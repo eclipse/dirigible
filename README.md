@@ -41,7 +41,7 @@ You can also try the sandbox instance with restricted functionality that is avai
 
 ### Download
 
-The "fast-track" - you can download the precompiled binaries produced from the released versions from [https://github.com/SAP/dirigible/releases/](https://github.com/SAP/dirigible/releases/) and skip the build section.
+The "fast-track" - you can download the precompiled binaries produced from the released versions from [https://github.com/eclipse/dirigible/releases/](https://github.com/eclipse/dirigible/releases/) and skip the build section.
 
 Nevertheless, we highly recommend building the binaries from source in order to have all experimental features that are not available in the releases.
 
@@ -160,11 +160,11 @@ The IDE part can be run directly via Eclipse. This is useful when testing new fe
 
 ### License
 
-This project is copyrighted by [SAP AG](http://www.sap.com/) and is available under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). See [LICENSE.txt](LICENSE.txt) and [NOTICE.txt](NOTICE.txt) for further details.
+This project is copyrighted by [SAP SE](http://www.sap.com/) and is available under the [Eclipse Public License v 1.0](https://www.eclipse.org/legal/epl-v10.html). See [LICENSE.txt](LICENSE.txt) and [NOTICE.txt](NOTICE.txt) for further details.
 
 ### Contributors
 
-If you'd like to contribute to Dirigible, please file an [issue](https://github.com/SAP/dirigible/issues) or send us a [pull request](https://github.com/SAP/dirigible/pulls).
+If you'd like to contribute to Dirigible, please file an [issue](https://github.com/eclipse/dirigible/issues) or send us a [pull request](https://github.com/eclipse/dirigible/pulls).
 
 ### References
 
@@ -183,8 +183,13 @@ If you'd like to contribute to Dirigible, please file an [issue](https://github.
 [http://trial.dirigible.io](http://trial.dirigible.io)
 
 - Forum
-[http://forum.dirigible.io](http://forum.dirigible.io)
+[https://www.eclipse.org/forums/index.php/m/1688357/](https://www.eclipse.org/forums/index.php/m/1688357/)
 
+- Mailing List
+[https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
+
+- Bugzilla
+[https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Dirigible](https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Dirigible)
 
 ### Update Sites
 
