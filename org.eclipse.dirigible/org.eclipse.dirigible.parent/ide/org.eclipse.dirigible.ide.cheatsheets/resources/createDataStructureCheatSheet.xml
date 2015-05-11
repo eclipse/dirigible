@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Create Data Structure">
+  <intro>
+    <description>This cheat sheet helps you to create your entities. You can execute the following step several times depending on domain model.</description>
+  </intro>
+  <item title="Create Data Structure">
+  	 <description>Use the following embedded command to open the Create Data Structure Wizard</description>
+     <command serialization="org.eclipse.dirigible.ide.template.ui.db.command.DataStructureCommandHandler"/>
+  </item>
+</cheatsheet>

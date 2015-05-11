@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Create JavaScript Service">
+  <intro>
+    <description>This cheat sheet helps you to create a server-side JavaScript Service.</description>
+  </intro>
+  <item title="Create JavaScript Service">
+  	 <description>Use the following embedded command to open the Create JavaScript Service Wizard</description>
+     <command serialization="org.eclipse.dirigible.ide.template.ui.js.command.JavascriptServiceCommandHandler"/>
+  </item>
+</cheatsheet>

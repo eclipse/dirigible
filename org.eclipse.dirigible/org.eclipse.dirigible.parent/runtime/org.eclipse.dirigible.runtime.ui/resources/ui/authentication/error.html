@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Log In Error</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="authentication/custom.css">
+</head>
+    <body>
+        <div class="container">
+			<div class="row">
+				<div class="col-sm-6 col-md-4 col-md-offset-4">
+					<div class="alert alert-danger text-center" role="alert">
+						<strong>Invalid username and/or password!</strong>
+					</div>
+					
+					<div class="account-wall">
+						<img class="logo-img" src="images/dirigible_logo.svg"
+							alt="">
+						<form class="form-signin" name="loginForm" method="POST" action="j_security_check">
+						<input type="text" name="j_username" class="form-control" placeholder="Username" required autofocus>
+						<input type="password" name="j_password" class="form-control" placeholder="Password" required>
+						<button class="btn btn-lg btn-primary btn-block" type="submit">
+							Log in</button>
+						<label class="checkbox pull-left">
+							<input type="checkbox" value="remember-me">
+							Remember me
+						</label>
+						<a href="///help.dirigible.io" target="_blank" class="pull-right need-help">Need help?</a><span class="clearfix"></span>
+						</form>
+					</div>
+					<a href="///account.hanatrial.ondemand.com/register" target="_blank" class="text-center new-account">Register</a>
+				</div>
+			</div>
+		</div>     
+    </body>
+</html>

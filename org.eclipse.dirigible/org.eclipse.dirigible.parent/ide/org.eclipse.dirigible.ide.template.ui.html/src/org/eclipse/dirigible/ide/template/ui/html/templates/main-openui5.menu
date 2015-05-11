@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Sample Category",
+        "link": "",
+        "subMenu": [
+            {
+                "name" : "Sample Page",
+                "link" : "sample.html"
+            }
+        ]
+    }
+]

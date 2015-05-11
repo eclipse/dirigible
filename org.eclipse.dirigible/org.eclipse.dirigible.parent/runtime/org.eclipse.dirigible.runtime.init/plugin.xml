@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	  <extension
+           id="ContentInitializerServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/content-init"
+              class="org.eclipse.dirigible.runtime.content.ContentInitializerServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+	 	 <extension
+           id="BaseContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/load"
+              class="org.eclipse.dirigible.runtime.content.BaseContentServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="ContentExporterServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/export"
+              class="org.eclipse.dirigible.runtime.content.ContentExporterServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="ContentImporterServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/import"
+              class="org.eclipse.dirigible.runtime.content.ContentImporterServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+
+	 
+</plugin>

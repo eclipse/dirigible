@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Create Project">
+  <intro>
+    <description>This cheat sheet helps you to start developing On-Demand Application by creating a Project</description>
+  </intro>  
+  <item title="Create Project">
+     <description>Use the following embedded command to open the Create Project Wizard</description>
+     <command serialization="org.eclipse.dirigible.ide.workspace.ui.command.Project"/>
+  </item>
+</cheatsheet>

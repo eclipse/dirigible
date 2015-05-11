@@ -1,0 +1,67 @@
+[{
+    "name": "IDE",
+    "link": "../index.html"
+},{
+    "name": "Content",
+    "subMenu": [{
+        "name": "Show Content",
+        "link": "#/content"
+    }, {
+        "name": "Transport Content",
+        "link": "#/content/import"
+    }]
+}, {
+    "name": "Web",
+    "subMenu": [{
+        "name": "Sites",
+        "link": "#/web/content"
+    }, {
+        "name": "Wikis",
+        "link": "#/web/wiki"
+    }]
+}, {
+    "name": "Scripting",
+    "subMenu": [{
+        "name": "JavaScript Services",
+        "link": "#/scripting/javascript"
+    }, {
+        "name": "Java Services",
+        "link": "#/scripting/java"
+    }, {
+        "name": "Command Services",
+        "link": "#/scripting/command"
+    }, {
+        "name": "Test Services",
+        "link": "#/scripting/tests"
+    }]
+}, {
+    "name": "Integration",
+    "subMenu": [{
+        "name": "Flows",
+        "link": "#/integration/flow"
+    }, {
+        "name": "Jobs",
+        "link": "#/integration/job"
+    }]
+}, {
+    "name": "Monitoring",
+    "subMenu": [{
+        "name": "Hits Graphics",
+        "link": "#/monitoring/hits"
+    }, {
+        "name": "Memory Graphics",
+        "link": "#/monitoring/memory"
+    }, {
+        "name": "Response Graphics",
+        "link": "#/monitoring/response"
+    }, {
+        "name": "Manage",
+        "link": "#/monitoring/manage"
+    }, {
+        "name": "Access Log",
+        "link": "#/monitoring/acclog"
+    }, {
+        "name": "Logging",
+        "link": "#/monitoring/logging"
+    }]
+}]

@@ -1,0 +1,24 @@
+h1. ${pageTitle}
+
+Text formatting
+*bold* bold
+_italic_ italic
+-strike- strike
++under+ under
+Headings
+h1. Large heading
+h3. Medium heading
+h5. Small heading
+Lists
+* Bulleted point
+# Numbered point
+Tables
+||head1 ||head2||
+| colA1 | colA2 |
+| colB1 | colB2 |
+Links
+[title#anchor] Link a page
+[dev:title] In 'dev' space
+[http://host.com] Remote link
+[phrase@shortcut] Shortcut
+[alias|link] Custom link title

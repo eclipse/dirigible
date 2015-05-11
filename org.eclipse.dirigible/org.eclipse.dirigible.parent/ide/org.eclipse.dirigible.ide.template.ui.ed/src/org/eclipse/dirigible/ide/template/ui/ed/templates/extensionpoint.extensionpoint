@@ -1,0 +1,4 @@
+{
+  "extension-point":"/${projectName}/${fileNameNoExtension}",
+  "description":"description for the extension point ${fileNameNoExtension}"
+}

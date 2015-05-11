@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.rap.ui.serviceHandler">
+      <serviceHandler
+            class="org.eclipse.rap.rwt.supplemental.fileupload.internal.FileUploadServiceHandler"
+            id="org.eclipse.rap.rwt.supplemental.fileupload.internal.FileUploadServiceHandler">
+      </serviceHandler>
+   </extension>
+
+</plugin>

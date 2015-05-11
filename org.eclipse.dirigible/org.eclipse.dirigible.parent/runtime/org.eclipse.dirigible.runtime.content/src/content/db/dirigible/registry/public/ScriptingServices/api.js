@@ -1,0 +1,20 @@
+exports.api = {
+  "request": request,
+  "response": response,
+  "datasource": datasource,
+  "mail": mail,
+  "io": io,
+  "out": out,
+  "http": http,
+  "base64": base64,
+  "hex": hex,
+  "digest": digest,
+  "url": url,
+  "user": user,
+  "upload": upload,
+  "uuid": uuid,
+  "input": input,
+  "db": db,
+  "xss": xss,
+  "repository": repository
+};

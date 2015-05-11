@@ -1,0 +1,4 @@
+{
+  "viewName":"${fileNameNoExtension}",
+  "query":"${query}"
+}

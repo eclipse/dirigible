@@ -1,0 +1,1 @@
+%JAVA_HOME%/bin/javadoc.exe -J-Dhttp.proxySet=true -J-Dhttp.proxyHost=proxy.wdf.sap.corp -J-Dhttp.proxyPort=8080 @options @packages

@@ -1,0 +1,38 @@
+/******************************************************************************* 
+ * Copyright (c) 2015 SAP and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   SAP - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.dirigible.ide.publish.ui.command;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+
+import org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView;
+import org.eclipse.dirigible.repository.logging.Logger;
+
+public class ShowWebViewerHandler extends AbstractHandler {
+
+	private static final Logger logger = Logger.getLogger(ShowWebViewerHandler.class);
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		try {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.showView(WebViewerView.class.getName()); //$NON-NLS-1$
+		} catch (PartInitException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+}

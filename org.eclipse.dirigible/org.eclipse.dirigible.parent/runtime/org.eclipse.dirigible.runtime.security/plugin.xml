@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/"
+              class="org.eclipse.dirigible.runtime.filter.XSSFilter">
+        </filter>
+     </extension>
+  
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/web-secured"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/js-secured"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/js-debug"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/js-debug"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/command-secured"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+	 
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/js-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/command-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/test-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+    
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/js"
+              class="org.eclipse.dirigible.runtime.filter.JavaScriptRegistrySecureFilter">
+        </filter>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/command"
+              class="org.eclipse.dirigible.runtime.filter.CommandRegistrySecureFilter">
+        </filter>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/"
+              class="org.eclipse.dirigible.runtime.filter.CorsFilter">
+        </filter>
+     </extension>
+
+          
+          
+</plugin>

@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dirigible Repository API
+Bundle-SymbolicName: org.eclipse.dirigible.ide.repository;singleton:=true
+Bundle-Version: 2.0.150424
+Bundle-Vendor: SAP
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.dirigible.ide.repository
+Require-Bundle: org.eclipse.dirigible.ide.datasource,
+ org.eclipse.dirigible.repository.api,
+ org.eclipse.jface;resolution:=optional,
+ org.eclipse.rap.jface;resolution:=optional,
+ org.eclipse.dirigible.repository.ext,
+ org.eclipse.dirigible.repository.logging,
+ org.eclipse.dirigible.ide.common
+Import-Package: javax.servlet,
+ javax.servlet.annotation,
+ javax.servlet.descriptor,
+ javax.servlet.http,
+ javax.servlet.resources,
+ org.slf4j

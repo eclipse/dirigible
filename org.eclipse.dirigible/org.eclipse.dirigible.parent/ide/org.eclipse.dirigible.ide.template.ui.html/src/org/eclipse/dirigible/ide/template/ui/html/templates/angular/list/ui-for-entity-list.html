@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>${pageTitle}</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+<body>
+	<div id="wrap">
+		<div class="container">
+			<table class="table table-condensed table-striped" ng-app
+				ng-controller="ListController">
+				<thead>
+					<tr>
+#foreach ($tableColumn in $tableColumns) 
+#if($tableColumn.isVisible())
+						<th>${tableColumn.getName()}</th>
+#end
+#end
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="entry in data">
+#foreach ($tableColumn in $tableColumns) 
+#if($tableColumn.isVisible())
+						<td>{{entry.${tableColumn.getName()}}}</td> 
+#end
+#end
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular-resource.min.js"></script>
+
+	<script type="text/javascript">
+		function ListController($scope, $http) {
+			
+			var url = '${serviceFileName}';
+
+			$http.get(url)
+			.success(function(data) {
+				$scope.data = data;
+			});
+		}
+	</script>
+</body>
+</html>

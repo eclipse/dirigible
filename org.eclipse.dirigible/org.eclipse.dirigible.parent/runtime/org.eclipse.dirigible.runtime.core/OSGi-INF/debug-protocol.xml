@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="DebugProtocolHandler">
+   <service>
+      <provide interface="org.eclipse.dirigible.repository.ext.debug.IDebugProtocol"/>
+   </service>
+   <implementation class="org.eclipse.dirigible.runtime.js.debug.DebugProtocolHandler"/>
+</scr:component>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu?before=separator.view">
+         <separator
+               name="separator"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.eclipse.dirigible.ide.publish.ui.command.ActivateCommandHandler"
+               label="Activate"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.dirigible.ide.publish.ui.command.ActivateFileCommandHandler"
+               label="Activate File"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.eclipse.core.resources.IFile">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.dirigible.ide.publish.ui.command.PublishCommandHandler"
+               label="Publish"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+         
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.publish.ui.command.ActivateCommandHandler"
+            description="Activate the selected Project"
+            id="org.eclipse.dirigible.ide.publish.ui.command.ActivateCommandHandler"
+            name="Activate">
+      </command>
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.publish.ui.command.ActivateFileCommandHandler"
+            description="Activate the selected File"
+            id="org.eclipse.dirigible.ide.publish.ui.command.ActivateFileCommandHandler"
+            name="Activate File">
+      </command>
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.publish.ui.command.PublishCommandHandler"
+            description="Publishes the selected Project."
+            id="org.eclipse.dirigible.ide.publish.ui.command.PublishCommandHandler"
+            name="Publish">
+      </command>
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.publish.ui.command.ShowWebViewerHandler"
+            description="Show Preview"
+            id="org.eclipse.dirigible.ide.publish.ui.command.ShowWebViewerHandler"
+            name="Show Preview">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.eclipse.dirigible.ide.publish.ui.command.ActivateCommandHandler"
+            icon="resources/icons/activate.png">
+      </image>
+      <image
+            commandId="org.eclipse.dirigible.ide.publish.ui.command.ActivateFileCommandHandler"
+            icon="resources/icons/activate.png">
+      </image>
+      <image
+            commandId="org.eclipse.dirigible.ide.publish.ui.command.PublishCommandHandler"
+            icon="resources/icons/publish.png">
+      </image>
+   </extension>
+     <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Project ActionSet"
+            visible="false"
+            id="org.eclipse.dirigible.projectActionSet">
+         <menu
+               id="org.eclipse.dirigible.projectMenu"
+               label="&amp;Project"
+               path="id.file">
+            <separator
+                  name="activationGroup">
+            </separator>
+            <separator
+                  name="autoActivationGroup">
+            </separator>
+         </menu>
+         <action
+               allowLabelUpdate="true"
+               class="org.eclipse.dirigible.ide.publish.ui.command.PublishAction"
+               id="org.eclipse.dirigible.ide.publish.ui.command.PublishAction"
+               label="Publish"
+               menubarPath="org.eclipse.dirigible.projectMenu/activationGroup"
+               state="false"
+               style="push"
+               toolbarPath="activationGroup"
+               tooltip="Publish">
+         </action>
+         <action
+               allowLabelUpdate="true"
+               class="org.eclipse.dirigible.ide.publish.ui.command.ActivateAction"
+               id="org.eclipse.dirigible.ide.publish.ui.command.ActivateAction"
+               label="Activate"
+               menubarPath="org.eclipse.dirigible.projectMenu/activationGroup"
+               state="false"
+               style="push"
+               toolbarPath="activationGroup"
+               tooltip="Activate">
+         </action>
+         
+         <action
+               allowLabelUpdate="true"
+               class="org.eclipse.dirigible.ide.publish.ui.command.AutoActivateAction"
+               id="org.eclipse.dirigible.ide.publish.ui.command.AutoActivateAction"
+               label="Auto Activate"
+               menubarPath="org.eclipse.dirigible.projectMenu/autoActivationGroup"
+               state="true"
+               style="toggle"
+               toolbarPath="autoActivationGroup"
+               tooltip="Turn on/off Auto Activation">
+         </action>
+         
+      </actionSet>
+   </extension>
+    <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="workspace">
+         <actionSet
+               id="org.eclipse.dirigible.projectActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
+</plugin>

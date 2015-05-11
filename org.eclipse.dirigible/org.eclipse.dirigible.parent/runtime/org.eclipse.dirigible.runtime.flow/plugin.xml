@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+     <extension
+           id="FlowServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow"
+              class="org.eclipse.dirigible.runtime.flow.FlowServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="FlowSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow-secured"
+              class="org.eclipse.dirigible.runtime.flow.FlowSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="FlowSandboxServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow-sandbox"
+              class="org.eclipse.dirigible.runtime.flow.FlowSandboxServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="FlowRegistryUiContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow/flow"
+              class="org.eclipse.dirigible.runtime.flow.FlowRegistryUiContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="FlowRegistryUiContentSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow/flow-secured"
+              class="org.eclipse.dirigible.runtime.flow.FlowRegistryUiContentSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/flow-secured"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     
+      <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/flow-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/flow"
+              class="org.eclipse.dirigible.runtime.flow.FlowRegistrySecureFilter">
+        </filter>
+     </extension>
+          
+          
+          
+          
+          
+          
+     <extension
+           id="JobSyncServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/job"
+              class="org.eclipse.dirigible.runtime.job.JobSyncServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="JobSyncSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/job-secured"
+              class="org.eclipse.dirigible.runtime.job.JobSyncSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="JobSyncSandboxServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/job-sandbox"
+              class="org.eclipse.dirigible.runtime.job.JobSyncSandboxServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="JobRegistryUiContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow/job"
+              class="org.eclipse.dirigible.runtime.job.JobRegistryUiContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="JobRegistryUiContentSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow/job-secured"
+              class="org.eclipse.dirigible.runtime.job.JobRegistryUiContentSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/job-secured"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     
+      <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/job-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/job"
+              class="org.eclipse.dirigible.runtime.job.JobRegistrySecureFilter">
+        </filter>
+     </extension>
+
+          
+          
+</plugin>

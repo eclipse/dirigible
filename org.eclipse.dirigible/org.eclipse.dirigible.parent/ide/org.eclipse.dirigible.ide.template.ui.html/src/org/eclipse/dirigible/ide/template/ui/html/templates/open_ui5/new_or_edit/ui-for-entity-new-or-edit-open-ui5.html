@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style>
+.mySelectedText {
+    color: #4fbcf2;
+	font-weight: bold;
+}
+</style>
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_goldreflection"
+	data-sap-ui-libs="sap.ui.commons,sap.ui.ux3,sap.ui.table">
+</script>
+
+<script>
+Number.prototype.formatMoney = function(c, d, t){
+    var n = this, 
+    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+    d = d == undefined ? "." : d, 
+    t = t == undefined ? "," : t, 
+    s = n < 0 ? "-" : "", 
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+function getURLParameter(name) { 
+     return decodeURIComponent((
+                new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)
+                || [,""])[1].replace(/\+/g, '%20'))
+                || null; 
+     }
+
+     var spinnerLayout;
+     var wrapperPanel;
+     var wrapperPanelTitle;
+     var detailsPanel;
+     var detailsModel;
+     var dates = [];
+     var integers = [];
+     var doubles = [];
+     var controls = [];
+     var buttonSave;
+     var buttonCancel;
+    
+     function main() {
+        createUIComponents();
+        layoutUIComponents();
+     }
+
+     function createUIComponents() {
+        createWrapperPanel();
+        createSpinnerLayout();
+        createDetailsPanel();
+     }
+
+     function saveEntity(entity){
+        entity = convertDateToString(entity);
+        jQuery.ajax({
+            type: "POST",
+            contentType : "application/json",
+            data: JSON.stringify(entity),
+ 			url: "${serviceFileName}",
+ 			success: function (data) {
+ 				var primaryKey = getPrimaryKeys()[0];
+ 				var saveMessage = createLabel("Entity saved with "+primaryKey+" = "+data);
+ 	            wrapperPanel.destroyContent();
+ 	            wrapperPanel.setTitle(new sap.ui.commons.Title({
+ 	                text : "Saved!"   
+ 	            }));
+ 	            wrapperPanel.addContent(saveMessage);
+ 			}
+ 		});
+     }
+     
+     function updateEntity(entity){
+        entity = convertDateToString(entity);
+ 		var primaryKey = getPrimaryKeys()[0];
+  		var primaryKeyParameter = getURLParameter(primaryKey);
+        jQuery.ajax({
+            type: "PUT",
+            contentType : "application/json",
+            data: JSON.stringify(entity),
+ 			url: "${serviceFileName}?"+primaryKey+"="+primaryKeyParameter,
+ 		    success: function (data) {
+ 	    		var primaryKey = getPrimaryKeys()[0];
+ 				var msg = "Entity with "+primaryKey+" = "+data+" updated!";
+ 				sap.ui.commons.MessageBox.alert(msg, null, "Updated");
+ 			}
+ 		});
+     }
+     
+     function convertStringToDate(data){
+        for(var i = 0; i < dates.length; i++){
+			data[dates[i][0]] = new Date(data[dates[i][0]]);
+        }
+        return data;
+     }
+     
+     function convertDateToString(data){
+         for(var i = 0; i < dates.length; i++){
+			var date = data[dates[i][0]];
+            date.setHours(12);
+            data[dates[i][0]] = date.toLocaleString();
+        }
+        return data;
+     }
+     
+    function convertDataTypes(data){
+		for(var i = 0; i < dates.length; i++){
+            data[dates[i][0]] = new Date(data[dates[i][0]]);
+        }
+		for(var i = 0; i < integers.length; i++){
+			var formatedIntger = data[integers[i][0]];
+			if(typeof formatedIntger !== "string"){
+				data[integers[i][0]] = formatedIntger.formatMoney(0, ".", " ");
+            }
+		}
+		for(var i = 0; i < doubles.length; i++){
+			var formatedDouble = data[doubles[i][0]];
+			if(typeof formatedDouble !== "string"){
+				data[doubles[i][0]] = formatedDouble.formatMoney(2, ".", " ");
+            }
+		}
+    return data;
+    }
+   
+    function attachDetailsModel() {
+        var primaryKey = getPrimaryKeys()[0];
+        var primaryKeyParameter = getURLParameter(primaryKey);
+		
+		detailsModel.attachRequestCompleted(null, function(){
+            var data = JSON.parse(detailsModel.getJSON());
+            detailsModel.setData(convertStringToDate(data));
+            detailsModel.setProperty("/saveNew", false);                
+        }, null);
+        
+		detailsModel.attachRequestFailed(null, function(){
+            var errorMessage = createLabel("No entity found with "+primaryKey+" = "+primaryKeyParameter);
+            wrapperPanel.destroyContent();
+            wrapperPanel.setTitle(new sap.ui.commons.Title({
+                text : "No entity found"   
+            }));
+            wrapperPanel.addContent(errorMessage);
+        }, null);
+           
+        if(primaryKeyParameter){
+			detailsModel.setProperty("/saveNew", false);
+			detailsModel.loadData("${serviceFileName}?"+primaryKey+"="+primaryKeyParameter);
+        }else{
+            detailsModel.setData({});
+            detailsModel.setProperty("/saveNew", true);
+        }
+    }
+
+    function atModelChange() {
+        showSpinner(false);
+    }
+
+    function showSpinner(showIt) {
+        spinnerLayout.removeAllRows();
+        if (showIt) {
+            createSpinnerRowAndAddItToSpinnerLayout();
+        }
+    }
+     
+    function createSpinnerLayout() {
+        spinnerLayout = new sap.ui.commons.layout.MatrixLayout({
+            layoutFixed : true,
+            width : '300px',
+            columns : 2
+        });
+        createSpinnerRowAndAddItToSpinnerLayout();
+    }
+
+    function createSpinnerRowAndAddItToSpinnerLayout() {
+        var tableLoadingSpinner = new sap.ui.commons.Image();
+        tableLoadingSpinner.setSrc("img/spinner.gif");
+        tableLoadingSpinner.setAlt("Loading data...");
+        var oLabell = createLabel("Loading data, please be patient...");
+        spinnerLayout.setWidths('28px', '200px');
+        spinnerLayout.createRow(tableLoadingSpinner, oLabell);
+    }
+
+    function createWrapperPanel() {
+        wrapperPanel = new sap.ui.commons.Panel("mp");
+        wrapperPanel.setBorderDesign(sap.ui.commons.enums.BorderDesign.None);
+        wrapperPanel.setAreaDesign(sap.ui.commons.enums.AreaDesign.Plain);
+        wrapperPanel.setShowCollapseIcon(false);
+        wrapperPanel.addStyleClass("mainPanel");
+        wrapperPanelTitle = new sap.ui.commons.Title({
+            text : "${pageTitle}"
+        });
+        wrapperPanel.setTitle(wrapperPanelTitle);
+    }
+
+     function createDetailsPanel(){
+		var entity = [
+#foreach ($tableColumn in $tableColumns)
+#if($tableColumn.isKey() == false)
+			["${tableColumn.getName()}", "/${tableColumn.getName()}", "${tableColumn.getType()}", "${tableColumn.getSize()}"],
+#end
+#end
+        ];
+
+        buttonSave = new sap.ui.commons.Button();
+        buttonSave.setText("Save");
+       	buttonSave.attachPress(function(){
+			var json = detailsModel.getJSON();
+			var entity = JSON.parse(json);
+			entity = convertStringToDate(entity);
+           
+			if(detailsModel.getProperty("/saveNew") === true){
+				saveEntity(entity);
+                detailsModel.setData({});
+                detailsModel.setProperty("/saveNew", true);
+            }else{
+                updateEntity(entity);
+                detailsModel.setProperty("/saveNew", false);
+            }
+        });
+
+        buttonCancel = new sap.ui.commons.Button();
+        buttonCancel.setText("Cancel");
+        buttonCancel.attachPress(function(){
+			attachDetailsModel();
+        });
+        
+        var detailsMatrix = new sap.ui.commons.layout.MatrixLayout({
+            widths: ["20%","80%"]
+		});
+        
+		detailsMatrix.createRow(null, null);
+        for(i = 0; i < entity.length; i++){
+			var dataType = entity[i][2];
+			if(dataType === "DATE"){
+				dates.push([entity[i][0], entity[i][1]]);
+            } else if(dataType === "INTEGER"){
+                integers.push([entity[i][0], entity[i][1]]);
+            } else if(dataType === "DOUBLE" || dataType === "FLOAT"){
+                doubles.push([entity[i][0], entity[i][1]]);
+            }
+            detailsMatrix.addRow(createNewRow(entity[i]));
+        }
+
+        var toolbar = new sap.ui.commons.Toolbar();
+        toolbar.setDesign(sap.ui.commons.ToolbarDesign.Standard);
+        toolbar.addItem(buttonSave);
+        toolbar.addItem(buttonCancel);
+        
+        detailsPanel = new sap.ui.commons.Panel({
+			width: "100%",
+            text: "Details", 
+            areaDesign: sap.ui.commons.enums.AreaDesign.Plain,
+            showCollapseIcon: false,
+            content : [toolbar, detailsMatrix]
+        });
+        
+        detailsModel = new sap.ui.model.json.JSONModel();
+        attachDetailsModel();
+        detailsMatrix.setModel(detailsModel);
+     }
+    
+    function createNewRow(rowData){
+        var nextRow = new sap.ui.commons.layout.MatrixLayoutRow();
+
+        var labelCell = new sap.ui.commons.layout.MatrixLayoutCell();
+        labelCell.addContent(createLabel(rowData[0]));
+        
+        var controllerCell = new sap.ui.commons.layout.MatrixLayoutCell();
+        var controller;
+        if(rowData[2] === "BOOLEAN"){
+			controller = createCheckBox(rowData[1], true);
+			controllerCell.addContent(controller);
+        } else if(rowData[2] === "DATE") {
+			controller = createDatePicker(rowData[1], true);
+            controllerCell.addContent(controller);
+        } else if(rowData[2] === "VARCHAR") {
+            if(rowData[3] <= 20){
+				controller = createTextField(rowData[1], true);
+                controllerCell.addContent(controller);                
+            } else{
+                controller = createTextArea(rowData[1], true);
+                controllerCell.addContent(controller);
+            }
+        } else if(rowData[2] === "INTEGER") {
+			controller = createTextField(rowData[1], true, sap.ui.core.TextAlign.Right, true, true);
+            controllerCell.addContent(controller);
+        } else if(rowData[2] === "DOUBLE" || rowData[2] === "FLOAT"){
+			controller = createTextField(rowData[1], true, sap.ui.core.TextAlign.Right, true, false);
+			controllerCell.addContent(controller);
+        } else {
+			controller = createTextField(rowData[1], true);
+			controllerCell.addContent(controller);
+        }
+        if(!isPrimaryKey(rowData[0])){
+            controls.push(controller);          
+        }
+        
+        nextRow.addCell(labelCell);
+        nextRow.addCell(controllerCell);
+        return nextRow;
+    }
+    
+    function createLabel(text){
+    var label = new sap.ui.commons.Label();
+    label.setText(text);
+    
+    return label;
+    }
+    
+    function createTextField(value, editable, textAlign, number, integer){
+        if(editable === null || editable === undefined){
+            editable = true;
+        }
+        if(textAlign === null || textAlign === undefined){
+           textAlign: sap.ui.core.TextAlign.Left
+        }
+        var textField = new sap.ui.commons.TextField();
+        textField.bindValue(value, null);
+        textField.setEditable(editable);
+        textField.setTextAlign(textAlign);
+        
+        return textField;
+    }
+    
+    function createTextArea(value, editable){
+		if(editable === null || editable === undefined){
+			editable = true;
+		}
+    
+		var textArea = new sap.ui.commons.TextArea();
+		textArea.setWidth("100%");
+		textArea.bindValue(value, null);
+		textArea.setRows(1);
+		textArea.setEditable(editable);
+    
+		return textArea;
+    }
+    
+    function createCheckBox(checked, editable){
+        if(editable === null || editable === undefined){
+			editable = true;
+        }
+        
+        var checkBox = new sap.ui.commons.CheckBox();
+        checkBox.bindChecked(checked, null);
+        checkBox.setEditable(editable);
+    }
+    
+    function createDatePicker(value, editable){
+        if(editable === null || editable === undefined){
+			editable = true;
+        }
+        
+        var datePicker = new sap.ui.commons.DatePicker();
+        datePicker.bindValue(value, null);
+        datePicker.setEditable(editable);
+        datePicker.setLocale("en-US");
+        
+        return datePicker;
+    }
+    
+    function isPrimaryKey(columnName){
+		return columnName === getPrimaryKeys()[0];
+    }
+    
+     function getPrimaryKeys(){
+        var result = new Array();
+        var i = 0;
+#foreach ($tableColumn in $tableColumns)
+#if ($tableColumn.isKey())
+		result[i++] = '$tableColumn.getName()';
+#end
+#end
+        if(result.length > 1){
+            throw new Exception("More than one Primary Key is not supported.");
+        }
+        return result;
+    }
+     
+    function layoutUIComponents() {
+        wrapperPanel.addContent(detailsPanel);
+        wrapperPanel.placeAt("panelArea");
+    }
+
+</script>
+
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="panelArea"></div>
+
+	<script>
+         main();
+    </script>
+
+</body>
+</html>

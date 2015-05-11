@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Integration Services Publisher
+Bundle-SymbolicName: org.eclipse.dirigible.ide.integration.publish;singleton:=true
+Bundle-Version: 2.0.150424
+Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.dirigible.ide.repository,
+ org.eclipse.core.runtime,
+ org.eclipse.dirigible.repository.logging
+Import-Package: org.eclipse.dirigible.ide.common,
+ org.eclipse.dirigible.ide.common.io,
+ org.eclipse.dirigible.ide.publish,
+ org.eclipse.dirigible.repository.api,
+ javax.servlet.http,
+ org.eclipse.core.resources

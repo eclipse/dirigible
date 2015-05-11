@@ -1,0 +1,172 @@
+<div class="container" ng-app ng-controller="Controller">
+	<div class="alert alert-success">
+		<h3>
+			<strong>Sample Page</strong>
+		</h3>
+	</div>
+	<h3>
+		Form <span class="label label-success">New</span>
+	</h3>
+	<br>
+	<div class="well">
+		<div class="input-group col-lg-4" ng-hide="loggedIn">
+			<span class="input-group-addon">@</span> <input type="text"
+				class="form-control" placeholder="Username" ng-model="username">
+		</div>
+		<br>
+		<div class="input-group col-lg-4" ng-hide="loggedIn">
+			<span class="input-group-addon">@</span> <input type="password"
+				class="form-control" placeholder="Password" ng-model="password">
+		</div>
+		<br>
+		<button type="button" class="btn btn-primary" ng-click="login()"
+			ng-disabled="!username || !password">{{loginButtonLabel}}</button>
+		<button type="button" class="btn btn-default" ng-click="register()"
+			ng-disabled="!username || !password" ng-hide="loggedIn">Register</button>
+	</div>
+	<div ng-show="loggedIn">
+		<div class="alert alert-info">
+			<h4>
+				User <strong>{{username}}</strong> logged in!
+			</h4>
+		</div>
+	</div>
+	<br>
+	<div class="btn-group">
+		<button type="button" class="btn btn-default"
+			ng-click="buttonClick('Left')">Left</button>
+		<button type="button" class="btn btn-default"
+			ng-click="buttonClick('Middle')">Middle</button>
+		<button type="button" class="btn btn-default"
+			ng-click="buttonClick('Right')">Right</button>
+	</div>
+	<br> <br>
+	<ol class="breadcrumb">
+		<li><a href="#">Home</a></li>
+		<li><a href="#">User</a></li>
+		<li><a href="#">Music</a></li>
+		<li class="active">Song</li>
+	</ol>
+	<input type="checkbox" ng-model="displayCountries"> <label>Display
+		countries</label>
+	<form name="myForm" ng-show="displayCountries">
+		<input type="radio" name="displayCountriesGroup"
+			ng-click="listCountries(1)" /> One<br /> <input type="radio"
+			name="displayCountriesGroup" ng-click="listCountries(3)" /> Three<br />
+		<input type="radio" name="displayCountriesGroup"
+			ng-click="listCountries(-1)" checked="checked" /> All<br />
+	</form>
+	<hr>
+	<table class="table table-hover" ng-show="displayCountries">
+		<thead>
+			<tr>
+				<th>Country</th>
+				<th>Capital</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="country in countries">
+				<td>{{country.name}}</td>
+				<td>{{country.capital}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="progress progress-striped active">
+		<div class="progress-bar" role="progressbar" aria-valuenow="45"
+			aria-valuemin="0" aria-valuemax="100" style="width: 55%">
+			<span class="sr-only">45% Complete</span>
+		</div>
+	</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
+<script>
+	function Controller($scope) {
+		$scope.allCountries = [ {
+			'name' : 'Bulgaria',
+			'capital' : 'Sofia'
+		}, {
+			'name' : 'China',
+			'capital' : 'Beijing'
+		}, {
+			'name' : 'Germany',
+			'capital' : 'Berlin'
+		}, {
+			'name' : 'Russia',
+			'capital' : 'Moscow'
+		}, {
+			'name' : 'United Kingdom',
+			'capital' : 'London'
+		}, {
+			'name' : 'United States',
+			'capital' : 'Washington, D.C.'
+		}
+
+		];
+		$scope.countries = $scope.allCountries;
+
+		$scope.displayCountries = true;
+		$scope.users = [];
+		$scope.username;
+		$scope.password;
+		$scope.loggedIn;
+		$scope.loginButtonLabel = "Login";
+
+		$scope.buttonClick = function(button) {
+			alert(button + ' button clicked!');
+		}
+
+		$scope.listCountries = function(count) {
+			if (count == -1) {
+				$scope.countries = $scope.allCountries;
+			} else {
+				$scope.countries = [];
+				for ( var i = 0; i < count; i++) {
+					var country = $scope.allCountries[i];
+					$scope.countries.push(country);
+				}
+			}
+		}
+
+		$scope.login = function() {
+			if ($scope.loginButtonLabel == "Login") {
+				var found = false;
+				for ( var i = 0; i < $scope.users.length; i++) {
+					found = $scope.users[i].username == $scope.username;
+					if (found && $scope.users[i].password == $scope.password) {
+						$scope.loginButtonLabel = "Logout";
+						$scope.loggedIn = true;
+						break;
+					}
+				}
+				if (!found) {
+					alert('User ' + $scope.username
+							+ ' is not registered! Please register first!');
+				} else if (found && !$scope.loggedIn) {
+					alert('Invalid username and/or password');
+				}
+			} else {
+				$scope.username = "";
+				$scope.password = "";
+				$scope.loginButtonLabel = "Login";
+				$scope.loggedIn = false;
+			}
+		}
+
+		$scope.register = function() {
+			var registered = false;
+			for ( var i = 0; i < $scope.users.length; i++) {
+				if ($scope.users[i].username == $scope.username) {
+					registered = true;
+					alert('User ' + $scope.username + ' already registered!');
+					break;
+				}
+			}
+			if (!registered) {
+				var user = {};
+				user.username = $scope.username;
+				user.password = $scope.password;
+				$scope.users.push(user);
+			}
+		}
+	}
+</script>

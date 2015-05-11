@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	 <extension
+           id="AccessLogServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/acclog"
+              class="org.eclipse.dirigible.runtime.metrics.AccessLogServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/"
+              class="org.eclipse.dirigible.runtime.filter.AccessLogFilter">
+        </filter>
+     </extension>
+
+	 <extension
+           id="MemoryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/memory"
+              class="org.eclipse.dirigible.runtime.memory.MemoryServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+
+               
+</plugin>

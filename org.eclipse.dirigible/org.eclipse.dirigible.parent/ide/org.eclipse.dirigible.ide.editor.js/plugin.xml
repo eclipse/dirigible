@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.dirigible.ide.editor.js.JavaScriptEditor"
+            extensions="js,xml,xsl,sql,html,odata,json,jslib,routes,ws,wsdl,table,view,entity,menu,txt,flow,job"
+            icon="icons/editor-icon.png"
+            id="org.eclipse.dirigible.ide.editor.SourceCodeEditor"
+            name="ACE Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.eclipse.dirigible.ide.editor.js.EditorHandler"
+            defaultHandler="org.eclipse.dirigible.ide.editor.js.EditorHandler"
+            name="ACE Editor">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.eclipse.dirigible.ide.editor.js.EditorHandler"
+            icon="icons/editor-icon.png">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.open_with?after=separator.custom">
+         <command
+               commandId="org.eclipse.dirigible.ide.editor.js.EditorHandler"
+               icon="icons/editor-icon.png"
+               label="ACE Editor"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/aceeditor"
+            base-name="resources">
+      </resource>
+   </extension>
+
+</plugin>

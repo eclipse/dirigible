@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.dirigible.bridge.feature" version="0.0.0">
+      <category name="dirigible-bridge"/>
+   </feature>
+   <category-def name="dirigible-bridge" label="Dirigible Bridge Bundles"/>
+</site>

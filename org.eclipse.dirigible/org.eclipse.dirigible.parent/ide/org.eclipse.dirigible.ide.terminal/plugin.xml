@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.eclipse.dirigible.ide.terminal.ui.TerminalView"
+            icon="resources/terminal.png"
+            id="org.eclipse.dirigible.ide.terminal.ui.TerminalView"
+            name="Terminal"
+            restorable="true">
+      </view>
+   </extension>
+
+ <extension
+      point = "org.eclipse.ui.preferencePages">
+      <page id="org.eclipse.dirigible.ide.terminal.ui.TerminalPreferencePage"
+	   	class="org.eclipse.dirigible.ide.terminal.ui.TerminalPreferencePage" name="Terminal">
+      </page>
+   </extension>
+</plugin>

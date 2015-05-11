@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	 <extension
+           id="WebRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/web"
+              class="org.eclipse.dirigible.runtime.web.WebRegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="WebRegistrySecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/web-secured"
+              class="org.eclipse.dirigible.runtime.web.WebRegistrySecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="WebRegistrySandboxServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/web-sandbox"
+              class="org.eclipse.dirigible.runtime.web.WebRegistrySandboxServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="WebRegistryUiContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/web/content"
+              class="org.eclipse.dirigible.runtime.web.WebRegistryUiContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="WebRegistryUiContentSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/web/content-secured"
+              class="org.eclipse.dirigible.runtime.web.WebRegistryUiContentSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/web-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/web"
+              class="org.eclipse.dirigible.runtime.web.WebRegistrySecureFilter">
+        </filter>
+     </extension>
+     
+     
+
+</plugin>

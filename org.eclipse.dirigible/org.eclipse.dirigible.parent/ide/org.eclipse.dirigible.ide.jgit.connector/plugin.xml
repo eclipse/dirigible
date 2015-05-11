@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu?after=separator.edit">
+            <menu
+               id="org.eclipse.dirigible.ide.workspace.ui.team"
+               label="Team">
+		         <command
+		               commandId="org.eclipse.dirigible.ide.jgit.command.CloneCommand"
+		               label="Clone"
+		               style="push">
+		         </command>
+		         <command
+		               commandId="org.eclipse.dirigible.ide.jgit.command.PushCommand"
+		               label="Push"
+		               style="push">
+		         </command>
+		         <command
+		               commandId="org.eclipse.dirigible.ide.jgit.command.PullCommand"
+		               label="Pull"
+		               style="push">
+		         </command>
+		         <command
+		               commandId="org.eclipse.dirigible.ide.jgit.command.ResetCommand"
+		               label="Reset"
+		               style="push">
+		         </command>
+		         <command
+		               commandId="org.eclipse.dirigible.ide.jgit.command.ShareCommand"
+		               label="Share"
+		               style="push">
+		         </command>
+
+		   </menu>
+	   </menuContribution>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.commands">
+         <command
+               description="Share"
+               id="org.eclipse.dirigible.ide.jgit.command.ShareCommand"
+               name="Share">
+      </command>
+        <command
+              description="Reset"
+              id="org.eclipse.dirigible.ide.jgit.command.ResetCommand"
+              name="Reset">
+      </command>
+      <command
+            description="Push"
+            id="org.eclipse.dirigible.ide.jgit.command.PushCommand"
+            name="Push">
+      </command>
+      <command
+            description="Pull"
+            id="org.eclipse.dirigible.ide.jgit.command.PullCommand"
+            name="Pull">
+      </command>
+      <command
+      		defaultHandler="org.eclipse.dirigible.ide.jgit.command.CloneCommandHandler"
+            description="Cloning"
+            id="org.eclipse.dirigible.ide.jgit.command.CloneCommand"
+            name="Clone">
+      </command>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+         <propertyTester
+        	   properties="GitProjectPropertyTest"
+         	   namespace="org.eclipse.dirigible.ide.jgit.property.tester"
+               class="org.eclipse.dirigible.ide.jgit.property.tester.GitProjectPropertyTest"
+               id="org.eclipse.dirigible.ide.jgit.property.tester.GitProjectPropertyTest"
+               type="org.eclipse.core.resources.IProject">
+         </propertyTester>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+     		class="org.eclipse.dirigible.ide.jgit.command.PushCommandHandler"
+            commandId="org.eclipse.dirigible.ide.jgit.command.PushCommand">
+            <enabledWhen>
+	            <with variable="selection">
+	               <count value="1"></count>
+	               <iterate ifEmpty="false" operator="and">
+			            <instanceof value="org.eclipse.core.resources.IProject"></instanceof>
+			           	<test property="org.eclipse.dirigible.ide.jgit.property.tester.GitProjectPropertyTest" value="true"></test>
+					</iterate>
+	            </with>
+            </enabledWhen>
+      </handler>
+      <handler
+     		class="org.eclipse.dirigible.ide.jgit.command.PullCommandHandler"
+            commandId="org.eclipse.dirigible.ide.jgit.command.PullCommand">
+            <enabledWhen>
+	            <with variable="selection">
+	               <count value="1"></count>
+	               <iterate ifEmpty="false" operator="and">
+			            <instanceof value="org.eclipse.core.resources.IProject"></instanceof>
+			           	<test property="org.eclipse.dirigible.ide.jgit.property.tester.GitProjectPropertyTest" value="true"></test>
+					</iterate>
+	            </with>
+            </enabledWhen>
+      </handler>
+      <handler
+     		class="org.eclipse.dirigible.ide.jgit.command.ResetCommandHandler"
+            commandId="org.eclipse.dirigible.ide.jgit.command.ResetCommand">
+            <enabledWhen>
+	            <with variable="selection">
+	               <count value="1"></count>
+	               <iterate ifEmpty="false" operator="and">
+			            <instanceof value="org.eclipse.core.resources.IProject"></instanceof>
+			           	<test property="org.eclipse.dirigible.ide.jgit.property.tester.GitProjectPropertyTest" value="true"></test>
+					</iterate>
+	            </with>
+            </enabledWhen>
+      </handler>
+      <handler
+     		class="org.eclipse.dirigible.ide.jgit.command.ShareCommandHandler"
+            commandId="org.eclipse.dirigible.ide.jgit.command.ShareCommand">
+            <enabledWhen>
+	            <with variable="selection">
+	               <count value="1"></count>
+	               <iterate ifEmpty="false" operator="and">
+			            <instanceof value="org.eclipse.core.resources.IProject"></instanceof>
+			           	<test property="org.eclipse.dirigible.ide.jgit.property.tester.GitProjectPropertyTest" value="false"></test>
+					</iterate>
+	            </with>
+            </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.eclipse.dirigible.ide.jgit.command.CloneCommand"
+            icon="resources/icons/clone.png">
+      </image>
+      <image
+            commandId="org.eclipse.dirigible.ide.jgit.command.PushCommand"
+            icon="resources/icons/push.png">
+      </image>
+      <image
+            commandId="org.eclipse.dirigible.ide.jgit.command.PullCommand"
+            icon="resources/icons/pull.png">
+      </image>
+      <image
+            commandId="org.eclipse.dirigible.ide.jgit.command.ResetCommand"
+            icon="resources/icons/reset.png">
+      </image>
+      <image
+            commandId="org.eclipse.dirigible.ide.jgit.command.ShareCommand"
+            icon="resources/icons/share.png">
+      </image>
+   </extension>
+   
+</plugin>

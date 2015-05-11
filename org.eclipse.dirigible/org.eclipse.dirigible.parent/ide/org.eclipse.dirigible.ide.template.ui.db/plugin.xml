@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.db.command.DataStructureCommandHandler"
+            id="org.eclipse.dirigible.ide.template.ui.db.command.DataStructureCommandHandler"
+            name="Data Structure">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.new?after=separator.custom">
+         <command
+               commandId="org.eclipse.dirigible.ide.template.ui.db.command.DataStructureCommandHandler"
+               icon="icons/wizard_data-structure.png"
+               label="Data Structure"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.dirigible.ide.workspace.ui.view.Menu.new?after=separator.custom">
+         <command
+               commandId="org.eclipse.dirigible.ide.template.ui.db.command.DataStructureCommandHandler"
+               icon="icons/wizard_data-structure.png"
+               label="Data Structure"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.dirigible.ide.template.type">
+      <template
+            category="DataStructures"
+            image="/icons/table.png"
+            location="/org/eclipse/dirigible/ide/template/ui/db/templates/table.table"
+            text="Database Table">
+      </template>
+      <template
+            category="DataStructures"
+            image="/icons/view.png"
+            location="/org/eclipse/dirigible/ide/template/ui/db/templates/view.view"
+            text="Database View">
+      </template>
+      <template
+            category="DataStructures"
+            image="/icons/dsv.png"
+            location="/org/eclipse/dirigible/ide/template/ui/db/templates/dsv.dsv"
+            text="Delimiter Separated Values (DSV) Sample Data">
+      </template>
+   </extension>
+   
+   <extension
+       point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
+       <newMenuItem
+            text="Data Structure"
+            toolTip="Data Structure"
+            order="11"
+            imageBundle="org.eclipse.dirigible.ide.template.ui.db"
+            imagePrefix="/icons/"
+            imageName="wizard_data-structure.png"
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.db.command.DataStructureCommandHandler">
+        </newMenuItem>
+ 	</extension>
+
+</plugin>

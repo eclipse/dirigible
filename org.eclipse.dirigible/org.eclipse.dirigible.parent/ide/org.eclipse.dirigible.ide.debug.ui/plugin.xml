@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.eclipse.dirigible.ide.debug.ui.DebugPerspective"
+            icon="resources/debug.png"
+            id="debug"
+            name="Debug">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.eclipse.dirigible.ide.debug.ui.DebugView"
+            icon="resources/debug.png"
+            id="org.eclipse.dirigible.ide.debug.ui.DebugView"
+            name="Debug"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

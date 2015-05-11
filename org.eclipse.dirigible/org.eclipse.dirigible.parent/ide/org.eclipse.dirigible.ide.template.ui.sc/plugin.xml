@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.new?after=separator.custom">
+         <command
+               commandId="org.eclipse.dirigible.ide.template.ui.sc.command.SecurityConstraintCommandHandler"
+               icon="icons/wizard_security-constraint.png"
+               label="Security Constraint"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.sc.command.SecurityConstraintCommandHandler"
+            id="org.eclipse.dirigible.ide.template.ui.sc.command.SecurityConstraintCommandHandler"
+            name="Security Constraint">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.dirigible.ide.template.type">
+      <template
+            category="SecurityConstraints"
+            image="/icons/access.png"
+            location="/org/eclipse/dirigible/ide/template/ui/sc/templates/main.access"
+            text="Main Access File">
+      </template>
+   </extension>
+   <extension
+       point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
+       <newMenuItem
+            text="Security Constraint"
+            toolTip="Security Constraint"
+            order="5"
+            imageBundle="org.eclipse.dirigible.ide.template.ui.sc"
+            imagePrefix="/icons/"
+            imageName="wizard_security-constraint.png"
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.sc.command.SecurityConstraintCommandHandler">
+        </newMenuItem>
+ 	</extension>
+</plugin>

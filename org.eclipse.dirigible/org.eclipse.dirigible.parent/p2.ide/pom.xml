@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>org.eclipse.dirigible.parent</artifactId>
+		<version>2.0.150424</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+
+	<groupId>org.eclipse.dirigible.p2.ide</groupId>
+	<artifactId>org.eclipse.dirigible.p2.ide.parent</artifactId>
+	<packaging>pom</packaging>
+	<url>http://www.dirigible.io</url>
+
+	<organization>
+		<name>SAP AG</name>
+		<url>http://www.sap.com</url>
+	</organization>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<pomDependencies>consider</pomDependencies>
+					<ignoreTychoRepositories>true</ignoreTychoRepositories>
+					<target>
+						<artifact>
+							<groupId>org.eclipse.dirigible.platform</groupId>
+							<artifactId>org.eclipse.dirigible.platform.target</artifactId>
+							<version>2.0.150424</version>
+							<classifier>org.eclipse.dirigible.platform.base</classifier>
+						</artifact>
+					</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<modules>
+		<module>ide.feature</module>
+		<module>ide.p2</module>
+	</modules>
+ 
+</project>

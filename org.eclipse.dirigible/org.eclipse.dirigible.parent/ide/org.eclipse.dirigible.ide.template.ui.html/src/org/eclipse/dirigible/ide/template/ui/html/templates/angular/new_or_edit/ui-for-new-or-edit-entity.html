@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>${pageTitle}</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular-resource.min.js"></script>
+</head>
+<body>
+	<div id="wrap" ng-controller="NewOrEditController">
+		<div class="container well">
+            <div ng-show="urlParameter">
+            	<div class="alert alert-danger" ng-show="errorMessage">
+                    <strong>Oh snap!</strong> {{errorMessage}}
+                </div>
+                <div class="alert alert-success" ng-show="successfullyUpdated">
+                    <strong>Well done!</strong> Entity successfully updated!
+                </div>
+                <div ng-show="exist">
+#foreach ($tableColumn in $tableColumns) 
+#if ($tableColumn.isKey())
+                    <label>${tableColumn.getName()}</label>
+                    <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}" readonly>
+                    <br>
+#else
+                    <label>${tableColumn.getName()}</label>
+                    <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}">
+                    <br>
+#end 
+#end                      
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="updateEntity()">Update</button>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="cancelUpdate()">Cancel</button>
+                    </div>
+                </div>
+                
+                <div ng-hide="exist">
+                    <div class="alert alert-warning">
+                        <strong>Warning!</strong>
+                        Entity with 
+#foreach ($tableColumn in $tableColumns) 
+#if ($tableColumn.isKey())
+						${tableColumn.getName()}
+#end
+#end
+                        = '{{urlParameter}}' does not exists!
+                        You can create it.
+                    </div>
+#foreach ($tableColumn in $tableColumns) 
+#if ($tableColumn.isKey())
+                    <label>${tableColumn.getName()}</label>
+                    <input type="text" class="form-control" value="Auto Generated" readonly>
+                    <br>
+#else
+                    <label>${tableColumn.getName()}</label>
+                    <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}">
+                    <br>
+#end 
+#end                    
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="saveEntity()">Save</button>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="cancelSave()">Cancel</button>
+                    </div>
+                </div>
+                
+            </div>
+            <div ng-hide="urlParameter">
+                <div class="alert alert-danger">
+            		<strong>Oh snap!</strong> Missing or invalid parameter! Valid parameter is <strong>'{{ primaryKey }}'</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+	function getURLParameter(name) { 
+		return decodeURIComponent((
+			new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)
+			|| [,""])[1].replace(/\+/g, '%20'))|| null; 
+        }
+        
+
+	function NewOrEditController($scope, $http) {
+		var url = '${serviceFileName}';
+#foreach ($tableColumn in $tableColumns) 
+#if ($tableColumn.isKey())
+  		$scope.primaryKey = '${tableColumn.getName()}';
+#end 
+#end                    
+		$scope.urlParameter = getURLParameter($scope.primaryKey);
+        $scope.exist = true;
+        $scope.errorMessage = null;
+        $scope.successfullyUpdated = false;
+                    
+        if($scope.urlParameter){
+        	var getUrl = url + '?' + $scope.primaryKey + '=' + $scope.urlParameter;
+
+        	$http.get(getUrl)
+        	.success(function(response){
+            	$scope.entity=response;    
+			}).error(function(response){
+            	$scope.exist = false;
+			});
+		}
+                    
+        $scope.saveEntity = function(){
+        	$http.post(url ,$scope.entity)
+        	.success(function(response){
+            	var documentURL = document.URL.toString();
+				documentURL = documentURL.substring(0, documentURL.lastIndexOf('=')+1);
+            	documentURL+=parseInt(response);
+                window.location = documentURL;
+                $scope.errorMessage = null;
+			}).error(function(response){
+            	$scope.errorMessage = response.err.message;
+			});
+		}
+                    
+        $scope.updateEntity = function(){
+        	$http.put(url, $scope.entity)
+        	.success(function (response){
+        		$scope.successfullyUpdated = true;
+                $scope.errorMessage = null;
+            }).error(function(response){
+                $scope.successfullyUpdated = false;
+                $scope.errorMessage = response.data.err.message;
+            });
+		}
+                    
+        $scope.cancelSave = function(){
+            $scope.entity = {};
+		}
+
+        $scope.cancelUpdate = function(){
+        	$scope.errorMessage = null;
+        	
+        	$http.get(getUrl)
+        	.success(function(response){
+				$scope.entity=response;    
+			}).error(function(response){
+            	$scope.exist = false;
+			});
+		}
+                    
+	}
+	</script>
+
+</body>
+</html>

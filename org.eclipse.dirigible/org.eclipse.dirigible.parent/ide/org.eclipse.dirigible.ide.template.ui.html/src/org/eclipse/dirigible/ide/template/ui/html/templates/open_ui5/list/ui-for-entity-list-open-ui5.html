@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script id="sap-ui-bootstrap" type="text/javascript"
+    src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_goldreflection"
+    data-sap-ui-libs="sap.ui.commons,sap.ui.ux3,sap.ui.table">
+</script>
+
+<script>
+
+    var spinnerLayout;
+    var dataTable;
+	var tableModel;
+	var wrapperPanel;
+	var wrapperPanelTitle;
+	var oMatrixInput;
+	
+	function main() {
+		createUIComponents();
+		layoutUIComponents();
+	}
+
+	function createUIComponents() {
+		createDataTable();
+		createWrapperPanel();
+		createSpinnerLayout();
+	}
+
+	function createSpinnerLayout() {
+		spinnerLayout = new sap.ui.commons.layout.MatrixLayout({
+			layoutFixed : true,
+			width : '300px',
+			columns : 2
+		});
+
+		createSpinnerRowAndAddItToSpinnerLayout();
+	}
+
+	function createSpinnerRowAndAddItToSpinnerLayout() {
+		var tableLoadingSpinner = new sap.ui.commons.Image();
+		tableLoadingSpinner.setSrc("img/spinner.gif");
+		tableLoadingSpinner.setAlt("Loading data...");
+
+		var oLabell = new sap.ui.commons.Label({
+			text : 'Loading data, please be patient...'
+		});
+		spinnerLayout.setWidths('28px', '200px');
+		spinnerLayout.createRow(tableLoadingSpinner, oLabell);
+	}
+
+	function createDataTable() {
+		dataTable = new sap.ui.table.DataTable();
+		dataTable.setEditable(false);
+		dataTable.setThreshold(30);
+		dataTable.setSelectionMode(sap.ui.table.SelectionMode.Single);
+		var columnNames =
+			[
+#foreach ($tableColumn in $tableColumns)
+#if ($tableColumn.isVisible())
+                [ "${tableColumn.getName()}", "${tableColumn.getName()}", "100px" ],
+#end
+#end 
+			];
+
+		for ( var ndx = 0; ndx < columnNames.length; ndx++) {
+			dataTable.addColumn(createDataTableTextColumn(columnNames[ndx]));
+		}
+        dataTable.attachRowSelect(rowSelected)
+		attachTableModel();
+	}
+
+	function createDataTableTextColumn(propertyNameArr) {
+		var control, column;
+		control = new sap.ui.commons.TextView().bindProperty("text", propertyNameArr[0]);
+
+		var column = new sap.ui.table.Column({
+			label : propertyNameArr[1],
+			template : control,
+			sortProperty : propertyNameArr[0],
+			filterProperty : propertyNameArr[0],
+			filterOperator : "sap.ui.model.FilterOperator.EQ"
+		});
+
+		if (propertyNameArr[2]) {
+			column.setWidth(propertyNameArr[2]);
+		}
+		return column;
+	}
+
+	function createWrapperPanel() {
+		wrapperPanel = new sap.ui.commons.Panel("mp");
+		wrapperPanel.setBorderDesign(sap.ui.commons.enums.BorderDesign.None);
+		wrapperPanel.setAreaDesign(sap.ui.commons.enums.AreaDesign.Plain);
+		wrapperPanel.setShowCollapseIcon(false);
+		wrapperPanel.addStyleClass("mainPanel");
+
+		wrapperPanelTitle = new sap.ui.commons.Title({
+			text : "${pageTitle}"
+		});
+		wrapperPanel.setTitle(wrapperPanelTitle);
+	}
+
+	function layoutUIComponents() {
+		wrapperPanel.addContent(dataTable);
+		wrapperPanel.addContent(oMatrixInput);
+		wrapperPanel.placeAt("panelArea");
+	}
+
+	function attachTableModel() {
+		${createDataModel}
+
+		tableModel.attachRequestCompleted(null, function() {
+			atModelChange();
+		}, null);
+
+		tableModel.attachRequestFailed(null, function() {
+			atModelChange();
+		}, null);
+
+		tableModel.attachParseError(null, function() {
+			atModelChange();
+		}, null);
+
+		tableModel.attachRequestSent(null, function() {
+			showSpinner(true);
+		}, null);
+
+		dataTable.setModel(tableModel);
+        dataTable.bindRows("/", null, null, null);
+	}
+
+	function atModelChange() {
+		showSpinner(false);
+	}
+
+	function showSpinner(showIt) {
+		spinnerLayout.removeAllRows();
+		if (showIt) {
+			createSpinnerRowAndAddItToSpinnerLayout();
+		}
+	}
+
+    function rowSelected(oControlEvent) {
+    	// TODO your custom action goes here
+    
+        //selectedEntityId = oControlEvent.getParameters().rowContext.sPath;
+        //var columnValueX = oControlEvent.getParameters().rowContext.getProperty(C_COLUMN_X);
+    }
+
+</script>
+
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="panelArea"></div>
+
+	<script>
+		main();
+	</script>
+
+</body>
+</html>

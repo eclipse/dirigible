@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="Dirigible External Dependencies" sequenceNumber="260">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rap.examples.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.rap.sdk.feature.feature.group" version="0.0.0"/>
+
+<unit id="org.eclipse.rap.equinox.target.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.rap.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.help.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/releases/luna/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.commons.io" version="2.2.0.v201405211200"/>
+<unit id="org.slf4j.impl.log4j12" version="1.7.2.v20131105-2200"/>
+<unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201411290715"/>
+<unit id="javax.activation" version="0.0.0"/>
+<unit id="javax.mail" version="0.0.0"/>
+<unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
+<unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
+<unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
+<unit id="org.apache.commons.net" version="3.2.0.v201305141515"/>
+<unit id="org.apache.commons.codec" version="1.6.0.v201305230611"/>
+<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+<unit id="com.google.gson" version="2.2.4.v201311231704"/>
+<unit id="org.apache.commons.fileupload" version="1.2.2.v20111214-1400"/>
+<unit id="javax.servlet" version="3.1.0.v201410161800"/>
+<unit id="org.apache.commons.collections" version="3.2.0.v2013030210310"/>
+<unit id="org.apache.commons.lang" version="2.6.0.v201404270220"/>
+<unit id="org.apache.derby" version="10.8.2.2_v201211210650"/>
+<unit id="org.mockito" version="1.9.5.v201311280930"/>
+<unit id="org.objenesis" version="1.0.0.v201105211943"/>
+<unit id="org.jdom" version="1.1.1.v201101151400"/>
+<unit id="org.apache.lucene.core" version="3.5.0.v20120725-1805"/>
+<unit id="org.apache.lucene.analysis" version="3.5.0.v20120725-1805"/>
+<unit id="org.apache.lucene.memory" version="3.5.0.v20120725-1805"/>
+<unit id="org.apache.lucene.highlighter" version="3.5.0.v20121015-1317"/>
+<unit id="org.apache.lucene.queries" version="3.5.0.v20120725-1805"/>
+<unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
+<unit id="org.mozilla.javascript" version="1.7.4.v201504221540"/>
+<unit id="org.quartz" version="1.8.3.v20110329-1420"/>
+<unit id="org.json" version="1.0.0.v201011060100"/>
+<unit id="org.apache.velocity" version="1.5.0.v200905192330"/>
+<unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
+<unit id="com.google.guava" version="15.0.0.v201403281430"/>
+<unit id="org.jsoup" version="1.7.2.v201411291515"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20150428165605/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.jgit.http.apache.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/egit/updates/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/mylyn/releases/latest"/>
+</location>
+</locations>
+<environment>
+<os>linux,macosx,win32</os>
+</environment>
+<launcherArgs>
+<vmArgs>-Dosgi.noShutdown=true -Declipse.ignoreApp=true</vmArgs>
+<programArgs>-console -consolelog</programArgs>
+</launcherArgs>
+</target>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+     <extension
+           id="JavaScriptServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/js"
+              class="org.eclipse.dirigible.runtime.js.JavaScriptServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="JavaScriptSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/js-secured"
+              class="org.eclipse.dirigible.runtime.js.JavaScriptSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="JavaScriptSandboxServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/js-sandbox"
+              class="org.eclipse.dirigible.runtime.js.JavaScriptSandboxServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CommandServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/command"
+              class="org.eclipse.dirigible.runtime.command.CommandServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CommandSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/command-secured"
+              class="org.eclipse.dirigible.runtime.command.CommandSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CommandSandboxServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/command-sandbox"
+              class="org.eclipse.dirigible.runtime.command.CommandSandboxServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="TestCasesServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/test"
+              class="org.eclipse.dirigible.runtime.js.TestCasesServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="TestCasesSandboxServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/test-sandbox"
+              class="org.eclipse.dirigible.runtime.js.TestCasesSandboxServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="RegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/registry"
+              class="org.eclipse.dirigible.runtime.registry.RegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="RegistryContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/content"
+              class="org.eclipse.dirigible.runtime.registry.RegistryContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="RepositoryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/repository"
+              class="org.eclipse.dirigible.runtime.registry.RepositoryServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+	 
+	 <extension
+           id="JavaScriptRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/registry-js"
+              class="org.eclipse.dirigible.runtime.registry.JavaScriptRegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="JavaScriptRegistryUiContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/scripting/javascript"
+              class="org.eclipse.dirigible.runtime.registry.JavaScriptRegistryUiContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CommandRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/registry-command"
+              class="org.eclipse.dirigible.runtime.registry.CommandRegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CommandRegistryUiContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/scripting/command"
+              class="org.eclipse.dirigible.runtime.registry.CommandRegistryUiContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="TestCasesRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/registry-tc"
+              class="org.eclipse.dirigible.runtime.registry.TestCasesRegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="TestCasesRegistryUiContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/scripting/tests"
+              class="org.eclipse.dirigible.runtime.registry.TestCasesRegistryUiContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+
+	 <extension
+           id="OperationalServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/op"
+              class="org.eclipse.dirigible.runtime.registry.OperationalServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="SearchServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/search"
+              class="org.eclipse.dirigible.runtime.search.SearchServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="JavaScriptDebugServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/js-debug"
+              class="org.eclipse.dirigible.runtime.js.debug.JavaScriptDebugServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+     
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/"
+              class="org.eclipse.dirigible.runtime.filter.SandboxFilter">
+        </filter>
+     </extension>
+        
+</plugin>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>${pageTitle}</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+<body>
+	<div id="wrap" ng-app ng-controller="ListAndDetailsController">
+		<div class="container">
+			<table class="table table-condensed table-striped table-hover">
+				<thead>
+					<tr>
+#foreach ($tableColumn in $tableColumns) 
+#if ($tableColumn.isVisible())
+						<th>${tableColumn.getName()}</th> 
+#end 
+#end
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="entry in data" ng-click="showInfoForEntry(entry)">
+#foreach ($tableColumn in $tableColumns) #if ($tableColumn.isVisible())
+						<td>{{entry.${tableColumn.getName()}}}</td> 
+#end
+#end
+					</tr>
+				</tbody>
+			</table>
+			<table class="table table-bordered" ng-show="showEntry">
+				<thead>
+					<tr>
+						<th>Attribute</th>
+						<th>Value</th>
+					</tr>
+				</thead>
+				<tbody ng-model="selectedEntry">
+#foreach ($tableColumn in $tableColumns)
+					<tr>
+						<td width="50%">${tableColumn.getName()}</td>
+						<td width="50%">{{selectedEntry.${tableColumn.getName()}}}</td>
+#end
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular-resource.min.js"></script>
+
+	<script type="text/javascript">
+		function ListAndDetailsController($scope, $http) {
+			
+			var url = '${serviceFileName}';
+
+			$http.get(url)
+			.success(function(data) {
+				$scope.data = data;
+			});
+
+			$scope.showEntry = false;
+			$scope.selectedEntry;
+
+			$scope.showInfoForEntry = function(entry) {
+				if ($scope.selectedEntry === entry) {
+					$scope.showEntry = false;
+					$scope.selectedEntry = null;
+				} else {
+					$scope.showEntry = true;
+					$scope.selectedEntry = entry;
+				}
+			}
+		}
+	</script>
+
+</body>
+</html>

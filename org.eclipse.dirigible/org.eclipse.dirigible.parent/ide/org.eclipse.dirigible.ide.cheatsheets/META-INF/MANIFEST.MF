@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dirigible Cheatsheets
+Bundle-SymbolicName: org.eclipse.dirigible.ide.cheatsheets;singleton:=true
+Bundle-Version: 2.0.150424
+Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.ui.cheatsheets;resolution:=optional,
+ org.eclipse.rap.ui.cheatsheets;resolution:=optional

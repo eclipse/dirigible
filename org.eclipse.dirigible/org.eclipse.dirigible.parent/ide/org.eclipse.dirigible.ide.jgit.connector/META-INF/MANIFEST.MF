@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dirigible - IDE - JGit
+Bundle-SymbolicName: org.eclipse.dirigible.ide.jgit.connector;singleton:=true
+Bundle-Version: 2.0.150424
+Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.jgit,
+ org.eclipse.dirigible.ide.workspace.ui,
+ org.eclipse.dirigible.repository.api,
+ org.eclipse.dirigible.ide.common,
+ org.eclipse.ui;resolution:=optional,
+ org.eclipse.rap.ui;resolution:=optional,
+ org.eclipse.core.runtime,
+ org.eclipse.core.expressions;bundle-version="3.4.500",
+ org.eclipse.dirigible.repository.ext,
+ org.apache.commons.io,
+ org.eclipse.dirigible.ide.workspace.rcp;resolution:=optional,
+ org.eclipse.dirigible.ide.workspace.rap;resolution:=optional,
+ org.eclipse.dirigible.ide.repository
+Import-Package: org.eclipse.dirigible.repository.logging,
+ org.eclipse.core.resources
+Export-Package: org.eclipse.dirigible.ide.jgit.utils,
+ org.eclipse.dirigible.ide.jgit.connector

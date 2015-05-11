@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Template Wizard for Security Constraints
+Bundle-SymbolicName: org.eclipse.dirigible.ide.template.ui.sc;singleton:=true
+Bundle-Version: 2.0.150424
+Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.ui;resolution:=optional,
+ org.eclipse.rap.ui;resolution:=optional,
+ org.eclipse.ui.ide;resolution:=optional,
+ org.eclipse.dirigible.org.eclipse.ui.ide;resolution:=optional,
+ org.eclipse.dirigible.ide.template.ui.common,
+ org.eclipse.dirigible.ide.datasource,
+ org.eclipse.dirigible.ide.common,
+ org.eclipse.dirigible.repository.api,
+ org.eclipse.core.runtime
+Import-Package: org.eclipse.dirigible.ide.common.io,
+ org.eclipse.dirigible.repository.logging,
+ org.eclipse.dirigible.ide.ui.common.validation,
+ org.eclipse.dirigible.ide.workspace.ui.commands,
+ org.eclipse.core.resources

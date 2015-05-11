@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.eclipse.dirigible.ide.registry.ui.RegistryPerspective"
+            icon="resources/registry.png"
+            id="registry"
+            name="Registry">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.eclipse.dirigible.ide.registry.ui.RegistryView"
+            icon="resources/registry.png"
+            id="org.eclipse.dirigible.ide.registry.ui.RegistryView"
+            name="Registry"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

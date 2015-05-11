@@ -1,0 +1,19 @@
+{
+  "tableName":"${fileNameNoExtension}",
+  "columns":
+    [
+#foreach ($columnDefinition in $columnDefinitions)
+#if ($velocityCount > 1)
+      ,
+#end
+      {
+        "name":"${columnDefinition.getName()}",
+        "type":"${columnDefinition.getType()}",
+        "length":"${columnDefinition.getLength()}",
+        "notNull":"${columnDefinition.isNotNull()}",
+        "primaryKey":"${columnDefinition.isPrimaryKey()}",
+        "defaultValue":"${columnDefinition.getDefaultValue()}"
+      }
+#end
+    ]
+}

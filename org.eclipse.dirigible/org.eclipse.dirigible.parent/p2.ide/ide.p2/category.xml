@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.dirigible.ide.feature" version="0.0.0">
+      <category name="dirigible-ide"/>
+   </feature>
+   <category-def name="dirigible-ide" label="Dirigible IDE Bundles"/>
+</site>

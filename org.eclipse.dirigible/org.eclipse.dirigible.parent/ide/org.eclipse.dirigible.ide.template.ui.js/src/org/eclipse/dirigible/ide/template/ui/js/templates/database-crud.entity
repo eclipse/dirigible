@@ -1,0 +1,5 @@
+{
+  "fileName":"${fileName}",
+  "tableName":"${tableName}",
+  "tableType":"${tableType}"
+}

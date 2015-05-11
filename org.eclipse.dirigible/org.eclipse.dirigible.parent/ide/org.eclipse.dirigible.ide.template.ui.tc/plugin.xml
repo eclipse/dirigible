@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.new?after=separator.custom">
+         <command
+               commandId="org.eclipse.dirigible.ide.template.ui.tc.command.TestCaseCommandHandler"
+               icon="icons/wizard_test-case.png"
+               label="Test Case"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.dirigible.ide.workspace.ui.view.Menu.new?after=separator.custom">
+         <command
+               commandId="org.eclipse.dirigible.ide.template.ui.tc.command.TestCaseCommandHandler"
+               icon="icons/wizard_test-case.png"
+               label="Test Case"
+               style="push">
+         </command>
+      </menuContribution>
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.tc.command.TestCaseCommandHandler"
+            id="org.eclipse.dirigible.ide.template.ui.tc.command.TestCaseCommandHandler"
+            name="Test Case">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.dirigible.ide.template.type">
+      <template
+            category="TestCases"
+            image="/icons/rest_service.png"
+            location="/org/eclipse/dirigible/ide/template/ui/tc/templates/rest-service.js"
+            text="Test RESTful Service">
+      </template>
+   </extension>
+   <extension
+       point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
+       <newMenuItem
+            text="Test Case"
+            toolTip="Test Case"
+            order="4"
+            imageBundle="org.eclipse.dirigible.ide.template.ui.tc"
+            imagePrefix="/icons/"
+            imageName="wizard_test-case.png"
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.tc.command.TestCaseCommandHandler">
+        </newMenuItem>
+ 	</extension>
+</plugin>

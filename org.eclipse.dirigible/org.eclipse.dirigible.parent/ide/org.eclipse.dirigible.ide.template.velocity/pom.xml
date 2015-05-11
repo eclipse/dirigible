@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<packaging>eclipse-plugin</packaging>
+
+	<parent>
+		<groupId>org.eclipse.dirigible.ide</groupId>
+		<artifactId>org.eclipse.dirigible.ide.parent</artifactId>
+		<version>2.0.150424</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>org.eclipse.dirigible.ide.template.velocity</artifactId>
+	
+	
+	<dependencies>
+	
+		<dependency>
+		    <groupId>org.apache.velocity</groupId>
+		    <artifactId>velocity</artifactId>
+		    <version>1.7</version>
+		    <type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	
+	</dependencies>
+	
+	
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<wtpversion>1.5</wtpversion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>src/main/webapp/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+
+					<execution>
+						<id>copy-dependencies-lib</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/lib</outputDirectory>
+						</configuration>
+					</execution>
+					 
+				</executions>
+			</plugin>
+			
+			
+		</plugins>
+		
+	</build>
+	
+	
+	
+</project>

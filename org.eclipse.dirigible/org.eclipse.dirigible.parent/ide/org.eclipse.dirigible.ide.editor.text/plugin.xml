@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.eclipse.dirigible.ide.editor.text.contentProviders" name="ContentProviders" schema="schema/org.eclipse.dirigible.ide.editor.text.contentProviders.exsd"/>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.dirigible.ide.editor.text.editor.TextEditor"
+            default="false"
+            extensions=""
+            icon="icons/icon-text.png"
+            id="org.eclipse.dirigible.ide.editor.text.editor.TextEditor"
+            name="Text Editor">
+      </editor>
+      <editor
+            class="org.eclipse.dirigible.ide.editor.text.editor.ReadOnlyEditor"
+            extensions=""
+            icon="icons/icon-text.png"
+            id="org.eclipse.dirigible.ide.editor.text.editor.ReadOnlyEditor"
+            name="Read Only Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.editor.text.command.TextEditorHandler"
+            id="org.eclipse.dirigible.ide.editor.text.command.TextEditorHandler"
+            name="Text Editor">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.eclipse.dirigible.ide.editor.text.command.TextEditorHandler"
+            icon="icons/icon-text.png">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.open_with?after=separator.custom">
+         <command
+               commandId="org.eclipse.dirigible.ide.editor.text.command.TextEditorHandler"
+               label="Text Editor"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.dirigible.ide.editor.text.contentProviders">
+      <provider
+            class="org.eclipse.dirigible.ide.editor.text.editor.DefaultContentProvider"
+            inputTypes="org.eclipse.ui.IEditorInput">
+      </provider>
+   </extension>
+
+</plugin>

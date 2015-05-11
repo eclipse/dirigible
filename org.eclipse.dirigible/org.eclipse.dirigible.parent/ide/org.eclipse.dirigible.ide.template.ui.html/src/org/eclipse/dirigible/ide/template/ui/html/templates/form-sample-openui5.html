@@ -1,0 +1,240 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Sample Form</title>
+		
+		<script id="sap-ui-bootstrap"
+				type="text/javascript"
+				src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+				data-sap-ui-theme="sap_goldreflection"
+				data-sap-ui-libs="sap.ui.commons, sap.ui.ux3">
+		</script>
+		
+		<style>
+			.formPanel{
+				margin:30px;
+			}
+			.submitButton{
+				margin-top:10px;
+			}
+		</style>
+		
+		<script>
+			 		
+ 		//The function creates a form, using sap ui5 controls 
+ 		function main(){
+ 			// alias for convenience
+ 	 		var c = sap.ui.commons;
+ 			
+ 	 		var oLabel;
+ 	 		var oTextField;
+ 	 		var oItem;
+ 	 		
+	 		//Heading
+	    	var oTextView = new sap.ui.commons.TextView(
+	    		{
+					text : 'Application Form',
+					tooltip : 'This is tooltip',
+					width : '500px',
+					textAlign : sap.ui.core.TextAlign.Center,
+					semanticColor: sap.ui.commons.TextViewColor.Default,
+					design: sap.ui.commons.TextViewDesign.H1
+				}
+	    	);
+			oTextView.placeAt("heading");
+	    
+	    	// Form panel
+	    	var formPanel = new sap.ui.commons.Panel(
+	    			{
+	    				text: "Personal Data",
+	    				width: "420px"
+	    			}
+	    	);
+	    	formPanel.addStyleClass("formPanel");
+	    
+	    
+	    	// Matrix layout for the panel
+	    	var formLayout = new c.layout.MatrixLayout(
+	    		{
+	    			width: "400px",
+	    			widths: [ "80px", "300px" ],
+	    			layoutFixed: false
+	    		}
+	    	);
+	    
+	    	// Label and text field controls
+	        oLabel = createLabel("FirstName");
+		    oTextField = createTextField("100%");
+		    oTextField.addStyleClass("formElement");
+			oLabel.setLabelFor(oTextField);
+			formLayout.createRow(oLabel, oTextField);
+			
+			// Label and text field controls
+			oLabel = createLabel("Last name");
+			oTextField = createTextField("100%");
+			oTextField.addStyleClass("formElement");
+			oLabel.setLabelFor(oTextField);
+			formLayout.createRow(oLabel, oTextField);
+	    
+			// Label and password field controls
+	    	oLabel = createLabel("Password");
+			var oPassField = new sap.ui.commons.PasswordField(
+					{
+						width:"100%"
+					}
+			);
+			oPassField.addStyleClass("formElement");
+			oLabel.setLabelFor(oPassField);
+			formLayout.createRow(oLabel, oPassField);
+	    
+	    	// Label and dropdown controls
+	    	oLabel = createLabel("Gender");
+	    	var oDropdownBox = new sap.ui.commons.DropdownBox(
+	    			{
+	    				width: "30%",
+	    				tooltip: "Pick your gender"
+	    			}
+	    	);
+	    	oDropdownBox.addStyleClass("formElement");
+			oLabel.setLabelFor(oDropdownBox);
+			
+			oItem = createListItem("GenderMale","Male");
+			oDropdownBox.addItem(oItem);
+			
+		    oItem = createListItem("GenderFemale","Female");
+			oDropdownBox.addItem(oItem);
+			
+			oItem = createListItem("GenderBot","Robot");
+			oDropdownBox.addItem(oItem);
+			formLayout.createRow(oLabel, oDropdownBox);
+			
+			//Label and multiselect list box
+			oLabel = createLabel("Hobbies");
+			var oListBox = new sap.ui.commons.ListBox(
+					{
+	       				items : [
+	                   		new sap.ui.core.ListItem({text : 'Shopping'}),
+	                   		new sap.ui.core.ListItem({text : 'Swimming'}),
+	                   		new sap.ui.core.ListItem({text : 'Sleeping'}),
+	                   		new sap.ui.core.ListItem({text : 'Eating'})
+	  						],
+	  				allowMultiSelect: true
+	  				}
+			);
+			oLabel.setLabelFor(oListBox);
+	  		formLayout.createRow(oLabel, oListBox);
+	  	
+		  	// Label and radio button controls
+		    oLabel = createLabel("Status");
+		  	var oRadioGroup = new sap.ui.commons.RadioButtonGroup(
+		  			{
+	        			tooltip : "Your status",
+	        			columns : 2,
+	        			editable : true
+	        		}
+		  	);
+		  	oLabel.setLabelFor(oRadioGroup);
+		  	
+			var oItem = new sap.ui.core.Item(
+					{
+	        			text : "Married",
+	        			tooltip : "You are married",
+	        			key : "Mar"
+	        		}
+			);
+			oRadioGroup.addItem(oItem);
+			
+			oItem = new sap.ui.core.Item(
+					{
+	        			text : "Single",
+	        			tooltip : "You are single",
+	        			key : "Sin"
+	        		}
+			);
+			oRadioGroup.addItem(oItem);
+			formLayout.createRow(oLabel, oRadioGroup);
+			
+			
+			// Checkbox control
+			var oCheckBox = new sap.ui.commons.CheckBox(
+					{
+							text : 'it\'s complicated',
+							tooltip : 'Complicated',
+							change : function() {
+									oRadioGroup.setEditable(!oCheckBox.getChecked());
+						    }
+					}
+			);
+			formLayout.createRow(createLabel(""), oCheckBox);
+	    
+	    
+	    	// label and text area
+	        oLabel = createLabel("Comments");
+	    	var oTextArea = new sap.ui.commons.TextArea(
+	    			{
+	    				width: "100%",
+	    				tooltip: "Please be nice",
+	    				rows: 3
+	    			}
+	    	);
+			oLabel.setLabelFor(oTextArea);
+			formLayout.createRow(oLabel, oTextArea);
+	
+			var oButton = new sap.ui.commons.Button({
+		        text : "Send",
+		        tooltip : "Safe to click, nothing will happen",
+		        press : function() {alert('You clicked the Send button');}
+			});
+			oButton.addStyleClass("submitButton");
+			formLayout.createRow(createLabel(""), oButton);
+				
+			formPanel.addContent(formLayout);
+	    	formPanel.placeAt('form');
+	    
+	    	// Register event handler for the ENTER key
+	    	formLayout.attachBrowserEvent("keydown", function(evt){
+	        												if (evt.which == 13) {  // ENTER key
+	            											alert("ENTER was pressed");
+	        								}
+	    		}
+	    	);
+ 		}
+ 		
+ 		//The function creates a Label control, by passing label text as a param
+ 		function createLabel(text){
+ 			return new sap.ui.commons.Label(
+					{
+						text: text
+					}
+			);
+ 		}
+ 		
+		//The function creates a TextField control, by passing width as a param
+ 		function createTextField(width){
+	 		return new sap.ui.commons.TextField(
+					{
+						width:width
+					}
+			);
+ 		}
+ 		
+ 		//The function creates a ListItem control, by passing id and text as params
+ 		function createListItem(id, text){
+ 			return new sap.ui.core.ListItem({
+ 				id: id,
+ 				text: text
+ 			});
+ 		}
+		</script>
+		
+	</head>
+	<body class="sapUiBody" role="application">
+		<div id="heading"></div>
+		<div id="form"></div>
+		<script>
+			main();
+		</script>
+	</body>
+</html>

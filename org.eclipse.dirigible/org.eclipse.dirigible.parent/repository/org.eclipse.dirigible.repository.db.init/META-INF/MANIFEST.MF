@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Export-Package: org.eclipse.dirigible.repository.db.init
+Bundle-ActivationPolicy: lazy
+Bundle-Name: Dirigible Repository RDBMS Initialization
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: SAP
+Build-Jdk: 1.6.0_33
+Bundle-Version: 2.0.150424
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.dirigible.repository.db.init;singleton:=true
+Require-Bundle: org.eclipse.dirigible.repository.api,
+ org.apache.commons.io,
+ org.eclipse.dirigible.repository.ext
+Import-Package: org.eclipse.dirigible.repository.logging
+

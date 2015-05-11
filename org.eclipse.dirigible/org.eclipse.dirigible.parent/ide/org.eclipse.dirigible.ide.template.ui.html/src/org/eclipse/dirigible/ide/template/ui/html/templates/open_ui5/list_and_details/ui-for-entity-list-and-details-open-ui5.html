@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script id="sap-ui-bootstrap" type="text/javascript"
+	src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+	data-sap-ui-theme="sap_goldreflection"
+	data-sap-ui-libs="sap.ui.commons,sap.ui.ux3,sap.ui.table">
+</script>
+
+<script>
+Number.prototype.formatMoney = function(c, d, t){
+    var n = this, 
+    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+    d = d == undefined ? "." : d, 
+    t = t == undefined ? "," : t, 
+    s = n < 0 ? "-" : "", 
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+    var spinnerLayout;
+    var table;
+	var tableModel;
+	var wrapperPanel;
+	var wrapperPanelTitle;
+	var oMatrixInput;
+	var detailsPanel;
+	var detailsModel;
+	var dates = [];
+	
+	function main() {
+		createUIComponents();
+		layoutUIComponents();
+	}
+
+	function createUIComponents() {
+		createTable();
+		createWrapperPanel();
+		createSpinnerLayout();
+		createDetailsPanel();
+	}
+
+	function createTable() {
+		table = new sap.ui.table.Table();
+		table.setEditable(false);
+		table.setThreshold(30);
+		table.setSelectionMode(sap.ui.table.SelectionMode.Single);
+		table.setSelectionBehavior(sap.ui.table.SelectionBehavior.Row);
+		var columnNames =
+			[
+#foreach ($tableColumn in $tableColumns)
+#if ($tableColumn.isVisible())
+                [ "${tableColumn.getName()}", "${tableColumn.getName()}", "100px" ],
+#end
+#end 
+   			];
+
+		for ( var ndx = 0; ndx < columnNames.length; ndx++) {
+			table.addColumn(createTableTextColumn(columnNames[ndx]));
+		}
+		table.attachRowSelectionChange(rowSelected)
+		attachTableModel();
+	}
+	
+    function rowSelected(event) {
+        var rowContext = event.getParameter("rowContext");
+        var data = tableModel.getProperty(null, rowContext);
+        for(var i = 0; i < dates.length; i++){
+            data[dates[i][0]] = new Date(data[dates[i][0]]);
+        }
+        detailsModel.setData(data);
+    }
+    
+	function createTableTextColumn(propertyNameArr) {
+		var control, column;
+		control = new sap.ui.commons.TextView().bindProperty("text", propertyNameArr[0]);
+
+		var column = new sap.ui.table.Column({
+			label : propertyNameArr[1],
+			template : control,
+			sortProperty : propertyNameArr[0],
+			filterProperty : propertyNameArr[0],
+			filterOperator : "sap.ui.model.FilterOperator.EQ"
+		});
+
+		if (propertyNameArr[2]) {
+			column.setWidth(propertyNameArr[2]);
+		}
+		return column;
+	}
+	
+	function attachTableModel() {
+		${createDataModel}
+
+		tableModel.attachRequestCompleted(null, function() {
+			atModelChange();
+		}, null);
+
+		tableModel.attachRequestFailed(null, function() {
+			atModelChange();
+		}, null);
+
+		tableModel.attachParseError(null, function() {
+			atModelChange();
+		}, null);
+
+		tableModel.attachRequestSent(null, function() {
+			showSpinner(true);
+		}, null);
+
+		table.setModel(tableModel);
+        table.bindRows("/", null, null, null);
+	}
+
+	function atModelChange() {
+		showSpinner(false);
+	}
+
+	function showSpinner(showIt) {
+		spinnerLayout.removeAllRows();
+		if (showIt) {
+			createSpinnerRowAndAddItToSpinnerLayout();
+		}
+	}
+
+	function createWrapperPanel() {
+		wrapperPanel = new sap.ui.commons.Panel("mp");
+		wrapperPanel.setBorderDesign(sap.ui.commons.enums.BorderDesign.None);
+		wrapperPanel.setAreaDesign(sap.ui.commons.enums.AreaDesign.Plain);
+		wrapperPanel.setShowCollapseIcon(false);
+		wrapperPanel.addStyleClass("mainPanel");
+
+		wrapperPanelTitle = new sap.ui.commons.Title({
+			text : "${pageTitle}"
+		});
+		wrapperPanel.setTitle(wrapperPanelTitle);
+	}
+
+	function createSpinnerLayout() {
+		spinnerLayout = new sap.ui.commons.layout.MatrixLayout({
+			layoutFixed : true,
+			width : '300px',
+			columns : 2
+		});
+
+		createSpinnerRowAndAddItToSpinnerLayout();
+	}
+
+	function createSpinnerRowAndAddItToSpinnerLayout() {
+		var tableLoadingSpinner = new sap.ui.commons.Image();
+		tableLoadingSpinner.setSrc("img/spinner.gif");
+		tableLoadingSpinner.setAlt("Loading data...");
+
+		var oLabell = createLabel("Loading data, please be patient...");
+		spinnerLayout.setWidths('28px', '200px');
+		spinnerLayout.createRow(tableLoadingSpinner, oLabell);
+	}
+	
+	function createDetailsPanel(){
+		var entity = [
+#foreach ($tableColumn in $tableColumns)
+			["${tableColumn.getName()}", "/${tableColumn.getName()}", "${tableColumn.getType()}", "${tableColumn.getSize()}"],
+#end
+		];
+		var detailsMatrix = new sap.ui.commons.layout.MatrixLayout({
+                widths: ["20%","80%"]
+        });
+       
+        for(i = 0; i < entity.length; i++){
+        	if(entity[i][2] === "DATE"){
+                dates.push([entity[i][0], entity[i][1]]);
+            }
+            detailsMatrix.addRow(createRow(entity[i]));
+        }
+        detailsModel = new sap.ui.model.json.JSONModel(); 
+        detailsMatrix.setModel(detailsModel);
+        detailsPanel = new sap.ui.commons.Panel({
+            width: "100%",
+            text: "Details", 
+            areaDesign: sap.ui.commons.enums.AreaDesign.Plain,
+            showCollapseIcon: false,
+            content : [detailsMatrix]
+        });
+	}
+    
+    function createLabel(text){
+    	var label = new sap.ui.commons.Label();
+    	label.setText(text);
+    	
+    	return label;
+    }
+    
+    function createTextField(value, editable, textAlign, number, integer){
+        if(editable === null || editable === undefined){
+            editable = true;
+        }
+        if(textAlign === null || textAlign === undefined){
+        	textAlign: sap.ui.core.TextAlign.Left
+        }
+        var textField = new sap.ui.commons.TextField();
+        textField.bindValue(value, function(result){
+            if(number && result !== undefined){
+                if(integer){
+                    result = result.formatMoney(0, ".", " ");                
+                }else{
+                    result = result.formatMoney(2, ".", " ");
+                }
+            }
+            return result;
+        });
+        textField.setEditable(editable);
+        textField.setTextAlign(textAlign);
+        
+        return textField;
+    }
+    
+    function createTextArea(value, editable){
+    	if(editable === null || editable === undefined){
+            editable = true;
+        }
+    	
+    	var textArea = new sap.ui.commons.TextArea();
+    	textArea.setWidth("100%");
+    	textArea.bindValue(value);
+    	textArea.setRows(1);
+    	textArea.setEditable(editable);
+    	
+    	return textArea;
+    }
+    
+    function createCheckBox(checked, editable){
+        if(editable === null || editable === undefined){
+            editable = true;
+        }
+        
+        var checkBox = new sap.ui.commons.CheckBox();
+        checkBox.setChecked(checked);
+        checkBox.setEditable(editable);
+    }
+    
+    function createDatePicker(value, editable){
+        if(editable === null || editable === undefined){
+            editable = true;
+        }
+        
+        var datePicker = new sap.ui.commons.DatePicker();
+        datePicker.bindValue(value);
+        datePicker.setEditable(editable);
+        
+        return datePicker;
+    }
+
+    function createRow(row){
+        var nextRow = new sap.ui.commons.layout.MatrixLayoutRow();
+        
+        var labelCell = new sap.ui.commons.layout.MatrixLayoutCell();
+        labelCell.addContent(createLabel(row[0]));
+        
+        var controllerCell = new sap.ui.commons.layout.MatrixLayoutCell();
+        if(row[2] === "BOOLEAN"){
+            controllerCell.addContent(createCheckBox(row[1], false));
+        } else if(row[2] === "DATE") {
+            var datePicker = createDatePicker(row[1], false);
+            controllerCell.addContent(datePicker);
+        } else if(row[2] === "VARCHAR") {
+            if(row[3] <= 20){
+                controllerCell.addContent(createTextField(row[1], false));                
+            }else{
+                controllerCell.addContent(createTextArea(row[1], false));
+            }
+        } else if(row[2] === "INTEGER") {
+                controllerCell.addContent(createTextField(row[1], false, sap.ui.core.TextAlign.Right, true, true));
+        } else if(row[2] === "DOUBLE" || row[2] === "FLOAT"){
+                controllerCell.addContent(createTextField(row[1], false, sap.ui.core.TextAlign.Right, true, false));
+        }else{
+                controllerCell.addContent(createTextField(row[1], false));
+        }
+        
+        nextRow.addCell(labelCell);
+        nextRow.addCell(controllerCell);
+        return nextRow;
+    }
+    
+	function layoutUIComponents() {
+		wrapperPanel.addContent(table);
+		wrapperPanel.addContent(oMatrixInput);
+		wrapperPanel.addContent(detailsPanel);
+		wrapperPanel.placeAt("panelArea");
+	}
+
+</script>
+
+</head>
+
+<body class="sapUiBody" role="application">
+	<div id="panelArea"></div>
+
+	<script>
+		main();
+	</script>
+
+</body>
+</html>

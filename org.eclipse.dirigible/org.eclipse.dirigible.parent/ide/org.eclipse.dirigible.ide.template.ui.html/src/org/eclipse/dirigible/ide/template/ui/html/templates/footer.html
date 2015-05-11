@@ -1,0 +1,47 @@
+
+		</div>
+	  </div>
+	 
+	  
+    </div>
+
+    <div id="footer" style="position: fixed; bottom: 0; width: 100%; background-color: #f5f5f5;">
+      <div class="container">
+        <p class="text-muted credit">Copyright &copy; Your copyright</p>
+      </div>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<script>
+		  $( document ).ready(function() {
+              
+		    $\.getJSON("main.menu", function(data) {
+				$\.each(data, function(i, item) {
+					var itemContent = "";
+					if (item.subMenu.length > 0) {
+						itemContent += "<li class=\"dropdown\"><a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" + item.name + " <b class=\"caret\"></b></a>";
+						itemContent += "<ul class=\"dropdown-menu\">";
+						$\.each(item.subMenu, function(j, subitem) {
+							itemContent += "<li><a href=\"" + subitem.link + "\" >" + subitem.name + "</a></li>";
+						});
+						itemContent += "</ul>";
+					} else {
+						itemContent += "<li><a href=\"" + item.link + "\" >" + item.name + "</a>";
+					}
+					itemContent += "</li>"
+					$("#main-menu").append(itemContent);
+				});
+				
+			});
+
+		  });
+		  		  
+	</script>
+  </body>
+</html>

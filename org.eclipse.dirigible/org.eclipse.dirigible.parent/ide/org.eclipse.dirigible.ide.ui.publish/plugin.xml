@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.dirigible.ide.publish.publisher">
+      <publisher
+            class="org.eclipse.dirigible.ide.ui.publish.UiPublisher"
+            id="org.eclipse.dirigible.ide.ui.publish.UiPublisher">
+      </publisher>
+      <publisher
+            class="org.eclipse.dirigible.ide.ui.publish.WikiPublisher"
+            id="org.eclipse.dirigible.ide.ui.publish.WikiPublisher">
+      </publisher>
+   </extension>
+
+</plugin>

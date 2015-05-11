@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dirigible IDE - Common
+Bundle-SymbolicName: org.eclipse.dirigible.ide.common
+Bundle-Version: 2.0.150424
+Bundle-Vendor: SAP
+Export-Package: org.eclipse.dirigible.ide.common,
+ org.eclipse.dirigible.ide.common.image,
+ org.eclipse.dirigible.ide.common.io,
+ org.eclipse.dirigible.ide.common.status
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.ui;resolution:=optional,
+ org.eclipse.rap.ui;resolution:=optional,
+ org.eclipse.core.runtime;resolution:=optional,
+ org.apache.httpcomponents.httpclient,
+ org.apache.httpcomponents.httpcore,
+ org.eclipse.dirigible.repository.logging,
+ org.eclipse.dirigible.repository.api,
+ org.eclipse.dirigible.ide.common.rap;resolution:=optional,
+ org.eclipse.dirigible.ide.common.rcp;resolution:=optional
+Import-Package: javax.servlet,
+ javax.servlet.http,
+ org.eclipse.core.runtime,
+ org.eclipse.jface.action,
+ org.eclipse.jface.dialogs,
+ org.eclipse.jface.resource

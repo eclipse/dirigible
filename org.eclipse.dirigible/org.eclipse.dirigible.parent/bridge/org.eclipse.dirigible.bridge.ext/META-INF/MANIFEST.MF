@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dirigible IDE - Bridge Servlet Extension
+Bundle-SymbolicName: org.eclipse.dirigible.bridge.ext
+Bundle-Version: 2.0.150424
+Bundle-Vendor: SAP
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.equinox.servletbridge,
+ org.apache.commons.lang
+Import-Package: javax.mail,
+ javax.mail.event,
+ javax.mail.internet,
+ javax.mail.search,
+ javax.mail.util,
+ javax.servlet,
+ javax.servlet.annotation,
+ javax.servlet.descriptor,
+ javax.servlet.http,
+ javax.servlet.resources,
+ org.slf4j

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>${pageTitle}</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular-resource.min.js"></script>
+</head>
+<body>
+	<div id="wrap" ng-controller="DisplayController">
+		<div class="container well">
+            <div ng-show="urlParameter">
+                <div ng-show="exist">
+#foreach ($tableColumn in $tableColumns) 
+                    <label>${tableColumn.getName()}</label>
+                    <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}" readonly>
+                    <br>
+#end 
+                </div>
+                
+                <div ng-hide="exist">
+                    <div class="alert alert-warning">
+                        <strong>Warning!</strong>
+                        Entity with 
+#foreach ($tableColumn in $tableColumns) 
+#if ($tableColumn.isKey())
+						${tableColumn.getName()}
+#end
+#end
+                        = '{{urlParameter}}' does not exists!
+                    </div>
+                </div>
+                
+            </div>
+            <div ng-hide="urlParameter">
+                <div class="alert alert-danger">
+            		<strong>Oh snap!</strong> Missing or invalid parameter! Valid parameter is <strong>'{{ primaryKey }}'</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+	function getURLParameter(name) { 
+    	return decodeURIComponent((
+        	new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)
+            || [,""])[1].replace(/\+/g, '%20'))|| null; 
+	}
+        
+    function DisplayController ($scope, $http) {
+		var url = '${serviceFileName}';
+#foreach ($tableColumn in $tableColumns) 
+#if ($tableColumn.isKey())
+		$scope.primaryKey = '${tableColumn.getName()}';
+#end 
+#end                    
+		$scope.urlParameter = getURLParameter($scope.primaryKey);
+		$scope.exist = true;
+                    
+		if($scope.urlParameter) {
+        	var getUrl = url + '?' + $scope.primaryKey + '=' + $scope.urlParameter;
+			
+        	$http.get(getUrl)
+            .success(function(response) {
+            	$scope.entity=response;    
+			}).error(function(response) {
+				$scope.exist = false;
+			})
+		}
+	}
+	</script>
+
+</body>
+</html>

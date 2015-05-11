@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.eclipse.dirigible.lib.feature" version="0.0.0">
+      <category name="dirigible-lib"/>
+   </feature>
+   <category-def name="dirigible-lib" label="Dirigible WAR Lib Bundles"/>
+</site>

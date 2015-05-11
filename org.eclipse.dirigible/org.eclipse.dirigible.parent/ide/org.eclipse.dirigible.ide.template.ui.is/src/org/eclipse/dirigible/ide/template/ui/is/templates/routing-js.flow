@@ -1,0 +1,43 @@
+{  
+   "name":"${id}",
+   "properties":{
+      "myKey2":"myValue2",
+      "myKey1":"myValue1"
+   },
+   "steps":[  
+      {  
+         "type":"condition",
+         "name":"1",
+         "cases":[  
+            {  
+               "key":"name",
+               "value":"Joe",
+               "flow":{
+                  "name":"WelcomeJoe",
+                  "steps":[  
+                     {  
+                     	"name":"4",
+                        "type":"output",
+                        "message":"Welcome Joe"
+                     }
+                  ]
+               }
+            },
+            {  
+               "key":"name",
+               "value":"null",
+               "flow":{  
+			      "name":"NoName",
+                  "steps":[  
+                     {  
+                     	"name":"5",
+                        "type":"output",
+                        "message":"Add to the request URL '?name=Joe'"
+                     }
+                  ]
+               }
+            }
+         ]
+      }
+   ]
+}

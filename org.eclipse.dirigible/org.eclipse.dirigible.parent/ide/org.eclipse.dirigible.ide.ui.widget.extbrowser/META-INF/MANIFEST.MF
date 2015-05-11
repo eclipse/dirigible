@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dirigible IDE - Extended Browser UI
+Bundle-SymbolicName: org.eclipse.dirigible.ide.ui.widget.extbrowser
+Bundle-Version: 2.0.150424
+Bundle-Vendor: SAP
+Export-Package: org.eclipse.dirigible.ide.ui.widget.extbrowser
+Require-Bundle: org.eclipse.ui;resolution:=optional,
+ org.eclipse.rap.ui;resolution:=optional
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

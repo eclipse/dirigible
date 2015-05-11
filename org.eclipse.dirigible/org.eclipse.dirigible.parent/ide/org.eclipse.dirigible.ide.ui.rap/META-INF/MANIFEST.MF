@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dirigible IDE - RAP
+Bundle-SymbolicName: org.eclipse.dirigible.ide.ui.rap;singleton:=true
+Bundle-Version: 2.0.150424
+Bundle-Vendor: Eclipse.org - Dirigible
+Require-Bundle: org.eclipse.rap.ui,
+ org.eclipse.dirigible.repository.api,
+ org.eclipse.dirigible.repository.logging,
+ org.eclipse.dirigible.ide.common
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.dirigible.ide.ui.rap.entry
+Import-Package: javax.servlet,
+ javax.servlet.http
