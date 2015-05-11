@@ -1,11 +1,11 @@
 # dirigible 
 
-[![Build Status](https://travis-ci.org/SAP/cloud-dirigible.svg)](https://travis-ci.org/SAP/cloud-dirigible)
+[![Build Status](https://travis-ci.org/eclipse/dirigible.svg)](https://travis-ci.org/eclipse/dirigible)
 
 **Dirigible** is an Integrated Development Environment as a Service (IDEaaS) for dynamic applications. It provides both development tools and runtime environment.
 
 <p align="center">
-  <img src="https://github.com/SAP/cloud-dirigible/blob/master/logo/dirigible-logo-symbol.png" width="60%" alt="dirigible logo"/>
+  <img src="https://github.com/eclipse/dirigible/blob/master/logo/dirigible-logo-symbol.png" width="60%" alt="dirigible logo"/>
 </p>
 
 > Enjoy Programming Like Never Before
@@ -58,7 +58,7 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
 ##### Steps
 
-1. Clone the [project repository](https://github.com/SAP/cloud-dirigible.git) or [download the latest release](https://github.com/SAP/dirigible/archive/master.zip).
+1. Clone the [project repository](https://github.com/eclipse/dirigible.git) or [download the latest release](https://github.com/eclipse/dirigible/archive/master.zip).
 2. Go to the `org.eclipse.dirigible/org.eclipse.dirigible.parent` folder.
 3. Build the project via
 
