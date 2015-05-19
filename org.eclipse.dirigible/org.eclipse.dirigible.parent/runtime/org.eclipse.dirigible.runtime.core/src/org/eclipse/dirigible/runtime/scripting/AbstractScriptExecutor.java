@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
@@ -32,10 +33,10 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.lucene.document.Document;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IEntity;
@@ -48,10 +49,11 @@ import org.eclipse.dirigible.runtime.RuntimeActivator;
 import org.eclipse.dirigible.runtime.mail.MailSender;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ConnectivityConfigurationUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.FileStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
-import org.eclipse.dirigible.runtime.scripting.utils.IndexerUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.IndexingService;
 import org.eclipse.dirigible.runtime.scripting.utils.StorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
@@ -91,87 +93,159 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 			HttpServletResponse response, Object input, Map<Object, Object> executionContext,
 			IRepository repository, Object scope) {
 		
+		InjectedAPIWrapper api = new InjectedAPIWrapper();
+		
 		if (executionContext == null) {
 			// in case executionContext is not provided from outside
 			executionContext = new HashMap<Object, Object>();
 		}
 		
+		// Objects
+		
 		// put the execution context
-		registerDefaultVariable(scope, "context", executionContext); //$NON-NLS-1$
+		registerDefaultVariable(scope, IInjectedAPIAliases.EXECUTION_CONTEXT, executionContext); //$NON-NLS-1$
+		api.setExecutionContext(executionContext);
+		
 		// put the system out
-		registerDefaultVariableInContextAndScope(executionContext, scope, "out", System.out); //$NON-NLS-1$
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.SYSTEM_OUTPUT, System.out); //$NON-NLS-1$
+		api.setSystemOutput(System.out);
+		
 		// put the default data source
 		DataSource dataSource = null;
-//		if (repository instanceof DBRepository) {
-//			dataSource = ((DBRepository) repository).getDataSource();
-//		} else {
-			dataSource = RepositoryFacade.getInstance().getDataSource();
-//		}
-		registerDefaultVariableInContextAndScope(executionContext, scope, "datasource", dataSource); //$NON-NLS-1$
+		dataSource = RepositoryFacade.getInstance().getDataSource();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DEFAULT_DATASOURCE, dataSource); //$NON-NLS-1$
+		api.setDatasource(dataSource);
+		
 		// put request
-		registerDefaultVariableInContextAndScope(executionContext, scope, "request", request); //$NON-NLS-1$
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_REQUEST, request); //$NON-NLS-1$
+		api.setRequest(request);
+		if (request != null) {
+
+			// put session
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_SESSION, request.getSession()); //$NON-NLS-1$
+			api.setSession(request.getSession());
+		}
+		
 		// put response
-		registerDefaultVariableInContextAndScope(executionContext, scope, "response", response); //$NON-NLS-1$
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_RESPONSE, response); //$NON-NLS-1$
+		api.setResponse(response);
+		
 		// put repository
-		registerDefaultVariableInContextAndScope(executionContext, scope, "repository", repository); //$NON-NLS-1$
-		// put mail sender
-		MailSender mailSender = new MailSender();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "mail", mailSender); //$NON-NLS-1$
-		// put Apache Commons IOUtils
-		IOUtils ioUtils = new IOUtils();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "io", ioUtils); //$NON-NLS-1$
-		// put Apache Commons HttpClient and related classes wrapped with a
-		// factory like HttpUtils
-		HttpUtils httpUtils = new HttpUtils();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "http", httpUtils); //$NON-NLS-1$
-		// put Apache Commons Codecs
-		Base64 base64Codec = new Base64();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "base64", base64Codec); //$NON-NLS-1$
-		Hex hexCodec = new Hex();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "hex", hexCodec); //$NON-NLS-1$
-		DigestUtils digestUtils = new DigestUtils();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "digest", digestUtils); //$NON-NLS-1$
-		// standard URLEncoder and URLDecoder functionality
-		URLUtils urlUtils = new URLUtils();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "url", urlUtils); //$NON-NLS-1$
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.REPOSITORY, repository); //$NON-NLS-1$
+		api.setRepository(repository);
+		
 		// user name
-		registerDefaultVariableInContextAndScope(executionContext, scope, "user", RepositoryFacade.getUser(request)); //$NON-NLS-1$
-		// file upload
-		ServletFileUpload fileUpload = new ServletFileUpload(new DiskFileItemFactory());
-		registerDefaultVariableInContextAndScope(executionContext, scope, "upload", fileUpload); //$NON-NLS-1$
-		// UUID
-		UUID uuid = new UUID(0, 0);
-		registerDefaultVariableInContextAndScope(executionContext, scope, "uuid", uuid); //$NON-NLS-1$
+		String userName = RepositoryFacade.getUser(request);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.USER, userName); //$NON-NLS-1$
+		api.setUserName(userName);
+		
 		// the input from the execution chain if any
-		registerDefaultVariableInContextAndScope(executionContext, scope, "input", input); //$NON-NLS-1$
-		// DbUtils
-		DbUtils dbUtils = new DbUtils(dataSource);
-		registerDefaultVariableInContextAndScope(executionContext, scope, "db", dbUtils); //$NON-NLS-1$
-		// EscapeUtils
-		StringEscapeUtils stringEscapeUtils = new StringEscapeUtils();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "xss", stringEscapeUtils); //$NON-NLS-1$
-		// Extension Manager
-		ExtensionManager extensionManager = new ExtensionManager(repository, dataSource);
-		registerDefaultVariableInContextAndScope(executionContext, scope, "extensionManager", extensionManager); //$NON-NLS-1$
-		// Apache Lucene Indexer
-		IndexerUtils indexerUtils = new IndexerUtils();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "indexer", indexerUtils); //$NON-NLS-1$
-//		// Mylyn Confluence Format
-//		WikiUtils wikiUtils = new WikiUtils();
-//		registerDefaultVariableInContextAndScope(executionContext, scope, "wiki", wikiUtils); //$NON-NLS-1$
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.REQUEST_INPUT, input); //$NON-NLS-1$
+		api.setRequestInput(input);
+
+		if (request != null) {
+			// JNDI context
+			InitialContext initialContext = (InitialContext) request.getSession().getAttribute(ICommonConstants.INITIAL_CONTEXT);
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.INITIAL_CONTEXT, initialContext); //$NON-NLS-1$
+			api.setInitialContext(initialContext);
+		}
+		
 		// Simple binary storage
 		StorageUtils storageUtils = new StorageUtils(dataSource);
-		registerDefaultVariableInContextAndScope(executionContext, scope, "storage", storageUtils); //$NON-NLS-1$
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.STORAGE, storageUtils); //$NON-NLS-1$
+		api.setBinaryStorage(storageUtils);
+		
 		// Simple file storage
 		FileStorageUtils fileStorageUtils = new FileStorageUtils(dataSource);
-		registerDefaultVariableInContextAndScope(executionContext, scope, "fileStorage", fileStorageUtils); //$NON-NLS-1$
-		// Simple binary storage
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.FILE_STORAGE, fileStorageUtils); //$NON-NLS-1$
+		api.setFileStorage(fileStorageUtils);
+		
+		// Simple configuration storage
 		ConfigStorageUtils configStorageUtils = new ConfigStorageUtils(dataSource);
-		registerDefaultVariableInContextAndScope(executionContext, scope, "config", configStorageUtils); //$NON-NLS-1$
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONFIGURATION_STORAGE, configStorageUtils); //$NON-NLS-1$
+		api.setConfigurationStorage(configStorageUtils);
+		
+
+		
+		//Services
+		
+		// put mail sender
+		MailSender mailSender = new MailSender();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MAIL_SERVICE, mailSender); //$NON-NLS-1$
+		api.setMailService(mailSender);
+		
+		// Extension Manager
+		ExtensionManager extensionManager = new ExtensionManager(repository, dataSource);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.EXTENSIONS_SERVICE, extensionManager); //$NON-NLS-1$
+		api.setExtensionService(extensionManager);
+		
+		// Apache Lucene Indexer
+		IndexingService<Document> indexingUtils = new IndexingService<Document>();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.INDEXING_SERVICE, indexingUtils); //$NON-NLS-1$
+		api.setIndexingService(indexingUtils);
+		
+		// Connectivity Configuration service
+		ConnectivityConfigurationUtils configurationUtils = new ConnectivityConfigurationUtils();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONNECTIVITY_SERVICE, configurationUtils); //$NON-NLS-1$
+		api.setConnectivityService(configurationUtils);
+
+		
+		// Utils
+		
+		// put Apache Commons IOUtils
+		IOUtils ioUtils = new IOUtils();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.IO_UTILS, ioUtils); //$NON-NLS-1$
+		api.setIOUtils(ioUtils);
+		
+		// put Apache Commons HttpClient and related classes wrapped with a factory like HttpUtils
+		HttpUtils httpUtils = new HttpUtils();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_UTILS, httpUtils); //$NON-NLS-1$
+		api.setHttpUtils(httpUtils);
+		
+		// put Apache Commons Codecs
+		Base64 base64Codec = new Base64();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.BASE64_UTILS, base64Codec); //$NON-NLS-1$
+		api.setBase64Utils(base64Codec);
+		
+		Hex hexCodec = new Hex();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HEX_UTILS, hexCodec); //$NON-NLS-1$
+		api.setHexUtils(hexCodec);
+		
+		DigestUtils digestUtils = new DigestUtils();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DIGEST_UTILS, digestUtils); //$NON-NLS-1$
+		api.setDigestUtils(digestUtils);
+		
+		// standard URLEncoder and URLDecoder functionality
+		URLUtils urlUtils = new URLUtils();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.URL_UTILS, urlUtils); //$NON-NLS-1$
+		api.setUrlUtils(urlUtils);
+		
+		// file upload
+		ServletFileUpload fileUpload = new ServletFileUpload(new DiskFileItemFactory());
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.UPLOAD_UTILS, fileUpload); //$NON-NLS-1$
+		api.setUploadUtils(fileUpload);
+		
+		// UUID
+		UUID uuid = new UUID(0, 0);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.UUID_UTILS, uuid); //$NON-NLS-1$
+		api.setUuidUtils(uuid);
+		
+		// DbUtils
+		DbUtils dbUtils = new DbUtils(dataSource);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DB_UTILS, dbUtils); //$NON-NLS-1$
+		api.setDatabaseUtils(dbUtils);
+		
+		// EscapeUtils
+		StringEscapeUtils stringEscapeUtils = new StringEscapeUtils();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.XSS_UTILS, stringEscapeUtils); //$NON-NLS-1$
+		api.setXssUtils(stringEscapeUtils);
+		
 		// XML to JSON and vice-versa
 		XMLUtils xmlUtils = new XMLUtils();
-		registerDefaultVariableInContextAndScope(executionContext, scope, "xml", xmlUtils); //$NON-NLS-1$
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.XML_UTILS, xmlUtils); //$NON-NLS-1$
+		api.setXmlUtils(xmlUtils);
 
+				
 		// register objects via extension
 		try {
 			BundleContext context = RuntimeActivator.getContext();
@@ -181,12 +255,14 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 					ServiceReference<IContextService> serviceReference = iterator.next();
 					IContextService contextService = context.getService(serviceReference);
 					registerDefaultVariableInContextAndScope(executionContext, scope, contextService.getName(), contextService.getInstance());
+					api.set(contextService.getName(), contextService.getInstance());
 				}
 			}
 		} catch (InvalidSyntaxException e) {
 			logger.error(e.getMessage(), e);
 		}
 		
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.API, api); //$NON-NLS-1$
 	}
 
 	public byte[] readResourceData(IRepository repository, String repositoryPath)

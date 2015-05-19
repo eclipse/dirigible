@@ -12,12 +12,13 @@
 package org.eclipse.dirigible.runtime.wiki;
 
 import org.eclipse.dirigible.runtime.scripting.IContextService;
+import org.eclipse.dirigible.runtime.scripting.IInjectedAPIAliases;
 
 public class WikiContextService implements IContextService {
 
 	@Override
 	public String getName() {
-		return "wiki";
+		return IInjectedAPIAliases.WIKI_UTILS;
 	}
 
 	@Override

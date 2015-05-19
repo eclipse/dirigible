@@ -25,9 +25,10 @@ import org.apache.lucene.index.IndexNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
-import org.eclipse.dirigible.repository.ext.lucene.RepositoryMemoryIndexer;
+import org.eclipse.dirigible.repository.ext.indexing.RepositoryMemoryIndexer;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.registry.AbstractRegistryServlet;
 

@@ -23,11 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InitialContextInjector implements Injector {
+public class ConnectivityInjector implements Injector {
 	
-	private static final Logger logger = LoggerFactory.getLogger(InitialContextInjector.class);
+	public static final String JAVA_COMP_ENV_CONNECTIVITY_CONFIGURATION = "java:comp/env/connectivity/Configuration"; //$NON-NLS-1$
+	public static final String CONNECTIVITY_CONFIGURATION = "ConnectivityConfiguration"; //$NON-NLS-1$
 	
-	public static final String INITIAL_CONTEXT = "InitialContext"; //$NON-NLS-1$
+	private static final Logger logger = LoggerFactory.getLogger(ConnectivityInjector.class);
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.ide.bridge.Injector#inject(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -35,16 +36,28 @@ public class InitialContextInjector implements Injector {
 	@Override
 	public void inject(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		InitialContext initialContext = (InitialContext) req.getSession().getAttribute(INITIAL_CONTEXT);
-		if (initialContext == null) {
+		Object connectivityConfiguration = req.getSession().getAttribute(CONNECTIVITY_CONFIGURATION);
+		if (connectivityConfiguration == null) {
 			try {
-				initialContext = new InitialContext();
-				req.getSession().setAttribute(INITIAL_CONTEXT, initialContext);
-				System.getProperties().put(INITIAL_CONTEXT, initialContext);
+				connectivityConfiguration = lookupConnectivityConfiguration();
+				req.getSession().setAttribute(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
+				System.getProperties().put(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+				logger.error(DirigibleBridge.class.getCanonicalName(), e);
 			}
 		}
 	}
 	
+	/**
+	 * Retrieve the Connectivity Configuration from the target server environment
+	 * 
+	 * @return
+	 * @throws NamingException
+	 */
+	private Object lookupConnectivityConfiguration() throws NamingException {
+		final InitialContext ctx = new InitialContext();
+		return ctx.lookup(JAVA_COMP_ENV_CONNECTIVITY_CONFIGURATION);
+	}
+
+
 }

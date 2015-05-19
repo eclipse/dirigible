@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.AbstractStorageUtils;
+import org.eclipse.dirigible.runtime.scripting.EStorageException;
 
 public class ConfigStorageUtils extends AbstractStorageUtils {
 
@@ -77,31 +78,47 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 		super.checkDB(SELECT_COUNT_FROM_DGB_CONFIG_STORAGE, CREATE_TABLE_DGB_CONFIG_STORAGE);
 	}
 
-	public boolean exists(String path) throws SQLException {
-		return super.exists(path, SELECT_DGB_CONFIG_STORAGE_EXISTS,
-				SELECT_COUNT_FROM_DGB_CONFIG_STORAGE, CREATE_TABLE_DGB_CONFIG_STORAGE);
-	}
-
-	public void clear() throws SQLException {
-		super.clear(DELETE_DGB_CONFIG_STORAGE, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE,
-				CREATE_TABLE_DGB_CONFIG_STORAGE);
-	}
-
-	public void delete(String path) throws SQLException {
-		super.delete(path, DELETE_DGB_STORAGE_PATH, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE,
-				CREATE_TABLE_DGB_CONFIG_STORAGE);
-	}
-
-	public void putProperty(String path, Object key, Object value) throws SQLException, IOException {
-		Properties properties = getProperties(path);
-		if (properties == null) {
-			properties = new Properties();
+	public boolean exists(String path) throws EStorageException {
+		try {
+			return super.exists(path, SELECT_DGB_CONFIG_STORAGE_EXISTS,
+					SELECT_COUNT_FROM_DGB_CONFIG_STORAGE, CREATE_TABLE_DGB_CONFIG_STORAGE);
+		} catch (SQLException e) {
+			throw new EStorageException(e);
 		}
-		properties.put(key, value);
-		putProperties(path, properties);
 	}
 
-	public void putProperties(String path, Properties properties) throws SQLException {
+	public void clear() throws EStorageException {
+		try {
+			super.clear(DELETE_DGB_CONFIG_STORAGE, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE,
+					CREATE_TABLE_DGB_CONFIG_STORAGE);
+		} catch (SQLException e) {
+			throw new EStorageException(e);
+		}
+	}
+
+	public void delete(String path) throws EStorageException {
+		try {
+			super.delete(path, DELETE_DGB_STORAGE_PATH, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE,
+					CREATE_TABLE_DGB_CONFIG_STORAGE);
+		} catch (SQLException e) {
+			throw new EStorageException(e);
+		}
+	}
+
+	public void putProperty(String path, Object key, Object value) throws EStorageException {
+		try {
+			Properties properties = getProperties(path);
+			if (properties == null) {
+				properties = new Properties();
+			}
+			properties.put(key, value);
+			putProperties(path, properties);
+		} catch (Exception e) {
+			throw new EStorageException(e);
+		}
+	}
+
+	public void putProperties(String path, Properties properties) throws EStorageException {
 		byte[] data = checkMaxSize(getByteArray(properties));
 
 		try {
@@ -113,8 +130,8 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 				insert(path, data);
 			}
 
-		} catch (NamingException e) {
-			throw new SQLException(e);
+		} catch (Exception e) {
+			throw new EStorageException(e);
 		}
 	}
 
@@ -182,7 +199,7 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 		}
 	}
 
-	public Object getProperty(String path, Object key) throws SQLException, IOException {
+	public Object getProperty(String path, Object key) throws EStorageException {
 		Properties properties = getProperties(path);
 		if (properties == null) {
 			throw new InvalidParameterException(NO_PROPERTY_FOUND_ON_PATH + path);
@@ -191,7 +208,7 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 	}
 
 	// Retrieve photo data from the cache
-	public Properties getProperties(String path) throws SQLException, IOException {
+	public Properties getProperties(String path) throws EStorageException {
 		try {
 			checkDB();
 
@@ -219,10 +236,41 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 					connection.close();
 				}
 			}
-		} catch (NamingException e) {
-			throw new SQLException(e);
+		} catch (Exception e) {
+			throw new EStorageException(e);
 		}
 		return null;
+	}
+
+	@Override
+	public void put(String path, byte[] data) throws EStorageException {
+		try {
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			Properties properties = new Properties();
+			properties.load(bis);
+			putProperties(path, properties);
+		} catch (IOException e) {
+			throw new EStorageException(e);
+		}
+		
+	}
+
+	@Override
+	public void put(String path, byte[] data, String contentType)
+			throws EStorageException {
+		put(path, data);
+	}
+
+	@Override
+	public byte[] get(String path) throws EStorageException {
+		try {
+			Properties properties = getProperties(path);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			properties.store(baos, "");
+			return baos.toByteArray();
+		} catch (IOException e) {
+			throw new EStorageException(e);
+		}
 	}
 
 }

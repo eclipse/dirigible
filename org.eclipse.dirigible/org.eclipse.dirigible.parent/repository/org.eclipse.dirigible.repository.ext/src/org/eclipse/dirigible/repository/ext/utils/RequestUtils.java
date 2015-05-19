@@ -13,10 +13,12 @@ package org.eclipse.dirigible.repository.ext.utils;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
+
 public class RequestUtils {
 	
 	public static String getUser(HttpServletRequest request) {
-		String user = "guest"; // shared one //$NON-NLS-1$
+		String user = ICommonConstants.GUEST;
 		try {
 			if ((request != null) && (request.getUserPrincipal() != null)) {
 				user = request.getUserPrincipal().getName();

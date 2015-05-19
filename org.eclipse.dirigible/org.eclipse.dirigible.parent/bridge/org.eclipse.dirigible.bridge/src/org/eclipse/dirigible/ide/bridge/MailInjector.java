@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 
 public class MailInjector implements Injector {
 	
-	public static final String JAVA_COMP_ENV_JDBC_DEFAULT_MAIL_SESSION = "java:comp/env/mail/SAPInternalNWCloudSession"; //$NON-NLS-1$
-	public static final String DEFAULT_MAIL_SESSION = "DEFAULT_MAIL_SESSION"; //$NON-NLS-1$
+	public static final String JAVA_COMP_ENV_MAIL_SESSION = "java:comp/env/mail/SAPInternalNWCloudSession"; //$NON-NLS-1$
+	public static final String DEFAULT_MAIL_SESSION = "MailSession"; //$NON-NLS-1$
 	
 	private static final Logger logger = LoggerFactory.getLogger(MailInjector.class);
 	
@@ -43,7 +43,8 @@ public class MailInjector implements Injector {
 			try {
 				session = lookupMailSession();
 				req.getSession().setAttribute(DEFAULT_MAIL_SESSION, session);
-			} catch (NamingException e) {
+				System.getProperties().put(DEFAULT_MAIL_SESSION, session);
+			} catch (Exception e) {
 				logger.error(DirigibleBridge.class.getCanonicalName(), e);
 			}
 		}
@@ -58,7 +59,7 @@ public class MailInjector implements Injector {
 	 */
 	private Session lookupMailSession() throws NamingException {
 		final InitialContext ctx = new InitialContext();
-		return (Session) ctx.lookup(JAVA_COMP_ENV_JDBC_DEFAULT_MAIL_SESSION);
+		return (Session) ctx.lookup(JAVA_COMP_ENV_MAIL_SESSION);
 	}
 
 

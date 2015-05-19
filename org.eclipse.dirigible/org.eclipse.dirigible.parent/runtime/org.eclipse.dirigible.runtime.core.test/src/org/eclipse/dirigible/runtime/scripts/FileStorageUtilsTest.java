@@ -44,7 +44,7 @@ public class FileStorageUtilsTest {
 	@Test
 	public void testPut() throws Exception {
 		fileStorage.put(PATH, DATA, CONTENT_TYPE);
-		FileStorageFile retrieved = fileStorage.get(PATH);
+		FileStorageFile retrieved = fileStorage.getFile(PATH);
 		assertArrayEquals(DATA, retrieved.data);
 		assertEquals(CONTENT_TYPE, retrieved.contentType);
 	}
@@ -63,21 +63,21 @@ public class FileStorageUtilsTest {
 	public void testClear() throws Exception {
 		fileStorage.put(PATH, DATA, CONTENT_TYPE);
 		fileStorage.clear();
-		assertNull(fileStorage.get(PATH));
+		assertNull(fileStorage.getFile(PATH));
 	}
 
 	@Test
 	public void testDelete() throws Exception {
 		fileStorage.put(PATH, DATA, CONTENT_TYPE);
 		fileStorage.delete(PATH);
-		assertNull(fileStorage.get(PATH));
+		assertNull(fileStorage.getFile(PATH));
 	}
 
 	@Test
 	public void testSet() throws Exception {
 		fileStorage.put(PATH, DATA, CONTENT_TYPE);
 		fileStorage.put(PATH, OTHER_DATA, CONTENT_TYPE);
-		FileStorageFile retrieved = fileStorage.get(PATH);
+		FileStorageFile retrieved = fileStorage.getFile(PATH);
 		assertArrayEquals(OTHER_DATA, retrieved.data);
 		assertEquals(CONTENT_TYPE, retrieved.contentType);
 	}

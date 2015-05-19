@@ -11,7 +11,7 @@
 
 package org.eclipse.dirigible.runtime.search;
 
-import org.eclipse.dirigible.repository.ext.lucene.RepositoryMemoryIndexer;
+import org.eclipse.dirigible.repository.ext.indexing.RepositoryMemoryIndexer;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 import org.eclipse.dirigible.runtime.task.IRunnableTask;

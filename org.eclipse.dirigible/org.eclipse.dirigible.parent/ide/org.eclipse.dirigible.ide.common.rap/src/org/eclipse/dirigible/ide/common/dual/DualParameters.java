@@ -13,6 +13,7 @@ package org.eclipse.dirigible.ide.common.dual;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.ClientService;
 
@@ -35,7 +36,7 @@ public class DualParameters {
 	public static final String HC_REGION = "HC_REGION"; //$NON-NLS-1$
 	public static final String HC_HOST = "HC_HOST"; //$NON-NLS-1$
 	
-	public static final String GUEST_USER = "guest"; //$NON-NLS-1$
+	public static final String GUEST_USER = ICommonConstants.GUEST;
 	
 	public static final String ENABLE_ROLES = "enableRoles"; //$NON-NLS-1$
 	

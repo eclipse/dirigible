@@ -22,10 +22,9 @@ import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.db.DBRepository;
-import org.eclipse.dirigible.repository.ext.lucene.RepositoryMemoryIndexer;
+import org.eclipse.dirigible.repository.ext.indexing.RepositoryMemoryIndexer;
 import org.eclipse.dirigible.runtime.utils.DataSourceUtils;
 
 public class SearchIndexerTest {

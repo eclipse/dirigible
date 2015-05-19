@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.runtime.scripting.utils;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,9 +23,11 @@ import java.util.GregorianCalendar;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.AbstractStorageUtils;
+import org.eclipse.dirigible.runtime.scripting.EStorageException;
 
 public class FileStorageUtils extends AbstractStorageUtils {
 
@@ -73,22 +74,38 @@ public class FileStorageUtils extends AbstractStorageUtils {
 		super.checkDB(SELECT_COUNT_FROM_DGB_FILE_STORAGE, CREATE_TABLE_DGB_FILE_STORAGE);
 	}
 
-	public boolean exists(String path) throws SQLException {
-		return super.exists(path, SELECT_DGB_FILE_STORAGE_EXISTS,
-				SELECT_COUNT_FROM_DGB_FILE_STORAGE, CREATE_TABLE_DGB_FILE_STORAGE);
+	@Override
+	public boolean exists(String path) throws EStorageException {
+		try {
+			return super.exists(path, SELECT_DGB_FILE_STORAGE_EXISTS,
+					SELECT_COUNT_FROM_DGB_FILE_STORAGE, CREATE_TABLE_DGB_FILE_STORAGE);
+		} catch (SQLException e) {
+			throw new EStorageException(e);
+		}
 	}
 
-	public void clear() throws SQLException {
-		super.clear(DELETE_DGB_FILE_STORAGE, SELECT_COUNT_FROM_DGB_FILE_STORAGE,
-				CREATE_TABLE_DGB_FILE_STORAGE);
+	@Override
+	public void clear() throws EStorageException {
+		try {
+			super.clear(DELETE_DGB_FILE_STORAGE, SELECT_COUNT_FROM_DGB_FILE_STORAGE,
+					CREATE_TABLE_DGB_FILE_STORAGE);
+		} catch (Exception e) {
+			throw new EStorageException(e);
+		}
 	}
 
-	public void delete(String path) throws SQLException {
-		super.delete(path, DELETE_DGB_STORAGE_PATH, SELECT_COUNT_FROM_DGB_FILE_STORAGE,
-				CREATE_TABLE_DGB_FILE_STORAGE);
+	@Override
+	public void delete(String path) throws EStorageException {
+		try {
+			super.delete(path, DELETE_DGB_STORAGE_PATH, SELECT_COUNT_FROM_DGB_FILE_STORAGE,
+					CREATE_TABLE_DGB_FILE_STORAGE);
+		} catch (Exception e) {
+			throw new EStorageException(e);
+		}
 	}
 
-	public void put(String path, byte[] data, String contentType) throws SQLException {
+	@Override
+	public void put(String path, byte[] data, String contentType) throws EStorageException {
 		checkMaxSize(data);
 		try {
 			checkDB();
@@ -99,9 +116,14 @@ public class FileStorageUtils extends AbstractStorageUtils {
 				insert(path, data, contentType);
 			}
 
-		} catch (NamingException e) {
-			throw new SQLException(e);
+		} catch (Exception e) {
+			throw new EStorageException(e);
 		}
+	}
+	
+	@Override
+	public void put(String path, byte[] data) throws EStorageException {
+		put(path, data, ContentTypeHelper.DEFAULT_CONTENT_TYPE);
 	}
 
 	private byte[] checkMaxSize(byte[] data) {
@@ -155,9 +177,14 @@ public class FileStorageUtils extends AbstractStorageUtils {
 			}
 		}
 	}
+	
+	@Override
+	public byte[] get(String path) throws EStorageException {
+		return getFile(path).data;
+	}
 
 	// Retrieve photo data from the cache
-	public FileStorageFile get(String path) throws SQLException, IOException {
+	public FileStorageFile getFile(String path) throws EStorageException {
 		try {
 			checkDB();
 
@@ -180,8 +207,8 @@ public class FileStorageUtils extends AbstractStorageUtils {
 					connection.close();
 				}
 			}
-		} catch (NamingException e) {
-			throw new SQLException(e);
+		} catch (Exception e) {
+			throw new EStorageException(e);
 		}
 		return null;
 	}

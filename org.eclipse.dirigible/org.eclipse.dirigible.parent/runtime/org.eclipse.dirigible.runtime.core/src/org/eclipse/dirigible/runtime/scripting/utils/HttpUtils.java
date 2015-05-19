@@ -133,9 +133,5 @@ public class HttpUtils {
 	public BasicHeader createBasicHeader(String name, String value) {
 		return new BasicHeader(name, value);
 	}
-	
-	
-	
-	
 
 }

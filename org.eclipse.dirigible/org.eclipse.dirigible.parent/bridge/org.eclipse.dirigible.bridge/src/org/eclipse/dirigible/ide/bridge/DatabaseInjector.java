@@ -75,7 +75,7 @@ public class DatabaseInjector implements Injector {
 					logger.error(e.getMessage(), e);
 					//throw new ServletException(ERROR_WHILE_GETTING_DATABASE_METADATA, e);
 				}
-			} catch (NamingException e) {
+			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
 		}

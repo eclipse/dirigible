@@ -5,7 +5,7 @@ Export-Package: org.eclipse.dirigible.repository.ext.command,
  org.eclipse.dirigible.repository.ext.db.dialect,
  org.eclipse.dirigible.repository.ext.debug,
  org.eclipse.dirigible.repository.ext.extensions,
- org.eclipse.dirigible.repository.ext.lucene,
+ org.eclipse.dirigible.repository.ext.indexing,
  org.eclipse.dirigible.repository.ext.security,
  org.eclipse.dirigible.repository.ext.utils
 Bundle-ActivationPolicy: lazy

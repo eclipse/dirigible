@@ -11,12 +11,14 @@
 
 package org.eclipse.dirigible.runtime.scripting.utils;
 
-import org.eclipse.dirigible.repository.ext.lucene.CustomMemoryIndexer;
+import org.eclipse.dirigible.repository.ext.indexing.IIndex;
+import org.eclipse.dirigible.repository.ext.indexing.LuceneMemoryIndexer;
+import org.eclipse.dirigible.runtime.scripting.IIndexingService;
 
-public class IndexerUtils {
+public class IndexingService <T> implements IIndexingService<T> {
 
-	public CustomMemoryIndexer getIndex(String indexName) {
-		return CustomMemoryIndexer.getIndex(indexName);
+	public IIndex<T> getIndex(String indexName) {
+		return LuceneMemoryIndexer.getIndex(indexName);
 	}
 
 }

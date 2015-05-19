@@ -17,7 +17,7 @@ import org.eclipse.dirigible.repository.ext.security.Messages;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
-public class ExtensionManager {
+public class ExtensionManager implements IExtensionService {
 	
 	private static final Logger logger = Logger.getLogger(ExtensionManager.class);
 	
@@ -75,304 +75,351 @@ public class ExtensionManager {
 		return this.dbUtils;
 	}
 	
-	public String[] getExtensions(String extensionPoint) throws SQLException, IOException {
-		List<String> extensions = new ArrayList<String>();
-		Connection connection = null;
-		PreparedStatement statement = null;
+	@Override
+	public String[] getExtensions(String extensionPoint) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			
-			String script = getDBUtils().readScript(connection,
-					GET_EXTENSIONS, this.getClass());
-			statement = connection.prepareStatement(script);
-			statement.setString(1, extensionPoint);
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				extensions.add(resultSet.getString(1));
-			}
-		} finally {
+			List<String> extensions = new ArrayList<String>();
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				
+				String script = getDBUtils().readScript(connection,
+						GET_EXTENSIONS, this.getClass());
+				statement = connection.prepareStatement(script);
+				statement.setString(1, extensionPoint);
+				ResultSet resultSet = statement.executeQuery();
+				while (resultSet.next()) {
+					extensions.add(resultSet.getString(1));
 				}
-				if (connection != null) {
-					connection.close();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
-		}
 
-		return extensions.toArray(new String[]{});
+			return extensions.toArray(new String[]{});
+		} catch (Exception e) {
+			throw new EExtensionException(e);
+		}
 	}
 	
-	public ExtensionDefinition getExtension(String extension, String extensionPoint) throws SQLException, IOException {
-		ExtensionDefinition extensionDefinition = null;
-		Connection connection = null;
-		PreparedStatement statement = null;
+	@Override
+	public ExtensionDefinition getExtension(String extension, String extensionPoint) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			
-			String script = getDBUtils().readScript(connection,
-					GET_EXTENSION, this.getClass());
-			statement = connection.prepareStatement(script);
-			statement.setString(1, extension);
-			statement.setString(2, extensionPoint);
-			ResultSet resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				extensionDefinition = new ExtensionDefinition();
-				extensionDefinition.setLocation(resultSet.getString("EXT_LOCATION"));
-				extensionDefinition.setExtensionPoint(resultSet.getString("EXT_EXTPOINT_LOCATION"));
-				extensionDefinition.setDescription(resultSet.getString("EXT_DESCRIPTION"));
-				extensionDefinition.setCreatedBy(resultSet.getString("EXT_CREATED_BY"));
-				extensionDefinition.setCreatedAt(resultSet.getTimestamp("EXT_CREATED_AT"));
-			}
-		} finally {
+			ExtensionDefinition extensionDefinition = null;
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				
+				String script = getDBUtils().readScript(connection,
+						GET_EXTENSION, this.getClass());
+				statement = connection.prepareStatement(script);
+				statement.setString(1, extension);
+				statement.setString(2, extensionPoint);
+				ResultSet resultSet = statement.executeQuery();
+				if (resultSet.next()) {
+					extensionDefinition = new ExtensionDefinition();
+					extensionDefinition.setLocation(resultSet.getString("EXT_LOCATION"));
+					extensionDefinition.setExtensionPoint(resultSet.getString("EXT_EXTPOINT_LOCATION"));
+					extensionDefinition.setDescription(resultSet.getString("EXT_DESCRIPTION"));
+					extensionDefinition.setCreatedBy(resultSet.getString("EXT_CREATED_BY"));
+					extensionDefinition.setCreatedAt(resultSet.getTimestamp("EXT_CREATED_AT"));
 				}
-				if (connection != null) {
-					connection.close();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
-		}
 
-		return extensionDefinition;
+			return extensionDefinition;
+		} catch (Exception e) {
+			throw new EExtensionException(e);
+		}
 	}
 	
-	public ExtensionPointDefinition getExtensionPoint(String extensionPoint) throws SQLException, IOException {
-		ExtensionPointDefinition extensionPointDefinition = null;
-		Connection connection = null;
-		PreparedStatement statement = null;
+	@Override
+	public ExtensionPointDefinition getExtensionPoint(String extensionPoint) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			
-			String script = getDBUtils().readScript(connection,
-					GET_EXTENSION_POINT, this.getClass());
-			statement = connection.prepareStatement(script);
-			statement.setString(1, extensionPoint);
-			ResultSet resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				extensionPointDefinition = new ExtensionPointDefinition();
-				extensionPointDefinition.setLocation(resultSet.getString("EXTPOINT_LOCATION"));
-				extensionPointDefinition.setDescription(resultSet.getString("EXTPOINT_DESCRIPTION"));
-				extensionPointDefinition.setCreatedBy(resultSet.getString("EXTPOINT_CREATED_BY"));
-				extensionPointDefinition.setCreatedAt(resultSet.getTimestamp("EXTPOINT_CREATED_AT"));
-			}
-		} finally {
+			ExtensionPointDefinition extensionPointDefinition = null;
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				
+				String script = getDBUtils().readScript(connection,
+						GET_EXTENSION_POINT, this.getClass());
+				statement = connection.prepareStatement(script);
+				statement.setString(1, extensionPoint);
+				ResultSet resultSet = statement.executeQuery();
+				if (resultSet.next()) {
+					extensionPointDefinition = new ExtensionPointDefinition();
+					extensionPointDefinition.setLocation(resultSet.getString("EXTPOINT_LOCATION"));
+					extensionPointDefinition.setDescription(resultSet.getString("EXTPOINT_DESCRIPTION"));
+					extensionPointDefinition.setCreatedBy(resultSet.getString("EXTPOINT_CREATED_BY"));
+					extensionPointDefinition.setCreatedAt(resultSet.getTimestamp("EXTPOINT_CREATED_AT"));
 				}
-				if (connection != null) {
-					connection.close();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
-		}
 
-		return extensionPointDefinition;
+			return extensionPointDefinition;
+		} catch (Exception e) {
+			throw new EExtensionException(e);
+		}
 	}
 	
-	public String[] getExtensionPoints() throws SQLException, IOException {
-		List<String> extensionPoints = new ArrayList<String>();
-		Connection connection = null;
-		PreparedStatement statement = null;
+	@Override
+	public String[] getExtensionPoints() throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			
-			String script = getDBUtils().readScript(connection,
-					GET_EXTENSION_POINTS, this.getClass());
-			statement = connection.prepareStatement(script);
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				extensionPoints.add(resultSet.getString(1));
-			}
-		} finally {
+			List<String> extensionPoints = new ArrayList<String>();
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				
+				String script = getDBUtils().readScript(connection,
+						GET_EXTENSION_POINTS, this.getClass());
+				statement = connection.prepareStatement(script);
+				ResultSet resultSet = statement.executeQuery();
+				while (resultSet.next()) {
+					extensionPoints.add(resultSet.getString(1));
 				}
-				if (connection != null) {
-					connection.close();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
-		}
 
-		return extensionPoints.toArray(new String[]{});
+			return extensionPoints.toArray(new String[]{});
+		} catch (Exception e) {
+			throw new EExtensionException(e);
+		}
 	}
 	
+	@Override
 	public void createExtension(String extension,
-			String extensionPoint, String description, HttpServletRequest request) throws SQLException, IOException {
-		Connection connection = null;
-		PreparedStatement statement = null;
+			String extensionPoint, String description, HttpServletRequest request) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			String script = getDBUtils().readScript(connection, INSERT_EXTENSION, this.getClass());
-			statement = connection.prepareStatement(script);
-			
-			statement.setString(1, extension);
-			statement.setString(2, extensionPoint);
-			statement.setString(3, description);
-			statement.setString(4, RequestUtils.getUser(request));
-
-			statement.executeUpdate();
-		} finally {
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				String script = getDBUtils().readScript(connection, INSERT_EXTENSION, this.getClass());
+				statement = connection.prepareStatement(script);
+				
+				statement.setString(1, extension);
+				statement.setString(2, extensionPoint);
+				statement.setString(3, description);
+				statement.setString(4, RequestUtils.getUser(request));
+
+				statement.executeUpdate();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
+		} catch (Exception e) {
+			throw new EExtensionException(e);
 		}
 	}
 	
+	@Override
 	public void updateExtension(String extension,
-			String extensionPoint, String description, HttpServletRequest request) throws SQLException, IOException {
-		Connection connection = null;
-		PreparedStatement statement = null;
+			String extensionPoint, String description, HttpServletRequest request) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			String script = getDBUtils().readScript(connection, UPDATE_EXTENSION, this.getClass());
-			statement = connection.prepareStatement(script);
-			
-			statement.setString(1, description);
-			statement.setString(2, extension);
-			statement.setString(3, extensionPoint);
-
-			statement.executeUpdate();
-		} finally {
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				String script = getDBUtils().readScript(connection, UPDATE_EXTENSION, this.getClass());
+				statement = connection.prepareStatement(script);
+				
+				statement.setString(1, description);
+				statement.setString(2, extension);
+				statement.setString(3, extensionPoint);
+
+				statement.executeUpdate();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
+		} catch (Exception e) {
+			throw new EExtensionException(e);
 		}
 	}
 
-
-	public void createExtensionPoint(String extensionPoint, String description, HttpServletRequest request) throws SQLException, IOException {
-		Connection connection = null;
-		PreparedStatement statement = null;
+	@Override
+	public void createExtensionPoint(String extensionPoint, String description, HttpServletRequest request) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			String script = getDBUtils().readScript(connection, INSERT_EXTENSION_POINT, this.getClass());
-			statement = connection.prepareStatement(script);
-			
-			statement.setString(1, extensionPoint);
-			statement.setString(2, description);
-			statement.setString(3, RequestUtils.getUser(request));
-
-			statement.executeUpdate();
-		} finally {
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				String script = getDBUtils().readScript(connection, INSERT_EXTENSION_POINT, this.getClass());
+				statement = connection.prepareStatement(script);
+				
+				statement.setString(1, extensionPoint);
+				statement.setString(2, description);
+				statement.setString(3, RequestUtils.getUser(request));
+
+				statement.executeUpdate();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
+		} catch (Exception e) {
+			throw new EExtensionException(e);
 		}
 	}
 	
-	public void updateExtensionPoint(String extensionPoint, String description, HttpServletRequest request) throws SQLException, IOException {
-		Connection connection = null;
-		PreparedStatement statement = null;
+	@Override
+	public void updateExtensionPoint(String extensionPoint, String description, HttpServletRequest request) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			String script = getDBUtils().readScript(connection, UPDATE_EXTENSION_POINT, this.getClass());
-			statement = connection.prepareStatement(script);
-			
-			statement.setString(1, description);
-			statement.setString(2, extensionPoint);
-
-			statement.executeUpdate();
-		} finally {
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				String script = getDBUtils().readScript(connection, UPDATE_EXTENSION_POINT, this.getClass());
+				statement = connection.prepareStatement(script);
+				
+				statement.setString(1, description);
+				statement.setString(2, extensionPoint);
+
+				statement.executeUpdate();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
+		} catch (Exception e) {
+			throw new EExtensionException(e);
 		}
 	}
 	
-	public void removeExtension(String extension, String extensionPoint) throws SQLException, IOException {
-		Connection connection = null;
-		PreparedStatement statement = null;
+	@Override
+	public void removeExtension(String extension, String extensionPoint) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			String script = getDBUtils().readScript(connection, REMOVE_EXTENSION, this.getClass());
-			statement = connection.prepareStatement(script);
-			
-			statement.setString(1, extension);
-			statement.setString(2, extensionPoint);
-
-			statement.executeUpdate();
-			
-		} finally {
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				String script = getDBUtils().readScript(connection, REMOVE_EXTENSION, this.getClass());
+				statement = connection.prepareStatement(script);
+				
+				statement.setString(1, extension);
+				statement.setString(2, extensionPoint);
+
+				statement.executeUpdate();
+				
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
+		} catch (Exception e) {
+			throw new EExtensionException(e);
 		}
 	}
 	
-	
-
-	public void removeExtensionPoint(String extensionPoint) throws SQLException, IOException {
-		Connection connection = null;
-		PreparedStatement statement = null;
+	@Override
+	public void removeExtensionPoint(String extensionPoint) throws EExtensionException {
 		try {
-			connection = dataSource.getConnection();
-			
-			removeExtensionsByExtensionPoint(connection, extensionPoint);
-			
-			String script = getDBUtils().readScript(connection, REMOVE_EXTENSION_POINT, this.getClass());
-			statement = connection.prepareStatement(script);
-			
-			statement.setString(1, extensionPoint);
-
-			statement.executeUpdate();
-		} finally {
+			Connection connection = null;
+			PreparedStatement statement = null;
 			try {
-				if (statement != null) {
-					statement.close();
+				connection = dataSource.getConnection();
+				
+				removeExtensionsByExtensionPoint(connection, extensionPoint);
+				
+				String script = getDBUtils().readScript(connection, REMOVE_EXTENSION_POINT, this.getClass());
+				statement = connection.prepareStatement(script);
+				
+				statement.setString(1, extensionPoint);
+
+				statement.executeUpdate();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
 				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				logger.error(DATABASE_ERROR, e);
 			}
+		} catch (Exception e) {
+			throw new EExtensionException(e);
 		}
 	}
 	

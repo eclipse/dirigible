@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.repository.logging.Logger;
 
-public abstract class AbstractStorageUtils {
+public abstract class AbstractStorageUtils implements IStorage {
 	
 	private static final String MAX_STORAGE_FILE_SIZE_MESSAGE = "The maximum allowed storage file size is %d MB";
 

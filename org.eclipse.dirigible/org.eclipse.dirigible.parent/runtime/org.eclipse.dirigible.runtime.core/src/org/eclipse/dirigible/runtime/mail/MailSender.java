@@ -19,19 +19,19 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.internet.MimeMultipart;
-import javax.naming.InitialContext;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.scripting.IMailService;
 
-public class MailSender {
+public class MailSender implements IMailService {
 
 	private static final Logger logger = Logger.getLogger(MailSender.class.getCanonicalName());
 
+	@Override
 	public String sendMail(String from, String to, String subject, String content) {
 		try {
-			InitialContext ctx = new InitialContext();
-			Session smtpSession = (Session) ctx
-					.lookup("java:comp/env/mail/SAPInternalNWCloudSession"); //$NON-NLS-1$
+			Session smtpSession = (Session) System.getProperties().get(ICommonConstants.MAIL_SESSION);
 			Transport transport = smtpSession.getTransport();
 			transport.connect();
 

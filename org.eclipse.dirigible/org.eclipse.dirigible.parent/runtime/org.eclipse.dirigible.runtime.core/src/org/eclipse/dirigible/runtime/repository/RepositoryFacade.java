@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import org.apache.derby.jdbc.EmbeddedDataSource;
-
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.eclipse.dirigible.repository.api.RepositoryFactory;
@@ -47,9 +47,9 @@ public class RepositoryFacade {
 
 	private WrappedDataSource dataSource;
 	
-	public static final String GUEST = "guest"; //$NON-NLS-1$
+	public static final String GUEST = ICommonConstants.GUEST;
 	
-	public static final String INITIAL_CONTEXT = "InitialContext"; //$NON-NLS-1$
+	public static final String INITIAL_CONTEXT = ICommonConstants.INITIAL_CONTEXT;
 
 	private RepositoryFacade() {
 
@@ -150,7 +150,7 @@ public class RepositoryFacade {
 			return new WrappedDataSource(datasource);
 		} catch (Throwable e) {
 			logger.error(COULD_NOT_FIND_DATA_SOURCE, e);
-			logger.error(e.getMessage(), e);
+//			logger.error(e.getMessage(), e);
 		}
 		
 //		} finally {

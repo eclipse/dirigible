@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.ext.lucene;
+package org.eclipse.dirigible.repository.ext.indexing;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

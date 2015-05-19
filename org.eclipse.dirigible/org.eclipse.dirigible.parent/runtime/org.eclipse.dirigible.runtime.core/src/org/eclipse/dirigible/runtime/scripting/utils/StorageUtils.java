@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.AbstractStorageUtils;
+import org.eclipse.dirigible.runtime.scripting.EStorageException;
 
 public class StorageUtils extends AbstractStorageUtils {
 
@@ -70,21 +71,37 @@ public class StorageUtils extends AbstractStorageUtils {
 		super.checkDB(SELECT_COUNT_FROM_DGB_STORAGE, CREATE_TABLE_DGB_STORAGE);
 	}
 
-	public boolean exists(String path) throws SQLException {
-		return super.exists(path, SELECT_DGB_STORAGE_EXISTS, SELECT_COUNT_FROM_DGB_STORAGE,
-				CREATE_TABLE_DGB_STORAGE);
+	@Override
+	public boolean exists(String path) throws EStorageException {
+		try {
+			return super.exists(path, SELECT_DGB_STORAGE_EXISTS, SELECT_COUNT_FROM_DGB_STORAGE,
+					CREATE_TABLE_DGB_STORAGE);
+		} catch (Exception e) {
+			throw new EStorageException(e);
+		}
 	}
 
-	public void clear() throws SQLException {
-		super.clear(DELETE_DGB_STORAGE, SELECT_COUNT_FROM_DGB_STORAGE, CREATE_TABLE_DGB_STORAGE);
+	@Override
+	public void clear() throws EStorageException {
+		try {
+			super.clear(DELETE_DGB_STORAGE, SELECT_COUNT_FROM_DGB_STORAGE, CREATE_TABLE_DGB_STORAGE);
+		} catch (Exception e) {
+			throw new EStorageException(e);
+		}
 	}
 
-	public void delete(String path) throws SQLException {
-		super.delete(path, DELETE_DGB_STORAGE_PATH, SELECT_COUNT_FROM_DGB_STORAGE,
-				CREATE_TABLE_DGB_STORAGE);
+	@Override
+	public void delete(String path) throws EStorageException {
+		try {
+			super.delete(path, DELETE_DGB_STORAGE_PATH, SELECT_COUNT_FROM_DGB_STORAGE,
+					CREATE_TABLE_DGB_STORAGE);
+		} catch (Exception e) {
+			throw new EStorageException(e);
+		}
 	}
 
-	public void put(String path, byte[] data) throws SQLException {
+	@Override
+	public void put(String path, byte[] data) throws EStorageException {
 		checkMaxSize(data);
 		try {
 			checkDB();
@@ -95,9 +112,15 @@ public class StorageUtils extends AbstractStorageUtils {
 				insert(path, data);
 			}
 
-		} catch (NamingException e) {
-			throw new SQLException(e);
+		} catch (Exception e) {
+			throw new EStorageException(e);
 		}
+	}
+	
+	@Override
+	public void put(String path, byte[] data, String contentType)
+			throws EStorageException {
+		put(path, data);
 	}
 
 	private byte[] checkMaxSize(byte[] data) {
@@ -151,7 +174,8 @@ public class StorageUtils extends AbstractStorageUtils {
 	}
 
 	// Retrieve photo data from the cache
-	public byte[] get(String path) throws SQLException, IOException {
+	@Override
+	public byte[] get(String path) throws EStorageException {
 		try {
 			checkDB();
 
@@ -172,8 +196,8 @@ public class StorageUtils extends AbstractStorageUtils {
 					connection.close();
 				}
 			}
-		} catch (NamingException e) {
-			throw new SQLException(e);
+		} catch (Exception e) {
+			throw new EStorageException(e);
 		}
 		return null;
 	}

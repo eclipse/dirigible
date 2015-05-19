@@ -80,7 +80,7 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 
 	private void executeExtensionUpdate(Connection connection,
 			String scDefinition, HttpServletRequest request)
-			throws SQLException, IOException {
+			throws SQLException, IOException, EExtensionException {
 		JsonObject edDefinition = parseExtension(scDefinition);
 		String extensionName = edDefinition.get(NODE_EXTENSION).getAsString(); //$NON-NLS-1$
 		String extensionPointName = edDefinition.get(NODE_EXTENSION_POINT).getAsString(); //$NON-NLS-1$
@@ -95,7 +95,7 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 	
 	private void executeExtensionPointUpdate(Connection connection,
 			String scDefinition, HttpServletRequest request)
-			throws SQLException, IOException {
+			throws SQLException, IOException, EExtensionException {
 		JsonObject edDefinition = parseExtensionPoint(scDefinition);
 		String extensionPointName = edDefinition.get(NODE_EXTENSION_POINT).getAsString(); //$NON-NLS-1$
 		String extensionDescription = edDefinition.get(NODE_DESCRIPTION).getAsString(); //$NON-NLS-1$

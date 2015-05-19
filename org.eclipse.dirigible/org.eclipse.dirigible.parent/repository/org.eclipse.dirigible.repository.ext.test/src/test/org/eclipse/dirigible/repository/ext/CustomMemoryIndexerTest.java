@@ -17,8 +17,7 @@ import java.util.List;
 
 import org.apache.lucene.document.Document;
 import org.junit.Test;
-
-import org.eclipse.dirigible.repository.ext.lucene.CustomMemoryIndexer;
+import org.eclipse.dirigible.repository.ext.indexing.LuceneMemoryIndexer;
 
 public class CustomMemoryIndexerTest {
 
@@ -26,7 +25,7 @@ public class CustomMemoryIndexerTest {
 	public void testIndexer() {
 		try {
 			// create indexer
-			CustomMemoryIndexer customMemoryIndexer = CustomMemoryIndexer.getIndex("TestIndex");
+			LuceneMemoryIndexer customMemoryIndexer = LuceneMemoryIndexer.getIndex("TestIndex");
 			
 			assertNotNull(customMemoryIndexer);
 			
@@ -58,7 +57,7 @@ public class CustomMemoryIndexerTest {
 	public void testDeleteDocument() {
 		try {
 			// create indexer
-			CustomMemoryIndexer customMemoryIndexer = CustomMemoryIndexer.getIndex("TestIndex");
+			LuceneMemoryIndexer customMemoryIndexer = LuceneMemoryIndexer.getIndex("TestIndex");
 			
 			assertNotNull(customMemoryIndexer);
 			
@@ -90,7 +89,7 @@ public class CustomMemoryIndexerTest {
 	public void testUpdateDocument() {
 		try {
 			// create indexer
-			CustomMemoryIndexer customMemoryIndexer = CustomMemoryIndexer.getIndex("TestIndex");
+			LuceneMemoryIndexer customMemoryIndexer = LuceneMemoryIndexer.getIndex("TestIndex");
 			
 			assertNotNull(customMemoryIndexer);
 			

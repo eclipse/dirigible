@@ -13,8 +13,6 @@ package org.eclipse.dirigible.ide.bridge;
 
 import java.util.Properties;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
@@ -22,8 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SystemBridge extends HttpServlet {
-	
-	private static final String INITIAL_CONTEXT = "InitialContext"; //$NON-NLS-1$
 	
 	private static final long serialVersionUID = -8043662807856187626L;
 	
@@ -38,12 +34,6 @@ public class SystemBridge extends HttpServlet {
 		
 		for (Object property : ENV_PROPERTIES.keySet()) {
 			logger.info("SYSTEM_" + property + ": " + ENV_PROPERTIES.getProperty(property.toString()));
-		}
-		
-		try {
-			System.getProperties().put(INITIAL_CONTEXT, new InitialContext());
-		} catch (NamingException e) {
-			logger.error(e.getMessage(), e);
 		}
 		
 		super.init();

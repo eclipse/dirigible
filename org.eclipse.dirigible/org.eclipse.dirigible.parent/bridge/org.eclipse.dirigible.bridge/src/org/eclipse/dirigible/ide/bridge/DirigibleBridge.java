@@ -36,12 +36,15 @@ public class DirigibleBridge extends BridgeServlet {
 	static Class<Injector>[] injectorClasses;
 	static {
 		injectorClasses = new Class[]{
-			DatabaseInjector.class,
 			InitParametersInjector.class,
+			
+			InitialContextInjector.class,
+			DatabaseInjector.class,
 			ProxyParametersInjector.class,
 			LocalParametersInjector.class,
 			MailInjector.class,
-			RuntimeBridgeInjector.class
+			RuntimeBridgeInjector.class,
+			ConnectivityInjector.class
 		};
 	}
 	
@@ -58,6 +61,8 @@ public class DirigibleBridge extends BridgeServlet {
 			} catch (InstantiationException e) {
 				logger.error(e.getMessage(), e);
 			} catch (IllegalAccessException e) {
+				logger.error(e.getMessage(), e);
+			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
 		}

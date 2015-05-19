@@ -126,6 +126,15 @@
 		<res-auth>Container</res-auth>
 	</resource-ref>
 	
+	<resource-ref>
+    	<res-ref-name>connectivity/Configuration</res-ref-name>
+    	<res-type>com.sap.core.connectivity.api.configuration.ConnectivityConfiguration</res-type>
+	</resource-ref>
+	
+	<resource-ref>
+  		<res-ref-name>mail/SAPInternalNWCloudSession</res-ref-name>
+  	    <res-type>javax.mail.Session</res-type>
+  	</resource-ref>
 	
 <!-- 
 	<resource-ref>

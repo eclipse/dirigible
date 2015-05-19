@@ -98,4 +98,14 @@ public interface ICommonConstants {
 	public static final String EXTENSION_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
 			+ ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
 
+	public static final String INITIAL_CONTEXT = "InitialContext"; //$NON-NLS-1$
+		
+	public static final String GUEST = "guest"; //$NON-NLS-1$
+	
+	
+	// Platform specific
+	public static final String MAIL_SESSION = "MailSession"; //$NON-NLS-1$
+	
+	public static final String CONNECTIVITY_CONFIGURATION = "ConnectivityConfiguration"; //$NON-NLS-1$
+
 }
