@@ -20,13 +20,13 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MailInjector implements Injector {
 	
-	public static final String JAVA_COMP_ENV_MAIL_SESSION = "java:comp/env/mail/SAPInternalNWCloudSession"; //$NON-NLS-1$
 	public static final String DEFAULT_MAIL_SESSION = "MailSession"; //$NON-NLS-1$
 	
 	private static final Logger logger = LoggerFactory.getLogger(MailInjector.class);
@@ -42,8 +42,12 @@ public class MailInjector implements Injector {
 		if (session == null) {
 			try {
 				session = lookupMailSession();
-				req.getSession().setAttribute(DEFAULT_MAIL_SESSION, session);
-				System.getProperties().put(DEFAULT_MAIL_SESSION, session);
+				if (session != null) {
+					req.getSession().setAttribute(DEFAULT_MAIL_SESSION, session);
+					System.getProperties().put(DEFAULT_MAIL_SESSION, session);
+				} else {
+					logger.warn(InitParametersInjector.JNDI_MAIL_SESSION + " not present");
+				}
 			} catch (Exception e) {
 				logger.error(DirigibleBridge.class.getCanonicalName(), e);
 			}
@@ -59,7 +63,11 @@ public class MailInjector implements Injector {
 	 */
 	private Session lookupMailSession() throws NamingException {
 		final InitialContext ctx = new InitialContext();
-		return (Session) ctx.lookup(JAVA_COMP_ENV_MAIL_SESSION);
+		String key = InitParametersInjector.get(InitParametersInjector.JNDI_MAIL_SESSION);
+		if (key != null) {
+			return (Session) ctx.lookup(key);
+		}
+		return null;		
 	}
 
 

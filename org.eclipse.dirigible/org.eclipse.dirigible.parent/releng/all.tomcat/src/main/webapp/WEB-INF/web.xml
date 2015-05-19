@@ -66,6 +66,27 @@
 			<param-name>logInSystemOutput</param-name>
 			<param-value>true</param-value>
 		</init-param>
+		
+		<!-- JNDI key for the Default Database DataSource 
+		<init-param>
+			<param-name>jndiDefaultDataSource</param-name>
+			<param-value>java:comp/env/jdbc/DefaultDB</param-value>
+		</init-param>
+		-->
+		
+		<!-- JNDI key for the Connectivity Service 
+		<init-param>
+			<param-name>jndiConnectivityService</param-name>
+			<param-value>java:comp/env/connectivity/Configuration</param-value>
+		</init-param>
+		-->
+		
+		<!-- JNDI key for the Mail Service 
+		<init-param>
+			<param-name>jndiMailService</param-name>
+			<param-value>java:comp/env/mail/SAPInternalNWCloudSession</param-value>
+		</init-param>
+		-->
 
 		<load-on-startup>2</load-on-startup>
 
@@ -118,7 +139,7 @@
 	</filter-mapping>
 
 
-	<!-- Resource References  
+	<!-- Resource References 
 	
 	<resource-ref>
 		<res-ref-name>jdbc/DefaultDB</res-ref-name>
@@ -126,15 +147,18 @@
 		<res-auth>Container</res-auth>
 	</resource-ref>
 	
+	<resource-ref>
+    	<res-ref-name>connectivity/Configuration</res-ref-name>
+    	<res-type>com.sap.core.connectivity.api.configuration.ConnectivityConfiguration</res-type>
+	</resource-ref>
+	
+	<resource-ref>
+  		<res-ref-name>mail/SAPInternalNWCloudSession</res-ref-name>
+  	    <res-type>javax.mail.Session</res-type>
+  	</resource-ref>
+	
 	-->
 	
-<!-- 
-	<resource-ref>
-		<res-ref-name>PasswordStorage</res-ref-name>
-		<res-type>org.eclipse.jpaas.service.securestore.password.PasswordStorage</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
- -->
 
 	<!-- Security -->
 	

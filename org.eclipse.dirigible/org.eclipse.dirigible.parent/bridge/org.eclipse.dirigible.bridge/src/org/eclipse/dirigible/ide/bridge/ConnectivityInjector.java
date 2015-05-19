@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 public class ConnectivityInjector implements Injector {
 	
-	public static final String JAVA_COMP_ENV_CONNECTIVITY_CONFIGURATION = "java:comp/env/connectivity/Configuration"; //$NON-NLS-1$
 	public static final String CONNECTIVITY_CONFIGURATION = "ConnectivityConfiguration"; //$NON-NLS-1$
 	
 	private static final Logger logger = LoggerFactory.getLogger(ConnectivityInjector.class);
@@ -40,8 +39,12 @@ public class ConnectivityInjector implements Injector {
 		if (connectivityConfiguration == null) {
 			try {
 				connectivityConfiguration = lookupConnectivityConfiguration();
-				req.getSession().setAttribute(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
-				System.getProperties().put(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
+				if (connectivityConfiguration != null) {
+					req.getSession().setAttribute(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
+					System.getProperties().put(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
+				} else {
+					logger.warn(InitParametersInjector.JNDI_CONNECTIVITY_CONFIGURATION + " not present");
+				}
 			} catch (Exception e) {
 				logger.error(DirigibleBridge.class.getCanonicalName(), e);
 			}
@@ -49,14 +52,18 @@ public class ConnectivityInjector implements Injector {
 	}
 	
 	/**
-	 * Retrieve the Connectivity Configuration from the target server environment
+	 * Retrieve the Connectivity Configuration from the target platform
 	 * 
 	 * @return
 	 * @throws NamingException
 	 */
 	private Object lookupConnectivityConfiguration() throws NamingException {
 		final InitialContext ctx = new InitialContext();
-		return ctx.lookup(JAVA_COMP_ENV_CONNECTIVITY_CONFIGURATION);
+		String key = InitParametersInjector.get(InitParametersInjector.JNDI_CONNECTIVITY_CONFIGURATION);
+		if (key != null) {
+			return ctx.lookup(key);
+		}
+		return null;
 	}
 
 
