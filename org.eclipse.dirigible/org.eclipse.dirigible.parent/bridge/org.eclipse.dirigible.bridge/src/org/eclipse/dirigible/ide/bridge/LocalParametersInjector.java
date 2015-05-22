@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LocalParametersInjector implements Injector {
+public class LocalParametersInjector implements IInjector {
 	
 	private static final Logger logger = LoggerFactory.getLogger(LocalParametersInjector.class); 
 	
@@ -34,28 +34,33 @@ public class LocalParametersInjector implements Injector {
 	
 	
 	@Override
-	public void inject(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp)
+	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		String parameterHC_HOST = SystemBridge.ENV_PROPERTIES.getProperty(HC_HOST);
+		String parameterHC_HOST = DirigibleBridge.ENV_PROPERTIES.getProperty(HC_HOST);
 		req.getSession().setAttribute(HC_HOST, parameterHC_HOST);
 		logger.debug("HC_HOST:" + parameterHC_HOST);
-		String parameterHC_REGION = SystemBridge.ENV_PROPERTIES.getProperty(HC_REGION);
+		String parameterHC_REGION = DirigibleBridge.ENV_PROPERTIES.getProperty(HC_REGION);
 		req.getSession().setAttribute(HC_REGION, parameterHC_REGION);
 		logger.debug("HC_REGION:" + parameterHC_REGION);
-		String parameterHC_ACCOUNT = SystemBridge.ENV_PROPERTIES.getProperty(HC_ACCOUNT);
+		String parameterHC_ACCOUNT = DirigibleBridge.ENV_PROPERTIES.getProperty(HC_ACCOUNT);
 		req.getSession().setAttribute(HC_ACCOUNT, parameterHC_ACCOUNT);
 		logger.debug("HC_ACCOUNT:" + parameterHC_ACCOUNT);
-		String parameterHC_APPLICATION = SystemBridge.ENV_PROPERTIES.getProperty(HC_APPLICATION);
+		String parameterHC_APPLICATION = DirigibleBridge.ENV_PROPERTIES.getProperty(HC_APPLICATION);
 		req.getSession().setAttribute(HC_APPLICATION, parameterHC_APPLICATION);
 		logger.debug("HC_APPLICATION:" + parameterHC_APPLICATION);
-		String parameterHC_APPLICATION_URL = SystemBridge.ENV_PROPERTIES.getProperty(HC_APPLICATION_URL);
+		String parameterHC_APPLICATION_URL = DirigibleBridge.ENV_PROPERTIES.getProperty(HC_APPLICATION_URL);
 		req.getSession().setAttribute(HC_APPLICATION_URL, parameterHC_APPLICATION_URL);
 		logger.debug("HC_APPLICATION_URL:" + parameterHC_APPLICATION_URL);
-		String parameterHC_LOCAL_HTTP_PORT = SystemBridge.ENV_PROPERTIES.getProperty(HC_LOCAL_HTTP_PORT);
+		String parameterHC_LOCAL_HTTP_PORT = DirigibleBridge.ENV_PROPERTIES.getProperty(HC_LOCAL_HTTP_PORT);
 		req.getSession().setAttribute(HC_LOCAL_HTTP_PORT, parameterHC_LOCAL_HTTP_PORT);
 		logger.debug("HC_LOCAL_HTTP_PORT:" + parameterHC_LOCAL_HTTP_PORT);
 		
 	}
 
+	@Override
+	public void injectOnStart(ServletConfig servletConfig)
+			throws ServletException, IOException {
+		// do nothing		
+	}	
 }

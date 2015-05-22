@@ -23,17 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConnectivityInjector implements Injector {
+public class ConnectivityInjector implements IInjector {
 	
 	public static final String CONNECTIVITY_CONFIGURATION = "ConnectivityConfiguration"; //$NON-NLS-1$
 	
 	private static final Logger logger = LoggerFactory.getLogger(ConnectivityInjector.class);
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.ide.bridge.Injector#inject(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
 	@Override
-	public void inject(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		Object connectivityConfiguration = req.getSession().getAttribute(CONNECTIVITY_CONFIGURATION);
 		if (connectivityConfiguration == null) {
@@ -41,6 +38,24 @@ public class ConnectivityInjector implements Injector {
 				connectivityConfiguration = lookupConnectivityConfiguration();
 				if (connectivityConfiguration != null) {
 					req.getSession().setAttribute(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
+					System.getProperties().put(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
+				} else {
+					logger.warn(InitParametersInjector.JNDI_CONNECTIVITY_CONFIGURATION + " not present");
+				}
+			} catch (Exception e) {
+				logger.error(DirigibleBridge.class.getCanonicalName(), e);
+			}
+		}
+	}
+	
+	@Override
+	public void injectOnStart(ServletConfig servletConfig) throws ServletException, IOException {
+		
+		Object connectivityConfiguration = System.getProperties().get(CONNECTIVITY_CONFIGURATION);
+		if (connectivityConfiguration == null) {
+			try {
+				connectivityConfiguration = lookupConnectivityConfiguration();
+				if (connectivityConfiguration != null) {
 					System.getProperties().put(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
 				} else {
 					logger.warn(InitParametersInjector.JNDI_CONNECTIVITY_CONFIGURATION + " not present");

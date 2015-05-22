@@ -29,8 +29,6 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 public class RepositoryFacade {
 
-	private static final String COULD_NOT_FIND_DATA_SOURCE = "Could not find DataSource";
-
 	private static final Logger logger = Logger.getLogger(RepositoryFacade.class);
 
 //	private static final String JAVA_COMP_ENV_JDBC_DEFAULT_DB = "java:comp/env/jdbc/DefaultDB"; //$NON-NLS-1$
@@ -89,85 +87,89 @@ public class RepositoryFacade {
 	}
 	
 	public DataSource getDataSource() {
-		if (dataSource == null) {
-			dataSource = (WrappedDataSource) getFromEnv();
-		}
-		if (dataSource == null) {
-			dataSource = createLocal();
-		}
-		return dataSource;
+		return getDataSource(null);
 	}
 
 	public DataSource getDataSource(HttpServletRequest request) {
 		if (dataSource == null) {
+			logger.debug("Lookup Datasource...");
 			if (request == null) {
+				logger.debug("No request - try from Env...");
 				dataSource = (WrappedDataSource) getFromEnv();
 			} else {
+				logger.debug("Request exists - try from Request...");
 				dataSource = (WrappedDataSource) getFromSession(request);
+			} 
+			
+			if (dataSource == null) {
+				logger.debug("Try from Context...");
+				dataSource = (WrappedDataSource) getFromContext();
 			}
+			
 			if (dataSource == null) {
 				dataSource = createLocal();
+				logger.warn("Created Local DataSource!");
+			} else {
+				logger.debug("Lookup done.");
 			}
 		}
 		return dataSource;
 	}
 	
-	private static final String DATASOURCE_DEFAULT = "DEFAULT_DATASOURCE"; //$NON-NLS-1$
+	private static final String DATASOURCE_DEFAULT 				= "DEFAULT_DATASOURCE"; //$NON-NLS-1$
+	private static final String JNDI_DEFAULT_DATASOURCE 		= "jndiDefaultDataSource"; //$NON-NLS-1$
 	
 	private WrappedDataSource getFromSession(HttpServletRequest request) {
+		logger.debug("Try to get datasource from the Request");
+		
 		DataSource dataSource = null;
 		dataSource = (DataSource) request.getSession().getAttribute(DATASOURCE_DEFAULT);
 		if (dataSource != null) {
-			WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource); 
+			WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource);
+			logger.debug("Datasource retrieved from the Request");
 			return wrappedDataSource;
+		} else {
+			logger.debug("Datasource NOT available in the Request");
 		}
 		return null;
 	}
 	
 	private WrappedDataSource getFromEnv() {
+		logger.debug("Try to get datasource from System Properties");
+		
 		DataSource dataSource = null;
 		dataSource = (DataSource) System.getProperties().get(DATASOURCE_DEFAULT);
 		if (dataSource != null) {
-			WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource); 
+			WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource);
+			logger.debug("Datasource retrieved from System Properties");
 			return wrappedDataSource;
+		} else {
+			logger.debug("Datasource NOT available in System Properties");
 		}
 		return null;
 	}
 	
 
-//	private DataSource lookupDataSource() {
-////		InitialContext ctx;
-////		try {
-////			ctx = new InitialContext();
-////			return new WrappedDataSource((DataSource) ctx.lookup(JAVA_COMP_ENV_JDBC_DEFAULT_DB));
-////		} catch (NamingException e) {
-////			logger.error(e.getMessage());
-////		}
-////		return null;
-//		
-//		logger.debug("Try to get datasource from the InitialContext");
-//		
-////		Thread current = Thread.currentThread();
-////		ClassLoader old = current.getContextClassLoader();
-//		try {
-////			current.setContextClassLoader(BridgeServlet.class.getClassLoader());
-////			InitialContext context = new InitialContext();
-//			InitialContext context = (InitialContext) System.getProperties().get(INITIAL_CONTEXT);
-//			DataSource datasource = (DataSource) context.lookup(JAVA_COMP_ENV_JDBC_DEFAULT_DB);
-//			if (datasource == null) {
-//				logger.error(COULD_NOT_FIND_DATA_SOURCE);
-//			}
-//			return new WrappedDataSource(datasource);
-//		} catch (Throwable e) {
-//			logger.error(COULD_NOT_FIND_DATA_SOURCE, e);
-////			logger.error(e.getMessage(), e);
-//		}
-//		
-////		} finally {
-////			current.setContextClassLoader(old);
-////		}
-//		return null;
-//	}
+	private DataSource getFromContext() {
+		logger.debug("Try to get datasource from the InitialContext");
+		
+		try {
+			InitialContext context = (InitialContext) System.getProperties().get(INITIAL_CONTEXT);
+			String jndiName = System.getProperty(JNDI_DEFAULT_DATASOURCE);
+			DataSource datasource = (DataSource) context.lookup(jndiName);
+			if (datasource == null) {
+				logger.error("Could not find DataSource in Initial Context by name: " + jndiName);
+			} else {
+				WrappedDataSource wrappedDataSource = new WrappedDataSource(datasource);
+				logger.debug("Datasource retrieved from InitialContext");
+				return wrappedDataSource;
+			}
+		} catch (Throwable e) {
+			logger.error("Could not find DataSource", e);
+		}
+		
+		return null;
+	}
 
 	private WrappedDataSource createLocal() {
 		
@@ -180,7 +182,7 @@ public class RepositoryFacade {
 			((EmbeddedDataSource) localDataSource).setCreateDatabase(LOCAL_DB_ACTION);
 			System.getProperties().put(LOCAL_DB_NAME, localDataSource);
 		}
-		logger.error("Embedded DataSource is used!");
+		logger.error("Embedded DataSource is used! In case you intentionally use local datasource, ignore this error.");
 
 		WrappedDataSource wrappedDataSource = new WrappedDataSource(localDataSource);
 		return wrappedDataSource;

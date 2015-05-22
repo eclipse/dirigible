@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.ide.bridge;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -33,9 +34,11 @@ public class DirigibleBridge extends BridgeServlet {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleBridge.class);
 	
-	static Class<Injector>[] injectorClasses;
+	public static Properties ENV_PROPERTIES = new Properties();
+	
+	static Class<IInjector>[] INJECTOR_CLASSES;
 	static {
-		injectorClasses = new Class[]{
+		INJECTOR_CLASSES = new Class[]{
 			InitParametersInjector.class,
 			
 			InitialContextInjector.class,
@@ -49,15 +52,42 @@ public class DirigibleBridge extends BridgeServlet {
 	}
 	
 	@Override
+	public void init() throws ServletException {
+		
+		ENV_PROPERTIES.putAll(System.getProperties());
+		
+		for (Object property : ENV_PROPERTIES.keySet()) {
+			logger.info("SYSTEM_" + property + ": " + ENV_PROPERTIES.getProperty(property.toString()));
+		}
+		
+		ServletConfig servletConfig = getServletConfig();
+		
+		for (Class injectorClass : INJECTOR_CLASSES) {
+			try {
+				IInjector injector = (IInjector) injectorClass.newInstance();
+				injector.injectOnStart(servletConfig);
+			} catch (InstantiationException e) {
+				logger.error(e.getMessage(), e);
+			} catch (IllegalAccessException e) {
+				logger.error(e.getMessage(), e);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		
+		super.init();
+	}
+	
+	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
 		ServletConfig servletConfig = getServletConfig();
 		
-		for (Class injectorClass : injectorClasses) {
+		for (Class injectorClass : INJECTOR_CLASSES) {
 			try {
-				Injector injector = (Injector) injectorClass.newInstance();
-				injector.inject(servletConfig, req, resp);
+				IInjector injector = (IInjector) injectorClass.newInstance();
+				injector.injectOnRequest(servletConfig, req, resp);
 			} catch (InstantiationException e) {
 				logger.error(e.getMessage(), e);
 			} catch (IllegalAccessException e) {
@@ -69,6 +99,8 @@ public class DirigibleBridge extends BridgeServlet {
 
 		super.service(req, resp);
 	}
+	
+
 	
 
 }

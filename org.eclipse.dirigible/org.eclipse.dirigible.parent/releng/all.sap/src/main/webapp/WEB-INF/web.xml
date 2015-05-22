@@ -9,14 +9,6 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 	
-	<servlet id="system">
-		<description>System Bridge Servlet</description>
-		<display-name>System Bridge Servlet</display-name>
-		<servlet-name>systembridgeservlet</servlet-name>
-		<servlet-class>org.eclipse.dirigible.ide.bridge.SystemBridge</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
 	<servlet id="bridge">
 		<description>Equinox Bridge Servlet</description>
 		<display-name>Equinox Bridge Servlet</display-name>

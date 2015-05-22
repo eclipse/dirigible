@@ -19,7 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class InitParametersInjector implements Injector {
+public class InitParametersInjector implements IInjector {
 	
 	public static final String RUNTIME_URL 						= "runtimeUrl"; //$NON-NLS-1$
 	public static final String SERVICES_URL 					= "servicesUrl"; //$NON-NLS-1$
@@ -30,7 +30,7 @@ public class InitParametersInjector implements Injector {
 	public static final String JNDI_MAIL_SESSION				= "jndiMailSession"; //$NON-NLS-1$
 	
 	@Override
-	public void inject(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp)
+	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
 		Enumeration<String> parameterNames = servletConfig.getInitParameterNames();
@@ -38,6 +38,18 @@ public class InitParametersInjector implements Injector {
 			String parameterName = parameterNames.nextElement();
 			String parameterValue = servletConfig.getInitParameter(parameterName);
 			req.getSession().setAttribute(parameterName, parameterValue);
+		}
+		
+	}
+	
+	@Override
+	public void injectOnStart(ServletConfig servletConfig)
+			throws ServletException, IOException {
+		
+		Enumeration<String> parameterNames = servletConfig.getInitParameterNames();
+		while (parameterNames.hasMoreElements()) {
+			String parameterName = parameterNames.nextElement();
+			String parameterValue = servletConfig.getInitParameter(parameterName);
 			System.getProperties().put(parameterName, parameterValue);
 		}
 		

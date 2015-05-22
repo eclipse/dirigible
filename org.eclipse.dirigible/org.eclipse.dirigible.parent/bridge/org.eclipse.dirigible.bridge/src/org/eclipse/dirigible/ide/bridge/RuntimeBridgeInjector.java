@@ -23,17 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RuntimeBridgeInjector implements Injector {
+public class RuntimeBridgeInjector implements IInjector {
 	
 	public static final String DIRIGIBLE_RUNTIME_BRIDGE = "dirigible.runtime.bridge"; //$NON-NLS-1$
 	
 	private static final Logger logger = LoggerFactory.getLogger(RuntimeBridgeInjector.class);
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.ide.bridge.Injector#inject(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
 	@Override
-	public void inject(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		PropertyChangeSupport sessionRuntimeBridge = (PropertyChangeSupport) req.getSession().getAttribute(DIRIGIBLE_RUNTIME_BRIDGE);
 		if (sessionRuntimeBridge == null) {
@@ -44,6 +41,12 @@ public class RuntimeBridgeInjector implements Injector {
 				logger.error(e.getMessage(), e);
 			}
 		}
+	}
+	
+	@Override
+	public void injectOnStart(ServletConfig servletConfig)
+			throws ServletException, IOException {
+		// do nothing	
 	}
 	
 	/**

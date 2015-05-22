@@ -23,23 +23,32 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InitialContextInjector implements Injector {
+public class InitialContextInjector implements IInjector {
 	
 	private static final Logger logger = LoggerFactory.getLogger(InitialContextInjector.class);
 	
 	public static final String INITIAL_CONTEXT = "InitialContext"; //$NON-NLS-1$
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.ide.bridge.Injector#inject(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
 	@Override
-	public void inject(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		InitialContext initialContext = (InitialContext) req.getSession().getAttribute(INITIAL_CONTEXT);
 		if (initialContext == null) {
 			try {
 				initialContext = new InitialContext();
 				req.getSession().setAttribute(INITIAL_CONTEXT, initialContext);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+	}
+	
+	@Override
+	public void injectOnStart(ServletConfig servletConfig) {
+		InitialContext initialContext = (InitialContext) System.getProperties().get(INITIAL_CONTEXT);
+		if (initialContext == null) {
+			try {
+				initialContext = new InitialContext();
 				System.getProperties().put(INITIAL_CONTEXT, initialContext);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
