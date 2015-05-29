@@ -80,6 +80,12 @@
 			<param-value>java:comp/env/mail/SAPInternalNWCloudSession</param-value>
 		</init-param>
 		-->
+		
+		<!-- Auto Commit property for JDBC connection --> 
+		<init-param>
+			<param-name>jdbcSetAutoCommit</param-name>
+			<param-value>false</param-value>  <!-- set to true in case of PostgreSQL -->
+		</init-param>
 
 		<load-on-startup>2</load-on-startup>
 

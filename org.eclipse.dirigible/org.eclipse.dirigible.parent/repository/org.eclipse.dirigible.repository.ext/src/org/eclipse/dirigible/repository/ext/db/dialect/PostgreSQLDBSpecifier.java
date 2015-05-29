@@ -24,6 +24,7 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 	
 	private static final String POSTGRESQL_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
 	private static final String POSTGRESQL_FLOAT = "REAL"; //$NON-NLS-1$
+	private static final String POSTGRESQL_DOUBLE = "DOUBLE PRECISION"; //$NON-NLS-1$
 	private static final String POSTGRESQL_BLOB = "BYTEA"; //$NON-NLS-1$
 	private static final String POSTGRESQL_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP"; //$NON-NLS-1$
 
@@ -44,6 +45,9 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 	public String getSpecificType(String commonType) {
 		if (DBSupportedTypesMap.FLOAT.equals(commonType)) {
 			return POSTGRESQL_FLOAT;
+		}
+		if (DBSupportedTypesMap.DOUBLE.equals(commonType)) {
+			return POSTGRESQL_DOUBLE;
 		}
 		return commonType;
 	}

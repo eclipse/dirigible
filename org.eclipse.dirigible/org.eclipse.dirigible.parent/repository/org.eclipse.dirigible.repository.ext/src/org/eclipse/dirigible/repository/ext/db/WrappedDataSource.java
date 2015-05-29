@@ -37,6 +37,8 @@ public class WrappedDataSource implements DataSource {
 	private static final long WAIT_TIMEOUT = 500;
 	private static final int WAIT_COUNT = 5;
 
+	public static final String SET_AUTO_COMMIT = "jdbcSetAutoCommit"; //$NON-NLS-1$
+	
 	public WrappedDataSource(DataSource originalDataSource) {
 		super();
 		this.originalDataSource = originalDataSource;
@@ -47,7 +49,8 @@ public class WrappedDataSource implements DataSource {
 		checkConnections();
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(), this);
 		addConnection(wrappedConnection);
-		wrappedConnection.setAutoCommit(false);
+//		wrappedConnection.setAutoCommit(false);
+		wrappedConnection.setAutoCommit(Boolean.parseBoolean(System.getProperty(SET_AUTO_COMMIT)));
 		logger.debug("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
 		logger.debug("exiting - getConnection()");
 		return wrappedConnection;
@@ -59,7 +62,8 @@ public class WrappedDataSource implements DataSource {
 		checkConnections();
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(username, password), this);
 		addConnection(wrappedConnection);
-		wrappedConnection.setAutoCommit(false);
+//		wrappedConnection.setAutoCommit(false);
+		wrappedConnection.setAutoCommit(Boolean.parseBoolean(System.getProperty(SET_AUTO_COMMIT)));
 		logger.debug("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
 		logger.debug("exiting - getConnection(String username, String password)");
 		return wrappedConnection;

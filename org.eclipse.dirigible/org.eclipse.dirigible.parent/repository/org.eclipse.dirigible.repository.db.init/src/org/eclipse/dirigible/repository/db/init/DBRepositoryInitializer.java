@@ -137,11 +137,9 @@ public class DBRepositoryInitializer {
 					scriptDescriptor.description));
 			String script = null;
 			try {
-				script = this.dbUtils.readScript(connection,
-						scriptDescriptor.location, this.getClass());
-				result = this.dbUtils.executeUpdate(connection,
-						script);
-			} catch (IOException e) {
+				script = this.dbUtils.readScript(connection, scriptDescriptor.location, this.getClass());
+				result = this.dbUtils.executeUpdate(connection, script);
+			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				logger.error(script);
 			}
@@ -190,8 +188,7 @@ public class DBRepositoryInitializer {
 							script = this.dbUtils.readScript(
 									connection, scriptDescriptor.location,
 									this.getClass());
-							boolean result = this.dbUtils
-									.executeUpdate(connection, script);
+							boolean result = this.dbUtils.executeUpdate(connection, script);
 							if (!result) {
 								break;
 							}
@@ -206,10 +203,7 @@ public class DBRepositoryInitializer {
 				forceRecreate();
 			}
 
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			logger.error(script);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			logger.error(script);
 		} finally {

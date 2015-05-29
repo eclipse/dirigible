@@ -69,7 +69,9 @@ public class WrappedConnection implements Connection {
 
 	public void close() throws SQLException {
 		logger.debug("entering - close()");
-		originalConnection.commit();
+		if (!originalConnection.getAutoCommit()) {
+			originalConnection.commit();
+		}
 		originalConnection.close();
 		dataSource.closedConnection(this);
 		logger.debug("exiting - close()");
@@ -77,7 +79,9 @@ public class WrappedConnection implements Connection {
 
 	public void commit() throws SQLException {
 		logger.debug("entering - commit()");
-		originalConnection.commit();
+		if (!originalConnection.getAutoCommit()) {
+			originalConnection.commit();
+		}
 		logger.debug("exiting - commit()");
 	}
 
@@ -262,12 +266,16 @@ public class WrappedConnection implements Connection {
 
 	public void rollback() throws SQLException {
 		logger.debug("called - rollback()");
-		originalConnection.rollback();
+		if (!originalConnection.getAutoCommit()) {
+			originalConnection.rollback();
+		}
 	}
 
 	public void rollback(Savepoint savepoint) throws SQLException {
 		logger.debug("called - rollback(Savepoint savepoint)");
-		originalConnection.rollback(savepoint);
+		if (!originalConnection.getAutoCommit()) {
+			originalConnection.rollback(savepoint);
+		}
 	}
 
 	public void setAutoCommit(boolean autoCommit) throws SQLException {
