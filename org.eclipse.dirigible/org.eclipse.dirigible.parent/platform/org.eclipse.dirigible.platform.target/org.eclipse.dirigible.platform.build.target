@@ -67,7 +67,7 @@
 <unit id="org.apache.commons.lang" version="2.6.0.v201404270220"/>
 <unit id="org.apache.derby" version="10.8.2.2_v201211210650"/>
 <unit id="org.mockito" version="1.8.4.v201303031500"/>
-<unit id="org.objenesis" version="1.0.0.v201105211943"/>
+<unit id="org.objenesis" version="1.0.0.v201505121915"/>
 <unit id="org.jdom" version="1.0.0.v201005080400"/>
 <unit id="org.apache.lucene.core" version="3.5.0.v20120725-1805"/>
 <unit id="org.apache.lucene.analysis" version="3.5.0.v20120725-1805"/>
@@ -82,7 +82,7 @@
 <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
 <unit id="org.jsoup" version="1.7.2.v201411291515"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20150428165605/repository"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
