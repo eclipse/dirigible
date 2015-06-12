@@ -46,7 +46,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<JavaFileManager>
 		if (instance == null) {
 			instance = new ClassFileManager(standardManager);
 		}
-		return new ClassFileManager(standardManager);
+		return instance;
 	}
 	
 	public static String getFQN(String module) {
@@ -58,28 +58,20 @@ public class ClassFileManager extends ForwardingJavaFileManager<JavaFileManager>
 		if (indexOf > 0) {
 			fqn.delete(indexOf, fqn.length());
 		}
-
 		return fqn.toString().replace(SLASH, DOT);
 	}
 	
-//	public static String getJars() throws URISyntaxException, IOException {
-//		URL url = JavaExecutor.class.getProtectionDomain().getCodeSource().getLocation();
-//		File libDirectory = new File(url.toURI()).getParentFile();
-//		return getJars(libDirectory);
-//	}
-	
 	public static String getJars(File libDirectory) throws IOException {
-		
 			StringBuilder jars = new StringBuilder();
-			
+
 			if (libDirectory == null) {
 				throw new IOException("Lib directory is null");
 			}
-			
+
 			if (!libDirectory.exists()) {
 				throw new IOException(String.format("File %s does not exist", libDirectory.getCanonicalFile()));
 			}
-	
+
 			for (File jar : libDirectory.listFiles()) {
 				String jarPath = jar.getCanonicalPath();
 				if (jar.isFile()) {
@@ -87,10 +79,6 @@ public class ClassFileManager extends ForwardingJavaFileManager<JavaFileManager>
 							&& jarPath.endsWith(".jar")) { // exclude source bundles
 						jars.append(jarPath + separator);
 					}
-//					if (jarPath.contains("javax.servlet")
-//							&& jarPath.endsWith(".jar")) {
-//						jars.append(jarPath + separator);
-//					}
 				} else {
 					jars.append(getJars(jar));
 				}
