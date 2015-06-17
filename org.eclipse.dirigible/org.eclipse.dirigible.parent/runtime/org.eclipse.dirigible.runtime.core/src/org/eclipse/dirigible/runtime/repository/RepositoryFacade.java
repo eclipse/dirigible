@@ -156,6 +156,9 @@ public class RepositoryFacade {
 		try {
 			InitialContext context = (InitialContext) System.getProperties().get(INITIAL_CONTEXT);
 			String jndiName = System.getProperty(JNDI_DEFAULT_DATASOURCE);
+			if ((context == null) || (jndiName == null)) {
+				return null;
+			}
 			DataSource datasource = (DataSource) context.lookup(jndiName);
 			if (datasource == null) {
 				logger.error("Could not find DataSource in Initial Context by name: " + jndiName);

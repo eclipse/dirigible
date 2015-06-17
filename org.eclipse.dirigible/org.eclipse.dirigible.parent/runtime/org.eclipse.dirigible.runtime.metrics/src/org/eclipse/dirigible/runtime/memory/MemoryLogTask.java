@@ -31,7 +31,7 @@ public class MemoryLogTask implements IRunnableTask {
 				+ "start()"); //$NON-NLS-1$
 		try {
 			MemoryLogRecordDAO.insert();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		logger.debug("exiting: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$

@@ -37,7 +37,7 @@ public class WrappedDataSource implements DataSource {
 	private static final long WAIT_TIMEOUT = 500;
 	private static final int WAIT_COUNT = 5;
 
-	public static final String SET_AUTO_COMMIT = "jdbcSetAutoCommit"; //$NON-NLS-1$
+	public static final String SET_AUTO_COMMIT = "jdbcAutoCommit"; //$NON-NLS-1$
 	
 	public WrappedDataSource(DataSource originalDataSource) {
 		super();

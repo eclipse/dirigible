@@ -28,7 +28,7 @@ public class InitParametersInjector implements IInjector {
 	public static final String JNDI_DEFAULT_DATASOURCE 			= "jndiDefaultDataSource"; //$NON-NLS-1$
 	public static final String JNDI_CONNECTIVITY_CONFIGURATION 	= "jndiConnectivityService"; //$NON-NLS-1$
 	public static final String JNDI_MAIL_SESSION				= "jndiMailSession"; //$NON-NLS-1$
-	public static final String SET_AUTO_COMMIT					= "jdbcSetAutoCommit"; //$NON-NLS-1$
+	public static final String SET_AUTO_COMMIT					= "jdbcAutoCommit"; //$NON-NLS-1$
 	
 	@Override
 	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp)

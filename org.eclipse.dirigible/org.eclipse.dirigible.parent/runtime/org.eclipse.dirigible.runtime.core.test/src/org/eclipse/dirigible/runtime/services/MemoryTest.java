@@ -12,15 +12,29 @@
 package org.eclipse.dirigible.runtime.services;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.dirigible.runtime.memory.MemoryLogRecordDAO;
+import org.junit.Test;
 
 public class MemoryTest {
 	
 	@Test
 	public void testMemory() {
 		assertNotNull(MemoryLogRecordDAO.generateMemoryInfo());
+	}
+	
+	@Test
+	public void testMemoryLog() {
+		try {
+			MemoryLogRecordDAO.insert();
+			String[][] memoryLogs = MemoryLogRecordDAO.getMemoryLogRecords();
+			assertNotNull(memoryLogs);
+			System.out.println(ArrayUtils.toString(memoryLogs));
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+			e.printStackTrace();
+		}
 	}
 }
