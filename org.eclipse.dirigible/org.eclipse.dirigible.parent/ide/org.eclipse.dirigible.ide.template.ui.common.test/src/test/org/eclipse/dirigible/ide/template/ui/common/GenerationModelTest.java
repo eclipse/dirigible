@@ -39,7 +39,8 @@ public class GenerationModelTest {
 	private static final String FILE_NAME_NO_EXTENSION = "fileName"; //$NON-NLS-1$
 	private static final String FILE_NAME_WITH_EXTENSION = "fileName.txt"; //$NON-NLS-1$
 	private static final String TEMPLATE_LOCATION = "Template Location"; //$NON-NLS-1$
-	private static final String TARGET_LOCATION = "targetLocation/services"; //$NON-NLS-1$
+	private static final String TARGET_LOCATION = "targetLocation"; //$NON-NLS-1$
+	private static final String TARGET_PACKAGE = "services"; //$NON-NLS-1$
 	private static final String PROJECT_NAME = "targetLocation"; //$NON-NLS-1$
 	private static final String TEMPLATE_LOCATION_IS_EMPTY = "Template location is empty"; //$NON-NLS-1$
 	private static final String COULD_NOT_OPEN_INPUT_STREAM_FOR = "Could not open input stream for: %s"; //$NON-NLS-1$
@@ -123,7 +124,8 @@ public class GenerationModelTest {
 	 */
 	@Test 
 	public void testgetProjectName() {
-		generationModel.setTargetLocation(TARGET_LOCATION);
+		generationModel.setTargetContainer(TARGET_LOCATION);
+		generationModel.setPackageName(TARGET_PACKAGE);
 		generationModel.setFileName(FILE_NAME_WITH_EXTENSION);
 
 //		IPath location = new Path(generationModel.getTargetLocation())
@@ -138,7 +140,8 @@ public class GenerationModelTest {
 	public void testValidateLocationGenericPathNotIsValid() {
 		//Path is not valid for a resource of the given type(s)
 		
-		generationModel.setTargetLocation(TARGET_LOCATION);
+		generationModel.setTargetContainer(TARGET_LOCATION);
+		generationModel.setPackageName(TARGET_PACKAGE);
 
 		Mockito.when(
 				workspace.validatePath(generationModel.getTargetLocation(),
@@ -167,7 +170,8 @@ public class GenerationModelTest {
 		Mockito.when(workspace.validateName(anyString(), anyInt())).thenReturn(
 				iStatus);
 
-		generationModel.setTargetLocation(TARGET_LOCATION);
+		generationModel.setTargetContainer(TARGET_LOCATION);
+		generationModel.setPackageName(TARGET_PACKAGE);
 		String actual = generationModel.validateLocationGeneric(workspace)
 				.getMessage();
 		String expected = ValidationStatus.createError(
@@ -190,7 +194,8 @@ public class GenerationModelTest {
 		Mockito.when(workspace.getRoot()).thenReturn(root);
 		Mockito.when(root.findMember(anyString())).thenReturn(resource);
 
-		generationModel.setTargetLocation(TARGET_LOCATION);
+		generationModel.setTargetContainer(TARGET_LOCATION);
+		generationModel.setPackageName(TARGET_PACKAGE);
 		generationModel.setFileName(FILE_NAME_WITH_EXTENSION);
 
 //		IPath location = new Path(generationModel.getTargetLocation())
@@ -220,7 +225,8 @@ public class GenerationModelTest {
 		Mockito.when(workspace.getRoot()).thenReturn(root);
 		Mockito.when(root.findMember(anyString())).thenReturn(resource);
 
-		generationModel.setTargetLocation(TARGET_LOCATION);
+		generationModel.setTargetContainer(TARGET_LOCATION);
+		generationModel.setPackageName(TARGET_PACKAGE);
 		generationModel.setFileName(FILE_NAME_WITH_EXTENSION);
 
 		IPath location = new Path(generationModel.getTargetLocation())
