@@ -117,9 +117,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 			@Override
 			public Object function(final Object[] arguments) {
 				if ((listener != null) && (arguments[0] != null) && (arguments[0] instanceof Number)) {
-					if (arguments[0] instanceof Number) {
-						listener.setBreakpoint(((Number) arguments[0]).intValue());
-					}
+					listener.setBreakpoint(((Number) arguments[0]).intValue());
 				}
 				return null;
 			}
@@ -130,9 +128,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 			@Override
 			public Object function(final Object[] arguments) {
 				if ((listener != null) && (arguments[0] != null) && (arguments[0] instanceof Number)) {
-					if (arguments[0] instanceof Number) {
-						listener.clearBreakpoint(((Number) arguments[0]).intValue());
-					}
+					listener.clearBreakpoint(((Number) arguments[0]).intValue());
 				}
 				return null;
 			}
