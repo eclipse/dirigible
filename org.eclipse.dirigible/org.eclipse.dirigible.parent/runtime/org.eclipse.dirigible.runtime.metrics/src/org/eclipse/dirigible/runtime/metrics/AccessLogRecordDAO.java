@@ -11,6 +11,7 @@
 
 package org.eclipse.dirigible.runtime.metrics;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,6 +31,7 @@ import java.util.TreeMap;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 
@@ -37,57 +39,62 @@ public class AccessLogRecordDAO {
 	
 	private static final Logger logger = Logger.getLogger(AccessLogRecordDAO.class);
 	
-	private static final String DELETE_FROM_DGB_ACCESS_LOG_WHERE_ACCLOG_TIMESTAMP = "DELETE FROM DGB_ACCESS_LOG WHERE ACCLOG_TIMESTAMP < ?";
-	private static final String INSERT_INTO_DGB_ACCESS_LOG = "INSERT INTO DGB_ACCESS_LOG ("
-			+ "ACCLOG_REQUEST_URI, "
-			+ "ACCLOG_REMOTE_USER, "
-			+ "ACCLOG_REMOTE_HOST, "
-			+ "ACCLOG_SESSION_ID, "
-			+ "ACCLOG_METHOD, "
-			+ "ACCLOG_USER_AGENT, "
-			+ "ACCLOG_RESPONSE_STATUS, "
-			+ "ACCLOG_TIMESTAMP,"
-			+ "ACCLOG_PERIOD,"
-			+ "ACCLOG_PATTERN,"
-			+ "ACCLOG_PROJECT,"
-			+ "ACCLOG_RESPONSE_TIME) "
-			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-	private static final String CREATE_TABLE_DGB_ACCESS_LOG = "CREATE TABLE DGB_ACCESS_LOG ("
-			+ " ACCLOG_REQUEST_URI VARCHAR(256), "
-			+ " ACCLOG_REMOTE_USER VARCHAR(128), "
-			+ " ACCLOG_REMOTE_HOST VARCHAR(128), "
-			+ " ACCLOG_SESSION_ID VARCHAR(64), "
-			+ " ACCLOG_METHOD VARCHAR(12), "
-			+ " ACCLOG_USER_AGENT VARCHAR(32), "
-			+ " ACCLOG_RESPONSE_STATUS INTEGER, "
-			+ " ACCLOG_TIMESTAMP TIMESTAMP, "
-			+ " ACCLOG_PERIOD TIMESTAMP, "
-			+ " ACCLOG_PATTERN VARCHAR(128), "
-			+ " ACCLOG_PROJECT VARCHAR(128), "
-			+ " ACCLOG_RESPONSE_TIME INTEGER "
-			+ " )";
-	private static final String SELECT_COUNT_FROM_DGB_ACCESS_LOG = "SELECT COUNT(*) FROM DGB_ACCESS_LOG";
 	
-	private static final String SELECT_ALL_DGB_ACCESS_LOG = "SELECT * FROM DGB_ACCESS_LOG";
+	private static final String RESPONSE_TIME = "RESPONSE_TIME";
+
+	private static final String ACCLOG_COUNT = "ACCLOG_COUNT";
+
+	private static final String ACCLOG_RESPONSE_TIME = "ACCLOG_RESPONSE_TIME";
+
+	private static final String ACCLOG_PROJECT = "ACCLOG_PROJECT";
+
+	private static final String ACCLOG_PATTERN = "ACCLOG_PATTERN";
+
+	private static final String ACCLOG_PERIOD = "ACCLOG_PERIOD";
+
+	private static final String ACCLOG_TIMESTAMP = "ACCLOG_TIMESTAMP";
+
+	private static final String ACCLOG_RESPONSE_STATUS = "ACCLOG_RESPONSE_STATUS";
+
+	private static final String ACCLOG_USER_AGENT = "ACCLOG_USER_AGENT";
+
+	private static final String ACCLOG_METHOD = "ACCLOG_METHOD";
+
+	private static final String ACCLOG_SESSION_ID = "ACCLOG_SESSION_ID";
+
+	private static final String ACCLOG_REMOTE_HOST = "ACCLOG_REMOTE_HOST";
+
+	private static final String ACCLOG_REMOTE_USER = "ACCLOG_REMOTE_USER";
+
+	private static final String ACCLOG_REQUEST_URI = "ACCLOG_REQUEST_URI";
+
 	
-	// hit count related 
-	private static final String SELECT_LAST_BY_PATTERN = "SELECT ACCLOG_PATTERN, ACCLOG_PERIOD, COUNT(*) AS ACCLOG_COUNT FROM DGB_ACCESS_LOG WHERE ACCLOG_PERIOD > ? GROUP BY ACCLOG_PATTERN, ACCLOG_PERIOD ORDER BY ACCLOG_PATTERN, ACCLOG_PERIOD";
+	private static final String SQL_MAP_REMOVE_OLDER_LOG_RECORDS =
+			"/org/eclipse/dirigible/runtime/metrics/sql/remove_older_log_records.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_INSERT_LOG_RECORD =
+			"/org/eclipse/dirigible/runtime/metrics/sql/insert_log_record.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_CREATE_TABLE_LOG_RECORDS =
+			"/org/eclipse/dirigible/runtime/metrics/sql/create_table_log_records.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_COUNT_LOG_RECORDS =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_count_log_records.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_ALL_LOG_RECORDS =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_all_log_records.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_LAST_BY_PATTERN_LOG_RECORD =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_last_by_pattern_log_record.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_LAST_BY_PROJECT_LOG_RECORD =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_last_by_project_log_record.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_last_by_uri_log_record.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_rt_by_pattern_log_record.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_rt_by_project_log_record.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_rt_by_uri_log_record.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_HITS_BY_URI_LOG_RECORD =
+			"/org/eclipse/dirigible/runtime/metrics/sql/select_hits_by_uri_log_record.sql"; //$NON-NLS-1$
 	
-	private static final String SELECT_LAST_BY_PROJECT = "SELECT ACCLOG_PROJECT, ACCLOG_PERIOD, COUNT(*) AS ACCLOG_COUNT FROM DGB_ACCESS_LOG WHERE ACCLOG_PERIOD > ? GROUP BY ACCLOG_PROJECT, ACCLOG_PERIOD ORDER BY ACCLOG_PROJECT, ACCLOG_PERIOD";
-	
-	private static final String SELECT_LAST_BY_URI = "SELECT ACCLOG_REQUEST_URI, ACCLOG_PERIOD, COUNT(*) AS ACCLOG_COUNT FROM DGB_ACCESS_LOG WHERE ACCLOG_PERIOD > ? GROUP BY ACCLOG_REQUEST_URI, ACCLOG_PERIOD ORDER BY ACCLOG_REQUEST_URI, ACCLOG_PERIOD";
-	
-	// response time related 
-	private static final String SELECT_RT_BY_PATTERN = "SELECT ACCLOG_PATTERN, ACCLOG_PERIOD, AVG(ACCLOG_RESPONSE_TIME) AS RESPONSE_TIME FROM DGB_ACCESS_LOG WHERE ACCLOG_PERIOD > ? GROUP BY ACCLOG_PATTERN, ACCLOG_PERIOD ORDER BY ACCLOG_PATTERN, ACCLOG_PERIOD";
-	
-	private static final String SELECT_RT_BY_PROJECT = "SELECT ACCLOG_PROJECT, ACCLOG_PERIOD, AVG(ACCLOG_RESPONSE_TIME) AS RESPONSE_TIME FROM DGB_ACCESS_LOG WHERE ACCLOG_PERIOD > ? GROUP BY ACCLOG_PROJECT, ACCLOG_PERIOD ORDER BY ACCLOG_PROJECT, ACCLOG_PERIOD";
-	
-	private static final String SELECT_RT_BY_URI = "SELECT ACCLOG_REQUEST_URI, ACCLOG_PERIOD, AVG(ACCLOG_RESPONSE_TIME) AS RESPONSE_TIME FROM DGB_ACCESS_LOG WHERE ACCLOG_PERIOD > ? GROUP BY ACCLOG_REQUEST_URI, ACCLOG_PERIOD ORDER BY ACCLOG_REQUEST_URI, ACCLOG_PERIOD";
-	
-	// hits grouped
-	private static final String SELECT_HITS_BY_URI = "SELECT ACCLOG_REQUEST_URI, COUNT(*) AS ACCLOG_COUNT FROM DGB_ACCESS_LOG GROUP BY ACCLOG_REQUEST_URI ORDER BY ACCLOG_REQUEST_URI";
-	
-	public static void insert(AccessLogRecord accessLogRecord) throws SQLException {
+	public static void insert(AccessLogRecord accessLogRecord) throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -96,8 +103,10 @@ public class AccessLogRecordDAO {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(
-						INSERT_INTO_DGB_ACCESS_LOG);
+				
+				DBUtils dbUtils = new DBUtils(dataSource);
+				String sql = dbUtils.readScript(connection, SQL_MAP_INSERT_LOG_RECORD, AccessLogRecordDAO.class);
+				PreparedStatement pstmt = connection.prepareStatement(sql);
 				
 				int i=0;
 				pstmt.setString(++i, accessLogRecord.getRequestUri());
@@ -125,20 +134,23 @@ public class AccessLogRecordDAO {
 		}
 	}
 
-	private static  void checkDB() throws NamingException, SQLException {
+	private static  void checkDB() throws NamingException, SQLException, IOException {
 		DataSource dataSource = RepositoryFacade.getInstance()
 				.getDataSource();
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
 			Statement stmt = connection.createStatement();
-			
+			DBUtils dbUtils = new DBUtils(dataSource);
+			String sqlCount = dbUtils.readScript(connection, SQL_MAP_SELECT_COUNT_LOG_RECORDS, AccessLogRecordDAO.class);
+
 			try {
-				stmt.executeQuery(SELECT_COUNT_FROM_DGB_ACCESS_LOG);
+				stmt.executeQuery(sqlCount);
 			} catch (Exception e) {
 				logger.error("DGB_ACCESS_LOG does not exist?" + e.getMessage(), e);
 				// Create Access Log Table
-				stmt.executeUpdate(CREATE_TABLE_DGB_ACCESS_LOG);
+				String sqlCreate = dbUtils.readScript(connection, SQL_MAP_CREATE_TABLE_LOG_RECORDS, AccessLogRecordDAO.class);
+				stmt.executeUpdate(sqlCreate);
 			}
 		} finally {
 			if (connection != null) {
@@ -147,7 +159,7 @@ public class AccessLogRecordDAO {
 		}
 	}
 
-	public static void cleanupOlderRecords() throws SQLException {
+	public static void cleanupOlderRecords() throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -156,8 +168,9 @@ public class AccessLogRecordDAO {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(
-						DELETE_FROM_DGB_ACCESS_LOG_WHERE_ACCLOG_TIMESTAMP);
+				DBUtils dbUtils = new DBUtils(dataSource);
+				String sql = dbUtils.readScript(connection, SQL_MAP_REMOVE_OLDER_LOG_RECORDS, AccessLogRecordDAO.class);
+				PreparedStatement pstmt = connection.prepareStatement(sql);
 				
 				GregorianCalendar last = new GregorianCalendar();
 				last.add(Calendar.WEEK_OF_YEAR, -1);
@@ -176,7 +189,7 @@ public class AccessLogRecordDAO {
 		
 	}
 	
-	public static AccessLogRecord[] getAccessLogRecords() throws SQLException {
+	public static AccessLogRecord[] getAccessLogRecords() throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -185,25 +198,26 @@ public class AccessLogRecordDAO {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(
-						SELECT_ALL_DGB_ACCESS_LOG);
+				DBUtils dbUtils = new DBUtils(dataSource);
+				String sql = dbUtils.readScript(connection, SQL_MAP_SELECT_ALL_LOG_RECORDS, AccessLogRecordDAO.class);
+				PreparedStatement pstmt = connection.prepareStatement(sql);
 				
 				List<AccessLogRecord> accessLogRecords = new ArrayList<AccessLogRecord>();
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
 					AccessLogRecord accessLogRecord = new AccessLogRecord(
-						rs.getString("ACCLOG_REQUEST_URI"),
-						rs.getString("ACCLOG_REMOTE_USER"),
-						rs.getString("ACCLOG_REMOTE_HOST"),
-						rs.getString("ACCLOG_SESSION_ID"),
-						rs.getString("ACCLOG_METHOD"),
-						rs.getString("ACCLOG_USER_AGENT"),
-						rs.getInt("ACCLOG_RESPONSE_STATUS"),
-						rs.getTimestamp("ACCLOG_TIMESTAMP"),
-						rs.getTimestamp("ACCLOG_PERIOD"),
-						rs.getString("ACCLOG_PATTERN"),
-						rs.getString("ACCLOG_PROJECT"),
-						rs.getInt("ACCLOG_RESPONSE_TIME")
+						rs.getString(ACCLOG_REQUEST_URI),
+						rs.getString(ACCLOG_REMOTE_USER),
+						rs.getString(ACCLOG_REMOTE_HOST),
+						rs.getString(ACCLOG_SESSION_ID),
+						rs.getString(ACCLOG_METHOD),
+						rs.getString(ACCLOG_USER_AGENT),
+						rs.getInt(ACCLOG_RESPONSE_STATUS),
+						rs.getTimestamp(ACCLOG_TIMESTAMP),
+						rs.getTimestamp(ACCLOG_PERIOD),
+						rs.getString(ACCLOG_PATTERN),
+						rs.getString(ACCLOG_PROJECT),
+						rs.getInt(ACCLOG_RESPONSE_TIME)
 					);
 					accessLogRecords.add(accessLogRecord);
 				}
@@ -221,31 +235,31 @@ public class AccessLogRecordDAO {
 	}
 
 	
-	public String[][] getLastRecordsByPattern() throws SQLException {
-		return getLastRecords(SELECT_LAST_BY_PATTERN, "ACCLOG_PATTERN", "ACCLOG_COUNT");
+	public String[][] getLastRecordsByPattern() throws SQLException, IOException {
+		return getLastRecords(SQL_MAP_SELECT_LAST_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, ACCLOG_COUNT);
 	}
 	
-	public String[][] getLastRecordsByProject() throws SQLException {
-		return getLastRecords(SELECT_LAST_BY_PROJECT, "ACCLOG_PROJECT", "ACCLOG_COUNT");
+	public String[][] getLastRecordsByProject() throws SQLException, IOException {
+		return getLastRecords(SQL_MAP_SELECT_LAST_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, ACCLOG_COUNT);
 	}
 	
-	public String[][] getLastRecordsByURI() throws SQLException {
-		return getLastRecords(SELECT_LAST_BY_URI, "ACCLOG_REQUEST_URI", "ACCLOG_COUNT");
+	public String[][] getLastRecordsByURI() throws SQLException, IOException {
+		return getLastRecords(SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, ACCLOG_COUNT);
 	}
 	
-	public String[][] getRTRecordsByPattern() throws SQLException {
-		return getLastRecords(SELECT_RT_BY_PATTERN, "ACCLOG_PATTERN", "RESPONSE_TIME");
+	public String[][] getRTRecordsByPattern() throws SQLException, IOException {
+		return getLastRecords(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
 	}
 	
-	public String[][] getRTRecordsByProject() throws SQLException {
-		return getLastRecords(SELECT_RT_BY_PROJECT, "ACCLOG_PROJECT", "RESPONSE_TIME");
+	public String[][] getRTRecordsByProject() throws SQLException, IOException {
+		return getLastRecords(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
 	}
 	
-	public String[][] getRTRecordsByURI() throws SQLException {
-		return getLastRecords(SELECT_RT_BY_URI, "ACCLOG_REQUEST_URI", "RESPONSE_TIME");
+	public String[][] getRTRecordsByURI() throws SQLException, IOException {
+		return getLastRecords(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
 	}
 	
-	private String[][] getLastRecords(String sql, String fieldSeries, String fieldNumber) throws SQLException {
+	private String[][] getLastRecords(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -254,8 +268,9 @@ public class AccessLogRecordDAO {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(
-						sql);
+				DBUtils dbUtils = new DBUtils(dataSource);
+				String sql = dbUtils.readScript(connection, sqlLocation, AccessLogRecordDAO.class);
+				PreparedStatement pstmt = connection.prepareStatement(sql);
 				
 				GregorianCalendar last = new GregorianCalendar();
 				last.add(Calendar.YEAR, -1);
@@ -265,7 +280,7 @@ public class AccessLogRecordDAO {
 				List<List<Object>> allRecords = new ArrayList<List<Object>>();
 				while (rs.next()) {
 					String thisPattern = rs.getString(fieldSeries);
-					Date thisPeriod = rs.getTimestamp("ACCLOG_PERIOD");
+					Date thisPeriod = rs.getTimestamp(ACCLOG_PERIOD);
 					int thisCount = rs.getInt(fieldNumber);
 					
 					List<Object> record = new ArrayList<Object>();
@@ -361,7 +376,7 @@ public class AccessLogRecordDAO {
 	}
 	
 
-	public String[][] getHitsByURI() throws SQLException {
+	public String[][] getHitsByURI() throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -370,14 +385,15 @@ public class AccessLogRecordDAO {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(
-						SELECT_HITS_BY_URI);
+				DBUtils dbUtils = new DBUtils(dataSource);
+				String sql = dbUtils.readScript(connection, SQL_MAP_SELECT_HITS_BY_URI_LOG_RECORD, AccessLogRecordDAO.class);
+				PreparedStatement pstmt = connection.prepareStatement(sql);
 				
 				ResultSet rs = pstmt.executeQuery();
 				List<String[]> allRecords = new ArrayList<String[]>();
 				while (rs.next()) {
-					String thisURI = rs.getString("ACCLOG_REQUEST_URI");
-					int thisCount = rs.getInt("ACCLOG_COUNT");
+					String thisURI = rs.getString(ACCLOG_REQUEST_URI);
+					int thisCount = rs.getInt(ACCLOG_COUNT);
 					
 					String[] record = new String[2];
 					record[0] = thisURI;

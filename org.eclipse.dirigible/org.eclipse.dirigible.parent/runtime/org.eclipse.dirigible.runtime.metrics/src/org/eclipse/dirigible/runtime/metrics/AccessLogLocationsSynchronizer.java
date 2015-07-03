@@ -11,7 +11,6 @@
 
 package org.eclipse.dirigible.runtime.metrics;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +36,7 @@ public class AccessLogLocationsSynchronizer implements IRunnableTask {
 				+ "start()"); //$NON-NLS-1$
 		try {
 			AccessLogLocationsDAO.refreshLocations();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		logger.debug("exiting: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$

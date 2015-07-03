@@ -41,15 +41,15 @@ public class MemoryLogRecordDAO {
 	
 
 	private static final String SQL_MAP_INSERT_MEMORY_LOG =
-			"/org/eclipse/dirigible/runtime/memory/sql/insert_memory_log.sql";
+			"/org/eclipse/dirigible/runtime/memory/sql/insert_memory_log.sql"; //$NON-NLS-1$
 	private static final String SQL_MAP_SELECT_COUNT_MEMORY_LOGS =
-			"/org/eclipse/dirigible/runtime/memory/sql/select_count_memory_logs.sql";
+			"/org/eclipse/dirigible/runtime/memory/sql/select_count_memory_logs.sql"; //$NON-NLS-1$
 	private static final String SQL_MAP_CREATE_TABLE_MEMORY_LOG =
-			"/org/eclipse/dirigible/runtime/memory/sql/create_table_memory_log.sql";
+			"/org/eclipse/dirigible/runtime/memory/sql/create_table_memory_log.sql"; //$NON-NLS-1$
 	private static final String SQL_MAP_REMOVE_OLDER_MEMORY_LOGS =
-			"/org/eclipse/dirigible/runtime/memory/sql/remove_older_memory_logs.sql";
+			"/org/eclipse/dirigible/runtime/memory/sql/remove_older_memory_logs.sql"; //$NON-NLS-1$
 	private static final String SQL_MAP_SELECT_ALL_MEMORY_LOGS =
-			"/org/eclipse/dirigible/runtime/memory/sql/select_all_memory_logs.sql";	
+			"/org/eclipse/dirigible/runtime/memory/sql/select_all_memory_logs.sql"; //$NON-NLS-1$
 	
 	private static final String AVAILABLE_PROCESSORS = "availableProcessors"; //$NON-NLS-1$
 	private static final String MAX_MEMORY = "maxMemory"; //$NON-NLS-1$

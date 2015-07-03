@@ -11,8 +11,6 @@
 
 package org.eclipse.dirigible.runtime.memory;
 
-import java.sql.SQLException;
-
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.task.IRunnableTask;
 
