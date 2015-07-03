@@ -117,8 +117,8 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		new BrowserFunction(browser, "setBreakpoint") { //$NON-NLS-1$
 			@Override
 			public Object function(final Object[] arguments) {
-				if (listener != null) {
-					listener.setBreakpoint((Integer) arguments[0]);
+				if ((listener != null) && (arguments[0] != null) && (arguments[0] instanceof Number)) {
+					listener.setBreakpoint(((Number) arguments[0]).intValue());
 				}
 				return null;
 			}
@@ -128,8 +128,8 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		new BrowserFunction(browser, "clearBreakpoint") { //$NON-NLS-1$
 			@Override
 			public Object function(final Object[] arguments) {
-				if (listener != null) {
-					listener.clearBreakpoint((Integer) arguments[0]);
+				if ((listener != null) && (arguments[0] != null) && (arguments[0] instanceof Number)) {
+					listener.clearBreakpoint(((Number) arguments[0]).intValue());
 				}
 				return null;
 			}
