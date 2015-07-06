@@ -73,6 +73,7 @@ fileApp.config(function($routeProvider) {
   $scope.pageHeader = 'Import Registry Content';
   $scope.exportTitle = 'Export Registry Content';
   $scope.exportUrl = '../export';
+  $scope.exportButtonText = 'Download Zipped Registry Content';
   $scope.overrideContent = false;
 
   $scope.uploader = new FileUploader({
@@ -96,6 +97,7 @@ fileApp.config(function($routeProvider) {
   $scope.pageHeader = 'Import Cloned Content';
   $scope.exportTitle = 'Export Cloned Content';
   $scope.exportUrl = '../clone-export';
+  $scope.exportButtonText = 'Download Zipped Cloned Content';
   $scope.overrideContent = false;
 
   var uploader = $scope.uploader = new FileUploader({
