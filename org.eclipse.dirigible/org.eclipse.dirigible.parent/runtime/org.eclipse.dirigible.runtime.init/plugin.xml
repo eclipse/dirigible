@@ -12,16 +12,6 @@
         </servlet>
      </extension>
 	 
-	 	 <extension
-           id="BaseContentServlet"
-           point="org.eclipse.equinox.http.registry.servlets">
-        <servlet
-              alias="/load"
-              class="org.eclipse.dirigible.runtime.content.BaseContentServlet"
-              load-on-startup="true">
-        </servlet>
-     </extension>
-	 
 	 <extension
            id="ContentExporterServlet"
            point="org.eclipse.equinox.http.registry.servlets">
@@ -38,6 +28,36 @@
         <servlet
               alias="/import"
               class="org.eclipse.dirigible.runtime.content.ContentImporterServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="CloneExporterServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/clone-export"
+              class="org.eclipse.dirigible.runtime.content.CloneExporterServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CloneImporterServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/clone-import"
+              class="org.eclipse.dirigible.runtime.content.CloneImporterServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="ContentResetServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/reset"
+              class="org.eclipse.dirigible.runtime.content.ContentResetServlet"
               load-on-startup="true">
         </servlet>
      </extension>

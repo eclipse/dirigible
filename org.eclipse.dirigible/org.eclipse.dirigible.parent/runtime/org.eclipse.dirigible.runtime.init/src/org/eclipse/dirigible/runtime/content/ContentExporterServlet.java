@@ -14,6 +14,7 @@ package org.eclipse.dirigible.runtime.content;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,15 +24,44 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.eclipse.dirigible.repository.logging.Logger;
 
-public class ContentExporterServlet extends BaseContentServlet {
+/**
+ * Exports the current content of the Registry
+ *
+ */
+public class ContentExporterServlet extends ContentBaseServlet {
 	
 	private static final long serialVersionUID = 5798183051027211544L;
 
 	private static final Logger logger = Logger.getLogger(ContentExporterServlet.class);
 	
 	private static final String GUID = "guid"; //$NON-NLS-1$
+	
+	static final String DEFAULT_PATH_FOR_EXPORT = IRepositoryPaths.REGISTRY_DEPLOY_PATH;
+	
+	static final String UNKNOWN_HOST = "unknown_host";
+	
+	static final String EMPTY = ""; //$NON-NLS-1$
+
+	static final String UNDERSCORE = "_"; //$NON-NLS-1$
+
+	static final String DATE_FORMAT = "yyyyMMdd-HHmmss"; //$NON-NLS-1$
+	
+	
+	protected String getExportFilePrefix() {
+		StringBuilder buff = new StringBuilder();
+		buff.append(IRepositoryPaths.REGISTRY)
+			.append(UNDERSCORE);
+		try {
+			buff.append(java.net.InetAddress.getLocalHost().getHostName());
+		} catch (UnknownHostException e) {
+			logger.error(e.getMessage(), e);
+			buff.append(UNKNOWN_HOST);
+		}
+		return buff.toString();
+	}
 
 	
 	/**
@@ -90,9 +120,8 @@ public class ContentExporterServlet extends BaseContentServlet {
 
 	private String defaultFileName(HttpServletRequest request) {
 		String fileName;
-		String guid = "".equals(getGUID(request)) ? "" : "." //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				+ getGUID(request);
-		fileName = COM_SAP_DIRIGIBLE_RUNTIME + guid;
+		String guid = EMPTY.equals(getGUID(request)) ? EMPTY : getGUID(request);
+		fileName = getExportFilePrefix()+ UNDERSCORE + guid;
 		return fileName;
 	}
 
@@ -106,11 +135,15 @@ public class ContentExporterServlet extends BaseContentServlet {
 		byte[] zippedContent = null;
 		try {
 			IRepository repository = getRepository(request);
-			zippedContent = repository.exportZip(DEFAULT_PATH_FOR_EXPORT, true);
+			zippedContent = repository.exportZip(getDefaultPathForExport(), true);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
 		return zippedContent;
+	}
+
+	protected String getDefaultPathForExport() {
+		return DEFAULT_PATH_FOR_EXPORT;
 	}
 
 	/**
@@ -121,7 +154,7 @@ public class ContentExporterServlet extends BaseContentServlet {
 	private String createGUID() {
 		// SimpleDateFormat sdfDate = new
 		// SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS");
-		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyyMMdd-HHmmss"); //$NON-NLS-1$
+		SimpleDateFormat sdfDate = new SimpleDateFormat(DATE_FORMAT);
 		Date now = new Date();
 		String strDate = sdfDate.format(now);
 		return strDate;

@@ -13,9 +13,11 @@ package org.eclipse.dirigible.repository.api;
 
 public interface IRepositoryPaths {
 
+
 	public static final String SEPARATOR = ICommonConstants.SEPARATOR; //$NON-NLS-1$
 	
-	public static final String DB_DIRIGIBLE_ROOT = "/db/dirigible/"; //$NON-NLS-1$
+	public static final String DB_DIRIGIBLE_BASE = "/db/"; //$NON-NLS-1$
+	public static final String DB_DIRIGIBLE_ROOT = DB_DIRIGIBLE_BASE + "dirigible/"; //$NON-NLS-1$
 	public static final String DB_DIRIGIBLE_REGISTRY = DB_DIRIGIBLE_ROOT + "registry/"; //$NON-NLS-1$
 	public static final String DB_DIRIGIBLE_REGISTRY_PUBLIC = DB_DIRIGIBLE_REGISTRY + "public/"; //$NON-NLS-1$
 	public static final String DB_DIRIGIBLE_SANDBOX = DB_DIRIGIBLE_ROOT + "sandbox/"; //$NON-NLS-1$
@@ -28,9 +30,12 @@ public interface IRepositoryPaths {
 	
 	public static final String CONF_REGISTRY = DB_DIRIGIBLE_REGISTRY + CONF_FOLDER_NAME;  
 
+	public static final String SANDBOX = "sandbox";
+	public static final String REGISTRY = "registry";
+	
 	public static final String REGISTRY_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + "registry/public"; //$NON-NLS-1$
-	public static final String REGISTRY_IMPORT_PATH = DB_DIRIGIBLE_ROOT + "registry"; //$NON-NLS-1$
-	public static final String SANDBOX_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + "sandbox"; //$NON-NLS-1$
+	public static final String REGISTRY_IMPORT_PATH = DB_DIRIGIBLE_ROOT + REGISTRY; //$NON-NLS-1$
+	public static final String SANDBOX_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + SANDBOX; //$NON-NLS-1$
 
 
 }
