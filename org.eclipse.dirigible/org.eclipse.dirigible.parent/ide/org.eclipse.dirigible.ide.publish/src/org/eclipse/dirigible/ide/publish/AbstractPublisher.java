@@ -24,12 +24,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public abstract class AbstractPublisher implements IPublisher {
@@ -166,7 +166,7 @@ public abstract class AbstractPublisher implements IPublisher {
 //		}
 //		return true;
 		// #177
-		return CommonParameters.isUserInRole(CommonParameters.ROLE_OPERATOR);
+		return CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 	}
 
 	public void copyFileInto(IFile file, ICollection target, String user) throws IOException,
@@ -230,7 +230,7 @@ public abstract class AbstractPublisher implements IPublisher {
 //		}
 //		return true;
 		// #177
-		return CommonParameters.isUserInRole(CommonParameters.ROLE_OPERATOR);
+		return CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 	}
 
 	protected byte[] readFile(IFile file) throws IOException, CoreException {

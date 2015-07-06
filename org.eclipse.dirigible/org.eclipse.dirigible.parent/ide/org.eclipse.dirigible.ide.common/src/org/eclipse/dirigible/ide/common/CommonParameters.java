@@ -121,9 +121,6 @@ public class CommonParameters {
 	public static final String DATABASE_DRIVER_MAJOR_VERSION = "DATABASE_DRIVER_MAJOR_VERSION"; //$NON-NLS-1$
 	public static final String DATABASE_CONNECTION_CLASS_NAME = "DATABASE_CONNECTION_CLASS_NAME"; //$NON-NLS-1$
 
-	public static final String ROLE_OPERATOR = "Operator"; //$NON-NLS-1$
-	public static final String ROLE_DEVELOPER = "Developer"; //$NON-NLS-1$
-
 	public static final String DIRIGIBLE_DEBUGGER_BRIDGE = "dirigible.debugger.bridge"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_RUNTIME_BRIDGE = "dirigible.runtime.bridge"; //$NON-NLS-1$
 

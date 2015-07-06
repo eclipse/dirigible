@@ -40,7 +40,6 @@ import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.DeleteTableAction;
@@ -48,6 +47,7 @@ import org.eclipse.dirigible.ide.db.viewer.views.actions.ExportDataAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.RefreshViewAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.ShowTableDefinitionAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.ViewTableContentAction;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
 
 /**
  * Database Viewer represents the structure of the tenant specific schema
@@ -83,7 +83,7 @@ public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 	 * The constructor.
 	 */
 	public DatabaseViewer() {
-		isOperator = CommonParameters.isUserInRole(CommonParameters.ROLE_OPERATOR);
+		isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 	}
 
 	/**

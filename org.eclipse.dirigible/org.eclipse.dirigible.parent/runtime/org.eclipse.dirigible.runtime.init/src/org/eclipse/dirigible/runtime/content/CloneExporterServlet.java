@@ -1,10 +1,22 @@
 package org.eclipse.dirigible.runtime.content;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 
-import org.eclipse.dirigible.repository.api.IRepositoryPaths;
-import org.eclipse.dirigible.repository.logging.Logger;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.repository.api.IRepositoryPaths;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
+import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.PermissionsUtils;
+
+/**
+ * Exports the full content from the repository as 'clone'
+ * Can be used for backups as well
+ *
+ */
 public class CloneExporterServlet extends ContentExporterServlet {
 
 	private static final long serialVersionUID = -2906745438795974322L;
@@ -31,5 +43,18 @@ public class CloneExporterServlet extends ContentExporterServlet {
 			buff.append(UNKNOWN_HOST);
 		}
 		return buff.toString();
+	}
+	
+	@Override
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
+			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Export Cloned Content");
+			logger.debug(err);
+			throw new ServletException(err);
+		}
+		
+		super.doGet(request, response);
 	}
 }

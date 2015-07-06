@@ -28,7 +28,9 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.PermissionsUtils;
 
 /**
  * Imports the provided content into the Registry
@@ -52,6 +54,12 @@ public class ContentImporterServlet extends ContentBaseServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
+		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
+			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Import");
+			logger.debug(err);
+			throw new ServletException(err);
+		}
 
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 

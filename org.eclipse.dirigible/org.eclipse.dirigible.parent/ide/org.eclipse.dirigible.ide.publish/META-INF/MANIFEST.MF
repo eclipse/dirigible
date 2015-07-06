@@ -19,5 +19,6 @@ Export-Package: org.eclipse.dirigible.ide.publish;version="1.0.0";uses:="org.ecl
 Require-Bundle: org.eclipse.dirigible.repository.logging,
  org.apache.commons.io,
  org.eclipse.ui;resolution:=optional,
- org.eclipse.rap.ui;resolution:=optional
+ org.eclipse.rap.ui;resolution:=optional,
+ org.eclipse.dirigible.repository.ext
 Bundle-ActivationPolicy: lazy

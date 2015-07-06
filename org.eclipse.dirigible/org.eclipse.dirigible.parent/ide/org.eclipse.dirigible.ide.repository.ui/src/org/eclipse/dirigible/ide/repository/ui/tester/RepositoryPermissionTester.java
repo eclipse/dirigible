@@ -14,10 +14,10 @@ package org.eclipse.dirigible.ide.repository.ui.tester;
 import java.io.IOException;
 
 import org.eclipse.core.expressions.PropertyTester;
-
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class RepositoryPermissionTester extends PropertyTester {
@@ -36,7 +36,7 @@ public class RepositoryPermissionTester extends PropertyTester {
 		String allowedWorkspacePath = CommonParameters.getWorkspace();
 		String allowedSandboxPath = IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + currentUser;
 		
-		boolean isOperator = CommonParameters.isUserInRole(CommonParameters.ROLE_OPERATOR);
+		boolean isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 		
 		IEntity selectedEntity = (IEntity) receiver;
 		String selectedEntityPath = selectedEntity.getPath();

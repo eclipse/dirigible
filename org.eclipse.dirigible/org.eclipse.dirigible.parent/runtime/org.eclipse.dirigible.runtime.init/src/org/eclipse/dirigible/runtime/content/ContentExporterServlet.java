@@ -25,7 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.PermissionsUtils;
 
 /**
  * Exports the current content of the Registry
@@ -79,6 +81,12 @@ public class ContentExporterServlet extends ContentBaseServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
+			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Export");
+			logger.debug(err);
+			throw new ServletException(err);
+		}
 
 		// put guid in the session
 		request.getSession().setAttribute(GUID, createGUID()); //$NON-NLS-1$

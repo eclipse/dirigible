@@ -23,10 +23,10 @@ import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DatabaseViewContentProvider implements IStructuredContentProvider,
@@ -116,7 +116,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 				// String catalogName = (String) iteratorCatalogs.next();
 				// TreeParent catalog = new TreeParent(catalogName);
 
-				boolean isOperator = CommonParameters.isUserInRole(CommonParameters.ROLE_OPERATOR);
+				boolean isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 				String catalogName = null;
 				// list schemes
 				List<String> listOfSchemes = getListOfSchemes(connection, catalogName);

@@ -39,10 +39,10 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
-
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole {
@@ -139,7 +139,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 			}
 		});
 
-		boolean isOperator = CommonParameters.isUserInRole(CommonParameters.ROLE_OPERATOR);
+		boolean isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 		if (isOperator) {
 			new ToolItem(toolBar, SWT.SEPARATOR);
 			ToolItem itemUpdate = new ToolItem(toolBar, SWT.PUSH);
