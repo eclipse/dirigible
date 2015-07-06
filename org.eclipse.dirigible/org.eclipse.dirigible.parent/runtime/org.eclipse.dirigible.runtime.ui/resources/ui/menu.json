@@ -9,6 +9,9 @@
     }, {
         "name": "Transport Content",
         "link": "#/content/import"
+    }, {
+        "name": "Clone Instance",
+        "link": "#/content/clone"
     }]
 }, {
     "name": "Web",

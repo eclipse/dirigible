@@ -4,9 +4,9 @@
 </style>
 <div class="row">
 
-	<div class="page-header">
-	  <h1>Import Content</h1>
-	</div>
+    <div class="page-header">
+        <h1>{{ pageHeader }}</h1>
+    </div>
 
     <div class="col-md-3">
         <h3>Select files</h3>
@@ -20,7 +20,7 @@
         </div>
         or add them
         <input type="file" nv-file-select="" uploader="uploader" multiple  accept=".zip"/><br/>
-		<input type="checkbox" ng-model="overrideContent"/> Override previous content?<br/>
+        <input type="checkbox" ng-model="overrideContent"/> Override previous content?<br/>
     </div>
     <div class="col-md-9" style="margin-bottom: 40px">
         <h3>Upload queue</h3>
@@ -85,12 +85,12 @@
 
 <div class="row">
 
-	<div class="page-header">
-	  <h1>Export Content</h1>
-	</div>
-	<div class="col-md-3">
-        <a href="../export" class="btn btn-default btn-lg">
-  			<span class="glyphicon glyphicon glyphicon glyphicon-download-alt"></span> Download Zipped Registry Content
-  		</a>
+    <div class="page-header">
+        <h1>{{ exportTitle }}</h1>
+    </div>
+    <div class="col-md-3">
+        <a href="{{ exportUrl }}" class="btn btn-default btn-lg">
+            <span class="glyphicon glyphicon glyphicon glyphicon-download-alt"></span> Download Zipped Registry Content
+        </a>
     </div>
 </div>

@@ -13,6 +13,9 @@ fileApp.config(function($routeProvider) {
     }).when('/content/import', {
       controller: 'ImportCtrl',
       templateUrl: 'templates/content/import/import.html'
+    }).when('/content/clone', {
+      controller: 'CloneCtrl',
+      templateUrl: 'templates/content/import/import.html'
     }).when('/web/content', {
       controller: 'WebContentCtrl',
       templateUrl: 'templates/web/content/content.html'
@@ -67,14 +70,49 @@ fileApp.config(function($routeProvider) {
       redirectTo: '/home'
     });
 }).controller('ImportCtrl', function($scope, FileUploader) {
+  $scope.pageHeader = 'Import Registry Content';
+  $scope.exportTitle = 'Export Registry Content';
+  $scope.exportUrl = '../export';
+  $scope.overrideContent = false;
+
+  $scope.uploader = new FileUploader({
+    url: '../import?override=false'
+  });
+
+  $scope.$watch('overrideContent', function (newVal) {
+    $scope.uploader.url = '../import?override=' + newVal;
+    for (var i=0; i<$scope.uploader.queue.length; i++) {
+      $scope.uploader.queue[i].url = $scope.uploader.url;
+    }
+  });
+
+  $scope.uploader.filters.push({
+    name: 'onlyZip',
+    fn: function(item) {
+      return item.name.lastIndexOf(".zip") === item.name.length - 4;
+    }
+  });
+}).controller('CloneCtrl', function($scope, FileUploader) {
+  $scope.pageHeader = 'Import Cloned Content';
+  $scope.exportTitle = 'Export Cloned Content';
+  $scope.exportUrl = '../clone-export';
+  $scope.overrideContent = false;
+
   var uploader = $scope.uploader = new FileUploader({
-    url: '../import?override=' + $scope.overrideContent
+    url: '../clone-import?reset=false'
+  });
+
+  $scope.$watch('overrideContent', function (newVal) {
+    $scope.uploader.url = '../clone-import?reset=' + newVal;
+    for (var i=0; i<$scope.uploader.queue.length; i++) {
+      $scope.uploader.queue[i].url = $scope.uploader.url;
+    }
   });
 
   uploader.filters.push({
     name: 'onlyZip',
     fn: function(item) {
-      return item.name.lastIndexOf(".zip") === item.name.length - 4;
+      return item.name.lastIndexOf('.zip') === item.name.length - 4;
     }
   });
 });
