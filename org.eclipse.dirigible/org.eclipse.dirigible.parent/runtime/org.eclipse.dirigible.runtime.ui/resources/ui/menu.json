@@ -12,6 +12,9 @@
     }, {
         "name": "Clone Instance",
         "link": "#/content/clone"
+    }, {
+        "name": "Import Project",
+        "link": "#/content/project"
     }]
 }, {
     "name": "Web",

@@ -53,6 +53,16 @@
      </extension>
      
      <extension
+           id="ProjectImporterServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/project-import"
+              class="org.eclipse.dirigible.runtime.content.ProjectImporterServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+     
+     <extension
            id="ContentResetServlet"
            point="org.eclipse.equinox.http.registry.servlets">
         <servlet

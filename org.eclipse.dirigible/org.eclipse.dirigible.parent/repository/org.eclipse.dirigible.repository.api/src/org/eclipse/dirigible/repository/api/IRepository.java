@@ -139,7 +139,7 @@ public interface IRepository {
 
 	/**
 	 * Imports content from zip file to the repository, based on the relative
-	 * root
+	 * root. Overrides the previous content depending on the override parameter.
 	 * 
 	 * @param zipInputStream
 	 * @param relativeRoot
@@ -147,6 +147,19 @@ public interface IRepository {
 	 * @throws IOException
 	 */
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override) throws IOException;
+	
+	/**
+	 * Imports content from zip file to the repository, based on the relative
+	 * root. Overrides the previous content depending on the override parameter.
+	 * Excludes the name of the root folder, during the import, based on the excludeRootFolderName parameter.
+	 * 
+	 * @param zipInputStream
+	 * @param relativeRoot
+	 * @param override
+	 * @param excludeRootFolderName
+	 * @throws IOException
+	 */
+	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName) throws IOException;
 
 	/**
 	 * Imports content from zip file to the repository, based on the relative
@@ -161,7 +174,7 @@ public interface IRepository {
 
 	/**
 	 * Imports content from zip file to the repository, based on the relative
-	 * root
+	 * root. Overrides the previous content depending on the override parameter.
 	 * 
 	 * @param data
 	 *            the Zip file as byte array
@@ -169,6 +182,20 @@ public interface IRepository {
 	 * @throws IOException
 	 */
 	public void importZip(byte[] data, String relativeRoot, boolean override) throws IOException;
+
+	/**
+	 * Imports content from zip file to the repository, based on the relative
+	 * root. Overrides the previous content depending on the override parameter.
+	 * Excludes the name of the root folder, during the import, based on the excludeRootFolderName parameter.
+	 * 
+	 * @param data
+	 *            the Zip file as byte array
+	 * @param relativeRoot
+	 * @param override
+	 * @param excludeRootFolderName
+	 * @throws IOException
+	 */
+	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName) throws IOException;
 
 	/**
 	 * Export all the content under the given path(s) with the target repository

@@ -34,7 +34,7 @@ public interface IRepositoryPaths {
 	public static final String REGISTRY = "registry";
 	
 	public static final String REGISTRY_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + "registry/public"; //$NON-NLS-1$
-	public static final String REGISTRY_IMPORT_PATH = DB_DIRIGIBLE_ROOT + REGISTRY; //$NON-NLS-1$
+	public static final String REGISTRY_IMPORT_PATH = REGISTRY_DEPLOY_PATH; //$NON-NLS-1$
 	public static final String SANDBOX_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + SANDBOX; //$NON-NLS-1$
 
 

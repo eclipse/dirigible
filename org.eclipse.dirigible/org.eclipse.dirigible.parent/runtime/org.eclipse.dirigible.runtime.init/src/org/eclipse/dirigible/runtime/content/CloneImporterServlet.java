@@ -24,7 +24,7 @@ public class CloneImporterServlet extends ContentImporterServlet {
 	
 	private static final Logger logger = Logger.getLogger(CloneImporterServlet.class);
 	
-	static final String CLONE_PATH_FOR_IMPORT = 
+	private static final String CLONE_PATH_FOR_IMPORT = 
 			IRepositoryPaths.DB_DIRIGIBLE_BASE.substring(0, IRepositoryPaths.DB_DIRIGIBLE_BASE.length()-1);
 	
 	private static final String PARAMETER_RESET = "reset";

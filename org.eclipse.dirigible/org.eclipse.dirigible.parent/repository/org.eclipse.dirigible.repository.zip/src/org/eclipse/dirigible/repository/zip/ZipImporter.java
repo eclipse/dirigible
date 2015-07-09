@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
 
@@ -39,6 +40,7 @@ public class ZipImporter {
 			throws IOException {
 		importZip(repository, zipInputStream, relativeRoot, false);
 	}
+
 	/**
 	 * Import all the content from a given zip to the target repository instance
 	 * within the given path, overrides files during the pass
@@ -52,21 +54,40 @@ public class ZipImporter {
 	public static void importZip(IRepository repository,
 			ZipInputStream zipInputStream, String relativeRoot, boolean override)
 			throws IOException {
+		importZip(repository, zipInputStream, relativeRoot, override, false);
+	}
+		/**
+		 * Import all the content from a given zip to the target repository instance
+		 * within the given path, overrides files during the pass and removes the root folder name
+		 * 
+		 * @param repository
+		 * @param zipInputStream
+		 * @param relativeRoot
+		 * @param override
+		 * @param excludeRootFolderName
+		 * @throws IOException
+		 */
+		public static void importZip(IRepository repository,
+				ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName)
+				throws IOException {
 		try {
-
-			byte[] buffer = new byte[2048];
-
 			ZipEntry entry;
+			String parentFolder = null;
 			while ((entry = zipInputStream.getNextEntry()) != null) {
-				String outpath = relativeRoot + IRepository.SEPARATOR + entry.getName();
-				ByteArrayOutputStream output = null;
-				try {
-					output = new ByteArrayOutputStream();
-					int len = 0;
-					while ((len = zipInputStream.read(buffer)) > 0) {
-						output.write(buffer, 0, len);
-					}
+				
+				if(excludeRootFolderName && parentFolder == null) {
+					parentFolder = entry.getName();
+					continue;
+				}
 
+				String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
+
+				String outpath = relativeRoot + IRepository.SEPARATOR + entryName;
+				ByteArrayOutputStream output = new ByteArrayOutputStream();
+				try {
+					
+					IOUtils.copy(zipInputStream, output);
+					
 					if (output.toByteArray().length > 0) {
 						// TODO filter for binary extensions
 						String mimeType = null;
@@ -89,7 +110,6 @@ public class ZipImporter {
 					}
 
 				} finally {
-					if (output != null)
 						output.close();
 				}
 			}
@@ -97,5 +117,10 @@ public class ZipImporter {
 			zipInputStream.close();
 		}
 	}
+
+		private static String getEntryName(ZipEntry entry, String parentFolder,
+				boolean excludeParentFolder) {
+			return excludeParentFolder ? entry.getName().substring(parentFolder.length()) : entry.getName();
+		}
 
 }

@@ -34,24 +34,20 @@ import org.eclipse.dirigible.runtime.PermissionsUtils;
  *
  */
 public class ContentExporterServlet extends ContentBaseServlet {
-	
+
 	private static final long serialVersionUID = 5798183051027211544L;
 
 	private static final Logger logger = Logger.getLogger(ContentExporterServlet.class);
-	
+
 	private static final String GUID = "guid"; //$NON-NLS-1$
-	
-	static final String DEFAULT_PATH_FOR_EXPORT = IRepositoryPaths.REGISTRY_DEPLOY_PATH;
-	
+	private static final String DEFAULT_PATH_FOR_EXPORT = IRepositoryPaths.REGISTRY_DEPLOY_PATH;
+	private static final String EMPTY = ""; //$NON-NLS-1$
+	private static final String DATE_FORMAT = "yyyyMMdd-HHmmss"; //$NON-NLS-1$
+
 	static final String UNKNOWN_HOST = "unknown_host";
-	
-	static final String EMPTY = ""; //$NON-NLS-1$
 
 	static final String UNDERSCORE = "_"; //$NON-NLS-1$
 
-	static final String DATE_FORMAT = "yyyyMMdd-HHmmss"; //$NON-NLS-1$
-	
-	
 	protected String getExportFilePrefix() {
 		StringBuilder buff = new StringBuilder();
 		buff.append(IRepositoryPaths.REGISTRY)
@@ -70,6 +66,7 @@ public class ContentExporterServlet extends ContentBaseServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doGet(request, response);
@@ -79,9 +76,10 @@ public class ContentExporterServlet extends ContentBaseServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
 			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Export");
 			logger.debug(err);

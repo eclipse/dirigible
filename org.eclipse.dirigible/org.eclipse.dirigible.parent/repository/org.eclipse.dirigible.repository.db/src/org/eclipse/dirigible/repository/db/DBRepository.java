@@ -237,11 +237,18 @@ public class DBRepository implements IRepository {
 	@Override
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override)
 			throws IOException {
+		importZip(zipInputStream, relativeRoot, false, false);
+	}
+
+	@Override
+	public void importZip(ZipInputStream zipInputStream, String relativeRoot,
+			boolean override, boolean excludeRootFolderName) throws IOException {
 		if (zipInputStream == null) {
 			logger.error(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 			throw new IOException(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 		}
-		ZipImporter.importZip(this, zipInputStream, relativeRoot, override);
+		ZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
+		
 	}
 
 	@Override
@@ -251,12 +258,19 @@ public class DBRepository implements IRepository {
 
 	@Override
 	public void importZip(byte[] data, String relativeRoot, boolean override) throws IOException {
+		importZip(data, relativeRoot, false, false);
+	}
+
+	@Override
+	public void importZip(byte[] data, String relativeRoot, boolean override,
+			boolean excludeRootFolderName) throws IOException {
 		if (data == null) {
 			logger.error(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 			throw new IOException(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 		}
 		ZipImporter.importZip(this, new ZipInputStream(
-				new ByteArrayInputStream(data)), relativeRoot, override);
+				new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName);
+		
 	}
 
 	@Override

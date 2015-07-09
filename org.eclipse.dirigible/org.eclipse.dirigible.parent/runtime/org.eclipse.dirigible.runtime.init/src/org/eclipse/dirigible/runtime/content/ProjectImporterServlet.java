@@ -36,11 +36,11 @@ import org.eclipse.dirigible.runtime.PermissionsUtils;
  * Imports the provided content into the Registry
  *
  */
-public class ContentImporterServlet extends ContentBaseServlet {
+public class ProjectImporterServlet extends ContentBaseServlet {
 
-	private static final long serialVersionUID = 5844468087553458293L;
+	private static final long serialVersionUID = -2889019459717507121L;
 
-	private static final Logger logger = Logger.getLogger(ContentImporterServlet.class);
+	private static final Logger logger = Logger.getLogger(ProjectImporterServlet.class);
 	
 	private static final String DEFAULT_PATH_FOR_IMPORT = IRepositoryPaths.REGISTRY_IMPORT_PATH;
 	private static final String PARAMETER_OVERRIDE = "override";
@@ -50,6 +50,7 @@ public class ContentImporterServlet extends ContentBaseServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
@@ -93,39 +94,30 @@ public class ContentImporterServlet extends ContentBaseServlet {
 	}
 
 	/**
-	 * Import ZIP and execute DB updates. Don't override previous content.
+	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter. Exclude the root folder name.
 	 * 
 	 * @param content
 	 * @param request
 	 * @param override
 	 */
-	public void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request) {
-		importZipAndUpdate(content, pathForImport, request, false);
-	}
-
-	/**
-	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter.
-	 * 
-	 * @param content
-	 * @param request
-	 * @param override
-	 */
-	public void importZipAndUpdate(InputStream content, HttpServletRequest request, boolean override) {
-		importZipAndUpdate(content, getDefaultPathForImport(), request, override);
+	private void importZipAndUpdate(InputStream content, HttpServletRequest request, boolean override) {
+		importZipAndUpdate(content, getDefaultPathForImport(), request, override, true);
 	}
 
 	/**
 	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter. 
+	 * Exclude the root folder name depending on the excludeRootFolderName parameter.
 	 * 
 	 * @param content
 	 * @param pathForImport
 	 * @param request
 	 * @param override
+	 * @param excludeRootFolderName
 	 */
-	public void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request, boolean override) {
+	private void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request, boolean override, boolean excludeRootFolderName) {
 		try {
 			// 1. Import content.zip into repository
-			getRepository(request).importZip(new ZipInputStream(content), pathForImport, override);
+			getRepository(request).importZip(new ZipInputStream(content), pathForImport, override, excludeRootFolderName);
 
 			postImport(request);
 
@@ -138,13 +130,11 @@ public class ContentImporterServlet extends ContentBaseServlet {
 		}
 	}
 
-	public void postImport(HttpServletRequest request) throws IOException,
+	private void postImport(HttpServletRequest request) throws IOException,
 			Exception {
 		// 2. Post import actions
 		ContentPostImportUpdater contentPostImportUpdater = new ContentPostImportUpdater(
 				getRepository(request));
 		contentPostImportUpdater.update(request);
 	}
-
-
 }
