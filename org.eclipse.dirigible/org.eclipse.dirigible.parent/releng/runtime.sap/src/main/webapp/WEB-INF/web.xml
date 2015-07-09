@@ -101,7 +101,7 @@
 		<servlet-class>org.eclipse.dirigible.runtime.logging.LoggingServlet</servlet-class>
 		<init-param>
 			<param-name>initLoggingDirectory</param-name>
-			<param-value>log</param-value>
+			<param-value>/ljs/log</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

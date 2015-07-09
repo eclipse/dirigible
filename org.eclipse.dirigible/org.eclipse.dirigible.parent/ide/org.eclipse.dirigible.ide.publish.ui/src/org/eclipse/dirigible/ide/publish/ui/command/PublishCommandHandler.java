@@ -30,7 +30,6 @@ import org.eclipse.dirigible.repository.logging.Logger;
  */
 public class PublishCommandHandler extends AbstractHandler {
 
-	private static final String UNKNOWN_SELECTION_TYPE = PublishCommandMessages.UNKNOWN_SELECTION_TYPE;
 	private static final String NO_PROJECTS_IN_SELECTION_NOTHING_TO_PUBLISH = PublishCommandMessages.NO_PROJECTS_IN_SELECTION_NOTHING_TO_PUBLISH;
 	private static final String NOTHING_IS_SELECTED_TO_BE_PUBLISHED = PublishCommandMessages.NOTHING_IS_SELECTED_TO_BE_PUBLISHED;
 	private static final Logger logger = Logger.getLogger(PublishCommandHandler.class);

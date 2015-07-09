@@ -39,7 +39,7 @@
 		<!-- Corresponding Runtime URL. Used for Registry Perspective, Log Service, etc. -->
 		<init-param>
 			<param-name>runtimeUrl</param-name>
-			<param-value></param-value>
+			<param-value>/dirigible-all-tomcat-2.0.150424</param-value>
 		</init-param>
 		
 		<init-param>
@@ -105,7 +105,7 @@
 		<servlet-class>org.eclipse.dirigible.runtime.logging.LoggingServlet</servlet-class>
 		<init-param>
 			<param-name>initLoggingDirectory</param-name>
-			<param-value>log</param-value>
+			<param-value>/logs</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

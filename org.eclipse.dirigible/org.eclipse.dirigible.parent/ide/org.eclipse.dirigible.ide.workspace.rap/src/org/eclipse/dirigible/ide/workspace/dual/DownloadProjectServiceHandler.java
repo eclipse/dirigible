@@ -45,8 +45,7 @@ public class DownloadProjectServiceHandler implements ServiceHandler {
 			response.setContentType("application/zip"); //$NON-NLS-1$
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			download = (ERROR_WHILE_GETTING_CONTENT_FROM_LOCATION + fileName)
-					.getBytes();
+			download = (ERROR_WHILE_GETTING_CONTENT_FROM_LOCATION + fileName).getBytes();
 			// Send the file in the response
 			response.setContentType("text/plain"); //$NON-NLS-1$
 			fileName = "error.txt"; //$NON-NLS-1$

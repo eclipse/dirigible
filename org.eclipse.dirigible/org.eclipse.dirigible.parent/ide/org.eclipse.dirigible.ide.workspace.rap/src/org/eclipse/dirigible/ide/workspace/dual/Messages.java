@@ -14,7 +14,7 @@ package org.eclipse.dirigible.ide.workspace.dual;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.dirigible.ide.workspace.wizard.project.export.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.dirigible.ide.workspace.dual.messages"; //$NON-NLS-1$
 	public static String DownloadProjectServiceHandler_ERROR_WHILE_GETTING_CONTENT_FROM_LOCATION;
 	static {
 		// initialize resource bundle

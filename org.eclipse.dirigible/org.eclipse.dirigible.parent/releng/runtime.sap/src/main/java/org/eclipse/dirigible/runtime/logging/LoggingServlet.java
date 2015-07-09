@@ -17,16 +17,16 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public class LoggingServlet extends HttpServlet {
+	
 	private static final String B_CLOSE = "</b>";
 	private static final String B = "<b>";
 	private static final String A_HREF_JAVASCRIPT_LOCATION_RELOAD_TRUE_REFRESH_A = "<a href=\"javascript:location.reload(true);\">Refresh</a>";
@@ -46,22 +46,21 @@ public class LoggingServlet extends HttpServlet {
 	private static final String TABLE_OPEN = "<table  border=\"0\">";
 	private static final String FONT_CLOSE = "</font>";
 	private static final String FONT_ARIAL_OPEN = "<font face=\"arial\">";
-	private static final String BAD_INITIAL_CONFIGURATION_PLEASE_SET_PROPERLY_LOGGING_DIRECTORY = "Bad initial configuration. Please set properly logging directory.";
+	private static final String BAD_INITIAL_CONFIGURATION_PLEASE_SET_PROPERLY_LOGGING_DIRECTORY = "Bad initial configuration [%s]. Please set properly logging directory.";
 	private static final String MM_DD_YYYY_HH_MM_SS = "MM/dd/yyyy HH:mm:ss";
 	private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
 	private static final String LOG_FILE_S_DOSN_T_EXIST = "Log file '%s' dosn't exist!";
 	private static final String LOG_PARAMETER = "log";
 	private static final String EMPTY_STRING = "";
 	private static final String DOT = ".";
-	private static final String LOGGING_SERVLET_CLASS_IS_NOT_STORED_IN_A_FILE = "LoggingServlet class is not stored in a file.";
-	private static final String LOGGING_SERVLET_CLASS = "LoggingServlet.class";
-	private static final String FILE = "file";
 	private static final String INIT_LOGGING_DIRECTORY = "initLoggingDirectory";
 	private static final String HTML_START = "<!DOCTYPE html><html><body>";
 	private static final String HTML_END = "</body></html>";
 	private static final String LOGGING_FILES_LIST_LOCATION = "logging";
 	private static final String LOGGING_FILE_LOCATION = LOGGING_FILES_LIST_LOCATION + "?log=";
 	private static final long serialVersionUID = 1L;
+	
+	private static Logger logger = Logger.getLogger(LoggingServlet.class.getCanonicalName());
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -70,7 +69,10 @@ public class LoggingServlet extends HttpServlet {
 
 		File loggingDirectory = new File(serverFileSystemPath + initLoggingDirectory);
 		if (!loggingDirectory.exists()) {
-			response.sendError(500, BAD_INITIAL_CONFIGURATION_PLEASE_SET_PROPERLY_LOGGING_DIRECTORY);
+			String err = String.format(BAD_INITIAL_CONFIGURATION_PLEASE_SET_PROPERLY_LOGGING_DIRECTORY, loggingDirectory.getCanonicalPath());
+			response.sendError(500, err);
+			logger.severe(err);
+			
 		} else {
 			File[] loggingFiles = loggingDirectory.listFiles();
 			String logFile = request.getParameter(LOG_PARAMETER);
@@ -160,14 +162,12 @@ public class LoggingServlet extends HttpServlet {
 		writer.print(TABLE_CLOSE);
 		writer.flush();
 	}
-
-	private String getServerFileSystemPath() {
-		URL servletURL = LoggingServlet.class.getResource(LOGGING_SERVLET_CLASS);
-		if (!FILE.equalsIgnoreCase(servletURL.getProtocol())) {
-			throw new IllegalStateException(LOGGING_SERVLET_CLASS_IS_NOT_STORED_IN_A_FILE);
-		}
-		String path = servletURL.getPath();
-		String serverFileSystemPath = path.substring(0, path.indexOf(DOT));
-		return serverFileSystemPath;
+	
+	private String getServerFileSystemPath() throws IOException {
+		String binDir = new File(DOT).getCanonicalPath();
+		binDir = binDir.replace("\\", "/");
+		String logDir = binDir.substring(0, binDir.lastIndexOf('/') + 1);
+		return logDir;
 	}
+	
 }
