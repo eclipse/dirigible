@@ -44,7 +44,7 @@
 		
 		<init-param>
 			<param-name>servicesUrl</param-name>
-			<param-value></param-value>
+			<param-value>/services</param-value>
 		</init-param>
 		
 		<!-- Enable usage of roles - Developer, Operators, etc. Default is true, false means Everyone can do anything -->
@@ -59,12 +59,12 @@
 			<param-value>true</param-value>
 		</init-param>
 		
-		<!-- JNDI key for the Default Database DataSource 
+		<!-- JNDI key for the Default Database DataSource -->
 		<init-param>
 			<param-name>jndiDefaultDataSource</param-name>
 			<param-value>java:comp/env/jdbc/DefaultDB</param-value>
 		</init-param>
-		-->
+		
 		
 		<!-- JNDI key for the Connectivity Service 
 		<init-param>
