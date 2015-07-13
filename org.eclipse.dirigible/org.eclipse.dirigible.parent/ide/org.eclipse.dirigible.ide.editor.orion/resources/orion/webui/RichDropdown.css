@@ -1,8 +1,0 @@
-.dropdownTriggerButtonLabel{
-	display: inline-block;
-	line-height: 14px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	width: calc(100% - 20px);
-}

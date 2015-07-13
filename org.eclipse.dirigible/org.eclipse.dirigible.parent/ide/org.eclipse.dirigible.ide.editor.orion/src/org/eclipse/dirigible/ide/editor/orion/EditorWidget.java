@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -12,13 +12,6 @@
 package org.eclipse.dirigible.ide.editor.orion;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.BrowserFunction;
-import org.eclipse.swt.browser.ProgressEvent;
-import org.eclipse.swt.browser.ProgressListener;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.debug.model.DebugModel;
@@ -27,7 +20,14 @@ import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
 import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.BrowserFunction;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.swt.widgets.Composite;
 
 @SuppressWarnings("unused")
 public class EditorWidget extends AbstractTextEditorWidget {
@@ -37,7 +37,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	private static final Logger logger = Logger.getLogger(EditorWidget.class);
 	private static final String SCRIPT_EVALUATION_FAILED = Messages.EditorWidget_SCRIPT_EVALUATION_FAILED;
 	private static final int EVALUATE_ATTEMPTS = 15;
-	private static final String EDITOR_URL = "/orion/examples/editor/embeddededitor.html"; //$NON-NLS-1$
+	private static final String EDITOR_URL = "orion/editor.html"; //$NON-NLS-1$
 	private Browser browser;
 	private String text;
 	private IEditorWidgetListener listener;
@@ -70,14 +70,14 @@ public class EditorWidget extends AbstractTextEditorWidget {
 				loaded = true;
 				updateWidgetContents();
 				if (javaScriptEditor) {
-					DebugModel debugModel = DebugModelFacade.getActiveDebugModel();
+					final DebugModel debugModel = DebugModelFacade.getActiveDebugModel();
 
 					if (debugModel != null
 							&& debugModel.getCurrentLineBreak() != null) {
-						String filePath = debugModel.getCurrentLineBreak().getFullPath();
-						String path = CommonUtils.formatToRuntimePath(
+						final String filePath = debugModel.getCurrentLineBreak().getFullPath();
+						final String path = CommonUtils.formatToRuntimePath(
 								ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, filePath);
-						int[] breakpoints = debugModel.getBreakpointsMetadata()
+						final int[] breakpoints = debugModel.getBreakpointsMetadata()
 								.getBreakpoints(path);
 
 						loadBreakpoints(breakpoints);
@@ -141,12 +141,13 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		this.listener = listener;
 	}
 
-	public void setText(final String text, final EditorMode mode, boolean readOnly,
-			boolean breakpointsEnabled, int row) {
+	@Override
+	public void setText(final String text, final EditorMode mode, final boolean readOnly,
+			final boolean breakpointsEnabled, final int row) {
 		this.text = text;
 		this.mode = mode.getName();
 		if ("javascript".equals(this.mode)) {
-			this.mode = "js"; // orion specific
+			this.mode = "application/javascript"; // orion specific
 		}
 		this.readOnly = readOnly;
 		this.breakpointsEnabled = breakpointsEnabled;
@@ -156,6 +157,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		}
 	}
 
+	@Override
 	public String getText() {
 		return (String) browser.evaluate("return getText();"); //$NON-NLS-1$
 	}
@@ -168,9 +170,8 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		execute("setDebugRow", row); //$NON-NLS-1$
 	}
 
-	public void loadBreakpoints(int[] breakpoints) {
-		for (int i = 0; i < breakpoints.length; i++) {
-			int breakpoint = breakpoints[i];
+	public void loadBreakpoints(final int[] breakpoints) {
+		for (final int breakpoint : breakpoints) {
 			execute("loadBreakpoint", breakpoint); //$NON-NLS-1$
 		}
 	}

@@ -11,14 +11,6 @@
 
 package org.eclipse.dirigible.ide.editor.orion;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.debug.model.DebugModel;
 import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
@@ -29,6 +21,15 @@ import org.eclipse.dirigible.ide.editor.text.editor.TextEditor;
 import org.eclipse.dirigible.ide.shared.editor.SourceFileEditorInput;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
+
 
 public class OrionEditor extends TextEditor {
 
