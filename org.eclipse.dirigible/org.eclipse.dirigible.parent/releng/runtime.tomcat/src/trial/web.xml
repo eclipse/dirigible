@@ -39,7 +39,7 @@
 		<!-- Corresponding Runtime URL. Used for Registry Perspective, Log Service, etc. -->
 		<init-param>
 			<param-name>runtimeUrl</param-name>
-			<param-value>/dirigible-all-tomcat-2.0.150424</param-value>
+			<param-value>/dirigible</param-value>
 		</init-param>
 		
 		<init-param>
@@ -50,7 +50,7 @@
 		<!-- Enable usage of roles - Developer, Operators, etc. Default is true, false means Everyone can do anything -->
 		<init-param>
 			<param-name>enableRoles</param-name>
-			<param-value>true</param-value>
+			<param-value>false</param-value>
 		</init-param>
 		
 		<!-- Print logs in System output in addition to the standard logger. Workaround for some application servers -->
@@ -163,18 +163,17 @@
 	
 	<!-- Basic -->
 	<login-config>
-		<auth-method>BASIC</auth-method>
+		<auth-method>FORM</auth-method>
 	</login-config>
 	
-	<!-- IDE Services -->
+ 	<!-- IDE Services -->
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>IDE Services</web-resource-name>
 			<url-pattern>/services/index.html</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>Developer</role-name>
-			<role-name>Operator</role-name>
+			<role-name>Everyone</role-name>
 		</auth-constraint>
 	</security-constraint>
 
@@ -186,7 +185,7 @@
 			<url-pattern>/services/export</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>Operator</role-name>
+			<role-name>Everyone</role-name>
 		</auth-constraint>
 	</security-constraint>
 
@@ -220,12 +219,6 @@
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Everyone</role-name>
-			<role-name>Administrator</role-name>
-			<role-name>Manager</role-name>
-			<role-name>PowerUser</role-name>
-			<role-name>User</role-name>
-			<role-name>ReadWrite</role-name>
-			<role-name>ReadOnly</role-name>
 		</auth-constraint>
 	</security-constraint>
 	
@@ -236,7 +229,7 @@
 			<url-pattern>/services/repository/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>Repository</role-name>
+			<role-name>Everyone</role-name>
 		</auth-constraint>
 	</security-constraint>
 
@@ -245,18 +238,6 @@
 	<security-role>
 		<description>All SAP NetWeaver Cloud users</description>
 		<role-name>Everyone</role-name>
-	</security-role>
-	<security-role>
-		<description>Developer can access the IDE</description>
-		<role-name>Developer</role-name>
-	</security-role>
-	<security-role>
-		<description>Operator can perform actions on Registry and Repository</description>
-		<role-name>Operator</role-name>
-	</security-role>
-	<security-role>
-		<description>Repository can perform direct manipulations on Repository</description>
-		<role-name>Repository</role-name>
 	</security-role>
 
 </web-app>

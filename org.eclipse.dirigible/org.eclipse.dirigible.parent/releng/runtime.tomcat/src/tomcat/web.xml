@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="dirigible-ide" version="2.5">
 
-	<display-name>Dirigible IDE</display-name>
+	<display-name>Dirigible</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
@@ -36,7 +36,7 @@
 			<param-value>org.apache.naming.java,org.apache.tomcat.dbcp.dbcp</param-value>
 		</init-param>
 
-		<!-- Corresponding Runtime URL. Used for Registry Perspective, Log Service, etc. -->
+		<!-- Corresponding Runtime URL. Used by Registry Perspective, Log Service, etc. -->
 		<init-param>
 			<param-name>runtimeUrl</param-name>
 			<param-value>/dirigible-all-tomcat-2.0.150424</param-value>
@@ -85,7 +85,6 @@
 			<param-name>jdbcAutoCommit</param-name>
 			<param-value>false</param-value>  <!-- set to true in case of PostgreSQL -->
 		</init-param>
-		
 
 		<load-on-startup>2</load-on-startup>
 
@@ -157,26 +156,23 @@
   	</resource-ref>
 	
 	-->
-	
 
 	<!-- Security -->
 	
-	<!-- Basic -->
 	<login-config>
 		<auth-method>BASIC</auth-method>
 	</login-config>
 	
-	<!-- IDE Services -->
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>IDE Services</web-resource-name>
-			<url-pattern>/services/index.html</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>Developer</role-name>
-			<role-name>Operator</role-name>
-		</auth-constraint>
-	</security-constraint>
+	<!-- Remove comment when #109 is fixed
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>file</realm-name>
+		<form-login-config>
+			<form-login-page>/authentication/login.html</form-login-page>
+			<form-error-page>/authentication/error.html</form-error-page>
+		</form-login-config>
+	</login-config>
+  	-->
 
 	<!-- Registry Import/Export Services -->
 	<security-constraint>
@@ -239,7 +235,6 @@
 			<role-name>Repository</role-name>
 		</auth-constraint>
 	</security-constraint>
-
 	
 	<!-- Security Roles -->
 	<security-role>
@@ -255,7 +250,31 @@
 		<role-name>Operator</role-name>
 	</security-role>
 	<security-role>
-		<description>Repository can perform direct manipulations on Repository</description>
+		<description>Predefined Role For Applications</description>
+		<role-name>Administrator</role-name>
+	</security-role>	
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>Manager</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>		
+		<role-name>PowerUser</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>User</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>ReadWrite</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>ReadOnly</role-name>
+	</security-role>
+	<security-role>
+		<description>Repository Service Access</description>
 		<role-name>Repository</role-name>
 	</security-role>
 

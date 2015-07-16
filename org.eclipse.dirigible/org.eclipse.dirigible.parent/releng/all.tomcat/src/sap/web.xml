@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="dirigible-ide" version="2.5">
 
-	<display-name>Dirigible IDE</display-name>
+	<display-name>Dirigible</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
@@ -36,7 +36,7 @@
 			<param-value>org.apache.naming.java,org.apache.tomcat.dbcp.dbcp</param-value>
 		</init-param>
 
-		<!-- Corresponding Runtime URL. Used for Registry Perspective, Log Service, etc. -->
+		<!-- Corresponding Runtime URL. Used by Registry Perspective, Log Service, etc. -->
 		<init-param>
 			<param-name>runtimeUrl</param-name>
 			<param-value>/dirigible-all-tomcat-2.0.150424</param-value>
@@ -65,27 +65,23 @@
 			<param-value>java:comp/env/jdbc/DefaultDB</param-value>
 		</init-param>
 		
-		
-		<!-- JNDI key for the Connectivity Service 
+		<!-- JNDI key for the Connectivity Service -->
 		<init-param>
 			<param-name>jndiConnectivityService</param-name>
 			<param-value>java:comp/env/connectivity/Configuration</param-value>
 		</init-param>
-		-->
 		
-		<!-- JNDI key for the Mail Service 
+		<!-- JNDI key for the Mail Service -->
 		<init-param>
 			<param-name>jndiMailService</param-name>
 			<param-value>java:comp/env/mail/SAPInternalNWCloudSession</param-value>
 		</init-param>
-		-->
 		
 		<!-- Auto Commit property for JDBC connection --> 
 		<init-param>
 			<param-name>jdbcAutoCommit</param-name>
 			<param-value>false</param-value>  <!-- set to true in case of PostgreSQL -->
 		</init-param>
-		
 
 		<load-on-startup>2</load-on-startup>
 
@@ -105,7 +101,7 @@
 		<servlet-class>org.eclipse.dirigible.runtime.logging.LoggingServlet</servlet-class>
 		<init-param>
 			<param-name>initLoggingDirectory</param-name>
-			<param-value>/logs</param-value>
+			<param-value>/ljs/log</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -138,7 +134,7 @@
 	</filter-mapping>
 
 
-	<!-- Resource References 
+	<!-- Resource References  -->
 	
 	<resource-ref>
 		<res-ref-name>jdbc/DefaultDB</res-ref-name>
@@ -156,17 +152,14 @@
   	    <res-type>javax.mail.Session</res-type>
   	</resource-ref>
 	
-	-->
-	
 
 	<!-- Security -->
 	
-	<!-- Basic -->
 	<login-config>
-		<auth-method>BASIC</auth-method>
+		<auth-method>FORM</auth-method>
 	</login-config>
-	
-	<!-- IDE Services -->
+
+ 	<!-- IDE Services -->
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>IDE Services</web-resource-name>
@@ -239,7 +232,6 @@
 			<role-name>Repository</role-name>
 		</auth-constraint>
 	</security-constraint>
-
 	
 	<!-- Security Roles -->
 	<security-role>
@@ -255,7 +247,31 @@
 		<role-name>Operator</role-name>
 	</security-role>
 	<security-role>
-		<description>Repository can perform direct manipulations on Repository</description>
+		<description>Predefined Role For Applications</description>
+		<role-name>Administrator</role-name>
+	</security-role>	
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>Manager</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>		
+		<role-name>PowerUser</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>User</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>ReadWrite</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>ReadOnly</role-name>
+	</security-role>
+	<security-role>
+		<description>Repository Service Access</description>
 		<role-name>Repository</role-name>
 	</security-role>
 

@@ -26,6 +26,7 @@
 	</properties>
 
 	<build>
+		<finalName>${deployment.name}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -58,20 +59,44 @@
           			<packagingExcludes>**/*.source_*.jar</packagingExcludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webXml>${basedir}/src/${deployment.type}/web.xml</webXml>
+					<failOnMissingWebXml>true</failOnMissingWebXml>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<deployment.type>tomcat</deployment.type>
+				<deployment.name>${project.name}-${project.version}</deployment.name>
+			</properties>
+		</profile>
+		<profile>
+			<id>trial</id>
+			<properties>
+				<deployment.type>trial</deployment.type>
+				<deployment.name>dirigible</deployment.name>
+			</properties>
+		</profile>
+		<profile>
+			<id>sap</id>
+			<properties>
+				<deployment.type>sap</deployment.type>
+				<deployment.name>dirigible</deployment.name>
+			</properties>
+		</profile>
+	</profiles>
 	<modules>
-
-		<module>ide.tomcat</module>
-		<module>ide.sap</module>
 		<module>runtime.tomcat</module>
-		<module>runtime.sap</module>
 		<module>all.tomcat</module>
-		<module>all.sap</module>
-		
-		
-		
 	</modules>
- 
 </project>
