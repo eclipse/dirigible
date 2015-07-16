@@ -15,6 +15,9 @@
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<wtpversion>1.5</wtpversion>
@@ -78,29 +81,6 @@
 						<configuration>
 							<outputDirectory>${project.build.directory}/lib</outputDirectory>
 							<includeArtifactIds>org.eclipse.dirigible.lib.p2</includeArtifactIds>
-						</configuration>
-					</execution>
-
-				</executions>
-			</plugin>
-			
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<executions>
-					<execution>
-						<id>copy-libs</id>
-						<phase>test</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/WEB-INF/lib</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/lib/plugins</directory>
-								</resource>
-							</resources>
 						</configuration>
 					</execution>
 				</executions>

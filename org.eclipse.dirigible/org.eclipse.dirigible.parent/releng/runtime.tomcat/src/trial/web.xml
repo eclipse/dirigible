@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="dirigible-ide" version="2.5">
 
-	<display-name>Dirigible IDE</display-name>
+	<display-name>Dirigible Cloud Toolkit</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
@@ -39,7 +39,7 @@
 		<!-- Corresponding Runtime URL. Used for Registry Perspective, Log Service, etc. -->
 		<init-param>
 			<param-name>runtimeUrl</param-name>
-			<param-value>/dirigible</param-value>
+			<param-value>/@RUNTIME_URL@</param-value>
 		</init-param>
 		
 		<init-param>

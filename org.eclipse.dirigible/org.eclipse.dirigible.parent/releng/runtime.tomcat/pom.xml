@@ -15,6 +15,9 @@
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<wtpversion>1.5</wtpversion>
@@ -70,90 +73,10 @@
 							<includeArtifactIds>org.eclipse.dirigible.lib.p2</includeArtifactIds>
 						</configuration>
 					</execution>
-
-					<!-- 
-					<execution>
-						<id>copy-dependencies-lib</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/WEB-INF/lib</outputDirectory>
-							<excludeArtifactIds>org.eclipse.dirigible.external.p2,org.eclipse.dirigible.repository.p2,org.eclipse.dirigible.ide.p2</excludeArtifactIds>
-						</configuration>
-					</execution>
- -->
-										 
-					 
 				</executions>
 			</plugin>
-			
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<executions>
-					<execution>
-						<id>copy-libs</id>
-						<phase>test</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/WEB-INF/lib</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/lib/plugins</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					
-					<!-- 
-					<execution>
-						<id>copy-ui</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
-							<resources>
-								<resource>
-									<directory>../../runtime/org.eclipse.dirigible.runtime.ui/src</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					 -->
-					<!-- 
-					<execution>
-						<id>copy-content</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF</outputDirectory>
-							<resources>
-								<resource>
-									<directory>../../runtime/org.eclipse.dirigible.runtime.content/src</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					 -->
-				</executions>
-			</plugin>
-			
-			
-			
-			
-			
-			
 		</plugins>
 	</build>
-	
 	
  	<dependencies>
 		<dependency>
