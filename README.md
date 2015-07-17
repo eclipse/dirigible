@@ -64,7 +64,7 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
         mvn clean install
 
-The build should pass successfully. The produced WAR files under sub-folder `org.eclipse.dirigible/org.eclipse.dirigible.parent/releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type and the technical platform.
+The build should pass successfully. The produced WAR files under sub-folder `org.eclipse.dirigible/org.eclipse.dirigible.parent/releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type.
 
 ### Deploy
 
@@ -75,10 +75,11 @@ Deploy on [HANA Cloud Platform](https://account.hana.ondemand.com/) with the [Cl
 ##### Prerequisites
 
 - [HANA Cloud Platform SDK](https://tools.hana.ondemand.com/#cloud)
+- build using 'mvn clean install -P sap'
 
 ##### Steps
 
-1. Go to the `neo-java-web-sdk-1.xxx/tools` SDK folder.
+1. Go to the `neo-java-web-sdk-2.xxx/tools` SDK folder.
 2. Deploy with command:
 
         neo deploy --account <your_account> --application <application_name> --user <your_user> --host <target_landscape_host> --source <source_directory> --password <your_password>
