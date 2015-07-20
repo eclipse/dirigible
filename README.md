@@ -165,7 +165,7 @@ This project is copyrighted by [SAP SE](http://www.sap.com/) and is available un
 
 ### Contributors
 
-If you like to contribute to Dirigible, please read the [Contributor's guide)(CONTRIBUTING.md).
+If you like to contribute to Dirigible, please read the [Contributor's guide](CONTRIBUTING.md).
 
 ### References
 
