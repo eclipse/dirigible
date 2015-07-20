@@ -33,8 +33,7 @@ http://travis-ci.org to validate your branches before you even put them into
 pull requests.  All pull requests will be validated by Travis-ci in any case
 and must pass before being merged.
 
-Again, check that your author email in commits is the same as your Eclipse
-Foundation account, and make sure that you sign-off every commit (`git commit
+Again, check that your author email in commits is the same as your GitHub account, and make sure that you sign-off every commit (`git commit
 -s`).
 
 Do not make pull requests from your `master` branch, please use topic branches
