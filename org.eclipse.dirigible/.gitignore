@@ -2,8 +2,10 @@
 target/
 bin/
 derby/
+.settings/
 
 # files
+.project
 *.bak
 *.class
 *.jar
