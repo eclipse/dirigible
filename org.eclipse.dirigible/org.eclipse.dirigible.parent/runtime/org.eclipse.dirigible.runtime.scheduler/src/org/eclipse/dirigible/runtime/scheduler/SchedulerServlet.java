@@ -29,7 +29,6 @@ import org.eclipse.dirigible.runtime.task.TaskManagerMedium;
 import org.eclipse.dirigible.runtime.task.TaskManagerShort;
 
 public class SchedulerServlet extends HttpServlet {
-
 	private static final long serialVersionUID = -3775928162856885854L;
 
 	private static final Logger logger = Logger.getLogger(SchedulerServlet.class);
@@ -39,9 +38,10 @@ public class SchedulerServlet extends HttpServlet {
 	private static ScheduledExecutorService taskManagerShortScheduler;
 	private static ScheduledExecutorService taskManagerMediumScheduler;
 	private static ScheduledExecutorService taskManagerLongScheduler;
-	
-	private static Boolean started = false;
-	
+
+	private static final Object LOCK = new Object();
+	private static volatile boolean started = false;
+
 	@Override
 	public void init() throws ServletException {
 		super.init();
@@ -49,59 +49,64 @@ public class SchedulerServlet extends HttpServlet {
 	}
 
 	public void startSchedulers() {
-		synchronized (started) {
-			if (!started) {
-				logger.debug("entering: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
-						+ "contextInitialized"); //$NON-NLS-1$
-		
-				securitySynchronizerScheduler = Executors.newSingleThreadScheduledExecutor();
-				securitySynchronizerScheduler.scheduleAtFixedRate(new SecuritySynchronizer(), 1, 1, TimeUnit.MINUTES);
-				
-				jobsSynchronizerScheduler = Executors.newSingleThreadScheduledExecutor();
-				jobsSynchronizerScheduler.scheduleAtFixedRate(new JobsSynchronizer(), 1, 1, TimeUnit.MINUTES);
-		
-				taskManagerShortScheduler = Executors.newSingleThreadScheduledExecutor();
-				taskManagerShortScheduler.scheduleAtFixedRate(TaskManagerShort.getInstance(),10, 10, TimeUnit.SECONDS);
-		
-				taskManagerMediumScheduler = Executors.newSingleThreadScheduledExecutor();
-				taskManagerMediumScheduler.scheduleAtFixedRate(TaskManagerMedium.getInstance(), 1, 1,TimeUnit.MINUTES);
-		
-				taskManagerLongScheduler = Executors.newSingleThreadScheduledExecutor();
-				taskManagerLongScheduler.scheduleAtFixedRate(TaskManagerLong.getInstance(),	1, 1,TimeUnit.HOURS);
-		
-				registerRunnableTasks();
-		
-				logger.debug("exiting: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
-						+ "contextInitialized"); //$NON-NLS-1$
-				started = true;
+		if (!started) {
+			synchronized (LOCK) {
+				if (!started) {
+					logger.debug("entering: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
+							+ "contextInitialized"); //$NON-NLS-1$
+
+					securitySynchronizerScheduler = Executors.newSingleThreadScheduledExecutor();
+					securitySynchronizerScheduler.scheduleAtFixedRate(new SecuritySynchronizer(), 1, 1, TimeUnit.MINUTES);
+
+					jobsSynchronizerScheduler = Executors.newSingleThreadScheduledExecutor();
+					jobsSynchronizerScheduler.scheduleAtFixedRate(new JobsSynchronizer(), 1, 1, TimeUnit.MINUTES);
+
+					taskManagerShortScheduler = Executors.newSingleThreadScheduledExecutor();
+					taskManagerShortScheduler.scheduleAtFixedRate(TaskManagerShort.getInstance(), 10, 10, TimeUnit.SECONDS);
+
+					taskManagerMediumScheduler = Executors.newSingleThreadScheduledExecutor();
+					taskManagerMediumScheduler.scheduleAtFixedRate(TaskManagerMedium.getInstance(), 1, 1, TimeUnit.MINUTES);
+
+					taskManagerLongScheduler = Executors.newSingleThreadScheduledExecutor();
+					taskManagerLongScheduler.scheduleAtFixedRate(TaskManagerLong.getInstance(), 1, 1, TimeUnit.HOURS);
+
+					registerRunnableTasks();
+					started = true;
+
+					logger.debug("exiting: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
+							+ "contextInitialized"); //$NON-NLS-1$
+				}
 			}
 		}
 	}
-	
+
 	@Override
 	public void destroy() {
-		
+
 		stopSchedulers();
-		
+
 		super.destroy();
 	}
 
 	void stopSchedulers() {
-		synchronized (started) {
-			if (started) {
-				logger.debug("entering: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
-						+ "contextDestroyed"); //$NON-NLS-1$
-				securitySynchronizerScheduler.shutdownNow();
-				taskManagerShortScheduler.shutdownNow();
-				taskManagerMediumScheduler.shutdownNow();
-				taskManagerLongScheduler.shutdownNow();
-				logger.debug("exiting: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
-						+ "contextDestroyed"); //$NON-NLS-1$
+		if (started) {
+			synchronized (LOCK) {
+				if (started) {
+					logger.debug("entering: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
+							+ "contextDestroyed"); //$NON-NLS-1$
+					securitySynchronizerScheduler.shutdownNow();
+					jobsSynchronizerScheduler.shutdownNow();
+					taskManagerShortScheduler.shutdownNow();
+					taskManagerMediumScheduler.shutdownNow();
+					taskManagerLongScheduler.shutdownNow();
+					started = false;
+
+					logger.debug("exiting: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
+							+ "contextDestroyed"); //$NON-NLS-1$
+				}
 			}
 		}
 	}
-
-
 
 	private void registerRunnableTasks() {
 		logger.debug("entering: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
