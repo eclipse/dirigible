@@ -165,7 +165,7 @@ This project is copyrighted by [SAP SE](http://www.sap.com/) and is available un
 
 ### Contributors
 
-If you'd like to contribute to Dirigible, please file an [issue](https://github.com/eclipse/dirigible/issues) or send us a [pull request](https://github.com/eclipse/dirigible/pulls).
+If you like to contribute to Dirigible, please read the [Contributor's guide)(CONTRIBUTING.md).
 
 ### References
 
