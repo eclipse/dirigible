@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="src" path="src" including="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+  <classpathentry kind="lib" path="/Users/i031512/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>
+  <classpathentry kind="lib" path="/Users/i031512/.m2/repository/p2/osgi/bundle/org.apache.commons.lang/2.6.0.v201404270220/org.apache.commons.lang-2.6.0.v201404270220.jar"/>
+  <classpathentry kind="lib" path="/Users/i031512/.m2/repository/org/apache/velocity/velocity/1.7/velocity-1.7.jar"/>
+  <classpathentry kind="lib" path="/Users/i031512/.m2/repository/p2/osgi/bundle/org.hamcrest/1.1.0.v20090501071000/org.hamcrest-1.1.0.v20090501071000.jar"/>
+  <classpathentry kind="lib" path="/Users/i031512/.m2/repository/p2/osgi/bundle/org.hamcrest.core/1.3.0.v201303031735/org.hamcrest.core-1.3.0.v201303031735.jar"/>
+  <classpathentry kind="lib" path="/Users/i031512/.m2/repository/p2/osgi/bundle/org.hamcrest.library/1.3.0.v201505072020/org.hamcrest.library-1.3.0.v201505072020.jar"/>
+  <classpathentry kind="lib" path="/Users/i031512/.m2/repository/p2/osgi/bundle/org.hamcrest.integration/1.3.0.v201305210900/org.hamcrest.integration-1.3.0.v201305210900.jar"/>
+  <classpathentry kind="lib" path="/Users/i031512/.m2/repository/p2/osgi/bundle/org.hamcrest.text/1.1.0.v20090501071000/org.hamcrest.text-1.1.0.v20090501071000.jar"/>
 </classpath>

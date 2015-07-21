@@ -21,13 +21,11 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.security.SecurityManager;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.registry.Messages;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 
 public class SecuritySynchronizer implements Runnable {
 
-	private static final String REFRESHING_OF_SECURED_LOCATIONS_FAILED = Messages
-			.getString("SecuritySynchronizer.REFRESHING_OF_SECURED_LOCATIONS_FAILED"); //$NON-NLS-1$
+	private static final String REFRESHING_OF_SECURED_LOCATIONS_FAILED = Messages.SecuritySynchronizer_REFRESHING_OF_SECURED_LOCATIONS_FAILED; 
 
 	private static final Logger logger = Logger.getLogger(SecuritySynchronizer.class);
 
