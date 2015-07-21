@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Export-Package: org.eclipse.dirigible.repository.rcp
 Bundle-ActivationPolicy: lazy
-Bundle-Name: Dirigible Repository RCP Implementation
+Bundle-Name: org.eclipse.dirigible.repository.rcp
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: SAP
+Bundle-Vendor: SAP AG
 Build-Jdk: 1.6.0_33
 Bundle-Version: 2.0.150424
 Bundle-ManifestVersion: 2
@@ -19,4 +19,4 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
 Import-Package: org.eclipse.dirigible.repository.logging
 Service-Component: OSGi-INF/repository-rcp.xml
 Bundle-Activator: org.eclipse.dirigible.repository.rcp.RCPRepositoryActivator
-
+Bundle-ClassPath: .

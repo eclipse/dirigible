@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible Debug Perspective
+Bundle-Name: org.eclipse.dirigible.ide.debug.model
 Bundle-SymbolicName: org.eclipse.dirigible.ide.debug.model;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: SAP
+Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.dirigible.ide.common,
  org.eclipse.dirigible.repository.logging,
@@ -16,3 +16,4 @@ Require-Bundle: org.eclipse.dirigible.ide.common,
 Export-Package: org.eclipse.dirigible.ide.debug.model
 Import-Package: javax.servlet,
  javax.servlet.http
+Bundle-ClassPath: .

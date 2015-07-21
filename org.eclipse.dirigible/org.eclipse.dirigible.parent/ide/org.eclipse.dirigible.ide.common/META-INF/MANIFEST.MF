@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible IDE - Common
-Bundle-SymbolicName: org.eclipse.dirigible.ide.common
+Bundle-Name: org.eclipse.dirigible.ide.common
+Bundle-SymbolicName: org.eclipse.dirigible.ide.common;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: SAP
+Bundle-Vendor: SAP AG
 Export-Package: org.eclipse.dirigible.ide.common,
  org.eclipse.dirigible.ide.common.image,
  org.eclipse.dirigible.ide.common.io,
@@ -24,3 +24,4 @@ Import-Package: javax.servlet,
  org.eclipse.jface.action,
  org.eclipse.jface.dialogs,
  org.eclipse.jface.resource
+Bundle-ClassPath: .

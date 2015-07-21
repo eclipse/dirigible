@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible Template HTML
+Bundle-Name: org.eclipse.dirigible.ide.template.ui.html
 Bundle-SymbolicName: org.eclipse.dirigible.ide.template.ui.html;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.rap.ui;resolution:=optional,
@@ -22,3 +22,4 @@ Import-Package: org.eclipse.dirigible.ide.common.io,
  org.eclipse.core.resources
 Export-Package: org.eclipse.dirigible.ide.template.ui.html.command,
  org.eclipse.dirigible.ide.template.ui.html.wizard
+Bundle-ClassPath: .

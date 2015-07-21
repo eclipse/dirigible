@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible Template Common
+Bundle-Name: org.eclipse.dirigible.ide.template.ui.common
 Bundle-SymbolicName: org.eclipse.dirigible.ide.template.ui.common;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.rap.ui;resolution:=optional,
@@ -23,3 +23,6 @@ Import-Package: org.eclipse.dirigible.ide.common.io,
  org.eclipse.dirigible.ide.template.velocity,
  org.eclipse.dirigible.ide.ui.common.validation,
  org.eclipse.dirigible.ide.workspace.ui.viewer
+Bundle-ClassPath: .,
+ jdi.jar,
+ jdimodel.jar

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible AppDesigner Integration
+Bundle-Name: org.eclipse.dirigible.ide.designer
 Bundle-SymbolicName: org.eclipse.dirigible.ide.designer;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.rap.ui,
  org.eclipse.dirigible.ide.ui.widget.extbrowser,
@@ -19,3 +19,4 @@ Export-Package: org.eclipse.dirigible.ide.designer.ui
 Import-Package: javax.servlet,
  javax.servlet.http,
  org.apache.commons.lang
+Bundle-ClassPath: .

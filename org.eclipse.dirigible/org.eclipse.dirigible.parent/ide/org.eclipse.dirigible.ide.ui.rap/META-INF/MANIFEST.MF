@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible IDE - RAP
+Bundle-Name: org.eclipse.dirigible.ide.ui.rap
 Bundle-SymbolicName: org.eclipse.dirigible.ide.ui.rap;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.rap.ui,
  org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.logging,
@@ -12,3 +12,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.dirigible.ide.ui.rap.entry
 Import-Package: javax.servlet,
  javax.servlet.http
+Bundle-ClassPath: .

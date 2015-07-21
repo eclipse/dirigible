@@ -9,9 +9,9 @@ Export-Package: org.eclipse.dirigible.repository.ext.command,
  org.eclipse.dirigible.repository.ext.security,
  org.eclipse.dirigible.repository.ext.utils
 Bundle-ActivationPolicy: lazy
-Bundle-Name: Dirigible Repository Extensions
+Bundle-Name: org.eclipse.dirigible.repository.ext
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: SAP
+Bundle-Vendor: SAP AG
 Build-Jdk: 1.6.0_33
 Bundle-Version: 2.0.150424
 Bundle-ManifestVersion: 2
@@ -24,5 +24,4 @@ Import-Package: com.google.gson,
  org.eclipse.dirigible.repository.logging,
  javax.servlet,
  javax.servlet.http
-
-
+Bundle-ClassPath: .

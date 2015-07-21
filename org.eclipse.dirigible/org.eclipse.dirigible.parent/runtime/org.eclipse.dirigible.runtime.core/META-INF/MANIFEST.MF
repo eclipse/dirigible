@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible - Runtime Core
+Bundle-Name: org.eclipse.dirigible.runtime.core
 Bundle-SymbolicName: org.eclipse.dirigible.runtime.core;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.ext,
  com.google.gson,
@@ -52,4 +52,4 @@ Export-Package: org.eclipse.dirigible.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.dirigible.runtime.RuntimeActivator
 Service-Component: OSGi-INF/debug-protocol.xml, OSGi-INF/javascript-executor.xml, OSGi-INF/command-executor.xml
-
+Bundle-ClassPath: .

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Security Manager
+Bundle-Name: org.eclipse.dirigible.ide.services.security.manager
 Bundle-SymbolicName: org.eclipse.dirigible.ide.services.security.manager;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui;resolution:=optional,
  org.eclipse.rap.ui;resolution:=optional,
@@ -16,3 +16,4 @@ Import-Package: org.eclipse.dirigible.ide.datasource,
  org.eclipse.dirigible.repository.ext.security,
  javax.servlet,
  javax.servlet.http
+Bundle-ClassPath: .

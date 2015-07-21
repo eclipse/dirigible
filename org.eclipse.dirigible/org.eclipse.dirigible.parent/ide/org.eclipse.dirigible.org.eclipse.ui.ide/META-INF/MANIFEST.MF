@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible IDE - RAP Eclipse IDE
+Bundle-Name: org.eclipse.dirigible.org.eclipse.ui.ide
 Bundle-SymbolicName: org.eclipse.dirigible.org.eclipse.ui.ide;singleton:=true
 Bundle-Version: 2.0.150424
 Bundle-Activator: org.eclipse.ui.internal.ide.IDEWorkbenchPlugin
@@ -27,4 +27,5 @@ Require-Bundle: com.ibm.icu,
  org.eclipse.dirigible.ide.workspace
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
+Bundle-ClassPath: .

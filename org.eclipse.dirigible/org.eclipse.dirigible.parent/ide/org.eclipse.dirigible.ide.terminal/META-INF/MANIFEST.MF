@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dirigible Terminal View
+Bundle-Name: org.eclipse.dirigible.ide.terminal
 Bundle-SymbolicName: org.eclipse.dirigible.ide.terminal;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.rap.ui;resolution:=optional,
@@ -17,3 +17,4 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
 Export-Package: org.eclipse.dirigible.ide.terminal.ui
 Import-Package: javax.servlet,
  javax.servlet.http
+Bundle-ClassPath: .

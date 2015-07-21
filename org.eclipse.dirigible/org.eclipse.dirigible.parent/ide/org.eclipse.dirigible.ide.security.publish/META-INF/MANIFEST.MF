@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Security Artifacts Publish
+Bundle-Name: org.eclipse.dirigible.ide.security.publish
 Bundle-SymbolicName: org.eclipse.dirigible.ide.security.publish;singleton:=true
 Bundle-Version: 2.0.150424
-Bundle-Vendor: Eclipse.org - Dirigible
+Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.dirigible.ide.repository,
  org.eclipse.core.runtime,
@@ -21,3 +21,4 @@ Import-Package: com.google.gson,
  javax.servlet.http,
  org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .

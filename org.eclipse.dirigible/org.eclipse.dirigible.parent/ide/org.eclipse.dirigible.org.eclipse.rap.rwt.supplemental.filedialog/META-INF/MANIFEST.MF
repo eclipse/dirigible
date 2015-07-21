@@ -6,9 +6,9 @@ Build-Jdk: 1.6.0_21
 Export-Package: org.eclipse.swt.widgets
 Require-Bundle: org.eclipse.rap.rwt,
  org.eclipse.rap.ui
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Vendor: SAP AG
 Bundle-Version: 2.0.150424
-Bundle-Name: %Bundle-Name
+Bundle-Name: org.eclipse.dirigible.org.eclipse.rap.rwt.supplemental.filedialog
 Bundle-ManifestVersion: 2
 Import-Package: javax.servlet,
  javax.servlet.http,
@@ -20,4 +20,4 @@ Import-Package: javax.servlet,
  org.apache.commons.io;version="1.4.0"
 Bundle-SymbolicName: org.eclipse.dirigible.org.eclipse.rap.rwt.supplemental.filedialog;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-
+Bundle-ClassPath: .
