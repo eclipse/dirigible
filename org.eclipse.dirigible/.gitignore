@@ -6,8 +6,9 @@ derby/
 
 # files
 .project
+.classpath
 *.bak
 *.class
 *.jar
 derby.log
-*.DS_Store
+.DS_Store
