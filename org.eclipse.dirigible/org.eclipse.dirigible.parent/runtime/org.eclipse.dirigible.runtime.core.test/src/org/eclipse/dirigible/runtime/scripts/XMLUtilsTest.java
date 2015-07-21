@@ -11,17 +11,18 @@
 
 package org.eclipse.dirigible.runtime.scripts;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 import org.json.JSONException;
 import org.junit.Test;
-import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 
 public class XMLUtilsTest {
 
 	@Test
 	public void testFromJson() throws JSONException {
 		XMLUtils xmlUtils = new XMLUtils();
+
 		String xml = xmlUtils.fromJson(
 				"{"
 				+ "  'name':'JSON',"
@@ -34,12 +35,19 @@ public class XMLUtilsTest {
 				+ "  },"
 				+ "  'array':[1,2,3]"
 				+ "}");
-		assertEquals("<nested><id>42</id></nested><integer>1</integer><name>JSON</name><boolean>true</boolean><double>2.0</double><array>1</array><array>2</array><array>3</array>", xml);
+
+		assertTrue(xml.contains("<nested><id>42</id></nested>"));
+		assertTrue(xml.contains("<integer>1</integer>"));
+		assertTrue(xml.contains("<name>JSON</name>"));
+		assertTrue(xml.contains("<boolean>true</boolean>"));
+		assertTrue(xml.contains("<double>2.0</double>"));
+		assertTrue(xml.contains("<array>1</array><array>2</array><array>3</array>"));
 	}
 
 	@Test
 	public void testToJson() throws JSONException {
 		XMLUtils xmlUtils = new XMLUtils();
+
 		String json = xmlUtils.toJson(
 				"  <nested>"
 				+ "  <id>42</id>"
@@ -51,7 +59,12 @@ public class XMLUtilsTest {
 				+ "<array>1</array>"
 				+ "<array>2</array>"
 				+ "<array>3</array>");
-		assertEquals("{\"nested\":{\"id\":42},\"integer\":1,\"name\":\"JSON\",\"boolean\":true,\"double\":2,\"array\":[1,2,3]}", json);
-	}
 
+		assertTrue(json.contains("{\"nested\":{\"id\":42}"));
+		assertTrue(json.contains("\"integer\":1"));
+		assertTrue(json.contains("\"name\":\"JSON\""));
+		assertTrue(json.contains("\"boolean\":true"));
+		assertTrue(json.contains("\"double\":2"));
+		assertTrue(json.contains("\"array\":[1,2,3]}"));
+	}
 }
