@@ -15,8 +15,6 @@ import static org.junit.Assert.assertTrue;
 
 import javax.sql.DataSource;
 
-import org.apache.derby.jdbc.EmbeddedDataSource;
-
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.db.DBRepository;
 
@@ -28,20 +26,13 @@ public class DBRepositoryTest {
 	
 
 	public static void setUp() {
-		dataSource = createLocal();
+		dataSource = DataSourceUtils.createLocal();
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
 		}
-	}
-
-	private static DataSource createLocal() {
-		EmbeddedDataSource dataSource = new EmbeddedDataSource();
-		dataSource.setDatabaseName("derby"); //$NON-NLS-1$
-		dataSource.setCreateDatabase("create"); //$NON-NLS-1$
-		return dataSource;
 	}
 	
 	public static DataSource getDataSource() {
