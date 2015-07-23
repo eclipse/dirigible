@@ -34,7 +34,7 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/WEB-INF/</outputDirectory>
+							<outputDirectory>${project.build.directory}/${deployment.name}/WEB-INF/</outputDirectory>
 							<includeArtifactIds>org.eclipse.dirigible.external.p2</includeArtifactIds>
 						</configuration>
 					</execution>
@@ -45,7 +45,7 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/WEB-INF/</outputDirectory>
+							<outputDirectory>${project.build.directory}/${deployment.name}/WEB-INF/</outputDirectory>
 							<includeArtifactIds>org.eclipse.dirigible.repository.p2</includeArtifactIds>
 						</configuration>
 					</execution>
@@ -57,7 +57,7 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/WEB-INF/</outputDirectory>
+							<outputDirectory>${project.build.directory}/${deployment.name}/WEB-INF/</outputDirectory>
 							<includeArtifactIds>org.eclipse.dirigible.runtime.p2</includeArtifactIds>
 						</configuration>
 					</execution>

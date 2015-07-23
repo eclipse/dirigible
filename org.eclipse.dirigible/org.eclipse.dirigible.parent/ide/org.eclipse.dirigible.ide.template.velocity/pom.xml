@@ -55,7 +55,7 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/lib</outputDirectory>
+							<outputDirectory>${project.build.directory}/${deployment.name}/lib</outputDirectory>
 						</configuration>
 					</execution>
 					 

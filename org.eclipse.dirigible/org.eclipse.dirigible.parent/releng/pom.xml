@@ -62,7 +62,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/${project.name}-${project.version}/WEB-INF/lib</outputDirectory>
+							<outputDirectory>${project.build.directory}/${deployment.name}/WEB-INF/lib</outputDirectory>
 							<resources>
 								<resource>
 									<directory>${project.build.directory}/lib/plugins</directory>
