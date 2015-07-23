@@ -63,26 +63,11 @@ public class ProxyUtils {
 	}
 
 	public static void setProxySettings() throws IOException {
-
-		// Local case only
-
-		// if (System.getProperty(HTTP_PROXY_HOST) == null) {
-		// loadLocalBuildProxy();
-		// }
-
-		// setSystemProxySettings();
 		setTrustAllSSL();
 	}
 
 	public static HttpClient getHttpClient(boolean trustAll) {
 		HttpClient httpClient = null;
-
-		// Local case only
-		// try {
-		// loadLocalBuildProxy();
-		// } catch (IOException e) {
-		// logger.error(e.getMessage(), e);
-		// }
 
 		if (trustAll) {
 			try {
@@ -109,7 +94,8 @@ public class ProxyUtils {
 		String httpProxyHost = System.getProperty(HTTP_PROXY_HOST);
 		String httpProxyPort = System.getProperty(HTTP_PROXY_PORT);
 
-		if (httpProxyHost != null && httpProxyPort != null) {
+		if (httpProxyHost != null && httpProxyPort != null
+				&& !"".equals(httpProxyHost.trim()) && !"".equals(httpProxyHost.trim())) {
 			HttpHost httpProxy = new HttpHost(httpProxyHost, Integer.parseInt(httpProxyPort));
 			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpProxy);
 		}
