@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.scripts;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -67,12 +68,10 @@ public class JavaScriptExecutorTest {
 					(" var testDefaultObjects = function() { return (datasource !== null) ? true : false}; testDefaultObjects();") //$NON-NLS-1$
 							.getBytes());
 			
-			
-			
-			
+
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -88,8 +87,8 @@ public class JavaScriptExecutorTest {
 			assertTrue(((Double) object) == 4);
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -105,8 +104,8 @@ public class JavaScriptExecutorTest {
 			assertTrue(((Double) object) == 4);
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -122,8 +121,8 @@ public class JavaScriptExecutorTest {
 			assertTrue(((Double) object) == 11);
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -139,8 +138,8 @@ public class JavaScriptExecutorTest {
 			assertTrue(((Boolean) object));
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

@@ -12,6 +12,7 @@
 package test.org.eclipse.dirigible.repository.ext;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertFalse;
 
 import javax.sql.DataSource;
@@ -45,8 +46,8 @@ public class SecurityManagerTest {
 			securityManager.secureLocation("/location1", null);
 			assertTrue(securityManager.isSecuredLocation("/location1"));
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -58,8 +59,8 @@ public class SecurityManagerTest {
 			securityManager.unsecureLocation("/location1");
 			assertFalse(securityManager.isSecuredLocation("/location1"));
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	

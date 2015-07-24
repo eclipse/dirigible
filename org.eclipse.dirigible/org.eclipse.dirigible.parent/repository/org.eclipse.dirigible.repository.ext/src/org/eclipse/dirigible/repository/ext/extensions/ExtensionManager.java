@@ -61,7 +61,7 @@ public class ExtensionManager implements IExtensionService {
 		return instance;
 	}
 
-	public ExtensionManager(IRepository repository, DataSource dataSource) {
+	private ExtensionManager(IRepository repository, DataSource dataSource) {
 		this.dataSource = dataSource;
 		this.repository = repository;
 		this.dbUtils = new DBUtils(dataSource);

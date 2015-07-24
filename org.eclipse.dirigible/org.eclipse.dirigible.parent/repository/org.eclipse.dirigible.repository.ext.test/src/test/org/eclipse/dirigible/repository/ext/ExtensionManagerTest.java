@@ -12,6 +12,7 @@
 package test.org.eclipse.dirigible.repository.ext;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -53,8 +54,8 @@ public class ExtensionManagerTest {
 			String[] extensionPoints = extensionManager.getExtensionPoints();
 			assertTrue(contains(extensionPoints,"extensionPoint1"));
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -77,8 +78,8 @@ public class ExtensionManagerTest {
 			String[] extensions = extensionManager.getExtensions("extensionPoint1");
 			assertTrue(contains(extensions,"extension1"));
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -96,8 +97,8 @@ public class ExtensionManagerTest {
 			assertFalse(contains(extensions,"extension1"));
 			
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -110,8 +111,8 @@ public class ExtensionManagerTest {
 			ExtensionPointDefinition extensionPointDefinition = extensionManager.getExtensionPoint("extensionPoint1");
 			assertNotNull(extensionPointDefinition);
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -124,8 +125,8 @@ public class ExtensionManagerTest {
 			ExtensionDefinition extensionDefinition = extensionManager.getExtension("extension1", "extensionPoint1");
 			assertNotNull(extensionDefinition);
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -141,8 +142,8 @@ public class ExtensionManagerTest {
 			extensionPointDefinition = extensionManager.getExtensionPoint("extensionPoint1");
 			assertEquals("test extension point updated", extensionPointDefinition.getDescription());
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -159,8 +160,8 @@ public class ExtensionManagerTest {
 			extensionDefinition = extensionManager.getExtension("extension1", "extensionPoint1");
 			assertEquals("test extension updated", extensionDefinition.getDescription());
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	

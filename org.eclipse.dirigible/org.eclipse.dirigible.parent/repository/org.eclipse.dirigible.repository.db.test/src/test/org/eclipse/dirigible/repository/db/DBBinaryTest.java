@@ -14,6 +14,7 @@ package test.org.eclipse.dirigible.repository.db;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -37,8 +38,8 @@ public class DBBinaryTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -52,8 +53,8 @@ public class DBBinaryTest {
 			assertTrue(resource.exists());
 			assertTrue(resource.isBinary());
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -70,8 +71,8 @@ public class DBBinaryTest {
 			assertTrue(Arrays.equals(resource.getContent(), new byte[] { 0, 1,
 					1, 0 }));
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -86,8 +87,8 @@ public class DBBinaryTest {
 			assertNotNull(resource);
 			assertFalse(resource.exists());
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

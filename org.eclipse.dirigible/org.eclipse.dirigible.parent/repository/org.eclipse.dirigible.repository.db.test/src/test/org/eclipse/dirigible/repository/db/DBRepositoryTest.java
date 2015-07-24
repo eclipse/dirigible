@@ -14,6 +14,7 @@ package test.org.eclipse.dirigible.repository.db;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -40,8 +41,8 @@ public class DBRepositoryTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -58,8 +59,8 @@ public class DBRepositoryTest {
 			assertNotNull(collection);
 			assertTrue(collection.exists());
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -72,8 +73,8 @@ public class DBRepositoryTest {
 			assertNotNull(collection);
 			assertTrue(collection.exists());
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -88,8 +89,8 @@ public class DBRepositoryTest {
 			assertNotNull(collection);
 			assertFalse(collection.exists());
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -99,8 +100,8 @@ public class DBRepositoryTest {
 			repository.createCollection("/testCollection"); //$NON-NLS-1$
 			assertTrue(repository.hasCollection("/testCollection")); //$NON-NLS-1$
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -113,8 +114,8 @@ public class DBRepositoryTest {
 			assertTrue(resource.exists());
 			assertTrue(resource.getContent().length == 0);
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -131,8 +132,8 @@ public class DBRepositoryTest {
 			assertTrue(Arrays.equals(resource.getContent(),
 					"test content".getBytes(Charset.defaultCharset()))); //$NON-NLS-1$
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -145,8 +146,8 @@ public class DBRepositoryTest {
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -162,8 +163,8 @@ public class DBRepositoryTest {
 			assertNotNull(resource);
 			assertFalse(resource.exists());
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -178,8 +179,8 @@ public class DBRepositoryTest {
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

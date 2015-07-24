@@ -14,6 +14,7 @@ package test.org.eclipse.dirigible.repository.db;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -38,8 +39,8 @@ public class DBCacheTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false, !disabled); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -56,8 +57,8 @@ public class DBCacheTest {
 			// TODO
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		} finally {
 			try {
 				if (resource != null && resource.exists()) {
@@ -68,8 +69,8 @@ public class DBCacheTest {
 					assertFalse(resource.exists());
 				}
 			} catch (IOException e) {
-				assertTrue(e.getMessage(), false);
 				e.printStackTrace();
+				fail(e.getMessage());
 			}
 		}
 	}

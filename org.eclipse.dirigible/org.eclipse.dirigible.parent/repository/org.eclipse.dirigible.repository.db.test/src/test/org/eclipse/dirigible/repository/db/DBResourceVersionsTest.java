@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,8 +41,8 @@ public class DBResourceVersionsTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -86,8 +87,8 @@ public class DBResourceVersionsTest {
 			assertEquals(versions.size(), 0);
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

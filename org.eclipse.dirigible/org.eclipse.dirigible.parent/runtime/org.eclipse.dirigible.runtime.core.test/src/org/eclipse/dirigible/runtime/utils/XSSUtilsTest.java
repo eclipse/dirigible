@@ -12,11 +12,10 @@
 package org.eclipse.dirigible.runtime.utils;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
 import org.eclipse.dirigible.runtime.filter.XSSUtils;
+import org.junit.Test;
 
 public class XSSUtilsTest {
 
@@ -27,8 +26,8 @@ public class XSSUtilsTest {
 			String escaped = XSSUtils.stripXSS(script);
 			assertEquals("&lt;script&gt;alert(&quot;XSS&quot;);&lt;/script&gt;",escaped);
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

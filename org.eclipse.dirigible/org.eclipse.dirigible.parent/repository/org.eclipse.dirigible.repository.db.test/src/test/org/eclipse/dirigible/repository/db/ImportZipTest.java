@@ -13,6 +13,7 @@ package test.org.eclipse.dirigible.repository.db;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.zip.ZipInputStream;
@@ -37,8 +38,8 @@ public class ImportZipTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -66,8 +67,8 @@ public class ImportZipTest {
 			assertEquals("image/png", resource.getContentType()); //$NON-NLS-1$
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

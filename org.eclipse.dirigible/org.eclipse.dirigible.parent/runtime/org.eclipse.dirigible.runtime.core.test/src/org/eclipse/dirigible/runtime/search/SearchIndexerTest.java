@@ -14,6 +14,7 @@ package org.eclipse.dirigible.runtime.search;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,8 +51,8 @@ public class SearchIndexerTest {
 							.getBytes(), false, "text/plain");
 			
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -80,8 +81,8 @@ public class SearchIndexerTest {
 			assertEquals(0, matches.size());
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

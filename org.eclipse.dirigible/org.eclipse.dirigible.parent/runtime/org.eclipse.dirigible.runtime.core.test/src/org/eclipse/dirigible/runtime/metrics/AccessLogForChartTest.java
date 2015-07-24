@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.runtime.metrics;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,8 +74,8 @@ public class AccessLogForChartTest {
 			// TODO check the result
 			
 		} catch (ParseException e) {
-			assertTrue(e.getMessage(), false);
             e.printStackTrace();
+            fail(e.getMessage());
 		}
     }
 

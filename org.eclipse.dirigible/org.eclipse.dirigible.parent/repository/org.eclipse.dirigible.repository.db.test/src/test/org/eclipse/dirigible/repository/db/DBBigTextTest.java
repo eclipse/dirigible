@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -40,8 +41,8 @@ public class DBBigTextTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -72,8 +73,8 @@ public class DBBigTextTest {
 			assertEquals(base64, base64back);
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		} finally {
 			try {
 				if (resource != null && resource.exists()) {
@@ -84,8 +85,8 @@ public class DBBigTextTest {
 					assertFalse(resource.exists());
 				}
 			} catch (IOException e) {
-				assertTrue(e.getMessage(), false);
 				e.printStackTrace();
+				fail(e.getMessage());
 			}
 		}
 	}
@@ -115,8 +116,8 @@ public class DBBigTextTest {
 			assertTrue(Arrays.equals(bytes, bytesBack));
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		} finally {
 			try {
 				if (resource != null && resource.exists()) {
@@ -127,8 +128,8 @@ public class DBBigTextTest {
 					assertFalse(resource.exists());
 				}
 			} catch (IOException e) {
-				assertTrue(e.getMessage(), false);
 				e.printStackTrace();
+				fail(e.getMessage());
 			}
 		}
 	}

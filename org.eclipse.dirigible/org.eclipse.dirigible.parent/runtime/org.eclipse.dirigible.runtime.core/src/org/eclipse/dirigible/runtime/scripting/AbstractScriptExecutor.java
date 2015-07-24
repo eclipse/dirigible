@@ -175,7 +175,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		api.setMailService(mailSender);
 		
 		// Extension Manager
-		ExtensionManager extensionManager = new ExtensionManager(repository, dataSource);
+		ExtensionManager extensionManager = ExtensionManager.getInstance(repository, dataSource);
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.EXTENSIONS_SERVICE, extensionManager); //$NON-NLS-1$
 		api.setExtensionService(extensionManager);
 		

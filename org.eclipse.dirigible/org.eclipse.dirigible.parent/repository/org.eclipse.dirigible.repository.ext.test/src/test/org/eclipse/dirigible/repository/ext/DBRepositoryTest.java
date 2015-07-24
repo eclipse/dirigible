@@ -12,11 +12,13 @@
 package test.org.eclipse.dirigible.repository.ext;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.db.DBRepository;
+import org.junit.Before;
 
 public class DBRepositoryTest {
 
@@ -24,14 +26,14 @@ public class DBRepositoryTest {
 	
 	private static IRepository repository;
 	
-
+	@Before
 	public static void setUp() {
 		dataSource = DataSourceUtils.createLocal();
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	

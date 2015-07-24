@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 
@@ -45,8 +46,8 @@ public class DbUtilsTest {
 			value = dbUtils.getNext("TEST_SEQ"); //$NON-NLS-1$
 			assertEquals(3, value);
 		} catch (SQLException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -56,8 +57,8 @@ public class DbUtilsTest {
 			dbUtils.createSequence("TEST_SEQ1", 0); //$NON-NLS-1$
 			dbUtils.dropSequence("TEST_SEQ1"); //$NON-NLS-1$
 		} catch (SQLException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -71,8 +72,8 @@ public class DbUtilsTest {
 			value = dbUtils.getNext("TEST_SEQ2"); //$NON-NLS-1$
 			assertEquals(1, value);
 		} catch (SQLException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -86,8 +87,8 @@ public class DbUtilsTest {
 			value = dbUtils.existSequence("TEST_SEQ3"); //$NON-NLS-1$
 			assertEquals(true, value);
 		} catch (SQLException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

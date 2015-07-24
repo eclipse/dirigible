@@ -11,20 +11,20 @@
 
 package test.org.eclipse.dirigible.repository.ext;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.util.Properties;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.ext.conf.ConfigurationStore;
 import org.eclipse.dirigible.repository.ext.conf.IConfigurationStore;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ConfigurationStoreTest {
 
@@ -61,8 +61,8 @@ public class ConfigurationStoreTest {
 			assertEquals("value2", var2);
 			
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 		

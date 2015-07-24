@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -37,8 +38,8 @@ public class DBCollectionRenameTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -53,8 +54,8 @@ public class DBCollectionRenameTest {
 			assertEquals(0, collection.getChildren().size());
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		} finally {
 			try {
 				if (collection != null && collection.exists()) {
@@ -65,8 +66,8 @@ public class DBCollectionRenameTest {
 					assertFalse(collection.exists());
 				}
 			} catch (IOException e) {
-				assertTrue(e.getMessage(), false);
 				e.printStackTrace();
+				fail(e.getMessage());
 			}
 		}
 	}
@@ -116,14 +117,14 @@ public class DBCollectionRenameTest {
 			
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		} finally {
 			try {
 				repository.removeCollection("/a");
 			} catch (IOException e) {
-				assertTrue(e.getMessage(), false);
 				e.printStackTrace();
+				fail(e.getMessage());
 			}
 		}
 	}

@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,8 +40,8 @@ public class SearchTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -68,8 +69,8 @@ public class SearchTest {
 			repository.removeResource("/testCollectionSearch/param12.txt"); //$NON-NLS-1$
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -97,8 +98,8 @@ public class SearchTest {
 			repository.removeResource("/dddd/file3.txt"); //$NON-NLS-1$
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -138,8 +139,8 @@ public class SearchTest {
 			repository.removeResource("/testCollectionSearch/param12.txt"); //$NON-NLS-1$
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -185,8 +186,8 @@ public class SearchTest {
 			repository.removeResource("/testCollectionSearch/xxx4.txt"); //$NON-NLS-1$
 
 		} catch (IOException e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

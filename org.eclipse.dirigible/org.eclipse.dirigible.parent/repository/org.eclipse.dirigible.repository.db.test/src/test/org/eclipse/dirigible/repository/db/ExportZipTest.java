@@ -12,7 +12,7 @@
 package test.org.eclipse.dirigible.repository.db;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,11 +24,10 @@ import java.util.zip.ZipInputStream;
 
 import javax.sql.DataSource;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.db.DBRepository;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ExportZipTest {
 
@@ -40,8 +39,8 @@ public class ExportZipTest {
 		try {
 			repository = new DBRepository(dataSource, "guest", false); //$NON-NLS-1$
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -100,7 +99,7 @@ public class ExportZipTest {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			assertTrue(e.getMessage(), false);
+			fail(e.getMessage());
 		}
 
 	}
@@ -167,7 +166,7 @@ public class ExportZipTest {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			assertTrue(e.getMessage(), false);
+			fail(e.getMessage());
 		}
 
 	}
@@ -225,7 +224,7 @@ public class ExportZipTest {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			assertTrue(e.getMessage(), false);
+			fail(e.getMessage());
 		}
 
 	}
@@ -277,7 +276,7 @@ public class ExportZipTest {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			assertTrue(e.getMessage(), false);
+			fail(e.getMessage());
 		}
 
 	}

@@ -12,6 +12,7 @@
 package test.org.eclipse.dirigible.repository.ext;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 
@@ -44,8 +45,8 @@ public class FileUtilsTest {
 			FileUtils.copyCollectionToDirectory(collection, temp, new String[]{"/db/dirigible/root"});
 			//assertTrue(contains(extensionPoints,"extensionPoint1"));
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 		

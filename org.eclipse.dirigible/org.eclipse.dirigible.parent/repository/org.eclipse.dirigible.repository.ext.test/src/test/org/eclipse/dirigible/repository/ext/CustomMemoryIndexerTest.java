@@ -47,8 +47,8 @@ public class CustomMemoryIndexerTest {
 			assertEquals(0, hitDocs.size());
 			
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -80,8 +80,8 @@ public class CustomMemoryIndexerTest {
 			assertEquals(0, hitDocs.size());
 			
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
@@ -117,8 +117,8 @@ public class CustomMemoryIndexerTest {
 			customMemoryIndexer.clearIndex();
 			
 		} catch (Exception e) {
-			assertTrue(e.getMessage(), false);
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

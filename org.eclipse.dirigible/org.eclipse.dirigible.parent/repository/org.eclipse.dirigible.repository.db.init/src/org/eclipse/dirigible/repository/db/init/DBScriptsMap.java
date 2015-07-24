@@ -26,6 +26,7 @@ public class DBScriptsMap {
 	public static final String SCRIPT_CREATE_SCHEMA_4 = "/org/eclipse/dirigible/repository/db/sql/create_schema_4.sql"; //$NON-NLS-1$
 	public static final String SCRIPT_CREATE_SCHEMA_5 = "/org/eclipse/dirigible/repository/db/sql/create_schema_5.sql"; //$NON-NLS-1$
 	public static final String SCRIPT_CREATE_SCHEMA_6 = "/org/eclipse/dirigible/repository/db/sql/create_schema_6.sql"; //$NON-NLS-1$
+	public static final String SCRIPT_CREATE_SCHEMA_7 = "/org/eclipse/dirigible/repository/db/sql/create_schema_7.sql"; //$NON-NLS-1$
 
 	public static final String SCRIPT_GET_BINARY = "/org/eclipse/dirigible/repository/db/sql/get_binary.sql"; //$NON-NLS-1$
 	public static final String SCRIPT_GET_DOCUMENT = "/org/eclipse/dirigible/repository/db/sql/get_document.sql"; //$NON-NLS-1$

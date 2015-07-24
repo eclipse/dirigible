@@ -33,6 +33,8 @@ import org.eclipse.dirigible.repository.logging.Logger;
  */
 public class DBRepositoryInitializer {
 
+	private static final String MESSAGING_HUB = Messages.getString("DBRepositoryInitializer.MESSAGING_HUB"); //$NON-NLS-1$
+
 	private static final String IT_SEEMS_DGB_SCHEMA_VERSIONS_DOESN_T_EXISTS_CHECK_WHETHER_THIS_MESSAGE_HAS_BEEN_APPEARING_MORE_THAN_ONCE = Messages.getString("DBRepositoryInitializer.IT_SEEMS_DGB_SCHEMA_VERSIONS_DOESN_T_EXISTS_CHECK_WHETHER_THIS_MESSAGE_HAS_BEEN_APPEARING_MORE_THAN_ONCE"); //$NON-NLS-1$
 
 	private static final String EXTENSION_POINTS = Messages.getString("DBRepositoryInitializer.EXTENSION_POINTS"); //$NON-NLS-1$
@@ -90,8 +92,8 @@ public class DBRepositoryInitializer {
 				DBScriptsMap.SCRIPT_CREATE_SCHEMA_5));
 		scriptDescriptors.add(new ScriptDescriptor(6, EXTENSION_POINTS,
 				DBScriptsMap.SCRIPT_CREATE_SCHEMA_6));
-		
-		
+		scriptDescriptors.add(new ScriptDescriptor(7, MESSAGING_HUB,
+				DBScriptsMap.SCRIPT_CREATE_SCHEMA_7));
 	}
 
 	public DBRepositoryInitializer(DataSource dataSource, Connection connection,

@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.scripts;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,8 +54,8 @@ public class DefinitionEnumeratorTest {
             repository.createResource(FILE_THREE, ("text_html").getBytes());
 
         } catch (final Exception e) {
-            assertTrue(e.getMessage(), false);
             e.printStackTrace();
+            fail(e.getMessage());
         }
     }
 
@@ -67,8 +68,8 @@ public class DefinitionEnumeratorTest {
             repository.removeResource(FILE_THREE);
 
         } catch (final Exception e) {
-            assertTrue(e.getMessage(), false);
             e.printStackTrace();
+            fail(e.getMessage());
         }
     }
 
@@ -83,8 +84,8 @@ public class DefinitionEnumeratorTest {
             assertTrue(list.get(1).equals("/test/test1.jstest"));
 
         } catch (final IOException e) {
-            assertTrue(e.getMessage(), false);
             e.printStackTrace();
+            fail(e.getMessage());
         }
     }
 
