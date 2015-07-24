@@ -19,11 +19,12 @@ public interface IInjectedAPIAliases {
 	public static final String STORAGE						= "storage"; //$NON-NLS-1$
 	public static final String FILE_STORAGE					= "fileStorage"; //$NON-NLS-1$
 	public static final String CONFIGURATION_STORAGE		= "config"; //$NON-NLS-1$
-	
+		
 	// Services
 	public static final String MAIL_SERVICE 				= "mail"; //$NON-NLS-1$
 	public static final String EXTENSIONS_SERVICE			= "extensionManager"; //$NON-NLS-1$
 	public static final String INDEXING_SERVICE				= "indexer"; //$NON-NLS-1$
+	public static final String MESSAGE_HUB					= "messageHub"; //$NON-NLS-1$
 	
 	public static final String CONNECTIVITY_SERVICE			= "connectivity"; //$NON-NLS-1$		
 	

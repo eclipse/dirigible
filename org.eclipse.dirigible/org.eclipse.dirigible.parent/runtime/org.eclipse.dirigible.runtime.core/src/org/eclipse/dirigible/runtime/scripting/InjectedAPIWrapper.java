@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
+import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
@@ -116,6 +117,10 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 	 */
 	private IConnectivityService connectivityService;
 	
+	/**
+	 * The messaging service facade
+	 */
+	private IMessagingService messagingService;
 	
 	
 	/**
@@ -381,6 +386,14 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 	
 	public void set(String key, Object value) {
 		generic.put(key, value);
+	}
+
+	public IMessagingService getMessagingService() {
+		return messagingService;
+	}
+
+	public void setMessagingService(IMessagingService messagingService) {
+		this.messagingService = messagingService;
 	}
 	
 }

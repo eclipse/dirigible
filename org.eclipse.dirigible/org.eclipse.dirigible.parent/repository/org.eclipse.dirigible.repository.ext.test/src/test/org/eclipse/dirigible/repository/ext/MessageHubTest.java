@@ -164,7 +164,7 @@ public class MessageHubTest {
 	}
 	
 	@Test
-	public void testSendReceiveSecondTime() {
+	public void testSendReceiveSecondReceive() {
 		try {
 			String sender = "MSG_SEND_SENDER_TEST2";
 			String receiver = "MSG_SEND_RECEIVER_TEST2";
@@ -298,6 +298,47 @@ public class MessageHubTest {
 		}
 	}
 
+	@Test
+	public void testSendReceiveSecondRoute() {
+		try {
+			String sender = "MSG_SEND_SENDER_TEST6";
+			String receiver = "MSG_SEND_RECEIVER_TEST6";
+			String topic = "MSG_SEND_TOPIC_TEST6";
+			String subject = "Subject6";
+			String body = "Body6";
+			messageHub.registerClient(sender, null);
+			messageHub.registerClient(receiver, null);
+			messageHub.registerTopic(topic, null);
+			messageHub.subscribe(receiver, topic, null);
+			messageHub.send(sender, topic, subject, body, null);
+			messageHub.route();
+			
+			List<MessageDefinition> messages = messageHub.receive(receiver, null);
+			assertNotNull(messages);
+			assertTrue(messages.size() > 0);
+			MessageDefinition message = messages.get(0);
+			assertEquals(message.getSender(), sender);
+			assertEquals(message.getTopic(), topic);
+			assertEquals(message.getSubject(), subject);
+			assertEquals(message.getBody(), body);
+			
+			messageHub.route();
+			
+			messages = messageHub.receive(receiver, null);
+			assertNotNull("Messages object is null", messages);
+			assertTrue("Messages list is not empty", messages.size() == 0);
+			
+			messageHub.unsubscribe(receiver, topic, null);
+			messageHub.unregisterClient(sender, null);
+			messageHub.unregisterClient(receiver, null);
+			messageHub.unregisterTopic(topic, null);
+			
+		} catch (EMessagingException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
 	@Test
 	public void testCleanup() {
 		try {

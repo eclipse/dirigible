@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
+import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
@@ -92,6 +93,10 @@ public interface IInjectedAPI {
 	public IConnectivityService getConnectivityService();
 
 	public void setConnectivityService(IConnectivityService connectivityService);
+	
+	public IMessagingService getMessagingService();
+
+	public void setMessagingService(IMessagingService messagingService);
 
 	public IOUtils getIOUtils();
 

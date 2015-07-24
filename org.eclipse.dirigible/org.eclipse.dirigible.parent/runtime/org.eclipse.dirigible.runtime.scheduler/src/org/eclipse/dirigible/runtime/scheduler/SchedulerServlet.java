@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.job.JobsSynchronizer;
+import org.eclipse.dirigible.runtime.messaging.MessagingSynchronizer;
 import org.eclipse.dirigible.runtime.repository.RepositoryHistoryCleanupTask;
 import org.eclipse.dirigible.runtime.search.RebuildSearchIndexTask;
 import org.eclipse.dirigible.runtime.search.UpdateSearchIndexTask;
@@ -35,6 +36,7 @@ public class SchedulerServlet extends HttpServlet {
 
 	private static ScheduledExecutorService securitySynchronizerScheduler;
 	private static ScheduledExecutorService jobsSynchronizerScheduler;
+	private static ScheduledExecutorService messagingSynchronizerScheduler;
 	private static ScheduledExecutorService taskManagerShortScheduler;
 	private static ScheduledExecutorService taskManagerMediumScheduler;
 	private static ScheduledExecutorService taskManagerLongScheduler;
@@ -60,6 +62,9 @@ public class SchedulerServlet extends HttpServlet {
 
 					jobsSynchronizerScheduler = Executors.newSingleThreadScheduledExecutor();
 					jobsSynchronizerScheduler.scheduleAtFixedRate(new JobsSynchronizer(), 1, 1, TimeUnit.MINUTES);
+					
+					messagingSynchronizerScheduler = Executors.newSingleThreadScheduledExecutor();
+					messagingSynchronizerScheduler.scheduleAtFixedRate(new MessagingSynchronizer(), 1, 1, TimeUnit.MINUTES);
 
 					taskManagerShortScheduler = Executors.newSingleThreadScheduledExecutor();
 					taskManagerShortScheduler.scheduleAtFixedRate(TaskManagerShort.getInstance(), 10, 10, TimeUnit.SECONDS);
@@ -96,6 +101,7 @@ public class SchedulerServlet extends HttpServlet {
 							+ "contextDestroyed"); //$NON-NLS-1$
 					securitySynchronizerScheduler.shutdownNow();
 					jobsSynchronizerScheduler.shutdownNow();
+					messagingSynchronizerScheduler.shutdownNow();
 					taskManagerShortScheduler.shutdownNow();
 					taskManagerMediumScheduler.shutdownNow();
 					taskManagerLongScheduler.shutdownNow();
@@ -146,6 +152,10 @@ public class SchedulerServlet extends HttpServlet {
 
 	public ScheduledExecutorService getJobsSynchronizerScheduler() {
 		return jobsSynchronizerScheduler;
+	}
+	
+	public ScheduledExecutorService getMessagingSynchronizerScheduler() {
+		return messagingSynchronizerScheduler;
 	}
 
 	public ScheduledExecutorService getTaskManagerShortScheduler() {

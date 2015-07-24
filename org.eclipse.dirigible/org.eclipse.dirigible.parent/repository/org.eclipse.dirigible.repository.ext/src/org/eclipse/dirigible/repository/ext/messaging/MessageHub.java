@@ -78,6 +78,8 @@ public class MessageHub implements IMessagingService {
 	
 	private static final String GET_SUB = 				"/org/eclipse/dirigible/repository/ext/messaging/sql/get_sub.sql"; //$NON-NLS-1$
 	
+	private static final String SET_ROUTED_STATUS = 	"/org/eclipse/dirigible/repository/ext/messaging/sql/update_routed_status.sql"; //$NON-NLS-1$
+	
 	private static MessageHub instance;
 	
 	private DBUtils dbUtils;
@@ -331,6 +333,10 @@ public class MessageHub implements IMessagingService {
 
 	@Override
 	public void subscribe(String client, String topic, HttpServletRequest request) throws EMessagingException {
+		if (isSubscriptionExists(client, topic)) {
+			logger.warn(String.format("Subscription with Client %s and Topic %s has been already registered.", client, topic));
+			return;
+		}
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;
@@ -627,6 +633,37 @@ public class MessageHub implements IMessagingService {
 			throw new EMessagingException(e);
 		}
 	}
+	
+	private void setRoutedStatus(int msgId) throws EMessagingException {
+		try {
+			Connection connection = null;
+			PreparedStatement statement = null;
+			try {
+				connection = dataSource.getConnection();
+				String script = getDBUtils().readScript(connection, SET_ROUTED_STATUS, this.getClass());
+				statement = connection.prepareStatement(script);
+				
+				int i=0;
+				statement.setInt(++i, 1); // received
+				statement.setInt(++i, msgId);
+				
+				statement.executeUpdate();
+			} finally {
+				try {
+					if (statement != null) {
+						statement.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					logger.error(DATABASE_ERROR, e);
+				}
+			}
+		} catch (Exception e) {
+			throw new EMessagingException(e);
+		}
+	}
 
 	@Override
 	public void route() throws EMessagingException {
@@ -640,6 +677,7 @@ public class MessageHub implements IMessagingService {
 			}
 			for (SubscriptionPairDefinition subscription : subscribers) {
 				insertOut(incomingNewDefinition.getMessageId(), subscription.getSubscriberId());
+				setRoutedStatus(incomingNewDefinition.getMessageId());
 			}
 		}
 		

@@ -44,6 +44,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 //import org.eclipse.dirigible.repository.db.DBRepository;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionManager;
+import org.eclipse.dirigible.repository.ext.messaging.MessageHub;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.RuntimeActivator;
 import org.eclipse.dirigible.runtime.mail.MailSender;
@@ -188,6 +189,11 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		ConnectivityConfigurationUtils configurationUtils = new ConnectivityConfigurationUtils();
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONNECTIVITY_SERVICE, configurationUtils); //$NON-NLS-1$
 		api.setConnectivityService(configurationUtils);
+		
+		// Messaging Service
+		MessageHub messageHub = MessageHub.getInstance(dataSource);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MESSAGE_HUB, messageHub); //$NON-NLS-1$
+		api.setMessagingService(messageHub);
 
 		
 		// Utils
@@ -244,8 +250,8 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		XMLUtils xmlUtils = new XMLUtils();
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.XML_UTILS, xmlUtils); //$NON-NLS-1$
 		api.setXmlUtils(xmlUtils);
-
-				
+		
+		
 		// register objects via extension
 		try {
 			BundleContext context = RuntimeActivator.getContext();
