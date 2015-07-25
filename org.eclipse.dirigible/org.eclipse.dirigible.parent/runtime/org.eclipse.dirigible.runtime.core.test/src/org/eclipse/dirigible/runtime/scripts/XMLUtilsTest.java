@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -60,11 +60,13 @@ public class XMLUtilsTest {
 				+ "<array>2</array>"
 				+ "<array>3</array>");
 
-		assertTrue(json.contains("{\"nested\":{\"id\":42}"));
+		assertTrue(json.startsWith("{\""));
+		assertTrue(json.endsWith("}"));
+		assertTrue(json.contains("\"nested\":{\"id\":42}"));
 		assertTrue(json.contains("\"integer\":1"));
 		assertTrue(json.contains("\"name\":\"JSON\""));
 		assertTrue(json.contains("\"boolean\":true"));
 		assertTrue(json.contains("\"double\":2"));
-		assertTrue(json.contains("\"array\":[1,2,3]}"));
+		assertTrue(json.contains("\"array\":[1,2,3]"));
 	}
 }
