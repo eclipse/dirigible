@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.runtime.job;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -23,21 +24,20 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
-import org.quartz.CronTrigger;
-import org.quartz.JobDetail;
-import org.quartz.ObjectAlreadyExistsException;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
-import org.quartz.impl.StdSchedulerFactory;
-
-import com.google.gson.JsonObject;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.ext.db.AbstractDataUpdater;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.quartz.CronTrigger;
+import org.quartz.JobDetail;
+import org.quartz.ObjectAlreadyExistsException;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.impl.StdSchedulerFactory;
+
+import com.google.gson.JsonObject;
 
 public class JobsUpdater extends AbstractDataUpdater {
 
@@ -60,16 +60,29 @@ public class JobsUpdater extends AbstractDataUpdater {
 		this.repository = repository;
 		this.dataSource = dataSource;
 		this.location = location;
-		SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+
+		InputStream schedulerConfig = getClass().getResourceAsStream("/scheduler.properties");
 		try {
+			StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
+			schedulerFactory.initialize(schedulerConfig);
+
 			logger.debug("Creating quartz scheduler..."); //$NON-NLS-1$
-			this.scheduler = schedulerFactory.getScheduler();
+			scheduler = schedulerFactory.getScheduler();
 			logger.debug("Quartz scheduler created."); //$NON-NLS-1$
+
 			logger.debug("Starting quartz scheduler..."); //$NON-NLS-1$
-			this.scheduler.start();
+			scheduler.start();
 			logger.debug("Quartz scheduler started."); //$NON-NLS-1$
 		} catch (SchedulerException e) {
 			throw new JobsException(e);
+		}finally {
+			if(null != schedulerConfig){
+				try {
+					schedulerConfig.close();
+				} catch (IOException ioException) {
+					logger.error("Cannot close the scheduler configuration stream.", ioException);
+				}
+			}
 		}
 	}
 
