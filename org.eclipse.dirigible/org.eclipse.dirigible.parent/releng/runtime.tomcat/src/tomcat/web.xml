@@ -180,6 +180,13 @@
 			<web-resource-name>Registry Import/Export Services</web-resource-name>
 			<url-pattern>/services/import</url-pattern>
 			<url-pattern>/services/export</url-pattern>
+			<url-pattern>/services/clone-import</url-pattern>
+			<url-pattern>/services/clone-export</url-pattern>
+			<url-pattern>/services/project-import</url-pattern>
+			<url-pattern>/services/data-import</url-pattern>
+			<url-pattern>/services/data-export</url-pattern>
+			<url-pattern>/services/content-init</url-pattern>
+			<url-pattern>/services/reset</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Operator</role-name>

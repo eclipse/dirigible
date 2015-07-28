@@ -51,7 +51,7 @@ public class CloneExporterServlet extends ContentExporterServlet {
 		
 		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
 			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Export Cloned Content");
-			logger.debug(err);
+			logger.error(err);
 			throw new ServletException(err);
 		}
 		

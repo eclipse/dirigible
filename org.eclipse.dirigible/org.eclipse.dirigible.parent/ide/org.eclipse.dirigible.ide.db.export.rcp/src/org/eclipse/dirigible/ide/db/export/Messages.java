@@ -18,7 +18,6 @@ public class Messages extends NLS {
 	public static String DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV;
 	public static String DataExportDialog_AVAILABLE_TABLES_AND_VIEWS;
 	public static String DataExportDialog_ERROR_ON_LOADING_TABLES_FROM_DATABASE_FOR_GENERATION;
-	public static String DataFinder_ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE;
 	
 	static {
 		// initialize resource bundle

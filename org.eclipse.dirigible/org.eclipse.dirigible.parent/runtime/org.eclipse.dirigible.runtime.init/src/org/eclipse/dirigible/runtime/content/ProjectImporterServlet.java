@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -63,29 +62,33 @@ public class ProjectImporterServlet extends ContentBaseServlet {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		boolean override = Boolean.parseBoolean(request.getParameter(PARAMETER_OVERRIDE)) || Boolean.parseBoolean(request.getHeader(HEADER_OVERRIDE));
 
-		if (isMultipart) {
-			FileItemFactory factory = new DiskFileItemFactory();
-			ServletFileUpload upload = new ServletFileUpload(factory);
+		try {
+			if (isMultipart) {
+				FileItemFactory factory = new DiskFileItemFactory();
+				ServletFileUpload upload = new ServletFileUpload(factory);
 
-			try {
-				List<FileItem> items = upload.parseRequest(request);
-				logger.debug("Importing multiple content...");
-				for (FileItem fileItem : items) {
-					logger.debug("Importing " + fileItem.getFieldName());
-					InputStream in = fileItem.getInputStream();
-					importZipAndUpdate(in, request, override);
-					logger.debug("Content imported.");
+				try {
+					List<FileItem> items = upload.parseRequest(request);
+					logger.debug("Importing multiple content...");
+					for (FileItem fileItem : items) {
+						logger.debug("Importing " + fileItem.getFieldName());
+						InputStream in = fileItem.getInputStream();
+						importZipAndUpdate(in, request, override);
+						logger.debug("Content imported.");
+					}
+				} catch (FileUploadException e) {
+					logger.error(e.getMessage(), e);
+					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				}
-			} catch (FileUploadException e) {
-				logger.error(e.getMessage(), e);
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			} else {
+				logger.debug("Importing single content...");
+				InputStream in = request.getInputStream();
+				importZipAndUpdate(in, request, override);
+				logger.debug("Content imported.");
 			}
-		} else {
-			logger.debug("Importing single content...");
-			InputStream in = request.getInputStream();
-			importZipAndUpdate(in, request, override);
-			logger.debug("Content imported.");
-
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 
@@ -99,8 +102,9 @@ public class ProjectImporterServlet extends ContentBaseServlet {
 	 * @param content
 	 * @param request
 	 * @param override
+	 * @throws Exception 
 	 */
-	private void importZipAndUpdate(InputStream content, HttpServletRequest request, boolean override) {
+	private void importZipAndUpdate(InputStream content, HttpServletRequest request, boolean override) throws Exception {
 		importZipAndUpdate(content, getDefaultPathForImport(), request, override, true);
 	}
 
@@ -113,21 +117,12 @@ public class ProjectImporterServlet extends ContentBaseServlet {
 	 * @param request
 	 * @param override
 	 * @param excludeRootFolderName
+	 * @throws Exception 
 	 */
-	private void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request, boolean override, boolean excludeRootFolderName) {
-		try {
-			// 1. Import content.zip into repository
-			getRepository(request).importZip(new ZipInputStream(content), pathForImport, override, excludeRootFolderName);
-
-			postImport(request);
-
-		} catch (NamingException e) {
-			logger.error(e.getMessage(), e);
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
+	private void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request, boolean override, boolean excludeRootFolderName) throws Exception {
+		// 1. Import content.zip into repository
+		getRepository(request).importZip(new ZipInputStream(content), pathForImport, override, excludeRootFolderName);
+		postImport(request);
 	}
 
 	private void postImport(HttpServletRequest request) throws IOException,

@@ -72,5 +72,26 @@
         </servlet>
      </extension>
 
+
+
+	<extension
+           id="DataExporterServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/data-export"
+              class="org.eclipse.dirigible.runtime.content.DataExporterServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="DataImporterServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/data-import"
+              class="org.eclipse.dirigible.runtime.content.DataImporterServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
 	 
 </plugin>

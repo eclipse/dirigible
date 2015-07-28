@@ -42,7 +42,7 @@ public class CloneImporterServlet extends ContentImporterServlet {
 		
 		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
 			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Import Cloned Content");
-			logger.debug(err);
+			logger.error(err);
 			throw new ServletException(err);
 		}
 		
