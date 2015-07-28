@@ -22,12 +22,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
+import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
 import org.eclipse.dirigible.ide.db.export.DataExportDialog;
-import org.eclipse.dirigible.ide.db.export.DataFinder;
-import org.eclipse.dirigible.ide.db.export.TableColumn;
-import org.eclipse.dirigible.ide.db.export.TableName;
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
+import org.eclipse.dirigible.repository.ext.db.transfer.TableColumn;
+import org.eclipse.dirigible.repository.ext.db.transfer.TableName;
 
 public class DataStructureTemplateDSVPage extends WizardPage {
 	
@@ -96,7 +96,7 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 					if (selectedTableName != null) {
 						model.setTableName(selectedTableName.getName());
 						
-						DataFinder dataFinder = new DataFinder();
+						DBTableExporter dataFinder = new DBTableExporter(DataSourceFacade.getInstance().getDataSource());
 						dataFinder.setTableName(selectedTableName.getName());
 						dataFinder.getTableData();
 

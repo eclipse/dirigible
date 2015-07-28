@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.db.export;
+package org.eclipse.dirigible.repository.ext.db.transfer;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -20,10 +20,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
+import javax.sql.DataSource;
+
 import org.eclipse.dirigible.repository.logging.Logger;
 
-public class DataFinder {
+public class DBTableExporter {
 
 	private static final String DELIMETER = "|";
 	private static final String DATA_TYPE = "DATA_TYPE";
@@ -31,13 +32,19 @@ public class DataFinder {
 	private static final String SELECT_FROM = "SELECT * FROM ";
 	private static final String THERE_IS_NO_DATA_IN_TABLE = "There is no data in table ";
 	private static final String COULD_NOT_RETRIEVE_TABLE_DATA = "Could not rettrieve table data reason: Table name is null";
-	private static final String ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE = Messages.DataExportDialog_ERROR_ON_LOADING_TABLES_FROM_DATABASE_FOR_GENERATION;
+	private static final String ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE = "Error on loading table columns from the Database for Table:";
 
 	private String tableName;
 	private String tableType;
 	private TableColumn[] tableColumns;
 
-	private static final Logger logger = Logger.getLogger(DataFinder.class);
+	private static final Logger logger = Logger.getLogger(DBTableExporter.class);
+	
+	private DataSource dataSource; 
+	
+	public DBTableExporter(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 
 	public String getTableData() {
 		String data = "";
@@ -53,8 +60,10 @@ public class DataFinder {
 			Connection connection = null;
 
 			try {
-				connection = DataSourceFacade.getInstance().getDataSource().getConnection();
+//				connection = DataSourceFacade.getInstance().getDataSource().getConnection();
 
+				connection = dataSource.getConnection();
+						
 				DatabaseMetaData meta = connection.getMetaData();
 
 				List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
@@ -70,8 +79,7 @@ public class DataFinder {
 					availableTableColumns.add(tableColumn);
 				}
 
-				ResultSet columns = meta.getColumns(null, null, getTableName(),
-						null);
+				ResultSet columns = meta.getColumns(null, null, getTableName(), null);
 
 				while (columns.next()) {
 					// columns
@@ -111,7 +119,7 @@ public class DataFinder {
 		Connection connection = null;
 		
 		try {
-			connection = DataSourceFacade.getInstance().getDataSource().getConnection();
+			connection = dataSource.getConnection();
 			
 			statement = connection.createStatement();
 			sql = SELECT_FROM + tableName;

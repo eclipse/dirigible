@@ -17,11 +17,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ServiceHandler;
 import org.eclipse.rap.rwt.service.ServiceManager;
-
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DataExportServiceHandler implements ServiceHandler {
 
@@ -41,7 +42,7 @@ public class DataExportServiceHandler implements ServiceHandler {
 		byte[] download;
 		
 		try {
-			DataFinder dataFinder = new DataFinder();
+			DBTableExporter dataFinder = new DBTableExporter(DataSourceFacade.getInstance().getDataSource());
 			dataFinder.setTableName(tableName);
 			download = dataFinder.getTableData().getBytes();
 			

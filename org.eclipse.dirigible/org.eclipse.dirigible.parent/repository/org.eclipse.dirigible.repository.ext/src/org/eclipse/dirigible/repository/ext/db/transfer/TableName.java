@@ -9,21 +9,18 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.db.export;
+package org.eclipse.dirigible.repository.ext.db.transfer;
 
-public class TableColumn {
+public class TableName {
 
 	private String name;
 
-	private int type;
+	private String type;
 
-	private boolean key;
-
-	public TableColumn(String name, int type, boolean key, boolean visible) {
+	public TableName(String name, String type) {
 		super();
 		this.name = name;
 		this.type = type;
-		this.key = key;
 	}
 
 	public String getName() {
@@ -34,19 +31,12 @@ public class TableColumn {
 		this.name = name;
 	}
 
-	public boolean isKey() {
-		return key;
-	}
-
-	public void setKey(boolean key) {
-		this.key = key;
-	}
-
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
+
 }

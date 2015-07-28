@@ -29,9 +29,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
-
 import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
-import org.eclipse.dirigible.repository.ext.db.DBTableDataInserter;
+import org.eclipse.dirigible.repository.ext.db.transfer.DBTableImporter;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class UploadDataHandler extends AbstractHandler {
@@ -82,7 +81,7 @@ public class UploadDataHandler extends AbstractHandler {
 			try {
 				in = new FileInputStream(fullFileName);
 				byte[] data = IOUtils.toByteArray(in);
-				DBTableDataInserter dataInserter = new DBTableDataInserter(DataSourceFacade.getInstance().getDataSource(),
+				DBTableImporter dataInserter = new DBTableImporter(DataSourceFacade.getInstance().getDataSource(),
 						data, fileName);
 				dataInserter.insert();
 				multiStatus.add(new Status(IStatus.OK, PLUGIN_ID,

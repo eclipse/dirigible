@@ -11,6 +11,7 @@
 
 package org.eclipse.dirigible.ide.db.export;
 
+import org.eclipse.dirigible.repository.ext.db.transfer.TableName;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 

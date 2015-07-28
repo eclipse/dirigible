@@ -23,9 +23,11 @@ import javax.sql.DataSource;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.ext.db.transfer.DBTableImporter;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DsvUpdater extends AbstractDataUpdater {
@@ -128,7 +130,7 @@ public class DsvUpdater extends AbstractDataUpdater {
 		byte[] content = resource.getContent();
 
 		if (content.length != 0) {
-			DBTableDataInserter tableDataInserter = new DBTableDataInserter(dataSource, 
+			DBTableImporter tableDataInserter = new DBTableImporter(dataSource, 
 					content, tableName + EXTENSION_TABLE);
 			tableDataInserter.insert();
 		}

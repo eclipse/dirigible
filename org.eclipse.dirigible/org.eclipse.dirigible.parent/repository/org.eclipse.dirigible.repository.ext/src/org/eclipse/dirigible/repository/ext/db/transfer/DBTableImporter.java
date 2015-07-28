@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.ext.db;
+package org.eclipse.dirigible.repository.ext.db.transfer;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -26,7 +26,10 @@ import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
-public class DBTableDataInserter {
+import org.eclipse.dirigible.repository.ext.db.InvalidNumberOfElementsException;
+import org.eclipse.dirigible.repository.ext.db.Messages;
+
+public class DBTableImporter {
 
 	private static final String INVALID_NUMBER_D_OF_ELEMENTS_AT_LINE_D_INITIAL_COLUMNS_NUMBER_D = Messages.DBTableDataInserter_INVALID_NUMBER_D_OF_ELEMENTS_AT_LINE_D_INITIAL_COLUMNS_NUMBER_D;
 
@@ -50,7 +53,7 @@ public class DBTableDataInserter {
 	private String tableName;
 	private DataSource dataSource;
 
-	public DBTableDataInserter(DataSource dataSource, byte[] csvFileContent, String fileName) {
+	public DBTableImporter(DataSource dataSource, byte[] csvFileContent, String fileName) {
 		this.csvFileContent = csvFileContent;
 		this.tableName = getFileNameWithoutExtension(fileName);
 		this.dataSource = dataSource;

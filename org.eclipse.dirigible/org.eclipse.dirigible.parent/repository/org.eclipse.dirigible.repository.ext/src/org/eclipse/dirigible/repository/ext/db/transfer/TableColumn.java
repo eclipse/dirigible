@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.db.export;
+package org.eclipse.dirigible.repository.ext.db.transfer;
 
 public class TableColumn {
 
