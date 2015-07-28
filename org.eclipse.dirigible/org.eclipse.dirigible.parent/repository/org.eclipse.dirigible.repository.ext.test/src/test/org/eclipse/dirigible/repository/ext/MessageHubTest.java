@@ -21,11 +21,14 @@ public class MessageHubTest {
 	private DataSource dataSource;
 	
 	private MessageHub messageHub;
+	
+	private MessageHub messageHubSilent;
 
 	@Before
 	public void setUp() {
 		dataSource = DataSourceUtils.createLocal();
-		messageHub = MessageHub.getInstance(dataSource);
+		messageHub = new MessageHub(dataSource, false);
+		messageHubSilent = new MessageHub(dataSource);
 	}
 
 	@Test
@@ -350,4 +353,36 @@ public class MessageHubTest {
 
 	}
 
+	@Test
+	public void testSendReceiveSilent() {
+		try {
+			String sender = "MSG_SEND_SENDER_TEST7";
+			String receiver = "MSG_SEND_RECEIVER_TEST7";
+			String topic = "MSG_SEND_TOPIC_TEST7";
+			String subject = "Subject7";
+			String body = "Body7";
+			// no preliminary registrations needed in this case - 'silent'
+			messageHubSilent.subscribe(receiver, topic, null);
+			messageHubSilent.send(sender, topic, subject, body, null);
+			messageHubSilent.route();
+			List<MessageDefinition> messages = messageHubSilent.receive(receiver, null);
+			assertNotNull(messages);
+			assertTrue(messages.size() > 0);
+			MessageDefinition message = messages.get(0);
+			assertEquals(message.getSender(), sender);
+			assertEquals(message.getTopic(), topic);
+			assertEquals(message.getSubject(), subject);
+			assertEquals(message.getBody(), body);
+			
+			messageHubSilent.unsubscribe(receiver, topic, null);
+			messageHubSilent.unregisterClient(sender, null);
+			messageHubSilent.unregisterClient(receiver, null);
+			messageHubSilent.unregisterTopic(topic, null);
+			
+		} catch (EMessagingException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
 }

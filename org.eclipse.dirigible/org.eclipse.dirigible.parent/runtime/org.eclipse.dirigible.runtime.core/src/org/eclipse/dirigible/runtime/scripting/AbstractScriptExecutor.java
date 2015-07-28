@@ -191,7 +191,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		api.setConnectivityService(configurationUtils);
 		
 		// Messaging Service
-		MessageHub messageHub = MessageHub.getInstance(dataSource);
+		MessageHub messageHub = new MessageHub(dataSource);
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MESSAGE_HUB, messageHub); //$NON-NLS-1$
 		api.setMessagingService(messageHub);
 

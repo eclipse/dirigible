@@ -11,12 +11,9 @@
 
 package org.eclipse.dirigible.runtime.messaging;
 
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.messaging.MessageHub;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
@@ -45,7 +42,7 @@ public class MessagingSynchronizer implements Runnable {
 
 		try {
 			DataSource dataSource = RepositoryFacade.getInstance().getDataSource();
-			MessageHub messageHub = MessageHub.getInstance(dataSource);
+			MessageHub messageHub = new MessageHub(dataSource);
 			messageHub.route();
 			messageHub.cleanup();
 		} catch (Exception e) {

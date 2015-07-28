@@ -80,29 +80,35 @@ public class MessageHub implements IMessagingService {
 	
 	private static final String SET_ROUTED_STATUS = 	"/org/eclipse/dirigible/repository/ext/messaging/sql/update_routed_status.sql"; //$NON-NLS-1$
 	
-	private static MessageHub instance;
-	
 	private DBUtils dbUtils;
 	
 	private DBSequenceUtils dbSequenceUtils;
 
 	private DataSource dataSource;
 	
-	public static MessageHub getInstance(DataSource dataSource) {
-		if (instance == null) {
-			instance = new MessageHub(dataSource);
-		}
-		return instance;
-	}
+	private boolean silentMode = true;
 
-	private MessageHub(DataSource dataSource) {
+	public MessageHub(DataSource dataSource, boolean silentMode) {
 		this.dataSource = dataSource;
 		this.dbUtils = new DBUtils(dataSource);
+		this.silentMode = silentMode;
 		this.dbSequenceUtils = new DBSequenceUtils(dataSource);
+	}
+	
+	public MessageHub(DataSource dataSource) {
+		this(dataSource, true);
 	}
 
 	public DBUtils getDBUtils() {
 		return this.dbUtils;
+	}
+	
+	public boolean isSilentMode() {
+		return silentMode;
+	}
+	
+	public void setSilentMode(boolean silentMode) {
+		this.silentMode = silentMode;
 	}
 
 	@Override
@@ -332,9 +338,17 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public void subscribe(String client, String topic, HttpServletRequest request) throws EMessagingException {
-		if (isSubscriptionExists(client, topic)) {
-			logger.warn(String.format("Subscription with Client %s and Topic %s has been already registered.", client, topic));
+	public void subscribe(String subscriber, String topic, HttpServletRequest request) throws EMessagingException {
+		if (isSilentMode()) {
+			if (!isClientExists(subscriber)) {
+				registerClient(subscriber, request);
+			}
+			if (!isTopicExists(topic)) {
+				registerTopic(topic, request);
+			}
+		}
+		if (isSubscriptionExists(subscriber, topic)) {
+			logger.warn(String.format("Subscription with Client %s and Topic %s has been already registered.", subscriber, topic));
 			return;
 		}
 		try {
@@ -347,7 +361,7 @@ public class MessageHub implements IMessagingService {
 				
 				int i=0;
 				statement.setInt(++i, this.dbSequenceUtils.getNext(MSQ_SUBS_SEQ));
-				ClientDefinition clientDefinition = getClientDefinition(client);
+				ClientDefinition clientDefinition = getClientDefinition(subscriber);
 				statement.setInt(++i, clientDefinition.getId());
 				TopicDefinition topicDefinition = getTopicDefinition(topic);
 				statement.setInt(++i, topicDefinition.getId());
@@ -407,6 +421,14 @@ public class MessageHub implements IMessagingService {
 
 	@Override
 	public void send(String sender, String topic, String subject, String body, HttpServletRequest request) throws EMessagingException {
+		if (isSilentMode()) {
+			if (!isClientExists(sender)) {
+				registerClient(sender, request);
+			}
+			if (!isTopicExists(topic)) {
+				registerTopic(topic, request);
+			}
+		}
 		int msgId = insertMessage(topic, subject, body, request);
 		insertIncoming(msgId, sender, request);
 	}
@@ -492,6 +514,11 @@ public class MessageHub implements IMessagingService {
 
 	@Override
 	public List<MessageDefinition> receive(String receiver, HttpServletRequest request) throws EMessagingException {
+		if (isSilentMode()) {
+			if (!isClientExists(receiver)) {
+				registerClient(receiver, request);
+			}
+		}
 		ClientDefinition clientDefinition = getClientDefinition(receiver);
 		int receiverId = clientDefinition.getId();
 		List<MessageDefinition> results = getOut(receiverId);
@@ -547,6 +574,14 @@ public class MessageHub implements IMessagingService {
 
 	@Override
 	public List<MessageDefinition> receive(String receiver, String topic, HttpServletRequest request) throws EMessagingException {
+		if (isSilentMode()) {
+			if (!isClientExists(receiver)) {
+				registerClient(receiver, request);
+			}
+			if (!isTopicExists(topic)) {
+				registerTopic(topic, request);
+			}
+		}
 		ClientDefinition clientDefinition = getClientDefinition(receiver);
 		int receiverId = clientDefinition.getId();
 		List<MessageDefinition> results = getOutByTopic(receiverId, topic);
