@@ -25,6 +25,7 @@ import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.eclipse.dirigible.repository.api.RepositoryFactory;
 //import org.eclipse.dirigible.repository.db.DBRepository;
 import org.eclipse.dirigible.repository.ext.db.WrappedDataSource;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class RepositoryFacade {
@@ -44,8 +45,6 @@ public class RepositoryFacade {
 	private static DataSource localDataSource;
 
 	private WrappedDataSource dataSource;
-	
-	public static final String GUEST = ICommonConstants.GUEST;
 	
 	public static final String INITIAL_CONTEXT = ICommonConstants.INITIAL_CONTEXT;
 
@@ -192,15 +191,7 @@ public class RepositoryFacade {
 	}
 
 	public static String getUser(HttpServletRequest request) {
-		String user = GUEST; // shared one
-		try {
-			if ((request != null) && (request.getUserPrincipal() != null)) {
-				user = request.getUserPrincipal().getName();
-			}
-		} catch (Exception e) {
-			// TODO - do nothing
-		}
-		return user;
+		return RequestUtils.getUser(request);
 	}
 
 	private IRepository getRepositoryInstance(HttpServletRequest request) {

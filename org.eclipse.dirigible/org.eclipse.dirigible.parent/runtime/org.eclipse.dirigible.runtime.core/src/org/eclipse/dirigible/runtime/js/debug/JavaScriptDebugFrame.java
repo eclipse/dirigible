@@ -21,6 +21,16 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
+import org.eclipse.dirigible.repository.ext.debug.BreakpointsMetadata;
+import org.eclipse.dirigible.repository.ext.debug.DebugConstants;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionMetadata;
+import org.eclipse.dirigible.repository.ext.debug.IDebugProtocol;
+import org.eclipse.dirigible.repository.ext.debug.VariableValue;
+import org.eclipse.dirigible.repository.ext.debug.VariableValuesMetadata;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
+import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.js.debug.IDebugCommands.DebugCommand;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaObject;
@@ -31,16 +41,6 @@ import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
 
 import com.google.gson.Gson;
-import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
-import org.eclipse.dirigible.repository.ext.debug.BreakpointsMetadata;
-import org.eclipse.dirigible.repository.ext.debug.DebugConstants;
-import org.eclipse.dirigible.repository.ext.debug.DebugSessionMetadata;
-import org.eclipse.dirigible.repository.ext.debug.IDebugProtocol;
-import org.eclipse.dirigible.repository.ext.debug.VariableValue;
-import org.eclipse.dirigible.repository.ext.debug.VariableValuesMetadata;
-import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.js.debug.IDebugCommands.DebugCommand;
-import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 
 public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener {
 	private static final String NULL = "null";
@@ -74,10 +74,7 @@ public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener 
 
 		// create a new instance of commander per frame
 		String executionId = UUID.randomUUID().toString();
-		String userId = request.getRemoteUser();
-		if (userId == null) {
-			userId = RepositoryFacade.GUEST;
-		}
+		String userId = RequestUtils.getUser(request);
 		this.debuggerActionCommander = new DebuggerActionCommander(this.debuggerActionManager,
 				executionId, userId);
 

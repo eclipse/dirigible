@@ -247,40 +247,20 @@ public class CommonParameters {
 		}
 		
 		public static Boolean isRolesEnabled() {
-//			Boolean rolesEnabled = Boolean.parseBoolean(CommonParameters.get(CommonParameters.ENABLE_ROLES));
-//			return rolesEnabled;
 			return DualParameters.isRolesEnabled();
 		}
 		
 		
 
 		public static String getUserName() {
-//			String user = null;
-//			try {
-//				user = RWT.getRequest().getRemoteUser();
-	//
-//			} catch (Throwable t) {
-//				user = GUEST_USER;
-//			}
-//			if (user == null) {
-//				user = GUEST_USER;
-//			}
-//			return user;
 			return DualParameters.getUserName();
 		}
 	
 	public static boolean isUserInRole(String role) {
-//		if (isRolesEnabled()) {
-//			return RWT.getRequest().isUserInRole(role);
-//		} else {
-//			return true;
-//		}
 		return DualParameters.isUserInRole(role);
 	}
 
 	public static String getSessionId() {
-//		String sessionId = RWT.getRequest().getSession(true).getId();
-//		return sessionId;
 		return DualParameters.getSessionId();
 	}
 	
