@@ -93,5 +93,15 @@
               load-on-startup="true">
         </servlet>
      </extension>
+     
+     <extension
+           id="AnonymousUserServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/anonymous"
+              class="org.eclipse.dirigible.runtime.content.AnonymousUserServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
 	 
 </plugin>

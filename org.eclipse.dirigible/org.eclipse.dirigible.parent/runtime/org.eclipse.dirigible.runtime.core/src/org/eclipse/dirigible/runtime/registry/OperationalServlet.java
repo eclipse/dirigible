@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 
 public class OperationalServlet extends HttpServlet {
 
@@ -34,10 +35,7 @@ public class OperationalServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		if (req.getParameter(PARAMETER_USER) != null) {
-			String userName = ICommonConstants.GUEST; //$NON-NLS-1$
-			if (req.getUserPrincipal() != null) {
-				userName = req.getUserPrincipal().getName();
-			}
+			String userName = RequestUtils.getUser(req);
 			resp.getWriter().write(userName);
 			resp.getWriter().flush();
 			resp.getWriter().close();

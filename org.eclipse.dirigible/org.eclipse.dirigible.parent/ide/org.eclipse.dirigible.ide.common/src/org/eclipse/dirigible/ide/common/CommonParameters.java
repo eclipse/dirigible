@@ -183,74 +183,46 @@ public class CommonParameters {
 // =====================================================================================================================================
 
 		public static String get(String name) {
-//			String parameter = (String) RWT.getRequest().getSession().getAttribute(name);
-//			return parameter;
 			return DualParameters.get(name);
 		}
 		
 		public static Object getObject(String name) {
-//			Object parameter = RWT.getRequest().getSession().getAttribute(name);
-//			return parameter;
 			return DualParameters.getObject(name);
 		}
 
 		public static void set(String name, String value) {
-//			RWT.getRequest().getSession().setAttribute(name, value);
 			DualParameters.set(name, value);
 		}
 		
 		public static void setObject(String name, Object value) {
-//			RWT.getRequest().getSession().setAttribute(name, value);
 			DualParameters.setObject(name, value);
 		}
 
 		public static String getRuntimeUrl() {
-//			String runtimeUrl = CommonParameters.get(CommonParameters.RUNTIME_URL);
-//			if (runtimeUrl == null) {
-//				runtimeUrl = CommonParameters.RUNTIME_URL_DEFAULT;
-//			}
-//			return runtimeUrl;
 			return DualParameters.getRuntimeUrl();
 		}
 		
 		public static Object getService(Class clazz) {
-//			return RWT.getClient().getService(clazz);
 			return DualParameters.getService(clazz);
 		}
 		
 		
 		
 		public static String getServicesUrl() {
-//			String runtimeUrl = CommonParameters.get(CommonParameters.RUNTIME_URL);
-//			if (runtimeUrl == null
-//					|| "".equals(runtimeUrl)) {
-//				runtimeUrl = RWT.getRequest().getContextPath();
-//			}
-//			String servicesUrl = CommonParameters.get(CommonParameters.SERVICES_URL);
-//			if (servicesUrl == null) {
-//				servicesUrl = CommonParameters.SERVICES_URL_DEFAULT;
-//			}
-//			
-//			return runtimeUrl + servicesUrl;
-			
 			return DualParameters.getServicesUrl();
 		}
 		
 		public static String getContextPath() {
-//			return RWT.getRequest().getContextPath();
 			return DualParameters.getContextPath();
 		}
 		
 		public static HttpServletRequest getRequest() {
-//			return RWT.getRequest();
 			return DualParameters.getRequest();
 		}
 		
 		public static Boolean isRolesEnabled() {
 			return DualParameters.isRolesEnabled();
 		}
-		
-		
 
 		public static String getUserName() {
 			return DualParameters.getUserName();

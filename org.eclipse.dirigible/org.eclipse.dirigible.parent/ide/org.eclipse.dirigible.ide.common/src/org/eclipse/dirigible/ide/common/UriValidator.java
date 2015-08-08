@@ -17,8 +17,6 @@ import org.eclipse.jface.dialogs.IInputValidator;
 
 public class UriValidator implements IInputValidator {
 
-	private static final long serialVersionUID = 553319995495098208L;
-
 	/**
 	 * Validates the String. Returns null for no error, or an error message
 	 * 

@@ -11,22 +11,52 @@
 
 package org.eclipse.dirigible.repository.ext.utils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.logging.Logger;
 
 public class RequestUtils {
+	
+	private static final Logger logger = Logger.getLogger(RequestUtils.class);
 	
 	public static String getUser(HttpServletRequest request) {
 		String user = ICommonConstants.GUEST;
 		try {
-			if ((request != null) && (request.getUserPrincipal() != null)) {
-				user = request.getUserPrincipal().getName();
+			if (request != null) { 
+				if (request.getUserPrincipal() != null) {
+					user = request.getUserPrincipal().getName();
+				} else {
+					if (!isRolesEnabled(request)) {
+						user = getCookieValue(request, ICommonConstants.COOKIE_ANONYMOUS_USER);
+					}
+				}
 			}
 		} catch (Exception e) {
-			// TODO - do nothing
+			logger.error(e.getMessage(), e);
 		}
 		return user;
 	}
+	
+	public static String getCookieValue(HttpServletRequest request, String cookieName) {
+		Cookie[] cookies = request.getCookies();
+		for ( int i=0; i<cookies.length; i++) {
+			Cookie cookie = cookies[i];
+			if (cookieName.equals(cookie.getName())) {
+				return cookie.getValue();
+			}
+		}
+		return null;
+	}
+	
+	public static String get(HttpServletRequest request, String name) {
+		String parameter = (String) request.getSession().getAttribute(name);
+		return parameter;
+	}
 
+	public static Boolean isRolesEnabled(HttpServletRequest request) {
+		Boolean rolesEnabled = Boolean.parseBoolean(get(request, ICommonConstants.ENABLE_ROLES));
+		return rolesEnabled;
+	}
 }

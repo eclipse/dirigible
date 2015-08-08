@@ -102,6 +102,10 @@ public interface ICommonConstants {
 		
 	public static final String GUEST = "guest"; //$NON-NLS-1$
 	
+	public static final String COOKIE_ANONYMOUS_USER = "dirigible_anonymous_user"; //$NON-NLS-1$
+	
+	public static final String ENABLE_ROLES = "enableRoles"; //$NON-NLS-1$
+	
 	
 	// Platform specific
 	public static final String MAIL_SESSION = "MailSession"; //$NON-NLS-1$

@@ -14,6 +14,8 @@ package org.eclipse.dirigible.ide.common.dual;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.ClientService;
 
@@ -23,6 +25,8 @@ import org.eclipse.rap.rwt.client.service.ClientService;
  *
  */
 public class DualParameters {
+	
+	private static final Logger logger = Logger.getLogger(DualParameters.class);
 	
 	public static final String RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
 	public static final String SERVICES_URL = "servicesUrl"; //$NON-NLS-1$
@@ -37,8 +41,6 @@ public class DualParameters {
 	public static final String HC_HOST = "HC_HOST"; //$NON-NLS-1$
 	
 	public static final String GUEST_USER = ICommonConstants.GUEST;
-	
-	public static final String ENABLE_ROLES = "enableRoles"; //$NON-NLS-1$
 	
 	public static void initSystemParameters() {
 		HttpServletRequest req = RWT.getRequest();
@@ -109,12 +111,16 @@ public class DualParameters {
 	}
 	
 	public static String getUserName() {
-		String user = null;
+		String user = GUEST_USER;
 		try {
 			user = RWT.getRequest().getRemoteUser();
-
 		} catch (Throwable t) {
-			user = GUEST_USER;
+			logger.error(t.getMessage(), t);
+		}
+		if (user == null) {
+			if (!isRolesEnabled()) {
+				user = RequestUtils.getCookieValue(RWT.getRequest(), ICommonConstants.COOKIE_ANONYMOUS_USER);
+			}
 		}
 		if (user == null) {
 			user = GUEST_USER;
@@ -123,7 +129,7 @@ public class DualParameters {
 	}
 	
 	public static Boolean isRolesEnabled() {
-		Boolean rolesEnabled = Boolean.parseBoolean(get(ENABLE_ROLES));
+		Boolean rolesEnabled = Boolean.parseBoolean(get(ICommonConstants.ENABLE_ROLES));
 		return rolesEnabled;
 	}
 

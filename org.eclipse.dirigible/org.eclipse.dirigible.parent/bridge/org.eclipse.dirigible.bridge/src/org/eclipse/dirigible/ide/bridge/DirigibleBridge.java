@@ -47,7 +47,8 @@ public class DirigibleBridge extends BridgeServlet {
 			LocalParametersInjector.class,
 			MailInjector.class,
 			RuntimeBridgeInjector.class,
-			ConnectivityInjector.class
+			ConnectivityInjector.class,
+			AnonymousUserInjector.class
 		};
 	}
 	
