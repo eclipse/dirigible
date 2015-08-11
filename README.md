@@ -75,7 +75,6 @@ Deploy on [HANA Cloud Platform](https://account.hana.ondemand.com/) with the [Cl
 ##### Prerequisites
 
 - [HANA Cloud Platform SDK](https://tools.hana.ondemand.com/#cloud)
-- build using 'mvn clean install -P sap'
 
 ##### Steps
 
