@@ -122,36 +122,6 @@
             location="/org/eclipse/dirigible/ide/template/ui/html/templates/angular/new_or_edit/ui-for-new-or-edit-entity.html"
             text="New or Edit Entity">
       </template>
-      <template
-            category="EntityUserInterface"
-            image="/icons/ui-for-entity-list-openui5.png"
-            location="/org/eclipse/dirigible/ide/template/ui/html/templates/open_ui5/list/ui-for-entity-list-open-ui5.html"
-            text="List Of Entities (OpenUI5)">
-      </template>
-      <template
-            category="EntityUserInterface"
-            image="/icons/ui-for-entity-details-openui5.png"
-            location="/org/eclipse/dirigible/ide/template/ui/html/templates/open_ui5/list_and_details/ui-for-entity-list-and-details-open-ui5.html"
-            text="List and Details View (OpenUI5)">
-      </template>
-      <template
-            category="EntityUserInterface"
-            image="/icons/ui-for-entity-manage-openui5.png"
-            location="/org/eclipse/dirigible/ide/template/ui/html/templates/open_ui5/list_and_manage/ui-for-entity-list-and-manage-open-ui5.html"
-            text="List and Manage View (OpenUI5)">
-      </template>
-      <template
-            category="EntityUserInterface"
-            image="/icons/ui-for-display-entity-openui5.png"
-            location="/org/eclipse/dirigible/ide/template/ui/html/templates/open_ui5/display_single_entity/ui-for-display-single-entity-open-ui5.html"
-            text="Display Single Entity (OpenUI5)">
-      </template>
-      <template
-            category="EntityUserInterface"
-            image="/icons/ui-for-new-entity-openui5.png"
-            location="/org/eclipse/dirigible/ide/template/ui/html/templates/open_ui5/new_or_edit/ui-for-entity-new-or-edit-open-ui5.html"
-            text="New or Edit Entity (OpenUI5)">
-      </template>
       
       <template
             category="WebContent"
@@ -171,20 +141,7 @@
             location="/org/eclipse/dirigible/ide/template/ui/html/templates/form-sample.html"
             text="Sample Form">
       </template>
-      <template
-            category="WebContent"
-            image="/icons/index-page-openui5.png"
-            location="/org/eclipse/dirigible/ide/template/ui/html/templates/index-page-openui5.html"
-            text="Index Page with Main Menu (OpenUI5)">
-      </template>
-      <template
-            category="WebContent"
-            image="/icons/sample-form-openui5.png"
-            location="/org/eclipse/dirigible/ide/template/ui/html/templates/form-sample-openui5.html"
-            text="Sample Form (OpenUI5)">
-      </template>
-      
-      
+     
       <template
             category="WikiContent"
             image="/icons/wiki-notation-guide.png"

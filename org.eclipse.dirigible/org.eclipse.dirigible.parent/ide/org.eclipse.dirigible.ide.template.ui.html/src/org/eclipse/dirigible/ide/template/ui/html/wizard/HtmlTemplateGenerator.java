@@ -64,17 +64,6 @@ public class HtmlTemplateGenerator extends TemplateGenerator {
 					"/org/eclipse/dirigible/ide/template/ui/html/templates/footer.html", //$NON-NLS-1$
 					model.getTargetLocation(), "footer.html"); //$NON-NLS-1$
 		}
-		if ("/org/eclipse/dirigible/ide/template/ui/html/templates/index-page-openui5.html" //$NON-NLS-1$
-				.equals(model.getTemplate().getLocation())) {
-			copyFile(
-					"main.menu", //$NON-NLS-1$
-					"/org/eclipse/dirigible/ide/template/ui/html/templates/main-openui5.menu", //$NON-NLS-1$
-					HtmlTemplateGenerator.class);
-			copyFile(
-					"sample.html", //$NON-NLS-1$
-					"/org/eclipse/dirigible/ide/template/ui/html/templates/sample-openui5.html", //$NON-NLS-1$
-					HtmlTemplateGenerator.class);
-		}
 	}
 
 	@Override

@@ -72,8 +72,6 @@ public class HtmlTemplateTargetLocationPage extends TemplateTargetLocationPage {
 				|| "".equals(getModel().getFileName())) { //$NON-NLS-1$
 			String pageName = "page_name.html"; 
 			if ("/org/eclipse/dirigible/ide/template/ui/html/templates/index-page.html" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation())
-				|| "/org/eclipse/dirigible/ide/template/ui/html/templates/index-page-openui5.html" //$NON-NLS-1$
 					.equals(model.getTemplate().getLocation())) {
 				pageName = "index.html"; //$NON-NLS-1$
 			}

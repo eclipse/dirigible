@@ -71,14 +71,6 @@ public class HtmlForEntityTemplateWizard extends TemplateWizard {
 					.equals(model.getTemplate().getLocation()))) {
 				return targetLocationPage;
 			}
-			if (("/org/eclipse/dirigible/ide/template/ui/html/templates/open_ui5/display_single_entity/ui-for-display-single-entity-open-ui5.html" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation()))) {
-				return targetLocationPage;
-			}
-			if (("/org/eclipse/dirigible/ide/template/ui/html/templates/open_ui5/new_or_edit/ui-for-entity-new-or-edit-open-ui5.html" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation()))) {
-				return targetLocationPage;
-			}
 		}
 		return super.getNextPage(page);
 	}
