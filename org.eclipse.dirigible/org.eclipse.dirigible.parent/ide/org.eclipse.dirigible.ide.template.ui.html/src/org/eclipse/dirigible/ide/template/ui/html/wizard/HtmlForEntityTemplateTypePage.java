@@ -20,16 +20,6 @@ public class HtmlForEntityTemplateTypePage extends TemplateTypeWizardPage {
 
 	private static final long serialVersionUID = -9074706494058923056L;
 
-	private static final String LIST_OF_ENTITIES_OPEN_UI5 = Messages.HtmlForEntityTemplateTypePage_LIST_OF_ENTITIES_OPEN_UI5;
-
-	private static final String LIST_AND_DETAILS_VIEW_OPEN_UI5 = Messages.HtmlForEntityTemplateTypePage_LIST_AND_DETAILS_VIEW_OPEN_UI5;
-
-	private static final String LIST_AND_MANAGE_VIEW_OPEN_UI5 = Messages.HtmlForEntityTemplateTypePage_LIST_AND_MANAGE_VIEW_OPEN_UI5;
-
-	private static final String DISPLAY_ENTITY_DETAILS_OPEN_UI5 = Messages.HtmlForEntityTemplateTypePage_DISPLAY_ENTITY_DETAILS_OPEN_UI5;
-
-	private static final String NEW_OR_EDIT_ENTITY_OPEN_UI5 = Messages.HtmlForEntityTemplateTypePage_NEW_OR_EDIT_ENTITY_OPEN_UI5;
-
 	private static final String NEW_OR_EDIT_ENTITY = Messages.HtmlForEntityTemplateTypePage_NEW_OR_EDIT_ENTITY;
 
 	private static final String DISPLAY_ENTITY_DETAILS = Messages.HtmlForEntityTemplateTypePage_DISPLAY_ENTITY_DETAILS;
@@ -55,60 +45,6 @@ public class HtmlForEntityTemplateTypePage extends TemplateTypeWizardPage {
 		setDescription(SELECT_THE_TYPE_OF_THE_TEMPLATE_WHICH_WILL_BE_USED_DURING_GENERATION);
 	}
 
-//	@Override
-//	protected TemplateType[] prepareTemplateTypes() throws MalformedURLException {
-//		TemplateType[] templateTypes = new TemplateType[] {
-//				TemplateType
-//						.createTemplateType(
-//								LIST_OF_ENTITIES,
-//								"/org/eclipse/dirigible/ide/template/ui/html/templates/ui-for-entity-list.html", //$NON-NLS-1$
-//								"/icons/ui-for-entity-list.png", //$NON-NLS-1$
-//								this.getClass()),
-//				TemplateType
-//						.createTemplateType(
-//								LIST_AND_DETAILS_VIEW,
-//								"/org/eclipse/dirigible/ide/template/ui/html/templates/ui-for-entity-details.html", //$NON-NLS-1$
-//								"/icons/ui-for-entity-details.png", //$NON-NLS-1$
-//								this.getClass()),
-//				TemplateType
-//						.createTemplateType(
-//								LIST_AND_MANAGE_VIEW,
-//								"/org/eclipse/dirigible/ide/template/ui/html/templates/ui-for-entity-manage.html", //$NON-NLS-1$
-//								"/icons/ui-for-entity-manage.png", //$NON-NLS-1$
-//								this.getClass()),
-//				TemplateType
-//						.createTemplateType(
-//								LIST_OF_ENTITIES_OPEN_UI5,
-//								"/org/eclipse/dirigible/ide/template/ui/html/templates/ui-for-entity-list.html", //$NON-NLS-1$
-//								"/icons/ui-for-entity-list.png", //$NON-NLS-1$
-//								this.getClass()),
-//				TemplateType
-//						.createTemplateType(
-//								LIST_AND_DETAILS_VIEW_OPEN_UI5,
-//								"/org/eclipse/dirigible/ide/template/ui/html/templates/ui-for-entity-details-open-ui5.html", //$NON-NLS-1$
-//								"/icons/ui-for-entity-details.png", //$NON-NLS-1$
-//								this.getClass()),
-//				TemplateType
-//						.createTemplateType(
-//								LIST_AND_MANAGE_VIEW_OPEN_UI5,
-//								"/org/eclipse/dirigible/ide/template/ui/html/templates/ui-for-entity-manage-open-ui5.html", //$NON-NLS-1$
-//								"/icons/ui-for-entity-manage.png", //$NON-NLS-1$
-//								this.getClass()),
-//				TemplateType
-//						.createTemplateType(
-//								DISPLAY_ENTITY_DETAILS_OPEN_UI5,
-//								"/org/eclipse/dirigible/ide/template/ui/html/templates/ui-for-entity-display-open-ui5.html", //$NON-NLS-1$
-//								"/icons/ui-for-display-entity.png", //$NON-NLS-1$
-//								this.getClass()),
-//				TemplateType
-//						.createTemplateType(
-//								NEW_OR_EDIT_ENTITY_OPEN_UI5,
-//								"/org/eclipse/dirigible/ide/template/ui/html/templates/ui-for-entity-new-or-edit-open-ui5.html", //$NON-NLS-1$
-//								"/icons/ui-for-new-entity.png", //$NON-NLS-1$
-//								this.getClass()) };
-//		return templateTypes;
-//	}
-	
 	@Override
 	protected String getCategory() {
 		return ENTITY_USER_INTERFACE;
