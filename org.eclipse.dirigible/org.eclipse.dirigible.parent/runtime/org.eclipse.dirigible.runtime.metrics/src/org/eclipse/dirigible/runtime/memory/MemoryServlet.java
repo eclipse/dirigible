@@ -48,16 +48,10 @@ public class MemoryServlet extends HttpServlet {
 		
 		try {
 			if (paramLog != null) {
-				response.setContentType("text/tab-separated-values");
+				response.setContentType("application/json");
 				// full log for chart
-				String[][] records = MemoryLogRecordDAO.getMemoryLogRecords();
-				for (int i = 0; i < records.length; i++) {
-					writer.print(records[i][0] + "\t");
-					writer.print(records[i][1] + "\t");
-					writer.print(records[i][2] + "\t");
-					writer.print(records[i][3] + "\t");
-					writer.println();
-				}
+				String result = MemoryLogRecordDAO.getMemoryLogRecords();
+				writer.println(result);
 			} else {
 				// instant numbers
 				String content = MemoryLogRecordDAO.generateMemoryInfo();

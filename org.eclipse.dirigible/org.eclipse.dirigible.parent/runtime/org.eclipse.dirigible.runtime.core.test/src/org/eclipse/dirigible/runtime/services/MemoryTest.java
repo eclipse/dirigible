@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.runtime.services;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -30,7 +29,7 @@ public class MemoryTest {
 	public void testMemoryLog() {
 		try {
 			MemoryLogRecordDAO.insert();
-			String[][] memoryLogs = MemoryLogRecordDAO.getMemoryLogRecords();
+			String memoryLogs = MemoryLogRecordDAO.getMemoryLogRecords();
 			assertNotNull(memoryLogs);
 			System.out.println(ArrayUtils.toString(memoryLogs));
 		} catch (Exception e) {

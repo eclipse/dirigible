@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -163,7 +165,7 @@ public class MemoryLogRecordDAO {
 
 	}
 
-	public static String[][] getMemoryLogRecords() throws SQLException, IOException {
+	public static String getMemoryLogRecords() throws SQLException, IOException {
 		try {
 			checkDB();
 
@@ -177,33 +179,42 @@ public class MemoryLogRecordDAO {
 
 				SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
 
-				List<String[]> memoryLogRecords = new ArrayList<String[]>();
+				List<List<List<Object>>> memoryLogRecords = new ArrayList<List<List<Object>>>();
+				
+				List<List<Object>> memlogFree = new ArrayList<List<Object>>();
+				List<List<Object>> memlogTotal = new ArrayList<List<Object>>();
+				List<List<Object>> memlogMax = new ArrayList<List<Object>>();
+				
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
-					String[] record = new String[4];
-					record[0] = format.format(rs.getTimestamp(MEMLOG_TIMESTAMP));
-					record[1] = rs.getLong(MEMLOG_FREE_MEMORY) + EMPTY;
-					record[2] = rs.getLong(MEMLOG_TOTAL_MEMORY) + EMPTY;
-					record[3] = rs.getLong(MEMLOG_MAX_MEMORY) + EMPTY;
-
-					memoryLogRecords.add(record);
+					
+//					Long date = new Long(format.format(rs.getTimestamp(MEMLOG_TIMESTAMP)));
+					Date date = rs.getTimestamp(MEMLOG_TIMESTAMP);
+					List<Object> pair = new ArrayList<Object>();
+					pair.add(date);
+					pair.add(new Long(rs.getLong(MEMLOG_FREE_MEMORY)/1048576));
+					memlogFree.add(pair);
+					
+					pair = new ArrayList<Object>();
+					pair.add(date);
+					pair.add(new Long(rs.getLong(MEMLOG_TOTAL_MEMORY)/1048576));
+					memlogTotal.add(pair);
+					
+					pair = new ArrayList<Object>();
+					pair.add(date);
+					pair.add(new Long(rs.getLong(MEMLOG_MAX_MEMORY)/1048576));
+					memlogMax.add(pair);
+					
 				}
+				
+				memoryLogRecords.add(memlogFree);
+				memoryLogRecords.add(memlogTotal);
+				memoryLogRecords.add(memlogMax);
+				
 
-				String[][] result = new String[memoryLogRecords.size() + 1][4];
-
-				result[0][0] = FIELD_DATE;
-				result[0][1] = FIELD_FREE;
-				result[0][2] = FIELD_TOTAL;
-				result[0][3] = FIELD_MAX;
-
-				for (int i = 0; i < memoryLogRecords.size(); i++) {
-					String[] record = memoryLogRecords.get(i);
-					result[i + 1][0] = record[0];
-					result[i + 1][1] = record[1];
-					result[i + 1][2] = record[2];
-					result[i + 1][3] = record[3];
-				}
-
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
+				String result = gson.toJson(memoryLogRecords.toArray());
+				
 				return result;
 
 			} finally {

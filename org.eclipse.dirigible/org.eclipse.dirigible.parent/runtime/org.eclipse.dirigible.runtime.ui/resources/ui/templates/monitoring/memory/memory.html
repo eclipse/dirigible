@@ -1,7 +1,20 @@
-<link rel="stylesheet" type="text/css" href="templates/monitoring/memory/graphics.css" />
-
 <div>
 	<h2><span class="label label-default">Memory</span></h2>
 	<div id="memory-log"></div>
-	<script src="templates/monitoring/memory/graphics.js"></script>
 </div>
+
+<script>
+$(document).ready(function(){
+	$.get( "../memory?log", function(data) {
+		var plot1 = $.jqplot('memory-log', data, {  
+			series:[
+		    	{showMarker:false, label: 'Free', shadow: false, lineWidth: 1.5},
+		        {showMarker:false, label: 'Total', shadow: false, lineWidth: 1.5},
+		        {showMarker:false, label: 'Max', shadow: false, lineWidth: 1.5}],
+		    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Memory (MB)'}},
+		    legend: {show: true},
+		    cursor:{show:true, zoom:true, showTooltip:false}
+		  });
+	});
+});
+</script>
