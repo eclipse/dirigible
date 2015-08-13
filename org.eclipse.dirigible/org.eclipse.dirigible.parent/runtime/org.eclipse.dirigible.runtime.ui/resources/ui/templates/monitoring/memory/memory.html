@@ -13,7 +13,9 @@ $(document).ready(function(){
 		        {showMarker:false, label: 'Max', shadow: false, lineWidth: 1.5}],
 		    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Memory (MB)'}},
 		    legend: {show: true},
-		    cursor:{show:true, zoom:true, showTooltip:false}
+		    cursor:{show:true, zoom:true, showTooltip:false},
+		    grid: {background: '#ffffff'},
+		    seriesColors: [ "#0000ff", "#00ff00", "#ff0000", "#ffff00", "#00ffff", "#ff00ff"]
 		  });
 	});
 });
