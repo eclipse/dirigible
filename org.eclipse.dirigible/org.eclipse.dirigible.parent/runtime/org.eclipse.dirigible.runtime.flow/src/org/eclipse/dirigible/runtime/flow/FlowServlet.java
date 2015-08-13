@@ -23,7 +23,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.AbstractScriptingServlet;
 
 /**
- * Servlet for JavaScript scripts execution
+ * Servlet for Flow process execution
  */
 public class FlowServlet extends AbstractScriptingServlet {
 

@@ -155,6 +155,37 @@
         </filter>
      </extension>
 
-          
-          
+     
+     
+     
+     <extension
+           id="MessagingSendServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/message/send"
+              class="org.eclipse.dirigible.runtime.messaging.MessagingSendServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="MessagingSubscribeServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/message/subscribe"
+              class="org.eclipse.dirigible.runtime.messaging.MessagingSubscribeServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="MessagingReceiveServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/message/receive"
+              class="org.eclipse.dirigible.runtime.messaging.MessagingReceiveServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
 </plugin>

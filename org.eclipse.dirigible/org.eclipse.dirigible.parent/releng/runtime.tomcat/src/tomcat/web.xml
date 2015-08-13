@@ -243,6 +243,20 @@
 		</auth-constraint>
 	</security-constraint>
 	
+	<!-- Messaging Services -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Messaging Services</web-resource-name>
+			<url-pattern>/services/message/send</url-pattern>
+			<url-pattern>/services/message/subscribe</url-pattern>
+			<url-pattern>/services/message/receive</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Messenger</role-name>
+			<role-name>Operator</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
 	<!-- Security Roles -->
 	<security-role>
 		<description>All SAP NetWeaver Cloud users</description>
@@ -283,6 +297,10 @@
 	<security-role>
 		<description>Repository Service Access</description>
 		<role-name>Repository</role-name>
+	</security-role>
+	<security-role>
+		<description>Messenger can perform direct communication via Messaging Hub</description>
+		<role-name>Messenger</role-name>
 	</security-role>
 
 </web-app>

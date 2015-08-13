@@ -20,12 +20,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.repository.logging.Logger;
+
 /**
  * Servlet implementation class MemoryServlet
  */
 public class MemoryServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 5645919875259516138L;
+	
+	private static final Logger logger = Logger.getLogger(MemoryServlet.class);
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -58,8 +62,8 @@ public class MemoryServlet extends HttpServlet {
 				writer.write(content);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
+			throw new ServletException(e);
 		}
 		
 		writer.flush();

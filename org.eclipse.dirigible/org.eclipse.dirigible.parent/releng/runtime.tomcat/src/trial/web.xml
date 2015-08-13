@@ -239,6 +239,19 @@
 			<role-name>Everyone</role-name>
 		</auth-constraint>
 	</security-constraint>
+	
+	<!-- Messaging Services -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Messaging Services</web-resource-name>
+			<url-pattern>/services/message/send</url-pattern>
+			<url-pattern>/services/message/subscribe</url-pattern>
+			<url-pattern>/services/message/receive</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Everyone</role-name>
+		</auth-constraint>
+	</security-constraint>
 
 	
 	<!-- Security Roles -->

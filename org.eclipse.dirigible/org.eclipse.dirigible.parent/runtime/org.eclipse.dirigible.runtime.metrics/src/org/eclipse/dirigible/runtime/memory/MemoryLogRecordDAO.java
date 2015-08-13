@@ -57,16 +57,10 @@ public class MemoryLogRecordDAO {
 	private static final String MAX_MEMORY = "maxMemory"; //$NON-NLS-1$
 	private static final String TOTAL_MEMORY = "totalMemory"; //$NON-NLS-1$
 	private static final String FREE_MEMORY = "freeMemory"; //$NON-NLS-1$
-	private static final String FIELD_MAX = "Max"; //$NON-NLS-1$
-	private static final String FIELD_TOTAL = "Total"; //$NON-NLS-1$
-	private static final String FIELD_FREE = "Free"; //$NON-NLS-1$
-	private static final String FIELD_DATE = "date"; //$NON-NLS-1$
-	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String MEMLOG_MAX_MEMORY = "MEMLOG_MAX_MEMORY"; //$NON-NLS-1$
 	private static final String MEMLOG_TOTAL_MEMORY = "MEMLOG_TOTAL_MEMORY"; //$NON-NLS-1$
 	private static final String MEMLOG_FREE_MEMORY = "MEMLOG_FREE_MEMORY"; //$NON-NLS-1$
 	private static final String MEMLOG_TIMESTAMP = "MEMLOG_TIMESTAMP"; //$NON-NLS-1$
-	private static final String DATE_FORMAT = "yyyyMMddHHmm"; //$NON-NLS-1$
 
 	public static String generateMemoryInfo() {
 		Gson gson = new Gson();
@@ -177,8 +171,6 @@ public class MemoryLogRecordDAO {
 				String sql = dbUtils.readScript(connection, SQL_MAP_SELECT_ALL_MEMORY_LOGS, MemoryLogRecordDAO.class);
 				PreparedStatement pstmt = connection.prepareStatement(sql);
 
-				SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
-
 				List<List<List<Object>>> memoryLogRecords = new ArrayList<List<List<Object>>>();
 				
 				List<List<Object>> memlogFree = new ArrayList<List<Object>>();
@@ -188,7 +180,6 @@ public class MemoryLogRecordDAO {
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
 					
-//					Long date = new Long(format.format(rs.getTimestamp(MEMLOG_TIMESTAMP)));
 					Date date = rs.getTimestamp(MEMLOG_TIMESTAMP);
 					List<Object> pair = new ArrayList<Object>();
 					pair.add(date);
@@ -210,7 +201,6 @@ public class MemoryLogRecordDAO {
 				memoryLogRecords.add(memlogFree);
 				memoryLogRecords.add(memlogTotal);
 				memoryLogRecords.add(memlogMax);
-				
 
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
 				String result = gson.toJson(memoryLogRecords.toArray());

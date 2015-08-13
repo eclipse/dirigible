@@ -27,17 +27,17 @@ public class MessageHubTest {
 	@Before
 	public void setUp() {
 		dataSource = DataSourceUtils.createLocal();
-		messageHub = new MessageHub(dataSource, false);
-		messageHubSilent = new MessageHub(dataSource);
+		messageHub = new MessageHub(dataSource, false, null);
+		messageHubSilent = new MessageHub(dataSource, null);
 	}
 
 	@Test
 	public void testRegisterClient() {
 		try {
 			String clientName = "MSG_CLIENT_TEST1";
-			messageHub.registerClient(clientName, null);
+			messageHub.registerClient(clientName);
 			assertTrue(messageHub.isClientExists(clientName));
-			messageHub.unregisterClient(clientName, null);
+			messageHub.unregisterClient(clientName);
 		} catch (EMessagingException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -48,9 +48,9 @@ public class MessageHubTest {
 	public void testUnregisterClient() {
 		try {
 			String clientName = "MSG_CLIENT_TEST2";
-			messageHub.registerClient(clientName, null);
+			messageHub.registerClient(clientName);
 			assertTrue(messageHub.isClientExists(clientName));
-			messageHub.unregisterClient(clientName, null);
+			messageHub.unregisterClient(clientName);
 			assertFalse(messageHub.isClientExists(clientName));
 		} catch (EMessagingException e) {
 			e.printStackTrace();
@@ -62,9 +62,9 @@ public class MessageHubTest {
 	public void testRegisterTopic() {
 		try {
 			String topicName = "MSG_TOPIC_TEST1";
-			messageHub.registerTopic(topicName, null);
+			messageHub.registerTopic(topicName);
 			assertTrue(messageHub.isTopicExists(topicName));
-			messageHub.unregisterTopic(topicName, null);
+			messageHub.unregisterTopic(topicName);
 		} catch (EMessagingException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -75,9 +75,9 @@ public class MessageHubTest {
 	public void testUnregisterTopic() {
 		try {
 			String topicName = "MSG_TOPIC_TEST2";
-			messageHub.registerTopic(topicName, null);
+			messageHub.registerTopic(topicName);
 			assertTrue(messageHub.isTopicExists(topicName));
-			messageHub.unregisterTopic(topicName, null);
+			messageHub.unregisterTopic(topicName);
 			assertFalse(messageHub.isTopicExists(topicName));
 		} catch (EMessagingException e) {
 			e.printStackTrace();
@@ -91,22 +91,22 @@ public class MessageHubTest {
 			String client = "MSG_SUB_CLIENT_TEST1";
 			String topic = "MSG_SUB_TOPIC_TEST1";
 			try {
-				messageHub.subscribe(client, topic, null);
+				messageHub.subscribe(client, topic);
 			} catch (Exception e) {
 				assertTrue(e.getMessage(), e.getMessage().contains("Client MSG_SUB_CLIENT_TEST1 does not exist"));
 			}
-			messageHub.registerClient(client, null);
+			messageHub.registerClient(client);
 			try {
-				messageHub.subscribe(client, topic, null);
+				messageHub.subscribe(client, topic);
 			} catch (Exception e) {
 				assertTrue(e.getMessage(), e.getMessage().contains("Topic MSG_SUB_TOPIC_TEST1 does not exist"));
 			}
-			messageHub.registerTopic(topic, null);
-			messageHub.subscribe(client, topic, null);
+			messageHub.registerTopic(topic);
+			messageHub.subscribe(client, topic);
 			assertTrue(messageHub.isSubscriptionExists(client, topic));
-			messageHub.unsubscribe(client, topic, null);
-			messageHub.unregisterClient(client, null);
-			messageHub.unregisterTopic(topic, null);
+			messageHub.unsubscribe(client, topic);
+			messageHub.unregisterClient(client);
+			messageHub.unregisterTopic(topic);
 		} catch (EMessagingException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -118,14 +118,14 @@ public class MessageHubTest {
 		try {
 			String client = "MSG_SUB_CLIENT_TEST2";
 			String topic = "MSG_SUB_TOPIC_TEST2";
-			messageHub.registerClient(client, null);
-			messageHub.registerTopic(topic, null);
-			messageHub.subscribe(client, topic, null);
+			messageHub.registerClient(client);
+			messageHub.registerTopic(topic);
+			messageHub.subscribe(client, topic);
 			assertTrue(messageHub.isSubscriptionExists(client, topic));
-			messageHub.unsubscribe(client, topic, null);
+			messageHub.unsubscribe(client, topic);
 			assertFalse(messageHub.isSubscriptionExists(client, topic));
-			messageHub.unregisterClient(client, null);
-			messageHub.unregisterTopic(topic, null);
+			messageHub.unregisterClient(client);
+			messageHub.unregisterTopic(topic);
 		} catch (EMessagingException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -140,13 +140,13 @@ public class MessageHubTest {
 			String topic = "MSG_SEND_TOPIC_TEST1";
 			String subject = "Subject1";
 			String body = "Body1";
-			messageHub.registerClient(sender, null);
-			messageHub.registerClient(receiver, null);
-			messageHub.registerTopic(topic, null);
-			messageHub.subscribe(receiver, topic, null);
-			messageHub.send(sender, topic, subject, body, null);
+			messageHub.registerClient(sender);
+			messageHub.registerClient(receiver);
+			messageHub.registerTopic(topic);
+			messageHub.subscribe(receiver, topic);
+			messageHub.send(sender, topic, subject, body);
 			messageHub.route();
-			List<MessageDefinition> messages = messageHub.receive(receiver, null);
+			List<MessageDefinition> messages = messageHub.receive(receiver);
 			assertNotNull(messages);
 			assertTrue(messages.size() > 0);
 			MessageDefinition message = messages.get(0);
@@ -155,10 +155,10 @@ public class MessageHubTest {
 			assertEquals(message.getSubject(), subject);
 			assertEquals(message.getBody(), body);
 			
-			messageHub.unsubscribe(receiver, topic, null);
-			messageHub.unregisterClient(sender, null);
-			messageHub.unregisterClient(receiver, null);
-			messageHub.unregisterTopic(topic, null);
+			messageHub.unsubscribe(receiver, topic);
+			messageHub.unregisterClient(sender);
+			messageHub.unregisterClient(receiver);
+			messageHub.unregisterTopic(topic);
 			
 		} catch (EMessagingException e) {
 			e.printStackTrace();
@@ -174,14 +174,14 @@ public class MessageHubTest {
 			String topic = "MSG_SEND_TOPIC_TEST2";
 			String subject = "Subject2";
 			String body = "Body2";
-			messageHub.registerClient(sender, null);
-			messageHub.registerClient(receiver, null);
-			messageHub.registerTopic(topic, null);
-			messageHub.subscribe(receiver, topic, null);
-			messageHub.send(sender, topic, subject, body, null);
+			messageHub.registerClient(sender);
+			messageHub.registerClient(receiver);
+			messageHub.registerTopic(topic);
+			messageHub.subscribe(receiver, topic);
+			messageHub.send(sender, topic, subject, body);
 			messageHub.route();
 			
-			List<MessageDefinition> messages = messageHub.receive(receiver, null);
+			List<MessageDefinition> messages = messageHub.receive(receiver);
 			assertNotNull(messages);
 			assertTrue(messages.size() > 0);
 			MessageDefinition message = messages.get(0);
@@ -190,14 +190,14 @@ public class MessageHubTest {
 			assertEquals(message.getSubject(), subject);
 			assertEquals(message.getBody(), body);
 			
-			messages = messageHub.receive(receiver, null);
+			messages = messageHub.receive(receiver);
 			assertNotNull("Messages object is null", messages);
 			assertTrue("Messages list is not empty", messages.size() == 0);
 			
-			messageHub.unsubscribe(receiver, topic, null);
-			messageHub.unregisterClient(sender, null);
-			messageHub.unregisterClient(receiver, null);
-			messageHub.unregisterTopic(topic, null);
+			messageHub.unsubscribe(receiver, topic);
+			messageHub.unregisterClient(sender);
+			messageHub.unregisterClient(receiver);
+			messageHub.unregisterTopic(topic);
 			
 		} catch (EMessagingException e) {
 			e.printStackTrace();
@@ -213,13 +213,13 @@ public class MessageHubTest {
 			String topic = "MSG_SEND_TOPIC_TEST3";
 			String subject = "Subject3";
 			String body = "Body3";
-			messageHub.registerClient(sender, null);
-			messageHub.registerClient(receiver, null);
-			messageHub.registerTopic(topic, null);
-			messageHub.subscribe(receiver, topic, null);
-			messageHub.send(sender, topic, subject, body, null);
+			messageHub.registerClient(sender);
+			messageHub.registerClient(receiver);
+			messageHub.registerTopic(topic);
+			messageHub.subscribe(receiver, topic);
+			messageHub.send(sender, topic, subject, body);
 			messageHub.route();
-			List<MessageDefinition> messages = messageHub.receive(receiver, topic, null);
+			List<MessageDefinition> messages = messageHub.receive(receiver, topic);
 			assertNotNull(messages);
 			assertTrue(messages.size() > 0);
 			MessageDefinition message = messages.get(0);
@@ -228,10 +228,10 @@ public class MessageHubTest {
 			assertEquals(message.getSubject(), subject);
 			assertEquals(message.getBody(), body);
 			
-			messageHub.unsubscribe(receiver, topic, null);
-			messageHub.unregisterClient(sender, null);
-			messageHub.unregisterClient(receiver, null);
-			messageHub.unregisterTopic(topic, null);
+			messageHub.unsubscribe(receiver, topic);
+			messageHub.unregisterClient(sender);
+			messageHub.unregisterClient(receiver);
+			messageHub.unregisterTopic(topic);
 			
 		} catch (EMessagingException e) {
 			e.printStackTrace();
@@ -248,21 +248,21 @@ public class MessageHubTest {
 			String anotherTopic = "ANOTHER_TOPIC4";
 			String subject = "Subject4";
 			String body = "Body4";
-			messageHub.registerClient(sender, null);
-			messageHub.registerClient(receiver, null);
-			messageHub.registerTopic(topic, null);
-			messageHub.registerTopic(anotherTopic, null);
-			messageHub.subscribe(receiver, topic, null);
-			messageHub.send(sender, topic, subject, body, null);
+			messageHub.registerClient(sender);
+			messageHub.registerClient(receiver);
+			messageHub.registerTopic(topic);
+			messageHub.registerTopic(anotherTopic);
+			messageHub.subscribe(receiver, topic);
+			messageHub.send(sender, topic, subject, body);
 			messageHub.route();
-			List<MessageDefinition> messages = messageHub.receive(receiver, anotherTopic, null);
+			List<MessageDefinition> messages = messageHub.receive(receiver, anotherTopic);
 			assertNotNull(messages);
 			assertTrue("Messages list is not empty for another topic", messages.size() == 0);
 			
-			messageHub.unsubscribe(receiver, topic, null);
-			messageHub.unregisterClient(sender, null);
-			messageHub.unregisterClient(receiver, null);
-			messageHub.unregisterTopic(topic, null);
+			messageHub.unsubscribe(receiver, topic);
+			messageHub.unregisterClient(sender);
+			messageHub.unregisterClient(receiver);
+			messageHub.unregisterTopic(topic);
 			
 		} catch (EMessagingException e) {
 			e.printStackTrace();
@@ -279,21 +279,21 @@ public class MessageHubTest {
 			String topic = "MSG_SEND_TOPIC_TEST5";
 			String subject = "Subject3";
 			String body = "Body3";
-			messageHub.registerClient(sender, null);
-			messageHub.registerClient(receiver, null);
-			messageHub.registerClient(anotherReceiver, null);
-			messageHub.registerTopic(topic, null);
-			messageHub.subscribe(receiver, topic, null);
-			messageHub.send(sender, topic, subject, body, null);
+			messageHub.registerClient(sender);
+			messageHub.registerClient(receiver);
+			messageHub.registerClient(anotherReceiver);
+			messageHub.registerTopic(topic);
+			messageHub.subscribe(receiver, topic);
+			messageHub.send(sender, topic, subject, body);
 			messageHub.route();
-			List<MessageDefinition> messages = messageHub.receive(anotherReceiver, null);
+			List<MessageDefinition> messages = messageHub.receive(anotherReceiver);
 			assertNotNull(messages);
 			assertTrue("Messages list is not empty for another topic", messages.size() == 0);
 			
-			messageHub.unsubscribe(receiver, topic, null);
-			messageHub.unregisterClient(sender, null);
-			messageHub.unregisterClient(receiver, null);
-			messageHub.unregisterTopic(topic, null);
+			messageHub.unsubscribe(receiver, topic);
+			messageHub.unregisterClient(sender);
+			messageHub.unregisterClient(receiver);
+			messageHub.unregisterTopic(topic);
 			
 		} catch (EMessagingException e) {
 			e.printStackTrace();
@@ -309,14 +309,14 @@ public class MessageHubTest {
 			String topic = "MSG_SEND_TOPIC_TEST6";
 			String subject = "Subject6";
 			String body = "Body6";
-			messageHub.registerClient(sender, null);
-			messageHub.registerClient(receiver, null);
-			messageHub.registerTopic(topic, null);
-			messageHub.subscribe(receiver, topic, null);
-			messageHub.send(sender, topic, subject, body, null);
+			messageHub.registerClient(sender);
+			messageHub.registerClient(receiver);
+			messageHub.registerTopic(topic);
+			messageHub.subscribe(receiver, topic);
+			messageHub.send(sender, topic, subject, body);
 			messageHub.route();
 			
-			List<MessageDefinition> messages = messageHub.receive(receiver, null);
+			List<MessageDefinition> messages = messageHub.receive(receiver);
 			assertNotNull(messages);
 			assertTrue(messages.size() > 0);
 			MessageDefinition message = messages.get(0);
@@ -327,14 +327,14 @@ public class MessageHubTest {
 			
 			messageHub.route();
 			
-			messages = messageHub.receive(receiver, null);
+			messages = messageHub.receive(receiver);
 			assertNotNull("Messages object is null", messages);
 			assertTrue("Messages list is not empty", messages.size() == 0);
 			
-			messageHub.unsubscribe(receiver, topic, null);
-			messageHub.unregisterClient(sender, null);
-			messageHub.unregisterClient(receiver, null);
-			messageHub.unregisterTopic(topic, null);
+			messageHub.unsubscribe(receiver, topic);
+			messageHub.unregisterClient(sender);
+			messageHub.unregisterClient(receiver);
+			messageHub.unregisterTopic(topic);
 			
 		} catch (EMessagingException e) {
 			e.printStackTrace();
@@ -362,10 +362,10 @@ public class MessageHubTest {
 			String subject = "Subject7";
 			String body = "Body7";
 			// no preliminary registrations needed in this case - 'silent'
-			messageHubSilent.subscribe(receiver, topic, null);
-			messageHubSilent.send(sender, topic, subject, body, null);
+			messageHubSilent.subscribe(receiver, topic);
+			messageHubSilent.send(sender, topic, subject, body);
 			messageHubSilent.route();
-			List<MessageDefinition> messages = messageHubSilent.receive(receiver, null);
+			List<MessageDefinition> messages = messageHubSilent.receive(receiver);
 			assertNotNull(messages);
 			assertTrue(messages.size() > 0);
 			MessageDefinition message = messages.get(0);
@@ -374,10 +374,10 @@ public class MessageHubTest {
 			assertEquals(message.getSubject(), subject);
 			assertEquals(message.getBody(), body);
 			
-			messageHubSilent.unsubscribe(receiver, topic, null);
-			messageHubSilent.unregisterClient(sender, null);
-			messageHubSilent.unregisterClient(receiver, null);
-			messageHubSilent.unregisterTopic(topic, null);
+			messageHubSilent.unsubscribe(receiver, topic);
+			messageHubSilent.unregisterClient(sender);
+			messageHubSilent.unregisterClient(receiver);
+			messageHubSilent.unregisterTopic(topic);
 			
 		} catch (EMessagingException e) {
 			e.printStackTrace();

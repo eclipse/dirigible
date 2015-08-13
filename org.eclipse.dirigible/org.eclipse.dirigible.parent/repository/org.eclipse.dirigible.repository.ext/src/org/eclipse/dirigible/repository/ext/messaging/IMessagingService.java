@@ -16,14 +16,14 @@ public interface IMessagingService {
 	 * 
 	 * @param clientName
 	 */
-	public void registerClient(String clientName, HttpServletRequest request) throws EMessagingException;
+	public void registerClient(String clientName) throws EMessagingException;
 	
 	/**
 	 * Unregisters a Client by Name
 	 * 
 	 * @param clientName
 	 */
-	public void unregisterClient(String clientName, HttpServletRequest request) throws EMessagingException;
+	public void unregisterClient(String clientName) throws EMessagingException;
 	
 	/**
 	 * Checks the existence of a Client by Name
@@ -37,14 +37,14 @@ public interface IMessagingService {
 	 * 
 	 * @param topic
 	 */
-	public void registerTopic(String topic, HttpServletRequest request) throws EMessagingException;
+	public void registerTopic(String topic) throws EMessagingException;
 	
 	/**
 	 * Unregisters a Topic by Name
 	 * 
 	 * @param topic
 	 */
-	public void unregisterTopic(String topic, HttpServletRequest request) throws EMessagingException;
+	public void unregisterTopic(String topic) throws EMessagingException;
 	
 	/**
 	 * Checks the existence of a Topic by Name
@@ -61,7 +61,7 @@ public interface IMessagingService {
 	 * @param client
 	 * @param topic
 	 */
-	public void subscribe(String client, String topic, HttpServletRequest request) throws EMessagingException;
+	public void subscribe(String client, String topic) throws EMessagingException;
 	
 	/**
 	 * Un-subscribes a given Client from a given Topic
@@ -69,7 +69,7 @@ public interface IMessagingService {
 	 * @param client
 	 * @param topic
 	 */
-	public void unsubscribe(String client, String topic, HttpServletRequest request) throws EMessagingException;
+	public void unsubscribe(String client, String topic) throws EMessagingException;
 	
 	/**
 	 * Checks whether subscription of a given Client to a given Topic exists
@@ -89,7 +89,7 @@ public interface IMessagingService {
 	 * @param subject
 	 * @param body
 	 */
-	public void send(String sender, String topic, String subject, String body, HttpServletRequest request) throws EMessagingException;
+	public void send(String sender, String topic, String subject, String body) throws EMessagingException;
 	
 	/**
 	 * Sends a message to the hub
@@ -97,21 +97,21 @@ public interface IMessagingService {
 	 * @param messageDefinition
 	 * @throws EMessagingException
 	 */
-	public void send(MessageDefinition messageDefinition, HttpServletRequest request) throws EMessagingException;
+	public void send(MessageDefinition messageDefinition) throws EMessagingException;
 	
 	/**
 	 * Get all the new messages for this Client for all the Topics
 	 * 
 	 * @param receiver
 	 */
-	public List<MessageDefinition> receive(String receiver, HttpServletRequest request) throws EMessagingException;
+	public List<MessageDefinition> receive(String receiver) throws EMessagingException;
 	
 	/**
 	 * Get all the new messages for this Client for a given Topic
 	 * 
 	 * @param receiver
 	 */
-	public List<MessageDefinition> receive(String receiver, String topic, HttpServletRequest request) throws EMessagingException;
+	public List<MessageDefinition> receive(String receiver, String topic) throws EMessagingException;
 
 	/**
 	 * Triggers the Routing Process.

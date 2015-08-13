@@ -90,7 +90,8 @@ public class DataExporterServlet extends ContentBaseServlet {
 		}
 
 		String tableName = request.getParameter(PARAMETER_TABLE);
-		if (tableName == null) {
+		if (tableName == null
+				|| "".equals(tableName)) {
 			logger.error(PARAMETER_TABLE_ERR);
 			throw new ServletException(PARAMETER_TABLE_ERR);
 		}

@@ -87,16 +87,19 @@ public class MessageHub implements IMessagingService {
 	private DataSource dataSource;
 	
 	private boolean silentMode = true;
+	
+	private HttpServletRequest request;
 
-	public MessageHub(DataSource dataSource, boolean silentMode) {
+	public MessageHub(DataSource dataSource, boolean silentMode, HttpServletRequest request) {
 		this.dataSource = dataSource;
 		this.dbUtils = new DBUtils(dataSource);
 		this.silentMode = silentMode;
 		this.dbSequenceUtils = new DBSequenceUtils(dataSource);
+		this.request = request;
 	}
 	
-	public MessageHub(DataSource dataSource) {
-		this(dataSource, true);
+	public MessageHub(DataSource dataSource, HttpServletRequest request) {
+		this(dataSource, true, request);
 	}
 
 	public DBUtils getDBUtils() {
@@ -112,7 +115,7 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public void registerClient(String clientName, HttpServletRequest request) throws EMessagingException {
+	public void registerClient(String clientName) throws EMessagingException {
 		if (isClientExists(clientName)) {
 			logger.warn(String.format("Client with name %s has been already registered.", clientName));
 			return;
@@ -149,7 +152,7 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public void unregisterClient(String clientName, HttpServletRequest request) throws EMessagingException {
+	public void unregisterClient(String clientName) throws EMessagingException {
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;
@@ -225,7 +228,7 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public void registerTopic(String topic, HttpServletRequest request) throws EMessagingException {
+	public void registerTopic(String topic) throws EMessagingException {
 		if (isTopicExists(topic)) {
 			logger.warn(String.format("Topic with name %s has been already registered.", topic));
 			return;
@@ -262,7 +265,7 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public void unregisterTopic(String topic, HttpServletRequest request) throws EMessagingException {
+	public void unregisterTopic(String topic) throws EMessagingException {
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;
@@ -338,13 +341,13 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public void subscribe(String subscriber, String topic, HttpServletRequest request) throws EMessagingException {
+	public void subscribe(String subscriber, String topic) throws EMessagingException {
 		if (isSilentMode()) {
 			if (!isClientExists(subscriber)) {
-				registerClient(subscriber, request);
+				registerClient(subscriber);
 			}
 			if (!isTopicExists(topic)) {
-				registerTopic(topic, request);
+				registerTopic(topic);
 			}
 		}
 		if (isSubscriptionExists(subscriber, topic)) {
@@ -386,7 +389,7 @@ public class MessageHub implements IMessagingService {
 	}
 	
 	@Override
-	public void unsubscribe(String client, String topic, HttpServletRequest request) throws EMessagingException {
+	public void unsubscribe(String client, String topic) throws EMessagingException {
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;
@@ -420,25 +423,25 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public void send(String sender, String topic, String subject, String body, HttpServletRequest request) throws EMessagingException {
+	public void send(String sender, String topic, String subject, String body) throws EMessagingException {
 		if (isSilentMode()) {
 			if (!isClientExists(sender)) {
-				registerClient(sender, request);
+				registerClient(sender);
 			}
 			if (!isTopicExists(topic)) {
-				registerTopic(topic, request);
+				registerTopic(topic);
 			}
 		}
-		int msgId = insertMessage(topic, subject, body, request);
-		insertIncoming(msgId, sender, request);
+		int msgId = insertMessage(topic, subject, body);
+		insertIncoming(msgId, sender);
 	}
 	
 	@Override
-	public void send(MessageDefinition messageDefinition, HttpServletRequest request) throws EMessagingException {
-		send(messageDefinition.getSender(), messageDefinition.getTopic(), messageDefinition.getSubject(), messageDefinition.getBody(), request);
+	public void send(MessageDefinition messageDefinition) throws EMessagingException {
+		send(messageDefinition.getSender(), messageDefinition.getTopic(), messageDefinition.getSubject(), messageDefinition.getBody());
 	}
 
-	private int insertMessage(String topic, String subject, String body, HttpServletRequest request) throws EMessagingException {
+	private int insertMessage(String topic, String subject, String body) throws EMessagingException {
 		try {
 			int msgId = 0;
 			Connection connection = null;
@@ -476,7 +479,7 @@ public class MessageHub implements IMessagingService {
 		}
 	}
 	
-	private void insertIncoming(int msgId, String sender, HttpServletRequest request) throws EMessagingException {
+	private void insertIncoming(int msgId, String sender) throws EMessagingException {
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;
@@ -513,10 +516,10 @@ public class MessageHub implements IMessagingService {
 
 
 	@Override
-	public List<MessageDefinition> receive(String receiver, HttpServletRequest request) throws EMessagingException {
+	public List<MessageDefinition> receive(String receiver) throws EMessagingException {
 		if (isSilentMode()) {
 			if (!isClientExists(receiver)) {
-				registerClient(receiver, request);
+				registerClient(receiver);
 			}
 		}
 		ClientDefinition clientDefinition = getClientDefinition(receiver);
@@ -573,13 +576,13 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public List<MessageDefinition> receive(String receiver, String topic, HttpServletRequest request) throws EMessagingException {
+	public List<MessageDefinition> receive(String receiver, String topic) throws EMessagingException {
 		if (isSilentMode()) {
 			if (!isClientExists(receiver)) {
-				registerClient(receiver, request);
+				registerClient(receiver);
 			}
 			if (!isTopicExists(topic)) {
-				registerTopic(topic, request);
+				registerTopic(topic);
 			}
 		}
 		ClientDefinition clientDefinition = getClientDefinition(receiver);

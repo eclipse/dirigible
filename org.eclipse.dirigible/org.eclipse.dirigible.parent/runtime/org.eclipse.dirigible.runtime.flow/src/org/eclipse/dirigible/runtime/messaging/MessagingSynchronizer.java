@@ -42,7 +42,7 @@ public class MessagingSynchronizer implements Runnable {
 
 		try {
 			DataSource dataSource = RepositoryFacade.getInstance().getDataSource();
-			MessageHub messageHub = new MessageHub(dataSource);
+			MessageHub messageHub = new MessageHub(dataSource, null);
 			messageHub.route();
 			messageHub.cleanup();
 		} catch (Exception e) {
