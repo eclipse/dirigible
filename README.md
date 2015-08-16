@@ -23,9 +23,11 @@ The project started as an internal SAP initiative to address the extension and a
 	- [Download](#download)
 	- [Build](#build)
 	- [Deploy](#deploy)
+		- [Instant Trial](#instant-trial) 
 		- [HANA Cloud Platform](#hana-cloud-platform)
 		- [Tomcat](#tomcat)
 		- [Eclipse](#eclipse)
+		- [CloudFoundry](#cloudfoundry)
 - [Additional Information](#additional-information)
 	- [License](#license)
 	- [Contributors](#contributors)
@@ -60,13 +62,34 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
 1. Clone the [project repository](https://github.com/eclipse/dirigible.git) or [download the latest release](https://github.com/eclipse/dirigible/archive/master.zip).
 2. Go to the `org.eclipse.dirigible/org.eclipse.dirigible.parent` folder.
-3. Build the project via
+3. Build the project with:
 
         mvn clean install
 
-The build should pass successfully. The produced WAR files under sub-folder `org.eclipse.dirigible/org.eclipse.dirigible.parent/releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type.
+The build should pass successfully. The produced WAR files under target sub-folder `org.eclipse.dirigible/org.eclipse.dirigible.parent/releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type.
 
 ### Deploy
+
+
+#### Instant Trial
+
+Instant trial package combines the deployable artifacts of Dirigible along with the Tomcat web container and Derby database. It is useful for quick exploration of Dirigible features.
+
+##### Steps
+
+1. Build the project with:
+
+	mvn clean install -P trial
+	
+The build should pass successfully. Find the produced produced executable JAR file under target sub-folder at `org.eclipse.dirigible/org.eclipse.dirigible.parent/releng`.
+
+2. Run with:
+
+	java -jar dirigible-all-tomcat-trial-executable.jar
+	
+3. Open a web browser and go to:
+
+        http://localhost:8080/dirigible/services/ui/anonymous.html	
 
 #### HANA Cloud Platform
 
