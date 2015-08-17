@@ -23,9 +23,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.naming.NamingException;
@@ -235,55 +238,55 @@ public class AccessLogRecordDAO {
 	}
 
 	
-	public String[][] getLastRecordsByPattern() throws SQLException, IOException {
+	public Map<String, List<List<Object>>> getLastRecordsByPattern() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, ACCLOG_COUNT);
 	}
 
-	public List<String> getLastRecordsByPatternSeries() throws SQLException, IOException {
+	public Set<String> getLastRecordsByPatternSeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, ACCLOG_COUNT);
 	}
 
-	public String[][] getLastRecordsByProject() throws SQLException, IOException {
+	public Map<String, List<List<Object>>> getLastRecordsByProject() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, ACCLOG_COUNT);
 	}
 
-	public List<String> getLastRecordsByProjectSeries() throws SQLException, IOException {
+	public Set<String> getLastRecordsByProjectSeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, ACCLOG_COUNT);
 	}
 
-	public String[][] getLastRecordsByURI() throws SQLException, IOException {
+	public Map<String, List<List<Object>>> getLastRecordsByURI() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, ACCLOG_COUNT);
 	}
 
-	public List<String> getLastRecordsByURISeries() throws SQLException, IOException {
+	public Set<String> getLastRecordsByURISeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, ACCLOG_COUNT);
 	}
 
-	public String[][] getResponseTimeRecordsByPattern() throws SQLException, IOException {
+	public Map<String, List<List<Object>>> getResponseTimeRecordsByPattern() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
 	}
 
-	public List<String> getResponseTimeRecordsByPatternSeries() throws SQLException, IOException {
+	public Set<String> getResponseTimeRecordsByPatternSeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
 	}
 
-	public String[][] getResponseTimeRecordsByProject() throws SQLException, IOException {
+	public Map<String, List<List<Object>>> getResponseTimeRecordsByProject() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
 	}
 
-	public List<String> getResponseTimeRecordsByProjectSeries() throws SQLException, IOException {
+	public Set<String> getResponseTimeRecordsByProjectSeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
 	}
 
-	public String[][] getResponseTimeRecordsByURI() throws SQLException, IOException {
+	public Map<String, List<List<Object>>> getResponseTimeRecordsByURI() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
 	}
 
-	public List<String> getResponseTimeRecordsByURISeries() throws SQLException, IOException {
+	public Set<String> getResponseTimeRecordsByURISeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
 	}
 
-	private String[][] getLastRecords(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
+	private Map<String, List<List<Object>>> getLastRecords(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -301,23 +304,22 @@ public class AccessLogRecordDAO {
 				pstmt.setTimestamp(1, new Timestamp(last.getTime().getTime()));
 				
 				ResultSet rs = pstmt.executeQuery();
-				List<List<Object>> allRecords = new ArrayList<List<Object>>();
+				Map<String, List<List<Object>>> allRecords = new HashMap<String, List<List<Object>>>();
 				while (rs.next()) {
-					String thisPattern = rs.getString(fieldSeries);
+					String thisSeries = rs.getString(fieldSeries);
 					Date thisPeriod = rs.getTimestamp(ACCLOG_PERIOD);
 					int thisCount = rs.getInt(fieldNumber);
-					
-					List<Object> record = new ArrayList<Object>();
-					record.add(thisPattern);
-					record.add(thisPeriod);
-					record.add(thisCount);
-					
-					allRecords.add(record);
+
+					if(allRecords.containsKey(thisSeries)) {
+						List<List<Object>> records = allRecords.get(thisSeries);
+						List<Object> pair = new ArrayList<Object>();
+						pair.add(thisPeriod);
+						pair.add(thisCount);
+						records.add(pair);
+					}
 				}
 				
-				String[][] result = prepareData(allRecords);
-				
-				return result;
+				return allRecords;
 				
 			} finally {
 				if (connection != null) {
@@ -329,7 +331,7 @@ public class AccessLogRecordDAO {
 		}
 	}
 
-	private List<String> getLastRecordsSeries(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
+	private Set<String> getLastRecordsSeries(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -347,7 +349,7 @@ public class AccessLogRecordDAO {
 				pstmt.setTimestamp(1, new Timestamp(last.getTime().getTime()));
 				
 				ResultSet rs = pstmt.executeQuery();
-				List<String> series = new ArrayList<String>();
+				Set<String> series = new HashSet<String>();
 				while (rs.next()) {
 					String thisSeries = rs.getString(fieldSeries);
 					series.add(thisSeries);
