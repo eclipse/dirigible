@@ -38,7 +38,7 @@ $(document).ready(function(){
 $(document).ready(function(){
 	$.get( "../acclog?hitsPerProject&series", function(series) {
 		var seriesArray = series;
-		$.get( "../acclog?hitsProjectURI", function(data) {
+		$.get( "../acclog?hitsPerProject", function(data) {
 			var seriesModel = [];
 			seriesArray.forEach(function(nextSeries) {
 				seriesModel.push({
@@ -66,7 +66,7 @@ $(document).ready(function(){
 </div>
 <script>
 $(document).ready(function(){
-	$.get( "../acclog?hitsByURI&series", function(data) {
+	$.get( "../acclog?hitsByURI", function(data) {
 		var plot = $.jqplot('hits-by-uri', data, {  
 		    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Hits'}},
 		    legend: {show: true},
