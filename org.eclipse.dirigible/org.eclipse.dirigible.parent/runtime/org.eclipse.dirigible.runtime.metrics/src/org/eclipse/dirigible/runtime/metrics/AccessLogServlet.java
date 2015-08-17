@@ -77,17 +77,67 @@ public class AccessLogServlet extends HttpServlet {
 		logger.debug("existing AccessLogServlet doGet");
 	}
 
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		logger.debug("entering AccessLogServlet doPost...");
+
+		String path = PathUtils.extractPath(request);
+		logger.debug("path=" + path);
+		if (path != null) {
+			try {
+				logger.debug("inserting: " + path);
+				AccessLogLocationsDAO.insertLocation(path);
+				response.getWriter().print("Added: " + path);
+				response.getWriter().flush();
+			} catch (SQLException e) {
+				handleException(response, e);
+			}
+		}
+
+		logger.debug("existing AccessLogServlet doPost");
+	}
+
+	@Override
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		logger.debug("entering AccessLogServlet doDelete...");
+
+		String path = PathUtils.extractPath(request);
+		logger.debug("path=" + path);
+		if (path != null) {
+			if (!path.endsWith(ALL)) {
+				logger.debug("removing access location: " + path);
+				try {
+					AccessLogLocationsDAO.deleteLocation(path);
+					response.getWriter().print("Removed: " + path);
+				} catch (SQLException e) {
+					handleException(response, e);
+				}
+			} else {
+				logger.debug("removing all access locations");
+				try {
+					AccessLogLocationsDAO.deleteAllLocations();
+					response.getWriter().print("Removed All");
+				} catch (SQLException e) {
+					handleException(response, e);
+				}
+			}
+			response.getWriter().flush();
+		}
+		logger.debug("existing AccessLogServlet doDelete");
+	}
+	
 	private void hitsPerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] result = accessLogRecordDAO.getLastRecordsByPattern();
 			printChartData(response, result);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			response.getWriter().print(e.getMessage());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(response, e);
 		}
 	}
+
 
 	private void hitsPerProject(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
@@ -95,9 +145,7 @@ public class AccessLogServlet extends HttpServlet {
 			String[][] result = accessLogRecordDAO.getLastRecordsByProject();
 			printChartData(response, result);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			response.getWriter().print(e.getMessage());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(response, e);
 		}
 	}
 
@@ -107,9 +155,7 @@ public class AccessLogServlet extends HttpServlet {
 			String[][] result = accessLogRecordDAO.getLastRecordsByURI();
 			printChartData(response, result);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			response.getWriter().print(e.getMessage());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(response, e);
 		}
 	}
 
@@ -119,9 +165,7 @@ public class AccessLogServlet extends HttpServlet {
 			String[][] result = accessLogRecordDAO.getRTRecordsByPattern();
 			printChartData(response, result);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			response.getWriter().print(e.getMessage());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(response, e);
 		}
 	}
 
@@ -131,9 +175,7 @@ public class AccessLogServlet extends HttpServlet {
 			String[][] result = accessLogRecordDAO.getRTRecordsByProject();
 			printChartData(response, result);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			response.getWriter().print(e.getMessage());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(response, e);
 		}
 	}
 
@@ -143,9 +185,7 @@ public class AccessLogServlet extends HttpServlet {
 			String[][] result = accessLogRecordDAO.getRTRecordsByURI();
 			printChartData(response, result);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			response.getWriter().print(e.getMessage());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(response, e);
 		}
 	}
 
@@ -155,9 +195,7 @@ public class AccessLogServlet extends HttpServlet {
 			String[][] result = accessLogRecordDAO.getHitsByURI();
 			printChartData(response, result);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			response.getWriter().print(e.getMessage());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(response, e);
 		}
 	}
 
@@ -184,9 +222,7 @@ public class AccessLogServlet extends HttpServlet {
 			AccessLogRecord[] records = AccessLogRecordDAO.getAccessLogRecords();
 			sendJson(response, records);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			response.getWriter().print(e.getMessage());
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(response, e);
 		}
 	}
 
@@ -207,61 +243,10 @@ public class AccessLogServlet extends HttpServlet {
 		response.getWriter().print(json);
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		logger.debug("entering AccessLogServlet doPost...");
-
-		String path = PathUtils.extractPath(request);
-		logger.debug("path=" + path);
-		if (path != null) {
-			try {
-				logger.debug("inserting: " + path);
-				AccessLogLocationsDAO.insertLocation(path);
-				response.getWriter().print("Added: " + path);
-				response.getWriter().flush();
-			} catch (SQLException e) {
-				logger.error(e.getMessage(), e);
-				response.getWriter().print(e.getMessage());
-				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			}
-		}
-
-		logger.debug("existing AccessLogServlet doPost");
-	}
-
-	@Override
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		logger.debug("entering AccessLogServlet doDelete...");
-
-		String path = PathUtils.extractPath(request);
-		logger.debug("path=" + path);
-		if (path != null) {
-			if (!path.endsWith(ALL)) {
-				logger.debug("removing access location: " + path);
-				try {
-					AccessLogLocationsDAO.deleteLocation(path);
-					response.getWriter().print("Removed: " + path);
-				} catch (SQLException e) {
-					logger.error(e.getMessage(), e);
-					response.getWriter().print(e.getMessage());
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				}
-			} else {
-				logger.debug("removing all access locations");
-				try {
-					AccessLogLocationsDAO.deleteAllLocations();
-					response.getWriter().print("Removed All");
-				} catch (SQLException e) {
-					logger.error(e.getMessage(), e);
-					response.getWriter().print(e.getMessage());
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				}
-			}
-			response.getWriter().flush();
-		}
-		logger.debug("existing AccessLogServlet doDelete");
+	private void handleException(HttpServletResponse response, Exception e) throws IOException {
+		logger.error(e.getMessage(), e);
+		response.getWriter().print(e.getMessage());
+		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
 
 }
