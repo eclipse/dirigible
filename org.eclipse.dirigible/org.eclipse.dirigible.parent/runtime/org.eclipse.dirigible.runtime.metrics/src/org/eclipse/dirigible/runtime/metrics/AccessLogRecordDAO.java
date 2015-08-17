@@ -20,6 +20,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -235,7 +236,7 @@ public class AccessLogRecordDAO {
 	}
 
 	
-	public Map<String, List<List<Object>>> getLastRecordsByPattern() throws SQLException, IOException {
+	public Collection<List<List<Object>>> getLastRecordsByPattern() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, ACCLOG_COUNT);
 	}
 
@@ -243,7 +244,7 @@ public class AccessLogRecordDAO {
 		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, ACCLOG_COUNT);
 	}
 
-	public Map<String, List<List<Object>>> getLastRecordsByProject() throws SQLException, IOException {
+	public Collection<List<List<Object>>> getLastRecordsByProject() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, ACCLOG_COUNT);
 	}
 
@@ -251,7 +252,7 @@ public class AccessLogRecordDAO {
 		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, ACCLOG_COUNT);
 	}
 
-	public Map<String, List<List<Object>>> getLastRecordsByURI() throws SQLException, IOException {
+	public Collection<List<List<Object>>> getLastRecordsByURI() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, ACCLOG_COUNT);
 	}
 
@@ -259,7 +260,7 @@ public class AccessLogRecordDAO {
 		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, ACCLOG_COUNT);
 	}
 
-	public Map<String, List<List<Object>>> getResponseTimeRecordsByPattern() throws SQLException, IOException {
+	public Collection<List<List<Object>>> getResponseTimeRecordsByPattern() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
 	}
 
@@ -267,7 +268,7 @@ public class AccessLogRecordDAO {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
 	}
 
-	public Map<String, List<List<Object>>> getResponseTimeRecordsByProject() throws SQLException, IOException {
+	public Collection<List<List<Object>>> getResponseTimeRecordsByProject() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
 	}
 
@@ -275,7 +276,7 @@ public class AccessLogRecordDAO {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
 	}
 
-	public Map<String, List<List<Object>>> getResponseTimeRecordsByURI() throws SQLException, IOException {
+	public Collection<List<List<Object>>> getResponseTimeRecordsByURI() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
 	}
 
@@ -283,7 +284,7 @@ public class AccessLogRecordDAO {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
 	}
 
-	private Map<String, List<List<Object>>> getLastRecords(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
+	private Collection<List<List<Object>>> getLastRecords(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -321,7 +322,7 @@ public class AccessLogRecordDAO {
 					}
 				}
 
-				return allRecords;
+				return allRecords.values();
 				
 			} finally {
 				if (connection != null) {
