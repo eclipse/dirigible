@@ -67,7 +67,7 @@ public class AccessLogServlet extends HttpServlet {
 		} else if (paramRTimePerURI != null) {
 			responseTimePerURI(response, paramSeries);
 		} else if (paramHitsByURI != null) {
-			hitsByURI(response, paramSeries);
+			hitsByURI(response);
 		} else {
 			listLog(response);
 		}
@@ -140,9 +140,14 @@ public class AccessLogServlet extends HttpServlet {
 
 	private void hitsPerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
+			Object result;
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getLastRecordsByPattern();
-			sendJson(response, records);
+			if(paramSeries != null) {
+				result = accessLogRecordDAO.getLastRecordsByPatternSeries();
+			} else {
+				result = accessLogRecordDAO.getLastRecordsByPattern();
+			}
+			sendJson(response, result);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -151,9 +156,14 @@ public class AccessLogServlet extends HttpServlet {
 
 	private void hitsPerProject(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
+			Object result;
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getLastRecordsByProject();
-			sendJson(response, records);
+			if(paramSeries != null) {
+				result = accessLogRecordDAO.getLastRecordsByProjectSeries();
+			} else {
+				result = accessLogRecordDAO.getLastRecordsByProject();
+			}
+			sendJson(response, result);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -161,9 +171,14 @@ public class AccessLogServlet extends HttpServlet {
 
 	private void hitsPerURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
+			Object result;
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getLastRecordsByURI();
-			sendJson(response, records);
+			if(paramSeries != null) {
+				result = accessLogRecordDAO.getLastRecordsByURISeries();
+			} else {
+				result = accessLogRecordDAO.getLastRecordsByURI();
+			}
+			sendJson(response, result);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -171,9 +186,14 @@ public class AccessLogServlet extends HttpServlet {
 
 	private void responseTimePerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
+			Object result;
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getResponseTimeRecordsByPattern();
-			sendJson(response, records);
+			if(paramSeries != null) {
+				result = accessLogRecordDAO.getResponseTimeRecordsByPatternSeries();
+			} else {
+				result = accessLogRecordDAO.getResponseTimeRecordsByPattern();
+			}
+			sendJson(response, result);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -181,9 +201,14 @@ public class AccessLogServlet extends HttpServlet {
 
 	private void responseTimePerProject(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
+			Object result;
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getResponseTimeRecordsByProject();
-			sendJson(response, records);
+			if(paramSeries != null) {
+				result = accessLogRecordDAO.getResponseTimeRecordsByProjectSeries();
+			} else {
+				result = accessLogRecordDAO.getResponseTimeRecordsByProject();
+			}
+			sendJson(response, result);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -191,15 +216,20 @@ public class AccessLogServlet extends HttpServlet {
 
 	private void responseTimePerURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
+			Object result;
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getResponseTimeRecordsByURI();
-			sendJson(response, records);
+			if(paramSeries != null) {
+				result = accessLogRecordDAO.getResponseTimeRecordsByURISeries();
+			} else {
+				result = accessLogRecordDAO.getResponseTimeRecordsByURI();
+			}
+			sendJson(response, result);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
 	}
 
-	private void hitsByURI(HttpServletResponse response, String paramSeries) throws IOException {
+	private void hitsByURI(HttpServletResponse response) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] records = accessLogRecordDAO.getHitsByURI();
