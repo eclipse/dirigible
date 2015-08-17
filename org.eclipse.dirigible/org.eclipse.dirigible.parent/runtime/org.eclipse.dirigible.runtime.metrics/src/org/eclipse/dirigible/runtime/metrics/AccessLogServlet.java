@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.runtime.metrics;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -142,8 +141,8 @@ public class AccessLogServlet extends HttpServlet {
 	private void hitsPerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] result = accessLogRecordDAO.getLastRecordsByPattern();
-			printChartData(response, result);
+			String[][] records = accessLogRecordDAO.getLastRecordsByPattern();
+			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -153,8 +152,8 @@ public class AccessLogServlet extends HttpServlet {
 	private void hitsPerProject(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] result = accessLogRecordDAO.getLastRecordsByProject();
-			printChartData(response, result);
+			String[][] records = accessLogRecordDAO.getLastRecordsByProject();
+			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -163,8 +162,8 @@ public class AccessLogServlet extends HttpServlet {
 	private void hitsPerURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] result = accessLogRecordDAO.getLastRecordsByURI();
-			printChartData(response, result);
+			String[][] records = accessLogRecordDAO.getLastRecordsByURI();
+			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -173,8 +172,8 @@ public class AccessLogServlet extends HttpServlet {
 	private void responseTimePerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] result = accessLogRecordDAO.getRTRecordsByPattern();
-			printChartData(response, result);
+			String[][] records = accessLogRecordDAO.getRTRecordsByPattern();
+			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -183,8 +182,8 @@ public class AccessLogServlet extends HttpServlet {
 	private void responseTimePerProject(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] result = accessLogRecordDAO.getRTRecordsByProject();
-			printChartData(response, result);
+			String[][] records = accessLogRecordDAO.getRTRecordsByProject();
+			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -193,8 +192,8 @@ public class AccessLogServlet extends HttpServlet {
 	private void responseTimePerURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] result = accessLogRecordDAO.getRTRecordsByURI();
-			printChartData(response, result);
+			String[][] records = accessLogRecordDAO.getRTRecordsByURI();
+			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -203,8 +202,8 @@ public class AccessLogServlet extends HttpServlet {
 	private void hitsByURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] result = accessLogRecordDAO.getHitsByURI();
-			printChartData(response, result);
+			String[][] records = accessLogRecordDAO.getHitsByURI();
+			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
 		}
@@ -217,23 +216,6 @@ public class AccessLogServlet extends HttpServlet {
 			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
-		}
-	}
-
-	private void printChartData(HttpServletResponse response, String[][] result) throws IOException {
-		PrintWriter writer = response.getWriter();
-		if (result == null) {
-			writer.write("");
-			return;
-		}
-		response.setContentType("text/tab-separated-values");
-
-		for (int i = 0; i < result.length; i++) {
-			String[] row = result[i];
-			for (int j = 0; j < row.length; j++) {
-				writer.print(row[j] + "\t");
-			}
-			writer.println();
 		}
 	}
 
