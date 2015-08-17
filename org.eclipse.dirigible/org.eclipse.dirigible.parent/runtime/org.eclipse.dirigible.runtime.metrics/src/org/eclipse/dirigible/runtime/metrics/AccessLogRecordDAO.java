@@ -18,12 +18,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -370,79 +368,8 @@ public class AccessLogRecordDAO {
 			throw new SQLException(e);
 		}
 	}
-	
-	public String[][] prepareData(List<List<Object>> allRecords) {
-		
-		if (allRecords == null
-				|| allRecords.size() == 0) {
-			return null;
-		}
-		
-		// add the monitored patterns and meanwhile take the min date
-		Date minDate = new Date();
-		List<String> patterns = new ArrayList<String>();
-		patterns.add("date");
-		for (List<Object> patternRecord : allRecords) {
-			String pattern = (String) patternRecord.get(0);
-			if (!patterns.contains(pattern)) {
-				patterns.add(pattern);
-			}
-			Date date = (Date) patternRecord.get(1);
-			if (minDate.after(date)) {
-				minDate = date;
-			}
-		}
-		
-		// prepare date formats and beginning date 
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(minDate);
-		Date now = new Date();
-		Map<String, String[]> prepared = new TreeMap<String, String[]>();
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHH");
-		
-		// create header record
-		String[] headerRecord = patterns.toArray(new String[]{});
-		
-		// prepare the empty matrix
-		while (calendar.getTime().before(now)) {
-			String[] record = new String[patterns.size()];
-			String dateKey = format.format(calendar.getTime());
-			record[0] = dateKey;
-			for (int i=1;i<record.length;i++) {
-				record[i] = "0";
-			}
-			prepared.put(dateKey, record);
-			calendar.add(Calendar.HOUR_OF_DAY, 1);
-		}
-		
-		// set the existing numbers to the corresponding places in the matrix
-		for (List<Object> patternRecord : allRecords) {
-			String pattern = (String) patternRecord.get(0);
-			Date date = (Date) patternRecord.get(1);
-			int count = (Integer) patternRecord.get(2);
-			String dateKey = format.format(date);
-			String[] record = prepared.get(dateKey);
-			if (record != null) {
-				record[patterns.indexOf(pattern)] = count + "";
-			}
-		}
-		
-		// prepare the final matrix
-		String[][] result = new String[prepared.size() + 1][patterns.size()];
-		int i = 1;
-		result[0] = headerRecord;
-		for (String[] record : prepared.values()) {
-			for (int j = 0; j < record.length; j++) {
-				result[i][j] = record[j];
-			}
-			i++;
-		}
-		
-		return result;
-	}
-	
 
-	public String[][] getHitsByURI() throws SQLException, IOException {
+	public List<List<Object>> getHitsByURI() throws SQLException, IOException {
 		try {
 			checkDB();
 			
@@ -456,30 +383,20 @@ public class AccessLogRecordDAO {
 				PreparedStatement pstmt = connection.prepareStatement(sql);
 				
 				ResultSet rs = pstmt.executeQuery();
-				List<String[]> allRecords = new ArrayList<String[]>();
+				List<List<Object>> allRecords = new ArrayList<List<Object>>();
 				while (rs.next()) {
 					String thisURI = rs.getString(ACCLOG_REQUEST_URI);
 					int thisCount = rs.getInt(ACCLOG_COUNT);
 					
-					String[] record = new String[2];
-					record[0] = thisURI;
-					record[1] = thisCount  + "";
-					
-					allRecords.add(record);
+					List<Object> pair = new ArrayList<Object>();
+					pair.add(thisURI);
+					pair.add(thisCount);
+
+					allRecords.add(pair);
 				}
 				
-				String[][] result = new String[allRecords.size()][2];
-				int i=0;
-				for (Iterator<String[]> iterator = allRecords.iterator(); iterator
-						.hasNext();) {
-					String[] strings = iterator.next();
-					for (int j=0;j<2;j++) {
-						result[i][j] = strings[j];
-					}
-					i++;
-				}
 				
-				return result;
+				return allRecords;
 				
 			} finally {
 				if (connection != null) {

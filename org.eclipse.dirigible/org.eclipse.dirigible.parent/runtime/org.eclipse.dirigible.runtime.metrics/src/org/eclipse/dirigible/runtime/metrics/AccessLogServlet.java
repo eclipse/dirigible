@@ -233,7 +233,7 @@ public class AccessLogServlet extends HttpServlet {
 	private void hitsByURI(HttpServletResponse response) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getHitsByURI();
+			List<List<Object>> records = accessLogRecordDAO.getHitsByURI();
 			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
