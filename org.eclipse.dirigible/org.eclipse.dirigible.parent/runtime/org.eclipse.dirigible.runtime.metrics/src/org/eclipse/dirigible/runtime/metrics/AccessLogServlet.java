@@ -127,7 +127,18 @@ public class AccessLogServlet extends HttpServlet {
 		}
 		logger.debug("existing AccessLogServlet doDelete");
 	}
-	
+
+	private void listLocations(HttpServletResponse response) throws IOException {
+		logger.debug("listing registered access locations");
+		try {
+			AccessLogLocationsDAO.refreshLocations();
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		}
+		List<String> locations = AccessLogLocationsSynchronizer.getAccessLogLocations();
+		sendJson(response, locations);
+	}
+
 	private void hitsPerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
@@ -199,6 +210,16 @@ public class AccessLogServlet extends HttpServlet {
 		}
 	}
 
+	private void listLog(HttpServletResponse response) throws IOException {
+		logger.debug("printing the access log");
+		try {
+			AccessLogRecord[] records = AccessLogRecordDAO.getAccessLogRecords();
+			sendJson(response, records);
+		} catch (SQLException e) {
+			handleException(response, e);
+		}
+	}
+
 	private void printChartData(HttpServletResponse response, String[][] result) throws IOException {
 		PrintWriter writer = response.getWriter();
 		if (result == null) {
@@ -214,27 +235,6 @@ public class AccessLogServlet extends HttpServlet {
 			}
 			writer.println();
 		}
-	}
-
-	private void listLog(HttpServletResponse response) throws IOException {
-		logger.debug("printing the access log");
-		try {
-			AccessLogRecord[] records = AccessLogRecordDAO.getAccessLogRecords();
-			sendJson(response, records);
-		} catch (SQLException e) {
-			handleException(response, e);
-		}
-	}
-
-	private void listLocations(HttpServletResponse response) throws IOException {
-		logger.debug("listing registered access locations");
-		try {
-			AccessLogLocationsDAO.refreshLocations();
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-		}
-		List<String> locations = AccessLogLocationsSynchronizer.getAccessLogLocations();
-		sendJson(response, locations);
 	}
 
 	private void sendJson(HttpServletResponse response, Object content) throws IOException {
