@@ -49,25 +49,26 @@ public class AccessLogServlet extends HttpServlet {
 		String paramRTimePerProject = request.getParameter("rtimePerProject");
 		String paramRTimePerURI = request.getParameter("rtimePerURI");
 		String paramHitsByURI = request.getParameter("hitsByURI");
-
+		String paramSeries = request.getParameter("series");
+		
 		String path = PathUtils.extractPath(request);
 		logger.debug("path=" + path);
 		if (LOCATIONS.endsWith(path)) {
 			listLocations(response);
 		} else if (paramHitsPerPattern != null) {
-			listHitsPerPattern(response);
+			hitsPerPattern(response, paramSeries);
 		} else if (paramHitsPerProject != null) {
-			listHitsPerProject(response);
+			hitsPerProject(response, paramSeries);
 		} else if (paramHitsPerURI != null) {
-			listHitsPerURI(response);
+			hitsPerURI(response, paramSeries);
 		} else if (paramRTimePerPattern != null) {
-			listRTimePerPattern(response);
+			responseTimePerPattern(response, paramSeries);
 		} else if (paramRTimePerProject != null) {
-			listRTimePerProject(response);
+			responseTimePerProject(response, paramSeries);
 		} else if (paramRTimePerURI != null) {
-			listRTimePerURI(response);
+			responseTimePerURI(response, paramSeries);
 		} else if (paramHitsByURI != null) {
-			listHitsByURI(response);
+			hitsByURI(response, paramSeries);
 		} else {
 			listLog(response);
 		}
@@ -76,7 +77,7 @@ public class AccessLogServlet extends HttpServlet {
 		logger.debug("existing AccessLogServlet doGet");
 	}
 
-	private void listHitsPerPattern(HttpServletResponse response) throws IOException {
+	private void hitsPerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] result = accessLogRecordDAO.getLastRecordsByPattern();
@@ -88,7 +89,7 @@ public class AccessLogServlet extends HttpServlet {
 		}
 	}
 
-	private void listHitsPerProject(HttpServletResponse response) throws IOException {
+	private void hitsPerProject(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] result = accessLogRecordDAO.getLastRecordsByProject();
@@ -100,7 +101,7 @@ public class AccessLogServlet extends HttpServlet {
 		}
 	}
 
-	private void listHitsPerURI(HttpServletResponse response) throws IOException {
+	private void hitsPerURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] result = accessLogRecordDAO.getLastRecordsByURI();
@@ -112,7 +113,7 @@ public class AccessLogServlet extends HttpServlet {
 		}
 	}
 
-	private void listRTimePerPattern(HttpServletResponse response) throws IOException {
+	private void responseTimePerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] result = accessLogRecordDAO.getRTRecordsByPattern();
@@ -124,7 +125,7 @@ public class AccessLogServlet extends HttpServlet {
 		}
 	}
 
-	private void listRTimePerProject(HttpServletResponse response) throws IOException {
+	private void responseTimePerProject(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] result = accessLogRecordDAO.getRTRecordsByProject();
@@ -136,7 +137,7 @@ public class AccessLogServlet extends HttpServlet {
 		}
 	}
 
-	private void listRTimePerURI(HttpServletResponse response) throws IOException {
+	private void responseTimePerURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] result = accessLogRecordDAO.getRTRecordsByURI();
@@ -148,7 +149,7 @@ public class AccessLogServlet extends HttpServlet {
 		}
 	}
 
-	private void listHitsByURI(HttpServletResponse response) throws IOException {
+	private void hitsByURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
 			String[][] result = accessLogRecordDAO.getHitsByURI();
