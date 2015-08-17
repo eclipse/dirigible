@@ -238,27 +238,51 @@ public class AccessLogRecordDAO {
 	public String[][] getLastRecordsByPattern() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, ACCLOG_COUNT);
 	}
-	
+
+	public List<String> getLastRecordsByPatternSeries() throws SQLException, IOException {
+		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, ACCLOG_COUNT);
+	}
+
 	public String[][] getLastRecordsByProject() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, ACCLOG_COUNT);
 	}
-	
+
+	public List<String> getLastRecordsByProjectSeries() throws SQLException, IOException {
+		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, ACCLOG_COUNT);
+	}
+
 	public String[][] getLastRecordsByURI() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, ACCLOG_COUNT);
 	}
-	
+
+	public List<String> getLastRecordsByURISeries() throws SQLException, IOException {
+		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, ACCLOG_COUNT);
+	}
+
 	public String[][] getRTRecordsByPattern() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
 	}
-	
+
+	public List<String> getRTRecordsByPatternSeries() throws SQLException, IOException {
+		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
+	}
+
 	public String[][] getRTRecordsByProject() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
 	}
-	
+
+	public List<String> getRTRecordsByProjectSeries() throws SQLException, IOException {
+		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
+	}
+
 	public String[][] getRTRecordsByURI() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
 	}
-	
+
+	public List<String> getRTRecordsByURISeries() throws SQLException, IOException {
+		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
+	}
+
 	private String[][] getLastRecords(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
 		try {
 			checkDB();
@@ -305,6 +329,42 @@ public class AccessLogRecordDAO {
 		}
 	}
 
+	private List<String> getLastRecordsSeries(String sqlLocation, String fieldSeries, String fieldNumber) throws SQLException, IOException {
+		try {
+			checkDB();
+			
+			DataSource dataSource = RepositoryFacade.getInstance()
+					.getDataSource();
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				DBUtils dbUtils = new DBUtils(dataSource);
+				String sql = dbUtils.readScript(connection, sqlLocation, AccessLogRecordDAO.class);
+				PreparedStatement pstmt = connection.prepareStatement(sql);
+				
+				GregorianCalendar last = new GregorianCalendar();
+				last.add(Calendar.YEAR, -1);
+				pstmt.setTimestamp(1, new Timestamp(last.getTime().getTime()));
+				
+				ResultSet rs = pstmt.executeQuery();
+				List<String> series = new ArrayList<String>();
+				while (rs.next()) {
+					String thisSeries = rs.getString(fieldSeries);
+					series.add(thisSeries);
+				}
+				
+				return series;
+				
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (NamingException e) {
+			throw new SQLException(e);
+		}
+	}
+	
 	public String[][] prepareData(List<List<Object>> allRecords) {
 		
 		if (allRecords == null
