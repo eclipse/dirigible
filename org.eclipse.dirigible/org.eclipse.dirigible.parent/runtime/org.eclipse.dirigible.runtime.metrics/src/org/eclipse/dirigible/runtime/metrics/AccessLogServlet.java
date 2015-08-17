@@ -172,7 +172,7 @@ public class AccessLogServlet extends HttpServlet {
 	private void responseTimePerPattern(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getRTRecordsByPattern();
+			String[][] records = accessLogRecordDAO.getResponseTimeRecordsByPattern();
 			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
@@ -182,7 +182,7 @@ public class AccessLogServlet extends HttpServlet {
 	private void responseTimePerProject(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getRTRecordsByProject();
+			String[][] records = accessLogRecordDAO.getResponseTimeRecordsByProject();
 			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);
@@ -192,7 +192,7 @@ public class AccessLogServlet extends HttpServlet {
 	private void responseTimePerURI(HttpServletResponse response, String paramSeries) throws IOException {
 		try {
 			AccessLogRecordDAO accessLogRecordDAO = new AccessLogRecordDAO();
-			String[][] records = accessLogRecordDAO.getRTRecordsByURI();
+			String[][] records = accessLogRecordDAO.getResponseTimeRecordsByURI();
 			sendJson(response, records);
 		} catch (SQLException e) {
 			handleException(response, e);

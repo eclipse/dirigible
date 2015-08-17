@@ -259,27 +259,27 @@ public class AccessLogRecordDAO {
 		return getLastRecordsSeries(SQL_MAP_SELECT_LAST_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, ACCLOG_COUNT);
 	}
 
-	public String[][] getRTRecordsByPattern() throws SQLException, IOException {
+	public String[][] getResponseTimeRecordsByPattern() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
 	}
 
-	public List<String> getRTRecordsByPatternSeries() throws SQLException, IOException {
+	public List<String> getResponseTimeRecordsByPatternSeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_PATTERN_LOG_RECORD, ACCLOG_PATTERN, RESPONSE_TIME);
 	}
 
-	public String[][] getRTRecordsByProject() throws SQLException, IOException {
+	public String[][] getResponseTimeRecordsByProject() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
 	}
 
-	public List<String> getRTRecordsByProjectSeries() throws SQLException, IOException {
+	public List<String> getResponseTimeRecordsByProjectSeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_PROJECT_LOG_RECORD, ACCLOG_PROJECT, RESPONSE_TIME);
 	}
 
-	public String[][] getRTRecordsByURI() throws SQLException, IOException {
+	public String[][] getResponseTimeRecordsByURI() throws SQLException, IOException {
 		return getLastRecords(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
 	}
 
-	public List<String> getRTRecordsByURISeries() throws SQLException, IOException {
+	public List<String> getResponseTimeRecordsByURISeries() throws SQLException, IOException {
 		return getLastRecordsSeries(SQL_MAP_SELECT_RT_BY_URI_LOG_RECORD, ACCLOG_REQUEST_URI, RESPONSE_TIME);
 	}
 
