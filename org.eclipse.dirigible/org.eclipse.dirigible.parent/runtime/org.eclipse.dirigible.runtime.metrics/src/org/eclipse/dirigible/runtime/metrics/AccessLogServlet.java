@@ -25,6 +25,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.registry.PathUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class AccessLogServlet extends HttpServlet {
 
@@ -34,7 +35,7 @@ public class AccessLogServlet extends HttpServlet {
 
 	private static final String LOCATIONS = "/locations";
 	private static final String ALL = "/all";
-	private static final Gson GSON = new Gson();
+	private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,

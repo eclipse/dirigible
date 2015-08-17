@@ -23,13 +23,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -304,21 +303,26 @@ public class AccessLogRecordDAO {
 				pstmt.setTimestamp(1, new Timestamp(last.getTime().getTime()));
 				
 				ResultSet rs = pstmt.executeQuery();
-				Map<String, List<List<Object>>> allRecords = new HashMap<String, List<List<Object>>>();
+				Map<String, List<List<Object>>> allRecords = new TreeMap<String, List<List<Object>>>();
+				
 				while (rs.next()) {
 					String thisSeries = rs.getString(fieldSeries);
 					Date thisPeriod = rs.getTimestamp(ACCLOG_PERIOD);
 					int thisCount = rs.getInt(fieldNumber);
+					
+					List<Object> pair = new ArrayList<Object>();
+					pair.add(thisPeriod);
+					pair.add(thisCount);
 
 					if(allRecords.containsKey(thisSeries)) {
-						List<List<Object>> records = allRecords.get(thisSeries);
-						List<Object> pair = new ArrayList<Object>();
-						pair.add(thisPeriod);
-						pair.add(thisCount);
-						records.add(pair);
+						allRecords.get(thisSeries).add(pair);
+					} else {
+						List<List<Object>> listOfPairs = new ArrayList<List<Object>>();
+						listOfPairs.add(pair);
+						allRecords.put(thisSeries, listOfPairs);
 					}
 				}
-				
+
 				return allRecords;
 				
 			} finally {
@@ -349,7 +353,7 @@ public class AccessLogRecordDAO {
 				pstmt.setTimestamp(1, new Timestamp(last.getTime().getTime()));
 				
 				ResultSet rs = pstmt.executeQuery();
-				Set<String> series = new HashSet<String>();
+				Set<String> series = new TreeSet<String>();
 				while (rs.next()) {
 					String thisSeries = rs.getString(fieldSeries);
 					series.add(thisSeries);
