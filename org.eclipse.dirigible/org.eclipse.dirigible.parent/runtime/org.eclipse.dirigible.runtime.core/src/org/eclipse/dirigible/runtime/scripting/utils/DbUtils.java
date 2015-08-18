@@ -12,7 +12,10 @@
 package org.eclipse.dirigible.runtime.scripting.utils;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 import javax.sql.DataSource;
 
@@ -100,4 +103,15 @@ public class DbUtils {
 		}
 	}
 
+	public Date createDate(long value) {
+		return new Date(value);
+	}
+	
+	public Time createTime(long value) {
+		return new Time(value);
+	}
+	
+	public Timestamp createTimestamp(long value) {
+		return new Timestamp(value);
+	}
 }

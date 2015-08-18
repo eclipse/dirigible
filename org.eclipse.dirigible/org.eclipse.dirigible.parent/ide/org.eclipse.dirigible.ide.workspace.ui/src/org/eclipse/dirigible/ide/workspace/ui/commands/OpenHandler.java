@@ -37,9 +37,9 @@ public class OpenHandler extends AbstractHandler {
 
 	private static final String OPEN_FAILURE2 = Messages.OpenHandler_OPEN_FAILURE2;
 
-	private static final String VIEW_THEM_VIA_REGISTRY_AFTER_ACTIVATION = Messages.OpenHandler_VIEW_THEM_VIA_REGISTRY_AFTER_ACTIVATION;
+//	private static final String VIEW_THEM_VIA_REGISTRY_AFTER_ACTIVATION = Messages.OpenHandler_VIEW_THEM_VIA_REGISTRY_AFTER_ACTIVATION;
 
-	private static final String OPEN_FAILURE = Messages.OpenHandler_OPEN_FAILURE;
+//	private static final String OPEN_FAILURE = Messages.OpenHandler_OPEN_FAILURE;
 
 	private static final String BINARY_FILES_ARE_NOT_SUPPORTED = Messages.OpenHandler_BINARY_FILES_ARE_NOT_SUPPORTED;
 
@@ -47,9 +47,11 @@ public class OpenHandler extends AbstractHandler {
 
 	private static final String COULD_NOT_OPEN_ONE_OR_MORE_FILES = Messages.OpenHandler_COULD_NOT_OPEN_ONE_OR_MORE_FILES;
 	
-	private static final String SOURCE_CODE_EDITOR_ID = "org.eclipse.dirigible.ide.editor.SourceCodeEditor"; //$NON-NLS-1$
+//	private static final String SOURCE_CODE_EDITOR_ID = "org.eclipse.dirigible.ide.editor.SourceCodeEditor"; //$NON-NLS-1$
 	
-	private static final String TEXT_EDITOR_RCP_ID = "org.eclipse.jdt.ui.CompilationUnitEditor"; //$NON-NLS-1$
+	private static final String SOURCE_CODE_EDITOR_ID = "org.eclipse.dirigible.ide.editor.orion.OrionEditor"; //$NON-NLS-1$
+	
+//	private static final String TEXT_EDITOR_RCP_ID = "org.eclipse.jdt.ui.CompilationUnitEditor"; //$NON-NLS-1$
 	
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {

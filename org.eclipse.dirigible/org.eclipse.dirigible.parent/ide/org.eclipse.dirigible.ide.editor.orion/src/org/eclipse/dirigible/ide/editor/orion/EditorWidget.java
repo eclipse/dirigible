@@ -11,6 +11,9 @@
 
 package org.eclipse.dirigible.ide.editor.orion;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.CommonUtils;
@@ -20,13 +23,13 @@ import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
 import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.swt.widgets.Composite;
 
 @SuppressWarnings("unused")
@@ -51,6 +54,16 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	private boolean breakpointsEnabled;
 
 	private int row;
+	
+	private static Map<String, String> ORION_MODES = new HashMap<String, String>();
+	
+	static {
+		ORION_MODES.put("javascript", "application/javascript");
+		ORION_MODES.put("html", "text/html");
+		ORION_MODES.put("css", "text/css");
+		ORION_MODES.put("json", "application/json");
+		ORION_MODES.put("menu", "application/json");
+	}
 
 	public EditorWidget(final Composite parent) {
 		this(parent, false);
@@ -146,8 +159,10 @@ public class EditorWidget extends AbstractTextEditorWidget {
 			final boolean breakpointsEnabled, final int row) {
 		this.text = text;
 		this.mode = mode.getName();
-		if ("javascript".equals(this.mode)) {
-			this.mode = "application/javascript"; // orion specific
+		
+		String orionMode = ORION_MODES.get(this.mode);
+		if (orionMode != null) {
+			this.mode = orionMode;
 		}
 		this.readOnly = readOnly;
 		this.breakpointsEnabled = breakpointsEnabled;

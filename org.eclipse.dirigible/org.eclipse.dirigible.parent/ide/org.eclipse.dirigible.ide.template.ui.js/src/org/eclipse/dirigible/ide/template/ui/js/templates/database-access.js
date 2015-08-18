@@ -1,7 +1,10 @@
+/* globals $ */
+/* eslint-env node */
+
 var systemLib = require('system');
 
 var count;
-var connection = datasource.getConnection();
+var connection = $.getDatasource().getConnection();
 try {
     var statement = connection.createStatement();
     var rs = statement.executeQuery('SELECT COUNT(*) FROM ${tableName}');
@@ -13,6 +16,6 @@ try {
     connection.close();
 }
 
-response.getWriter().println(count);
-response.getWriter().flush();
-response.getWriter().close();
+$.getResponse().getWriter().println(count);
+$.getResponse().getWriter().flush();
+$.getResponse().getWriter().close();

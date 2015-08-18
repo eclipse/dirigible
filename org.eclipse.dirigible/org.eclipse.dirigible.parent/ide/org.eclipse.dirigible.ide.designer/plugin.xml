@@ -6,7 +6,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.dirigible.ide.designer.ui.DesignerEditor"
-            extensions="html"
+            extensions=""
             icon="resources/designer.png"
             id="org.eclipse.dirigible.ide.editor.DesignerEditor"
             name="Designer Editor">

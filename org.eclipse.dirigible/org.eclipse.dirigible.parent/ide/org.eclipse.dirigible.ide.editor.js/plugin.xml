@@ -5,7 +5,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.dirigible.ide.editor.js.JavaScriptEditor"
-            extensions="js,xml,xsl,sql,html,odata,json,jslib,routes,ws,wsdl,table,view,entity,menu,txt,flow,job"
+            extensions="xml,xsl,sql,odata,json,jslib,routes,ws,wsdl,table,view,entity,menu,txt,flow,job"
             icon="icons/editor-icon.png"
             id="org.eclipse.dirigible.ide.editor.SourceCodeEditor"
             name="ACE Editor">

@@ -65,7 +65,6 @@ public class MemoryServlet extends HttpServlet {
 			logger.error(e.getMessage(), e);
 			throw new ServletException(e);
 		}
-		
 		writer.flush();
 		writer.close();
 	}
