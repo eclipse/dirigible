@@ -32,7 +32,15 @@ public class LoggerTest extends AbstractConsoleOutputTest {
 	private static final String INFO = "Info";
 	private static final String TRACE = "Trace";
 
-	private static final Throwable THROWABLE = new Exception("Exception");
+	private static Throwable THROWABLE;
+	
+	static {
+		try {
+			THROWABLE = new Exception("Exception");
+		} catch (Throwable e) {
+			//
+		}
+	}
 
 	private static void assertContains(Throwable t, String output) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
