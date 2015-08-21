@@ -1,7 +1,7 @@
 /* globals $ */
-/* eslint-env node */
+/* eslint-env node, dirigible */
 
 exports.generateGuid = function() {
-    var guid = $.getUuidUtils().randomUUID();
+    var guid = $\.getUuidUtils().randomUUID();
     return guid;
 };

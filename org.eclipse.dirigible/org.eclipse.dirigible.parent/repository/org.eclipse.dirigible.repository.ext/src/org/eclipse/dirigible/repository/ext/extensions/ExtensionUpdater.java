@@ -36,11 +36,11 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 	private ExtensionManager extensionManager;
 
 	public ExtensionUpdater(IRepository repository, DataSource dataSource,
-			String location) {
+			String location, HttpServletRequest request) {
 		this.repository = repository;
 		this.dataSource = dataSource;
 		this.location = location;
-		this.extensionManager = ExtensionManager.getInstance(repository, dataSource);
+		this.extensionManager = new ExtensionManager(repository, dataSource, request);
 	}
 
 	@Override
@@ -87,9 +87,9 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 		String extensionDescription = edDefinition.get(NODE_DESCRIPTION).getAsString(); //$NON-NLS-1$
 		ExtensionDefinition extensionDefinition = this.extensionManager.getExtension(extensionName, extensionPointName);
 		if (extensionDefinition == null) {
-			this.extensionManager.createExtension(extensionName, extensionPointName, extensionDescription, request);
+			this.extensionManager.createExtension(extensionName, extensionPointName, extensionDescription);
 		} else {
-			this.extensionManager.updateExtension(extensionName, extensionPointName, extensionDescription, request);
+			this.extensionManager.updateExtension(extensionName, extensionPointName, extensionDescription);
 		}
 	}
 	
@@ -101,9 +101,9 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 		String extensionDescription = edDefinition.get(NODE_DESCRIPTION).getAsString(); //$NON-NLS-1$
 		ExtensionPointDefinition extensionPointDefinition = this.extensionManager.getExtensionPoint(extensionPointName);
 		if (extensionPointDefinition == null) {
-			this.extensionManager.createExtensionPoint(extensionPointName, extensionDescription, request);
+			this.extensionManager.createExtensionPoint(extensionPointName, extensionDescription);
 		} else {
-			this.extensionManager.updateExtensionPoint(extensionPointName, extensionDescription, request);
+			this.extensionManager.updateExtensionPoint(extensionPointName, extensionDescription);
 		}
 	}
 

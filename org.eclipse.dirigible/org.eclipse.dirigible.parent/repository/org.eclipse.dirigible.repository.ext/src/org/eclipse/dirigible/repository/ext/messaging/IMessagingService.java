@@ -56,7 +56,7 @@ public interface IMessagingService {
 	/**
 	 * Subscribes a given Client for a given Topic,
 	 * so that this Client will get the new messages 
-	 * from this Topic during the Routing Process 
+	 * from this Topic after the Routing Process 
 	 * 
 	 * @param client
 	 * @param topic
@@ -97,7 +97,7 @@ public interface IMessagingService {
 	 * @param messageDefinition
 	 * @throws EMessagingException
 	 */
-	public void send(MessageDefinition messageDefinition) throws EMessagingException;
+	public void sendMessage(MessageDefinition messageDefinition) throws EMessagingException;
 	
 	/**
 	 * Get all the new messages for this Client for all the Topics
@@ -111,7 +111,7 @@ public interface IMessagingService {
 	 * 
 	 * @param receiver
 	 */
-	public List<MessageDefinition> receive(String receiver, String topic) throws EMessagingException;
+	public List<MessageDefinition> receiveByTopic(String receiver, String topic) throws EMessagingException;
 
 	/**
 	 * Triggers the Routing Process.

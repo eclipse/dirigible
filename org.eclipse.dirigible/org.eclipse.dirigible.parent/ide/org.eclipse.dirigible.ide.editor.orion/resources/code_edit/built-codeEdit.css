@@ -130,7 +130,7 @@
 .textviewTooltip p {
 	word-wrap: break-word;
 }
-.textviewTooltip em {
+.textviewTooltip multi_anno {
 	font-style: normal;
 	font-weight: bold;
 }
@@ -149,6 +149,9 @@
 	padding-left: 3px;
 	vertical-align: middle;
 }
+.textviewTooltip .hoverTooltipTitle {
+	font-weight: normal;
+}
 .textviewTooltip .commandButton { 
 	border: 1px solid #325C80;
 	background-color: inherit;
@@ -164,6 +167,7 @@
 .textViewTooltipOnHover {
 	overflow: auto;
 }
+
 .textViewFind {
 	background-color: #ddd;
 	position: absolute;
@@ -281,6 +285,31 @@
 	position: fixed;
 	visibility: visible;
 	z-index: 1000; 
+}
+.contentassist .proposalTag {
+	display: inline-block;
+  	line-height: 11px;
+  	height: 10px;
+   	border-radius: 2px;
+	background: #325C80;
+	padding: 2px;
+	margin-right: 3px;
+	text-align: center;
+  	color: white;
+}
+.contentassist .iconTagGreen {
+	display: inline-block;
+	font-size: 10px;
+  	font-weight: bold;
+  	line-height: 13px;
+  	height: 12px;
+  	width: 12px;
+   	border-radius: 50%;
+	background: green;
+	padding: 1px;
+	margin-right: 3px;
+	text-align: center;
+  	color: white;
 }
 .contentassist>div {
 	padding: 1px 3px 1px 5px;
@@ -401,6 +430,7 @@
 .cm-bracket { color: white; background-color: gray; }
 .cm-tag { color: #3f7f7f; }
 .cm-attribute { color: #7f007f; }
+
 .annotation {
 }
 .annotation.error,
@@ -687,6 +717,7 @@
 .annotationLine.currentLine {
 	background-color: #EAF2FE;
 }
+
 .headerLayout {
 	height: 60px;
 }
@@ -1027,7 +1058,7 @@
 	left: 33%;  
 	height: 100%;
 	z-index: 51;
-	width: 1px;
+	width: 3px;
 	cursor: e-resize;
 	visibility: hidden;  
 }
@@ -1036,7 +1067,7 @@
 	top: 33%;  
 	width: 100%;
 	z-index: 51;
-	height: 1px;
+	height: 3px;
 	cursor: n-resize;
 	visibility: hidden;  
 }
@@ -1168,7 +1199,6 @@ and (max-device-width : 1024px)  {
     font-family: sans-serif;
 	font-size:10px;
 	text-decoration:none !important;
-	border-right:1px solid #ccc;
 	user-select: none;
 	-webkit-user-select: none;
 	-moz-user-select: -moz-none;
@@ -1834,7 +1864,7 @@ a.breadcrumb.currentLocation {
 .commandInactiveItem {
 }
 .split {
-	background: #263238;
+	background: #37474F;
 }
 .splitTracking {
 	background: #37474F;
@@ -1944,7 +1974,6 @@ a.breadcrumb.currentLocation {
 	width: 12px;
 }
 .dropdownMenuItem .dropdownKeyBinding {
-	color: grey !important; 
 	flex-grow: 0;
 	-webkit-flex-grow: 0;		
 	font-size: 11px;

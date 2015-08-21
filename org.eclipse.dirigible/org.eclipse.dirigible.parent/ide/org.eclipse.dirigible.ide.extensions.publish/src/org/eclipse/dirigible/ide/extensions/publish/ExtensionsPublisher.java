@@ -54,7 +54,7 @@ public class ExtensionsPublisher extends AbstractPublisher implements IPublisher
 			ExtensionUpdater extensionUpdater = new ExtensionUpdater(
 					RepositoryFacade.getInstance().getRepository(),
 					DataSourceFacade.getInstance().getDataSource(),
-					getRegistryLocation());
+					getRegistryLocation(), CommonParameters.getRequest());
 			
 //			# 177
 //			extensionUpdater.enumerateKnownFiles(targetContainer, knownFiles);

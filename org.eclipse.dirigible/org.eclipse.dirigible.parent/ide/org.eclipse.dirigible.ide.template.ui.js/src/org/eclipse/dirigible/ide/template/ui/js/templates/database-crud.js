@@ -1,5 +1,5 @@
 /* globals $ */
-/* eslint-env node */
+/* eslint-env node, dirigible */
 
 var entity${entityName} = require('${projectName}/${fileNameNoExtension}_lib');
 

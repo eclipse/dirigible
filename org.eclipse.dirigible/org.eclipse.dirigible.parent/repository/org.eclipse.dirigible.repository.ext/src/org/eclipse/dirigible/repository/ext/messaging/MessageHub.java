@@ -437,7 +437,7 @@ public class MessageHub implements IMessagingService {
 	}
 	
 	@Override
-	public void send(MessageDefinition messageDefinition) throws EMessagingException {
+	public void sendMessage(MessageDefinition messageDefinition) throws EMessagingException {
 		send(messageDefinition.getSender(), messageDefinition.getTopic(), messageDefinition.getSubject(), messageDefinition.getBody());
 	}
 
@@ -576,7 +576,7 @@ public class MessageHub implements IMessagingService {
 	}
 
 	@Override
-	public List<MessageDefinition> receive(String receiver, String topic) throws EMessagingException {
+	public List<MessageDefinition> receiveByTopic(String receiver, String topic) throws EMessagingException {
 		if (isSilentMode()) {
 			if (!isClientExists(receiver)) {
 				registerClient(receiver);

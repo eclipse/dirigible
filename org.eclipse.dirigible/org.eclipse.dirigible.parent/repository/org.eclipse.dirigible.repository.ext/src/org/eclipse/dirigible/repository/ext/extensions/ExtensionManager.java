@@ -52,19 +52,14 @@ public class ExtensionManager implements IExtensionService {
 	private IRepository repository;
 
 	private DBUtils dbUtils;
+	
+	private HttpServletRequest request;
 
-	public static ExtensionManager getInstance(IRepository repository,
-			DataSource dataSource) {
-		if (instance == null) {
-			instance = new ExtensionManager(repository, dataSource);
-		}
-		return instance;
-	}
-
-	private ExtensionManager(IRepository repository, DataSource dataSource) {
+	public ExtensionManager(IRepository repository, DataSource dataSource, HttpServletRequest request) {
 		this.dataSource = dataSource;
 		this.repository = repository;
 		this.dbUtils = new DBUtils(dataSource);
+		this.request = request;
 	}
 
 	public IRepository getRepository() {
@@ -230,7 +225,7 @@ public class ExtensionManager implements IExtensionService {
 	
 	@Override
 	public void createExtension(String extension,
-			String extensionPoint, String description, HttpServletRequest request) throws EExtensionException {
+			String extensionPoint, String description) throws EExtensionException {
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;
@@ -264,7 +259,7 @@ public class ExtensionManager implements IExtensionService {
 	
 	@Override
 	public void updateExtension(String extension,
-			String extensionPoint, String description, HttpServletRequest request) throws EExtensionException {
+			String extensionPoint, String description) throws EExtensionException {
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;
@@ -296,7 +291,7 @@ public class ExtensionManager implements IExtensionService {
 	}
 
 	@Override
-	public void createExtensionPoint(String extensionPoint, String description, HttpServletRequest request) throws EExtensionException {
+	public void createExtensionPoint(String extensionPoint, String description) throws EExtensionException {
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;
@@ -328,7 +323,7 @@ public class ExtensionManager implements IExtensionService {
 	}
 	
 	@Override
-	public void updateExtensionPoint(String extensionPoint, String description, HttpServletRequest request) throws EExtensionException {
+	public void updateExtensionPoint(String extensionPoint, String description) throws EExtensionException {
 		try {
 			Connection connection = null;
 			PreparedStatement statement = null;

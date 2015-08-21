@@ -1,5 +1,5 @@
 /* globals $ */
-/* eslint-env node */
+/* eslint-env node, dirigible */
 
 var systemLib = require('system');
 var ioLib = require('io');
@@ -7,9 +7,9 @@ var entityLib = require('entity');
 
 // create entity by parsing JSON object from request body
 exports.create${entityName} = function() {
-    var input = ioLib.read($.getRequest().getReader());
+    var input = ioLib.read($\.getRequest().getReader());
     var message = JSON.parse(input);
-    var connection = $.getDatasource().getConnection();
+    var connection = $\.getDatasource().getConnection();
     try {
         var sql = "INSERT INTO ${tableName} (";
 #foreach ($tableColumn in $tableColumns)
@@ -51,21 +51,21 @@ exports.create${entityName} = function() {
 #elseif ($tableColumn.getType() == $DATE)
         if (message.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, $.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
         if (message.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, $.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
         if (message.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, $.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTimestamp(++i, null);
         }
@@ -75,10 +75,10 @@ exports.create${entityName} = function() {
 #end
 #end
         statement.executeUpdate();
-		$.getResponse().getWriter().println(id);
+		$\.getResponse().getWriter().println(id);
         return id;
     } catch(e) {
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
+        var errorCode = $\.getResponse().SC_BAD_REQUEST;
         entityLib.printError(errorCode, errorCode, e.message);
     } finally {
         connection.close();
@@ -88,7 +88,7 @@ exports.create${entityName} = function() {
 
 // read single entity by id and print as JSON object to response
 exports.read${entityName}Entity = function(id) {
-    var connection = $.getDatasource().getConnection();
+    var connection = $\.getDatasource().getConnection();
     try {
         var result = "";
         var sql = "SELECT * FROM ${tableName} WHERE " + pkToSQL();
@@ -101,12 +101,12 @@ exports.read${entityName}Entity = function(id) {
             result = createEntity(resultSet);
         }
         if(result.length === 0){
-            entityLib.printError($.getResponse().SC_NOT_FOUND, 1, "Record with id: " + id + " does not exist.");
+            entityLib.printError($\.getResponse().SC_NOT_FOUND, 1, "Record with id: " + id + " does not exist.");
         }
         var text = JSON.stringify(result, null, 2);
-        $.getResponse().getWriter().println(text);
+        $\.getResponse().getWriter().println(text);
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
+        var errorCode = $\.getResponse().SC_BAD_REQUEST;
         entityLib.printError(errorCode, errorCode, e.message);
     } finally {
         connection.close();
@@ -115,7 +115,7 @@ exports.read${entityName}Entity = function(id) {
 
 // read all entities and print them as JSON array to response
 exports.read${entityName}List = function(limit, offset, sort, desc) {
-    var connection = $.getDatasource().getConnection();
+    var connection = $\.getDatasource().getConnection();
     try {
         var result = [];
         var sql = "SELECT ";
@@ -139,9 +139,9 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
             result.push(createEntity(resultSet));
         }
         var text = JSON.stringify(result, null, 2);
-        $.getResponse().getWriter().println(text);
+        $\.getResponse().getWriter().println(text);
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
+        var errorCode = $\.getResponse().SC_BAD_REQUEST;
         entityLib.printError(errorCode, errorCode, e.message);
     } finally {
         connection.close();
@@ -200,9 +200,9 @@ function convertToDateString(date) {
 
 // update entity by id
 exports.update${entityName} = function() {
-    var input = ioLib.read($.getRequest().getReader());
+    var input = ioLib.read($\.getRequest().getReader());
     var message = JSON.parse(input);
-    var connection = $.getDatasource().getConnection();
+    var connection = $\.getDatasource().getConnection();
     try {
         var sql = "UPDATE ${tableName} SET ";
 #foreach ($tableColumn in $tableColumnsWithoutKeys)
@@ -266,9 +266,9 @@ exports.update${entityName} = function() {
 #end
 #end
         statement.executeUpdate();
-		$.getResponse().getWriter().println(id);
+		$\.getResponse().getWriter().println(id);
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
+        var errorCode = $\.getResponse().SC_BAD_REQUEST;
         entityLib.printError(errorCode, errorCode, e.message);
     } finally {
         connection.close();
@@ -277,15 +277,15 @@ exports.update${entityName} = function() {
 
 // delete entity
 exports.delete${entityName} = function(id) {
-    var connection = $.getDatasource().getConnection();
+    var connection = $\.getDatasource().getConnection();
     try {
         var sql = "DELETE FROM ${tableName} WHERE "+pkToSQL();
         var statement = connection.prepareStatement(sql);
         statement.setString(1, id);
         var resultSet = statement.executeUpdate();
-        $.getResponse().getWriter().println(id);
+        $\.getResponse().getWriter().println(id);
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
+        var errorCode = $\.getResponse().SC_BAD_REQUEST;
         entityLib.printError(errorCode, errorCode, e.message);
     } finally {
         connection.close();
@@ -294,7 +294,7 @@ exports.delete${entityName} = function(id) {
 
 exports.count${entityName} = function() {
     var count = 0;
-    var connection = $.getDatasource().getConnection();
+    var connection = $\.getDatasource().getConnection();
     try {
         var statement = connection.createStatement();
         var rs = statement.executeQuery('SELECT COUNT(*) FROM ${tableName}');
@@ -302,12 +302,12 @@ exports.count${entityName} = function() {
             count = rs.getInt(1);
         }
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
+        var errorCode = $\.getResponse().SC_BAD_REQUEST;
         entityLib.printError(errorCode, errorCode, e.message);
     } finally {
         connection.close();
     }
-    $.getResponse().getWriter().println(count);
+    $\.getResponse().getWriter().println(count);
 };
 
 exports.metadata${entityName} = function() {
@@ -350,7 +350,7 @@ exports.metadata${entityName} = function() {
 
 #end
 
-	$.getResponse().getWriter().println(JSON.stringify(entityMetadata));
+	$\.getResponse().getWriter().println(JSON.stringify(entityMetadata));
 };
 
 function getPrimaryKeys(){
@@ -381,20 +381,20 @@ function pkToSQL(){
 exports.process${entityName} = function() {
 	
 	// get method type
-	var method = $.getRequest().getMethod();
+	var method = $\.getRequest().getMethod();
 	method = method.toUpperCase();
 	
 	//get primary keys (one primary key is supported!)
 	var idParameter = getPrimaryKey();
 	
 	// retrieve the id as parameter if exist 
-	var id = xss.escapeSql($.getRequest().getParameter(idParameter));
-	var count = xss.escapeSql($.getRequest().getParameter('count'));
-	var metadata = xss.escapeSql($.getRequest().getParameter('metadata'));
-	var sort = xss.escapeSql($.getRequest().getParameter('sort'));
-	var limit = xss.escapeSql($.getRequest().getParameter('limit'));
-	var offset = xss.escapeSql($.getRequest().getParameter('offset'));
-	var desc = xss.escapeSql($.getRequest().getParameter('desc'));
+	var id = xss.escapeSql($\.getRequest().getParameter(idParameter));
+	var count = xss.escapeSql($\.getRequest().getParameter('count'));
+	var metadata = xss.escapeSql($\.getRequest().getParameter('metadata'));
+	var sort = xss.escapeSql($\.getRequest().getParameter('sort'));
+	var limit = xss.escapeSql($\.getRequest().getParameter('limit'));
+	var offset = xss.escapeSql($\.getRequest().getParameter('offset'));
+	var desc = xss.escapeSql($\.getRequest().getParameter('desc'));
 	
 	if (limit === null) {
 		limit = 100;
@@ -428,11 +428,11 @@ exports.process${entityName} = function() {
 				exports.delete${entityName}(id);
 			}
 		} else {
-			entityLib.printError($.getResponse().SC_BAD_REQUEST, 1, "Invalid HTTP Method");
+			entityLib.printError($\.getResponse().SC_BAD_REQUEST, 1, "Invalid HTTP Method");
 		}
 	}
 	
 	// flush and close the response
-	$.getResponse().getWriter().flush();
-	$.getResponse().getWriter().close();
+	$\.getResponse().getWriter().flush();
+	$\.getResponse().getWriter().close();
 };

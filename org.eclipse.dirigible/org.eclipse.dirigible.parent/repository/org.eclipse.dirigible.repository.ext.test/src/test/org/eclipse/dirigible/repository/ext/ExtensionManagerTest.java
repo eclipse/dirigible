@@ -43,14 +43,14 @@ public class ExtensionManagerTest {
 		DBRepositoryTest.setUp();
 		dataSource = DBRepositoryTest.getDataSource();
 		repository = DBRepositoryTest.getRepository();
-		extensionManager = ExtensionManager.getInstance(repository, dataSource);
+		extensionManager = new ExtensionManager(repository, dataSource, null);
 	}
 
 	@Test
 	public void testCreateExtensionPoint() {
 		try {
 			extensionManager.removeExtensionPoint("extensionPoint1");
-			extensionManager.createExtensionPoint("extensionPoint1", "test extension point", null);
+			extensionManager.createExtensionPoint("extensionPoint1", "test extension point");
 			String[] extensionPoints = extensionManager.getExtensionPoints();
 			assertTrue(contains(extensionPoints,"extensionPoint1"));
 		} catch (Exception e) {
@@ -73,8 +73,8 @@ public class ExtensionManagerTest {
 	public void testCreateExtension() {
 		try {
 			extensionManager.removeExtensionPoint("extensionPoint1");
-			extensionManager.createExtensionPoint("extensionPoint1", "test extension point", null);
-			extensionManager.createExtension("extension1", "extensionPoint1", "test extension", null);
+			extensionManager.createExtensionPoint("extensionPoint1", "test extension point");
+			extensionManager.createExtension("extension1", "extensionPoint1", "test extension");
 			String[] extensions = extensionManager.getExtensions("extensionPoint1");
 			assertTrue(contains(extensions,"extension1"));
 		} catch (Exception e) {
@@ -87,8 +87,8 @@ public class ExtensionManagerTest {
 	public void testRemoveExtension() {
 		try {
 			extensionManager.removeExtensionPoint("extensionPoint1");
-			extensionManager.createExtensionPoint("extensionPoint1", "test extension point", null);
-			extensionManager.createExtension("extension1", "extensionPoint1", "test extension", null);
+			extensionManager.createExtensionPoint("extensionPoint1", "test extension point");
+			extensionManager.createExtension("extension1", "extensionPoint1", "test extension");
 			String[] extensions = extensionManager.getExtensions("extensionPoint1");
 			assertTrue(contains(extensions,"extension1"));
 			
@@ -107,7 +107,7 @@ public class ExtensionManagerTest {
 	public void testGetExtensionPoint() {
 		try {
 			extensionManager.removeExtensionPoint("extensionPoint1");
-			extensionManager.createExtensionPoint("extensionPoint1", "test extension point", null);
+			extensionManager.createExtensionPoint("extensionPoint1", "test extension point");
 			ExtensionPointDefinition extensionPointDefinition = extensionManager.getExtensionPoint("extensionPoint1");
 			assertNotNull(extensionPointDefinition);
 		} catch (Exception e) {
@@ -120,8 +120,8 @@ public class ExtensionManagerTest {
 	public void testGetExtension() {
 		try {
 			extensionManager.removeExtensionPoint("extensionPoint1");
-			extensionManager.createExtensionPoint("extensionPoint1", "test extension point", null);
-			extensionManager.createExtension("extension1", "extensionPoint1", "test extension", null);
+			extensionManager.createExtensionPoint("extensionPoint1", "test extension point");
+			extensionManager.createExtension("extension1", "extensionPoint1", "test extension");
 			ExtensionDefinition extensionDefinition = extensionManager.getExtension("extension1", "extensionPoint1");
 			assertNotNull(extensionDefinition);
 		} catch (Exception e) {
@@ -134,11 +134,11 @@ public class ExtensionManagerTest {
 	public void testUpdateExtensionPoint() {
 		try {
 			extensionManager.removeExtensionPoint("extensionPoint1");
-			extensionManager.createExtensionPoint("extensionPoint1", "test extension point", null);
+			extensionManager.createExtensionPoint("extensionPoint1", "test extension point");
 			ExtensionPointDefinition extensionPointDefinition = extensionManager.getExtensionPoint("extensionPoint1");
 			assertNotNull(extensionPointDefinition);
 			assertEquals("test extension point", extensionPointDefinition.getDescription());
-			extensionManager.updateExtensionPoint("extensionPoint1", "test extension point updated", null);
+			extensionManager.updateExtensionPoint("extensionPoint1", "test extension point updated");
 			extensionPointDefinition = extensionManager.getExtensionPoint("extensionPoint1");
 			assertEquals("test extension point updated", extensionPointDefinition.getDescription());
 		} catch (Exception e) {
@@ -151,12 +151,12 @@ public class ExtensionManagerTest {
 	public void testUpdateExtension() {
 		try {
 			extensionManager.removeExtensionPoint("extensionPoint1");
-			extensionManager.createExtensionPoint("extensionPoint1", "test extension point", null);
-			extensionManager.createExtension("extension1", "extensionPoint1", "test extension", null);
+			extensionManager.createExtensionPoint("extensionPoint1", "test extension point");
+			extensionManager.createExtension("extension1", "extensionPoint1", "test extension");
 			ExtensionDefinition extensionDefinition = extensionManager.getExtension("extension1", "extensionPoint1");
 			assertNotNull(extensionDefinition);
 			assertEquals("test extension", extensionDefinition.getDescription());
-			extensionManager.updateExtension("extension1", "extensionPoint1", "test extension updated", null);
+			extensionManager.updateExtension("extension1", "extensionPoint1", "test extension updated");
 			extensionDefinition = extensionManager.getExtension("extension1", "extensionPoint1");
 			assertEquals("test extension updated", extensionDefinition.getDescription());
 		} catch (Exception e) {
