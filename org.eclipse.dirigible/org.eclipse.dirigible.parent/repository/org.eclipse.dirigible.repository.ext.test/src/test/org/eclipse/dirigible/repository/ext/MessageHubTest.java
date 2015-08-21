@@ -219,7 +219,7 @@ public class MessageHubTest {
 			messageHub.subscribe(receiver, topic);
 			messageHub.send(sender, topic, subject, body);
 			messageHub.route();
-			List<MessageDefinition> messages = messageHub.receive(receiver, topic);
+			List<MessageDefinition> messages = messageHub.receiveByTopic(receiver, topic);
 			assertNotNull(messages);
 			assertTrue(messages.size() > 0);
 			MessageDefinition message = messages.get(0);
@@ -255,7 +255,7 @@ public class MessageHubTest {
 			messageHub.subscribe(receiver, topic);
 			messageHub.send(sender, topic, subject, body);
 			messageHub.route();
-			List<MessageDefinition> messages = messageHub.receive(receiver, anotherTopic);
+			List<MessageDefinition> messages = messageHub.receiveByTopic(receiver, anotherTopic);
 			assertNotNull(messages);
 			assertTrue("Messages list is not empty for another topic", messages.size() == 0);
 			

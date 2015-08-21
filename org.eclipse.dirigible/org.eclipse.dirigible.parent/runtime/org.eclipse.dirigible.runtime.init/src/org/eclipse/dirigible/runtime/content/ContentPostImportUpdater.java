@@ -55,7 +55,7 @@ public class ContentPostImportUpdater {
 		// 4. Extensions
 		ExtensionUpdater extensionUpdater = new ExtensionUpdater(getRepository(), RepositoryFacade
 				.getInstance().getDataSource(request),
-				ExtensionUpdater.REGISTRY_EXTENSION_DEFINITIONS_DEFAULT);
+				ExtensionUpdater.REGISTRY_EXTENSION_DEFINITIONS_DEFAULT, request);
 		extensionUpdater.applyUpdates();
 		
 		// 5. Jobs

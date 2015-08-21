@@ -33,7 +33,7 @@ public class MessagingReceiveServlet extends MessagingServlet {
 				messages = getMessageHub(req).receive(
 						RepositoryFacade.getUser(req));
 			} else {
-				messages = getMessageHub(req).receive(
+				messages = getMessageHub(req).receiveByTopic(
 						RepositoryFacade.getUser(req), topic);
 			}
 			

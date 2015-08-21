@@ -31,7 +31,7 @@ exports.create${entityName} = function() {
         var i = 0;
 #foreach ($tableColumn in $tableColumns)
 #if ($tableColumn.isKey())
-        var id = db.getNext('${tableName}_${tableColumn.getName()}');
+        var id = $\.getDatabaseUtils().getNext('${tableName}_${tableColumn.getName()}');
         statement.setInt(++i, id);
 #else    
 #if ($tableColumn.getType() == $INTEGER)
@@ -120,7 +120,7 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
         var result = [];
         var sql = "SELECT ";
         if (limit !== null && offset !== null) {
-            sql += " " + db.createTopAndStart(limit, offset);
+            sql += " " + $\.getDatabaseUtils()createTopAndStart(limit, offset);
         }
         sql += " * FROM ${tableName}";
         if (sort !== null) {
@@ -130,7 +130,7 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
             sql += " DESC ";
         }
         if (limit !== null && offset !== null) {
-            sql += " " + db.createLimitAndOffset(limit, offset);
+            sql += " " + $\.getDatabaseUtils().createLimitAndOffset(limit, offset);
         }
         var statement = connection.prepareStatement(sql);
         var resultSet = statement.executeQuery();

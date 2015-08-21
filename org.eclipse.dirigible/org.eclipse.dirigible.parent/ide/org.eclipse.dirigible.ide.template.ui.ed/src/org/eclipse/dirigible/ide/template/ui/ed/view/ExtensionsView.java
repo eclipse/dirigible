@@ -51,8 +51,8 @@ public class ExtensionsView extends ViewPart {
 
 	private TreeViewer viewer;
 
-	private ExtensionManager extensionManager = ExtensionManager.getInstance(RepositoryFacade
-			.getInstance().getRepository(), DataSourceFacade.getInstance().getDataSource());
+	private ExtensionManager extensionManager = new ExtensionManager(RepositoryFacade
+			.getInstance().getRepository(), DataSourceFacade.getInstance().getDataSource(), CommonParameters.getRequest());
 
 	@Override
 	public void createPartControl(Composite parent) {
