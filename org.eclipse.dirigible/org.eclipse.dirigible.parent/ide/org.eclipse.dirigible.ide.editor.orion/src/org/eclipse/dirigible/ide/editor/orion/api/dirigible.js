@@ -138,10 +138,17 @@ $ = (function(){
     }
 
     var Connection = {
-        prepareStatement : function() {return PreparedStatement; },
+    	createStatement : function() {return Statement; },
+        prepareStatement : function(sql) {return PreparedStatement; },
         setAutoCommit : function(autoCommit) {},
         commit : function() {},
         rollback : function() {},
+        close : function() {}
+    }
+    var Statement = {
+        executeQuery : function(sql) { return ResultSet; },
+        executeUpdate : function(sql) {},
+        execute : function(sql) {},
         close : function() {}
     }
     var PreparedStatement = {
