@@ -38,7 +38,7 @@
 								<tasks>
 									<replace dir="${project.build.directory}/temp">
 										<include name="**/web.xml" />
-										<replacefilter token="@RUNTIME_URL@" value="${deployment.name}" />
+										<replacefilter token="@RUNTIME_URL@" value="${deployment.context}" />
 									</replace>
 								</tasks>
 							</configuration>
@@ -80,11 +80,26 @@
 							<outputDirectory>${project.build.directory}/temp</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/src/${deployment.type}</directory>
+									<directory>${basedir}/src/web/${deployment.type}</directory>
 								</resource>
 							</resources>
 						</configuration>
 					</execution>
+                    <execution>
+                        <id>copy-index.html</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/main/webapp</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/index/${deployment.type}</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -139,7 +154,7 @@
 						</goals>
 						<phase>package</phase>
 						<configuration>
-						    <path>/dirigible</path>
+                            <path>/${deployment.context}</path>
 						    <enableNaming>false</enableNaming>
 						    <finalName>${deployment.executable}.jar</finalName>
 						    <charset>utf-8</charset>
@@ -160,6 +175,7 @@
 			<properties>
 				<deployment.type>tomcat</deployment.type>
 				<deployment.name>${project.name}-${project.version}</deployment.name>
+                <deployment.context>${project.name}-${project.version}</deployment.context>
 				<deployment.executable>${project.name}-executable</deployment.executable>
 			</properties>
 		</profile>
@@ -167,7 +183,8 @@
 			<id>trial</id>
 			<properties>
 				<deployment.type>trial</deployment.type>
-				<deployment.name>dirigible</deployment.name>
+				<deployment.name>ROOT</deployment.name>
+                <deployment.context></deployment.context>
 				<deployment.executable>${project.name}-trial-executable</deployment.executable>
 			</properties>
 		</profile>
@@ -176,6 +193,7 @@
 			<properties>
 				<deployment.type>sap</deployment.type>
 				<deployment.name>dirigible</deployment.name>
+                <deployment.context>dirigible</deployment.context>
 				<deployment.executable>${project.name}-sap-executable</deployment.executable>
 			</properties>
 		</profile>
