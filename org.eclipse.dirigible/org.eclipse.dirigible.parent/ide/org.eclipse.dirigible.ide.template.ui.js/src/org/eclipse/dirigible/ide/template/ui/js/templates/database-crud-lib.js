@@ -1,14 +1,13 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var systemLib = require('system');
 var ioLib = require('io');
 var entityLib = require('entity');
 
 // create entity by parsing JSON object from request body
 exports.create${entityName} = function() {
     var input = ioLib.read($\.getRequest().getReader());
-    var message = JSON.parse(input);
+    var requestBody = JSON.parse(input);
     var connection = $\.getDatasource().getConnection();
     try {
         var sql = "INSERT INTO ${tableName} (";
@@ -35,42 +34,42 @@ exports.create${entityName} = function() {
         statement.setInt(++i, id);
 #else    
 #if ($tableColumn.getType() == $INTEGER)
-        statement.setInt(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setInt(++i, requestBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $VARCHAR)
-        statement.setString(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setString(++i, requestBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $CHAR)
-        statement.setString(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setString(++i, requestBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $BIGINT)
-        statement.setLong(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setLong(++i, requestBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $SMALLINT)
-        statement.setShort(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setShort(++i, requestBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $FLOAT)
-        statement.setFloat(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setFloat(++i, requestBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $DOUBLE)
-        statement.setDouble(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setDouble(++i, requestBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $DATE)
-        if (message.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()}));
+        if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
+            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()}));
             statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
-        if (message.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()})); 
+        if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
+            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()})); 
             statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
-        if (message.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()}));
+        if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
+            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()}));
             statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTimestamp(++i, null);
         }
 #else
-    // not supported type: message.${tableColumn.getName().toLowerCase()}
+    // not supported type: requestBody.${tableColumn.getName().toLowerCase()}
 #end
 #end
 #end
@@ -90,21 +89,18 @@ exports.create${entityName} = function() {
 exports.read${entityName}Entity = function(id) {
     var connection = $\.getDatasource().getConnection();
     try {
-        var result = "";
-        var sql = "SELECT * FROM ${tableName} WHERE " + pkToSQL();
-        var statement = connection.prepareStatement(sql);
+        var result;
+        var statement = connection.prepareStatement("SELECT * FROM ${tableName} WHERE " + exports.pkToSQL());
         statement.setString(1, id);
         
         var resultSet = statement.executeQuery();
-        var value;
-        while (resultSet.next()) {
+        if (resultSet.next()) {
             result = createEntity(resultSet);
+        } else {
+        	entityLib.printError($\.getResponse().SC_NOT_FOUND, 1, "Record with id: " + id + " does not exist.");
         }
-        if(result.length === 0){
-            entityLib.printError($\.getResponse().SC_NOT_FOUND, 1, "Record with id: " + id + " does not exist.");
-        }
-        var text = JSON.stringify(result, null, 2);
-        $\.getResponse().getWriter().println(text);
+        var jsonResponse = JSON.stringify(result, null, 2);
+        $\.getResponse().getWriter().println(jsonResponse);
     } catch(e){
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
         entityLib.printError(errorCode, errorCode, e.message);
@@ -120,7 +116,7 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
         var result = [];
         var sql = "SELECT ";
         if (limit !== null && offset !== null) {
-            sql += " " + $\.getDatabaseUtils()createTopAndStart(limit, offset);
+            sql += " " + $\.getDatabaseUtils().createTopAndStart(limit, offset);
         }
         sql += " * FROM ${tableName}";
         if (sort !== null) {
@@ -134,12 +130,11 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
         }
         var statement = connection.prepareStatement(sql);
         var resultSet = statement.executeQuery();
-        var value;
         while (resultSet.next()) {
             result.push(createEntity(resultSet));
         }
-        var text = JSON.stringify(result, null, 2);
-        $\.getResponse().getWriter().println(text);
+        var jsonResponse = JSON.stringify(result, null, 2);
+        $\.getResponse().getWriter().println(jsonResponse);
     } catch(e){
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
         entityLib.printError(errorCode, errorCode, e.message);
@@ -149,7 +144,7 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
 };
 
 //create entity as JSON object from ResultSet current Row
-function createEntity(resultSet, data) {
+function createEntity(resultSet) {
     var result = {};
 #foreach ($tableColumn in $tableColumns)
 #if ($tableColumn.getType() == $INTEGER)
@@ -201,7 +196,7 @@ function convertToDateString(date) {
 // update entity by id
 exports.update${entityName} = function() {
     var input = ioLib.read($\.getRequest().getReader());
-    var message = JSON.parse(input);
+    var responseBody = JSON.parse(input);
     var connection = $\.getDatasource().getConnection();
     try {
         var sql = "UPDATE ${tableName} SET ";
@@ -220,48 +215,47 @@ exports.update${entityName} = function() {
         var i = 0;
 #foreach ($tableColumn in $tableColumnsWithoutKeys)
 #if ($tableColumn.getType() == $INTEGER)
-        statement.setInt(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setInt(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $VARCHAR)
-        statement.setString(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setString(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $CHAR)
-        statement.setString(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setString(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $BIGINT)
-        statement.setLong(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setLong(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $SMALLINT)
-        statement.setShort(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setShort(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $FLOAT)
-        statement.setFloat(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setFloat(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $DOUBLE)
-        statement.setDouble(++i, message.${tableColumn.getName().toLowerCase()});
+        statement.setDouble(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $DATE)
-        if (message.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()}));
+        if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
+            var js_date =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
             statement.setDate(++i, new java.sql.Date(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
-        if (message.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()})); 
+        if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
+            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()})); 
             statement.setTime(++i, new java.sql.Time(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
-        if (message.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(message.${tableColumn.getName().toLowerCase()}));
+        if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
+            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
             statement.setTimestamp(++i, new java.sql.Timestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTimestamp(++i, null);
         }
 #else
-    // not supported type: message.${tableColumn.getName().toLowerCase()}
+    // not supported type: responseBody.${tableColumn.getName().toLowerCase()}
 #end
 #end
-        var id = "";
 #foreach ($tableColumn in $tableColumns)
 #if ($tableColumn.isKey())
-        id = message.${tableColumn.getName().toLowerCase()};
+        var id = responseBody.${tableColumn.getName().toLowerCase()};
         statement.setInt(++i, id);
 #end
 #end
@@ -279,10 +273,9 @@ exports.update${entityName} = function() {
 exports.delete${entityName} = function(id) {
     var connection = $\.getDatasource().getConnection();
     try {
-        var sql = "DELETE FROM ${tableName} WHERE "+pkToSQL();
-        var statement = connection.prepareStatement(sql);
+        var statement = connection.prepareStatement("DELETE FROM ${tableName} WHERE " + exports.pkToSQL());
         statement.setString(1, id);
-        var resultSet = statement.executeUpdate();
+        statement.executeUpdate();
         $\.getResponse().getWriter().println(id);
     } catch(e){
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
@@ -298,7 +291,7 @@ exports.count${entityName} = function() {
     try {
         var statement = connection.createStatement();
         var rs = statement.executeQuery('SELECT COUNT(*) FROM ${tableName}');
-        while (rs.next()) {
+        if (rs.next()) {
             count = rs.getInt(1);
         }
     } catch(e){
@@ -311,41 +304,63 @@ exports.count${entityName} = function() {
 };
 
 exports.metadata${entityName} = function() {
-	var entityMetadata = {};
-	entityMetadata.name = '${tableName.toLowerCase()}';
-	entityMetadata.type = 'object';
-	entityMetadata.properties = [];
+	var entityMetadata = {
+		name: '${tableName.toLowerCase()}',
+		type: 'object',
+		properties: []
+	};
 	
 #foreach ($tableColumn in $tableColumns)
-	var property${tableColumn.getName().toLowerCase()} = {};
-	property${tableColumn.getName().toLowerCase()}.name = '$tableColumn.getName().toLowerCase()';
-#if ($tableColumn.getType() == $INTEGER)
-	property${tableColumn.getName().toLowerCase()}.type = 'integer';
+	var property${tableColumn.getName().toLowerCase()} = {
+		name: '$tableColumn.getName().toLowerCase()',
+#if ($tableColumn.getType() == $INTEGER && $tableColumn.isKey())
+		type: 'integer',
+#elseif ($tableColumn.getType() == $INTEGER)
+		type: 'integer'
+#elseif ($tableColumn.getType() == $VARCHAR && $tableColumn.isKey())
+    	type: 'string',
 #elseif ($tableColumn.getType() == $VARCHAR)
-    property${tableColumn.getName().toLowerCase()}.type = 'string';
+		type: 'string'
+#elseif ($tableColumn.getType() == $CHAR && $tableColumn.isKey())
+		type: 'string',
 #elseif ($tableColumn.getType() == $CHAR)
-	property${tableColumn.getName().toLowerCase()}.type = 'string';
+		type: 'string'
+#elseif ($tableColumn.getType() == $BIGINT && $tableColumn.isKey())
+		type: 'bigint',
 #elseif ($tableColumn.getType() == $BIGINT)
-	property${tableColumn.getName().toLowerCase()}.type = 'bigint';
+		type: 'bigint'
+#elseif ($tableColumn.getType() == $SMALLINT && $tableColumn.isKey())
+		type: 'smallint',
 #elseif ($tableColumn.getType() == $SMALLINT)
-	property${tableColumn.getName().toLowerCase()}.type = 'smallint';
+		type: 'smallint'
+#elseif ($tableColumn.getType() == $FLOAT && $tableColumn.isKey())
+		type: 'float',
 #elseif ($tableColumn.getType() == $FLOAT)
-	property${tableColumn.getName().toLowerCase()}.type = 'float';
+		type: 'float'
+#elseif ($tableColumn.getType() == $DOUBLE && $tableColumn.isKey())
+		type: 'double',
 #elseif ($tableColumn.getType() == $DOUBLE)
-    property${tableColumn.getName().toLowerCase()}.type = 'double';
+		type: 'double'
+#elseif ($tableColumn.getType() == $DATE && $tableColumn.isKey())
+		type: 'date',
 #elseif ($tableColumn.getType() == $DATE)
-    property${tableColumn.getName().toLowerCase()}.type = 'date';
+		type: 'date'
+#elseif ($tableColumn.getType() == $TIME && $tableColumn.isKey())
+		type: 'time',
 #elseif ($tableColumn.getType() == $TIME)
-    property${tableColumn.getName().toLowerCase()}.type = 'time';
+		type: 'time'
+#elseif ($tableColumn.getType() == $TIMESTAMP && $tableColumn.isKey())
+		type: 'timestamp',
 #elseif ($tableColumn.getType() == $TIMESTAMP)
-    property${tableColumn.getName().toLowerCase()}.type = 'timestamp';
+		type: 'timestamp'
 #else
-    property${tableColumn.getName().toLowerCase()}.type = 'unknown';
+ 		type: 'unknown',
 #end
 #if ($tableColumn.isKey())
-	property${tableColumn.getName().toLowerCase()}.key = 'true';
-	property${tableColumn.getName().toLowerCase()}.required = 'true';
+	key: 'true',
+	required: 'true'
 #end
+	};
     entityMetadata.properties.push(property${tableColumn.getName().toLowerCase()});
 
 #end
@@ -353,7 +368,7 @@ exports.metadata${entityName} = function() {
 	$\.getResponse().getWriter().println(JSON.stringify(entityMetadata));
 };
 
-function getPrimaryKeys(){
+exports.getPrimaryKeys = function() {
     var result = [];
     var i = 0;
 #foreach ($tableColumn in $tableColumns)
@@ -367,72 +382,13 @@ function getPrimaryKeys(){
         throw new Exception("More than one Primary Key is not supported.");
     }
     return result;
-}
+};
 
-function getPrimaryKey(){
-	return getPrimaryKeys()[0].toLowerCase();
-}
+exports.getPrimaryKey = function() {
+	return exports.getPrimaryKeys()[0].toLowerCase();
+};
 
-function pkToSQL(){
-    var pks = getPrimaryKeys();
+exports.pkToSQL = function() {
+    var pks = exports.getPrimaryKeys();
     return pks[0] + " = ?";
-}
-
-exports.process${entityName} = function() {
-	
-	// get method type
-	var method = $\.getRequest().getMethod();
-	method = method.toUpperCase();
-	
-	//get primary keys (one primary key is supported!)
-	var idParameter = getPrimaryKey();
-	
-	// retrieve the id as parameter if exist 
-	var id = xss.escapeSql($\.getRequest().getParameter(idParameter));
-	var count = xss.escapeSql($\.getRequest().getParameter('count'));
-	var metadata = xss.escapeSql($\.getRequest().getParameter('metadata'));
-	var sort = xss.escapeSql($\.getRequest().getParameter('sort'));
-	var limit = xss.escapeSql($\.getRequest().getParameter('limit'));
-	var offset = xss.escapeSql($\.getRequest().getParameter('offset'));
-	var desc = xss.escapeSql($\.getRequest().getParameter('desc'));
-	
-	if (limit === null) {
-		limit = 100;
-	}
-	if (offset === null) {
-		offset = 0;
-	}
-	
-	if(!entityLib.hasConflictingParameters(id, count, metadata)) {
-		// switch based on method type
-		if ((method === 'POST')) {
-			// create
-			exports.create${entityName}();
-		} else if ((method === 'GET')) {
-			// read
-			if (id) {
-				exports.read${entityName}Entity(id);
-			} else if (count !== null) {
-				exports.count${entityName}();
-			} else if (metadata !== null) {
-				exports.metadata${entityName}();
-			} else {
-				exports.read${entityName}List(limit, offset, sort, desc);
-			}
-		} else if ((method === 'PUT')) {
-			// update
-			exports.update${entityName}();    
-		} else if ((method === 'DELETE')) {
-			// delete
-			if(entityLib.isInputParameterValid(idParameter)){
-				exports.delete${entityName}(id);
-			}
-		} else {
-			entityLib.printError($\.getResponse().SC_BAD_REQUEST, 1, "Invalid HTTP Method");
-		}
-	}
-	
-	// flush and close the response
-	$\.getResponse().getWriter().flush();
-	$\.getResponse().getWriter().close();
 };
