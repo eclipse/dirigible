@@ -113,7 +113,7 @@
 		function ManageController($scope, $http){
 			
 			var url = '${serviceFileName}';
-#[[			
+
 			$http.get(url)
 			.success(function(data){
 				$scope.data = data;
@@ -139,33 +139,33 @@
 						$scope.selectedEntry = entry;
 					}
 				}
-			}
+			};
 					
-			$scope.setOperation = function(operation){
-                      switch(operation){
+			$scope.setOperation = function(operation) {
+                      switch (operation) {
                           case 'new':
-                              if($scope.operation != 'new'){
+                              if ($scope.operation !== 'new') {
                                   $scope.operation = 'new';
-                              }else{
+                              } else {
                                   $scope.operation = 'show';
                               }
                               break;
                           case 'update':
-                               if($scope.operation != 'update'){
-                              	 if($scope.selectedEntry){
+                               if ($scope.operation !== 'update') {
+                              	 if ($scope.selectedEntry) {
                                        $scope.operation = 'update';
-                                   }else{
+                                   } else {
                                        alert("Please first select entry for updated");
                                        $scope.operation = 'show';
                                    }
-                              }else{
+                              } else {
                                   $scope.operation = 'show';
                               }
                               break;
                           case 'delete':
-                              if($scope.operation != 'delete'){
+                              if ($scope.operation !== 'delete') {
                                   $scope.operation = 'delete';
-                              }else{
+                              } else {
                                   $scope.operation = 'show';
                               }
                               break;
@@ -173,9 +173,9 @@
                               $scope.operation = 'show';
                               break;
                        }
-            }
+            };
                    
-            $scope.confirmAction = function(){
+            $scope.confirmAction = function() {
                 switch($scope.operation){
                     case 'show':
                         break;
@@ -186,24 +186,24 @@
                         updateEntry($scope.selectedEntry);
                         break;
                 }
-            }
+            };
 
-            $scope.cancelAction = function(){
+            $scope.cancelAction = function() {
                 refreshData();
-            }
+            };
 
-           $scope.delete = function(){
-        	   if($scope.selectedEntry){
+           $scope.delete = function() {
+        	   if($scope.selectedEntry) {
                  	var confirmed = confirm('Do you realy want to delete the selected entry?');
-               	if(confirmed){
-                   	delete $scope.selectedEntry._selected_;
-                       deleteEntry($scope.selectedEntry);
-                       $scope.operation = 'show';
-               	}                    	
-               }else{
+	               	if(confirmed) {
+	                   	delete $scope.selectedEntry._selected_;
+	                       deleteEntry($scope.selectedEntry);
+	                       $scope.operation = 'show';
+	               	}                    	
+               } else {
                    alert('Please select row from the table.');
                }
-           }
+           };
                     
 			function newEntry(entry){
 				delete $scope.newEntry._selected_;
@@ -232,7 +232,7 @@
 					$scope.errorMessage = response.err.message;
 				});
 			}
-]]#					
+
 			function deleteEntry(entry){
 				var primaryKey;
 #foreach ($tableColumn in $tableColumns) 
@@ -249,7 +249,7 @@
 				})
 				.error(function(response){
 					$scope.errorMessage = response.err.message;
-				})
+				});
 			}
                     
 			function refreshData(){
