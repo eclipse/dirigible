@@ -75,7 +75,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 	@Override
 	public Object executeServiceModule(HttpServletRequest request, HttpServletResponse response,
 			String module, Map<Object, Object> executionContext) throws IOException {
-		return executeServiceModule(request, response, request.getInputStream(), module, executionContext);
+		return executeServiceModule(request, response, request == null ? null : request.getInputStream(), module, executionContext);
 	}
 
 	protected abstract Object executeServiceModule(HttpServletRequest request,
