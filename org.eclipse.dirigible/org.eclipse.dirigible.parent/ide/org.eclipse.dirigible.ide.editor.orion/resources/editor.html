@@ -49,6 +49,16 @@ function createEditor(content, contentType) {
                     saveCalled();
                     return true;
                 });
+                
+                // breakpoints callback
+                var ruler = editorViewer.editor._annotationRuler;
+                var oldDblClick = ruler.onDblClick;
+                var addRemoveBookmark = function(lineIndex, e) {
+                	console.log(lineIndex);
+                	oldDblClick.apply(ruler, [lineIndex, e]);
+                }
+                ruler.onDblClick = addRemoveBookmark;
+                
             });
     });
 }
