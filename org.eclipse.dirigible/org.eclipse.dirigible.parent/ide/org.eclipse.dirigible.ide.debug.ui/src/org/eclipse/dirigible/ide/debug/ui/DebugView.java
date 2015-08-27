@@ -21,6 +21,24 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.debug.model.DebugModel;
+import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
+import org.eclipse.dirigible.ide.debug.model.IDebugController;
+import org.eclipse.dirigible.ide.editor.js.JavaScriptEditor;
+import org.eclipse.dirigible.ide.editor.orion.OrionEditor;
+import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
+import org.eclipse.dirigible.ide.workspace.ui.commands.OpenHandler;
+import org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
+import org.eclipse.dirigible.repository.ext.debug.BreakpointsMetadata;
+import org.eclipse.dirigible.repository.ext.debug.DebugConstants;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionMetadata;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionsMetadata;
+import org.eclipse.dirigible.repository.ext.debug.IDebugProtocol;
+import org.eclipse.dirigible.repository.ext.debug.VariableValuesMetadata;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -55,23 +73,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.ServiceReference;
 
 import com.google.gson.Gson;
-import org.eclipse.dirigible.ide.common.CommonUtils;
-import org.eclipse.dirigible.ide.debug.model.DebugModel;
-import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
-import org.eclipse.dirigible.ide.debug.model.IDebugController;
-import org.eclipse.dirigible.ide.editor.js.JavaScriptEditor;
-import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
-import org.eclipse.dirigible.ide.workspace.ui.commands.OpenHandler;
-import org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView;
-import org.eclipse.dirigible.repository.api.ICommonConstants;
-import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
-import org.eclipse.dirigible.repository.ext.debug.BreakpointsMetadata;
-import org.eclipse.dirigible.repository.ext.debug.DebugConstants;
-import org.eclipse.dirigible.repository.ext.debug.DebugSessionMetadata;
-import org.eclipse.dirigible.repository.ext.debug.DebugSessionsMetadata;
-import org.eclipse.dirigible.repository.ext.debug.IDebugProtocol;
-import org.eclipse.dirigible.repository.ext.debug.VariableValuesMetadata;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DebugView extends ViewPart implements IDebugController, IPropertyListener {
 	private static final String INTERNAL_ERROR_DEBUG_BRIDGE_IS_NOT_PRESENT = "Internal error - DebugBridge is not present";
@@ -669,8 +670,10 @@ public class DebugView extends ViewPart implements IDebugController, IPropertyLi
 
 	private IEditorPart openWorkspaceFile(int row, IFile file) {
 		IEditorPart sourceCodeEditor = OpenHandler.open(file, row);
-		if (sourceCodeEditor != null && sourceCodeEditor instanceof JavaScriptEditor) {
+		if ((sourceCodeEditor != null) && (sourceCodeEditor instanceof JavaScriptEditor)) {
 			((JavaScriptEditor) sourceCodeEditor).setDebugRow(row);
+		} else if ((sourceCodeEditor != null) && (sourceCodeEditor instanceof OrionEditor)) {
+			((OrionEditor) sourceCodeEditor).setDebugRow(row);
 		}
 		return sourceCodeEditor;
 	}
