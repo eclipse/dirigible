@@ -24,7 +24,11 @@
         <script>
 // this needs to be in the global scope
 editor = null;
-function createEditor(content, contentType) {
+breakpointsEnabled = false;
+
+function createEditor(content, contentType, readOnlyStatus, breakpointsEnabledStatus, row) {
+	setBreakpointsEnabled(breakpointsEnabledStatus);
+	
     require(["code_edit/built-codeEdit", "orion/keyBinding"], function(widget, mKeyBinding) {
         var codeEdit = new widget();
         codeEdit.create({parent: "embeddedEditor", contentType: contentType, contents: content})
@@ -49,22 +53,39 @@ function createEditor(content, contentType) {
                     saveCalled();
                     return true;
                 });
-                
-                // breakpoints callback
-                var ruler = editorViewer.editor._annotationRuler;
+                var ruler = editor._annotationRuler;
                 var oldDblClick = ruler.onDblClick;
                 var addRemoveBookmark = function(lineIndex, e) {
-                	console.log(lineIndex);
-                	oldDblClick.apply(ruler, [lineIndex, e]);
+	                if(typeof(Storage) === "undefined") {
+	                	alert("Session storage is not available!")
+	                } else if (getBreakpointsEnabled()) {
+                		var breakpointsArray;
+	                	if (sessionStorage.breakpoints) {
+	                		breakpointsArray = JSON.parse(sessionStorage.breakpoints)
+	                		var index = breakpointsArray.indexOf(lineIndex);
+	                		if (index > -1) {
+	                			breakpointsArray.splice(index, 1);
+	                		    clearBreakpoint(lineIndex);
+	                		} else {
+	                			breakpointsArray.push(lineIndex);
+	                			setBreakpoint(lineIndex);
+	                		}
+	                	} else {
+	                		breakpointsArray = [];
+	                		breakpointsArray.push(lineIndex);
+	                	    setBreakpoint(lineIndex);
+	                	}
+                	    sessionStorage.breakpoints = JSON.stringify(breakpointsArray);
+	               		oldDblClick.apply(ruler, [lineIndex, e]);
+	                }
                 }
                 ruler.onDblClick = addRemoveBookmark;
-                
             });
     });
 }
 
-function setText(text, mode, readOnlyStatus, breakpointsenabledStatus, row) {
-    createEditor(text, mode);
+function setText(text, mode, readOnlyStatus, breakpointsEnabledStatus, row) {
+    createEditor(text, mode, readOnlyStatus, breakpointsEnabledStatus, row);
 }
 
 function getText() {
@@ -74,7 +95,15 @@ function getText() {
 function setReadOnly(status) {
     editor.setReadOnly(status);
 }
-        </script>
+
+function getBreakpointsEnabled() {
+    return breakpointsEnabled;
+}
+
+function setBreakpointsEnabled(status) {
+	breakpointsEnabled = status;
+}
+</script>
     </head>
     <body id="orion-browser" spellcheck="false" class="orionPage">
         <div class="demoBody" id="embeddedEditor"></div>
