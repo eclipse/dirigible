@@ -66,8 +66,40 @@ function createEditor(content, contentType, readOnlyStatus, breakpointsEnabledSt
                 	handleAddRemoveBreakpoint(lineIndex);
                 	oldDblClickAnnotationRuler.apply(annotationRuler, [lineIndex, e]);
                 };
+                if(getBreakpointsEnabled()) {
+	                editor.setCaretOffset(editor.getLineStart(0));
+                }
             });
     });
+}
+
+function getText() {
+    return editor.getText();
+}
+
+function setText(text, mode, readOnlyStatus, breakpointsEnabledStatus, row) {
+    createEditor(text, mode, readOnlyStatus, breakpointsEnabledStatus, row);
+}
+
+function setReadOnly(status) {
+    editor.setReadOnly(status);
+}
+
+function getBreakpointsEnabled() {
+    return breakpointsEnabled;
+}
+
+function setBreakpointsEnabled(status) {
+	breakpointsEnabled = status;
+}
+
+function loadBreakpoint(breakpoint) {
+	handleAddRemoveBreakpoint(breakpoint);
+}
+
+
+function setDebugRow(row) {
+	editor.setCaretOffset(editor.getLineStart(row));
 }
 
 function handleAddRemoveBreakpoint(lineIndex) {
@@ -92,26 +124,6 @@ function handleAddRemoveBreakpoint(lineIndex) {
     	}
 	    sessionStorage.breakpoints = JSON.stringify(breakpointsArray);
     }
-}
-
-function setText(text, mode, readOnlyStatus, breakpointsEnabledStatus, row) {
-    createEditor(text, mode, readOnlyStatus, breakpointsEnabledStatus, row);
-}
-
-function getText() {
-    return editor.getText();
-}
-
-function setReadOnly(status) {
-    editor.setReadOnly(status);
-}
-
-function getBreakpointsEnabled() {
-    return breakpointsEnabled;
-}
-
-function setBreakpointsEnabled(status) {
-	breakpointsEnabled = status;
 }
 </script>
     </head>
