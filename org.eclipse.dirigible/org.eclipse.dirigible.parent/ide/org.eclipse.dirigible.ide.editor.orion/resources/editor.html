@@ -34,6 +34,7 @@ function createEditor(content, contentType, readOnlyStatus, breakpointsEnabledSt
         codeEdit.create({parent: "embeddedEditor", contentType: contentType, contents: content})
             .then(function(editorViewer) {
                 editor = editorViewer.editor;
+                editor.setAnnotationRulerVisible(getBreakpointsEnabled());
                 var savedText = content;
                 var isDirty = false;
                 editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("s", true), "save");
@@ -53,35 +54,44 @@ function createEditor(content, contentType, readOnlyStatus, breakpointsEnabledSt
                     saveCalled();
                     return true;
                 });
-                var ruler = editor._annotationRuler;
-                var oldDblClick = ruler.onDblClick;
-                var addRemoveBookmark = function(lineIndex, e) {
-	                if(typeof(Storage) === "undefined") {
-	                	alert("Session storage is not available!")
-	                } else if (getBreakpointsEnabled()) {
-                		var breakpointsArray;
-	                	if (sessionStorage.breakpoints) {
-	                		breakpointsArray = JSON.parse(sessionStorage.breakpoints)
-	                		var index = breakpointsArray.indexOf(lineIndex);
-	                		if (index > -1) {
-	                			breakpointsArray.splice(index, 1);
-	                		    clearBreakpoint(lineIndex);
-	                		} else {
-	                			breakpointsArray.push(lineIndex);
-	                			setBreakpoint(lineIndex);
-	                		}
-	                	} else {
-	                		breakpointsArray = [];
-	                		breakpointsArray.push(lineIndex);
-	                	    setBreakpoint(lineIndex);
-	                	}
-                	    sessionStorage.breakpoints = JSON.stringify(breakpointsArray);
-	               		oldDblClick.apply(ruler, [lineIndex, e]);
-	                }
-                }
-                ruler.onDblClick = addRemoveBookmark;
+                var lineNumberRuler = editor._lineNumberRuler;
+                var oldDblClickLineNumberRuler = lineNumberRuler.onDblClick;
+                lineNumberRuler.onDblClick = function(lineIndex, e) {
+                	handleAddRemoveBreakpoint(lineIndex);
+                	oldDblClickLineNumberRuler.apply(lineNumberRuler, [lineIndex, e]);
+                };
+                var annotationRuler = editor._annotationRuler;
+                var oldDblClickAnnotationRuler = annotationRuler.onDblClick;
+                annotationRuler.onDblClick = function(lineIndex, e) {
+                	handleAddRemoveBreakpoint(lineIndex);
+                	oldDblClickAnnotationRuler.apply(annotationRuler, [lineIndex, e]);
+                };
             });
     });
+}
+
+function handleAddRemoveBreakpoint(lineIndex) {
+	if(typeof(Storage) === "undefined") {
+    	alert("Session storage is not available!")
+    } else if (getBreakpointsEnabled()) {
+		var breakpointsArray;
+    	if (sessionStorage.breakpoints) {
+    		breakpointsArray = JSON.parse(sessionStorage.breakpoints)
+    		var index = breakpointsArray.indexOf(lineIndex);
+    		if (index > -1) {
+    			breakpointsArray.splice(index, 1);
+    		    clearBreakpoint(lineIndex);
+    		} else {
+    			breakpointsArray.push(lineIndex);
+    			setBreakpoint(lineIndex);
+    		}
+    	} else {
+    		breakpointsArray = [];
+    		breakpointsArray.push(lineIndex);
+    	    setBreakpoint(lineIndex);
+    	}
+	    sessionStorage.breakpoints = JSON.stringify(breakpointsArray);
+    }
 }
 
 function setText(text, mode, readOnlyStatus, breakpointsEnabledStatus, row) {
