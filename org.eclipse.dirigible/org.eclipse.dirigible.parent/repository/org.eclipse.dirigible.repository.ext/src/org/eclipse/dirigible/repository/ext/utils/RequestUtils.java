@@ -29,7 +29,10 @@ public class RequestUtils {
 					user = request.getUserPrincipal().getName();
 				} else {
 					if (!isRolesEnabled(request)) {
-						user = getCookieValue(request, ICommonConstants.COOKIE_ANONYMOUS_USER);
+						String fromCookie = getCookieValue(request, ICommonConstants.COOKIE_ANONYMOUS_USER);
+						if (fromCookie != null) {
+							user = fromCookie;
+						}
 					}
 				}
 			}
