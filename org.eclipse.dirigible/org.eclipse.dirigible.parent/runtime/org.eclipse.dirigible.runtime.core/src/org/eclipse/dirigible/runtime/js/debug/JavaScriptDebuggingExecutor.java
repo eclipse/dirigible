@@ -14,13 +14,12 @@ package org.eclipse.dirigible.runtime.js.debug;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ErrorReporter;
-
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.ext.debug.IDebugProtocol;
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.js.JavaScriptExecutor;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ErrorReporter;
 
 public class JavaScriptDebuggingExecutor extends JavaScriptExecutor {
 
@@ -33,12 +32,12 @@ public class JavaScriptDebuggingExecutor extends JavaScriptExecutor {
 		super(repository, rootPath, secondaryRootPath);
 	}
 
-	private IDebugProtocol debugProtocol;
+	private DebugModel debugModel;
 
 	public JavaScriptDebuggingExecutor(IRepository repository, String rootPath,
-			String secondaryRootPath, IDebugProtocol debugProtocol) {
+			String secondaryRootPath, DebugModel debugModel) {
 		super(repository, rootPath, secondaryRootPath);
-		this.debugProtocol = debugProtocol;
+		this.debugModel = debugModel;
 	}
 
 	protected void beforeExecution(HttpServletRequest request, HttpServletResponse response,
@@ -48,7 +47,7 @@ public class JavaScriptDebuggingExecutor extends JavaScriptExecutor {
 		context.setErrorReporter(reporter);
 
 		logger.debug("creating JavaScriptDebugger");
-		JavaScriptDebugger debugger = new JavaScriptDebugger(debugProtocol, request);
+		JavaScriptDebugger debugger = new JavaScriptDebugger(debugModel, request);
 		context.setDebugger(debugger, JAVA_SCRIPT_DEBUGGER);
 		logger.debug("created JavaScriptDebugger");
 

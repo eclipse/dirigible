@@ -17,12 +17,12 @@ import java.util.Map;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.CommonUtils;
-import org.eclipse.dirigible.ide.debug.model.DebugModel;
 import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
 import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
 import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -83,15 +83,14 @@ public class EditorWidget extends AbstractTextEditorWidget {
 				loaded = true;
 				updateWidgetContents();
 				if (javaScriptEditor) {
-					final DebugModel debugModel = DebugModelFacade.getActiveDebugModel();
+					final DebugSessionModel session = DebugModelFacade.getDebugModel().getActiveSession();
 
-					if (debugModel != null
-							&& debugModel.getCurrentLineBreak() != null) {
-						final String filePath = debugModel.getCurrentLineBreak().getFullPath();
+					if (session != null
+							&& session.getCurrentLineBreak() != null) {
+						final String filePath = session.getCurrentLineBreak().getBreakpoint().getFullPath();
 						final String path = CommonUtils.formatToRuntimePath(
 								ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, filePath);
-						final int[] breakpoints = debugModel.getBreakpointsMetadata()
-								.getBreakpoints(path);
+						final int[] breakpoints = DebugModelFacade.getDebugModel().getBreakpointsMetadata().getBreakpoints(path);
 
 						loadBreakpoints(breakpoints);
 					}

@@ -11,7 +11,6 @@
 
 package org.eclipse.dirigible.runtime.js.debug;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +21,15 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
-import org.eclipse.dirigible.repository.ext.debug.BreakpointsMetadata;
-import org.eclipse.dirigible.repository.ext.debug.DebugConstants;
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
 import org.eclipse.dirigible.repository.ext.debug.DebugSessionMetadata;
-import org.eclipse.dirigible.repository.ext.debug.IDebugProtocol;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
+import org.eclipse.dirigible.repository.ext.debug.IDebugExecutor.DebugCommand;
+import org.eclipse.dirigible.repository.ext.debug.LinebreakMetadata;
 import org.eclipse.dirigible.repository.ext.debug.VariableValue;
 import org.eclipse.dirigible.repository.ext.debug.VariableValuesMetadata;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.js.debug.IDebugCommands.DebugCommand;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaObject;
@@ -42,7 +41,7 @@ import org.mozilla.javascript.debug.DebuggableScript;
 
 import com.google.gson.Gson;
 
-public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener {
+public class JavaScriptDebugFrame implements DebugFrame {
 	private static final String NULL = "null";
 
 	private static final String NATIVE = "native";
@@ -54,53 +53,71 @@ public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener 
 	private static final Logger logger = Logger.getLogger(JavaScriptDebugFrame.class);
 
 	private static final int SLEEP_TIME = 50;
-	private DebuggerActionManager debuggerActionManager;
+//	private DebuggerActionManager debuggerActionManager;
 	private DebuggerActionCommander debuggerActionCommander;
 	private Stack<DebuggableScript> scriptStack;
 	private Stack<Scriptable> activationStack;
 	private int stepOverLineNumber = 0;
 	private int previousLineNumber = 0;
 	private boolean stepOverFinished = true;
-	private IDebugProtocol debugProtocol;
-	private VariableValuesMetadata variableValuesMetadata;
+	private DebugModel debugModel;
+//	private VariableValuesMetadata variableValuesMetadata;
+	
+	private DebugSessionModel session;
 
-	public JavaScriptDebugFrame(IDebugProtocol debugProtocol, HttpServletRequest request,
+	public JavaScriptDebugFrame(DebugModel debugModel, HttpServletRequest request,
 			JavaScriptDebugger javaScriptDebugger) {
 		// get the instance of debugger action manager from the session
 
 		logDebug("entering JavaScriptDebugFrame.constructor");
 
-		this.debuggerActionManager = DebuggerActionManager.getInstance(request.getSession(true));
+//		this.debuggerActionManager = DebuggerActionManager.getInstance(request.getSession());
 
+		this.debugModel = debugModel;
+		
 		// create a new instance of commander per frame
+		String sessionId = request.getSession().getId();
 		String executionId = UUID.randomUUID().toString();
 		String userId = RequestUtils.getUser(request);
-		this.debuggerActionCommander = new DebuggerActionCommander(this.debuggerActionManager,
-				executionId, userId);
+		
+		this.session =  this.debugModel.createSession();
+		
+		this.debuggerActionCommander = new DebuggerActionCommander(this.session, sessionId, executionId, userId);
+		
+		this.session.setDebugExecutor(getDebuggerActionCommander());
 
 		this.debuggerActionCommander.init();
 		this.debuggerActionCommander.setDebugFrame(this);
 		this.debuggerActionCommander.setDebugger(javaScriptDebugger);
 
-		this.debugProtocol = debugProtocol;
-		this.debugProtocol.addPropertyChangeListener(this);
+		
 
 		this.scriptStack = new Stack<DebuggableScript>();
 		this.activationStack = new Stack<Scriptable>();
 
-		registerDebugFrame();
+		this.debugModel.getDebugController().register(session);
+		
+//		registerDebugFrame();
 
 		logDebug("exiting JavaScriptDebugFrame.constructor");
 	}
-
-	private void registerDebugFrame() {
-		logDebug("entering JavaScriptDebugFrame.registerDebugFrame");
-		String commandBody = new Gson().toJson(new DebugSessionMetadata(
-				getDebuggerActionCommander().getSessionId(), getDebuggerActionCommander()
-						.getExecutionId(), getDebuggerActionCommander().getUserId()));
-		send(DebugConstants.VIEW_REGISTER, commandBody);
-		logDebug("exiting JavaScriptDebugFrame.registerDebugFrame");
+	
+	public DebugModel getDebugModel() {
+		return debugModel;
 	}
+
+//	private void registerDebugFrame() {
+////		logDebug("entering JavaScriptDebugFrame.registerDebugFrame");
+////		String commandBody = new Gson().toJson(new DebugSessionMetadata(
+////				getDebuggerActionCommander().getSessionId(), getDebuggerActionCommander()
+////						.getExecutionId(), getDebuggerActionCommander().getUserId()));
+////		send(DebugConstants.VIEW_REGISTER, commandBody);
+//		
+//		this.session =  this.debugModel.createSession();
+//		session.setDebugExecutor(getDebuggerActionCommander());
+//		
+//		logDebug("exiting JavaScriptDebugFrame.registerDebugFrame");
+//	}
 
 	@Override
 	public void onEnter(Context context, Scriptable activation, Scriptable thisObj, Object[] args) {
@@ -128,7 +145,6 @@ public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener 
 		scriptStack.pop();
 		activationStack.pop();
 		if (scriptStack.isEmpty()) {
-			this.debugProtocol.removePropertyChangeListener(this);
 			this.debuggerActionCommander.clean();
 			DebuggerActionCommander commander = getDebuggerActionCommander();
 			DebugSessionMetadata metadata = new DebugSessionMetadata(commander.getSessionId(),
@@ -145,23 +161,24 @@ public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener 
 	}
 
 	private void finishDebugSession(DebugSessionMetadata metadata) {
-		String json = new Gson().toJson(metadata);
-		send(DebugConstants.VIEW_FINISH, json);
+//		String json = new Gson().toJson(metadata);
+//		send(DebugConstants.VIEW_FINISH, json);
+		this.session.getDebugController().finish(this.session);
 	}
 
 	private void clearVariables() {
-		if (variableValuesMetadata != null) {
-			variableValuesMetadata.getVariableValueList().clear();
-			sendVariableValuesMetadata();
+		if (this.session.getVariableValuesMetadata() != null) {
+			this.session.getVariableValuesMetadata().getVariableValueList().clear();
+			notifyVariableValuesMetadata();
 		}
 	}
 	
-	private void clearBreakpoints() {
-		if (debuggerActionManager.getBreakpoints() != null) {
-			debuggerActionManager.getBreakpoints().clear();
-			sendBreakpointsMetadata();
-		}
-	}
+//	private void clearBreakpoints() {
+//		if (debuggerActionManager.getBreakpoints() != null) {
+//			debuggerActionManager.getBreakpoints().clear();
+////			sendBreakpointsMetadata();
+//		}
+//	}
 
 	@Override
 	public void onDebuggerStatement(Context context) {
@@ -244,10 +261,10 @@ public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener 
 	private boolean isBreakpoint(int row) {
 		String path = scriptStack.peek().getSourceName();
 		DebuggerActionCommander commander = getDebuggerActionCommander();
-		BreakpointMetadata breakpoint = new BreakpointMetadata(commander.getSessionId(),
+		LinebreakMetadata breakpoint = new LinebreakMetadata(commander.getSessionId(),
 				commander.getExecutionId(), commander.getUserId(), path, row);
 		Set<BreakpointMetadata> breakpoints = debuggerActionCommander.getBreakpoints();
-		return breakpoints.contains(breakpoint);
+		return breakpoints.contains(breakpoint.getBreakpoint());
 	}
 
 	private void print(int row) {
@@ -264,12 +281,12 @@ public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener 
 				variableValuesList.add(new VariableValue(variable, valueContent));
 			}
 		}
-		if (variableValuesMetadata == null) {
-			variableValuesMetadata = new VariableValuesMetadata(commander.getSessionId(),
+//		if (variableValuesMetadata == null) {
+		VariableValuesMetadata variableValuesMetadata = new VariableValuesMetadata(commander.getSessionId(),
 					commander.getExecutionId(), commander.getUserId(), variableValuesList);
-		}
-		variableValuesMetadata.setVariableValueList(variableValuesList);
-		sendVariableValuesMetadata();
+//		}
+		this.session.setVariableValuesMetadata(variableValuesMetadata);
+		notifyVariableValuesMetadata();
 		String sourceName = script.getSourceName();
 		sendOnBreakLineChange(sourceName, row);
 	}
@@ -300,88 +317,90 @@ public class JavaScriptDebugFrame implements DebugFrame, PropertyChangeListener 
 		return result;
 	}
 
-	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-		String commandId = event.getPropertyName();
-		String clientId = (String) event.getOldValue();
-		String commandBody = (String) event.getNewValue();
-		logDebug("JavaScriptDebugFrame propertyChange() command: " + commandId + ", clientId: "
-				+ clientId + ", body: " + commandBody);
+//	@Override
+//	public void propertyChange(PropertyChangeEvent event) {
+//		String commandId = event.getPropertyName();
+//		String clientId = (String) event.getOldValue();
+//		String commandBody = (String) event.getNewValue();
+//		logDebug("JavaScriptDebugFrame propertyChange() command: " + commandId + ", clientId: "
+//				+ clientId + ", body: " + commandBody);
+//
+//		if (clientId == null || !clientId.equals(getDebuggerActionCommander().getExecutionId())) {
+//			// skip as the command is not for the current frame
+//			return;
+//		}
+//
+//		Gson gson = new Gson();
+//		if (commandId.startsWith(DebugConstants.DEBUG)) {
+//			if (commandId.equals(DebugConstants.DEBUG_REFRESH)) {
+//				sendBreakpointsMetadata();
+//				notifyVariableValuesMetadata();
+//			} else if (commandId.equals(DebugConstants.DEBUG_STEP_INTO)) {
+//				debuggerActionCommander.stepInto();
+//				debuggerActionCommander.resumeExecution();
+//			} else if (commandId.equals(DebugConstants.DEBUG_STEP_OVER)) {
+//				debuggerActionCommander.stepOver();
+//				debuggerActionCommander.resumeExecution();
+//			} else if (commandId.equals(DebugConstants.DEBUG_CONTINUE)) {
+//				debuggerActionCommander.continueExecution();
+//				debuggerActionCommander.resumeExecution();
+//			} else if (commandId.equals(DebugConstants.DEBUG_SKIP_ALL_BREAKPOINTS)) {
+//				debuggerActionCommander.skipAllBreakpoints();
+//				debuggerActionCommander.resumeExecution();
+//			} else if (commandId.equals(DebugConstants.DEBUG_SET_BREAKPOINT)) {
+//				BreakpointMetadata breakpoint = gson
+//						.fromJson(commandBody, BreakpointMetadata.class);
+//				debuggerActionCommander.addBreakpoint(breakpoint);
+//				sendBreakpointsMetadata();
+//			} else if (commandId.equals(DebugConstants.DEBUG_CLEAR_BREAKPOINT)) {
+//				BreakpointMetadata breakpoint = gson
+//						.fromJson(commandBody, BreakpointMetadata.class);
+//				debuggerActionCommander.clearBreakpoint(breakpoint);
+//				sendBreakpointsMetadata();
+//			} else if (commandId.equals(DebugConstants.DEBUG_CLEAR_ALL_BREAKPOINTS)) {
+//				debuggerActionCommander.clearAllBreakpoints();
+////				sendBreakpointsMetadata();
+//			} else if (commandId.equals(DebugConstants.DEBUG_CLEAR_ALL_BREAKPOINTS_FOR_FILE)) {
+//				String path = commandBody;
+//				debuggerActionCommander.clearAllBreakpoints(path);
+////				sendBreakpointsMetadata();
+//			} 
+//		}
+//	}
 
-		if (clientId == null || !clientId.equals(getDebuggerActionCommander().getExecutionId())) {
-			// skip as the command is not for the current frame
-			return;
-		}
-
-		Gson gson = new Gson();
-		if (commandId.startsWith(DebugConstants.DEBUG)) {
-			if (commandId.equals(DebugConstants.DEBUG_REFRESH)) {
-				sendBreakpointsMetadata();
-				sendVariableValuesMetadata();
-			} else if (commandId.equals(DebugConstants.DEBUG_STEP_INTO)) {
-				debuggerActionCommander.stepInto();
-				debuggerActionCommander.resumeExecution();
-			} else if (commandId.equals(DebugConstants.DEBUG_STEP_OVER)) {
-				debuggerActionCommander.stepOver();
-				debuggerActionCommander.resumeExecution();
-			} else if (commandId.equals(DebugConstants.DEBUG_CONTINUE)) {
-				debuggerActionCommander.continueExecution();
-				debuggerActionCommander.resumeExecution();
-			} else if (commandId.equals(DebugConstants.DEBUG_SKIP_ALL_BREAKPOINTS)) {
-				debuggerActionCommander.skipAllBreakpoints();
-				debuggerActionCommander.resumeExecution();
-			} else if (commandId.equals(DebugConstants.DEBUG_SET_BREAKPOINT)) {
-				BreakpointMetadata breakpoint = gson
-						.fromJson(commandBody, BreakpointMetadata.class);
-				debuggerActionCommander.addBreakpoint(breakpoint);
-				sendBreakpointsMetadata();
-			} else if (commandId.equals(DebugConstants.DEBUG_CLEAR_BREAKPOINT)) {
-				BreakpointMetadata breakpoint = gson
-						.fromJson(commandBody, BreakpointMetadata.class);
-				debuggerActionCommander.clearBreakpoint(breakpoint);
-				sendBreakpointsMetadata();
-			} else if (commandId.equals(DebugConstants.DEBUG_CLEAR_ALL_BREAKPOINTS)) {
-				debuggerActionCommander.clearAllBreakpoints();
-				sendBreakpointsMetadata();
-			} else if (commandId.equals(DebugConstants.DEBUG_CLEAR_ALL_BREAKPOINTS_FOR_FILE)) {
-				String path = commandBody;
-				debuggerActionCommander.clearAllBreakpoints(path);
-				sendBreakpointsMetadata();
-			} 
-		}
-	}
-
-	private void sendVariableValuesMetadata() {
-		if (variableValuesMetadata != null) {
-			Gson gson = new Gson();
-			String variableValuesJson = gson.toJson(variableValuesMetadata);
-			send(DebugConstants.VIEW_VARIABLE_VALUES, variableValuesJson);
+	private void notifyVariableValuesMetadata() {
+		if (this.session.getVariableValuesMetadata() != null) {
+//			Gson gson = new Gson();
+//			String variableValuesJson = gson.toJson(variableValuesMetadata);
+//			send(DebugConstants.VIEW_VARIABLE_VALUES, variableValuesJson);
+//			this.session.setUpdated(true);
+			this.session.getDebugController().refreshVariables();
 		} 
 	}
 
 	private void sendOnBreakLineChange(String path, Integer row) {
 		DebuggerActionCommander commander = getDebuggerActionCommander();
-		BreakpointMetadata breakLine = new BreakpointMetadata(commander.getSessionId(),
+		LinebreakMetadata currentLineBreak = new LinebreakMetadata(commander.getSessionId(),
 				commander.getExecutionId(), commander.getUserId(), path, row);
-		Gson gson = new Gson();
-		String variableValuesJson = gson.toJson(breakLine);
-		send(DebugConstants.VIEW_ON_LINE_CHANGE, variableValuesJson);
+//		Gson gson = new Gson();
+//		String variableValuesJson = gson.toJson(breakLine);
+//		send(DebugConstants.VIEW_ON_LINE_CHANGE, variableValuesJson);
+		
+//		this.session.setUpdated(true);
+		this.session.setCurrentLineBreak(currentLineBreak);
+		this.session.getDebugController().onLineChange(currentLineBreak, this.session);
 	}
 
-	private void sendBreakpointsMetadata() {
-		Set<BreakpointMetadata> breakpoints = debuggerActionCommander.getBreakpoints();
-		DebuggerActionCommander commander = getDebuggerActionCommander();
-		BreakpointsMetadata metadata = new BreakpointsMetadata(commander.getSessionId(),
-				commander.getExecutionId(), commander.getUserId(), breakpoints);
-		String json = new Gson().toJson(metadata);
-		send(DebugConstants.VIEW_BREAKPOINT_METADATA, json);
-	}
-
-	public void send(String commandId, String commandBody) {
-		logDebug("JavaScriptDebugFrame send() command: " + commandId + ", body: " + commandBody);
-		DebugProtocolUtils.send(this.debugProtocol, commandId, getDebuggerActionCommander()
-				.getExecutionId(), commandBody);
-	}
+//	private void sendBreakpointsMetadata() {
+//		Set<BreakpointMetadata> breakpoints = debuggerActionCommander.getBreakpoints();
+//		DebuggerActionCommander commander = getDebuggerActionCommander();
+//		BreakpointsMetadata metadata = new BreakpointsMetadata(commander.getSessionId(),
+//				commander.getExecutionId(), commander.getUserId(), breakpoints);
+////		String json = new Gson().toJson(metadata);
+////		send(DebugConstants.VIEW_BREAKPOINT_METADATA, json);
+//		
+//		
+//	}
 
 	public DebuggerActionCommander getDebuggerActionCommander() {
 		return debuggerActionCommander;

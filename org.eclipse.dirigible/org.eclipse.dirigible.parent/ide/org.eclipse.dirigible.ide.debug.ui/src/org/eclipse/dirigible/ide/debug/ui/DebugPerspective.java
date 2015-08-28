@@ -19,7 +19,7 @@ import org.eclipse.dirigible.ide.workspace.ui.perspective.WorkspacePerspective;
 
 public class DebugPerspective implements IPerspectiveFactory {
 
-	private static final String PERSPECTIVE_ID = "debug"; //$NON-NLS-1$
+	public static final String PERSPECTIVE_ID = "debug"; //$NON-NLS-1$
 
 	private static final String DEBUG_VIEW_ID = "org.eclipse.dirigible.ide.debug.ui.DebugView"; //$NON-NLS-1$
 
@@ -35,8 +35,7 @@ public class DebugPerspective implements IPerspectiveFactory {
 		layout.getViewLayout(WorkspacePerspective.WORKSPACE_EXPLORER_VIEW_ID).setCloseable(false);
 		
 		// Top
-		IFolderLayout top = layout.createFolder(
-						"top", IPageLayout.TOP, 0.20f, editorArea); //$NON-NLS-1$
+		IFolderLayout top = layout.createFolder("top", IPageLayout.TOP, 0.20f, editorArea); //$NON-NLS-1$
 				
 		top.addView(DEBUG_VIEW_ID);
 		layout.getViewLayout(DEBUG_VIEW_ID).setCloseable(false);
@@ -53,4 +52,6 @@ public class DebugPerspective implements IPerspectiveFactory {
 
 	}
 
+	
+	
 }

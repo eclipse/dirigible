@@ -11,19 +11,15 @@
 
 package org.eclipse.dirigible.repository.ext.debug;
 
-public class BreakpointMetadata extends DebugSessionMetadata implements Comparable<BreakpointMetadata> {
+public class BreakpointMetadata implements Comparable<BreakpointMetadata> {
 	
 	private static final String SLASH = "/";
 	private static final String ROW_D_PATH_S = "[row: %d | full path: %s]";
 	private String fullPath;
 	private Integer row;
 	
-	public BreakpointMetadata(String sessionId, String executionId, String userId) {
-		super(sessionId, executionId, userId);
-	}
-
-	public BreakpointMetadata(String sessionId, String executionId, String userId, String fullPath, Integer row) {
-		super(sessionId, executionId, userId);
+	public BreakpointMetadata(String fullPath, Integer row) {
+		super();
 		this.fullPath = fullPath;
 		this.row = row;
 	}

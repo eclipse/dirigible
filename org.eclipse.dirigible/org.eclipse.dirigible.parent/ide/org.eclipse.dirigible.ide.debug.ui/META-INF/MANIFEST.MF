@@ -23,6 +23,8 @@ Require-Bundle: org.eclipse.rap.ui,
  com.google.gson
 Export-Package: org.eclipse.dirigible.ide.debug.ui
 Import-Package: javax.servlet,
- javax.servlet.http
+ javax.servlet.http,
+ org.eclipse.dirigible.runtime.js.debug,
+ org.eclipse.dirigible.runtime.scripting
 Bundle-Activator: org.eclipse.dirigible.ide.debug.ui.DebugUIActivator
 Bundle-ClassPath: .

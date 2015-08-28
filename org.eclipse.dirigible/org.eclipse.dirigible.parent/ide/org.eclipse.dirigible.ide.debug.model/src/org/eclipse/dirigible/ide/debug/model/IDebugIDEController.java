@@ -11,30 +11,11 @@
 
 package org.eclipse.dirigible.ide.debug.model;
 
-import java.beans.PropertyChangeListener;
-
+import org.eclipse.dirigible.repository.ext.debug.IDebugController;
 import org.eclipse.ui.IEditorPart;
 
-public interface IDebugController extends PropertyChangeListener {
+public interface IDebugIDEController extends IDebugController {
 	
-	public void refresh(DebugModel debugModel);
-
-	public void stepInto(DebugModel debugModel);
-
-	public void stepOver(DebugModel debugModel);
-
-	public void continueExecution(DebugModel debugModel);
-
-	public void skipAllBreakpoints(DebugModel debugModel);
-
 	public IEditorPart openEditor(String path, int row);
-
-	public void setBreakpoint(DebugModel debugModel, String path, int row);
-
-	public void clearBreakpoint(DebugModel debugModel, String path, int row);
-
-	public void clearAllBreakpoints(DebugModel debugModel);
-
-	public void clearAllBreakpoints(DebugModel debugModel, String path);
 
 }

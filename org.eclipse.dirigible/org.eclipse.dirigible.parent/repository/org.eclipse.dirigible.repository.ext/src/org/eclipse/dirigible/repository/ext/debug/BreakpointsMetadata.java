@@ -13,21 +13,23 @@ package org.eclipse.dirigible.repository.ext.debug;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class BreakpointsMetadata extends DebugSessionMetadata {
+public class BreakpointsMetadata {
+	
+	private DebugModel model;
 
-	private Set<BreakpointMetadata> breakpointsList;
+	private Set<BreakpointMetadata> breakpointsList = new HashSet<BreakpointMetadata>();
 
-	public BreakpointsMetadata(String sessionId, String executionId, String userId) {
-		super(sessionId, executionId, userId);
+	BreakpointsMetadata(DebugModel model) {
+		super();
+		this.model = model;
 	}
-
-	public BreakpointsMetadata(String sessionId, String executionId, String userId,
-			Set<BreakpointMetadata> breakpointsList) {
-		super(sessionId, executionId, userId);
-		this.breakpointsList = breakpointsList;
+	
+	public DebugModel getModel() {
+		return model;
 	}
 
 	public Set<BreakpointMetadata> getBreakpoints() {

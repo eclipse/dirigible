@@ -20,17 +20,22 @@ import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
 import org.eclipse.dirigible.repository.ext.debug.BreakpointsMetadata;
 
 public class BreakpointViewContentProvider implements ITreeContentProvider {
+	
 	private static final long serialVersionUID = 5189974338674989869L;
 
+	public BreakpointViewContentProvider(BreakpointsMetadata metadata) {
+		this.metadata = metadata;
+	}
+	
 	private BreakpointsMetadata metadata;
 
 	public BreakpointsMetadata getBreakpointMetadata() {
 		return metadata;
 	}
 
-	public void setBreakpointMetadata(BreakpointsMetadata metadata) {
-		this.metadata = metadata;
-	}
+//	public void setBreakpointMetadata(BreakpointsMetadata metadata) {
+//		this.metadata = metadata;
+//	}
 
 	@Override
 	public void dispose() {

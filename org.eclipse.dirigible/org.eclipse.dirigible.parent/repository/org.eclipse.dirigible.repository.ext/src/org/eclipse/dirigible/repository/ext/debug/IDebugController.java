@@ -11,13 +11,25 @@
 
 package org.eclipse.dirigible.repository.ext.debug;
 
-import java.beans.PropertyChangeListener;
 
-public interface IDebugProtocol {
+public interface IDebugController extends IDebugView {
+	
+	public void refresh();
 
-	public void addPropertyChangeListener(PropertyChangeListener listener);
-	
-	public void firePropertyChange(String commandId, Object clientId, Object commandBody);
-	
-	public void removePropertyChangeListener(PropertyChangeListener listener);
+	public void stepInto();
+
+	public void stepOver();
+
+	public void continueExecution();
+
+	public void skipAllBreakpoints();
+
+	public void setBreakpoint(String path, int row);
+
+	public void clearBreakpoint(String path, int row);
+
+	public void clearAllBreakpoints();
+
+//	public void clearAllBreakpoints(String path);
+
 }

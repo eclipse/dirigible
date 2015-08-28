@@ -11,6 +11,16 @@
 
 package org.eclipse.dirigible.ide.editor.js;
 
+import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
+import org.eclipse.dirigible.ide.editor.text.editor.ContentProviderException;
+import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
+import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
+import org.eclipse.dirigible.ide.editor.text.editor.TextEditor;
+import org.eclipse.dirigible.ide.shared.editor.SourceFileEditorInput;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -19,16 +29,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.dirigible.ide.common.CommonUtils;
-import org.eclipse.dirigible.ide.debug.model.DebugModel;
-import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
-import org.eclipse.dirigible.ide.editor.text.editor.ContentProviderException;
-import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
-import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
-import org.eclipse.dirigible.ide.editor.text.editor.TextEditor;
-import org.eclipse.dirigible.ide.shared.editor.SourceFileEditorInput;
-import org.eclipse.dirigible.repository.api.ICommonConstants;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class JavaScriptEditor extends TextEditor {
 
@@ -101,9 +101,9 @@ public class JavaScriptEditor extends TextEditor {
 			public void setBreakpoint(final int row) {
 				IEditorInput editorInput = getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
-					DebugModel debugModel = DebugModelFacade.getActiveDebugModel();
+					DebugModel debugModel = DebugModelFacade.getDebugModel();
 					if (debugModel != null) {
-						debugModel.setBreakpoint(CommonUtils.formatToRuntimePath(
+						debugModel.getDebugController().setBreakpoint(CommonUtils.formatToRuntimePath(
 								ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES,
 								((FileEditorInput) editorInput).getPath().toString()), row);
 					}
@@ -114,12 +114,12 @@ public class JavaScriptEditor extends TextEditor {
 			public void clearBreakpoint(final int row) {
 				IEditorInput editorInput = getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
-					DebugModel debugModel = DebugModelFacade.getActiveDebugModel();
+					DebugModel debugModel = DebugModelFacade.getDebugModel();
 					if (debugModel != null) {
 						String formatToRuntimePath = CommonUtils.formatToRuntimePath(
 								ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES,
 								((FileEditorInput) editorInput).getPath().toString());
-						debugModel.clearBreakpoint(formatToRuntimePath, row);
+						debugModel.getDebugController().clearBreakpoint(formatToRuntimePath, row);
 					}
 				}
 			}

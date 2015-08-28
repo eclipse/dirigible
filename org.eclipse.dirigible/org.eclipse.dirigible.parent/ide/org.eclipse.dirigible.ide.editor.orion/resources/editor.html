@@ -108,7 +108,7 @@ function handleAddRemoveBreakpoint(lineIndex) {
     } else if (getBreakpointsEnabled()) {
 		var breakpointsArray;
     	if (sessionStorage.breakpoints) {
-    		breakpointsArray = JSON.parse(sessionStorage.breakpoints)
+    		breakpointsArray = JSON.parse(sessionStorage.breakpoints);
     		var index = breakpointsArray.indexOf(lineIndex);
     		if (index > -1) {
     			breakpointsArray.splice(index, 1);

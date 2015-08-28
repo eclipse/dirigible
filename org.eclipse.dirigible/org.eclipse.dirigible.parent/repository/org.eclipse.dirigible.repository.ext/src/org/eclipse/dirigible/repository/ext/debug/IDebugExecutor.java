@@ -9,13 +9,11 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.runtime.js.debug;
+package org.eclipse.dirigible.repository.ext.debug;
 
 import java.util.Set;
 
-import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
-
-public interface IDebugCommands {
+public interface IDebugExecutor {
 	public enum DebugCommand {
 		CONTINUE, PAUSE, STEPOVER, STEPINTO, SKIP_ALL_BREAKPOINTS;
 	}
@@ -32,17 +30,33 @@ public interface IDebugCommands {
 
 	public void stepInto();
 
-	public void addBreakpoint(BreakpointMetadata breakpoint);
-
-	public void clearBreakpoint(BreakpointMetadata breakpoint);
-
-	public void clearAllBreakpoints();
-
-	public void clearAllBreakpoints(String path);
+//	public void addBreakpoint(BreakpointMetadata breakpoint);
+//
+//	public void clearBreakpoint(BreakpointMetadata breakpoint);
+//
+//	public void clearAllBreakpoints();
+//
+//	public void clearAllBreakpoints(String path);
 
 	public Set<BreakpointMetadata> getBreakpoints();
 
 	public void skipAllBreakpoints();
 
 	public DebugCommand getCommand();
+	
+	/**
+	 * @return the session id of logged in user
+	 */
+	public String getSessionId();
+
+	/**
+	 * @return the execution id for the debug session
+	 */
+	public String getExecutionId();
+
+	/**
+	 * @return the user id of logged in user
+	 */
+	public String getUserId();
+	
 }

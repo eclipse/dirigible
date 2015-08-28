@@ -11,20 +11,17 @@
 
 package org.eclipse.dirigible.repository.ext.debug;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class DebugSessionsMetadata {
+public interface IDebugView {
+	
+	public void register(DebugSessionModel session);
 
-	private List<DebugSessionMetadata> debugSessionsMetadata = new ArrayList<DebugSessionMetadata>();
+	public void finish(DebugSessionModel session);
+
+	public void onLineChange(LinebreakMetadata linebreak, DebugSessionModel session);
+
+	public void refreshVariables();
 	
-	public List<DebugSessionMetadata> getDebugSessionsMetadata() {
-		return debugSessionsMetadata;
-	}
-	
-	public void setDebugSessionsMetadata(
-			List<DebugSessionMetadata> debugSessionsMetadata) {
-		this.debugSessionsMetadata = debugSessionsMetadata;
-	}
-	
+	public void refreshBreakpoints();
+
 }

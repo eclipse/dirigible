@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.eclipse.dirigible.repository.ext.debug.IDebugProtocol;
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.js.JavaScriptExecutor;
 import org.eclipse.dirigible.runtime.js.JavaScriptServlet;
@@ -30,16 +30,21 @@ public class JavaScriptDebugServlet extends JavaScriptServlet {
 	private static final Logger logger = Logger.getLogger(JavaScriptDebugServlet.class);
 
 	@Override
-	public JavaScriptExecutor createExecutor(HttpServletRequest request) throws IOException {
+	public JavaScriptDebuggingExecutor createExecutor(HttpServletRequest request) throws IOException {
 
 		logger.debug("entering JavaScriptDebugServlet.createExecutor()");
 
-		IDebugProtocol debugProtocol = DebugProtocolUtils.lookupDebugProtocol();
+		DebugModel debugModel = (DebugModel) request.getSession(true).getAttribute(DebugModel.DEBUG_MODEL);
+		if (debugModel == null) {
+			String error = "Debug model is not present in the session";
+			logger.error(error);
+			throw new IOException(error);
+		}
 
 		String rootPath = getScriptingRegistryPath(request);
 		logger.debug("rootPath=" + rootPath);
 		JavaScriptDebuggingExecutor executor = new JavaScriptDebuggingExecutor(
-				getRepository(request), rootPath, REGISTRY_SCRIPTING_DEPLOY_PATH, debugProtocol);
+				getRepository(request), rootPath, REGISTRY_SCRIPTING_DEPLOY_PATH, debugModel);
 
 		logger.debug("exiting JavaScriptDebugServlet.createExecutor()");
 

@@ -15,10 +15,9 @@ import java.util.Iterator;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
-import org.eclipse.dirigible.ide.debug.model.DebugModel;
 import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
 
 public class SessionsViewContentProvider implements ITreeContentProvider {
 	private static final long serialVersionUID = -7946214629624017357L;
@@ -35,18 +34,18 @@ public class SessionsViewContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		String[] elements = new String[DebugModelFacade.getDebugModels().values().size()];
+		String[] elements = new String[DebugModelFacade.getDebugModel().getSessions().size()];
 		int i=0;
-		for (Iterator<DebugModel> iterator = DebugModelFacade.getDebugModels().values().iterator(); iterator.hasNext();) {
-			DebugModel debugModel = iterator.next();
+		for (Iterator<DebugSessionModel> iterator = DebugModelFacade.getDebugModel().getSessions().iterator(); iterator.hasNext();) {
+			DebugSessionModel session = iterator.next();
 			
 			StringBuilder label = new StringBuilder();
 			label
-				.append(debugModel.getUserId())
+				.append(session.getUserId())
 				.append(ICommonConstants.DEBUG_SEPARATOR)
 				.append(i+1)
 				.append(ICommonConstants.DEBUG_SEPARATOR)
-				.append(debugModel.getExecutionId())
+				.append(session.getExecutionId())
 				.append(ICommonConstants.DEBUG_SEPARATOR);
 			elements[i++] = label.toString(); 
 		}

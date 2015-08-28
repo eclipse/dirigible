@@ -15,21 +15,30 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
 import org.eclipse.dirigible.repository.ext.debug.VariableValue;
 import org.eclipse.dirigible.repository.ext.debug.VariableValuesMetadata;
 
 public class VariablesViewContentProvider implements ITreeContentProvider {
+	
 	private static final long serialVersionUID = -7946214629624017357L;
-	private VariableValuesMetadata metadata;
-
-	public VariableValuesMetadata getVariablesMetaData() {
-		return metadata;
+	
+	private DebugModel debugModel;
+	
+//	private VariableValuesMetadata metadata;
+	
+	public VariablesViewContentProvider(DebugModel debugModel) {
+		this.debugModel = debugModel;
 	}
 
-	public void setVariablesMetaData(VariableValuesMetadata metadata) {
-		this.metadata = metadata;
-	}
+//	public VariableValuesMetadata getVariablesMetaData() {
+//		return metadata;
+//	}
+//
+//	public void setVariablesMetaData(VariableValuesMetadata metadata) {
+//		this.metadata = metadata;
+//	}
 
 	@Override
 	public void dispose() {
@@ -44,8 +53,12 @@ public class VariablesViewContentProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getElements(Object inputElement) {
 		Object[] elements = null;
-		if (metadata != null) {
-			List<VariableValue> variableValueList = metadata.getVariableValueList();
+		
+		DebugSessionModel session = this.debugModel.getActiveSession();
+		
+		if (session != null
+				&& session.getVariableValuesMetadata() != null) {
+			List<VariableValue> variableValueList = session.getVariableValuesMetadata().getVariableValueList();
 			if (variableValueList != null) {
 				elements = variableValueList.toArray(new VariableValue[variableValueList.size()]);
 			}

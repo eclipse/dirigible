@@ -13,19 +13,18 @@ package org.eclipse.dirigible.runtime.js.debug;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
 import org.mozilla.javascript.debug.Debugger;
 
-import org.eclipse.dirigible.repository.ext.debug.IDebugProtocol;
-
 public class JavaScriptDebugger implements Debugger {
 
 	private JavaScriptDebugFrame debugFrame = null;
 
-	public JavaScriptDebugger(IDebugProtocol debugProtocol, HttpServletRequest request) {
-		this.debugFrame = new JavaScriptDebugFrame(debugProtocol, request, this);
+	public JavaScriptDebugger(DebugModel debugModel, HttpServletRequest request) {
+		this.debugFrame = new JavaScriptDebugFrame(debugModel, request, this);
 	}
 
 	public DebugFrame getFrame(Context context, DebuggableScript fnOrScript) {
