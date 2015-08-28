@@ -87,12 +87,12 @@
 					</execution>
                     <execution>
                         <id>copy-index.html</id>
-                        <phase>compile</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/src/main/webapp</outputDirectory>
+                            <outputDirectory>${project.build.directory}/${deployment.name}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${basedir}/src/index/${deployment.type}</directory>
