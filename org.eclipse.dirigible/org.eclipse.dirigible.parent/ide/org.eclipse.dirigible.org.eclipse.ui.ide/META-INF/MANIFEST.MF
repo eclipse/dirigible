@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.org.eclipse.ui.ide
 Bundle-SymbolicName: org.eclipse.dirigible.org.eclipse.ui.ide;singleton:=true
-Bundle-Version: 2.0.150424
+Bundle-Version: 2.1.150831
 Bundle-Activator: org.eclipse.ui.internal.ide.IDEWorkbenchPlugin
 Export-Package: org.eclipse.ui,
  org.eclipse.ui.actions,

@@ -3,7 +3,7 @@
   <parent>
 		<groupId>org.eclipse.dirigible.p2.rcp</groupId>
 		<artifactId>org.eclipse.dirigible.p2.rcp.parent</artifactId>
-		<version>2.0.150424</version>
+		<version>2.1.150831</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
   <artifactId>org.eclipse.dirigible.rcp.feature</artifactId>

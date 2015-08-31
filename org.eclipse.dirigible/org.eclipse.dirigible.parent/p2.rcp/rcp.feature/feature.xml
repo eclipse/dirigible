@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dirigible.rcp.feature"
       label="Dirigible RCP Bundles Feature"
-      version="2.0.150424"
+      version="2.1.150831"
       provider-name="Eclipse.org - Dirigible">
 
    <description url="http://www.dirigible.io/">

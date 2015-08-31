@@ -7,7 +7,7 @@ Export-Package: org.eclipse.swt.widgets
 Require-Bundle: org.eclipse.rap.rwt,
  org.eclipse.rap.ui
 Bundle-Vendor: SAP AG
-Bundle-Version: 2.0.150424
+Bundle-Version: 2.1.150831
 Bundle-Name: org.eclipse.dirigible.org.eclipse.rap.rwt.supplemental.filedialog
 Bundle-ManifestVersion: 2
 Import-Package: javax.servlet,
