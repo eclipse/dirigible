@@ -33,17 +33,15 @@ The project started as an internal SAP initiative to address the extension and a
 	- [Contributors](#contributors)
 	- [References](#references)
 		
-## Try
+## Instant Trial
 
-You can try a full fledged Dirigible deployment on [HANA Cloud Platform](https://account.hana.ondemand.com/). Create your own unlimited free trial account at [https://account.hanatrial.ondemand.com/](https://account.hanatrial.ondemand.com/).
-
-You can also try the sandbox instance with restricted functionality that is available at [http://trial.dirigible.io](http://trial.dirigible.io).
+You can try the sandbox instance to have a quick look on the functionality you are interested [http://trial.dirigible.io](http://trial.dirigible.io).
 
 ## Get Started
 
 ### Download
 
-The "fast-track" - you can download the precompiled binaries produced from the released versions from [https://github.com/eclipse/dirigible/releases/](https://github.com/eclipse/dirigible/releases/) and skip the build section.
+The "fast-track" - you can download the precompiled binaries produced from the Hudson builds from [http://wiki.eclipse.org/Dirigible/Downloads](http://wiki.eclipse.org/Dirigible/Downloads) and skip the build section.
 
 Nevertheless, we highly recommend building the binaries from source in order to have all experimental features that are not available in the releases.
 
@@ -71,9 +69,9 @@ The build should pass successfully. The produced WAR files under target sub-fold
 ### Deploy
 
 
-#### Instant Trial
+#### Trial
 
-Instant trial package combines the deployable artifacts of Dirigible along with the Tomcat web container and Derby database. It is useful for quick exploration of Dirigible features.
+Trial package combines the deployable artifacts of Dirigible along with the Tomcat web container and Derby database. It is useful for quick exploration of Dirigible features.
 
 ##### Steps
 
