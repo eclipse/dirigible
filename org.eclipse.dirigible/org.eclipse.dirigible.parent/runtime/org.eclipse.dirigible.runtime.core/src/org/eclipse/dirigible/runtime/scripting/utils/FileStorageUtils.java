@@ -54,7 +54,7 @@ public class FileStorageUtils extends AbstractStorageUtils {
 
 	private static final String CREATE_TABLE_DGB_FILE_STORAGE = "CREATE TABLE " + DGB_FILE_STORAGE
 			+ " (" + FILE_STORAGE_PATH + " VARCHAR(2048) PRIMARY KEY, " + FILE_STORAGE_DATA
-			+ " BLOB, " + FILE_STORAGE_CONTENT_TYPE + " VARCHAR(50), " + FILE_STORAGE_TIMESTAMP
+			+ " BLOB, " + FILE_STORAGE_CONTENT_TYPE + " VARCHAR(100), " + FILE_STORAGE_TIMESTAMP
 			+ " TIMESTAMP" + " )";
 
 	private static final String SELECT_COUNT_FROM_DGB_FILE_STORAGE = "SELECT COUNT(*) FROM "
