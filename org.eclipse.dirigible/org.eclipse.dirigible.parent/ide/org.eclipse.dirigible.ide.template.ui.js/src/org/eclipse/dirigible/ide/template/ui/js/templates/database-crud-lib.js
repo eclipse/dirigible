@@ -6,7 +6,7 @@ var entityLib = require('entity');
 
 // create entity by parsing JSON object from request body
 exports.create${entityName} = function() {
-    var input = ioLib.read($\.getRequest().getReader());
+    var input = ioLib.read($\.getRequest().getInputStream());
     var requestBody = JSON.parse(input);
     var connection = $\.getDatasource().getConnection();
     try {
@@ -195,7 +195,7 @@ function convertToDateString(date) {
 
 // update entity by id
 exports.update${entityName} = function() {
-    var input = ioLib.read($\.getRequest().getReader());
+    var input = ioLib.read($\.getRequest().getInputStream());
     var responseBody = JSON.parse(input);
     var connection = $\.getDatasource().getConnection();
     try {
