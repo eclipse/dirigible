@@ -63,6 +63,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		ORION_MODES.put("css", "text/css");
 		ORION_MODES.put("json", "application/json");
 		ORION_MODES.put("menu", "application/json");
+		ORION_MODES.put("java", "text/x-java-source");
 	}
 
 	public EditorWidget(final Composite parent) {
@@ -82,7 +83,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 			public void completed(final ProgressEvent event) {
 				loaded = true;
 				updateWidgetContents();
-				if (javaScriptEditor) {
+				if (javaScriptEditor && DebugModelFacade.getDebugModel() != null) {
 					final DebugSessionModel session = DebugModelFacade.getDebugModel().getActiveSession();
 
 					if (session != null
