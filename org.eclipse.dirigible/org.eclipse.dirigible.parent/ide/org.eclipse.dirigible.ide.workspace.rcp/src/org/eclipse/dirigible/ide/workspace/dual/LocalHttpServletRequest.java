@@ -35,6 +35,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
@@ -451,5 +452,21 @@ public class LocalHttpServletRequest implements HttpServletRequest {
 		}
 		
 	}
+
+	public long getContentLengthLong() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public String changeSessionId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }

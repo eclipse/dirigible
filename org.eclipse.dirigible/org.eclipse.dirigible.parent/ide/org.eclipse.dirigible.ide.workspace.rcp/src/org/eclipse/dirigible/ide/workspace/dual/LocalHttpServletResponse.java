@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -337,7 +338,22 @@ public class LocalHttpServletResponse implements HttpServletResponse {
 		public void println(String s) throws IOException {
 			super.println(s);
 		}
+
+		public boolean isReady() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public void setWriteListener(WriteListener writeListener) {
+			// TODO Auto-generated method stub
+			
+		}
 		
+		
+	}
+
+	public void setContentLengthLong(long len) {
+		// TODO Auto-generated method stub
 		
 	}
 }

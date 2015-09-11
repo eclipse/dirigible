@@ -15,6 +15,5 @@ Import-Package: javax.mail,
  javax.servlet.annotation,
  javax.servlet.descriptor,
  javax.servlet.http,
- javax.servlet.resources,
  org.slf4j
 Bundle-ClassPath: .
