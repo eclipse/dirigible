@@ -218,10 +218,10 @@ If you like to contribute to Dirigible, please read the [Contributor's guide](CO
 
 ### Update Sites
 
-- [http://dirigible.io/p2/bridge/](http://dirigible.io/p2/bridge/)
-- [http://dirigible.io/p2/external/](http://dirigible.io/p2/external/)
-- [http://dirigible.io/p2/ide/](http://dirigible.io/p2/ide/)
-- [http://dirigible.io/p2/lib/](http://dirigible.io/p2/lib/)
-- [http://dirigible.io/p2/repository/](http://dirigible.io/p2/repository/)
-- [http://dirigible.io/p2/runtime/](http://dirigible.io/p2/runtime/)
-- [http://dirigible.io/p2/rcp/](http://dirigible.io/p2/rcp/)
+- [http://download.eclipse.org/dirigible/nightly/p2/bridge/](http://download.eclipse.org/dirigible/nightly/p2/bridge/)
+- [http://download.eclipse.org/dirigible/nightly/p2/external/](http://download.eclipse.org/dirigible/nightly/p2/external/)
+- [http://download.eclipse.org/dirigible/nightly/p2/ide/](http://download.eclipse.org/dirigible/nightly/p2/ide/)
+- [http://download.eclipse.org/dirigible/nightly/p2/lib/](http://download.eclipse.org/dirigible/nightly/p2/lib/)
+- [http://download.eclipse.org/dirigible/nightly/p2/repository/](http://download.eclipse.org/dirigible/nightly/p2/repository/)
+- [http://download.eclipse.org/dirigible/nightly/p2/runtime/](http://download.eclipse.org/dirigible/nightly/p2/runtime/)
+- [http://download.eclipse.org/dirigible/nightly/p2/rcp/](http://download.eclipse.org/dirigible/nightly/p2/rcp/)
