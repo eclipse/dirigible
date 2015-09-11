@@ -25,11 +25,14 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.internal.PageEventAction;
 import org.eclipse.ui.internal.SaveAction;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
@@ -186,9 +189,9 @@ public class ToolBarMenuViewProvider {
 			public void widgetSelected(SelectionEvent e) {
 				IWorkbench workbench = PlatformUI.getWorkbench();
 				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-				SaveAction saveAction = (SaveAction) ActionFactory.SAVE.create(window);
+				IPageListener saveAction = (IPageListener) ActionFactory.SAVE.create(window);
 				saveAction.pageActivated(window.getActivePage());
-				saveAction.run();
+				((IWorkbenchAction) saveAction).run();
 			}
 
 			@Override

@@ -42,12 +42,12 @@ public class RCPFile extends RCPObject {
 	}
 
 	public void setData(byte[] content) throws RCPBaseException {
-		byte[] old = getData();
-		if (old != null) {
-			if (Arrays.equals(old, content)) {
-				return;
-			}
-		}
+//		byte[] old = getData();
+//		if (old != null) {
+//			if (Arrays.equals(old, content)) {
+//				return;
+//			}
+//		}
 		getRepository().getRepositoryDAO().setFileContent(this, content);
 	}
 
