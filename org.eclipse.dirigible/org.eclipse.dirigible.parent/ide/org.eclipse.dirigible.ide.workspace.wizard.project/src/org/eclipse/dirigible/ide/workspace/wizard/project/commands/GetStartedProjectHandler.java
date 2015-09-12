@@ -14,20 +14,21 @@ package org.eclipse.dirigible.ide.workspace.wizard.project.commands;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
-import org.eclipse.dirigible.ide.workspace.wizard.project.sample.SampleProjectWizard;
+import org.eclipse.dirigible.ide.workspace.wizard.project.getstarted.GetStartedProjectWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 
-public class SampleImportHandler extends AbstractWorkspaceHandler {
+public class GetStartedProjectHandler extends AbstractWorkspaceHandler {
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Wizard wizard = new SampleProjectWizard();
+		Wizard wizard = new GetStartedProjectWizard();
 		WizardDialog dialog = new WizardDialog(null, wizard);
+		dialog.setMinimumPageSize(500, 700);
 		dialog.open();
 
 		refreshWorkspace();
 
 		return null;
 	}
+
 }

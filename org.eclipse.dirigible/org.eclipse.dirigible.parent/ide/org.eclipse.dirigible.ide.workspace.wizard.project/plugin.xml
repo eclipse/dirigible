@@ -3,6 +3,11 @@
 <plugin>
    <extension
          point="org.eclipse.ui.commands">
+	  <command
+            defaultHandler="org.eclipse.dirigible.ide.workspace.wizard.project.commands.GetStartedProjectHandler"
+            id="org.eclipse.dirigible.ide.workspace.wizard.project.command.GetStartedProject"
+            name="Get Started">
+      </command>
       <command
             defaultHandler="org.eclipse.dirigible.ide.workspace.wizard.project.commands.ProjectHandler"
             id="org.eclipse.dirigible.ide.workspace.wizard.project.command.Project"
@@ -45,6 +50,12 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.new?before=separator.project">
+			 <command
+                  commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.GetStartedProject"
+                  icon="icons/icon-sample.png"
+                  label="Get Started"
+                  style="push">
+            </command>
             <command
                   commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.Project"
                   icon="icons/icon-project.png"
@@ -56,17 +67,6 @@
 	  <menuContribution
             locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.import">
             
-            <!--
-            <command
-                  commandId="org.eclipse.dirigible.ide.workspace.wizard.project.commands.UploadProjectHandler"
-                  icon="icons/icon-project.png"
-                  label="Project"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="true">
-               </visibleWhen>
-            </command>
-            -->
              <command
                   commandId="org.eclipse.dirigible.ide.workspace.wizard.project.commands.SampleImport"
                   icon="icons/icon-sample.png"
@@ -90,30 +90,17 @@
                      checkEnabled="true">
                </visibleWhen>
             </command>
-            
-            <!--
-            <command
-                  commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.DownloadProjectHandler"
-                  icon="icons/icon-project.png"
-                  label="Project"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <and>
-                     <iterate>
-                        <instanceof
-                              value="org.eclipse.core.resources.IProject">
-                        </instanceof>
-                     </iterate>
-                  </and>
-               </visibleWhen>
-            </command>
-            -->
+
       </menuContribution>
 
       <menuContribution
             locationURI="menu:org.eclipse.dirigible.ide.workspace.ui.view.Menu.new?before=separator.project">
-
+			<command
+                  commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.GetStartedProject"
+                  icon="icons/icon-sample.png"
+                  label="Get Started"
+                  style="push">
+            </command>
             <command
                   commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.Project"
                   icon="icons/icon-project.png"
@@ -167,6 +154,11 @@
       <menuContribution
             locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.BasicMenu">
          <command
+               commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.GetStartedProject"
+               label="Get Started"
+               style="push">
+         </command>
+         <command
                commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.Project"
                label="New Project"
                style="push">
@@ -208,6 +200,10 @@
             commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.Project"
             icon="icons/icon-project.png">
       </image>
+      <image
+            commandId="org.eclipse.dirigible.ide.workspace.wizard.project.command.GetStartedProject"
+            icon="icons/icon-sample.png">
+      </image>
    </extension>
     <extension
        point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
@@ -220,5 +216,19 @@
             imageName="icon-project.png"
             defaultHandler="org.eclipse.dirigible.ide.workspace.wizard.project.commands.ProjectHandler">
         </newMenuItem>
+        <newMenuItem
+            text="Get Started"
+            toolTip="Get Started"
+            order="0"
+            imageBundle="org.eclipse.dirigible.ide.workspace.wizard.project"
+            imagePrefix="/icons/"
+            imageName="icon-sample.png"
+            defaultHandler="org.eclipse.dirigible.ide.workspace.wizard.project.commands.GetStartedProjectHandler">
+        </newMenuItem>
  	</extension>
+ 	<extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.eclipse.dirigible.ide.workspace.wizard.project.getstarted.GetStartedStartup"></startup>
+   </extension>
 </plugin>

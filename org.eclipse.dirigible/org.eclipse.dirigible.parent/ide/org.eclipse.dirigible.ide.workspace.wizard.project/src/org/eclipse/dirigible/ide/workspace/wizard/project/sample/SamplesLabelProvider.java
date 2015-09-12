@@ -11,10 +11,9 @@
 
 package org.eclipse.dirigible.ide.workspace.wizard.project.sample;
 
+import org.eclipse.dirigible.ide.common.image.ImageUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.dirigible.ide.common.image.ImageUtils;
 
 public class SamplesLabelProvider extends LabelProvider {
 	private static final long serialVersionUID = 6752428028085740772L;

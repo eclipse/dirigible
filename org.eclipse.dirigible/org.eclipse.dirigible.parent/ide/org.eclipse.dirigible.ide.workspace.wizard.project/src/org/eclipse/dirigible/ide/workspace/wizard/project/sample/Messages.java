@@ -13,8 +13,6 @@ package org.eclipse.dirigible.ide.workspace.wizard.project.sample;
 
 import org.eclipse.osgi.util.NLS;
 
-import org.eclipse.dirigible.ide.workspace.wizard.project.sample.Messages;
-
 public class Messages extends NLS {
 	
 	private static final String BUNDLE_NAME = "org.eclipse.dirigible.ide.workspace.wizard.project.sample.messages";//$NON-NLS-1$

@@ -13,12 +13,10 @@ package org.eclipse.dirigible.ide.workspace.wizard.project.commands;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
+import org.eclipse.dirigible.ide.workspace.wizard.project.create.NewProjectWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-
-import org.eclipse.dirigible.ide.workspace.wizard.project.create.NewProjectWizard;
-
-import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
 
 public class ProjectHandler extends AbstractWorkspaceHandler {
 

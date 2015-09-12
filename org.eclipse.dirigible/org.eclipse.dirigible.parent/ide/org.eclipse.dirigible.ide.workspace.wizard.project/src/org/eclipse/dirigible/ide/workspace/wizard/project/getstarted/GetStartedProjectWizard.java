@@ -9,16 +9,17 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.workspace.wizard.project.create;
+package org.eclipse.dirigible.ide.workspace.wizard.project.getstarted;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
+import org.eclipse.dirigible.ide.workspace.wizard.project.create.Messages;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
-public class NewProjectWizard extends Wizard {
+public class GetStartedProjectWizard extends Wizard {
 
 	private static final String COULD_NOT_CREATE_PROJECT = Messages.NewProjectWizard_COULD_NOT_CREATE_PROJECT;
 
@@ -26,29 +27,35 @@ public class NewProjectWizard extends Wizard {
 
 	private static final String PROJECT_S_CREATED_SUCCESSFULLY = Messages.NewProjectWizard_PROJECT_S_CREATED_SUCCESSFULLY;
 
-	private static final String WINDOW_TITLE = Messages.NewProjectWizard_WINDOW_TITLE;
+	private static final String WINDOW_TITLE = "Get Started Project Wizard";
 
-	private final NewProjectWizardModel model;
+	private final GetStartedProjectWizardModel model;
 
-	private final NewProjectWizardMainPage mainPage;
-
-	private final NewProjectWizardTemplateTypePage templatesPage;
+	private final GetStartedProjectWizardWelcomePage welcomePage;
+	
+	private final GetStartedProjectWizardMainPage mainPage;
 
 	private static final Logger logger = Logger
-			.getLogger(NewProjectWizard.class);
+			.getLogger(GetStartedProjectWizard.class);
 
-	public NewProjectWizard() {
+	public GetStartedProjectWizard() {
 		setWindowTitle(WINDOW_TITLE);
 
-		model = new NewProjectWizardModel();
-		mainPage = new NewProjectWizardMainPage(model);
-		templatesPage = new NewProjectWizardTemplateTypePage(model);
+		model = new GetStartedProjectWizardModel();
+		
+		model.setProjectName(CommonParameters.getUserName() + "_" + model.getProjectName());
+		
+		welcomePage = new GetStartedProjectWizardWelcomePage(model);
+		
+		mainPage = new GetStartedProjectWizardMainPage(model);
+
 	}
 
 	@Override
 	public void addPages() {
+		addPage(welcomePage);
 		addPage(mainPage);
-		addPage(templatesPage);
+		
 	}
 
 	public boolean performFinish() {
@@ -76,15 +83,6 @@ public class NewProjectWizard extends Wizard {
 			logger.error(ex.getMessage(), ex);
 			this.showErrorDialog(OPERATION_FAILED, String.format(COULD_NOT_CREATE_PROJECT, ex.getMessage()));
 			return false;
-		}
-	}
-
-	@Override
-	public IWizardPage getNextPage(IWizardPage page) {
-		if (model.isUseTemplate()) {
-			return super.getNextPage(page);
-		} else {
-			return null;
 		}
 	}
 

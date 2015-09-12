@@ -12,11 +12,10 @@
 package org.eclipse.dirigible.ide.workspace.wizard.project.sample;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.wizard.Wizard;
-
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.Wizard;
 
 
 public class SampleProjectWizard extends Wizard {

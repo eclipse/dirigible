@@ -20,16 +20,15 @@ import java.util.zip.ZipInputStream;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.handlers.HandlerUtil;
-
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 public class UploadProjectHandler extends AbstractWorkspaceHandler {
 

@@ -19,16 +19,15 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-
-import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IResource;
 
 public class ProjectTemplateType {
 

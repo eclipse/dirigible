@@ -20,6 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.image.ImageUtils;
+import org.eclipse.dirigible.ide.jgit.connector.JGitConnector;
+import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
+import org.eclipse.dirigible.ide.workspace.ui.shared.IValidationStatus;
+import org.eclipse.dirigible.ide.workspace.wizard.project.create.ProjectTemplateType;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -42,14 +49,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.image.ImageUtils;
-import org.eclipse.dirigible.ide.jgit.connector.JGitConnector;
-import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
-import org.eclipse.dirigible.ide.workspace.ui.shared.IValidationStatus;
-import org.eclipse.dirigible.ide.workspace.wizard.project.create.ProjectTemplateType;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class SampleProjectWizardGitTemplatePage extends WizardPage {
 

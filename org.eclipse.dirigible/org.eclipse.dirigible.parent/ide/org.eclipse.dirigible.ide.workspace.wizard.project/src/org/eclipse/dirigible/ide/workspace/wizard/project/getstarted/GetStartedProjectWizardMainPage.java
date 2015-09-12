@@ -9,10 +9,11 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.workspace.wizard.project.create;
+package org.eclipse.dirigible.ide.workspace.wizard.project.getstarted;
 
 import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
 import org.eclipse.dirigible.ide.workspace.ui.shared.IValidationStatus;
+import org.eclipse.dirigible.ide.workspace.wizard.project.create.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -22,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class NewProjectWizardMainPage extends FocusableWizardPage {
+public class GetStartedProjectWizardMainPage extends FocusableWizardPage {
 
 	private static final long serialVersionUID = -2191030355904715681L;
 	private static final String ENTER_PROJECT_NAME = Messages.NewProjectWizardMainPage_ENTER_PROJECT_NAME;
@@ -30,11 +31,11 @@ public class NewProjectWizardMainPage extends FocusableWizardPage {
 	private static final String PAGE_TITLE = Messages.NewProjectWizardMainPage_PAGE_TITLE;
 	private static final String PAGE_DESCRIPTION = Messages.NewProjectWizardMainPage_PAGE_DESCRIPTION;
 
-	private final NewProjectWizardModel model;
+	private final GetStartedProjectWizardModel model;
 
 	private Text projectNameField = null;
 	
-	public NewProjectWizardMainPage(NewProjectWizardModel model) {
+	public GetStartedProjectWizardMainPage(GetStartedProjectWizardModel model) {
 		super(PAGE_NAME);
 		setTitle(PAGE_TITLE);
 		setDescription(PAGE_DESCRIPTION);

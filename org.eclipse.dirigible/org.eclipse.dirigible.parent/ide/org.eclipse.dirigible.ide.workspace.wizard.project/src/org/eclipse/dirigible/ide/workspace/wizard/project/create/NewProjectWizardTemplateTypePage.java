@@ -16,6 +16,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.ide.common.image.ImageUtils;
+import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryPaths;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -28,13 +34,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import org.eclipse.dirigible.ide.common.image.ImageUtils;
-import org.eclipse.dirigible.ide.repository.RepositoryFacade;
-import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryPaths;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class NewProjectWizardTemplateTypePage extends WizardPage {
 

@@ -9,34 +9,33 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.workspace.wizard.project.sample;
+package org.eclipse.dirigible.ide.workspace.wizard.project.getstarted;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.zip.ZipInputStream;
+import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.publish.IPublisher;
+import org.eclipse.dirigible.ide.publish.PublishManager;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.ide.workspace.dual.ProjectCreatorEnhancer;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.shared.IValidationStatus;
 import org.eclipse.dirigible.ide.workspace.ui.shared.ValidationStatus;
 import org.eclipse.dirigible.ide.workspace.wizard.project.create.Messages;
-import org.eclipse.dirigible.ide.workspace.wizard.project.create.ProjectTemplateType;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
-import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.eclipse.dirigible.repository.logging.Logger;
 
-public class SampleProjectWizardModel {
+public class GetStartedProjectWizardModel {
+
 	private static final String ERROR_OCCURED_WHEN_TRYING_TO_VALIDATE_NEW_PROJECT_NAME = Messages.NewProjectWizardModel_ERROR_OCCURED_WHEN_TRYING_TO_VALIDATE_NEW_PROJECT_NAME;
 
 	private static final String PROJECT_WITH_NAME_S_WAS_ALREADY_CREATED_FROM_USER_S = Messages.NewProjectWizardModel_PROJECT_WITH_NAME_S_WAS_ALREADY_CREATED_FROM_USER_S;
@@ -46,60 +45,26 @@ public class SampleProjectWizardModel {
 	private static final String INVALID_PROJECT_NAME = Messages.NewProjectWizardModel_INVALID_PROJECT_NAME;
 
 	public static final Logger logger = Logger
-			.getLogger(SampleProjectWizardModel.class.getCanonicalName());
+			.getLogger(GetStartedProjectWizardModel.class.getCanonicalName());
 
-	private static final String INITIAL_LOCATION = "project"; //$NON-NLS-1$
+	private static final String INITIAL_LOCATION = "MyFirstProject"; //$NON-NLS-1$
 
 	private String projectName = INITIAL_LOCATION;
 
 	private String conflictUser;
 
-	private ProjectTemplateType template;
-
-	private boolean useTemplate = true;
-
-	private static final String ZIP = ".zip"; //$NON-NLS-1$
-
-	public IProject execute() throws CoreException {
-
-		IProject project = null;
-
-		if (isUseTemplate()) {
-
-			try {
-				IRepository repository = RepositoryFacade.getInstance()
-						.getRepository();
-
-				String contentPath = getTemplate().getContentPath();
-				File projectFile = new File(contentPath);
-
-				FileInputStream fis = new FileInputStream(projectFile);
-				ZipInputStream zipInputStream = new ZipInputStream(fis);
-				
-				repository.importZip(zipInputStream,
-						CommonParameters.getWorkspace());
-				
-				IWorkspace workspace = WorkspaceLocator.getWorkspace();
-				IWorkspaceRoot root = workspace.getRoot();
-
-				String gitProjectName = projectFile.getName();
-				gitProjectName = gitProjectName.substring(0,
-						gitProjectName.indexOf(ZIP));
-
-				project = root.getProject(getProjectName());
-			} catch (RepositoryException e) {
-				logger.error(e.getMessage(), e);
-				throw new CoreException(new Status(IStatus.ERROR, // NOPMD
-						"org.eclipse.dirigible.ide.workspace.ui", e.getMessage())); //$NON-NLS-1$ // NOPMD
-			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
-				throw new CoreException(new Status(IStatus.ERROR, // NOPMD
-						"org.eclipse.dirigible.ide.workspace.ui", e.getMessage())); //$NON-NLS-1$ // NOPMD
-			}
-		}
-		return project;
+	public GetStartedProjectWizardModel() {
+		super();
 	}
-	
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String location) {
+		this.projectName = location;
+	}
+
 	public IValidationStatus validate() {
 		IWorkspace workspace = WorkspaceLocator.getWorkspace();
 		IStatus pathValidation = workspace.validateName(projectName,
@@ -154,34 +119,33 @@ public class SampleProjectWizardModel {
 		return isValid;
 	}
 
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String location) {
-		this.projectName = location;
-	}
-
-	public void setTemplate(ProjectTemplateType gitTemplate) {
-		this.template = gitTemplate;
-	}
-
-	public ProjectTemplateType getTemplate() {
-		return this.template;
-	}
-
-	public String getTemplateLocation() {
-		if (this.template == null) {
-			return null;
+	public IProject execute() throws CoreException {
+		IWorkspace workspace = WorkspaceLocator.getWorkspace();
+		IWorkspaceRoot root = workspace.getRoot();
+		IProject project = root.getProject(projectName);
+		// create the project first
+		try {
+			project.create(null);
+		} catch(CoreException e) {
+			logger.error(e.getMessage(), e);
 		}
-		return this.template.getLocation();
+		
+		project.open(null);
+		
+		
+		// create default folders
+		List<IPublisher> publishers = PublishManager.getPublishers();
+		for (IPublisher publisher : publishers) {
+			IFolder folder = project.getFolder(publisher.getFolderType());
+			folder.create(true, false, null);
+		}
+		
+		
+		ProjectCreatorEnhancer.enhance(project);
+		
+		project.refreshLocal(2, null);
+		
+		return project;
 	}
 
-	public void setUseTemplate(boolean isUsed) {
-		this.useTemplate = isUsed;
-	}
-
-	public boolean isUseTemplate() {
-		return this.useTemplate;
-	}
 }
