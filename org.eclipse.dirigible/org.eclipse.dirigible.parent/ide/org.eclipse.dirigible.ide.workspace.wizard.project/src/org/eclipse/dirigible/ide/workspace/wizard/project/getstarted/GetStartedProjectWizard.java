@@ -20,6 +20,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 
 public class GetStartedProjectWizard extends Wizard {
+	
+	private static final Logger logger = Logger.getLogger(GetStartedProjectWizard.class);
 
 	private static final String COULD_NOT_CREATE_PROJECT = Messages.NewProjectWizard_COULD_NOT_CREATE_PROJECT;
 
@@ -34,9 +36,14 @@ public class GetStartedProjectWizard extends Wizard {
 	private final GetStartedProjectWizardWelcomePage welcomePage;
 	
 	private final GetStartedProjectWizardMainPage mainPage;
-
-	private static final Logger logger = Logger
-			.getLogger(GetStartedProjectWizard.class);
+	
+	private final GetStartedProjectWizardDBTablePage dbTablePage;
+	
+	private final GetStartedProjectWizardJSServicePage jsServicePage;
+	
+	private final GetStartedProjectWizardHTMLPage htmlPage;
+	
+	private final GetStartedProjectWizardSummaryPage summaryPage;
 
 	public GetStartedProjectWizard() {
 		setWindowTitle(WINDOW_TITLE);
@@ -45,17 +52,22 @@ public class GetStartedProjectWizard extends Wizard {
 		
 		model.setProjectName(CommonParameters.getUserName() + "_" + model.getProjectName());
 		
-		welcomePage = new GetStartedProjectWizardWelcomePage(model);
-		
+		welcomePage = new GetStartedProjectWizardWelcomePage();
 		mainPage = new GetStartedProjectWizardMainPage(model);
-
+		dbTablePage = new GetStartedProjectWizardDBTablePage();
+		jsServicePage = new GetStartedProjectWizardJSServicePage();
+		htmlPage = new GetStartedProjectWizardHTMLPage();
+		summaryPage = new GetStartedProjectWizardSummaryPage();
 	}
 
 	@Override
 	public void addPages() {
 		addPage(welcomePage);
 		addPage(mainPage);
-		
+		addPage(dbTablePage);
+		addPage(jsServicePage);
+		addPage(htmlPage);
+		addPage(summaryPage);
 	}
 
 	public boolean performFinish() {

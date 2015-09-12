@@ -21,20 +21,20 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class GetStartedProjectWizardWelcomePage extends WizardPage {
+public class GetStartedProjectWizardHTMLPage extends WizardPage {
 	
 	private static final Logger logger = Logger
-			.getLogger(GetStartedProjectWizardWelcomePage.class);
+			.getLogger(GetStartedProjectWizardHTMLPage.class);
 
-	private static final String PAGE_DESCRIPTION = "This wizard will guide you throughout the process of creation of your first project.";
+	private static final String PAGE_DESCRIPTION = "Creation of a HTML5 Form";
 
-	private static final String PAGE_TITLE = "Get Started with Dirigible";
+	private static final String PAGE_TITLE = "HTML5 Form";
 
-	private static final String PAGE_NAME = "Welcome Page"; //$NON-NLS-1$
-	
-	private static final String CONTENT = "welcome.html"; //$NON-NLS-1$
+	private static final String PAGE_NAME = "HTML5 Form"; //$NON-NLS-1$
 
-	public GetStartedProjectWizardWelcomePage() {
+	private static final String CONTENT = "html5form.html"; //$NON-NLS-1$
+
+	public GetStartedProjectWizardHTMLPage() {
 		super(PAGE_NAME);
 		setTitle(PAGE_TITLE);
 		setDescription(PAGE_DESCRIPTION);
@@ -49,7 +49,7 @@ public class GetStartedProjectWizardWelcomePage extends WizardPage {
 		String description = "";
 		try {
 			description = IOUtils.toString(
-					GetStartedProjectWizardWelcomePage.class.getResourceAsStream(CONTENT));
+					GetStartedProjectWizardHTMLPage.class.getResourceAsStream(CONTENT));
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}

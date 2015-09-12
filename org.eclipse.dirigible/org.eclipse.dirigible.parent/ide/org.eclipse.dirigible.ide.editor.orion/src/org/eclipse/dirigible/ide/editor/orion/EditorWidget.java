@@ -64,6 +64,8 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		ORION_MODES.put("json", "application/json");
 		ORION_MODES.put("menu", "application/json");
 		ORION_MODES.put("java", "text/x-java-source");
+		ORION_MODES.put("xml", "application/xml");
+		ORION_MODES.put("yaml", "text/x-yaml");
 	}
 
 	public EditorWidget(final Composite parent) {

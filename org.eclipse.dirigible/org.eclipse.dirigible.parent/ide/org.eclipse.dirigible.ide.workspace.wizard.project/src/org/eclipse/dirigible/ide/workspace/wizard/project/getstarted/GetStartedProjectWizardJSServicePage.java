@@ -21,20 +21,20 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class GetStartedProjectWizardWelcomePage extends WizardPage {
+public class GetStartedProjectWizardJSServicePage extends WizardPage {
 	
 	private static final Logger logger = Logger
-			.getLogger(GetStartedProjectWizardWelcomePage.class);
+			.getLogger(GetStartedProjectWizardJSServicePage.class);
 
-	private static final String PAGE_DESCRIPTION = "This wizard will guide you throughout the process of creation of your first project.";
+	private static final String PAGE_DESCRIPTION = "Creation of a JavaScript RESTfull Service";
 
-	private static final String PAGE_TITLE = "Get Started with Dirigible";
+	private static final String PAGE_TITLE = "JavaScript RESTfull Service";
 
-	private static final String PAGE_NAME = "Welcome Page"; //$NON-NLS-1$
-	
-	private static final String CONTENT = "welcome.html"; //$NON-NLS-1$
+	private static final String PAGE_NAME = "JavaScript Service"; //$NON-NLS-1$
 
-	public GetStartedProjectWizardWelcomePage() {
+	private static final String CONTENT = "jsservice.html"; //$NON-NLS-1$
+
+	public GetStartedProjectWizardJSServicePage() {
 		super(PAGE_NAME);
 		setTitle(PAGE_TITLE);
 		setDescription(PAGE_DESCRIPTION);
@@ -49,7 +49,7 @@ public class GetStartedProjectWizardWelcomePage extends WizardPage {
 		String description = "";
 		try {
 			description = IOUtils.toString(
-					GetStartedProjectWizardWelcomePage.class.getResourceAsStream(CONTENT));
+					GetStartedProjectWizardJSServicePage.class.getResourceAsStream(CONTENT));
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}

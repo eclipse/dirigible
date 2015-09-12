@@ -21,20 +21,20 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class GetStartedProjectWizardWelcomePage extends WizardPage {
+public class GetStartedProjectWizardSummaryPage extends WizardPage {
 	
 	private static final Logger logger = Logger
-			.getLogger(GetStartedProjectWizardWelcomePage.class);
+			.getLogger(GetStartedProjectWizardSummaryPage.class);
 
-	private static final String PAGE_DESCRIPTION = "This wizard will guide you throughout the process of creation of your first project.";
+	private static final String PAGE_DESCRIPTION = "Summary of performed tasks and further steps";
 
-	private static final String PAGE_TITLE = "Get Started with Dirigible";
+	private static final String PAGE_TITLE = "Summary Page";
 
-	private static final String PAGE_NAME = "Welcome Page"; //$NON-NLS-1$
+	private static final String PAGE_NAME = "Summary Page"; //$NON-NLS-1$
 	
-	private static final String CONTENT = "welcome.html"; //$NON-NLS-1$
+	private static final String CONTENT = "summary.html"; //$NON-NLS-1$
 
-	public GetStartedProjectWizardWelcomePage() {
+	public GetStartedProjectWizardSummaryPage() {
 		super(PAGE_NAME);
 		setTitle(PAGE_TITLE);
 		setDescription(PAGE_DESCRIPTION);
@@ -49,7 +49,7 @@ public class GetStartedProjectWizardWelcomePage extends WizardPage {
 		String description = "";
 		try {
 			description = IOUtils.toString(
-					GetStartedProjectWizardWelcomePage.class.getResourceAsStream(CONTENT));
+					GetStartedProjectWizardSummaryPage.class.getResourceAsStream(CONTENT));
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}

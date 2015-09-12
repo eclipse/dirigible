@@ -68,7 +68,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 			public void completed(final ProgressEvent event) {
 				loaded = true;
 				updateWidgetContents();
-				if (javaScriptEditor) {
+				if (javaScriptEditor && DebugModelFacade.getDebugModel() != null) {
 					DebugSessionModel session = DebugModelFacade.getDebugModel().getActiveSession();
 
 					if (session != null
