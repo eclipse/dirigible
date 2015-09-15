@@ -50,7 +50,7 @@
 			
 			function createEditor(content, contentType, readOnlyStatus, breakpointsEnabledStatus, row) {
 				setBreakpointsEnabled(breakpointsEnabledStatus);
-				
+				require.config({waitSeconds: 0});
 			    require(["code_edit/built-codeEdit", "orion/keyBinding"], function(widget, mKeyBinding) {
 			        var codeEdit = new widget();
 			        codeEdit.create({parent: "embeddedEditor", contentType: contentType, contents: content})
