@@ -12,6 +12,28 @@
   </style>
 </head>
 <body>
-Database Table...
+<p>There are two main approaches to start building an application service from scratch - 
+data-driven and user-interface-driven a.k.a bottom-up and top-down.
+In this wizard we will follow the first approach.</p>
+<p>Let's create a <b>Data Structure</b>, which will represent the entity <i>Book</i>.</p>
+<p>The layout of the data structure is as follows:</p>
+<code>
+BOOKID                 INTEGER         not null    primaryKey<br>
+BOOKISBN               CHAR        13  not null<br>
+BOOKTITLE              VARCHAR     200 not null<br>
+BOOKAUTHOR             VARCHAR     100 not null<br>
+BOOKEDITOR             VARCHAR     100<br>
+BOOKPUBLISHER          VARCHAR     100<br>
+BOOKFORMAT             VARCHAR     100<br>
+BOOKPUBLICATIONDATE    DATE<br>
+BOOKPRICE              DOUBLE          not null<br>
+</code>
+<p>The data model will be stored in a JSON format under the <b>DataStructures</b> folder of your project.
+After activation or publishing, the corresponding database table will be created</p>
+<p>More information about how to manually create such a data structure, as well as
+the general concepts behind, can be found at: 
+<a target='_blank' href='http://www.dirigible.io/samples/data_model.html'>http://www.dirigible.io/samples/data_model.html</a> and
+<a target='_blank' href='http://www.dirigible.io/help/data_structures.html'>http://www.dirigible.io/help/data_structures.html</a>
+</p>  
 </body>
 </html>

@@ -59,5 +59,15 @@ public class CommonUtils {
 		}
 		return buff.toString();
 	}
-
+	
+	public static String toCamelCase(String input) {
+		if (input == null) {
+			return null;
+		}
+		StringBuffer result = new StringBuffer();
+		result.append(input.substring(0, 1).toUpperCase());
+		result.append(input.substring(1).toLowerCase());
+		return result.toString();
+	}
+	
 }

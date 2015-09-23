@@ -12,8 +12,13 @@
 package org.eclipse.dirigible.ide.workspace.wizard.project.getstarted;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -21,7 +26,10 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.publish.IPublisher;
+import org.eclipse.dirigible.ide.publish.PublishException;
 import org.eclipse.dirigible.ide.publish.PublishManager;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.workspace.dual.ProjectCreatorEnhancer;
@@ -143,9 +151,54 @@ public class GetStartedProjectWizardModel {
 		
 		ProjectCreatorEnhancer.enhance(project);
 		
+		createGetStartedArtifacts(project);
+		
+		activateAndPublish(project);
+		
 		project.refreshLocal(2, null);
 		
 		return project;
 	}
 
+	
+
+	private void createGetStartedArtifacts(IProject project) {
+		generateAndStoreArtifact(project, "user_books.table", "DataStructures");
+		generateAndStoreArtifact(project, "user_books_lib.js", "ScriptingServices");
+		generateAndStoreArtifact(project, "user_books.js", "ScriptingServices");
+		generateAndStoreArtifact(project, "user_books.entity", "ScriptingServices");
+		generateAndStoreArtifact(project, "user_books.html", "WebContent");
+	}
+	
+	private void generateAndStoreArtifact(IProject project, String resource, String folder) {
+		InputStream in = GetStartedProjectWizardModel.class.getResourceAsStream(resource);
+		String user = CommonParameters.getUserName();
+		user = user.toLowerCase();
+		try {
+			String content = IOUtils.toString(in, "UTF-8");
+			content = content.replace("${User}", CommonUtils.toCamelCase(user));
+			content = content.replace("${user}", user);
+			content = content.replace("${USER}", user.toUpperCase());
+			
+			IFolder pckg = project.getFolder(folder + "/" + user + "_books");
+			if (!pckg.exists()) {
+				pckg.create(true, false, null);
+			}
+			IFile file = project.getFile(folder + "/" + user + "_books/" + resource.replace("user", user));
+			file.create(IOUtils.toInputStream(content), true, null);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		} catch (CoreException e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+	}
+
+	private void activateAndPublish(IProject project) {
+		try {
+			PublishManager.publishProject(project);
+		} catch (PublishException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 }

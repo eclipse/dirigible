@@ -17,6 +17,7 @@ public class GetStartedStartup implements IStartup {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
+				// enable/disable get started wizard
 				if (WorkspaceLocator.getWorkspace().getRoot().getProjects().length == 0) {
 					GetStartedProjectHandler projectHandler = new GetStartedProjectHandler();
 					try {

@@ -1,0 +1,5 @@
+{
+  "fileName":"${user}_books.js",
+  "tableName":"${USER}_BOOKS",
+  "tableType":"TABLE"
+}

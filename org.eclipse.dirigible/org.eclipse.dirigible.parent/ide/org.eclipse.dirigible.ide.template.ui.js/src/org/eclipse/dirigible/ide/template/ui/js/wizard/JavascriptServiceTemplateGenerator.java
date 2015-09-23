@@ -18,7 +18,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
+import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
@@ -45,7 +45,7 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 		}
 		parameters.put("tableName", model.getTableName()); //$NON-NLS-1$
 		parameters.put("tableType", model.getTableType()); //$NON-NLS-1$
-		parameters.put("entityName", toCamelCase(model.getTableName())); //$NON-NLS-1$
+		parameters.put("entityName", CommonUtils.toCamelCase(model.getTableName())); //$NON-NLS-1$
 		parameters.put("tableColumns", model.getTableColumns()); //$NON-NLS-1$
 		parameters.put("tableColumnsWithoutKeys", //$NON-NLS-1$
 				getTableColumnsWithoutKeys(model.getTableColumns()));
@@ -103,16 +103,6 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 			}
 		}
 		return list.toArray(new TableColumn[] {});
-	}
-
-	private Object toCamelCase(String input) {
-		if (input == null) {
-			return null;
-		}
-		StringBuffer result = new StringBuffer();
-		result.append(input.substring(0, 1).toUpperCase());
-		result.append(input.substring(1).toLowerCase());
-		return result.toString();
 	}
 
 	@Override
