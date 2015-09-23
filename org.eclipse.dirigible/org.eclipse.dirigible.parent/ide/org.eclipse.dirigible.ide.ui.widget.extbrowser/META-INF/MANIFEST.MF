@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.ui.widget.extbrowser
 Bundle-SymbolicName: org.eclipse.dirigible.ide.ui.widget.extbrowser;singleton:=true
-Bundle-Version: 2.1.150831
+Bundle-Version: 2.1.150923
 Bundle-Vendor: SAP AG
 Export-Package: org.eclipse.dirigible.ide.ui.widget.extbrowser
 Require-Bundle: org.eclipse.ui;resolution:=optional,

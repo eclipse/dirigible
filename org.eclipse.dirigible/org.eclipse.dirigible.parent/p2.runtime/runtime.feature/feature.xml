@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dirigible.runtime.feature"
       label="Dirigible Runtime Bundles Feature"
-      version="2.1.150831"
+      version="2.1.150923"
       provider-name="Eclipse.org - Dirigible">
 
    <description url="http://www.dirigible.io/">
