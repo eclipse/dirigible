@@ -27,10 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
@@ -38,6 +34,10 @@ import org.eclipse.dirigible.repository.api.IEntityInformation;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.logging.Logger;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * Servlet implementation class RegistryServlet
@@ -135,6 +135,21 @@ public class RegistryServlet extends AbstractRegistryServlet {
 					response.setContentType(mimeType);
 				} else {
 					response.setContentType(resource.getContentType());
+				}
+				
+				// encoding
+				String acceptLang = request.getHeader("Accept-Language");
+				String contentLang = acceptLang;
+				if (acceptLang != null
+						&& acceptLang.indexOf(",") > 0) {
+					contentLang = acceptLang.substring(0, acceptLang.indexOf(","));
+					if (contentLang.indexOf("-") > 0) {
+						contentLang = contentLang.substring(0, contentLang.indexOf("-"));
+					}
+				}
+					
+				if (contentLang != null) {
+					response.setHeader("Content-Language", contentLang);
 				}
 			}
 			sendData(out, data);
