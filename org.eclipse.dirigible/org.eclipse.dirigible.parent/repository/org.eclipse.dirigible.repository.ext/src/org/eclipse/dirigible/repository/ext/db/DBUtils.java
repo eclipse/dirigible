@@ -28,10 +28,10 @@ import java.util.StringTokenizer;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
-
 import org.eclipse.dirigible.repository.ext.db.dialect.DerbyDBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.HANADBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
+import org.eclipse.dirigible.repository.ext.db.dialect.MySQLDBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.PostgreSQLDBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.SAPDBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.SybaseDBSpecifier;
@@ -44,6 +44,7 @@ public class DBUtils {
 	private static final String PRODUCT_SAP_DB = "SAP DB"; //$NON-NLS-1$
 	private static final String PRODUCT_HDB = "HDB"; //$NON-NLS-1$
 	private static final String PRODUCT_POSTGRESQL = "PostgreSQL"; //$NON-NLS-1$
+	private static final String PRODUCT_MYSQL = "MySQL"; //$NON-NLS-1$
 	
 	public static final String SCRIPT_DELIMITER = ";"; //$NON-NLS-1$
 	
@@ -204,9 +205,11 @@ public class DBUtils {
 				return new DerbyDBSpecifier();
 			} else if (PRODUCT_POSTGRESQL.equals(productName)) {
 				return new PostgreSQLDBSpecifier();
+			} else if (PRODUCT_MYSQL.equals(productName)) {
+				return new MySQLDBSpecifier();
 			}
 		}
-		return new HANADBSpecifier();
+		return new DerbyDBSpecifier();
 	}
 
 	public String specifyDataType(Connection connection, String commonType)

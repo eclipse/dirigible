@@ -25,7 +25,9 @@ public class HANADBSpecifier implements IDialectSpecifier {
 	private static final String HANA_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
 	private static final String HANA_BLOB = "BLOB"; //$NON-NLS-1$
 	private static final String HANA_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP"; //$NON-NLS-1$
-
+	private static final String HANA_KEY_VARCHAR = "VARCHAR(1000)";
+	private static final String HANA_BIG_VARCHAR = "VARCHAR(4000)";
+	
 	@Override
 	public String createLimitAndOffset(int limit, int offset) {
 		return String.format(LIMIT_D_OFFSET_D, limit, offset);
@@ -56,6 +58,8 @@ public class HANADBSpecifier implements IDialectSpecifier {
 		sql = sql.replace(DIALECT_CURRENT_TIMESTAMP, HANA_CURRENT_TIMESTAMP);
 		sql = sql.replace(DIALECT_TIMESTAMP, HANA_TIMESTAMP);
 		sql = sql.replace(DIALECT_BLOB, HANA_BLOB);
+		sql = sql.replace(DIALECT_KEY_VARCHAR, HANA_KEY_VARCHAR);
+		sql = sql.replace(DIALECT_BIG_VARCHAR, HANA_BIG_VARCHAR);
 		return sql;
 	}
 
@@ -76,6 +80,11 @@ public class HANADBSpecifier implements IDialectSpecifier {
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		Blob data = resultSet.getBlob(columnName);
 		return data.getBinaryStream();
+	}
+
+	@Override
+	public boolean isCatalogForSchema() {
+		return false;
 	}
 
 }

@@ -21,6 +21,9 @@ public interface IDialectSpecifier {
 	public static final String DIALECT_BLOB = "$BLOB$"; //$NON-NLS-1$
 	public static final String DIALECT_CURRENT_TIMESTAMP = "$CURRENT_TIMESTAMP$"; //$NON-NLS-1$
 
+	public static final String DIALECT_KEY_VARCHAR = "$KEY_VARCHAR$"; //$NON-NLS-1$
+	public static final String DIALECT_BIG_VARCHAR = "$BIG_VARCHAR$"; //$NON-NLS-1$
+	
 	String specify(String sql);
 
 	String getSpecificType(String commonType);
@@ -38,5 +41,7 @@ public interface IDialectSpecifier {
 	String getAlterAddClose();
 
 	InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException;
+
+	boolean isCatalogForSchema();
 
 }

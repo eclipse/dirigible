@@ -51,7 +51,7 @@ public class StorageUtils extends AbstractStorageUtils {
 			+ STORAGE_PATH + " = ?";
 
 	private static final String CREATE_TABLE_DGB_STORAGE = "CREATE TABLE " + DGB_STORAGE + " ("
-			+ STORAGE_PATH + " VARCHAR(2048) PRIMARY KEY, " + STORAGE_DATA + " BLOB, "
+			+ STORAGE_PATH + " $KEY_VARCHAR$ PRIMARY KEY, " + STORAGE_DATA + " $BLOB$, "
 			+ STORAGE_TIMESTAMP + " TIMESTAMP" + " )";
 
 	private static final String SELECT_COUNT_FROM_DGB_STORAGE = "SELECT COUNT(*) FROM "

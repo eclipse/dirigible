@@ -191,6 +191,8 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 					// backup in case of wrong product recognition
 					rs = metaData.getSchemas(catalogName, null);
 				}
+			} else if (dialectSpecifier.isCatalogForSchema()) {
+				rs = metaData.getCatalogs();
 			} else {
 				rs = metaData.getSchemas(catalogName, null);
 			}
@@ -214,10 +216,18 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 
 	private List<String> getListOfTables(DatabaseMetaData dmd, String catalogName, String schemeName)
 			throws SQLException {
+		
+		String productName = CommonParameters.getDatabaseProductName();
+		IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
 
 		List<String> listOfTables = new ArrayList<String>();
 
-		ResultSet rs = dmd.getTables(catalogName, schemeName, PRCNT, CommonParameters.TABLE_TYPES);
+		ResultSet rs = null;
+		if (dialectSpecifier.isCatalogForSchema()) {
+			rs = dmd.getTables(schemeName, null, PRCNT, CommonParameters.TABLE_TYPES);
+		} else {
+			rs = dmd.getTables(catalogName, schemeName, PRCNT, CommonParameters.TABLE_TYPES);
+		}
 
 		while (rs.next()) {
 			String tableName = rs.getString(3);

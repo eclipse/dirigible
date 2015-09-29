@@ -25,12 +25,16 @@ public class SybaseDBSpecifier implements IDialectSpecifier {
 	private static final String SYBASE_FLOAT = "REAL"; //$NON-NLS-1$
 	private static final String SYBASE_BLOB = "IMAGE"; //$NON-NLS-1$
 	private static final String SYBASE_CURRENT_TIMESTAMP = "GETDATE()"; //$NON-NLS-1$
-
+	private static final String SYBASE_KEY_VARCHAR = "VARCHAR(1000)";
+	private static final String SYBASE_BIG_VARCHAR = "VARCHAR(4000)";
+	
 	@Override
 	public String specify(String sql) {
 		sql = sql.replace(DIALECT_CURRENT_TIMESTAMP, SYBASE_CURRENT_TIMESTAMP);
 		sql = sql.replace(DIALECT_TIMESTAMP, SYBASE_TIMESTAMP);
 		sql = sql.replace(DIALECT_BLOB, SYBASE_BLOB);
+		sql = sql.replace(DIALECT_KEY_VARCHAR, SYBASE_KEY_VARCHAR);
+		sql = sql.replace(DIALECT_BIG_VARCHAR, SYBASE_BIG_VARCHAR);
 		return sql;
 	}
 
@@ -86,6 +90,11 @@ public class SybaseDBSpecifier implements IDialectSpecifier {
 	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		return new ByteArrayInputStream(resultSet.getBytes(columnName));
+	}
+
+	@Override
+	public boolean isCatalogForSchema() {
+		return false;
 	}
 
 }

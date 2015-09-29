@@ -27,7 +27,9 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 	private static final String POSTGRESQL_DOUBLE = "DOUBLE PRECISION"; //$NON-NLS-1$
 	private static final String POSTGRESQL_BLOB = "BYTEA"; //$NON-NLS-1$
 	private static final String POSTGRESQL_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP"; //$NON-NLS-1$
-
+	private static final String POSTGRESQL_KEY_VARCHAR = "VARCHAR(1000)";
+	private static final String POSTGRESQL_BIG_VARCHAR = "VARCHAR(4000)";
+	
 	@Override
 	public String createLimitAndOffset(int limit, int offset) {
 		return String.format(LIMIT_D_OFFSET_D, limit, offset);
@@ -38,6 +40,8 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 		sql = sql.replace(DIALECT_CURRENT_TIMESTAMP, POSTGRESQL_CURRENT_TIMESTAMP);
 		sql = sql.replace(DIALECT_TIMESTAMP, POSTGRESQL_TIMESTAMP);
 		sql = sql.replace(DIALECT_BLOB, POSTGRESQL_BLOB);
+		sql = sql.replace(DIALECT_KEY_VARCHAR, POSTGRESQL_KEY_VARCHAR);
+		sql = sql.replace(DIALECT_BIG_VARCHAR, POSTGRESQL_BIG_VARCHAR);
 		return sql;
 	}
 
@@ -80,6 +84,11 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		return new ByteArrayInputStream(resultSet.getBytes(columnName));
+	}
+
+	@Override
+	public boolean isCatalogForSchema() {
+		return false;
 	}
 
 }

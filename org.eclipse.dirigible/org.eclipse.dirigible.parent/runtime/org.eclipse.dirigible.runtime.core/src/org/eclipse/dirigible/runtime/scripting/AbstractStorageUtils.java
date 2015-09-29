@@ -20,6 +20,8 @@ import java.sql.Statement;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.repository.ext.db.DBUtils;
+import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public abstract class AbstractStorageUtils implements IStorage {
@@ -55,6 +57,9 @@ public abstract class AbstractStorageUtils implements IStorage {
 			} catch (Exception e) {
 				logger.warn(String.format(TABLE_DOES_NOT_EXIST_S, e.getMessage()));
 				// Create Table
+				String productName = connection.getMetaData().getDatabaseProductName();
+				IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
+				createTableQuery = dialectSpecifier.specify(createTableQuery);
 				stmt.executeUpdate(createTableQuery);
 			}
 		} finally {
