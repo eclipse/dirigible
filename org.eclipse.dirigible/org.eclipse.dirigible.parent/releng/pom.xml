@@ -141,6 +141,13 @@
 					<failOnMissingWebXml>true</failOnMissingWebXml>
 				</configuration>
 			</plugin>
+			<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-war-plugin</artifactId>
+	            <configuration>
+	                <outputDirectory>../../../dist/${deployment.type}/${artifactId}/</outputDirectory>
+	            </configuration>
+	        </plugin>
 			
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -162,8 +169,6 @@
 					</execution>
 				</executions>
 			</plugin>			
-
-
 		</plugins>
 	</build>
 	<profiles>
@@ -174,9 +179,9 @@
 			</activation>
 			<properties>
 				<deployment.type>tomcat</deployment.type>
-				<deployment.name>${project.name}-${project.version}</deployment.name>
-                <deployment.context>${project.name}-${project.version}</deployment.context>
-				<deployment.executable>${project.name}-executable</deployment.executable>
+				<deployment.name>dirigible</deployment.name>
+                <deployment.context>dirigible</deployment.context>
+				<deployment.executable>dont-use</deployment.executable>
 			</properties>
 		</profile>
 		<profile>
@@ -185,7 +190,16 @@
 				<deployment.type>trial</deployment.type>
 				<deployment.name>ROOT</deployment.name>
                 <deployment.context></deployment.context>
-				<deployment.executable>${project.name}-trial-executable</deployment.executable>
+				<deployment.executable>dirigible-${project.name}-trial-executable</deployment.executable>
+			</properties>
+		</profile>
+		<profile>
+			<id>trial-postgres</id>
+			<properties>
+				<deployment.type>trial-postgres</deployment.type>
+				<deployment.name>ROOT</deployment.name>
+                <deployment.context></deployment.context>
+				<deployment.executable>dont-use</deployment.executable>
 			</properties>
 		</profile>
 		<profile>
@@ -194,7 +208,16 @@
 				<deployment.type>sap</deployment.type>
 				<deployment.name>dirigible</deployment.name>
                 <deployment.context>dirigible</deployment.context>
-				<deployment.executable>${project.name}-sap-executable</deployment.executable>
+				<deployment.executable>dont-use</deployment.executable>
+			</properties>
+		</profile>
+		<profile>
+			<id>tomcat-postgres</id>
+			<properties>
+				<deployment.type>tomcat-postgres</deployment.type>
+				<deployment.name>dirigible</deployment.name>
+                <deployment.context>dirigible</deployment.context>
+				<deployment.executable>dont-use</deployment.executable>
 			</properties>
 		</profile>
 	</profiles>

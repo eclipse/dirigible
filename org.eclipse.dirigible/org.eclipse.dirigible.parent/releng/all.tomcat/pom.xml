@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>dirigible-all-tomcat</artifactId>
+	<artifactId>allinone</artifactId>
 	<packaging>war</packaging>
 
 	<build>
@@ -85,6 +85,73 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+	          <artifactId>maven-antrun-plugin</artifactId>
+	          <executions>
+	            <execution>
+	              <phase>install</phase>
+	              <configuration>
+	                <tasks>
+	                  
+	                  <!-- Copy executable jar, if relevant -->
+	                  <copy todir="../../../../dist/${deployment.type}/${artifactId}/">
+						    <fileset dir="${project.build.directory}">
+						        <include name="*.jar"/>
+						        <exclude name="dont-use.jar"/>
+						    </fileset>
+					  </copy>
+					  
+					  <!-- Copy bridge p2 -->
+					  <copy todir="../../../../dist/p2/bridge/">
+						    <fileset dir="${project.build.directory}/../../../p2.bridge/bridge.p2/target/repository">
+						        <include name="**/*"/>
+						    </fileset>
+					  </copy>
+					  <!-- Copy external p2 -->
+					  <copy todir="../../../../dist/p2/external/">
+						    <fileset dir="${project.build.directory}/../../../p2.external/external.p2/target/repository">
+						        <include name="**/*"/>
+						    </fileset>
+					  </copy>
+					  <!-- Copy ide p2 -->
+					  <copy todir="../../../../dist/p2/ide/">
+						    <fileset dir="${project.build.directory}/../../../p2.ide/ide.p2/target/repository">
+						        <include name="**/*"/>
+						    </fileset>
+					  </copy>
+					  <!-- Copy lib p2 -->
+					  <copy todir="../../../../dist/p2/lib/">
+						    <fileset dir="${project.build.directory}/../../../p2.lib/lib.p2/target/repository">
+						        <include name="**/*"/>
+						    </fileset>
+					  </copy>
+					  <!-- Copy rcp p2 -->
+					  <copy todir="../../../../dist/p2/rcp/">
+						    <fileset dir="${project.build.directory}/../../../p2.rcp/rcp.p2/target/repository">
+						        <include name="**/*"/>
+						    </fileset>
+					  </copy>
+					  <!-- Copy repository p2 -->
+					  <copy todir="../../../../dist/p2/repository/">
+						    <fileset dir="${project.build.directory}/../../../p2.repository/repository.p2/target/repository">
+						        <include name="**/*"/>
+						    </fileset>
+					  </copy>
+					  <!-- Copy runtime p2 -->
+					  <copy todir="../../../../dist/p2/runtime/">
+						    <fileset dir="${project.build.directory}/../../../p2.runtime/runtime.p2/target/repository">
+						        <include name="**/*"/>
+						    </fileset>
+					  </copy>
+					  
+	                </tasks>
+	              </configuration>
+	              <goals>
+	                <goal>run</goal>
+	              </goals>
+	            </execution>
+	          </executions>
+	        </plugin>
 		</plugins>
 	</build>
 	

@@ -52,6 +52,9 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	
+	
 
 	<modules>
 		<module>bridge.feature</module>

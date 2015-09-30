@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="dirigible-ide" version="2.5">
+
+	<display-name>Dirigible Cloud Toolkit</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+	<servlet id="bridge">
+		<description>Equinox Bridge Servlet</description>
+		<display-name>Equinox Bridge Servlet</display-name>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<servlet-class>org.eclipse.dirigible.ide.bridge.DirigibleBridge</servlet-class>
+
+		<!-- Framework Controls could be useful for testing purpose, but we disable 
+			it per default -->
+		<init-param>
+			<param-name>enableFrameworkControls</param-name>
+			<param-value>false</param-value>
+		</init-param>
+
+		<!-- Enable multi-language support for the extension registry -->
+		<!-- the OSGi console is useful for trouble shooting but will fill up your 
+			appserver log quickly, so deactivate on production use. Uncomment the -console 
+			parameter to enabled OSGi console access. -->
+		<init-param>
+			<param-name>commandline</param-name>
+			<param-value>-registryMultiLanguage -console</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>extendedFrameworkExports</param-name>
+			<param-value>org.apache.naming.java,org.apache.tomcat.dbcp.dbcp</param-value>
+		</init-param>
+
+		<!-- Corresponding Runtime URL. Used by Registry Perspective, Log Service, etc. -->
+		<init-param>
+			<param-name>runtimeUrl</param-name>
+			<param-value>/@RUNTIME_URL@</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>servicesUrl</param-name>
+			<param-value>/services</param-value>
+		</init-param>
+		
+		<!-- Enable usage of roles - Developer, Operators, etc. Default is true, false means Everyone can do anything -->
+		<init-param>
+			<param-name>enableRoles</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		
+		<!-- Print logs in System output in addition to the standard logger. Workaround for some application servers -->
+		<init-param>
+			<param-name>logInSystemOutput</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		
+		<!-- JNDI key for the Default Database DataSource -->
+		<init-param>
+			<param-name>jndiDefaultDataSource</param-name>
+			<param-value>java:comp/env/jdbc/DefaultDB</param-value>
+		</init-param>
+		
+		
+		<!-- JNDI key for the Connectivity Service 
+		<init-param>
+			<param-name>jndiConnectivityService</param-name>
+			<param-value>java:comp/env/connectivity/Configuration</param-value>
+		</init-param>
+		-->
+		
+		<!-- JNDI key for the Mail Service 
+		<init-param>
+			<param-name>jndiMailService</param-name>
+			<param-value>java:comp/env/mail/SAPInternalNWCloudSession</param-value>
+		</init-param>
+		-->
+		
+		<!-- Auto Commit property for JDBC connection --> 
+		<init-param>
+			<param-name>jdbcAutoCommit</param-name>
+			<param-value>true</param-value>  <!-- set to true in case of PostgreSQL -->
+		</init-param>
+
+		<load-on-startup>2</load-on-startup>
+
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+	
+	
+	<!-- Logging Servlet -->
+	<servlet>
+		<description>Logging Servlet</description>
+		<display-name>Logging Servlet</display-name>
+		<servlet-name>LoggingServlet</servlet-name>
+		<servlet-class>org.eclipse.dirigible.runtime.logging.LoggingServlet</servlet-class>
+		<init-param>
+			<param-name>initLoggingDirectory</param-name>
+			<param-value>/logs</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoggingServlet</servlet-name>
+		<url-pattern>/logging</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Filters -->
+	
+	<!-- Expires Filter - fix for blinking images in Chrome -->
+	<filter>
+	 <filter-name>ExpiresFilter</filter-name>
+	 <filter-class>org.eclipse.dirigible.ide.bridge.ext.ExpiresFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+	 <filter-name>ExpiresFilter</filter-name>
+	 <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- XSS Filter - against XSS attacks -->
+	<filter>
+		<filter-name>XSSFilter</filter-name>
+		<filter-class>org.eclipse.dirigible.ide.bridge.ext.XSSFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>XSSFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<!-- Resource References 
+	
+	<resource-ref>
+		<res-ref-name>jdbc/DefaultDB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	
+	<resource-ref>
+    	<res-ref-name>connectivity/Configuration</res-ref-name>
+    	<res-type>com.sap.core.connectivity.api.configuration.ConnectivityConfiguration</res-type>
+	</resource-ref>
+	
+	<resource-ref>
+  		<res-ref-name>mail/SAPInternalNWCloudSession</res-ref-name>
+  	    <res-type>javax.mail.Session</res-type>
+  	</resource-ref>
+	
+	-->
+
+	<!-- Security -->
+	
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+	
+	<!-- Remove comment when #109 is fixed
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>file</realm-name>
+		<form-login-config>
+			<form-login-page>/authentication/login.html</form-login-page>
+			<form-error-page>/authentication/error.html</form-error-page>
+		</form-login-config>
+	</login-config>
+  	-->
+
+	<!-- Registry Import/Export Services -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Registry Import/Export Services</web-resource-name>
+			<url-pattern>/services/import</url-pattern>
+			<url-pattern>/services/export</url-pattern>
+			<url-pattern>/services/clone-import</url-pattern>
+			<url-pattern>/services/clone-export</url-pattern>
+			<url-pattern>/services/project-import</url-pattern>
+			<url-pattern>/services/data-import</url-pattern>
+			<url-pattern>/services/data-export</url-pattern>
+			<url-pattern>/services/content-init</url-pattern>
+			<url-pattern>/services/reset</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Operator</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<!-- Registry Services -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Registry Services</web-resource-name>
+			<url-pattern>/services/registry/DataStructures/*</url-pattern>
+			<url-pattern>/services/registry/IntegrationServices/*</url-pattern>
+			<url-pattern>/services/registry/ScriptingServices/*</url-pattern>
+			<url-pattern>/services/registry/WebContent/*</url-pattern>
+			<url-pattern>/services/content/DataStructures/*</url-pattern>
+			<url-pattern>/services/content/IntegrationServices/*</url-pattern>
+			<url-pattern>/services/content/ScriptingServices/*</url-pattern>
+			<url-pattern>/services/content/WebContent/*</url-pattern>
+			<url-pattern>/services/web-secured/*</url-pattern>
+			<url-pattern>/services/web/content-secured/*</url-pattern>
+			<url-pattern>/services/js-secured/*</url-pattern>
+			<url-pattern>/services/rb-secured/*</url-pattern>
+			<url-pattern>/services/groovy-secured/*</url-pattern>
+			<url-pattern>/services/wiki-secured/*</url-pattern>
+			<url-pattern>/services/web/wiki-secured/*</url-pattern>
+			<url-pattern>/services/ui/index.html</url-pattern>
+			<url-pattern>/services/js-sandbox/*</url-pattern>
+			<url-pattern>/services/groovy-sandbox/*</url-pattern>
+			<url-pattern>/services/web-sandbox/*</url-pattern>
+			<url-pattern>/services/wiki-sandbox/*</url-pattern>
+			<url-pattern>/services/acclog/*</url-pattern>
+			<url-pattern>/services/memory</url-pattern>
+			<url-pattern>/services/js-debug/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Everyone</role-name>
+			<role-name>Administrator</role-name>
+			<role-name>Manager</role-name>
+			<role-name>PowerUser</role-name>
+			<role-name>User</role-name>
+			<role-name>ReadWrite</role-name>
+			<role-name>ReadOnly</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<!-- Repository Service -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Repository Service</web-resource-name>
+			<url-pattern>/services/repository/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Repository</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<!-- Messaging Services -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Messaging Services</web-resource-name>
+			<url-pattern>/services/message/send</url-pattern>
+			<url-pattern>/services/message/subscribe</url-pattern>
+			<url-pattern>/services/message/receive</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Messenger</role-name>
+			<role-name>Operator</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<!-- Anonymous Service -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Anonymous Service</web-resource-name>
+			<url-pattern>/services/anonymous/*</url-pattern>
+			<url-pattern>/services/ui/anonymous.html/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Anonymous</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	
+	<!-- Security Roles -->
+	<security-role>
+		<description>All SAP NetWeaver Cloud users</description>
+		<role-name>Everyone</role-name>
+	</security-role>
+	<security-role>
+		<description>Developer can access the IDE</description>
+		<role-name>Developer</role-name>
+	</security-role>
+	<security-role>
+		<description>Operator can perform actions on Registry and Repository</description>
+		<role-name>Operator</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>Administrator</role-name>
+	</security-role>	
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>Manager</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>		
+		<role-name>PowerUser</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>User</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>ReadWrite</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>ReadOnly</role-name>
+	</security-role>
+	<security-role>
+		<description>Repository Service Access</description>
+		<role-name>Repository</role-name>
+	</security-role>
+	<security-role>
+		<description>Messenger can perform direct communication via Messaging Hub</description>
+		<role-name>Messenger</role-name>
+	</security-role>
+	<security-role>
+		<description>Anonymous can set explicit user name</description>
+		<role-name>Anonymous</role-name>
+	</security-role>
+	
+</web-app>

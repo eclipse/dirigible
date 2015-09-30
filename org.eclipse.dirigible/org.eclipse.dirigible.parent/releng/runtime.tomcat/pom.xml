@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>dirigible-runtime-tomcat</artifactId>
+	<artifactId>runtime</artifactId>
 	<packaging>war</packaging>
 
 	<build>
