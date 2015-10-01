@@ -230,7 +230,7 @@ exports.update${entityName} = function() {
         statement.setDouble(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $DATE)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase() =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
+            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
             statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setDate(++i, null);
