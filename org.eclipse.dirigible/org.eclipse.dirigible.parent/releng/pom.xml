@@ -29,7 +29,7 @@
 		<finalName>${deployment.name}</finalName>
 		<pluginManagement>
 			<plugins>
-				<plugin>
+				<!-- <plugin>
 					<artifactId>maven-antrun-plugin</artifactId>
 					<executions>
 						<execution>
@@ -47,7 +47,7 @@
 							</goals>
 						</execution>
 					</executions>
-				</plugin>
+				</plugin> -->
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -141,14 +141,7 @@
 					<failOnMissingWebXml>true</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-war-plugin</artifactId>
-	            <configuration>
-	                <outputDirectory>../../dist/${deployment.type}/${artifactId}/</outputDirectory>
-	            </configuration>
-	        </plugin>
-			
+            
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
@@ -190,7 +183,7 @@
 				<deployment.type>trial</deployment.type>
 				<deployment.name>ROOT</deployment.name>
                 <deployment.context></deployment.context>
-				<deployment.executable>dirigible-${project.name}-trial-executable</deployment.executable>
+				<deployment.executable>dirigible-${project.name}-${project.version}-trial-executable</deployment.executable>
 			</properties>
 		</profile>
 		<profile>

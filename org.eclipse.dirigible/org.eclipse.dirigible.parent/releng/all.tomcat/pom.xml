@@ -89,6 +89,23 @@
 	          <artifactId>maven-antrun-plugin</artifactId>
 	          <executions>
 	            <execution>
+	                <id>replace-runtime-url</id>
+					<phase>prepare-package</phase>
+					<configuration>
+						<tasks>
+							<replace dir="${project.build.directory}/temp">
+								<include name="**/web.xml" />
+								<replacefilter token="@RUNTIME_URL@" value="${deployment.context}" />
+							</replace>
+						</tasks>
+					</configuration>
+					<goals>
+						<goal>run</goal>
+					</goals>
+				</execution>
+						
+	            <execution>
+	              <id>copy for distribution</id>
 	              <phase>install</phase>
 	              <configuration>
 	                <tasks>
@@ -98,6 +115,13 @@
 						    <fileset dir="${project.build.directory}">
 						        <include name="*.jar"/>
 						        <exclude name="dont-use.jar"/>
+						    </fileset>
+					  </copy>
+					  
+					  <!-- Copy deployable war, if relevant -->
+	                  <copy todir="../../../../dist/${deployment.type}/${artifactId}/">
+						    <fileset dir="${project.build.directory}">
+						        <include name="*.war"/>
 						    </fileset>
 					  </copy>
 					  

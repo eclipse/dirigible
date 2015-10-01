@@ -15,9 +15,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
 					<wtpversion>1.5</wtpversion>
@@ -75,6 +72,48 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+	          <artifactId>maven-antrun-plugin</artifactId>
+	          <executions>
+	            <execution>
+	                <id>replace-runtime-url</id>
+					<phase>prepare-package</phase>
+					<configuration>
+						<tasks>
+							<replace dir="${project.build.directory}/temp">
+								<include name="**/web.xml" />
+								<replacefilter token="@RUNTIME_URL@" value="${deployment.context}" />
+							</replace>
+						</tasks>
+					</configuration>
+					<goals>
+						<goal>run</goal>
+					</goals>
+				</execution>
+						
+	            <execution>
+	              <id>copy for distribution</id>
+	              <phase>install</phase>
+	              <configuration>
+	                <tasks>
+	                  
+					  <!-- Copy deployable war, if relevant -->
+	                  <copy todir="../../../../dist/${deployment.type}/${artifactId}/">
+						    <fileset dir="${project.build.directory}">
+						        <include name="*.war"/>
+						    </fileset>
+					  </copy>
+					  
+	                </tasks>
+	              </configuration>
+	              <goals>
+	                <goal>run</goal>
+	              </goals>
+	            </execution>
+	          </executions>
+	        </plugin>
+			
 		</plugins>
 	</build>
 	
