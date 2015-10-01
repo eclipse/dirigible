@@ -52,6 +52,7 @@ import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ConnectivityConfigurationUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.FileStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.IndexingService;
@@ -251,6 +252,10 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.XML_UTILS, xmlUtils); //$NON-NLS-1$
 		apiBuilder.setXmlUtils(xmlUtils);
 
+		// ExceptionUtils
+		ExceptionUtils exceptionUtils = new ExceptionUtils();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.EXCEPTION_UTILS, exceptionUtils); //$NON-NLS-1$
+		apiBuilder.setExceptionUtils(exceptionUtils);
 
 		// register objects via extension
 		try {

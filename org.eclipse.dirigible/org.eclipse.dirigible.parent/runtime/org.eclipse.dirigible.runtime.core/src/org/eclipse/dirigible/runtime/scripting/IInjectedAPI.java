@@ -20,6 +20,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
@@ -83,6 +84,8 @@ public interface IInjectedAPI {
 	public StringEscapeUtils getXssUtils();
 
 	public XMLUtils getXmlUtils();
+
+	public ExceptionUtils getExceptionUtils();
 
 	public Object get(String key);
 	

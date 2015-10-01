@@ -20,6 +20,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
@@ -178,11 +179,15 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 	}
 
 	@Override
+	public ExceptionUtils getExceptionUtils() {
+		return builder.getExceptionUtils();
+	}
+
+	@Override
 	public IMessagingService getMessagingService() {
 		return builder.getMessagingService();
 	}
 
-	
 	@Override
 	public Object get(String key) {
 		return builder.get(key);

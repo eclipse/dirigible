@@ -21,6 +21,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
@@ -148,6 +149,8 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers{
 	private StringEscapeUtils xssUtils;
 	
 	private XMLUtils xmlUtils;
+
+	private ExceptionUtils exceptionUtils;
 	
 	
 	/**
@@ -436,6 +439,15 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers{
 		this.xmlUtils = xmlUtils;
 	}
 
+	@Override
+	public ExceptionUtils getExceptionUtils() {
+		return exceptionUtils;
+	}
+
+	@Override
+	public void setExceptionUtils(ExceptionUtils exceptionUtils) {
+		this.exceptionUtils = exceptionUtils;
+	}
 
 	@Override
 	public IMessagingService getMessagingService() {
@@ -446,7 +458,7 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers{
 	public void setMessagingService(IMessagingService messagingService) {
 		this.messagingService = messagingService;
 	}
-	
+
 	@Override
 	public Object get(String key) {
 		return generic.get(key);

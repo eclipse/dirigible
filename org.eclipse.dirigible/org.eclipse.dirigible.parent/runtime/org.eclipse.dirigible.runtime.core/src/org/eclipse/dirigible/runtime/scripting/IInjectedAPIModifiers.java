@@ -20,6 +20,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
@@ -84,4 +85,5 @@ public interface IInjectedAPIModifiers {
 
 	public void setXmlUtils(XMLUtils xmlUtils);
 
+	public void setExceptionUtils(ExceptionUtils exceptionUtils);
 }
