@@ -377,9 +377,9 @@ exports.getPrimaryKeys = function() {
 #end
 #end
     if (result === 0) {
-        throw new Exception("There is no primary key");
+        throw $\.getExceptionUtils().createException("There is no primary key");
     } else if(result.length > 1) {
-        throw new Exception("More than one Primary Key is not supported.");
+        throw $\.getExceptionUtils().createException("More than one Primary Key is not supported.");
     }
     return result;
 };
