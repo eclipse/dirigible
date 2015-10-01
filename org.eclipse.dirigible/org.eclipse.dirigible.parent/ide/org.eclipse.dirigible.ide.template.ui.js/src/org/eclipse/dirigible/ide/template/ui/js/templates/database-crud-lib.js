@@ -230,22 +230,22 @@ exports.update${entityName} = function() {
         statement.setDouble(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $DATE)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, $.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            var js_date_${tableColumn.getName().toLowerCase() =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
+            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, $.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, $.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTimestamp(++i, null);
         }
