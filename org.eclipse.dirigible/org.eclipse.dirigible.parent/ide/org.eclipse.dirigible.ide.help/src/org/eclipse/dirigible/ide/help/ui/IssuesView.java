@@ -15,7 +15,7 @@ public class IssuesView extends AbstractHelpView {
 
 	@Override
 	protected String getSiteUrl() {
-		return "https://github.com/SAP/cloud-dirigible/issues?state=open";
+		return "https://bugs.eclipse.org/bugs/buglist.cgi?list_id=12783016&product=Dirigible&query_format=advanced";
 	}
 
 }

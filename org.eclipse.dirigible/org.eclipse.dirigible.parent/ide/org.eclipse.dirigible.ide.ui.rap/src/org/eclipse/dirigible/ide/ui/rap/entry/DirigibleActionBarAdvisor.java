@@ -62,6 +62,8 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 	private static final String HTTP_DIRIGIBLE_SAMPLES = "http://samples.dirigible.io"; //$NON-NLS-1$
 	
 	private static final String HTTP_DIRIGIBLE_FORUM = "http://forum.dirigible.io"; //$NON-NLS-1$
+	
+	private static final String HTTP_DIRIGIBLE_BUG = "https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Dirigible"; //$NON-NLS-1$
 
 	private static final String ABOUT = Messages.DirigibleActionBarAdvisor_ABOUT;
 
@@ -72,6 +74,8 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 	private static final String DIRIGIBLE_SAMPLES = Messages.DirigibleActionBarAdvisor_DIRIGIBLE_SAMPLES;
 	
 	private static final String DIRIGIBLE_FORUM = Messages.DirigibleActionBarAdvisor_DIRIGIBLE_FORUM;
+	
+	private static final String DIRIGIBLE_BUG = Messages.DirigibleActionBarAdvisor_DIRIGIBLE_BUG;
 
 	private static final String SHOW_VIEW = Messages.DirigibleActionBarAdvisor_SHOW_VIEW;
 
@@ -97,6 +101,7 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 	private Action dirigibleHelpAction;
 	private Action dirigibleSamplesAction;
 	private Action dirigibleForumAction;
+	private Action dirigibleBugAction;
 	private Action aboutAction;
 	private MenuManager showPerspectiveMenuMgr;
 	private MenuManager showViewMenuMgr;
@@ -204,6 +209,18 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		dirigibleForumAction.setId("org.eclipse.dirigible.ide.forum"); //$NON-NLS-1$
 		register(dirigibleForumAction);
 		
+		// Bug
+		dirigibleBugAction = new Action() {
+			private static final long serialVersionUID = 7112545561507879756L;
+			
+			public void run() {
+				onWebPageAction(window.getWorkbench(), dirigibleBugAction, HTTP_DIRIGIBLE_BUG);
+			}
+		};
+		dirigibleBugAction.setText(DIRIGIBLE_BUG);
+		dirigibleBugAction.setId("org.eclipse.dirigible.ide.bug"); //$NON-NLS-1$
+		register(dirigibleBugAction);
+		
 		// About
 		aboutAction = new Action() {
 			private static final long serialVersionUID = 8477239924815783883L;
@@ -288,6 +305,7 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		helpMenu.add(dirigibleHomeAction);
 		helpMenu.add(dirigibleSamplesAction);
 		helpMenu.add(dirigibleForumAction);
+		helpMenu.add(dirigibleBugAction);
 		// helpMenu.add(helpAction);
 		helpMenu.add(new Separator("about")); //$NON-NLS-1$
 		helpMenu.add(aboutAction);
@@ -305,8 +323,9 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 	}
 
 	protected void fillStatusLine(IStatusLineManager statusLine) {
-		statusLine.add(dirigibleHomeAction);
-		statusLine.add(dirigibleForumAction);
-		statusLine.add(aboutAction);
+//		statusLine.add(dirigibleHomeAction);
+//		statusLine.add(dirigibleForumAction);
+		statusLine.add(dirigibleBugAction);
+//		statusLine.add(aboutAction);
 	}
 }

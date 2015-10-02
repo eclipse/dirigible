@@ -15,7 +15,7 @@ public class ForumView extends AbstractHelpView {
 
 	@Override
 	protected String getSiteUrl() {
-		return "https://groups.google.com/forum/embed/?place=forum/dirigible-forum&showpopout=true&theme=default#!forum/dirigible-forum";
+		return "https://www.eclipse.org/forums/index.php?t=thread&frm_id=311";
 	}
 
 }
