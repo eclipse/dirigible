@@ -75,6 +75,7 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 				nextPage = dsvPage;
 			}
 		} else if (page instanceof DataStructureTemplateStructurePage
+				|| page instanceof DataStructureTemplateQueryPage
 				|| page instanceof DataStructureTemplateDSVPage) {
 			nextPage = targetLocationPage;
 		} else {
