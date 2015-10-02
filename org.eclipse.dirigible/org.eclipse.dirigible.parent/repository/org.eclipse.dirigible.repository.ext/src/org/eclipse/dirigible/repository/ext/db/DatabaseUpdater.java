@@ -407,8 +407,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		// "query":"SELECT * FROM table_name"
 		// }
 		IRepository repository = this.repository;
-		IResource resource = repository.getResource(this.location
-				+ dsDefinition);
+		IResource resource = repository.getResource(dsDefinition);
 		String content = new String(resource.getContent());
 		JsonParser parser = new JsonParser();
 		JsonObject dsDefinitionObject = (JsonObject) parser.parse(content);
