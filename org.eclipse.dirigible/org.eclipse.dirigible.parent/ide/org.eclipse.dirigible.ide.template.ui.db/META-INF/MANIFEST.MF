@@ -16,7 +16,9 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.dirigible.ide.db.export.rcp;resolution:=optional,
  org.eclipse.dirigible.ide.db.export.rap;resolution:=optional,
  org.eclipse.core.runtime,
- org.eclipse.dirigible.repository.ext
+ org.eclipse.dirigible.repository.ext,
+ org.eclipse.dirigible.ide.editor.js;resolution:=optional,
+ org.eclipse.dirigible.ide.editor.text;resolution:=optional
 Import-Package: org.eclipse.dirigible.ide.common.io,
  org.eclipse.dirigible.repository.logging,
  org.eclipse.dirigible.ide.ui.common.validation,

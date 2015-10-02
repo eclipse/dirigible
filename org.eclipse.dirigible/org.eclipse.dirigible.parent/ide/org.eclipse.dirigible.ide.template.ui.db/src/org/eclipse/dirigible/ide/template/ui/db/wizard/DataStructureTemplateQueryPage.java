@@ -12,6 +12,8 @@
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -19,7 +21,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
+import org.eclipse.dirigible.ide.editor.js.EditorWidget;
+import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
 import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
 
 public class DataStructureTemplateQueryPage extends FocusableWizardPage {
@@ -41,7 +44,7 @@ public class DataStructureTemplateQueryPage extends FocusableWizardPage {
 
 	private Composite composite;
 
-	private Text queryText;
+	private EditorWidget queryText;
 
 	protected DataStructureTemplateQueryPage(DataStructureTemplateModel model) {
 		super(PAGE_NAME);
@@ -62,41 +65,52 @@ public class DataStructureTemplateQueryPage extends FocusableWizardPage {
 	
 	private void createIdField(Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 		label.setText(QUERY);
 
-		queryText = new Text(parent, SWT.BORDER);
-		queryText
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		queryText.addModifyListener(new ModifyListener() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 5393849992282223675L;
-
-			@Override
-			public void modifyText(ModifyEvent event) {
-				if (queryText.getText() == null
-						|| "".equals(queryText.getText())) { //$NON-NLS-1$
-					setErrorMessage(INPUT_THE_SQL_QUERY_FOR_THE_VIEW);
-				} else {
-					setErrorMessage(null);
-					model.setQuery(queryText.getText());
-				}
-				checkPageStatus();
-			}
-		});
+//		queryText = new Text(parent, SWT.BORDER);
+		
+		queryText = new EditorWidget(parent);
+		queryText.setText("", EditorMode.SQL, false, false, 0);
+		
+		queryText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		queryText.addKeyListener(new KeyListener() {
+//			
+//			private static final long serialVersionUID = 3767429446887374077L;
+//
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				// 
+//			}
+//			
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				if (queryText.getText() == null
+//						|| "".equals(queryText.getText())) { //$NON-NLS-1$
+//					setErrorMessage(INPUT_THE_SQL_QUERY_FOR_THE_VIEW);
+//				} else {
+//					setErrorMessage(null);
+//					model.setQuery(queryText.getText());
+//				}
+//				checkPageStatus();
+//				
+//			}
+//		});
+		
 		setFocusable(queryText);
 	}
 
 	private void checkPageStatus() {
-		if (model.getQuery() == null || "".equals(model.getQuery())) { //$NON-NLS-1$
-			setPageComplete(false);
-			return;
-		}
+//		if (model.getQuery() == null || "".equals(model.getQuery())) { //$NON-NLS-1$
+//			setPageComplete(false);
+//			return;
+//		}
 
 		setPageComplete(true);
+	}
+	
+	public String getQuery() {
+		return queryText.getText();
 	}
 
 }

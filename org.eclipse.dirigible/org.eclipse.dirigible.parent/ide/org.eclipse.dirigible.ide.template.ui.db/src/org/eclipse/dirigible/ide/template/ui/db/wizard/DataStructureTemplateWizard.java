@@ -77,6 +77,19 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 		} else if (page instanceof DataStructureTemplateStructurePage
 				|| page instanceof DataStructureTemplateQueryPage
 				|| page instanceof DataStructureTemplateDSVPage) {
+			
+			if (page instanceof DataStructureTemplateQueryPage) {
+				DataStructureTemplateQueryPage queryPage = (DataStructureTemplateQueryPage) page;
+				String queryText  = queryPage.getQuery();
+				if (queryText == null
+						|| "".equals(queryText.trim())) {
+					nextPage = page;
+					queryPage.setErrorMessage("SQL query string is empty");
+				} else {
+					queryPage.setErrorMessage(null);
+				}
+			}
+			
 			nextPage = targetLocationPage;
 		} else {
 			nextPage = super.getNextPage(page);
@@ -94,5 +107,24 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 		}
 		return result;
 	}
+	
+	@Override
+	public boolean canFinish() {
+		boolean can = super.canFinish();
+		if (!can) {
+			return can;
+		}
+		String queryText  = queryPage.getQuery();
+		if (queryText == null
+				|| "".equals(queryText.trim())) {
+			queryPage.setErrorMessage("SQL query string is empty");
+			can = false;
+		} else {
+			queryPage.setErrorMessage(null);
+			can = true;
+		}
+		return can;
+	}
+	
 
 }
