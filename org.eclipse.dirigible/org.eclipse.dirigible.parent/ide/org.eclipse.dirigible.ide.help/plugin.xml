@@ -40,11 +40,6 @@
             name="Forum"
             restorable="true">
       </view>
-   </extension>
-   
-   <!--
-   <extension
-         point="org.eclipse.ui.views">
       <view
             class="org.eclipse.dirigible.ide.help.ui.IssuesView"
             icon="resources/issues.png"
@@ -53,6 +48,7 @@
             restorable="true">
       </view>
    </extension>
-  -->
+   
+
   
 </plugin>

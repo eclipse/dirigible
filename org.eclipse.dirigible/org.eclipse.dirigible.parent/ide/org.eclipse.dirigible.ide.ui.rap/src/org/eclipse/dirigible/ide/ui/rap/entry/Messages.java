@@ -24,6 +24,7 @@ public class Messages extends NLS {
 	public static String DirigibleActionBarAdvisor_DIRIGIBLE_HELP;
 	public static String DirigibleActionBarAdvisor_DIRIGIBLE_SAMPLES;
 	public static String DirigibleActionBarAdvisor_DIRIGIBLE_FORUM;
+	public static String DirigibleActionBarAdvisor_DIRIGIBLE_BUG;
 	public static String DirigibleActionBarAdvisor_SHOW_PERSPECTIVE;
 	public static String DirigibleActionBarAdvisor_SHOW_VIEW;
 	public static String DirigibleActionBarAdvisor_WEB_PAGE_ERROR;
