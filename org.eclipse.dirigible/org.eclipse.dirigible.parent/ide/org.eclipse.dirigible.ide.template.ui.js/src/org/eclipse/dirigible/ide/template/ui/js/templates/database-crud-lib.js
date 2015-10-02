@@ -230,22 +230,22 @@ exports.update${entityName} = function() {
         statement.setDouble(++i, responseBody.${tableColumn.getName().toLowerCase()});
 #elseif ($tableColumn.getType() == $DATE)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, new java.sql.Date(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
+            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, new java.sql.Time(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, new java.sql.Timestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
         } else {
             statement.setTimestamp(++i, null);
         }
@@ -377,9 +377,9 @@ exports.getPrimaryKeys = function() {
 #end
 #end
     if (result === 0) {
-        throw new Exception("There is no primary key");
+        throw $\.getExceptionUtils().createException("There is no primary key");
     } else if(result.length > 1) {
-        throw new Exception("More than one Primary Key is not supported.");
+        throw $\.getExceptionUtils().createException("More than one Primary Key is not supported.");
     }
     return result;
 };

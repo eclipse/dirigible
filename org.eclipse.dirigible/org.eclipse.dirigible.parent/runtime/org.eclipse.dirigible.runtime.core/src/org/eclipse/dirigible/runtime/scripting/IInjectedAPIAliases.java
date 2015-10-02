@@ -41,5 +41,6 @@ public interface IInjectedAPIAliases {
 	public static final String XSS_UTILS					= "xss"; //$NON-NLS-1$
 	public static final String XML_UTILS					= "xml"; //$NON-NLS-1$
 	public static final String WIKI_UTILS					= "wiki"; //$NON-NLS-1$
+	public static final String EXCEPTION_UTILS				= "exception"; //$NON-NLS-1$
 	
 }

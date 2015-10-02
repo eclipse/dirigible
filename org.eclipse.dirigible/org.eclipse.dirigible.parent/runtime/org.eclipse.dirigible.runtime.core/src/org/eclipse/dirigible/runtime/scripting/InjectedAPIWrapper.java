@@ -1,7 +1,6 @@
 package org.eclipse.dirigible.runtime.scripting;
 
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,6 +20,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
@@ -31,369 +31,170 @@ import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
  *
  */
 public class InjectedAPIWrapper implements IInjectedAPI {
-	
-	/**
-	 * The execution context object
-	 */
-	private Map<Object, Object> executionContext;
-	
-	/**
-	 * The default (system) output set before the execution
-	 */
-	private PrintStream systemOutput;
-	
-	/**
-	 * Default datasource injected on server start
-	 */
-	private DataSource datasource;
-	
-	/**
-	 * The standard HTTP Servlet Request
-	 */
-	private HttpServletRequest request;
-	
-	/**
-	 * The standard HTTP Servlet Response
-	 */
-	private HttpServletResponse response;
-	
-	/**
-	 * The standard HTTP Session
-	 */
-	private HttpSession session;
-	
-	/**
-	 * The input stream of the HTTP Request
-	 */
-	private Object requestInput;
-	
-	/**
-	 * The Repository facade
-	 */
-	private IRepository repository;
-	
-	/**
-	 * The authenticated user if any, otherwise 'guest'
-	 */
-	private String userName;
-	
-	/**
-	 * The server's default JNDI Initial Context
-	 */
-	private InitialContext initialContext;
-	
-	/**
-	 * The Binary Storage facade
-	 */
-	private IStorage binaryStorage;
-	
-	/**
-	 * The File Storage facade
-	 */
-	private IStorage fileStorage;
-	
-	/**
-	 * The Configuration Storage facade
-	 */
-	private IStorage configurationStorage;
-	
-	/**
-	 * Default Mail Service injected by the platform
-	 */
-	private IMailService mailService;
-	
-	/**
-	 * The service managing extension points and extensions
-	 */
-	private IExtensionService extensionService;
-	
-	/**
-	 * The indexing service facade
-	 */
-	private IIndexingService indexingService;
-	
-	/**
-	 * The connectivity configuration service injected by the platform
-	 */
-	private IConnectivityService connectivityService;
-	
-	/**
-	 * The messaging service facade
-	 */
-	private IMessagingService messagingService;
-	
-	
-	/**
-	 * Utilities
-	 */
 
-	private IOUtils ioUtils;
+	private InjectedAPIBuilder builder;
 	
-	private HttpUtils httpUtils;
+	public InjectedAPIWrapper(InjectedAPIBuilder builder) {
+		this.builder = builder;
+	}
 	
-	private Base64 base64Utils;
-	
-	private Hex hexUtils;
-	
-	private DigestUtils digestUtils;
-
-	private URLUtils urlUtils;
-	
-	private ServletFileUpload uploadUtils;
-	
-	private UUID uuidUtils;
-	
-	private DbUtils dbUtils;
-	
-	private StringEscapeUtils xssUtils;
-	
-	private XMLUtils xmlUtils;
-	
-	
-	/**
-	 * The generic map for custom object and services registered via the extension point 
-	 */
-	private Map<String, Object> generic = new HashMap<String, Object>();
-	
-	
+	@Override
 	public Map<Object, Object> getExecutionContext() {
-		return executionContext;
+		return builder.getExecutionContext();
 	}
 	
-	public void setExecutionContext(Map<Object, Object> executionContext) {
-		this.executionContext = executionContext;
-	}
-	
+	@Override
 	public PrintStream getSystemOutput() {
-		return systemOutput;
+		return builder.getSystemOutput();
 	}
 
-	public void setSystemOutput(PrintStream systemOutput) {
-		this.systemOutput = systemOutput;
-	}
-
+	@Override
 	public DataSource getDatasource() {
-		return datasource;
+		return builder.getDatasource();
 	}
 
-	public void setDatasource(DataSource datasource) {
-		this.datasource = datasource;
-	}
-
+	@Override
 	public HttpServletRequest getRequest() {
-		return request;
+		return builder.getRequest();
 	}
 
-	public void setRequest(HttpServletRequest request) {
-		this.request = request;
-	}
-
+	@Override
 	public HttpServletResponse getResponse() {
-		return response;
+		return builder.getResponse();
 	}
 
-	public void setResponse(HttpServletResponse response) {
-		this.response = response;
-	}
-
+	@Override
 	public HttpSession getSession() {
-		return session;
+		return builder.getSession();
 	}
 
-	public void setSession(HttpSession session) {
-		this.session = session;
-	}
-
+	@Override
 	public Object getRequestInput() {
-		return requestInput;
+		return builder.getRequestInput();
 	}
 
-	public void setRequestInput(Object requestInput) {
-		this.requestInput = requestInput;
-	}
-
+	@Override
 	public IRepository getRepository() {
-		return repository;
+		return builder.getRepository();
 	}
 
-	public void setRepository(IRepository repository) {
-		this.repository = repository;
-	}
-
+	@Override
 	public String getUserName() {
-		return userName;
+		return builder.getUserName();
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
+	@Override
 	public InitialContext getInitialContext() {
-		return initialContext;
+		return builder.getInitialContext();
 	}
 
-	public void setInitialContext(InitialContext initialContext) {
-		this.initialContext = initialContext;
-	}
-
+	@Override
 	public IStorage getBinaryStorage() {
-		return binaryStorage;
+		return builder.getBinaryStorage();
 	}
 
-	public void setBinaryStorage(IStorage binaryStorage) {
-		this.binaryStorage = binaryStorage;
-	}
-
+	@Override
 	public IStorage getFileStorage() {
-		return fileStorage;
+		return builder.getFileStorage();
 	}
 
-	public void setFileStorage(IStorage fileStorage) {
-		this.fileStorage = fileStorage;
-	}
-
+	@Override
 	public IStorage getConfigurationStorage() {
-		return configurationStorage;
+		return builder.getConfigurationStorage();
 	}
 
-	public void setConfigurationStorage(IStorage configurationStorage) {
-		this.configurationStorage = configurationStorage;
-	}
-
+	@Override
 	public IMailService getMailService() {
-		return mailService;
+		return builder.getMailService();
 	}
 
-	public void setMailService(IMailService mailService) {
-		this.mailService = mailService;
-	}
-
+	@Override
 	public IExtensionService getExtensionService() {
-		return extensionService;
+		return builder.getExtensionService();
 	}
 
-	public void setExtensionService(IExtensionService extensionService) {
-		this.extensionService = extensionService;
+	@Override
+	public IIndexingService<?> getIndexingService() {
+		return builder.getIndexingService();
 	}
 
-	public IIndexingService getIndexingService() {
-		return indexingService;
-	}
-
-	public void setIndexingService(IIndexingService indexingService) {
-		this.indexingService = indexingService;
-	}
-
+	@Override
 	public IConnectivityService getConnectivityService() {
-		return connectivityService;
+		return builder.getConnectivityService();
 	}
 
-	public void setConnectivityService(IConnectivityService connectivityService) {
-		this.connectivityService = connectivityService;
-	}
-
+	@Override
 	public IOUtils getIOUtils() {
-		return ioUtils;
+		return builder.getIOUtils();
 	}
 
-	public void setIOUtils(IOUtils ioUtils) {
-		this.ioUtils = ioUtils;
-	}
-
+	@Override
 	public HttpUtils getHttpUtils() {
-		return httpUtils;
+		return builder.getHttpUtils();
 	}
 
-	public void setHttpUtils(HttpUtils httpUtils) {
-		this.httpUtils = httpUtils;
-	}
-
+	@Override
 	public Base64 getBase64Utils() {
-		return base64Utils;
+		return builder.getBase64Utils();
 	}
 
-	public void setBase64Utils(Base64 base64Utils) {
-		this.base64Utils = base64Utils;
-	}
-
+	@Override
 	public Hex getHexUtils() {
-		return hexUtils;
+		return builder.getHexUtils();
 	}
 
-	public void setHexUtils(Hex hexUtils) {
-		this.hexUtils = hexUtils;
-	}
-
+	@Override
 	public DigestUtils getDigestUtils() {
-		return digestUtils;
+		return builder.getDigestUtils();
 	}
 
-	public void setDigestUtils(DigestUtils digestUtils) {
-		this.digestUtils = digestUtils;
-	}
-
+	@Override
 	public URLUtils getUrlUtils() {
-		return urlUtils;
+		return builder.getUrlUtils();
 	}
 
-	public void setUrlUtils(URLUtils urlUtils) {
-		this.urlUtils = urlUtils;
-	}
-
+	@Override
 	public ServletFileUpload getUploadUtils() {
-		return uploadUtils;
+		return builder.getUploadUtils();
 	}
 
-	public void setUploadUtils(ServletFileUpload uploadUtils) {
-		this.uploadUtils = uploadUtils;
-	}
-
+	@Override
 	public UUID getUuidUtils() {
-		return uuidUtils;
+		return builder.getUuidUtils();
 	}
 
-	public void setUuidUtils(UUID uuidUtils) {
-		this.uuidUtils = uuidUtils;
-	}
-
+	@Override
 	public DbUtils getDatabaseUtils() {
-		return dbUtils;
+		return builder.getDatabaseUtils();
 	}
 
-	public void setDatabaseUtils(DbUtils dbUtils) {
-		this.dbUtils = dbUtils;
-	}
-
+	@Override
 	public StringEscapeUtils getXssUtils() {
-		return xssUtils;
+		return builder.getXssUtils();
 	}
 
-	public void setXssUtils(StringEscapeUtils xssUtils) {
-		this.xssUtils = xssUtils;
-	}
-
+	@Override
 	public XMLUtils getXmlUtils() {
-		return xmlUtils;
+		return builder.getXmlUtils();
 	}
 
-	public void setXmlUtils(XMLUtils xmlUtils) {
-		this.xmlUtils = xmlUtils;
+	@Override
+	public ExceptionUtils getExceptionUtils() {
+		return builder.getExceptionUtils();
 	}
 
-	public Object get(String key) {
-		return generic.get(key);
-	}
-	
-	public void set(String key, Object value) {
-		generic.put(key, value);
-	}
-
+	@Override
 	public IMessagingService getMessagingService() {
-		return messagingService;
+		return builder.getMessagingService();
 	}
 
-	public void setMessagingService(IMessagingService messagingService) {
-		this.messagingService = messagingService;
+	@Override
+	public Object get(String key) {
+		return builder.get(key);
 	}
 	
+	@Override
+	public void set(String key, Object value) {
+		builder.set(key, value);
+	}
 }
