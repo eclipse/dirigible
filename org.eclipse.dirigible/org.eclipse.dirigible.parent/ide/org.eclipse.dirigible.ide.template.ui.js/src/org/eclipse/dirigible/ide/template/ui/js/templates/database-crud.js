@@ -8,6 +8,9 @@ handleRequest();
 
 function handleRequest() {
 	
+	$\.getResponse().setContentType("application/json; charset=UTF-8");
+	$\.getResponse().setCharacterEncoding("UTF-8");
+	
 	// get method type
 	var method = $\.getRequest().getMethod();
 	method = method.toUpperCase();

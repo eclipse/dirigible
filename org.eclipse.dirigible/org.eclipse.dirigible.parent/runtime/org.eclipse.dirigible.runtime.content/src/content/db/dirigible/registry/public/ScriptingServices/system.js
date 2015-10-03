@@ -5,3 +5,7 @@ exports.print = function(s){
 exports.println = function(s){
 	out.println(s + '');
 };
+
+exports.env = function() {
+	return java.lang.System.getProperties();
+};

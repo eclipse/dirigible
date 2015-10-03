@@ -3,6 +3,9 @@
 
 var systemLib = require('system');
 
+$\.getResponse().setContentType("application/json; charset=UTF-8");
+$\.getResponse().setCharacterEncoding("UTF-8");
+
 var count;
 var connection = $\.getDatasource().getConnection();
 try {
