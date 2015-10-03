@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -27,7 +27,8 @@ public class MySQLDBSpecifier implements IDialectSpecifier {
 	private static final String MYSQL_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP"; //$NON-NLS-1$
 	private static final String MYSQL_KEY_VARCHAR = "VARCHAR(255)";
 	private static final String MYSQL_BIG_VARCHAR = "TEXT";
-	
+	private static final String MYSQL_CLOB = "TEXT"; //$NON-NLS-1$
+
 	@Override
 	public String specify(String sql) {
 		sql = sql.replace(DIALECT_CURRENT_TIMESTAMP, MYSQL_CURRENT_TIMESTAMP);
@@ -35,7 +36,8 @@ public class MySQLDBSpecifier implements IDialectSpecifier {
 		sql = sql.replace(DIALECT_BLOB, MYSQL_BLOB);
 		sql = sql.replace(DIALECT_KEY_VARCHAR, MYSQL_KEY_VARCHAR);
 		sql = sql.replace(DIALECT_BIG_VARCHAR, MYSQL_BIG_VARCHAR);
-		
+		sql = sql.replace(DIALECT_CLOB, MYSQL_CLOB);
+
 		return sql;
 	}
 
@@ -44,6 +46,12 @@ public class MySQLDBSpecifier implements IDialectSpecifier {
 		if (DBSupportedTypesMap.FLOAT.equals(commonType)) {
 			return MYSQL_FLOAT;
 		}
+		if (DBSupportedTypesMap.BLOB.equals(commonType)) {
+			return MYSQL_BLOB;
+		}
+		if (DBSupportedTypesMap.CLOB.equals(commonType)) {
+			return MYSQL_CLOB;
+		}
 		return commonType;
 	}
 
@@ -51,10 +59,10 @@ public class MySQLDBSpecifier implements IDialectSpecifier {
 	public String createLimitAndOffset(int limit, int offset) {
 		return String.format(LIMIT_D_D, offset, limit);
 	}
-	
+
 	@Override
 	public String createTopAndStart(int limit, int offset) {
-		return "";  //$NON-NLS-1$
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -78,7 +86,8 @@ public class MySQLDBSpecifier implements IDialectSpecifier {
 	}
 
 	@Override
-	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
+	public InputStream getBinaryStream(ResultSet resultSet, String columnName)
+			throws SQLException {
 		Blob data = resultSet.getBlob(columnName);
 		return data.getBinaryStream();
 	}
