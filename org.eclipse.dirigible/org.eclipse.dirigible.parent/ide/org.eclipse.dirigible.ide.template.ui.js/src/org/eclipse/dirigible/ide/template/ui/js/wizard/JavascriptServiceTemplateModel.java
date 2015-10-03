@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -12,20 +12,18 @@
 package org.eclipse.dirigible.ide.template.ui.js.wizard;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
 import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class JavascriptServiceTemplateModel extends GenerationModel {
@@ -128,13 +126,12 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 
 			Connection connection = null;
 			try {
-				connection = DataSourceFacade.getInstance()
-						.getDataSource().getConnection();
-				DatabaseMetaData meta = connection.getMetaData();
+				connection = DataSourceFacade.getInstance().getDataSource()
+						.getConnection();
 
 				List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
 
-				ResultSet primaryKeys = meta.getPrimaryKeys(null, null,
+				ResultSet primaryKeys = DBUtils.getPrimaryKeys(connection,
 						getTableName());
 				while (primaryKeys.next()) {
 					String columnName = primaryKeys.getString("COLUMN_NAME"); //$NON-NLS-1$
@@ -143,16 +140,12 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 					availableTableColumns.add(tableColumn);
 				}
 
-				ResultSet columns = meta.getColumns(null, null, getTableName(),
-						null);
+				ResultSet columns = DBUtils.getColumns(connection,
+						getTableName());
 				while (columns.next()) {
 					// columns
 					String columnName = columns.getString("COLUMN_NAME"); //$NON-NLS-1$
 					int columnType = columns.getInt("DATA_TYPE"); //$NON-NLS-1$
-					// column.columnTypeName = columns.getString("TYPE_NAME");
-					// column.columnSize = columns.getInt("COLUMN_SIZE");
-					// column.isNullable = columns.getInt("NULLABLE") ==
-					// DatabaseMetaData.columnNullable;
 
 					TableColumn tableColumn = new TableColumn(columnName,
 							columnType, false, true);
@@ -180,9 +173,8 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 		if (getTableName() == null) {
 			return false;
 		}
-		for (Iterator<TableColumn> iterator = availableTableColumns.iterator(); iterator
-				.hasNext();) {
-			TableColumn tableColumnX = (TableColumn) iterator.next();
+		for (TableColumn tableColumn2 : availableTableColumns) {
+			TableColumn tableColumnX = tableColumn2;
 			if (tableColumnX.getName().equals(tableColumn.getName())) {
 				tableColumnX.setType(tableColumn.getType());
 				return true;

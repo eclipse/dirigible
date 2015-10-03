@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -12,16 +12,15 @@
 package org.eclipse.dirigible.repository.ext.db.transfer;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DBTableExporter {
@@ -38,10 +37,11 @@ public class DBTableExporter {
 	private String tableType;
 	private TableColumn[] tableColumns;
 
-	private static final Logger logger = Logger.getLogger(DBTableExporter.class);
-	
-	private DataSource dataSource; 
-	
+	private static final Logger logger = Logger
+			.getLogger(DBTableExporter.class);
+
+	private DataSource dataSource;
+
 	public DBTableExporter(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -60,31 +60,28 @@ public class DBTableExporter {
 			Connection connection = null;
 
 			try {
-//				connection = DataSourceFacade.getInstance().getDataSource().getConnection();
 
 				connection = dataSource.getConnection();
-						
-				DatabaseMetaData meta = connection.getMetaData();
 
 				List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
 
-				ResultSet primaryKeys = meta.getPrimaryKeys(null, null,
+				ResultSet primaryKeys = DBUtils.getPrimaryKeys(connection,
 						getTableName());
 
 				while (primaryKeys.next()) {
 					// pk columns
-					String columnName = primaryKeys.getString(COLUMN_NAME); //$NON-NLS-1$
+					String columnName = primaryKeys.getString(COLUMN_NAME);
 					TableColumn tableColumn = new TableColumn(columnName, 0,
 							true, true);
 					availableTableColumns.add(tableColumn);
 				}
 
-				ResultSet columns = meta.getColumns(null, null, getTableName(), null);
-
+				ResultSet columns = DBUtils.getColumns(connection,
+						getTableName());
 				while (columns.next()) {
 					// columns
-					String columnName = columns.getString(COLUMN_NAME); //$NON-NLS-1$
-					int columnType = columns.getInt(DATA_TYPE); //$NON-NLS-1$
+					String columnName = columns.getString(COLUMN_NAME);
+					int columnType = columns.getInt(DATA_TYPE);
 
 					TableColumn tableColumn = new TableColumn(columnName,
 							columnType, false, true);
@@ -93,9 +90,10 @@ public class DBTableExporter {
 					}
 				}
 
-				setTableColumns(availableTableColumns.toArray(new TableColumn[] {}));
+				setTableColumns(availableTableColumns
+						.toArray(new TableColumn[] {}));
 				data = getDataForTable();
-				
+
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -117,10 +115,10 @@ public class DBTableExporter {
 		String tableName = getTableName();
 		TableColumn[] columns = getTableColumns();
 		Connection connection = null;
-		
+
 		try {
 			connection = dataSource.getConnection();
-			
+
 			statement = connection.createStatement();
 			sql = SELECT_FROM + tableName;
 			resultSet = statement.executeQuery(sql);
@@ -149,11 +147,11 @@ public class DBTableExporter {
 				}
 			}
 		}
-		
+
 		result = sb.toString();
 
 		if (result.equalsIgnoreCase("")) {
-			return THERE_IS_NO_DATA_IN_TABLE+tableName;
+			return THERE_IS_NO_DATA_IN_TABLE + tableName;
 		} else {
 			return result;
 		}
@@ -164,9 +162,8 @@ public class DBTableExporter {
 		if (getTableName() == null) {
 			return false;
 		}
-		for (Iterator<TableColumn> iterator = availableTableColumns.iterator(); iterator
-				.hasNext();) {
-			TableColumn tableColumnX = (TableColumn) iterator.next();
+		for (TableColumn tableColumn2 : availableTableColumns) {
+			TableColumn tableColumnX = tableColumn2;
 			if (tableColumnX.getName().equals(tableColumn.getName())) {
 				tableColumnX.setType(tableColumn.getType());
 				return true;

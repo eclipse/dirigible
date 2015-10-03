@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -11,14 +11,11 @@
 
 package org.eclipse.dirigible.repository.db.init;
 
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -29,29 +26,39 @@ import org.eclipse.dirigible.repository.logging.Logger;
 /**
  * Initialize the database schema of Repository Supports incremental alteration
  * of the schema
- * 
+ *
  */
 public class DBRepositoryInitializer {
 
-	private static final String MESSAGING_HUB = Messages.getString("DBRepositoryInitializer.MESSAGING_HUB"); //$NON-NLS-1$
+	private static final String MESSAGING_HUB = Messages
+			.getString("DBRepositoryInitializer.MESSAGING_HUB"); //$NON-NLS-1$
 
-	private static final String IT_SEEMS_DGB_SCHEMA_VERSIONS_DOESN_T_EXISTS_CHECK_WHETHER_THIS_MESSAGE_HAS_BEEN_APPEARING_MORE_THAN_ONCE = Messages.getString("DBRepositoryInitializer.IT_SEEMS_DGB_SCHEMA_VERSIONS_DOESN_T_EXISTS_CHECK_WHETHER_THIS_MESSAGE_HAS_BEEN_APPEARING_MORE_THAN_ONCE"); //$NON-NLS-1$
+	private static final String IT_SEEMS_DGB_SCHEMA_VERSIONS_DOESN_T_EXISTS_CHECK_WHETHER_THIS_MESSAGE_HAS_BEEN_APPEARING_MORE_THAN_ONCE = Messages
+			.getString("DBRepositoryInitializer.IT_SEEMS_DGB_SCHEMA_VERSIONS_DOESN_T_EXISTS_CHECK_WHETHER_THIS_MESSAGE_HAS_BEEN_APPEARING_MORE_THAN_ONCE"); //$NON-NLS-1$
 
-	private static final String EXTENSION_POINTS = Messages.getString("DBRepositoryInitializer.EXTENSION_POINTS"); //$NON-NLS-1$
+	private static final String EXTENSION_POINTS = Messages
+			.getString("DBRepositoryInitializer.EXTENSION_POINTS"); //$NON-NLS-1$
 
-	private static final String INITIALIZING_SCRIPT_VERSION_S_FROM_S_ABOUT_S = Messages.getString("DBRepositoryInitializer.INITIALIZING_SCRIPT_VERSION_S_FROM_S_ABOUT_S"); //$NON-NLS-1$
+	private static final String INITIALIZING_SCRIPT_VERSION_S_FROM_S_ABOUT_S = Messages
+			.getString("DBRepositoryInitializer.INITIALIZING_SCRIPT_VERSION_S_FROM_S_ABOUT_S"); //$NON-NLS-1$
 
-	private static final String SECURITY_FEATURES = Messages.getString("DBRepositoryInitializer.SECURITY_FEATURES"); //$NON-NLS-1$
+	private static final String SECURITY_FEATURES = Messages
+			.getString("DBRepositoryInitializer.SECURITY_FEATURES"); //$NON-NLS-1$
 
-	private static final String FILE_VERSIONS_SUPPORT = Messages.getString("DBRepositoryInitializer.FILE_VERSIONS_SUPPORT"); //$NON-NLS-1$
+	private static final String FILE_VERSIONS_SUPPORT = Messages
+			.getString("DBRepositoryInitializer.FILE_VERSIONS_SUPPORT"); //$NON-NLS-1$
 
-	private static final String FREE_TEXT_SEARCH_IN_DOCUMENTS = Messages.getString("DBRepositoryInitializer.FREE_TEXT_SEARCH_IN_DOCUMENTS"); //$NON-NLS-1$
+	private static final String FREE_TEXT_SEARCH_IN_DOCUMENTS = Messages
+			.getString("DBRepositoryInitializer.FREE_TEXT_SEARCH_IN_DOCUMENTS"); //$NON-NLS-1$
 
-	private static final String TEST_UPDATE = Messages.getString("DBRepositoryInitializer.TEST_UPDATE"); //$NON-NLS-1$
+	private static final String TEST_UPDATE = Messages
+			.getString("DBRepositoryInitializer.TEST_UPDATE"); //$NON-NLS-1$
 
-	private static final String INITIAL_CREATION = Messages.getString("DBRepositoryInitializer.INITIAL_CREATION"); //$NON-NLS-1$
+	private static final String INITIAL_CREATION = Messages
+			.getString("DBRepositoryInitializer.INITIAL_CREATION"); //$NON-NLS-1$
 
-	private static Logger logger = Logger.getLogger(DBRepositoryInitializer.class);
+	private static Logger logger = Logger
+			.getLogger(DBRepositoryInitializer.class);
 
 	private static final String TABLE_NAME_DGB_SCHEMA_VERSIONS = "DGB_SCHEMA_VERSIONS"; //$NON-NLS-1$
 	private static final String TABLE_COLUMN_SCHV_VERSION = "SCHV_VERSION"; //$NON-NLS-1$
@@ -96,8 +103,8 @@ public class DBRepositoryInitializer {
 				DBScriptsMap.SCRIPT_CREATE_SCHEMA_7));
 	}
 
-	public DBRepositoryInitializer(DataSource dataSource, Connection connection,
-			boolean forceRecreate) {
+	public DBRepositoryInitializer(DataSource dataSource,
+			Connection connection, boolean forceRecreate) {
 		logger.debug("entering constructor"); //$NON-NLS-1$
 		this.dbUtils = new DBUtils(dataSource);
 		this.connection = connection;
@@ -107,7 +114,7 @@ public class DBRepositoryInitializer {
 
 	/**
 	 * The entry point method
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean initialize() {
@@ -124,22 +131,21 @@ public class DBRepositoryInitializer {
 
 	/**
 	 * Drop all tables and create all the schema from scratch
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean forceRecreate() {
 		logger.warn("entering forceRecreate"); //$NON-NLS-1$
 		boolean result = false;
-		for (Iterator<ScriptDescriptor> iterator = scriptDescriptors.iterator(); iterator
-				.hasNext();) {
-			ScriptDescriptor scriptDescriptor = iterator.next();
+		for (ScriptDescriptor scriptDescriptor : scriptDescriptors) {
 			logger.info(String.format(
 					INITIALIZING_SCRIPT_VERSION_S_FROM_S_ABOUT_S,
 					scriptDescriptor.version, scriptDescriptor.location,
 					scriptDescriptor.description));
 			String script = null;
 			try {
-				script = this.dbUtils.readScript(connection, scriptDescriptor.location, this.getClass());
+				script = this.dbUtils.readScript(connection,
+						scriptDescriptor.location, this.getClass());
 				result = this.dbUtils.executeUpdate(connection, script);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -156,7 +162,7 @@ public class DBRepositoryInitializer {
 
 	/**
 	 * Check the tables one by one and try to repair the schema if needed
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean updateIncrements() {
@@ -171,26 +177,24 @@ public class DBRepositoryInitializer {
 					DBScriptsMap.SCRIPT_GET_SCHEMA_VERSION, this.getClass());
 			if (versionExists()) {
 
-				preparedStatement = this.dbUtils
-						.getPreparedStatement(connection, script);
+				preparedStatement = this.dbUtils.getPreparedStatement(
+						connection, script);
 				ResultSet resultSet = preparedStatement.executeQuery();
 
 				if (resultSet.next()) {
 					int version = resultSet.getInt(TABLE_COLUMN_SCHV_VERSION);
 
-					for (Iterator<ScriptDescriptor> iterator = scriptDescriptors
-							.iterator(); iterator.hasNext();) {
-						ScriptDescriptor scriptDescriptor = iterator.next();
+					for (ScriptDescriptor scriptDescriptor : scriptDescriptors) {
 						if (scriptDescriptor.version > version) {
 							logger.warn(String
 									.format(INITIALIZING_SCRIPT_VERSION_S_FROM_S_ABOUT_S,
 											scriptDescriptor.version,
 											scriptDescriptor.location,
 											scriptDescriptor.description));
-							script = this.dbUtils.readScript(
-									connection, scriptDescriptor.location,
-									this.getClass());
-							boolean result = this.dbUtils.executeUpdate(connection, script);
+							script = this.dbUtils.readScript(connection,
+									scriptDescriptor.location, this.getClass());
+							boolean result = this.dbUtils.executeUpdate(
+									connection, script);
 							if (!result) {
 								break;
 							}
@@ -218,7 +222,8 @@ public class DBRepositoryInitializer {
 	}
 
 	private boolean versionExists() throws SQLException {
-		boolean exists = DBUtils.isTableOrViewExists(connection, TABLE_NAME_DGB_SCHEMA_VERSIONS);
+		boolean exists = DBUtils.isTableOrViewExists(connection,
+				TABLE_NAME_DGB_SCHEMA_VERSIONS);
 		if (!exists) {
 			logger.warn(IT_SEEMS_DGB_SCHEMA_VERSIONS_DOESN_T_EXISTS_CHECK_WHETHER_THIS_MESSAGE_HAS_BEEN_APPEARING_MORE_THAN_ONCE);
 		}

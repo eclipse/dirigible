@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -13,13 +13,14 @@ package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
 import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.ext.db.DBUtils;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -38,8 +39,6 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class HtmlForEntityTemplateTablePage extends WizardPage {
 
@@ -109,10 +108,11 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 		selectButton.setFont(JFaceResources.getDialogFont());
 		selectButton.addSelectionListener(new SelectionAdapter() {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = -7095187791495950403L;
 
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				selectAll(true);
 			}
@@ -125,10 +125,11 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 		deselectButton.setFont(JFaceResources.getDialogFont());
 		deselectButton.addSelectionListener(new SelectionAdapter() {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 7117397741755265980L;
 
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				selectAll(false);
 			}
@@ -139,8 +140,9 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 		typeViewer.getControl().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 		typeViewer.setContentProvider(new ArrayContentProvider());
-		typeViewer.setLabelProvider(new HtmlForEntityTemplateTablePageLabelProvider());
-		//typeViewer.setSorter(new ViewerSorter());
+		typeViewer
+		.setLabelProvider(new HtmlForEntityTemplateTablePageLabelProvider());
+		// typeViewer.setSorter(new ViewerSorter());
 		createTableColumns();
 		typeViewer.setInput(model.getOriginalTableColumns());
 		typeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -178,11 +180,9 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 
 			Connection connection = getConnection();
 			try {
-				DatabaseMetaData meta = connection.getMetaData();
-
 				List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
 
-				ResultSet primaryKeys = meta.getPrimaryKeys(null, null,
+				ResultSet primaryKeys = DBUtils.getPrimaryKeys(connection,
 						model.getTableName());
 				List<String> primaryKeysList = new ArrayList<String>();
 				while (primaryKeys.next()) {
@@ -193,19 +193,14 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 					primaryKeysList.add(columnName);
 				}
 
-				ResultSet columns = meta.getColumns(null, null,
-						model.getTableName(), null);
+				ResultSet columns = DBUtils.getColumns(connection,
+						model.getTableName());
 				while (columns.next()) {
 					// columns
 					String columnName = columns.getString("COLUMN_NAME"); //$NON-NLS-1$
 					String columnType = columns.getString("TYPE_NAME"); //$NON-NLS-1$
 					int columnSize = columns.getInt("COLUMN_SIZE"); //$NON-NLS-1$
 
-					// column.columnType = columns.getInt("DATA_TYPE");
-					// column.columnTypeName = columns.getString("TYPE_NAME");
-					// column.columnSize = columns.getInt("COLUMN_SIZE");
-					// column.isNullable = columns.getInt("NULLABLE") ==
-					// DatabaseMetaData.columnNullable;
 					TableColumn tableColumn = null;
 					if (primaryKeysList.contains(columnName)) {
 						tableColumn = new TableColumn(columnName, true, true,
@@ -236,9 +231,8 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 
 	private boolean exists(List<TableColumn> availableTableColumns,
 			TableColumn tableColumn) {
-		for (Iterator<TableColumn> iterator = availableTableColumns.iterator(); iterator
-				.hasNext();) {
-			TableColumn tableColumnX = (TableColumn) iterator.next();
+		for (TableColumn tableColumn2 : availableTableColumns) {
+			TableColumn tableColumnX = tableColumn2;
 			if (tableColumnX.getName().equals(tableColumn.getName())) {
 				return true;
 			}

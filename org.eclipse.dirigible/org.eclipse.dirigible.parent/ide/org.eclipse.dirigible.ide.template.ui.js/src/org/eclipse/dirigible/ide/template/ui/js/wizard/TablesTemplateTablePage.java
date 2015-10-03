@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -12,11 +12,13 @@
 package org.eclipse.dirigible.ide.template.ui.js.wizard;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.ext.db.DBUtils;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -28,9 +30,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class TablesTemplateTablePage extends WizardPage {
 
@@ -52,7 +51,7 @@ public class TablesTemplateTablePage extends WizardPage {
 	private JavascriptServiceTemplateModel model;
 
 	private TableViewer typeViewer;
-	
+
 	private Label labelSelected;
 
 	protected TablesTemplateTablePage(JavascriptServiceTemplateModel model) {
@@ -97,14 +96,16 @@ public class TablesTemplateTablePage extends WizardPage {
 		updateTableNames();
 		labelSelected = new Label(parent, SWT.NONE);
 		labelSelected.setText("");
-		labelSelected.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false));
+		labelSelected.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true,
+				false));
 
 	}
 
 	private void updateTableNames() {
-		if (typeViewer.getTable().getSelection() != null
-				&& typeViewer.getTable().getSelection().length > 0) {
-			TableName selectedTableName = (TableName) typeViewer.getTable().getSelection()[0].getData();
+		if ((typeViewer.getTable().getSelection() != null)
+				&& (typeViewer.getTable().getSelection().length > 0)) {
+			TableName selectedTableName = (TableName) typeViewer.getTable()
+					.getSelection()[0].getData();
 			if (selectedTableName != null) {
 				model.setTableName(selectedTableName.getName());
 				model.setTableType(selectedTableName.getType());
@@ -129,11 +130,11 @@ public class TablesTemplateTablePage extends WizardPage {
 		try {
 			Connection connection = null;
 			try {
-				connection = DataSourceFacade.getInstance()
-						.getDataSource().getConnection();
-				DatabaseMetaData meta = connection.getMetaData();
+				connection = DataSourceFacade.getInstance().getDataSource()
+						.getConnection();
 
-				ResultSet tableNames = meta.getTables(null, null, "%", null); //$NON-NLS-1$
+				ResultSet tableNames = DBUtils.getAllTables(connection);
+
 				while (tableNames.next()) {
 					String sTableName = tableNames.getString("TABLE_NAME"); //$NON-NLS-1$
 					String sTableType = tableNames.getString("TABLE_TYPE"); //$NON-NLS-1$

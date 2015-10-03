@@ -13,7 +13,6 @@ package org.eclipse.dirigible.repository.ext.db;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -102,7 +101,6 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 		try {
 			Connection connection = dataSource.getConnection();
-			DatabaseMetaData databaseMetaData = getMetaData(connection);
 			String productName = connection.getMetaData()
 					.getDatabaseProductName();
 			IDialectSpecifier dialectSpecifier = DBUtils
@@ -112,11 +110,11 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 				for (String dsDefinition : knownFiles) {
 					try {
 						if (dsDefinition.endsWith(EXTENSION_TABLE)) {
-							executeTableUpdate(connection, databaseMetaData,
+							executeTableUpdateMain(connection,
 									dialectSpecifier, dsDefinition);
 						} else if (dsDefinition.endsWith(EXTENSION_VIEW)) {
-							executeViewUpdate(connection, databaseMetaData,
-									dialectSpecifier, dsDefinition);
+							executeViewUpdateMain(connection, dialectSpecifier,
+									dsDefinition);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -139,8 +137,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		executeUpdate(knownFiles, errors);
 	}
 
-	private void executeTableUpdate(Connection connection,
-			DatabaseMetaData databaseMetaData,
+	private void executeTableUpdateMain(Connection connection,
 			IDialectSpecifier dialectSpecifier, String dsDefinition)
 			throws SQLException, IOException {
 		JsonObject dsDefinitionObject = parseTable(dsDefinition);
@@ -165,15 +162,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	}
 
-	private DatabaseMetaData getMetaData(Connection connection)
-			throws SQLException {
-		// get the database metadata
-		DatabaseMetaData databaseMetaData = connection.getMetaData();
-		return databaseMetaData;
-	}
-
-	private void executeViewUpdate(Connection connection,
-			DatabaseMetaData databaseMetaData,
+	private void executeViewUpdateMain(Connection connection,
 			IDialectSpecifier dialectSpecifier, String dsDefinition)
 			throws SQLException, IOException {
 		JsonObject dsDefinitionObject = parseView(dsDefinition);
@@ -254,8 +243,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 				.toUpperCase();
 
 		Map<String, String> columnDefinitions = new HashMap<String, String>();
-		ResultSet rsColumns = connection.getMetaData().getColumns(null, null,
-				tableName, "%"); //$NON-NLS-1$
+		ResultSet rsColumns = DBUtils.getColumns(connection, tableName);
 		while (rsColumns.next()) {
 			String typeName = DBSupportedTypesMap.getTypeName(rsColumns
 					.getInt(5));

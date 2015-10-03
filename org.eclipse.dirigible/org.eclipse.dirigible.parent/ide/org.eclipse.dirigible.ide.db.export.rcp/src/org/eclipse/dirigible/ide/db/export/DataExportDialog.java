@@ -1,23 +1,22 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.db.export;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.ext.db.transfer.TableName;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -123,13 +122,13 @@ public class DataExportDialog extends TitleAreaDialog {
 			Connection connection = null;
 			try {
 				connection = DataSourceFacade.getInstance().getDataSource().getConnection();
-				DatabaseMetaData meta = connection.getMetaData();
-				ResultSet tableNames = meta.getTables(null, null, "%", null); //$NON-NLS-1$
+
+				ResultSet tableNames = DBUtils.getAllTables(connection);
 
 				while (tableNames.next()) {
-					String sTableName = tableNames.getString(TABLE_NAME); //$NON-NLS-1$
-					String sTableType = tableNames.getString(TABLE_TYPE); //$NON-NLS-1$
-					if (TABLE.equals(sTableType) || VIEW.equals(sTableType)) { //$NON-NLS-1$ //$NON-NLS-2$
+					String sTableName = tableNames.getString(TABLE_NAME);
+					String sTableType = tableNames.getString(TABLE_TYPE);
+					if (TABLE.equals(sTableType) || VIEW.equals(sTableType)) {
 						TableName tableName = new TableName(sTableName, sTableType);
 						availableTableNames.add(tableName);
 					}
@@ -163,10 +162,9 @@ public class DataExportDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				DataDownloadDialog dataDownloadDialog = new DataDownloadDialog(e.display
-						.getActiveShell());
+				DataDownloadDialog dataDownloadDialog = new DataDownloadDialog(e.display.getActiveShell());
 				// TODO
-//				dataDownloadDialog.setURL(DataExportServiceHandler.getUrl(getSelectedTableName()));
+				// dataDownloadDialog.setURL(DataExportServiceHandler.getUrl(getSelectedTableName()));
 				dataDownloadDialog.open();
 			}
 
@@ -192,6 +190,7 @@ public class DataExportDialog extends TitleAreaDialog {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, CLOSE, true);
 	}

@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,6 +40,9 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DBUtils {
 
+	private static Logger logger = Logger.getLogger(DBUtils.class
+			.getCanonicalName());
+
 	private static final String PRODUCT_DERBY = "Apache Derby"; //$NON-NLS-1$
 	private static final String PRODUCT_SYBASE = "Adaptive Server Enterprise"; //$NON-NLS-1$
 	private static final String PRODUCT_SAP_DB = "SAP DB"; //$NON-NLS-1$
@@ -57,10 +61,9 @@ public class DBUtils {
 	public static final String TABLE = "TABLE"; //$NON-NLS-1$
 
 	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM,
-			GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
+		GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
-	private static Logger logger = Logger.getLogger(DBUtils.class
-			.getCanonicalName());
+	private static final String TABLE_NAME_PATTERN_ALL = "%"; //$NON-NLS-1$
 
 	private DataSource dataSource;
 
@@ -326,4 +329,67 @@ public class DBUtils {
 
 		return exists;
 	}
+
+	public static ResultSet getAllTables(Connection connection)
+			throws SQLException {
+		DatabaseMetaData meta = connection.getMetaData();
+		ResultSet tableNames = meta.getTables(null, null,
+				TABLE_NAME_PATTERN_ALL, null);
+		return tableNames;
+	}
+
+	public static ResultSet getColumns(Connection connection, String name)
+			throws SQLException {
+
+		DatabaseMetaData meta = connection.getMetaData();
+
+		if (name == null) {
+			meta.getColumns(null, null, name, null);
+		}
+
+		ResultSet columns = meta.getColumns(null, null, name, null);
+		if (columns.next()) {
+			return meta.getColumns(null, null, name, null);
+		} else {
+			columns = meta.getColumns(null, null, name.toLowerCase(), null);
+			if (columns.next()) {
+				return meta.getColumns(null, null, name.toLowerCase(), null);
+			} else {
+				columns = meta.getColumns(null, null, name.toUpperCase(), null);
+				// if (columns.next()) {
+				// return meta.getColumns(null, null, name.toUpperCase(), null);
+				// }
+			}
+		}
+
+		return columns;
+	}
+
+	public static ResultSet getPrimaryKeys(Connection connection, String name)
+			throws SQLException {
+
+		DatabaseMetaData meta = connection.getMetaData();
+
+		if (name == null) {
+			meta.getPrimaryKeys(null, null, name);
+		}
+
+		ResultSet columns = meta.getPrimaryKeys(null, null, name);
+		if (columns.next()) {
+			return meta.getPrimaryKeys(null, null, name);
+		} else {
+			columns = meta.getPrimaryKeys(null, null, name.toLowerCase());
+			if (columns.next()) {
+				return meta.getPrimaryKeys(null, null, name.toLowerCase());
+			} else {
+				columns = meta.getPrimaryKeys(null, null, name.toUpperCase());
+				// if (columns.next()) {
+				// return meta.getColumns(null, null, name.toUpperCase(), null);
+				// }
+			}
+		}
+
+		return columns;
+	}
+
 }
