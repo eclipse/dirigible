@@ -139,7 +139,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	private void executeTableUpdateMain(Connection connection,
 			IDialectSpecifier dialectSpecifier, String dsDefinition)
-			throws SQLException, IOException {
+					throws SQLException, IOException {
 		JsonObject dsDefinitionObject = parseTable(dsDefinition);
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
 		tableName = tableName.toUpperCase();
@@ -164,7 +164,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	private void executeViewUpdateMain(Connection connection,
 			IDialectSpecifier dialectSpecifier, String dsDefinition)
-			throws SQLException, IOException {
+					throws SQLException, IOException {
 		JsonObject dsDefinitionObject = parseView(dsDefinition);
 		String viewName = dsDefinitionObject.get(VIEW_NAME).getAsString();
 		viewName = viewName.toUpperCase();
@@ -173,7 +173,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	private void executeTableCreate(Connection connection,
 			IDialectSpecifier dialectSpecifier, JsonObject dsDefinitionObject)
-			throws SQLException {
+					throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
 
@@ -237,7 +237,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	private void executeTableUpdate(Connection connection,
 			IDialectSpecifier dialectSpecifier, JsonObject dsDefinitionObject)
-			throws SQLException {
+					throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString()
 				.toUpperCase();
@@ -245,8 +245,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		Map<String, String> columnDefinitions = new HashMap<String, String>();
 		ResultSet rsColumns = DBUtils.getColumns(connection, tableName);
 		while (rsColumns.next()) {
-			String typeName = DBSupportedTypesMap.getTypeName(rsColumns
-					.getInt(5));
+			String typeName = dbUtils.specifyDataType(connection,
+					DBSupportedTypesMap.getTypeName(rsColumns.getInt(5)));
 			columnDefinitions.put(rsColumns.getString(4).toUpperCase(),
 					typeName);
 		}
