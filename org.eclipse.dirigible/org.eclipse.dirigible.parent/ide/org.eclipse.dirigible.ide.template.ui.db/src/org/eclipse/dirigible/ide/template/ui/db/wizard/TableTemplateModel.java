@@ -102,15 +102,24 @@ public class TableTemplateModel extends GenerationModel {
 	}
 
 	private boolean isTableExists(String tableName) {
+		Connection connection = null;
 		try {
 			DataSource dataSource = DataSourceFacade.getInstance()
 					.getDataSource();
-			Connection connection = dataSource.getConnection();
+			connection = dataSource.getConnection();
 
 			return DBUtils.isTableOrViewExists(connection, tableName);
 
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
 		}
 		return false;
 	}

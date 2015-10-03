@@ -143,7 +143,7 @@ public class DBTableExporter {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}

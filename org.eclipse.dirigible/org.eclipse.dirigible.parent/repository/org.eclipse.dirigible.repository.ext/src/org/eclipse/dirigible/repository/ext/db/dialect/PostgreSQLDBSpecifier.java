@@ -56,6 +56,9 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 		if (DBSupportedTypesMap.DOUBLE.equals(commonType)) {
 			return POSTGRESQL_DOUBLE;
 		}
+		if (DBSupportedTypesMap.BLOB.equals(commonType)) {
+			return POSTGRESQL_BLOB;
+		}
 		if (DBSupportedTypesMap.CLOB.equals(commonType)) {
 			return POSTGRESQL_CLOB;
 		}
