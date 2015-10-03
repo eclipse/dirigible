@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.db.viewer.views;
@@ -16,22 +15,20 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.viewers.IFilter;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.jface.viewers.IFilter;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
-public class DatabaseViewContentProvider implements IStructuredContentProvider,
-		ITreeContentProvider {
-	
+public class DatabaseViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+
 	private static final Logger logger = Logger.getLogger(DatabaseViewContentProvider.class);
 
 	private static final String DIRIGIBLE_SYSTEM_TALBES_PREFIX = "DGB_";
@@ -54,23 +51,28 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 		this.databaseViewer = databaseViewer;
 	}
 
+	@Override
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		//
 	}
 
+	@Override
 	public void dispose() {
 		//
 	}
 
+	@Override
 	public Object[] getElements(Object parent) {
 		if (parent.equals(databaseViewer.getViewSite())) {
-			if (invisibleRoot == null)
+			if (invisibleRoot == null) {
 				initialize();
+			}
 			return getChildren(invisibleRoot);
 		}
 		return getChildren(parent);
 	}
 
+	@Override
 	public Object getParent(Object child) {
 		if (child instanceof TreeObject) {
 			return ((TreeObject) child).getParent();
@@ -78,6 +80,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 		return null;
 	}
 
+	@Override
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof TreeParent) {
 			return ((TreeParent) parent).getChildren();
@@ -85,9 +88,11 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 		return new Object[0];
 	}
 
+	@Override
 	public boolean hasChildren(Object parent) {
-		if (parent instanceof TreeParent)
+		if (parent instanceof TreeParent) {
 			return ((TreeParent) parent).hasChildren();
+		}
 		return false;
 	}
 
@@ -103,9 +108,8 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 				TreeParent schemes = null;
 				// TreeParent tables = null;
 				List<TreeParent> schemesMid = new ArrayList<TreeParent>();
-				schemes = new TreeParent(CommonParameters.getDatabaseProductName() + CBO
-						+ CommonParameters.getDatabaseProductVersion() + CBC + CommonParameters.getDriverName(),
-						this.databaseViewer);
+				schemes = new TreeParent(CommonParameters.getDatabaseProductName() + CBO + CommonParameters.getDatabaseProductVersion() + CBC
+						+ CommonParameters.getDriverName(), this.databaseViewer);
 
 				// list catalogs
 				// List<String> listOfCatalogs = getListOfCatalogs(dmd);
@@ -120,24 +124,20 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 				String catalogName = null;
 				// list schemes
 				List<String> listOfSchemes = getListOfSchemes(connection, catalogName);
-				for (Iterator<String> iteratorSchemes = listOfSchemes.iterator(); iteratorSchemes
-						.hasNext();) {
+				for (String string : listOfSchemes) {
 
-					String schemeName = (String) iteratorSchemes.next();
+					String schemeName = string;
 
 					TreeParent scheme = new TreeParent(schemeName, this.databaseViewer);
 
 					// get a list of all tables
 					List<String> listOfTables = getListOfTables(dmd, catalogName, schemeName);
 					// tables = new TreeParent(schemeName);
-					for (Iterator<String> iteratorTables = listOfTables.iterator(); iteratorTables
-							.hasNext();) {
-						String tableName = iteratorTables.next();
+					for (String tableName : listOfTables) {
 						if (!isOperator && tableName.startsWith(DIRIGIBLE_SYSTEM_TALBES_PREFIX)) {
 							continue;
 						}
-						TreeObject toTable = new TreeObject(tableName, new TableDefinition(
-								catalogName, schemeName, tableName));
+						TreeObject toTable = new TreeObject(tableName, new TableDefinition(catalogName, schemeName, tableName));
 						scheme.addChild(toTable);
 					}
 					// scheme.addChild(tables);
@@ -145,7 +145,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 				}
 
 				invisibleRoot = new TreeParent(EMPTY, this.databaseViewer);
-				if (this.databaseViewer.showSchemes() || schemesMid.size() > 1) {
+				if (this.databaseViewer.showSchemes() || (schemesMid.size() > 1)) {
 					for (TreeParent treeParent : schemesMid) {
 						schemes.addChild(treeParent);
 					}
@@ -169,8 +169,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 
 	}
 
-	private List<String> getListOfSchemes(Connection connection, String catalogName)
-			throws SQLException {
+	private List<String> getListOfSchemes(Connection connection, String catalogName) throws SQLException {
 
 		DatabaseMetaData metaData = connection.getMetaData();
 
@@ -185,8 +184,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 			if (dialectSpecifier.isSchemaFilterSupported()) {
 				try {
 					// low level filtering for schema
-					rs = connection.createStatement().executeQuery(
-							dialectSpecifier.getSchemaFilterScript());
+					rs = connection.createStatement().executeQuery(dialectSpecifier.getSchemaFilterScript());
 				} catch (Exception e) {
 					// backup in case of wrong product recognition
 					rs = metaData.getSchemas(catalogName, null);
@@ -200,7 +198,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 				String schemeName = rs.getString(1);
 				// higher level filtering for schema if low level is not
 				// supported
-				if (schemaFilter != null && !schemaFilter.select(schemeName)) {
+				if ((schemaFilter != null) && !schemaFilter.select(schemeName)) {
 					continue;
 				}
 				listOfSchemes.add(schemeName);
@@ -214,9 +212,8 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 		return listOfSchemes;
 	}
 
-	private List<String> getListOfTables(DatabaseMetaData dmd, String catalogName, String schemeName)
-			throws SQLException {
-		
+	private List<String> getListOfTables(DatabaseMetaData dmd, String catalogName, String schemeName) throws SQLException {
+
 		String productName = CommonParameters.getDatabaseProductName();
 		IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
 
@@ -224,9 +221,9 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider,
 
 		ResultSet rs = null;
 		if (dialectSpecifier.isCatalogForSchema()) {
-			rs = dmd.getTables(schemeName, null, PRCNT, CommonParameters.TABLE_TYPES);
+			rs = dmd.getTables(schemeName, null, PRCNT, DBUtils.TABLE_TYPES);
 		} else {
-			rs = dmd.getTables(catalogName, schemeName, PRCNT, CommonParameters.TABLE_TYPES);
+			rs = dmd.getTables(catalogName, schemeName, PRCNT, DBUtils.TABLE_TYPES);
 		}
 
 		while (rs.next()) {

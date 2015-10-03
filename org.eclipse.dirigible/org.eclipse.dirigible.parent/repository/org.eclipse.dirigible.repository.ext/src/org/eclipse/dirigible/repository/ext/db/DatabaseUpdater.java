@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -18,17 +18,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -36,20 +31,32 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 public class DatabaseUpdater extends AbstractDataUpdater {
 
 	private static final String DASH = " - "; //$NON-NLS-1$
-	private static final String AUTOMATIC_DROP_COLUMN_NOT_SUPPORTED = Messages.getString("DatabaseUpdater.AUTOMATIC_DROP_COLUMN_NOT_SUPPORTED"); //$NON-NLS-1$
+	private static final String AUTOMATIC_DROP_COLUMN_NOT_SUPPORTED = Messages
+			.getString("DatabaseUpdater.AUTOMATIC_DROP_COLUMN_NOT_SUPPORTED"); //$NON-NLS-1$
 	private static final String AS = " AS "; //$NON-NLS-1$
 	private static final String CREATE_VIEW = "CREATE VIEW "; //$NON-NLS-1$
 	private static final String DROP_VIEW = "DROP VIEW "; //$NON-NLS-1$
 	private static final String QUERY = "query"; //$NON-NLS-1$
-	private static final String CANNOT_BE_CHANGED_TO = Messages.getString("DatabaseUpdater.CANNOT_BE_CHANGED_TO"); //$NON-NLS-1$
-	private static final String TYPE2 = Messages.getString("DatabaseUpdater.TYPE2"); //$NON-NLS-1$
-	private static final String ADDING_PRIMARY_KEY_COLUMN = Messages.getString("DatabaseUpdater.ADDING_PRIMARY_KEY_COLUMN"); //$NON-NLS-1$
-	private static final String ADDING_NOT_NULL_COLUMN = Messages.getString("DatabaseUpdater.ADDING_NOT_NULL_COLUMN"); //$NON-NLS-1$
-	private static final String AND_COLUMN = Messages.getString("DatabaseUpdater.AND_COLUMN"); //$NON-NLS-1$
-	private static final String INCOMPATIBLE_CHANGE_OF_TABLE = Messages.getString("DatabaseUpdater.INCOMPATIBLE_CHANGE_OF_TABLE"); //$NON-NLS-1$
+	private static final String CANNOT_BE_CHANGED_TO = Messages
+			.getString("DatabaseUpdater.CANNOT_BE_CHANGED_TO"); //$NON-NLS-1$
+	private static final String TYPE2 = Messages
+			.getString("DatabaseUpdater.TYPE2"); //$NON-NLS-1$
+	private static final String ADDING_PRIMARY_KEY_COLUMN = Messages
+			.getString("DatabaseUpdater.ADDING_PRIMARY_KEY_COLUMN"); //$NON-NLS-1$
+	private static final String ADDING_NOT_NULL_COLUMN = Messages
+			.getString("DatabaseUpdater.ADDING_NOT_NULL_COLUMN"); //$NON-NLS-1$
+	private static final String AND_COLUMN = Messages
+			.getString("DatabaseUpdater.AND_COLUMN"); //$NON-NLS-1$
+	private static final String INCOMPATIBLE_CHANGE_OF_TABLE = Messages
+			.getString("DatabaseUpdater.INCOMPATIBLE_CHANGE_OF_TABLE"); //$NON-NLS-1$
 	private static final String ADD = "ADD "; //$NON-NLS-1$
 	private static final String ALTER_TABLE = "ALTER TABLE "; //$NON-NLS-1$
 	private static final String COLUMN_DEFAULT_VALUE = "defaultValue"; //$NON-NLS-1$
@@ -61,14 +68,13 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 	private static final String COLUMNS = "columns"; //$NON-NLS-1$
 	private static final String CREATE_TABLE = "CREATE TABLE "; //$NON-NLS-1$
 	private static final String VIEW_NAME = "viewName"; //$NON-NLS-1$
-	private static final String VIEW = "VIEW"; //$NON-NLS-1$
-	private static final String TABLE = "TABLE"; //$NON-NLS-1$
 	private static final String TABLE_NAME = "tableName"; //$NON-NLS-1$
 	private static final String DEFAULT = "DEFAULT "; //$NON-NLS-1$
 	private static final String PRIMARY_KEY = "PRIMARY KEY "; //$NON-NLS-1$
 	private static final String NOT_NULL = "NOT NULL "; //$NON-NLS-1$
 
-	private static final Logger logger = Logger.getLogger(DatabaseUpdater.class);
+	private static final Logger logger = Logger
+			.getLogger(DatabaseUpdater.class);
 
 	public static final String EXTENSION_TABLE = ".table"; //$NON-NLS-1$
 	public static final String EXTENSION_VIEW = ".view"; //$NON-NLS-1$
@@ -88,7 +94,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 	}
 
 	@Override
-	public void executeUpdate(List<String> knownFiles, List<String> errors) throws Exception {
+	public void executeUpdate(List<String> knownFiles, List<String> errors)
+			throws Exception {
 		if (knownFiles.size() == 0) {
 			return;
 		}
@@ -96,18 +103,20 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		try {
 			Connection connection = dataSource.getConnection();
 			DatabaseMetaData databaseMetaData = getMetaData(connection);
-			String productName = connection.getMetaData().getDatabaseProductName();
-			IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
-			
+			String productName = connection.getMetaData()
+					.getDatabaseProductName();
+			IDialectSpecifier dialectSpecifier = DBUtils
+					.getDialectSpecifier(productName);
+
 			try {
-				for (Iterator<String> iterator = knownFiles.iterator(); iterator
-						.hasNext();) {
-					String dsDefinition = iterator.next();
+				for (String dsDefinition : knownFiles) {
 					try {
 						if (dsDefinition.endsWith(EXTENSION_TABLE)) {
-							executeTableUpdate(connection, databaseMetaData, dialectSpecifier, dsDefinition);
+							executeTableUpdate(connection, databaseMetaData,
+									dialectSpecifier, dsDefinition);
 						} else if (dsDefinition.endsWith(EXTENSION_VIEW)) {
-							executeViewUpdate(connection, databaseMetaData, dialectSpecifier, dsDefinition);
+							executeViewUpdate(connection, databaseMetaData,
+									dialectSpecifier, dsDefinition);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -123,33 +132,37 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	@Override
-	public void executeUpdate(List<String> knownFiles, HttpServletRequest request, List<String> errors) throws Exception {
+	public void executeUpdate(List<String> knownFiles,
+			HttpServletRequest request, List<String> errors) throws Exception {
 		executeUpdate(knownFiles, errors);
 	}
 
-	private void executeTableUpdate(Connection connection, DatabaseMetaData databaseMetaData, IDialectSpecifier dialectSpecifier, String dsDefinition)
+	private void executeTableUpdate(Connection connection,
+			DatabaseMetaData databaseMetaData,
+			IDialectSpecifier dialectSpecifier, String dsDefinition)
 			throws SQLException, IOException {
 		JsonObject dsDefinitionObject = parseTable(dsDefinition);
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
 		tableName = tableName.toUpperCase();
 		ResultSet rs = null;
 		try {
-			rs = databaseMetaData.getTables(null, null, tableName,
-					new String[] { TABLE, VIEW });
-			if (rs.next()) {
+			boolean exists = DBUtils.isTableOrViewExists(connection, tableName);
+			if (exists) {
 				// String retrievedTableName = rs.getString(3);
-				executeTableUpdate(connection, dialectSpecifier, dsDefinitionObject);
+				executeTableUpdate(connection, dialectSpecifier,
+						dsDefinitionObject);
 			} else {
-				executeTableCreate(connection, dialectSpecifier, dsDefinitionObject);
+				executeTableCreate(connection, dialectSpecifier,
+						dsDefinitionObject);
 			}
 		} finally {
 			if (rs != null) {
 				rs.close();
 			}
 		}
-		
+
 	}
 
 	private DatabaseMetaData getMetaData(Connection connection)
@@ -159,7 +172,9 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		return databaseMetaData;
 	}
 
-	private void executeViewUpdate(Connection connection, DatabaseMetaData databaseMetaData, IDialectSpecifier dialectSpecifier, String dsDefinition)
+	private void executeViewUpdate(Connection connection,
+			DatabaseMetaData databaseMetaData,
+			IDialectSpecifier dialectSpecifier, String dsDefinition)
 			throws SQLException, IOException {
 		JsonObject dsDefinitionObject = parseView(dsDefinition);
 		String viewName = dsDefinitionObject.get(VIEW_NAME).getAsString();
@@ -167,8 +182,9 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		executeViewCreateOrReplace(connection, dsDefinitionObject);
 	}
 
-	private void executeTableCreate(Connection connection, IDialectSpecifier dialectSpecifier,
-			JsonObject dsDefinitionObject) throws SQLException {
+	private void executeTableCreate(Connection connection,
+			IDialectSpecifier dialectSpecifier, JsonObject dsDefinitionObject)
+			throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
 
@@ -178,7 +194,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		int i = 0;
 		for (JsonElement jsonElement : columns) {
 			if (jsonElement instanceof JsonObject) {
-				if (i > 0 && i < columns.size()) {
+				if ((i > 0) && (i < columns.size())) {
 					sql.append(", "); //$NON-NLS-1$
 				}
 				JsonObject jsonObject = (JsonObject) jsonElement;
@@ -206,7 +222,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 				if (primaryKey) {
 					sql.append(PRIMARY_KEY);
 				}
-				if (defaultValue != null && !"".equals(defaultValue)) { //$NON-NLS-1$
+				if ((defaultValue != null) && !"".equals(defaultValue)) { //$NON-NLS-1$
 					sql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
 				}
 			}
@@ -230,8 +246,9 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		preparedStatement.executeUpdate();
 	}
 
-	private void executeTableUpdate(Connection connection, IDialectSpecifier dialectSpecifier,
-			JsonObject dsDefinitionObject) throws SQLException {
+	private void executeTableUpdate(Connection connection,
+			IDialectSpecifier dialectSpecifier, JsonObject dsDefinitionObject)
+			throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString()
 				.toUpperCase();
@@ -252,7 +269,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		int i = 0;
 		StringBuffer addSql = new StringBuffer();
 		addSql.append(dialectSpecifier.getAlterAddOpen());
-		
+
 		for (JsonElement jsonElement : columns) {
 
 			if (jsonElement instanceof JsonObject) {
@@ -292,7 +309,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 								+ tableName + AND_COLUMN + name
 								+ ADDING_PRIMARY_KEY_COLUMN);
 					}
-					if (defaultValue != null && !"".equals(defaultValue)) { //$NON-NLS-1$
+					if ((defaultValue != null) && !"".equals(defaultValue)) { //$NON-NLS-1$
 						sql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
 					}
 					i++;
@@ -305,20 +322,19 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			}
 
 		}
-		
+
 		// TODO Derby does not support multiple ADD in a single statement!
-		
-		
+
 		if (i > 0) {
 			addSql.append(dialectSpecifier.getAlterAddClose());
 			sql.append(addSql.toString());
 		}
-		
+
 		if (columnDefinitions.size() > columns.size()) {
-			throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE
-					+ tableName + DASH + AUTOMATIC_DROP_COLUMN_NOT_SUPPORTED);
+			throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE + tableName
+					+ DASH + AUTOMATIC_DROP_COLUMN_NOT_SUPPORTED);
 		}
-		
+
 		if (i > 0) {
 			String sqlExpression = sql.toString();
 			try {
@@ -353,10 +369,11 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		// ]
 		// }
 		IRepository repository = this.repository;
-//		# 177
-//		IResource resource = repository.getResource(this.location + dsDefinition);
+		// # 177
+		// IResource resource = repository.getResource(this.location +
+		// dsDefinition);
 		IResource resource = repository.getResource(dsDefinition);
-		
+
 		String content = new String(resource.getContent());
 		JsonParser parser = new JsonParser();
 		JsonObject dsDefinitionObject = (JsonObject) parser.parse(content);
@@ -374,9 +391,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		String query = dsDefinitionObject.get(QUERY).getAsString();
 
 		String sqlExpression = null;
-		ResultSet rs = connection.getMetaData().getTables(null, null, viewName,
-				new String[] { TABLE, VIEW });
-		if (rs.next()) {
+		boolean exists = DBUtils.isTableOrViewExists(connection, viewName);
+		if (exists) {
 			sql.append(DROP_VIEW + viewName);
 			sqlExpression = sql.toString();
 			try {
@@ -422,16 +438,14 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			List<String> dsDefinitions) throws IOException {
 		if (collection.exists()) {
 			List<IResource> resources = collection.getResources();
-			for (Iterator<IResource> iterator = resources.iterator(); iterator
-					.hasNext();) {
-				IResource resource = iterator.next();
-				if (resource != null && resource.getName() != null) {
+			for (IResource resource : resources) {
+				if ((resource != null) && (resource.getName() != null)) {
 					if (resource.getName().endsWith(EXTENSION_TABLE)
 							|| resource.getName().endsWith(EXTENSION_VIEW)) {
-//						# 177
-//						String fullPath = collection.getPath().substring(
-//								this.location.length())
-//								+ IRepository.SEPARATOR + resource.getName();
+						// # 177
+						// String fullPath = collection.getPath().substring(
+						// this.location.length())
+						// + IRepository.SEPARATOR + resource.getName();
 						String fullPath = resource.getPath();
 						dsDefinitions.add(fullPath);
 					}
@@ -439,9 +453,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			}
 
 			List<ICollection> collections = collection.getCollections();
-			for (Iterator<ICollection> iterator = collections.iterator(); iterator
-					.hasNext();) {
-				ICollection subCollection = iterator.next();
+			for (ICollection subCollection : collections) {
 				enumerateKnownFiles(subCollection, dsDefinitions);
 			}
 		}

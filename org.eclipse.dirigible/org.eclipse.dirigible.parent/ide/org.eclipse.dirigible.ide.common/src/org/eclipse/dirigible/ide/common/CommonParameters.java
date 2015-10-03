@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -13,58 +13,68 @@ package org.eclipse.dirigible.ide.common;
 
 import javax.servlet.http.HttpServletRequest;
 
-
-
 import org.eclipse.dirigible.ide.common.dual.DualParameters;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 public class CommonParameters {
 
-	
 	public static String getWorkspace() {
-		return IRepositoryPaths.DB_DIRIGIBLE_USERS + getUserName() + ICommonConstants.SEPARATOR + IRepositoryPaths.WORKSPACE_FOLDER_NAME;
+		return IRepositoryPaths.DB_DIRIGIBLE_USERS + getUserName()
+				+ ICommonConstants.SEPARATOR
+				+ IRepositoryPaths.WORKSPACE_FOLDER_NAME;
 	}
 
 	public static final String DB_DIRIGIBLE_CONFIGURATIONS = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.CONFIGURATION_SETTINGS; //$NON-NLS-1$
+			+ ICommonConstants.ARTIFACT_TYPE.CONFIGURATION_SETTINGS;
 
-	
 	public static final String LOGGER_FACTORY = "loggerFactory"; //$NON-NLS-1$
 
 	public static String getWebContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
+				+ ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
 	}
 
 	public static String getWikiContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
+				+ ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
 	}
 
 	public static String getScriptingContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
+				+ ICommonConstants.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
 	}
-	
+
 	public static String getIntegrationContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
+				+ ICommonConstants.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES;
 	}
 
 	public static String getSecuritContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.SECURITY_CONSTRAINTS;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
+				+ ICommonConstants.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.SECURITY_CONSTRAINTS;
 	}
 
 	public static String getTestingContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
+				+ ICommonConstants.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
 	}
 
 	public static String getExtensionContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
+				+ ICommonConstants.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
 	}
 
 	// github url
 	public static final String GIT_REPOSITORY_URL = "https://github.com/SAP/cloud-dirigible-samples.git";
-	
+
 	public static final String WEB_CONTENT_CONTAINER_MAPPING = "/web"; //$NON-NLS-1$
 	public static final String JAVASCRIPT_CONTAINER_MAPPING = "/js"; //$NON-NLS-1$
 	public static final String JAVASCRIPT_DEBUG_CONTAINER_MAPPING = "/js-debug"; //$NON-NLS-1$
@@ -88,24 +98,19 @@ public class CommonParameters {
 	public static final String FLOW_SANDBOX_MAPPING = "/flow-sandbox"; //$NON-NLS-1$
 	public static final String JOB_SANDBOX_MAPPING = "/job-sandbox"; //$NON-NLS-1$
 
-	public static final String JAVASCRIPT_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT; //$NON-NLS-1$
-	public static final String RUBY_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.RUBY; //$NON-NLS-1$
-	public static final String GROOVY_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.GROOVY; //$NON-NLS-1$
-	public static final String JAVA_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JAVA; //$NON-NLS-1$
-	public static final String COMMAND_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.COMMAND; //$NON-NLS-1$
-	public static final String FLOW_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.FLOW; //$NON-NLS-1$
-	public static final String JOB_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JOB; //$NON-NLS-1$
-	
-	
-	public static final String EXTENSION_POINT_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.EXTENSION_POINT; //$NON-NLS-1$
-	public static final String EXTENSION_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.EXTENSION; //$NON-NLS-1$
-	public static final String SECURITY_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.SECURITY; //$NON-NLS-1$
-	
-	
+	public static final String JAVASCRIPT_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT;
+	public static final String RUBY_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.RUBY;
+	public static final String GROOVY_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.GROOVY;
+	public static final String JAVA_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JAVA;
+	public static final String COMMAND_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.COMMAND;
+	public static final String FLOW_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.FLOW;
+	public static final String JOB_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JOB;
+
+	public static final String EXTENSION_POINT_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.EXTENSION_POINT;
+	public static final String EXTENSION_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.EXTENSION;
+	public static final String SECURITY_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.SECURITY;
 
 	public static final String CONTENT_EXPORT = "/content-export/"; //$NON-NLS-1$
-
-	
 
 	// Workbench Parameters
 	public static final String PARAMETER_PERSPECTIVE = "perspective"; //$NON-NLS-1$
@@ -124,19 +129,6 @@ public class CommonParameters {
 	public static final String DIRIGIBLE_DEBUGGER_BRIDGE = "dirigible.debugger.bridge"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_RUNTIME_BRIDGE = "dirigible.runtime.bridge"; //$NON-NLS-1$
 
-	public static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
-	public static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
-	public static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
-	public static final String SYNONYM = "SYNONYM"; //$NON-NLS-1$
-	public static final String ALIAS = "ALIAS"; //$NON-NLS-1$
-	public static final String VIEW = "VIEW"; //$NON-NLS-1$
-	public static final String TABLE = "TABLE"; //$NON-NLS-1$
-
-	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY,
-			LOCAL_TEMPORARY, SYSTEM_TABLE };
-
-	
-
 	public static String getDatabaseProductName() {
 		return get(DATABASE_PRODUCT_NAME);
 	}
@@ -149,85 +141,67 @@ public class CommonParameters {
 		return get(DATABASE_DRIVER_NAME);
 	}
 
-
-
 	public static final String CONF_PATH_IDE = "/ide";
-	
+
 	public static final String CONF_PATH_GENERIC_VIEWS = "/ide/generic/views";
 
-	public static final int[] BINARY_TYPES = new int[]{
-			java.sql.Types.ARRAY,
-			java.sql.Types.BINARY,
-			java.sql.Types.BIT,
-			java.sql.Types.BIT,
-			java.sql.Types.BLOB,
-			java.sql.Types.CLOB,
-			java.sql.Types.DATALINK,
-			java.sql.Types.DISTINCT,
-			java.sql.Types.JAVA_OBJECT,
-			java.sql.Types.LONGVARBINARY,
-			java.sql.Types.NCLOB,
-			java.sql.Types.NULL,
-			java.sql.Types.OTHER,
-			java.sql.Types.REF,
-			java.sql.Types.SQLXML,
-			java.sql.Types.STRUCT,
-			java.sql.Types.VARBINARY
-	};
-	
-	
-	
-	
-// =====================================================================================================================================
-// DUAL PARAMETERS - DEPENDING ON THE TARGET PLATFORM - RAP or RCP
-// =====================================================================================================================================
+	public static final int[] BINARY_TYPES = new int[] { java.sql.Types.ARRAY,
+		java.sql.Types.BINARY, java.sql.Types.BIT, java.sql.Types.BIT,
+		java.sql.Types.BLOB, java.sql.Types.CLOB, java.sql.Types.DATALINK,
+		java.sql.Types.DISTINCT, java.sql.Types.JAVA_OBJECT,
+		java.sql.Types.LONGVARBINARY, java.sql.Types.NCLOB,
+		java.sql.Types.NULL, java.sql.Types.OTHER, java.sql.Types.REF,
+		java.sql.Types.SQLXML, java.sql.Types.STRUCT,
+		java.sql.Types.VARBINARY };
 
-		public static String get(String name) {
-			return DualParameters.get(name);
-		}
-		
-		public static Object getObject(String name) {
-			return DualParameters.getObject(name);
-		}
+	// =====================================================================================================================================
+	// DUAL PARAMETERS - DEPENDING ON THE TARGET PLATFORM - RAP or RCP
+	// =====================================================================================================================================
 
-		public static void set(String name, String value) {
-			DualParameters.set(name, value);
-		}
-		
-		public static void setObject(String name, Object value) {
-			DualParameters.setObject(name, value);
-		}
+	public static String get(String name) {
+		return DualParameters.get(name);
+	}
 
-		public static String getRuntimeUrl() {
-			return DualParameters.getRuntimeUrl();
-		}
-		
-		public static Object getService(Class clazz) {
-			return DualParameters.getService(clazz);
-		}
-		
-		
-		
-		public static String getServicesUrl() {
-			return DualParameters.getServicesUrl();
-		}
-		
-		public static String getContextPath() {
-			return DualParameters.getContextPath();
-		}
-		
-		public static HttpServletRequest getRequest() {
-			return DualParameters.getRequest();
-		}
-		
-		public static Boolean isRolesEnabled() {
-			return DualParameters.isRolesEnabled();
-		}
+	public static Object getObject(String name) {
+		return DualParameters.getObject(name);
+	}
 
-		public static String getUserName() {
-			return DualParameters.getUserName();
-		}
-	
+	public static void set(String name, String value) {
+		DualParameters.set(name, value);
+	}
+
+	public static void setObject(String name, Object value) {
+		DualParameters.setObject(name, value);
+	}
+
+	public static String getRuntimeUrl() {
+		return DualParameters.getRuntimeUrl();
+	}
+
+	public static Object getService(Class clazz) {
+		return DualParameters.getService(clazz);
+	}
+
+	public static String getServicesUrl() {
+		return DualParameters.getServicesUrl();
+	}
+
+	public static String getContextPath() {
+		return DualParameters.getContextPath();
+	}
+
+	public static HttpServletRequest getRequest() {
+		return DualParameters.getRequest();
+	}
+
+	public static Boolean isRolesEnabled() {
+		return DualParameters.isRolesEnabled();
+	}
+
+	public static String getUserName() {
+		return DualParameters.getUserName();
+	}
+
 	public static boolean isUserInRole(String role) {
 		return DualParameters.isUserInRole(role);
 	}
@@ -235,20 +209,17 @@ public class CommonParameters {
 	public static String getSessionId() {
 		return DualParameters.getSessionId();
 	}
-	
+
 	public static final boolean isRAP() {
 		return DualParameters.isRAP();
 	}
-	
+
 	public static final boolean isRCP() {
 		return DualParameters.isRCP();
 	}
-	
+
 	public static final void initSystemParameters() {
 		DualParameters.initSystemParameters();
 	}
-	
-	
-	
-	
+
 }

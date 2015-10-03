@@ -1,8 +1,8 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
@@ -45,11 +45,22 @@ public class DBUtils {
 	private static final String PRODUCT_HDB = "HDB"; //$NON-NLS-1$
 	private static final String PRODUCT_POSTGRESQL = "PostgreSQL"; //$NON-NLS-1$
 	private static final String PRODUCT_MYSQL = "MySQL"; //$NON-NLS-1$
-	
-	public static final String SCRIPT_DELIMITER = ";"; //$NON-NLS-1$
-	
 
-	private static Logger logger = Logger.getLogger(DBUtils.class.getCanonicalName());
+	public static final String SCRIPT_DELIMITER = ";"; //$NON-NLS-1$
+
+	public static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
+	public static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
+	public static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
+	public static final String SYNONYM = "SYNONYM"; //$NON-NLS-1$
+	public static final String ALIAS = "ALIAS"; //$NON-NLS-1$
+	public static final String VIEW = "VIEW"; //$NON-NLS-1$
+	public static final String TABLE = "TABLE"; //$NON-NLS-1$
+
+	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM,
+			GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
+
+	private static Logger logger = Logger.getLogger(DBUtils.class
+			.getCanonicalName());
 
 	private DataSource dataSource;
 
@@ -60,18 +71,19 @@ public class DBUtils {
 	/**
 	 * Read whole SQL script from the class path. It can contain multiple
 	 * statements separated with ';'
-	 * 
+	 *
 	 * @param path
 	 * @return the SQL script as a String
 	 */
-	public String readScript(Connection conn, String path, Class<?> clazz) throws IOException {
+	public String readScript(Connection conn, String path, Class<?> clazz)
+			throws IOException {
 		logger.debug("entering readScript"); //$NON-NLS-1$
 		String sql = null;
 		InputStream in = clazz.getResourceAsStream(path);
 		if (in == null) {
 			throw new IOException("SQL script does not exist: " + path);
 		}
-		
+
 		BufferedInputStream bufferedInput = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintWriter writer = new PrintWriter(baos);
@@ -102,8 +114,9 @@ public class DBUtils {
 			logger.error(ex.getMessage(), ex);
 		} finally {
 			try {
-				if (bufferedInput != null)
+				if (bufferedInput != null) {
 					bufferedInput.close();
+				}
 			} catch (IOException ex) {
 				logger.error(ex.getMessage(), ex);
 			}
@@ -116,7 +129,7 @@ public class DBUtils {
 
 	/**
 	 * Execute a SQL script containing multiple statements separated with ';'
-	 * 
+	 *
 	 * @param connection
 	 * @param script
 	 * @return
@@ -255,35 +268,62 @@ public class DBUtils {
 
 	/**
 	 * ResultSet current row to Content transformation
-	 * 
+	 *
 	 * @param resultSet
 	 * @return
 	 * @throws SQLException
 	 */
-	public static byte[] dbToData(ResultSet resultSet)
-			throws SQLException {
+	public static byte[] dbToData(ResultSet resultSet) throws SQLException {
 		String data = resultSet.getString("DOC_CONTENT"); //$NON-NLS-1$
 		return data.getBytes(Charset.defaultCharset());
 	}
 
 	/**
 	 * ResultSet current row to Binary Content transformation
-	 * 
+	 *
 	 * @param repository
 	 * @param resultSet
 	 * @return
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public static byte[] dbToDataBinary(Connection connection, ResultSet resultSet,
-			String columnName) throws SQLException, IOException {
+	public static byte[] dbToDataBinary(Connection connection,
+			ResultSet resultSet, String columnName) throws SQLException,
+			IOException {
 		String productName = connection.getMetaData().getDatabaseProductName();
-		IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
-		InputStream is = dialectSpecifier.getBinaryStream(resultSet, columnName);
+		IDialectSpecifier dialectSpecifier = DBUtils
+				.getDialectSpecifier(productName);
+		InputStream is = dialectSpecifier
+				.getBinaryStream(resultSet, columnName);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		IOUtils.copy(is, baos);
 		byte[] bytes = baos.toByteArray();
 		return bytes;
 	}
 
+	public static boolean isTableOrViewExists(Connection connection, String name)
+			throws SQLException {
+
+		boolean exists = false;
+		ResultSet rs = connection.getMetaData().getTables(null, null, name,
+				TABLE_TYPES);
+
+		exists = rs.next();
+
+		if (!exists) {
+			name = name.toLowerCase(); // e.g. postgres
+			rs = connection.getMetaData().getTables(null, null, name,
+					TABLE_TYPES);
+			exists = rs.next();
+		}
+
+		if (!exists) {
+			name = name.toUpperCase(); // e.g. mysql
+			rs = connection.getMetaData().getTables(null, null, name,
+					TABLE_TYPES);
+			exists = rs.next();
+		}
+
+		return exists;
+	}
 }
