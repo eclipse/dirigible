@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
@@ -50,8 +49,7 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 
 	@Override
 	public TemplateGenerator getTemplateGenerator() {
-		DataStructureTemplateGenerator generator = new DataStructureTemplateGenerator(
-				model);
+		DataStructureTemplateGenerator generator = new DataStructureTemplateGenerator(model);
 		return generator;
 	}
 
@@ -64,18 +62,14 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 	public IWizardPage getNextPage(IWizardPage page) {
 		IWizardPage nextPage = null;
 		if (page instanceof DataStructureTemplateTypePage) {
-			if (DataStructureTemplateLocations.TABLE.equals(model.getTemplate()
-					.getLocation())) {
+			if (DataStructureTemplateLocations.TABLE.equals(model.getTemplate().getLocation())) {
 				nextPage = structurePage;
-			} else if (DataStructureTemplateLocations.VIEW.equals(model
-					.getTemplate().getLocation())) {
+			} else if (DataStructureTemplateLocations.VIEW.equals(model.getTemplate().getLocation())) {
 				nextPage = queryPage;
-			} else if (DataStructureTemplateLocations.DSV.equals(model
-					.getTemplate().getLocation())) {
+			} else if (DataStructureTemplateLocations.DSV.equals(model.getTemplate().getLocation())) {
 				nextPage = dsvPage;
 			}
-		} else if ((page instanceof DataStructureTemplateStructurePage)
-				|| (page instanceof DataStructureTemplateQueryPage)
+		} else if ((page instanceof DataStructureTemplateStructurePage) || (page instanceof DataStructureTemplateQueryPage)
 				|| (page instanceof DataStructureTemplateDSVPage)) {
 
 			if (page instanceof DataStructureTemplateQueryPage) {
@@ -86,6 +80,7 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 					queryPage.setErrorMessage("SQL query string is empty");
 				} else {
 					queryPage.setErrorMessage(null);
+					this.model.setQuery(queryText);
 				}
 			}
 
@@ -101,9 +96,7 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 	public boolean performFinish() {
 		boolean result = super.performFinish();
 		if (result) {
-			StatusLineManagerUtil.setInfoMessage(String.format(
-					StatusLineManagerUtil.ARTIFACT_HAS_BEEN_CREATED,
-					model.getFileName()));
+			StatusLineManagerUtil.setInfoMessage(String.format(StatusLineManagerUtil.ARTIFACT_HAS_BEEN_CREATED, model.getFileName()));
 		}
 		return result;
 	}
@@ -114,14 +107,14 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 		if (!can) {
 			return can;
 		}
-		if (DataStructureTemplateLocations.VIEW.equals(model.getTemplate()
-				.getLocation())) {
+		if (DataStructureTemplateLocations.VIEW.equals(model.getTemplate().getLocation())) {
 			String queryText = queryPage.getQuery();
 			if ((queryText == null) || "".equals(queryText.trim())) {
 				queryPage.setErrorMessage("SQL query string is empty");
 				can = false;
 			} else {
 				queryPage.setErrorMessage(null);
+				this.model.setQuery(queryText);
 				can = true;
 			}
 		}
