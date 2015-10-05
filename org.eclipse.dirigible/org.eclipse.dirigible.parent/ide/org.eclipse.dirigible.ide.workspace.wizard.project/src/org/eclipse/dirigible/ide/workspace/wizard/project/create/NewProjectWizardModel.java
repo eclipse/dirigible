@@ -1,18 +1,19 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.wizard.project.create;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -46,8 +47,7 @@ public class NewProjectWizardModel {
 
 	private static final String INVALID_PROJECT_NAME = Messages.NewProjectWizardModel_INVALID_PROJECT_NAME;
 
-	public static final Logger logger = Logger
-			.getLogger(NewProjectWizardModel.class.getCanonicalName());
+	public static final Logger logger = Logger.getLogger(NewProjectWizardModel.class.getCanonicalName());
 
 	private static final String INITIAL_LOCATION = "project"; //$NON-NLS-1$
 
@@ -73,8 +73,7 @@ public class NewProjectWizardModel {
 
 	public IValidationStatus validate() {
 		IWorkspace workspace = WorkspaceLocator.getWorkspace();
-		IStatus pathValidation = workspace.validateName(projectName,
-				IResource.PROJECT);
+		IStatus pathValidation = workspace.validateName(projectName, IResource.PROJECT);
 		if (!pathValidation.isOK()) {
 			return ValidationStatus.createError(INVALID_PROJECT_NAME);
 		}
@@ -82,28 +81,23 @@ public class NewProjectWizardModel {
 		IWorkspaceRoot root = workspace.getRoot();
 		IProject project = root.getProject(projectName);
 		if (project.exists()) {
-			return ValidationStatus
-					.createError(PROJECT_WITH_THIS_NAME_ALREADY_EXISTS);
+			return ValidationStatus.createError(PROJECT_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
 		if (!isValidRepositoryProject()) {
-			return ValidationStatus.createError(String.format(
-					PROJECT_WITH_NAME_S_WAS_ALREADY_CREATED_FROM_USER_S,
-					projectName, conflictUser));
+			return ValidationStatus.createError(String.format(PROJECT_WITH_NAME_S_WAS_ALREADY_CREATED_FROM_USER_S, projectName, conflictUser));
 		}
 		return ValidationStatus.createOk();
 	}
 
 	private boolean isValidRepositoryProject() {
 		IRepository repository = RepositoryFacade.getInstance().getRepository();
-		ICollection userFolders = repository
-				.getCollection(IRepositoryPaths.DB_DIRIGIBLE_USERS);
+		ICollection userFolders = repository.getCollection(IRepositoryPaths.DB_DIRIGIBLE_USERS);
 		boolean isValid = true;
 		try {
 			for (ICollection user : userFolders.getCollections()) {
 				if (user.exists()) {
-					ICollection workspace = user
-							.getCollection(IRepositoryPaths.WORKSPACE_FOLDER_NAME);
+					ICollection workspace = user.getCollection(IRepositoryPaths.WORKSPACE_FOLDER_NAME);
 					for (ICollection nextProject : workspace.getCollections()) {
 						if (nextProject.exists()) {
 							if (nextProject.getName().equals(projectName)) {
@@ -132,27 +126,27 @@ public class NewProjectWizardModel {
 		// create the project first
 		try {
 			project.create(null);
-		} catch(CoreException e) {
+		} catch (CoreException e) {
 			logger.error(e.getMessage(), e);
 		}
-		
+
 		project.open(null);
-		
+
 		if (isUseTemplate()) {
 			String contentPath = this.template.getContentPath();
 			try {
-				IRepository repository = RepositoryFacade.getInstance()
-						.getRepository();
-				org.eclipse.dirigible.repository.api.IResource contentResource = repository
-						.getResource(contentPath);
+				IRepository repository = RepositoryFacade.getInstance().getRepository();
+				org.eclipse.dirigible.repository.api.IResource contentResource = repository.getResource(contentPath);
 				if (contentResource.exists()) {
 					byte[] data = contentResource.getContent();
 					IPath location = project.getRawLocation();
 					if (location == null) {
 						location = project.getLocation();
 					}
-					repository.importZip(data, location
-							.toString());
+					Map<String, String> filter = new HashMap<String, String>();
+					filter.put("PROJECT_NAME", projectName);
+					repository.importZip(data, location.toString(), false, false, filter);
+					// repository.importZip(data, location.toString());
 				}
 			} catch (RepositoryException e) {
 				logger.error(e.getMessage(), e);
@@ -172,11 +166,11 @@ public class NewProjectWizardModel {
 				folder.create(true, false, null);
 			}
 		}
-		
+
 		ProjectCreatorEnhancer.enhance(project);
-		
+
 		project.refreshLocal(2, null);
-		
+
 		return project;
 	}
 

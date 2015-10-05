@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.rcp;
@@ -20,6 +19,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -37,24 +37,24 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
  * The DB implementation of {@link IRepository}
- * 
  */
 public class RCPRepository implements IRepository {
 
 	private static final String PROVIDED_ZIP_DATA_CANNOT_BE_NULL = Messages.getString("DBRepository.PROVIDED_ZIP_DATA_CANNOT_BE_NULL"); //$NON-NLS-1$
 
-	private static final String PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL = Messages.getString("DBRepository.PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL"); //$NON-NLS-1$
+	private static final String PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL = Messages
+			.getString("DBRepository.PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL"); //$NON-NLS-1$
 
 	private static Logger logger = Logger.getLogger(RCPRepository.class);
 
 	public static final String PATH_DELIMITER = IRepository.SEPARATOR;
 
 	private static final String WORKSPACE_PATH = IRepository.SEPARATOR;
-	
+
 	private RCPRepositoryDAO repositoryDAO;
-	
+
 	private static RCPRepository instance;
-	
+
 	public static RCPRepository getInstance() {
 		if (instance == null) {
 			instance = new RCPRepository();
@@ -68,8 +68,7 @@ public class RCPRepository implements IRepository {
 			DataSource dataSource = DataSourceFacade.getInstance().getDataSource();
 			Connection connection = dataSource.getConnection();
 			try {
-				DBRepositoryInitializer dbRepositoryInitializer = new DBRepositoryInitializer(dataSource,
-						connection, false);
+				DBRepositoryInitializer dbRepositoryInitializer = new DBRepositoryInitializer(dataSource, connection, false);
 				boolean result = dbRepositoryInitializer.initialize();
 			} finally {
 				if (connection != null) {
@@ -80,12 +79,11 @@ public class RCPRepository implements IRepository {
 			throw new RCPBaseException("Initializing local database for Repository use failed", e);
 		}
 	}
-	
+
 	@Override
 	public ICollection getRoot() {
 		logger.debug("entering getRoot"); //$NON-NLS-1$
-		final RepositoryPath wrapperPath = new RepositoryPath(
-				WORKSPACE_PATH);
+		final RepositoryPath wrapperPath = new RepositoryPath(WORKSPACE_PATH);
 		RCPCollection dbCollection = new RCPCollection(this, wrapperPath);
 		logger.debug("exiting getRoot"); //$NON-NLS-1$
 		return dbCollection;
@@ -140,8 +138,7 @@ public class RCPRepository implements IRepository {
 	}
 
 	@Override
-	public IResource createResource(String path, byte[] content)
-			throws IOException {
+	public IResource createResource(String path, byte[] content) throws IOException {
 		logger.debug("entering createResource with Content"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new RCPResource(this, wrapperPath);
@@ -151,14 +148,12 @@ public class RCPRepository implements IRepository {
 	}
 
 	@Override
-	public IResource createResource(String path, byte[] content,
-			boolean isBinary, String contentType) throws IOException {
+	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType) throws IOException {
 		return createResource(path, content, isBinary, contentType, false);
 	}
 
 	@Override
-	public IResource createResource(String path, byte[] content,
-			boolean isBinary, String contentType, boolean override) throws IOException {
+	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override) throws IOException {
 		logger.debug("entering createResource with Content"); //$NON-NLS-1$
 		try {
 			getRepositoryDAO().createFile(path, content, isBinary, contentType);
@@ -200,7 +195,7 @@ public class RCPRepository implements IRepository {
 
 	@Override
 	public void dispose() {
-//		repositoryDAO.dispose();
+		// repositoryDAO.dispose();
 	}
 
 	public RCPRepositoryDAO getRepositoryDAO() {
@@ -208,27 +203,24 @@ public class RCPRepository implements IRepository {
 	}
 
 	@Override
-	public void importZip(ZipInputStream zipInputStream, String path)
-			throws IOException {
-		importZip(zipInputStream, path, false); 
+	public void importZip(ZipInputStream zipInputStream, String path) throws IOException {
+		importZip(zipInputStream, path, false);
 	}
 
 	@Override
-	public void importZip(ZipInputStream zipInputStream, String path, boolean override)
-			throws IOException {
+	public void importZip(ZipInputStream zipInputStream, String path, boolean override) throws IOException {
 		importZip(zipInputStream, path, override, false);
 	}
 
 	@Override
-	public void importZip(ZipInputStream zipInputStream, String path,
-			boolean override, boolean excludeRootFolderName) throws IOException {
+	public void importZip(ZipInputStream zipInputStream, String path, boolean override, boolean excludeRootFolderName) throws IOException {
 		if (zipInputStream == null) {
 			logger.error(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 			throw new IOException(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 		}
 		// TODO make use of override and excludeRootFolderName arguments?
-		ZipImporter.unzip(path,zipInputStream);
-		
+		ZipImporter.unzip(path, zipInputStream, null);
+
 	}
 
 	@Override
@@ -238,20 +230,18 @@ public class RCPRepository implements IRepository {
 
 	@Override
 	public void importZip(byte[] data, String path, boolean override) throws IOException {
-		importZip(data, path, override, false);
+		importZip(data, path, override, false, null);
 	}
 
 	@Override
-	public void importZip(byte[] data, String path, boolean override,
-			boolean excludeRootFolderName) throws IOException {
+	public void importZip(byte[] data, String path, boolean override, boolean excludeRootFolderName, Map<String, String> filter) throws IOException {
 		if (data == null) {
 			logger.error(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 			throw new IOException(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 		}
 		// TODO make use of override and excludeRootFolderName arguments?
-		ZipImporter.unzip(path, new ZipInputStream(
-				new ByteArrayInputStream(data)));
-		
+		ZipImporter.unzip(path, new ZipInputStream(new ByteArrayInputStream(data)), filter);
+
 	}
 
 	@Override
@@ -263,8 +253,7 @@ public class RCPRepository implements IRepository {
 	}
 
 	@Override
-	public byte[] exportZip(String path, boolean inclusive)
-			throws IOException {
+	public byte[] exportZip(String path, boolean inclusive) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
 		ZipExporter.zip(path, zipOutputStream);
@@ -272,96 +261,86 @@ public class RCPRepository implements IRepository {
 	}
 
 	@Override
-	public List<IEntity> searchName(String parameter, boolean caseInsensitive)
-			throws IOException {
-//		return repositoryDAO.searchName(parameter, caseInsensitive);
+	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws IOException {
+		// return repositoryDAO.searchName(parameter, caseInsensitive);
 		return null;
 	}
 
 	@Override
-	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive)
-			throws IOException {
-//		return repositoryDAO.searchName(root, parameter, caseInsensitive);
-//		return null;
-		
-		String workspacePath = RCPWorkspaceMapper.getMappedName(root);
-		
-		List<IEntity> entities = new ArrayList<IEntity>();
-		
+	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws IOException {
+		// return repositoryDAO.searchName(root, parameter, caseInsensitive);
+		// return null;
 
-		if (parameter == null
-				|| "".equals(parameter)) {
+		String workspacePath = RCPWorkspaceMapper.getMappedName(root);
+
+		List<IEntity> entities = new ArrayList<IEntity>();
+
+		if ((parameter == null) || "".equals(parameter)) {
 			return entities;
 		}
-		
+
 		if (parameter.startsWith("%")) {
 			parameter = parameter.substring(1);
 		}
-		
+
 		File dir = new File(workspacePath);
 		findInDirectory(dir, parameter, entities);
 
-    	return entities;
+		return entities;
 	}
 
-	private void findInDirectory(File dir, String parameter,
-			List<IEntity> entities) throws IOException {
-		
-		
+	private void findInDirectory(File dir, String parameter, List<IEntity> entities) throws IOException {
+
 		final String search = parameter;
-    	File[] found = dir.listFiles(new FilenameFilter() {
-			
+		File[] found = dir.listFiles(new FilenameFilter() {
+
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.endsWith(search);
 			}
 		});
-    	
-    	for (File f : found) {
-    		String repositoryName = RCPWorkspaceMapper.getReverseMappedName(f.getCanonicalPath());
-    		RepositoryPath repositoryPath = new RepositoryPath(repositoryName);
-    		entities.add(new RCPResource(this, repositoryPath));
-    	}
-    	
-    	File[] all = dir.listFiles();
+
+		for (File f : found) {
+			String repositoryName = RCPWorkspaceMapper.getReverseMappedName(f.getCanonicalPath());
+			RepositoryPath repositoryPath = new RepositoryPath(repositoryName);
+			entities.add(new RCPResource(this, repositoryPath));
+		}
+
+		File[] all = dir.listFiles();
 		for (File f : all) {
 			if (f.isDirectory()) {
 				findInDirectory(f, parameter, entities);
 			}
 		}
 	}
-	
+
 	@Override
-	public List<IEntity> searchPath(String parameter, boolean caseInsensitive)
-			throws IOException {
-//		return repositoryDAO.searchPath(parameter, caseInsensitive);
+	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws IOException {
+		// return repositoryDAO.searchPath(parameter, caseInsensitive);
 		return null;
 	}
 
 	@Override
-	public List<IEntity> searchText(String parameter, boolean caseInsensitive)
-			throws IOException {
-//		return repositoryDAO.searchText(parameter, caseInsensitive);
+	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws IOException {
+		// return repositoryDAO.searchText(parameter, caseInsensitive);
 		return null;
 	}
 
 	@Override
-	public List<IResourceVersion> getResourceVersions(String path)
-			throws IOException {
-//		return repositoryDAO.getResourceVersionsByPath(path);
+	public List<IResourceVersion> getResourceVersions(String path) throws IOException {
+		// return repositoryDAO.getResourceVersionsByPath(path);
 		return null;
 	}
 
 	@Override
-	public IResourceVersion getResourceVersion(String path, int version)
-			throws IOException {
-//		return new DBResourceVersion(this, new RepositoryPath(path), version);
+	public IResourceVersion getResourceVersion(String path, int version) throws IOException {
+		// return new DBResourceVersion(this, new RepositoryPath(path), version);
 		return null;
 	}
-	
+
 	@Override
 	public void cleanupOldVersions() throws IOException {
-//		repositoryDAO.cleanupOldVersions();
+		// repositoryDAO.cleanupOldVersions();
 	}
 
 	public String getUser() {

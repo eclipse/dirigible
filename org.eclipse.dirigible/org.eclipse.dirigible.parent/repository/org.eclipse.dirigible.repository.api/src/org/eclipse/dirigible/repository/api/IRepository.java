@@ -1,28 +1,27 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.api;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 /**
  * This interface represents a repository. It allows for querying, modifying and
  * navigating through collections and resources.
- * 
  */
 public interface IRepository {
 
-	public static final String SEPARATOR = ICommonConstants.SEPARATOR; //$NON-NLS-1$
+	public static final String SEPARATOR = ICommonConstants.SEPARATOR;
 
 	/**
 	 * Returns an instance of <code>ICollection</code> which represents the root
@@ -85,8 +84,7 @@ public interface IRepository {
 	 * The returned value is an instance of <code>IResource</code> that
 	 * represents the newly created resource.
 	 */
-	public IResource createResource(String path, byte[] content, boolean isBinary,
-			String contentType) throws IOException;
+	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType) throws IOException;
 
 	/**
 	 * This method creates a new empty, or override resource at the specified path.
@@ -94,8 +92,7 @@ public interface IRepository {
 	 * The returned value is an instance of <code>IResource</code> that
 	 * represents the newly created resource.
 	 */
-	public IResource createResource(String path, byte[] content, boolean isBinary,
-			String contentType, boolean override) throws IOException;
+	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override) throws IOException;
 
 	/**
 	 * Returns an instance of <code>IResource</code> which represents the
@@ -130,7 +127,7 @@ public interface IRepository {
 	/**
 	 * Imports content from zip file to the repository, based on the relative
 	 * root
-	 * 
+	 *
 	 * @param zipInputStream
 	 * @param relativeRoot
 	 * @throws IOException
@@ -140,19 +137,19 @@ public interface IRepository {
 	/**
 	 * Imports content from zip file to the repository, based on the relative
 	 * root. Overrides the previous content depending on the override parameter.
-	 * 
+	 *
 	 * @param zipInputStream
 	 * @param relativeRoot
 	 * @param override
 	 * @throws IOException
 	 */
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override) throws IOException;
-	
+
 	/**
 	 * Imports content from zip file to the repository, based on the relative
 	 * root. Overrides the previous content depending on the override parameter.
 	 * Excludes the name of the root folder, during the import, based on the excludeRootFolderName parameter.
-	 * 
+	 *
 	 * @param zipInputStream
 	 * @param relativeRoot
 	 * @param override
@@ -164,7 +161,7 @@ public interface IRepository {
 	/**
 	 * Imports content from zip file to the repository, based on the relative
 	 * root
-	 * 
+	 *
 	 * @param data
 	 *            the Zip file as byte array
 	 * @param relativeRoot
@@ -175,10 +172,11 @@ public interface IRepository {
 	/**
 	 * Imports content from zip file to the repository, based on the relative
 	 * root. Overrides the previous content depending on the override parameter.
-	 * 
+	 *
 	 * @param data
 	 *            the Zip file as byte array
 	 * @param relativeRoot
+	 * @param override
 	 * @throws IOException
 	 */
 	public void importZip(byte[] data, String relativeRoot, boolean override) throws IOException;
@@ -187,21 +185,23 @@ public interface IRepository {
 	 * Imports content from zip file to the repository, based on the relative
 	 * root. Overrides the previous content depending on the override parameter.
 	 * Excludes the name of the root folder, during the import, based on the excludeRootFolderName parameter.
-	 * 
+	 *
 	 * @param data
 	 *            the Zip file as byte array
 	 * @param relativeRoot
 	 * @param override
+	 * @param filter
 	 * @param excludeRootFolderName
 	 * @throws IOException
 	 */
-	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName) throws IOException;
+	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
+			throws IOException;
 
 	/**
 	 * Export all the content under the given path(s) with the target repository
 	 * instance Include the last segment of the relative roots during the
 	 * archiving
-	 * 
+	 *
 	 * @param relativeRoot
 	 * @return
 	 * @throws IOException
@@ -212,7 +212,7 @@ public interface IRepository {
 	 * Export all the content under the given path with the target repository
 	 * instance Include or NOT the last segment of the relative root during the
 	 * archiving
-	 * 
+	 *
 	 * @param relativeRoot
 	 *            single root
 	 * @param inclusive
@@ -226,7 +226,7 @@ public interface IRepository {
 	/**
 	 * Search the given parameter in the names of the files and folders ( means
 	 * *parameter)
-	 * 
+	 *
 	 * @param parameter
 	 * @param caseInsensitive
 	 * @return
@@ -237,20 +237,19 @@ public interface IRepository {
 	/**
 	 * Search the given parameter in the names of the files and folders ( means
 	 * *parameter) under specified root folder (means *root)
-	 * 
+	 *
 	 * @param root
 	 * @param parameter
 	 * @param caseInsensitive
 	 * @return
 	 * @throws IOException
 	 */
-	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive)
-			throws IOException;
+	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws IOException;
 
 	/**
 	 * Search the given given parameter in the names of the files and folders
 	 * (means *parameter*)
-	 * 
+	 *
 	 * @param parameter
 	 * @param caseInsensitive
 	 * @return
@@ -261,7 +260,7 @@ public interface IRepository {
 	/**
 	 * Search the given given parameter in the names of the files and folders as
 	 * well as in the content of the text files
-	 * 
+	 *
 	 * @param parameters
 	 * @param caseInsensitive
 	 * @return
@@ -271,7 +270,7 @@ public interface IRepository {
 
 	/**
 	 * Retrieve all the kept versions of a given resource
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 * @throws IOException
@@ -280,7 +279,7 @@ public interface IRepository {
 
 	/**
 	 * Retrieve a particular version of a given resource
-	 * 
+	 *
 	 * @param path
 	 * @param version
 	 * @return
@@ -291,7 +290,7 @@ public interface IRepository {
 	/**
 	 * Clean-up the file versions older than a month For full fledged SCM
 	 * system, use external e.g. Git
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void cleanupOldVersions() throws IOException;
