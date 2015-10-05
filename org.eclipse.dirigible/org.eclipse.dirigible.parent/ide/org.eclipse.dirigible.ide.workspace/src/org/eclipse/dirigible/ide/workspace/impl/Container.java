@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.impl;
@@ -27,7 +26,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -41,7 +39,7 @@ public class Container extends Resource implements IContainer {
 	private String defaultCharset = "UTF-8"; //$NON-NLS-1$
 
 	private static final Logger logger = Logger.getLogger(Container.class);
-	
+
 	public Container(IPath path, Workspace workspace) {
 		super(path, workspace);
 	}
@@ -57,9 +55,9 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IResourceFilterDescription createFilter(int type,
-			FileInfoMatcherDescription matcherDescription, int updateFlags,
-			IProgressMonitor monitor) throws CoreException {
+	@Override
+	public IResourceFilterDescription createFilter(int type, FileInfoMatcherDescription matcherDescription, int updateFlags, IProgressMonitor monitor)
+			throws CoreException {
 		// We do not support filters
 		throw new UnsupportedOperationException();
 	}
@@ -67,6 +65,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean exists(IPath childPath) {
 		IPath location = getLocation().append(childPath);
 		return workspace.hasResource(location);
@@ -75,8 +74,8 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IFile[] findDeletedMembersWithHistory(int depth,
-			IProgressMonitor monitor) throws CoreException {
+	@Override
+	public IFile[] findDeletedMembersWithHistory(int depth, IProgressMonitor monitor) throws CoreException {
 		// We do not support rollback.
 		return new IFile[0];
 	}
@@ -84,6 +83,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IResource findMember(String name) {
 		return findMember(name, false);
 	}
@@ -91,6 +91,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IResource findMember(IPath path) {
 		return findMember(path, false);
 	}
@@ -98,10 +99,11 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IResource findMember(String name, boolean phantom) {
 		IPath resourcePath = getLocation().append(name);
 		IResource resource = workspace.newResource(resourcePath);
-		if (resource == null || !resource.exists()) {
+		if ((resource == null) || !resource.exists()) {
 			return null;
 		}
 		return resource;
@@ -110,10 +112,11 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IResource findMember(IPath path, boolean phantom) {
 		IPath resourcePath = getLocation().append(path);
 		IResource resource = workspace.newResource(resourcePath);
-		if (resource == null || !resource.exists()) {
+		if ((resource == null) || !resource.exists()) {
 			return null;
 		}
 		return resource;
@@ -122,6 +125,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getDefaultCharset() throws CoreException {
 		return getDefaultCharset(true);
 	}
@@ -129,6 +133,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getDefaultCharset(boolean checkImplicit) throws CoreException {
 		return defaultCharset;
 	}
@@ -136,11 +141,11 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IFile getFile(IPath path) {
 		IPath resourcePath = this.path.append(path);
 		if (resourcePath.segmentCount() < 2) {
-			throw new IllegalArgumentException(
-					String.format(THE_FILE_PATH_MUST_HAVE_AT_LEAST_TWO_SEGMENTS, resourcePath.toString()));
+			throw new IllegalArgumentException(String.format(THE_FILE_PATH_MUST_HAVE_AT_LEAST_TWO_SEGMENTS, resourcePath.toString()));
 		}
 		return new File(resourcePath, workspace);
 	}
@@ -148,6 +153,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IResourceFilterDescription[] getFilters() throws CoreException {
 		// We support no filters.
 		return new IResourceFilterDescription[0];
@@ -156,11 +162,11 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IFolder getFolder(IPath path) {
 		IPath resourcePath = this.path.append(path);
 		if (resourcePath.segmentCount() < 2) {
-			throw new IllegalArgumentException(
-					String.format(THE_FOLDER_PATH_MUST_HAVE_AT_LEAST_TWO_SEGMENTS, resourcePath.toString()));
+			throw new IllegalArgumentException(String.format(THE_FOLDER_PATH_MUST_HAVE_AT_LEAST_TWO_SEGMENTS, resourcePath.toString()));
 		}
 		return new Folder(resourcePath, workspace);
 	}
@@ -168,6 +174,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IResource[] members() throws CoreException {
 		return members(false);
 	}
@@ -175,6 +182,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IResource[] members(boolean phantom) throws CoreException {
 		return members(phantom ? IContainer.INCLUDE_PHANTOMS : IContainer.NONE);
 	}
@@ -182,6 +190,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IResource[] members(int memberFlags) throws CoreException {
 		ICollection collection = (ICollection) getEntity();
 		List<String> childNames = new ArrayList<String>();
@@ -190,7 +199,7 @@ public class Container extends Resource implements IContainer {
 			childNames.addAll(collection.getResourcesNames());
 		} catch (IOException ex) {
 			logger.error(ex.getMessage(), ex);
-			throw new CoreException(createErrorStatus(COULD_NOT_GET_MEMBERS + ex.getMessage())); // NOPMD 
+			throw new CoreException(createErrorStatus(COULD_NOT_GET_MEMBERS + ex.getMessage())); // NOPMD
 		}
 		List<IResource> result = new ArrayList<IResource>();
 		for (String childName : childNames) {
@@ -202,8 +211,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removeFilter(IResourceFilterDescription arg0, int arg1,
-			IProgressMonitor arg2) throws CoreException {
+	public void rekFilter(IResourceFilterDescription arg0, int arg1, IProgressMonitor arg2) throws CoreException {
 		// We do not support filters.
 		throw new UnsupportedOperationException();
 	}
@@ -211,6 +219,7 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setDefaultCharset(String charset) throws CoreException {
 		setDefaultCharset(charset, null);
 	}
@@ -218,8 +227,8 @@ public class Container extends Resource implements IContainer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setDefaultCharset(String charset, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public void setDefaultCharset(String charset, IProgressMonitor monitor) throws CoreException {
 		defaultCharset = charset;
 	}
 
@@ -230,10 +239,9 @@ public class Container extends Resource implements IContainer {
 	}
 
 	@Override
-	public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags)
-			throws CoreException {
+	public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags) throws CoreException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

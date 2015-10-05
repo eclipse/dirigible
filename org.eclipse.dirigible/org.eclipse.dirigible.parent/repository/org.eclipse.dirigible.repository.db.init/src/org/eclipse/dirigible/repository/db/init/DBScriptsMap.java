@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.db.init;
@@ -14,7 +13,6 @@ package org.eclipse.dirigible.repository.db.init;
 /**
  * The static map for the scripts locations Intentionally the active scripts are
  * registered in this class
- * 
  */
 public class DBScriptsMap {
 
@@ -65,6 +63,8 @@ public class DBScriptsMap {
 	public static final String SCRIPT_GET_DOCUMENTS_BY_PATH_CASCADE = "/org/eclipse/dirigible/repository/db/sql/get_documents_by_path_cascade.sql"; //$NON-NLS-1$
 	public static final String SCRIPT_RENAME_FILE = "/org/eclipse/dirigible/repository/db/sql/rename_file.sql"; //$NON-NLS-1$
 	public static final String SCRIPT_RENAME_DOCUMENT = "/org/eclipse/dirigible/repository/db/sql/rename_document.sql"; //$NON-NLS-1$
+	public static final String SCRIPT_GET_BINARIES_BY_PATH_CASCADE = "/org/eclipse/dirigible/repository/db/sql/get_binaries_by_path_cascade.sql"; //$NON-NLS-1$
+	public static final String SCRIPT_RENAME_BINARY = "/org/eclipse/dirigible/repository/db/sql/rename_binary.sql"; //$NON-NLS-1$
 
 	public static final String SCRIPT_SET_MODIFIED = "/org/eclipse/dirigible/repository/db/sql/set_modified.sql"; //$NON-NLS-1$
 
