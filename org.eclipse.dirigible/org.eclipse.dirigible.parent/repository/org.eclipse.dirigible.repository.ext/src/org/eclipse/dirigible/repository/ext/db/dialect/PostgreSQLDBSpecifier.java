@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.db.dialect;
@@ -38,8 +37,7 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 
 	@Override
 	public String specify(String sql) {
-		sql = sql.replace(DIALECT_CURRENT_TIMESTAMP,
-				POSTGRESQL_CURRENT_TIMESTAMP);
+		sql = sql.replace(DIALECT_CURRENT_TIMESTAMP, POSTGRESQL_CURRENT_TIMESTAMP);
 		sql = sql.replace(DIALECT_TIMESTAMP, POSTGRESQL_TIMESTAMP);
 		sql = sql.replace(DIALECT_BLOB, POSTGRESQL_BLOB);
 		sql = sql.replace(DIALECT_KEY_VARCHAR, POSTGRESQL_KEY_VARCHAR);
@@ -82,7 +80,7 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 
 	@Override
 	public String getAlterAddOpen() {
-		return " ADD COLUMN ";
+		return "";
 	}
 
 	@Override
@@ -91,14 +89,23 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 	}
 
 	@Override
-	public InputStream getBinaryStream(ResultSet resultSet, String columnName)
-			throws SQLException {
+	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		return new ByteArrayInputStream(resultSet.getBytes(columnName));
 	}
 
 	@Override
 	public boolean isCatalogForSchema() {
 		return false;
+	}
+
+	@Override
+	public String getAlterAddOpenEach() {
+		return " ADD COLUMN ";
+	}
+
+	@Override
+	public String getAlterAddCloseEach() {
+		return "";
 	}
 
 }

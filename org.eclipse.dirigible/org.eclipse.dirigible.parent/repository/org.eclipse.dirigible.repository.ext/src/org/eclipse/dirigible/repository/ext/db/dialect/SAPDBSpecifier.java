@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.db.dialect;
@@ -27,7 +26,7 @@ public class SAPDBSpecifier implements IDialectSpecifier {
 	private static final String SAPDB_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP"; //$NON-NLS-1$
 	private static final String SAPDB_KEY_VARCHAR = "VARCHAR(1000)";
 	private static final String SAPDB_BIG_VARCHAR = "VARCHAR(4000)";
-	
+
 	@Override
 	public String specify(String sql) {
 		sql = sql.replace(DIALECT_CURRENT_TIMESTAMP, SAPDB_CURRENT_TIMESTAMP);
@@ -50,10 +49,10 @@ public class SAPDBSpecifier implements IDialectSpecifier {
 	public String createLimitAndOffset(int limit, int offset) {
 		return String.format(LIMIT_D_D, offset, limit);
 	}
-	
+
 	@Override
 	public String createTopAndStart(int limit, int offset) {
-		return "";  //$NON-NLS-1$
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -85,6 +84,16 @@ public class SAPDBSpecifier implements IDialectSpecifier {
 	@Override
 	public boolean isCatalogForSchema() {
 		return false;
+	}
+
+	@Override
+	public String getAlterAddOpenEach() {
+		return "";
+	}
+
+	@Override
+	public String getAlterAddCloseEach() {
+		return "";
 	}
 
 }

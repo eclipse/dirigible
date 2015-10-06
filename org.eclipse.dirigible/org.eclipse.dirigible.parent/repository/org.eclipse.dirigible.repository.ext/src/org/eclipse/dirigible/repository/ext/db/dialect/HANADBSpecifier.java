@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.db.dialect;
@@ -27,17 +26,17 @@ public class HANADBSpecifier implements IDialectSpecifier {
 	private static final String HANA_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP"; //$NON-NLS-1$
 	private static final String HANA_KEY_VARCHAR = "VARCHAR(1000)";
 	private static final String HANA_BIG_VARCHAR = "VARCHAR(4000)";
-	
+
 	@Override
 	public String createLimitAndOffset(int limit, int offset) {
 		return String.format(LIMIT_D_OFFSET_D, limit, offset);
 	}
-	
+
 	@Override
 	public boolean isSchemaFilterSupported() {
 		return true;
 	}
-	
+
 	@Override
 	public String getSchemaFilterScript() {
 		return "SELECT * FROM PUBLIC.SCHEMAS WHERE HAS_PRIVILEGES='TRUE'";
@@ -51,6 +50,16 @@ public class HANADBSpecifier implements IDialectSpecifier {
 	@Override
 	public String getAlterAddClose() {
 		return " ) ";
+	}
+
+	@Override
+	public String getAlterAddOpenEach() {
+		return "";
+	}
+
+	@Override
+	public String getAlterAddCloseEach() {
+		return "";
 	}
 
 	@Override
@@ -73,7 +82,7 @@ public class HANADBSpecifier implements IDialectSpecifier {
 
 	@Override
 	public String createTopAndStart(int limit, int offset) {
-		return "";  //$NON-NLS-1$
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override

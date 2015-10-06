@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.db.dialect;
@@ -86,8 +85,7 @@ public class MySQLDBSpecifier implements IDialectSpecifier {
 	}
 
 	@Override
-	public InputStream getBinaryStream(ResultSet resultSet, String columnName)
-			throws SQLException {
+	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		Blob data = resultSet.getBlob(columnName);
 		return data.getBinaryStream();
 	}
@@ -95,6 +93,16 @@ public class MySQLDBSpecifier implements IDialectSpecifier {
 	@Override
 	public boolean isCatalogForSchema() {
 		return true;
+	}
+
+	@Override
+	public String getAlterAddOpenEach() {
+		return "";
+	}
+
+	@Override
+	public String getAlterAddCloseEach() {
+		return "";
 	}
 
 }
