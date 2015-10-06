@@ -67,6 +67,9 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 			} else if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.js" //$NON-NLS-1$
 					.equals(model.getTemplate().getLocation()))) {
 				return tablesTemplateTablePage;
+			} else if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.js" //$NON-NLS-1$
+					.equals(model.getTemplate().getLocation()))) {
+				return tablesTemplateTablePage;
 			} else {
 				return targetLocationPage;
 			}
@@ -87,6 +90,9 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 					.equals(model.getTemplate().getLocation()))) {
 				return tablesTemplateTablePage;
 			} else if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.js" //$NON-NLS-1$
+					.equals(model.getTemplate().getLocation()))) {
+				return tablesTemplateTablePage;
+			} else if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.js" //$NON-NLS-1$
 					.equals(model.getTemplate().getLocation()))) {
 				return tablesTemplateTablePage;
 			}

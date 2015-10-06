@@ -39,31 +39,37 @@
             category="ScriptingServices"
             image="/icons/javascript-service.png"
             location="/org/eclipse/dirigible/ide/template/ui/js/templates/javascript-service.js"
-            text="Server-Side JavaScript Service">
+            text="JavaScript Hello World Service">
       </template>
       <template
             category="ScriptingServices"
             image="/icons/guid-generator.png"
             location="/org/eclipse/dirigible/ide/template/ui/js/templates/guid-generator.js"
-            text="Server-Side JavaScript Guid Generator Library">
+            text="JavaScript Guid Generator Library">
       </template>
       <template
             category="ScriptingServices"
             image="/icons/database-access.png"
             location="/org/eclipse/dirigible/ide/template/ui/js/templates/database-access.js"
-            text="Database Access Sample">
+            text="JavaScript Database Access">
       </template>
       <template
             category="ScriptingServices"
             image="/icons/database-crud.png"
             location="/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.js"
-            text="Entity Service on Table">
+            text="JavaScript Entity Service on Table">
+      </template>
+      <template
+            category="ScriptingServices"
+            image="/icons/database-read.png"
+            location="/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.js"
+            text="JavaScript Entities List Service on Table or View">
       </template>
        <template
             category="ScriptingServices"
             image="/icons/java-service.png"
             location="/org/eclipse/dirigible/ide/template/ui/js/templates/java-service.java_"
-            text="Java Service">
+            text="Java Hello World Service">
       </template>
       <!-- Ruby Template
       <template
@@ -84,7 +90,7 @@
             category="ScriptingServices"
             image="/icons/terminal-command.png"
             location="/org/eclipse/dirigible/ide/template/ui/js/templates/terminal-command.command"
-            text="Terminal Command">
+            text="Terminal Command Service">
       </template>
    </extension>
    

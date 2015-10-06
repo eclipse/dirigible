@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.js.wizard;
@@ -29,8 +28,7 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 
 	private JavascriptServiceTemplateModel model;
 
-	public JavascriptServiceTemplateGenerator(
-			JavascriptServiceTemplateModel model) {
+	public JavascriptServiceTemplateGenerator(JavascriptServiceTemplateModel model) {
 		this.model = model;
 	}
 
@@ -69,12 +67,12 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 		parameters.put("TIME", java.sql.Types.TIME); //$NON-NLS-1$
 		parameters.put("TIMESTAMP", java.sql.Types.TIMESTAMP); //$NON-NLS-1$
 
-//		parameters.put("CLOB", java.sql.Types.CLOB); //$NON-NLS-1$
-//		parameters.put("BLOB", java.sql.Types.BLOB); //$NON-NLS-1$
+		// parameters.put("CLOB", java.sql.Types.CLOB); //$NON-NLS-1$
+		// parameters.put("BLOB", java.sql.Types.BLOB); //$NON-NLS-1$
 
 		return parameters;
 	}
-	
+
 	public String constructPackageName() {
 		StringBuilder result = new StringBuilder();
 		IPath location = new Path(model.getTargetContainer());
@@ -90,14 +88,13 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 		return constructedPackage;
 	}
 
-
 	private TableColumn[] getTableColumnsWithoutKeys(TableColumn[] tableColumns) {
 		if (tableColumns == null) {
 			return null;
 		}
 		List<TableColumn> list = new ArrayList<TableColumn>();
-		for (int i = 0; i < tableColumns.length; i++) {
-			TableColumn tableColumn = tableColumns[i];
+		for (TableColumn tableColumn2 : tableColumns) {
+			TableColumn tableColumn = tableColumn2;
 			if (!tableColumn.isKey()) {
 				list.add(tableColumn);
 			}
@@ -132,29 +129,32 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 
 		if ("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.js" //$NON-NLS-1$
 				.equals(model.getTemplate().getLocation())) {
-			generateFile(
-					"/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.entity", //$NON-NLS-1$
-					model.getTargetLocation(), model.getFileNameNoExtension()
-							+ ".entity"); //$NON-NLS-1$
-			generateFile(
-					"/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud-lib.js", //$NON-NLS-1$
-					model.getTargetLocation(), model.getFileNameNoExtension()
-							+ "_lib.js"); //$NON-NLS-1$
+			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.entity", //$NON-NLS-1$
+					model.getTargetLocation(), model.getFileNameNoExtension() + ".entity"); //$NON-NLS-1$
+			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud-lib.js", //$NON-NLS-1$
+					model.getTargetLocation(), model.getFileNameNoExtension() + "_lib.js"); //$NON-NLS-1$
+
+		}
+
+		if ("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.js" //$NON-NLS-1$
+				.equals(model.getTemplate().getLocation())) {
+			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.entity", //$NON-NLS-1$
+					model.getTargetLocation(), model.getFileNameNoExtension() + ".entity"); //$NON-NLS-1$
+			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read-lib.js", //$NON-NLS-1$
+					model.getTargetLocation(), model.getFileNameNoExtension() + "_lib.js"); //$NON-NLS-1$
 
 		}
 
 		if ("/org/eclipse/dirigible/ide/template/ui/js/templates/ruby-service.rb" //$NON-NLS-1$
 				.equals(model.getTemplate().getLocation())) {
-			generateFile(
-					"/org/eclipse/dirigible/ide/template/ui/js/templates/ruby-module.rb", //$NON-NLS-1$
+			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/ruby-module.rb", //$NON-NLS-1$
 					model.getTargetLocation(), "module1.rb"); //$NON-NLS-1$
 
 		}
-		
+
 		if ("/org/eclipse/dirigible/ide/template/ui/js/templates/groovy-service.groovy" //$NON-NLS-1$
 				.equals(model.getTemplate().getLocation())) {
-			generateFile(
-					"/org/eclipse/dirigible/ide/template/ui/js/templates/groovy-module.groovy", //$NON-NLS-1$
+			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/groovy-module.groovy", //$NON-NLS-1$
 					model.getTargetLocation(), "module1.groovy"); //$NON-NLS-1$
 
 		}
