@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>org.eclipse.dirigible.parent</artifactId>
-		<version>2.1.150923</version>
+		<version>2.1.151007</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -38,7 +38,7 @@
 						<artifact>
 							<groupId>org.eclipse.dirigible.platform</groupId>
 							<artifactId>org.eclipse.dirigible.platform.target</artifactId>
-							<version>2.1.150923</version>
+							<version>2.1.151007</version>
 							<classifier>org.eclipse.dirigible.platform.base</classifier>
 						</artifact>
 					</target>

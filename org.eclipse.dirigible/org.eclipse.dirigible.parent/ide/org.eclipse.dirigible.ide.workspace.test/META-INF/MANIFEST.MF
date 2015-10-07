@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Workspace Test
 Bundle-SymbolicName: org.eclipse.dirigible.ide.workspace.test
 Fragment-Host: org.eclipse.dirigible.ide.workspace
-Bundle-Version: 2.1.150923
+Bundle-Version: 2.1.151007
 Bundle-Vendor: SAP
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,

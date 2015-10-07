@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.common;
@@ -15,6 +14,10 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
+import org.eclipse.dirigible.ide.workspace.ui.viewer.ReservedFolderFilter;
+import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceContainerFilter;
+import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -31,18 +34,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import org.eclipse.dirigible.ide.workspace.ui.viewer.ReservedFolderFilter;
-import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceContainerFilter;
-import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceViewer;
-
 public abstract class TemplateTargetLocationPage extends WizardPage {
+
+	private static final String THERE_IS_NO_SELECTED_PROJECT = "There is no selected project";
 
 	private static final long serialVersionUID = 1L;
 
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	private static final String INPUT_THE_FILE_NAME = Messages.TemplateTargetLocationPage_INPUT_THE_FILE_NAME;
-	
+
 	private static final String INPUT_THE_PACKAGE_NAME = Messages.TemplateTargetLocationPage_INPUT_THE_PACKAGE_NAME;
 
 	private static final String SELECT_THE_LOCATION_OF_THE_GENERATED_PAGE = Messages.TemplateTargetLocationPage_SELECT_THE_LOCATION_OF_THE_GENERATED_PAGE;
@@ -52,7 +53,7 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 	private WorkspaceViewer projectViewer;
 
 	private Text packageNameText;
-	
+
 	private Text fileNameText;
 
 	protected TemplateTargetLocationPage(String pageName) {
@@ -77,42 +78,45 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 
 	private void createProjectViewerField(Composite parent) {
 		projectViewer = new WorkspaceViewer(parent, SWT.BORDER);
-		projectViewer.getControl().setLayoutData(
-				new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		projectViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		projectViewer.getViewer().addFilter(getFilter());
-		projectViewer.getViewer().addSelectionChangedListener(
-				new ISelectionChangedListener() {
+		projectViewer.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
-					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
-						String targetLocation = null;
-						IStructuredSelection selection = (IStructuredSelection) projectViewer
-								.getSelectionProvider().getSelection();
-						if (selection.getFirstElement() == null
-								|| !(selection.getFirstElement() instanceof IContainer)) {
-							setErrorMessage(SELECT_THE_LOCATION_OF_THE_GENERATED_PAGE);
-						} else {
-							setErrorMessage(null);
-							IContainer container = ((IContainer) selection
-									.getFirstElement());
-							// #177
-							targetLocation = container.getFullPath().toString();
-							
-//							getModel().setTargetLocation(targetLocation);
-							if (getModel().getTargetContainer() == null) { 
-								getModel().setTargetContainer(targetLocation);
-							}
-							if (getModel().getPackageName() == null) {
-								if (container.getProjectRelativePath().segmentCount() <= 1) {
-									getModel().setPackageName(getModel().getProjectName());
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				String targetLocation = null;
+				IStructuredSelection selection = (IStructuredSelection) projectViewer.getSelectionProvider().getSelection();
+				if ((selection.getFirstElement() == null) || !(selection.getFirstElement() instanceof IContainer)) {
+					setErrorMessage(SELECT_THE_LOCATION_OF_THE_GENERATED_PAGE);
+				} else {
+					setErrorMessage(null);
+					IContainer container = ((IContainer) selection.getFirstElement());
+					// #177
+					targetLocation = container.getFullPath().toString();
+
+					// getModel().setTargetLocation(targetLocation);
+					if (getModel().getTargetContainer() == null) {
+						getModel().setTargetContainer(targetLocation);
+					}
+					if (getModel().getPackageName() == null) {
+						if (container.getProjectRelativePath().segmentCount() <= 1) {
+							if (getModel().getProjectName() != null) {
+								getModel().setPackageName(getModel().getProjectName());
+							} else {
+								if (WorkspaceLocator.getWorkspace().getRoot().getProjects().length == 0) {
+									setErrorMessage(THERE_IS_NO_SELECTED_PROJECT);
 								} else {
-									packageNameText.setEnabled(false);
+									getModel().setPackageName(WorkspaceLocator.getWorkspace().getRoot().getProjects()[0].getName());
 								}
 							}
+						} else {
+							packageNameText.setEnabled(false);
 						}
-						checkPageStatus();
 					}
-				});
+				}
+				checkPageStatus();
+			}
+		});
 		projectViewer.getViewer().expandToLevel(2);
 	}
 
@@ -130,7 +134,7 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 	 * should return one of the main types of artifacts: javascript service,
 	 * integration service etc. Null if no the artifact can be created
 	 * everywhere.
-	 * 
+	 *
 	 * @return Method should return one of the main types of artifacts:
 	 *         javascript service, integration service etc.
 	 */
@@ -139,13 +143,11 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 	}
 
 	protected Object getApropriateFolderForAction(String folderName) {
-		Object[] expandedElements = projectViewer.getViewer()
-				.getExpandedElements();
-		if (expandedElements == null || expandedElements.length == 0) {
+		Object[] expandedElements = projectViewer.getViewer().getExpandedElements();
+		if ((expandedElements == null) || (expandedElements.length == 0)) {
 			return null;
 		}
-		ITreeContentProvider contentProvider = (ITreeContentProvider) projectViewer
-				.getViewer().getContentProvider();
+		ITreeContentProvider contentProvider = (ITreeContentProvider) projectViewer.getViewer().getContentProvider();
 		IResource sourceResource = getModel().getSourceResource();
 		if (sourceResource != null) {
 			String[] segments = sourceResource.getLocation().segments();
@@ -183,16 +185,14 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 		label.setText(Messages.TemplateTargetLocationPage_FILE_NAME);
 
 		fileNameText = new Text(parent, SWT.BORDER);
-		fileNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false));
+		fileNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		fileNameText.addModifyListener(new ModifyListener() {
 
 			private static final long serialVersionUID = 72329751007839679L;
 
 			@Override
 			public void modifyText(ModifyEvent event) {
-				if (fileNameText.getText() == null
-						|| EMPTY_STRING.equals(fileNameText.getText())) {
+				if ((fileNameText.getText() == null) || EMPTY_STRING.equals(fileNameText.getText())) {
 					setErrorMessage(INPUT_THE_FILE_NAME);
 				} else {
 					setErrorMessage(null);
@@ -210,16 +210,14 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 		label.setText(Messages.TemplateTargetLocationPage_PACKAGE_NAME);
 
 		packageNameText = new Text(parent, SWT.BORDER);
-		packageNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false));
+		packageNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		packageNameText.addModifyListener(new ModifyListener() {
 
 			private static final long serialVersionUID = 72329751007839679L;
 
 			@Override
 			public void modifyText(ModifyEvent event) {
-				if (packageNameText.getText() == null
-						|| EMPTY_STRING.equals(packageNameText.getText())) {
+				if ((packageNameText.getText() == null) || EMPTY_STRING.equals(packageNameText.getText())) {
 					setErrorMessage(INPUT_THE_PACKAGE_NAME);
 				} else {
 					setErrorMessage(null);
@@ -231,7 +229,6 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 
 	}
 
-	
 	protected abstract void checkPageStatus();
 
 	protected abstract String getDefaultFileName(String preset);
@@ -239,18 +236,18 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 	@Override
 	public void setVisible(boolean visible) {
 		setPreselectedElement();
-		
+
 		if (packageNameText.isEnabled()) {
-			packageNameText.setText(getDefaultPackageName());
+			String packageName = getDefaultPackageName();
+			packageNameText.setText((packageName == null) ? "" : packageName);
 		}
-		
-		if (fileNameText.getText() == null
-				|| EMPTY_STRING.equals(fileNameText.getText())) {
+
+		if ((fileNameText.getText() == null) || EMPTY_STRING.equals(fileNameText.getText())) {
 			fileNameText.setText(getDefaultFileName(null));
 		} else {
 			if (isForcedFileName()
-//					&& getModel().getFileName() == null
-					) {
+			// && getModel().getFileName() == null
+			) {
 				fileNameText.setText(getDefaultFileName(fileNameText.getText()));
 			}
 		}
@@ -261,14 +258,13 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 	}
 
 	private String getDefaultPackageName() {
-		return (getModel().getPackageName() == null) ?
-				getModel().getProjectName() : getModel().getPackageName();
+		return (getModel().getPackageName() == null) ? getModel().getProjectName() : getModel().getPackageName();
 	}
 
 	private void preselectFileNameText() {
 		fileNameText.setFocus();
 		String defaultName = getDefaultFileName(fileNameText.getText());
-		if (defaultName != null && defaultName.length() > 0) {
+		if ((defaultName != null) && (defaultName.length() > 0)) {
 			int lastIndexOf = defaultName.indexOf("."); //$NON-NLS-1$
 			if (lastIndexOf == -1) {
 				lastIndexOf = defaultName.length();
@@ -281,7 +277,7 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 	/**
 	 * Method returns preselected element that is the correct type of artifact
 	 * parent location.
-	 * 
+	 *
 	 * @return default selection
 	 */
 	protected StructuredSelection getPreselectedElement() {

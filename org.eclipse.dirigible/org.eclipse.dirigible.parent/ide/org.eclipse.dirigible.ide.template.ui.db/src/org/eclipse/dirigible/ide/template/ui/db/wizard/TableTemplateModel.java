@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
@@ -32,8 +31,7 @@ public class TableTemplateModel extends GenerationModel {
 
 	private static final String TABLE_OR_VIEW_WITH_THE_SAME_NAME_ALREADY_EXISTS = Messages.TableTemplateModel_TABLE_OR_VIEW_WITH_THE_SAME_NAME_ALREADY_EXISTS;
 
-	private static final Logger logger = Logger
-			.getLogger(TableTemplateModel.class);
+	private static final Logger logger = Logger.getLogger(TableTemplateModel.class);
 
 	private static final String TARGET_LOCATION_IS_NOT_ALLOWED = Messages.TableTemplateModel_TARGET_LOCATION_IS_NOT_ALLOWED;
 	private static final String NO_PRIMARY_KEY_FOUND = Messages.TableTemplateModel_NO_PRIMARY_KEY_FOUND;
@@ -64,8 +62,7 @@ public class TableTemplateModel extends GenerationModel {
 			return locationStatus;
 		}
 
-		return ValidationStatus.getValidationStatus(locationStatus,
-				templateStatus);
+		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
 	}
 
 	public IValidationStatus validateLocation() {
@@ -75,21 +72,16 @@ public class TableTemplateModel extends GenerationModel {
 			if (status.hasErrors()) {
 				return status;
 			}
-			IPath location = new Path(getTargetLocation())
-			.append(getFileName());
+			IPath location = new Path(getTargetLocation()).append(getFileName());
 			// TODO - more precise test for the location ../DataStructures/...
-			if (location.toString().indexOf(
-					ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES) == -1) {
-				return ValidationStatus
-						.createError(TARGET_LOCATION_IS_NOT_ALLOWED);
+			if (location.toString().indexOf(ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES) == -1) {
+				return ValidationStatus.createError(TARGET_LOCATION_IS_NOT_ALLOWED);
 			}
 
 			// check the file name against the existing table names
-			if (isTableExists(getFileNameNoExtension().toLowerCase())
-					|| (isTableExists(getFileNameNoExtension().toUpperCase()) && !(getFileName()
-							.endsWith(".dsv")))) {
-				return ValidationStatus
-						.createError(TABLE_OR_VIEW_WITH_THE_SAME_NAME_ALREADY_EXISTS);
+			if ((isTableExists(getFileNameNoExtension().toLowerCase()) && !(getFileName().endsWith(".dsv")))
+					|| (isTableExists(getFileNameNoExtension().toUpperCase()) && !(getFileName().endsWith(".dsv")))) {
+				return ValidationStatus.createError(TABLE_OR_VIEW_WITH_THE_SAME_NAME_ALREADY_EXISTS);
 			}
 
 		} catch (Exception e) {
@@ -104,8 +96,7 @@ public class TableTemplateModel extends GenerationModel {
 	private boolean isTableExists(String tableName) {
 		Connection connection = null;
 		try {
-			DataSource dataSource = DataSourceFacade.getInstance()
-					.getDataSource();
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource();
 			connection = dataSource.getConnection();
 
 			return DBUtils.isTableOrViewExists(connection, tableName);

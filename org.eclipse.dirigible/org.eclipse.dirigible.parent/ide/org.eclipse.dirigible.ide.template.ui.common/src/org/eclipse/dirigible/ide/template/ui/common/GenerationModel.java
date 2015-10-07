@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.common;
@@ -20,7 +19,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-
 import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
@@ -30,7 +28,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public abstract class GenerationModel {
-	
+
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	private static final String COULD_NOT_OPEN_INPUT_STREAM_FOR = Messages.GenerationModel_COULD_NOT_OPEN_INPUT_STREAM_FOR;
@@ -47,12 +45,12 @@ public abstract class GenerationModel {
 
 	private IResource sourceResource;
 
-//	private String targetLocation;
-	
+	// private String targetLocation;
+
 	private String targetContainer;
 
 	private String packageName;
-	
+
 	private String fileName;
 
 	private TemplateType template;
@@ -68,7 +66,7 @@ public abstract class GenerationModel {
 	}
 
 	public String getTargetLocation() {
-//		return targetLocation;
+		// return targetLocation;
 		if (this.targetContainer == null) {
 			return null;
 		}
@@ -78,26 +76,24 @@ public abstract class GenerationModel {
 		return this.targetContainer + IRepository.SEPARATOR + getPackageName();
 	}
 
-//	public void setTargetLocation(String targetLocation) {
-//		this.targetLocation = targetLocation;
-//	}
-	
+	// public void setTargetLocation(String targetLocation) {
+	// this.targetLocation = targetLocation;
+	// }
+
 	public String getTargetContainer() {
 		return targetContainer;
 	}
-	
+
 	public void setTargetContainer(String targetContainer) {
 		this.targetContainer = targetContainer;
 	}
-	
+
 	public String getPackageName() {
 		return this.packageName;
 	}
-	
+
 	public void setPackageName(String packageName) {
-		if (this.packageName != null
-				&& this.packageName.length() > 1
-				&& this.packageName.startsWith(IRepository.SEPARATOR)) {
+		if ((this.packageName != null) && (this.packageName.length() > 1) && this.packageName.startsWith(IRepository.SEPARATOR)) {
 			this.packageName = this.packageName.substring(1);
 		}
 		this.packageName = packageName;
@@ -140,13 +136,10 @@ public abstract class GenerationModel {
 
 	public IValidationStatus validateLocationGeneric(IWorkspace workspace) {
 
-		IStatus folderLocationValidation = workspace.validatePath(getTargetLocation(),
-				IResource.FOLDER);
-		IStatus projectLocationValidation = workspace.validatePath(getTargetLocation(),
-				IResource.PROJECT);
+		IStatus folderLocationValidation = workspace.validatePath(getTargetLocation(), IResource.FOLDER);
+		IStatus projectLocationValidation = workspace.validatePath(getTargetLocation(), IResource.PROJECT);
 		if (!folderLocationValidation.isOK() && !projectLocationValidation.isOK()) {
-			return ValidationStatus
-					.createError(PATH_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
+			return ValidationStatus.createError(PATH_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
 		}
 
 		if (getTargetLocation().contains(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES)) {
@@ -155,33 +148,28 @@ public abstract class GenerationModel {
 				IWorkspaceRoot root = workspace.getRoot();
 				if (isResourceExist(root)) {
 					IResource res = extractResource(root);
-					return ValidationStatus
-							.createError(String.format(RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE,
-									res.getFullPath().toString()));
+					return ValidationStatus.createError(String.format(RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE, res.getFullPath().toString()));
 				}
 				return ValidationStatus.createOk();
 			} else {
-				return ValidationStatus
-						.createError(NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
+				return ValidationStatus.createError(NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
 			}
 		} else {
 			IStatus nameValidation = workspace.validateName(getFileName(), IResource.FILE);
 			if (!nameValidation.isOK()) {
-				return ValidationStatus
-						.createError(NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
+				return ValidationStatus.createError(NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
 			}
 			IWorkspaceRoot root = workspace.getRoot();
 			if (isResourceExist(root)) {
 				IPath location = new Path(getTargetLocation()).append(getFileName());
-				return ValidationStatus.createError(String.format(
-						RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE, location.toString()));
+				return ValidationStatus.createError(String.format(RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE, location.toString()));
 			}
 			return ValidationStatus.createOk();
 		}
 	}
 
 	public IValidationStatus validateTemplate() {
-		if (getTemplateLocation() == null || EMPTY_STRING.equals(getTemplateLocation())) {
+		if ((getTemplateLocation() == null) || EMPTY_STRING.equals(getTemplateLocation())) {
 			return ValidationStatus.createError(TEMPLATE_LOCATION_IS_EMPTY);
 		}
 		InputStream in = null;
@@ -192,8 +180,7 @@ public abstract class GenerationModel {
 		}
 		if (in == null) {
 			logger.error(COULD_NOT_OPEN_INPUT_STREAM_FOR + getTemplateLocation());
-			return ValidationStatus.createError(String.format(COULD_NOT_OPEN_INPUT_STREAM_FOR,
-					getTemplateLocation()));
+			return ValidationStatus.createError(String.format(COULD_NOT_OPEN_INPUT_STREAM_FOR, getTemplateLocation()));
 		}
 		return ValidationStatus.createOk();
 	}
@@ -206,21 +193,24 @@ public abstract class GenerationModel {
 
 	public String getProjectName() {
 		StringBuilder result = new StringBuilder();
+		if (getTargetContainer() == null) {
+			return null;
+		}
 		IPath location = new Path(getTargetContainer());
-//		if (location.segmentCount() > 2) {
-//			for (int i = 0; i < location.segmentCount(); i++) {
-//				if (i == 1) {
-//					continue;
-//				}
-//				result.append(location.segment(i) + ICommonConstants.SEPARATOR);
-//			}
-//			result.delete(result.length() - ICommonConstants.SEPARATOR.length(), result.length());
-//		} else {
-			result.append(location.segment(0));
-//		}
+		// if (location.segmentCount() > 2) {
+		// for (int i = 0; i < location.segmentCount(); i++) {
+		// if (i == 1) {
+		// continue;
+		// }
+		// result.append(location.segment(i) + ICommonConstants.SEPARATOR);
+		// }
+		// result.delete(result.length() - ICommonConstants.SEPARATOR.length(), result.length());
+		// } else {
+		result.append(location.segment(0));
+		// }
 		return result.toString();
 	}
-	
+
 	public Class<?> getTemplateClassLoader() {
 		return templateClassLoader;
 	}
