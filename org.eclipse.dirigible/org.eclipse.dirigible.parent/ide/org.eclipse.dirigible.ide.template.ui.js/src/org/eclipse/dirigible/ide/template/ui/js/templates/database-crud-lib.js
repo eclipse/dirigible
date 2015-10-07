@@ -91,7 +91,7 @@ exports.read${entityName}Entity = function(id) {
     try {
         var result;
         var statement = connection.prepareStatement("SELECT * FROM ${tableName} WHERE " + exports.pkToSQL());
-        statement.setString(1, id);
+        statement.setInt(1, id);
         
         var resultSet = statement.executeQuery();
         if (resultSet.next()) {
