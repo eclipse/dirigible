@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.dirigible.ide.common,
  org.eclipse.core.runtime,
  org.eclipse.dirigible.ide.workspace.rcp;resolution:=optional,
- org.eclipse.dirigible.ide.workspace.rap;resolution:=optional
+ org.eclipse.dirigible.ide.workspace.rap;resolution:=optional,
+ org.eclipse.dirigible.repository.ext
 Import-Package: org.eclipse.dirigible.repository.logging,
  org.eclipse.dirigible.ide.publish,
  javax.servlet,
