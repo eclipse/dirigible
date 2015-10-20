@@ -28,9 +28,12 @@ import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+/**
+ * Base class for all the publishers.
+ * Provide utility methods often used by its ancestors, such as mapping between Resource API and Repository API.
+ */
 public abstract class AbstractPublisher implements IPublisher {
 
 	public static final Logger logger = Logger.getLogger(AbstractPublisher.class);
@@ -48,12 +51,11 @@ public abstract class AbstractPublisher implements IPublisher {
 		final ICollection projectContainer = publishContainer;
 		String user = getUser();
 		if (projectContainer.exists()) {
-			if (!checkOverridePermissionsForFolder(project.getName(), user, projectContainer)) {
-				return projectContainer;
-			}
-		} else {
-			projectContainer.create();
+			return projectContainer;
 		}
+
+		projectContainer.create();
+
 		return projectContainer;
 	}
 
@@ -72,6 +74,14 @@ public abstract class AbstractPublisher implements IPublisher {
 		return project.getFolder(sourceFolderName);
 	}
 
+	/**
+	 * Copy the artifacts from workspace to either sandbox or registry
+	 *
+	 * @param source
+	 * @param target
+	 * @throws CoreException
+	 * @throws IOException
+	 */
 	public void copyAllFromTo(IContainer source, ICollection target) throws CoreException, IOException {
 
 		if (!source.exists()) {
@@ -93,38 +103,27 @@ public abstract class AbstractPublisher implements IPublisher {
 		}
 	}
 
-	// private void synchronizeRepositoryWithWorkspace(IContainer source, ICollection target)
-	// throws IOException, CoreException {
-	// for (IEntity repositoryResource : target.getChildren()) {
-	// if (repositoryResource.exists()) {
-	// boolean shouldDelete = true;
-	// String repositoryMemberPath = repositoryResource.getName();
-	// for (IResource member : source.members()) {
-	// String sourceMemberPath = member.getName();
-	//
-	// if (repositoryMemberPath.equals(sourceMemberPath)) {
-	// shouldDelete = false;
-	// break;
-	// }
-	// }
-	// if (shouldDelete) {
-	// repositoryResource.delete();
-	// }
-	// }
-	// }
-	// }
-
+	/**
+	 * Utility method for getting the user
+	 *
+	 * @return
+	 */
 	public String getUser() {
 		String user = CommonParameters.getUserName();
 		return user;
 	}
 
+	/**
+	 * Copy a folder from workspace to either sandbox or registry
+	 *
+	 * @param folder
+	 * @param target
+	 * @param user
+	 * @throws IOException
+	 * @throws CoreException
+	 */
 	public void copyFolderInto(IFolder folder, ICollection target, String user) throws IOException, CoreException {
 		final ICollection targetFolder = target.getCollection(folder.getName());
-		if (!checkOverridePermissionsForFolder(folder.getName(), user, targetFolder)) {
-			logger.warn(String.format("The user %s does not have permissions ('Operator' role) to modify %s", user, targetFolder));
-			return;
-		}
 
 		if (!targetFolder.exists()) {
 			targetFolder.create();
@@ -132,38 +131,15 @@ public abstract class AbstractPublisher implements IPublisher {
 		copyAllFromTo(folder, targetFolder);
 	}
 
-	private boolean checkOverridePermissionsForFolder(String folderName, String user, final ICollection targetFolder) throws IOException {
-		// if (targetFolder.exists() && targetFolder.getInformation().getModifiedBy() != null
-		// && !"".equals(targetFolder.getInformation().getModifiedBy()) //$NON-NLS-1$
-		// && !"null".equalsIgnoreCase(targetFolder.getInformation().getModifiedBy()) //$NON-NLS-1$
-		// && !targetFolder.getInformation().getModifiedBy().equalsIgnoreCase(user)) {
-		//
-		// boolean publishOverride = Boolean.parseBoolean(CommonParameters.get(PUBLISH_OVERRIDE));
-		//
-		// if (!publishOverride) {
-		// boolean override = MessageDialog
-		// .openConfirm(
-		// null,
-		// PUBLISH,
-		// String.format(
-		// FOLDER_WITH_THE_SAME_NAME_ALREADY_PUBLISHED_BY_ANOTHER_USER_S_DO_YOU_WANT_TO_OVERRIDE_IT_ANYWAY,
-		// targetFolder.getName(), targetFolder.getInformation().getModifiedBy()));
-		// if (!override) {
-		// logger.debug(String.format(PUBLISH_OF_FOLDER_S_SKIPPED, folderName));
-		// return false;
-		// } else {
-		// CommonParameters.set(PUBLISH_OVERRIDE, Boolean.TRUE.toString());
-		// }
-		// }
-		// logger.warn(String.format(
-		// PUBLISH_OF_FOLDER_S_BY_S_OVERRIDES_THE_PREVIOUS_MODIFICATIONS_MADE_BY_S,
-		// folderName, user, targetFolder.getInformation().getModifiedBy()));
-		// }
-		// return true;
-		// #177
-		return CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
-	}
-
+	/**
+	 * Copy a file from workspace to either sandbox or registry
+	 *
+	 * @param file
+	 * @param target
+	 * @param user
+	 * @throws IOException
+	 * @throws CoreException
+	 */
 	public void copyFileInto(IFile file, ICollection target, String user) throws IOException, CoreException {
 
 		String fileLocation = file.getFullPath().toString();
@@ -171,9 +147,6 @@ public abstract class AbstractPublisher implements IPublisher {
 
 		final org.eclipse.dirigible.repository.api.IResource targetResource = target.getRepository().getResource(this.currentPublishLocation
 				+ IRepository.SEPARATOR + fileLocation.substring(projectLocation.length() + getFolderType().length() + 2));
-		if (!checkOverridePermissionsForResource(file.getName(), user, targetResource)) {
-			return;
-		}
 
 		org.eclipse.dirigible.repository.api.IResource resource = target.getRepository()
 				.getResource(file.getWorkspace().getRoot().getRawLocation() + file.getFullPath().toString());
@@ -195,34 +168,6 @@ public abstract class AbstractPublisher implements IPublisher {
 	private void setTargetResourceContent(IFile file, final org.eclipse.dirigible.repository.api.IResource targetResource,
 			org.eclipse.dirigible.repository.api.IResource resource) throws IOException, CoreException {
 		targetResource.setContent(readFile(file), resource.isBinary(), resource.getContentType());
-	}
-
-	private boolean checkOverridePermissionsForResource(String fileName, String user,
-			final org.eclipse.dirigible.repository.api.IResource targetResource) throws IOException {
-		// if (targetResource.exists() && targetResource.getInformation().getModifiedBy() != null
-		// && !"".equals(targetResource.getInformation().getModifiedBy()) //$NON-NLS-1$
-		// && !"null".equalsIgnoreCase(targetResource.getInformation().getModifiedBy()) //$NON-NLS-1$
-		// && !targetResource.getInformation().getModifiedBy().equalsIgnoreCase(user)) {
-		//
-		// boolean override = MessageDialog
-		// .openConfirm(
-		// null,
-		// PUBLISH,
-		// String.format(
-		// FILE_WITH_THE_SAME_NAME_ALREADY_PUBLISHED_BY_ANOTHER_USER_S_DO_YOU_WANT_TO_OVERRIDE_IT_ANYWAY,
-		// targetResource.getInformation().getModifiedBy()));
-		// if (!override) {
-		// logger.debug(String.format(PUBLISH_OF_FILE_S_SKIPPED, fileName));
-		// return false;
-		// }
-		//
-		// logger.warn(String.format(
-		// PUBLISH_OF_FILE_S_BY_S_OVERRIDES_THE_PREVIOUS_MODIFICATIONS_MADE_BY_S,
-		// fileName, user, targetResource.getInformation().getModifiedBy()));
-		// }
-		// return true;
-		// #177
-		return CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 	}
 
 	protected byte[] readFile(IFile file) throws IOException, CoreException {
@@ -318,10 +263,21 @@ public abstract class AbstractPublisher implements IPublisher {
 		return null;
 	}
 
+	/**
+	 * Utility method for getting the Workspace
+	 *
+	 * @return
+	 */
 	public String getWorkspaceLocation() {
 		return CommonParameters.getWorkspace();
 	}
 
+	/**
+	 * Retrieve the project's repository representation as {@link ICollection}
+	 *
+	 * @param project
+	 * @return
+	 */
 	public ICollection getSourceProjectContainer(IProject project) {
 		final IRepository repository = RepositoryFacade.getInstance().getRepository();
 		final ICollection workspaceContainer = repository.getCollection(getWorkspaceLocation());
