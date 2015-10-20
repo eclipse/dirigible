@@ -28,7 +28,7 @@
 					<tr>
 #foreach ($tableColumn in $tableColumns)
 #if($tableColumn.isVisible())
-						<th>${tableColumn.getName()}</th>
+						<th>${tableColumn.getLabel()}</th>
 #end
 #end
 					</tr>
@@ -61,7 +61,7 @@
 			<div>
 				<div ng-show="operation == 'show'">
 #foreach ($tableColumn in $tableColumns) 
-					<label>${tableColumn.getName()}</label>
+					<label>${tableColumn.getLabel()}</label>
 					<input type="text" class="form-control"
 						ng-model="selectedEntry.${tableColumn.getName()}" readonly>
 					<br> 
@@ -70,11 +70,11 @@
 				<div ng-show="operation == 'new'">
 #foreach ($tableColumn in $tableColumns)
 #if($tableColumn.isKey())
-					<label>${tableColumn.getName()}</label> 
+					<label>${tableColumn.getLabel()}</label> 
 					<input type="text"
 						class="form-control" value="Auto Generated" readonly> <br>
 #else 
-					<label>${tableColumn.getName()}</label> 
+					<label>${tableColumn.getLabel()}</label> 
 					<input type="text" class="form-control" 
 						ng-model="newEntry.${tableColumn.getName()}">
 					<br>
@@ -84,12 +84,12 @@
 				<div ng-show="operation == 'update'">
 #foreach ($tableColumn in $tableColumns) 
 #if($tableColumn.isKey())
-					<label>${tableColumn.getName()}</label>
+					<label>${tableColumn.getLabel()}</label>
 					<input type="text" class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}" readonly>
 					<br> 
 #else 
-					<label>${tableColumn.getName()}</label> 
+					<label>${tableColumn.getLabel()}</label> 
 					<input type="text" class="form-control"
 						ng-model="selectedEntry.${tableColumn.getName()}"> 
 					<br>

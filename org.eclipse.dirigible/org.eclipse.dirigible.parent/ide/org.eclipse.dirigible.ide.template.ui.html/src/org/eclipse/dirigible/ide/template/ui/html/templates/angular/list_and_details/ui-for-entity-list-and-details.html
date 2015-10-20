@@ -20,7 +20,7 @@
 					<tr>
 #foreach ($tableColumn in $tableColumns) 
 #if ($tableColumn.isVisible())
-						<th>${tableColumn.getName()}</th> 
+						<th>${tableColumn.getLabel()}</th> 
 #end 
 #end
 					</tr>
@@ -44,7 +44,7 @@
 				<tbody ng-model="selectedEntry">
 #foreach ($tableColumn in $tableColumns)
 					<tr>
-						<td width="50%">${tableColumn.getName()}</td>
+						<td width="50%">${tableColumn.getLabel()}</td>
 						<td width="50%">{{selectedEntry.${tableColumn.getName()}}}</td>
 #end
 					</tr>

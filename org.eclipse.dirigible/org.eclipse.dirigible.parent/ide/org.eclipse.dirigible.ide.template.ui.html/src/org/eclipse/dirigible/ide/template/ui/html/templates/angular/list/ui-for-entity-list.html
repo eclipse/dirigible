@@ -21,7 +21,7 @@
 					<tr>
 #foreach ($tableColumn in $tableColumns) 
 #if($tableColumn.isVisible())
-						<th>${tableColumn.getName()}</th>
+						<th>${tableColumn.getLabel()}</th>
 #end
 #end
 					</tr>

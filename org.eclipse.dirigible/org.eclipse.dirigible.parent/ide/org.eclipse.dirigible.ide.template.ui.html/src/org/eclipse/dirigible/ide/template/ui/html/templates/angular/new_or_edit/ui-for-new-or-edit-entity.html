@@ -29,11 +29,11 @@
                 <div ng-show="exist">
 #foreach ($tableColumn in $tableColumns) 
 #if ($tableColumn.isKey())
-                    <label>${tableColumn.getName()}</label>
+                    <label>${tableColumn.getLabel()}</label>
                     <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}" readonly>
                     <br>
 #else
-                    <label>${tableColumn.getName()}</label>
+                    <label>${tableColumn.getLabel()}</label>
                     <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}">
                     <br>
 #end 
@@ -58,11 +58,11 @@
                     </div>
 #foreach ($tableColumn in $tableColumns) 
 #if ($tableColumn.isKey())
-                    <label>${tableColumn.getName()}</label>
+                    <label>${tableColumn.getLabel()}</label>
                     <input type="text" class="form-control" value="Auto Generated" readonly>
                     <br>
 #else
-                    <label>${tableColumn.getName()}</label>
+                    <label>${tableColumn.getLabel()}</label>
                     <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}">
                     <br>
 #end 
