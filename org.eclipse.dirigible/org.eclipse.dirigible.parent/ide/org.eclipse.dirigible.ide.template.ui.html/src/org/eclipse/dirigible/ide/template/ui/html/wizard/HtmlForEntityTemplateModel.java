@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
@@ -15,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
@@ -54,10 +52,8 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 		TableColumn[] lowerCased = new TableColumn[originalCased.length];
 		for (int i = 0; i < originalCased.length; i++) {
 			TableColumn originalColumn = originalCased[i];
-			TableColumn lowerColumn = new TableColumn(originalColumn.getName()
-					.toLowerCase(), originalColumn.isKey(),
-					originalColumn.isVisible(), originalColumn.getType(),
-					originalColumn.getSize());
+			TableColumn lowerColumn = new TableColumn(originalColumn.getName().toLowerCase(), originalColumn.isKey(), originalColumn.isVisible(),
+					originalColumn.getType(), originalColumn.getSize(), originalColumn.getWidgetType(), originalColumn.getLabel());
 			lowerCased[i] = lowerColumn;
 		}
 		return lowerCased;
@@ -90,8 +86,7 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 			return locationStatus;
 		}
 
-		return ValidationStatus.getValidationStatus(locationStatus,
-				templateStatus);
+		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
 	}
 
 	public IValidationStatus validateLocation() {
@@ -101,13 +96,10 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 			if (status.hasErrors()) {
 				return status;
 			}
-			IPath location = new Path(getTargetLocation())
-					.append(getFileName());
+			IPath location = new Path(getTargetLocation()).append(getFileName());
 			// TODO - more precise test for the location ../WebContent/...
-			if (location.toString().indexOf(
-					ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT) == -1) {
-				return ValidationStatus
-						.createError(TARGET_LOCATION_IS_NOT_ALLOWED);
+			if (location.toString().indexOf(ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT) == -1) {
+				return ValidationStatus.createError(TARGET_LOCATION_IS_NOT_ALLOWED);
 			}
 		} catch (Exception e) {
 			// temp workaround due to another bug - context menu is not context
@@ -119,8 +111,7 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 	}
 
 	public boolean validateTableColumns() {
-		for (int i = 0; i < tableColumns.length; i++) {
-			TableColumn tableColumn = tableColumns[i];
+		for (TableColumn tableColumn : tableColumns) {
 			if (tableColumn.isVisible()) {
 				return true;
 			}
