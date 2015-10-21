@@ -216,6 +216,10 @@
 			<url-pattern>/services/acclog/*</url-pattern>
 			<url-pattern>/services/memory</url-pattern>
 			<url-pattern>/services/js-debug/*</url-pattern>
+			<url-pattern>/services/java-secured/*</url-pattern>
+			<url-pattern>/services/java-sandbox/*</url-pattern>
+			<url-pattern>/services/sql-secured/*</url-pattern>
+			<url-pattern>/services/sql-sandbox/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Everyone</role-name>

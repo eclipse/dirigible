@@ -71,6 +71,12 @@
             location="/org/eclipse/dirigible/ide/template/ui/js/templates/java-service.java_"
             text="Java Hello World Service">
       </template>
+      <template
+            category="ScriptingServices"
+            image="/icons/sql-service.png"
+            location="/org/eclipse/dirigible/ide/template/ui/js/templates/sql-service.sql"
+            text="SQL Sample Query Service">
+      </template>
       <!-- Ruby Template
       <template
             category="ScriptingServices"

@@ -34,6 +34,9 @@
         "name": "Java Services",
         "link": "#/scripting/java"
     }, {
+        "name": "SQL Services",
+        "link": "#/scripting/sql"
+    }, {
         "name": "Command Services",
         "link": "#/scripting/command"
     }, {

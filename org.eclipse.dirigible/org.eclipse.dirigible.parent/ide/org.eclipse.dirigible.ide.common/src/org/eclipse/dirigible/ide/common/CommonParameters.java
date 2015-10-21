@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.common;
@@ -20,9 +19,7 @@ import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 public class CommonParameters {
 
 	public static String getWorkspace() {
-		return IRepositoryPaths.DB_DIRIGIBLE_USERS + getUserName()
-				+ ICommonConstants.SEPARATOR
-				+ IRepositoryPaths.WORKSPACE_FOLDER_NAME;
+		return IRepositoryPaths.DB_DIRIGIBLE_USERS + getUserName() + ICommonConstants.SEPARATOR + IRepositoryPaths.WORKSPACE_FOLDER_NAME;
 	}
 
 	public static final String DB_DIRIGIBLE_CONFIGURATIONS = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
@@ -31,44 +28,33 @@ public class CommonParameters {
 	public static final String LOGGER_FACTORY = "loggerFactory"; //$NON-NLS-1$
 
 	public static String getWebContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
-				+ ICommonConstants.SEPARATOR
-				+ ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
 	}
 
 	public static String getWikiContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
-				+ ICommonConstants.SEPARATOR
-				+ ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
 	}
 
 	public static String getScriptingContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
-				+ ICommonConstants.SEPARATOR
-				+ ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
 	}
 
 	public static String getIntegrationContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
-				+ ICommonConstants.SEPARATOR
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES;
 	}
 
 	public static String getSecuritContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
-				+ ICommonConstants.SEPARATOR
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.SECURITY_CONSTRAINTS;
 	}
 
 	public static String getTestingContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
-				+ ICommonConstants.SEPARATOR
-				+ ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
 	}
 
 	public static String getExtensionContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName()
-				+ ICommonConstants.SEPARATOR
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
 	}
 
@@ -86,6 +72,7 @@ public class CommonParameters {
 	public static final String WIKI_CONTENT_CONTAINER_MAPPING = "/wiki"; //$NON-NLS-1$
 	public static final String FLOW_CONTAINER_MAPPING = "/flow"; //$NON-NLS-1$
 	public static final String JOB_CONTAINER_MAPPING = "/job"; //$NON-NLS-1$
+	public static final String SQL_CONTAINER_MAPPING = "/sql"; //$NON-NLS-1$
 
 	public static final String WEB_CONTENT_SANDBOX_MAPPING = "/web-sandbox"; //$NON-NLS-1$
 	public static final String JAVASCRIPT_SANDBOX_MAPPING = "/js-sandbox"; //$NON-NLS-1$
@@ -97,18 +84,7 @@ public class CommonParameters {
 	public static final String WIKI_CONTENT_SANDBOX_MAPPING = "/wiki-sandbox"; //$NON-NLS-1$
 	public static final String FLOW_SANDBOX_MAPPING = "/flow-sandbox"; //$NON-NLS-1$
 	public static final String JOB_SANDBOX_MAPPING = "/job-sandbox"; //$NON-NLS-1$
-
-	public static final String JAVASCRIPT_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT;
-	public static final String RUBY_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.RUBY;
-	public static final String GROOVY_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.GROOVY;
-	public static final String JAVA_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JAVA;
-	public static final String COMMAND_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.COMMAND;
-	public static final String FLOW_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.FLOW;
-	public static final String JOB_SERVICE_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.JOB;
-
-	public static final String EXTENSION_POINT_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.EXTENSION_POINT;
-	public static final String EXTENSION_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.EXTENSION;
-	public static final String SECURITY_EXTENSION = ICommonConstants.ARTIFACT_EXTENSION.SECURITY;
+	public static final String SQL_SANDBOX_MAPPING = "/sql-sandbox"; //$NON-NLS-1$
 
 	public static final String CONTENT_EXPORT = "/content-export/"; //$NON-NLS-1$
 
@@ -145,14 +121,10 @@ public class CommonParameters {
 
 	public static final String CONF_PATH_GENERIC_VIEWS = "/ide/generic/views";
 
-	public static final int[] BINARY_TYPES = new int[] { java.sql.Types.ARRAY,
-		java.sql.Types.BINARY, java.sql.Types.BIT, java.sql.Types.BIT,
-		java.sql.Types.BLOB, java.sql.Types.CLOB, java.sql.Types.DATALINK,
-		java.sql.Types.DISTINCT, java.sql.Types.JAVA_OBJECT,
-		java.sql.Types.LONGVARBINARY, java.sql.Types.NCLOB,
-		java.sql.Types.NULL, java.sql.Types.OTHER, java.sql.Types.REF,
-		java.sql.Types.SQLXML, java.sql.Types.STRUCT,
-		java.sql.Types.VARBINARY };
+	public static final int[] BINARY_TYPES = new int[] { java.sql.Types.ARRAY, java.sql.Types.BINARY, java.sql.Types.BIT, java.sql.Types.BIT,
+			java.sql.Types.BLOB, java.sql.Types.CLOB, java.sql.Types.DATALINK, java.sql.Types.DISTINCT, java.sql.Types.JAVA_OBJECT,
+			java.sql.Types.LONGVARBINARY, java.sql.Types.NCLOB, java.sql.Types.NULL, java.sql.Types.OTHER, java.sql.Types.REF, java.sql.Types.SQLXML,
+			java.sql.Types.STRUCT, java.sql.Types.VARBINARY };
 
 	// =====================================================================================================================================
 	// DUAL PARAMETERS - DEPENDING ON THE TARGET PLATFORM - RAP or RCP

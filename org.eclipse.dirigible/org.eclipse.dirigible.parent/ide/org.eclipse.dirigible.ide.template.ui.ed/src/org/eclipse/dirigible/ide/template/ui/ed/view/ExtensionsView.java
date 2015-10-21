@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.ed.view;
@@ -19,17 +18,6 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.ViewPart;
-
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
@@ -42,6 +30,16 @@ import org.eclipse.dirigible.repository.ext.extensions.ExtensionDefinition;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionManager;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionPointDefinition;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.part.ViewPart;
 
 public class ExtensionsView extends ViewPart {
 
@@ -51,15 +49,14 @@ public class ExtensionsView extends ViewPart {
 
 	private TreeViewer viewer;
 
-	private ExtensionManager extensionManager = new ExtensionManager(RepositoryFacade
-			.getInstance().getRepository(), DataSourceFacade.getInstance().getDataSource(), CommonParameters.getRequest());
+	private ExtensionManager extensionManager = new ExtensionManager(RepositoryFacade.getInstance().getRepository(),
+			DataSourceFacade.getInstance().getDataSource(), CommonParameters.getRequest());
 
 	@Override
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 		viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		viewer.setContentProvider(new ExtensionsContentProvider(extensionManager, viewer
-				.getControl().getShell()));
+		viewer.setContentProvider(new ExtensionsContentProvider(extensionManager, viewer.getControl().getShell()));
 		viewer.setLabelProvider(new ExtensionsLabelProvider());
 		viewer.setSorter(new ViewerSorter());
 		viewer.setInput(getExtensionPoints());
@@ -74,15 +71,12 @@ public class ExtensionsView extends ViewPart {
 				if (firstElement != null) {
 					if (firstElement instanceof ExtensionPointDefinition) {
 						ExtensionPointDefinition extensionPoint = (ExtensionPointDefinition) firstElement;
-						openEditor(CommonUtils.formatToIDEPath(
-								ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS,
-								extensionPoint.getLocation())
-								+ CommonParameters.EXTENSION_POINT_EXTENSION);
+						openEditor(CommonUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extensionPoint.getLocation())
+								+ ICommonConstants.ARTIFACT_EXTENSION.EXTENSION_POINT);
 					} else if (firstElement instanceof ExtensionDefinition) {
 						ExtensionDefinition extension = (ExtensionDefinition) firstElement;
-						openEditor(CommonUtils.formatToIDEPath(
-								ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extension.getLocation())
-								+ CommonParameters.EXTENSION_EXTENSION);
+						openEditor(CommonUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extension.getLocation())
+								+ ICommonConstants.ARTIFACT_EXTENSION.EXTENSION);
 					}
 				}
 			}
@@ -107,8 +101,7 @@ public class ExtensionsView extends ViewPart {
 			}
 		} catch (Exception e) {
 			logger.error(EXTENSIONS_ERROR, e);
-			MessageDialog.openError(viewer.getControl().getShell(), EXTENSIONS_ERROR,
-					e.getMessage());
+			MessageDialog.openError(viewer.getControl().getShell(), EXTENSIONS_ERROR, e.getMessage());
 		}
 		return extensionPoints;
 	}

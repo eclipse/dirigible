@@ -35,6 +35,7 @@ public interface ICommonConstants {
 		public static final String SECURITY = ".access"; //$NON-NLS-1$
 		public static final String FLOW = ".flow"; //$NON-NLS-1$
 		public static final String JOB = ".job"; //$NON-NLS-1$
+		public static final String SQL = ".sql"; //$NON-NLS-1$
 	}
 
 	public interface ARTIFACT_TYPE {
@@ -60,6 +61,7 @@ public interface ICommonConstants {
 		public static final String JOB = "job"; //$NON-NLS-1$
 		public static final String WEB = "web"; //$NON-NLS-1$
 		public static final String WIKI = "wiki"; //$NON-NLS-1$
+		public static final String SQL = "sql"; //$NON-NLS-1$
 	}
 
 	public interface ENGINE_ALIAS {
@@ -71,6 +73,7 @@ public interface ICommonConstants {
 		public static final String JOB = "job"; //$NON-NLS-1$
 		public static final String WEB = "web"; //$NON-NLS-1$
 		public static final String WIKI = "wiki"; //$NON-NLS-1$
+		public static final String SQL = "sql"; //$NON-NLS-1$
 	}
 
 	public static final String DATA_CONTENT_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
