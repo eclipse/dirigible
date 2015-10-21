@@ -109,7 +109,7 @@
 		<module>org.eclipse.dirigible.ide.ui.widget.connection</module>
 		<module>org.eclipse.dirigible.ide.repository.ui</module>
 		<module>org.eclipse.dirigible.ide.editor.text</module>
-		<module>org.eclipse.dirigible.ide.editor.js</module>
+		<module>org.eclipse.dirigible.ide.editor.ace</module>
 		<module>org.eclipse.dirigible.ide.editor.orion</module>
 		<module>org.eclipse.dirigible.ide.db.viewer</module>
 		<module>org.eclipse.dirigible.ide.db.export.rap</module>

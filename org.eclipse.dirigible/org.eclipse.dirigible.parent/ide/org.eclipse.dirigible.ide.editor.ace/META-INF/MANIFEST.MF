@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.eclipse.dirigible.ide.editor.js
-Bundle-SymbolicName: org.eclipse.dirigible.ide.editor.js;singleton:=true
+Bundle-Name: org.eclipse.dirigible.ide.editor.ace
+Bundle-SymbolicName: org.eclipse.dirigible.ide.editor.ace;singleton:=true
 Bundle-Version: 2.1.151007
 Bundle-Vendor: SAP AG
 Require-Bundle: 
@@ -18,7 +18,7 @@ Require-Bundle:
  org.eclipse.dirigible.repository.api
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.dirigible.ide.editor.js
+Export-Package: org.eclipse.dirigible.ide.editor.ace
 Import-Package: org.eclipse.dirigible.repository.ext.debug,
  javax.servlet.http,
  org.apache.commons.lang;version="2.5.0"

@@ -11,5 +11,5 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>org.eclipse.dirigible.ide.editor.js</artifactId>
+	<artifactId>org.eclipse.dirigible.ide.editor.ace</artifactId>
 </project>

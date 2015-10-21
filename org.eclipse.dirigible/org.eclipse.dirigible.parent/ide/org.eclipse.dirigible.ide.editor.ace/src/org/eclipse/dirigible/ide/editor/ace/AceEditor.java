@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.editor.js;
+package org.eclipse.dirigible.ide.editor.ace;
 
 import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
@@ -30,13 +30,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
-public class JavaScriptEditor extends TextEditor {
+public class AceEditor extends TextEditor {
 
 	private static final String ERROR = Messages.JavaScriptEditor_ERROR;
 
 	private static final String CANNOT_LOAD_DOCUMENT = Messages.JavaScriptEditor_CANNOT_LOAD_DOCUMENT;
 
-	private static final Logger logger = Logger.getLogger(JavaScriptEditor.class);
+	private static final Logger logger = Logger.getLogger(AceEditor.class);
 
 	private EditorWidget text = null;
 
@@ -47,7 +47,7 @@ public class JavaScriptEditor extends TextEditor {
 	public void createPartControl(final Composite parent) {
 		parent.setLayout(new GridLayout());
 
-		final JavaScriptEditor textEditor = this;
+		final AceEditor textEditor = this;
 		final IEditorInput input = getEditorInput();
 		text = new EditorWidget(parent, true);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));

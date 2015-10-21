@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dirigible.ide.common,
  org.eclipse.dirigible.ide.db.export.rcp;resolution:=optional,
  org.eclipse.dirigible.ide.db.export.rap;resolution:=optional,
- org.eclipse.dirigible.ide.editor.js;resolution:=optional,
+ org.eclipse.dirigible.ide.editor.ace;resolution:=optional,
  org.eclipse.dirigible.ide.db.viewer,
  org.eclipse.dirigible.ide.editor.text
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

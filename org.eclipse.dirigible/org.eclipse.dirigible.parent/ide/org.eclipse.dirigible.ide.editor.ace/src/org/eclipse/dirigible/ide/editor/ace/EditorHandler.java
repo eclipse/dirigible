@@ -8,19 +8,16 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.shared.editor;
+package org.eclipse.dirigible.ide.editor.ace;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.dirigible.ide.editor.text.command.TextEditorHandler;
 
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.dirigible.ide.shared.editor.messages"; //$NON-NLS-1$
-	public static String EditorUtil_COULD_NOT_FIND_EXTENSION_POINT;
+public class EditorHandler extends TextEditorHandler {
 
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+	private static final String EDITOR_ID = "org.eclipse.dirigible.ide.editor.ace.AceEditor"; //$NON-NLS-1$
 
-	private Messages() {
+	@Override
+	protected String getEditorId() {
+		return EDITOR_ID;
 	}
 }

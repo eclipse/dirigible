@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.editor.js;
+package org.eclipse.dirigible.ide.editor.ace;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.swt.SWT;

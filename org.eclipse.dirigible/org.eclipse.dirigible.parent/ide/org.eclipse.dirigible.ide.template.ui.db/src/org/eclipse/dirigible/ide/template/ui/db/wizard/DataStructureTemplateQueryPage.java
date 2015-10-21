@@ -1,34 +1,28 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
+import org.eclipse.dirigible.ide.editor.ace.EditorWidget;
+import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
+import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.dirigible.ide.editor.js.EditorWidget;
-import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
-import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
 
 public class DataStructureTemplateQueryPage extends FocusableWizardPage {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7818351982843742829L;
 
@@ -62,53 +56,53 @@ public class DataStructureTemplateQueryPage extends FocusableWizardPage {
 		createIdField(composite);
 		checkPageStatus();
 	}
-	
+
 	private void createIdField(Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 		label.setText(QUERY);
 
-//		queryText = new Text(parent, SWT.BORDER);
-		
+		// queryText = new Text(parent, SWT.BORDER);
+
 		queryText = new EditorWidget(parent);
 		queryText.setText("", EditorMode.SQL, false, false, 0);
-		
+
 		queryText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		queryText.addKeyListener(new KeyListener() {
-//			
-//			private static final long serialVersionUID = 3767429446887374077L;
-//
-//			@Override
-//			public void keyReleased(KeyEvent e) {
-//				// 
-//			}
-//			
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//				if (queryText.getText() == null
-//						|| "".equals(queryText.getText())) { //$NON-NLS-1$
-//					setErrorMessage(INPUT_THE_SQL_QUERY_FOR_THE_VIEW);
-//				} else {
-//					setErrorMessage(null);
-//					model.setQuery(queryText.getText());
-//				}
-//				checkPageStatus();
-//				
-//			}
-//		});
-		
+		// queryText.addKeyListener(new KeyListener() {
+		//
+		// private static final long serialVersionUID = 3767429446887374077L;
+		//
+		// @Override
+		// public void keyReleased(KeyEvent e) {
+		// //
+		// }
+		//
+		// @Override
+		// public void keyPressed(KeyEvent e) {
+		// if (queryText.getText() == null
+		// || "".equals(queryText.getText())) { //$NON-NLS-1$
+		// setErrorMessage(INPUT_THE_SQL_QUERY_FOR_THE_VIEW);
+		// } else {
+		// setErrorMessage(null);
+		// model.setQuery(queryText.getText());
+		// }
+		// checkPageStatus();
+		//
+		// }
+		// });
+
 		setFocusable(queryText);
 	}
 
 	private void checkPageStatus() {
-//		if (model.getQuery() == null || "".equals(model.getQuery())) { //$NON-NLS-1$
-//			setPageComplete(false);
-//			return;
-//		}
+		// if (model.getQuery() == null || "".equals(model.getQuery())) { //$NON-NLS-1$
+		// setPageComplete(false);
+		// return;
+		// }
 
 		setPageComplete(true);
 	}
-	
+
 	public String getQuery() {
 		return queryText.getText();
 	}

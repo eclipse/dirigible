@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dirigible.ide.common,
  org.eclipse.dirigible.repository.ext
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.eclipse.dirigible.ide.editor.js,
+Import-Package: org.eclipse.dirigible.ide.editor.ace,
  javax.servlet,
  javax.servlet.http
 Export-Package: org.eclipse.dirigible.ide.db.export

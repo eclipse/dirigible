@@ -83,7 +83,7 @@ Contributors:
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.dirigible.ide.editor.js"
+         id="org.eclipse.dirigible.ide.editor.ace"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -9,16 +9,20 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.editor.js;
+package org.eclipse.dirigible.ide.editor.ace;
 
-import org.eclipse.dirigible.ide.editor.text.command.TextEditorHandler;
+import org.eclipse.osgi.util.NLS;
 
-public class EditorHandler extends TextEditorHandler {
+public class Messages extends NLS {
+	private static final String BUNDLE_NAME = "org.eclipse.dirigible.ide.editor.ace.messages"; //$NON-NLS-1$
+	public static String EditorWidget_SCRIPT_EVALUATION_FAILED;
+	public static String JavaScriptEditor_CANNOT_LOAD_DOCUMENT;
+	public static String JavaScriptEditor_ERROR;
+	static {
+		// initialize resource bundle
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	}
 
-	private static final String EDITOR_ID = "org.eclipse.dirigible.ide.editor.SourceCodeEditor"; //$NON-NLS-1$
-
-	@Override
-	protected String getEditorId() {
-		return EDITOR_ID;
+	private Messages() {
 	}
 }
