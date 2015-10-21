@@ -1,23 +1,21 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.sc.wizard;
 
 import org.eclipse.core.resources.IResource;
-
-import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateWizard;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 public class SecurityConstraintTemplateWizard extends TemplateWizard {
 
@@ -43,8 +41,7 @@ public class SecurityConstraintTemplateWizard extends TemplateWizard {
 
 	@Override
 	public TemplateGenerator getTemplateGenerator() {
-		SecurityConstraintTemplateGenerator generator = new SecurityConstraintTemplateGenerator(
-				model);
+		SecurityConstraintTemplateGenerator generator = new SecurityConstraintTemplateGenerator(model);
 		return generator;
 	}
 
@@ -55,15 +52,14 @@ public class SecurityConstraintTemplateWizard extends TemplateWizard {
 
 	@Override
 	protected String openEditorForFileWithExtension() {
-		return CommonParameters.SECURITY_EXTENSION;
+		return ICommonConstants.ARTIFACT_EXTENSION.SECURITY;
 	}
 
 	@Override
 	public boolean performFinish() {
 		boolean result = super.performFinish();
 		if (result) {
-			StatusLineManagerUtil.setInfoMessage(String.format(
-					StatusLineManagerUtil.ARTIFACT_HAS_BEEN_CREATED, model.getFileName()));
+			StatusLineManagerUtil.setInfoMessage(String.format(StatusLineManagerUtil.ARTIFACT_HAS_BEEN_CREATED, model.getFileName()));
 		}
 		return result;
 	}

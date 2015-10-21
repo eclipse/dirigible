@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+     <extension
+           id="SQLServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/sql"
+              class="org.eclipse.dirigible.runtime.sql.SQLServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="SQLSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/sql-secured"
+              class="org.eclipse.dirigible.runtime.sql.SQLSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="SQLSandboxServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/sql-sandbox"
+              class="org.eclipse.dirigible.runtime.sql.SQLSandboxServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="SQLRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/scripting/sql"
+              class="org.eclipse.dirigible.runtime.registry.SQLRegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/sql-secured/*"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/sql-sandbox/*"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/sql/*"
+              class="org.eclipse.dirigible.runtime.filter.SQLRegistrySecureFilter">
+        </filter>
+     </extension>
+          
+</plugin>

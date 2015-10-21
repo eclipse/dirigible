@@ -37,6 +37,9 @@ fileApp.config(function($routeProvider) {
     }).when('/scripting/command', {
       controller: 'CommandCtrl',
       templateUrl: 'templates/scripting/command/command.html'
+    }).when('/scripting/sql', {
+        controller: 'SQLCtrl',
+        templateUrl: 'templates/scripting/sql/sql.html'
     }).when('/scripting/tests', {
       controller: 'TestsCtrl',
       templateUrl: 'templates/scripting/tests/tests.html'
@@ -205,6 +208,11 @@ menuControllers.controller('HomeCtrl', ['$scope',
       path: "#/scripting/java",
       title: "Java",
       description: "Java Services Endpoints"
+    }, {
+        image: "images/sql.png",
+        path: "#/scripting/sql",
+        title: "SQL",
+        description: "SQL Services Endpoints"
     }, {
       image: "images/command.png",
       path: "#/scripting/command",

@@ -120,6 +120,10 @@ defaultControllers.controller('JavaCtrl', function($scope, $resource) {
 	  $scope.restService = $resource('../scripting/java');
 });
 
+defaultControllers.controller('SQLCtrl', function($scope, $resource) {
+	$scope.restService = $resource('../scripting/sql');
+});
+
 defaultControllers.controller('CommandCtrl', function($scope, $resource) {
 	$scope.restService = $resource('../scripting/command');
 });

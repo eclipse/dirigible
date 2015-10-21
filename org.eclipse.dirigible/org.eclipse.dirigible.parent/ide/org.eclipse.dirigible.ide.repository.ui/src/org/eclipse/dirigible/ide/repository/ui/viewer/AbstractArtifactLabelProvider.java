@@ -1,22 +1,20 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.repository.ui.viewer;
 
 import java.net.URL;
 
+import org.eclipse.dirigible.ide.common.image.ImageUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-
-import org.eclipse.dirigible.ide.common.image.ImageUtils;
 
 public class AbstractArtifactLabelProvider extends LabelProvider {
 
@@ -44,7 +42,7 @@ public class AbstractArtifactLabelProvider extends LabelProvider {
 	public static final URL TYPE_COLLECTION_TEST_ICON_URL = getIconURL("icon-collection-test.png"); //$NON-NLS-1$
 	public static final URL TYPE_COLLECTION_WEB_ICON_URL = getIconURL("icon-collection-web.png"); //$NON-NLS-1$
 	public static final URL TYPE_COLLECTION_WIKI_ICON_URL = getIconURL("icon-collection-wiki.png"); //$NON-NLS-1$
-	public static final URL TYPE_JSLIB_ICON_URL = getIconURL("icon-jslib.png"); //$NON-NLS-1$
+	public static final URL TYPE_SQL_ICON_URL = getIconURL("icon-sql.png"); //$NON-NLS-1$
 	public static final URL TYPE_ODATA_ICON_URL = getIconURL("icon-odata.png"); //$NON-NLS-1$
 	public static final URL TYPE_ENTITY_ICON_URL = getIconURL("icon-entity.png"); //$NON-NLS-1$
 	public static final URL TYPE_ROUTES_ICON_URL = getIconURL("icon-routes.png"); //$NON-NLS-1$
@@ -109,8 +107,8 @@ public class AbstractArtifactLabelProvider extends LabelProvider {
 		if (resourceName.endsWith("html")) { //$NON-NLS-1$
 			return createImage(TYPE_HTML_ICON_URL);
 		}
-		if (resourceName.endsWith("jslib")) { //$NON-NLS-1$
-			return createImage(TYPE_JSLIB_ICON_URL);
+		if (resourceName.endsWith("sql")) { //$NON-NLS-1$
+			return createImage(TYPE_SQL_ICON_URL);
 		}
 		if (resourceName.endsWith("odata")) { //$NON-NLS-1$
 			return createImage(TYPE_ODATA_ICON_URL);
@@ -169,11 +167,11 @@ public class AbstractArtifactLabelProvider extends LabelProvider {
 				|| resourceName.endsWith("mkdn") //$NON-NLS-1$
 				|| resourceName.endsWith("mdwn") //$NON-NLS-1$
 				|| resourceName.endsWith("mkd") //$NON-NLS-1$
-//				|| resourceName.endsWith("mediawiki") //$NON-NLS-1$
+		// || resourceName.endsWith("mediawiki") //$NON-NLS-1$
 				|| resourceName.endsWith("textile") //$NON-NLS-1$
 				|| resourceName.endsWith("tracwiki") //$NON-NLS-1$
 				|| resourceName.endsWith("twiki") //$NON-NLS-1$
-				) { 
+		) {
 			return createImage(TYPE_WIKI_ICON_URL);
 		}
 		if (resourceName.endsWith("wikis")) { //$NON-NLS-1$
@@ -191,7 +189,6 @@ public class AbstractArtifactLabelProvider extends LabelProvider {
 
 		return createImage(TYPE_UNKNOWN_ICON_URL);
 	}
-
 
 	@Override
 	public void dispose() {
