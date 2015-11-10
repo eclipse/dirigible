@@ -55,6 +55,10 @@ public class RCPRepository implements IRepository {
 
 	private static RCPRepository instance;
 
+	private RCPZipImporter importer = new RCPZipImporter();
+
+	private RCPZipExporter exporter = new RCPZipExporter();
+
 	public static RCPRepository getInstance() {
 		if (instance == null) {
 			instance = new RCPRepository();
@@ -219,7 +223,7 @@ public class RCPRepository implements IRepository {
 			throw new IOException(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 		}
 		// TODO make use of override and excludeRootFolderName arguments?
-		ZipImporter.unzip(path, zipInputStream, null);
+		importer.unzip(path, zipInputStream, null);
 
 	}
 
@@ -240,7 +244,7 @@ public class RCPRepository implements IRepository {
 			throw new IOException(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 		}
 		// TODO make use of override and excludeRootFolderName arguments?
-		ZipImporter.unzip(path, new ZipInputStream(new ByteArrayInputStream(data)), filter);
+		importer.unzip(path, new ZipInputStream(new ByteArrayInputStream(data)), filter);
 
 	}
 
@@ -248,7 +252,7 @@ public class RCPRepository implements IRepository {
 	public byte[] exportZip(List<String> relativeRoots) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
-		ZipExporter.zip(relativeRoots, zipOutputStream);
+		exporter.zip(relativeRoots, zipOutputStream);
 		return baos.toByteArray();
 	}
 
@@ -256,7 +260,12 @@ public class RCPRepository implements IRepository {
 	public byte[] exportZip(String path, boolean inclusive) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
-		ZipExporter.zip(path, zipOutputStream);
+		try {
+			exporter.zip(path, zipOutputStream, inclusive);
+		} finally {
+			zipOutputStream.flush();
+			zipOutputStream.close();
+		}
 		return baos.toByteArray();
 	}
 
@@ -343,6 +352,7 @@ public class RCPRepository implements IRepository {
 		// repositoryDAO.cleanupOldVersions();
 	}
 
+	@Override
 	public String getUser() {
 		return "local";
 	}

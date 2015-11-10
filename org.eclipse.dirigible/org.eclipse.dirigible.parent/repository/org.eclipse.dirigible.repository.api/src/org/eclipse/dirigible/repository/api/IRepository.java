@@ -295,4 +295,11 @@ public interface IRepository {
 	 */
 	public void cleanupOldVersions() throws IOException;
 
+	/**
+	 * Getter for the user has created this instance of a repository object
+	 *
+	 * @return the user name
+	 */
+	public String getUser();
+
 }

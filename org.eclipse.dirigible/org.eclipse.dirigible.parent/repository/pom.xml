@@ -87,6 +87,7 @@
 
 	<modules>
 		<module>org.eclipse.dirigible.repository.api</module>
+		<module>org.eclipse.dirigible.repository.test</module>
 		<module>org.eclipse.dirigible.repository.zip</module>
 		<module>org.eclipse.dirigible.repository.db.init</module>
 		<module>org.eclipse.dirigible.repository.db</module>
@@ -95,6 +96,8 @@
 		<module>org.eclipse.dirigible.repository.ext.test</module>
 		<module>org.eclipse.dirigible.repository.rcp</module>
 		<module>org.eclipse.dirigible.repository.logging</module>
+		<module>org.eclipse.dirigible.repository.local</module>
+        <module>org.eclipse.dirigible.repository.local.test</module>
 	</modules>
  
 </project>

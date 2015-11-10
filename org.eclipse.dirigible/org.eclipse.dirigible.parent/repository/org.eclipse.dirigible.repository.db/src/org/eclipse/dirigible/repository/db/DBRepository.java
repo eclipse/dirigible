@@ -218,6 +218,7 @@ public class DBRepository implements IRepository {
 		return dbUtils;
 	}
 
+	@Override
 	public String getUser() {
 		return user;
 	}

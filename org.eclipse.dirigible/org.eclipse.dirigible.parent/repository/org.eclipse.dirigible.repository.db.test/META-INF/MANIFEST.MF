@@ -10,7 +10,8 @@ Bundle-SymbolicName: org.eclipse.dirigible.repository.db.test;singleton:=true
 Fragment-Host: org.eclipse.dirigible.repository.db
 Require-Bundle: org.eclipse.dirigible.repository.api,
  org.mockito,
- org.objenesis
+ org.objenesis,
+ org.eclipse.dirigible.repository.test
 Import-Package: org.apache.derby.jdbc,
  org.hamcrest,
  org.hamcrest.core,

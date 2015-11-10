@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.rcp;
+package org.eclipse.dirigible.repository.ext.fs;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class ZipImporter {
+public class FileZipImporter {
 
-	public static void unzip(String destinationFolder, ZipInputStream zipInput, Map<String, String> filter) throws IOException {
-		String workspaceFolder = RCPWorkspaceMapper.getMappedName(destinationFolder);
+	public void unzip(String destinationFolder, ZipInputStream zipInput, Map<String, String> filter) throws IOException {
+		String workspaceFolder = getMappedLocation(destinationFolder);
 		File directory = new File(workspaceFolder);
 
 		if (!directory.exists()) {
@@ -53,7 +53,7 @@ public class ZipImporter {
 						}
 					}
 				} else {
-					FileUtils.createFoldersIfNecessary(outpath);
+					FileSystemUtils.createFoldersIfNecessary(outpath);
 					FileOutputStream fOutput = new FileOutputStream(file);
 					int count = 0;
 					while ((count = zipInput.read(buffer)) > 0) {
@@ -71,6 +71,10 @@ public class ZipImporter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected String getMappedLocation(String destinationFolder) throws IOException {
+		return destinationFolder;
 	}
 
 }

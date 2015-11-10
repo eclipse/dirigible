@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.db;
@@ -15,20 +14,19 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableImporter;
 import org.eclipse.dirigible.repository.logging.Logger;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class DsvUpdater extends AbstractDataUpdater {
 
@@ -37,34 +35,30 @@ public class DsvUpdater extends AbstractDataUpdater {
 
 	private static final String EXTENSION_TABLE = ".table";
 	private static final String EXTENSION_DSV = ".dsv";
-	
+
 	private static final Logger logger = Logger.getLogger(DsvUpdater.class);
 
 	private IRepository repository;
 	private DataSource dataSource;
 	private String location;
 
-	public DsvUpdater(IRepository repository, DataSource dataSource,
-			String location) {
+	public DsvUpdater(IRepository repository, DataSource dataSource, String location) {
 		this.repository = repository;
 		this.dataSource = dataSource;
 		this.location = location;
 	}
 
 	@Override
-	public void enumerateKnownFiles(ICollection collection,
-			List<String> dsDefinitions) throws IOException {
+	public void enumerateKnownFiles(ICollection collection, List<String> dsDefinitions) throws IOException {
 		if (collection.exists()) {
 			List<IResource> resources = collection.getResources();
-			for (Iterator<IResource> iterator = resources.iterator(); iterator
-					.hasNext();) {
-				IResource resource = iterator.next();
-				if (resource != null && resource.getName() != null) {
+			for (IResource resource : resources) {
+				if ((resource != null) && (resource.getName() != null)) {
 					if (resource.getName().endsWith(EXTENSION_DSV)) {
-//						# 177
-//						String fullPath = collection.getPath().substring(
-//								this.location.length())
-//								+ IRepository.SEPARATOR + resource.getName();
+						// # 177
+						// String fullPath = collection.getPath().substring(
+						// this.location.length())
+						// + IRepository.SEPARATOR + resource.getName();
 						String fullPath = resource.getPath();
 						dsDefinitions.add(fullPath);
 					}
@@ -72,9 +66,7 @@ public class DsvUpdater extends AbstractDataUpdater {
 			}
 
 			List<ICollection> collections = collection.getCollections();
-			for (Iterator<ICollection> iterator = collections.iterator(); iterator
-					.hasNext();) {
-				ICollection subCollection = iterator.next();
+			for (ICollection subCollection : collections) {
 				enumerateKnownFiles(subCollection, dsDefinitions);
 			}
 		}
@@ -97,7 +89,9 @@ public class DsvUpdater extends AbstractDataUpdater {
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
+						if (errors != null) {
+							errors.add(e.getMessage());
+						}
 					}
 				}
 			} finally {
@@ -114,9 +108,8 @@ public class DsvUpdater extends AbstractDataUpdater {
 	public void executeUpdate(List<String> knownFiles, HttpServletRequest request, List<String> errors) throws Exception {
 		executeUpdate(knownFiles, errors);
 	}
-	
-	private void executeDSVUpdate(Connection connection, String dsDefinition)
-			throws Exception {
+
+	private void executeDSVUpdate(Connection connection, String dsDefinition) throws Exception {
 		String dsDefinitionTable = dsDefinition.replace(EXTENSION_DSV, EXTENSION_TABLE);
 		JsonObject dsDefinitionObject = parseTable(dsDefinitionTable);
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
@@ -124,22 +117,21 @@ public class DsvUpdater extends AbstractDataUpdater {
 		deleteAllDataFromTable(tableName);
 
 		IRepository repository = this.repository;
-//		# 177
-//		IResource resource = repository.getResource(this.location + dsDefinition);
+		// # 177
+		// IResource resource = repository.getResource(this.location + dsDefinition);
 		IResource resource = repository.getResource(dsDefinition);
 		byte[] content = resource.getContent();
 
 		if (content.length != 0) {
-			DBTableImporter tableDataInserter = new DBTableImporter(dataSource, 
-					content, tableName + EXTENSION_TABLE);
+			DBTableImporter tableDataInserter = new DBTableImporter(dataSource, content, tableName + EXTENSION_TABLE);
 			tableDataInserter.insert();
 		}
 	}
 
 	private JsonObject parseTable(String dsDefinition) throws IOException {
 		IRepository repository = this.repository;
-//		# 177
-//		IResource resource = repository.getResource(this.location + dsDefinition);
+		// # 177
+		// IResource resource = repository.getResource(this.location + dsDefinition);
 		IResource resource = repository.getResource(dsDefinition);
 		String content = new String(resource.getContent());
 		JsonParser parser = new JsonParser();
@@ -168,7 +160,7 @@ public class DsvUpdater extends AbstractDataUpdater {
 	public IRepository getRepository() {
 		return this.repository;
 	}
-	
+
 	@Override
 	public String getLocation() {
 		return location;

@@ -111,6 +111,33 @@
       </entrypoint>
    </extension>
    <extension
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            brandingId="org.eclipse.rap.design.example.business.branding"
+            class="org.eclipse.dirigible.ide.ui.rap.entry.DirigibleWorkbench"
+            id="org.eclipse.dirigible.ide.ui.rap.entry.DefaultEntrypoint"
+            path="/business">
+      </entrypoint>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            brandingId="org.eclipse.rap.design.example.fancy.branding"
+            class="org.eclipse.dirigible.ide.ui.rap.entry.DirigibleWorkbench"
+            id="org.eclipse.dirigible.ide.ui.rap.entry.DefaultEntrypoint"
+            path="/fancy">
+      </entrypoint>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            brandingId="phirea.rap.theme.branding1"
+            class="org.eclipse.dirigible.ide.ui.rap.entry.DirigibleWorkbench"
+            id="org.eclipse.dirigible.ide.ui.rap.entry.DefaultEntrypoint"
+            path="/dark">
+      </entrypoint>
+   </extension>
+   <extension
          point="org.eclipse.ui.presentationFactories">
       <factory
             class="org.eclipse.dirigible.ide.ui.rap.presentation.fancy.FancyPresentationFactory"
