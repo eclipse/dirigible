@@ -16,8 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -308,20 +307,7 @@ public class LocalRepositoryDAO {
 		File versionsDir = new File(versionsPath);
 		if (versionsDir.isDirectory()) {
 			File[] children = versionsDir.listFiles();
-			Arrays.sort(children, new Comparator<File>() {
 
-				@Override
-				public int compare(File o1, File o2) {
-					try {
-						Integer f1 = Integer.parseInt(o1.getName());
-						Integer f2 = Integer.parseInt(o2.getName());
-						return f1.compareTo(f2);
-					} catch (NumberFormatException e) {
-						return 0;
-					}
-				}
-
-			});
 			if (children != null) {
 				for (File file : children) {
 					if (!LAST.equals(file.getName())) {
@@ -330,6 +316,7 @@ public class LocalRepositoryDAO {
 						versions.add(localResourceVersion);
 					}
 				}
+				Collections.sort(versions);
 			}
 		}
 		return versions;

@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.api;
@@ -14,7 +13,7 @@ package org.eclipse.dirigible.repository.api;
 import java.io.IOException;
 import java.util.Date;
 
-public interface IResourceVersion {
+public interface IResourceVersion extends Comparable<IResourceVersion> {
 
 	/**
 	 * Returns the path of this resource version
@@ -28,7 +27,7 @@ public interface IResourceVersion {
 
 	/**
 	 * Returns the version number
-	 * 
+	 *
 	 * @return
 	 */
 	public int getVersion();
@@ -40,28 +39,28 @@ public interface IResourceVersion {
 
 	/**
 	 * Getter for binary flag
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isBinary();
 
 	/**
 	 * Getter for the content type
-	 * 
+	 *
 	 * @return
 	 */
 	public String getContentType();
 
 	/**
 	 * The creator of the entity
-	 * 
+	 *
 	 * @return
 	 */
 	public String getCreatedBy();
 
 	/**
 	 * Timestamp of the creation of the entity
-	 * 
+	 *
 	 * @return
 	 */
 	public Date getCreatedAt();

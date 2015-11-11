@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.db;
@@ -14,8 +13,8 @@ package org.eclipse.dirigible.repository.db;
 import java.io.IOException;
 import java.util.Date;
 
-import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.db.dao.DBFileVersion;
 import org.eclipse.dirigible.repository.db.dao.DBObject;
 
@@ -29,14 +28,12 @@ public class DBResourceVersion implements IResourceVersion {
 
 	private DBFileVersion fileVersion;
 
-	public DBResourceVersion(DBRepository repository, RepositoryPath path,
-			int version) {
+	public DBResourceVersion(DBRepository repository, RepositoryPath path, int version) {
 		super();
 		this.repository = repository;
 		this.path = path;
 		this.version = version;
-		this.fileVersion = getRepository().getRepositoryDAO()
-				.getFileVersionByPath(getPath(), version);
+		this.fileVersion = getRepository().getRepositoryDAO().getFileVersionByPath(getPath(), version);
 	}
 
 	public DBRepository getRepository() {
@@ -100,6 +97,17 @@ public class DBResourceVersion implements IResourceVersion {
 	@Override
 	public int hashCode() {
 		return getPath().hashCode();
+	}
+
+	@Override
+	public int compareTo(IResourceVersion o) {
+		try {
+			int x = this.getVersion();
+			int y = o.getVersion();
+			return (x < y) ? -1 : ((x == y) ? 0 : 1);
+		} catch (NumberFormatException e) {
+			return 0;
+		}
 	}
 
 }

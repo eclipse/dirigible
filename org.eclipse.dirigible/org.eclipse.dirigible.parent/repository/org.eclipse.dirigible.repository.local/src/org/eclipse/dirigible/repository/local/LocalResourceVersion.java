@@ -98,4 +98,16 @@ public class LocalResourceVersion implements IResourceVersion {
 		return getPath().hashCode();
 	}
 
+	@Override
+	public int compareTo(IResourceVersion o) {
+		try {
+			int x = this.getVersion();
+			int y = o.getVersion();
+			return (x < y) ? -1 : ((x == y) ? 0 : 1);
+		} catch (NumberFormatException e) {
+			return 0;
+		}
+
+	}
+
 }
