@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -306,6 +307,7 @@ public class LocalRepositoryDAO {
 		File versionsDir = new File(versionsPath);
 		if (versionsDir.isDirectory()) {
 			File[] children = versionsDir.listFiles();
+			Arrays.sort(children);
 			if (children != null) {
 				for (File file : children) {
 					if (!LAST.equals(file.getName())) {
