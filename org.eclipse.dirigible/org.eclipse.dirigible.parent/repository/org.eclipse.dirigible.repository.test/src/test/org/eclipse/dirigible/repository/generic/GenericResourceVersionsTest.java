@@ -49,18 +49,18 @@ public class GenericResourceVersionsTest {
 			List<IResourceVersion> versions = repository.getResourceVersions("/testCollection/versionedFile.txt"); //$NON-NLS-1$
 			assertEquals(versions.size(), 1);
 			IResourceVersion version = versions.get(0);
-			assertArrayEquals(version.getContent(), "Version 1".getBytes()); //$NON-NLS-1$
+			assertArrayEquals(new String(version.getContent()).getBytes(), "Version 1".getBytes()); //$NON-NLS-1$
 			assertEquals(version.getVersion(), 1);
 
-			resource.setContent("Version 2".getBytes()); //$NON-NLS-1$
+			resource.setContent("Version  2".getBytes()); //$NON-NLS-1$
 
 			versions = repository.getResourceVersions("/testCollection/versionedFile.txt"); //$NON-NLS-1$
 			assertEquals(versions.size(), 2);
 			version = versions.get(0);
-			assertArrayEquals(version.getContent(), "Version 1".getBytes()); //$NON-NLS-1$
+			assertArrayEquals(new String(version.getContent()).getBytes(), "Version 1".getBytes()); //$NON-NLS-1$
 			assertEquals(version.getVersion(), 1);
 			version = versions.get(1);
-			assertArrayEquals(version.getContent(), "Version 2".getBytes()); //$NON-NLS-1$
+			assertArrayEquals(new String(version.getContent()).getBytes(), "Version  2".getBytes()); //$NON-NLS-1$
 			assertEquals(version.getVersion(), 2);
 
 			resource.delete();

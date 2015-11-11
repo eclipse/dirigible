@@ -76,8 +76,6 @@ public class LocalRepository implements IRepository {
 		this.user = user;
 		this.repositoryDAO = new LocalRepositoryDAO(this);
 
-		// TODO seprate pure Repository stuff from general DB stuff...
-
 		try {
 			DataSource dataSource = DataSourceFacade.getInstance().getDataSource();
 			Connection connection = dataSource.getConnection();
