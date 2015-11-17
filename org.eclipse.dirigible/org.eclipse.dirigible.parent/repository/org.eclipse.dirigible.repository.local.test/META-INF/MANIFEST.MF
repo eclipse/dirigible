@@ -4,7 +4,7 @@ Bundle-Name: Dirigible Repository Local Test Suite
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: SAP
 Build-Jdk: 1.6.0_33
-Bundle-Version: 2.1.151007
+Bundle-Version: 2.2.151117
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.dirigible.repository.local.test;singleton:=true
 Fragment-Host: org.eclipse.dirigible.repository.local

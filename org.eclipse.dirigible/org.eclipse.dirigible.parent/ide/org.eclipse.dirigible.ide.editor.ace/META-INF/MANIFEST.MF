@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.editor.ace
 Bundle-SymbolicName: org.eclipse.dirigible.ide.editor.ace;singleton:=true
-Bundle-Version: 2.1.151007
+Bundle-Version: 2.2.151117
 Bundle-Vendor: SAP AG
 Require-Bundle: 
  org.eclipse.core.runtime,
