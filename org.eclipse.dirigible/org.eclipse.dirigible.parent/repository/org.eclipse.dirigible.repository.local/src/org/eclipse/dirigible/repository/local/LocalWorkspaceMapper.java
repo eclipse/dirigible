@@ -27,7 +27,7 @@ public class LocalWorkspaceMapper {
 
 	private static String workspaceRoot = "/";
 
-	public static String getMappedName(String repositoryName) throws IOException {
+	public static String getMappedName(LocalRepository repository, String repositoryName) throws IOException {
 		String workspaceName = null;
 
 		if ((repositoryName != null) && !"".equals(repositoryName)) {
@@ -38,10 +38,10 @@ public class LocalWorkspaceMapper {
 		}
 
 		if (workspaceName == null) {
-			if (repositoryName.startsWith(LocalRepository.WORKSPACE_PATH)) {
+			if (repositoryName.startsWith(repository.getRepositoryPath())) {
 				workspaceName = repositoryName;
 			} else {
-				workspaceName = LocalRepository.WORKSPACE_PATH + repositoryName;
+				workspaceName = repository.getRepositoryPath() + repositoryName;
 			}
 			// throw new IOException("No workspace mapping for file: " + repositoryName);
 		}

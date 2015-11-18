@@ -94,7 +94,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		if (IRepository.SEPARATOR.equals(repositoryPath)) {
 			return true;
 		}
-		String localPath = LocalWorkspaceMapper.getMappedName(repositoryPath);
+		String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
 		return FileSystemUtils.directoryExists(localPath);
 	}
 

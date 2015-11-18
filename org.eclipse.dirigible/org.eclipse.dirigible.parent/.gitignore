@@ -3,6 +3,7 @@ target/
 bin/
 derby/
 .settings/
+dirigible_local/
 
 # files
 *.bak

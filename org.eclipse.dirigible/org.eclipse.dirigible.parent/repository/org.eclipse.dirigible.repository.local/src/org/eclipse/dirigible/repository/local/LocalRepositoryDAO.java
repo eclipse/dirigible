@@ -58,7 +58,7 @@ public class LocalRepositoryDAO {
 
 	public void createFile(String path, byte[] content, boolean isBinary, String contentType) throws LocalBaseException {
 		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(path);
+			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			FileSystemUtils.saveFile(workspacePath, content);
 			createVersion(workspacePath, content);
 			createInfo(workspacePath);
@@ -69,7 +69,7 @@ public class LocalRepositoryDAO {
 	}
 
 	private void createVersion(String workspacePath, byte[] content) throws FileNotFoundException, IOException {
-		String versionsPath = workspacePath.replace(LocalRepository.WORKSPACE_PATH, LocalRepository.VERSIONS_PATH);
+		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
 		if (FileSystemUtils.directoryExists(versionsPath)) {
 			String versionsLastPath = versionsPath + File.separator + LAST;
 			byte[] bytes = FileSystemUtils.loadFile(versionsLastPath);
@@ -95,7 +95,7 @@ public class LocalRepositoryDAO {
 	}
 
 	private void createInfo(String workspacePath) throws FileNotFoundException, IOException {
-		String infoPath = workspacePath.replace(LocalRepository.WORKSPACE_PATH, LocalRepository.INFO_PATH);
+		String infoPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getInfoPath());
 		if (FileSystemUtils.fileExists(infoPath)) {
 			byte[] bytes = FileSystemUtils.loadFile(infoPath);
 			if (bytes != null) {
@@ -127,14 +127,14 @@ public class LocalRepositoryDAO {
 	}
 
 	private void removeVersions(String workspacePath) throws FileNotFoundException, IOException {
-		String versionsPath = workspacePath.replace(LocalRepository.WORKSPACE_PATH, LocalRepository.VERSIONS_PATH);
+		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
 		if (FileSystemUtils.directoryExists(versionsPath)) {
 			FileSystemUtils.removeFile(versionsPath);
 		}
 	}
 
 	private void removeInfo(String workspacePath) throws FileNotFoundException, IOException {
-		String infoPath = workspacePath.replace(LocalRepository.WORKSPACE_PATH, LocalRepository.INFO_PATH);
+		String infoPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getInfoPath());
 		if (FileSystemUtils.fileExists(infoPath)) {
 			FileSystemUtils.removeFile(infoPath);
 		}
@@ -147,7 +147,7 @@ public class LocalRepositoryDAO {
 
 	public void setFileContent(LocalFile localFile, byte[] content) {
 		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(localFile.getPath());
+			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), localFile.getPath());
 			FileSystemUtils.saveFile(workspacePath, content);
 			createVersion(workspacePath, content);
 			createInfo(workspacePath);
@@ -158,7 +158,7 @@ public class LocalRepositoryDAO {
 
 	public byte[] getFileContent(LocalFile localFile) {
 		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(localFile.getPath());
+			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), localFile.getPath());
 			return FileSystemUtils.loadFile(workspacePath);
 		} catch (IOException e) {
 			throw new LocalBaseException(e);
@@ -168,8 +168,8 @@ public class LocalRepositoryDAO {
 	public void renameFile(String path, String newPath) {
 
 		try {
-			String workspacePathOld = LocalWorkspaceMapper.getMappedName(path);
-			String workspacePathNew = LocalWorkspaceMapper.getMappedName(newPath);
+			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
+			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
 			FileSystemUtils.moveFile(workspacePathOld, workspacePathNew);
 			byte[] content = FileSystemUtils.loadFile(workspacePathNew);
 			if (content != null) {
@@ -185,7 +185,7 @@ public class LocalRepositoryDAO {
 
 	public void removeFileByPath(String path) {
 		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(path);
+			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			FileSystemUtils.removeFile(workspacePath);
 			removeVersions(workspacePath);
 			removeInfo(workspacePath);
@@ -196,7 +196,7 @@ public class LocalRepositoryDAO {
 
 	public void removeFolderByPath(String path) {
 		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(path);
+			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			FileSystemUtils.removeFile(workspacePath);
 			removeVersions(workspacePath);
 			removeInfo(workspacePath);
@@ -207,7 +207,7 @@ public class LocalRepositoryDAO {
 
 	public void createFolder(String normalizePath) {
 		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(normalizePath);
+			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), normalizePath);
 			FileSystemUtils.createFolder(workspacePath);
 		} catch (IOException e) {
 			throw new LocalBaseException(e);
@@ -217,8 +217,8 @@ public class LocalRepositoryDAO {
 	public void renameFolder(String path, String newPath) {
 
 		try {
-			String workspacePathOld = LocalWorkspaceMapper.getMappedName(path);
-			String workspacePathNew = LocalWorkspaceMapper.getMappedName(newPath);
+			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
+			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
 			FileSystemUtils.moveFile(workspacePathOld, workspacePathNew);
 			removeVersions(workspacePathNew);
 			removeInfo(workspacePathNew);
@@ -234,7 +234,7 @@ public class LocalRepositoryDAO {
 		LocalObject localObject = null;
 
 		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(path);
+			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			File objectFile = new File(workspacePath);
 			if (!objectFile.exists()) {
 				// This is folder, that was not created
@@ -251,7 +251,7 @@ public class LocalRepositoryDAO {
 			localObject.setName(objectFile.getName());
 			localObject.setPath(workspacePath);
 
-			String infoPath = workspacePath.replace(LocalRepository.WORKSPACE_PATH, LocalRepository.INFO_PATH);
+			String infoPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getInfoPath());
 			if (FileSystemUtils.fileExists(infoPath)) {
 				byte[] bytes = FileSystemUtils.loadFile(infoPath);
 				if (bytes != null) {
@@ -284,7 +284,7 @@ public class LocalRepositoryDAO {
 	public List<LocalObject> getChildrenByFolder(String path) {
 		List<LocalObject> localObjects = new ArrayList<LocalObject>();
 		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(path);
+			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			File objectFile = new File(workspacePath);
 			if (objectFile.isDirectory()) {
 				File[] children = objectFile.listFiles();
@@ -302,8 +302,8 @@ public class LocalRepositoryDAO {
 
 	public List<IResourceVersion> getResourceVersionsByPath(String path) throws IOException {
 		List<IResourceVersion> versions = new ArrayList<IResourceVersion>();
-		String workspacePath = LocalWorkspaceMapper.getMappedName(path);
-		String versionsPath = workspacePath.replace(LocalRepository.WORKSPACE_PATH, LocalRepository.VERSIONS_PATH);
+		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
+		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
 		File versionsDir = new File(versionsPath);
 		if (versionsDir.isDirectory()) {
 			File[] children = versionsDir.listFiles();
@@ -323,12 +323,12 @@ public class LocalRepositoryDAO {
 	}
 
 	public LocalFileVersion getFileVersionByPath(String path, int version) throws FileNotFoundException, IOException {
-		String workspacePath = LocalWorkspaceMapper.getMappedName(path);
+		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 		return getLocalFileVersionByPath(version, workspacePath);
 	}
 
 	private LocalFileVersion getLocalFileVersionByPath(int version, String workspacePath) throws FileNotFoundException, IOException {
-		String versionsPath = workspacePath.replace(LocalRepository.WORKSPACE_PATH, LocalRepository.VERSIONS_PATH);
+		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
 		String versionPath = versionsPath + File.separator + version;
 		if (FileSystemUtils.fileExists(versionPath)) {
 			byte[] bytes = FileSystemUtils.loadFile(versionPath);

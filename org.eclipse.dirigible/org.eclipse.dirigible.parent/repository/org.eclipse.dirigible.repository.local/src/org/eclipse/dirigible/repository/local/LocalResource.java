@@ -97,7 +97,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	@Override
 	public boolean exists() throws IOException {
 		String repositoryPath = getRepositoryPath().toString();
-		String localPath = LocalWorkspaceMapper.getMappedName(repositoryPath);
+		String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
 		return (FileSystemUtils.fileExists(localPath));
 		// return (getDocument() != null);
 	}

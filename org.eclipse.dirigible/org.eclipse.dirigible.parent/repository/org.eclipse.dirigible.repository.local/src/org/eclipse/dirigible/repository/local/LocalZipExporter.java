@@ -16,9 +16,15 @@ import org.eclipse.dirigible.repository.ext.fs.FileZipExporter;
 
 public class LocalZipExporter extends FileZipExporter {
 
+	private LocalRepository repository;
+
+	public LocalZipExporter(LocalRepository repository) {
+		this.repository = repository;
+	}
+
 	@Override
 	protected String getMappedLocation(String inputFolder) throws IOException {
-		String workspaceFolder = LocalWorkspaceMapper.getMappedName(inputFolder);
+		String workspaceFolder = LocalWorkspaceMapper.getMappedName(repository, inputFolder);
 		return workspaceFolder;
 	}
 

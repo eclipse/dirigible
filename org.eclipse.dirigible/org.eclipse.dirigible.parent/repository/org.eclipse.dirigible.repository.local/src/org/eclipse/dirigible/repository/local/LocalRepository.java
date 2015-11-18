@@ -25,7 +25,6 @@ import java.util.zip.ZipOutputStream;
 
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -49,35 +48,82 @@ public class LocalRepository implements IRepository {
 
 	public static final String PATH_DELIMITER = IRepository.SEPARATOR;
 
-	public static String WORKSPACE_PATH = IRepository.SEPARATOR;
-	public static String VERSIONS_PATH = IRepository.SEPARATOR;
-	public static String INFO_PATH = IRepository.SEPARATOR;
-
-	static {
-		String userFolder = System.getProperty("user.dir");
-
-		WORKSPACE_PATH = userFolder + "/dirigible/root"; // $NON-NLS-1$
-		WORKSPACE_PATH = WORKSPACE_PATH.replace(IRepository.SEPARATOR, File.separator);
-		VERSIONS_PATH = userFolder + "/dirigible/versions"; // $NON-NLS-1$
-		VERSIONS_PATH = VERSIONS_PATH.replace(IRepository.SEPARATOR, File.separator);
-		INFO_PATH = userFolder + "/dirigible/info"; // $NON-NLS-1$
-		INFO_PATH = INFO_PATH.replace(IRepository.SEPARATOR, File.separator);
-	}
+	private String repositoryPath = IRepository.SEPARATOR;
+	private String versionsPath = IRepository.SEPARATOR;
+	private String infoPath = IRepository.SEPARATOR;
 
 	private LocalRepositoryDAO repositoryDAO;
-
-	private LocalZipImporter importer = new LocalZipImporter();
-
-	private LocalZipExporter exporter = new LocalZipExporter();
+	private LocalZipImporter importer;
+	private LocalZipExporter exporter;
 
 	private String user;
 
+	/**
+	 * Constructor with default root folder - user.dir and without database initialization
+	 *
+	 * @param user
+	 * @throws LocalBaseException
+	 */
 	public LocalRepository(String user) throws LocalBaseException {
+		this(null, user);
+	}
+
+	/**
+	 * Constructor with default root folder - user.dir
+	 *
+	 * @param dataSource
+	 * @param user
+	 * @throws LocalBaseException
+	 */
+	public LocalRepository(DataSource dataSource, String user) throws LocalBaseException {
+		this(dataSource, user, System.getProperty("user.dir")); //$NON-NLS-1$
+	}
+
+	/**
+	 * Constructor with root folder parameter
+	 *
+	 * @param dataSource
+	 * @param user
+	 * @param rootFolder
+	 * @throws LocalBaseException
+	 */
+	public LocalRepository(DataSource dataSource, String user, String rootFolder) throws LocalBaseException {
 		this.user = user;
 		this.repositoryDAO = new LocalRepositoryDAO(this);
+		this.importer = new LocalZipImporter(this);
+		this.exporter = new LocalZipExporter(this);
 
+		initializeRepository(rootFolder);
+		initializeDatabase(dataSource);
+	}
+
+	public String getRepositoryPath() {
+		return repositoryPath;
+	}
+
+	public String getVersionsPath() {
+		return versionsPath;
+	}
+
+	public String getInfoPath() {
+		return infoPath;
+	}
+
+	private void initializeRepository(String rootFolder) {
+		repositoryPath = rootFolder + "/dirigible_local/root"; // $NON-NLS-1$
+		repositoryPath = repositoryPath.replace(IRepository.SEPARATOR, File.separator);
+		versionsPath = rootFolder + "/dirigible_local/versions"; // $NON-NLS-1$
+		versionsPath = versionsPath.replace(IRepository.SEPARATOR, File.separator);
+		infoPath = rootFolder + "/dirigible_local/info"; // $NON-NLS-1$
+		infoPath = infoPath.replace(IRepository.SEPARATOR, File.separator);
+	}
+
+	private void initializeDatabase(DataSource dataSource) {
+		if (dataSource == null) {
+			logger.warn("Local Repository initialization - DataSource has not been provided");
+			return;
+		}
 		try {
-			DataSource dataSource = DataSourceFacade.getInstance().getDataSource();
 			Connection connection = dataSource.getConnection();
 			try {
 				DBRepositoryInitializer dbRepositoryInitializer = new DBRepositoryInitializer(dataSource, connection, false);
@@ -95,7 +141,7 @@ public class LocalRepository implements IRepository {
 	@Override
 	public ICollection getRoot() {
 		logger.debug("entering getRoot"); //$NON-NLS-1$
-		final RepositoryPath wrapperPath = new RepositoryPath(WORKSPACE_PATH);
+		final RepositoryPath wrapperPath = new RepositoryPath(repositoryPath);
 		LocalCollection dbCollection = new LocalCollection(this, wrapperPath);
 		logger.debug("exiting getRoot"); //$NON-NLS-1$
 		return dbCollection;
@@ -297,7 +343,7 @@ public class LocalRepository implements IRepository {
 	@Override
 	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws IOException {
 
-		String workspacePath = LocalWorkspaceMapper.getMappedName(root);
+		String workspacePath = LocalWorkspaceMapper.getMappedName(this, root);
 
 		List<IEntity> entities = new ArrayList<IEntity>();
 
@@ -327,7 +373,7 @@ public class LocalRepository implements IRepository {
 		});
 
 		for (File f : found) {
-			String repositoryName = f.getCanonicalPath().substring(LocalRepository.WORKSPACE_PATH.length());
+			String repositoryName = f.getCanonicalPath().substring(getRepositoryPath().length());
 			RepositoryPath repositoryPath = new RepositoryPath(repositoryName);
 			entities.add(new LocalResource(this, repositoryPath));
 		}
