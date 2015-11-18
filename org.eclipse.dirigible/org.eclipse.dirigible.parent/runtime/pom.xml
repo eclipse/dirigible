@@ -62,6 +62,8 @@
 		<module>org.eclipse.dirigible.runtime.ui</module>
 		<module>org.eclipse.dirigible.runtime.core</module>
 		<module>org.eclipse.dirigible.runtime.core.test</module>
+        <module>org.eclipse.dirigible.runtime.javascript</module>
+        <module>org.eclipse.dirigible.runtime.javascript.test</module>
 		<module>org.eclipse.dirigible.runtime.security</module>
 		<module>org.eclipse.dirigible.runtime.web</module>
 		<module>org.eclipse.dirigible.runtime.wiki</module>

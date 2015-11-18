@@ -68,6 +68,14 @@
         </filter>
      </extension>
      
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/web-secured"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     
      
 
 </plugin>

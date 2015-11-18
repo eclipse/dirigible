@@ -208,6 +208,7 @@
 			<url-pattern>/services/web-secured/*</url-pattern>
 			<url-pattern>/services/web/content-secured/*</url-pattern>
 			<url-pattern>/services/js-secured/*</url-pattern>
+			<url-pattern>/services/test-secured/*</url-pattern>
 			<url-pattern>/services/rb-secured/*</url-pattern>
 			<url-pattern>/services/groovy-secured/*</url-pattern>
 			<url-pattern>/services/wiki-secured/*</url-pattern>
