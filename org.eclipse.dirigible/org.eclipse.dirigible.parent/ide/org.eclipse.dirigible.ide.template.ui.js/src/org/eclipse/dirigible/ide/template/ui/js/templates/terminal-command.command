@@ -14,6 +14,11 @@
                 "osName": "Windows",
                 "command":"cmd /c \"systeminfo\""
             }
+            ,
+            {
+			    "osName": "Mac",
+			    "command":"bash -c \"uname -s -v\""
+			}
         ],
     "envAdd":
         [
