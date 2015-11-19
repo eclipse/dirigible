@@ -146,6 +146,20 @@
         </filter>
      </extension>
      
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/js-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
      
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/test-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
           
 </plugin>

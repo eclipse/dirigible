@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package test.org.eclipse.dirigible.ide.workspace.impl;
@@ -16,10 +15,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,17 +31,16 @@ import org.eclipse.core.resources.IResourceFilterDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
 import org.eclipse.dirigible.ide.workspace.impl.Container;
 import org.eclipse.dirigible.ide.workspace.impl.Workspace;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 public class ContainerTest {
 	@Mock
@@ -194,8 +192,7 @@ public class ContainerTest {
 	}
 
 	@Test(expected = CoreException.class)
-	public void whenErrorOccursDuringExtractingMembersCoreExceptionShouldBeThrows()
-			throws Exception {
+	public void whenErrorOccursDuringExtractingMembersCoreExceptionShouldBeThrows() throws Exception {
 		doThrow(new IOException()).when(expectedEntity).getCollectionsNames();
 
 		container.members(true);
@@ -208,20 +205,20 @@ public class ContainerTest {
 		assertNotNull(filterDescription);
 	}
 
-	@Test
-	public void whenUsingUnsupportedMethodExceptionShouldBeThrown() throws Exception {
-		try {
-			container.createFilter(0, null, 0, null);
-			fail("container.createFilter(int, FileInfoMatcherDescription, int, IProgressMonitor) should be unsupported");
-		} catch (UnsupportedOperationException e) {
-			// Expected
-		}
-		try {
-			container.removeFilter(null, 0, null);
-			fail("container.removeFilter(IResourceFilterDescription, int, IProgressMonitor) should be unsupported");
-		} catch (UnsupportedOperationException e) {
-			// Expected
-		}
-	}
+	// @Test
+	// public void whenUsingUnsupportedMethodExceptionShouldBeThrown() throws Exception {
+	// try {
+	// container.createFilter(0, null, 0, null);
+	// fail("container.createFilter(int, FileInfoMatcherDescription, int, IProgressMonitor) should be unsupported");
+	// } catch (UnsupportedOperationException e) {
+	// // Expected
+	// }
+	// try {
+	// container.removeFilter(null, 0, null);
+	// fail("container.removeFilter(IResourceFilterDescription, int, IProgressMonitor) should be unsupported");
+	// } catch (UnsupportedOperationException e) {
+	// // Expected
+	// }
+	// }
 
 }

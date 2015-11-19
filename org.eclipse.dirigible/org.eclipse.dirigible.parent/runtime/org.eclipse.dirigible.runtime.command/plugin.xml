@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+     <extension
+           id="CommandServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/command"
+              class="org.eclipse.dirigible.runtime.command.CommandServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CommandSecuredServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/command-secured"
+              class="org.eclipse.dirigible.runtime.command.CommandSecuredServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CommandSandboxServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/command-sandbox"
+              class="org.eclipse.dirigible.runtime.command.CommandSandboxServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+
+     <extension
+           id="CommandRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/registry-command"
+              class="org.eclipse.dirigible.runtime.registry.CommandRegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+	 
+	 <extension
+           id="CommandRegistryUiContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/scripting/command"
+              class="org.eclipse.dirigible.runtime.registry.CommandRegistryUiContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/command"
+              class="org.eclipse.dirigible.runtime.filter.CommandRegistrySecureFilter">
+        </filter>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/command-sandbox"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+     
+     <extension
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/command-secured"
+              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
+        </filter>
+     </extension>
+
+
+
+  
+</plugin>
