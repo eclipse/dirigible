@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 
 public class LocalResourceVersion implements IResourceVersion {
 
-	private final LocalRepository repository;
+	private final FileSystemRepository repository;
 
 	private final RepositoryPath path;
 
@@ -27,7 +27,7 @@ public class LocalResourceVersion implements IResourceVersion {
 
 	private LocalFileVersion fileVersion;
 
-	public LocalResourceVersion(LocalRepository repository, RepositoryPath path, int version) throws FileNotFoundException, IOException {
+	public LocalResourceVersion(FileSystemRepository repository, RepositoryPath path, int version) throws FileNotFoundException, IOException {
 		super();
 		this.repository = repository;
 		this.path = path;
@@ -35,7 +35,7 @@ public class LocalResourceVersion implements IResourceVersion {
 		this.fileVersion = getRepository().getRepositoryDAO().getFileVersionByPath(getPath(), version);
 	}
 
-	public LocalRepository getRepository() {
+	public FileSystemRepository getRepository() {
 		return repository;
 	}
 

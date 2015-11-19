@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
  */
 public class LocalFolder extends LocalObject {
 
-	public LocalFolder(LocalRepository repository) {
+	public LocalFolder(FileSystemRepository repository) {
 		super(repository);
 	}
 

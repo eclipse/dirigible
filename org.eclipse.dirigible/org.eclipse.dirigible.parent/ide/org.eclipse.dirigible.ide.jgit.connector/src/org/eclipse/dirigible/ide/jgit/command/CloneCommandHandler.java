@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.jgit.command;
@@ -19,6 +18,17 @@ import java.util.List;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
+import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
+import org.eclipse.dirigible.ide.jgit.command.ui.CloneCommandDialog;
+import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
+import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
+import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.ext.git.JGitConnector;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -27,18 +37,6 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
-import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
-import org.eclipse.dirigible.ide.jgit.command.ui.CloneCommandDialog;
-import org.eclipse.dirigible.ide.jgit.connector.JGitConnector;
-import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
-import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
-import org.eclipse.dirigible.ide.repository.RepositoryFacade;
-import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class CloneCommandHandler extends AbstractWorkspaceHandler {
 
@@ -63,25 +61,21 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 		CloneCommandDialog dialog = new CloneCommandDialog(parent);
 
 		switch (dialog.open()) {
-		case Window.OK:
-			cloneGitRepository(dialog.getRepositoryURI(), dialog.getUsername(),
-					dialog.getPassword());
-			break;
+			case Window.OK:
+				cloneGitRepository(dialog.getRepositoryURI(), dialog.getUsername(), dialog.getPassword());
+				break;
 		}
 
 		monitor.done();
 		return null;
 	}
 
-	private void cloneGitRepository(final String repositoryURI, final String username,
-			final String password) {
+	private void cloneGitRepository(final String repositoryURI, final String username, final String password) {
 		File gitDirectory = null;
 		try {
 			String user = CommonParameters.getUserName();
-			String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SLASH) + 1,
-					repositoryURI.lastIndexOf(DOT_GIT));
-			gitDirectory = GitFileUtils.createTempDirectory(JGitConnector.TEMP_DIRECTORY_PREFIX
-					+ repositoryName);
+			String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SLASH) + 1, repositoryURI.lastIndexOf(DOT_GIT));
+			gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 
 			JGitConnector.cloneRepository(gitDirectory, repositoryURI, username, password);
 
@@ -92,13 +86,10 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 			GitProjectProperties gitProperties = new GitProjectProperties(repositoryURI, lastSha);
 
 			IRepository repository = RepositoryFacade.getInstance().getRepository();
-			String workspacePath = String.format(
-					GitProjectProperties.DB_DIRIGIBLE_USERS_S_WORKSPACE, user);
+			String workspacePath = String.format(GitProjectProperties.DB_DIRIGIBLE_USERS_S_WORKSPACE, user);
 
-			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, repository,
-					workspacePath, user, gitProperties);
-			StatusLineManagerUtil.setInfoMessage(String
-					.format(PROJECT_WAS_CLONED, importedProjects));
+			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, repository, workspacePath, user, gitProperties);
+			StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_WAS_CLONED, importedProjects));
 			refreshWorkspace();
 		} catch (InvalidRemoteException e) {
 			logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);
@@ -114,21 +105,17 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 					String causedBy = PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY;
 					MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, causedBy);
 				} else {
-					MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e
-							.getCause().getMessage());
+					MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e.getCause().getMessage());
 				}
 			} else {
-				MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED,
-						e.getMessage());
+				MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e.getMessage());
 			}
 		} catch (GitAPIException e) {
 			logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);
-			MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e.getCause()
-					.getMessage());
+			MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e.getCause().getMessage());
 		} catch (IOException e) {
 			logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);
-			MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e.getCause()
-					.getMessage());
+			MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e.getCause().getMessage());
 		} finally {
 			GitFileUtils.deleteDirectory(gitDirectory);
 		}

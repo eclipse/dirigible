@@ -16,22 +16,12 @@ import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 /**
- * This interface represents a repository. It allows for querying, modifying and
+ * This interface represents a Repository. It allows for querying, modifying and
  * navigating through collections and resources.
  */
-public interface IRepository {
+public interface IRepository extends IReadOnlyRepository {
 
 	public static final String SEPARATOR = ICommonConstants.SEPARATOR;
-
-	/**
-	 * Returns an instance of <code>ICollection</code> which represents the root
-	 * collection of the repository.
-	 * <p>
-	 * This method does not throw any exceptions for convenience but is not
-	 * guaranteed to return a valid collection. One should check this by using
-	 * the {@link ICollection#isValid()} method.
-	 */
-	public ICollection getRoot();
 
 	/**
 	 * This method creates a new empty collection at the specified path.
@@ -42,24 +32,10 @@ public interface IRepository {
 	public ICollection createCollection(String path) throws IOException;
 
 	/**
-	 * Returns an <code>ICollection</code> instance representing the resource at
-	 * the specified path.
-	 * <p>
-	 * The collection may not exist at the specified path.
-	 */
-	public ICollection getCollection(String path);
-
-	/**
 	 * This method removes the collection with the specified path from the
 	 * repository.
 	 */
 	public void removeCollection(String path) throws IOException;
-
-	/**
-	 * Returns whether a collection with the specified path exists in the
-	 * repository.
-	 */
-	public boolean hasCollection(String path) throws IOException;
 
 	/**
 	 * This method creates a new empty resource at the specified path.
@@ -95,24 +71,10 @@ public interface IRepository {
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override) throws IOException;
 
 	/**
-	 * Returns an instance of <code>IResource</code> which represents the
-	 * resource located at the specified path.
-	 * <p>
-	 * The resource may not exist at the specified path.
-	 */
-	public IResource getResource(String path);
-
-	/**
 	 * This method removes the resource at the specified path from the
 	 * repository.
 	 */
 	public void removeResource(String path) throws IOException;
-
-	/**
-	 * Returns whether a resource with the specified path exists in the
-	 * repository.
-	 */
-	public boolean hasResource(String path) throws IOException;
 
 	/**
 	 * Disposes of this repository.
@@ -198,32 +160,6 @@ public interface IRepository {
 			throws IOException;
 
 	/**
-	 * Export all the content under the given path(s) with the target repository
-	 * instance Include the last segment of the relative roots during the
-	 * archiving
-	 *
-	 * @param relativeRoot
-	 * @return
-	 * @throws IOException
-	 */
-	public byte[] exportZip(List<String> relativeRoots) throws IOException;
-
-	/**
-	 * Export all the content under the given path with the target repository
-	 * instance Include or NOT the last segment of the relative root during the
-	 * archiving
-	 *
-	 * @param relativeRoot
-	 *            single root
-	 * @param inclusive
-	 *            whether to include the last segment of the root or to pack its
-	 *            content directly in the archive
-	 * @return
-	 * @throws IOException
-	 */
-	public byte[] exportZip(String relativeRoot, boolean inclusive) throws IOException;
-
-	/**
 	 * Search the given parameter in the names of the files and folders ( means
 	 * *parameter)
 	 *
@@ -269,37 +205,11 @@ public interface IRepository {
 	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws IOException;
 
 	/**
-	 * Retrieve all the kept versions of a given resource
-	 *
-	 * @param path
-	 * @return
-	 * @throws IOException
-	 */
-	public List<IResourceVersion> getResourceVersions(String path) throws IOException;
-
-	/**
-	 * Retrieve a particular version of a given resource
-	 *
-	 * @param path
-	 * @param version
-	 * @return
-	 * @throws IOException
-	 */
-	public IResourceVersion getResourceVersion(String path, int version) throws IOException;
-
-	/**
 	 * Clean-up the file versions older than a month For full fledged SCM
 	 * system, use external e.g. Git
 	 *
 	 * @throws IOException
 	 */
 	public void cleanupOldVersions() throws IOException;
-
-	/**
-	 * Getter for the user has created this instance of a repository object
-	 *
-	 * @return the user name
-	 */
-	public String getUser();
 
 }

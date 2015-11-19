@@ -39,7 +39,7 @@ public class LocalResource extends LocalEntity implements IResource {
 
 	private String contentType;
 
-	public LocalResource(LocalRepository repository, RepositoryPath path) {
+	public LocalResource(FileSystemRepository repository, RepositoryPath path) {
 		super(repository, path);
 		try {
 			LocalFile localFile = getDocument();

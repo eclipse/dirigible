@@ -12,6 +12,7 @@ package org.eclipse.dirigible.repository.api;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,8 @@ public class RepositoryFactory {
 
 	static List<IRepositoryProvider> repositoryProviders = new ArrayList<IRepositoryProvider>();
 
+	static Map<String, IMasterRepositoryProvider> masterRepositoryProviders = new HashMap<String, IMasterRepositoryProvider>();
+
 	static {
 		registerServices();
 	}
@@ -33,6 +36,8 @@ public class RepositoryFactory {
 		// register repository providers
 		try {
 			BundleContext context = RepositoryActivator.getContext();
+
+			// IRepositoryProvider services
 			Collection<ServiceReference<IRepositoryProvider>> serviceReferences = context.getServiceReferences(IRepositoryProvider.class, null);
 			for (ServiceReference<IRepositoryProvider> serviceReference : serviceReferences) {
 				IRepositoryProvider repositoryProvider = context.getService(serviceReference);
@@ -41,12 +46,27 @@ public class RepositoryFactory {
 					localRepositoryProvider = repositoryProvider;
 				}
 			}
+
+			// IMasterRepositoryProvider services
+			Collection<ServiceReference<IMasterRepositoryProvider>> masterServiceReferences = context
+					.getServiceReferences(IMasterRepositoryProvider.class, null);
+			for (ServiceReference<IMasterRepositoryProvider> serviceReference : masterServiceReferences) {
+				IMasterRepositoryProvider masterRepositoryProvider = context.getService(serviceReference);
+				masterRepositoryProviders.put(masterRepositoryProvider.getClass().getCanonicalName(), masterRepositoryProvider);
+			}
 		} catch (InvalidSyntaxException e) {
 			// logger.error(e.getMessage(), e);
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Create a Repository instance used for local operations
+	 *
+	 * @param parameters
+	 * @return local repository
+	 * @throws RepositoryCreationException
+	 */
 	public static IRepository createRepository(Map<String, Object> parameters) throws RepositoryCreationException {
 		if (localRepositoryProvider == null) {
 			registerServices();
@@ -58,7 +78,27 @@ public class RepositoryFactory {
 				localRepositoryProvider = repositoryProviders.get(0);
 			}
 		}
-		return localRepositoryProvider.createRepository(parameters);
+		IRepository repository = localRepositoryProvider.createRepository(parameters);
+		return repository;
+	}
+
+	/**
+	 * Create a Master Repository from which the content can be synchronized as initial load or reset
+	 *
+	 * @param className
+	 * @param parameters
+	 * @return master repository
+	 * @throws RepositoryCreationException
+	 */
+	public static IMasterRepository createMasterRepository(String className, Map<String, Object> parameters) throws RepositoryCreationException {
+
+		IMasterRepositoryProvider masterRepositoryProvider = masterRepositoryProviders.get(className);
+		if (masterRepositoryProvider == null) {
+			throw new RepositoryCreationException(String.format("Master Repository Provider with class name %s has NOT been registered", className));
+		}
+		IMasterRepository masterRepository = masterRepositoryProvider.createRepository(parameters);
+
+		return masterRepository;
 	}
 
 }

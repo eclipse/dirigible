@@ -19,7 +19,7 @@ public class LocalFile extends LocalObject {
 
 	private String contentType;
 
-	public LocalFile(LocalRepository repository, boolean isBinary, String contentType) {
+	public LocalFile(FileSystemRepository repository, boolean isBinary, String contentType) {
 		super(repository);
 		this.binary = isBinary;
 		this.contentType = contentType;

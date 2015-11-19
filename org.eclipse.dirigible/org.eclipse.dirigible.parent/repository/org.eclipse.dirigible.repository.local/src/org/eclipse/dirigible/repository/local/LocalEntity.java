@@ -29,18 +29,18 @@ public abstract class LocalEntity implements IEntity {
 
 	private static final Logger logger = Logger.getLogger(LocalEntity.class);
 
-	private final LocalRepository repository;
+	private final FileSystemRepository repository;
 
 	private final RepositoryPath path;
 
-	public LocalEntity(LocalRepository repository, RepositoryPath path) {
+	public LocalEntity(FileSystemRepository repository, RepositoryPath path) {
 		super();
 		this.repository = repository;
 		this.path = path;
 	}
 
 	@Override
-	public LocalRepository getRepository() {
+	public FileSystemRepository getRepository() {
 		return this.repository;
 	}
 

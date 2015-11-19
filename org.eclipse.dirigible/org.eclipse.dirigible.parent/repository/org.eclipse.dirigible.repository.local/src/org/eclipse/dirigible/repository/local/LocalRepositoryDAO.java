@@ -46,13 +46,13 @@ public class LocalRepositoryDAO {
 	static final int OBJECT_TYPE_DOCUMENT = 1;
 	static final int OBJECT_TYPE_BINARY = 2;
 
-	private LocalRepository repository;
+	private FileSystemRepository repository;
 
-	LocalRepositoryDAO(LocalRepository repository) {
+	LocalRepositoryDAO(FileSystemRepository repository) {
 		this.repository = repository;
 	}
 
-	public LocalRepository getRepository() {
+	public FileSystemRepository getRepository() {
 		return this.repository;
 	}
 

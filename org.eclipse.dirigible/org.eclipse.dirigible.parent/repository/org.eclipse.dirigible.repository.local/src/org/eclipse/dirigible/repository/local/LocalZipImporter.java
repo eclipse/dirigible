@@ -16,9 +16,9 @@ import org.eclipse.dirigible.repository.ext.fs.FileZipImporter;
 
 public class LocalZipImporter extends FileZipImporter {
 
-	private LocalRepository repository;
+	private FileSystemRepository repository;
 
-	public LocalZipImporter(LocalRepository repository) {
+	public LocalZipImporter(FileSystemRepository repository) {
 		this.repository = repository;
 	}
 

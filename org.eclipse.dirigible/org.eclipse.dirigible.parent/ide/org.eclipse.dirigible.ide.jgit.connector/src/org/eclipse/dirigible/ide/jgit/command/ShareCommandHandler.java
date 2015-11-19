@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.jgit.command;
@@ -20,6 +19,18 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
+import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
+import org.eclipse.dirigible.ide.jgit.command.ui.ShareCommandDialog;
+import org.eclipse.dirigible.ide.jgit.utils.CommandHandlerUtils;
+import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
+import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
+import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.ext.git.JGitConnector;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -30,19 +41,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
-import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
-import org.eclipse.dirigible.ide.jgit.command.ui.ShareCommandDialog;
-import org.eclipse.dirigible.ide.jgit.connector.JGitConnector;
-import org.eclipse.dirigible.ide.jgit.utils.CommandHandlerUtils;
-import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
-import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
-import org.eclipse.dirigible.ide.repository.RepositoryFacade;
-import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class ShareCommandHandler extends AbstractWorkspaceHandler {
 	private static final String TASK_SHARING_PROJECT = Messages.ShareCommandHandler_TASK_SHARING_PROJECT;
@@ -74,8 +72,7 @@ public class ShareCommandHandler extends AbstractWorkspaceHandler {
 		} else if (projects.length > 1) {
 			logger.warn(ONLY_ONE_PROJECT_CAN_BE_SHARED_AT_A_TIME);
 			StatusLineManagerUtil.setWarningMessage(ONLY_ONE_PROJECT_CAN_BE_SHARED_AT_A_TIME);
-			MessageDialog.openWarning(null, ONLY_ONE_PROJECT_CAN_BE_SHARED_AT_A_TIME,
-					PLEASE_SELECT_ONE);
+			MessageDialog.openWarning(null, ONLY_ONE_PROJECT_CAN_BE_SHARED_AT_A_TIME, PLEASE_SELECT_ONE);
 			return null;
 		}
 
@@ -84,32 +81,27 @@ public class ShareCommandHandler extends AbstractWorkspaceHandler {
 
 		ShareCommandDialog shareCommandDialog = new ShareCommandDialog(parent);
 		switch (shareCommandDialog.open()) {
-		case Window.OK:
-			String commitMessage = shareCommandDialog.getCommitMessage();
-			String repositoryURI = shareCommandDialog.getRepositoryURI();
-			String username = shareCommandDialog.getUsername();
-			String email = shareCommandDialog.getEmail();
-			String password = shareCommandDialog.getPassword();
+			case Window.OK:
+				String commitMessage = shareCommandDialog.getCommitMessage();
+				String repositoryURI = shareCommandDialog.getRepositoryURI();
+				String username = shareCommandDialog.getUsername();
+				String email = shareCommandDialog.getEmail();
+				String password = shareCommandDialog.getPassword();
 
-			shareToGitRepository(projects[0], commitMessage, username, email, password,
-					repositoryURI);
-			break;
+				shareToGitRepository(projects[0], commitMessage, username, email, password, repositoryURI);
+				break;
 		}
 		monitor.done();
 
 		return null;
 	}
 
-	private void shareToGitRepository(IProject project, String commitMessage, String username,
-			String email, String password, String repositoryURI) {
-		final String errorMessage = String.format(WHILE_SHARING_PROJECT_ERROR_OCCURED,
-				project.getName());
+	private void shareToGitRepository(IProject project, String commitMessage, String username, String email, String password, String repositoryURI) {
+		final String errorMessage = String.format(WHILE_SHARING_PROJECT_ERROR_OCCURED, project.getName());
 		File gitDirectory = null;
 		try {
-			final String repositoryName = repositoryURI.substring(
-					repositoryURI.lastIndexOf(SLASH) + 1, repositoryURI.lastIndexOf(DOT_GIT));
-			gitDirectory = GitFileUtils.createTempDirectory(JGitConnector.TEMP_DIRECTORY_PREFIX
-					+ repositoryName);
+			final String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SLASH) + 1, repositoryURI.lastIndexOf(DOT_GIT));
+			gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 			JGitConnector.cloneRepository(gitDirectory, repositoryURI, username, password);
 
 			Repository repository = JGitConnector.getRepository(gitDirectory.getAbsolutePath());
@@ -126,8 +118,7 @@ public class ShareCommandHandler extends AbstractWorkspaceHandler {
 			GitProjectProperties properties = new GitProjectProperties(repositoryURI, lastSHA);
 			String user = CommonParameters.getUserName();
 
-			GitFileUtils.saveGitPropertiesFile(dirigibleRepository, properties, user,
-					project.getName());
+			GitFileUtils.saveGitPropertiesFile(dirigibleRepository, properties, user, project.getName());
 
 			String message = String.format(PROJECT_S_SUCCESSFULY_SHARED, project.getName());
 			StatusLineManagerUtil.setInfoMessage(message);
@@ -141,11 +132,9 @@ public class ShareCommandHandler extends AbstractWorkspaceHandler {
 			if (rootCause != null) {
 				rootCause = rootCause.getCause();
 				if (rootCause instanceof UnknownHostException) {
-					MessageDialog.openError(null, errorMessage,
-							PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY);
+					MessageDialog.openError(null, errorMessage, PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY);
 				} else {
-					MessageDialog.openError(null, errorMessage, e.getCause().getMessage()
-							+ INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI);
+					MessageDialog.openError(null, errorMessage, e.getCause().getMessage() + INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI);
 				}
 			}
 		} catch (GitAPIException e) {

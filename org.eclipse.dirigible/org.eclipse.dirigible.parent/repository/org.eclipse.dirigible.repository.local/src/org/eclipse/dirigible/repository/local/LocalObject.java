@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public abstract class LocalObject {
 
-	private LocalRepository repository;
+	private FileSystemRepository repository;
 
 	private String name;
 
@@ -33,11 +33,11 @@ public abstract class LocalObject {
 
 	private Date modifiedAt;
 
-	public LocalObject(LocalRepository repository) {
+	public LocalObject(FileSystemRepository repository) {
 		this.repository = repository;
 	}
 
-	public LocalRepository getRepository() {
+	public FileSystemRepository getRepository() {
 		return repository;
 	}
 

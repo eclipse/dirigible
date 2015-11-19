@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.jgit.command;
@@ -20,6 +19,17 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
+import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
+import org.eclipse.dirigible.ide.jgit.utils.CommandHandlerUtils;
+import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
+import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
+import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.ext.git.JGitConnector;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
@@ -28,18 +38,6 @@ import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
-
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
-import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
-import org.eclipse.dirigible.ide.jgit.connector.JGitConnector;
-import org.eclipse.dirigible.ide.jgit.utils.CommandHandlerUtils;
-import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
-import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
-import org.eclipse.dirigible.ide.repository.RepositoryFacade;
-import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class PullCommandHandler extends AbstractWorkspaceHandler {
 	private static final String TASK_PULLING_FROM_REMOTE_REPOSITORY = Messages.PullCommandHandler_TASK_PULLING_FROM_REMOTE_REPOSITORY;
@@ -83,8 +81,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 		} else if (projects.length > 1) {
 			logger.warn(ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME);
 			StatusLineManagerUtil.setWarningMessage(ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME);
-			MessageDialog.openWarning(null, ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME,
-					PLEASE_SELECT_ONE);
+			MessageDialog.openWarning(null, ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME, PLEASE_SELECT_ONE);
 			return null;
 		}
 
@@ -101,12 +98,10 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 
 	private void pullProjectFromGitRepository(final IProject selectedProject) {
 
-		final String errorMessage = String.format(WHILE_PULLING_PROJECT_ERROR_OCCURED,
-				selectedProject.getName());
+		final String errorMessage = String.format(WHILE_PULLING_PROJECT_ERROR_OCCURED, selectedProject.getName());
 		GitProjectProperties gitProperties = null;
 		try {
-			gitProperties = GitFileUtils.getGitPropertiesForProject(selectedProject,
-					CommonParameters.getUserName());
+			gitProperties = GitFileUtils.getGitPropertiesForProject(selectedProject, CommonParameters.getUserName());
 		} catch (IOException e) {
 			MessageDialog.openError(null, THIS_IS_NOT_A_GIT_PROJECT, errorMessage);
 			return;
@@ -114,10 +109,8 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 		File tempGitDirectory = null;
 		try {
 			String gitRepositoryURI = gitProperties.getURL();
-			String repositoryName = gitRepositoryURI.substring(
-					gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
-			tempGitDirectory = GitFileUtils.createTempDirectory(JGitConnector.TEMP_DIRECTORY_PREFIX
-					+ repositoryName);
+			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
+			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 			JGitConnector.cloneRepository(tempGitDirectory, gitRepositoryURI);
 
 			Repository repository = JGitConnector.getRepository(tempGitDirectory.toString());
@@ -131,8 +124,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 			jgit.createBranch(changesBranch, lastSHA);
 			jgit.checkout(changesBranch);
 
-			GitFileUtils.deleteProjectFolderFromDirectory(tempGitDirectory,
-					selectedProject.getName());
+			GitFileUtils.deleteProjectFolderFromDirectory(tempGitDirectory, selectedProject.getName());
 			GitFileUtils.copyProjectToDirectory(selectedProject, tempGitDirectory);
 
 			jgit.add(JGitConnector.ADD_ALL_FILE_PATTERN);
@@ -149,18 +141,14 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 
 				IRepository dirigibleRepository = RepositoryFacade.getInstance().getRepository();
 
-				String workspacePath = String.format(
-						GitProjectProperties.DB_DIRIGIBLE_USERS_S_WORKSPACE, dirigibleUser);
+				String workspacePath = String.format(GitProjectProperties.DB_DIRIGIBLE_USERS_S_WORKSPACE, dirigibleUser);
 
-				GitFileUtils.importProject(tempGitDirectory, dirigibleRepository, workspacePath,
-						dirigibleUser, gitProperties);
+				GitFileUtils.importProject(tempGitDirectory, dirigibleRepository, workspacePath, dirigibleUser, gitProperties);
 
 				refreshWorkspace();
-				StatusLineManagerUtil.setInfoMessage(String.format(
-						PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY, selectedProject.getName()));
+				StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY, selectedProject.getName()));
 			} else {
-				String message = String.format(PROJECT_HAS_D_CONFILCTING_FILES_DO_PUSH_OR_RESET,
-						numberOfConflictingFiles);
+				String message = String.format(PROJECT_HAS_D_CONFILCTING_FILES_DO_PUSH_OR_RESET, numberOfConflictingFiles);
 				MessageDialog.openError(null, CONFLICTING_FILES, message);
 			}
 		} catch (CheckoutConflictException e) {
@@ -180,11 +168,9 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 			if (rootCause != null) {
 				rootCause = rootCause.getCause();
 				if (rootCause instanceof UnknownHostException) {
-					MessageDialog.openError(null, errorMessage,
-							PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY);
+					MessageDialog.openError(null, errorMessage, PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY);
 				} else {
-					MessageDialog.openError(null, errorMessage, e.getCause().getMessage()
-							+ INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI);
+					MessageDialog.openError(null, errorMessage, e.getCause().getMessage() + INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI);
 				}
 			}
 		} catch (GitAPIException e) {

@@ -19,7 +19,7 @@ public class LocalFileVersion extends LocalFile {
 
 	private byte[] bytes;
 
-	public LocalFileVersion(LocalRepository repository, boolean isBinary, String contentType, int version, byte[] bytes) {
+	public LocalFileVersion(FileSystemRepository repository, boolean isBinary, String contentType, int version, byte[] bytes) {
 		super(repository, isBinary, contentType);
 		this.version = version;
 		this.bytes = bytes;

@@ -16,9 +16,9 @@ import org.eclipse.dirigible.repository.ext.fs.FileZipExporter;
 
 public class LocalZipExporter extends FileZipExporter {
 
-	private LocalRepository repository;
+	private FileSystemRepository repository;
 
-	public LocalZipExporter(LocalRepository repository) {
+	public LocalZipExporter(FileSystemRepository repository) {
 		this.repository = repository;
 	}
 

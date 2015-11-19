@@ -39,7 +39,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	private static final String COULD_NOT_RENAME_COLLECTION = Messages.getString("DBCollection.COULD_NOT_RENAME_COLLECTION"); //$NON-NLS-1$
 	private static final String CANNOT_CREATE_ROOT_COLLECTION = Messages.getString("DBCollection.CANNOT_CREATE_ROOT_COLLECTION"); //$NON-NLS-1$
 
-	public LocalCollection(LocalRepository repository, RepositoryPath path) {
+	public LocalCollection(FileSystemRepository repository, RepositoryPath path) {
 		super(repository, path);
 	}
 

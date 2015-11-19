@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.jgit.utils;
@@ -28,20 +27,45 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.ext.utils.FileUtils;
+import org.eclipse.dirigible.repository.logging.Logger;
 
 public class GitFileUtils {
+
 	private static final String COULD_NOT_CREATE_TEMP_DIRECTORY = Messages.GitFileUtils_COULD_NOT_CREATE_TEMP_DIRECTORY;
 	private static final String COULD_NOT_DELETE_TEMP_FILE = Messages.GitFileUtils_COULD_NOT_DELETE_TEMP_FILE;
 	private static final String SLASH = "/"; //$NON-NLS-1$
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 	private static final int MINIMUM_URL_LENGTH = 25;
+
+	private static final Logger logger = Logger.getLogger(GitFileUtils.class);
+
+	public static final String TEMP_DIRECTORY_PREFIX = "org.eclipse.dirigible.jgit."; //$NON-NLS-1$
+
+	static {
+		try {
+			// ProxyUtils.setProxySettings();
+			deleteTempDirectories();
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private static void deleteTempDirectories() throws IOException {
+		File file = GitFileUtils.createTempDirectory("DeleteDirectory");
+		File tempDirectory = file.getParentFile();
+		for (File temp : tempDirectory.listFiles()) {
+			if (temp.isDirectory() && temp.getName().startsWith(TEMP_DIRECTORY_PREFIX)) {
+				GitFileUtils.deleteDirectory(temp);
+			}
+		}
+		GitFileUtils.deleteDirectory(file);
+	}
 
 	public static boolean isValidRepositoryURI(String repositoryURI) {
 		return (repositoryURI.endsWith(DOT_GIT)) && (repositoryURI.length() > MINIMUM_URL_LENGTH);
@@ -55,9 +79,8 @@ public class GitFileUtils {
 		return FileUtils.createTempDirectory(directory, suffix);
 	}
 
-	public static List<String> importProject(File gitDirectory, IRepository repository,
-			String basePath, String dirigibleUser, GitProjectProperties properties)
-			throws IOException {
+	public static List<String> importProject(File gitDirectory, IRepository repository, String basePath, String dirigibleUser,
+			GitProjectProperties properties) throws IOException {
 		List<String> importedProjects = new ArrayList<String>(gitDirectory.listFiles().length);
 		for (File file : gitDirectory.listFiles()) {
 			String project = file.getName();
@@ -70,12 +93,11 @@ public class GitFileUtils {
 		return importedProjects;
 	}
 
-	private static void importProjectFromGitRepoToDGBWorkspace(File gitRepositoryFile,
-			IRepository dirigibleRepository, String path) throws IOException {
+	private static void importProjectFromGitRepoToDGBWorkspace(File gitRepositoryFile, IRepository dirigibleRepository, String path)
+			throws IOException {
 		if (gitRepositoryFile.isDirectory()) {
 			for (File file : gitRepositoryFile.listFiles()) {
-				importProjectFromGitRepoToDGBWorkspace(file, dirigibleRepository, path + SLASH
-						+ file.getName());
+				importProjectFromGitRepoToDGBWorkspace(file, dirigibleRepository, path + SLASH + file.getName());
 			}
 		}
 		if (!gitRepositoryFile.isDirectory()) {
@@ -94,37 +116,32 @@ public class GitFileUtils {
 		return out.toByteArray();
 	}
 
-	public static void deleteDGBRepositoryProject(IProject project, String dirigibleUser)
-			throws IOException {
+	public static void deleteDGBRepositoryProject(IProject project, String dirigibleUser) throws IOException {
 		String projectPath = project.getFullPath().toString();
-		String repositoryPath = String.format(GitProjectProperties.DB_DIRIGIBLE_USERS_S_WORKSPACE,
-				dirigibleUser);
+		String repositoryPath = String.format(GitProjectProperties.DB_DIRIGIBLE_USERS_S_WORKSPACE, dirigibleUser);
 		String fullPath = repositoryPath + projectPath;
 		IRepository repository = RepositoryFacade.getInstance().getRepository();
 		repository.getCollection(fullPath).delete();
 	}
 
-	public static void saveGitPropertiesFile(IRepository repository,
-			GitProjectProperties properties, String user, String project) throws IOException {
-		String dirigibleGitFolderPath = String.format(
-				GitProjectProperties.DB_DIRIGIBLE_USERS_S_GIT_S_REPOSITORY, user, project);
+	public static void saveGitPropertiesFile(IRepository repository, GitProjectProperties properties, String user, String project)
+			throws IOException {
+		String dirigibleGitFolderPath = String.format(GitProjectProperties.DB_DIRIGIBLE_USERS_S_GIT_S_REPOSITORY, user, project);
 		if (repository.hasCollection(dirigibleGitFolderPath)) {
 			ICollection propertiesFolder = repository.getCollection(dirigibleGitFolderPath);
-			
+
 			if (propertiesFolder.getResource(GitProjectProperties.PROJECT_GIT_PROPERTY).exists()) {
-				IResource propertiesFile = propertiesFolder
-						.getResource(GitProjectProperties.PROJECT_GIT_PROPERTY);
+				IResource propertiesFile = propertiesFolder.getResource(GitProjectProperties.PROJECT_GIT_PROPERTY);
 				propertiesFile.setContent(properties.getContent());
 			} else {
 				// IResource propertiesFile =
-				propertiesFolder.createResource(GitProjectProperties.PROJECT_GIT_PROPERTY,
-						properties.getContent(), false, ContentTypeHelper.DEFAULT_CONTENT_TYPE);
+				propertiesFolder.createResource(GitProjectProperties.PROJECT_GIT_PROPERTY, properties.getContent(), false,
+						ContentTypeHelper.DEFAULT_CONTENT_TYPE);
 				// propertiesFile.setContent(properties.getContent());
 			}
 		} else {
-			repository.createCollection(dirigibleGitFolderPath).createResource(
-					GitProjectProperties.PROJECT_GIT_PROPERTY, properties.getContent(), false,
-					ContentTypeHelper.DEFAULT_CONTENT_TYPE);
+			repository.createCollection(dirigibleGitFolderPath).createResource(GitProjectProperties.PROJECT_GIT_PROPERTY, properties.getContent(),
+					false, ContentTypeHelper.DEFAULT_CONTENT_TYPE);
 		}
 
 	}
@@ -158,8 +175,7 @@ public class GitFileUtils {
 		}
 	}
 
-	public static void copyProjectToDirectory(IContainer source, File tempGitDirectory)
-			throws IOException, CoreException {
+	public static void copyProjectToDirectory(IContainer source, File tempGitDirectory) throws IOException, CoreException {
 		if (!source.exists()) {
 			return;
 		}
@@ -171,7 +187,7 @@ public class GitFileUtils {
 			if (resource instanceof IFile) {
 				IPath path = resource.getFullPath();
 				StringBuilder resourceDirectory = new StringBuilder();
-				for (int i = 0; i < path.segmentCount() - 1; i++) {
+				for (int i = 0; i < (path.segmentCount() - 1); i++) {
 					resourceDirectory.append(SLASH + path.segment(i));
 				}
 				resourceDirectory.append(SLASH);
@@ -191,14 +207,12 @@ public class GitFileUtils {
 		}
 	}
 
-	public static GitProjectProperties getGitPropertiesForProject(final IProject selectedProject,
-			String user) throws IOException {
+	public static GitProjectProperties getGitPropertiesForProject(final IProject selectedProject, String user) throws IOException {
 		IRepository dirigibleRepository = RepositoryFacade.getInstance().getRepository();
 
 		String projectName = selectedProject.getName();
 		org.eclipse.dirigible.repository.api.IResource resource = dirigibleRepository
-				.getResource(String.format(GitProjectProperties.GIT_PROPERTY_FILE_LOCATION, user,
-						projectName));
+				.getResource(String.format(GitProjectProperties.GIT_PROPERTY_FILE_LOCATION, user, projectName));
 		InputStream in = new ByteArrayInputStream(resource.getContent());
 		GitProjectProperties gitProperties = new GitProjectProperties(in);
 		return gitProperties;

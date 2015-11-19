@@ -22,10 +22,10 @@ import java.util.Map.Entry;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.image.ImageUtils;
-import org.eclipse.dirigible.ide.jgit.connector.JGitConnector;
 import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
 import org.eclipse.dirigible.ide.workspace.ui.shared.IValidationStatus;
 import org.eclipse.dirigible.ide.workspace.wizard.project.create.ProjectTemplateType;
+import org.eclipse.dirigible.repository.ext.git.JGitConnector;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
