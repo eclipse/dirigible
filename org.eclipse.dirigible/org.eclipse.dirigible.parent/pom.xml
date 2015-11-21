@@ -24,19 +24,19 @@
 
 	<licenses>
 		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<name>Eclipse Public License - v 1.0</name>
+			<url>https://www.eclipse.org/legal/epl-v10.html</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
 	<url>http://www.dirigible.io</url>
 	<organization>
-		<name>SAP AG</name>
-		<url>http://www.sap.com</url>
+		<name>Eclipse Foundation</name>
+		<url>http://www.eclipse.org</url>
 	</organization>
 	<scm>
-		<url>https://github.com/SAP/dirigible</url>
+		<url>https://github.com/eclipse/dirigible</url>
 	</scm>
 
 	<build>
@@ -298,7 +298,7 @@
 	</repositories>
 
 	<issueManagement>
-		<url>https://github.com/SAP/dirigible/issues</url>
+		<url>http://bugs.dirigible.io</url>
 	</issueManagement>
 	
 	
