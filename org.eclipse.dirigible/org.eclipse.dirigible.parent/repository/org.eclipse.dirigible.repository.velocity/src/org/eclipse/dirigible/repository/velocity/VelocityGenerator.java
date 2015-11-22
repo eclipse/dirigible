@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.template.velocity;
+package org.eclipse.dirigible.repository.velocity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,7 +141,7 @@ public class VelocityGenerator {
 
 	/**
 	 * Put the input parameters to the Velocity Context for processing
-	 * 
+	 *
 	 * @param parameters
 	 * @param context
 	 */

@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.common;
@@ -27,18 +26,16 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
-import org.eclipse.dirigible.ide.template.velocity.VelocityGenerator;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceViewerUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.repository.velocity.VelocityGenerator;
 
 public abstract class TemplateGenerator {
 
 	private static final String THE_FILE_ALREADY_EXISTS_SKIPPED_GENERATION_OF = Messages.TemplateGenerator_THE_FILE_ALREADY_EXISTS_SKIPPED_GENERATION_OF;
 
-	private static final Logger logger = Logger
-			.getLogger(TemplateGenerator.class);
+	private static final Logger logger = Logger.getLogger(TemplateGenerator.class);
 
 	private VelocityGenerator velocityGenerator = new VelocityGenerator();
 
@@ -51,12 +48,10 @@ public abstract class TemplateGenerator {
 	protected abstract String getLogTag();
 
 	public void generate() throws Exception {
-		generateFile(getModel().getTemplateLocation(), getModel()
-				.getTargetLocation(), getModel().getFileName());
+		generateFile(getModel().getTemplateLocation(), getModel().getTargetLocation(), getModel().getFileName());
 	}
 
-	public void generateFile(String templateLocation, String targetLocation,
-			String fileName) throws Exception {
+	public void generateFile(String templateLocation, String targetLocation, String fileName) throws Exception {
 		Map<String, Object> parameters = prepareParameters();
 		InputStream in = this.getClass().getResourceAsStream(templateLocation);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -96,10 +91,8 @@ public abstract class TemplateGenerator {
 		WorkspaceViewerUtils.selectElement(file);
 	}
 
-	protected void copyFile(String targetFileName, String templateLocation,
-			Class<?> clazz) throws IOException, Exception {
-		IPath location = new Path(getModel().getTargetLocation())
-				.append(targetFileName);
+	protected void copyFile(String targetFileName, String templateLocation, Class<?> clazz) throws IOException, Exception {
+		IPath location = new Path(getModel().getTargetLocation()).append(targetFileName);
 		InputStream in = clazz.getResourceAsStream(templateLocation);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		IOUtils.copy(in, out);

@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.eclipse.dirigible.ide.template.velocity
-Bundle-SymbolicName: org.eclipse.dirigible.ide.template.velocity;singleton:=true
+Bundle-Name: org.eclipse.dirigible.repository.velocity
+Bundle-SymbolicName: org.eclipse.dirigible.repository.velocity;singleton:=true
 Bundle-Version: 2.2.151117
 Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.eclipse.dirigible.ide.template.velocity
+Export-Package: org.eclipse.dirigible.repository.velocity
 Require-Bundle: org.apache.velocity
 Bundle-ClassPath: .

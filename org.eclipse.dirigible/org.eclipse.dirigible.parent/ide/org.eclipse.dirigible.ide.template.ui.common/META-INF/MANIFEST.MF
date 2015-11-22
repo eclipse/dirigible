@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
 Export-Package: org.eclipse.dirigible.ide.template.ui.common
 Import-Package: org.eclipse.dirigible.ide.common.io,
  org.eclipse.dirigible.repository.logging,
- org.eclipse.dirigible.ide.template.velocity,
+ org.eclipse.dirigible.repository.velocity,
  org.eclipse.dirigible.ide.ui.common.validation,
  org.eclipse.dirigible.ide.workspace.ui.viewer
 Bundle-ClassPath: .,

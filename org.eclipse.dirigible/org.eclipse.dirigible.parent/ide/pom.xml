@@ -128,7 +128,7 @@
 		<module>org.eclipse.dirigible.ide.cheatsheets</module>
 		<module>org.eclipse.dirigible.ide.integration.publish</module>
 		<module>org.eclipse.dirigible.ide.services.security.manager</module>
-		<module>org.eclipse.dirigible.ide.template.velocity</module>
+		
 		<module>org.eclipse.dirigible.ide.template.ui.common</module>
 		<!-- 
 		<module>org.eclipse.dirigible.ide.template.ui.common.test</module>

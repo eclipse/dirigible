@@ -99,6 +99,7 @@
 		<module>org.eclipse.dirigible.repository.local</module>
         <module>org.eclipse.dirigible.repository.local.test</module>
         <module>org.eclipse.dirigible.repository.git</module>
+		<module>org.eclipse.dirigible.repository.velocity</module>
 	</modules>
  
 </project>
