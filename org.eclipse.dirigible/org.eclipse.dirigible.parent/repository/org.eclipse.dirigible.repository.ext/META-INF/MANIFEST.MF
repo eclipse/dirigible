@@ -11,6 +11,7 @@ Export-Package: org.eclipse.dirigible.repository.ext.command,
  org.eclipse.dirigible.repository.ext.indexing,
  org.eclipse.dirigible.repository.ext.messaging,
  org.eclipse.dirigible.repository.ext.security,
+ org.eclipse.dirigible.repository.ext.template,
  org.eclipse.dirigible.repository.ext.utils
 Bundle-ActivationPolicy: lazy
 Bundle-Name: org.eclipse.dirigible.repository.ext
@@ -24,7 +25,9 @@ Require-Bundle: org.apache.lucene.analysis,
  org.apache.lucene.core,
  org.eclipse.dirigible.repository.api,
  org.apache.commons.io,
- org.eclipse.jgit
+ org.eclipse.jgit,
+ org.apache.velocity,
+ org.eclipse.dirigible.repository.velocity
 Import-Package: com.google.gson,
  org.eclipse.dirigible.repository.logging,
  javax.servlet,

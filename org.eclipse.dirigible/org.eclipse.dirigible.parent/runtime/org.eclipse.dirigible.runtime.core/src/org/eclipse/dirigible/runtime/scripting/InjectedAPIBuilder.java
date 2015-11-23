@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
+import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
@@ -28,147 +29,147 @@ import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 
 /**
  * Builder for wrapper object API containing type-safe access to the available injected objects, services and utilities
- *
  */
-public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers{
-
+public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 
 	/**
 	 * The execution context object
 	 */
 	private Map<Object, Object> executionContext;
-	
+
 	/**
 	 * The default (system) output set before the execution
 	 */
 	private PrintStream systemOutput;
-	
+
 	/**
 	 * Default datasource injected on server start
 	 */
 	private DataSource datasource;
-	
+
 	/**
 	 * The standard HTTP Servlet Request
 	 */
 	private HttpServletRequest request;
-	
+
 	/**
 	 * The standard HTTP Servlet Response
 	 */
 	private HttpServletResponse response;
-	
+
 	/**
 	 * The standard HTTP Session
 	 */
 	private HttpSession session;
-	
+
 	/**
 	 * The input stream of the HTTP Request
 	 */
 	private Object requestInput;
-	
+
 	/**
 	 * The Repository facade
 	 */
 	private IRepository repository;
-	
+
 	/**
 	 * The authenticated user if any, otherwise 'guest'
 	 */
 	private String userName;
-	
+
 	/**
 	 * The server's default JNDI Initial Context
 	 */
 	private InitialContext initialContext;
-	
+
 	/**
 	 * The Binary Storage facade
 	 */
 	private IStorage binaryStorage;
-	
+
 	/**
 	 * The File Storage facade
 	 */
 	private IStorage fileStorage;
-	
+
 	/**
 	 * The Configuration Storage facade
 	 */
 	private IStorage configurationStorage;
-	
+
 	/**
 	 * Default Mail Service injected by the platform
 	 */
 	private IMailService mailService;
-	
+
 	/**
 	 * The service managing extension points and extensions
 	 */
 	private IExtensionService extensionService;
-	
+
 	/**
 	 * The indexing service facade
 	 */
 	private IIndexingService<?> indexingService;
-	
+
 	/**
 	 * The connectivity configuration service injected by the platform
 	 */
 	private IConnectivityService connectivityService;
-	
+
 	/**
 	 * The messaging service facade
 	 */
 	private IMessagingService messagingService;
-	
-	
+
+	/**
+	 * The templating service facade
+	 */
+	private ITemplatingService templatingService;
+
 	/**
 	 * Utilities
 	 */
 
 	private IOUtils ioUtils;
-	
+
 	private HttpUtils httpUtils;
-	
+
 	private Base64 base64Utils;
-	
+
 	private Hex hexUtils;
-	
+
 	private DigestUtils digestUtils;
 
 	private URLUtils urlUtils;
-	
+
 	private ServletFileUpload uploadUtils;
-	
+
 	private UUID uuidUtils;
-	
+
 	private DbUtils dbUtils;
-	
+
 	private StringEscapeUtils xssUtils;
-	
+
 	private XMLUtils xmlUtils;
 
 	private ExceptionUtils exceptionUtils;
-	
-	
+
 	/**
-	 * The generic map for custom object and services registered via the extension point 
+	 * The generic map for custom object and services registered via the extension point
 	 */
 	private Map<String, Object> generic = new HashMap<String, Object>();
-	
-	
+
 	@Override
 	public Map<Object, Object> getExecutionContext() {
 		return executionContext;
 	}
-	
+
 	@Override
 	public void setExecutionContext(Map<Object, Object> executionContext) {
 		this.executionContext = executionContext;
 	}
-	
+
 	@Override
 	public PrintStream getSystemOutput() {
 		return systemOutput;
@@ -463,9 +464,20 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers{
 	public Object get(String key) {
 		return generic.get(key);
 	}
-	
+
 	@Override
 	public void set(String key, Object value) {
 		generic.put(key, value);
 	}
+
+	@Override
+	public ITemplatingService getTemplatingService() {
+		return this.templatingService;
+	}
+
+	@Override
+	public void setTemplatingService(ITemplatingService templatingService) {
+		this.templatingService = templatingService;
+	}
+
 }

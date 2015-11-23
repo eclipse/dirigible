@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
+import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
@@ -28,7 +29,7 @@ import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 public interface IInjectedAPI {
 
 	public Map<Object, Object> getExecutionContext();
-	
+
 	public PrintStream getSystemOutput();
 
 	public DataSource getDatasource();
@@ -63,6 +64,8 @@ public interface IInjectedAPI {
 
 	public IMessagingService getMessagingService();
 
+	public ITemplatingService getTemplatingService();
+
 	public IOUtils getIOUtils();
 
 	public HttpUtils getHttpUtils();
@@ -88,7 +91,7 @@ public interface IInjectedAPI {
 	public ExceptionUtils getExceptionUtils();
 
 	public Object get(String key);
-	
+
 	public void set(String key, Object value);
 
 }

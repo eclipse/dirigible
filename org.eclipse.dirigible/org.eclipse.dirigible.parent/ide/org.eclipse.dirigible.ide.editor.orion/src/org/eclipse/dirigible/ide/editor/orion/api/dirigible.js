@@ -382,6 +382,12 @@ $ = (function(){
    		getCreatedAt : function() { return Date;}
     }
     
+    var ITemplatingService = {
+        generate : function(template, parameters, String tag) {return "";}
+    	createParameters : function() {return Map;}
+    
+    }
+    
     var IOUtils = {
     	toString : function(inputStream) { return ""; }
     }
@@ -506,6 +512,10 @@ $ = (function(){
     	getConnectivityService: function(){ return IConnectivityService; },
     	/** Passive Messaging Service enabling asynchronous execution, if required */
     	getMessagingService: function(){ return IMessagingService; },
+    	/** Templating Engine using Velocity syntax */
+    	getTemplatingService: function(){ return ITemplatingService; },
+    	
+    	
     	/** IO utility operations */
     	getIOUtils: function(){ return IOUtils; },
     	/** HTTP utility operations */
@@ -541,7 +551,12 @@ $ = (function(){
  * git clone orion.client
  * git reset --hard origin/stable_20150817
  * replace ternWorkerCore.js
- * orion.client/bundles/org.eclipse.orion.client.javascript/web/node_modules/tern/bin/condense --name dirigible --no-spans --plugin doc_comment --def ecma5 --def browser  dirigible.js > orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/dirigible.json
+ * 		> cp {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/ternWorkerCore.js {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/javascript/plugins/
+ * copy dirigible.js
+ *      > cp {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/dirigible.js {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/
+ * generate definition     
+ *      > {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/node_modules/tern/bin/condense --name dirigible --no-spans --plugin doc_comment --def ecma5 --def browser  dirigible.js > orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/dirigible.json
  * mvn clean install
- * copy orion.client/build-js/codeEdit > resources
+ * copy codeEdit/* to resources
+ *      > cp -r {github_root_directory}/orion.client/built-js/codeEdit/* {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/resources/
  */

@@ -19,30 +19,29 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
+import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 
-
 /**
  * The wrapper object containing type-safe access to the available injected objects, services and utilities
- *
  */
 public class InjectedAPIWrapper implements IInjectedAPI {
 
 	private InjectedAPIBuilder builder;
-	
+
 	public InjectedAPIWrapper(InjectedAPIBuilder builder) {
 		this.builder = builder;
 	}
-	
+
 	@Override
 	public Map<Object, Object> getExecutionContext() {
 		return builder.getExecutionContext();
 	}
-	
+
 	@Override
 	public PrintStream getSystemOutput() {
 		return builder.getSystemOutput();
@@ -192,9 +191,14 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 	public Object get(String key) {
 		return builder.get(key);
 	}
-	
+
 	@Override
 	public void set(String key, Object value) {
 		builder.set(key, value);
+	}
+
+	@Override
+	public ITemplatingService getTemplatingService() {
+		return builder.getTemplatingService();
 	}
 }

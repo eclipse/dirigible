@@ -146,6 +146,9 @@ public class VelocityGenerator {
 	 * @param context
 	 */
 	private void prepareContextData(Map<String, Object> parameters, VelocityContext context) {
+		if (parameters == null) {
+			return;
+		}
 		Iterator<Map.Entry<String, Object>> iterator = parameters.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<String, Object> entry = iterator.next();

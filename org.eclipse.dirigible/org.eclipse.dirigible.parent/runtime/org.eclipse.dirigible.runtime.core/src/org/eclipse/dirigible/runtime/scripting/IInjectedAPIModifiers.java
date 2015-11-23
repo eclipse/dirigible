@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
+import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
@@ -62,6 +63,8 @@ public interface IInjectedAPIModifiers {
 	public void setConnectivityService(IConnectivityService connectivityService);
 
 	public void setMessagingService(IMessagingService messagingService);
+
+	public void setTemplatingService(ITemplatingService templatingService);
 
 	public void setIOUtils(IOUtils ioUtils);
 
