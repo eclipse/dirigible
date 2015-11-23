@@ -15,6 +15,7 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class GenericExportZipTest {
 						while ((len = zipInputStream.read(buffer)) > 0) {
 							output.write(buffer, 0, len);
 						}
-
+						outpath = outpath.replace(File.separator, IRepository.SEPARATOR);
 						if (outpath.equals("export/folder3/text3.txt")) { //$NON-NLS-1$
 							String read = new String(output.toByteArray());
 							assertEquals("text3", read); //$NON-NLS-1$
@@ -123,7 +124,7 @@ public class GenericExportZipTest {
 						while ((len = zipInputStream.read(buffer)) > 0) {
 							output.write(buffer, 0, len);
 						}
-
+						outpath = outpath.replace(File.separator, IRepository.SEPARATOR);
 						if (outpath.equals("text3.txt")) { //$NON-NLS-1$
 							String read = new String(output.toByteArray());
 							assertEquals("text3", read); //$NON-NLS-1$
@@ -187,7 +188,7 @@ public class GenericExportZipTest {
 						while ((len = zipInputStream.read(buffer)) > 0) {
 							output.write(buffer, 0, len);
 						}
-
+						outpath = outpath.replace(File.separator, IRepository.SEPARATOR);
 						if (outpath.equals("folder3/text3.txt")) { //$NON-NLS-1$
 							String read = new String(output.toByteArray());
 							assertEquals("text3", read); //$NON-NLS-1$

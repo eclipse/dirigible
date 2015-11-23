@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.eclipse.dirigible.repository.api.IRepository;
-
 public class FileZipExporter {
 
 	public void zip(List<String> inputFolders, ZipOutputStream zipOutputStream) throws IOException {
@@ -48,7 +46,7 @@ public class FileZipExporter {
 
 		String folderName = parentName + inputFolder.getName() + File.separator;
 
-		String zipFolderName = inclusive ? folderName : folderName.substring(folderName.indexOf(IRepository.SEPARATOR) + 1);
+		String zipFolderName = inclusive ? folderName : folderName.substring(folderName.indexOf(File.separator) + 1);
 
 		ZipEntry folderZipEntry = new ZipEntry(zipFolderName);
 		zipOutputStream.putNextEntry(folderZipEntry);
@@ -69,7 +67,7 @@ public class FileZipExporter {
 
 		String fileName = parentName + inputFile.getName();
 
-		String zipFileName = inclusive ? fileName : fileName.substring(fileName.indexOf(IRepository.SEPARATOR) + 1);
+		String zipFileName = inclusive ? fileName : fileName.substring(fileName.indexOf(File.separator) + 1);
 
 		ZipEntry zipEntry = new ZipEntry(zipFileName);
 		zipOutputStream.putNextEntry(zipEntry);
