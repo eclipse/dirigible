@@ -26,7 +26,7 @@ public class TemplatingEngine implements ITemplatingService {
 
 	@Override
 	public Map<String, Object> createParameters() {
-		return new HashMap<>();
+		return new HashMap<String, Object>();
 	}
 
 }
