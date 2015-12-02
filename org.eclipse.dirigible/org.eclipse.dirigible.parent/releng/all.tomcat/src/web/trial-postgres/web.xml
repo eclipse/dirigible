@@ -59,6 +59,12 @@
 			<param-value>true</param-value>
 		</init-param>
 		
+		<!-- Type of the Default Database DataSource -->
+		<init-param>
+			<param-name>defaultDataSourceType</param-name>
+			<param-value>jndi</param-value>
+		</init-param>
+		
 		<!-- JNDI key for the Default Database DataSource -->
 		<init-param>
 			<param-name>jndiDefaultDataSource</param-name>
@@ -86,6 +92,11 @@
 			<param-value>true</param-value>  <!-- set to true in case of PostgreSQL -->
 		</init-param>
 		
+		<!-- Default Repository Provider --> 
+		<init-param>
+			<param-name>repositoryProvider</param-name>
+			<param-value>org.eclipse.dirigible.repository.local.LocalRepositoryProvider</param-value>
+		</init-param>		
 
 		<load-on-startup>2</load-on-startup>
 

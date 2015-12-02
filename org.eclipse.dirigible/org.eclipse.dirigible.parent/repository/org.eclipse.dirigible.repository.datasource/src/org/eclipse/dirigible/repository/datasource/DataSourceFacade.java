@@ -45,6 +45,7 @@ public class DataSourceFacade {
 	private static final String LOCAL_DB_NAME = "derby"; //$NON-NLS-1$
 
 	private static final String DATASOURCE_DEFAULT = "DEFAULT_DATASOURCE"; //$NON-NLS-1$
+	private static final String DEFAULT_DATASOURCE_TYPE = "defaultDataSourceType"; //$NON-NLS-1$
 	private static final String JNDI_DEFAULT_DATASOURCE = "jndiDefaultDataSource"; //$NON-NLS-1$
 
 	public static final Logger logger = Logger.getLogger(DataSourceFacade.class.getCanonicalName());

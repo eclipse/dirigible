@@ -15,12 +15,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
 public class RepositoryFactory {
+
+	private static final Logger logger = Logger.getLogger(RepositoryFactory.class.getCanonicalName());
 
 	static IRepositoryProvider localRepositoryProvider;
 
@@ -37,13 +40,39 @@ public class RepositoryFactory {
 		try {
 			BundleContext context = RepositoryActivator.getContext();
 
+			logger.info("Registering Repository Providers...");
+
+			String defaultRepositoryProvider = System.getProperty(ICommonConstants.PARAM_REPOSITORY_PROVIDER);
+			String localRepositoryProviderClass = "org.eclipse.dirigible.repository.local.LocalRepositoryProvider";
+
 			// IRepositoryProvider services
 			Collection<ServiceReference<IRepositoryProvider>> serviceReferences = context.getServiceReferences(IRepositoryProvider.class, null);
 			for (ServiceReference<IRepositoryProvider> serviceReference : serviceReferences) {
 				IRepositoryProvider repositoryProvider = context.getService(serviceReference);
 				repositoryProviders.add(repositoryProvider);
-				if (repositoryProvider.getClass().getCanonicalName().equals("org.eclipse.dirigible.repository.local.LocalRepositoryProvider")) {
+
+				logger.info(
+						String.format("%s added to the list of available Repository Providers", repositoryProvider.getClass().getCanonicalName()));
+
+				if (defaultRepositoryProvider != null) {
+					if (repositoryProvider.getClass().getCanonicalName().equals(defaultRepositoryProvider)) {
+						logger.info(String.format("Default Repository Provider %s, set as Local Repository Provider",
+								repositoryProvider.getClass().getCanonicalName()));
+						localRepositoryProvider = repositoryProvider;
+					}
+				} else if (repositoryProvider.getClass().getCanonicalName().equals(localRepositoryProviderClass)) {
+					logger.info("Standard Local Repository Provider is used");
 					localRepositoryProvider = repositoryProvider;
+				}
+			}
+
+			if (localRepositoryProvider == null) {
+				for (Object element : repositoryProviders) {
+					IRepositoryProvider repositoryProvider = (IRepositoryProvider) element;
+					if (repositoryProvider.getClass().getCanonicalName().equals(localRepositoryProviderClass)) {
+						logger.info("Fallback to standard Local Repository Provider is used");
+						localRepositoryProvider = repositoryProvider;
+					}
 				}
 			}
 
@@ -55,9 +84,10 @@ public class RepositoryFactory {
 				masterRepositoryProviders.put(masterRepositoryProvider.getClass().getCanonicalName(), masterRepositoryProvider);
 			}
 		} catch (InvalidSyntaxException e) {
-			// logger.error(e.getMessage(), e);
+			logger.severe(e.getMessage());
 			e.printStackTrace();
 		}
+
 	}
 
 	/**
