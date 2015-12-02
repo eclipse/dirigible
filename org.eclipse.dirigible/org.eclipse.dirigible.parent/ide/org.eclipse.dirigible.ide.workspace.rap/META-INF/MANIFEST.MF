@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.ui.views;resolution:=optional,
  org.eclipse.rap.ui.views;resolution:=optional,
  org.eclipse.dirigible.repository.ext,
- org.eclipse.dirigible.ide.datasource,
+ org.eclipse.dirigible.repository.datasource,
  org.eclipse.core.expressions,
  org.apache.commons.io,
  org.eclipse.core.runtime

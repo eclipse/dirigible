@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.security;
@@ -19,18 +18,18 @@ import javax.servlet.ServletException;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.security.SecurityManager;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 
 public class SecuritySynchronizer implements Runnable {
 
-	private static final String REFRESHING_OF_SECURED_LOCATIONS_FAILED = Messages.SecuritySynchronizer_REFRESHING_OF_SECURED_LOCATIONS_FAILED; 
+	private static final String REFRESHING_OF_SECURED_LOCATIONS_FAILED = Messages.SecuritySynchronizer_REFRESHING_OF_SECURED_LOCATIONS_FAILED;
 
 	private static final Logger logger = Logger.getLogger(SecuritySynchronizer.class);
 
-	private static List<String> securedLocations = Collections
-			.synchronizedList(new ArrayList<String>());
+	private static List<String> securedLocations = Collections.synchronizedList(new ArrayList<String>());
 
 	@Override
 	public void run() {
@@ -58,7 +57,7 @@ public class SecuritySynchronizer implements Runnable {
 
 		SecurityManager securityManager = null;
 		try {
-			DataSource dataSource = RepositoryFacade.getInstance().getDataSource();
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(null);
 			IRepository repository = RepositoryFacade.getInstance().getRepository(null);
 			// TODO
 			securityManager = SecurityManager.getInstance(repository, dataSource);

@@ -41,13 +41,6 @@ Contributors:
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.dirigible.ide.datasource"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.dirigible.ide.db.publish"
          download-size="0"
          install-size="0"

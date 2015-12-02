@@ -25,13 +25,13 @@ import java.util.zip.ZipOutputStream;
 
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.db.init.DBRepositoryInitializer;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -69,7 +69,7 @@ public class RCPRepository implements IRepository {
 	private RCPRepository() throws RCPBaseException {
 		this.repositoryDAO = new RCPRepositoryDAO(this);
 		try {
-			DataSource dataSource = DataSourceFacade.getInstance().getDataSource();
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(null);
 			Connection connection = dataSource.getConnection();
 			try {
 				DBRepositoryInitializer dbRepositoryInitializer = new DBRepositoryInitializer(dataSource, connection, false);

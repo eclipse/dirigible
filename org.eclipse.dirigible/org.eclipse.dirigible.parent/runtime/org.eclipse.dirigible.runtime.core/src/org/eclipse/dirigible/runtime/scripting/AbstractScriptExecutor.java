@@ -37,6 +37,7 @@ import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 // import org.eclipse.dirigible.repository.db.DBRepository;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionManager;
 import org.eclipse.dirigible.repository.ext.messaging.MessageHub;
@@ -114,7 +115,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 
 		// put the default data source
 		DataSource dataSource = null;
-		dataSource = RepositoryFacade.getInstance().getDataSource();
+		dataSource = DataSourceFacade.getInstance().getDataSource(request);
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DEFAULT_DATASOURCE, dataSource);
 		apiBuilder.setDatasource(dataSource);
 
@@ -170,7 +171,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		// Services
 
 		// put mail sender
-		MailSender mailSender = new MailSender();
+		MailSender mailSender = new MailSender(request);
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MAIL_SERVICE, mailSender);
 		apiBuilder.setMailService(mailSender);
 

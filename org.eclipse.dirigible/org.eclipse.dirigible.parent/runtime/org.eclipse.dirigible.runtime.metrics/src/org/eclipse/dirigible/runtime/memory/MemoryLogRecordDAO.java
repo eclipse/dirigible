@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.memory;
@@ -18,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,29 +28,23 @@ import java.util.Map;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class MemoryLogRecordDAO {
 
 	private static final Logger logger = Logger.getLogger(MemoryLogRecordDAO.class);
-	
 
-	private static final String SQL_MAP_INSERT_MEMORY_LOG =
-			"/org/eclipse/dirigible/runtime/memory/sql/insert_memory_log.sql"; //$NON-NLS-1$
-	private static final String SQL_MAP_SELECT_COUNT_MEMORY_LOGS =
-			"/org/eclipse/dirigible/runtime/memory/sql/select_count_memory_logs.sql"; //$NON-NLS-1$
-	private static final String SQL_MAP_CREATE_TABLE_MEMORY_LOG =
-			"/org/eclipse/dirigible/runtime/memory/sql/create_table_memory_log.sql"; //$NON-NLS-1$
-	private static final String SQL_MAP_REMOVE_OLDER_MEMORY_LOGS =
-			"/org/eclipse/dirigible/runtime/memory/sql/remove_older_memory_logs.sql"; //$NON-NLS-1$
-	private static final String SQL_MAP_SELECT_ALL_MEMORY_LOGS =
-			"/org/eclipse/dirigible/runtime/memory/sql/select_all_memory_logs.sql"; //$NON-NLS-1$
-	
+	private static final String SQL_MAP_INSERT_MEMORY_LOG = "/org/eclipse/dirigible/runtime/memory/sql/insert_memory_log.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_COUNT_MEMORY_LOGS = "/org/eclipse/dirigible/runtime/memory/sql/select_count_memory_logs.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_CREATE_TABLE_MEMORY_LOG = "/org/eclipse/dirigible/runtime/memory/sql/create_table_memory_log.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_REMOVE_OLDER_MEMORY_LOGS = "/org/eclipse/dirigible/runtime/memory/sql/remove_older_memory_logs.sql"; //$NON-NLS-1$
+	private static final String SQL_MAP_SELECT_ALL_MEMORY_LOGS = "/org/eclipse/dirigible/runtime/memory/sql/select_all_memory_logs.sql"; //$NON-NLS-1$
+
 	private static final String AVAILABLE_PROCESSORS = "availableProcessors"; //$NON-NLS-1$
 	private static final String MAX_MEMORY = "maxMemory"; //$NON-NLS-1$
 	private static final String TOTAL_MEMORY = "totalMemory"; //$NON-NLS-1$
@@ -77,7 +69,7 @@ public class MemoryLogRecordDAO {
 		try {
 			checkDB();
 
-			DataSource dataSource = RepositoryFacade.getInstance().getDataSource();
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(null);
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
@@ -89,7 +81,7 @@ public class MemoryLogRecordDAO {
 				pstmt.setLong(++i, Runtime.getRuntime().freeMemory());
 				pstmt.setLong(++i, Runtime.getRuntime().totalMemory());
 				pstmt.setLong(++i, Runtime.getRuntime().maxMemory());
-//				pstmt.setTimestamp(++i, new Timestamp(GregorianCalendar.getInstance().getTime().getTime()));
+				// pstmt.setTimestamp(++i, new Timestamp(GregorianCalendar.getInstance().getTime().getTime()));
 
 				pstmt.executeUpdate();
 
@@ -104,22 +96,20 @@ public class MemoryLogRecordDAO {
 	}
 
 	private static void checkDB() throws NamingException, SQLException, IOException {
-		DataSource dataSource = RepositoryFacade.getInstance().getDataSource();
+		DataSource dataSource = DataSourceFacade.getInstance().getDataSource(null);
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
 			Statement stmt = connection.createStatement();
 			DBUtils dbUtils = new DBUtils(dataSource);
-			String sqlCount = 
-					dbUtils.readScript(connection, SQL_MAP_SELECT_COUNT_MEMORY_LOGS, MemoryLogRecordDAO.class);
-			String sqlCreate = 
-					dbUtils.readScript(connection, SQL_MAP_CREATE_TABLE_MEMORY_LOG, MemoryLogRecordDAO.class);
+			String sqlCount = dbUtils.readScript(connection, SQL_MAP_SELECT_COUNT_MEMORY_LOGS, MemoryLogRecordDAO.class);
+			String sqlCreate = dbUtils.readScript(connection, SQL_MAP_CREATE_TABLE_MEMORY_LOG, MemoryLogRecordDAO.class);
 			try {
 				stmt.executeQuery(sqlCount);
 			} catch (Exception e) {
 				logger.error("DGB_MEMORY_LOG does not exist?" + e.getMessage(), e);
 				// Create Memory Log Table
-				
+
 				stmt.executeUpdate(sqlCreate);
 			}
 		} finally {
@@ -133,14 +123,13 @@ public class MemoryLogRecordDAO {
 		try {
 			checkDB();
 
-			DataSource dataSource = RepositoryFacade.getInstance().getDataSource();
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(null);
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
 				DBUtils dbUtils = new DBUtils(dataSource);
 				String sql = dbUtils.readScript(connection, SQL_MAP_REMOVE_OLDER_MEMORY_LOGS, MemoryLogRecordDAO.class);
-				PreparedStatement pstmt = connection
-						.prepareStatement(sql);
+				PreparedStatement pstmt = connection.prepareStatement(sql);
 
 				GregorianCalendar last = new GregorianCalendar();
 				last.add(Calendar.DATE, -1);
@@ -163,7 +152,7 @@ public class MemoryLogRecordDAO {
 		try {
 			checkDB();
 
-			DataSource dataSource = RepositoryFacade.getInstance().getDataSource();
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(null);
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
@@ -172,39 +161,39 @@ public class MemoryLogRecordDAO {
 				PreparedStatement pstmt = connection.prepareStatement(sql);
 
 				List<List<List<Object>>> memoryLogRecords = new ArrayList<List<List<Object>>>();
-				
+
 				List<List<Object>> memlogFree = new ArrayList<List<Object>>();
 				List<List<Object>> memlogTotal = new ArrayList<List<Object>>();
 				List<List<Object>> memlogMax = new ArrayList<List<Object>>();
-				
+
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
-					
+
 					Date date = rs.getTimestamp(MEMLOG_TIMESTAMP);
 					List<Object> pair = new ArrayList<Object>();
 					pair.add(date);
-					pair.add(new Long(rs.getLong(MEMLOG_FREE_MEMORY)/1048576));
+					pair.add(new Long(rs.getLong(MEMLOG_FREE_MEMORY) / 1048576));
 					memlogFree.add(pair);
-					
+
 					pair = new ArrayList<Object>();
 					pair.add(date);
-					pair.add(new Long(rs.getLong(MEMLOG_TOTAL_MEMORY)/1048576));
+					pair.add(new Long(rs.getLong(MEMLOG_TOTAL_MEMORY) / 1048576));
 					memlogTotal.add(pair);
-					
+
 					pair = new ArrayList<Object>();
 					pair.add(date);
-					pair.add(new Long(rs.getLong(MEMLOG_MAX_MEMORY)/1048576));
+					pair.add(new Long(rs.getLong(MEMLOG_MAX_MEMORY) / 1048576));
 					memlogMax.add(pair);
-					
+
 				}
-				
+
 				memoryLogRecords.add(memlogFree);
 				memoryLogRecords.add(memlogTotal);
 				memoryLogRecords.add(memlogMax);
 
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
 				String result = gson.toJson(memoryLogRecords.toArray());
-				
+
 				return result;
 
 			} finally {

@@ -101,7 +101,6 @@
 		<module>org.eclipse.dirigible.ide.workspace.ui</module>
 		<module>org.eclipse.dirigible.ide.workspace.wizard.project</module>
 		<module>org.eclipse.dirigible.ide.repository</module>
-		<module>org.eclipse.dirigible.ide.datasource</module>
 		<module>org.eclipse.dirigible.ide.ui.common</module>
 		<module>org.eclipse.dirigible.org.eclipse.ui.ide</module>
 		<module>org.eclipse.dirigible.ide.shared</module>

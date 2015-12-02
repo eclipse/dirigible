@@ -1,16 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.eclipse.dirigible.ide.datasource
-Bundle-SymbolicName: org.eclipse.dirigible.ide.datasource;singleton:=true
+Bundle-Name: org.eclipse.dirigible.repository.datasource
+Bundle-SymbolicName: org.eclipse.dirigible.repository.datasource;singleton:=true
 Bundle-Version: 2.2.151117
 Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.logging,
- org.eclipse.dirigible.repository.ext,
- org.eclipse.dirigible.ide.common
+ org.eclipse.dirigible.repository.ext
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.dirigible.ide.datasource
+Export-Package: org.eclipse.dirigible.repository.datasource
 Import-Package: javax.servlet.http,
  org.apache.derby.jdbc
 Bundle-ClassPath: .

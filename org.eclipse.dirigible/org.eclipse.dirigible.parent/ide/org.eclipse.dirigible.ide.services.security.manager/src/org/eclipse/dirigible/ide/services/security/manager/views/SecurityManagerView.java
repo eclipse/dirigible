@@ -1,16 +1,22 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.services.security.manager.views;
 
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.ext.security.SecurityException;
+import org.eclipse.dirigible.repository.ext.security.SecurityLocationMetadata;
+import org.eclipse.dirigible.repository.ext.security.SecurityManager;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -35,14 +41,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
-import org.eclipse.dirigible.ide.repository.RepositoryFacade;
-import org.eclipse.dirigible.repository.ext.security.SecurityException;
-import org.eclipse.dirigible.repository.ext.security.SecurityLocationMetadata;
-import org.eclipse.dirigible.repository.ext.security.SecurityManager;
-import org.eclipse.dirigible.repository.logging.Logger;
-
 public class SecurityManagerView extends ViewPart {
 
 	private static final String REFRESH_THE_LIST_OF_PROTECTED_LOCATIONS = Messages.SecurityManagerView_REFRESH_THE_LIST_OF_PROTECTED_LOCATIONS;
@@ -60,11 +58,10 @@ public class SecurityManagerView extends ViewPart {
 	private static final String ROLES = Messages.SecurityManagerView_ROLES;
 
 	private static final String LOCATION = Messages.SecurityManagerView_LOCATION;
-	
+
 	private static final String LOCATION_IS_TOO_LONG = Messages.SecurityManagerView_LOCATION_IS_TOO_LONG;
 
-	private static final Logger logger = Logger
-			.getLogger(SecurityManagerView.class);
+	private static final Logger logger = Logger.getLogger(SecurityManagerView.class);
 
 	private static final String UNSECURE_LOCATION = Messages.SecurityManagerView_UNSECURE_LOCATION;
 
@@ -82,9 +79,8 @@ public class SecurityManagerView extends ViewPart {
 	private Action actionUnsecure;
 	private Action actionRefresh;
 
-	private SecurityManager securityManager = SecurityManager.getInstance(
-			RepositoryFacade.getInstance().getRepository(), DataSourceFacade
-					.getInstance().getDataSource());
+	private SecurityManager securityManager = SecurityManager.getInstance(RepositoryFacade.getInstance().getRepository(),
+			DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()));
 
 	public TreeViewer getViewer() {
 		return viewer;
@@ -97,18 +93,14 @@ public class SecurityManagerView extends ViewPart {
 	class NameSorter extends ViewerSorter {
 
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = -8832089975378999206L;
 
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 != null && e2 != null
-					&& e1 instanceof SecurityLocationMetadata
-					&& e2 instanceof SecurityLocationMetadata) {
-				return super.compare(viewer,
-						((SecurityLocationMetadata) e1).getLocation(),
-						((SecurityLocationMetadata) e2).getLocation());
+			if ((e1 != null) && (e2 != null) && (e1 instanceof SecurityLocationMetadata) && (e2 instanceof SecurityLocationMetadata)) {
+				return super.compare(viewer, ((SecurityLocationMetadata) e1).getLocation(), ((SecurityLocationMetadata) e2).getLocation());
 			}
 			return super.compare(viewer, e1, e2);
 		}
@@ -125,6 +117,7 @@ public class SecurityManagerView extends ViewPart {
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		// PatternFilter filter = new PatternFilter();
 		// FilteredTree tree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL
@@ -152,10 +145,11 @@ public class SecurityManagerView extends ViewPart {
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = -8683354310299838422L;
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				SecurityManagerView.this.fillContextMenu(manager);
 			}
@@ -195,92 +189,79 @@ public class SecurityManagerView extends ViewPart {
 	private void makeActions() {
 		actionSecure = new Action() {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = -6534944336694980431L;
 
+			@Override
 			public void run() {
-				InputDialog dlg = new InputDialog(viewer.getControl()
-						.getShell(), SECURE_LOCATION, PROTECTED_URL,
-						"/project1/securedFolder", new LengthValidator()); //$NON-NLS-1$
+				InputDialog dlg = new InputDialog(viewer.getControl().getShell(), SECURE_LOCATION, PROTECTED_URL, "/project1/securedFolder", //$NON-NLS-1$
+						new LengthValidator());
 				if (dlg.open() == Window.OK) {
 					try {
-						securityManager.secureLocation(dlg.getValue(),
-								CommonParameters.getRequest());
+						securityManager.secureLocation(dlg.getValue(), CommonParameters.getRequest());
 						viewer.refresh();
 					} catch (SecurityException e) {
 						logger.error(SECURITY_ERROR, e);
-						MessageDialog.openError(viewer.getControl().getShell(),
-								SECURITY_ERROR, e.getMessage());
+						MessageDialog.openError(viewer.getControl().getShell(), SECURITY_ERROR, e.getMessage());
 					}
 				}
 			}
 		};
 		actionSecure.setText(SECURE_LOCATION);
 		actionSecure.setToolTipText(PROTECT_A_GIVEN_RELATIVE_URL_TRANSITIVELY);
-		actionSecure.setImageDescriptor(PlatformUI.getWorkbench()
-				.getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ELCL_STOP));
+		actionSecure.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_STOP));
 
 		actionUnsecure = new Action() {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1336014167502247774L;
 
+			@Override
 			public void run() {
 
 				if (!viewer.getSelection().isEmpty()) {
-					StructuredSelection selection = (StructuredSelection) viewer
-							.getSelection();
+					StructuredSelection selection = (StructuredSelection) viewer.getSelection();
 					SecurityLocationMetadata location = (SecurityLocationMetadata) selection.getFirstElement();
-					if (MessageDialog
-							.openConfirm(
-									viewer.getControl().getShell(),
-									UNSECURE_LOCATION,
-									ARE_YOU_SURE_YOU_WANT_TO_REMOVE_THE_SELECTED_LOCATION_FROM_THE_LIST_OF_PROTECTED_LOCATIONS
-											+ location.getLocation())) {
+					if (MessageDialog.openConfirm(viewer.getControl().getShell(), UNSECURE_LOCATION,
+							ARE_YOU_SURE_YOU_WANT_TO_REMOVE_THE_SELECTED_LOCATION_FROM_THE_LIST_OF_PROTECTED_LOCATIONS + location.getLocation())) {
 						try {
 							securityManager.unsecureLocation(location.getLocation());
 							viewer.refresh();
 						} catch (SecurityException e) {
 							logger.error(SECURITY_ERROR, e);
-							MessageDialog
-									.openError(viewer.getControl().getShell(),
-											SECURITY_ERROR, e.getMessage());
+							MessageDialog.openError(viewer.getControl().getShell(), SECURITY_ERROR, e.getMessage());
 						}
 					}
 				}
 			}
 		};
 		actionUnsecure.setText(UNSECURE_LOCATION);
-		actionUnsecure
-				.setToolTipText(REMOVE_THE_SELECTED_LOCATION_FROM_THE_LIST_OF_PROTECTED_LOCATIONS);
-		actionUnsecure.setImageDescriptor(PlatformUI.getWorkbench()
-				.getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ELCL_REMOVE));
+		actionUnsecure.setToolTipText(REMOVE_THE_SELECTED_LOCATION_FROM_THE_LIST_OF_PROTECTED_LOCATIONS);
+		actionUnsecure.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_REMOVE));
 
 		actionRefresh = new Action() {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 506492927597193506L;
 
+			@Override
 			public void run() {
 				viewer.refresh();
 			}
 		};
 		actionRefresh.setText(REFRESH);
 		actionRefresh.setToolTipText(REFRESH_THE_LIST_OF_PROTECTED_LOCATIONS);
-		actionRefresh.setImageDescriptor(PlatformUI.getWorkbench()
-				.getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ELCL_SYNCED));
+		actionRefresh.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_SYNCED));
 
 	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
@@ -288,23 +269,25 @@ public class SecurityManagerView extends ViewPart {
 	class LengthValidator implements IInputValidator {
 
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 553319995495098208L;
 
 		/**
 		 * Validates the String. Returns null for no error, or an error message
-		 * 
+		 *
 		 * @param newText
 		 *            the String to validate
 		 * @return String
 		 */
+		@Override
 		public String isValid(String newText) {
 			int len = newText.length();
 
 			// Determine if input is too short or too long
-			if (len > 1000)
+			if (len > 1000) {
 				return LOCATION_IS_TOO_LONG;
+			}
 
 			// Input must be OK
 			return null;

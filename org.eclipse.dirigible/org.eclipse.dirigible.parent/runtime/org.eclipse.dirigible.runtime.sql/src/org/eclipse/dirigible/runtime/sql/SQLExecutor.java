@@ -26,8 +26,8 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 import org.eclipse.dirigible.runtime.scripting.AbstractScriptExecutor;
 
 import com.google.gson.Gson;
@@ -69,7 +69,7 @@ public class SQLExecutor extends AbstractScriptExecutor {
 
 			String sqlSource = new String(retrieveModule(repository, module, "", rootPaths).getContent());
 
-			DataSource dataSource = RepositoryFacade.getInstance().getDataSource();
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(request);
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();

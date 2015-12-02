@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.db.viewer.views;
@@ -16,6 +15,14 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.db.viewer.views.actions.DeleteTableAction;
+import org.eclipse.dirigible.ide.db.viewer.views.actions.ExportDataAction;
+import org.eclipse.dirigible.ide.db.viewer.views.actions.RefreshViewAction;
+import org.eclipse.dirigible.ide.db.viewer.views.actions.ShowTableDefinitionAction;
+import org.eclipse.dirigible.ide.db.viewer.views.actions.ViewTableContentAction;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -40,18 +47,9 @@ import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
-import org.eclipse.dirigible.ide.db.viewer.views.actions.DeleteTableAction;
-import org.eclipse.dirigible.ide.db.viewer.views.actions.ExportDataAction;
-import org.eclipse.dirigible.ide.db.viewer.views.actions.RefreshViewAction;
-import org.eclipse.dirigible.ide.db.viewer.views.actions.ShowTableDefinitionAction;
-import org.eclipse.dirigible.ide.db.viewer.views.actions.ViewTableContentAction;
-import org.eclipse.dirigible.repository.ext.security.IRoles;
 
 /**
  * Database Viewer represents the structure of the tenant specific schema
- * 
  */
 public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 
@@ -90,11 +88,11 @@ public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
+	@Override
 	@SuppressWarnings("unused")
 	public void createPartControl(Composite parent) {
 		PatternFilter filter = new PatternFilter();
-		FilteredTree tree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,
-				filter, true);
+		FilteredTree tree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL, filter, true);
 		viewer = tree.getViewer();
 		DrillDownAdapter drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.setContentProvider(initContentProvider());
@@ -126,6 +124,7 @@ public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 		menuMgr.addMenuListener(new IMenuListener() {
 			private static final long serialVersionUID = -4330735691305481160L;
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				DatabaseViewer.this.fillContextMenu(manager);
 			}
@@ -194,7 +193,7 @@ public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 			deleteAction = new DeleteTableAction(viewer);
 		}
 		doubleClickAction = new ShowTableDefinitionAction(viewer);
-		
+
 	}
 
 	protected void createRefreshAction() {
@@ -209,13 +208,14 @@ public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 	protected void createShowTableDefinitionAction() {
 		showTableDefinitionAction = new ShowTableDefinitionAction(viewer);
 	}
-	
-	protected void createExportDataAction(){
+
+	protected void createExportDataAction() {
 		exportDataAction = new ExportDataAction(viewer);
 	}
-	
+
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
@@ -229,23 +229,24 @@ public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
 
+	@Override
 	public Connection getDatabaseConnection() throws SQLException {
 		return getConnectionFromSelectedDatasource();
 	}
 
 	/**
 	 * Create connection from the data-source selected at this view
-	 * 
+	 *
 	 * @return
 	 * @throws SQLException
 	 */
-	public static Connection getConnectionFromSelectedDatasource()
-			throws SQLException {
-		DataSource dataSource = DataSourceFacade.getInstance().getDataSource();
+	public static Connection getConnectionFromSelectedDatasource() throws SQLException {
+		DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
 		Connection connection = dataSource.getConnection();
 		return connection;
 	}

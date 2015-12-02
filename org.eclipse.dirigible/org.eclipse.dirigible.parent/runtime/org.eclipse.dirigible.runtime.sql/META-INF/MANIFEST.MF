@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.runtime.core,
  org.eclipse.dirigible.runtime.security,
  org.eclipse.dirigible.repository.logging,
- org.json
+ org.json,
+ org.eclipse.dirigible.repository.datasource
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.mail,
  javax.mail.event,

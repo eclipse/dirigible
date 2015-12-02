@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.core.runtime,
  org.eclipse.dirigible.runtime.core,
  com.google.gson,
- org.eclipse.dirigible.repository.logging
+ org.eclipse.dirigible.repository.logging,
+ org.eclipse.dirigible.repository.datasource
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.servlet,
  javax.servlet.annotation,

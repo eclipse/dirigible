@@ -20,12 +20,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.CommonUtils;
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.template.ui.ed.wizard.Messages;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.commands.OpenHandler;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionDefinition;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionManager;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionPointDefinition;
@@ -50,7 +50,7 @@ public class ExtensionsView extends ViewPart {
 	private TreeViewer viewer;
 
 	private ExtensionManager extensionManager = new ExtensionManager(RepositoryFacade.getInstance().getRepository(),
-			DataSourceFacade.getInstance().getDataSource(), CommonParameters.getRequest());
+			DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()), CommonParameters.getRequest());
 
 	@Override
 	public void createPartControl(Composite parent) {

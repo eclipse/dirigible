@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.eclipse.dirigible.ide.common.dual.DualParameters;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 
 public class CommonParameters {
 
@@ -93,28 +94,19 @@ public class CommonParameters {
 	public static final String PARAMETER_PROJECT = "project"; //$NON-NLS-1$
 	public static final String PARAMETER_PACKAGE = "package"; //$NON-NLS-1$
 
-	public static final String DATABASE_PRODUCT_NAME = "DATABASE_PRODUCT_NAME"; //$NON-NLS-1$
-	public static final String DATABASE_PRODUCT_VERSION = "DATABASE_PRODUCT_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_MINOR_VERSION = "DATABASE_MINOR_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_MAJOR_VERSION = "DATABASE_MAJOR_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_DRIVER_NAME = "DATABASE_DRIVER_NAME"; //$NON-NLS-1$
-	public static final String DATABASE_DRIVER_MINOR_VERSION = "DATABASE_DRIVER_MINOR_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_DRIVER_MAJOR_VERSION = "DATABASE_DRIVER_MAJOR_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_CONNECTION_CLASS_NAME = "DATABASE_CONNECTION_CLASS_NAME"; //$NON-NLS-1$
-
 	public static final String DIRIGIBLE_DEBUGGER_BRIDGE = "dirigible.debugger.bridge"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_RUNTIME_BRIDGE = "dirigible.runtime.bridge"; //$NON-NLS-1$
 
 	public static String getDatabaseProductName() {
-		return get(DATABASE_PRODUCT_NAME);
+		return System.getProperty(DataSourceFacade.DATABASE_PRODUCT_NAME);
 	}
 
 	public static String getDatabaseProductVersion() {
-		return get(DATABASE_PRODUCT_VERSION);
+		return System.getProperty(DataSourceFacade.DATABASE_PRODUCT_VERSION);
 	}
 
 	public static String getDriverName() {
-		return get(DATABASE_DRIVER_NAME);
+		return System.getProperty(DataSourceFacade.DATABASE_DRIVER_NAME);
 	}
 
 	public static final String CONF_PATH_IDE = "/ide";

@@ -1,18 +1,24 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
 import java.util.Random;
 
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.db.export.DataExportDialog;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
+import org.eclipse.dirigible.repository.ext.db.transfer.TableColumn;
+import org.eclipse.dirigible.repository.ext.db.transfer.TableName;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -22,17 +28,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
-import org.eclipse.dirigible.ide.db.export.DataExportDialog;
-import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
-import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
-import org.eclipse.dirigible.repository.ext.db.transfer.TableColumn;
-import org.eclipse.dirigible.repository.ext.db.transfer.TableName;
 
 public class DataStructureTemplateDSVPage extends WizardPage {
-	
+
 	private static final long serialVersionUID = 7697608637259213988L;
-	
+
 	private static final String AVAILABLE_TABLES = Messages.DataStructureTemplateDSVPage_0;
 
 	private static final String DSV = Messages.DataStructureTemplateDSVPage_1;
@@ -44,7 +44,7 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 	private static final String GENERATE_DSV_SAMPLE_BASED_ON_TABLE = Messages.DataStructureTemplateDSVPage_3;
 
 	private DataStructureTemplateModel model;
-	
+
 	private Label labelSelected;
 
 	protected DataStructureTemplateDSVPage(DataStructureTemplateModel model) {
@@ -68,40 +68,38 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setText(AVAILABLE_TABLES);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
-		
+
 		final TableViewer typeViewer = DataExportDialog.createTableList(parent);
 		typeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-//				int selectionIndex = typeViewer.getTable().getSelectionIndex();
-//				TableName[] tables = (TableName[]) typeViewer.getInput();
-//				if (selectionIndex >= 0) {
-//
-//					final String selectedTable = tables[selectionIndex].getName();
-//					model.setTableName(selectedTable);
-//
-//					DataFinder dataFinder = new DataFinder();
-//					dataFinder.setTableName(selectedTable);
-//					dataFinder.getTableData();
-//
-//					model.setDsvSampleRows(generateDsvSamplesRows(dataFinder.getTableColumns()));
-//				}
-//				
-				
-				
-				if (typeViewer.getTable().getSelection() != null
-						&& typeViewer.getTable().getSelection().length > 0) {
+				// int selectionIndex = typeViewer.getTable().getSelectionIndex();
+				// TableName[] tables = (TableName[]) typeViewer.getInput();
+				// if (selectionIndex >= 0) {
+				//
+				// final String selectedTable = tables[selectionIndex].getName();
+				// model.setTableName(selectedTable);
+				//
+				// DataFinder dataFinder = new DataFinder();
+				// dataFinder.setTableName(selectedTable);
+				// dataFinder.getTableData();
+				//
+				// model.setDsvSampleRows(generateDsvSamplesRows(dataFinder.getTableColumns()));
+				// }
+				//
+
+				if ((typeViewer.getTable().getSelection() != null) && (typeViewer.getTable().getSelection().length > 0)) {
 					TableName selectedTableName = (TableName) typeViewer.getTable().getSelection()[0].getData();
 					if (selectedTableName != null) {
 						model.setTableName(selectedTableName.getName());
-						
-						DBTableExporter dataFinder = new DBTableExporter(DataSourceFacade.getInstance().getDataSource());
+
+						DBTableExporter dataFinder = new DBTableExporter(DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()));
 						dataFinder.setTableName(selectedTableName.getName());
 						dataFinder.getTableData();
 
 						model.setDsvSampleRows(generateDsvSamplesRows(dataFinder.getTableColumns()));
-						
+
 						labelSelected.setText(selectedTableName.getName());
 						labelSelected.pack();
 					} else {
@@ -112,7 +110,7 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 				} else {
 					model.setTableName(null);
 				}
-				
+
 				checkPageStatus();
 			}
 
@@ -126,7 +124,7 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 						TableColumn column = tableColumns[columnIndex];
 						String sampleValue = getSampleValue(column);
 						dsvSample.append(sampleValue);
-						if (columnIndex < columnsCount - 1) {
+						if (columnIndex < (columnsCount - 1)) {
 							dsvSample.append(dsvDelimiter);
 						}
 					}
@@ -137,25 +135,18 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 
 			private String getSampleValue(TableColumn column) {
 				String type = DBSupportedTypesMap.getTypeName(column.getType());
-				boolean numeric = type.equals(DBSupportedTypesMap.BIGINT)
-						|| type.equals(DBSupportedTypesMap.SMALLINT)
-						|| type.equals(DBSupportedTypesMap.BINARY)
-						|| type.equals(DBSupportedTypesMap.BIT)
-						|| type.equals(DBSupportedTypesMap.INTEGER)
-						|| type.equals(DBSupportedTypesMap.NUMERIC)
-						|| type.equals(DBSupportedTypesMap.TINYINT);
+				boolean numeric = type.equals(DBSupportedTypesMap.BIGINT) || type.equals(DBSupportedTypesMap.SMALLINT)
+						|| type.equals(DBSupportedTypesMap.BINARY) || type.equals(DBSupportedTypesMap.BIT) || type.equals(DBSupportedTypesMap.INTEGER)
+						|| type.equals(DBSupportedTypesMap.NUMERIC) || type.equals(DBSupportedTypesMap.TINYINT);
 				boolean blob = type.equals(DBSupportedTypesMap.BLOB);
 				boolean clob = type.equals(DBSupportedTypesMap.CLOB);
 				boolean booleanType = type.equals(DBSupportedTypesMap.BOOLEAN);
 				boolean textChar = type.equals(DBSupportedTypesMap.CHAR);
-				boolean textVarchar = type.equals(DBSupportedTypesMap.NVARCHAR)
-						|| type.equals(DBSupportedTypesMap.VARCHAR);
+				boolean textVarchar = type.equals(DBSupportedTypesMap.NVARCHAR) || type.equals(DBSupportedTypesMap.VARCHAR);
 				boolean date = type.equals(DBSupportedTypesMap.DATE);
 
-				boolean floatingPoint = type.equals(DBSupportedTypesMap.REAL)
-						|| type.equals(DBSupportedTypesMap.DECIMAL)
-						|| type.equals(DBSupportedTypesMap.DOUBLE)
-						|| type.equals(DBSupportedTypesMap.FLOAT);
+				boolean floatingPoint = type.equals(DBSupportedTypesMap.REAL) || type.equals(DBSupportedTypesMap.DECIMAL)
+						|| type.equals(DBSupportedTypesMap.DOUBLE) || type.equals(DBSupportedTypesMap.FLOAT);
 				boolean time = type.equals(DBSupportedTypesMap.TIME);
 				boolean timeStamp = type.equals(DBSupportedTypesMap.TIMESTAMP);
 
@@ -194,7 +185,7 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 	}
 
 	private void checkPageStatus() {
-		if (model.getTableName() == null || "".equals(model.getTableName())) { //$NON-NLS-1$
+		if ((model.getTableName() == null) || "".equals(model.getTableName())) { //$NON-NLS-1$
 			setErrorMessage(NO_TABLE_IS_SELECTED_PLEASE_SELECT_ONE);
 			setPageComplete(false);
 			return;

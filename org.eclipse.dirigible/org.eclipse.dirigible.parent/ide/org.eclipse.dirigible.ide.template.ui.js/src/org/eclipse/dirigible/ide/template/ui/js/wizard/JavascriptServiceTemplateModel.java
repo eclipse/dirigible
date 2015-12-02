@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.js.wizard;
@@ -18,11 +17,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
+import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -32,8 +32,7 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 
 	private static final String TARGET_LOCATION_IS_NOT_ALLOWED = Messages.JavascriptServiceTemplateModel_TARGET_LOCATION_IS_NOT_ALLOWED;
 
-	private static final Logger logger = Logger
-			.getLogger(JavascriptServiceTemplateModel.class);
+	private static final Logger logger = Logger.getLogger(JavascriptServiceTemplateModel.class);
 
 	private String tableName;
 
@@ -84,8 +83,7 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 		// if (!validateTableName()) {
 		// return false;
 		// }
-		return ValidationStatus.getValidationStatus(locationStatus,
-				templateStatus);
+		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
 	}
 
 	public IValidationStatus validateLocation() {
@@ -95,13 +93,10 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 			if (status.hasErrors()) {
 				return status;
 			}
-			IPath location = new Path(getTargetLocation())
-					.append(getFileName());
+			IPath location = new Path(getTargetLocation()).append(getFileName());
 			// TODO - more precise test for the location ../WebContent/...
-			if (location.toString().indexOf(
-					ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES) == -1) {
-				return ValidationStatus
-						.createError(TARGET_LOCATION_IS_NOT_ALLOWED);
+			if (location.toString().indexOf(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES) == -1) {
+				return ValidationStatus.createError(TARGET_LOCATION_IS_NOT_ALLOWED);
 			}
 		} catch (Exception e) {
 			// temp workaround due to another bug - context menu is not context
@@ -126,50 +121,41 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 
 			Connection connection = null;
 			try {
-				connection = DataSourceFacade.getInstance().getDataSource()
-						.getConnection();
+				connection = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()).getConnection();
 
 				List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
 
-				ResultSet primaryKeys = DBUtils.getPrimaryKeys(connection,
-						getTableName());
+				ResultSet primaryKeys = DBUtils.getPrimaryKeys(connection, getTableName());
 				while (primaryKeys.next()) {
 					String columnName = primaryKeys.getString("COLUMN_NAME"); //$NON-NLS-1$
-					TableColumn tableColumn = new TableColumn(columnName, 0,
-							true, true);
+					TableColumn tableColumn = new TableColumn(columnName, 0, true, true);
 					availableTableColumns.add(tableColumn);
 				}
 
-				ResultSet columns = DBUtils.getColumns(connection,
-						getTableName());
+				ResultSet columns = DBUtils.getColumns(connection, getTableName());
 				while (columns.next()) {
 					// columns
 					String columnName = columns.getString("COLUMN_NAME"); //$NON-NLS-1$
 					int columnType = columns.getInt("DATA_TYPE"); //$NON-NLS-1$
 
-					TableColumn tableColumn = new TableColumn(columnName,
-							columnType, false, true);
+					TableColumn tableColumn = new TableColumn(columnName, columnType, false, true);
 					if (!exists(availableTableColumns, tableColumn)) {
 						availableTableColumns.add(tableColumn);
 					}
 				}
 
-				setTableColumns(availableTableColumns
-						.toArray(new TableColumn[] {}));
+				setTableColumns(availableTableColumns.toArray(new TableColumn[] {}));
 			} finally {
 				if (connection != null) {
 					connection.close();
 				}
 			}
 		} catch (Exception e) {
-			logger.error(
-					ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_GENERATION,
-					e);
+			logger.error(ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_GENERATION, e);
 		}
 	}
 
-	private boolean exists(List<TableColumn> availableTableColumns,
-			TableColumn tableColumn) {
+	private boolean exists(List<TableColumn> availableTableColumns, TableColumn tableColumn) {
 		if (getTableName() == null) {
 			return false;
 		}

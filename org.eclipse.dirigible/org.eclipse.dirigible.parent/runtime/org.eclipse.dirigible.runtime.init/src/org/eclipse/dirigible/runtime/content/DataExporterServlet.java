@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.content;
@@ -23,15 +22,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.PermissionsUtils;
-import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 
 /**
  * Exports the current content of the Registry
- *
  */
 public class DataExporterServlet extends ContentBaseServlet {
 
@@ -48,13 +46,12 @@ public class DataExporterServlet extends ContentBaseServlet {
 	static final String UNKNOWN_HOST = "unknown_host";
 
 	static final String UNDERSCORE = "_"; //$NON-NLS-1$
-	
+
 	public static final String PARAMETER_TABLE_ERR = "Parameter 'table' is not present. Use .../data-export?table=TABLE_XXX";
 
 	protected String getExportFilePrefix(String tableName) {
 		StringBuilder buff = new StringBuilder();
-		buff.append(tableName)
-			.append(UNDERSCORE);
+		buff.append(tableName).append(UNDERSCORE);
 		try {
 			buff.append(java.net.InetAddress.getLocalHost().getHostName());
 		} catch (UnknownHostException e) {
@@ -64,14 +61,12 @@ public class DataExporterServlet extends ContentBaseServlet {
 		return buff.toString();
 	}
 
-	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 
@@ -80,8 +75,7 @@ public class DataExporterServlet extends ContentBaseServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
 			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Data Export");
@@ -90,14 +84,13 @@ public class DataExporterServlet extends ContentBaseServlet {
 		}
 
 		String tableName = request.getParameter(PARAMETER_TABLE);
-		if (tableName == null
-				|| "".equals(tableName)) {
+		if ((tableName == null) || "".equals(tableName)) {
 			logger.error(PARAMETER_TABLE_ERR);
 			throw new ServletException(PARAMETER_TABLE_ERR);
 		}
-			
+
 		// put guid in the session
-		request.getSession().setAttribute(GUID, createGUID()); //$NON-NLS-1$
+		request.getSession().setAttribute(GUID, createGUID());
 
 		try {
 			byte[] data = getData(tableName, request);
@@ -110,20 +103,19 @@ public class DataExporterServlet extends ContentBaseServlet {
 	}
 
 	private byte[] getData(String tableName, HttpServletRequest request) {
-		DBTableExporter dbTableExporter = new DBTableExporter(RepositoryFacade.getInstance().getDataSource());
+		DBTableExporter dbTableExporter = new DBTableExporter(DataSourceFacade.getInstance().getDataSource(request));
 		dbTableExporter.setTableName(tableName);
 		byte[] data = dbTableExporter.getTableData().getBytes();
 		return data;
 	}
 
-
 	/**
 	 * Return the constructed zip in servlet response
-	 * 
+	 *
 	 * @param response
 	 * @param tmpFile
 	 * @param request
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void send(String tableName, HttpServletRequest request, HttpServletResponse response, byte[] content) throws IOException {
 		String fileName = null;
@@ -148,13 +140,13 @@ public class DataExporterServlet extends ContentBaseServlet {
 	private String defaultFileName(String tableName, HttpServletRequest request) {
 		String fileName;
 		String guid = EMPTY.equals(getGUID(request)) ? EMPTY : getGUID(request);
-		fileName = getExportFilePrefix(tableName)+ UNDERSCORE + guid;
+		fileName = getExportFilePrefix(tableName) + UNDERSCORE + guid;
 		return fileName;
 	}
 
 	/**
 	 * Create guid. Currently timestamp.
-	 * 
+	 *
 	 * @return
 	 */
 	private String createGUID() {

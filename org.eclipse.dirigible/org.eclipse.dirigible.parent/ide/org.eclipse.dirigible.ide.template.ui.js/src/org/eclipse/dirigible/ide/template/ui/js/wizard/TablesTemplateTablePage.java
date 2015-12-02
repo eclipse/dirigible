@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.js.wizard;
@@ -16,7 +15,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dirigible.ide.datasource.DataSourceFacade;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -43,8 +43,7 @@ public class TablesTemplateTablePage extends WizardPage {
 
 	private static final String SELECTION_OF_TABLE = Messages.TablesTemplateTablePage_SELECTION_OF_TABLE;
 
-	private static final Logger logger = Logger
-			.getLogger(TablesTemplateTablePage.class);
+	private static final Logger logger = Logger.getLogger(TablesTemplateTablePage.class);
 
 	private static final String PAGE_NAME = "org.eclipse.dirigible.ide.template.ui.odata.wizard.UIForODataTemplateTablePage"; //$NON-NLS-1$
 
@@ -76,10 +75,8 @@ public class TablesTemplateTablePage extends WizardPage {
 		label.setText(AVAILABLE_TABLES_AND_VIEWS);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
 
-		typeViewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER
-				| SWT.V_SCROLL);
-		typeViewer.getControl().setLayoutData(
-				new GridData(SWT.FILL, SWT.FILL, true, true));
+		typeViewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+		typeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		typeViewer.setContentProvider(new ArrayContentProvider());
 		typeViewer.setLabelProvider(new TablesTemplateTablePageLabelProvider());
 		typeViewer.setSorter(new ViewerSorter());
@@ -96,16 +93,13 @@ public class TablesTemplateTablePage extends WizardPage {
 		updateTableNames();
 		labelSelected = new Label(parent, SWT.NONE);
 		labelSelected.setText("");
-		labelSelected.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true,
-				false));
+		labelSelected.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, false));
 
 	}
 
 	private void updateTableNames() {
-		if ((typeViewer.getTable().getSelection() != null)
-				&& (typeViewer.getTable().getSelection().length > 0)) {
-			TableName selectedTableName = (TableName) typeViewer.getTable()
-					.getSelection()[0].getData();
+		if ((typeViewer.getTable().getSelection() != null) && (typeViewer.getTable().getSelection().length > 0)) {
+			TableName selectedTableName = (TableName) typeViewer.getTable().getSelection()[0].getData();
 			if (selectedTableName != null) {
 				model.setTableName(selectedTableName.getName());
 				model.setTableType(selectedTableName.getType());
@@ -130,8 +124,7 @@ public class TablesTemplateTablePage extends WizardPage {
 		try {
 			Connection connection = null;
 			try {
-				connection = DataSourceFacade.getInstance().getDataSource()
-						.getConnection();
+				connection = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()).getConnection();
 
 				ResultSet tableNames = DBUtils.getAllTables(connection);
 
@@ -139,8 +132,7 @@ public class TablesTemplateTablePage extends WizardPage {
 					String sTableName = tableNames.getString("TABLE_NAME"); //$NON-NLS-1$
 					String sTableType = tableNames.getString("TABLE_TYPE"); //$NON-NLS-1$
 					if ("TABLE".equals(sTableType) || "VIEW".equals(sTableType)) { //$NON-NLS-1$ //$NON-NLS-2$
-						TableName tableName = new TableName(sTableName,
-								sTableType);
+						TableName tableName = new TableName(sTableName, sTableType);
 						availableTableNames.add(tableName);
 					}
 				}
@@ -150,8 +142,7 @@ public class TablesTemplateTablePage extends WizardPage {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(ERROR_ON_LOADING_TABLES_FROM_DATABASE_FOR_GENERATION,
-					e);
+			logger.error(ERROR_ON_LOADING_TABLES_FROM_DATABASE_FOR_GENERATION, e);
 		}
 		return availableTableNames.toArray(new TableName[] {});
 	}

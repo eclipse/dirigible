@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.runtime.security,
  org.eclipse.dirigible.repository.logging,
  org.quartz,
- org.apache.commons.io
+ org.apache.commons.io,
+ org.eclipse.dirigible.repository.datasource
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.servlet,
  javax.servlet.annotation,

@@ -7,7 +7,7 @@ Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.ide.repository
-Require-Bundle: org.eclipse.dirigible.ide.datasource,
+Require-Bundle: org.eclipse.dirigible.repository.datasource,
  org.eclipse.dirigible.repository.api,
  org.eclipse.jface;resolution:=optional,
  org.eclipse.rap.jface;resolution:=optional,
