@@ -10,21 +10,16 @@
 
 package org.eclipse.dirigible.repository.local;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.db.init.DBRepositoryInitializer;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
  * The File System based Local Repository implementation of {@link IRepository}
  */
 public class LocalRepository extends FileSystemRepository {
 
-	private static Logger logger = Logger.getLogger(LocalRepository.class);
+	// private static Logger logger = Logger.getLogger(LocalRepository.class);
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -56,29 +51,7 @@ public class LocalRepository extends FileSystemRepository {
 	 * @throws LocalBaseException
 	 */
 	public LocalRepository(DataSource dataSource, String user, String rootFolder) throws LocalBaseException {
-
 		super(user, rootFolder);
-		initializeDatabase(dataSource);
-	}
-
-	private void initializeDatabase(DataSource dataSource) {
-		if (dataSource == null) {
-			logger.warn("Local Repository initialization - DataSource has not been provided");
-			return;
-		}
-		try {
-			Connection connection = dataSource.getConnection();
-			try {
-				DBRepositoryInitializer dbRepositoryInitializer = new DBRepositoryInitializer(dataSource, connection, false);
-				boolean result = dbRepositoryInitializer.initialize();
-			} finally {
-				if (connection != null) {
-					connection.close();
-				}
-			}
-		} catch (SQLException e) {
-			throw new LocalBaseException("Initializing local database for Repository use failed", e);
-		}
 	}
 
 }

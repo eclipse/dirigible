@@ -47,7 +47,7 @@ public class DatabaseInjector implements IInjector {
 			try {
 
 				String defaultDataSourceType = System.getProperty(InitParametersInjector.DEFAULT_DATASOURCE_TYPE);
-				if (!defaultDataSourceType.equals(InitParametersInjector.DEFAULT_DATASOURCE_TYPE_JNDI)) {
+				if (!InitParametersInjector.DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
 					return;
 				}
 
@@ -97,7 +97,7 @@ public class DatabaseInjector implements IInjector {
 			try {
 
 				String defaultDataSourceType = System.getProperty(InitParametersInjector.DEFAULT_DATASOURCE_TYPE);
-				if (!defaultDataSourceType.equals(InitParametersInjector.DEFAULT_DATASOURCE_TYPE_JNDI)) {
+				if (!InitParametersInjector.DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
 					return;
 				}
 

@@ -46,6 +46,8 @@ public class DataSourceFacade {
 
 	private static final String DATASOURCE_DEFAULT = "DEFAULT_DATASOURCE"; //$NON-NLS-1$
 	private static final String DEFAULT_DATASOURCE_TYPE = "defaultDataSourceType"; //$NON-NLS-1$
+	private static final String DEFAULT_DATASOURCE_TYPE_JNDI = "jndi"; //$NON-NLS-1$
+	private static final String DEFAULT_DATASOURCE_TYPE_LOCAL = "local"; //$NON-NLS-1$
 	private static final String JNDI_DEFAULT_DATASOURCE = "jndiDefaultDataSource"; //$NON-NLS-1$
 
 	public static final Logger logger = Logger.getLogger(DataSourceFacade.class.getCanonicalName());
@@ -125,9 +127,17 @@ public class DataSourceFacade {
 	}
 
 	private DataSource getFromContext() {
+
+		String defaultDataSourceType = System.getProperty(DEFAULT_DATASOURCE_TYPE);
+		if (!DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
+			logger.debug("Getting from Context not possible - no configured default DataSource as initial parameter");
+			return null;
+		}
+
 		logger.debug("Try to get datasource from the InitialContext");
 
 		try {
+
 			InitialContext context = (InitialContext) System.getProperties().get(ICommonConstants.INITIAL_CONTEXT);
 			String jndiName = System.getProperty(JNDI_DEFAULT_DATASOURCE);
 			if ((context == null) || (jndiName == null)) {

@@ -11,6 +11,16 @@
               load-on-startup="true">
         </servlet>
      </extension>
+     
+     <extension
+           id="DBInitializerServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/db-init"
+              class="org.eclipse.dirigible.runtime.content.DBInitializerServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
 	 
 	 <extension
            id="ContentExporterServlet"
