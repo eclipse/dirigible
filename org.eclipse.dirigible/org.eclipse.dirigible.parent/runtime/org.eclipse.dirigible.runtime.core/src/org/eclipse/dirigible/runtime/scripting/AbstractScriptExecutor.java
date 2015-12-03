@@ -53,6 +53,8 @@ import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.FileStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.IndexingService;
+import org.eclipse.dirigible.runtime.scripting.utils.NamedNoSQLDataSourcesUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.NamedRelationalDataSourcesUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.StorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
@@ -259,6 +261,16 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		ExceptionUtils exceptionUtils = new ExceptionUtils();
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.EXCEPTION_UTILS, exceptionUtils);
 		apiBuilder.setExceptionUtils(exceptionUtils);
+
+		// Named Relational DataSources Utils
+		NamedRelationalDataSourcesUtils namedRelationalDataSourcesUtils = new NamedRelationalDataSourcesUtils(request);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.RDB_UTILS, namedRelationalDataSourcesUtils);
+		apiBuilder.setNamedRelationalDataSourcesUtils(namedRelationalDataSourcesUtils);
+
+		// Named NoSQL DataSources Utils
+		NamedNoSQLDataSourcesUtils namedNoSQLDataSourcesUtils = new NamedNoSQLDataSourcesUtils(request);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.NOSQL_UTILS, namedNoSQLDataSourcesUtils);
+		apiBuilder.setNamedNoSQLDataSourcesUtils(namedNoSQLDataSourcesUtils);
 
 		// register objects via extension
 		try {

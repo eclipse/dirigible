@@ -21,6 +21,16 @@
               load-on-startup="true">
         </servlet>
      </extension>
+     
+     <extension
+           id="DataSourcesInitializerServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/rdb-init"
+              class="org.eclipse.dirigible.runtime.content.DataSourcesInitializerServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
 	 
 	 <extension
            id="ContentExporterServlet"

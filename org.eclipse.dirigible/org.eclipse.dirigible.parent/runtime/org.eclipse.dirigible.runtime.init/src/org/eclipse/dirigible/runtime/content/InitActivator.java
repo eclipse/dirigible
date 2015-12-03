@@ -22,6 +22,8 @@ public class InitActivator implements BundleActivator {
 		dbInitializerServlet.registerInitRegister();
 		ContentInitializerServlet contentInitializerServlet = new ContentInitializerServlet();
 		contentInitializerServlet.registerInitRegister();
+		DataSourcesInitializerServlet datasourcesInitializerServlet = new DataSourcesInitializerServlet();
+		datasourcesInitializerServlet.registerInitRegister();
 
 		SchedulerActivator.getSchedulerServlet().startSchedulers();
 	}

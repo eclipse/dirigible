@@ -23,6 +23,8 @@ import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.NamedNoSQLDataSourcesUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.NamedRelationalDataSourcesUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 
@@ -200,5 +202,15 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 	@Override
 	public ITemplatingService getTemplatingService() {
 		return builder.getTemplatingService();
+	}
+
+	@Override
+	public NamedRelationalDataSourcesUtils getNamedRelationalDatasources() {
+		return builder.getNamedRelationalDatasources();
+	}
+
+	@Override
+	public NamedNoSQLDataSourcesUtils getNamedNoSQLDatasources() {
+		return builder.getNamedNoSQLDatasources();
 	}
 }

@@ -23,6 +23,8 @@ import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.NamedNoSQLDataSourcesUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.NamedRelationalDataSourcesUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 
@@ -93,5 +95,9 @@ public interface IInjectedAPI {
 	public Object get(String key);
 
 	public void set(String key, Object value);
+
+	public NamedRelationalDataSourcesUtils getNamedRelationalDatasources();
+
+	public NamedNoSQLDataSourcesUtils getNamedNoSQLDatasources();
 
 }

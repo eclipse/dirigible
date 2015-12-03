@@ -20,7 +20,7 @@ public class NamedDataSourcesInitializer {
 
 	private static final Logger logger = Logger.getLogger(NamedDataSourcesInitializer.class);
 
-	private static final String DATASOURCES_CONF_ROOT = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_CONF + "db";
+	private static final String DATASOURCES_CONF_ROOT = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_CONF + "rdb";
 
 	/**
 	 * Enumerate and register all the configured DataSources
@@ -73,7 +73,7 @@ public class NamedDataSourcesInitializer {
 		String name = properties.getProperty(DataSourceFacade.PARAM_DB_NAME);
 		String location = properties.getProperty(DataSourceFacade.PARAM_DB_LOC);
 		// TODO check valid parameters
-		DataSourceFacade.getInstance().registerDataSource(name, properties);
+		DataSourceFacade.getInstance().registerDataSource(id, properties);
 	}
 
 	private static void registerDirectDataSource(HttpServletRequest request, Properties properties) {
@@ -88,7 +88,7 @@ public class NamedDataSourcesInitializer {
 		String maxIdle = properties.getProperty(DataSourceFacade.PARAM_DB_AUTO_MAX_IDLE);
 		String maxWait = properties.getProperty(DataSourceFacade.PARAM_DB_AUTO_MAX_WAIT);
 		// TODO check valid parameters
-		DataSourceFacade.getInstance().registerDataSource(name, properties);
+		DataSourceFacade.getInstance().registerDataSource(id, properties);
 	}
 
 }

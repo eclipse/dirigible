@@ -41,7 +41,7 @@ public class DataSourcesInitializerServlet extends HttpServlet {
 
 	public void registerInitRegister() {
 		TaskManagerShort.getInstance().registerRunnableTask(new DataSourcesInitializerRegister(this));
-		logger.info("DataSources Register has been registered");
+		logger.info("Datasources Register has been registered");
 	}
 
 	class DataSourcesInitializerRegister implements IRunnableTask {
@@ -54,7 +54,7 @@ public class DataSourcesInitializerServlet extends HttpServlet {
 
 		@Override
 		public String getName() {
-			return "DataSources Register";
+			return "Datasources Register";
 		}
 
 		@Override
@@ -67,7 +67,7 @@ public class DataSourcesInitializerServlet extends HttpServlet {
 			}
 			if (ok) {
 				TaskManagerShort.getInstance().unregisterRunnableTask(this);
-				logger.info("DataSources Register has been un-registered");
+				logger.info("Datasources Register has been un-registered");
 			}
 		}
 

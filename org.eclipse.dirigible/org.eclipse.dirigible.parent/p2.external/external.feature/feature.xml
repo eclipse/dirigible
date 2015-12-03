@@ -368,4 +368,11 @@ Contributors:
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.apache.commons.pool"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>

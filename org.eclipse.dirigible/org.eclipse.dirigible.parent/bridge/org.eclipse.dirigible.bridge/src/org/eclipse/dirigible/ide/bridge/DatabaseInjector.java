@@ -58,6 +58,7 @@ public class DatabaseInjector implements IInjector {
 				String customDataSourceName = parameterName.substring(CUSTOM_DATASOURCE_PARAM_PREFIX.length());
 				try {
 					DataSource dataSource = lookupDataSource(parameterValue);
+					logger.error(parameterValue + " found and injected in the request");
 					req.getSession().setAttribute(DATASOURCE_PREFIX + customDataSourceName, dataSource);
 				} catch (NamingException e) {
 					logger.error(e.getMessage(), e);

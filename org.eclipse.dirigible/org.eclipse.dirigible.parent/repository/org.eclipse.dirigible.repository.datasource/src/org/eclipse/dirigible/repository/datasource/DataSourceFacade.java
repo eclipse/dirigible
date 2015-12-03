@@ -156,7 +156,7 @@ public class DataSourceFacade {
 
 		String defaultDataSourceType = System.getProperty(DEFAULT_DATASOURCE_TYPE);
 		if (!DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
-			logger.debug("Getting from Context not possible - no configured default DataSource as initial parameter");
+			logger.warn("Getting from Context not possible - no configured default DataSource as initial parameter");
 			return null;
 		}
 
@@ -235,6 +235,7 @@ public class DataSourceFacade {
 	 */
 	public void registerDataSource(String name, Properties namedDataSource) {
 		this.namedDataSources.put(name, namedDataSource);
+		logger.debug(String.format("Datasource with name %s has been registered", name));
 	}
 
 	/**
@@ -245,6 +246,11 @@ public class DataSourceFacade {
 	 */
 	public DataSource getNamedDataSource(HttpServletRequest request, String name) {
 		Properties properties = this.namedDataSources.get(name);
+		if (properties == null) {
+			logger.error(String.format("Named DataSource %s is not configured in the Repository.", name));
+			return null;
+		}
+
 		String id = properties.getProperty(PARAM_DB_ID);
 		String type = properties.getProperty(PARAM_DB_TYPE);
 		String loc = properties.getProperty(PARAM_DB_LOC);
