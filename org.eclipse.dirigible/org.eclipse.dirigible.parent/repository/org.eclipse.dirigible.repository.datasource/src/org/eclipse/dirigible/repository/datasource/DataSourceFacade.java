@@ -13,11 +13,17 @@ package org.eclipse.dirigible.repository.datasource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.db.WrappedDataSource;
@@ -50,6 +56,23 @@ public class DataSourceFacade {
 	private static final String DEFAULT_DATASOURCE_TYPE_LOCAL = "local"; //$NON-NLS-1$
 	private static final String JNDI_DEFAULT_DATASOURCE = "jndiDefaultDataSource"; //$NON-NLS-1$
 
+	public static final String DATASOURCE_PREFIX = "DATASOURCE_"; //$NON-NLS-1$
+
+	public static final String PARAM_DB_ID = "db.id";
+	public static final String PARAM_DB_NAME = "db.name";
+	public static final String PARAM_DB_TYPE = "db.type";
+	public static final String PARAM_DB_LOC = "db.location";
+	public static final String PARAM_DB_DRIVER = "db.driver";
+	public static final String PARAM_DB_USER = "db.user";
+	public static final String PARAM_DB_PASSWORD = "db.password";
+	public static final String PARAM_DB_AUTO_COMMIT = "db.auto-commit";
+	public static final String PARAM_DB_AUTO_MAX_ACTIVE = "db.max-active";
+	public static final String PARAM_DB_AUTO_MAX_IDLE = "db.max-idle";
+	public static final String PARAM_DB_AUTO_MAX_WAIT = "db.max-wait";
+
+	public static final String PARAM_DB_TYPE_JNDI = "jndi";
+	public static final String PARAM_DB_TYPE_DIRECT = "direct";
+
 	public static final Logger logger = Logger.getLogger(DataSourceFacade.class.getCanonicalName());
 
 	private static DataSource localDataSource;
@@ -57,6 +80,8 @@ public class DataSourceFacade {
 	private static DataSourceFacade instance;
 
 	private WrappedDataSource dataSource;
+
+	private static Map<String, Properties> namedDataSources = Collections.synchronizedMap(new HashMap<String, Properties>());
 
 	public static DataSourceFacade getInstance() {
 		if (instance == null) {
@@ -82,7 +107,8 @@ public class DataSourceFacade {
 
 			if (dataSource == null) {
 				logger.debug("Try from Context...");
-				dataSource = (WrappedDataSource) getFromContext();
+				String jndiName = System.getProperty(JNDI_DEFAULT_DATASOURCE);
+				dataSource = (WrappedDataSource) getFromContext(jndiName, true);
 			}
 
 			if (dataSource == null) {
@@ -126,7 +152,7 @@ public class DataSourceFacade {
 		return null;
 	}
 
-	private DataSource getFromContext() {
+	private DataSource getFromContext(String jndiName, boolean wrap) {
 
 		String defaultDataSourceType = System.getProperty(DEFAULT_DATASOURCE_TYPE);
 		if (!DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
@@ -137,9 +163,7 @@ public class DataSourceFacade {
 		logger.debug("Try to get datasource from the InitialContext");
 
 		try {
-
 			InitialContext context = (InitialContext) System.getProperties().get(ICommonConstants.INITIAL_CONTEXT);
-			String jndiName = System.getProperty(JNDI_DEFAULT_DATASOURCE);
 			if ((context == null) || (jndiName == null)) {
 				return null;
 			}
@@ -147,9 +171,13 @@ public class DataSourceFacade {
 			if (datasource == null) {
 				logger.error("Could not find DataSource in Initial Context by name: " + jndiName);
 			} else {
-				WrappedDataSource wrappedDataSource = new WrappedDataSource(datasource);
-				logger.debug("Datasource retrieved from InitialContext");
-				return wrappedDataSource;
+				if (wrap) {
+					WrappedDataSource wrappedDataSource = new WrappedDataSource(datasource);
+					logger.debug("Datasource retrieved from InitialContext and wrapped");
+					return wrappedDataSource;
+				}
+				logger.debug("Datasource retrieved from InitialContext and returned unwrapped");
+				return datasource;
 			}
 		} catch (Throwable e) {
 			logger.error("Could not find DataSource", e);
@@ -197,6 +225,106 @@ public class DataSourceFacade {
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * Register a named data-source's meta-data by name in the list of known named data sources
+	 *
+	 * @param name
+	 * @param namedDataSource
+	 */
+	public void registerDataSource(String name, Properties namedDataSource) {
+		this.namedDataSources.put(name, namedDataSource);
+	}
+
+	/**
+	 * Gives the named data source from the list, if any
+	 *
+	 * @param name
+	 * @return
+	 */
+	public DataSource getNamedDataSource(HttpServletRequest request, String name) {
+		Properties properties = this.namedDataSources.get(name);
+		String id = properties.getProperty(PARAM_DB_ID);
+		String type = properties.getProperty(PARAM_DB_TYPE);
+		String loc = properties.getProperty(PARAM_DB_LOC);
+		DataSource namedDataSource = null;
+		if (request != null) {
+			String nameInSession = DATASOURCE_PREFIX + id;
+			namedDataSource = (DataSource) request.getSession().getAttribute(nameInSession);
+			if (namedDataSource == null) {
+				if (PARAM_DB_TYPE_JNDI.equals(type)) {
+					namedDataSource = getFromContext(loc, false);
+					if (namedDataSource != null) {
+						request.getSession().setAttribute(nameInSession, namedDataSource);
+					} else {
+						logger.error(String.format(
+								"Named DataSource %s has not been injected in the request's session. Check the initial parameters.", nameInSession));
+					}
+				} else if (PARAM_DB_TYPE_DIRECT.equals(type)) {
+					namedDataSource = createDirectDataSource(properties);
+					if (namedDataSource != null) {
+						request.getSession().setAttribute(nameInSession, namedDataSource);
+					} else {
+						logger.error(String.format("Named DataSource %s cannot be created based on the configurations metadata", nameInSession));
+					}
+				}
+			}
+		} else {
+			namedDataSource = getFromContext(loc, false);
+		}
+		return namedDataSource;
+	}
+
+	private DataSource createDirectDataSource(Properties properties) {
+		String id = properties.getProperty(DataSourceFacade.PARAM_DB_ID);
+		String name = properties.getProperty(DataSourceFacade.PARAM_DB_NAME);
+		String url = properties.getProperty(DataSourceFacade.PARAM_DB_LOC);
+		String driver = properties.getProperty(DataSourceFacade.PARAM_DB_DRIVER);
+		String user = properties.getProperty(DataSourceFacade.PARAM_DB_USER);
+		String password = properties.getProperty(DataSourceFacade.PARAM_DB_PASSWORD);
+		String defaultAutoCommit = properties.getProperty(DataSourceFacade.PARAM_DB_AUTO_COMMIT);
+		String maxActive = properties.getProperty(DataSourceFacade.PARAM_DB_AUTO_MAX_ACTIVE);
+		String maxIdle = properties.getProperty(DataSourceFacade.PARAM_DB_AUTO_MAX_IDLE);
+		String maxWait = properties.getProperty(DataSourceFacade.PARAM_DB_AUTO_MAX_WAIT);
+
+		BasicDataSource basicDataSource = new BasicDataSource();
+		basicDataSource.setDriverClassName(driver);
+		basicDataSource.setUrl(url);
+		basicDataSource.setUsername(user);
+		basicDataSource.setPassword(password);
+		basicDataSource.setDefaultAutoCommit(Boolean.parseBoolean(defaultAutoCommit));
+		basicDataSource.setMaxActive(maxActive != null ? Integer.parseInt(maxActive) : 100);
+		basicDataSource.setMaxIdle(maxIdle != null ? Integer.parseInt(maxIdle) : 30);
+		basicDataSource.setMaxWait(maxWait != null ? Integer.parseInt(maxWait) : 10000);
+
+		return basicDataSource;
+
+	}
+
+	/**
+	 * List the registered DataSources names
+	 *
+	 * @return
+	 */
+	public Set<String> getNamedDataSourcesNames() {
+		return this.namedDataSources.keySet();
+	}
+
+	/**
+	 * Un-register an already registered DataSource
+	 *
+	 * @param name
+	 */
+	public void unregisterDataSource(String name) {
+		this.namedDataSources.remove(name);
+	}
+
+	/**
+	 * Un-register all the registered DataSources
+	 */
+	public void unregisterAllDataSources() {
+		this.namedDataSources.clear();
 	}
 
 }

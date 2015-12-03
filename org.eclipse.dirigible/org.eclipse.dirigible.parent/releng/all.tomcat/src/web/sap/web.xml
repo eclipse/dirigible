@@ -94,7 +94,14 @@
 			<param-name>repositoryProvider</param-name>
 			<param-value>org.eclipse.dirigible.repository.db.DBRepositoryProvider</param-value>
 		</init-param>
-
+		
+		<!-- JNDI key for the Custom Database DataSource(s) 
+		<init-param>
+			<param-name>jndiCustomDataSource-XXX</param-name>
+			<param-value>java:comp/env/jdbc/XXX</param-value>
+		</init-param>
+		-->
+		
 		<load-on-startup>2</load-on-startup>
 
 	</servlet>

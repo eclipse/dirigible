@@ -11,30 +11,28 @@
 package org.eclipse.dirigible.runtime.content;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 
-import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
-import org.eclipse.dirigible.repository.db.init.DBRepositoryInitializer;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.datasource.NamedDataSourcesInitializer;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 import org.eclipse.dirigible.runtime.task.IRunnableTask;
 import org.eclipse.dirigible.runtime.task.TaskManagerShort;
 
 /**
- * Initializes the default database content on startup
+ * Enumerate and register the named DataSources on startup
  */
-public class DBInitializerServlet extends HttpServlet {
+public class DataSourcesInitializerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 6468050094756163896L;
 
-	private static final Logger logger = Logger.getLogger(DBInitializerServlet.class);
+	private static final Logger logger = Logger.getLogger(DataSourcesInitializerServlet.class);
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -42,62 +40,53 @@ public class DBInitializerServlet extends HttpServlet {
 	}
 
 	public void registerInitRegister() {
-		TaskManagerShort.getInstance().registerRunnableTask(new DBInitializerRegister(this));
-		logger.info("Database Initializer Register has been registered");
+		TaskManagerShort.getInstance().registerRunnableTask(new DataSourcesInitializerRegister(this));
+		logger.info("DataSources Register has been registered");
 	}
 
-	class DBInitializerRegister implements IRunnableTask {
+	class DataSourcesInitializerRegister implements IRunnableTask {
 
-		DBInitializerServlet contentInitializerServlet;
+		DataSourcesInitializerServlet contentInitializerServlet;
 
-		DBInitializerRegister(DBInitializerServlet contentInitializerServlet) {
+		DataSourcesInitializerRegister(DataSourcesInitializerServlet contentInitializerServlet) {
 			this.contentInitializerServlet = contentInitializerServlet;
 		}
 
 		@Override
 		public String getName() {
-			return "Database Initializer Register";
+			return "DataSources Register";
 		}
 
 		@Override
 		public void start() {
 			boolean ok = false;
 			try {
-				ok = initDefaultDatabaseContent(null);
+				ok = registerDataSources(null);
 			} catch (ServletException e) {
 				logger.error(e.getMessage(), e);
 			}
 			if (ok) {
 				TaskManagerShort.getInstance().unregisterRunnableTask(this);
-				logger.info("Database Initializer Register has been un-registered");
+				logger.info("DataSources Register has been un-registered");
 			}
 		}
 
 	}
 
-	private boolean initDefaultDatabaseContent(HttpServletRequest request) throws ServletException {
-
-		DataSource dataSource = DataSourceFacade.getInstance().getDataSource(request);
-
+	private boolean registerDataSources(HttpServletRequest request) throws ServletException {
 		try {
-			Connection connection = dataSource.getConnection();
-			try {
-				DBRepositoryInitializer dbRepositoryInitializer = new DBRepositoryInitializer(dataSource, connection, false);
-				boolean result = dbRepositoryInitializer.initialize();
-				return result;
-			} finally {
-				if (connection != null) {
-					connection.close();
-				}
-			}
-		} catch (SQLException e) {
+			NamedDataSourcesInitializer namedDataSourcesInitializer = new NamedDataSourcesInitializer();
+			IRepository repository = RepositoryFacade.getInstance().getRepository(request);
+			boolean result = namedDataSourcesInitializer.initializeAvailableDataSources(request, repository);
+			return result;
+		} catch (Exception e) {
 			throw new ServletException("Initializing local database for Repository use failed", e);
 		}
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		initDefaultDatabaseContent(req);
+		registerDataSources(req);
 	}
 
 }

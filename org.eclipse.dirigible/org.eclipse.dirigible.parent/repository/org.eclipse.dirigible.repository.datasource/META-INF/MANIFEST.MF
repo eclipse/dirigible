@@ -7,7 +7,8 @@ Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.logging,
- org.eclipse.dirigible.repository.ext
+ org.eclipse.dirigible.repository.ext,
+ org.apache.commons.dbcp
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.repository.datasource

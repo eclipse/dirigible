@@ -60,6 +60,7 @@
 <unit id="org.apache.commons.net" version="3.2.0.v201305141515"/>
 <unit id="org.apache.commons.codec" version="1.4.0.v201209201156"/>
 <unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+<unit id="org.apache.commons.dbcp" version="1.4.0.v201204271417"/>
 <unit id="com.google.gson" version="2.1.0.v201303041604"/>
 <unit id="org.apache.commons.fileupload" version="1.2.2.v20111214-1400"/>
 <unit id="javax.servlet" version="3.0.0.v201112011016"/>
