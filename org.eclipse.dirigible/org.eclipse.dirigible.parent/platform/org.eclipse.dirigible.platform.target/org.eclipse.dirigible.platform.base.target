@@ -4,7 +4,6 @@
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.rap.examples.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.rap.sdk.feature.feature.group" version="0.0.0"/>
-
 <unit id="org.eclipse.rap.equinox.target.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.rap.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.help.feature.group" version="0.0.0"/>
@@ -47,6 +46,7 @@
 <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
 <unit id="org.jsoup" version="1.7.2.v201411291515"/>
+<unit id="org.eclipse.orbit.mongodb" version="2.10.1.v20130422-1135"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
