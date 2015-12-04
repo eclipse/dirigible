@@ -34,6 +34,38 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="popup:menu.repository">
+            
+            
+         <command
+               commandId="org.eclipse.dirigible.ide.repository.ui.command.NewResourceHandler"
+               label="New Resource"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <test property="org.eclipse.dirigible.ide.repository.ui.tester.RepositoryPermissionTester" value="paste"></test>
+               </iterate>
+            </visibleWhen>
+         </command>
+         
+         <command
+               commandId="org.eclipse.dirigible.ide.repository.ui.command.NewCollectionHandler"
+               label="New Collection"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <test property="org.eclipse.dirigible.ide.repository.ui.tester.RepositoryPermissionTester" value="paste"></test>
+               </iterate>
+            </visibleWhen>
+         </command>
+            
+            
+            
          <command
                commandId="org.eclipse.dirigible.ide.repository.ui.command.OpenHandler"
                label="Open"
@@ -139,6 +171,21 @@
    </extension>
    <extension
          point="org.eclipse.ui.commands">
+         
+         
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.repository.ui.command.NewResourceHandler"
+            id="org.eclipse.dirigible.ide.repository.ui.command.NewResourceHandler"
+            name="New Resource">
+      </command>
+      
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.repository.ui.command.NewCollectionHandler"
+            id="org.eclipse.dirigible.ide.repository.ui.command.NewCollectionHandler"
+            name="New Collection">
+      </command>
+         
+         
       <command
             defaultHandler="org.eclipse.dirigible.ide.repository.ui.command.OpenHandler"
             id="org.eclipse.dirigible.ide.repository.ui.command.OpenHandler"
