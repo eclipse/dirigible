@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.eclipse.dirigible.ide.common.dual.DualParameters;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
-import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
+// import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 
 public class CommonParameters {
 
@@ -97,17 +97,17 @@ public class CommonParameters {
 	public static final String DIRIGIBLE_DEBUGGER_BRIDGE = "dirigible.debugger.bridge"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_RUNTIME_BRIDGE = "dirigible.runtime.bridge"; //$NON-NLS-1$
 
-	public static String getDatabaseProductName() {
-		return System.getProperty(DataSourceFacade.DATABASE_PRODUCT_NAME);
-	}
-
-	public static String getDatabaseProductVersion() {
-		return System.getProperty(DataSourceFacade.DATABASE_PRODUCT_VERSION);
-	}
-
-	public static String getDriverName() {
-		return System.getProperty(DataSourceFacade.DATABASE_DRIVER_NAME);
-	}
+	// public static String getDatabaseProductName() {
+	// return System.getProperty(DataSourceFacade.DATABASE_PRODUCT_NAME);
+	// }
+	//
+	// public static String getDatabaseProductVersion() {
+	// return System.getProperty(DataSourceFacade.DATABASE_PRODUCT_VERSION);
+	// }
+	//
+	// public static String getDriverName() {
+	// return System.getProperty(DataSourceFacade.DATABASE_DRIVER_NAME);
+	// }
 
 	public static final String CONF_PATH_IDE = "/ide";
 

@@ -15,17 +15,17 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import org.eclipse.dirigible.ide.db.viewer.views.IDbConnectionFactory;
+import org.eclipse.dirigible.ide.db.viewer.views.IDatabaseConnectionFactory;
 import org.eclipse.dirigible.ide.db.viewer.views.TableDefinition;
 
 public class DbEditorInput implements IEditorInput {
 
 	private static final String DATABASE_METADATA_FOR = Messages.DbEditorInput_DATABASE_METADATA_FOR;
 	private TableDefinition tDefinition;
-	private IDbConnectionFactory iDbConnectionFactory;
+	private IDatabaseConnectionFactory iDbConnectionFactory;
 
 	public DbEditorInput(TableDefinition tDefinition,
-			IDbConnectionFactory iDbConnectionFactory) {
+			IDatabaseConnectionFactory iDbConnectionFactory) {
 		this.tDefinition = tDefinition;
 		this.iDbConnectionFactory = iDbConnectionFactory;
 	}
@@ -69,7 +69,7 @@ public class DbEditorInput implements IEditorInput {
 		return tDefinition;
 	}
 
-	public IDbConnectionFactory getDbConnectionFactory() {
+	public IDatabaseConnectionFactory getDbConnectionFactory() {
 		return iDbConnectionFactory;
 	}
 

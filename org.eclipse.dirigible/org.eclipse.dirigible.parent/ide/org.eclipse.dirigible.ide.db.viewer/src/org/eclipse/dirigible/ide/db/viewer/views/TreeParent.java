@@ -15,9 +15,9 @@ import java.util.ArrayList;
 
 public class TreeParent extends TreeObject {
 	private ArrayList<TreeObject> children;
-	private IDbConnectionFactory connectionFactory;
+	private IDatabaseConnectionFactory connectionFactory;
 
-	public TreeParent(String name, IDbConnectionFactory connectionFactory) {
+	public TreeParent(String name, IDatabaseConnectionFactory connectionFactory) {
 		super(name);
 		this.connectionFactory = connectionFactory;
 		children = new ArrayList<TreeObject>();
@@ -41,7 +41,7 @@ public class TreeParent extends TreeObject {
 		return children.size() > 0;
 	}
 
-	public IDbConnectionFactory getConnectionFactory() {
+	public IDatabaseConnectionFactory getConnectionFactory() {
 		return connectionFactory;
 	}
 

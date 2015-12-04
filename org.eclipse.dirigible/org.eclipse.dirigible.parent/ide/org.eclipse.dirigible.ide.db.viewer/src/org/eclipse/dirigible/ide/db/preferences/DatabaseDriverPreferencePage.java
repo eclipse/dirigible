@@ -10,8 +10,15 @@
 
 package org.eclipse.dirigible.ide.db.preferences;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Text;
@@ -22,6 +29,8 @@ public class DatabaseDriverPreferencePage extends FieldEditorPreferencePage impl
 
 	private static final long serialVersionUID = -877187045002896492L;
 
+	private static final Logger logger = Logger.getLogger(DatabaseDriverPreferencePage.class);
+
 	public DatabaseDriverPreferencePage() {
 		super(FieldEditorPreferencePage.GRID);
 	}
@@ -30,37 +39,51 @@ public class DatabaseDriverPreferencePage extends FieldEditorPreferencePage impl
 	protected void createFieldEditors() {
 		Text text = null;
 
-		StringFieldEditor databaseDriverNameField = new StringFieldEditor(DataSourceFacade.DATABASE_DRIVER_NAME, "&Driver Name:",
-				getFieldEditorParent());
-		text = databaseDriverNameField.getTextControl(getFieldEditorParent());
-		text.setEditable(false);
-		text.setText(CommonParameters.get(DataSourceFacade.DATABASE_DRIVER_NAME) != null ? CommonParameters.get(DataSourceFacade.DATABASE_DRIVER_NAME)
-				: DatabasePreferencePage.N_A);
-		addField(databaseDriverNameField);
+		DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
+		Connection connection = null;
+		try {
+			try {
+				connection = dataSource.getConnection();
+				DatabaseMetaData dmd = connection.getMetaData();
 
-		StringFieldEditor databaseMinorVersionField = new StringFieldEditor(DataSourceFacade.DATABASE_DRIVER_MINOR_VERSION, "&Minor Version:",
-				getFieldEditorParent());
-		text = databaseMinorVersionField.getTextControl(getFieldEditorParent());
-		text.setEditable(false);
-		text.setText(CommonParameters.get(DataSourceFacade.DATABASE_DRIVER_MINOR_VERSION) != null
-				? CommonParameters.get(DataSourceFacade.DATABASE_DRIVER_MINOR_VERSION) : DatabasePreferencePage.N_A);
-		addField(databaseMinorVersionField);
+				StringFieldEditor databaseDriverNameField = new StringFieldEditor("DATABASE_DRIVER_NAME", "&Driver Name:", getFieldEditorParent());
+				text = databaseDriverNameField.getTextControl(getFieldEditorParent());
+				text.setEditable(false);
+				String driverName = dmd.getDriverName();
+				text.setText(driverName != null ? driverName : DatabasePreferencePage.N_A);
+				addField(databaseDriverNameField);
 
-		StringFieldEditor databaseMajorVersionField = new StringFieldEditor(DataSourceFacade.DATABASE_DRIVER_MAJOR_VERSION, "&Major Version:",
-				getFieldEditorParent());
-		text = databaseMajorVersionField.getTextControl(getFieldEditorParent());
-		text.setEditable(false);
-		text.setText(CommonParameters.get(DataSourceFacade.DATABASE_DRIVER_MAJOR_VERSION) != null
-				? CommonParameters.get(DataSourceFacade.DATABASE_DRIVER_MAJOR_VERSION) : DatabasePreferencePage.N_A);
-		addField(databaseMajorVersionField);
+				StringFieldEditor databaseMinorVersionField = new StringFieldEditor("DATABASE_DRIVER_MINOR_VERSION", "&Minor Version:",
+						getFieldEditorParent());
+				text = databaseMinorVersionField.getTextControl(getFieldEditorParent());
+				text.setEditable(false);
+				String driverMinor = dmd.getDriverMinorVersion() + "";
+				text.setText(driverMinor);
+				addField(databaseMinorVersionField);
 
-		StringFieldEditor databaseConnectionClassNameField = new StringFieldEditor(DataSourceFacade.DATABASE_CONNECTION_CLASS_NAME,
-				"&Connection Class Name:", getFieldEditorParent());
-		text = databaseConnectionClassNameField.getTextControl(getFieldEditorParent());
-		text.setEditable(false);
-		text.setText(CommonParameters.get(DataSourceFacade.DATABASE_CONNECTION_CLASS_NAME) != null
-				? CommonParameters.get(DataSourceFacade.DATABASE_CONNECTION_CLASS_NAME) : DatabasePreferencePage.N_A);
-		addField(databaseConnectionClassNameField);
+				StringFieldEditor databaseMajorVersionField = new StringFieldEditor("DATABASE_DRIVER_MAJOR_VERSION", "&Major Version:",
+						getFieldEditorParent());
+				text = databaseMajorVersionField.getTextControl(getFieldEditorParent());
+				text.setEditable(false);
+				String driverMajor = dmd.getDriverMajorVersion() + "";
+				text.setText(driverMajor);
+				addField(databaseMajorVersionField);
+
+				StringFieldEditor databaseConnectionClassNameField = new StringFieldEditor("DATABASE_CONNECTION_CLASS_NAME",
+						"&Connection Class Name:", getFieldEditorParent());
+				text = databaseConnectionClassNameField.getTextControl(getFieldEditorParent());
+				text.setEditable(false);
+				String driverClass = connection.getClass().getCanonicalName();
+				text.setText(driverClass != null ? driverClass : DatabasePreferencePage.N_A);
+				addField(databaseConnectionClassNameField);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	@Override

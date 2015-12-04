@@ -14,6 +14,6 @@ package org.eclipse.dirigible.ide.db.viewer.views;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface IDbConnectionFactory {
+public interface IDatabaseConnectionFactory {
 	public Connection getDatabaseConnection() throws SQLException;
 }

@@ -108,8 +108,8 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 				TreeParent schemes = null;
 				// TreeParent tables = null;
 				List<TreeParent> schemesMid = new ArrayList<TreeParent>();
-				schemes = new TreeParent(CommonParameters.getDatabaseProductName() + CBO + CommonParameters.getDatabaseProductVersion() + CBC
-						+ CommonParameters.getDriverName(), this.databaseViewer);
+				schemes = new TreeParent(dmd.getDatabaseProductName() + CBO + dmd.getDatabaseProductVersion() + CBC + dmd.getDriverName(),
+						this.databaseViewer);
 
 				// list catalogs
 				// List<String> listOfCatalogs = getListOfCatalogs(dmd);
@@ -123,7 +123,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 				boolean isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 				String catalogName = null;
 				// list schemes
-				List<String> listOfSchemes = getListOfSchemes(connection, catalogName);
+				List<String> listOfSchemes = getListOfSchemes(dmd, connection, catalogName);
 				for (String string : listOfSchemes) {
 
 					String schemeName = string;
@@ -169,14 +169,14 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 
 	}
 
-	private List<String> getListOfSchemes(Connection connection, String catalogName) throws SQLException {
+	private List<String> getListOfSchemes(DatabaseMetaData dmd, Connection connection, String catalogName) throws SQLException {
 
 		DatabaseMetaData metaData = connection.getMetaData();
 
 		List<String> listOfSchemes = new ArrayList<String>();
 		ResultSet rs = null;
 
-		String productName = CommonParameters.getDatabaseProductName();
+		String productName = dmd.getDatabaseProductName();
 		IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
 
 		IFilter schemaFilter = databaseViewer.getSchemaFilter(connection);
@@ -214,7 +214,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 
 	private List<String> getListOfTables(DatabaseMetaData dmd, String catalogName, String schemeName) throws SQLException {
 
-		String productName = CommonParameters.getDatabaseProductName();
+		String productName = dmd.getDatabaseProductName();
 		IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
 
 		List<String> listOfTables = new ArrayList<String>();

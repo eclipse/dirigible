@@ -21,7 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import org.eclipse.dirigible.ide.db.viewer.views.IDbConnectionFactory;
+import org.eclipse.dirigible.ide.db.viewer.views.IDatabaseConnectionFactory;
 import org.eclipse.dirigible.ide.db.viewer.views.TableDefinition;
 import org.eclipse.dirigible.ide.db.viewer.views.TreeObject;
 import org.eclipse.dirigible.ide.db.viewer.views.TreeParent;
@@ -79,7 +79,7 @@ public class DeleteTableAction extends Action {
 						continue;
 					}
 					parent = ((TreeObject) obj).getParent();
-					IDbConnectionFactory connectionFactory = parent.getConnectionFactory();
+					IDatabaseConnectionFactory connectionFactory = parent.getConnectionFactory();
 					try {
 						deleteTable(tableDefinition, connectionFactory);
 					} catch (SQLException e) {
@@ -100,7 +100,7 @@ public class DeleteTableAction extends Action {
 		MessageDialog.openError(viewer.getControl().getShell(), DATABASE_VIEW, message);
 	}
 
-	private void deleteTable(TableDefinition tableDefinition, IDbConnectionFactory connectionFactory)
+	private void deleteTable(TableDefinition tableDefinition, IDatabaseConnectionFactory connectionFactory)
 			throws SQLException {
 		Connection connection = connectionFactory.getDatabaseConnection();
 		try {

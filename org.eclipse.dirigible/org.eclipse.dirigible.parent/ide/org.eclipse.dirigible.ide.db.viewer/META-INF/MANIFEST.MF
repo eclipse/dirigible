@@ -13,7 +13,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dirigible.ide.db.export.rcp;resolution:=optional,
  org.eclipse.dirigible.ide.db.export.rap;resolution:=optional,
  org.eclipse.dirigible.ide.editor.text,
- org.eclipse.dirigible.repository.ext
+ org.eclipse.dirigible.repository.ext,
+ org.eclipse.dirigible.ide.repository,
+ org.eclipse.dirigible.repository.api
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.servlet,
  javax.servlet.http

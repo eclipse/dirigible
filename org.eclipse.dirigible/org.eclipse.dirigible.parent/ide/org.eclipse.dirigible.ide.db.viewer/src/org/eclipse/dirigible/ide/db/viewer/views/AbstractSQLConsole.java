@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.db.viewer.views;
@@ -18,6 +17,11 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
+import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
+import org.eclipse.dirigible.repository.ext.security.IRoles;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -39,12 +43,10 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
-import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
-import org.eclipse.dirigible.repository.ext.security.IRoles;
-import org.eclipse.dirigible.repository.logging.Logger;
 
+/**
+ * Base SQL Console providing the reusable functionality for both RAP and RCP environment
+ */
 public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole {
 
 	private static final String EXECUTE_QUERY_STATEMENT = Messages.SQLConsole_EXECUTE_QUERY_STATEMENT;
@@ -98,16 +100,12 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 
 	public static final String SCRIPT_DELIMITER = ";"; //$NON-NLS-1$
 
-	public AbstractSQLConsole() {
-	}
-
 	@SuppressWarnings("unused")
 	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
 
-		ToolBar toolBar = new ToolBar(parent, SWT.FLAT | SWT.WRAP | SWT.RIGHT | SWT.BORDER
-				| SWT.SHADOW_OUT);
+		ToolBar toolBar = new ToolBar(parent, SWT.FLAT | SWT.WRAP | SWT.RIGHT | SWT.BORDER | SWT.SHADOW_OUT);
 
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL | SWT.BORDER);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -122,8 +120,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 
 		ToolItem itemQuery = new ToolItem(toolBar, SWT.PUSH | SWT.SEPARATOR);
 		itemQuery.setText(EXECUTE_QUERY);
-		Image iconQuery = ImageDescriptor.createFromURL(
-				AbstractSQLConsole.class.getResource(ICONS_SEGMENT + ICON_EXECUTE_QUERY_PNG)).createImage(); //$NON-NLS-1$
+		Image iconQuery = ImageDescriptor.createFromURL(AbstractSQLConsole.class.getResource(ICONS_SEGMENT + ICON_EXECUTE_QUERY_PNG)).createImage();
 		itemQuery.setImage(iconQuery);
 		itemQuery.addSelectionListener(new SelectionListener() {
 			private static final long serialVersionUID = 1281159157504712273L;
@@ -144,9 +141,8 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 			new ToolItem(toolBar, SWT.SEPARATOR);
 			ToolItem itemUpdate = new ToolItem(toolBar, SWT.PUSH);
 			itemUpdate.setText(EXECUTE_UPDATE);
-			Image iconUpdate = ImageDescriptor.createFromURL(
-					AbstractSQLConsole.class.getResource(ICONS_SEGMENT + ICON_EXECUTE_UPDATE_PNG))
-					.createImage(); //$NON-NLS-1$
+			Image iconUpdate = ImageDescriptor.createFromURL(AbstractSQLConsole.class.getResource(ICONS_SEGMENT + ICON_EXECUTE_UPDATE_PNG))
+					.createImage();
 			itemUpdate.setImage(iconUpdate);
 			itemUpdate.addSelectionListener(new SelectionListener() {
 				private static final long serialVersionUID = 1281159157504712273L;
@@ -184,6 +180,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 		actionExecuteQuery = new Action() {
 			private static final long serialVersionUID = -4666336820729503841L;
 
+			@Override
 			public void run() {
 				executeStatement(true);
 			}
@@ -194,6 +191,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 		actionExecuteUpdate = new Action() {
 			private static final long serialVersionUID = -4666336820729503841L;
 
+			@Override
 			public void run() {
 				executeStatement(false);
 			}
@@ -206,7 +204,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 	public void executeStatement(boolean isQuery) {
 
 		String sql = scriptArea.getText();
-		if (sql == null || sql.length() == 0) {
+		if ((sql == null) || (sql.length() == 0)) {
 			return;
 		}
 
@@ -248,7 +246,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 		}
 	}
 
-	public Connection getConnection() throws Exception {
+	protected Connection getConnection() throws Exception {
 		return DatabaseViewer.getConnectionFromSelectedDatasource();
 	}
 
@@ -265,8 +263,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 			if (isBinaryType(columnType)) {
 				columnLabelPrint = prepareStringForSize(columnLabel, BINARY.length(), SPACE);
 			} else {
-				columnLabelPrint = prepareStringForSize(columnLabel,
-						resultSetMetaData.getColumnDisplaySize(i), SPACE);
+				columnLabelPrint = prepareStringForSize(columnLabel, resultSetMetaData.getColumnDisplaySize(i), SPACE);
 			}
 			buff.append(columnLabelPrint);
 			headerLength += columnLabelPrint.length();
@@ -290,8 +287,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 				if (isBinaryType(columnType)) {
 					dataPrint = prepareStringForSize(data, BINARY.length(), ' ');
 				} else {
-					dataPrint = prepareStringForSize(data,
-							resultSetMetaData.getColumnDisplaySize(i), ' ');
+					dataPrint = prepareStringForSize(data, resultSetMetaData.getColumnDisplaySize(i), ' ');
 				}
 				buff.append(dataPrint);
 			}
@@ -326,7 +322,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 		} else {
 			StringBuffer buff = new StringBuffer();
 			buff.append(columnLabel);
-			for (int i = 0; i < columnDisplaySize - columnLabel.length(); i++) {
+			for (int i = 0; i < (columnDisplaySize - columnLabel.length()); i++) {
 				buff.append(c);
 			}
 			result = buff.toString();
@@ -345,6 +341,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 		menuMgr.addMenuListener(new IMenuListener() {
 			private static final long serialVersionUID = 7417283863427269417L;
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				AbstractSQLConsole.this.fillContextMenu(manager);
 			}

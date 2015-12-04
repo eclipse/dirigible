@@ -10,9 +10,6 @@
 
 package org.eclipse.dirigible.repository.datasource;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,14 +31,14 @@ import org.eclipse.dirigible.repository.logging.Logger;
  */
 public class DataSourceFacade {
 
-	public static final String DATABASE_PRODUCT_NAME = "DATABASE_PRODUCT_NAME"; //$NON-NLS-1$
-	public static final String DATABASE_PRODUCT_VERSION = "DATABASE_PRODUCT_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_MINOR_VERSION = "DATABASE_MINOR_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_MAJOR_VERSION = "DATABASE_MAJOR_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_DRIVER_NAME = "DATABASE_DRIVER_NAME"; //$NON-NLS-1$
-	public static final String DATABASE_DRIVER_MINOR_VERSION = "DATABASE_DRIVER_MINOR_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_DRIVER_MAJOR_VERSION = "DATABASE_DRIVER_MAJOR_VERSION"; //$NON-NLS-1$
-	public static final String DATABASE_CONNECTION_CLASS_NAME = "DATABASE_CONNECTION_CLASS_NAME"; //$NON-NLS-1$
+	// public static final String DATABASE_PRODUCT_NAME = "DATABASE_PRODUCT_NAME"; //$NON-NLS-1$
+	// public static final String DATABASE_PRODUCT_VERSION = "DATABASE_PRODUCT_VERSION"; //$NON-NLS-1$
+	// public static final String DATABASE_MINOR_VERSION = "DATABASE_MINOR_VERSION"; //$NON-NLS-1$
+	// public static final String DATABASE_MAJOR_VERSION = "DATABASE_MAJOR_VERSION"; //$NON-NLS-1$
+	// public static final String DATABASE_DRIVER_NAME = "DATABASE_DRIVER_NAME"; //$NON-NLS-1$
+	// public static final String DATABASE_DRIVER_MINOR_VERSION = "DATABASE_DRIVER_MINOR_VERSION"; //$NON-NLS-1$
+	// public static final String DATABASE_DRIVER_MAJOR_VERSION = "DATABASE_DRIVER_MAJOR_VERSION"; //$NON-NLS-1$
+	// public static final String DATABASE_CONNECTION_CLASS_NAME = "DATABASE_CONNECTION_CLASS_NAME"; //$NON-NLS-1$
 
 	private static final String EMPTY = "";
 
@@ -117,7 +114,7 @@ public class DataSourceFacade {
 			} else {
 				logger.debug("Lookup done.");
 			}
-			populateMetaData(dataSource);
+			// populateMetaData(dataSource);
 		}
 		return dataSource;
 	}
@@ -203,29 +200,29 @@ public class DataSourceFacade {
 		return wrappedDataSource;
 	}
 
-	private void populateMetaData(DataSource dataSource) {
-		Connection connection = null;
-		try {
-			try {
-				connection = dataSource.getConnection();
-				DatabaseMetaData metaData = connection.getMetaData();
-				System.setProperty(DATABASE_PRODUCT_NAME, metaData.getDatabaseProductName());
-				System.setProperty(DATABASE_PRODUCT_VERSION, metaData.getDatabaseProductVersion());
-				System.setProperty(DATABASE_MINOR_VERSION, metaData.getDatabaseMinorVersion() + EMPTY);
-				System.setProperty(DATABASE_MAJOR_VERSION, metaData.getDatabaseMajorVersion() + EMPTY);
-				System.setProperty(DATABASE_DRIVER_NAME, metaData.getDriverName());
-				System.setProperty(DATABASE_DRIVER_MINOR_VERSION, metaData.getDriverMinorVersion() + EMPTY);
-				System.setProperty(DATABASE_DRIVER_MAJOR_VERSION, metaData.getDriverMajorVersion() + EMPTY);
-				System.setProperty(DATABASE_CONNECTION_CLASS_NAME, connection.getClass().getCanonicalName());
-			} finally {
-				if (connection != null) {
-					connection.close();
-				}
-			}
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
+	// private void populateMetaData(DataSource dataSource) {
+	// Connection connection = null;
+	// try {
+	// try {
+	// connection = dataSource.getConnection();
+	// DatabaseMetaData metaData = connection.getMetaData();
+	// System.setProperty(DATABASE_PRODUCT_NAME, metaData.getDatabaseProductName());
+	// System.setProperty(DATABASE_PRODUCT_VERSION, metaData.getDatabaseProductVersion());
+	// System.setProperty(DATABASE_MINOR_VERSION, metaData.getDatabaseMinorVersion() + EMPTY);
+	// System.setProperty(DATABASE_MAJOR_VERSION, metaData.getDatabaseMajorVersion() + EMPTY);
+	// System.setProperty(DATABASE_DRIVER_NAME, metaData.getDriverName());
+	// System.setProperty(DATABASE_DRIVER_MINOR_VERSION, metaData.getDriverMinorVersion() + EMPTY);
+	// System.setProperty(DATABASE_DRIVER_MAJOR_VERSION, metaData.getDriverMajorVersion() + EMPTY);
+	// System.setProperty(DATABASE_CONNECTION_CLASS_NAME, connection.getClass().getCanonicalName());
+	// } finally {
+	// if (connection != null) {
+	// connection.close();
+	// }
+	// }
+	// } catch (SQLException e) {
+	// logger.error(e.getMessage(), e);
+	// }
+	// }
 
 	/**
 	 * Register a named data-source's meta-data by name in the list of known named data sources

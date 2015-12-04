@@ -98,12 +98,12 @@
 			<param-value>org.eclipse.dirigible.repository.local.LocalRepositoryProvider</param-value>
 		</init-param>
 		
-		<!-- JNDI key for the Custom Database DataSource(s) 
+		<!-- JNDI key for the Custom Database DataSource(s) -->
 		<init-param>
 			<param-name>jndiCustomDataSource-PostgresDB</param-name>
 			<param-value>java:comp/env/jdbc/PostgresDB</param-value>
 		</init-param>
-		-->
+		
 
 		<load-on-startup>2</load-on-startup>
 
@@ -156,7 +156,7 @@
 	</filter-mapping>
 
 
-	<!-- Resource References 
+	<!-- Resource References -->
 	
 	<resource-ref>
 		<res-ref-name>jdbc/PostgresDB</res-ref-name>
@@ -164,7 +164,7 @@
 		<res-auth>Container</res-auth>
 	</resource-ref>
 	
-	-->
+	
 	
 
 	<!-- Security -->

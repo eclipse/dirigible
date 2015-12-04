@@ -23,6 +23,7 @@ import org.eclipse.dirigible.ide.db.viewer.views.actions.ShowTableDefinitionActi
 import org.eclipse.dirigible.ide.db.viewer.views.actions.ViewTableContentAction;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -35,10 +36,13 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
@@ -51,7 +55,13 @@ import org.eclipse.ui.part.ViewPart;
 /**
  * Database Viewer represents the structure of the tenant specific schema
  */
-public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
+public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFactory, ISelectionChangedListener {
+
+	private static final Logger logger = Logger.getLogger(DatabaseViewer.class);
+
+	private static final String SELECTED_DATASOURCE_NAME = "SELECTED_DATASOURCE_NAME";
+
+	static final String DEFAULT_DATASOURCE_NAME = "Default";
 
 	private static final String DATABASE_VIEW = Messages.DatabaseViewer_DATABASE_VIEW;
 
@@ -91,6 +101,12 @@ public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 	@Override
 	@SuppressWarnings("unused")
 	public void createPartControl(Composite parent) {
+
+		parent.setLayout(new GridLayout());
+		DatabaseViewerToolBar databaseViewerToolBar = new DatabaseViewerToolBar();
+		databaseViewerToolBar.addSelectionChangedListener(this);
+		databaseViewerToolBar.createToolBar(parent, getSite().getShell());
+
 		PatternFilter filter = new PatternFilter();
 		FilteredTree tree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL, filter, true);
 		viewer = tree.getViewer();
@@ -246,13 +262,40 @@ public class DatabaseViewer extends ViewPart implements IDbConnectionFactory {
 	 * @throws SQLException
 	 */
 	public static Connection getConnectionFromSelectedDatasource() throws SQLException {
-		DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
-		Connection connection = dataSource.getConnection();
-		return connection;
+		String datasourceName = CommonParameters.get(SELECTED_DATASOURCE_NAME);
+		DataSource dataSource = null;
+		if ((datasourceName == null) || datasourceName.equals(DEFAULT_DATASOURCE_NAME)) {
+			logger.debug("No selected datasource found. Make use of the default one");
+			dataSource = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
+			if (dataSource != null) {
+				Connection connection = dataSource.getConnection();
+				return connection;
+			}
+			logger.error("Trying to use the default datasource, but it is null");
+		} else {
+			logger.debug(String.format("Selected datasource found %s", datasourceName));
+			dataSource = DataSourceFacade.getInstance().getNamedDataSource(CommonParameters.getRequest(), datasourceName);
+			if (dataSource != null) {
+				Connection connection = dataSource.getConnection();
+				return connection;
+			}
+			logger.error(String.format("Selected datasource found %s, but the datasource itself is null", datasourceName));
+		}
+		return null;
 	}
 
-	public boolean showSchemes() {
+	boolean showSchemes() {
 		return false;
+	}
+
+	@Override
+	public void selectionChanged(SelectionChangedEvent event) {
+		if (event.getSource() instanceof DatabaseViewerToolBar) {
+			String datasourceName = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
+			CommonParameters.set(SELECTED_DATASOURCE_NAME, datasourceName);
+			viewer.setContentProvider(initContentProvider());
+			viewer.refresh();
+		}
 	}
 
 }
