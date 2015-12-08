@@ -104,6 +104,11 @@
 			<param-value>java:comp/env/jdbc/PostgresDB</param-value>
 		</init-param>
 		
+		<!-- Mail Service Built-in --> 
+		<init-param>
+			<param-name>mailSender</param-name>
+			<param-value>built-in</param-value>
+		</init-param>
 
 		<load-on-startup>2</load-on-startup>
 

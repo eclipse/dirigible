@@ -44,7 +44,7 @@ import org.eclipse.dirigible.repository.ext.messaging.MessageHub;
 import org.eclipse.dirigible.repository.ext.template.TemplatingEngine;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.RuntimeActivator;
-import org.eclipse.dirigible.runtime.mail.MailSender;
+import org.eclipse.dirigible.runtime.mail.MailServiceFactory;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ConnectivityConfigurationUtils;
@@ -173,7 +173,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		// Services
 
 		// put mail sender
-		MailSender mailSender = new MailSender(request);
+		IMailService mailSender = MailServiceFactory.createMailService(request);
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MAIL_SERVICE, mailSender);
 		apiBuilder.setMailService(mailSender);
 

@@ -111,6 +111,8 @@ public interface ICommonConstants {
 	// Platform specific
 	public static final String MAIL_SESSION = "MailSession"; //$NON-NLS-1$
 
+	public static final String MAIL_SESSION_PROVIDED = "MailSessionProvided"; //$NON-NLS-1$
+
 	public static final String CONNECTIVITY_CONFIGURATION = "ConnectivityConfiguration"; //$NON-NLS-1$
 
 	public static final String PARAM_REPOSITORY_PROVIDER = "repositoryProvider"; //$NON-NLS-1$
