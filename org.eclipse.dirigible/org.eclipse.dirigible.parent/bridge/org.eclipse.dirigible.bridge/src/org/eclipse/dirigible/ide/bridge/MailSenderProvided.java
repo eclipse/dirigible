@@ -8,7 +8,9 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.runtime.mail;
+package org.eclipse.dirigible.ide.bridge;
+
+import java.util.logging.Logger;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -18,45 +20,33 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.internet.MimeMultipart;
-import javax.servlet.http.HttpServletRequest;
 
-import org.eclipse.dirigible.repository.api.ICommonConstants;
-import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.scripting.IMailService;
-
-public class MailSender implements IMailService {
+public class MailSenderProvided {
 
 	private static final String MAIL_SERVICE_IS_NOT_AVAILABLE = "Mail Service is not available";
 
-	private HttpServletRequest request;
+	private Session session;
 
-	public MailSender(HttpServletRequest request) {
-		this.request = request;
+	public MailSenderProvided(Session session) {
+		this.session = session;
 	}
 
-	private static final Logger logger = Logger.getLogger(MailSender.class.getCanonicalName());
+	private static final Logger logger = Logger.getLogger(MailSenderProvided.class.getCanonicalName());
 
-	@Override
 	public String sendMail(String from, String to, String subject, String content) {
 		try {
-			Session smtpSession = (Session) System.getProperties().get(ICommonConstants.MAIL_SESSION);
-			if (smtpSession == null) {
-				smtpSession = (Session) this.request.getSession().getAttribute(ICommonConstants.MAIL_SESSION);
-			}
-			if (smtpSession == null) {
-				throw new Exception(MAIL_SERVICE_IS_NOT_AVAILABLE);
-			}
-			Transport transport = smtpSession.getTransport();
+
+			Transport transport = this.session.getTransport();
 			transport.connect();
 
-			MimeMessage mimeMessage = createMimeMessage(smtpSession, from, to, subject, content);
+			MimeMessage mimeMessage = createMimeMessage(this.session, from, to, subject, content);
 			transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
 			transport.close();
 		} catch (Exception e) {
-			logger.error(this.getClass().getCanonicalName() + "#sendMail()", e); //$NON-NLS-1$
-			// e.printStackTrace();
+			logger.severe(String.format("Exception occurred in class %s in method %s with message %s", this.getClass().getCanonicalName(), //$NON-NLS-1$
+					"#sendMail()", e.getMessage()));
+			e.printStackTrace();
 			return e.getMessage();
-			// throw new Exception(e);
 		}
 		return ""; //$NON-NLS-1$
 	}

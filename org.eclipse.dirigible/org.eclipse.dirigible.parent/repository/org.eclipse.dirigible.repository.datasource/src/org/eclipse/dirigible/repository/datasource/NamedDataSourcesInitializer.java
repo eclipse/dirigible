@@ -31,32 +31,34 @@ public class NamedDataSourcesInitializer {
 	public boolean initializeAvailableDataSources(HttpServletRequest request, IRepository repository) {
 		try {
 			ICollection collection = repository.getCollection(DATASOURCES_CONF_ROOT);
-			List<IResource> resources = collection.getResources();
-			for (IResource resource : resources) {
-				if (resource.getName().endsWith(".properties")) {
-					Properties properties = new Properties();
-					properties.load(new ByteArrayInputStream(resource.getContent()));
-					if (properties.get(DataSourceFacade.PARAM_DB_ID) != null) {
-						String type = properties.getProperty(DataSourceFacade.PARAM_DB_TYPE);
-						if (type != null) {
-							if (DataSourceFacade.PARAM_DB_TYPE_JNDI.equals(type)) {
-								registerJNDIDataSource(request, properties);
-							} else if (DataSourceFacade.PARAM_DB_TYPE_DIRECT.equals(type)) {
-								registerDirectDataSource(request, properties);
+			if (collection.exists()) {
+				List<IResource> resources = collection.getResources();
+				for (IResource resource : resources) {
+					if (resource.getName().endsWith(".properties")) {
+						Properties properties = new Properties();
+						properties.load(new ByteArrayInputStream(resource.getContent()));
+						if (properties.get(DataSourceFacade.PARAM_DB_ID) != null) {
+							String type = properties.getProperty(DataSourceFacade.PARAM_DB_TYPE);
+							if (type != null) {
+								if (DataSourceFacade.PARAM_DB_TYPE_JNDI.equals(type)) {
+									registerJNDIDataSource(request, properties);
+								} else if (DataSourceFacade.PARAM_DB_TYPE_DIRECT.equals(type)) {
+									registerDirectDataSource(request, properties);
+								} else {
+									logger.error(String.format("DataSource configuration at location %s contains invalid data - unknown 'db.type' %s",
+											resource.getPath(), type));
+									continue;
+								}
 							} else {
-								logger.error(String.format("DataSource configuration at location %s contains invalid data - unknown 'db.type' %s",
-										resource.getPath(), type));
+								logger.error(String.format("DataSource configuration at location %s contains invalid data - missing 'db.type'",
+										resource.getPath()));
 								continue;
 							}
 						} else {
-							logger.error(String.format("DataSource configuration at location %s contains invalid data - missing 'db.type'",
+							logger.warn(String.format("DataSource configuration at location %s contains invalid or commented parameters",
 									resource.getPath()));
 							continue;
 						}
-					} else {
-						logger.warn(String.format("DataSource configuration at location %s contains invalid or commented parameters",
-								resource.getPath()));
-						continue;
 					}
 				}
 			}

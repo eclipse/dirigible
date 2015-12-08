@@ -94,6 +94,12 @@
 			<param-name>repositoryProvider</param-name>
 			<param-value>org.eclipse.dirigible.repository.db.DBRepositoryProvider</param-value>
 		</init-param>
+		
+		<!-- Mail Service Provided --> 
+		<init-param>
+			<param-name>mailSender</param-name>
+			<param-value>provided</param-value>
+		</init-param>
 
 		<load-on-startup>2</load-on-startup>
 

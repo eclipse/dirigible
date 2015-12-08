@@ -97,6 +97,12 @@
 			<param-name>repositoryProvider</param-name>
 			<param-value>org.eclipse.dirigible.repository.local.LocalRepositoryProvider</param-value>
 		</init-param>
+		
+		<!-- Mail Service Built-in --> 
+		<init-param>
+			<param-name>mailSender</param-name>
+			<param-value>built-in</param-value>
+		</init-param>
 
 		<load-on-startup>2</load-on-startup>
 
