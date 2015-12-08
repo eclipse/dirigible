@@ -36,20 +36,15 @@ import org.eclipse.dirigible.repository.logging.Logger;
  */
 public abstract class AbstractPublisher implements IPublisher {
 
-	public static final Logger logger = Logger.getLogger(AbstractPublisher.class);
+	private static final Logger logger = Logger.getLogger(AbstractPublisher.class);
 
-	private String currentPublishLocation;
-
-	protected ICollection getTargetProjectContainer(IProject project, String registryLocation) throws IOException {
-
-		this.currentPublishLocation = registryLocation;
+	protected ICollection getTargetProjectContainer(String registryLocation) throws IOException {
 
 		final IRepository repository = RepositoryFacade.getInstance().getRepository();
 		final ICollection publishContainer = repository.getCollection(registryLocation);
 		// final ICollection projectContainer = publishContainer.getCollection(project.getName());
 		// #177
 		final ICollection projectContainer = publishContainer;
-		String user = getUser();
 		if (projectContainer.exists()) {
 			return projectContainer;
 		}
@@ -145,8 +140,8 @@ public abstract class AbstractPublisher implements IPublisher {
 		String fileLocation = file.getFullPath().toString();
 		String projectLocation = file.getProject().getFullPath().toString();
 
-		final org.eclipse.dirigible.repository.api.IResource targetResource = target.getRepository().getResource(this.currentPublishLocation
-				+ IRepository.SEPARATOR + fileLocation.substring(projectLocation.length() + getFolderType().length() + 2));
+		final org.eclipse.dirigible.repository.api.IResource targetResource = target.getRepository()
+				.getResource(target.getPath() + IRepository.SEPARATOR + file.getName());
 
 		org.eclipse.dirigible.repository.api.IResource resource = target.getRepository()
 				.getResource(file.getWorkspace().getRoot().getRawLocation() + file.getFullPath().toString());

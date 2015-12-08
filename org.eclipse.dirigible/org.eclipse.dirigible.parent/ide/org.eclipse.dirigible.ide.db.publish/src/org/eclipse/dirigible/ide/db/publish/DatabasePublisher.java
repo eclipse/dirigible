@@ -47,7 +47,7 @@ public class DatabasePublisher extends AbstractPublisher implements IPublisher {
 	@Override
 	public void publish(IProject project) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(project, getRegistryLocation());
+			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES);
 			copyAllFromTo(sourceFolder, targetContainer);
 

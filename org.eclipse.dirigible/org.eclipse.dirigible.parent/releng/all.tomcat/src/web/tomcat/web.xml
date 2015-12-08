@@ -64,6 +64,15 @@
 			<param-name>defaultDataSourceType</param-name>
 			<param-value>local</param-value>
 		</init-param>
+		<init-param>
+			<param-name>autoActivateEnabled</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>autoPublishEnabled</param-name>
+			<param-value>true</param-value>
+		</init-param>
 		
 		<!-- JNDI key for the Default Database DataSource -->
 		<init-param>

@@ -152,6 +152,18 @@
                tooltip="Turn on/off Auto Activation">
          </action>
          
+         <action
+               allowLabelUpdate="true"
+               class="org.eclipse.dirigible.ide.publish.ui.command.AutoPublishAction"
+               id="org.eclipse.dirigible.ide.publish.ui.command.AutoPublishAction"
+               label="Auto Publish"
+               menubarPath="org.eclipse.dirigible.projectMenu/autoActivationGroup"
+               state="true"
+               style="toggle"
+               toolbarPath="autoActivationGroup"
+               tooltip="Turn on/off Auto Publish">
+         </action>
+         
       </actionSet>
    </extension>
     <extension

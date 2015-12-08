@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.api;
@@ -14,10 +13,8 @@ package org.eclipse.dirigible.repository.api;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-
 /**
  * Utility class representing the path object in the Repository
- * 
  */
 public class RepositoryPath {
 
@@ -27,8 +24,7 @@ public class RepositoryPath {
 
 	public RepositoryPath(String path) {
 		this.path = path;
-		final StringTokenizer tokenizer = new StringTokenizer(path,
-				IRepository.SEPARATOR);
+		final StringTokenizer tokenizer = new StringTokenizer(path, IRepository.SEPARATOR);
 		segments = new String[tokenizer.countTokens()];
 		for (int i = 0; i < segments.length; ++i) {
 			segments[i] = tokenizer.nextToken();
@@ -46,7 +42,7 @@ public class RepositoryPath {
 
 	/**
 	 * Getter for the last segment
-	 * 
+	 *
 	 * @return
 	 */
 	public String getLastSegment() {
@@ -58,28 +54,32 @@ public class RepositoryPath {
 
 	/**
 	 * Getter for the path of the parent
-	 * 
+	 *
 	 * @return
 	 */
 	public RepositoryPath getParentPath() {
 		if (segments.length == 0) {
 			return null;
 		}
-		final String[] newSegments = Arrays.copyOf(segments,
-				segments.length - 1);
+		final String[] newSegments = Arrays.copyOf(segments, segments.length - 1);
 		return new RepositoryPath(newSegments);
 	}
 
 	/**
 	 * Add new segment after the last position
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
 	public RepositoryPath append(String name) {
-		final String[] newSegments = Arrays.copyOf(segments,
-				segments.length + 1);
-		newSegments[newSegments.length - 1] = name;
+
+		final StringTokenizer tokenizer = new StringTokenizer(name, IRepository.SEPARATOR);
+		final String[] newSegments = Arrays.copyOf(segments, segments.length + tokenizer.countTokens());
+		int i = 0;
+		while (tokenizer.hasMoreTokens()) {
+			newSegments[segments.length + i++] = tokenizer.nextToken();
+		}
+
 		return new RepositoryPath(newSegments);
 	}
 
@@ -123,7 +123,7 @@ public class RepositoryPath {
 	public String[] getSegments() {
 		return Arrays.copyOf(segments, segments.length);
 	}
-	
+
 	public String constructPath(int number) {
 		if (number >= segments.length) {
 			return toString();
@@ -138,7 +138,7 @@ public class RepositoryPath {
 		}
 		return builder.toString();
 	}
-	
+
 	public static String normalizePath(String path, String name) {
 		String normalizedPath = null;
 		if (path != null) {

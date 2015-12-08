@@ -29,7 +29,7 @@ public class TestCasesPublisher extends AbstractPublisher implements IPublisher 
 	@Override
 	public void publish(IProject project) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(project, getRegistryLocation());
+			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.TEST_CASES);
 			copyAllFromTo(sourceFolder, targetContainer);
 		} catch (Exception ex) {
@@ -40,7 +40,7 @@ public class TestCasesPublisher extends AbstractPublisher implements IPublisher 
 	@Override
 	public void activate(IProject project) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(project, CommonParameters.getTestingContentSandbox());
+			final ICollection targetContainer = getTargetProjectContainer(CommonParameters.getTestingContentSandbox());
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.TEST_CASES);
 			copyAllFromTo(sourceFolder, targetContainer);
 		} catch (Exception ex) {

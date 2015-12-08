@@ -1,31 +1,31 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.publish.ui.command;
 
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.dual.DualParameters;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
-
+/**
+ * Auto activation action
+ */
 public class AutoActivateAction implements IWorkbenchWindowActionDelegate {
-
-	private static boolean AUTO_ACTIVATION = true;
 
 	@Override
 	public void run(IAction action) {
-//		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-		AUTO_ACTIVATION = action.isChecked();
+		// ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+		DualParameters.set(DualParameters.SET_AUTO_ACTIVATE, action.isChecked());
 	}
 
 	@Override
@@ -39,22 +39,18 @@ public class AutoActivateAction implements IWorkbenchWindowActionDelegate {
 		// TODO Auto-generated method stub
 
 	}
-	
-	private static String AUTO_ACTIVATOR = "auto-activator"; 
+
+	private static String AUTO_ACTIVATOR = "auto-activator";
 
 	@Override
 	public void init(IWorkbenchWindow window) {
-//		WorkspaceLocator.getWorkspace().addResourceChangeListener(this);
+		// WorkspaceLocator.getWorkspace().addResourceChangeListener(this);
 		AutoActivator autoActivator = (AutoActivator) CommonParameters.getObject(AUTO_ACTIVATOR);
 		if (autoActivator == null) {
 			autoActivator = new AutoActivator();
 			autoActivator.registerListener();
 			CommonParameters.setObject(AUTO_ACTIVATOR, autoActivator);
 		}
-	}
-
-	public static boolean isAutoActivateStrategy() {
-		return AUTO_ACTIVATION;
 	}
 
 }

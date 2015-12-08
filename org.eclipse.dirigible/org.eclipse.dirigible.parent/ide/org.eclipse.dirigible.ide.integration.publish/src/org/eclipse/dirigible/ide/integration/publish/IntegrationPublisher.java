@@ -42,7 +42,7 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 	@Override
 	public void publish(IProject project) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(project, getRegistryLocation());
+			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
 			final IFolder sourceFolder = getSourceFolder(project, IS_CONTENT_FOLDER);
 			copyAllFromTo(sourceFolder, targetContainer);
 

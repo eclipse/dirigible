@@ -28,6 +28,10 @@ public class DualParameters {
 
 	public static final String RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
 	public static final String SERVICES_URL = "servicesUrl"; //$NON-NLS-1$
+
+	public static final String SET_AUTO_ACTIVATE = "autoActivateEnabled"; //$NON-NLS-1$
+	public static final String SET_AUTO_PUBLISH = "autoPublishEnabled"; //$NON-NLS-1$
+
 	public static final String RUNTIME_URL_DEFAULT = ""; //$NON-NLS-1$
 	public static final String SERVICES_URL_DEFAULT = ""; //$NON-NLS-1$
 
@@ -39,6 +43,10 @@ public class DualParameters {
 	public static final String HC_HOST = "HC_HOST"; //$NON-NLS-1$
 
 	public static final String GUEST_USER = ICommonConstants.GUEST;
+
+	private static final boolean SET_AUTO_ACTIVATE_DEFAULT = true;
+
+	private static final boolean SET_AUTO_PUBLIUSH_DEFAULT = true;
 
 	public static void initSystemParameters() {
 		HttpServletRequest req = RWT.getRequest();
@@ -84,6 +92,14 @@ public class DualParameters {
 		}
 	}
 
+	public static void set(String name, Object value) {
+		try {
+			RWT.getRequest().getSession().setAttribute(name, value);
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+		}
+	}
+
 	public static void setObject(String name, Object value) {
 		try {
 			RWT.getRequest().getSession().setAttribute(name, value);
@@ -98,6 +114,22 @@ public class DualParameters {
 			runtimeUrl = RUNTIME_URL_DEFAULT;
 		}
 		return runtimeUrl;
+	}
+
+	public static boolean isAutoPublishEnabled() {
+		Boolean autoPublishEnabled = (Boolean) RWT.getRequest().getSession().getAttribute(SET_AUTO_PUBLISH);
+		if (autoPublishEnabled == null) {
+			autoPublishEnabled = SET_AUTO_PUBLIUSH_DEFAULT;
+		}
+		return autoPublishEnabled;
+	}
+
+	public static boolean isAutoActivateEnabled() {
+		Boolean autoPublishEnabled = (Boolean) RWT.getRequest().getSession().getAttribute(SET_AUTO_ACTIVATE);
+		if (autoPublishEnabled == null) {
+			autoPublishEnabled = SET_AUTO_ACTIVATE_DEFAULT;
+		}
+		return autoPublishEnabled;
 	}
 
 	public static String getServicesUrl() {
