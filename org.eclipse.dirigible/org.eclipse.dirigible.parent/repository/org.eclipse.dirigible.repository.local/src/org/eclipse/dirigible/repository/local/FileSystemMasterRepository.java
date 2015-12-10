@@ -12,4 +12,9 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 		super(user);
 	}
 
+	@Override
+	protected String getRepositoryRootFolder() {
+		return "dirigible_master";
+	}
+
 }

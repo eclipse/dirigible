@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.eclipse.dirigible.repository.api.RepositoryFactory;
@@ -27,6 +28,15 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 public class RepositoryFacade {
 
+	private static final String PARAM_RECREATE = "recreate"; //$NON-NLS-1$
+	private static final String PARAM_USER = "user"; //$NON-NLS-1$
+	private static final String PARAM_DATASOURCE = "datasource"; //$NON-NLS-1$
+	private static final String PARAM_GIT_TARGET_FOLDER = "masterRepositoryGitTarget"; //$NON-NLS-1$
+	private static final String PARAM_GIT_LOCATION = "masterRepositoryGitLocation"; //$NON-NLS-1$
+	private static final String PARAM_GIT_USER = "masterRepositoryGitUser"; //$NON-NLS-1$
+	private static final String PARAM_GIT_PASSWORD = "masterRepositoryGitPassword"; //$NON-NLS-1$
+	private static final String PARAM_GIT_BRANCH = "masterRepositoryGitBranch"; //$NON-NLS-1$
+
 	private static final Logger logger = Logger.getLogger(RepositoryFacade.class);
 
 	// private static final String JAVA_COMP_ENV_JDBC_DEFAULT_DB = "java:comp/env/jdbc/DefaultDB"; //$NON-NLS-1$
@@ -36,6 +46,8 @@ public class RepositoryFacade {
 	private static final String LOCAL_DB_NAME = "derby"; //$NON-NLS-1$
 
 	private static final String REPOSITORY = "repository-instance"; //$NON-NLS-1$
+
+	private static final String MASTER_REPOSITORY = "master-repository-instance"; //$NON-NLS-1$
 
 	private static RepositoryFacade instance;
 
@@ -63,15 +75,47 @@ public class RepositoryFacade {
 		}
 
 		try {
-			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(request);
+			DataSource defaultDataSource = DataSourceFacade.getInstance().getDataSource(request);
 			String user = getUser(request);
 			// repository = new DBRepository(dataSource, user, false);
 			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("datasource", dataSource);
-			parameters.put("user", user);
-			parameters.put("recreate", Boolean.FALSE);
+			parameters.put(PARAM_DATASOURCE, defaultDataSource);
+			parameters.put(PARAM_USER, user);
+			parameters.put(PARAM_RECREATE, Boolean.FALSE);
+			parameters.put(PARAM_GIT_TARGET_FOLDER, System.getProperty(PARAM_GIT_TARGET_FOLDER));
+			parameters.put(PARAM_GIT_LOCATION, System.getProperty(PARAM_GIT_LOCATION));
+			parameters.put(PARAM_GIT_USER, System.getProperty(PARAM_GIT_USER));
+			parameters.put(PARAM_GIT_PASSWORD, System.getProperty(PARAM_GIT_PASSWORD));
+			parameters.put(PARAM_GIT_BRANCH, System.getProperty(PARAM_GIT_BRANCH));
 			repository = RepositoryFactory.createRepository(parameters);
 			saveRepositoryInstance(request, repository);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new RepositoryException(e);
+		}
+
+		return repository;
+	}
+
+	public IMasterRepository getMasterRepository(HttpServletRequest request) throws RepositoryException {
+
+		IMasterRepository repository = getMasterRepositoryInstance(request);
+
+		if (repository != null) {
+			return repository;
+		}
+
+		try {
+			DataSource defaultDataSource = DataSourceFacade.getInstance().getDataSource(request);
+			String user = getUser(request);
+			// repository = new DBRepository(dataSource, user, false);
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put(PARAM_DATASOURCE, defaultDataSource);
+			parameters.put(PARAM_USER, user);
+			parameters.put(PARAM_RECREATE, Boolean.FALSE);
+
+			repository = RepositoryFactory.createMasterRepository(parameters);
+			saveMasterRepositoryInstance(request, repository);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			throw new RepositoryException(e);
@@ -96,15 +140,30 @@ public class RepositoryFacade {
 		return null;
 	}
 
-	public void saveRepositoryInstance(HttpServletRequest request, IRepository repository) {
+	private IMasterRepository getMasterRepositoryInstance(HttpServletRequest request) {
+		if (request == null) {
+			return null;
+		}
+		try {
+			return (IMasterRepository) request.getSession().getAttribute(MASTER_REPOSITORY);
+		} catch (IllegalStateException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+	private void saveRepositoryInstance(HttpServletRequest request, IRepository repository) {
 		if (request == null) {
 			return;
 		}
-		try {
-			request.getSession().setAttribute(REPOSITORY, repository);
-		} catch (Exception e) {
-			repository.dispose();
+		request.getSession().setAttribute(REPOSITORY, repository);
+	}
+
+	private void saveMasterRepositoryInstance(HttpServletRequest request, IMasterRepository repository) {
+		if (request == null) {
+			return;
 		}
+		request.getSession().setAttribute(MASTER_REPOSITORY, repository);
 	}
 
 }

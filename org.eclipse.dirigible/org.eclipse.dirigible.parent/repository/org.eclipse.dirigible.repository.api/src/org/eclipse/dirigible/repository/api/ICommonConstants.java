@@ -117,4 +117,6 @@ public interface ICommonConstants {
 
 	public static final String PARAM_REPOSITORY_PROVIDER = "repositoryProvider"; //$NON-NLS-1$
 
+	public static final String PARAM_REPOSITORY_PROVIDER_MASTER = "repositoryProviderMaster"; //$NON-NLS-1$
+
 }

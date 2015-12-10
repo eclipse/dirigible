@@ -14,17 +14,31 @@ import org.eclipse.dirigible.runtime.scheduler.SchedulerActivator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+/**
+ * The Activator of the Initializer plugin
+ */
 public class InitActivator implements BundleActivator {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
+
+		// Initializes the default database content - tables, views and records
 		DBInitializerServlet dbInitializerServlet = new DBInitializerServlet();
 		dbInitializerServlet.registerInitRegister();
+
+		// Initializes the default Repository content - resources
 		ContentInitializerServlet contentInitializerServlet = new ContentInitializerServlet();
 		contentInitializerServlet.registerInitRegister();
+
+		// Initializes the default data-sources definitions from the configuration store
 		DataSourcesInitializerServlet datasourcesInitializerServlet = new DataSourcesInitializerServlet();
 		datasourcesInitializerServlet.registerInitRegister();
 
+		// Initializes the content from the pre-configured Master Repository - DB, Git, FileSystem, ...
+		MasterRepositorySynchronizerServlet masterRepositorySynchronizerServlet = new MasterRepositorySynchronizerServlet();
+		masterRepositorySynchronizerServlet.registerInitRegister();
+
+		// Start all the scheduled tasks
 		SchedulerActivator.getSchedulerServlet().startSchedulers();
 	}
 

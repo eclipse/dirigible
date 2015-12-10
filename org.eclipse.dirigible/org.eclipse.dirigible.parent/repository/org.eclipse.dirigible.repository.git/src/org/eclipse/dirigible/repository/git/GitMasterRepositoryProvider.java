@@ -18,11 +18,11 @@ import org.eclipse.dirigible.repository.api.IMasterRepositoryProvider;
 public class GitMasterRepositoryProvider implements IMasterRepositoryProvider {
 
 	private static final String PARAM_USER = "user";
-	private static final String PARAM_GIT_TARGET_FOLDER = "git.target";
-	private static final String PARAM_GIT_LOCATION = "git.location";
-	private static final String PARAM_GIT_USER = "git.user";
-	private static final String PARAM_GIT_PASSWORD = "git.password";
-	private static final String PARAM_GIT_BRANCH = "git.branch";
+	private static final String PARAM_GIT_TARGET_FOLDER = "masterRepositoryGitTarget"; //$NON-NLS-1$
+	private static final String PARAM_GIT_LOCATION = "masterRepositoryGitLocation"; //$NON-NLS-1$
+	private static final String PARAM_GIT_USER = "masterRepositoryGitUser"; //$NON-NLS-1$
+	private static final String PARAM_GIT_PASSWORD = "masterRepositoryGitPassword"; //$NON-NLS-1$
+	private static final String PARAM_GIT_BRANCH = "masterRepositoryGitBranch"; //$NON-NLS-1$
 
 	@Override
 	public IMasterRepository createRepository(Map<String, Object> parameters) {

@@ -66,16 +66,17 @@ public class FileSystemRepository implements IRepository {
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param dataSource
 	 * @param user
 	 * @param rootFolder
 	 * @throws LocalBaseException
 	 */
 	public FileSystemRepository(String user, String rootFolder) throws LocalBaseException {
 
-		String root = rootFolder;
-		if (root == null) {
-			root = System.getProperty("user.dir");
+		String root = System.getProperty("user.dir");
+
+		if (rootFolder != null) {
+			root += File.separator;
+			root += rootFolder;
 		}
 
 		this.user = user;
@@ -98,12 +99,16 @@ public class FileSystemRepository implements IRepository {
 		return infoPath;
 	}
 
+	protected String getRepositoryRootFolder() {
+		return "dirigible_local";
+	}
+
 	private void initializeRepository(String rootFolder) {
-		repositoryPath = rootFolder + "/dirigible_local/root"; // $NON-NLS-1$
+		repositoryPath = rootFolder + "/" + getRepositoryRootFolder() + "/root"; // $NON-NLS-1$
 		repositoryPath = repositoryPath.replace(IRepository.SEPARATOR, File.separator);
-		versionsPath = rootFolder + "/dirigible_local/versions"; // $NON-NLS-1$
+		versionsPath = rootFolder + "/" + getRepositoryRootFolder() + "/versions"; // $NON-NLS-1$
 		versionsPath = versionsPath.replace(IRepository.SEPARATOR, File.separator);
-		infoPath = rootFolder + "/dirigible_local/info"; // $NON-NLS-1$
+		infoPath = rootFolder + "/" + getRepositoryRootFolder() + "/info"; // $NON-NLS-1$
 		infoPath = infoPath.replace(IRepository.SEPARATOR, File.separator);
 	}
 

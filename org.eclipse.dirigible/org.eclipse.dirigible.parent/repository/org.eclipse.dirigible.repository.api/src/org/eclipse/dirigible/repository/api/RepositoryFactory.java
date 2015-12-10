@@ -12,7 +12,6 @@ package org.eclipse.dirigible.repository.api;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -27,9 +26,11 @@ public class RepositoryFactory {
 
 	static IRepositoryProvider localRepositoryProvider;
 
+	static IMasterRepositoryProvider masterRepositoryProvider;
+
 	static List<IRepositoryProvider> repositoryProviders = new ArrayList<IRepositoryProvider>();
 
-	static Map<String, IMasterRepositoryProvider> masterRepositoryProviders = new HashMap<String, IMasterRepositoryProvider>();
+	static List<IMasterRepositoryProvider> masterRepositoryProviders = new ArrayList<IMasterRepositoryProvider>();
 
 	static {
 		registerServices();
@@ -40,54 +41,75 @@ public class RepositoryFactory {
 		try {
 			BundleContext context = RepositoryActivator.getContext();
 
-			logger.info("Registering Repository Providers...");
+			registerRepositoryProviders(context);
 
-			String defaultRepositoryProvider = System.getProperty(ICommonConstants.PARAM_REPOSITORY_PROVIDER);
-			String localRepositoryProviderClass = "org.eclipse.dirigible.repository.local.LocalRepositoryProvider";
+			registerMasterRepositoryProviders(context);
 
-			// IRepositoryProvider services
-			Collection<ServiceReference<IRepositoryProvider>> serviceReferences = context.getServiceReferences(IRepositoryProvider.class, null);
-			for (ServiceReference<IRepositoryProvider> serviceReference : serviceReferences) {
-				IRepositoryProvider repositoryProvider = context.getService(serviceReference);
-				repositoryProviders.add(repositoryProvider);
-
-				logger.info(
-						String.format("%s added to the list of available Repository Providers", repositoryProvider.getClass().getCanonicalName()));
-
-				if (defaultRepositoryProvider != null) {
-					if (repositoryProvider.getClass().getCanonicalName().equals(defaultRepositoryProvider)) {
-						logger.info(String.format("Default Repository Provider %s, set as Local Repository Provider",
-								repositoryProvider.getClass().getCanonicalName()));
-						localRepositoryProvider = repositoryProvider;
-					}
-				} else if (repositoryProvider.getClass().getCanonicalName().equals(localRepositoryProviderClass)) {
-					logger.info("Standard Local Repository Provider is used");
-					localRepositoryProvider = repositoryProvider;
-				}
-			}
-
-			if (localRepositoryProvider == null) {
-				for (Object element : repositoryProviders) {
-					IRepositoryProvider repositoryProvider = (IRepositoryProvider) element;
-					if (repositoryProvider.getClass().getCanonicalName().equals(localRepositoryProviderClass)) {
-						logger.info("Fallback to standard Local Repository Provider is used");
-						localRepositoryProvider = repositoryProvider;
-					}
-				}
-			}
-
-			// IMasterRepositoryProvider services
-			Collection<ServiceReference<IMasterRepositoryProvider>> masterServiceReferences = context
-					.getServiceReferences(IMasterRepositoryProvider.class, null);
-			for (ServiceReference<IMasterRepositoryProvider> serviceReference : masterServiceReferences) {
-				IMasterRepositoryProvider masterRepositoryProvider = context.getService(serviceReference);
-				masterRepositoryProviders.put(masterRepositoryProvider.getClass().getCanonicalName(), masterRepositoryProvider);
-			}
 		} catch (InvalidSyntaxException e) {
 			logger.severe(e.getMessage());
 			e.printStackTrace();
 		}
 
+	}
+
+	private static void registerRepositoryProviders(BundleContext context) throws InvalidSyntaxException {
+
+		logger.info("Registering Repository Providers...");
+
+		String defaultRepositoryProvider = System.getProperty(ICommonConstants.PARAM_REPOSITORY_PROVIDER);
+		String localRepositoryProviderClass = "org.eclipse.dirigible.repository.local.LocalRepositoryProvider";
+
+		// IRepositoryProvider services
+		Collection<ServiceReference<IRepositoryProvider>> serviceReferences = context.getServiceReferences(IRepositoryProvider.class, null);
+		for (ServiceReference<IRepositoryProvider> serviceReference : serviceReferences) {
+			IRepositoryProvider repositoryProvider = context.getService(serviceReference);
+			repositoryProviders.add(repositoryProvider);
+
+			logger.info(String.format("%s added to the list of available Repository Providers", repositoryProvider.getClass().getCanonicalName()));
+
+			if (defaultRepositoryProvider != null) {
+				if (repositoryProvider.getClass().getCanonicalName().equals(defaultRepositoryProvider)) {
+					logger.info(String.format("Repository Provider %s, set as Local Repository Provider",
+							repositoryProvider.getClass().getCanonicalName()));
+					localRepositoryProvider = repositoryProvider;
+				}
+			} else if (repositoryProvider.getClass().getCanonicalName().equals(localRepositoryProviderClass)) {
+				logger.info("Standard Local Repository Provider is used");
+				localRepositoryProvider = repositoryProvider;
+			}
+		}
+
+		if (localRepositoryProvider == null) {
+			for (Object element : repositoryProviders) {
+				IRepositoryProvider repositoryProvider = (IRepositoryProvider) element;
+				if (repositoryProvider.getClass().getCanonicalName().equals(localRepositoryProviderClass)) {
+					logger.info("Fallback to standard Local Repository Provider is used");
+					localRepositoryProvider = repositoryProvider;
+				}
+			}
+		}
+	}
+
+	private static void registerMasterRepositoryProviders(BundleContext context) throws InvalidSyntaxException {
+
+		logger.info("Registering Master Repository Providers...");
+
+		String defaultMasterRepositoryProvider = System.getProperty(ICommonConstants.PARAM_REPOSITORY_PROVIDER_MASTER);
+
+		// IMasterRepositoryProvider services
+		Collection<ServiceReference<IMasterRepositoryProvider>> masterServiceReferences = context
+				.getServiceReferences(IMasterRepositoryProvider.class, null);
+		for (ServiceReference<IMasterRepositoryProvider> serviceReference : masterServiceReferences) {
+			IMasterRepositoryProvider repositoryProvider = context.getService(serviceReference);
+			masterRepositoryProviders.add(repositoryProvider);
+			if (defaultMasterRepositoryProvider != null) {
+				if (repositoryProvider.getClass().getCanonicalName().equals(defaultMasterRepositoryProvider)) {
+					logger.info(String.format("Master Repository Provider %s, set as Master Repository Provider",
+							repositoryProvider.getClass().getCanonicalName()));
+					masterRepositoryProvider = repositoryProvider;
+				}
+			}
+		}
 	}
 
 	/**
@@ -115,19 +137,21 @@ public class RepositoryFactory {
 	/**
 	 * Create a Master Repository from which the content can be synchronized as initial load or reset
 	 *
-	 * @param className
 	 * @param parameters
 	 * @return master repository
 	 * @throws RepositoryCreationException
 	 */
-	public static IMasterRepository createMasterRepository(String className, Map<String, Object> parameters) throws RepositoryCreationException {
-
-		IMasterRepositoryProvider masterRepositoryProvider = masterRepositoryProviders.get(className);
+	public static IMasterRepository createMasterRepository(Map<String, Object> parameters) throws RepositoryCreationException {
 		if (masterRepositoryProvider == null) {
-			throw new RepositoryCreationException(String.format("Master Repository Provider with class name %s has NOT been registered", className));
+			registerServices();
+			if (masterRepositoryProvider == null) {
+				if (masterRepositoryProviders.size() == 0) {
+					logger.info("Master Repository Provider has NOT been registered");
+					return null;
+				}
+			}
 		}
 		IMasterRepository masterRepository = masterRepositoryProvider.createRepository(parameters);
-
 		return masterRepository;
 	}
 

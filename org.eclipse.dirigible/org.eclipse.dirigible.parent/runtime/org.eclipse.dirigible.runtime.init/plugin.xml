@@ -26,8 +26,18 @@
            id="DataSourcesInitializerServlet"
            point="org.eclipse.equinox.http.registry.servlets">
         <servlet
-              alias="/rdb-init"
+              alias="/datasources-init"
               class="org.eclipse.dirigible.runtime.content.DataSourcesInitializerServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="MasterRepositorySynchronizerServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/master-sync"
+              class="org.eclipse.dirigible.runtime.content.MasterRepositorySynchronizerServlet"
               load-on-startup="true">
         </servlet>
      </extension>

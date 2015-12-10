@@ -29,6 +29,7 @@ public class InitParametersInjector implements IInjector {
 	public static final String JNDI_MAIL_SESSION = "jndiMailService"; //$NON-NLS-1$
 	public static final String SET_AUTO_COMMIT = "jdbcAutoCommit"; //$NON-NLS-1$
 	public static final String REPOSITORY_PROVIDER = "repositoryProvider"; //$NON-NLS-1$
+	public static final String REPOSITORY_PROVIDER_MASTER = "repositoryProviderMaster"; //$NON-NLS-1$
 	public static final String DEFAULT_DATASOURCE_TYPE = "defaultDataSourceType"; //$NON-NLS-1$
 	public static final String DEFAULT_DATASOURCE_TYPE_JNDI = "jndi"; //$NON-NLS-1$
 	public static final String DEFAULT_DATASOURCE_TYPE_LOCAL = "local"; //$NON-NLS-1$

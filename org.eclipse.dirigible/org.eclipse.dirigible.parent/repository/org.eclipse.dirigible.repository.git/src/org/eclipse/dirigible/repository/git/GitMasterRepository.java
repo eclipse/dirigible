@@ -16,7 +16,7 @@ import java.io.IOException;
 import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.git.JGitConnector;
-import org.eclipse.dirigible.repository.local.FileSystemRepository;
+import org.eclipse.dirigible.repository.local.FileSystemMasterRepository;
 import org.eclipse.dirigible.repository.local.LocalBaseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
@@ -25,7 +25,7 @@ import org.eclipse.jgit.api.errors.TransportException;
 /**
  * The Git based implementation of {@link IRepository}
  */
-public class GitMasterRepository extends FileSystemRepository implements IMasterRepository {
+public class GitMasterRepository extends FileSystemMasterRepository implements IMasterRepository {
 
 	private String gitLocation;
 
