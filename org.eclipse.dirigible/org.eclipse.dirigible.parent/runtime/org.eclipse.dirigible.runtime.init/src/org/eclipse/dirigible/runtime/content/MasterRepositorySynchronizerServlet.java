@@ -82,8 +82,11 @@ public class MasterRepositorySynchronizerServlet extends HttpServlet {
 		try {
 			IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 			IMasterRepository masterRepository = RepositoryFacade.getInstance().getMasterRepository(request);
-
-			copyRepository(masterRepository, repository);
+			if (masterRepository != null) {
+				copyRepository(masterRepository, repository);
+			} else {
+				logger.info("Master Repository is not used in this instance");
+			}
 
 		} catch (Exception e) {
 			throw new ServletException("Initializing local database for Repository use failed", e);

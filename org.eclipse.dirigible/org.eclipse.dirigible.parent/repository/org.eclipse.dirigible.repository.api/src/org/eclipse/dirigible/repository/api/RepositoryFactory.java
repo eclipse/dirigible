@@ -151,6 +151,9 @@ public class RepositoryFactory {
 				}
 			}
 		}
+		if (masterRepositoryProvider == null) {
+			return null;
+		}
 		IMasterRepository masterRepository = masterRepositoryProvider.createRepository(parameters);
 		return masterRepository;
 	}

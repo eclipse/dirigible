@@ -115,6 +115,9 @@ public class RepositoryFacade {
 			parameters.put(PARAM_RECREATE, Boolean.FALSE);
 
 			repository = RepositoryFactory.createMasterRepository(parameters);
+			if (repository == null) {
+				return null;
+			}
 			saveMasterRepositoryInstance(request, repository);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
