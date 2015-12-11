@@ -5,11 +5,11 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 
-public class NamedRelationalDataSourcesUtils {
+public class NamedDataSourcesUtils {
 
 	private HttpServletRequest request;
 
-	public NamedRelationalDataSourcesUtils(HttpServletRequest request) {
+	public NamedDataSourcesUtils(HttpServletRequest request) {
 		super();
 		this.request = request;
 	}

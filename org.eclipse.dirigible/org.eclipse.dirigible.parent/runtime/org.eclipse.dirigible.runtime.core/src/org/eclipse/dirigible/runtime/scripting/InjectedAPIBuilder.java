@@ -24,8 +24,7 @@ import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
-import org.eclipse.dirigible.runtime.scripting.utils.NamedNoSQLDataSourcesUtils;
-import org.eclipse.dirigible.runtime.scripting.utils.NamedRelationalDataSourcesUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.NamedDataSourcesUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 
@@ -162,9 +161,7 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	 */
 	private Map<String, Object> generic = new HashMap<String, Object>();
 
-	private NamedRelationalDataSourcesUtils namedRelationalDataSourceUtils;
-
-	private NamedNoSQLDataSourcesUtils namedNoSQLDataSourceUtils;
+	private NamedDataSourcesUtils namedDataSourceUtils;
 
 	@Override
 	public Map<Object, Object> getExecutionContext() {
@@ -487,23 +484,13 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	}
 
 	@Override
-	public NamedRelationalDataSourcesUtils getNamedRelationalDatasources() {
-		return this.namedRelationalDataSourceUtils;
+	public NamedDataSourcesUtils getNamedDatasources() {
+		return this.namedDataSourceUtils;
 	}
 
 	@Override
-	public void setNamedRelationalDataSourcesUtils(NamedRelationalDataSourcesUtils namedRelationalDataSourceUtils) {
-		this.namedRelationalDataSourceUtils = namedRelationalDataSourceUtils;
-	}
-
-	@Override
-	public NamedNoSQLDataSourcesUtils getNamedNoSQLDatasources() {
-		return this.namedNoSQLDataSourceUtils;
-	}
-
-	@Override
-	public void setNamedNoSQLDataSourcesUtils(NamedNoSQLDataSourcesUtils namedNoSQLDataSourceUtils) {
-		this.namedNoSQLDataSourceUtils = namedNoSQLDataSourceUtils;
+	public void setNamedDataSourcesUtils(NamedDataSourcesUtils namedDataSourceUtils) {
+		this.namedDataSourceUtils = namedDataSourceUtils;
 	}
 
 }

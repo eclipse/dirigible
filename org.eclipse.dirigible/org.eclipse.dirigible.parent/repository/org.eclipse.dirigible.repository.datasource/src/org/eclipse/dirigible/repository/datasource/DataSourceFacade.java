@@ -152,7 +152,7 @@ public class DataSourceFacade {
 	private DataSource getFromContext(String jndiName, boolean wrap) {
 
 		String defaultDataSourceType = System.getProperty(DEFAULT_DATASOURCE_TYPE);
-		if (!DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
+		if (!DEFAULT_DATASOURCE_TYPE_JNDI.equalsIgnoreCase(defaultDataSourceType)) {
 			logger.warn("Getting from Context not possible - no configured default DataSource as initial parameter");
 			return null;
 		}

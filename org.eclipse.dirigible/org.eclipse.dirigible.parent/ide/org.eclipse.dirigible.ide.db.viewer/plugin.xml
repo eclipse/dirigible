@@ -39,7 +39,7 @@
    <extension
       point = "org.eclipse.ui.preferencePages">
        <page id="org.eclipse.dirigible.ide.db.preferences.DatabasePreferencePage"
-	    	class="org.eclipse.dirigible.ide.db.preferences.DatabasePreferencePage" name="Database">
+	    	class="org.eclipse.dirigible.ide.db.preferences.DatabasePreferencePage" name="Dafault Database">
        </page>
        <page id="org.eclipse.dirigible.ide.db.preferences.DatabaseAttributesPreferencePage"
 	    	class="org.eclipse.dirigible.ide.db.preferences.DatabaseAttributesPreferencePage" name="Attributes" 
@@ -48,6 +48,9 @@
        <page id="org.eclipse.dirigible.ide.db.preferences.DatabaseDriverPreferencePage"
 	    	class="org.eclipse.dirigible.ide.db.preferences.DatabaseDriverPreferencePage" name="Driver" 
 	    	category="org.eclipse.dirigible.ide.db.preferences.DatabasePreferencePage">
+       </page>
+       <page id="org.eclipse.dirigible.ide.db.preferences.DatasourcesPreferencePage"
+	    	class="org.eclipse.dirigible.ide.db.preferences.DatasourcesPreferencePage" name="Data Sources">
        </page>
    </extension>
 </plugin>

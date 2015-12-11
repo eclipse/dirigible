@@ -20,7 +20,9 @@ public class NamedDataSourcesInitializer {
 
 	private static final Logger logger = Logger.getLogger(NamedDataSourcesInitializer.class);
 
-	private static final String DATASOURCES_CONF_ROOT = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_CONF + "rdb";
+	public static final String DATASOURCES_FOLDER = "datasources";
+
+	public static final String DATASOURCES_CONF_ROOT = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_CONF + DATASOURCES_FOLDER;
 
 	/**
 	 * Enumerate and register all the configured DataSources
@@ -29,6 +31,7 @@ public class NamedDataSourcesInitializer {
 	 * @return
 	 */
 	public boolean initializeAvailableDataSources(HttpServletRequest request, IRepository repository) {
+		DataSourceFacade.getInstance().unregisterAllDataSources();
 		try {
 			ICollection collection = repository.getCollection(DATASOURCES_CONF_ROOT);
 			if (collection.exists()) {
@@ -40,7 +43,7 @@ public class NamedDataSourcesInitializer {
 						if (properties.get(DataSourceFacade.PARAM_DB_ID) != null) {
 							String type = properties.getProperty(DataSourceFacade.PARAM_DB_TYPE);
 							if (type != null) {
-								if (DataSourceFacade.PARAM_DB_TYPE_JNDI.equals(type)) {
+								if (DataSourceFacade.PARAM_DB_TYPE_JNDI.equalsIgnoreCase(type)) {
 									registerJNDIDataSource(request, properties);
 								} else if (DataSourceFacade.PARAM_DB_TYPE_DIRECT.equals(type)) {
 									registerDirectDataSource(request, properties);

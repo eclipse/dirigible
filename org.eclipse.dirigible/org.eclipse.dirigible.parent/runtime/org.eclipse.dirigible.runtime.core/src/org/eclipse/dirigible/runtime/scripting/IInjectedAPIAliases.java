@@ -43,7 +43,6 @@ public interface IInjectedAPIAliases {
 	public static final String XML_UTILS = "xml"; //$NON-NLS-1$
 	public static final String WIKI_UTILS = "wiki"; //$NON-NLS-1$
 	public static final String EXCEPTION_UTILS = "exception"; //$NON-NLS-1$
-	public static final String RDB_UTILS = "rdb"; //$NON-NLS-1$
-	public static final String NOSQL_UTILS = "nosql"; //$NON-NLS-1$
+	public static final String DATASOURCES_UTILS = "datasources"; //$NON-NLS-1$
 
 }
