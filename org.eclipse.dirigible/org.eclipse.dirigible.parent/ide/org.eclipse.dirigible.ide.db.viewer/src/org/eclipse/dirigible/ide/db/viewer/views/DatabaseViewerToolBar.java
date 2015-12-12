@@ -107,7 +107,7 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 
 	private void fillDatasources() {
 		datasourcesCombo.removeAll();
-		datasourcesCombo.add(DatabaseViewer.DEFAULT_DATASOURCE_NAME);
+		// datasourcesCombo.add(DatabaseViewer.DEFAULT_DATASOURCE_NAME);
 		Set<String> datasourcesNames = DataSourceFacade.getInstance().getNamedDataSourcesNames();
 		for (String datasourcesName : datasourcesNames) {
 			datasourcesCombo.add(datasourcesName);

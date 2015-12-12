@@ -474,6 +474,10 @@ $ = (function(){
     	toJson : function(xml){ return ""; }
     }
     
+    var DatasourcesUtils= {
+    	get : function(name){ return DataSource; }
+    }
+    
 
     return {
     	/** Execution context holds the stack parameters during the call */
@@ -542,6 +546,8 @@ $ = (function(){
     	get: function(key){ return ""},
     	/** Setter for the instance parameters */
     	set: function(key, value){}
+    	/** Datasources container */
+    	getNamedDatasources: function(){ return DatasourcesUtils; },
     };
 
 })();
@@ -555,7 +561,7 @@ $ = (function(){
  * copy dirigible.js
  *      > cp {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/dirigible.js {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/
  * generate definition     
- *      > {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/node_modules/tern/bin/condense --name dirigible --no-spans --plugin doc_comment --def ecma5 --def browser  dirigible.js > orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/dirigible.json
+ *      > {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/node_modules/tern/bin/condense --name dirigible --no-spans --plugin doc_comment --def ecma5 --def browser  {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/dirigible.js > {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/dirigible.json
  * mvn clean install
  * copy codeEdit/* to resources
  *      > cp -r {github_root_directory}/orion.client/built-js/codeEdit/* {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/resources/
