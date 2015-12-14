@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.db;
@@ -32,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.ext.db.dialect.DerbyDBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.HANADBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
+import org.eclipse.dirigible.repository.ext.db.dialect.MongoDBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.MySQLDBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.PostgreSQLDBSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.SAPDBSpecifier;
@@ -40,8 +40,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DBUtils {
 
-	private static Logger logger = Logger.getLogger(DBUtils.class
-			.getCanonicalName());
+	private static Logger logger = Logger.getLogger(DBUtils.class.getCanonicalName());
 
 	private static final String PRODUCT_DERBY = "Apache Derby"; //$NON-NLS-1$
 	private static final String PRODUCT_SYBASE = "Adaptive Server Enterprise"; //$NON-NLS-1$
@@ -49,6 +48,7 @@ public class DBUtils {
 	private static final String PRODUCT_HDB = "HDB"; //$NON-NLS-1$
 	private static final String PRODUCT_POSTGRESQL = "PostgreSQL"; //$NON-NLS-1$
 	private static final String PRODUCT_MYSQL = "MySQL"; //$NON-NLS-1$
+	private static final String PRODUCT_MONGODB = "MongoDB"; //$NON-NLS-1$
 
 	public static final String SCRIPT_DELIMITER = ";"; //$NON-NLS-1$
 
@@ -60,8 +60,7 @@ public class DBUtils {
 	public static final String VIEW = "VIEW"; //$NON-NLS-1$
 	public static final String TABLE = "TABLE"; //$NON-NLS-1$
 
-	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM,
-		GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
+	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
 	private static final String TABLE_NAME_PATTERN_ALL = "%"; //$NON-NLS-1$
 
@@ -78,8 +77,7 @@ public class DBUtils {
 	 * @param path
 	 * @return the SQL script as a String
 	 */
-	public String readScript(Connection conn, String path, Class<?> clazz)
-			throws IOException {
+	public String readScript(Connection conn, String path, Class<?> clazz) throws IOException {
 		logger.debug("entering readScript"); //$NON-NLS-1$
 		String sql = null;
 		InputStream in = clazz.getResourceAsStream(path);
@@ -97,8 +95,7 @@ public class DBUtils {
 			int bytesRead = 0;
 
 			while ((bytesRead = bufferedInput.read(buffer)) != -1) {
-				String chunk = new String(buffer, 0, bytesRead,
-						Charset.defaultCharset());
+				String chunk = new String(buffer, 0, bytesRead, Charset.defaultCharset());
 				writer.write(chunk);
 			}
 
@@ -140,8 +137,7 @@ public class DBUtils {
 	public boolean executeUpdate(Connection connection, String script) {
 		logger.debug("entering executeUpdate"); //$NON-NLS-1$
 		boolean status = false;
-		StringTokenizer tokenizer = new StringTokenizer(script,
-				SCRIPT_DELIMITER);
+		StringTokenizer tokenizer = new StringTokenizer(script, SCRIPT_DELIMITER);
 
 		while (tokenizer.hasMoreTokens()) {
 			String line = tokenizer.nextToken();
@@ -170,8 +166,7 @@ public class DBUtils {
 		return status;
 	}
 
-	public PreparedStatement getPreparedStatement(Connection connection,
-			String sql) throws SQLException {
+	public PreparedStatement getPreparedStatement(Connection connection, String sql) throws SQLException {
 		logger.debug("entering getPreparedStatement"); //$NON-NLS-1$
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		logger.debug("exiting getPreparedStatement"); //$NON-NLS-1$
@@ -223,13 +218,14 @@ public class DBUtils {
 				return new PostgreSQLDBSpecifier();
 			} else if (PRODUCT_MYSQL.equals(productName)) {
 				return new MySQLDBSpecifier();
+			} else if (PRODUCT_MONGODB.equals(productName)) {
+				return new MongoDBSpecifier();
 			}
 		}
 		return new DerbyDBSpecifier();
 	}
 
-	public String specifyDataType(Connection connection, String commonType)
-			throws SQLException {
+	public String specifyDataType(Connection connection, String commonType) throws SQLException {
 		String productName = connection.getMetaData().getDatabaseProductName();
 		IDialectSpecifier dialectSpecifier = getDialectSpecifier(productName);
 		return dialectSpecifier.getSpecificType(commonType);
@@ -290,56 +286,45 @@ public class DBUtils {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public static byte[] dbToDataBinary(Connection connection,
-			ResultSet resultSet, String columnName) throws SQLException,
-			IOException {
+	public static byte[] dbToDataBinary(Connection connection, ResultSet resultSet, String columnName) throws SQLException, IOException {
 		String productName = connection.getMetaData().getDatabaseProductName();
-		IDialectSpecifier dialectSpecifier = DBUtils
-				.getDialectSpecifier(productName);
-		InputStream is = dialectSpecifier
-				.getBinaryStream(resultSet, columnName);
+		IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
+		InputStream is = dialectSpecifier.getBinaryStream(resultSet, columnName);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		IOUtils.copy(is, baos);
 		byte[] bytes = baos.toByteArray();
 		return bytes;
 	}
 
-	public static boolean isTableOrViewExists(Connection connection, String name)
-			throws SQLException {
+	public static boolean isTableOrViewExists(Connection connection, String name) throws SQLException {
 
 		boolean exists = false;
-		ResultSet rs = connection.getMetaData().getTables(null, null, name,
-				TABLE_TYPES);
+		ResultSet rs = connection.getMetaData().getTables(null, null, name, TABLE_TYPES);
 
 		exists = rs.next();
 
 		if (!exists) {
 			name = name.toLowerCase(); // e.g. postgres
-			rs = connection.getMetaData().getTables(null, null, name,
-					TABLE_TYPES);
+			rs = connection.getMetaData().getTables(null, null, name, TABLE_TYPES);
 			exists = rs.next();
 		}
 
 		if (!exists) {
 			name = name.toUpperCase(); // e.g. mysql
-			rs = connection.getMetaData().getTables(null, null, name,
-					TABLE_TYPES);
+			rs = connection.getMetaData().getTables(null, null, name, TABLE_TYPES);
 			exists = rs.next();
 		}
 
 		return exists;
 	}
 
-	public static ResultSet getAllTables(Connection connection)
-			throws SQLException {
+	public static ResultSet getAllTables(Connection connection) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet tableNames = meta.getTables(null, null,
-				TABLE_NAME_PATTERN_ALL, null);
+		ResultSet tableNames = meta.getTables(null, null, TABLE_NAME_PATTERN_ALL, null);
 		return tableNames;
 	}
 
-	public static ResultSet getColumns(Connection connection, String name)
-			throws SQLException {
+	public static ResultSet getColumns(Connection connection, String name) throws SQLException {
 
 		DatabaseMetaData meta = connection.getMetaData();
 
@@ -365,8 +350,7 @@ public class DBUtils {
 		return columns;
 	}
 
-	public static ResultSet getPrimaryKeys(Connection connection, String name)
-			throws SQLException {
+	public static ResultSet getPrimaryKeys(Connection connection, String name) throws SQLException {
 
 		DatabaseMetaData meta = connection.getMetaData();
 

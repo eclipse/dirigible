@@ -105,11 +105,9 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 				// get the database metadata
 				DatabaseMetaData dmd = connection.getMetaData();
 
-				TreeParent schemes = null;
 				// TreeParent tables = null;
 				List<TreeParent> schemesMid = new ArrayList<TreeParent>();
-				schemes = new TreeParent(dmd.getDatabaseProductName() + CBO + dmd.getDatabaseProductVersion() + CBC + dmd.getDriverName(),
-						this.databaseViewer);
+				String dbName = dmd.getDatabaseProductName();
 
 				// list catalogs
 				// List<String> listOfCatalogs = getListOfCatalogs(dmd);
@@ -121,39 +119,65 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 				// TreeParent catalog = new TreeParent(catalogName);
 
 				boolean isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
-				String catalogName = null;
-				// list schemes
-				List<String> listOfSchemes = getListOfSchemes(dmd, connection, catalogName);
-				for (String string : listOfSchemes) {
-
-					String schemeName = string;
-
-					TreeParent scheme = new TreeParent(schemeName, this.databaseViewer);
-
-					// get a list of all tables
-					List<String> listOfTables = getListOfTables(dmd, catalogName, schemeName);
-					// tables = new TreeParent(schemeName);
-					for (String tableName : listOfTables) {
-						if (!isOperator && tableName.startsWith(DIRIGIBLE_SYSTEM_TALBES_PREFIX)) {
-							continue;
-						}
-						TreeObject toTable = new TreeObject(tableName, new TableDefinition(catalogName, schemeName, tableName));
-						scheme.addChild(toTable);
-					}
-					// scheme.addChild(tables);
-					schemesMid.add(scheme);
-				}
 
 				invisibleRoot = new TreeParent(EMPTY, this.databaseViewer);
-				if (this.databaseViewer.showSchemes() || (schemesMid.size() > 1)) {
-					for (TreeParent treeParent : schemesMid) {
-						schemes.addChild(treeParent);
-					}
-					invisibleRoot.addChild(schemes);
+
+				TreeParent schemes = new TreeParent(dbName + CBO + dmd.getDatabaseProductVersion() + CBC + dmd.getDriverName(), this.databaseViewer);
+
+				if (dbName == null) {
+					throw new IllegalArgumentException("Database Product name is required");// TODO: fallback
 				}
-				// else {
-				// invisibleRoot.addChild(tables);
-				// }
+
+				/*
+				 * if (DBUtils.getNoSqlDialectSpecifier(dbName, connection) != null) {
+				 * INoSqlSpecifier spec = DBUtils.getNoSqlDialectSpecifier(dbName, connection);
+				 * com.google.gson.JsonObject jsonDBLayout = spec.getLayout();
+				 * System.err.println(jsonDBLayout);
+				 * this.adapt(jsonDBLayout, invisibleRoot);
+				 * } else
+				 */
+				if (DBUtils.getDialectSpecifier(dbName) != null) {
+
+					String catalogName = null;
+					// list schemes
+					List<String> listOfSchemes = getListOfSchemes(dmd, connection, catalogName);
+					for (String string : listOfSchemes) {
+
+						String schemeName = string;
+
+						TreeParent scheme = new TreeParent(schemeName, this.databaseViewer);
+
+						// get a list of all tables
+						List<String> listOfTables = getListOfTables(dmd, catalogName, schemeName);
+						// tables = new TreeParent(schemeName);
+						for (String tableName : listOfTables) {
+							if (!isOperator && tableName.startsWith(DIRIGIBLE_SYSTEM_TALBES_PREFIX)) {
+								continue;
+							}
+							TreeObject toTable = new TreeObject(tableName, new TableDefinition(catalogName, schemeName, tableName));
+							scheme.addChild(toTable);
+						}
+						// scheme.addChild(tables);
+						schemesMid.add(scheme);
+					}
+
+					invisibleRoot.addChild(schemes);
+
+					if (schemesMid.size() == 1) {
+						TreeObject[] tables = schemesMid.get(0).getChildren();
+						for (TreeObject table : tables) {
+							schemes.addChild(table);
+						}
+					} else {
+						for (TreeParent treeParent : schemesMid) {
+							schemes.addChild(treeParent);
+						}
+					}
+
+				} else {
+					// TODO: report error and fallback
+				}
+
 			} finally {
 				if (connection != null) {
 					connection.close();

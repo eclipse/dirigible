@@ -13,11 +13,11 @@ package org.eclipse.dirigible.ide.db.viewer.views;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.db.viewer.views.format.ResultSetStringWriter;
 import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
@@ -251,54 +251,57 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 	}
 
 	private void printResultSet(ResultSet resultSet) throws SQLException {
-		StringBuffer buff = new StringBuffer();
+		/*
+		 * StringBuffer buff = new StringBuffer();
+		 * // header
+		 * int headerLength = 0;
+		 * ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+		 * for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+		 * String columnLabel = resultSetMetaData.getColumnLabel(i);
+		 * String columnLabelPrint = null;
+		 * int columnType = resultSetMetaData.getColumnType(i);
+		 * if (isBinaryType(columnType)) {
+		 * columnLabelPrint = prepareStringForSize(columnLabel, BINARY.length(), SPACE);
+		 * } else {
+		 * columnLabelPrint = prepareStringForSize(columnLabel, resultSetMetaData.getColumnDisplaySize(i), SPACE);
+		 * }
+		 * buff.append(columnLabelPrint);
+		 * headerLength += columnLabelPrint.length();
+		 * }
+		 * buff.append(END_DELIMITER);
+		 * buff.append(prepareStringForSize(EMPTY, headerLength - 1, MINUS));
+		 * buff.append(END_DELIMITER);
+		 * // data
+		 * int count = 0;
+		 * while (resultSet.next()) {
+		 * for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+		 * String data = null;
+		 * int columnType = resultSetMetaData.getColumnType(i);
+		 * if (isBinaryType(columnType)) {
+		 * data = BINARY;
+		 * } else {
+		 * data = resultSet.getString(i);
+		 * }
+		 * String dataPrint = null;
+		 * if (isBinaryType(columnType)) {
+		 * dataPrint = prepareStringForSize(data, BINARY.length(), ' ');
+		 * } else {
+		 * dataPrint = prepareStringForSize(data, resultSetMetaData.getColumnDisplaySize(i), ' ');
+		 * }
+		 * buff.append(dataPrint);
+		 * }
+		 * buff.append(END_DELIMITER);
+		 * if (++count > 100) {
+		 * buff.append(DOTS);
+		 * break;
+		 * }
+		 * }
+		 */
 
-		// header
-		int headerLength = 0;
-		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-		for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-			String columnLabel = resultSetMetaData.getColumnLabel(i);
-			String columnLabelPrint = null;
-			int columnType = resultSetMetaData.getColumnType(i);
-			if (isBinaryType(columnType)) {
-				columnLabelPrint = prepareStringForSize(columnLabel, BINARY.length(), SPACE);
-			} else {
-				columnLabelPrint = prepareStringForSize(columnLabel, resultSetMetaData.getColumnDisplaySize(i), SPACE);
-			}
-			buff.append(columnLabelPrint);
-			headerLength += columnLabelPrint.length();
-		}
-		buff.append(END_DELIMITER);
-		buff.append(prepareStringForSize(EMPTY, headerLength - 1, MINUS));
-		buff.append(END_DELIMITER);
+		ResultSetStringWriter writer = new ResultSetStringWriter();
+		String tableString = writer.writeTable(resultSet);
 
-		// data
-		int count = 0;
-		while (resultSet.next()) {
-			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-				String data = null;
-				int columnType = resultSetMetaData.getColumnType(i);
-				if (isBinaryType(columnType)) {
-					data = BINARY;
-				} else {
-					data = resultSet.getString(i);
-				}
-				String dataPrint = null;
-				if (isBinaryType(columnType)) {
-					dataPrint = prepareStringForSize(data, BINARY.length(), ' ');
-				} else {
-					dataPrint = prepareStringForSize(data, resultSetMetaData.getColumnDisplaySize(i), ' ');
-				}
-				buff.append(dataPrint);
-			}
-			buff.append(END_DELIMITER);
-			if (++count > 100) {
-				buff.append(DOTS);
-				break;
-			}
-		}
-
-		outputArea.setText(buff.toString());
+		outputArea.setText(tableString);
 	}
 
 	private boolean isBinaryType(int columnType) {
