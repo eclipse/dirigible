@@ -96,15 +96,14 @@
 			 <!-- <param-value>org.eclipse.dirigible.repository.local.LocalRepositoryProvider</param-value> -->
 		</init-param>
 		
-		<!-- Default Repository Provider Master (used for Initial Load or Reset)  
+		<!-- Default Repository Provider Master (used for Initial Load or Reset) 
 		<init-param>
 			<param-name>repositoryProviderMaster</param-name>
-			<param-value>org.eclipse.dirigible.repository.db.DBMasterRepositoryProvider</param-value>
-			<!- - <param-value>org.eclipse.dirigible.repository.db.GitMasterRepositoryProvider</param-value> - ->
+			<param-value>org.eclipse.dirigible.repository.git.GitMasterRepositoryProvider</param-value>
 		</init-param>
 		-->
 		
-		<!-- Master Repository parameters - Git based
+		<!-- Master Repository parameters - Git based 
 		<init-param>
 			<param-name>masterRepositoryGitTarget</param-name>
 			<param-value>master_git_repository</param-value>
@@ -112,23 +111,38 @@
 		
 		<init-param>
 			<param-name>masterRepositoryGitLocation</param-name>
-			<param-value>https://xxx</param-value>
+			<param-value>https://github.com/delchev/master_repository_test.git</param-value>
 		</init-param>
 		
+		<!- -
 		<init-param>
 			<param-name>masterRepositoryGitUser</param-name>
-			<param-value>{git.user}</param-value>
+			<param-value>{git username}</param-value>
 		</init-param>
 		
 		<init-param>
 			<param-name>masterRepositoryGitPassword</param-name>
-			<param-value>{git.password}</param-value>
+			<param-value>{git password}</param-value>
+		</init-param>
+		 - ->
+		 
+		<init-param>
+			<param-name>masterRepositoryGitBranch</param-name>
+			<param-value>origin/master</param-value>
+		</init-param>
+		
+		<!- -
+		<init-param>
+			<param-name>http.proxyHost</param-name>
+			<param-value>proxy</param-value>
 		</init-param>
 		
 		<init-param>
-			<param-name>masterRepositoryGitBranch</param-name>
-			<param-value>{git.branch}</param-value>
+			<param-name>http.proxyPort</param-name>
+			<param-value>8080</param-value>
 		</init-param>
+		- ->
+		
 		-->
 		 
 		 
@@ -342,7 +356,7 @@
 	</security-constraint>
 	
 	
-	<!-- Security Roles -->
+	<!-- Security Roles for Internal Usage -->
 	<security-role>
 		<description>All SAP NetWeaver Cloud users</description>
 		<role-name>Everyone</role-name>
@@ -355,6 +369,20 @@
 		<description>Operator can perform actions on Registry and Repository</description>
 		<role-name>Operator</role-name>
 	</security-role>
+	<security-role>
+		<description>Repository Service Access</description>
+		<role-name>Repository</role-name>
+	</security-role>
+	<security-role>
+		<description>Messenger can perform direct communication via Messaging Hub</description>
+		<role-name>Messenger</role-name>
+	</security-role>
+	<security-role>
+		<description>Anonymous can set explicit user name</description>
+		<role-name>Anonymous</role-name>
+	</security-role>
+	
+	<!-- Security Roles for Projects Usage -->
 	<security-role>
 		<description>Predefined Role For Applications</description>
 		<role-name>Administrator</role-name>
@@ -378,18 +406,6 @@
 	<security-role>
 		<description>Predefined Role For Applications</description>
 		<role-name>ReadOnly</role-name>
-	</security-role>
-	<security-role>
-		<description>Repository Service Access</description>
-		<role-name>Repository</role-name>
-	</security-role>
-	<security-role>
-		<description>Messenger can perform direct communication via Messaging Hub</description>
-		<role-name>Messenger</role-name>
-	</security-role>
-	<security-role>
-		<description>Anonymous can set explicit user name</description>
-		<role-name>Anonymous</role-name>
 	</security-role>
 	
 </web-app>

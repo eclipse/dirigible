@@ -12,6 +12,7 @@ package org.eclipse.dirigible.ide.bridge;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class InitParametersInjector implements IInjector {
+
+	private static final Logger logger = Logger.getLogger(InitParametersInjector.class.getCanonicalName());
 
 	public static final String RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
 	public static final String SERVICES_URL = "servicesUrl"; //$NON-NLS-1$
@@ -57,6 +60,7 @@ public class InitParametersInjector implements IInjector {
 			String parameterName = parameterNames.nextElement();
 			String parameterValue = servletConfig.getInitParameter(parameterName);
 			System.getProperties().put(parameterName, parameterValue);
+			logger.info(String.format("Initial Parameter set to Environment: name=%s value=%s", parameterName, parameterValue));
 		}
 
 	}

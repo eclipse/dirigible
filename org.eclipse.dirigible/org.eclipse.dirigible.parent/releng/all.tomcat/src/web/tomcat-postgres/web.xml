@@ -98,6 +98,55 @@
 			<param-value>org.eclipse.dirigible.repository.local.LocalRepositoryProvider</param-value>
 		</init-param>
 		
+		<!-- Default Repository Provider Master (used for Initial Load or Reset) 
+		<init-param>
+			<param-name>repositoryProviderMaster</param-name>
+			<param-value>org.eclipse.dirigible.repository.git.GitMasterRepositoryProvider</param-value>
+		</init-param>
+		-->
+		
+		<!-- Master Repository parameters - Git based 
+		<init-param>
+			<param-name>masterRepositoryGitTarget</param-name>
+			<param-value>master_git_repository</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>masterRepositoryGitLocation</param-name>
+			<param-value>https://github.com/delchev/master_repository_test.git</param-value>
+		</init-param>
+		
+		<!- -
+		<init-param>
+			<param-name>masterRepositoryGitUser</param-name>
+			<param-value>{git username}</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>masterRepositoryGitPassword</param-name>
+			<param-value>{git password}</param-value>
+		</init-param>
+		 - ->
+		 
+		<init-param>
+			<param-name>masterRepositoryGitBranch</param-name>
+			<param-value>origin/master</param-value>
+		</init-param>
+		
+		<!- -
+		<init-param>
+			<param-name>http.proxyHost</param-name>
+			<param-value>proxy</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>http.proxyPort</param-name>
+			<param-value>8080</param-value>
+		</init-param>
+		- ->
+		
+		-->
+		
 		<!-- JNDI key for the Custom Database DataSource(s) -->
 		<init-param>
 			<param-name>jndiCustomDataSource-PostgresDB</param-name>
@@ -293,7 +342,7 @@
 	</security-constraint>
 
 	
-	<!-- Security Roles -->
+	<!-- Security Roles for Internal Usage -->
 	<security-role>
 		<description>All SAP NetWeaver Cloud users</description>
 		<role-name>Everyone</role-name>
@@ -317,6 +366,32 @@
 	<security-role>
 		<description>Anonymous can set explicit user name</description>
 		<role-name>Anonymous</role-name>
+	</security-role>
+	
+	<!-- Security Roles for Projects Usage -->
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>Administrator</role-name>
+	</security-role>	
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>Manager</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>		
+		<role-name>PowerUser</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>User</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>ReadWrite</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined Role For Applications</description>
+		<role-name>ReadOnly</role-name>
 	</security-role>
 
 </web-app>

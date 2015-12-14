@@ -83,7 +83,10 @@ public class MasterRepositorySynchronizerServlet extends HttpServlet {
 			IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 			IMasterRepository masterRepository = RepositoryFacade.getInstance().getMasterRepository(request);
 			if (masterRepository != null) {
+				// 1. Copy from Master to Local
 				copyRepository(masterRepository, repository);
+				// 2. Do post import actions
+				postImport(repository);
 			} else {
 				logger.info("Master Repository is not used in this instance");
 			}
@@ -94,6 +97,7 @@ public class MasterRepositorySynchronizerServlet extends HttpServlet {
 	}
 
 	private void copyRepository(IMasterRepository sourceRepository, IRepository targetRepository) throws IOException {
+		// Copy from Master to Local
 		ICollection root = sourceRepository.getRoot();
 		copyCollection(root, targetRepository);
 	}
@@ -106,10 +110,21 @@ public class MasterRepositorySynchronizerServlet extends HttpServlet {
 				copyCollection(collection, targetRepository);
 			} else {
 				IResource resource = (IResource) entity;
-				targetRepository.createResource(resource.getPath(), resource.getContent(), resource.isBinary(), resource.getContentType(), true);
-				logger.info(String.format("Initial copy from the Mater Repository of the Resource: %s", resource.getPath()));
+				try {
+					targetRepository.createResource(resource.getPath(), resource.getContent(), resource.isBinary(), resource.getContentType(), true);
+					logger.info(String.format("Initial copy from the Mater Repository of the Resource: %s", resource.getPath()));
+				} catch (Exception e) {
+					logger.info(String.format("Failed initial copy from the Mater Repository of the Resource: %s", resource.getPath()));
+					logger.error(e.getMessage());
+				}
 			}
 		}
+	}
+
+	private void postImport(IRepository repository) throws IOException, Exception {
+		// 2. Post import actions
+		ContentPostImportUpdater contentPostImportUpdater = new ContentPostImportUpdater(repository);
+		contentPostImportUpdater.update(null);
 	}
 
 	@Override

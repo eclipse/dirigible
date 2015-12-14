@@ -34,6 +34,10 @@ import org.eclipse.dirigible.repository.logging.Logger;
  */
 public class FileSystemRepository implements IRepository {
 
+	public static final String PATH_SEGMENT_ROOT = "root";
+	public static final String PATH_SEGMENT_VERSIONS = "versions";
+	public static final String PATH_SEGMENT_INFO = "info";
+
 	private static final String PROVIDED_ZIP_DATA_CANNOT_BE_NULL = Messages.getString("DBRepository.PROVIDED_ZIP_DATA_CANNOT_BE_NULL"); //$NON-NLS-1$
 
 	private static final String PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL = Messages
@@ -104,18 +108,18 @@ public class FileSystemRepository implements IRepository {
 	}
 
 	private void initializeRepository(String rootFolder) {
-		repositoryPath = rootFolder + "/" + getRepositoryRootFolder() + "/root"; // $NON-NLS-1$
+		repositoryPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_ROOT; // $NON-NLS-1$
 		repositoryPath = repositoryPath.replace(IRepository.SEPARATOR, File.separator);
-		versionsPath = rootFolder + "/" + getRepositoryRootFolder() + "/versions"; // $NON-NLS-1$
+		versionsPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_VERSIONS; // $NON-NLS-1$
 		versionsPath = versionsPath.replace(IRepository.SEPARATOR, File.separator);
-		infoPath = rootFolder + "/" + getRepositoryRootFolder() + "/info"; // $NON-NLS-1$
+		infoPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_INFO; // $NON-NLS-1$
 		infoPath = infoPath.replace(IRepository.SEPARATOR, File.separator);
 	}
 
 	@Override
 	public ICollection getRoot() {
 		logger.debug("entering getRoot"); //$NON-NLS-1$
-		final RepositoryPath wrapperPath = new RepositoryPath(repositoryPath);
+		final RepositoryPath wrapperPath = new RepositoryPath(IRepository.SEPARATOR);
 		LocalCollection dbCollection = new LocalCollection(this, wrapperPath);
 		logger.debug("exiting getRoot"); //$NON-NLS-1$
 		return dbCollection;

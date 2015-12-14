@@ -112,13 +112,35 @@ public class JGitConnector {
 	 */
 	public static void cloneRepository(File gitDirectory, String repositoryURI, String username, String password)
 			throws InvalidRemoteException, TransportException, GitAPIException {
+		cloneRepository(gitDirectory, repositoryURI, username, password, Constants.DEFAULT_REMOTE_NAME);
+	}
+
+	/**
+	 * Clones secured git remote repository to the file system.
+	 *
+	 * @param gitDirectory
+	 *            where the remote repository will be cloned
+	 * @param repositoryURI
+	 *            repository's URI example: https://qwerty.com/xyz/abc.git
+	 * @param username
+	 *            the username used for authentication
+	 * @param password
+	 *            the password used for authentication
+	 * @param branch
+	 *            the branch where sources will be cloned from
+	 * @throws InvalidRemoteException
+	 * @throws TransportException
+	 * @throws GitAPIException
+	 */
+	public static void cloneRepository(File gitDirectory, String repositoryURI, String username, String password, String branch)
+			throws InvalidRemoteException, TransportException, GitAPIException {
 		try {
 			CloneCommand cloneCommand = Git.cloneRepository();
 			cloneCommand.setURI(repositoryURI);
 			if (!StringUtils.isEmptyOrNull(username) && !StringUtils.isEmptyOrNull(password)) {
 				cloneCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password));
 			}
-			cloneCommand.setRemote(Constants.DEFAULT_REMOTE_NAME);
+			cloneCommand.setRemote(branch);
 			cloneCommand.setDirectory(gitDirectory);
 			cloneCommand.call();
 		} catch (NullPointerException e) {

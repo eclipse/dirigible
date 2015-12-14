@@ -18,6 +18,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.git.JGitConnector;
 import org.eclipse.dirigible.repository.local.FileSystemMasterRepository;
 import org.eclipse.dirigible.repository.local.LocalBaseException;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
@@ -26,6 +27,8 @@ import org.eclipse.jgit.api.errors.TransportException;
  * The Git based implementation of {@link IRepository}
  */
 public class GitMasterRepository extends FileSystemMasterRepository implements IMasterRepository {
+
+	private static final Logger logger = Logger.getLogger(GitMasterRepository.class);
 
 	private String gitLocation;
 
@@ -42,10 +45,19 @@ public class GitMasterRepository extends FileSystemMasterRepository implements I
 		this.gitUser = gitUser;
 		this.gitPassword = gitPassword;
 		this.gitBranch = gitBranch;
+
+		try {
+			reset();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	public void reset() throws InvalidRemoteException, TransportException, GitAPIException, IOException {
-		JGitConnector.cloneRepository(new File(getRepositoryPath()), getGitLocation(), getGitUser(), getGitPassword());
+		File rootFolder = new File(getRepositoryPath());
+		if (!rootFolder.getParentFile().exists()) {
+			JGitConnector.cloneRepository(rootFolder.getParentFile(), getGitLocation(), getGitUser(), getGitPassword(), getGitBranch());
+		}
 		JGitConnector gitConnector = new JGitConnector(JGitConnector.getRepository(getRepositoryPath()));
 		gitConnector.hardReset();
 	}

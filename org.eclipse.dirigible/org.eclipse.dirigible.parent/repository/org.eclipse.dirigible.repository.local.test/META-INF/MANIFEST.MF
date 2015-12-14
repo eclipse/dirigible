@@ -11,7 +11,12 @@ Fragment-Host: org.eclipse.dirigible.repository.local
 Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.test,
  org.mockito,
- org.objenesis
+ org.objenesis,
+ org.eclipse.dirigible.ide.jgit.connector,
+ org.eclipse.dirigible.repository.git,
+ org.eclipse.jgit,
+ org.eclipse.jgit.http.apache,
+ com.jcraft.jsch
 Import-Package: org.hamcrest,
  org.hamcrest.core,
  org.hamcrest.internal,
