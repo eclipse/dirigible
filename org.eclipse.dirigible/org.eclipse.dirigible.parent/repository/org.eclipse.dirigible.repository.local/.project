@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-    <name>org.eclipse.dirigible.repository.local</name>
+	<name>Repository - Local</name>
 	<comment></comment>
 	<projects>
 	</projects>
