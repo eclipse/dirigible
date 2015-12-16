@@ -10,6 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
+	<name>IDE - Template - Test</name>
 	<artifactId>org.eclipse.dirigible.ide.template.ui.common.test</artifactId>  
   
 </project>

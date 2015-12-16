@@ -9,6 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>Runtime - Java - Test</name>
 	<artifactId>org.eclipse.dirigible.runtime.java.test</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 

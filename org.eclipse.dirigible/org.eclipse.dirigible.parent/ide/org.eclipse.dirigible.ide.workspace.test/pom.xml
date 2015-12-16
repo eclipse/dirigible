@@ -11,6 +11,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>IDE - Workspace - Test</name>
 	<artifactId>org.eclipse.dirigible.ide.workspace.test</artifactId>
 	
 </project>
