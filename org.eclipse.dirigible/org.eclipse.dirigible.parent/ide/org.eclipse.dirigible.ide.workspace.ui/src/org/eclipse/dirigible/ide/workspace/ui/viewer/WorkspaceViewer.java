@@ -11,29 +11,27 @@
 package org.eclipse.dirigible.ide.workspace.ui.viewer;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.dirigible.ide.workspace.dual.CustomResourceChangeListener;
+import org.eclipse.dirigible.ide.workspace.dual.ICustomResourceChangeListenerCallback;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.service.UISession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 
-public class WorkspaceViewer {
+public class WorkspaceViewer implements ICustomResourceChangeListenerCallback {
 
 	public static final Logger logger = Logger.getLogger(WorkspaceViewer.class.getCanonicalName());
 
@@ -43,7 +41,7 @@ public class WorkspaceViewer {
 
 	private final MenuManager menuManager;
 
-	private final IResourceChangeListener changeListener = new CustomResourceChangeListener();
+	private IResourceChangeListener changeListener;
 
 	public WorkspaceViewer(Composite parent, int style) {
 		this(parent, style, WorkspaceLocator.getWorkspace());
@@ -85,11 +83,14 @@ public class WorkspaceViewer {
 		final Menu menu = menuManager.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(menu);
 
+		changeListener = new CustomResourceChangeListener(viewer, this);
+
 		if (workspace != null) {
 			setInput(workspace.getRoot());
 		} else {
 			setInput(null);
 		}
+
 	}
 
 	public MenuManager getMenuManager() {
@@ -168,25 +169,9 @@ public class WorkspaceViewer {
 		}
 	}
 
-	private class CustomResourceChangeListener implements IResourceChangeListener {
-		@Override
-		public void resourceChanged(IResourceChangeEvent event) {
-			final Display display = Display.getCurrent();
-			UISession uiSession = RWT.getUISession(display);
-			uiSession.exec(new Runnable() {
-				@Override
-				public void run() {
-					if (!viewer.getControl().isDisposed()) {
-						try {
-							refresh();
-						} catch (Exception e) {
-							logger.error(e.getMessage(), e);
-						}
-					}
-				}
-			});
-
-		}
+	@Override
+	public void callback() {
+		refresh();
 	}
 
 }
