@@ -10,7 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>External - p2</name>
+	<name>p2 - External - p2</name>
 	<artifactId>org.eclipse.dirigible.external.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
 

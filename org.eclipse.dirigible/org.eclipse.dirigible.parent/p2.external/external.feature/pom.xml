@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>External - Feature</name>
+	<name>p2 - External - Feature</name>
 	<artifactId>org.eclipse.dirigible.external.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 

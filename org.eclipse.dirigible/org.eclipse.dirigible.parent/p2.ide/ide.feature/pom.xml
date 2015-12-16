@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - Feature</name>
+	<name>p2 - IDE - Feature</name>
 	<artifactId>org.eclipse.dirigible.ide.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 

@@ -10,9 +10,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - p2</name>
+	<name>p2 - IDE - p2</name>
 	<artifactId>org.eclipse.dirigible.ide.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
 
 </project>
-

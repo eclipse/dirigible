@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>RCP - Feature</name>
+	<name>p2 - RCP - Feature</name>
 	<artifactId>org.eclipse.dirigible.rcp.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 

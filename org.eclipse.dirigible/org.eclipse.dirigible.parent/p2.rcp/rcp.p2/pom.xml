@@ -3,7 +3,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-
 	<parent>
 		<groupId>org.eclipse.dirigible.p2.rcp</groupId>
 		<artifactId>org.eclipse.dirigible.p2.rcp.parent</artifactId>
@@ -11,9 +10,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>RCP - p2</name>
+	<name>p2 - RCP - p2</name>
 	<artifactId>org.eclipse.dirigible.rcp.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
 
 </project>
-

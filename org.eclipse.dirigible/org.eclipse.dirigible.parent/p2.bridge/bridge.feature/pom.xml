@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	<name>Bridge - Feature</name>
+	<name>p2 - Bridge - Feature</name>
 	<artifactId>org.eclipse.dirigible.bridge.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 

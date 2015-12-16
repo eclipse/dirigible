@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Repository - Feature</name>
+	<name>p2 - Repository - Feature</name>
 	<artifactId>org.eclipse.dirigible.repository.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 

@@ -9,7 +9,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-
 	<name>p2 - Runtime Parent</name>
 	<groupId>org.eclipse.dirigible.p2.runtime</groupId>
 	<artifactId>org.eclipse.dirigible.p2.runtime.parent</artifactId>

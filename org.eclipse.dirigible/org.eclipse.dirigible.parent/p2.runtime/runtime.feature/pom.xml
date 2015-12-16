@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Runtim - Feature</name>
+	<name>p2 - Runtime - Feature</name>
 	<artifactId>org.eclipse.dirigible.runtime.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 

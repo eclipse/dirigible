@@ -10,7 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Bridge - p2</name>
+	<name>p2 - Bridge - p2</name>
 	<artifactId>org.eclipse.dirigible.bridge.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
 

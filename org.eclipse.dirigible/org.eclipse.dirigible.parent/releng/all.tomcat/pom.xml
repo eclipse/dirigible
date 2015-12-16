@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>All in One</name>
+	<name>Releng - All in One</name>
 	<artifactId>allinone</artifactId>
 	<packaging>war</packaging>
 

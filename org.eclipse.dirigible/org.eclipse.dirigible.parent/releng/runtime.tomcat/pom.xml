@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Runtime</name>
+	<name>Releng - Runtime</name>
 	<artifactId>runtime</artifactId>
 	<packaging>war</packaging>
 
