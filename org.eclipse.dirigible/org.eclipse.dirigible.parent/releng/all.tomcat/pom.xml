@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -9,6 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>All in One</name>
 	<artifactId>allinone</artifactId>
 	<packaging>war</packaging>
 
@@ -23,12 +24,12 @@
 					<wtpversion>1.5</wtpversion>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
-					 <execution>
-					 	<id>external</id>
+					<execution>
+						<id>external</id>
 						<phase>compile</phase>
 						<goals>
 							<goal>unpack-dependencies</goal>
@@ -71,7 +72,7 @@
 							<includeArtifactIds>org.eclipse.dirigible.runtime.p2</includeArtifactIds>
 						</configuration>
 					</execution>
-					
+
 					<execution>
 						<id>lib</id>
 						<phase>compile</phase>
@@ -86,101 +87,108 @@
 				</executions>
 			</plugin>
 			<plugin>
-	          <artifactId>maven-antrun-plugin</artifactId>
-	          <executions>
-	            <execution>
-	                <id>replace-runtime-url</id>
-					<phase>prepare-package</phase>
-					<configuration>
-						<tasks>
-							<replace dir="${project.build.directory}/temp">
-								<include name="**/web.xml" />
-								<replacefilter token="@RUNTIME_URL@" value="${deployment.context}" />
-							</replace>
-						</tasks>
-					</configuration>
-					<goals>
-						<goal>run</goal>
-					</goals>
-				</execution>
-						
-	            <execution>
-	              <id>copy for distribution</id>
-	              <phase>install</phase>
-	              <configuration>
-	                <tasks>
-	                  
-	                  <!-- Copy executable jar, if relevant -->
-	                  <copy todir="../../../../dist/${deployment.type}/${artifactId}/">
-						    <fileset dir="${project.build.directory}">
-						        <include name="*.jar"/>
-						        <exclude name="dont-use.jar"/>
-						    </fileset>
-					  </copy>
-					  
-					  <!-- Copy deployable war, if relevant -->
-	                  <copy todir="../../../../dist/${deployment.type}/${artifactId}/">
-						    <fileset dir="${project.build.directory}">
-						        <include name="*.war"/>
-						    </fileset>
-					  </copy>
-					  
-					  <!-- Copy bridge p2 -->
-					  <copy todir="../../../../dist/p2/bridge/">
-						    <fileset dir="${project.build.directory}/../../../p2.bridge/bridge.p2/target/repository">
-						        <include name="**/*"/>
-						    </fileset>
-					  </copy>
-					  <!-- Copy external p2 -->
-					  <copy todir="../../../../dist/p2/external/">
-						    <fileset dir="${project.build.directory}/../../../p2.external/external.p2/target/repository">
-						        <include name="**/*"/>
-						    </fileset>
-					  </copy>
-					  <!-- Copy ide p2 -->
-					  <copy todir="../../../../dist/p2/ide/">
-						    <fileset dir="${project.build.directory}/../../../p2.ide/ide.p2/target/repository">
-						        <include name="**/*"/>
-						    </fileset>
-					  </copy>
-					  <!-- Copy lib p2 -->
-					  <copy todir="../../../../dist/p2/lib/">
-						    <fileset dir="${project.build.directory}/../../../p2.lib/lib.p2/target/repository">
-						        <include name="**/*"/>
-						    </fileset>
-					  </copy>
-					  <!-- Copy rcp p2 -->
-					  <copy todir="../../../../dist/p2/rcp/">
-						    <fileset dir="${project.build.directory}/../../../p2.rcp/rcp.p2/target/repository">
-						        <include name="**/*"/>
-						    </fileset>
-					  </copy>
-					  <!-- Copy repository p2 -->
-					  <copy todir="../../../../dist/p2/repository/">
-						    <fileset dir="${project.build.directory}/../../../p2.repository/repository.p2/target/repository">
-						        <include name="**/*"/>
-						    </fileset>
-					  </copy>
-					  <!-- Copy runtime p2 -->
-					  <copy todir="../../../../dist/p2/runtime/">
-						    <fileset dir="${project.build.directory}/../../../p2.runtime/runtime.p2/target/repository">
-						        <include name="**/*"/>
-						    </fileset>
-					  </copy>
-					  
-	                </tasks>
-	              </configuration>
-	              <goals>
-	                <goal>run</goal>
-	              </goals>
-	            </execution>
-	          </executions>
-	        </plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>replace-runtime-url</id>
+						<phase>prepare-package</phase>
+						<configuration>
+							<tasks>
+								<replace dir="${project.build.directory}/temp">
+									<include name="**/web.xml" />
+									<replacefilter token="@RUNTIME_URL@" value="${deployment.context}" />
+								</replace>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>copy for distribution</id>
+						<phase>install</phase>
+						<configuration>
+							<tasks>
+
+								<!-- Copy executable jar, if relevant -->
+								<copy todir="../../../../dist/${deployment.type}/${artifactId}/">
+									<fileset dir="${project.build.directory}">
+										<include name="*.jar" />
+										<exclude name="dont-use.jar" />
+									</fileset>
+								</copy>
+
+								<!-- Copy deployable war, if relevant -->
+								<copy todir="../../../../dist/${deployment.type}/${artifactId}/">
+									<fileset dir="${project.build.directory}">
+										<include name="*.war" />
+									</fileset>
+								</copy>
+
+								<!-- Copy bridge p2 -->
+								<copy todir="../../../../dist/p2/bridge/">
+									<fileset
+										dir="${project.build.directory}/../../../p2.bridge/bridge.p2/target/repository">
+										<include name="**/*" />
+									</fileset>
+								</copy>
+								<!-- Copy external p2 -->
+								<copy todir="../../../../dist/p2/external/">
+									<fileset
+										dir="${project.build.directory}/../../../p2.external/external.p2/target/repository">
+										<include name="**/*" />
+									</fileset>
+								</copy>
+								<!-- Copy ide p2 -->
+								<copy todir="../../../../dist/p2/ide/">
+									<fileset
+										dir="${project.build.directory}/../../../p2.ide/ide.p2/target/repository">
+										<include name="**/*" />
+									</fileset>
+								</copy>
+								<!-- Copy lib p2 -->
+								<copy todir="../../../../dist/p2/lib/">
+									<fileset
+										dir="${project.build.directory}/../../../p2.lib/lib.p2/target/repository">
+										<include name="**/*" />
+									</fileset>
+								</copy>
+								<!-- Copy rcp p2 -->
+								<copy todir="../../../../dist/p2/rcp/">
+									<fileset
+										dir="${project.build.directory}/../../../p2.rcp/rcp.p2/target/repository">
+										<include name="**/*" />
+									</fileset>
+								</copy>
+								<!-- Copy repository p2 -->
+								<copy todir="../../../../dist/p2/repository/">
+									<fileset
+										dir="${project.build.directory}/../../../p2.repository/repository.p2/target/repository">
+										<include name="**/*" />
+									</fileset>
+								</copy>
+								<!-- Copy runtime p2 -->
+								<copy todir="../../../../dist/p2/runtime/">
+									<fileset
+										dir="${project.build.directory}/../../../p2.runtime/runtime.p2/target/repository">
+										<include name="**/*" />
+									</fileset>
+								</copy>
+
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-	
-	
- 	<dependencies>
+
+
+	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.dirigible.p2.external</groupId>
 			<artifactId>org.eclipse.dirigible.external.p2</artifactId>
@@ -205,7 +213,7 @@
 			<version>${project.version}</version>
 			<type>eclipse-repository</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.eclipse.dirigible.p2.lib</groupId>
 			<artifactId>org.eclipse.dirigible.lib.p2</artifactId>
@@ -221,7 +229,7 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
-  		<dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.2</version>
@@ -235,7 +243,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.7.2</version>
@@ -249,7 +257,6 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+	</dependencies>
 
-	 	
- 	</dependencies>
 </project>

@@ -1,8 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<packaging>eclipse-plugin</packaging>
 
 	<parent>
 		<groupId>org.eclipse.dirigible.repository</groupId>
@@ -11,22 +9,20 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>Repository - Velocity</name>
 	<artifactId>org.eclipse.dirigible.repository.velocity</artifactId>
-	
-	
+	<packaging>eclipse-plugin</packaging>
+
 	<dependencies>
-	
 		<dependency>
-		    <groupId>org.apache.velocity</groupId>
-		    <artifactId>velocity</artifactId>
-		    <version>1.7</version>
-		    <type>jar</type>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-	
 	</dependencies>
-	
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -47,7 +43,6 @@
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
-
 					<execution>
 						<id>copy-dependencies-lib</id>
 						<phase>compile</phase>
@@ -58,15 +53,9 @@
 							<outputDirectory>${project.build.directory}/${deployment.name}/lib</outputDirectory>
 						</configuration>
 					</execution>
-					 
 				</executions>
 			</plugin>
-			
-			
 		</plugins>
-		
 	</build>
-	
-	
-	
+
 </project>

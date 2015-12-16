@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-
+	<name>p2 - External Parent</name>
 	<groupId>org.eclipse.dirigible.p2.external</groupId>
 	<artifactId>org.eclipse.dirigible.p2.external.parent</artifactId>
 	<packaging>pom</packaging>
@@ -43,37 +43,37 @@
 						</artifact>
 					</target>
 					<environments>
-			            <environment>
-			                <os>win32</os>
-			                <ws>win32</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>win32</os>
-			                <ws>win32</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			            <environment>
-			                <os>linux</os>
-			                <ws>gtk</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>linux</os>
-			                <ws>gtk</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			            <environment>
-			                <os>macosx</os>
-			                <ws>cocoa</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>macosx</os>
-			                <ws>cocoa</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			        </environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -82,24 +82,25 @@
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
-			
-			
+
 			<plugin>
-			    <artifactId>maven-clean-plugin</artifactId>
-			    <version>2.6.1</version>
-			    <goals>install</goals>
-			    <configuration>
-			      <filesets>
-			        <fileset>
-			          <directory>${basedir}</directory>
-			          <includes>
-			            <include>**/*.source_*</include>
-			          </includes>
-			          <followSymlinks>false</followSymlinks>
-			        </fileset>
-			      </filesets>
-			    </configuration>
-			  </plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+				<goals>
+					install
+				</goals>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}</directory>
+							<includes>
+								<include>**/*.source_*</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -107,5 +108,5 @@
 		<module>external.feature</module>
 		<module>external.p2</module>
 	</modules>
- 
+
 </project>

@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-
+	<name>IDE - Parent</name>
 	<groupId>org.eclipse.dirigible.ide</groupId>
 	<artifactId>org.eclipse.dirigible.ide.parent</artifactId>
 	<packaging>pom</packaging>
@@ -43,37 +43,37 @@
 						</artifact>
 					</target>
 					<environments>
-			            <environment>
-			                <os>win32</os>
-			                <ws>win32</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>win32</os>
-			                <ws>win32</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			            <environment>
-			                <os>linux</os>
-			                <ws>gtk</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>linux</os>
-			                <ws>gtk</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			            <environment>
-			                <os>macosx</os>
-			                <ws>cocoa</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>macosx</os>
-			                <ws>cocoa</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			        </environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -90,14 +90,12 @@
 		<module>org.eclipse.dirigible.ide.common.rcp</module>
 		<module>org.eclipse.dirigible.ide.common</module>
 		<module>org.eclipse.dirigible.ide.ui.rap</module>
-		
+
 		<module>org.eclipse.dirigible.ide.workspace.rap</module>
 		<module>org.eclipse.dirigible.ide.workspace.rcp</module>
-		
+
 		<module>org.eclipse.dirigible.ide.workspace</module>
-		<!-- 
-		<module>org.eclipse.dirigible.ide.workspace.test</module>
-		-->
+		<!-- <module>org.eclipse.dirigible.ide.workspace.test</module> -->
 		<module>org.eclipse.dirigible.ide.workspace.ui</module>
 		<module>org.eclipse.dirigible.ide.workspace.wizard.project</module>
 		<module>org.eclipse.dirigible.ide.repository</module>
@@ -121,17 +119,13 @@
 		<module>org.eclipse.dirigible.ide.publish.ui</module>
 		<module>org.eclipse.dirigible.ide.scripts.publish</module>
 		<module>org.eclipse.dirigible.ide.extensions.publish</module>
-		<!-- 
-		<module>org.eclipse.dirigible.ide.publish.test</module>
-		-->
+		<!-- <module>org.eclipse.dirigible.ide.publish.test</module> -->
 		<module>org.eclipse.dirigible.ide.cheatsheets</module>
 		<module>org.eclipse.dirigible.ide.integration.publish</module>
 		<module>org.eclipse.dirigible.ide.services.security.manager</module>
-		
+
 		<module>org.eclipse.dirigible.ide.template.ui.common</module>
-		<!-- 
-		<module>org.eclipse.dirigible.ide.template.ui.common.test</module>
-		 -->
+		<!-- <module>org.eclipse.dirigible.ide.template.ui.common.test</module> -->
 		<module>org.eclipse.dirigible.ide.template.ui.db</module>
 		<module>org.eclipse.dirigible.ide.template.ui.js</module>
 		<module>org.eclipse.dirigible.ide.template.ui.html</module>
@@ -150,7 +144,7 @@
 		<module>org.eclipse.dirigible.ide.terminal</module>
 		<module>org.eclipse.dirigible.ide.generic</module>
 	</modules>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.dirigible.p2.external</groupId>
@@ -164,6 +158,6 @@
 			<version>${project.version}</version>
 			<type>eclipse-repository</type>
 		</dependency>
- 	</dependencies>
- 
+	</dependencies>
+
 </project>

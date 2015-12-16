@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-
+	<name>p2 - RCP Parent</name>
 	<groupId>org.eclipse.dirigible.p2.rcp</groupId>
 	<artifactId>org.eclipse.dirigible.p2.rcp.parent</artifactId>
 	<packaging>pom</packaging>
@@ -50,24 +50,25 @@
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
-			
-			
+
 			<plugin>
-			    <artifactId>maven-clean-plugin</artifactId>
-			    <version>2.6.1</version>
-			    <goals>install</goals>
-			    <configuration>
-			      <filesets>
-			        <fileset>
-			          <directory>${basedir}</directory>
-			          <includes>
-			            <include>**/*.source_*</include>
-			          </includes>
-			          <followSymlinks>false</followSymlinks>
-			        </fileset>
-			      </filesets>
-			    </configuration>
-			  </plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+				<goals>
+					install
+				</goals>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}</directory>
+							<includes>
+								<include>**/*.source_*</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -75,5 +76,5 @@
 		<module>rcp.feature</module>
 		<module>rcp.p2</module>
 	</modules>
- 
+
 </project>

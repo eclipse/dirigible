@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-
+	<name>Runtime - Parent</name>
 	<groupId>org.eclipse.dirigible.runtime</groupId>
 	<artifactId>org.eclipse.dirigible.runtime.parent</artifactId>
 	<packaging>pom</packaging>
@@ -52,38 +52,27 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<modules>
-        
-        
-        
-        
 		<module>org.eclipse.dirigible.runtime.content</module>
 		<module>org.eclipse.dirigible.runtime.ui</module>
 		<module>org.eclipse.dirigible.runtime.core</module>
 		<module>org.eclipse.dirigible.runtime.core.test</module>
-        <module>org.eclipse.dirigible.runtime.javascript</module>
-        <module>org.eclipse.dirigible.runtime.javascript.test</module>
-        <module>org.eclipse.dirigible.runtime.command</module>
-        <!--
-        <module>org.eclipse.dirigible.runtime.command.test</module>
-         -->
+		<module>org.eclipse.dirigible.runtime.javascript</module>
+		<module>org.eclipse.dirigible.runtime.javascript.test</module>
+		<module>org.eclipse.dirigible.runtime.command</module>
+		<!-- <module>org.eclipse.dirigible.runtime.command.test</module> -->
 		<module>org.eclipse.dirigible.runtime.security</module>
 		<module>org.eclipse.dirigible.runtime.web</module>
 		<module>org.eclipse.dirigible.runtime.wiki</module>
 		<module>org.eclipse.dirigible.runtime.java</module>
-        <module>org.eclipse.dirigible.runtime.sql</module>
-		<!--
-		<module>org.eclipse.dirigible.runtime.java.test</module>
-		
-		<module>org.eclipse.dirigible.runtime.groovy</module>
-		<module>org.eclipse.dirigible.runtime.groovy.test</module>
-		-->
-		
+		<module>org.eclipse.dirigible.runtime.sql</module>
+		<!-- <module>org.eclipse.dirigible.runtime.java.test</module> -->
+		<!-- <module>org.eclipse.dirigible.runtime.groovy</module> -->
+		<!-- <module>org.eclipse.dirigible.runtime.groovy.test</module> -->
 		<module>org.eclipse.dirigible.runtime.flow</module>
 		<module>org.eclipse.dirigible.runtime.metrics</module>
 		<module>org.eclipse.dirigible.runtime.init</module>
 		<module>org.eclipse.dirigible.runtime.scheduler</module>
 	</modules>
- 
+
 </project>

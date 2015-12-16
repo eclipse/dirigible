@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -9,6 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<name>Runtime</name>
 	<artifactId>runtime</artifactId>
 	<packaging>war</packaging>
 
@@ -20,12 +21,12 @@
 					<wtpversion>1.5</wtpversion>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
-					 <execution>
-					 	<id>external</id>
+					<execution>
+						<id>external</id>
 						<phase>compile</phase>
 						<goals>
 							<goal>unpack-dependencies</goal>
@@ -46,7 +47,7 @@
 							<includeArtifactIds>org.eclipse.dirigible.repository.p2</includeArtifactIds>
 						</configuration>
 					</execution>
-					
+
 					<execution>
 						<id>runtime</id>
 						<phase>compile</phase>
@@ -58,7 +59,7 @@
 							<includeArtifactIds>org.eclipse.dirigible.runtime.p2</includeArtifactIds>
 						</configuration>
 					</execution>
-					
+
 					<execution>
 						<id>lib</id>
 						<phase>compile</phase>
@@ -72,52 +73,52 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
-	          <artifactId>maven-antrun-plugin</artifactId>
-	          <executions>
-	            <execution>
-	                <id>replace-runtime-url</id>
-					<phase>prepare-package</phase>
-					<configuration>
-						<tasks>
-							<replace dir="${project.build.directory}/temp">
-								<include name="**/web.xml" />
-								<replacefilter token="@RUNTIME_URL@" value="${deployment.context}" />
-							</replace>
-						</tasks>
-					</configuration>
-					<goals>
-						<goal>run</goal>
-					</goals>
-				</execution>
-						
-	            <execution>
-	              <id>copy for distribution</id>
-	              <phase>install</phase>
-	              <configuration>
-	                <tasks>
-	                  
-					  <!-- Copy deployable war, if relevant -->
-	                  <copy todir="../../../../dist/${deployment.type}/${artifactId}/">
-						    <fileset dir="${project.build.directory}">
-						        <include name="*.war"/>
-						    </fileset>
-					  </copy>
-					  
-	                </tasks>
-	              </configuration>
-	              <goals>
-	                <goal>run</goal>
-	              </goals>
-	            </execution>
-	          </executions>
-	        </plugin>
-			
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>replace-runtime-url</id>
+						<phase>prepare-package</phase>
+						<configuration>
+							<tasks>
+								<replace dir="${project.build.directory}/temp">
+									<include name="**/web.xml" />
+									<replacefilter token="@RUNTIME_URL@" value="${deployment.context}" />
+								</replace>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>copy for distribution</id>
+						<phase>install</phase>
+						<configuration>
+							<tasks>
+
+								<!-- Copy deployable war, if relevant -->
+								<copy todir="../../../../dist/${deployment.type}/${artifactId}/">
+									<fileset dir="${project.build.directory}">
+										<include name="*.war" />
+									</fileset>
+								</copy>
+
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
-	
- 	<dependencies>
+
+	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.dirigible.p2.external</groupId>
 			<artifactId>org.eclipse.dirigible.external.p2</artifactId>
@@ -136,17 +137,12 @@
 			<version>${project.version}</version>
 			<type>eclipse-repository</type>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.eclipse.dirigible.p2.lib</groupId>
 			<artifactId>org.eclipse.dirigible.lib.p2</artifactId>
 			<version>${project.version}</version>
 			<type>eclipse-repository</type>
 		</dependency>
-
-
-
-
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -154,7 +150,7 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
-  		<dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.2</version>
@@ -168,7 +164,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.7.2</version>
@@ -182,7 +178,6 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-	 
-	 	
- 	</dependencies>
+	</dependencies>
+
 </project>

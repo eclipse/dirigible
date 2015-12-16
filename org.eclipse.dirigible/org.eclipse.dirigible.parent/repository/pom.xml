@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-
+	<name>Repository - Parent</name>
 	<groupId>org.eclipse.dirigible.repository</groupId>
 	<artifactId>org.eclipse.dirigible.repository.parent</artifactId>
 	<packaging>pom</packaging>
@@ -43,37 +43,37 @@
 						</artifact>
 					</target>
 					<environments>
-			            <environment>
-			                <os>win32</os>
-			                <ws>win32</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>win32</os>
-			                <ws>win32</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			            <environment>
-			                <os>linux</os>
-			                <ws>gtk</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>linux</os>
-			                <ws>gtk</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			            <environment>
-			                <os>macosx</os>
-			                <ws>cocoa</ws>
-			                <arch>x86</arch>
-			            </environment>
-			            <environment>
-			                <os>macosx</os>
-			                <ws>cocoa</ws>
-			                <arch>x86_64</arch>
-			            </environment>
-			        </environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -97,10 +97,10 @@
 		<module>org.eclipse.dirigible.repository.rcp</module>
 		<module>org.eclipse.dirigible.repository.logging</module>
 		<module>org.eclipse.dirigible.repository.local</module>
-        <module>org.eclipse.dirigible.repository.local.test</module>
-        <module>org.eclipse.dirigible.repository.git</module>
+		<module>org.eclipse.dirigible.repository.local.test</module>
+		<module>org.eclipse.dirigible.repository.git</module>
 		<module>org.eclipse.dirigible.repository.velocity</module>
-        <module>org.eclipse.dirigible.repository.datasource</module>
+		<module>org.eclipse.dirigible.repository.datasource</module>
 	</modules>
- 
+
 </project>

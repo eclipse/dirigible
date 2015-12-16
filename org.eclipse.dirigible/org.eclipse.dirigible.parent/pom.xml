@@ -1,13 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.eclipse.dirigible</groupId>
-	<artifactId>org.eclipse.dirigible.parent</artifactId>
-	<version>2.2.151117</version>
-	<packaging>pom</packaging>
-	<name>org.eclipse.dirigible.parent</name>
-	<description>Dirigible Parent</description>
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -15,10 +8,16 @@
 		<version>7</version>
 	</parent>
 
+	<name>Parent</name>
+	<description>Dirigible Parent</description>
+	<groupId>org.eclipse.dirigible</groupId>
+	<artifactId>org.eclipse.dirigible.parent</artifactId>
+	<version>2.2.151117</version>
+	<packaging>pom</packaging>
+
 	<properties>
 		<tycho-version>0.22.0</tycho-version>
 	</properties>
-
 
 	<inceptionYear>2010</inceptionYear>
 
@@ -48,69 +47,30 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-			        <debug>true</debug>
-			        <debuglevel>lines,vars,source</debuglevel> 
+					<debug>true</debug>
+					<debuglevel>lines,vars,source</debuglevel>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-versions-plugin</artifactId>
 			</plugin>
-			
-<!-- 			
-		   <plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-surefire-plugin</artifactId>
-		        <version>2.18</version>
-		        <configuration>
-		          <skipTests>false</skipTests>
-		        </configuration>
-		    </plugin>
- -->		    
 
-			<!--  attach sources 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			-->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
+				<version>2.18</version> <configuration> <skipTests>false</skipTests> </configuration> 
+				</plugin> -->
 
-			<!--  attach javadoc 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>aggregate</id>
-						<goals>
-							<goal>aggregate</goal>
-						</goals>
-						<phase>site</phase>
-						<configuration>
-						
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			-->
-			
+			<!-- attach sources <plugin> <groupId>org.apache.maven.plugins</groupId> 
+				<artifactId>maven-source-plugin</artifactId> <executions> <execution> <id>attach-sources</id> 
+				<goals> <goal>jar</goal> </goals> </execution> </executions> </plugin> -->
+
+			<!-- attach javadoc <plugin> <groupId>org.apache.maven.plugins</groupId> 
+				<artifactId>maven-javadoc-plugin</artifactId> <executions> <execution> <id>attach-javadocs</id> 
+				<goals> <goal>jar</goal> </goals> </execution> <execution> <id>aggregate</id> 
+				<goals> <goal>aggregate</goal> </goals> <phase>site</phase> <configuration> 
+				</configuration> </execution> </executions> </plugin> -->
+
 		</plugins>
-
-
 
 		<pluginManagement>
 			<plugins>
@@ -288,23 +248,21 @@
 			<layout>p2</layout>
 		</repository>
 		<repository>
-                <id>mvnrepository</id>
-                <url>http://repo1.maven.org/maven2</url>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-                <releases>
-                    <enabled>true</enabled>
-                </releases>
-       </repository>
+			<id>mvnrepository</id>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
 	</repositories>
 
 	<issueManagement>
 		<url>http://bugs.dirigible.io</url>
 	</issueManagement>
-	
-	
-	
+
 	<modules>
 		<module>p2.external</module> <!-- Update Site for External Bundles -->
 		<module>platform</module> <!-- Target Platform Definition -->
@@ -318,10 +276,7 @@
 		<module>runtime</module> <!-- Runtime Projects -->
 		<module>p2.runtime</module> <!-- Update Site for Runtime Bundles -->
 		<module>p2.rcp</module> <!-- Update Site for Runtime Bundles -->
-		
 		<module>releng</module>
-		
 	</modules>
-	
-	
+
 </project>
