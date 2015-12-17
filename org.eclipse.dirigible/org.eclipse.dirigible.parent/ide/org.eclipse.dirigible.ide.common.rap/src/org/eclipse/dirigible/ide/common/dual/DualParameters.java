@@ -32,6 +32,8 @@ public class DualParameters {
 	public static final String SET_AUTO_ACTIVATE = "autoActivateEnabled"; //$NON-NLS-1$
 	public static final String SET_AUTO_PUBLISH = "autoPublishEnabled"; //$NON-NLS-1$
 
+	public static final String SANDBOX_ENABLED = "enableSandbox"; //$NON-NLS-1$
+
 	public static final String RUNTIME_URL_DEFAULT = ""; //$NON-NLS-1$
 	public static final String SERVICES_URL_DEFAULT = ""; //$NON-NLS-1$
 
@@ -43,6 +45,8 @@ public class DualParameters {
 	public static final String HC_HOST = "HC_HOST"; //$NON-NLS-1$
 
 	public static final String GUEST_USER = ICommonConstants.GUEST;
+
+	private static final boolean SET_SANDBOX_ENABLED_DEFAULT = false;
 
 	private static final boolean SET_AUTO_ACTIVATE_DEFAULT = true;
 
@@ -117,19 +121,30 @@ public class DualParameters {
 	}
 
 	public static boolean isAutoPublishEnabled() {
-		Boolean autoPublishEnabled = (Boolean) RWT.getRequest().getSession().getAttribute(SET_AUTO_PUBLISH);
-		if (autoPublishEnabled == null) {
-			autoPublishEnabled = SET_AUTO_PUBLIUSH_DEFAULT;
+		String autoPublishEnabled = System.getProperty(SET_AUTO_PUBLISH);
+		boolean result = SET_AUTO_PUBLIUSH_DEFAULT;
+		if (autoPublishEnabled != null) {
+			result = Boolean.parseBoolean(autoPublishEnabled);
 		}
-		return autoPublishEnabled;
+		return result;
 	}
 
 	public static boolean isAutoActivateEnabled() {
-		Boolean autoPublishEnabled = (Boolean) RWT.getRequest().getSession().getAttribute(SET_AUTO_ACTIVATE);
-		if (autoPublishEnabled == null) {
-			autoPublishEnabled = SET_AUTO_ACTIVATE_DEFAULT;
+		String autoPublishEnabled = System.getProperty(SET_AUTO_ACTIVATE);
+		boolean result = SET_AUTO_ACTIVATE_DEFAULT;
+		if (autoPublishEnabled != null) {
+			result = Boolean.parseBoolean(autoPublishEnabled);
 		}
-		return autoPublishEnabled;
+		return result;
+	}
+
+	public static boolean isSandboxEnabled() {
+		String sandboxEnabledStr = System.getProperty(SANDBOX_ENABLED);
+		boolean result = SET_SANDBOX_ENABLED_DEFAULT;
+		if (sandboxEnabledStr != null) {
+			result = Boolean.parseBoolean(sandboxEnabledStr);
+		}
+		return result;
 	}
 
 	public static String getServicesUrl() {

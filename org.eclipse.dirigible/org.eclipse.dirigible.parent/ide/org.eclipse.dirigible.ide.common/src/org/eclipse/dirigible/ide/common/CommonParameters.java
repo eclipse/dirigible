@@ -186,4 +186,24 @@ public class CommonParameters {
 		DualParameters.initSystemParameters();
 	}
 
+	public static boolean isAutoPublishEnabled() {
+		return DualParameters.isAutoPublishEnabled();
+	}
+
+	public static boolean isAutoActivateEnabled() {
+		return DualParameters.isAutoActivateEnabled();
+	}
+
+	public static boolean isSandboxEnabled() {
+		return DualParameters.isSandboxEnabled();
+	}
+
+	public static void setAutoActivate(boolean checked) {
+		DualParameters.set(DualParameters.SET_AUTO_ACTIVATE, checked);
+	}
+
+	public static void setAutoPublish(boolean checked) {
+		DualParameters.set(DualParameters.SET_AUTO_PUBLISH, checked);
+	}
+
 }

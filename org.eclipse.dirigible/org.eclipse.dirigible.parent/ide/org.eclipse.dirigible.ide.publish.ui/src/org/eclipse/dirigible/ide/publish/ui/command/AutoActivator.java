@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.dirigible.ide.common.dual.DualParameters;
+import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
 import org.eclipse.dirigible.ide.publish.PublishManager;
@@ -61,7 +61,7 @@ public class AutoActivator implements // ISaveParticipant {
 	}
 
 	private void autoPublish(IResourceChangeEvent event) {
-		if (!DualParameters.isAutoPublishEnabled()) {
+		if (!CommonParameters.isAutoPublishEnabled()) {
 			return;
 		}
 		IResource delta = event.getResource();
@@ -76,7 +76,7 @@ public class AutoActivator implements // ISaveParticipant {
 	}
 
 	private void autoActivate(IResourceChangeEvent event) {
-		if (!DualParameters.isAutoActivateEnabled()) {
+		if (!CommonParameters.isAutoActivateEnabled()) {
 			return;
 		}
 		IResource delta = event.getResource();

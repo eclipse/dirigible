@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.ide.publish.ui.command;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.dual.DualParameters;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -25,7 +24,7 @@ public class AutoActivateAction implements IWorkbenchWindowActionDelegate {
 	@Override
 	public void run(IAction action) {
 		// ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-		DualParameters.set(DualParameters.SET_AUTO_ACTIVATE, action.isChecked());
+		CommonParameters.setAutoActivate(action.isChecked());
 	}
 
 	@Override

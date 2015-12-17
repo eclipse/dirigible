@@ -1,17 +1,22 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.ui.view;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.image.ImageUtils;
+import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
+import org.eclipse.dirigible.ide.publish.PublishException;
+import org.eclipse.dirigible.ide.publish.PublishManager;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -32,15 +37,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
-import org.eclipse.ui.internal.PageEventAction;
-import org.eclipse.ui.internal.SaveAction;
-
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.image.ImageUtils;
-import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
-import org.eclipse.dirigible.ide.publish.PublishException;
-import org.eclipse.dirigible.ide.publish.PublishManager;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class ToolBarMenuViewProvider {
 
@@ -57,38 +53,40 @@ public class ToolBarMenuViewProvider {
 	private static final String PUBLISH_FAILED = Messages.WorkspaceExplorerView_PUBLISH_FAILED;
 	private static final String ACTIVATION_FAILED = Messages.WorkspaceExplorerView_ACTIVATION_FAILED;
 
-	private static final Image SAVE_ICON = ImageUtils.createImage(ImageUtils.getIconURL(
-			"org.eclipse.dirigible.ide.workspace.ui", "/resources/icons/", "save.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	private static final Image SAVE_ALL_ICON = ImageUtils.createImage(ImageUtils.getIconURL(
-			"org.eclipse.dirigible.ide.workspace.ui", "/resources/icons/", "save_all.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final Image SAVE_ICON = ImageUtils
+			.createImage(ImageUtils.getIconURL("org.eclipse.dirigible.ide.workspace.ui", "/resources/icons/", "save.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final Image SAVE_ALL_ICON = ImageUtils
+			.createImage(ImageUtils.getIconURL("org.eclipse.dirigible.ide.workspace.ui", "/resources/icons/", "save_all.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	private static final Image PUBLISH_ICON = ImageUtils.createImage(ImageUtils.getIconURL(
-			"org.eclipse.dirigible.ide.publish.ui", "/resources/icons/", "publish.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	private static final Image ACTIVATE_ICON = ImageUtils.createImage(ImageUtils.getIconURL(
-			"org.eclipse.dirigible.ide.publish.ui", "/resources/icons/", "activate.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final Image PUBLISH_ICON = ImageUtils
+			.createImage(ImageUtils.getIconURL("org.eclipse.dirigible.ide.publish.ui", "/resources/icons/", "publish.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final Image ACTIVATE_ICON = ImageUtils
+			.createImage(ImageUtils.getIconURL("org.eclipse.dirigible.ide.publish.ui", "/resources/icons/", "activate.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	public static void createToolBarMenu(Composite parent, Shell shell) {
 		if (CommonParameters.isRAP()) {
-			int style = SWT.FLAT | SWT.WRAP | SWT.RIGHT | SWT.BORDER | SWT.SHADOW_OUT; 
-			
+			int style = SWT.FLAT | SWT.WRAP | SWT.RIGHT | SWT.BORDER | SWT.SHADOW_OUT;
+
 			final ToolBar toolBar = new ToolBar(parent, style);
-	
-			createActivateToolItem(toolBar, shell);
-	
+
+			if (CommonParameters.isSandboxEnabled()) {
+				createActivateToolItem(toolBar, shell);
+			}
+
 			createSeparator(toolBar);
-	
+
 			createPublishToolItem(toolBar, shell);
-	
+
 			createSeparator(toolBar);
-	
+
 			createSaveToolItem(toolBar);
-	
+
 			createSeparator(toolBar);
-	
+
 			createSaveAllToolItem(toolBar);
-	
+
 			createSeparator(toolBar);
-	
+
 			createNewToolItem(parent, toolBar);
 		}
 	}
@@ -222,13 +220,11 @@ public class ToolBarMenuViewProvider {
 		return toolItem;
 	}
 
-	private static ToolItem createToolItem(ToolBar toolBar, String text, String toolTipText,
-			Image image) {
+	private static ToolItem createToolItem(ToolBar toolBar, String text, String toolTipText, Image image) {
 		return createToolItem(toolBar, text, toolTipText, image, SWT.PUSH);
 	}
 
-	private static ToolItem createToolItem(ToolBar toolBar, String text, String toolTipText,
-			Image image, int style) {
+	private static ToolItem createToolItem(ToolBar toolBar, String text, String toolTipText, Image image, int style) {
 		ToolItem toolItem = new ToolItem(toolBar, style);
 		toolItem.setText(text);
 		toolItem.setToolTipText(toolTipText);

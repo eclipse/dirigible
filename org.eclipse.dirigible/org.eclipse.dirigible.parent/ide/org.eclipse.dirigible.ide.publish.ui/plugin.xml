@@ -22,6 +22,13 @@
                   <instanceof
                         value="org.eclipse.core.resources.IProject">
                   </instanceof>
+                  <and>
+                     <systemTest
+                           property="enableSandbox"
+                           value="true">
+                     </systemTest>
+                  
+                  </and>
                </iterate>
             </visibleWhen>
          </command>
@@ -138,6 +145,12 @@
                style="push"
                toolbarPath="activationGroup"
                tooltip="Activate">
+            <enablement>
+               <systemProperty
+                     name="enableSandbox"
+                     value="true">
+               </systemProperty>
+            </enablement>
          </action>
          
          <action
@@ -150,6 +163,12 @@
                style="toggle"
                toolbarPath="autoActivationGroup"
                tooltip="Turn on/off Auto Activation">
+            <enablement>
+               <systemProperty
+                     name="enableSandbox"
+                     value="true">
+               </systemProperty>
+            </enablement>
          </action>
          
          <action
