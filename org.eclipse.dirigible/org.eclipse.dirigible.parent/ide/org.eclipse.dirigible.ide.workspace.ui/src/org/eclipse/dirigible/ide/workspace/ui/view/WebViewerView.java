@@ -1,30 +1,33 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.ui.view;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.publish.IPublisher;
+import org.eclipse.dirigible.ide.publish.PublishManager;
+import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
+import org.eclipse.dirigible.ide.workspace.dual.DirectRenderer;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-//import org.eclipse.rap.rwt.client.service.UrlLauncher;
+// import org.eclipse.rap.rwt.client.service.UrlLauncher;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,12 +53,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.publish.IPublisher;
-import org.eclipse.dirigible.ide.publish.PublishManager;
-import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
-import org.eclipse.dirigible.ide.workspace.dual.DirectRenderer;
-
 public class WebViewerView extends ViewPart {
 
 	public static String ID = "org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView";
@@ -70,14 +67,11 @@ public class WebViewerView extends ViewPart {
 
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
-	private static final URL DIRIGIBLE_REFRESH_ICON_URL = WebViewerView.class
-			.getResource("/resources/icons/refresh.png"); //$NON-NLS-1$
+	private static final URL DIRIGIBLE_REFRESH_ICON_URL = WebViewerView.class.getResource("/resources/icons/refresh.png"); //$NON-NLS-1$
 
-	private static final URL DIRIGIBLE_SANDBOX_ICON_URL = WebViewerView.class
-			.getResource("/resources/icons/sandbox.png"); //$NON-NLS-1$
+	private static final URL DIRIGIBLE_SANDBOX_ICON_URL = WebViewerView.class.getResource("/resources/icons/sandbox.png"); //$NON-NLS-1$
 
-	private static final URL DIRIGIBLE_OPEN_ICON_URL = WebViewerView.class
-			.getResource("/resources/icons/open.png"); //$NON-NLS-1$
+	private static final URL DIRIGIBLE_OPEN_ICON_URL = WebViewerView.class.getResource("/resources/icons/open.png"); //$NON-NLS-1$
 
 	private final ISelectionListener selectionListener = new SelectionListenerImpl();
 
@@ -90,7 +84,7 @@ public class WebViewerView extends ViewPart {
 	private boolean isSandbox;
 
 	private IFile lastSelectedFile;
-	
+
 	private boolean isContent = false;
 
 	public static void refreshWebViewerViewIfVisible() {
@@ -98,7 +92,7 @@ public class WebViewerView extends ViewPart {
 		if (workbenchWindow != null) {
 			IWorkbenchPage activePage = workbenchWindow.getActivePage();
 			IViewPart view = activePage.findView(WebViewerView.class.getName());
-			if (view != null && view instanceof WebViewerView) {
+			if ((view != null) && (view instanceof WebViewerView)) {
 				if (activePage.isPartVisible(view)) {
 					((WebViewerView) view).refresh();
 				}
@@ -109,7 +103,7 @@ public class WebViewerView extends ViewPart {
 	public WebViewerView() {
 		super();
 		resourceManager = new LocalResourceManager(JFaceResources.getResources());
-		isSandbox = true;
+		isSandbox = CommonParameters.isSandboxEnabled();
 	}
 
 	@Override
@@ -127,8 +121,10 @@ public class WebViewerView extends ViewPart {
 		holder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		holder.setLayout(new GridLayout(4, false));
 
-		createSandboxToggleButton(holder);
-//		createOpenInNewTabButton(holder);
+		if (CommonParameters.isSandboxEnabled()) {
+			createSandboxToggleButton(holder);
+		}
+		// createOpenInNewTabButton(holder);
 		createRefreshButton(holder);
 		createUrlAddressField(holder);
 
@@ -138,23 +134,23 @@ public class WebViewerView extends ViewPart {
 		setUrl(EMPTY_STRING);
 	}
 
-//	private void createOpenInNewTabButton(Composite holder) {
-//		final UrlLauncher launcher = (UrlLauncher) CommonParameters.getService(UrlLauncher.class);
-//		if (launcher != null) {
-//			final Button openInNewTabButton = new Button(holder, SWT.PUSH);
-//			openInNewTabButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
-//			openInNewTabButton.setToolTipText(OPEN);
-//			openInNewTabButton.setImage(createImage(DIRIGIBLE_OPEN_ICON_URL));
-//			openInNewTabButton.addSelectionListener(new SelectionAdapter() {
-//				private static final long serialVersionUID = 5262335626537755624L;
-//	
-//				public void widgetSelected(SelectionEvent e) {
-//					launcher.openURL(pageUrlText.getText());
-//					refresh();
-//				}
-//			});
-//		}
-//	}
+	// private void createOpenInNewTabButton(Composite holder) {
+	// final UrlLauncher launcher = (UrlLauncher) CommonParameters.getService(UrlLauncher.class);
+	// if (launcher != null) {
+	// final Button openInNewTabButton = new Button(holder, SWT.PUSH);
+	// openInNewTabButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false));
+	// openInNewTabButton.setToolTipText(OPEN);
+	// openInNewTabButton.setImage(createImage(DIRIGIBLE_OPEN_ICON_URL));
+	// openInNewTabButton.addSelectionListener(new SelectionAdapter() {
+	// private static final long serialVersionUID = 5262335626537755624L;
+	//
+	// public void widgetSelected(SelectionEvent e) {
+	// launcher.openURL(pageUrlText.getText());
+	// refresh();
+	// }
+	// });
+	// }
+	// }
 
 	private void createSandboxToggleButton(final Composite holder) {
 		final Button sandboxToggleButton = new Button(holder, SWT.TOGGLE);
@@ -165,6 +161,7 @@ public class WebViewerView extends ViewPart {
 		sandboxToggleButton.addSelectionListener(new SelectionAdapter() {
 			private static final long serialVersionUID = -6880371869205820154L;
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				isSandbox = sandboxToggleButton.getSelection();
 				sandboxToggleButton.setToolTipText(isSandbox ? SANDBOX : PUBLIC);
@@ -184,6 +181,7 @@ public class WebViewerView extends ViewPart {
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 			private static final long serialVersionUID = 5640314767414360517L;
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				refresh();
 			}
@@ -265,8 +263,7 @@ public class WebViewerView extends ViewPart {
 				if ("debug".equals(activePerspectiveId)) { //$NON-NLS-1$
 					endpoint = publisher.getDebugEndpoint(file);
 				} else {
-					endpoint = isSandbox ? publisher.getActivatedEndpoint(file) : publisher
-							.getPublishedEndpoint(file);
+					endpoint = isSandbox ? publisher.getActivatedEndpoint(file) : publisher.getPublishedEndpoint(file);
 				}
 
 				if (endpoint != null) {
@@ -289,8 +286,8 @@ public class WebViewerView extends ViewPart {
 	private IPublisher getPublisher(IFile file) {
 		final List<IPublisher> publishers = PublishManager.getPublishers();
 
-		for (Iterator<IPublisher> iterator = publishers.iterator(); iterator.hasNext();) {
-			IPublisher publisher = (IPublisher) iterator.next();
+		for (IPublisher iPublisher : publishers) {
+			IPublisher publisher = iPublisher;
 			if (publisher.recognizedFile(file)) {
 				return publisher;
 			}
@@ -300,6 +297,7 @@ public class WebViewerView extends ViewPart {
 
 	private class SelectionListenerImpl implements ISelectionListener {
 
+		@Override
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if (selection instanceof IStructuredSelection) {
 				selectionChanged((IStructuredSelection) selection);
@@ -322,7 +320,7 @@ public class WebViewerView extends ViewPart {
 	}
 
 	protected void setUrl(String text) {
-		if (text == null || EMPTY_STRING.equals(text)) {
+		if ((text == null) || EMPTY_STRING.equals(text)) {
 			return;
 		}
 		try {
@@ -344,7 +342,7 @@ public class WebViewerView extends ViewPart {
 		pageUrlText.setText(text);
 		String content = DirectRenderer.renderContent(text);
 		browser.setContent(content);
-//				browser.refresh();
+		// browser.refresh();
 		isContent = true;
 	}
 

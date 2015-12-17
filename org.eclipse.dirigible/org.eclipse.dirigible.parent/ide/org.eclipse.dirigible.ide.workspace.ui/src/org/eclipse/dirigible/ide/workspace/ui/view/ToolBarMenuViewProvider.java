@@ -71,9 +71,8 @@ public class ToolBarMenuViewProvider {
 
 			if (CommonParameters.isSandboxEnabled()) {
 				createActivateToolItem(toolBar, shell);
+				createSeparator(toolBar);
 			}
-
-			createSeparator(toolBar);
 
 			createPublishToolItem(toolBar, shell);
 

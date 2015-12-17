@@ -65,16 +65,19 @@
 			<param-value>jndi</param-value>
 		</init-param>
 		
+		<!-- Enable Auto-Activate option -->
 		<init-param>
 			<param-name>autoActivateEnabled</param-name>
 			<param-value>true</param-value>
 		</init-param>
 		
+		<!-- Enable Auto-Publish option -->
 		<init-param>
 			<param-name>autoPublishEnabled</param-name>
 			<param-value>true</param-value>
 		</init-param>
 		
+		<!-- Enable Sandboxing option - disabled by default -->
 		<init-param>
 			<param-name>enableSandbox</param-name>
 			<param-value>false</param-value>
