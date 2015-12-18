@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.java;
@@ -36,20 +35,21 @@ import org.eclipse.dirigible.runtime.java.dynamic.compilation.ClassFileManager;
 import org.eclipse.dirigible.runtime.java.dynamic.compilation.InMemoryCompilationException;
 import org.eclipse.dirigible.runtime.java.dynamic.compilation.InMemoryDiagnosticListener;
 import org.eclipse.dirigible.runtime.scripting.AbstractScriptExecutor;
+import org.eclipse.dirigible.runtime.scripting.Module;
 
 public class JavaExecutor extends AbstractScriptExecutor {
-	
+
 	private static final Logger logger = Logger.getLogger(JavaExecutor.class);
 
 	private static final String JAVA_EXTENSION = ".java"; //$NON-NLS-1$
 	private static final String CLASSPATH = "-classpath"; //$NON-NLS-1$
-	
+
 	public static final String JAVA_TOOLS_COMPILER = "JAVA_TOOLS_COMPILER"; //$NON-NLS-1$
 
 	private IRepository repository;
 	private String[] rootPaths;
 	private Map<String, Object> defaultVariables;
-	
+
 	private String classpath;
 
 	public JavaExecutor(IRepository repository, String classpath, String... rootPaths) {
@@ -60,11 +60,11 @@ public class JavaExecutor extends AbstractScriptExecutor {
 	}
 
 	@Override
-	public Object executeServiceModule(HttpServletRequest request, HttpServletResponse response,
-			Object input, String module, Map<Object, Object> executionContext) throws InMemoryCompilationException {
+	public Object executeServiceModule(HttpServletRequest request, HttpServletResponse response, Object input, String module,
+			Map<Object, Object> executionContext) throws InMemoryCompilationException {
 		try {
 			registerDefaultVariables(request, response, input, null, repository, null);
-			ClassFileManager fileManager = compile(request);
+			ClassFileManager fileManager = compile(request, module);
 			return execute(request, response, module, fileManager);
 		} catch (Throwable t) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -74,47 +74,61 @@ public class JavaExecutor extends AbstractScriptExecutor {
 		}
 	}
 
-	private ClassFileManager compile(HttpServletRequest request) throws IOException, ClassNotFoundException,
-			URISyntaxException {
-		List<JavaFileObject> sourceFiles = ClassFileManager.getSourceFiles(retrieveModulesByExtension(repository, JAVA_EXTENSION, rootPaths));
+	private ClassFileManager compile(HttpServletRequest request, String module) throws IOException, ClassNotFoundException, URISyntaxException {
 
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		
-		if(compiler == null) {
+
+		if (compiler == null) {
 			throw new InMemoryCompilationException("Use JDK instead of JRE");
 		}
 		InMemoryDiagnosticListener diagnosticListener = new InMemoryDiagnosticListener();
-		ClassFileManager fileManager = ClassFileManager.getInstance(compiler.getStandardFileManager(diagnosticListener, null, null));
-		CompilationTask compilationTask = compiler.getTask(null, fileManager, diagnosticListener, Arrays.asList(CLASSPATH, getClasspath()), null, sourceFiles);
+		// ClassFileManager fileManager =
+		// ClassFileManager.getInstance(compiler.getStandardFileManager(diagnosticListener, null, null));
+		ClassFileManager fileManager = new ClassFileManager(compiler.getStandardFileManager(diagnosticListener, null, null));
+
+		Module entryModule = retrieveModule(repository, module, null, rootPaths);
+		List<JavaFileObject> sourceFiles = fileManager.getSourceFiles(retrieveModulesByExtension(repository, JAVA_EXTENSION, rootPaths), entryModule);
+		// List<JavaFileObject> sourceFiles = fileManager.getSourceFile(retrieveModule(repository, module, null,
+		// rootPaths));
+
+		CompilationTask compilationTask = compiler.getTask(null, fileManager, diagnosticListener, Arrays.asList(CLASSPATH, getClasspath()), null,
+				sourceFiles);
 
 		Boolean compilationTaskResult = compilationTask.call();
 
-		if (compilationTaskResult == null || !compilationTaskResult.booleanValue()) {
+		if ((compilationTaskResult == null) || !compilationTaskResult.booleanValue()) {
 			throw new InMemoryCompilationException(diagnosticListener);
 		}
 		return fileManager;
 	}
-	
+
 	public String getClasspath() {
 		return classpath;
 	}
 
-	private Object execute(HttpServletRequest request, HttpServletResponse response, String module,
-			ClassFileManager fileManager) throws ClassNotFoundException, NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException, InstantiationException {
+	private Object execute(HttpServletRequest request, HttpServletResponse response, String module, ClassFileManager fileManager)
+			throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, InstantiationException {
 		Class<?> loadedClass = fileManager.getClassLoader(null).loadClass(ClassFileManager.getFQN(module));
 
 		Class<?>[] inputParameters = new Class<?>[] { HttpServletRequest.class, HttpServletResponse.class, Map.class };
 
-		Method serviceMethod = loadedClass.getMethod("service", inputParameters);
+		Method serviceMethod;
+		try {
+			serviceMethod = loadedClass.getMethod("service", inputParameters);
+		} catch (Exception e) {
+			return String.format(
+					"Requested Java file %s does not have 'public void service(HttpServletRequest request, HttpServletResponse response, Map<String, Object> scope) throws Exception' method",
+					loadedClass.getCanonicalName());
+		}
+
 		return serviceMethod.invoke(loadedClass.newInstance(), request, response, defaultVariables);
 	}
-	
+
 	@Override
 	protected void registerDefaultVariable(Object scope, String name, Object value) {
 		defaultVariables.put(name, value);
 	}
-	
+
 	@Override
 	protected String getModuleType(String path) {
 		return ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
