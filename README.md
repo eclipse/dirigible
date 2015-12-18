@@ -202,8 +202,6 @@ If you like to contribute to Dirigible, please read the [Contributor's guide](CO
 - Simple Samples
 [http://samples.dirigible.io](http://samples.dirigible.io)
 
-- User's Guide as PDF [http://www.dirigible.io/dirigible-user-guide-v1.2.pdf](http://www.dirigible.io/dirigible-user-guide-v1.2.pdf)
-
 - Trial Instance
 [http://trial.dirigible.io](http://trial.dirigible.io)
 
