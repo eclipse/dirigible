@@ -12,10 +12,12 @@ package org.eclipse.dirigible.ide.db.viewer.views;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.db.viewer.views.DatabaseViewContentProvider.Capability;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.DeleteTableAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.ExportDataAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.RefreshViewAction;
@@ -173,14 +175,28 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		if (!TreeParent.class.isInstance(obj)) {
 			if (TreeObject.class.isInstance(obj)) {
-				manager.add(showTableDefinitionAction);
-				manager.add(viewTableContentAction);
-				manager.add(exportDataAction);
-				manager.add(new Separator());
-				if (isOperator) {
-					manager.add(deleteAction);
+				TreeObject tObject = (TreeObject) obj;
+				List<Capability> capabilities = tObject.getTableDefinition().getCapabilities();
+				if ((capabilities != null) && !capabilities.isEmpty()) {
+					if (capabilities.contains(Capability.ShowTableDefinition)) {
+						manager.add(showTableDefinitionAction);
+					}
+					if (capabilities.contains(Capability.ViewTableContent)) {
+						manager.add(viewTableContentAction);
+					}
+					if (capabilities.contains(Capability.ExportData)) {
+						manager.add(exportDataAction);
+					}
+					if (!manager.isEmpty()) {
+						manager.add(new Separator());
+					}
+					if (isOperator && capabilities.contains(Capability.Delete)) {
+						manager.add(deleteAction);
+					}
+					if (!manager.isEmpty()) {
+						manager.add(new Separator());
+					}
 				}
-				manager.add(new Separator());
 			}
 		}
 		manager.add(refreshViewAction);
@@ -253,6 +269,10 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 	@Override
 	public Connection getDatabaseConnection() throws SQLException {
 		return getConnectionFromSelectedDatasource();
+	}
+
+	public static String getSelectedDatasourceName() throws SQLException {
+		return CommonParameters.get(SELECTED_DATASOURCE_NAME);
 	}
 
 	/**

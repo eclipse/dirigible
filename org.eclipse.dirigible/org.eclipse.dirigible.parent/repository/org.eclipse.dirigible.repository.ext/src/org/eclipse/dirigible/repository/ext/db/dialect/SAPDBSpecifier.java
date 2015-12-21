@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
-public class SAPDBSpecifier implements IDialectSpecifier {
+public class SAPDBSpecifier extends RDBGenericDialectSpecifier {
 
 	private static final String LIMIT_D_D = "LIMIT %d, %d";
 	private static final String SAPDB_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
@@ -56,16 +56,6 @@ public class SAPDBSpecifier implements IDialectSpecifier {
 	}
 
 	@Override
-	public boolean isSchemaFilterSupported() {
-		return false;
-	}
-
-	@Override
-	public String getSchemaFilterScript() {
-		return null;
-	}
-
-	@Override
 	public String getAlterAddOpen() {
 		return " ADD ";
 	}
@@ -79,11 +69,6 @@ public class SAPDBSpecifier implements IDialectSpecifier {
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		Blob data = resultSet.getBlob(columnName);
 		return data.getBinaryStream();
-	}
-
-	@Override
-	public boolean isCatalogForSchema() {
-		return false;
 	}
 
 	@Override

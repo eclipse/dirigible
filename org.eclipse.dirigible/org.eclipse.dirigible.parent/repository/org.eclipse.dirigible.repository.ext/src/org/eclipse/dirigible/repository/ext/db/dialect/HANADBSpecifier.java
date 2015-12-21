@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
-public class HANADBSpecifier implements IDialectSpecifier {
+public class HANADBSpecifier extends RDBGenericDialectSpecifier {
 
 	private static final String LIMIT_D_OFFSET_D = "LIMIT %d OFFSET %d"; //$NON-NLS-1$
 	private static final String HANA_FLOAT = "DOUBLE"; //$NON-NLS-1$
@@ -89,11 +89,6 @@ public class HANADBSpecifier implements IDialectSpecifier {
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		Blob data = resultSet.getBlob(columnName);
 		return data.getBinaryStream();
-	}
-
-	@Override
-	public boolean isCatalogForSchema() {
-		return false;
 	}
 
 }

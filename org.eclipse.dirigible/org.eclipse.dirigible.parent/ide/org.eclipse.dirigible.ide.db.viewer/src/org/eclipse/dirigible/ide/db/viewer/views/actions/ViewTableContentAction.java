@@ -1,16 +1,18 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.db.viewer.views.actions;
 
+import org.eclipse.dirigible.ide.db.viewer.views.ISQLConsole;
+import org.eclipse.dirigible.ide.db.viewer.views.TableDefinition;
+import org.eclipse.dirigible.ide.db.viewer.views.TreeObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -19,15 +21,9 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.dirigible.ide.db.viewer.views.ISQLConsole;
-import org.eclipse.dirigible.ide.db.viewer.views.TableDefinition;
-import org.eclipse.dirigible.ide.db.viewer.views.TreeObject;
-
 public class ViewTableContentAction extends Action {
 
 	private static final String DATABASE_VIEW = Messages.ViewTableContentAction_DATABASE_VIEW;
-
-	private static final String SELECT_FROM = "SELECT * FROM "; //$NON-NLS-1$
 
 	private static final String CANNOT_OPEN_SQL_VIEW = Messages.ViewTableContentAction_CANNOT_OPEN_SQL_VIEW;
 
@@ -48,17 +44,15 @@ public class ViewTableContentAction extends Action {
 		setToolTipText(WILL_SHOW_TABLE_CONTENT);
 	}
 
+	@Override
 	public void run() {
 		try {
 			ISelection selection = viewer.getSelection();
 			Object obj = ((IStructuredSelection) selection).getFirstElement();
 			if (TreeObject.class.isInstance(obj)) {
-				TableDefinition tableDefinition = ((TreeObject) obj)
-						.getTableDefinition();
+				TableDefinition tableDefinition = ((TreeObject) obj).getTableDefinition();
 				if (tableDefinition != null) {
-					ISQLConsole view = (ISQLConsole) PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getActivePage()
-							.showView(consoleId);
+					ISQLConsole view = (ISQLConsole) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(consoleId);
 					executeSelectStatement(tableDefinition, view);
 				}
 			}
@@ -68,16 +62,14 @@ public class ViewTableContentAction extends Action {
 		}
 	}
 
-	protected void executeSelectStatement(TableDefinition tableDefinition,
-			ISQLConsole view) {
-		String name = tableDefinition.getFqn();
-		view.setQuery(SELECT_FROM + name);
+	protected void executeSelectStatement(TableDefinition tableDefinition, ISQLConsole view) {
+		String script = tableDefinition.getContentScript();
+		view.setQuery(script);
 		view.executeStatement(true);
 	}
 
 	protected void showMessage(String message) {
-		MessageDialog.openInformation(viewer.getControl().getShell(),
-				DATABASE_VIEW, message);
+		MessageDialog.openInformation(viewer.getControl().getShell(), DATABASE_VIEW, message);
 	}
 
 }

@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.ide.db.viewer.views;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
@@ -20,6 +19,8 @@ import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.db.viewer.views.format.ResultSetStringWriter;
 import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
+import org.eclipse.dirigible.repository.datasource.DataSources;
+import org.eclipse.dirigible.repository.datasource.DataSources.RequestExecutionCallback;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.action.Action;
@@ -57,15 +58,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 
 	private static final String EXECUTE_UPDATE_TEXT = Messages.SQLConsole_EXECUTE_UPDATE_TEXT;
 
-	private static final char SPACE = ' ';
-
-	private static final char MINUS = '-';
-
 	private static final String EMPTY = ""; //$NON-NLS-1$
-
-	private static final String DOTS = "...\n"; //$NON-NLS-1$
-
-	private static final String NULL = "NULL"; //$NON-NLS-1$
 
 	private static final String ICON_EXECUTE_UPDATE_PNG = "icon-execute.png"; //$NON-NLS-1$
 
@@ -79,13 +72,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 
 	private static final String EXECUTE_UPDATE = Messages.SQLConsole_EXECUTE_UPDATE;
 
-	private static final String BINARY = "[BINARY]"; //$NON-NLS-1$
-
 	private static final Logger logger = Logger.getLogger(AbstractSQLConsole.class);
-
-	private static final String COLUMN_DELIMITER = "|"; //$NON-NLS-1$
-
-	private static final String END_DELIMITER = "|\n"; //$NON-NLS-1$
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -214,127 +201,50 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 			if (EMPTY.equals(line.trim())) {
 				continue;
 			}
-			executeSingleStatement(line, isQuery);
-		}
-
-	}
-
-	private void executeSingleStatement(String sql, boolean isQuery) {
-
-		try {
-			Connection connection = getConnection();
 			try {
+				DataSources ds = new DataSources(DatabaseViewer.getSelectedDatasourceName(),
+						DatabaseViewer.getConnectionFromSelectedDatasource());
+				ds.executeSingleStatement(line, isQuery, new RequestExecutionCallback() {
+					@Override
+					public void updateDone(int recordsCount) {
+						printUpdateCount(recordsCount);
+					}
 
-				PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					@Override
+					public void queryDone(ResultSet rs) {
+						try {
+							printResultSet(rs);
+						} catch (SQLException e) {
+							logger.warn(e.getMessage(), e);
+							outputArea.setText(e.getMessage());
+						}
+					}
 
-				if (isQuery) {
-					preparedStatement.executeQuery();
-					ResultSet resultSet = preparedStatement.getResultSet();
-					printResultSet(resultSet);
-				} else {
-					preparedStatement.executeUpdate();
-					printUpdateCount(preparedStatement.getUpdateCount());
-				}
-			} finally {
-				if (connection != null) {
-					connection.close();
-				}
+					@Override
+					public void error(Throwable t) {
+						logger.warn(t.getMessage(), t);
+						outputArea.setText(t.getMessage());
+					}
+				});
+			} catch (SQLException e) {
+				logger.warn(e.getMessage(), e);
+				outputArea.setText(e.getMessage());
 			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			outputArea.setText(e.getMessage());
 		}
+
 	}
 
 	protected Connection getConnection() throws Exception {
 		return DatabaseViewer.getConnectionFromSelectedDatasource();
 	}
 
-	private void printResultSet(ResultSet resultSet) throws SQLException {
-		/*
-		 * StringBuffer buff = new StringBuffer();
-		 * // header
-		 * int headerLength = 0;
-		 * ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-		 * for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-		 * String columnLabel = resultSetMetaData.getColumnLabel(i);
-		 * String columnLabelPrint = null;
-		 * int columnType = resultSetMetaData.getColumnType(i);
-		 * if (isBinaryType(columnType)) {
-		 * columnLabelPrint = prepareStringForSize(columnLabel, BINARY.length(), SPACE);
-		 * } else {
-		 * columnLabelPrint = prepareStringForSize(columnLabel, resultSetMetaData.getColumnDisplaySize(i), SPACE);
-		 * }
-		 * buff.append(columnLabelPrint);
-		 * headerLength += columnLabelPrint.length();
-		 * }
-		 * buff.append(END_DELIMITER);
-		 * buff.append(prepareStringForSize(EMPTY, headerLength - 1, MINUS));
-		 * buff.append(END_DELIMITER);
-		 * // data
-		 * int count = 0;
-		 * while (resultSet.next()) {
-		 * for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-		 * String data = null;
-		 * int columnType = resultSetMetaData.getColumnType(i);
-		 * if (isBinaryType(columnType)) {
-		 * data = BINARY;
-		 * } else {
-		 * data = resultSet.getString(i);
-		 * }
-		 * String dataPrint = null;
-		 * if (isBinaryType(columnType)) {
-		 * dataPrint = prepareStringForSize(data, BINARY.length(), ' ');
-		 * } else {
-		 * dataPrint = prepareStringForSize(data, resultSetMetaData.getColumnDisplaySize(i), ' ');
-		 * }
-		 * buff.append(dataPrint);
-		 * }
-		 * buff.append(END_DELIMITER);
-		 * if (++count > 100) {
-		 * buff.append(DOTS);
-		 * break;
-		 * }
-		 * }
-		 */
-
+	protected void printResultSet(ResultSet resultSet) throws SQLException {
 		ResultSetStringWriter writer = new ResultSetStringWriter();
 		String tableString = writer.writeTable(resultSet);
-
 		outputArea.setText(tableString);
 	}
 
-	private boolean isBinaryType(int columnType) {
-		for (int c : CommonParameters.BINARY_TYPES) {
-			if (columnType == c) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private String prepareStringForSize(String columnLabel, int columnDisplaySize, char c) {
-		String result;
-		if (columnLabel == null) {
-			columnLabel = NULL;
-		}
-		if (columnLabel.length() == columnDisplaySize) {
-			result = columnLabel;
-		} else if (columnLabel.length() > columnDisplaySize) {
-			result = columnLabel.substring(0, columnDisplaySize);
-		} else {
-			StringBuffer buff = new StringBuffer();
-			buff.append(columnLabel);
-			for (int i = 0; i < (columnDisplaySize - columnLabel.length()); i++) {
-				buff.append(c);
-			}
-			result = buff.toString();
-		}
-
-		return COLUMN_DELIMITER + result;
-	}
-
-	private void printUpdateCount(int updateCount) {
+	protected void printUpdateCount(int updateCount) {
 		outputArea.setText(String.format(UPDATE_COUNT_S, updateCount));
 	}
 
