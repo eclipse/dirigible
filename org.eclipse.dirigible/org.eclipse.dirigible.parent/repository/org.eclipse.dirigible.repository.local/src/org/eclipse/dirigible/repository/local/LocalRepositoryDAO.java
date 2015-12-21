@@ -238,7 +238,8 @@ public class LocalRepositoryDAO {
 			File objectFile = new File(workspacePath);
 			if (!objectFile.exists()) {
 				// This is folder, that was not created
-				if (ContentTypeHelper.getExtension(workspacePath).isEmpty()) {
+				if (ContentTypeHelper.getExtension(workspacePath).isEmpty()
+                        && !workspacePath.endsWith(".")) {
 					FileSystemUtils.createFolder(workspacePath);
 				}
 			}
