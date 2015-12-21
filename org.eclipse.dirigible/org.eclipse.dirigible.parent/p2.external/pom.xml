@@ -39,7 +39,7 @@
 							<groupId>org.eclipse.dirigible.platform</groupId>
 							<artifactId>org.eclipse.dirigible.platform.target</artifactId>
 							<version>2.2.151217</version>
-							<classifier>org.eclipse.dirigible.platform.base</classifier>
+							<classifier>org.eclipse.dirigible.platform.build</classifier>
 						</artifact>
 					</target>
 					<environments>
