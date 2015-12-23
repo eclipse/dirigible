@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="page">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +13,7 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 </head>
 <body>
-	<div id="wrap" ng-app ng-controller="ListAndDetailsController">
+	<div id="wrap" ng-controller="ListAndDetailsController">
 		<div class="container">
 			<table class="table table-condensed table-striped table-hover">
 				<thead>
@@ -27,8 +27,13 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="entry in data" ng-click="showInfoForEntry(entry)">
-#foreach ($tableColumn in $tableColumns) #if ($tableColumn.isVisible())
-						<td>{{entry.${tableColumn.getName()}}}</td> 
+#foreach ($tableColumn in $tableColumns)
+#if ($tableColumn.isVisible())
+#if ($tableColumn.getWidgetType() == "date")
+						<td>{{entry.${tableColumn.getName()} | date:format}}</td>
+#else
+						<td>{{entry.${tableColumn.getName()}}}</td>
+#end
 #end
 #end
 					</tr>
@@ -45,7 +50,12 @@
 #foreach ($tableColumn in $tableColumns)
 					<tr>
 						<td width="50%">${tableColumn.getLabel()}</td>
+						
+#if ($tableColumn.getWidgetType() == "date")
+						<td width="50%">{{selectedEntry.${tableColumn.getName()}  | date:format}}</td>
+#else
 						<td width="50%">{{selectedEntry.${tableColumn.getName()}}}</td>
+#end
 #end
 					</tr>
 				</tbody>
@@ -53,11 +63,14 @@
 		</div>
 	</div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular-resource.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
+	<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
 
 	<script type="text/javascript">
-		function ListAndDetailsController($scope, $http) {
+		angular.module('page', ['ngAnimate', 'ui.bootstrap']);
+		angular.module('page').controller('ListAndDetailsController', function ($scope, $http) {
 			
 			var url = '${serviceFileName}';
 
@@ -78,7 +91,10 @@
 					$scope.selectedEntry = entry;
 				}
 			}
-		}
+			
+			$scope.formats = ['yyyy/MM/dd', 'dd-MMMM-yyyy', 'dd.MM.yyyy', 'shortDate'];
+  			$scope.format = $scope.formats[0];
+		});
 	</script>
 
 </body>

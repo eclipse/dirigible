@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en"  ng-app="page">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,9 +23,13 @@
                 <div ng-show="exist">
 #foreach ($tableColumn in $tableColumns) 
                     <label>${tableColumn.getLabel()}</label>
-                    <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}" readonly>
+#if ($tableColumn.getWidgetType() == "date")
+					<div>{{entity.${tableColumn.getName()} | date:format}}</div>
+#else
+					<div>{{entity.${tableColumn.getName()}}}</div>
+#end
                     <br>
-#end 
+#end
                 </div>
                 
                 <div ng-hide="exist">
@@ -50,34 +54,43 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-	function getURLParameter(name) { 
-    	return decodeURIComponent((
-        	new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)
-            || [,""])[1].replace(/\+/g, '%20'))|| null; 
-	}
-        
-    function DisplayController ($scope, $http) {
-		var url = '${serviceFileName}';
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
+	<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
+
+	<script type="text/javascript">
+	
+		function getURLParameter(name) { 
+	    	return decodeURIComponent((
+	        	new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)
+	            || [,""])[1].replace(/\+/g, '%20'))|| null; 
+		}
+		
+		angular.module('page', ['ngAnimate', 'ui.bootstrap']);
+		angular.module('page').controller('DisplayController', function ($scope, $http) {
+			var url = '${serviceFileName}';
 #foreach ($tableColumn in $tableColumns) 
 #if ($tableColumn.isKey())
-		$scope.primaryKey = '${tableColumn.getName()}';
+			$scope.primaryKey = '${tableColumn.getName()}';
 #end 
 #end                    
-		$scope.urlParameter = getURLParameter($scope.primaryKey);
-		$scope.exist = true;
-                    
-		if($scope.urlParameter) {
-        	var getUrl = url + '?' + $scope.primaryKey + '=' + $scope.urlParameter;
-			
-        	$http.get(getUrl)
-            .success(function(response) {
-            	$scope.entity=response;    
-			}).error(function(response) {
-				$scope.exist = false;
-			})
-		}
-	}
+			$scope.urlParameter = getURLParameter($scope.primaryKey);
+			$scope.exist = true;
+	                    
+			if($scope.urlParameter) {
+	        	var getUrl = url + '?' + $scope.primaryKey + '=' + $scope.urlParameter;
+				
+	        	$http.get(getUrl)
+	            .success(function(response) {
+	            	$scope.entity=response;    
+				}).error(function(response) {
+					$scope.exist = false;
+				})
+			}
+			$scope.formats = ['yyyy/MM/dd', 'dd-MMMM-yyyy', 'dd.MM.yyyy', 'shortDate'];
+  			$scope.format = $scope.formats[0];
+		});
 	</script>
 
 </body>

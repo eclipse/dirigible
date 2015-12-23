@@ -74,7 +74,6 @@
 						ng-model="selectedEntry.${tableColumn.getName()}" readonly> <br>
 #else
 #if ($tableColumn.getWidgetType() == "date")
-
 					<p class="input-group">
 		            	<input type="text" ng-model="selectedEntry.${tableColumn.getName()}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
 		               		uib-datepicker-popup="" is-open="${tableColumn.getName()}Status.opened" 
@@ -84,9 +83,7 @@
 				        	<button type="button" class="btn btn-default" ng-click="${tableColumn.getName()}Open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
 				        </span>
 		           	</p>
-
 #elseif ($tableColumn.getWidgetType() == "textarea")
-
 					<textarea class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}" cols="50" rows="5" ng-readonly="operation == 'show'"></textarea>
 #else
@@ -284,7 +281,6 @@
 			$scope.${tableColumn.getName()}Status = {
 				opened: false
 			};
-
 #end
 #end
 			
