@@ -50,21 +50,21 @@ exports.create${entityName} = function() {
 #elseif ($tableColumn.getType() == $DATE)
         if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
         if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
         if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
         } else {
             statement.setTimestamp(++i, null);
         }
@@ -163,7 +163,7 @@ function createEntity(resultSet) {
     result.${tableColumn.getName().toLowerCase()} = resultSet.getDouble("${tableColumn.getName()}");
 #elseif ($tableColumn.getType() == $DATE) 
     if (resultSet.getDate("${tableColumn.getName()}") !== null) {
-		result.${tableColumn.getName().toLowerCase()} = convertToDateString(new Date(resultSet.getDate("${tableColumn.getName()}").getTime() - resultSet.getDate("${tableColumn.getName()}").getTimezoneOffset()*60*1000));
+		result.${tableColumn.getName().toLowerCase()} = convertToDateString(new Date(resultSet.getDate("${tableColumn.getName()}").getTime()));
     } else {
         result.${tableColumn.getName().toLowerCase()} = null;
     }
@@ -175,7 +175,7 @@ function createEntity(resultSet) {
     }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
     if (resultSet.getTimestamp("${tableColumn.getName()}") !== null) {
-        result.${tableColumn.getName().toLowerCase()} = new Date(resultSet.getTimestamp("${tableColumn.getName()}").getTime() - resultSet.getDate("${tableColumn.getName()}").getTimezoneOffset()*60*1000);
+        result.${tableColumn.getName().toLowerCase()} = new Date(resultSet.getTimestamp("${tableColumn.getName()}").getTime());
     } else {
         result.${tableColumn.getName().toLowerCase()} = null;
     }
@@ -231,21 +231,21 @@ exports.update${entityName} = function() {
 #elseif ($tableColumn.getType() == $DATE)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime() + js_date_${tableColumn.getName().toLowerCase()}.getTimezoneOffset()*60*1000));
+            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
         } else {
             statement.setTimestamp(++i, null);
         }

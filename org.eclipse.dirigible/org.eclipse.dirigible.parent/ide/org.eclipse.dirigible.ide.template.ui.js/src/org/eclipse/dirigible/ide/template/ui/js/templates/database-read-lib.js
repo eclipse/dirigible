@@ -58,7 +58,7 @@ function createEntity(resultSet) {
     result.${tableColumn.getName().toLowerCase()} = resultSet.getDouble("${tableColumn.getName()}");
 #elseif ($tableColumn.getType() == $DATE) 
     if (resultSet.getDate("${tableColumn.getName()}") !== null) {
-		result.${tableColumn.getName().toLowerCase()} = convertToDateString(new Date(resultSet.getDate("${tableColumn.getName()}").getTime() - resultSet.getDate("${tableColumn.getName()}").getTimezoneOffset()*60*1000));
+		result.${tableColumn.getName().toLowerCase()} = convertToDateString(new Date(resultSet.getDate("${tableColumn.getName()}").getTime()));
     } else {
         result.${tableColumn.getName().toLowerCase()} = null;
     }
@@ -70,7 +70,7 @@ function createEntity(resultSet) {
     }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
     if (resultSet.getTimestamp("${tableColumn.getName()}") !== null) {
-        result.${tableColumn.getName().toLowerCase()} = new Date(resultSet.getTimestamp("${tableColumn.getName()}").getTime() - resultSet.getDate("${tableColumn.getName()}").getTimezoneOffset()*60*1000);
+        result.${tableColumn.getName().toLowerCase()} = new Date(resultSet.getTimestamp("${tableColumn.getName()}").getTime());
     } else {
         result.${tableColumn.getName().toLowerCase()} = null;
     }
