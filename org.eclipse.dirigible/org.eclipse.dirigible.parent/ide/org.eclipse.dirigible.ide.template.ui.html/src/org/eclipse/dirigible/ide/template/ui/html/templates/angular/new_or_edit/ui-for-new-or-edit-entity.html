@@ -38,6 +38,7 @@
                 </div>
                 <div>
 #foreach ($tableColumn in $tableColumns)
+#if($tableColumn.isVisible())
 					<label>${tableColumn.getLabel()}</label> 
 #if ($tableColumn.isKey())
                     <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}" readonly>
@@ -65,7 +66,8 @@
 					<input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}" required="required">
 #end
 #end
-					<br> 
+					<br>
+#end
 #end                      
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary btn-sm" ng-click="saveEntity()" ng-show="!exist">Save</button>

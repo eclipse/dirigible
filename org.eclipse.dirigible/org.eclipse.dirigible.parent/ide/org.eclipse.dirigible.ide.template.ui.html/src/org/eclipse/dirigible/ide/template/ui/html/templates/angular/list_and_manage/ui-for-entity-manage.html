@@ -81,6 +81,7 @@
 				<!-- input form -->
 				<div>
 #foreach ($tableColumn in $tableColumns)
+#if($tableColumn.isVisible())
 					<label>${tableColumn.getLabel()}</label>
 #if ($tableColumn.isKey())
 					<input type="text" class="form-control" 
@@ -115,6 +116,7 @@
 #end
 #end
 					<br>
+#end
 #end
 				</div>
 				

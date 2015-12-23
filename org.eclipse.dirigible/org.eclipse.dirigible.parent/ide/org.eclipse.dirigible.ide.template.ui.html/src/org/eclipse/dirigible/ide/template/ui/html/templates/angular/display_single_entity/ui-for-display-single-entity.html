@@ -21,7 +21,8 @@
 		<div class="container well">
             <div ng-show="urlParameter">
                 <div ng-show="exist">
-#foreach ($tableColumn in $tableColumns) 
+#foreach ($tableColumn in $tableColumns)
+#if($tableColumn.isVisible())
                     <label>${tableColumn.getLabel()}</label>
 #if ($tableColumn.getWidgetType() == "date")
 					<div>{{entity.${tableColumn.getName()} | date:format}}</div>
@@ -29,6 +30,7 @@
 					<div>{{entity.${tableColumn.getName()}}}</div>
 #end
                     <br>
+#end
 #end
                 </div>
                 

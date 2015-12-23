@@ -48,6 +48,7 @@
 				</thead>
 				<tbody ng-model="selectedEntry">
 #foreach ($tableColumn in $tableColumns)
+#if ($tableColumn.isVisible())
 					<tr>
 						<td width="50%">${tableColumn.getLabel()}</td>
 						
@@ -55,6 +56,7 @@
 						<td width="50%">{{selectedEntry.${tableColumn.getName()}  | date:format}}</td>
 #else
 						<td width="50%">{{selectedEntry.${tableColumn.getName()}}}</td>
+#end
 #end
 #end
 					</tr>
