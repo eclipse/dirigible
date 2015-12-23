@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
-public class PostgreSQLDBSpecifier implements IDialectSpecifier {
+public class PostgreSQLDBSpecifier extends RDBGenericDialectSpecifier {
 
 	private static final String LIMIT_D_OFFSET_D = "LIMIT %d OFFSET %d"; //$NON-NLS-1$
 
@@ -69,16 +69,6 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 	}
 
 	@Override
-	public boolean isSchemaFilterSupported() {
-		return false;
-	}
-
-	@Override
-	public String getSchemaFilterScript() {
-		return null;
-	}
-
-	@Override
 	public String getAlterAddOpen() {
 		return "";
 	}
@@ -91,11 +81,6 @@ public class PostgreSQLDBSpecifier implements IDialectSpecifier {
 	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		return new ByteArrayInputStream(resultSet.getBytes(columnName));
-	}
-
-	@Override
-	public boolean isCatalogForSchema() {
-		return false;
 	}
 
 	@Override

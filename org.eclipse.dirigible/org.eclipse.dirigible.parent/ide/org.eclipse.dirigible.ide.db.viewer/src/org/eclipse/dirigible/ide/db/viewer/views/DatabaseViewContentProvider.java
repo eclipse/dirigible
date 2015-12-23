@@ -11,36 +11,31 @@
 package org.eclipse.dirigible.ide.db.viewer.views;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.repository.ext.db.DBUtils;
-import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
+import org.eclipse.dirigible.repository.datasource.DataSources;
+import org.eclipse.dirigible.repository.datasource.DataSources.Filter;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+@SuppressWarnings("javadoc")
 public class DatabaseViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
 	private static final Logger logger = Logger.getLogger(DatabaseViewContentProvider.class);
 
 	private static final String DIRIGIBLE_SYSTEM_TALBES_PREFIX = "DGB_";
-
-	private static final String PRCNT = "%"; //$NON-NLS-1$
-
 	private static final String EMPTY = ""; //$NON-NLS-1$
 
-	private static final String CBC = "] "; //$NON-NLS-1$
+	public enum Capability {
+		ShowTableDefinition, ViewTableContent, ExportData, Delete;
+	}
 
-	private static final String CBO = " ["; //$NON-NLS-1$
-
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 8868769345708033548L;
 
 	private TreeParent invisibleRoot;
@@ -100,83 +95,65 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 
 		try {
 			Connection connection = this.databaseViewer.getDatabaseConnection();
+			String dsName = DatabaseViewer.getSelectedDatasourceName();
+			DataSources dataSource = new DataSources(dsName, connection);
 
 			try {
-				// get the database metadata
-				DatabaseMetaData dmd = connection.getMetaData();
 
-				// TreeParent tables = null;
-				List<TreeParent> schemesMid = new ArrayList<TreeParent>();
-				String dbName = dmd.getDatabaseProductName();
+				this.invisibleRoot = new TreeParent(EMPTY, this.databaseViewer);
 
-				// list catalogs
-				// List<String> listOfCatalogs = getListOfCatalogs(dmd);
-				// for (Iterator iteratorCatalogs =
-				// listOfCatalogs.iterator();
-				// iteratorCatalogs.hasNext();) {
-				//
-				// String catalogName = (String) iteratorCatalogs.next();
-				// TreeParent catalog = new TreeParent(catalogName);
+				List<TreeParent> schemesContainerNode = new ArrayList<TreeParent>();
+				String catalogName = null;// TODO never used... remove?
+				// list schemes
+				List<String> schemeNames = dataSource.listSchemeNames(catalogName, null);
 
-				boolean isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
+				for (String schemeName : schemeNames) {
 
-				invisibleRoot = new TreeParent(EMPTY, this.databaseViewer);
+					TreeParent schemeContainerNode = new TreeParent(schemeName, this.databaseViewer);
 
-				TreeParent schemes = new TreeParent(dbName + CBO + dmd.getDatabaseProductVersion() + CBC + dmd.getDriverName(), this.databaseViewer);
-
-				if (dbName == null) {
-					throw new IllegalArgumentException("Database Product name is required");// TODO: fallback
-				}
-
-				/*
-				 * if (DBUtils.getNoSqlDialectSpecifier(dbName, connection) != null) {
-				 * INoSqlSpecifier spec = DBUtils.getNoSqlDialectSpecifier(dbName, connection);
-				 * com.google.gson.JsonObject jsonDBLayout = spec.getLayout();
-				 * System.err.println(jsonDBLayout);
-				 * this.adapt(jsonDBLayout, invisibleRoot);
-				 * } else
-				 */
-				if (DBUtils.getDialectSpecifier(dbName) != null) {
-
-					String catalogName = null;
-					// list schemes
-					List<String> listOfSchemes = getListOfSchemes(dmd, connection, catalogName);
-					for (String string : listOfSchemes) {
-
-						String schemeName = string;
-
-						TreeParent scheme = new TreeParent(schemeName, this.databaseViewer);
-
-						// get a list of all tables
-						List<String> listOfTables = getListOfTables(dmd, catalogName, schemeName);
-						// tables = new TreeParent(schemeName);
-						for (String tableName : listOfTables) {
-							if (!isOperator && tableName.startsWith(DIRIGIBLE_SYSTEM_TALBES_PREFIX)) {
-								continue;
+					// get a list of all table names
+					List<String> tableNames = dataSource.listTableNames(catalogName, schemeName, new Filter<String>() {
+						@Override
+						public boolean accepts(String tableName) {
+							if (tableName.startsWith(DIRIGIBLE_SYSTEM_TALBES_PREFIX)) {
+								if (!CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
+									return false;
+								}
 							}
-							TreeObject toTable = new TreeObject(tableName, new TableDefinition(catalogName, schemeName, tableName));
-							scheme.addChild(toTable);
+							return true;
 						}
-						// scheme.addChild(tables);
-						schemesMid.add(scheme);
+					});
+
+					for (String tableName : tableNames) {
+						TableDefinition tableDef = new TableDefinition(catalogName, schemeName, tableName);
+						TreeObject tableNode = new TreeObject(tableName, tableDef);
+						List<Capability> capabilities = tableNode.getTableDefinition().getCapabilities();
+						if (!dataSource.getDialect().isSchemaless()) {
+							capabilities.add(Capability.ShowTableDefinition);
+						}
+						capabilities.add(Capability.ViewTableContent);
+						tableDef.setContentScript(dataSource.getDialect().getContentQueryScript(catalogName, schemeName, tableName));
+						capabilities.add(Capability.ExportData);
+						capabilities.add(Capability.Delete);
+						schemeContainerNode.addChild(tableNode);
 					}
-
-					invisibleRoot.addChild(schemes);
-
-					if (schemesMid.size() == 1) {
-						TreeObject[] tables = schemesMid.get(0).getChildren();
-						for (TreeObject table : tables) {
-							schemes.addChild(table);
-						}
-					} else {
-						for (TreeParent treeParent : schemesMid) {
-							schemes.addChild(treeParent);
-						}
-					}
-
-				} else {
-					// TODO: report error and fallback
+					schemesContainerNode.add(schemeContainerNode);
 				}
+
+				TreeParent dataSourceContainerNode = new TreeParent(dataSource.getDataSourceLabel(), this.databaseViewer);
+
+				if (schemesContainerNode.size() == 1) {
+					TreeObject[] tableNodes = schemesContainerNode.get(0).getChildren();
+					for (TreeObject tableNode : tableNodes) {
+						dataSourceContainerNode.addChild(tableNode);
+					}
+				} else {
+					for (TreeParent schemeContainer : schemesContainerNode) {
+						dataSourceContainerNode.addChild(schemeContainer);
+					}
+				}
+
+				invisibleRoot.addChild(dataSourceContainerNode);
 
 			} finally {
 				if (connection != null) {
@@ -191,72 +168,6 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 			invisibleRoot.addChild(root);
 		}
 
-	}
-
-	private List<String> getListOfSchemes(DatabaseMetaData dmd, Connection connection, String catalogName) throws SQLException {
-
-		DatabaseMetaData metaData = connection.getMetaData();
-
-		List<String> listOfSchemes = new ArrayList<String>();
-		ResultSet rs = null;
-
-		String productName = dmd.getDatabaseProductName();
-		IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
-
-		IFilter schemaFilter = databaseViewer.getSchemaFilter(connection);
-		try {
-			if (dialectSpecifier.isSchemaFilterSupported()) {
-				try {
-					// low level filtering for schema
-					rs = connection.createStatement().executeQuery(dialectSpecifier.getSchemaFilterScript());
-				} catch (Exception e) {
-					// backup in case of wrong product recognition
-					rs = metaData.getSchemas(catalogName, null);
-				}
-			} else if (dialectSpecifier.isCatalogForSchema()) {
-				rs = metaData.getCatalogs();
-			} else {
-				rs = metaData.getSchemas(catalogName, null);
-			}
-			while (rs.next()) {
-				String schemeName = rs.getString(1);
-				// higher level filtering for schema if low level is not
-				// supported
-				if ((schemaFilter != null) && !schemaFilter.select(schemeName)) {
-					continue;
-				}
-				listOfSchemes.add(schemeName);
-			}
-		} finally {
-			if (rs != null) {
-				rs.close();
-			}
-		}
-
-		return listOfSchemes;
-	}
-
-	private List<String> getListOfTables(DatabaseMetaData dmd, String catalogName, String schemeName) throws SQLException {
-
-		String productName = dmd.getDatabaseProductName();
-		IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
-
-		List<String> listOfTables = new ArrayList<String>();
-
-		ResultSet rs = null;
-		if (dialectSpecifier.isCatalogForSchema()) {
-			rs = dmd.getTables(schemeName, null, PRCNT, DBUtils.TABLE_TYPES);
-		} else {
-			rs = dmd.getTables(catalogName, schemeName, PRCNT, DBUtils.TABLE_TYPES);
-		}
-
-		while (rs.next()) {
-			String tableName = rs.getString(3);
-			listOfTables.add(tableName);
-		}
-		rs.close();
-
-		return listOfTables;
 	}
 
 	public void requestRefreshContent() {

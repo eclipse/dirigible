@@ -86,10 +86,11 @@ public class DataSourceFacade {
 		}
 		return instance;
 	}
-
+	
 	// public DataSource getDataSource() {
 	// return getDataSource(null);
 	// }
+	
 
 	public DataSource getDataSource(HttpServletRequest request) {
 		if (dataSource == null) {
@@ -328,6 +329,10 @@ public class DataSourceFacade {
 	 */
 	public void unregisterAllDataSources() {
 		this.namedDataSources.clear();
+	}
+	
+	public Properties getNamedDataSourceConfig(String dsName){
+		return DataSourceFacade.namedDataSources.get(dsName);
 	}
 
 }

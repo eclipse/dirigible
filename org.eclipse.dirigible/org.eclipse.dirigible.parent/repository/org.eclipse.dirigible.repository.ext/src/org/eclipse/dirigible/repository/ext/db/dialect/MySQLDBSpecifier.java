@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
-public class MySQLDBSpecifier implements IDialectSpecifier {
+public class MySQLDBSpecifier extends RDBGenericDialectSpecifier {
 
 	private static final String LIMIT_D_D = "LIMIT %d, %d";
 	private static final String MYSQLDB_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$

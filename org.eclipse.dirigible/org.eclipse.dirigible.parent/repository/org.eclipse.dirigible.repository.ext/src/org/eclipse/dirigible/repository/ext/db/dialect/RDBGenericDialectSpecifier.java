@@ -4,8 +4,18 @@ import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.repository.ext.conf.IConfigurationStore;
+
 @SuppressWarnings("javadoc")
-public class MongoDBSpecifier implements IDialectSpecifier {
+public class RDBGenericDialectSpecifier implements IDialectSpecifier {
+
+	private static final String DOT = "."; //$NON-NLS-1$
+	private static final String QUOTES = "\""; //$NON-NLS-1$
+	private static final String EMPTY = "";
+
+	public static IDialectSpecifier getDialect(IConfigurationStore cfgStore) {
+		return null;
+	}
 
 	@Override
 	public String specify(String sql) {
@@ -59,7 +69,7 @@ public class MongoDBSpecifier implements IDialectSpecifier {
 
 	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
-		return resultSet.getBinaryStream(columnName);
+		return null;
 	}
 
 	@Override
@@ -68,12 +78,18 @@ public class MongoDBSpecifier implements IDialectSpecifier {
 	}
 
 	@Override
-	public String getContentQueryScript(String catalogName, String schemaName, String tableName) {
-		return "{}";
+	public boolean isSchemaless() {
+		return false;
 	}
 
 	@Override
-	public boolean isSchemaless() {
-		return true;
+	public String getContentQueryScript(String catalogName, String schemaName, String tableName) {
+		if (tableName == null) {
+			throw new IllegalArgumentException();
+		}
+		String q = "SELECT * FROM ";
+		String tableFqn = (schemaName != null ? QUOTES + schemaName + QUOTES + DOT : EMPTY) + QUOTES + tableName + QUOTES;
+		return q + tableFqn;
 	}
+
 }

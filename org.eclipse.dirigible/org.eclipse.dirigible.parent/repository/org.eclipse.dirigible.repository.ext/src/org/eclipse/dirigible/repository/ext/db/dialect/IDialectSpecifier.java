@@ -48,4 +48,59 @@ public interface IDialectSpecifier {
 
 	boolean isCatalogForSchema();
 
+	boolean isSchemaless();
+
+	/**
+	 * Provides a DataSource specific a query string constructed with the catalog, schema and table names arguments.
+	 * Generally, for RDB data sources that would most likely be:
+	 *
+	 * <PRE>
+	 * SELECT * FROM <schema-name>.<table-name>
+	 * </PRE>
+	 *
+	 * But for NoSql data sources it could be anything specific to that particular DB's query language. For example,
+	 * for MongoDB a generic query to all documents in a collection (which roughly maps to to a RDB Table) is a command
+	 * to findAll documents in a collection with no arguments (or empty document) and so the script is either "{}".
+	 *
+	 * @param catalogName
+	 * @param schemaName
+	 * @param tableName
+	 * @return
+	 */
+	String getContentQueryScript(String catalogName, String schemaName, String tableName);
+
+	public class Factory {
+		/* Note: case insensitive */
+
+		private static final String PRODUCT_DERBY = "Apache Derby"; //$NON-NLS-1$
+		private static final String PRODUCT_SYBASE = "Adaptive Server Enterprise"; //$NON-NLS-1$
+		private static final String PRODUCT_SAP_DB = "SAP DB"; //$NON-NLS-1$
+		private static final String PRODUCT_HDB = "HDB"; //$NON-NLS-1$
+		private static final String PRODUCT_POSTGRESQL = "PostgreSQL"; //$NON-NLS-1$
+		private static final String PRODUCT_MYSQL = "MySQL"; //$NON-NLS-1$
+		private static final String PRODUCT_MONGODB = "MongoDB"; //$NON-NLS-1$
+
+		public static IDialectSpecifier getInstance(String productName) {
+			if (productName != null) {
+				if (PRODUCT_HDB.equalsIgnoreCase(productName)) {
+					return new HANADBSpecifier();
+				} else if (PRODUCT_SAP_DB.equalsIgnoreCase(productName)) {
+					return new SAPDBSpecifier();
+				} else if (PRODUCT_SYBASE.equalsIgnoreCase(productName)) {
+					return new SybaseDBSpecifier();
+				} else if (PRODUCT_DERBY.equalsIgnoreCase(productName)) {
+					return new DerbyDBSpecifier();
+				} else if (PRODUCT_POSTGRESQL.equalsIgnoreCase(productName)) {
+					return new PostgreSQLDBSpecifier();
+				} else if (PRODUCT_MYSQL.equalsIgnoreCase(productName)) {
+					return new MySQLDBSpecifier();
+				} else if (PRODUCT_MONGODB.equalsIgnoreCase(productName)) {
+					return new MongoDBSpecifier();
+				}
+			}
+			return new DerbyDBSpecifier();
+		}
+
+	}
+
 }

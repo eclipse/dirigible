@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
-public class SybaseDBSpecifier implements IDialectSpecifier {
+public class SybaseDBSpecifier extends RDBGenericDialectSpecifier {
 
 	private static final String SYBASE_TIMESTAMP = "DATETIME"; //$NON-NLS-1$
 	private static final String SYBASE_FLOAT = "REAL"; //$NON-NLS-1$
@@ -62,16 +62,6 @@ public class SybaseDBSpecifier implements IDialectSpecifier {
 	}
 
 	@Override
-	public boolean isSchemaFilterSupported() {
-		return false;
-	}
-
-	@Override
-	public String getSchemaFilterScript() {
-		return null;
-	}
-
-	@Override
 	public String getAlterAddOpen() {
 		return "";
 	}
@@ -84,11 +74,6 @@ public class SybaseDBSpecifier implements IDialectSpecifier {
 	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		return new ByteArrayInputStream(resultSet.getBytes(columnName));
-	}
-
-	@Override
-	public boolean isCatalogForSchema() {
-		return false;
 	}
 
 	@Override
