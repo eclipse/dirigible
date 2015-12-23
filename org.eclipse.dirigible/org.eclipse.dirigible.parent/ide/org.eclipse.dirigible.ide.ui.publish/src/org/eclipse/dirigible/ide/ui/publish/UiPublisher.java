@@ -19,8 +19,11 @@ import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.logging.Logger;
 
 public class UiPublisher extends AbstractPublisher implements IPublisher {
+
+	private static final Logger logger = Logger.getLogger(UiPublisher.class);
 
 	public UiPublisher() {
 		super();
@@ -31,7 +34,7 @@ public class UiPublisher extends AbstractPublisher implements IPublisher {
 		try {
 			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT);
-			System.out.println("Copy all from " + sourceFolder.getFullPath().toString() + " to folder: " + targetContainer.getPath());
+			logger.debug("Copy all from " + sourceFolder.getFullPath().toString() + " to folder: " + targetContainer.getPath());
 			copyAllFromTo(sourceFolder, targetContainer);
 		} catch (Exception ex) {
 			throw new PublishException(ex.getMessage(), ex);
