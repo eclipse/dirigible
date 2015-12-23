@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -77,8 +79,15 @@ public class UploadDataHandler extends AbstractHandler {
 			try {
 				in = new FileInputStream(fullFileName);
 				byte[] data = IOUtils.toByteArray(in);
-				DBTableImporter dataInserter = new DBTableImporter(DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()), data,
-						fileName);
+
+				HttpServletRequest request = null;
+				try {
+					request = CommonParameters.getRequest();
+				} catch (IllegalStateException e) {
+					// no valid request found
+				}
+
+				DBTableImporter dataInserter = new DBTableImporter(DataSourceFacade.getInstance().getDataSource(request), data, fileName);
 				dataInserter.insert();
 				multiStatus.add(new Status(IStatus.OK, PLUGIN_ID, SUCCESSFULLY_IMPORTED_FILE + fileName));
 			} catch (Exception e) {
