@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.repository.ext.db.dialect;
 
 import java.io.InputStream;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -69,17 +70,34 @@ public interface IDialectSpecifier {
 	 */
 	String getContentQueryScript(String catalogName, String schemaName, String tableName);
 
+	/**
+	 * Factory class for IDialectInstances.
+	 */
 	public class Factory {
-		/* Note: case insensitive */
 
-		private static final String PRODUCT_DERBY = "Apache Derby"; //$NON-NLS-1$
-		private static final String PRODUCT_SYBASE = "Adaptive Server Enterprise"; //$NON-NLS-1$
-		private static final String PRODUCT_SAP_DB = "SAP DB"; //$NON-NLS-1$
-		private static final String PRODUCT_HDB = "HDB"; //$NON-NLS-1$
-		private static final String PRODUCT_POSTGRESQL = "PostgreSQL"; //$NON-NLS-1$
-		private static final String PRODUCT_MYSQL = "MySQL"; //$NON-NLS-1$
-		private static final String PRODUCT_MONGODB = "MongoDB"; //$NON-NLS-1$
+		public static final String PRODUCT_DERBY = "Apache Derby"; //$NON-NLS-1$
+		public static final String PRODUCT_SYBASE = "Adaptive Server Enterprise"; //$NON-NLS-1$
+		public static final String PRODUCT_SAP_DB = "SAP DB"; //$NON-NLS-1$
+		public static final String PRODUCT_HDB = "HDB"; //$NON-NLS-1$
+		public static final String PRODUCT_POSTGRESQL = "PostgreSQL"; //$NON-NLS-1$
+		public static final String PRODUCT_MYSQL = "MySQL"; //$NON-NLS-1$
+		public static final String PRODUCT_MONGODB = "MongoDB"; //$NON-NLS-1$
 
+		/**
+		 * Returns new instance of a dialect specifier corresponding to the provided productName parameter.
+		 * If no match was found, a default {@link DerbyDBSpecifier} instance is returned.
+		 * The productName is matched against one of the constants defined in this class.
+		 * They are the same as the value returned from JDBC API’s {@link DatabaseMetaData#getDatabaseProductName()}
+		 * method
+		 * for the corrseponding database.
+		 *
+		 * @param productName
+		 *            A database product name matching one of the declared constants in the class or null/random for
+		 *            default dialect
+		 * @return an implementation of {@link IDialectSpecifier} for the given productName parameter or default dialect
+		 *         if none
+		 *         matched the given productName
+		 */
 		public static IDialectSpecifier getInstance(String productName) {
 			if (productName != null) {
 				if (PRODUCT_HDB.equalsIgnoreCase(productName)) {
