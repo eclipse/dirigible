@@ -64,21 +64,6 @@ public class PostgreSQLDBSpecifier extends RDBGenericDialectSpecifier {
 	}
 
 	@Override
-	public String createTopAndStart(int limit, int offset) {
-		return ""; //$NON-NLS-1$
-	}
-
-	@Override
-	public String getAlterAddOpen() {
-		return "";
-	}
-
-	@Override
-	public String getAlterAddClose() {
-		return "";
-	}
-
-	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		return new ByteArrayInputStream(resultSet.getBytes(columnName));
 	}
@@ -87,10 +72,4 @@ public class PostgreSQLDBSpecifier extends RDBGenericDialectSpecifier {
 	public String getAlterAddOpenEach() {
 		return " ADD COLUMN ";
 	}
-
-	@Override
-	public String getAlterAddCloseEach() {
-		return "";
-	}
-
 }

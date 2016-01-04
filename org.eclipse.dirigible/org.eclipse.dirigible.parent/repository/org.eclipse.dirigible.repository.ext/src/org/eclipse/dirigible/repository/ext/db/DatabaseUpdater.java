@@ -123,8 +123,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		executeUpdate(knownFiles, errors);
 	}
 
-	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition)
-			throws SQLException, IOException {
+	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition) throws SQLException,
+	IOException {
 		JsonObject dsDefinitionObject = parseTable(dsDefinition);
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
 		tableName = tableName.toUpperCase();
@@ -145,8 +145,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	}
 
-	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition)
-			throws SQLException, IOException {
+	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition) throws SQLException,
+	IOException {
 		JsonObject dsDefinitionObject = parseView(dsDefinition);
 		String viewName = dsDefinitionObject.get(VIEW_NAME).getAsString();
 		viewName = viewName.toUpperCase();
@@ -225,7 +225,10 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		JsonArray columns = dsDefinitionObject.get(COLUMNS).getAsJsonArray();
 		int i = 0;
 		StringBuffer addSql = new StringBuffer();
-		addSql.append(dialectSpecifier.getAlterAddOpen());
+		String alterAddOpen = dialectSpecifier.getAlterAddOpen();
+		if (alterAddOpen != null) {
+			addSql.append(alterAddOpen);
+		}
 
 		for (JsonElement jsonElement : columns) {
 
@@ -243,7 +246,10 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 						addSql.append(", "); //$NON-NLS-1$
 					}
 
-					addSql.append(dialectSpecifier.getAlterAddOpenEach());
+					String alterAddOpenEach = dialectSpecifier.getAlterAddOpenEach();
+					if (alterAddOpenEach != null) {
+						addSql.append(alterAddOpenEach);
+					}
 
 					addSql.append(name + " " + type); //$NON-NLS-1$
 					if (DBSupportedTypesMap.VARCHAR.equals(type) || DBSupportedTypesMap.CHAR.equals(type)) {
@@ -263,7 +269,10 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 						sql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
 					}
 
-					addSql.append(dialectSpecifier.getAlterAddCloseEach());
+					String alterAddCloseEach = dialectSpecifier.getAlterAddCloseEach();
+					if (alterAddCloseEach != null) {
+						addSql.append(alterAddCloseEach);
+					}
 
 					i++;
 				} else if (!columnDefinitions.get(name).equals(type)) {
@@ -277,7 +286,10 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		// TODO Derby does not support multiple ADD in a single statement!
 
 		if (i > 0) {
-			addSql.append(dialectSpecifier.getAlterAddClose());
+			String alterAddClose = dialectSpecifier.getAlterAddClose();
+			if (alterAddClose != null) {
+				addSql.append(alterAddClose);
+			}
 			sql.append(addSql.toString());
 		}
 

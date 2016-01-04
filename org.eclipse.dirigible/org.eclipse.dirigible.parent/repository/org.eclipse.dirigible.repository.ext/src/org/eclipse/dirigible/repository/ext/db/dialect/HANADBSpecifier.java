@@ -10,11 +10,6 @@
 
 package org.eclipse.dirigible.repository.ext.db.dialect;
 
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
 public class HANADBSpecifier extends RDBGenericDialectSpecifier {
@@ -53,16 +48,6 @@ public class HANADBSpecifier extends RDBGenericDialectSpecifier {
 	}
 
 	@Override
-	public String getAlterAddOpenEach() {
-		return "";
-	}
-
-	@Override
-	public String getAlterAddCloseEach() {
-		return "";
-	}
-
-	@Override
 	public String specify(String sql) {
 		sql = sql.replace(DIALECT_CURRENT_TIMESTAMP, HANA_CURRENT_TIMESTAMP);
 		sql = sql.replace(DIALECT_TIMESTAMP, HANA_TIMESTAMP);
@@ -78,17 +63,6 @@ public class HANADBSpecifier extends RDBGenericDialectSpecifier {
 			return HANA_FLOAT;
 		}
 		return commonType;
-	}
-
-	@Override
-	public String createTopAndStart(int limit, int offset) {
-		return ""; //$NON-NLS-1$
-	}
-
-	@Override
-	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
-		Blob data = resultSet.getBlob(columnName);
-		return data.getBinaryStream();
 	}
 
 }

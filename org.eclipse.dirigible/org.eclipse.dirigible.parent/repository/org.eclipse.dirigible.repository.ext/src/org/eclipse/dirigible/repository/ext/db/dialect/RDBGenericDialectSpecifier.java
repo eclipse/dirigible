@@ -1,10 +1,9 @@
 package org.eclipse.dirigible.repository.ext.db.dialect;
 
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.eclipse.dirigible.repository.ext.conf.IConfigurationStore;
 
 @SuppressWarnings("javadoc")
 public class RDBGenericDialectSpecifier implements IDialectSpecifier {
@@ -12,10 +11,6 @@ public class RDBGenericDialectSpecifier implements IDialectSpecifier {
 	private static final String DOT = "."; //$NON-NLS-1$
 	private static final String QUOTES = "\""; //$NON-NLS-1$
 	private static final String EMPTY = "";
-
-	public static IDialectSpecifier getDialect(IConfigurationStore cfgStore) {
-		return null;
-	}
 
 	@Override
 	public String specify(String sql) {
@@ -67,9 +62,19 @@ public class RDBGenericDialectSpecifier implements IDialectSpecifier {
 		return null;
 	}
 
+	/**
+	 * Default implementation using
+	 *
+	 * <PRE>
+	 * resultSet.getBlob(columnName).getBinaryStream()
+	 * </PRE>
+	 *
+	 * to get InputStream bytes.
+	 */
 	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
-		return null;
+		Blob data = resultSet.getBlob(columnName);
+		return data.getBinaryStream();
 	}
 
 	@Override

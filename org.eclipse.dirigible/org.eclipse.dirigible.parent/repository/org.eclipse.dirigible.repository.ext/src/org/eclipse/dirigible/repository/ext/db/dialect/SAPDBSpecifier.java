@@ -10,11 +10,6 @@
 
 package org.eclipse.dirigible.repository.ext.db.dialect;
 
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
 public class SAPDBSpecifier extends RDBGenericDialectSpecifier {
@@ -51,34 +46,8 @@ public class SAPDBSpecifier extends RDBGenericDialectSpecifier {
 	}
 
 	@Override
-	public String createTopAndStart(int limit, int offset) {
-		return ""; //$NON-NLS-1$
-	}
-
-	@Override
 	public String getAlterAddOpen() {
 		return " ADD ";
-	}
-
-	@Override
-	public String getAlterAddClose() {
-		return "";
-	}
-
-	@Override
-	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
-		Blob data = resultSet.getBlob(columnName);
-		return data.getBinaryStream();
-	}
-
-	@Override
-	public String getAlterAddOpenEach() {
-		return "";
-	}
-
-	@Override
-	public String getAlterAddCloseEach() {
-		return "";
 	}
 
 }

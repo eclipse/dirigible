@@ -52,38 +52,13 @@ public class SybaseDBSpecifier extends RDBGenericDialectSpecifier {
 	}
 
 	@Override
-	public String createLimitAndOffset(int limit, int offset) {
-		return ""; //$NON-NLS-1$
-	}
-
-	@Override
 	public String createTopAndStart(int limit, int offset) {
 		return String.format("TOP %d ROWS START AT %d", limit, offset);
 	}
 
 	@Override
-	public String getAlterAddOpen() {
-		return "";
-	}
-
-	@Override
-	public String getAlterAddClose() {
-		return "";
-	}
-
-	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		return new ByteArrayInputStream(resultSet.getBytes(columnName));
-	}
-
-	@Override
-	public String getAlterAddOpenEach() {
-		return "";
-	}
-
-	@Override
-	public String getAlterAddCloseEach() {
-		return "";
 	}
 
 }

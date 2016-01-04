@@ -235,6 +235,15 @@ public class DataSources {
 		void error(Throwable t);
 	}
 	
+	/**
+	 * Executes a single SQL statement. The callbacks are on queryDone in case of query or updateDone in case of update, 
+	 * and on error. The method does not iterate on the result set and its pointer is in its initial position.
+	 * It is up to the callback to do something with it.  
+	 * 
+	 * @param sql
+	 * @param isQuery
+	 * @param callback
+	 */
 	public void executeSingleStatement(String sql, boolean isQuery, RequestExecutionCallback callback) {
 		ResultSet resultSet = null;
 		PreparedStatement preparedStatement = null;
@@ -260,12 +269,28 @@ public class DataSources {
 		}
 	}
 
+	/**
+	 * Callback interface for the {@link DataSources#executeSingleStatement(String, boolean, RequestIteratorCallback)} method.
+	 *
+	 */
 	public interface ResultSetIteratorCallback {
 		void onQueryDone(List<NavigableMap<String, Object>> table);
 		void onRowConstruction(NavigableMap<String, Object> row);
 		void onError(Throwable t);
 	}	
 	
+	/**
+	 * Unlike {@link #executeSingleStatement(String, boolean, RequestIteratorCallback)}, this method 
+	 * iterates on the ResultSet and produces a table data structure in the form of a list of ordered key-value tuples.
+	 * Schematically it looks like this:<PRE>
+	 * [[{column 1:value A}, {column 2: value B}, {column 3: value C}],
+	 *  [{column 1:value D}, {column 2: value E}, {column 3: value F}],
+	 *  [{column 1:value G}, {column 2: value I}, {column 3: value H}]]</PRE>
+	 * The callbacks are on completing the whole data structure, on error, and on each row construction.
+	 * 
+	 * @param sql
+	 * @param callback
+	 */
 	public void executeQueryStatement(String sql, ResultSetIteratorCallback callback) {
 		ResultSet resultSet = null;
 		PreparedStatement preparedStatement = null;

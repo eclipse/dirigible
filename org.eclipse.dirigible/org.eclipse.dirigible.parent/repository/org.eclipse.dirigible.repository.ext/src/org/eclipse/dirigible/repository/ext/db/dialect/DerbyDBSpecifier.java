@@ -10,14 +10,8 @@
 
 package org.eclipse.dirigible.repository.ext.db.dialect;
 
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
-@SuppressWarnings("javadoc")
 public class DerbyDBSpecifier extends RDBGenericDialectSpecifier {
 
 	private static final String OFFSET_D_ROWS_FETCH_FIRST_D_ROWS_ONLY = "OFFSET %d ROWS FETCH FIRST %d ROWS ONLY"; //$NON-NLS-1$
@@ -53,34 +47,8 @@ public class DerbyDBSpecifier extends RDBGenericDialectSpecifier {
 	}
 
 	@Override
-	public String createTopAndStart(int limit, int offset) {
-		return ""; //$NON-NLS-1$
-	}
-
-	@Override
 	public String getAlterAddOpen() {
 		return " ADD ";
-	}
-
-	@Override
-	public String getAlterAddClose() {
-		return "";
-	}
-
-	@Override
-	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
-		Blob data = resultSet.getBlob(columnName);
-		return data.getBinaryStream();
-	}
-
-	@Override
-	public String getAlterAddOpenEach() {
-		return "";
-	}
-
-	@Override
-	public String getAlterAddCloseEach() {
-		return "";
 	}
 
 }
