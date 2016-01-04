@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableMap;
 import java.util.Properties;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
@@ -237,7 +240,6 @@ public class DataSources {
 		PreparedStatement preparedStatement = null;
 		try{
 			preparedStatement = this.conn.prepareStatement(sql);
-			preparedStatement.closeOnCompletion();
 			if (isQuery) {
 				preparedStatement.executeQuery();
 				resultSet = preparedStatement.getResultSet();
@@ -258,4 +260,38 @@ public class DataSources {
 		}
 	}
 
+	public interface ResultSetIteratorCallback {
+		void onQueryDone(List<NavigableMap<String, Object>> table);
+		void onRowConstruction(NavigableMap<String, Object> row);
+		void onError(Throwable t);
+	}	
+	
+	public void executeQueryStatement(String sql, ResultSetIteratorCallback callback) {
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		try{
+			preparedStatement = this.conn.prepareStatement(sql);
+			preparedStatement.executeQuery();
+			resultSet = preparedStatement.getResultSet();
+			int columnsCount = resultSet.getMetaData().getColumnCount();
+			List<NavigableMap<String,Object>> table = new ArrayList<NavigableMap<String,Object>>();
+			NavigableMap<String, Object> row = new TreeMap<String, Object>();
+			for (int i = 1; i <= columnsCount; i++) {
+				row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
+				callback.onRowConstruction(row);
+				table.add(row);
+			}
+			callback.onQueryDone(table);
+		} catch (Exception e){
+			callback.onError(e);
+		} finally {
+			try {
+				if(resultSet!=null)
+					resultSet.close();
+			} catch (SQLException e) {
+				logger.warn(e.getMessage(), e);
+			}
+		}		
+	}
+	
 }
