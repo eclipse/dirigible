@@ -14,8 +14,8 @@ import java.util.Random;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.db.export.DataExportDialog;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
-import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
 import org.eclipse.dirigible.repository.ext.db.transfer.TableColumn;
 import org.eclipse.dirigible.repository.ext.db.transfer.TableName;

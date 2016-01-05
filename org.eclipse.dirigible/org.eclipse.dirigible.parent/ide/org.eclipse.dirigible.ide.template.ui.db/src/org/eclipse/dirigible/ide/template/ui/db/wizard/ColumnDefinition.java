@@ -11,7 +11,7 @@
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
-import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 
 public class ColumnDefinition {
 

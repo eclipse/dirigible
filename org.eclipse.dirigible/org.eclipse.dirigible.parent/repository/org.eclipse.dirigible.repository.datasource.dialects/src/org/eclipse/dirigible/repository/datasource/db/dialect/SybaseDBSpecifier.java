@@ -8,14 +8,14 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.ext.db.dialect;
+package org.eclipse.dirigible.repository.datasource.db.dialect;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 
 public class SybaseDBSpecifier extends RDBGenericDialectSpecifier {
 

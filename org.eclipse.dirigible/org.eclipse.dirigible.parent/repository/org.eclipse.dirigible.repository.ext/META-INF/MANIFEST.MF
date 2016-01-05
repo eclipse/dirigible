@@ -2,7 +2,6 @@ Manifest-Version: 1.0
 Export-Package: org.eclipse.dirigible.repository.ext.command,
  org.eclipse.dirigible.repository.ext.conf,
  org.eclipse.dirigible.repository.ext.db,
- org.eclipse.dirigible.repository.ext.db.dialect,
  org.eclipse.dirigible.repository.ext.db.transfer,
  org.eclipse.dirigible.repository.ext.debug,
  org.eclipse.dirigible.repository.ext.extensions,
@@ -34,5 +33,4 @@ Import-Package: com.google.gson,
  javax.servlet.http,
  org.eclipse.dirigible.repository.logging,
  org.osgi.framework;version="1.8.0"
-Service-Component: OSGi-INF/derby-dialect.xml, OSGi-INF/hanadb-dialect.xml, OSGi-INF/mongodb-dialect.xml, OSGi-INF/mysql-dialect.xml, OSGi-INF/postgresql-dialect.xml, OSGi-INF/sapdb-dialect.xml, OSGi-INF/sybase-dialect.xml
 Bundle-ClassPath: .

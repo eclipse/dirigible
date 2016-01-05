@@ -26,6 +26,7 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.logging.Logger;
 

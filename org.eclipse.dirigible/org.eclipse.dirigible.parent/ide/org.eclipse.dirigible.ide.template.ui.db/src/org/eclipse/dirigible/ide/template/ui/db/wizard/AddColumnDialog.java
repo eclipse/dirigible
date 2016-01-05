@@ -27,8 +27,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class AddColumnDialog extends TitleAreaDialog {

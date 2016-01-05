@@ -30,7 +30,6 @@ import javax.sql.DataSource;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.datasource.db.dialect.DialectFactory;
 import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
-import org.eclipse.dirigible.repository.ext.db.dialect.DerbyDBSpecifier;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DBUtils {
@@ -203,7 +202,7 @@ public class DBUtils {
 		if (productName != null) {
 			return DialectFactory.getInstance(productName);
 		}
-		return new DerbyDBSpecifier();
+		return DialectFactory.getInstance("Apache Derby");
 	}
 
 	public String specifyDataType(Connection connection, String commonType) throws SQLException {

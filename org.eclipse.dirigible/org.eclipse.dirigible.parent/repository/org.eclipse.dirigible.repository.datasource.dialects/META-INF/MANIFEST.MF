@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.dirigible.repository.datasource.dialects
+Bundle-SymbolicName: org.eclipse.dirigible.repository.datasource.dialects;singleton:=true
+Bundle-Version: 2.2.151217
+Bundle-ClassPath: .
+Bundle-Vendor: SAP AG
+Require-Bundle: org.eclipse.dirigible.repository.datasource;bundle-version="2.2.151217"
+Import-Package: org.eclipse.dirigible.repository.logging,
+ org.osgi.framework;version="1.8.0"
+Build-Jdk: 1.6.0_33
+Service-Component: OSGi-INF/derby-dialect.xml, OSGi-INF/hanadb-dialect.xml, OSGi-INF/mongodb-dialect.xml, OSGi-INF/mysql-dialect.xml, OSGi-INF/postgresql-dialect.xml, OSGi-INF/sapdb-dialect.xml, OSGi-INF/sybase-dialect.xml
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.dirigible.repository.datasource.db.dialect
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

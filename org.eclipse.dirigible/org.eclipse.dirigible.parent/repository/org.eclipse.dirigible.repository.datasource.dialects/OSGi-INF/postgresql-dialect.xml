@@ -3,5 +3,5 @@
    <service>
       <provide interface="org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier"/>
    </service>
-   <implementation class="org.eclipse.dirigible.repository.ext.db.dialect.PostgreSQLDBSpecifier"/>
+   <implementation class="org.eclipse.dirigible.repository.datasource.db.dialect.PostgreSQLDBSpecifier"/>
 </scr:component>

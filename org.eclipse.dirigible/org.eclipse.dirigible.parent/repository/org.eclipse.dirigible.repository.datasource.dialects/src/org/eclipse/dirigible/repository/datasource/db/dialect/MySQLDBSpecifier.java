@@ -8,9 +8,9 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.ext.db.dialect;
+package org.eclipse.dirigible.repository.datasource.db.dialect;
 
-import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 
 public class MySQLDBSpecifier extends RDBGenericDialectSpecifier {
 

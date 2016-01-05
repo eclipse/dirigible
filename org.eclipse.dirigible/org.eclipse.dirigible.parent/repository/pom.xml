@@ -101,6 +101,7 @@
 		<module>org.eclipse.dirigible.repository.git</module>
 		<module>org.eclipse.dirigible.repository.velocity</module>
 		<module>org.eclipse.dirigible.repository.datasource</module>
+		<module>org.eclipse.dirigible.repository.datasource.dialects</module>
 	</modules>
 
 </project>

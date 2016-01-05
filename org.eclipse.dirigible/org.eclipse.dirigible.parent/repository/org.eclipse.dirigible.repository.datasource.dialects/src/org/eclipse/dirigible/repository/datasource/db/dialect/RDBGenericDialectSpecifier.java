@@ -1,15 +1,16 @@
-package org.eclipse.dirigible.repository.ext.db.dialect;
+package org.eclipse.dirigible.repository.datasource.db.dialect;
 
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
-
 @SuppressWarnings("javadoc")
-public class MongoDBSpecifier implements IDialectSpecifier {
+public class RDBGenericDialectSpecifier implements IDialectSpecifier {
 
-	public static final String PRODUCT_MONGODB = "MongoDB"; //$NON-NLS-1$
+	private static final String DOT = "."; //$NON-NLS-1$
+	private static final String QUOTES = "\""; //$NON-NLS-1$
+	private static final String EMPTY = "";
 
 	@Override
 	public String specify(String sql) {
@@ -61,9 +62,19 @@ public class MongoDBSpecifier implements IDialectSpecifier {
 		return null;
 	}
 
+	/**
+	 * Default implementation using
+	 *
+	 * <PRE>
+	 * resultSet.getBlob(columnName).getBinaryStream()
+	 * </PRE>
+	 *
+	 * to get InputStream bytes.
+	 */
 	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
-		return resultSet.getBinaryStream(columnName);
+		Blob data = resultSet.getBlob(columnName);
+		return data.getBinaryStream();
 	}
 
 	@Override
@@ -72,17 +83,23 @@ public class MongoDBSpecifier implements IDialectSpecifier {
 	}
 
 	@Override
-	public String getContentQueryScript(String catalogName, String schemaName, String tableName) {
-		return "{}";
-	}
-
-	@Override
 	public boolean isSchemaless() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isDialectForName(String productName) {
-		return PRODUCT_MONGODB.equalsIgnoreCase(productName);
+		return false;
 	}
+
+	@Override
+	public String getContentQueryScript(String catalogName, String schemaName, String tableName) {
+		if (tableName == null) {
+			throw new IllegalArgumentException();
+		}
+		String q = "SELECT * FROM ";
+		String tableFqn = (schemaName != null ? QUOTES + schemaName + QUOTES + DOT : EMPTY) + QUOTES + tableName + QUOTES;
+		return q + tableFqn;
+	}
+
 }

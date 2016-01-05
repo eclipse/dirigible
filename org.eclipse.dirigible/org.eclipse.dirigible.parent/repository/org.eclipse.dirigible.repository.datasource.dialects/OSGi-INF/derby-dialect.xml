@@ -3,5 +3,5 @@
    <service>
       <provide interface="org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier"/>
    </service>
-   <implementation class="org.eclipse.dirigible.repository.ext.db.dialect.DerbyDBSpecifier"/>
+   <implementation class="org.eclipse.dirigible.repository.datasource.db.dialect.DerbyDBSpecifier"/>
 </scr:component>
