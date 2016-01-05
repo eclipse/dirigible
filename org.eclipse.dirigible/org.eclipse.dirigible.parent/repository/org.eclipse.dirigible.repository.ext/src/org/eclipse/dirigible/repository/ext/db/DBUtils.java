@@ -28,14 +28,9 @@ import java.util.StringTokenizer;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.repository.datasource.db.dialect.DialectFactory;
+import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.ext.db.dialect.DerbyDBSpecifier;
-import org.eclipse.dirigible.repository.ext.db.dialect.HANADBSpecifier;
-import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
-import org.eclipse.dirigible.repository.ext.db.dialect.MongoDBSpecifier;
-import org.eclipse.dirigible.repository.ext.db.dialect.MySQLDBSpecifier;
-import org.eclipse.dirigible.repository.ext.db.dialect.PostgreSQLDBSpecifier;
-import org.eclipse.dirigible.repository.ext.db.dialect.SAPDBSpecifier;
-import org.eclipse.dirigible.repository.ext.db.dialect.SybaseDBSpecifier;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DBUtils {
@@ -206,21 +201,7 @@ public class DBUtils {
 
 	public static IDialectSpecifier getDialectSpecifier(String productName) {
 		if (productName != null) {
-			if (PRODUCT_HDB.equals(productName)) {
-				return new HANADBSpecifier();
-			} else if (PRODUCT_SAP_DB.equals(productName)) {
-				return new SAPDBSpecifier();
-			} else if (PRODUCT_SYBASE.equals(productName)) {
-				return new SybaseDBSpecifier();
-			} else if (PRODUCT_DERBY.equals(productName)) {
-				return new DerbyDBSpecifier();
-			} else if (PRODUCT_POSTGRESQL.equals(productName)) {
-				return new PostgreSQLDBSpecifier();
-			} else if (PRODUCT_MYSQL.equals(productName)) {
-				return new MySQLDBSpecifier();
-			} else if (PRODUCT_MONGODB.equals(productName)) {
-				return new MongoDBSpecifier();
-			}
+			return DialectFactory.getInstance(productName);
 		}
 		return new DerbyDBSpecifier();
 	}

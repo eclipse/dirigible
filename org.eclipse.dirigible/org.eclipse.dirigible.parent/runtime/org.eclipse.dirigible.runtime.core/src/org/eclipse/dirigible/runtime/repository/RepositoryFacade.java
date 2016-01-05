@@ -22,7 +22,7 @@ import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.eclipse.dirigible.repository.api.RepositoryFactory;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 // import org.eclipse.dirigible.repository.db.DBRepository;
-import org.eclipse.dirigible.repository.ext.db.WrappedDataSource;
+import org.eclipse.dirigible.repository.datasource.WrappedDataSource;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 

@@ -19,6 +19,8 @@ import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
 public class PostgreSQLDBSpecifier extends RDBGenericDialectSpecifier {
 
+	public static final String PRODUCT_POSTGRESQL = "PostgreSQL"; //$NON-NLS-1$
+
 	private static final String LIMIT_D_OFFSET_D = "LIMIT %d OFFSET %d"; //$NON-NLS-1$
 
 	private static final String POSTGRESQL_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
@@ -71,5 +73,10 @@ public class PostgreSQLDBSpecifier extends RDBGenericDialectSpecifier {
 	@Override
 	public String getAlterAddOpenEach() {
 		return " ADD COLUMN ";
+	}
+
+	@Override
+	public boolean isDialectForName(String productName) {
+		return PRODUCT_POSTGRESQL.equalsIgnoreCase(productName);
 	}
 }

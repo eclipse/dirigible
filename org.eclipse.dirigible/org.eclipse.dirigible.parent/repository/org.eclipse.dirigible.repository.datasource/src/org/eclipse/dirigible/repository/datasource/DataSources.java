@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.Properties;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.repository.ext.db.DBUtils;
-import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
+import org.eclipse.dirigible.repository.datasource.db.dialect.DialectFactory;
+import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
@@ -27,6 +26,16 @@ import org.eclipse.dirigible.repository.logging.Logger;
 public class DataSources {
 
 	private static final Logger logger = Logger.getLogger(DataSources.class);
+	
+	public static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
+	public static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
+	public static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
+	public static final String SYNONYM = "SYNONYM"; //$NON-NLS-1$
+	public static final String ALIAS = "ALIAS"; //$NON-NLS-1$
+	public static final String VIEW = "VIEW"; //$NON-NLS-1$
+	public static final String TABLE = "TABLE"; //$NON-NLS-1$
+	
+	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
 	private static final String PRCNT = "%"; //$NON-NLS-1$
 	private static final String CBC = "] "; //$NON-NLS-1$
@@ -70,9 +79,9 @@ public class DataSources {
 		this.conn = conn;
 		this.dmd = this.conn.getMetaData();
 		String productName = dmd.getDatabaseProductName();
-		this.dialectSpecifier = IDialectSpecifier.Factory.getInstance(productName);
+		this.dialectSpecifier = DialectFactory.getInstance(productName);
 		if (this.dialectSpecifier == null) {
-			this.dialectSpecifier = IDialectSpecifier.Factory.getInstance(dsName);
+			this.dialectSpecifier = DialectFactory.getInstance(dsName);
 		}
 		this.dsConfig = org.eclipse.dirigible.repository.datasource.DataSourceFacade.getInstance().getNamedDataSourceConfig(dsName);
 	}
@@ -82,9 +91,9 @@ public class DataSources {
 		this.conn = ds.getConnection();
 		this.dmd = this.conn.getMetaData();
 		String productName = dmd.getDatabaseProductName();
-		this.dialectSpecifier = IDialectSpecifier.Factory.getInstance(productName);
+		this.dialectSpecifier = DialectFactory.getInstance(productName);
 		if (this.dialectSpecifier == null) {
-			this.dialectSpecifier = IDialectSpecifier.Factory.getInstance(dsName);
+			this.dialectSpecifier = DialectFactory.getInstance(dsName);
 		}
 		this.dsConfig = org.eclipse.dirigible.repository.datasource.DataSourceFacade.getInstance().getNamedDataSourceConfig(dsName);		
 	}
@@ -114,9 +123,9 @@ public class DataSources {
 
 		ResultSet rs = null;
 		if (this.dialectSpecifier.isCatalogForSchema()) {
-			rs = this.dmd.getTables(schemeName, null, PRCNT, DBUtils.TABLE_TYPES);
+			rs = this.dmd.getTables(schemeName, null, PRCNT, TABLE_TYPES);
 		} else {
-			rs = this.dmd.getTables(catalogName, schemeName, PRCNT, DBUtils.TABLE_TYPES);
+			rs = this.dmd.getTables(catalogName, schemeName, PRCNT, TABLE_TYPES);
 		}
 
 		while (rs.next()) {

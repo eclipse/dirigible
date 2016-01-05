@@ -19,6 +19,8 @@ import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
 public class SybaseDBSpecifier extends RDBGenericDialectSpecifier {
 
+	public static final String PRODUCT_SYBASE = "Adaptive Server Enterprise"; //$NON-NLS-1$
+
 	private static final String SYBASE_TIMESTAMP = "DATETIME"; //$NON-NLS-1$
 	private static final String SYBASE_FLOAT = "REAL"; //$NON-NLS-1$
 	private static final String SYBASE_BLOB = "IMAGE"; //$NON-NLS-1$
@@ -59,6 +61,11 @@ public class SybaseDBSpecifier extends RDBGenericDialectSpecifier {
 	@Override
 	public InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException {
 		return new ByteArrayInputStream(resultSet.getBytes(columnName));
+	}
+
+	@Override
+	public boolean isDialectForName(String productName) {
+		return PRODUCT_SYBASE.equalsIgnoreCase(productName);
 	}
 
 }

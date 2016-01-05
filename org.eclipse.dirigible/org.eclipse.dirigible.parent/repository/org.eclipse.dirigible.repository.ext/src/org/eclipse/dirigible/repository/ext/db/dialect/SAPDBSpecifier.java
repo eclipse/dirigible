@@ -14,6 +14,8 @@ import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
 public class SAPDBSpecifier extends RDBGenericDialectSpecifier {
 
+	public static final String PRODUCT_SAP_DB = "SAP DB"; //$NON-NLS-1$
+
 	private static final String LIMIT_D_D = "LIMIT %d, %d";
 	private static final String SAPDB_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
 	private static final String SAPDB_FLOAT = "DOUBLE"; //$NON-NLS-1$
@@ -48,6 +50,11 @@ public class SAPDBSpecifier extends RDBGenericDialectSpecifier {
 	@Override
 	public String getAlterAddOpen() {
 		return " ADD ";
+	}
+
+	@Override
+	public boolean isDialectForName(String productName) {
+		return PRODUCT_SAP_DB.equalsIgnoreCase(productName);
 	}
 
 }

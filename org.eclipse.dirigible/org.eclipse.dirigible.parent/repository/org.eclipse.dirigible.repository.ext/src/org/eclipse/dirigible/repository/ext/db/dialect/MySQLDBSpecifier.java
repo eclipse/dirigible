@@ -14,6 +14,8 @@ import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
 public class MySQLDBSpecifier extends RDBGenericDialectSpecifier {
 
+	public static final String PRODUCT_MYSQL = "MySQL"; //$NON-NLS-1$
+
 	private static final String LIMIT_D_D = "LIMIT %d, %d";
 	private static final String MYSQLDB_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
 	private static final String MYSQL_FLOAT = "DOUBLE"; //$NON-NLS-1$
@@ -62,5 +64,10 @@ public class MySQLDBSpecifier extends RDBGenericDialectSpecifier {
 	@Override
 	public boolean isCatalogForSchema() {
 		return true;
+	}
+
+	@Override
+	public boolean isDialectForName(String productName) {
+		return PRODUCT_MYSQL.equalsIgnoreCase(productName);
 	}
 }

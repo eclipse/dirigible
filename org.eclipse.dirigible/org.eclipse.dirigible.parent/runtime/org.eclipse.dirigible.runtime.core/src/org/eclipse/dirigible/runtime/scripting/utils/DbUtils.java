@@ -21,9 +21,9 @@ import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.ext.db.DBSequenceUtils;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
-import org.eclipse.dirigible.repository.ext.db.dialect.IDialectSpecifier;
 
 
 /**

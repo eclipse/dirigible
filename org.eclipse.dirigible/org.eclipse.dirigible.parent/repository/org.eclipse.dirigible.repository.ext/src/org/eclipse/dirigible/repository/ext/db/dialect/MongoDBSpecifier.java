@@ -4,8 +4,12 @@ import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
+
 @SuppressWarnings("javadoc")
 public class MongoDBSpecifier implements IDialectSpecifier {
+
+	public static final String PRODUCT_MONGODB = "MongoDB"; //$NON-NLS-1$
 
 	@Override
 	public String specify(String sql) {
@@ -75,5 +79,10 @@ public class MongoDBSpecifier implements IDialectSpecifier {
 	@Override
 	public boolean isSchemaless() {
 		return true;
+	}
+
+	@Override
+	public boolean isDialectForName(String productName) {
+		return PRODUCT_MONGODB.equalsIgnoreCase(productName);
 	}
 }

@@ -14,6 +14,8 @@ import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
 public class HANADBSpecifier extends RDBGenericDialectSpecifier {
 
+	public static final String PRODUCT_HDB = "HDB"; //$NON-NLS-1$
+
 	private static final String LIMIT_D_OFFSET_D = "LIMIT %d OFFSET %d"; //$NON-NLS-1$
 	private static final String HANA_FLOAT = "DOUBLE"; //$NON-NLS-1$
 	private static final String HANA_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
@@ -63,6 +65,11 @@ public class HANADBSpecifier extends RDBGenericDialectSpecifier {
 			return HANA_FLOAT;
 		}
 		return commonType;
+	}
+
+	@Override
+	public boolean isDialectForName(String productName) {
+		return PRODUCT_HDB.equalsIgnoreCase(productName);
 	}
 
 }

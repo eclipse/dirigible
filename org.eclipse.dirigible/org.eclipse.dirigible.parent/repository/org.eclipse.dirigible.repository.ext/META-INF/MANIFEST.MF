@@ -27,9 +27,12 @@ Require-Bundle: org.apache.lucene.analysis,
  org.apache.commons.io,
  org.eclipse.jgit,
  org.apache.velocity,
- org.eclipse.dirigible.repository.velocity
+ org.eclipse.dirigible.repository.velocity,
+ org.eclipse.dirigible.repository.datasource;bundle-version="2.2.151217"
 Import-Package: com.google.gson,
- org.eclipse.dirigible.repository.logging,
  javax.servlet,
- javax.servlet.http
+ javax.servlet.http,
+ org.eclipse.dirigible.repository.logging,
+ org.osgi.framework;version="1.8.0"
+Service-Component: OSGi-INF/derby-dialect.xml, OSGi-INF/hanadb-dialect.xml, OSGi-INF/mongodb-dialect.xml, OSGi-INF/mysql-dialect.xml, OSGi-INF/postgresql-dialect.xml, OSGi-INF/sapdb-dialect.xml, OSGi-INF/sybase-dialect.xml
 Bundle-ClassPath: .

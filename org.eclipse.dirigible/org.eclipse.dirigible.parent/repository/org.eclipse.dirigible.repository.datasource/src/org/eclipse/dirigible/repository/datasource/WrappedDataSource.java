@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.ext.db;
+package org.eclipse.dirigible.repository.datasource;
 
 import java.io.PrintWriter;
 import java.sql.Connection;

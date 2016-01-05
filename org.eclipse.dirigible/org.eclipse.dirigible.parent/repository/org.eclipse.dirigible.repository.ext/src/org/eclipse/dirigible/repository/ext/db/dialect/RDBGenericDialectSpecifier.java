@@ -5,6 +5,8 @@ import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
+
 @SuppressWarnings("javadoc")
 public class RDBGenericDialectSpecifier implements IDialectSpecifier {
 
@@ -84,6 +86,11 @@ public class RDBGenericDialectSpecifier implements IDialectSpecifier {
 
 	@Override
 	public boolean isSchemaless() {
+		return false;
+	}
+
+	@Override
+	public boolean isDialectForName(String productName) {
 		return false;
 	}
 

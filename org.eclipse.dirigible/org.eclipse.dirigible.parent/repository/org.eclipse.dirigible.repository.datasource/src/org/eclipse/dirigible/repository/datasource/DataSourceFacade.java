@@ -23,7 +23,6 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
-import org.eclipse.dirigible.repository.ext.db.WrappedDataSource;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 /**

@@ -14,6 +14,8 @@ import org.eclipse.dirigible.repository.ext.db.DBSupportedTypesMap;
 
 public class DerbyDBSpecifier extends RDBGenericDialectSpecifier {
 
+	private static final String PRODUCT_DERBY = "Apache Derby"; //$NON-NLS-1$
+
 	private static final String OFFSET_D_ROWS_FETCH_FIRST_D_ROWS_ONLY = "OFFSET %d ROWS FETCH FIRST %d ROWS ONLY"; //$NON-NLS-1$
 
 	private static final String DERBY_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
@@ -49,6 +51,11 @@ public class DerbyDBSpecifier extends RDBGenericDialectSpecifier {
 	@Override
 	public String getAlterAddOpen() {
 		return " ADD ";
+	}
+
+	@Override
+	public boolean isDialectForName(String productName) {
+		return PRODUCT_DERBY.equalsIgnoreCase(productName);
 	}
 
 }
