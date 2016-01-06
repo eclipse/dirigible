@@ -27,7 +27,8 @@ Require-Bundle: org.apache.lucene.analysis,
  org.eclipse.jgit,
  org.apache.velocity,
  org.eclipse.dirigible.repository.velocity,
- org.eclipse.dirigible.repository.datasource
+ org.eclipse.dirigible.repository.datasource,
+ org.eclipse.dirigible.repository.datasource.dialects
 Import-Package: com.google.gson,
  javax.servlet,
  javax.servlet.http,

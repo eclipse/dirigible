@@ -9,18 +9,24 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
-public class DataSourcesActivator implements BundleActivator{
-	
+public class DataSourcesActivator implements BundleActivator {
+
 	private static final Logger logger = Logger.getLogger(DataSourcesActivator.class.getCanonicalName());
 
 	private static BundleContext context;
-	
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		DataSourcesActivator.context = context;
 	}
 
-	public static <T> Collection<T> getServices(Class<T> clazz){
+	public static <T> Collection<T> getServices(Class<T> clazz) {
+
+		if (DataSourcesActivator.context == null) {
+			// non-osgi env - e.g. unit tests
+			return null;
+		}
+
 		Collection<T> services = null;
 		Collection<ServiceReference<T>> serviceReferences;
 		try {
@@ -36,7 +42,7 @@ public class DataSourcesActivator implements BundleActivator{
 		}
 		return services;
 	}
-	
+
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		context = null;
