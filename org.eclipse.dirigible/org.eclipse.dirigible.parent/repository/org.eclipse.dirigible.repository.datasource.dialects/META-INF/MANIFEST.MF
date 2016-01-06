@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.dirigible.repository.datasource.dialects;single
 Bundle-Version: 2.2.151217
 Bundle-ClassPath: .
 Bundle-Vendor: SAP AG
-Require-Bundle: org.eclipse.dirigible.repository.datasource;bundle-version="2.2.151217"
+Require-Bundle: org.eclipse.dirigible.repository.datasource
 Import-Package: org.eclipse.dirigible.repository.logging,
  org.osgi.framework;version="1.8.0"
 Build-Jdk: 1.6.0_33

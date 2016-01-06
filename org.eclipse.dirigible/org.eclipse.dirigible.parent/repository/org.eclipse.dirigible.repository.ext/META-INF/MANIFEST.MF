@@ -27,7 +27,7 @@ Require-Bundle: org.apache.lucene.analysis,
  org.eclipse.jgit,
  org.apache.velocity,
  org.eclipse.dirigible.repository.velocity,
- org.eclipse.dirigible.repository.datasource;bundle-version="2.2.151217"
+ org.eclipse.dirigible.repository.datasource
 Import-Package: com.google.gson,
  javax.servlet,
  javax.servlet.http,
