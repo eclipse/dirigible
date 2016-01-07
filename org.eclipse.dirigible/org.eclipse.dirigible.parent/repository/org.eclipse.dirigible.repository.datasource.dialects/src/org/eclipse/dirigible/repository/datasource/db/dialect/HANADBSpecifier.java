@@ -31,12 +31,14 @@ public class HANADBSpecifier extends RDBGenericDialectSpecifier {
 
 	@Override
 	public boolean isSchemaFilterSupported() {
-		return true;
+//		return true;
+		return false;
 	}
 
 	@Override
 	public String getSchemaFilterScript() {
-		return "SELECT * FROM PUBLIC.SCHEMAS WHERE HAS_PRIVILEGES='TRUE'";
+		//return "SELECT * FROM PUBLIC.SCHEMAS WHERE HAS_PRIVILEGES='TRUE'";
+		return "";
 	}
 
 	@Override
