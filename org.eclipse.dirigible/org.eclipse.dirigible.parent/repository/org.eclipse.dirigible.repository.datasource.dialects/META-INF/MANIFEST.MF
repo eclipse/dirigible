@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.dirigible.repository.datasource
 Import-Package: org.eclipse.dirigible.repository.logging,
  org.osgi.framework;version="1.8.0"
 Build-Jdk: 1.6.0_33
-Service-Component: OSGi-INF/derby-dialect.xml, OSGi-INF/hanadb-dialect.xml, OSGi-INF/mongodb-dialect.xml, OSGi-INF/mysql-dialect.xml, OSGi-INF/postgresql-dialect.xml, OSGi-INF/sapdb-dialect.xml, OSGi-INF/sybase-dialect.xml
+Service-Component: OSGi-INF/*.xml
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.repository.datasource.db.dialect
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
