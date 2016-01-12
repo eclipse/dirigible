@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.repository.datasource.db.dialect;
 
 import java.io.InputStream;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -85,9 +84,7 @@ public interface IDialectSpecifier {
 
 	/**
 	 * The method returns the most suitable dialect-specific SQL type that corresponds to the provided <CODE>commonType</CODE> parameter.
-	 * Entity model generation tools in Dirigible make use of this method to translate the list of possible column types they present
-	 * to the end user to dialect specific types. This method ensures that the type used in a statement to create a column is exactly 
-	 * the same that the database will use then in the table definition generation. 
+	 * Different mechanisms in Dirigible make use of this method to translate the common data types they use to dialect specific ones.
 	 *   
 	 * @param commonType one of the types returned by {@link DBSupportedTypesMap#getSupportedTypes()} (VARCHAR, CHAR, INTEGER, BIGINT, SMALLINT, REAL, DOUBLE, DATE, TIME, TIMESTAMP, BLOB)
 	 * @return The database-specific SQL type that corresponds to the commonType parameter, if any, or the provided commonType if it's the same.   
