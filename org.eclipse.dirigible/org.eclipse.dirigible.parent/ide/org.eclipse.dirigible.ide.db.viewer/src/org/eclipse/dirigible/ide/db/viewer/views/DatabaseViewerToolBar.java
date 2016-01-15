@@ -12,8 +12,8 @@ package org.eclipse.dirigible.ide.db.viewer.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.ide.common.image.ImageUtils;
@@ -41,8 +41,8 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 
 	private static final Logger logger = Logger.getLogger(DatabaseViewerToolBar.class);
 
-	private static final Image REFRESH_ICON = ImageUtils
-			.createImage(ImageUtils.getIconURL("org.eclipse.dirigible.ide.workspace.ui", "/resources/icons/", "refresh.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final Image REFRESH_ICON = ImageUtils.createImage(ImageUtils.getIconURL(
+			"org.eclipse.dirigible.ide.workspace.ui", "/resources/icons/", "refresh.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private Combo datasourcesCombo;
 
@@ -93,8 +93,8 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new NamedDataSourcesInitializer().initializeAvailableDataSources(CommonParameters.getRequest(),
-						RepositoryFacade.getInstance().getRepository());
+				new NamedDataSourcesInitializer().initializeAvailableDataSources(CommonParameters.getRequest(), RepositoryFacade.getInstance()
+						.getRepository());
 				fillDatasources();
 			}
 
@@ -105,10 +105,31 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 		});
 	}
 
+	static final String DEFAULT_DS_NAME = "Default";
+
 	private void fillDatasources() {
 		datasourcesCombo.removeAll();
 		// datasourcesCombo.add(DatabaseViewer.DEFAULT_DATASOURCE_NAME);
-		Set<String> datasourcesNames = DataSourceFacade.getInstance().getNamedDataSourcesNames();
+		List<String> datasourcesNames = new ArrayList<String>(DataSourceFacade.getInstance().getNamedDataSourcesNames());
+		/*
+		 * make sure:
+		 * 1) data source names are alphabetically sorted
+		 * 2) "Default" is always the first in the list
+		 */
+		if (datasourcesNames.size() > 1) {
+			datasourcesNames.sort(new Comparator<String>() {
+				@Override
+				public int compare(String o1, String o2) {
+					if (DEFAULT_DS_NAME.equals(o2)) {
+						return Integer.MAX_VALUE;
+					}
+					if (DEFAULT_DS_NAME.equals(o1)) {
+						return Integer.MIN_VALUE;
+					}
+					return o1.compareTo(o2);
+				}
+			});
+		}
 		for (String datasourcesName : datasourcesNames) {
 			datasourcesCombo.add(datasourcesName);
 		}
