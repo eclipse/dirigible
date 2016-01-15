@@ -1,0 +1,11 @@
+{"name":"Display Single Entity",
+ "description":"Display single entity page based on Bootstrap and AngularJS",
+ "image":"ui-for-display-entity.png",
+ "sources":[
+   {"name":"ui-for-display-single-entity.html", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

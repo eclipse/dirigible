@@ -1,0 +1,11 @@
+{"name":"JavaScript Hello World Service",
+ "description":"JavaScript hello world service",
+ "image":"javascript-service.png",
+ "sources":[
+   {"name":"javascript-service.js", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

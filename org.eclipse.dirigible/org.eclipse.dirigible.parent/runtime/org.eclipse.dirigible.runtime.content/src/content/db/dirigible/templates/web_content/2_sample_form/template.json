@@ -1,0 +1,11 @@
+{"name":"Sample Form Page",
+ "description":"Sample HTML5 form page ",
+ "image":"sample-form.png",
+ "sources":[
+   {"name":"sample-form.html", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

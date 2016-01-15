@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
@@ -17,13 +16,11 @@ import org.eclipse.dirigible.ide.template.ui.common.TemplateTargetLocationPage;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 
-public class HtmlForEntityTemplateTargetLocationPage extends
-		TemplateTargetLocationPage {
+public class HtmlForEntityTemplateTargetLocationPage extends TemplateTargetLocationPage {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6188714327822867617L;
+	private static final String EXT_HTML = ".html";
+
+	private static final String PAGE_NAME_HTML = "page_name.html";
 
 	private static final String SELECT_THE_TARGET_LOCATION_AND_THE_TARGET_FILE_NAME = Messages.HtmlForEntityTemplateTargetLocationPage_SELECT_THE_TARGET_LOCATION_AND_THE_TARGET_FILE_NAME;
 
@@ -31,8 +28,7 @@ public class HtmlForEntityTemplateTargetLocationPage extends
 
 	private HtmlForEntityTemplateModel model;
 
-	protected HtmlForEntityTemplateTargetLocationPage(
-			HtmlForEntityTemplateModel model) {
+	protected HtmlForEntityTemplateTargetLocationPage(HtmlForEntityTemplateModel model) {
 		super(PAGE_NAME);
 		this.model = model;
 		setTitle(Messages.HtmlForEntityTemplateTargetLocationPage_TARGET_LOCATION);
@@ -41,13 +37,11 @@ public class HtmlForEntityTemplateTargetLocationPage extends
 
 	@Override
 	protected void checkPageStatus() {
-		if (getModel().getTargetLocation() == null
-				|| "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
+		if ((getModel().getTargetLocation() == null) || "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
 			setPageComplete(false);
 			return;
 		}
-		if (getModel().getFileName() == null
-				|| "".equals(getModel().getFileName())) { //$NON-NLS-1$
+		if ((getModel().getFileName() == null) || "".equals(getModel().getFileName())) { //$NON-NLS-1$
 			setPageComplete(false);
 			return;
 		}
@@ -71,7 +65,7 @@ public class HtmlForEntityTemplateTargetLocationPage extends
 
 	@Override
 	protected String getDefaultFileName(String preset) {
-		return (preset == null) ? "page_name.html" : CommonUtils.getFileNameNoExtension(preset) + ".html";
+		return (preset == null) ? PAGE_NAME_HTML : CommonUtils.getFileNameNoExtension(preset) + EXT_HTML;
 	}
 
 	@Override

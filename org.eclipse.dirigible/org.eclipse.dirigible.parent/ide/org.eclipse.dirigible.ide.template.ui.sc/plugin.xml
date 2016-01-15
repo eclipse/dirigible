@@ -23,15 +23,6 @@
       </command>
    </extension>
    <extension
-         point="org.eclipse.dirigible.ide.template.type">
-      <template
-            category="SecurityConstraints"
-            image="/icons/access.png"
-            location="/org/eclipse/dirigible/ide/template/ui/sc/templates/main.access"
-            text="Main Access File">
-      </template>
-   </extension>
-   <extension
        point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
        <newMenuItem
             text="Security Constraint"

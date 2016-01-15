@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.wizard.project.create;
@@ -18,16 +17,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 
 public class ProjectTemplateType {
 
@@ -35,7 +29,7 @@ public class ProjectTemplateType {
 
 	private static final String EXT_PROPERTIES = ".properties"; //$NON-NLS-1$
 
-	private static final String SEPARATOR = "/"; //$NON-NLS-1$
+	private static final String SEPARATOR = IRepository.SEPARATOR;
 
 	private static final String PARAM_DESCRIPTION = "description"; //$NON-NLS-1$
 
@@ -49,7 +43,8 @@ public class ProjectTemplateType {
 
 	private static final String PROJECT_TEMPLATE_CONTENT_DOES_NOT_EXIST_AT_S = Messages.ProjectTemplateType_PROJECT_TEMPLATE_CONTENT_DOES_NOT_EXIST_AT_S;
 
-	private static final String PROJECT_TEMPLATE_IMAGE_DOES_NOT_EXIST_AT_S = Messages.ProjectTemplateType_PROJECT_TEMPLATE_IMAGE_DOES_NOT_EXIST_AT_S;
+	// private static final String PROJECT_TEMPLATE_IMAGE_DOES_NOT_EXIST_AT_S =
+	// Messages.ProjectTemplateType_PROJECT_TEMPLATE_IMAGE_DOES_NOT_EXIST_AT_S;
 
 	private static final String PROJECT_TEMPLATE_METADATA_DOES_NOT_EXIST_AT_S = Messages.ProjectTemplateType_PROJECT_TEMPLATE_METADATA_DOES_NOT_EXIST_AT_S;
 
@@ -69,19 +64,16 @@ public class ProjectTemplateType {
 
 	private String category;
 
-	private static final ResourceManager resourceManager = new LocalResourceManager(
-			JFaceResources.getResources());
+	// private static final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
 
-	public static ProjectTemplateType createTemplateType(IRepository repository, String location)
-			throws IOException {
+	public static ProjectTemplateType createTemplateType(IRepository repository, String location) throws IOException {
 		ICollection projectTemplateRoot = repository.getCollection(location);
 		if (!projectTemplateRoot.exists()) {
 			throw new IOException(String.format(PROJECT_TEMPLATE_LOCATION_S_IS_NOT_VALID, location));
 		}
 		IResource projectMetadataResource = projectTemplateRoot.getResource("project.properties"); //$NON-NLS-1$
 		if (!projectMetadataResource.exists()) {
-			throw new IOException(String.format(PROJECT_TEMPLATE_METADATA_DOES_NOT_EXIST_AT_S,
-					location));
+			throw new IOException(String.format(PROJECT_TEMPLATE_METADATA_DOES_NOT_EXIST_AT_S, location));
 		}
 
 		Properties projectMetadata = new Properties();
@@ -90,23 +82,22 @@ public class ProjectTemplateType {
 			byteArrayInputStream = new ByteArrayInputStream(projectMetadataResource.getContent());
 			projectMetadata.load(byteArrayInputStream);
 
-			String name = (String) projectMetadata.get(PARAM_NAME); //$NON-NLS-1$
-			String description = (String) projectMetadata.get(PARAM_DESCRIPTION); //$NON-NLS-1$
-			String imageName = (String) projectMetadata.get(PARAM_IMAGE); //$NON-NLS-1$
-			String imagePreviewName = (String) projectMetadata.get(PARAM_IMAGE_PREVIEW); //$NON-NLS-1$
-			String contentName = (String) projectMetadata.get(PARAM_CONTENT); //$NON-NLS-1$
+			String name = (String) projectMetadata.get(PARAM_NAME);
+			String description = (String) projectMetadata.get(PARAM_DESCRIPTION);
+			String imageName = (String) projectMetadata.get(PARAM_IMAGE);
+			String imagePreviewName = (String) projectMetadata.get(PARAM_IMAGE_PREVIEW);
+			String contentName = (String) projectMetadata.get(PARAM_CONTENT);
 
-			Image image = createImageFromResource(projectTemplateRoot, imageName);
-			Image imagePreview = createImageFromResource(projectTemplateRoot, imagePreviewName);
+			Image image = TemplateUtils.createImageFromResource(projectTemplateRoot, imageName);
+			Image imagePreview = TemplateUtils.createImageFromResource(projectTemplateRoot, imagePreviewName);
 
 			IResource contentResource = projectTemplateRoot.getResource(contentName);
 			if (!contentResource.exists()) {
-				throw new IOException(String.format(PROJECT_TEMPLATE_CONTENT_DOES_NOT_EXIST_AT_S,
-						contentName));
+				throw new IOException(String.format(PROJECT_TEMPLATE_CONTENT_DOES_NOT_EXIST_AT_S, contentName));
 			}
 
-			ProjectTemplateType templateType = new ProjectTemplateType(name, description, location,
-					image, imagePreview, contentResource.getPath(), "template");
+			ProjectTemplateType templateType = new ProjectTemplateType(name, description, location, image, imagePreview, contentResource.getPath(),
+					"template");
 			return templateType;
 		} finally {
 			if (byteArrayInputStream != null) {
@@ -115,19 +106,17 @@ public class ProjectTemplateType {
 		}
 	}
 
-	private static Image createImageFromResource(ICollection projectTemplateRoot, String imageName)
-			throws IOException {
-		IResource imageResource = projectTemplateRoot.getResource(imageName);
-		if (!imageResource.exists()) {
-			throw new IOException(String.format(PROJECT_TEMPLATE_IMAGE_DOES_NOT_EXIST_AT_S,
-					imageName));
-		}
-		Image image = createImage(imageResource.getContent());
-		return image;
-	}
+	// private static Image createImageFromResource(ICollection projectTemplateRoot, String imageName) throws
+	// IOException {
+	// IResource imageResource = projectTemplateRoot.getResource(imageName);
+	// if (!imageResource.exists()) {
+	// throw new IOException(String.format(PROJECT_TEMPLATE_IMAGE_DOES_NOT_EXIST_AT_S, imageName));
+	// }
+	// Image image = createImage(imageResource.getContent());
+	// return image;
+	// }
 
-	public static ProjectTemplateType createGitTemplateType(File project)
-			throws FileNotFoundException, IOException {
+	public static ProjectTemplateType createGitTemplateType(File project) throws FileNotFoundException, IOException {
 
 		Image image = null;
 		Image imagePreview = null;
@@ -157,8 +146,8 @@ public class ProjectTemplateType {
 
 					contentPath = project.getCanonicalPath() + SEPARATOR + contentName;
 					category = projectMetadata.getProperty(PARAM_CATEGORY);
-					image = createImageFromStream(project, imageName);
-					imagePreview = createImageFromStream(project, imagePreviewName);
+					image = TemplateUtils.createImageFromStream(project, imageName);
+					imagePreview = TemplateUtils.createImageFromStream(project, imagePreviewName);
 				} finally {
 					if (fileInputStream != null) {
 						fileInputStream.close();
@@ -167,23 +156,23 @@ public class ProjectTemplateType {
 			}
 		}
 
-		ProjectTemplateType templateType = new ProjectTemplateType(name, description,
-				project.getCanonicalPath(), image, imagePreview, contentPath, category);
+		ProjectTemplateType templateType = new ProjectTemplateType(name, description, project.getCanonicalPath(), image, imagePreview, contentPath,
+				category);
 		return templateType;
 	}
 
-	private static Image createImageFromStream(File project, String imageName) throws IOException,
-			FileNotFoundException {
-		Image image;
-		String imgPath = project.getCanonicalPath() + SEPARATOR + imageName;
-		File imgFile = new File(imgPath);
-		byte[] imgContent = IOUtils.toByteArray(new FileInputStream(imgFile));
-		image = createImage(imgContent);
-		return image;
-	}
+	// private static Image createImageFromStream(File project, String imageName) throws IOException,
+	// FileNotFoundException {
+	// Image image;
+	// String imgPath = project.getCanonicalPath() + SEPARATOR + imageName;
+	// File imgFile = new File(imgPath);
+	// byte[] imgContent = IOUtils.toByteArray(new FileInputStream(imgFile));
+	// image = TemplateUtils.createImage(imgContent);
+	// return image;
+	// }
 
-	private ProjectTemplateType(String name, String description, String location, Image image,
-			Image imagePreview, String contentPath, String category) {
+	private ProjectTemplateType(String name, String description, String location, Image image, Image imagePreview, String contentPath,
+			String category) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -234,11 +223,11 @@ public class ProjectTemplateType {
 		this.imagePreview = imagePreview;
 	}
 
-	private static Image createImage(byte[] data) {
-		ImageDescriptor imageDescriptor = ImageDescriptor.createFromImageData(new ImageData(
-				new ByteArrayInputStream(data)));
-		return resourceManager.createImage(imageDescriptor);
-	}
+	// private static Image createImage(byte[] data) {
+	// ImageDescriptor imageDescriptor = ImageDescriptor.createFromImageData(new ImageData(new
+	// ByteArrayInputStream(data)));
+	// return resourceManager.createImage(imageDescriptor);
+	// }
 
 	public String getContentPath() {
 		return contentPath;

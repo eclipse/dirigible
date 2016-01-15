@@ -1,0 +1,13 @@
+{"name":"JavaScript Entities List Service on Table or View",
+ "description":"JavaScript read-only entity service on a relational database table or view",
+ "image":"database-read.png",
+ "sources":[
+   {"name":"database-read.js", "action":"generate"},
+   {"name":"database-read-lib.js", "action":"generate", "rename":"%s_lib"},
+   {"name":"database-read.entity", "action":"generate", "rename":"%s"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

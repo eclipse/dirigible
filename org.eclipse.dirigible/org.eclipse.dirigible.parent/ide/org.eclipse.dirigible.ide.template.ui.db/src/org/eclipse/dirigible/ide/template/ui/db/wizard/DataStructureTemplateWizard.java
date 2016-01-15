@@ -19,6 +19,10 @@ import org.eclipse.jface.wizard.IWizardPage;
 
 public class DataStructureTemplateWizard extends TemplateWizard {
 
+	public static final String EXT_DSV = "dsv";
+	public static final String EXT_VIEW = "view";
+	public static final String EXT_TABLE = "table";
+
 	private final DataStructureTemplateModel model;
 	private final DataStructureTemplateTypePage typesPage;
 	private final DataStructureTemplateStructurePage structurePage;
@@ -62,11 +66,11 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 	public IWizardPage getNextPage(IWizardPage page) {
 		IWizardPage nextPage = null;
 		if (page instanceof DataStructureTemplateTypePage) {
-			if (DataStructureTemplateLocations.TABLE.equals(model.getTemplate().getLocation())) {
+			if (EXT_TABLE.equals(model.getTemplate().getExtension())) {
 				nextPage = structurePage;
-			} else if (DataStructureTemplateLocations.VIEW.equals(model.getTemplate().getLocation())) {
+			} else if (EXT_VIEW.equals(model.getTemplate().getExtension())) {
 				nextPage = queryPage;
-			} else if (DataStructureTemplateLocations.DSV.equals(model.getTemplate().getLocation())) {
+			} else if (EXT_DSV.equals(model.getTemplate().getExtension())) {
 				nextPage = dsvPage;
 			}
 		} else if ((page instanceof DataStructureTemplateStructurePage) || (page instanceof DataStructureTemplateQueryPage)
@@ -107,7 +111,7 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 		if (!can) {
 			return can;
 		}
-		if (DataStructureTemplateLocations.VIEW.equals(model.getTemplate().getLocation())) {
+		if (EXT_VIEW.equals(model.getTemplate().getExtension())) {
 			String queryText = queryPage.getQuery();
 			if ((queryText == null) || "".equals(queryText.trim())) {
 				queryPage.setErrorMessage("SQL query string is empty");

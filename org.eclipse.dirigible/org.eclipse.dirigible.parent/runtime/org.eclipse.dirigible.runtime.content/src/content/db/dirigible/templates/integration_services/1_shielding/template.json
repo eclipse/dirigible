@@ -1,0 +1,12 @@
+{"name":"Shielding a JavaScript Service",
+ "description":"Shielding a JavaScript based scripting service",
+ "image":"shielding.png",
+ "sources":[
+   {"name":"shielding-js.flow", "action":"generate"},
+   {"name":"ScriptingServices/javascript-sync.js", "action":"copy", "rename":"%s"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

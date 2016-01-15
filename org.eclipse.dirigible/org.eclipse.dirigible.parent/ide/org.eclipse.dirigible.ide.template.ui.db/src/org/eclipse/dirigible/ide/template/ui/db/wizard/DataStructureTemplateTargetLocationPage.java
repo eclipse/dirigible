@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
@@ -18,8 +17,6 @@ import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 public class DataStructureTemplateTargetLocationPage extends TemplateTargetLocationPage {
-
-	private static final String DSV = ".dsv";
 
 	private static final String VIEW_NAME_VIEW = "view_name.view";
 
@@ -44,11 +41,11 @@ public class DataStructureTemplateTargetLocationPage extends TemplateTargetLocat
 
 	@Override
 	protected void checkPageStatus() {
-		if (getModel().getTargetLocation() == null || "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
+		if ((getModel().getTargetLocation() == null) || "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
 			setPageComplete(false);
 			return;
 		}
-		if (getModel().getFileName() == null || "".equals(getModel().getFileName())) { //$NON-NLS-1$
+		if ((getModel().getFileName() == null) || "".equals(getModel().getFileName())) { //$NON-NLS-1$
 			setPageComplete(false);
 			return;
 		}
@@ -72,15 +69,16 @@ public class DataStructureTemplateTargetLocationPage extends TemplateTargetLocat
 
 	@Override
 	protected String getDefaultFileName(String preset) {
-		String templateLocation = model.getTemplateLocation();
+		String templateExt = model.getTemplateExtension();
 		String defaultName = null;
-		if (templateLocation.equals(DataStructureTemplateLocations.TABLE)) {
-			defaultName = (preset == null) ? TABLE_NAME_TABLE : CommonUtils.getFileNameNoExtension(preset) + ".table";
-		} else if (templateLocation.equals(DataStructureTemplateLocations.VIEW)) {
-			defaultName = (preset == null) ? VIEW_NAME_VIEW : CommonUtils.getFileNameNoExtension(preset) + ".view"; 
-		} else if (templateLocation.equals(DataStructureTemplateLocations.DSV)) {
+		if (templateExt.equals(DataStructureTemplateWizard.EXT_TABLE)) {
+			defaultName = (preset == null) ? TABLE_NAME_TABLE
+					: CommonUtils.getFileNameNoExtension(preset) + "." + DataStructureTemplateWizard.EXT_TABLE;
+		} else if (templateExt.equals(DataStructureTemplateWizard.EXT_VIEW)) {
+			defaultName = (preset == null) ? VIEW_NAME_VIEW : CommonUtils.getFileNameNoExtension(preset) + "." + DataStructureTemplateWizard.EXT_VIEW;
+		} else if (templateExt.equals(DataStructureTemplateWizard.EXT_DSV)) {
 			String tableName = ((DataStructureTemplateModel) model).getTableName();
-			defaultName = tableName.toLowerCase() + DSV;
+			defaultName = tableName.toLowerCase() + "." + DataStructureTemplateWizard.EXT_DSV;
 		}
 		return defaultName;
 	}

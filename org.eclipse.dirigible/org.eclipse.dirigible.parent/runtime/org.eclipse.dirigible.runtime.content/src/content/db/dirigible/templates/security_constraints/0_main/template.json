@@ -1,0 +1,11 @@
+{"name":"Main Access File",
+ "description":"Main access file",
+ "image":"access.png",
+ "sources":[
+   {"name":"main.access", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

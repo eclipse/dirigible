@@ -42,8 +42,35 @@ public interface IRepositoryPaths {
 	/** The templates root folder of the Repository structure */
 	public static final String DB_DIRIGIBLE_TEMPLATES = DB_DIRIGIBLE_ROOT + "templates/"; //$NON-NLS-1$
 
-	/** The project templates root folder of the Repository structure */
+	/** The Project templates root folder of the Repository structure */
 	public static final String DB_DIRIGIBLE_TEMPLATES_PROJECTS = DB_DIRIGIBLE_TEMPLATES + "projects/"; //$NON-NLS-1$
+
+	/** The Data Structures templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_DATA_STRUCTURES = DB_DIRIGIBLE_TEMPLATES + "data_structures/"; //$NON-NLS-1$
+
+	/** The Extension Definitions templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_EXTENSION_DEFINITIONS = DB_DIRIGIBLE_TEMPLATES + "extension_definitions/";
+
+	/** The Web Content for Entity templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_WEB_CONTENT_FOR_ENTITY = DB_DIRIGIBLE_TEMPLATES + "web_content_for_entity/";
+
+	/** The Web Content templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_WEB_CONTENT = DB_DIRIGIBLE_TEMPLATES + "web_content/";
+
+	/** The Wiki Content templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_WIKI_CONTENT = DB_DIRIGIBLE_TEMPLATES + "wiki_content/";
+
+	/** The Integration Services templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_INTEGRATION_SERVICES = DB_DIRIGIBLE_TEMPLATES + "integration_services/";
+
+	/** The Scripting Services templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_SCRIPTING_SERVICES = DB_DIRIGIBLE_TEMPLATES + "scripting_services/";
+
+	/** The Security Constraints templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_SECURITY_CONSTRAINTS = DB_DIRIGIBLE_TEMPLATES + "security_constraints/";
+
+	/** The Test Cases templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_TEST_CASES = DB_DIRIGIBLE_TEMPLATES + "test_cases/";
 
 	/** The configurations folder name */
 	public static final String CONF_FOLDER_NAME = "conf"; //$NON-NLS-1$

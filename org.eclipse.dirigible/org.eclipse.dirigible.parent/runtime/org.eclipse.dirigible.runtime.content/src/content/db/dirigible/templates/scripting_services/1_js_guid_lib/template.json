@@ -1,0 +1,11 @@
+{"name":"JavaScript Guid Generator Library",
+ "description":"JavaScript guid generator library",
+ "image":"guid-generator.png",
+ "sources":[
+   {"name":"guid-generator.js", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

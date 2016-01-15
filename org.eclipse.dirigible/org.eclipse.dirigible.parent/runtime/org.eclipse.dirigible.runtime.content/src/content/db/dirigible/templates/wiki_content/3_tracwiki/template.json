@@ -1,0 +1,11 @@
+{"name":"Tracwiki Notation Guide",
+ "description":"Tracwiki notation guide template",
+ "image":"wiki-notation-guide.png",
+ "sources":[
+   {"name":"tracwiki-notation-guide.md", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

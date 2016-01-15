@@ -1,0 +1,11 @@
+{"name":"Terminal Command Service",
+ "description":"Terminal sample command service - uname for Linux, Mac and Windows",
+ "image":"terminal-command.png",
+ "sources":[
+   {"name":"terminal-command.command", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

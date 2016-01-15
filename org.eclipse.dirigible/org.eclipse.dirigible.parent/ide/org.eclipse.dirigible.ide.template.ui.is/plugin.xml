@@ -33,49 +33,6 @@
    </extension>
    
    <extension
-         point="org.eclipse.dirigible.ide.template.type">
-
-
-      <template
-            category="IntegrationServices"
-            image="/icons/routing.png"
-            location="/org/eclipse/dirigible/ide/template/ui/is/templates/routing-js.flow"
-            text="Routing by Parameter">
-         <parameter
-               value="id">
-         </parameter>
-      </template>
-
-      <template
-            category="IntegrationServices"
-            image="/icons/shielding.png"
-            location="/org/eclipse/dirigible/ide/template/ui/is/templates/shielding-js.flow"
-            text="Shielding a JavaScript Service">
-         <parameter
-               value="id">
-         </parameter>
-         <parameter
-               value="endpointAddress">
-         </parameter>
-      </template>
-
-      <template
-            category="IntegrationServices"
-            image="/icons/job.png"
-            location="/org/eclipse/dirigible/ide/template/ui/is/templates/trigger-to-javascript.job"
-            text="Scheduled Job Triggering a JavaScript Service">
-         <parameter
-               value="id">
-         </parameter>
-         <parameter
-               value="endpointAddress">
-         </parameter>
-      </template>
-         
-      
-   </extension>
-   
-   <extension
        point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
        <newMenuItem
             text="Integration Service"

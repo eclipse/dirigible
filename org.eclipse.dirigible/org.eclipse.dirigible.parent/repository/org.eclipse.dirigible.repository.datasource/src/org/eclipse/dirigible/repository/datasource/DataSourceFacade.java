@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.repository.datasource;
 
+import java.sql.Connection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,11 +86,10 @@ public class DataSourceFacade {
 		}
 		return instance;
 	}
-	
+
 	// public DataSource getDataSource() {
 	// return getDataSource(null);
 	// }
-	
 
 	public DataSource getDataSource(HttpServletRequest request) {
 		if (dataSource == null) {
@@ -168,6 +168,18 @@ public class DataSourceFacade {
 			if (datasource == null) {
 				logger.error("Could not find DataSource in Initial Context by name: " + jndiName);
 			} else {
+				Connection con = null;
+				try {
+					con = datasource.getConnection();
+				} catch (Exception e) {
+					logger.error("Datasource retrieved from InitialContext, but it is broken - not bound to a real database", e);
+					return null;
+				} finally {
+					if (con != null) {
+						con.close();
+					}
+				}
+
 				if (wrap) {
 					WrappedDataSource wrappedDataSource = new WrappedDataSource(datasource);
 					logger.debug("Datasource retrieved from InitialContext and wrapped");
@@ -329,8 +341,8 @@ public class DataSourceFacade {
 	public void unregisterAllDataSources() {
 		this.namedDataSources.clear();
 	}
-	
-	public Properties getNamedDataSourceConfig(String dsName){
+
+	public Properties getNamedDataSourceConfig(String dsName) {
 		return DataSourceFacade.namedDataSources.get(dsName);
 	}
 

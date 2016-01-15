@@ -1,0 +1,11 @@
+{"name":"Delimiter Separated Values Sample Data",
+ "description":"Delimiter separated values for import in a relational table template",
+ "image":"dsv.png",
+ "sources":[
+   {"name":"dsv.dsv", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

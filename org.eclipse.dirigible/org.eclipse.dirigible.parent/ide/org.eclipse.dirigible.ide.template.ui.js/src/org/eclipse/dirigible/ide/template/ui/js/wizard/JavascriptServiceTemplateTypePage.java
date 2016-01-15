@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.js.wizard;
@@ -14,6 +13,7 @@ package org.eclipse.dirigible.ide.template.ui.js.wizard;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeWizardPage;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 public class JavascriptServiceTemplateTypePage extends TemplateTypeWizardPage {
 
@@ -22,7 +22,7 @@ public class JavascriptServiceTemplateTypePage extends TemplateTypeWizardPage {
 	private static final String RUBY_SERVICE = Messages.JavascriptServiceTemplateTypePage_RUBY_SERVICE;
 
 	private static final String GROOVY_SERVICE = Messages.JavascriptServiceTemplateTypePage_GROOVY_SERVICE;
-	
+
 	private static final String ENTITY_SERVICE_ON_TABLE = Messages.JavascriptServiceTemplateTypePage_ENTITY_SERVICE_ON_TABLE;
 
 	private static final String DATABASE_ACCESS_SAMPLE = Messages.JavascriptServiceTemplateTypePage_DATABASE_ACCESS_SAMPLE;
@@ -39,8 +39,7 @@ public class JavascriptServiceTemplateTypePage extends TemplateTypeWizardPage {
 
 	private JavascriptServiceTemplateModel model;
 
-	protected JavascriptServiceTemplateTypePage(
-			JavascriptServiceTemplateModel model) {
+	protected JavascriptServiceTemplateTypePage(JavascriptServiceTemplateModel model) {
 		super(PAGE_NAME);
 		this.model = model;
 		setTitle(SELECTION_OF_TEMPLATE_TYPE);
@@ -55,6 +54,11 @@ public class JavascriptServiceTemplateTypePage extends TemplateTypeWizardPage {
 	@Override
 	protected GenerationModel getModel() {
 		return model;
+	}
+
+	@Override
+	protected String getTemplatesPath() {
+		return IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_SCRIPTING_SERVICES;
 	}
 
 }

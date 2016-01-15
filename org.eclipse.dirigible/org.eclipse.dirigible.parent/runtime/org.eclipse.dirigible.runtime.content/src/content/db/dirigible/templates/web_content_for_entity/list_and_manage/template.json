@@ -1,0 +1,11 @@
+{"name":"List and Manage Entity",
+ "description":"List and manage entity page based on Bootstrap and AngularJS",
+ "image":"ui-for-entity-manage.png",
+ "sources":[
+   {"name":"ui-for-entity-manage.html", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

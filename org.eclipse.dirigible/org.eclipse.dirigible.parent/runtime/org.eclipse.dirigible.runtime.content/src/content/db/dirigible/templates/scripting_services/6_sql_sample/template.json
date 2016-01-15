@@ -1,0 +1,11 @@
+{"name":"SQL Sample Query Service",
+ "description":"SQL sample query service",
+ "image":"sql-service.png",
+ "sources":[
+   {"name":"sql-service.sql", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

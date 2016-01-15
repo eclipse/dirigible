@@ -1,0 +1,11 @@
+{"name":"Relational Database Table",
+ "description":"Relational database table template",
+ "image":"table.png",
+ "sources":[
+   {"name":"table.table", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

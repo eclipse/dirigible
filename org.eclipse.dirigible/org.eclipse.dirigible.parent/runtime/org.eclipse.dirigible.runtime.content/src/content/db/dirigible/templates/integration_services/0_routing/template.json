@@ -1,0 +1,11 @@
+{"name":"Routing by Parameter",
+ "description":"Routing by a parameter from the request",
+ "image":"routing.png",
+ "sources":[
+   {"name":"routing-js.flow", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

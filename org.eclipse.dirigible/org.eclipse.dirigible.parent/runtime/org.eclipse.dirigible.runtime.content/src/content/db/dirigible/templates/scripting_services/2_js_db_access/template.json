@@ -1,0 +1,11 @@
+{"name":"JavaScript Database Access",
+ "description":"JavaScript database access service",
+ "image":"database-access.png",
+ "sources":[
+   {"name":"database-access.js", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.ed.wizard;
@@ -18,6 +17,10 @@ import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 public class ExtensionDefinitionTemplateTargetLocationPage extends TemplateTargetLocationPage {
+
+	private static final String EXT_EXTENSION = "extension";
+
+	private static final String EXT_EXTENSION_POINT = "extensionpoint";
 
 	private static final long serialVersionUID = 5413819137031452222L;
 
@@ -42,11 +45,11 @@ public class ExtensionDefinitionTemplateTargetLocationPage extends TemplateTarge
 
 	@Override
 	protected void checkPageStatus() {
-		if (getModel().getTargetLocation() == null || "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
+		if ((getModel().getTargetLocation() == null) || "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
 			setPageComplete(false);
 			return;
 		}
-		if (getModel().getFileName() == null || "".equals(getModel().getFileName())) { //$NON-NLS-1$
+		if ((getModel().getFileName() == null) || "".equals(getModel().getFileName())) { //$NON-NLS-1$
 			setPageComplete(false);
 			return;
 		}
@@ -70,12 +73,12 @@ public class ExtensionDefinitionTemplateTargetLocationPage extends TemplateTarge
 
 	@Override
 	protected String getDefaultFileName(String preset) {
-		String templateLocation = model.getTemplateLocation();
-		String defaultName = EXTENSION_EXTENSION;
-		if (templateLocation.equals(ExtensionDefinitionTemplateLocations.EXTENSION_POINT)) {
-			defaultName = (preset == null) ? EXTENSIONPOINT_EXTENSIONPOINT : CommonUtils.getFileNameNoExtension(preset) + ".extensionpoint";
-		} else if (templateLocation.equals(ExtensionDefinitionTemplateLocations.EXTENSION)) {
-			defaultName = (preset == null) ? EXTENSION_EXTENSION : CommonUtils.getFileNameNoExtension(preset) + ".extension";
+		String templateExt = model.getTemplateExtension();
+		String defaultName = null;
+		if (templateExt.equals(EXT_EXTENSION_POINT)) {
+			defaultName = (preset == null) ? EXTENSIONPOINT_EXTENSIONPOINT : CommonUtils.getFileNameNoExtension(preset) + "." + EXT_EXTENSION_POINT;
+		} else if (templateExt.equals(EXT_EXTENSION)) {
+			defaultName = (preset == null) ? EXTENSION_EXTENSION : CommonUtils.getFileNameNoExtension(preset) + "." + EXT_EXTENSION;
 		}
 		return defaultName;
 	}

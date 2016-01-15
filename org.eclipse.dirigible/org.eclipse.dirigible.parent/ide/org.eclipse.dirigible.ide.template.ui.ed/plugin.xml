@@ -22,21 +22,6 @@
             name="Extension Definition">
       </command>
    </extension>
-   <extension
-         point="org.eclipse.dirigible.ide.template.type">
-      <template
-            category="ExtensionDefinitions"
-            image="/icons/extension-point.png"
-            location="/org/eclipse/dirigible/ide/template/ui/ed/templates/extensionpoint.extensionpoint"
-            text="Extension Point">
-      </template>
-	  <template
-            category="ExtensionDefinitions"
-            image="/icons/extension.png"
-            location="/org/eclipse/dirigible/ide/template/ui/ed/templates/extension.extension"
-            text="Extension">
-      </template>
-   </extension>
    <extension 
 	       point="org.eclipse.ui.views">
       <view

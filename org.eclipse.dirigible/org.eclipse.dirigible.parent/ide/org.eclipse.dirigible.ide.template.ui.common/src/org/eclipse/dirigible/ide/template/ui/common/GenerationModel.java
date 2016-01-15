@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.ide.template.ui.common;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.regex.Pattern;
 
@@ -20,6 +22,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
@@ -114,6 +117,34 @@ public abstract class GenerationModel {
 		return null;
 	}
 
+	public String[] getTemplateNames() {
+		if (template != null) {
+			return template.getSourceNames();
+		}
+		return null;
+	}
+
+	public String[] getTemplateLocations() {
+		if (template != null) {
+			return template.getSourceLocations();
+		}
+		return null;
+	}
+
+	public boolean[] getTemplateGenerates() {
+		if (template != null) {
+			return template.getSourceGenerates();
+		}
+		return null;
+	}
+
+	public String[] getTemplateRenamings() {
+		if (template != null) {
+			return template.getSourceRenamings();
+		}
+		return null;
+	}
+
 	public String getTemplateExtension() {
 		if (template != null) {
 			return template.getExtension();
@@ -151,38 +182,51 @@ public abstract class GenerationModel {
 					return ValidationStatus.createError(String.format(RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE, res.getFullPath().toString()));
 				}
 				return ValidationStatus.createOk();
-			} else {
-				return ValidationStatus.createError(NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
 			}
-		} else {
-			IStatus nameValidation = workspace.validateName(getFileName(), IResource.FILE);
-			if (!nameValidation.isOK()) {
-				return ValidationStatus.createError(NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
-			}
-			IWorkspaceRoot root = workspace.getRoot();
-			if (isResourceExist(root)) {
-				IPath location = new Path(getTargetLocation()).append(getFileName());
-				return ValidationStatus.createError(String.format(RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE, location.toString()));
-			}
-			return ValidationStatus.createOk();
+			return ValidationStatus.createError(NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
 		}
+
+		IStatus nameValidation = workspace.validateName(getFileName(), IResource.FILE);
+		if (!nameValidation.isOK()) {
+			return ValidationStatus.createError(NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S);
+		}
+		IWorkspaceRoot root = workspace.getRoot();
+		if (isResourceExist(root)) {
+			IPath location = new Path(getTargetLocation()).append(getFileName());
+			return ValidationStatus.createError(String.format(RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE, location.toString()));
+		}
+		return ValidationStatus.createOk();
+
 	}
 
 	public IValidationStatus validateTemplate() {
 		if ((getTemplateLocation() == null) || EMPTY_STRING.equals(getTemplateLocation())) {
 			return ValidationStatus.createError(TEMPLATE_LOCATION_IS_EMPTY);
 		}
-		InputStream in = null;
-		if (getTemplateClassLoader() != null) {
-			in = getTemplateClassLoader().getResourceAsStream(getTemplateLocation());
-		} else {
-			in = this.getClass().getResourceAsStream(getTemplateLocation());
+		InputStream in;
+		try {
+			in = getInputStreamByTemplateLocation(getTemplateLocation());
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			return ValidationStatus.createError(e.getMessage());
 		}
+
 		if (in == null) {
-			logger.error(COULD_NOT_OPEN_INPUT_STREAM_FOR + getTemplateLocation());
+			logger.error(String.format(COULD_NOT_OPEN_INPUT_STREAM_FOR, getTemplateLocation()));
 			return ValidationStatus.createError(String.format(COULD_NOT_OPEN_INPUT_STREAM_FOR, getTemplateLocation()));
 		}
 		return ValidationStatus.createOk();
+	}
+
+	public static InputStream getInputStreamByTemplateLocation(String location) throws IOException {
+		InputStream in = null;
+		IRepository repository = RepositoryFacade.getInstance().getRepository();
+		org.eclipse.dirigible.repository.api.IResource resource = repository.getResource(location);
+		if (resource != null) {
+			in = new ByteArrayInputStream(resource.getContent());
+		}
+
+		return in;
 	}
 
 	protected abstract IValidationStatus validate();
@@ -224,18 +268,16 @@ public abstract class GenerationModel {
 		String scriptingServicefileRegExPattern = "([a-zA-Z_0-9]+)+([\\.]){0,1}(([a-zA-Z0-9]*)*)"; //$NON-NLS-1$
 		if (Pattern.matches(scriptingServicefileRegExPattern, fileName)) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	private boolean isResourceExist(IWorkspaceRoot root) {
 		IResource resource = extractResource(root);
 		if (resource != null) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	private IResource extractResource(IWorkspaceRoot root) {

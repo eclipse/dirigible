@@ -24,7 +24,7 @@ public class TemplateTypePageLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof TemplateType) {
-			return ((TemplateType) element).getText();
+			return ((TemplateType) element).getName();
 		}
 		return null;
 	}

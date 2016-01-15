@@ -1,21 +1,21 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeWizardPage;
+import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 public class HtmlForEntityTemplateTypePage extends TemplateTypeWizardPage {
-	
+
 	private static final String ENTITY_USER_INTERFACE = "EntityUserInterface"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = -9074706494058923056L;
@@ -53,6 +53,11 @@ public class HtmlForEntityTemplateTypePage extends TemplateTypeWizardPage {
 	@Override
 	protected GenerationModel getModel() {
 		return model;
+	}
+
+	@Override
+	protected String getTemplatesPath() {
+		return IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_WEB_CONTENT_FOR_ENTITY;
 	}
 
 }

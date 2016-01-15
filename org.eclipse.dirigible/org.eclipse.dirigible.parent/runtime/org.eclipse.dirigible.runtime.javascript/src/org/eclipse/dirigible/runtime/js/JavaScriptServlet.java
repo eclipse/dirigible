@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.AbstractScriptingServlet;
+import org.mozilla.javascript.Undefined;
 
 /**
  * Servlet for JavaScript scripts execution
@@ -39,7 +40,7 @@ public class JavaScriptServlet extends AbstractScriptingServlet {
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();
 		try {
 			Object result = executor.executeServiceModule(request, response, module, executionContext);
-			if (result != null) {
+			if ((result != null) && !(result instanceof Undefined)) {
 				response.getWriter().println(result);
 			}
 		} catch (Exception e) {

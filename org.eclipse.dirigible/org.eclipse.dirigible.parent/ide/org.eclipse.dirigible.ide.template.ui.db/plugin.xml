@@ -32,27 +32,6 @@
          </command>
       </menuContribution>
    </extension>
-   <extension
-         point="org.eclipse.dirigible.ide.template.type">
-      <template
-            category="DataStructures"
-            image="/icons/table.png"
-            location="/org/eclipse/dirigible/ide/template/ui/db/templates/table.table"
-            text="Database Table">
-      </template>
-      <template
-            category="DataStructures"
-            image="/icons/view.png"
-            location="/org/eclipse/dirigible/ide/template/ui/db/templates/view.view"
-            text="Database View">
-      </template>
-      <template
-            category="DataStructures"
-            image="/icons/dsv.png"
-            location="/org/eclipse/dirigible/ide/template/ui/db/templates/dsv.dsv"
-            text="Delimiter Separated Values (DSV) Sample Data">
-      </template>
-   </extension>
    
    <extension
        point="org.eclipse.dirigible.ide.workspace.ui.new.menu">

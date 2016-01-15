@@ -1,0 +1,11 @@
+{"name":"Extension",
+ "description":"Extension template",
+ "image":"extension.png",
+ "sources":[
+   {"name":"extension.extension", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

@@ -24,6 +24,7 @@
          </command>
       </menuContribution>
    </extension>
+
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -32,74 +33,7 @@
             name="Scripting Service">
       </command>
    </extension>
-   
-   <extension
-         point="org.eclipse.dirigible.ide.template.type">
-      <template
-            category="ScriptingServices"
-            image="/icons/javascript-service.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/javascript-service.js"
-            text="JavaScript Hello World Service">
-      </template>
-      <template
-            category="ScriptingServices"
-            image="/icons/guid-generator.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/guid-generator.js"
-            text="JavaScript Guid Generator Library">
-      </template>
-      <template
-            category="ScriptingServices"
-            image="/icons/database-access.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/database-access.js"
-            text="JavaScript Database Access">
-      </template>
-      <template
-            category="ScriptingServices"
-            image="/icons/database-crud.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.js"
-            text="JavaScript Entity Service on Table">
-      </template>
-      <template
-            category="ScriptingServices"
-            image="/icons/database-read.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.js"
-            text="JavaScript Entities List Service on Table or View">
-      </template>
-       <template
-            category="ScriptingServices"
-            image="/icons/java-service.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/java-service.java_"
-            text="Java Hello World Service">
-      </template>
-      <template
-            category="ScriptingServices"
-            image="/icons/sql-service.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/sql-service.sql"
-            text="SQL Sample Query Service">
-      </template>
-      <!-- Ruby Template
-      <template
-            category="ScriptingServices"
-            image="/icons/ruby-service.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/ruby-service.rb"
-            text="Ruby Service">
-      </template>
-      
-      <template
-            category="ScriptingServices"
-            image="/icons/groovy-service.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/groovy-service.groovy"
-            text="Groovy Service">
-      </template>
-      -->
-      <template
-            category="ScriptingServices"
-            image="/icons/terminal-command.png"
-            location="/org/eclipse/dirigible/ide/template/ui/js/templates/terminal-command.command"
-            text="Terminal Command Service">
-      </template>
-   </extension>
-   
+
    <extension
        point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
        <newMenuItem
@@ -112,5 +46,5 @@
             defaultHandler="org.eclipse.dirigible.ide.template.ui.js.command.JavascriptServiceCommandHandler">
         </newMenuItem>
  	</extension>
-   
+
 </plugin>

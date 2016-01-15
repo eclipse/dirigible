@@ -1,0 +1,11 @@
+{"name":"Markdown Notation Guide",
+ "description":"Markdown notation guide template",
+ "image":"wiki-notation-guide.png",
+ "sources":[
+   {"name":"markdown-notation-guide.md", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

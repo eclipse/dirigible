@@ -1,0 +1,11 @@
+{"name":"Textile Notation Guide",
+ "description":"Textile notation guide template",
+ "image":"wiki-notation-guide.png",
+ "sources":[
+   {"name":"textile-notation-guide.md", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

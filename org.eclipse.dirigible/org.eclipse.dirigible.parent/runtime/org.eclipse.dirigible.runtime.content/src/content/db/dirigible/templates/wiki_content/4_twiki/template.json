@@ -1,0 +1,11 @@
+{"name":"TWiki Notation Guide",
+ "description":"TWiki notation guide template",
+ "image":"wiki-notation-guide.png",
+ "sources":[
+   {"name":"twiki-notation-guide.md", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

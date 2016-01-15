@@ -57,18 +57,11 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page instanceof JavascriptServiceTemplateTypePage) {
-			if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-access.js" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation()))) {
+			String location = model.getTemplate().getLocation();
+			if (location.indexOf("database") > -1) {
 				return tablesTemplateTablePage;
-			} else if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.js" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation()))) {
-				return tablesTemplateTablePage;
-			} else if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.js" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation()))) {
-				return tablesTemplateTablePage;
-			} else {
-				return targetLocationPage;
 			}
+			return targetLocationPage;
 		}
 		if (page instanceof TablesTemplateTablePage) {
 			return targetLocationPage;
@@ -82,14 +75,8 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 			return typesPage;
 		}
 		if (page instanceof JavascriptServiceTemplateTargetLocationPage) {
-			if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-access.js" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation()))) {
-				return tablesTemplateTablePage;
-			} else if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.js" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation()))) {
-				return tablesTemplateTablePage;
-			} else if (("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.js" //$NON-NLS-1$
-					.equals(model.getTemplate().getLocation()))) {
+			String location = model.getTemplate().getLocation();
+			if (location.indexOf("database") > -1) {
 				return tablesTemplateTablePage;
 			}
 		}

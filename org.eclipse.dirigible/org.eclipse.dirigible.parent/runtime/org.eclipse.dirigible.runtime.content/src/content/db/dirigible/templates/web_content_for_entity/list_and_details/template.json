@@ -1,0 +1,11 @@
+{"name":"List and Details of Entity",
+ "description":"List and details of an entity page based on Bootstrap and AngularJS",
+ "image":"ui-for-entity-details.png",
+ "sources":[
+   {"name":"ui-for-entity-list-and-details.html", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

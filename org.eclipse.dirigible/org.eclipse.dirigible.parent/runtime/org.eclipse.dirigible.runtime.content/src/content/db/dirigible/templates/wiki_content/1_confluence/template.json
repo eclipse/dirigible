@@ -1,0 +1,11 @@
+{"name":"Confluence Notation Guide",
+ "description":"Confluence notation guide template",
+ "image":"wiki-notation-guide.png",
+ "sources":[
+   {"name":"confluence-notation-guide.md", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}

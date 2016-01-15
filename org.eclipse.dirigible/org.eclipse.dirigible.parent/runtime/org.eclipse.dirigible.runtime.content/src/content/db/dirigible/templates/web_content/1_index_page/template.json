@@ -1,0 +1,15 @@
+{"name":"Index Page with Main Menu, Header and Footer",
+ "description":"Index page with main menu, header and footer",
+ "image":"index-page.png",
+ "sources":[
+   {"name":"index.html", "action":"generate"},
+   {"name":"main.menu", "action":"copy"},
+   {"name":"sample.html", "action":"copy"},
+   {"name":"header.html", "action":"generate"},
+   {"name":"footer.html", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"name",
+   "required":"true"}
+   ]
+}
