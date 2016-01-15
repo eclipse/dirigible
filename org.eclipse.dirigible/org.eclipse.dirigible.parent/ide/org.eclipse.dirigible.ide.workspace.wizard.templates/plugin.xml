@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.eclipse.dirigible.ide.workspace.wizard.templates.commands.UploadTemplateHandler"
+            name="Templates">
+      </command>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.menus">
+  
+	  <menuContribution
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.import">
+            
+             <command
+                  commandId="org.eclipse.dirigible.ide.workspace.wizard.templates.commands.UploadTemplateHandler"
+                  icon="icons/icon-sample.png"
+                  label="Templates"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+	  </menuContribution>
+	  
+	  <menuContribution
+            locationURI="menu:org.eclipse.dirigible.ide.workspace.ui.view.Menu.import">
+            <command
+                  commandId="org.eclipse.dirigible.ide.workspace.wizard.templates.commands.UploadTemplateHandler"
+                  icon="icons/icon-sample.png"
+                  label="Templates"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+      </menuContribution>
+
+   </extension>
+
+	<extension
+         point="org.eclipse.ui.handlers">
+      <handler
+     		class="org.eclipse.dirigible.ide.workspace.wizard.templates.commands.UploadTemplateHandler"
+            commandId="org.eclipse.dirigible.ide.workspace.wizard.templates.commands.UploadTemplateHandler">
+      </handler>
+   </extension>   
+   
+</plugin>

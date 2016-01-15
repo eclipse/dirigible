@@ -34,15 +34,6 @@
       </command>
    </extension>
    <extension
-         point="org.eclipse.dirigible.ide.template.type">
-      <template
-            category="TestCases"
-            image="/icons/rest_service.png"
-            location="/org/eclipse/dirigible/ide/template/ui/tc/templates/rest-service.js"
-            text="Test RESTful Service">
-      </template>
-   </extension>
-   <extension
        point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
        <newMenuItem
             text="Test Case"

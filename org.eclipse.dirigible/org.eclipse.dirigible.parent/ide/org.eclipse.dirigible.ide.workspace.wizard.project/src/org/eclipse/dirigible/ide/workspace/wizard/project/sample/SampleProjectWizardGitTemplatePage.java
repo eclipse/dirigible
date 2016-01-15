@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.wizard.project.sample;
@@ -33,15 +32,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.jgit.api.errors.CanceledException;
-import org.eclipse.jgit.api.errors.DetachedHeadException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidConfigurationException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -121,8 +111,7 @@ public class SampleProjectWizardGitTemplatePage extends WizardPage {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection.getFirstElement() == null
-						|| !(selection.getFirstElement() instanceof SamplesProject)) {
+				if ((selection.getFirstElement() == null) || !(selection.getFirstElement() instanceof SamplesProject)) {
 					setPageComplete(false);
 					setErrorMessage(SELECT_TEMPLATE_TYPE_FORM_THE_LIST);
 					labelPreview.setImage(previewImage);
@@ -199,8 +188,7 @@ public class SampleProjectWizardGitTemplatePage extends WizardPage {
 			if (!projectTemplate.getName().equalsIgnoreCase(".git") //$NON-NLS-1$
 					&& projectTemplate.isDirectory()) {
 
-				projectTemplateTypesList.add(ProjectTemplateType
-						.createGitTemplateType(projectTemplate));
+				projectTemplateTypesList.add(ProjectTemplateType.createGitTemplateType(projectTemplate));
 			}
 		}
 		return projectTemplateTypesList.toArray(new ProjectTemplateType[] {});
@@ -208,14 +196,13 @@ public class SampleProjectWizardGitTemplatePage extends WizardPage {
 
 	private void checkPageStatus() {
 		if (getModel().isUseTemplate()) {
-			if (getModel().getTemplateLocation() == null
-					|| "".equals(getModel().getTemplateLocation())) { //$NON-NLS-1$
+			if ((getModel().getTemplateLocation() == null) || "".equals(getModel().getTemplateLocation())) { //$NON-NLS-1$
 				setPageComplete(false);
 				return;
 			} else {
 				revalidateModel();
-				return;
 			}
+			return;
 		}
 		setPageComplete(false);
 	}
@@ -256,43 +243,23 @@ public class SampleProjectWizardGitTemplatePage extends WizardPage {
 		try {
 			repository = JGitConnector.getRepository(gitDirectoryPath);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		JGitConnector jgit = new JGitConnector(repository);
 		try {
 			jgit.pull();
 			jgit.add("."); //$NON-NLS-1$
 			jgit.hardReset();
-		} catch (WrongRepositoryStateException e) {
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		} catch (DetachedHeadException e) {
-			e.printStackTrace();
-		} catch (InvalidRemoteException e) {
-			e.printStackTrace();
-		} catch (CanceledException e) {
-			e.printStackTrace();
-		} catch (RefNotFoundException e) {
-			e.printStackTrace();
-		} catch (NoHeadException e) {
-			e.printStackTrace();
-		} catch (TransportException e) {
-			e.printStackTrace();
-		} catch (GitAPIException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 
 	private static void doClone(File gitDirectory) {
 		try {
 			JGitConnector.cloneRepository(gitDirectory, CommonParameters.GIT_REPOSITORY_URL);
-		} catch (InvalidRemoteException e) {
-			e.printStackTrace();
-		} catch (TransportException e) {
-			e.printStackTrace();
-		} catch (GitAPIException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 
