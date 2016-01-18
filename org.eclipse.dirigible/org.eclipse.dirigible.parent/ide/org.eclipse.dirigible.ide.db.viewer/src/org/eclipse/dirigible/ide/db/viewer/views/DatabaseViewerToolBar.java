@@ -117,7 +117,7 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 		 * 2) "Default" is always the first in the list
 		 */
 		if (datasourcesNames.size() > 1) {
-			datasourcesNames.sort(new Comparator<String>() {
+			Collections.sort(datasourcesNames, new Comparator<String>() {
 				@Override
 				public int compare(String o1, String o2) {
 					if (DEFAULT_DS_NAME.equals(o2)) {
