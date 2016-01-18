@@ -127,15 +127,17 @@ public class DataSources {
 		} else {
 			rs = this.dmd.getTables(catalogName, schemeName, PRCNT, TABLE_TYPES);
 		}
-
-		while (rs.next()) {
-			String tableName = rs.getString(3);
-			if ((tableNameFilter != null) && !tableNameFilter.accepts(tableName)) {
-				continue;
+		try{
+			while (rs.next()) {
+				String tableName = rs.getString(3);
+				if ((tableNameFilter != null) && !tableNameFilter.accepts(tableName)) {
+					continue;
+				}
+				listOfTables.add(tableName);
 			}
-			listOfTables.add(tableName);
+		} finally {
+			rs.close();
 		}
-		rs.close();
 
 		return listOfTables;
 	}
@@ -229,8 +231,6 @@ public class DataSources {
 							indexes.getString(FILTER_CONDITION));
 				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			columns.close();
 			indexes.close();
@@ -326,6 +326,15 @@ public class DataSources {
 				logger.warn(e.getMessage(), e);
 			}
 		}		
+	}
+	
+	/**
+	 * Closes opened connection and releases related resources.
+	 * @throws SQLException 
+	 */
+	public void release() throws SQLException{
+		if(this.conn!=null && !this.conn.isClosed())
+			this.conn.close();
 	}
 	
 }

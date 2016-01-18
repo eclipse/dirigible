@@ -275,9 +275,7 @@ public class TableDetailsEditorPage extends EditorPart {
 				}
 			});
 		} finally {
-			if (connection != null) {
-				connection.close();
-			}
+			dataSource.release();
 		}
 	}
 

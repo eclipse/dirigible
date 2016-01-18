@@ -201,9 +201,10 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 			if (EMPTY.equals(line.trim())) {
 				continue;
 			}
+
+			DataSources ds = null;
 			try {
-				DataSources ds = new DataSources(DatabaseViewer.getSelectedDatasourceName(),
-						DatabaseViewer.getConnectionFromSelectedDatasource());
+				ds = new DataSources(DatabaseViewer.getSelectedDatasourceName(), DatabaseViewer.getConnectionFromSelectedDatasource());
 				ds.executeSingleStatement(line, isQuery, new RequestExecutionCallback() {
 					@Override
 					public void updateDone(int recordsCount) {
@@ -229,6 +230,14 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 			} catch (SQLException e) {
 				logger.warn(e.getMessage(), e);
 				outputArea.setText(e.getMessage());
+			} finally {
+				if (ds != null) {
+					try {
+						ds.release();
+					} catch (SQLException e) {
+						logger.warn(e.getMessage(), e);
+					}
+				}
 			}
 		}
 

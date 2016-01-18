@@ -156,9 +156,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 				invisibleRoot.addChild(dataSourceContainerNode);
 
 			} finally {
-				if (connection != null) {
-					connection.close();
-				}
+				dataSource.release();
 			}
 
 		} catch (Exception e) {
