@@ -8,8 +8,9 @@ import java.util.List;
 
 public class ResultSetStringWriter implements ResultSetWriter<String> {
 
-	public static final String DELIMITER = "|";
-	public static final String NEWLINE_CHARACTER = System.getProperty("line.separator");
+	private static final String EMPTY_RESULT_SET = Messages.ResultSetStringWriter_EMPTY_RESULT_SET;
+	public static final String DELIMITER = "|"; //$NON-NLS-1$
+	public static final String NEWLINE_CHARACTER = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	private HeaderFormatter<?> headerFormat = new StringHeaderFormatter();
 	private RowFormatter<?> rowFormat = new StringRowFormatter();
@@ -63,13 +64,17 @@ public class ResultSetStringWriter implements ResultSetWriter<String> {
 
 			// limit to the first 100 rows. TODO: remove this limitation
 			if (++count > 100) {
-				tableSb.append("...");
+				tableSb.append("..."); //$NON-NLS-1$
 				break;
 			}
 		}
 
-		String headers = (String) this.headerFormat.write(columnHeaderDescriptors);
-		tableSb.insert(0, headers);
+		if (columnHeaderDescriptors.size() > 0) {
+			String headers = (String) this.headerFormat.write(columnHeaderDescriptors);
+			tableSb.insert(0, headers);
+		} else {
+			tableSb.append(EMPTY_RESULT_SET);
+		}
 
 		return tableSb.toString();
 	}

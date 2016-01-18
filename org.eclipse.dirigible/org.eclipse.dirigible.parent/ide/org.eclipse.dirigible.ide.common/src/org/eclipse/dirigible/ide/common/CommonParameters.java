@@ -97,17 +97,7 @@ public class CommonParameters {
 	public static final String DIRIGIBLE_DEBUGGER_BRIDGE = "dirigible.debugger.bridge"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_RUNTIME_BRIDGE = "dirigible.runtime.bridge"; //$NON-NLS-1$
 
-	// public static String getDatabaseProductName() {
-	// return System.getProperty(DataSourceFacade.DATABASE_PRODUCT_NAME);
-	// }
-	//
-	// public static String getDatabaseProductVersion() {
-	// return System.getProperty(DataSourceFacade.DATABASE_PRODUCT_VERSION);
-	// }
-	//
-	// public static String getDriverName() {
-	// return System.getProperty(DataSourceFacade.DATABASE_DRIVER_NAME);
-	// }
+	private static final String SELECTED_DATASOURCE_NAME = "SELECTED_DATASOURCE_NAME"; //$NON-NLS-1$
 
 	public static final String CONF_PATH_IDE = "/ide";
 
@@ -204,6 +194,14 @@ public class CommonParameters {
 
 	public static void setAutoPublish(boolean checked) {
 		DualParameters.set(DualParameters.SET_AUTO_PUBLISH, checked);
+	}
+
+	public static String getSelectedDatasource() {
+		return get(SELECTED_DATASOURCE_NAME);
+	}
+
+	public static void setSelectedDatasource(String dsName) {
+		set(SELECTED_DATASOURCE_NAME, dsName);
 	}
 
 }

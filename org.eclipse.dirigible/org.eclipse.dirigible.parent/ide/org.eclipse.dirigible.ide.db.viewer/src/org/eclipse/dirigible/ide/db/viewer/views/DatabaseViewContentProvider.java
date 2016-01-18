@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.ide.db.viewer.views;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,77 +94,83 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 
 	private void initialize() {
 
+		Connection connection = null;
 		try {
-			Connection connection = this.databaseViewer.getDatabaseConnection();
+			connection = this.databaseViewer.getDatabaseConnection();
 			String dsName = DatabaseViewer.getSelectedDatasourceName();
-			DataSources dataSource = new DataSources(dsName, connection);
+			// DataSources dataSource = new DataSources(dsName);
 
-			try {
+			this.invisibleRoot = new TreeParent(EMPTY, this.databaseViewer);
 
-				this.invisibleRoot = new TreeParent(EMPTY, this.databaseViewer);
+			List<TreeParent> schemesContainerNode = new ArrayList<TreeParent>();
+			String catalogName = null;// TODO never used... remove?
+			// list schemes
+			List<String> schemeNames = DataSources.listSchemeNames(connection, CommonParameters.getSelectedDatasource(), catalogName, null);
 
-				List<TreeParent> schemesContainerNode = new ArrayList<TreeParent>();
-				String catalogName = null;// TODO never used... remove?
-				// list schemes
-				List<String> schemeNames = dataSource.listSchemeNames(catalogName, null);
+			for (String schemeName : schemeNames) {
 
-				for (String schemeName : schemeNames) {
+				TreeParent schemeContainerNode = new TreeParent(schemeName, this.databaseViewer);
 
-					TreeParent schemeContainerNode = new TreeParent(schemeName, this.databaseViewer);
-
-					// get a list of all table names
-					List<String> tableNames = dataSource.listTableNames(catalogName, schemeName, new Filter<String>() {
-						@Override
-						public boolean accepts(String tableName) {
-							if (tableName.startsWith(DIRIGIBLE_SYSTEM_TALBES_PREFIX)) {
-								if (!CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
-									return false;
+				// get a list of all table names
+				List<String> tableNames = DataSources.listTableNames(connection, CommonParameters.getSelectedDatasource(), catalogName, schemeName,
+						new Filter<String>() {
+							@Override
+							public boolean accepts(String tableName) {
+								if (tableName.startsWith(DIRIGIBLE_SYSTEM_TALBES_PREFIX)) {
+									if (!CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
+										return false;
+									}
 								}
+								return true;
 							}
-							return true;
-						}
-					});
+						});
 
-					for (String tableName : tableNames) {
-						TableDefinition tableDef = new TableDefinition(catalogName, schemeName, tableName);
-						TreeObject tableNode = new TreeObject(tableName, tableDef);
-						List<Capability> capabilities = tableNode.getTableDefinition().getCapabilities();
-						if (!dataSource.getDialect().isSchemaless()) {
-							capabilities.add(Capability.ShowTableDefinition);
-						}
-						capabilities.add(Capability.ViewTableContent);
-						tableDef.setContentScript(dataSource.getDialect().getContentQueryScript(catalogName, schemeName, tableName));
-						capabilities.add(Capability.ExportData);
-						capabilities.add(Capability.Delete);
-						schemeContainerNode.addChild(tableNode);
+				for (String tableName : tableNames) {
+					TableDefinition tableDef = new TableDefinition(catalogName, schemeName, tableName);
+					TreeObject tableNode = new TreeObject(tableName, tableDef);
+					List<Capability> capabilities = tableNode.getTableDefinition().getCapabilities();
+					if (!DataSources.getDialect(connection, CommonParameters.getSelectedDatasource()).isSchemaless()) {
+						capabilities.add(Capability.ShowTableDefinition);
 					}
-					schemesContainerNode.add(schemeContainerNode);
+					capabilities.add(Capability.ViewTableContent);
+					tableDef.setContentScript(DataSources.getDialect(connection, CommonParameters.getSelectedDatasource())
+							.getContentQueryScript(catalogName, schemeName, tableName));
+					capabilities.add(Capability.ExportData);
+					capabilities.add(Capability.Delete);
+					schemeContainerNode.addChild(tableNode);
 				}
-
-				TreeParent dataSourceContainerNode = new TreeParent(dataSource.getDataSourceLabel(), this.databaseViewer);
-
-				if (schemesContainerNode.size() == 1) {
-					TreeObject[] tableNodes = schemesContainerNode.get(0).getChildren();
-					for (TreeObject tableNode : tableNodes) {
-						dataSourceContainerNode.addChild(tableNode);
-					}
-				} else {
-					for (TreeParent schemeContainer : schemesContainerNode) {
-						dataSourceContainerNode.addChild(schemeContainer);
-					}
-				}
-
-				invisibleRoot.addChild(dataSourceContainerNode);
-
-			} finally {
-				dataSource.release();
+				schemesContainerNode.add(schemeContainerNode);
 			}
+
+			TreeParent dataSourceContainerNode = new TreeParent(DataSources.getDataSourceLabel(connection, CommonParameters.getSelectedDatasource()),
+					this.databaseViewer);
+
+			if (schemesContainerNode.size() == 1) {
+				TreeObject[] tableNodes = schemesContainerNode.get(0).getChildren();
+				for (TreeObject tableNode : tableNodes) {
+					dataSourceContainerNode.addChild(tableNode);
+				}
+			} else {
+				for (TreeParent schemeContainer : schemesContainerNode) {
+					dataSourceContainerNode.addChild(schemeContainer);
+				}
+			}
+
+			invisibleRoot.addChild(dataSourceContainerNode);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			TreeParent root = new TreeParent(e.getMessage(), this.databaseViewer);
 			invisibleRoot = new TreeParent(EMPTY, this.databaseViewer);
 			invisibleRoot.addChild(root);
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
 		}
 
 	}

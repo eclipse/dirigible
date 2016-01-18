@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dirigible.ide.common.CommonParameters;
 import org.eclipse.dirigible.repository.datasource.DataSources;
 import org.eclipse.dirigible.repository.datasource.DataSources.ColumnsIteratorCallback;
 import org.eclipse.dirigible.repository.datasource.DataSources.IndicesIteratorCallback;
@@ -57,8 +56,6 @@ public class TableDetailsEditorPage extends EditorPart {
 	private static final String INDEX_NAME_TEXT = Messages.TableDetailsEditorPage_INDEX_NAME_TEXT;
 	private static final String INDEXES_TEXT = Messages.TableDetailsEditorPage_INDEXES_TEXT;
 	private static final String FILTER_CONDITION_TEXT = Messages.TableDetailsEditorPage_FILTER_CONDITION_TEXT;
-
-	private static final String SELECTED_DATASOURCE_NAME = "SELECTED_DATASOURCE_NAME";
 
 	public TableDetailsEditorPage() {
 		super();
@@ -256,10 +253,11 @@ public class TableDetailsEditorPage extends EditorPart {
 		String catalogName = input.getTableDefinition().getCatalogName();
 		String schemaName = input.getTableDefinition().getSchemaName();
 		Connection connection = input.getDbConnectionFactory().getDatabaseConnection();
-		DataSources dataSource = new DataSources(CommonParameters.get(SELECTED_DATASOURCE_NAME), connection);
-
 		try {
-			dataSource.iterateTableDefinition(tableName, catalogName, schemaName, new ColumnsIteratorCallback() {
+			// DataSources dataSource = new DataSources(CommonParameters.getSelectedDatasource());
+
+			// try {
+			DataSources.iterateTableDefinition(connection, tableName, catalogName, schemaName, new ColumnsIteratorCallback() {
 				@Override
 				public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
 					TreeItem item = new TreeItem(defTreeTable, SWT.NONE);
@@ -274,8 +272,13 @@ public class TableDetailsEditorPage extends EditorPart {
 							cardinality, pagesIndex, filterCondition });
 				}
 			});
+			// } finally {
+			// dataSource.release();
+			// }
 		} finally {
-			dataSource.release();
+			if (connection != null) {
+				connection.close();
+			}
 		}
 	}
 

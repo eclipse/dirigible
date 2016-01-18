@@ -11,22 +11,19 @@ import java.util.NavigableMap;
 import java.util.Properties;
 import java.util.TreeMap;
 
-import javax.sql.DataSource;
-
 import org.eclipse.dirigible.repository.datasource.db.dialect.DialectFactory;
 import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
- * Convenience class for common DataSource operations. 
+ * Convenience class for common DataSource operations.
  * An instance represents a single DataSource.
- *
  */
 @SuppressWarnings("javadoc")
 public class DataSources {
 
 	private static final Logger logger = Logger.getLogger(DataSources.class);
-	
+
 	public static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
 	public static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
 	public static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
@@ -34,7 +31,7 @@ public class DataSources {
 	public static final String ALIAS = "ALIAS"; //$NON-NLS-1$
 	public static final String VIEW = "VIEW"; //$NON-NLS-1$
 	public static final String TABLE = "TABLE"; //$NON-NLS-1$
-	
+
 	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
 	private static final String PRCNT = "%"; //$NON-NLS-1$
@@ -64,70 +61,52 @@ public class DataSources {
 		ShowTableContentScript, SchemaFilterScript;
 	}
 
-	String dsName;
-	Connection conn;
-	DatabaseMetaData dmd;
-	IDialectSpecifier dialectSpecifier;
-	Properties dsConfig;
+	private DataSources() {
 
-	public DataSources(String dsName, Connection conn) throws SQLException {
-		this.dsName = dsName;
-		if(conn==null)
-			throw new IllegalArgumentException("Connection is null");
-		if(conn.isClosed())
-			throw new IllegalStateException("Connection is in closed state");
-		this.conn = conn;
-		this.dmd = this.conn.getMetaData();
-		String productName = dmd.getDatabaseProductName();
-		this.dialectSpecifier = DialectFactory.getInstance(productName);
-		if (this.dialectSpecifier == null) {
-			this.dialectSpecifier = DialectFactory.getInstance(dsName);
-		}
-		this.dsConfig = org.eclipse.dirigible.repository.datasource.DataSourceFacade.getInstance().getNamedDataSourceConfig(dsName);
-	}
-	
-	public DataSources(String dsName) throws SQLException {
-		DataSource ds = DataSourceFacade.getInstance().getNamedDataSource(null, dsName);
-		this.conn = ds.getConnection();
-		this.dmd = this.conn.getMetaData();
-		String productName = dmd.getDatabaseProductName();
-		this.dialectSpecifier = DialectFactory.getInstance(productName);
-		if (this.dialectSpecifier == null) {
-			this.dialectSpecifier = DialectFactory.getInstance(dsName);
-		}
-		this.dsConfig = org.eclipse.dirigible.repository.datasource.DataSourceFacade.getInstance().getNamedDataSourceConfig(dsName);		
-	}
-	
-	public DatabaseMetaData getDataBaseMetadata() {
-		return this.dmd;
-	}
-	
-	public IDialectSpecifier getDialect(){
-		return this.dialectSpecifier;
 	}
 
-	public String getDataSourceLabel() throws SQLException {
-		String productName = dmd.getDatabaseProductName()!=null?dmd.getDatabaseProductName():this.dsConfig.getProperty("ds.id");
-		String productVersion = dmd.getDatabaseProductVersion()!=null? CBO + dmd.getDatabaseProductVersion() + CBC :"";
-		String driverName = dmd.getDriverName()!=null?dmd.getDriverName():"";
-		return  productName + productVersion + driverName;
+	public static IDialectSpecifier getDialect(Connection conn, String dsName) throws SQLException {
+		DatabaseMetaData dmd = conn.getMetaData();
+		String productName = dmd.getDatabaseProductName();
+		IDialectSpecifier dialectSpecifier = DialectFactory.getInstance(productName);
+		if (dialectSpecifier == null) {
+			dialectSpecifier = DialectFactory.getInstance(dsName);
+		}
+		return dialectSpecifier;
+	}
+
+	public static String getDataSourceLabel(Connection conn, String dsName) throws SQLException {
+
+		DatabaseMetaData dmd = conn.getMetaData();
+
+		Properties dsConfig = org.eclipse.dirigible.repository.datasource.DataSourceFacade.getInstance().getNamedDataSourceConfig(dsName);
+
+		String productName = dmd.getDatabaseProductName() != null ? dmd.getDatabaseProductName() : dsConfig.getProperty("ds.id");
+		String productVersion = dmd.getDatabaseProductVersion() != null ? CBO + dmd.getDatabaseProductVersion() + CBC : "";
+		String driverName = dmd.getDriverName() != null ? dmd.getDriverName() : "";
+		return productName + productVersion + driverName;
 	}
 
 	public interface Filter<T> {
 		boolean accepts(T t);
 	}
 
-	public List<String> listTableNames(String catalogName, String schemeName, Filter<String> tableNameFilter) throws SQLException {
+	public static List<String> listTableNames(Connection conn, String dsName, String catalogName, String schemeName, Filter<String> tableNameFilter)
+			throws SQLException {
+
+		DatabaseMetaData dmd = conn.getMetaData();
+
+		IDialectSpecifier dialectSpecifier = getDialect(conn, dsName);
 
 		List<String> listOfTables = new ArrayList<String>();
 
 		ResultSet rs = null;
-		if (this.dialectSpecifier.isCatalogForSchema()) {
-			rs = this.dmd.getTables(schemeName, null, PRCNT, TABLE_TYPES);
+		if (dialectSpecifier.isCatalogForSchema()) {
+			rs = dmd.getTables(schemeName, null, PRCNT, TABLE_TYPES);
 		} else {
-			rs = this.dmd.getTables(catalogName, schemeName, PRCNT, TABLE_TYPES);
+			rs = dmd.getTables(catalogName, schemeName, PRCNT, TABLE_TYPES);
 		}
-		try{
+		try {
 			while (rs.next()) {
 				String tableName = rs.getString(3);
 				if ((tableNameFilter != null) && !tableNameFilter.accepts(tableName)) {
@@ -142,29 +121,34 @@ public class DataSources {
 		return listOfTables;
 	}
 
-	public List<String> listSchemeNames(String catalogName, Filter<String> schemaNameFilter) throws SQLException {
+	public static List<String> listSchemeNames(Connection conn, String dsName, String catalogName, Filter<String> schemaNameFilter)
+			throws SQLException {
+
+		DatabaseMetaData dmd = conn.getMetaData();
 
 		List<String> listOfSchemes = new ArrayList<String>();
 		ResultSet rs = null;
 
+		IDialectSpecifier dialectSpecifier = getDialect(conn, dsName);
+
 		try {
 
-			if (this.dialectSpecifier.isSchemaFilterSupported()) {
+			if (dialectSpecifier.isSchemaFilterSupported()) {
 				try {
 					// low level filtering for schema
-					rs = this.conn.createStatement().executeQuery(this.dialectSpecifier.getSchemaFilterScript());
+					rs = conn.createStatement().executeQuery(dialectSpecifier.getSchemaFilterScript());
 				} catch (Exception e) {
 					// backup in case of wrong product recognition
-					rs = this.dmd.getSchemas(catalogName, null);
+					rs = dmd.getSchemas(catalogName, null);
 				} finally {
 					if (rs != null) {
 						rs.close();
 					}
 				}
 			} else if (dialectSpecifier.isCatalogForSchema()) {
-				rs = this.dmd.getCatalogs();
+				rs = dmd.getCatalogs();
 			} else {
-				rs = this.dmd.getSchemas(catalogName, null);
+				rs = dmd.getSchemas(catalogName, null);
 			}
 			if (rs != null) {
 				while (rs.next()) {
@@ -195,18 +179,23 @@ public class DataSources {
 				String sortOrder, String cardinality, String pagesIndex, String filterCondition);
 	}
 
-	public void iterateTableDefinition(String tableName, String catalogName, String schemaName, ColumnsIteratorCallback columnsIteratorCallback,
-			IndicesIteratorCallback indicesIteratorCallback) throws SQLException {
+	public static void iterateTableDefinition(Connection conn, String tableName, String catalogName, String schemaName,
+			ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback) throws SQLException {
 
-		ResultSet columns = this.dmd.getColumns(catalogName, schemaName, tableName, null);
-		if(columns==null)
+		DatabaseMetaData dmd = conn.getMetaData();
+
+		ResultSet columns = dmd.getColumns(catalogName, schemaName, tableName, null);
+		if (columns == null) {
 			throw new SQLException("DatabaseMetaData.getColumns returns null");
-		ResultSet pks = this.dmd.getPrimaryKeys(catalogName, schemaName, tableName);
-		if(pks==null)
+		}
+		ResultSet pks = dmd.getPrimaryKeys(catalogName, schemaName, tableName);
+		if (pks == null) {
 			throw new SQLException("DatabaseMetaData.getPrimaryKeys returns null");
-		ResultSet indexes = this.dmd.getIndexInfo(catalogName, schemaName, tableName, false, false);
-		if(indexes==null)
+		}
+		ResultSet indexes = dmd.getIndexInfo(catalogName, schemaName, tableName, false, false);
+		if (indexes == null) {
 			throw new SQLException("DatabaseMetaData.getIndexInfo returns null");
+		}
 
 		try {
 
@@ -237,27 +226,29 @@ public class DataSources {
 			pks.close();
 		}
 	}
-	
+
 	public interface RequestExecutionCallback {
 		void updateDone(int recordsCount);
+
 		void queryDone(ResultSet rs);
+
 		void error(Throwable t);
 	}
-	
+
 	/**
-	 * Executes a single SQL statement. The callbacks are on queryDone in case of query or updateDone in case of update, 
+	 * Executes a single SQL statement. The callbacks are on queryDone in case of query or updateDone in case of update,
 	 * and on error. The method does not iterate on the result set and its pointer is in its initial position.
-	 * It is up to the callback to do something with it.  
-	 * 
+	 * It is up to the callback to do something with it.
+	 *
 	 * @param sql
 	 * @param isQuery
 	 * @param callback
 	 */
-	public void executeSingleStatement(String sql, boolean isQuery, RequestExecutionCallback callback) {
+	public static void executeSingleStatement(Connection conn, String sql, boolean isQuery, RequestExecutionCallback callback) {
 		ResultSet resultSet = null;
 		PreparedStatement preparedStatement = null;
-		try{
-			preparedStatement = this.conn.prepareStatement(sql);
+		try {
+			preparedStatement = conn.prepareStatement(sql);
 			if (isQuery) {
 				preparedStatement.executeQuery();
 				resultSet = preparedStatement.getResultSet();
@@ -266,12 +257,13 @@ public class DataSources {
 				preparedStatement.executeUpdate();
 				callback.updateDone(preparedStatement.getUpdateCount());
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
 			callback.error(e);
 		} finally {
 			try {
-				if(resultSet!=null)
+				if (resultSet != null) {
 					resultSet.close();
+				}
 			} catch (SQLException e) {
 				logger.warn(e.getMessage(), e);
 			}
@@ -279,62 +271,60 @@ public class DataSources {
 	}
 
 	/**
-	 * Callback interface for the {@link DataSources#executeSingleStatement(String, boolean, RequestIteratorCallback)} method.
-	 *
+	 * Callback interface for the {@link DataSources#executeSingleStatement(String, boolean, RequestIteratorCallback)}
+	 * method.
 	 */
 	public interface ResultSetIteratorCallback {
-		void onQueryDone(List<NavigableMap<String, Object>> table);
-		void onRowConstruction(NavigableMap<String, Object> row);
-		void onError(Throwable t);
-	}	
-	
+		void onQueryDone(Connection conn, List<NavigableMap<String, Object>> table);
+
+		void onRowConstruction(Connection conn, NavigableMap<String, Object> row);
+
+		void onError(Connection conn, Throwable t);
+	}
+
 	/**
-	 * Unlike {@link #executeSingleStatement(String, boolean, RequestIteratorCallback)}, this method 
+	 * Unlike {@link #executeSingleStatement(String, boolean, RequestIteratorCallback)}, this method
 	 * iterates on the ResultSet and produces a table data structure in the form of a list of ordered key-value tuples.
-	 * Schematically it looks like this:<PRE>
+	 * Schematically it looks like this:
+	 *
+	 * <PRE>
 	 * [[{column 1:value A}, {column 2: value B}, {column 3: value C}],
 	 *  [{column 1:value D}, {column 2: value E}, {column 3: value F}],
-	 *  [{column 1:value G}, {column 2: value I}, {column 3: value H}]]</PRE>
+	 *  [{column 1:value G}, {column 2: value I}, {column 3: value H}]]
+	 * </PRE>
+	 *
 	 * The callbacks are on completing the whole data structure, on error, and on each row construction.
-	 * 
+	 *
 	 * @param sql
 	 * @param callback
 	 */
-	public void executeQueryStatement(String sql, ResultSetIteratorCallback callback) {
+	public static void executeQueryStatement(Connection conn, String sql, ResultSetIteratorCallback callback) {
 		ResultSet resultSet = null;
 		PreparedStatement preparedStatement = null;
-		try{
-			preparedStatement = this.conn.prepareStatement(sql);
+		try {
+			preparedStatement = conn.prepareStatement(sql);
 			preparedStatement.executeQuery();
 			resultSet = preparedStatement.getResultSet();
 			int columnsCount = resultSet.getMetaData().getColumnCount();
-			List<NavigableMap<String,Object>> table = new ArrayList<NavigableMap<String,Object>>();
+			List<NavigableMap<String, Object>> table = new ArrayList<NavigableMap<String, Object>>();
 			NavigableMap<String, Object> row = new TreeMap<String, Object>();
 			for (int i = 1; i <= columnsCount; i++) {
 				row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
-				callback.onRowConstruction(row);
+				callback.onRowConstruction(conn, row);
 				table.add(row);
 			}
-			callback.onQueryDone(table);
-		} catch (Exception e){
-			callback.onError(e);
+			callback.onQueryDone(conn, table);
+		} catch (Exception e) {
+			callback.onError(conn, e);
 		} finally {
 			try {
-				if(resultSet!=null)
+				if (resultSet != null) {
 					resultSet.close();
+				}
 			} catch (SQLException e) {
 				logger.warn(e.getMessage(), e);
 			}
-		}		
+		}
 	}
-	
-	/**
-	 * Closes opened connection and releases related resources.
-	 * @throws SQLException 
-	 */
-	public void release() throws SQLException{
-		if(this.conn!=null && !this.conn.isClosed())
-			this.conn.close();
-	}
-	
+
 }
