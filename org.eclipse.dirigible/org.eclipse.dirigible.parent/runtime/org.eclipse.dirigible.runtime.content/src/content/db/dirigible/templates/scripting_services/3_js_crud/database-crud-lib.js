@@ -78,7 +78,7 @@ exports.create${entityName} = function() {
         return id;
     } catch(e) {
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        entityLib.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -90,20 +90,21 @@ exports.read${entityName}Entity = function(id) {
     var connection = $\.getDatasource().getConnection();
     try {
         var result;
-        var statement = connection.prepareStatement("SELECT * FROM ${tableName} WHERE " + exports.pkToSQL());
+        var sql = "SELECT * FROM ${tableName} WHERE " + exports.pkToSQL();
+        var statement = connection.prepareStatement(sql);
         statement.setInt(1, id);
         
         var resultSet = statement.executeQuery();
         if (resultSet.next()) {
             result = createEntity(resultSet);
         } else {
-        	entityLib.printError($\.getResponse().SC_NOT_FOUND, 1, "Record with id: " + id + " does not exist.");
+        	entityLib.printError($\.getResponse().SC_NOT_FOUND, 1, "Record with id: " + id + " does not exist.", sql);
         }
         var jsonResponse = JSON.stringify(result, null, 2);
         $\.getResponse().getWriter().println(jsonResponse);
     } catch(e){
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        entityLib.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -137,7 +138,7 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
         $\.getResponse().getWriter().println(jsonResponse);
     } catch(e){
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        entityLib.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -263,7 +264,7 @@ exports.update${entityName} = function() {
 		$\.getResponse().getWriter().println(id);
     } catch(e){
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        entityLib.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -273,13 +274,14 @@ exports.update${entityName} = function() {
 exports.delete${entityName} = function(id) {
     var connection = $\.getDatasource().getConnection();
     try {
-        var statement = connection.prepareStatement("DELETE FROM ${tableName} WHERE " + exports.pkToSQL());
+    	var sql = "DELETE FROM ${tableName} WHERE " + exports.pkToSQL();
+        var statement = connection.prepareStatement(sql);
         statement.setString(1, id);
         statement.executeUpdate();
         $\.getResponse().getWriter().println(id);
     } catch(e){
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        entityLib.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -289,14 +291,15 @@ exports.count${entityName} = function() {
     var count = 0;
     var connection = $\.getDatasource().getConnection();
     try {
+    	var sql = 'SELECT COUNT(*) FROM ${tableName}';
         var statement = connection.createStatement();
-        var rs = statement.executeQuery('SELECT COUNT(*) FROM ${tableName}');
+        var rs = statement.executeQuery(sql);
         if (rs.next()) {
             count = rs.getInt(1);
         }
     } catch(e){
         var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        entityLib.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }

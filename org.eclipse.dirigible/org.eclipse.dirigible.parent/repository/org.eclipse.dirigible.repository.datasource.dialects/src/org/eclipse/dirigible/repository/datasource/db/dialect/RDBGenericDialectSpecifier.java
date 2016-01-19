@@ -24,12 +24,12 @@ public class RDBGenericDialectSpecifier implements IDialectSpecifier {
 
 	@Override
 	public String createLimitAndOffset(int limit, int offset) {
-		return null;
+		return "";
 	}
 
 	@Override
 	public String createTopAndStart(int limit, int offset) {
-		return null;
+		return "";
 	}
 
 	@Override
@@ -44,22 +44,22 @@ public class RDBGenericDialectSpecifier implements IDialectSpecifier {
 
 	@Override
 	public String getAlterAddOpen() {
-		return null;
+		return "";
 	}
 
 	@Override
 	public String getAlterAddOpenEach() {
-		return null;
+		return "";
 	}
 
 	@Override
 	public String getAlterAddClose() {
-		return null;
+		return "";
 	}
 
 	@Override
 	public String getAlterAddCloseEach() {
-		return null;
+		return "";
 	}
 
 	/**

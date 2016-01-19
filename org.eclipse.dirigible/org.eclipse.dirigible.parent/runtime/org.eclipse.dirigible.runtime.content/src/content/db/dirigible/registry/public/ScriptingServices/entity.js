@@ -21,9 +21,11 @@ exports.isInputParameterValid = function(paramName) {
 }
 
 // print error
-exports.printError = function(httpCode, errCode, errMessage) {
+exports.printError = function(httpCode, errCode, errMessage, errContext) {
     var body = {'err': {'code': errCode, 'message': errMessage}};
     response.setStatus(httpCode);
     response.setHeader("Content-Type", "application/json");
     response.getWriter().print(JSON.stringify(body));
+    out.println(JSON.stringify(body));
+    out.println(JSON.stringify(errContext));
 }

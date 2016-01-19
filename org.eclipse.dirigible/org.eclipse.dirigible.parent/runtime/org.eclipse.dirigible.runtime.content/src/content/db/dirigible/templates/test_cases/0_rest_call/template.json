@@ -1,8 +1,8 @@
 {"name":"REST Call Test",
  "description":"Test calling a RESTful service",
- "image":"rest-call.png",
+ "image":"rest_call.png",
  "sources":[
-   {"name":"rest-call.js", "action":"generate"}
+   {"name":"rest_call.js", "action":"generate"}
    ],
  "parameters":[
    {"name":"name",

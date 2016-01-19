@@ -59,7 +59,7 @@ function handleRequest() {
 				entity${entityName}.delete${entityName}(id);
 			}
 		} else {
-			entityLib.printError($\.getResponse().SC_BAD_REQUEST, 1, "Invalid HTTP Method");
+			entityLib.printError($\.getResponse().SC_BAD_REQUEST, 1, "Invalid HTTP Method", method);
 		}
 	}
 	
