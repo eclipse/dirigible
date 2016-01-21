@@ -1,16 +1,17 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.ui.view;
 
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,11 +20,13 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
-
 public class LogsView extends ViewPart {
-	private static final String LOGGING_LOCATION = CommonParameters.getRuntimeUrl() + "/logging";
+	private static String LOGGING_LOCATION;
+
+	static {
+		LOGGING_LOCATION = ((CommonParameters.getRuntimeUrl() == null) || "".equals(CommonParameters.getRuntimeUrl())) ? "/services/logging"
+				: "/logging";
+	}
 
 	private ExtendedBrowser browser = null;
 
