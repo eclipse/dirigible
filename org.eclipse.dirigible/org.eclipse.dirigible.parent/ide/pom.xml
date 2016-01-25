@@ -115,6 +115,7 @@
 		<module>org.eclipse.dirigible.ide.db.sqlconsole.rcp</module>
 		<module>org.eclipse.dirigible.ide.db.publish</module>
 		<module>org.eclipse.dirigible.ide.ui.publish</module>
+		<module>org.eclipse.dirigible.ide.mobile.publish</module>
 		<module>org.eclipse.dirigible.ide.publish</module>
 		<module>org.eclipse.dirigible.ide.publish.ui</module>
 		<module>org.eclipse.dirigible.ide.scripts.publish</module>
@@ -130,6 +131,7 @@
 		<module>org.eclipse.dirigible.ide.template.ui.js</module>
 		<module>org.eclipse.dirigible.ide.template.ui.html</module>
 		<module>org.eclipse.dirigible.ide.template.ui.is</module>
+		<module>org.eclipse.dirigible.ide.template.ui.mobile</module>
 		<module>org.eclipse.dirigible.org.eclipse.rap.rwt.supplemental.filedialog</module>
 		<module>org.eclipse.dirigible.ide.registry</module>
 		<module>org.eclipse.dirigible.ide.debug.model</module>
