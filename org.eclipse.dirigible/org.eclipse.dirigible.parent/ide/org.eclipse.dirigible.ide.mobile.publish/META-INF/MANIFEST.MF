@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.dirigible.ide.mobile.publish
+Bundle-SymbolicName: org.eclipse.dirigible.ide.mobile.publish;singleton:=true
+Bundle-Version: 2.2.160119
+Bundle-Vendor: SAP AG
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.dirigible.ide.repository,
+ org.eclipse.core.runtime;bundle-version="3.8.0"
+Import-Package: org.eclipse.dirigible.ide.common,
+ org.eclipse.dirigible.ide.publish;version="1.0.0",
+ org.eclipse.dirigible.repository.api,
+ org.eclipse.core.resources
+Export-Package: org.eclipse.dirigible.ide.mobile.publish
+Bundle-ClassPath: .
