@@ -366,6 +366,13 @@ Contributors:
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.dirigible.ide.template.ui.mobile"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.dirigible.ide.terminal"
          download-size="0"
          install-size="0"
@@ -381,6 +388,13 @@ Contributors:
 
    <plugin
          id="org.eclipse.dirigible.ide.ui.publish"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.dirigible.ide.mobile.publish"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -42,6 +42,7 @@ public class AbstractArtifactLabelProvider extends LabelProvider {
 	public static final URL TYPE_COLLECTION_TEST_ICON_URL = getIconURL("icon-collection-test.png"); //$NON-NLS-1$
 	public static final URL TYPE_COLLECTION_WEB_ICON_URL = getIconURL("icon-collection-web.png"); //$NON-NLS-1$
 	public static final URL TYPE_COLLECTION_WIKI_ICON_URL = getIconURL("icon-collection-wiki.png"); //$NON-NLS-1$
+	public static final URL TYPE_COLLECTION_MOBILE_ICON_URL = getIconURL("icon-collection-mobile.png"); //$NON-NLS-1$
 	public static final URL TYPE_SQL_ICON_URL = getIconURL("icon-sql.png"); //$NON-NLS-1$
 	public static final URL TYPE_ODATA_ICON_URL = getIconURL("icon-odata.png"); //$NON-NLS-1$
 	public static final URL TYPE_ENTITY_ICON_URL = getIconURL("icon-entity.png"); //$NON-NLS-1$

@@ -107,6 +107,8 @@ public abstract class TemplateGenerator {
 				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
 			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT)) {
 				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
+			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS)) {
+				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
 			}
 			if (alternativeTarget != null) {
 				IPath location = new Path(targetLocation);
