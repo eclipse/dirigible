@@ -60,6 +60,9 @@ public interface IRepositoryPaths {
 	/** The Wiki Content templates root folder of the Repository structure */
 	public static final String DB_DIRIGIBLE_TEMPLATES_WIKI_CONTENT = DB_DIRIGIBLE_TEMPLATES + "wiki_content/";
 
+	/** The Mobile Applications templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_MOBILE_APPLICATIONS = DB_DIRIGIBLE_TEMPLATES + "mobile_applications/";
+
 	/** The Integration Services templates root folder of the Repository structure */
 	public static final String DB_DIRIGIBLE_TEMPLATES_INTEGRATION_SERVICES = DB_DIRIGIBLE_TEMPLATES + "integration_services/";
 
