@@ -46,6 +46,7 @@ public interface ICommonConstants {
 		public final static String WEB_CONTENT = "WebContent"; //$NON-NLS-1$
 		public final static String SECURITY_CONSTRAINTS = "SecurityConstraints"; //$NON-NLS-1$
 		public final static String WIKI_CONTENT = "WikiContent"; //$NON-NLS-1$
+		public final static String MOBILE_APPLICATIONS = "MobileApplications"; //$NON-NLS-1$
 		public final static String EXTENSION_DEFINITIONS = "ExtensionDefinitions"; //$NON-NLS-1$
 		public static final String CONFIGURATION_SETTINGS = "ConfigurationSettings";
 	}
@@ -84,6 +85,9 @@ public interface ICommonConstants {
 
 	public static final String WIKI_CONTENT_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
 			+ ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
+
+	public static final String MOBILE_APPLICATIONS_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
+			+ ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
 
 	public static final String SCRIPTING_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
 			+ ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
