@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.new?after=separator.custom">
+         <command
+               commandId="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileCommandHandler"
+               icon="icons/wizard_mobile-applications.png"
+               label="Mobile App"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileCommandHandler"
+            id="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileCommandHandler"
+            name="Mobile App">
+      </command>
+   </extension>
+   
+   <extension point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
+        <newMenuItem
+            text="Mobile App"
+            toolTip="Mobile App"
+            order="9"
+            imageBundle="org.eclipse.dirigible.ide.template.ui.mobile"
+            imagePrefix="/icons/"
+            imageName="wizard_mobile-applications.png"
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileCommandHandler">
+        </newMenuItem>
+ 	</extension>
+ 	
+</plugin>
