@@ -36,6 +36,10 @@ public class CommonParameters {
 		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
 	}
 
+	public static String getMobileApplicationsSandbox() {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
+	}
+
 	public static String getScriptingContentSandbox() {
 		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
 	}
@@ -71,6 +75,7 @@ public class CommonParameters {
 	public static final String COMMAND_CONTAINER_MAPPING = "/command"; //$NON-NLS-1$
 	public static final String TEST_CASES_CONTAINER_MAPPING = "/test"; //$NON-NLS-1$
 	public static final String WIKI_CONTENT_CONTAINER_MAPPING = "/wiki"; //$NON-NLS-1$
+	public static final String MOBILE_APPLICATIONS_CONTAINER_MAPPING = "/mobile"; //$NON-NLS-1$
 	public static final String FLOW_CONTAINER_MAPPING = "/flow"; //$NON-NLS-1$
 	public static final String JOB_CONTAINER_MAPPING = "/job"; //$NON-NLS-1$
 	public static final String SQL_CONTAINER_MAPPING = "/sql"; //$NON-NLS-1$
@@ -83,6 +88,7 @@ public class CommonParameters {
 	public static final String COMMAND_SANDBOX_MAPPING = "/command-sandbox"; //$NON-NLS-1$
 	public static final String TEST_CASES_SANDBOX_MAPPING = "/test-sandbox"; //$NON-NLS-1$
 	public static final String WIKI_CONTENT_SANDBOX_MAPPING = "/wiki-sandbox"; //$NON-NLS-1$
+	public static final String MOBILE_APPLICATIONS_SANDBOX_MAPPING = "/mobile-sandbox"; //$NON-NLS-1$
 	public static final String FLOW_SANDBOX_MAPPING = "/flow-sandbox"; //$NON-NLS-1$
 	public static final String JOB_SANDBOX_MAPPING = "/job-sandbox"; //$NON-NLS-1$
 	public static final String SQL_SANDBOX_MAPPING = "/sql-sandbox"; //$NON-NLS-1$
