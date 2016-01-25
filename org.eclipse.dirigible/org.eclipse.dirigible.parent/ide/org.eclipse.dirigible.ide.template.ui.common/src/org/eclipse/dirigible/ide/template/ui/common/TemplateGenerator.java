@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -25,6 +26,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
@@ -149,12 +151,7 @@ public abstract class TemplateGenerator {
 			// TODO add as Markers as well
 			logger.warn(String.format(THE_FILE_ALREADY_EXISTS_SKIPPED_GENERATION_OF, location));
 		} else {
-			if (!file.getParent().exists()) {
-				IContainer parentContainer = file.getParent();
-				if (parentContainer instanceof IFolder) {
-					((IFolder) parentContainer).create(false, true, null);
-				}
-			}
+			createMissingParents(file);
 			file.create(new ByteArrayInputStream(bytes), false, null);
 			createdFiles.add(file);
 		}
@@ -163,6 +160,19 @@ public abstract class TemplateGenerator {
 			WorkspaceViewerUtils.expandElement(parent);
 		}
 		WorkspaceViewerUtils.selectElement(file);
+	}
+
+	private void createMissingParents(IFile file) throws CoreException {
+		Stack<IContainer> missingParents = new Stack<IContainer>();
+		for (IContainer parent = file.getParent(); !parent.exists(); parent = parent.getParent()) {
+			missingParents.push(parent);
+		}
+		while (!missingParents.isEmpty()) {
+			IContainer next = missingParents.pop();
+			if (next instanceof IFolder) {
+				((IFolder) next).create(false, true, null);
+			}
+		}
 	}
 
 	protected void copyFile(String targetFileName, String targetLocation, String templateLocation) throws IOException, Exception {
