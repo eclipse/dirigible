@@ -26,6 +26,9 @@
         "link": "#/web/wiki"
     }]
 }, {
+    "name": "Mobile",
+    "link": "#/mobile"
+}, {
     "name": "Scripting",
     "subMenu": [{
         "name": "JavaScript Services",

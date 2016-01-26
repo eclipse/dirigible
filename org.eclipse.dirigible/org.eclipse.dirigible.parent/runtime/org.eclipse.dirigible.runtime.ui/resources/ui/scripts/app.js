@@ -25,6 +25,9 @@ fileApp.config(function($routeProvider) {
     }).when('/web/wiki', {
       controller: 'WebWikiCtrl',
       templateUrl: 'templates/web/wiki/wiki.html'
+    }).when('/mobile', {
+        controller: 'MobileCtrl',
+        templateUrl: 'templates/mobile/mobile.html'
     }).when('/scripting/javascript', {
       controller: 'JavaScriptCtrl',
       templateUrl: 'templates/scripting/javascript/javascript.html'
@@ -188,6 +191,11 @@ menuControllers.controller('HomeCtrl', ['$scope',
       path: "#/web/wiki",
       title: "Wiki",
       description: "Browse Applications Documentation"
+    }, {
+        image: "images/wiki-content.png",
+        path: "#/mobile",
+        title: "Mobile",
+        description: "Native Mobile Applications"
     }, {
 //      image: "images/routes.png",
 //      path: "#/routes",
