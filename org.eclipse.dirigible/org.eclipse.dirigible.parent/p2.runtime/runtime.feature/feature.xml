@@ -111,6 +111,13 @@ Contributors:
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.dirigible.runtime.mobile"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.dirigible.runtime.command"
          download-size="0"
          install-size="0"
