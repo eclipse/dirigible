@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.jgit,
  org.eclipse.dirigible.ide.repository
 Import-Package: org.eclipse.dirigible.repository.logging,
  org.eclipse.core.resources
-Export-Package: org.eclipse.dirigible.ide.jgit.utils
+Export-Package: org.eclipse.dirigible.ide.jgit.command,
+ org.eclipse.dirigible.ide.jgit.utils
 Bundle-ClassPath: .,
  jdi.jar,
  jdimodel.jar

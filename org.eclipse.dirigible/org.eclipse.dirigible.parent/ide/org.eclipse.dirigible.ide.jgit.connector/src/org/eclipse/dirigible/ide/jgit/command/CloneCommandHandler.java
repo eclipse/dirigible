@@ -54,11 +54,15 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		return execute(event, null);
+	}
+
+	public Object execute(ExecutionEvent event, String git) throws ExecutionException {
 		DefaultProgressMonitor monitor = new DefaultProgressMonitor();
 		monitor.beginTask(TASK_CLONING_REPOSITORY, IProgressMonitor.UNKNOWN);
 
 		final Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		CloneCommandDialog dialog = new CloneCommandDialog(parent);
+		CloneCommandDialog dialog = new CloneCommandDialog(parent, git);
 
 		switch (dialog.open()) {
 			case Window.OK:

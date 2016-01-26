@@ -231,4 +231,15 @@
       <startup
             class="org.eclipse.dirigible.ide.workspace.wizard.project.getstarted.GetStartedStartup"></startup>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.eclipse.dirigible.ide.workspace.wizard.project.gitinit.GitStartup"></startup>
+   </extension>
+  <extension
+        point="org.eclipse.dirigible.ide.ui.rap.init">
+     <initializer
+           class="org.eclipse.dirigible.ide.workspace.wizard.project.gitinit.GitDirigibleWorkbenchInitializer">
+     </initializer>
+  </extension>
 </plugin>

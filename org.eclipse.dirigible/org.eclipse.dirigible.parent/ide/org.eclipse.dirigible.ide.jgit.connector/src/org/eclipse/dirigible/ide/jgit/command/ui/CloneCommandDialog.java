@@ -1,24 +1,22 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.jgit.command.ui;
 
+import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
 
 public class CloneCommandDialog extends BaseCommandDialog {
 
@@ -33,8 +31,9 @@ public class CloneCommandDialog extends BaseCommandDialog {
 
 	private String repositoryURI;
 
-	public CloneCommandDialog(Shell parentShell) {
+	public CloneCommandDialog(Shell parentShell, String git) {
 		super(parentShell);
+		this.repositoryURI = git;
 	}
 
 	@Override
@@ -60,6 +59,9 @@ public class CloneCommandDialog extends BaseCommandDialog {
 
 		textRepositoryURI = new Text(container, SWT.BORDER);
 		textRepositoryURI.setLayoutData(dataRepositoryURI);
+		if (this.repositoryURI != null) {
+			textRepositoryURI.setText(this.repositoryURI);
+		}
 	}
 
 	@Override

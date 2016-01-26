@@ -17,8 +17,9 @@
 					<div class="account-wall">
 						<img class="logo-img" src="images/dirigible_logo.svg" alt="">
 						<form class="form-tryout" name="tryoutForm" method="GET" action="../anonymous">
-						<input id="username" type="text" name="user" class="form-control" placeholder="Username" required autofocus pattern="[A-Za-z_]{3,64}">
+						<input id="username" type="text" name="user" class="form-control" placeholder="Username" required autofocus pattern="[A-Za-z0-9_]{3,64}">
 						<input id="redirect" type="hidden" name="redirect" value="true">
+						<input id="git" type="hidden" name="git" value="">
 						<button class="btn btn-lg btn-primary btn-block" type="submit">Try out!</button>
 						<a href="///help.dirigible.io" target="_blank" class="pull-right need-help">Need help?</a><span class="clearfix"></span>
 						</form>
@@ -27,10 +28,19 @@
 			</div>
 		</div>
 		<script type="text/javascript">
+			var parameters = {};
 			$(function() {
 				$.get( "../anonymous", function( data ) {
 					$('#username').val(data);
 				});
+				
+				location.search.substr(1).split("&").forEach(function(item) {
+				    var s = item.split("="),
+				        k = s[0],
+				        v = s[1] && decodeURIComponent(s[1]);
+				    (k in parameters) ? parameters[k].push(v) : parameters[k] = [v]
+				});
+				document.getElementById("git").value = parameters["git"][0];
 			});
 		</script>
 		<script>

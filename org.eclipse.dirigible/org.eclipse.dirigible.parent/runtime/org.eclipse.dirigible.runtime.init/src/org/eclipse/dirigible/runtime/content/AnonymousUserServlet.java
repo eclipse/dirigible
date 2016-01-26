@@ -16,7 +16,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 public class AnonymousUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 3669759124907091014L;
 	private static final Logger logger = Logger.getLogger(AnonymousUserServlet.class);
-	private static final String REGEX_USER_NAME = "[A-Za-z_]{3,64}";
+	private static final String REGEX_USER_NAME = "[A-Za-z0-9_]{3,64}";
 	private static final Pattern PATTERN_USER_NAME = Pattern.compile(REGEX_USER_NAME);
 
 	@Override
@@ -61,7 +61,12 @@ public class AnonymousUserServlet extends HttpServlet {
 		}
 		String redirect = req.getParameter("redirect");
 		if ((redirect != null) && !"".equals(redirect.trim())) {
-			resp.sendRedirect("ui/index.html");
+			String git = req.getParameter("git");
+			if ((git != null) && !"".equals(git.trim())) {
+				resp.sendRedirect("index.html?perspective=workspace&git=" + git);
+			} else {
+				resp.sendRedirect("ui/index.html");
+			}
 		} else {
 			resp.getWriter().println(cookieValue);
 			resp.getWriter().flush();
