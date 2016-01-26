@@ -180,6 +180,27 @@ The IDE part can be run directly via Eclipse. This is useful when testing new fe
 
 4. Login with user `dirigible` and password `dirigible` which are set by default in the custom buildpack used above.
 
+#### Docker
+
+##### Prerequisites
+
+- [Install Docker](https://docs.docker.com/engine/installation/)
+
+##### Steps
+      
+1. Pull the already built container from Quay.io
+
+        docker pull quay.io/delchevn/dirigible223
+        
+2. Start the container
+
+        docker run -p 8888:8080 -p quay.io/delchevn/dirigible223
+
+3. Open a web browser and go to:
+
+        http://[docker container ip]:8888/
+        
+4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/docker/Dockerfile)
 
 ## Additional Information
 
