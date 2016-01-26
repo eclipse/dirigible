@@ -303,11 +303,13 @@
 			<url-pattern>/services/groovy-secured/*</url-pattern>
 			<url-pattern>/services/wiki-secured/*</url-pattern>
 			<url-pattern>/services/web/wiki-secured/*</url-pattern>
+			<url-pattern>/services/mobile-secured/*</url-pattern>
 			<url-pattern>/services/ui/index.html</url-pattern>
 			<url-pattern>/services/js-sandbox/*</url-pattern>
 			<url-pattern>/services/groovy-sandbox/*</url-pattern>
 			<url-pattern>/services/web-sandbox/*</url-pattern>
 			<url-pattern>/services/wiki-sandbox/*</url-pattern>
+			<url-pattern>/services/mobile-sandbox/*</url-pattern>
 			<url-pattern>/services/acclog/*</url-pattern>
 			<url-pattern>/services/memory</url-pattern>
 			<url-pattern>/services/js-debug/*</url-pattern>
