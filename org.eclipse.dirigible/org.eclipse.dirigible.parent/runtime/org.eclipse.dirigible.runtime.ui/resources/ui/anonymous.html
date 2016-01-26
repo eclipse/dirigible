@@ -40,7 +40,11 @@
 				        v = s[1] && decodeURIComponent(s[1]);
 				    (k in parameters) ? parameters[k].push(v) : parameters[k] = [v]
 				});
-				document.getElementById("git").value = parameters["git"][0];
+				var gitParam = parameters["git"][0];
+				if (gitParam !== null) {
+					gitParam = gitParam.replace(/\//g, "~");
+					document.getElementById("git").value = gitParam;
+				}
 			});
 		</script>
 		<script>
