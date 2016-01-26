@@ -59,6 +59,7 @@
 		<module>org.eclipse.dirigible.runtime.core.test</module>
 		<module>org.eclipse.dirigible.runtime.javascript</module>
 		<module>org.eclipse.dirigible.runtime.javascript.test</module>
+		<module>org.eclipse.dirigible.runtime.mobile</module>
 		<module>org.eclipse.dirigible.runtime.command</module>
 		<!-- <module>org.eclipse.dirigible.runtime.command.test</module> -->
 		<module>org.eclipse.dirigible.runtime.security</module>

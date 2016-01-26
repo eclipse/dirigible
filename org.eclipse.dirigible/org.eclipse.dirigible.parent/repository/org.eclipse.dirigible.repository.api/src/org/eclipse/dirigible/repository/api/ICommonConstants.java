@@ -62,6 +62,7 @@ public interface ICommonConstants {
 		public static final String JOB = "job"; //$NON-NLS-1$
 		public static final String WEB = "web"; //$NON-NLS-1$
 		public static final String WIKI = "wiki"; //$NON-NLS-1$
+		public static final String MOBILE = "mobile"; //$NON-NLS-1$
 		public static final String SQL = "sql"; //$NON-NLS-1$
 	}
 
@@ -74,6 +75,7 @@ public interface ICommonConstants {
 		public static final String JOB = "job"; //$NON-NLS-1$
 		public static final String WEB = "web"; //$NON-NLS-1$
 		public static final String WIKI = "wiki"; //$NON-NLS-1$
+		public static final String MOBILE = "mobile"; //$NON-NLS-1$
 		public static final String SQL = "sql"; //$NON-NLS-1$
 	}
 
