@@ -104,6 +104,11 @@ defaultControllers.controller('WebWikiCtrl', function($scope, $resource) {
 	  $scope.restService = $resource('../wiki');
 });
 
+defaultControllers.controller('MobileCtrl', function($scope, $resource) {
+	  $scope.objectContent = true;
+	  $scope.restService = $resource('../mobile');
+});
+
 defaultControllers.controller('JavaScriptCtrl', function($scope, $resource) {
   $scope.restService = $resource('../scripting/javascript');
 });
