@@ -192,7 +192,7 @@ menuControllers.controller('HomeCtrl', ['$scope',
       title: "Wiki",
       description: "Browse Applications Documentation"
     }, {
-        image: "images/wiki-content.png",
+        image: "images/mobile-applications.png",
         path: "#/mobile",
         title: "Mobile",
         description: "Native Mobile Applications"
