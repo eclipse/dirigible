@@ -63,4 +63,14 @@
         </filter>
      </extension>
         
+     <extension
+           id="WorkspaceServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/workspace"
+              class="org.eclipse.dirigible.runtime.registry.WorkspaceServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+        
 </plugin>

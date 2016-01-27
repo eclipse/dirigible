@@ -2,6 +2,9 @@
     "name": "IDE",
     "link": "../index.html"
 },{
+    "name": "Workspace",
+    "link": "#/workspace"
+},{
     "name": "Content",
     "subMenu": [{
         "name": "Show Content",

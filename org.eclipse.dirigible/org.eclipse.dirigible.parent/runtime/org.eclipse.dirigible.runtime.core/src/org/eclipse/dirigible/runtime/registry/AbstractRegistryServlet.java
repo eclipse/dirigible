@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.registry;
@@ -50,29 +49,27 @@ public abstract class AbstractRegistryServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		initRepository(request);
 		super.service(request, response);
-		
+
 	}
 
 	private IRepository initRepository(HttpServletRequest request) throws ServletException {
 		try {
-			final IRepository repository = RepositoryFacade.getInstance()
-					.getRepository(request);
+			final IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 			if (request != null) {
 				request.getSession().setAttribute(REPOSITORY_ATTRIBUTE, repository);
 			}
 			return repository;
-//			getServletContext().setAttribute(REPOSITORY_ATTRIBUTE, repository);
+			// getServletContext().setAttribute(REPOSITORY_ATTRIBUTE, repository);
 		} catch (Exception ex) {
 			throw new ServletException("Could not initialize Repository", ex);
 		}
 	}
 
-	protected IRepository getRepository(HttpServletRequest request) throws IOException {	
-		IRepository repository = null; 
+	protected IRepository getRepository(HttpServletRequest request) throws IOException {
+		IRepository repository = null;
 		if (request != null) {
 			repository = (IRepository) request.getSession().getAttribute(REPOSITORY_ATTRIBUTE);
 		}
@@ -87,14 +84,16 @@ public abstract class AbstractRegistryServlet extends HttpServlet {
 		return repository;
 	}
 
-	protected String extractRepositoryPath(HttpServletRequest request)
-			throws IllegalArgumentException {
+	protected String extractRepositoryPath(HttpServletRequest request) throws IllegalArgumentException {
 		String requestPath = PathUtils.extractPath(request);
-		return IRepositoryPaths.REGISTRY_DEPLOY_PATH + requestPath;
+		return getRepositoryPathPrefix(request) + requestPath;
 	}
 
-	protected IEntity getEntity(String repositoryPath, HttpServletRequest request)
-			throws FileNotFoundException, IOException {
+	protected String getRepositoryPathPrefix(HttpServletRequest req) {
+		return IRepositoryPaths.REGISTRY_DEPLOY_PATH;
+	}
+
+	protected IEntity getEntity(String repositoryPath, HttpServletRequest request) throws FileNotFoundException, IOException {
 		IEntity result = null;
 		final IRepository repository = getRepository(request);
 		final IResource resource = repository.getResource(repositoryPath);

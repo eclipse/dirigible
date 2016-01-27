@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.registry;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
@@ -30,8 +28,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 public class RepositoryServlet extends RegistryServlet {
 
-	private static final String REQUEST_PROCESSING_FAILED_S = Messages
-			.getString("RepositoryServlet.REQUEST_PROCESSING_FAILED_S"); //$NON-NLS-1$
+	private static final String REQUEST_PROCESSING_FAILED_S = Messages.getString("RepositoryServlet.REQUEST_PROCESSING_FAILED_S"); //$NON-NLS-1$
 
 	private static final String THERE_IS_AN_EXISTING_COLLECTION_AT_THE_SAME_LOCATION = Messages
 			.getString("RepositoryServlet.THERE_IS_AN_EXISTING_COLLECTION_AT_THE_SAME_LOCATION"); //$NON-NLS-1$
@@ -43,21 +40,24 @@ public class RepositoryServlet extends RegistryServlet {
 
 	private static final Logger logger = Logger.getLogger(RepositoryServlet.class);
 
-	protected String extractRepositoryPath(HttpServletRequest request)
-			throws IllegalArgumentException {
-		String requestPath = PathUtils.extractPath(request);
-		return requestPath;
+	// @Override
+	// protected String extractRepositoryPath(HttpServletRequest request) throws IllegalArgumentException {
+	// String requestPath = PathUtils.extractPath(request);
+	// return requestPath;
+	// }
+
+	@Override
+	protected String getRepositoryPathPrefix(HttpServletRequest req) {
+		return "";
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.doGet(request, response);
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String repositoryPath = null;
 		final OutputStream out = response.getOutputStream();
@@ -80,8 +80,7 @@ public class RepositoryServlet extends RegistryServlet {
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST,
 							THERE_IS_AN_EXISTING_RESOURCE_AT_THE_SAME_LOCATION_USE_PUT_METHOD_FOR_UPDATE);
 				} else if (entity instanceof ICollection) {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-							THERE_IS_AN_EXISTING_COLLECTION_AT_THE_SAME_LOCATION);
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, THERE_IS_AN_EXISTING_COLLECTION_AT_THE_SAME_LOCATION);
 				}
 			}
 		} catch (IllegalArgumentException ex) {
@@ -98,8 +97,7 @@ public class RepositoryServlet extends RegistryServlet {
 	}
 
 	@Override
-	protected void doPut(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String repositoryPath = null;
 		final OutputStream out = response.getOutputStream();
@@ -116,8 +114,7 @@ public class RepositoryServlet extends RegistryServlet {
 					IResource resource = (IResource) entity;
 					resource.setContent(data);
 				} else {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-							THERE_IS_AN_EXISTING_COLLECTION_AT_THE_SAME_LOCATION);
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, THERE_IS_AN_EXISTING_COLLECTION_AT_THE_SAME_LOCATION);
 				}
 			}
 		} catch (IllegalArgumentException ex) {
@@ -133,8 +130,7 @@ public class RepositoryServlet extends RegistryServlet {
 	}
 
 	@Override
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String repositoryPath = null;
 		final OutputStream out = response.getOutputStream();
 		try {

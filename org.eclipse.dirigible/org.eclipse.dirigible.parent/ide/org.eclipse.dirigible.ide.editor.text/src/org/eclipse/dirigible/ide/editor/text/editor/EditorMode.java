@@ -25,7 +25,7 @@ public enum EditorMode {
 	TXT("text", "txt"), //$NON-NLS-1$ //$NON-NLS-2$
 	RUBY("ruby", "rb"), //$NON-NLS-1$ //$NON-NLS-2$
 	JAVA("java", "java"), //$NON-NLS-1$ //$NON-NLS-2$
-	GROOVY("groovy", "groovy", "gvy", "gy", "gsh"), PROPERTIES("properties", "properties"); //$NON-NLS-6$ //$NON-NLS-7$
+	GROOVY("groovy", "groovy", "gvy", "gy", "gsh"), PROPERTIES("properties", "properties");
 
 	private static final EditorMode DEFAULT_MODE = TXT;
 	private String name;

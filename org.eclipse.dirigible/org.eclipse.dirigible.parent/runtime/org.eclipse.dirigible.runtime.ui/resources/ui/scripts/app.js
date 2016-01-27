@@ -1,5 +1,5 @@
-var fileApp = angular.module('fileApp', ['ngRoute', 'defaultServices',
-  'menuControllers', 'defaultControllers', 'angularFileUpload'
+var fileApp = angular.module('fileApp', ['ngRoute', 'defaultServices', 'workspaceServices',
+  'menuControllers', 'defaultControllers', 'workspaceControllers', 'angularFileUpload'
 ]);
 
 fileApp.config(function($routeProvider) {
@@ -7,9 +7,12 @@ fileApp.config(function($routeProvider) {
     .when('/home', {
       controller: 'HomeCtrl',
       templateUrl: 'templates/home/home.html'
+    }).when('/workspace', {
+      controller: 'WorkspaceCtrl',
+      templateUrl: 'templates/workspace/workspace.html'
     }).when('/content', {
-      controller: 'ContentCtrl',
-      templateUrl: 'templates/content/content.html'
+        controller: 'ContentCtrl',
+        templateUrl: 'templates/content/content.html'
     }).when('/content/import', {
       controller: 'ImportCtrl',
       templateUrl: 'templates/content/import/import.html'
@@ -177,10 +180,15 @@ menuControllers.controller('HomeCtrl', ['$scope',
       description: "Development Toolkit",
       newTab: true
     }, {
-      image: "images/content.png",
-      path: "#/content",
-      title: "Repository",
-      description: "Browse Artifacts in Repository"
+      image: "images/workspace.png",
+      path: "#/workspace",
+      title: "Workspace",
+      description: "Lightweight Workspace Manager"
+    }, {
+        image: "images/content.png",
+        path: "#/content",
+        title: "Repository",
+        description: "Browse Artifacts in Repository"
     }, {
       image: "images/web-content.png",
       path: "#/web/content",

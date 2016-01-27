@@ -27,5 +27,7 @@ exports.printError = function(httpCode, errCode, errMessage, errContext) {
     response.setHeader("Content-Type", "application/json");
     response.getWriter().print(JSON.stringify(body));
     out.println(JSON.stringify(body));
-    out.println(JSON.stringify(errContext));
+    if (errContext !== null) {
+    	out.println(JSON.stringify(errContext));
+    }
 }

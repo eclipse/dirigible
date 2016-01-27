@@ -1,0 +1,171 @@
+
+		<style type="text/css" media="screen">
+		  body {
+		      overflow: hidden;
+		  }
+
+		  #editor {
+		      margin: 0;
+		      position: absolute;
+		      top: 0;
+		      bottom: 0;
+		      left: 0;
+		      right: 0;
+		  }
+
+		</style>
+		<script src="lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/ace/ext-language_tools.js" type="text/javascript"></script>
+
+
+		<script type="text/javascript">
+			
+			var http;
+			var path;
+		
+			var processChangeEvents = true;
+			var editor = ace.edit("editor");
+			var aceRange = ace.require('ace/range').Range;
+			var beforeSaveText = "";
+			
+			var dirtyContent = false;
+			
+		    editor.setOptions({
+		        enableBasicAutocompletion: true,
+		        enableSnippets: true,
+		        enableLiveAutocompletion: false
+		    });
+
+			editor.on("change", editorContentsChanged);
+			 //commands
+			editor.commands.addCommand({
+				name: 'save',
+				bindKey: {
+					win: 'Ctrl-S',
+					mac: 'Command-S'
+				},
+				exec: function(e) {
+					beforeSaveText = e.getSession().getValue();
+					/* saveCalled(); */
+					//alert("Save called.");
+					
+					debugger
+					
+					if (http) {
+					http({
+			        	  method: 'PUT',
+			        	  url: path,
+			        	  data: beforeSaveText
+			        	}).then(function successCallback(response) {
+			        		console.log("OK");
+			        	  }, function errorCallback(response) {
+			        		  console.log("Error saving " + path + "\n" + response);
+			        	  });
+					}
+					
+				},
+				readOnly: true // false if this command should not apply in readOnly mode
+			});
+
+			function setMode(mode) {
+				editor.getSession().setMode("ace/mode/" + mode);
+			}
+
+			function setText(text, mode) {
+				beforeSaveText = text;
+				setTimeout(function() {
+					try {
+						editor.getSession().setValue(text, -1);
+					} catch (e) {
+						console(e);
+					}
+					editor.getSession().setMode("ace/mode/" + mode);
+					editor.getSession().getUndoManager().reset();
+					
+					/* setReadOnly(readOnlyStatus);
+					setBreakpointsEnabled(breakpointsenabledStatus);
+					
+					editor.gotoLine(row, 0, true); */
+				}, 500);
+			}
+
+			function getText() {
+				return editor.getValue();
+			}
+
+			function editorContentsChanged(e, ed) {
+				/* updateDataOnDocChange.call(ed.getSession(), e);
+				dirty = (ed.getSession().getValue() !== beforeSaveText);
+				if (ed.getSession().getValue() !== beforeSaveText) {
+					if (!dirtyContent) {
+						dirtyChanged(true);
+						editor.getSession().clearBreakpoints();
+					}
+				} else {
+					dirtyChanged(false);
+				} */
+				
+				// alert("editorContentsChanged");
+			}
+
+			
+
+			// Do we really need this?
+			function setDirty(dirtyStatus) {
+				dirtyContent = dirtyStatus;
+			}
+
+			
+			
+		</script>
+		
+		
+
+
+<div ng-controller="WorkspaceListCtrl">
+  <div class="row" ng-hide="mainError">
+    <div class="col-lg-6">
+      <div class="input-group list-group">
+        <input type="text" class="form-control" placeholder="Search for file" ng-model="search">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" ng-click="search = undefined">Clear</button>
+        </span>
+      </div>
+      <div class="" ng-show="searchError && search">
+        <div class="alert alert-danger"> <strong>Oh snap!</strong>
+          {{ searchError.status }} - {{ searchError.data }}
+        </div>
+      </div>
+      <ol ng-show="paths" class="breadcrumb">
+        <li ng-repeat="path in paths">
+          <a href="" ng-click="crumbsChanged(path)">{{ path.name }}</a>
+        </li>
+      </ol>
+      <div class="list-group">
+        <div class="list-group-item" ng-repeat="single in selected.files" ng-click="change(single)">
+          <span class="badge-right glyphicon glyphicon-{{ single.folder ? 'folder-close' : 'file' }}"></span>
+          <span ng-show="single.files" class="badge">{{ single.files.length }}</span>
+          <span ng-hide="single.folder" class="badge badge-clean">
+            <a ng-href="{{single.path}}" title="Open location in new tab" target='_blank'>
+              <img ng-src="images/open.png"/>
+            </a>
+          </span>
+          <span ng-hide="single.folder" class="badge badge-clean">
+            <img title="Copy location" ng-src="images/copy.png" ng-click="copyFile(single)"/>
+          </span>
+          {{ single.name }}
+        </div>
+        <div class="alert alert-warning" role="alert" ng-show="!selected.files || selected.files.length === 0">No content.</div>
+      </div>
+    </div>
+    <div class="col-lg-6" style="height: 400px;">
+      <!--  iframe seamless ng-src="{{ securedUrl(iframeSrc) }}"></iframe -->
+      <pre id="editor"></pre>
+    </div>
+  </div>
+  <div class="row" ng-show="mainError">
+    <div class="alert alert-danger"> <strong>Oh snap!</strong>
+      {{ mainError.status }} - {{ mainError.data }}
+    </div>
+  </div>
+</div>
