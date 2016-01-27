@@ -122,13 +122,13 @@
         <div class="list-group-item" ng-repeat="single in selected.files" ng-click="change(single)">
           <span class="badge-right glyphicon glyphicon-{{ single.folder ? 'folder-close' : 'file' }}"></span>
           <span ng-show="single.files" class="badge">{{ single.files.length }}</span>
-          <span ng-hide="single.folder" class="badge badge-clean">
-            <a ng-href="{{single.path}}" title="Open location in new tab" target='_blank'>
-              <img ng-src="images/open.png"/>
-            </a>
-          </span>
-          <span ng-hide="single.folder" class="badge badge-clean">
-            <img title="Copy location" ng-src="images/copy.png" ng-click="copyFile(single)"/>
+          <a ng-href="{{single.path}}" title="Open location in new tab" target='_blank' style="float: right;">
+          	<span ng-hide="single.folder" class="badge badge-clean glyphicon glyphicon-open-file" style="color:initial !important;font-size: 1.6rem;">
+              <!-- <img ng-src="images/open.png"/> -->
+          	</span>
+          </a>
+          <span ng-hide="single.folder" class="badge badge-clean glyphicon glyphicon-copy" style="color:initial !important;font-size: 1.6rem;" title="Copy location" ng-click="copyFile(single)">
+            <!-- <img title="Copy location" ng-src="images/copy.png" ng-click="copyFile(single)"/> -->
           </span>
           {{ single.name }}
         </div>
