@@ -1,126 +1,107 @@
+<script type="text/javascript">
+	
+	var http;
+	var path;
 
+	var processChangeEvents = true;
+	var editor = ace.edit("editor");
+	var aceRange = ace.require('ace/range').Range;
+	var beforeSaveText = "";
+	
+	var dirtyContent = false;
+	
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false
+    });
+
+	editor.on("change", editorContentsChanged);
+	 //commands
+	editor.commands.addCommand({
+		name: 'save',
+		bindKey: {
+			win: 'Ctrl-S',
+			mac: 'Command-S'
+		},
+		exec: function(e) {
+			beforeSaveText = e.getSession().getValue();
+			/* saveCalled(); */
+			//alert("Save called.");
+			
+			debugger
+			
+			if (http) {
+			http({
+	        	  method: 'PUT',
+	        	  url: path,
+	        	  data: beforeSaveText
+	        	}).then(function successCallback(response) {
+	        		console.log("OK");
+	        	  }, function errorCallback(response) {
+	        		  console.log("Error saving " + path + "\n" + response);
+	        	  });
+			}
+			
+		},
+		readOnly: true // false if this command should not apply in readOnly mode
+	});
+
+	function setMode(mode) {
+		editor.getSession().setMode("ace/mode/" + mode);
+	}
+
+	function setText(text, mode) {
+		beforeSaveText = text;
+		setTimeout(function() {
+			try {
+				editor.getSession().setValue(text, -1);
+			} catch (e) {
+				console(e);
+			}
+			editor.getSession().setMode("ace/mode/" + mode);
+			editor.getSession().getUndoManager().reset();
+			
+			/* setReadOnly(readOnlyStatus);
+			setBreakpointsEnabled(breakpointsenabledStatus);
+			
+			editor.gotoLine(row, 0, true); */
+		}, 500);
+	}
+
+	function getText() {
+		return editor.getValue();
+	}
+
+	function editorContentsChanged(e, ed) {
+		/* updateDataOnDocChange.call(ed.getSession(), e);
+		dirty = (ed.getSession().getValue() !== beforeSaveText);
+		if (ed.getSession().getValue() !== beforeSaveText) {
+			if (!dirtyContent) {
+				dirtyChanged(true);
+				editor.getSession().clearBreakpoints();
+			}
+		} else {
+			dirtyChanged(false);
+		} */
 		
+		// alert("editorContentsChanged");
+	}
 
+	
 
-		<script type="text/javascript">
-			
-			var http;
-			var path;
-		
-			var processChangeEvents = true;
-			var editor = ace.edit("editor");
-			var aceRange = ace.require('ace/range').Range;
-			var beforeSaveText = "";
-			
-			var dirtyContent = false;
-			
-		    editor.setOptions({
-		        enableBasicAutocompletion: true,
-		        enableSnippets: true,
-		        enableLiveAutocompletion: false
-		    });
+	// Do we really need this?
+	function setDirty(dirtyStatus) {
+		dirtyContent = dirtyStatus;
+	}
 
-			editor.on("change", editorContentsChanged);
-			 //commands
-			editor.commands.addCommand({
-				name: 'save',
-				bindKey: {
-					win: 'Ctrl-S',
-					mac: 'Command-S'
-				},
-				exec: function(e) {
-					beforeSaveText = e.getSession().getValue();
-					/* saveCalled(); */
-					//alert("Save called.");
-					
-					debugger
-					
-					if (http) {
-						http({
-				        	  method: 'PUT',
-				        	  url: path,
-				        	  data: beforeSaveText
-				        	}).then(function successCallback(response) {
-				        		console.log("OK");
-				        		var publishPath = path;
-				        		publishPath = publishPath.substring(publishPath.indexOf('/') + 1);
-				        		publishPath = publishPath.substring(publishPath.indexOf('/') + 1);
-				        		publishPath = "/publish/" + publishPath;
-				        		http({
-						        	  method: 'POST',
-						        	  url: publishPath
-						        	}).then(function successCallback(response) {
-						        		console.log("OK");
-						        	  }, function errorCallback(response) {
-						        		  console.log("Error publishing " + publishPath + "\n" + response);
-						        	  });
-				        	  }, function errorCallback(response) {
-				        		  console.log("Error saving " + path + "\n" + response);
-				        	  });
-					}
-					
-				},
-				readOnly: true // false if this command should not apply in readOnly mode
-			});
+	
+	
+</script>
 
-			function setMode(mode) {
-				editor.getSession().setMode("ace/mode/" + mode);
-			}
-
-			function setText(text, mode) {
-				beforeSaveText = text;
-				setTimeout(function() {
-					try {
-						editor.getSession().setValue(text, -1);
-					} catch (e) {
-						console(e);
-					}
-					editor.getSession().setMode("ace/mode/" + mode);
-					editor.getSession().getUndoManager().reset();
-					
-					/* setReadOnly(readOnlyStatus);
-					setBreakpointsEnabled(breakpointsenabledStatus);
-					
-					editor.gotoLine(row, 0, true); */
-				}, 500);
-			}
-
-			function getText() {
-				return editor.getValue();
-			}
-
-			function editorContentsChanged(e, ed) {
-				/* updateDataOnDocChange.call(ed.getSession(), e);
-				dirty = (ed.getSession().getValue() !== beforeSaveText);
-				if (ed.getSession().getValue() !== beforeSaveText) {
-					if (!dirtyContent) {
-						dirtyChanged(true);
-						editor.getSession().clearBreakpoints();
-					}
-				} else {
-					dirtyChanged(false);
-				} */
-				
-				// alert("editorContentsChanged");
-			}
-
-			
-
-			// Do we really need this?
-			function setDirty(dirtyStatus) {
-				dirtyContent = dirtyStatus;
-			}
-
-			
-			
-		</script>
-		
-		
-
-
-<div ng-controller="WorkspaceListCtrl">
+<div ng-controller="WorkspaceListCtrl" class="container-fluid">
   <div class="row" ng-hide="mainError">
-    <div class="col-lg-6">
+    <div class="col-xs-18 collapse in" id="left">
       <div class="input-group list-group">
         <input type="text" class="form-control" placeholder="Search for file" ng-model="search">
         <span class="input-group-btn">
@@ -154,9 +135,18 @@
         <div class="alert alert-warning" role="alert" ng-show="!selected.files || selected.files.length === 0">No content.</div>
       </div>
     </div>
-    <div class="col-lg-6" style="height: 400px;">
-      <!--  iframe seamless ng-src="{{ securedUrl(iframeSrc) }}"></iframe -->
-      <pre id="editor"></pre>
+    <div class="col-xs-18">
+   	  	<button class="btn" data-toggle="collapse" data-target="#left" style="position: relative; top: 0px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;" title="Toggle workspace navigation">
+   	  		<span class="glyphicon glyphicon-menu-up"></span>
+   	  	</button>
+    	<div>
+	      	<!--  iframe seamless ng-src="{{ securedUrl(iframeSrc) }}"></iframe -->
+			<div id="editor-toolbar" style="background-color: #e8e8e8;padding: 1.3rem;">
+				<button type="button" class="btn btn-success btn-s" style="font-family: Helvetica"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+				<button type="button" class="btn btn-info btn-s"><span class="glyphicon glyphicon-play-circle"></span> Publish</button>
+			</div>
+      		<div id="editor"></div>
+      	</div>
     </div>
   </div>
   <div class="row" ng-show="mainError">
