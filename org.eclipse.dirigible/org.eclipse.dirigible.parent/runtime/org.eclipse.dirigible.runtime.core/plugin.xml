@@ -72,5 +72,15 @@
               load-on-startup="true">
         </servlet>
      </extension>
+     
+     <extension
+           id="WorkspacePublishServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/publish"
+              class="org.eclipse.dirigible.runtime.registry.WorkspacePublishServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
         
 </plugin>
