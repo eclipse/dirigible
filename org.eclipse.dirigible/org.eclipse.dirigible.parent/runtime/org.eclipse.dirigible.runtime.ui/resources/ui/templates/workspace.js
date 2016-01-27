@@ -18,6 +18,18 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
     $scope.mainError = undefined;
     $scope.searchError = undefined;
     $scope.search = undefined;
+    
+    $scope.mapping = {
+			"javascript": ["js"],
+			"sql": ["sql"],
+			"json": ["json", "odata", "ws", "table", "view", "entity", "menu", "access", "extensionpoint", "extension", "command", "flow", "job"],
+			"xml": ["xml", "xsd", "wsdl", "xsl", "xslt", "routes"],
+			"html": ["html"],
+			"css": ["css"],
+			"markdown": ["markdown", "mdown", "mkdn", "md", "mkd", "mdwn"],
+			"textile": ["textile"],
+			"text": ["txt"]
+		};
 
     if ($scope.objectContent) {
       $scope.restService.get({}, function(data) {
@@ -39,7 +51,7 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
         	      return data;
         	  }]
         	}).then(function successCallback(response) {
-        		setText(response.data, "html");
+        		setText(response.data, $scope.getAceModule(newData.path));
         		http = $http;
         		path = newData.path;
         	  }, function errorCallback(response) {
@@ -51,6 +63,24 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
         $scope.selected = newData;
         $scope.paths.push(newData);
       }
+    };
+    
+    $scope.getAceModule = function(resourcePath){
+		var m = resourcePath.match(/(.*)[\/\\]([^\/\\]+)\.(\w+)$/);
+		var ext;
+		if(m && m.length>3 && m[3])
+			ext = m[3];
+		else
+			ext = "txt";
+		var modules = Object.keys($scope.mapping);
+		var module;
+		for(var i in modules){
+			if($scope.mapping[modules[i]].indexOf(ext)>-1){
+				module = modules[i];
+				return module;
+			}
+		} 
+		return "text";//default
     };
 
     $scope.copyFile = function(file) {
