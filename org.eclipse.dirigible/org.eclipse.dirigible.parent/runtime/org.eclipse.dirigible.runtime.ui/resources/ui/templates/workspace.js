@@ -20,15 +20,16 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
     $scope.search = undefined;
     
     $scope.mapping = {
-			"javascript": ["js"],
-			"sql": ["sql"],
-			"json": ["json", "odata", "ws", "table", "view", "entity", "menu", "access", "extensionpoint", "extension", "command", "flow", "job"],
-			"xml": ["xml", "xsd", "wsdl", "xsl", "xslt", "routes"],
-			"html": ["html"],
-			"css": ["css"],
-			"markdown": ["markdown", "mdown", "mkdn", "md", "mkd", "mdwn"],
-			"textile": ["textile"],
-			"text": ["txt"]
+			"application/javascript": ["js"],
+			//"sql": ["sql"],
+			"application/json": ["json", "odata", "ws", "table", "view", "entity", "menu", "access", "extensionpoint", "extension", "command", "flow", "job"],
+			"application/xml": ["xml", "xsd", "wsdl", "xsl", "xslt", "routes"],
+			"text/html": ["html"],
+			"text/x-java-source": ["java"],
+			"text/css": ["css"],
+			//"markdown": ["markdown", "mdown", "mkdn", "md", "mkd", "mdwn"],
+			//"textile": ["textile"],
+			"text/plain": ["txt"]
 		};
 
     if ($scope.objectContent) {
@@ -51,7 +52,7 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
         	      return data;
         	  }]
         	}).then(function successCallback(response) {
-        		setText(response.data, $scope.getAceModule(newData.path));
+        		setText(response.data, $scope.getModeModule(newData.path));
         		http = $http;
         		path = newData.path;
         	  }, function errorCallback(response) {
@@ -65,7 +66,7 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
       }
     };
     
-    $scope.getAceModule = function(resourcePath){
+    $scope.getModeModule = function(resourcePath){
 		var m = resourcePath.match(/(.*)[\/\\]([^\/\\]+)\.(\w+)$/);
 		var ext;
 		if(m && m.length>3 && m[3])

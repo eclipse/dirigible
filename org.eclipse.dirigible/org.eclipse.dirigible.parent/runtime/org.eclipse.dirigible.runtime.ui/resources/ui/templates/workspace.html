@@ -1,104 +1,106 @@
-<script type="text/javascript">
-	
+
+<script>
+
 	var http;
 	var path;
 
-	var processChangeEvents = true;
-	var editor = ace.edit("editor");
-	var aceRange = ace.require('ace/range').Range;
-	var beforeSaveText = "";
+	// this needs to be in the global scope
+	editor = null;
 	
-	var dirtyContent = false;
+	function createEditor(content, contentType) {
+		require.config({waitSeconds: 0});
+	    require(["orion/code_edit/built-codeEdit", "orion/orion/keyBinding"], function(widget, mKeyBinding) {
+	        var codeEdit = new widget();
+	        codeEdit.create({parent: "editor", contentType: contentType, contents: content})
+	            .then(function(editorViewer) {
+	                editor = editorViewer.editor;
+	                var savedText = content;
+	                var isDirty = false;
+	                editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("s", true), "save");
+	                editor.addEventListener("DirtyChanged", function(evt) {
+	                    var newText = editor.getText();
+	                    if (savedText !== newText && !isDirty) {
+	                        isDirty = true;
+	                        dirtyChanged(true);
+	                    } else if (savedText === newText && isDirty) {
+	                        isDirty = false;
+	                        dirtyChanged(false);
+	                    }
+	                });
+	                editorViewer.editor.getTextView().setAction("save", function(){ //$NON-NLS-0$
+	                    savedText = editor.getText();
+	                    isDirty = false;
+	                    saveCalled();
+	                    return true;
+	                });
+	                
+	                
+	                // explicitly set the read only mode for empty files
+	                editor.getTextView()._readonly = false;
+	                
+	                document.getElementById("progressMessageDiv").textContent = "Plugins loaded!";
+	            	setupOnce(editorViewer);
+	            });
+	    });
+	}
 	
-    editor.setOptions({
-        enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: false
-    });
-
-	editor.on("change", editorContentsChanged);
-	 //commands
-	editor.commands.addCommand({
-		name: 'save',
-		bindKey: {
-			win: 'Ctrl-S',
-			mac: 'Command-S'
-		},
-		exec: function(e) {
-			beforeSaveText = e.getSession().getValue();
-			/* saveCalled(); */
-			//alert("Save called.");
-			
-			debugger
-			
-			if (http) {
+	function saveCalled() {
+		
+		debugger
+		
+		if (http) {
 			http({
 	        	  method: 'PUT',
 	        	  url: path,
-	        	  data: beforeSaveText
+	        	  data: editor.getText()
 	        	}).then(function successCallback(response) {
-	        		console.log("OK");
+	        		console.log(path + " saved successfully");
 	        	  }, function errorCallback(response) {
 	        		  console.log("Error saving " + path + "\n" + response);
 	        	  });
-			}
-			
-		},
-		readOnly: true // false if this command should not apply in readOnly mode
-	});
-
-	function setMode(mode) {
-		editor.getSession().setMode("ace/mode/" + mode);
+		}
 	}
 
-	function setText(text, mode) {
-		beforeSaveText = text;
-		setTimeout(function() {
-			try {
-				editor.getSession().setValue(text, -1);
-			} catch (e) {
-				console(e);
-			}
-			editor.getSession().setMode("ace/mode/" + mode);
-			editor.getSession().getUndoManager().reset();
-			
-			/* setReadOnly(readOnlyStatus);
-			setBreakpointsEnabled(breakpointsenabledStatus);
-			
-			editor.gotoLine(row, 0, true); */
-		}, 500);
-	}
-
-	function getText() {
-		return editor.getValue();
-	}
-
-	function editorContentsChanged(e, ed) {
-		/* updateDataOnDocChange.call(ed.getSession(), e);
-		dirty = (ed.getSession().getValue() !== beforeSaveText);
-		if (ed.getSession().getValue() !== beforeSaveText) {
-			if (!dirtyContent) {
-				dirtyChanged(true);
-				editor.getSession().clearBreakpoints();
-			}
-		} else {
-			dirtyChanged(false);
-		} */
+	function publishCalled() {
 		
-		// alert("editorContentsChanged");
+		debugger
+		
+		if (http) {
+			http({
+	        	  method: 'PUT',
+	        	  url: path,
+	        	  data: editor.getText()
+	        	}).then(function successCallback(response) {
+	        		console.log(path + " saved successfully");
+	        		var publishPath = path;
+	    			publishPath = publishPath.substring(publishPath.indexOf('/') + 1);
+	    			publishPath = publishPath.substring(publishPath.indexOf('/') + 1);
+	    			publishPath = "/publish/" + publishPath;
+	    			http({
+	    	        	  method: 'POST',
+	    	        	  url: publishPath
+	    	        	}).then(function successCallback(response) {
+	    	        		console.log(publishPath + " published successfully");
+	    	        	  }, function errorCallback(response) {
+	    	        		  console.log("Error publishing " + publishPath + "\n" + response);
+	    	        	  });
+	        	  }, function errorCallback(response) {
+	        		  console.log("Error saving " + path + "\n" + response);
+	        	  });
+		}
 	}
-
 	
-
-	// Do we really need this?
-	function setDirty(dirtyStatus) {
-		dirtyContent = dirtyStatus;
+	function getText() {
+	    return editor.getText();
 	}
-
 	
+	function setText(text, mode) {
+	    createEditor(text, mode);
+	}
 	
 </script>
-
+		
+ 
 <div ng-controller="WorkspaceListCtrl" class="container-fluid">
   <div class="row" ng-hide="mainError">
     <div class="col-xs-18 collapse in" id="left">
@@ -142,10 +144,10 @@
     	<div>
 	      	<!--  iframe seamless ng-src="{{ securedUrl(iframeSrc) }}"></iframe -->
 			<div id="editor-toolbar" style="background-color: #e8e8e8;padding: 1.3rem;">
-				<button type="button" class="btn btn-success btn-s" style="font-family: Helvetica"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
-				<button type="button" class="btn btn-info btn-s"><span class="glyphicon glyphicon-play-circle"></span> Publish</button>
+				<button type="button" class="btn btn-success btn-s" style="font-family: Helvetica" onCLick="saveCalled();"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+				<button type="button" class="btn btn-info btn-s" onClick="publishCalled();"><span class="glyphicon glyphicon-play-circle"></span> Publish</button>
 			</div>
-      		<div id="editor"></div>
+      		<div id="editor" style="height: 400px"></div>
       	</div>
     </div>
   </div>
