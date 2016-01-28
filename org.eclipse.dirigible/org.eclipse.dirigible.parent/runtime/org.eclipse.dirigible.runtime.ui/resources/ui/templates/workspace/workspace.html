@@ -36,10 +36,9 @@
       		</ol>
       		<div class="list-group">
         		<div class="list-group-item" ng-repeat="single in selected.files" ng-click="change(single)">
-          			<span class="badge-right fa fa-{{ single.folder ? (single.files?'folder':'folder-o') : 'file-code-o' }}"></span>
+          			<span class="fa fa-{{ single.folder ? (single.files?'folder':'folder-o') : 'file-code-o' }}"></span>
+  		    		{{ single.name }}
           			<span ng-show="single.files" class="badge">{{ single.files.length }}</span>
-          			<a ng-href="{{single.path}}" title="Open location in new tab" target='_blank' style="float: right;"><span ng-hide="single.folder" class="badge badge-clean glyphicon glyphicon-open-file" style="color:initial !important;font-size: 1.6rem;"></span></a>
-  		    		<span ng-hide="single.folder" class="badge badge-clean glyphicon glyphicon-copy" style="color:initial !important;font-size: 1.6rem;" title="Copy location" ng-click="copyFile(single)"></span>{{ single.name }}
         		</div>
         		<div class="alert alert-warning" role="alert" ng-show="!selected.files || selected.files.length === 0">No content.</div>
       		</div>
