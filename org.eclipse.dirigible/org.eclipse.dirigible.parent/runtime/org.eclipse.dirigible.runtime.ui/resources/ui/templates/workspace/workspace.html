@@ -46,8 +46,8 @@
     	<div class="col-xs-18" ng-show="editor != null">
 	    	<div>
 	    		<div id="editor-toolbar">
-					<button type="button" class="btn btn-success" onCLick="saveCalled();"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
-					<button type="button" class="btn btn-info" onClick="publishCalled();"><span class="glyphicon glyphicon-play-circle"></span> Publish</button>
+					<button type="button" class="btn btn-success" ng-click="saveCalled()"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+					<button type="button" class="btn btn-info" ng-click="publishCalled()"><span class="glyphicon glyphicon-play-circle"></span> Publish</button>
 					<button type="button" class="btn" ng-click="toggleFullscreen()" data-toggle="collapse" data-target="#left" style="float:right"><i ng-class="isFullscreen?'fa fa-compress':'fa fa-expand'"></i></button>
 					
 					<span ng-hide="isDirty">{{ path.replace("/workspace", "") }}</span>
