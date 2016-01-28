@@ -7,7 +7,7 @@
 },{
     "name": "Content",
     "subMenu": [{
-        "name": "Show Content",
+        "name": "Browse Registry Content",
         "link": "#/content"
     }, {
         "name": "Transport Content",
