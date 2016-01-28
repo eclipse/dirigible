@@ -1,1 +1,49 @@
-<div id="content" ng-include="'templates/workspace.html'"></div>
+<!-- <div id="content" ng-include="'templates/workspace.html'"></div> -->
+<div ng-controller="WorkspaceListCtrl" class="container-fluid">
+	<div class="row">
+		<div class="col-xs-18 collapse in" id="left">
+			<div id="successMessageAlert" class="alert alert-success" role="alert" ng-show="successfullMessage">
+		  		<a href="#" class="alert-link">{{ successfullMessage }}</a>
+	  		</div>
+	    	<div class="alert alert-danger" role="alert" ng-show="mainError"> 
+	    		<strong>Oh snap!</strong>
+	    		<span ng-show="mainError.status && mainError.data">{{ mainError.status }} - {{ mainError.data }}</span>
+	    		<span ng-hide="mainError.status && mainError.data">{{ mainError }}</span>
+	    	</div>
+      		<div class="input-group list-group">
+        		<input type="text" class="form-control" placeholder="Search for file" ng-model="search">
+        		<span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="search = undefined">Clear</button></span>
+      		</div>
+      		<div class="" ng-show="searchError && search">
+        		<div class="alert alert-danger"> <strong>Oh snap!</strong>{{ searchError.status }} - {{ searchError.data }}</div>
+      		</div>
+      		<ol ng-show="paths" class="breadcrumb" style="font-size: initial; padding-top: 5px">
+        		<li ng-repeat="path in paths">
+          			<a href="" ng-click="crumbsChanged(path)">{{ path.name }}</a>
+        		</li>
+      		</ol>
+      		<div class="list-group">
+        		<div class="list-group-item" ng-repeat="single in selected.files" ng-click="change(single)">
+          			<span class="badge-right glyphicon glyphicon-{{ single.folder ? 'folder-close' : 'file' }}"></span>
+          			<span ng-show="single.files" class="badge">{{ single.files.length }}</span>
+          			<a ng-href="{{single.path}}" title="Open location in new tab" target='_blank' style="float: right;"><span ng-hide="single.folder" class="badge badge-clean glyphicon glyphicon-open-file" style="color:initial !important;font-size: 1.6rem;"></span></a>
+  		    		<span ng-hide="single.folder" class="badge badge-clean glyphicon glyphicon-copy" style="color:initial !important;font-size: 1.6rem;" title="Copy location" ng-click="copyFile(single)"></span>{{ single.name }}
+        		</div>
+        		<div class="alert alert-warning" role="alert" ng-show="!selected.files || selected.files.length === 0">No content.</div>
+      		</div>
+    	</div>
+    	<div class="col-xs-18" ng-show="editor != null">
+	    	<div>
+	    		<div id="editor-toolbar">
+					<button type="button" class="btn btn-success" onCLick="saveCalled();"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+					<button type="button" class="btn btn-info" onClick="publishCalled();"><span class="glyphicon glyphicon-play-circle"></span> Publish</button>
+					<button type="button" class="btn" ng-click="toggleFullscreen()" data-toggle="collapse" data-target="#left" style="float:right"><i ng-class="isFullscreen?'fa fa-compress':'fa fa-expand'"></i></button>
+					
+					<span ng-hide="isDirty">{{ path.replace("/workspace", "") }}</span>
+					<span ng-show="isDirty">{{ path.replace("/workspace", "") }} *</span>
+				</div>
+      			<div id="editor"></div>
+      		</div>
+    	</div>
+ 	</div>
+</div>
