@@ -109,7 +109,7 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
     		onSuccess($scope.path + " saved successfully");
 
     		var publishPath = $scope.path;
-    		publishPath.replace("/workspace", "") 
+    		publishPath = publishPath.replace("/workspace", "");
     		publishPath = "/publish" + publishPath;
 
     		$http.post(publishPath).success(function(response) {
