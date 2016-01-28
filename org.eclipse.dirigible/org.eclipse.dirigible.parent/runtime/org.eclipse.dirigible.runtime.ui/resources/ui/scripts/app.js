@@ -183,12 +183,12 @@ menuControllers.controller('HomeCtrl', ['$scope',
       image: "images/workspace.png",
       path: "#/workspace",
       title: "Workspace",
-      description: "Lightweight Workspace Manager"
+      description: "Lightweight Development Environment"
     }, {
         image: "images/content.png",
         path: "#/content",
-        title: "Repository",
-        description: "Browse Artifacts in Repository"
+        title: "Registry",
+        description: "Browse Registry Content"
     }, {
       image: "images/web-content.png",
       path: "#/web/content",
