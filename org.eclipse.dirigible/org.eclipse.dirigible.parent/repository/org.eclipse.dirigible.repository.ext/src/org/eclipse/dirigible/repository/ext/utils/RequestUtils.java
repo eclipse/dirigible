@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.utils;
@@ -18,13 +17,13 @@ import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class RequestUtils {
-	
+
 	private static final Logger logger = Logger.getLogger(RequestUtils.class);
-	
+
 	public static String getUser(HttpServletRequest request) {
 		String user = ICommonConstants.GUEST;
 		try {
-			if (request != null) { 
+			if (request != null) {
 				if (request.getUserPrincipal() != null) {
 					user = request.getUserPrincipal().getName();
 				} else {
@@ -41,18 +40,19 @@ public class RequestUtils {
 		}
 		return user;
 	}
-	
+
 	public static String getCookieValue(HttpServletRequest request, String cookieName) {
 		Cookie[] cookies = request.getCookies();
-		for ( int i=0; i<cookies.length; i++) {
-			Cookie cookie = cookies[i];
-			if (cookieName.equals(cookie.getName())) {
-				return cookie.getValue();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookieName.equals(cookie.getName())) {
+					return cookie.getValue();
+				}
 			}
 		}
 		return null;
 	}
-	
+
 	public static String get(HttpServletRequest request, String name) {
 		String parameter = (String) request.getSession().getAttribute(name);
 		return parameter;
