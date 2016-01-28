@@ -33,14 +33,15 @@
     	</div>
     	<div class="col-xs-18" ng-show="editor != null">
 	    	<div>
-				<div id="editor-toolbar" style="background-color: #e8e8e8;padding: 1.3rem;">
-	 		  	  	<button class="btn" data-toggle="collapse" data-target="#left" style="position: relative; top: 0px; border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;" title="Toggle workspace navigation"><span class="glyphicon glyphicon-menu-up"></span></button>
-					<button type="button" class="btn btn-success btn-s" style="font-family: Helvetica" ng-click="saveCalled()"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
-					<button type="button" class="btn btn-info btn-s" ng-click="publishCalled()"><span class="glyphicon glyphicon-play-circle"></span> Publish</button>
+	    		<div id="editor-toolbar">
+					<button type="button" class="btn btn-success" onCLick="saveCalled();"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+					<button type="button" class="btn btn-info" onClick="publishCalled();"><span class="glyphicon glyphicon-play-circle"></span> Publish</button>
+					<button type="button" class="btn" ng-click="toggleFullscreen()" data-toggle="collapse" data-target="#left" style="float:right"><i ng-class="isFullscreen?'fa fa-compress':'fa fa-expand'"></i></button>
+					
 					<span ng-hide="isDirty">{{ path.replace("/workspace", "") }}</span>
 					<span ng-show="isDirty">{{ path.replace("/workspace", "") }} *</span>
 				</div>
-      			<div id="editor" style="height: 400px"></div>
+      			<div id="editor"></div>
       		</div>
     	</div>
  	</div>

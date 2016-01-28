@@ -16,6 +16,7 @@
   <!-- styles/app.css -->
   <link href="styles/custom.css" rel="stylesheet">
   <link href="styles/main.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <!-- end -->
 
   <!-- Bootstrap core JavaScript
@@ -46,43 +47,22 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.8/plugins/jqplot.cursor.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.8/plugins/jqplot.dateAxisRenderer.min.js"></script>
   <!-- end -->
-  
-  <link rel="stylesheet" type="text/css" href="orion/code_edit/built-codeEdit.css"/>
-        <style>
-        /* body {
-            overflow: hidden;
-            height: 100%
-        } */
-        #embeddedEditor {
-            margin: 0;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-		</style>
-		
-		<style type="text/css">
-			.lineHighlight{
-				outline: 1px dotted gray;
-			}
-			.lineHighlightGutter{
-				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIVBMVEX///8/n78/f58/v78/X3+/v78/P1/f379/v7+goKQAAAC7+sW9AAAANklEQVQYlbXINxIAIAzEQJ8T4f8PBlccNYO6lci/mgFxuRucThnqZ6CsSaPsNMK35xA+mey3FlHPAKrp8/+uAAAAAElFTkSuQmCC");
-			}
-			.demoTitle{
-				border: none;
-				vertical-align: middle;
-				overflow: hidden;
-				text-align: left;
-				margin-left: 15%;
-				margin-right: 15%;
-				padding-bottom: 5px;
-				position: relative;
-			}
 
-		</style>
-		<script src="orion/requirejs/require.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="orion/code_edit/built-codeEdit.css" />
+	<style>
+		#editor {
+			border: 1px solid #ddd;
+			height: 40rem;
+			margin-bottom: 3rem;
+		}
+		#editor-toolbar {
+			background-color: #ddd;
+			padding: 1.3rem;
+			border-top-left-radius: 4px;
+			border-top-right-radius: 4px;
+		}
+	</style>
+	<script src="orion/requirejs/require.min.js"></script>
 		
 </head>
 

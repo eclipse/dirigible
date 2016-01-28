@@ -203,6 +203,12 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
     function dirtyChanged(value) {
     	$scope.isDirty = value;
     }
+    
+    $scope.isFullscreen = false;
+    
+    $scope.toggleFullscreen = function() {
+      $scope.isFullscreen=!$scope.isFullscreen;
+    }
 }]);
 
 workspaceControllers.controller('WorkspaceCtrl', function($scope, $resource) {
