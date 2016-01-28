@@ -193,11 +193,23 @@ menuControllers.controller('HomeCtrl', ['$scope',
       title: "Registry",
       description: "Browse Registry Content"
     }, {
-      image: "area-chart",
-      color: 'red',
-      path: "#/monitoring",
-      title: "Monitoring",
-      description: "Monitor Basic Metrics"
+      image: "truck",
+      color: 'green',
+      path: "#/content/import",
+      title: "Transport",
+      description: "Transport Registry Content"
+    }, {
+      image: "toggle-on",
+      color: 'green',
+      path: "#/content/clone",
+      title: "Clone",
+      description: "Clone Instance"
+    }, {
+      image: "sign-in",
+      color: 'green',
+      path: "#/content/project",
+      title: "Import",
+      description: "Import Project"
     }, {
       image: "globe",
       color: 'yellow',
@@ -252,22 +264,28 @@ menuControllers.controller('HomeCtrl', ['$scope',
       description: "Command Services Endpoints"
     }, {
       image: "caret-square-o-right",
-      color: 'lblue',
+      color: 'orange',
       path: "#/integration/flow",
       title: "Flows",
       description: "Flow Integration Services"
     }, {
       image: "clock-o",
-      color: 'lblue',
+      color: 'orange',
       path: "#/integration/job",
       title: "Jobs",
       description: "Job Integration Services"
     }, {
       image: "flash",
-      color: 'orange',
+      color: 'purple',
       path: "#/scripting/tests",
       title: "Tests",
       description: "Test Cases Endpoints"
+    }, {
+      image: "area-chart",
+      color: 'red',
+      path: "#/monitoring",
+      title: "Monitoring",
+      description: "Monitor Basic Metrics"
     }, {
       image: 'graduation-cap',
       color: 'lila',
@@ -282,17 +300,17 @@ menuControllers.controller('HomeCtrl', ['$scope',
       title: 'Help',
       description: "Browse Help Portal",
       newTab: true
-    }];
-
-    /*
-     , {
+    }, {
       image: 'map-o',
       color: 'lila',
       path: 'http://www.dirigible.io',
       title: 'About',
       description: "Project Home Page",
       newTab: true
-    }
+    }];
+
+    /*
+     
      */
     
     

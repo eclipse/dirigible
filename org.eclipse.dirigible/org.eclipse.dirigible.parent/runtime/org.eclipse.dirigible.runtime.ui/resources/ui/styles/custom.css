@@ -116,25 +116,25 @@ code {
 }
 
 .panel-blue a:hover {
-    color: #df8a13;
+    color: #135a97;
 }
 
 .panel-purple {
-    border-color: #b49cfc;
+    border-color: #947cdc;
 }
 
 .panel-purple .panel-heading {
-    border-color: #b49cfc;
+    border-color: #947cdc;
     color: #fff;
-    background-color: #b49cfc;
+    background-color: #947cdc;
 }
 
 .panel-purple a {
-    color: #b49cfc;
+    color: #947cdc;
 }
 
 .panel-purple a:hover {
-    color: #df8a13;
+    color: #745cbc;
 }
 
 .panel-orange {
@@ -152,7 +152,7 @@ code {
 }
 
 .panel-orange a:hover {
-    color: #df8a13;
+    color: #c65100;
 }
 
 .panel-lila {
@@ -170,7 +170,7 @@ code {
 }
 
 .panel-lila a:hover {
-    color: #df8a13;
+    color: #7575a3;
 }
 
 .panel-lblue {
@@ -188,5 +188,11 @@ code {
 }
 
 .panel-lblue a:hover {
-    color: #df8a13;
+    color: #3f7db3;
+}
+
+a.thumbnail {
+	padding: 0px !important;
+	border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
 }

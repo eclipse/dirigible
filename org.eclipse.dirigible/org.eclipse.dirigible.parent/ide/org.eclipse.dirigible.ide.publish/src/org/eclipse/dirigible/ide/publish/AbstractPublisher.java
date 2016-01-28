@@ -150,7 +150,11 @@ public abstract class AbstractPublisher implements IPublisher {
 			Date targetResourceLastModifiedAt = targetResource.getInformation().getModifiedAt();
 			Date resourceLastModifiedAt = resource.getInformation().getModifiedAt();
 
-			if (resourceLastModifiedAt.getTime() >= targetResourceLastModifiedAt.getTime()) {
+			if ((resourceLastModifiedAt != null) && (targetResourceLastModifiedAt != null)) {
+				if (resourceLastModifiedAt.getTime() >= targetResourceLastModifiedAt.getTime()) {
+					setTargetResourceContent(file, targetResource, resource);
+				}
+			} else {
 				setTargetResourceContent(file, targetResource, resource);
 			}
 
