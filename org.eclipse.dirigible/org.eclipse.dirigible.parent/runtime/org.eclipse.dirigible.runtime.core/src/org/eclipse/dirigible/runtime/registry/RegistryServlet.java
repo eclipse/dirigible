@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.registry;
@@ -56,8 +55,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 	private static final String INDEX_HTML = "index.html"; //$NON-NLS-1$
 
-	private static final String LISTING_OF_FOLDERS_IS_FORBIDDEN = Messages
-			.getString("RegistryServlet.LISTING_OF_FOLDERS_IS_FORBIDDEN"); //$NON-NLS-1$
+	private static final String LISTING_OF_FOLDERS_IS_FORBIDDEN = Messages.getString("RegistryServlet.LISTING_OF_FOLDERS_IS_FORBIDDEN"); //$NON-NLS-1$
 
 	private static final String JSON = "json"; //$NON-NLS-1$
 
@@ -78,8 +76,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 	private static final Logger logger = Logger.getLogger(RegistryServlet.class);
 
 	@Override
-	protected void doGet(final HttpServletRequest request, final HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 
 		String repositoryPath = null;
 		final String requestPath = request.getPathInfo();
@@ -98,7 +95,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 				} else if (entity instanceof ICollection) {
 					String collectionPath = request.getRequestURI().toString();
 					String acceptHeader = request.getHeader(ACCEPT_HEADER);
-					if (acceptHeader != null && acceptHeader.contains(JSON)) {
+					if ((acceptHeader != null) && acceptHeader.contains(JSON)) {
 						if (!collectionPath.endsWith(IRepository.SEPARATOR)) {
 							collectionPath += IRepository.SEPARATOR;
 						}
@@ -110,15 +107,12 @@ public class RegistryServlet extends AbstractRegistryServlet {
 							data = buildResourceData(index, request, response);
 						} else {
 							// listing of collections is forbidden
-							exceptionHandler(response, repositoryPath,
-									HttpServletResponse.SC_FORBIDDEN,
-									LISTING_OF_FOLDERS_IS_FORBIDDEN);
+							exceptionHandler(response, repositoryPath, HttpServletResponse.SC_FORBIDDEN, LISTING_OF_FOLDERS_IS_FORBIDDEN);
 							return;
 						}
 					}
 				} else {
-					exceptionHandler(response, repositoryPath, HttpServletResponse.SC_FORBIDDEN,
-							LISTING_OF_FOLDERS_IS_FORBIDDEN);
+					exceptionHandler(response, repositoryPath, HttpServletResponse.SC_FORBIDDEN, LISTING_OF_FOLDERS_IS_FORBIDDEN);
 					return;
 				}
 			} else {
@@ -136,18 +130,17 @@ public class RegistryServlet extends AbstractRegistryServlet {
 				} else {
 					response.setContentType(resource.getContentType());
 				}
-				
+
 				// encoding
 				String acceptLang = request.getHeader("Accept-Language");
 				String contentLang = acceptLang;
-				if (acceptLang != null
-						&& acceptLang.indexOf(",") > 0) {
+				if ((acceptLang != null) && (acceptLang.indexOf(",") > 0)) {
 					contentLang = acceptLang.substring(0, acceptLang.indexOf(","));
 					if (contentLang.indexOf("-") > 0) {
 						contentLang = contentLang.substring(0, contentLang.indexOf("-"));
 					}
 				}
-					
+
 				if (contentLang != null) {
 					response.setHeader("Content-Language", contentLang);
 				}
@@ -155,28 +148,24 @@ public class RegistryServlet extends AbstractRegistryServlet {
 			sendData(out, data);
 			setContentLengthHeader(entity, data.length, request, response);
 		} catch (final IllegalArgumentException ex) {
-			exceptionHandler(response, repositoryPath, HttpServletResponse.SC_BAD_REQUEST,
-					ex.getMessage());
+			exceptionHandler(response, repositoryPath, HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		} catch (final MissingResourceException ex) {
-			exceptionHandler(response, repositoryPath, HttpServletResponse.SC_NO_CONTENT,
-					ex.getMessage());
+			exceptionHandler(response, repositoryPath, HttpServletResponse.SC_NO_CONTENT, ex.getMessage());
 		} catch (final RuntimeException ex) {
-			exceptionHandler(response, repositoryPath,
-					HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+			exceptionHandler(response, repositoryPath, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
 		} finally {
 			out.flush();
 			out.close();
 		}
 	}
 
-	private void exceptionHandler(final HttpServletResponse response, final String repositoryPath,
-			final int errorMessage, final String exceptionMessage) throws IOException {
+	private void exceptionHandler(final HttpServletResponse response, final String repositoryPath, final int errorMessage,
+			final String exceptionMessage) throws IOException {
 		logger.error(String.format(REQUEST_PROCESSING_FAILED_S, repositoryPath) + exceptionMessage);
 		response.sendError(errorMessage, exceptionMessage);
 	}
 
-	protected byte[] buildCollectionData(final boolean deep, final IEntity entity,
-			final String collectionPath) throws IOException {
+	protected byte[] buildCollectionData(final boolean deep, final IEntity entity, final String collectionPath) throws IOException {
 		byte[] data;
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final PrintWriter writer = new PrintWriter(baos);
@@ -184,8 +173,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		final JsonObject rootObject = new JsonObject();
 		rootObject.addProperty(JSON_NAME, JSON_ROOT);
 		rootObject.addProperty(JSON_PATH, IRepository.SEPARATOR);
-		rootObject.add(JSON_FILES,
-				enumerateCollectionData(collectionPath, (ICollection) entity, deep));
+		rootObject.add(JSON_FILES, enumerateCollectionData(collectionPath, (ICollection) entity, deep));
 
 		writer.println(new Gson().toJson(rootObject));
 		writer.flush();
@@ -193,8 +181,8 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		return data;
 	}
 
-	protected byte[] buildResourceData(final IEntity entity, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
+	protected byte[] buildResourceData(final IEntity entity, final HttpServletRequest request, final HttpServletResponse response)
+			throws IOException {
 		byte[] data = new byte[] {};
 		if (!setCacheHeaders(entity, request, response)) {
 			data = readResourceData((IResource) entity);
@@ -202,13 +190,12 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		return data;
 	}
 
-	private void setContentLengthHeader(IEntity entity, int contentLength,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void setContentLengthHeader(IEntity entity, int contentLength, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		response.setHeader(CONTENT_LENGTH_HEADER, Integer.toString(contentLength));
 	}
 
-	private boolean setCacheHeaders(IEntity entity, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	private boolean setCacheHeaders(IEntity entity, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		boolean cached = false;
 		IEntityInformation entityInformation = entity.getInformation();
@@ -219,7 +206,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 			if ((!StringUtils.isEmpty(modifiedSinceHeader))) {
 				Calendar modifiedSince = getCalendar(parseDate(modifiedSinceHeader));
-				
+
 				if (lastModified.compareTo(modifiedSince) <= 0) {
 
 					Calendar expires = getCalendar(lastModified);
@@ -236,37 +223,35 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		return cached;
 	}
 
-	//--------------------------------------------------------------------	
+	// --------------------------------------------------------------------
 	// lifted from org.apache.http.client.utils.DateUtils
-	//--------------------------------------------------------------------
-	
+	// --------------------------------------------------------------------
+
 	public static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 	public static final String PATTERN_RFC1036 = "EEE, dd-MMM-yy HH:mm:ss zzz";
 	public static final String PATTERN_ASCTIME = "EEE MMM d HH:mm:ss yyyy";
-	
-	public static final String[] DATE_FORMATS = new String[]{PATTERN_RFC1123, PATTERN_RFC1036, PATTERN_ASCTIME};
-	
+
+	public static final String[] DATE_FORMATS = new String[] { PATTERN_RFC1123, PATTERN_RFC1036, PATTERN_ASCTIME };
+
 	private static final String SINGLE_QUOTE = "'";
-	 
+
 	private Date parseDate(String modifiedSinceHeader) {
 		final Calendar calendar = Calendar.getInstance();
-		if (modifiedSinceHeader.length() > 1
-				&& modifiedSinceHeader.startsWith(SINGLE_QUOTE)
-				&& modifiedSinceHeader.endsWith(SINGLE_QUOTE)) {
-			modifiedSinceHeader = modifiedSinceHeader.substring (1, modifiedSinceHeader.length() - 1);
+		if ((modifiedSinceHeader.length() > 1) && modifiedSinceHeader.startsWith(SINGLE_QUOTE) && modifiedSinceHeader.endsWith(SINGLE_QUOTE)) {
+			modifiedSinceHeader = modifiedSinceHeader.substring(1, modifiedSinceHeader.length() - 1);
 		}
 		for (String format : DATE_FORMATS) {
 			SimpleDateFormat dateParser = new SimpleDateFormat(format);
-		    dateParser.set2DigitYearStart(calendar.getTime());
-		    final ParsePosition pos = new ParsePosition(0);
-		    final Date result = dateParser.parse(modifiedSinceHeader, pos);
-            if (pos.getIndex() != 0) {
-                return result;
-            }
+			dateParser.set2DigitYearStart(calendar.getTime());
+			final ParsePosition pos = new ParsePosition(0);
+			final Date result = dateParser.parse(modifiedSinceHeader, pos);
+			if (pos.getIndex() != 0) {
+				return result;
+			}
 		}
 		return null;
 	}
-	//--------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
 	private Calendar getCalendar(Calendar calendar) {
 		return getCalendar(calendar.getTime());
@@ -274,26 +259,26 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 	private Calendar getCalendar(Date time) {
 		Calendar calendar = Calendar.getInstance();
+		if (time == null) {
+			return calendar;
+		}
 		calendar.setTime(time);
 		calendar.clear(Calendar.MILLISECOND);
 		return calendar;
 	}
 
-	private JsonArray enumerateCollectionData(final String collectionPath,
-			final ICollection collection, final boolean deep) throws IOException {
+	private JsonArray enumerateCollectionData(final String collectionPath, final ICollection collection, final boolean deep) throws IOException {
 		final JsonArray arr = new JsonArray();
 		childItterate(arr, collectionPath, collection, deep, collection.getCollectionsNames(), true);
 		childItterate(arr, collectionPath, collection, deep, collection.getResourcesNames(), false);
 		return arr;
 	}
 
-	private void childItterate(final JsonArray arr, final String collectionPath,
-			final ICollection collection, final boolean deep, final List<String> collections,
-			final Boolean isFolder) throws IOException {
+	private void childItterate(final JsonArray arr, final String collectionPath, final ICollection collection, final boolean deep,
+			final List<String> collections, final Boolean isFolder) throws IOException {
 		for (final String collectionName : collections) {
 
-			final String path = collectionPath + collectionName
-					+ (isFolder ? IRepository.SEPARATOR : ""); //$NON-NLS-1$
+			final String path = collectionPath + collectionName + (isFolder ? IRepository.SEPARATOR : ""); //$NON-NLS-1$
 			final JsonObject elementObject = new JsonObject();
 			elementObject.addProperty(JSON_NAME, collectionName);
 			elementObject.addProperty(JSON_PATH, path);
@@ -301,8 +286,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 				elementObject.addProperty(JSON_FOLDER, isFolder);
 			}
 			if (deep && isFolder) {
-				final JsonArray children = enumerateCollectionData(path,
-						collection.getCollection(collectionName), deep);
+				final JsonArray children = enumerateCollectionData(path, collection.getCollection(collectionName), deep);
 				// We don't care about empty folders
 				if (children.size() != 0) {
 					elementObject.add(JSON_FILES, children);
