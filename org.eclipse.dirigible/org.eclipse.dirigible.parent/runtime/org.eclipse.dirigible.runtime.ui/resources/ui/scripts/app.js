@@ -174,43 +174,56 @@ menuControllers.controller('UserCtrl', ['$scope', '$http',
 menuControllers.controller('HomeCtrl', ['$scope',
   function($scope) {
     $scope.homeData = [{
-      image: 'images/ide.png',
+      image: 'edit',
+      color: 'blue',
       path: '../index.html',
       title: 'IDE',
       description: "Development Toolkit",
       newTab: true
     }, {
-      image: "images/workspace.png",
+      image: "sitemap",
+      color: 'blue',
       path: "#/workspace",
       title: "Workspace",
       description: "Lightweight Development Environment"
     }, {
-        image: "images/content.png",
-        path: "#/content",
-        title: "Registry",
-        description: "Browse Registry Content"
+      image: "search",
+      color: 'green',
+      path: "#/content",
+      title: "Registry",
+      description: "Browse Registry Content"
     }, {
-      image: "images/web-content.png",
+      image: "area-chart",
+      color: 'red',
+      path: "#/monitoring",
+      title: "Monitoring",
+      description: "Monitor Basic Metrics"
+    }, {
+      image: "globe",
+      color: 'yellow',
       path: "#/web/content",
       title: "Web",
       description: "Browse Applications User Interfaces"
     }, {
-      image: "images/wiki-content.png",
+      image: "book",
+      color: 'yellow',
       path: "#/web/wiki",
       title: "Wiki",
       description: "Browse Applications Documentation"
     }, {
-        image: "images/mobile-applications.png",
-        path: "#/mobile",
-        title: "Mobile",
-        description: "Native Mobile Applications"
+      image: "mobile-phone",
+      color: 'lblue',
+      path: "#/mobile",
+      title: "Mobile",
+      description: "Native Mobile Applications"
     }, {
 //      image: "images/routes.png",
 //      path: "#/routes",
 //      title: "Routes",
 //      description: "Integration Services Endpoints"
 //    }, {
-      image: "images/java-script.png",
+      image: "file-code-o",
+      color: 'lblue',
       path: "#/scripting/javascript",
       title: "JavaScript",
       description: "JavaScript Services Endpoints"
@@ -220,60 +233,69 @@ menuControllers.controller('HomeCtrl', ['$scope',
 //      title: "Groovy",
 //      description: "Groovy Services Endpoints"
     }, {
-      image: "images/java.png",
+      image: "coffee",
+      color: 'lblue',
       path: "#/scripting/java",
       title: "Java",
       description: "Java Services Endpoints"
     }, {
-        image: "images/sql.png",
-        path: "#/scripting/sql",
-        title: "SQL",
-        description: "SQL Services Endpoints"
+      image: "database",
+      color: 'lblue',
+      path: "#/scripting/sql",
+      title: "SQL",
+      description: "SQL Services Endpoints"
     }, {
-      image: "images/command.png",
+      image: "gear",
+      color: 'lblue',
       path: "#/scripting/command",
       title: "Command",
       description: "Command Services Endpoints"
     }, {
-      image: "images/test.png",
-      path: "#/scripting/tests",
-      title: "Tests",
-      description: "Test Cases Endpoints"
-    }, {
-      image: "images/flows.png",
+      image: "caret-square-o-right",
+      color: 'lblue',
       path: "#/integration/flow",
       title: "Flows",
       description: "Flow Integration Services"
     }, {
-      image: "images/jobs.png",
+      image: "clock-o",
+      color: 'lblue',
       path: "#/integration/job",
       title: "Jobs",
       description: "Job Integration Services"
     }, {
-      image: "images/monitor.png",
-      path: "#/monitoring",
-      title: "Monitoring",
-      description: "Monitor Basic Metrics"
+      image: "flash",
+      color: 'orange',
+      path: "#/scripting/tests",
+      title: "Tests",
+      description: "Test Cases Endpoints"
     }, {
-      image: 'images/samples.png',
+      image: 'graduation-cap',
+      color: 'lila',
       path: 'http://samples.dirigible.io',
       title: 'Samples',
       description: "Browse Samples Space",
       newTab: true
     }, {
-      image: 'images/help.png',
+      image: 'life-ring',
+      color: 'lila',
       path: 'http://help.dirigible.io',
       title: 'Help',
       description: "Browse Help Portal",
       newTab: true
-    }, {
-      image: 'images/about.png',
+    }];
+
+    /*
+     , {
+      image: 'map-o',
+      color: 'lila',
       path: 'http://www.dirigible.io',
       title: 'About',
       description: "Project Home Page",
       newTab: true
-    }];
-
+    }
+     */
+    
+    
     $scope.getTarget = function(data) {
       return data.newTab ? '_blank"' : '_self';
     };
