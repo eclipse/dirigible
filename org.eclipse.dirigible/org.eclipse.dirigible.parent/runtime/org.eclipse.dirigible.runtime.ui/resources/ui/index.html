@@ -69,12 +69,23 @@
 	    "yeti" : "styles/yeti/bootstrap.min.css"
 	}
 	$(function(){
-		   var themesheet = $('<link href="'+themes['default']+'" rel="stylesheet" />');
-		    themesheet.appendTo('head');
+		
+		
+		
+		$.get( "../theme", function( data ) {
+		
+			var themesheet = $('<link href="'+themes[data.trim()]+'" rel="stylesheet" />');
+			themesheet.appendTo('head');
 		    $('.theme-link').click(function(){
-		       var themeurl = themes[$(this).attr('data-theme')]; 
-		        themesheet.attr('href',themeurl);
-	    });
+		    	var themeName = $(this).attr('data-theme');
+		        var themeUrl = themes[$(this).attr('data-theme')];
+		        themesheet.attr('href',themeUrl);
+		       
+		        $.get( "../theme?name=" + themeName);
+	    	});
+		});
+		
+		   
 	});
   </script>
 

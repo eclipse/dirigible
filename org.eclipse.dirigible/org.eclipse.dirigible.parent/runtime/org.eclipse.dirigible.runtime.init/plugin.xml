@@ -133,5 +133,15 @@
               load-on-startup="true">
         </servlet>
      </extension>
+     
+     <extension
+           id="ThemesServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/theme"
+              class="org.eclipse.dirigible.runtime.content.ThemesServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
 	 
 </plugin>

@@ -112,6 +112,8 @@ public interface ICommonConstants {
 
 	public static final String COOKIE_ANONYMOUS_USER = "dirigible_anonymous_user"; //$NON-NLS-1$
 
+	public static final String COOKIE_THEME = "dirigible_theme"; //$NON-NLS-1$
+
 	public static final String ENABLE_ROLES = "enableRoles"; //$NON-NLS-1$
 
 	// Platform specific

@@ -264,7 +264,7 @@ menuControllers.controller('DiscoverCtrl', ['$scope',
         description: "Browse Applications Documentation"
       }, {
         image: "mobile-phone",
-        color: 'lblue',
+        color: 'blue',
         path: "#/mobile",
         title: "Mobile",
         description: "Native Mobile Applications"
@@ -347,8 +347,8 @@ menuControllers.controller('MonitoringCtrl', ['$scope',
       image: "wrench",
       color: 'blue',
       path: "#/monitoring/manage",
-      title: "Manage",
-      description: "Manage locations"
+      title: "Configure",
+      description: "Configure locations"
     }, {
       image: "bar-chart",
       color: 'green',
