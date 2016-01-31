@@ -47,7 +47,7 @@
         "link": "#/integration/job"
     }]
 }, {
-    "name": "Manage",
+    "name": "Operate",
     "subMenu": [{
         "name": "Transport Content",
         "link": "#/content/import"

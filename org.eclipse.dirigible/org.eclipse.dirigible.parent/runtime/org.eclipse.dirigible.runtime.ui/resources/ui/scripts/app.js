@@ -13,9 +13,9 @@ fileApp.config(function($routeProvider) {
     }).when('/home/discover', {
         controller: 'DiscoverCtrl',
         templateUrl: 'templates/home/discover/discover.html'
-    }).when('/home/manage', {
-        controller: 'ManageCtrl',
-        templateUrl: 'templates/home/manage/manage.html'
+    }).when('/home/operate', {
+        controller: 'OperateCtrl',
+        templateUrl: 'templates/home/operate/operate.html'
     }).when('/workspace', {
       controller: 'WorkspaceCtrl',
       templateUrl: 'templates/workspace/workspace.html'
@@ -199,8 +199,8 @@ menuControllers.controller('HomeCtrl', ['$scope',
       }, {
         image: "wrench",
         color: 'orange',
-        path: "#/home/manage",
-        title: "Manage",
+        path: "#/home/operate",
+        title: "Operate",
         description: "Lifecycle Management"
       }, {
         image: "area-chart",
@@ -315,9 +315,9 @@ menuControllers.controller('DiscoverCtrl', ['$scope',
   ]);
 
 
-menuControllers.controller('ManageCtrl', ['$scope',
+menuControllers.controller('OperateCtrl', ['$scope',
     function($scope) {
-      $scope.manageData = [{
+      $scope.operateData = [{
         image: "truck",
         color: 'blue',
         path: "#/content/import",
