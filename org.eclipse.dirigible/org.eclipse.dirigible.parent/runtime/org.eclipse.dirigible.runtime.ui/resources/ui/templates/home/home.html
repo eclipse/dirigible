@@ -1,37 +1,59 @@
-<!-- <div class="row text-center">
-	<div class="col-lg-4 col-md-6 hero-feature" ng-repeat="data in homeData">
-		<a class="thumbnail btn btn-default"
-			href="{{ data.path }}" target="{{ getTarget(data); }}">
-			<img src="{{ data.image }}">
-			<div class="caption">
-				<h3>{{ data.title }}</h3>
-				<p>{{ data.description }}</p>
-			</div>
-		</a>
+ 
+ 	<div class="row">
+		<div class="col-lg-12">
+	    	<h1 class="page-header">Forebridge</h1>
+		</div>
 	</div>
-</div> -->
 
-
-<div class="col-lg-3 col-md-6" ng-repeat="data in homeData">
-    <div class="panel panel-{{ data.color }}" style="height: 150px">
-        <div class="panel-heading" style="height: 97px">
-            <div class="row">
-                <div class="col-xs-3">
-                    <i class="fa fa-{{ data.image }} fa-4x"></i>
-                </div>
-                <div class="col-xs-9 text-right">
-                    <div class="huge">{{ data.title }}</div>
-                    <div>{{ data.description }}</div>
+ 
+    <div class="col-lg-3 col-md-6" ng-repeat="data in homeData">
+        <div class="panel panel-{{ data.color }}">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-{{ data.image }} fa-4x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ data.title }}</div>
+                        <div>{{ data.description }}</div>
+                    </div>
                 </div>
             </div>
+            <a href="{{ data.path }}">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right fa-2x"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
         </div>
-        <a class="thumbnail btn btn-default"
-			href="{{ data.path }}" target="{{ getTarget(data); }}">
-            <div class="panel-footer">
-                <span class="pull-left">More...</span>
-                <span class="pull-right"><i class="fa fa-arrow-circle-right fa-2x"></i></span>
-                <div class="clearfix"></div>
-            </div>
-        </a>
     </div>
-</div>
+    
+	<div class="row">
+	        <div class="col-lg-4 heading-lead page-scroll">
+				<hr class="section-heading-spacer">
+                <div class="clearfix"></div>
+	            <h2><i class="fa fa-question-circle fa-fw"></i>
+                What is Dirigible?</h2>
+	            <p>Dirigible is a cloud development platform providing both development tools and runtime environment. It supports full development life-cycle of on-demand applications by leveraging in-system programming models and rapid application development techniques.</p>
+	            <a class="btn btn-default" href="http://www.dirigible.io/project.html">More Info</a>
+	        </div>
+	        <div class="col-lg-4 heading-lead">
+				<hr class="section-heading-spacer">
+                <div class="clearfix"></div>
+	            <h2><i class="fa fa fa-search fa-fw"></i>
+                What is it for?</h2>
+	            <p>Dirigible provides capabilities for end-to-end development process from database modeling and management, through RESTful services authoring using various dynamic languages, to pattern-based user interface generation, role based security, external services integration, testing, debugging, operations, and monitoring.</p>
+	            <a class="btn btn-default" href="http://www.dirigible.io/features.html">More Info</a>
+	        </div>
+	        <div class="col-lg-4 heading-lead">
+		<hr class="section-heading-spacer">
+                <div class="clearfix"></div>
+	        <h2><i class="fa fa-github fa-fw"></i>
+                Is it free?</h2>
+	            <p>YES<br>All Dirigible source code and sample applications are licensed under 
+	            <a href="https://www.eclipse.org/legal/epl-v10.html" target="_blank">Eclipse Public License - v 1.0</a>
+	            and maintained at <a href="https://github.com/eclipse/dirigible" target="_blank">GitHub</a>.</p>
+	            <a class="btn btn-default" href="https://github.com/eclipse/dirigible" target="_blank">More Info</a>
+	        </div>
+	    </div>

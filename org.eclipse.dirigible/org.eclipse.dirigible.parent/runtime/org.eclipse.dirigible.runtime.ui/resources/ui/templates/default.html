@@ -19,15 +19,10 @@
       </ol>
       <div class="list-group">
         <div class="list-group-item" ng-repeat="single in selected.files" ng-click="change(single)">
-          <span class="badge-right glyphicon glyphicon-{{ single.folder ? 'folder-close' : 'file' }}"></span>
+          <span class="badge-right fa fa-{{ single.folder ? 'folder' : 'file-o' }}"></span>
           <span ng-show="single.files" class="badge">{{ single.files.length }}</span>
           <span ng-hide="single.folder" class="badge badge-clean">
-            <a ng-href="{{single.path}}" title="Open location in new tab" target='_blank'>
-              <img ng-src="images/open.png"/>
-            </a>
-          </span>
-          <span ng-hide="single.folder" class="badge badge-clean">
-            <img title="Copy location" ng-src="images/copy.png" ng-click="copyFile(single)"/>
+            <a ng-href="{{single.path}}" title="Open location in new tab" target='_blank' class="fa fa-clipboard" style="color: #fff"></a>
           </span>
           {{ single.name }}
         </div>

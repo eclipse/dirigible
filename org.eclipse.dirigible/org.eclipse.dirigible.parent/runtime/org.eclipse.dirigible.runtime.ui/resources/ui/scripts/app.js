@@ -7,6 +7,15 @@ fileApp.config(function($routeProvider) {
     .when('/home', {
       controller: 'HomeCtrl',
       templateUrl: 'templates/home/home.html'
+    }).when('/home/develop', {
+        controller: 'DevelopCtrl',
+        templateUrl: 'templates/home/develop/develop.html'
+    }).when('/home/discover', {
+        controller: 'DiscoverCtrl',
+        templateUrl: 'templates/home/discover/discover.html'
+    }).when('/home/manage', {
+        controller: 'ManageCtrl',
+        templateUrl: 'templates/home/manage/manage.html'
     }).when('/workspace', {
       controller: 'WorkspaceCtrl',
       templateUrl: 'templates/workspace/workspace.html'
@@ -171,187 +180,205 @@ menuControllers.controller('UserCtrl', ['$scope', '$http',
   }
 ]);
 
-menuControllers.controller('HomeCtrl', ['$scope',
-  function($scope) {
-    $scope.homeData = [{
-      image: 'edit',
-      color: 'blue',
-      path: '../index.html',
-      title: 'IDE',
-      description: "Development Toolkit",
-      newTab: true
-    }, {
-      image: "sitemap",
-      color: 'blue',
-      path: "#/workspace",
-      title: "Workspace",
-      description: "Lightweight Development Environment"
-    }, {
-      image: "search",
-      color: 'green',
-      path: "#/content",
-      title: "Registry",
-      description: "Browse Registry Content"
-    }, {
-      image: "truck",
-      color: 'green',
-      path: "#/content/import",
-      title: "Transport",
-      description: "Transport Registry Content"
-    }, {
-      image: "toggle-on",
-      color: 'green',
-      path: "#/content/clone",
-      title: "Clone",
-      description: "Clone Instance"
-    }, {
-      image: "sign-in",
-      color: 'green',
-      path: "#/content/project",
-      title: "Import",
-      description: "Import Project"
-    }, {
-      image: "globe",
-      color: 'yellow',
-      path: "#/web/content",
-      title: "Web",
-      description: "Browse Applications User Interfaces"
-    }, {
-      image: "book",
-      color: 'yellow',
-      path: "#/web/wiki",
-      title: "Wiki",
-      description: "Browse Applications Documentation"
-    }, {
-      image: "mobile-phone",
-      color: 'lblue',
-      path: "#/mobile",
-      title: "Mobile",
-      description: "Native Mobile Applications"
-    }, {
-//      image: "images/routes.png",
-//      path: "#/routes",
-//      title: "Routes",
-//      description: "Integration Services Endpoints"
-//    }, {
-      image: "file-code-o",
-      color: 'lblue',
-      path: "#/scripting/javascript",
-      title: "JavaScript",
-      description: "JavaScript Services Endpoints"
-//    }, {
-//      image: "images/java-groovy.png",
-//      path: "#/scripting/groovy",
-//      title: "Groovy",
-//      description: "Groovy Services Endpoints"
-    }, {
-      image: "coffee",
-      color: 'lblue',
-      path: "#/scripting/java",
-      title: "Java",
-      description: "Java Services Endpoints"
-    }, {
-      image: "database",
-      color: 'lblue',
-      path: "#/scripting/sql",
-      title: "SQL",
-      description: "SQL Services Endpoints"
-    }, {
-      image: "gear",
-      color: 'lblue',
-      path: "#/scripting/command",
-      title: "Command",
-      description: "Command Services Endpoints"
-    }, {
-      image: "caret-square-o-right",
-      color: 'orange',
-      path: "#/integration/flow",
-      title: "Flows",
-      description: "Flow Integration Services"
-    }, {
-      image: "clock-o",
-      color: 'orange',
-      path: "#/integration/job",
-      title: "Jobs",
-      description: "Job Integration Services"
-    }, {
-      image: "flash",
-      color: 'purple',
-      path: "#/scripting/tests",
-      title: "Tests",
-      description: "Test Cases Endpoints"
-    }, {
-      image: "area-chart",
-      color: 'red',
-      path: "#/monitoring",
-      title: "Monitoring",
-      description: "Monitor Basic Metrics"
-    }, {
-      image: 'graduation-cap',
-      color: 'lila',
-      path: 'http://samples.dirigible.io',
-      title: 'Samples',
-      description: "Browse Samples Space",
-      newTab: true
-    }, {
-      image: 'life-ring',
-      color: 'lila',
-      path: 'http://help.dirigible.io',
-      title: 'Help',
-      description: "Browse Help Portal",
-      newTab: true
-    }, {
-      image: 'map-o',
-      color: 'lila',
-      path: 'http://www.dirigible.io',
-      title: 'About',
-      description: "Project Home Page",
-      newTab: true
-    }];
 
-    /*
-     
-     */
-    
-    
-    $scope.getTarget = function(data) {
-      return data.newTab ? '_blank"' : '_self';
-    };
-  }
-]);
+menuControllers.controller('HomeCtrl', ['$scope',
+    function($scope) {
+      $scope.homeData = [{
+        image: 'edit',
+        color: 'blue',
+        path: '#/home/develop',
+        title: 'Develop',
+        description: "Development Toolkits",
+        newTab: true
+      }, {
+        image: "search",
+        color: 'green',
+        path: "#/home/discover",
+        title: "Discover",
+        description: "Service Endpoints"
+      }, {
+        image: "wrench",
+        color: 'orange',
+        path: "#/home/manage",
+        title: "Manage",
+        description: "Lifecycle Management"
+      }, {
+        image: "area-chart",
+        color: 'red',
+        path: "#/monitoring",
+        title: "Monitor",
+        description: "Basic Metrics"
+      }];
+    }
+  ]);
+
+
+
+
+
+menuControllers.controller('DevelopCtrl', ['$scope',
+    function($scope) {
+      $scope.developData = [{
+        image: 'laptop',
+        color: 'blue',
+        path: '../index.html',
+        title: 'Web IDE',
+        description: "Development Toolkit",
+        newTab: true
+      }, {
+        image: "mobile",
+        color: 'lblue',
+        path: "#/workspace",
+        title: "Light IDE",
+        description: "Lightweight Development"
+      }, {
+          image: "desktop",
+          color: 'lila',
+          path: "http://download.eclipse.org/dirigible/drops/M20160119-1919/p2/rcp/",
+          title: "Desktop IDE",
+          description: "Eclipse Plugins"
+        }];      
+    }
+  ]);
+
+
+menuControllers.controller('DiscoverCtrl', ['$scope',
+    function($scope) {
+      $scope.discoverData = [{
+        image: "search",
+        color: 'green',
+        path: "#/content",
+        title: "Registry",
+        description: "Browse Registry Content"
+      }, {
+        image: "globe",
+        color: 'yellow',
+        path: "#/web/content",
+        title: "Web",
+        description: "Browse Applications User Interfaces"
+      }, {
+        image: "book",
+        color: 'yellow',
+        path: "#/web/wiki",
+        title: "Wiki",
+        description: "Browse Applications Documentation"
+      }, {
+        image: "mobile-phone",
+        color: 'lblue',
+        path: "#/mobile",
+        title: "Mobile",
+        description: "Native Mobile Applications"
+      }, {
+        image: "file-code-o",
+        color: 'lblue',
+        path: "#/scripting/javascript",
+        title: "JavaScript",
+        description: "JavaScript Services Endpoints"
+      }, {
+        image: "coffee",
+        color: 'lblue',
+        path: "#/scripting/java",
+        title: "Java",
+        description: "Java Services Endpoints"
+      }, {
+        image: "database",
+        color: 'lblue',
+        path: "#/scripting/sql",
+        title: "SQL",
+        description: "SQL Services Endpoints"
+      }, {
+        image: "gear",
+        color: 'lblue',
+        path: "#/scripting/command",
+        title: "Command",
+        description: "Command Services Endpoints"
+      }, {
+        image: "caret-square-o-right",
+        color: 'orange',
+        path: "#/integration/flow",
+        title: "Flows",
+        description: "Flow Integration Services"
+      }, {
+        image: "clock-o",
+        color: 'orange',
+        path: "#/integration/job",
+        title: "Jobs",
+        description: "Job Integration Services"
+      }, {
+        image: "flash",
+        color: 'purple',
+        path: "#/scripting/tests",
+        title: "Tests",
+        description: "Test Cases Endpoints"
+      }];
+    }
+  ]);
+
+
+menuControllers.controller('ManageCtrl', ['$scope',
+    function($scope) {
+      $scope.manageData = [{
+        image: "truck",
+        color: 'blue',
+        path: "#/content/import",
+        title: "Transport",
+        description: "Transport Registry Content"
+      }, {
+        image: "toggle-on",
+        color: 'green',
+        path: "#/content/clone",
+        title: "Clone",
+        description: "Clone Instance"
+      }, {
+        image: "sign-in",
+        color: 'yellow',
+        path: "#/content/project",
+        title: "Import",
+        description: "Import Project"
+      }];
+    }
+  ]);
+
+
 
 menuControllers.controller('MonitoringCtrl', ['$scope',
   function($scope) {
     $scope.monitoringData = [{
-      image: "images/hits.png",
-      path: "#/monitoring/hits",
-      title: "Hits",
-      description: "Hit count graphics"
-    }, {
-      image: "images/memory.png",
-      path: "#/monitoring/memory",
-      title: "Memory",
-      description: "Memory graphics"
-    }, {
-      image: "images/response.png",
-      path: "#/monitoring/response",
-      title: "Response",
-      description: "Response time graphics"
-    }, {
-      image: "images/manage.png",
+      image: "wrench",
+      color: 'blue',
       path: "#/monitoring/manage",
       title: "Manage",
-      description: "Manage access locations"
+      description: "Manage locations"
     }, {
-      image: "images/access.png",
+      image: "bar-chart",
+      color: 'green',
+      path: "#/monitoring/hits",
+      title: "Hits",
+      description: "Hit count statistics"
+    }, {
+      image: "hourglass-o",
+      color: 'orange',
+      path: "#/monitoring/response",
+      title: "Response",
+      description: "Response time statistics"
+    }, {
+        image: "line-chart",
+        color: 'red',
+        path: "#/monitoring/memory",
+        title: "Memory",
+        description: "Memory statistics"
+    }, {
+      image: "ticket",
+      color: 'lila',
       path: "#/monitoring/acclog",
       title: "Access Log",
       description: "Access Log"
     }, {
-      image: "images/logging.png",
+      image: "film",
+      color: 'lblue',
       path: "#/monitoring/logging",
-      title: "Logging",
-      description: "Logging"
+      title: "Applications Log",
+      description: "Applications Log"
     }];
   }
 ]);

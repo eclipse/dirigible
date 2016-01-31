@@ -1,12 +1,12 @@
  
  	<div class="row">
 		<div class="col-lg-12">
-	    	<h1 class="page-header">Monitor</h1>
+	    	<h1 class="page-header">Discover</h1>
 		</div>
 	</div>
 
  
-    <div class="col-lg-4 col-md-6" ng-repeat="data in monitoringData">
+    <div class="col-lg-3 col-md-6" ng-repeat="data in discoverData">
         <div class="panel panel-{{ data.color }}">
             <div class="panel-heading">
                 <div class="row">
@@ -30,25 +30,18 @@
     </div>
     
 	<div class="row">
-	        <div class="col-lg-4 heading-lead page-scroll">
+	        <div class="col-lg-6 heading-lead page-scroll">
 				<hr class="section-heading-spacer">
                 <div class="clearfix"></div>
-	            <h2><i class="fa fa-wrench fa-fw"></i>
-                Manage Location</h2>
-	            <p>Register the locations to which the statistics shall be collected.</p>
+	            <h2><i class="fa fa-search fa-fw"></i>
+                Browse Content</h2>
+	            <p>Browse the raw content of the Registry containing all the published artifacts. Inspect the source of the HTML or Wiki pages as well as the code for the scripting services in JavaScript, Java, SQL and Shell Commands</p>
 	        </div>
-	        <div class="col-lg-4 heading-lead">
+	        <div class="col-lg-6 heading-lead">
 				<hr class="section-heading-spacer">
                 <div class="clearfix"></div>
-	            <h2><i class="fa fa fa-bar-chart-o fa-fw"></i>
-                Statistics</h2>
-	            <p>Monitor the basic statistics such as Hit Count and Response time for the registered locations. Used Memory chart can give an overview about the load of the instance.</p>
-	        </div>
-	        <div class="col-lg-4 heading-lead">
-		<hr class="section-heading-spacer">
-                <div class="clearfix"></div>
-	        <h2><i class="fa fa-film fa-fw"></i>
-                Logs</h2>
-	            <p>Inspect the applications logs directly from the specified server location.</p>
+	            <h2><i class="fa fa fa-server fa-fw"></i>
+                Find Endpoints</h2>
+	            <p>Navigate throughout all the registered service endpoints and perform test calls. Web content ususally is served as is, while Wiki pages first go thru transformation. The services are executed by the corresponding scripting engine for the given language. The same applies for the Flows and Jobs definitions.</p>
 	        </div>
 	    </div>

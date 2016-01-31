@@ -1,39 +1,30 @@
 [{
-    "name": "IDE",
-    "link": "../index.html"
-},{
-    "name": "Workspace",
-    "link": "#/workspace"
-},{
-    "name": "Content",
+    "name": "Develop",
     "subMenu": [{
-        "name": "Browse Registry Content",
+        "name": "Web IDE",
+        "link": "../index.html"
+    }, {
+        "name": "Lightweight IDE",
+        "link": "#/workspace"
+    }, {
+        "name": "Desktop IDE",
+        "link": "http://download.eclipse.org/dirigible/drops/M20160119-1919/p2/rcp/"
+    }]
+}, {
+    "name": "Discover",
+    "subMenu": [{
+        "name": "Browse Content",
         "link": "#/content"
     }, {
-        "name": "Transport Content",
-        "link": "#/content/import"
-    }, {
-        "name": "Clone Instance",
-        "link": "#/content/clone"
-    }, {
-        "name": "Import Project",
-        "link": "#/content/project"
-    }]
-}, {
-    "name": "Web",
-    "subMenu": [{
-        "name": "Sites",
+        "name": "Web",
         "link": "#/web/content"
     }, {
-        "name": "Wikis",
+        "name": "Wiki",
         "link": "#/web/wiki"
-    }]
-}, {
-    "name": "Mobile",
-    "link": "#/mobile"
-}, {
-    "name": "Scripting",
-    "subMenu": [{
+    }, {
+	    "name": "Mobile",
+	    "link": "#/mobile"
+	}, {
         "name": "JavaScript Services",
         "link": "#/scripting/javascript"
     }, {
@@ -48,10 +39,7 @@
     }, {
         "name": "Test Services",
         "link": "#/scripting/tests"
-    }]
-}, {
-    "name": "Integration",
-    "subMenu": [{
+    }, {
         "name": "Flows",
         "link": "#/integration/flow"
     }, {
@@ -59,24 +47,57 @@
         "link": "#/integration/job"
     }]
 }, {
+    "name": "Manage",
+    "subMenu": [{
+        "name": "Transport Content",
+        "link": "#/content/import"
+    }, {
+        "name": "Clone Instance",
+        "link": "#/content/clone"
+    }, {
+        "name": "Import Project",
+        "link": "#/content/project"
+    }]
+}, {
     "name": "Monitoring",
     "subMenu": [{
-        "name": "Hits Graphics",
+        "name": "Configure Locations",
+        "link": "#/monitoring/manage"
+    }, {
+        "name": "Hits Statistics",
         "link": "#/monitoring/hits"
     }, {
-        "name": "Memory Graphics",
-        "link": "#/monitoring/memory"
-    }, {
-        "name": "Response Graphics",
+        "name": "Response Statistics",
         "link": "#/monitoring/response"
     }, {
-        "name": "Manage",
-        "link": "#/monitoring/manage"
+        "name": "Memory Statistics",
+        "link": "#/monitoring/memory"
     }, {
         "name": "Access Log",
         "link": "#/monitoring/acclog"
     }, {
-        "name": "Logging",
+        "name": "Applications Log",
         "link": "#/monitoring/logging"
+    }]
+}, {
+    "name": "Help",
+    "subMenu": [{
+        "name": "Help Contents",
+        "link": "http://help.dirigible.io"
+    }, {
+        "name": "Samples",
+        "link": "http://samples.dirigible.io"
+    }, {
+        "name": "Forum",
+        "link": "http://forum.dirigible.io"
+    }, {
+        "name": "Bugzilla",
+        "link": "http://bugs.dirigible.io"
+    }, {
+        "name": "Mailing List",
+        "link": "http://mail.dirigible.io"
+    }, {
+        "name": "About",
+        "link": "http://www.dirigible.io"
     }]
 }]
