@@ -1,5 +1,5 @@
 angular.module('workspaceServices', ['ngResource']).factory('FilesSearch', ['$resource', function($resource) {
-	return $resource('../search');
+	return $resource('../searchw');
 }]);
 
 var workspaceControllers = angular.module('workspaceControllers', []);

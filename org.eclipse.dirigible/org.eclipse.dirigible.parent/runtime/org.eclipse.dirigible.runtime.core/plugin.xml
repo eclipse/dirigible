@@ -54,6 +54,16 @@
               load-on-startup="true">
         </servlet>
      </extension>
+     
+     <extension
+           id="WorkspaceSearchServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/searchw"
+              class="org.eclipse.dirigible.runtime.search.WorkspaceSearchServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
 	 
      <extension
            point="org.eclipse.equinox.http.registry.filters">
