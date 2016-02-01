@@ -48,8 +48,8 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.8/plugins/jqplot.dateAxisRenderer.min.js"></script>
   <!-- end -->
 
-  <link rel="stylesheet" type="text/css" href="/orion/code_edit/built-codeEdit.css" />
-  <script src="/orion/requirejs/require.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../orion/code_edit/built-codeEdit.css" />
+  <script src="../orion/requirejs/require.min.js"></script>
   
   <script>
   	
@@ -65,7 +65,6 @@
 	    "journal" : "styles/journal/bootstrap.min.css",
 	    "readable" : "styles/readable/bootstrap.min.css",
 	    "simplex" : "styles/simplex/bootstrap.min.css",
-	    "superhero" : "styles/superhero/bootstrap.min.css",
 	    "yeti" : "styles/yeti/bootstrap.min.css"
 	}
 	$(function(){
@@ -132,7 +131,6 @@
                 <li><a href="#" data-theme="journal" class="theme-link">Journal</a></li>
                 <li><a href="#" data-theme="readable" class="theme-link">Readable</a></li>
                 <li><a href="#" data-theme="simplex" class="theme-link">Simplex</a></li>
-                <li><a href="#" data-theme="superhero" class="theme-link">Superhero</a></li>
                 <li><a href="#" data-theme="yeti" class="theme-link">Yeti</a></li>
               </ul>
           </li>	
@@ -151,10 +149,12 @@
 	<div class="container" ng-view></div>
     
     <!-- End page content --> </div>
-	<div id="footer">
+	<div class="footer">
+	  
 	  <div class="container">
+	    <hr>
 	    <p class="text-muted credit">
-	      Copyright &copy; 2010-2015 Eclipse Foundation, Licensed under the
+	      Copyright &copy; 2010-2016 Eclipse Foundation, Licensed under the
 	      <a href='https://www.eclipse.org/legal/epl-v10.html' target='_blank'>Eclipse Public License - v 1.0</a>
 	    </p>
 	  </div>
