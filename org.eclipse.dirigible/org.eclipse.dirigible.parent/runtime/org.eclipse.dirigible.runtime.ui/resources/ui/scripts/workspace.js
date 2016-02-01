@@ -149,7 +149,7 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
 
     function createEditor(content, contentType) {
     	require.config({waitSeconds: 0});
-        require(["/orion/code_edit/built-codeEdit.js", "/orion/orion/keyBinding.js"], function(widget, mKeyBinding) {
+        require(["../orion/code_edit/built-codeEdit", "orion/keyBinding"], function(widget, mKeyBinding) {
             var codeEdit = new widget();
             $scope.editor = {};
             codeEdit.create({
