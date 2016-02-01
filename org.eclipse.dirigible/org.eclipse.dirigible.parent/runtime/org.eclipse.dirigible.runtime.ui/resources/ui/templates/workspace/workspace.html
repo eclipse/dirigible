@@ -20,14 +20,14 @@
 <div ng-controller="WorkspaceListCtrl" class="container-fluid">
 	<div class="row">
 		<div class="col-xs-18 collapse in" id="left">
-			<div id="successMessageAlert" class="alert alert-success" role="alert" ng-show="successfullMessage">
+			<!-- <div id="successMessageAlert" class="alert alert-success" role="alert" ng-show="successfullMessage">
 		  		<a href="#" class="alert-link">{{ successfullMessage }}</a>
 	  		</div>
-	    	<div class="alert alert-danger" role="alert" ng-show="mainError"> 
+	    	<div class="alert alert-danger" role="alert" ng-show="mainError">
 	    		<strong>Oh snap!</strong>
 	    		<span ng-show="mainError.status && mainError.data">{{ mainError.status }} - {{ mainError.data }}</span>
 	    		<span ng-hide="mainError.status && mainError.data">{{ mainError }}</span>
-	    	</div>
+	    	</div> -->
       		<div class="input-group list-group">
         		<input type="text" class="form-control" placeholder="Search for file" ng-model="search">
         		<span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="search = undefined">Clear</button></span>

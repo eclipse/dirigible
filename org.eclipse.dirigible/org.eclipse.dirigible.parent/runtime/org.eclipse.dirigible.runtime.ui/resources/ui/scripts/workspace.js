@@ -98,7 +98,7 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
 
     $scope.saveCalled = function() {
     	$http.put($scope.path, getText()).success(function(response) {
-    		onSuccess($scope.path + " saved successfully");
+    		onSuccess("Save of " + $scope.path + " passed successfully");
     	}).error(function(response) {
 			onError("Error saving " + $scope.path + "\n" + response);
     	});
@@ -106,14 +106,14 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
 
     $scope.publishCalled = function() {
     	$http.put($scope.path, getText()).success(function(response) {
-    		onSuccess($scope.path + " saved successfully");
+    		onSuccess("Save of " + $scope.path + " passed successfully");
 
     		var publishPath = $scope.path;
     		publishPath = publishPath.replace("/workspace", "");
     		publishPath = "/publish" + publishPath;
 
     		$http.post(publishPath).success(function(response) {
-        		onSuccess(publishPath + " published successfully");
+        		onSuccess("Publish of " + publishPath + " passed successfully");
     		}).error(function(response) {
     			onError("Error publishing " + publishPath + "\n" + response);
     		});
@@ -134,17 +134,19 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
     	console.log(message);
     	$scope.successfullMessage = message;
     	$scope.mainError = null;
-    	$("#successMessageAlert").fadeIn();
-    	setTimeout(function() {
-    		$("#successMessageAlert").fadeOut();
-    	}, 1500);
+//    	$("#successMessageAlert").fadeIn();
+//    	setTimeout(function() {
+//    		$("#successMessageAlert").fadeOut();
+//    	}, 1500);
     	dirtyChanged(false);
+    	$.notify({message: $scope.successfullMessage}, {type: "success"});
     }
 
     function onError(error) {
     	console.error(error);
     	$scope.successfullMessage = null;
     	$scope.mainError = error;
+    	$.notify({message: $scope.mainError = error}, {type: "danger"});
     }
 
     function createEditor(content, contentType) {
