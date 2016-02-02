@@ -240,7 +240,8 @@ public class LocalRepositoryDAO {
 				// This is folder, that was not created
 				if (ContentTypeHelper.getExtension(workspacePath).isEmpty()
                         && !workspacePath.endsWith(".")) {
-					FileSystemUtils.createFolder(workspacePath);
+//					FileSystemUtils.createFolder(workspacePath);
+					return null;
 				}
 			}
 			if (objectFile.isFile()) {
