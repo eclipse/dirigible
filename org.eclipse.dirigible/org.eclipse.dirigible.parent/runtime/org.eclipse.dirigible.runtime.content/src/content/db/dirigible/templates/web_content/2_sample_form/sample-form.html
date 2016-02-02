@@ -1,18 +1,11 @@
 <!DOCTYPE html>
-<html ng-app="Sample">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="">
-		<meta name="author" content="">
-		
-		<title>${pageTitle}</title>
-		
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-	</head>
-	<body>
+<html lang="en">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.17/angular.min.js"></script>
+</head>
+<body ng-app>
+<div ng-include="'header.html'"></div>
+
 		<div class="container" ng-controller="Controller">
 			<div class="alert alert-success"><h3><strong>Sample Page</strong></h3></div>
 			<h3>Form <span class="label label-success">New</span></h3>
@@ -159,5 +152,32 @@
 				} 
 			]);
 		</script>
-	</body>
+		<!-- Bootstrap core JavaScript
+		  ================================================== -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script>
+		  $( document ).ready(function() {
+		    $\.getJSON("main.menu", function(data) {
+				$\.each(data, function(i, item) {
+					var itemContent = "";
+					if (item.subMenu.length > 0) {
+						itemContent += "<li class=\"dropdown\"><a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" + item.name + " <b class=\"caret\"></b></a>";
+						itemContent += "<ul class=\"dropdown-menu\">";
+						$\.each(item.subMenu, function(j, subitem) {
+							itemContent += "<li><a href=\"" + subitem.link + "\" >" + subitem.name + "</a></li>";
+						});
+						itemContent += "</ul>";
+					} else {
+						itemContent += "<li><a href=\"" + item.link + "\" >" + item.name + "</a>";
+					}
+					itemContent += "</li>";
+					$("#main-menu").append(itemContent);
+				});
+			});
+		  });
+		</script>
+
+<div ng-include="'footer.html'"></div>
+</body>
 </html>

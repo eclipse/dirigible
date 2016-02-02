@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Welcome",
+        "link": "index.html",
+        "subMenu": []
+    },
+    {
+        "name": "Dropdown",
+        "link": "",
+        "subMenu": [
+            {
+                "name" : "${User} Books",
+                "link" : "${user}_books.html"
+            }
+        ]
+    }
+]

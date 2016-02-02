@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 
 public class HtmlTemplateGenerator extends TemplateGenerator {
 
@@ -46,35 +47,11 @@ public class HtmlTemplateGenerator extends TemplateGenerator {
 	@Override
 	public void generate() throws Exception {
 		super.generate();
-		// if ("/org/eclipse/dirigible/ide/template/ui/html/templates/index-page.html" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) {
-		// copyFile(
-		// "main.menu", //$NON-NLS-1$
-		// "/org/eclipse/dirigible/ide/template/ui/html/templates/main.menu", //$NON-NLS-1$
-		// HtmlTemplateGenerator.class);
-		// copyFile(
-		// "sample.html", //$NON-NLS-1$
-		// "/org/eclipse/dirigible/ide/template/ui/html/templates/sample.html", //$NON-NLS-1$
-		// HtmlTemplateGenerator.class);
-		// generateFile(
-		// "/org/eclipse/dirigible/ide/template/ui/html/templates/header.html", //$NON-NLS-1$
-		// model.getTargetLocation(), "header.html"); //$NON-NLS-1$
-		// generateFile(
-		// "/org/eclipse/dirigible/ide/template/ui/html/templates/footer.html", //$NON-NLS-1$
-		// model.getTargetLocation(), "footer.html"); //$NON-NLS-1$
-		// }
 	}
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		String content = new String(bytes);
-		content = content.replace("\\$", "$"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\{", "{"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\}", "}"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\[", "["); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\]", "]"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\.", "."); //$NON-NLS-1$ //$NON-NLS-2$
-		byte[] result = content.getBytes();
+		byte[] result = TemplateUtils.normalizeEscapes(bytes);
 		return result;
 	}
 

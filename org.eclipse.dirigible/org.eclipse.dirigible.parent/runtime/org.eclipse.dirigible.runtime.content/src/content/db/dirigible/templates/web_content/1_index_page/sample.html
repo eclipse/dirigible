@@ -1,4 +1,12 @@
-<div class="container" ng-app ng-controller="Controller">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.17/angular.min.js"></script>
+</head>
+<body ng-app>
+<div ng-include="'header.html'"></div>
+
+<div class="container" ng-controller="Controller">
 	<div class="alert alert-success">
 		<h3>
 			<strong>Sample Page</strong>
@@ -170,3 +178,32 @@
 		}
 	}
 </script>
+<!-- Bootstrap core JavaScript
+  ================================================== -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script>
+  $( document ).ready(function() {
+    $\.getJSON("main.menu", function(data) {
+		$\.each(data, function(i, item) {
+			var itemContent = "";
+			if (item.subMenu.length > 0) {
+				itemContent += "<li class=\"dropdown\"><a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" + item.name + " <b class=\"caret\"></b></a>";
+				itemContent += "<ul class=\"dropdown-menu\">";
+				$\.each(item.subMenu, function(j, subitem) {
+					itemContent += "<li><a href=\"" + subitem.link + "\" >" + subitem.name + "</a></li>";
+				});
+				itemContent += "</ul>";
+			} else {
+				itemContent += "<li><a href=\"" + item.link + "\" >" + item.name + "</a>";
+			}
+			itemContent += "</li>";
+			$("#main-menu").append(itemContent);
+		});
+	});
+  });
+</script>
+
+<div ng-include="'footer.html'"></div>
+</body>
+</html>

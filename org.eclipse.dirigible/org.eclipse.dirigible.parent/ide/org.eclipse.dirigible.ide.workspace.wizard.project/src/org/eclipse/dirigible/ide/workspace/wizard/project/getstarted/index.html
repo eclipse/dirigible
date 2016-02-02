@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>${pageTitle}</title>
+    <title>Welcome to the ${User}'s Bookstore</title>
     
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
@@ -28,7 +28,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">${pageTitle}</a>
+            <a class="navbar-brand" href="#">${User}'s Bookstore</a>
           </div>
           
           <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -42,14 +42,14 @@
 	  <div class="jumbotron visible-lg visible-md" >
 		<div class="container">
     			<div id="sloganHolder">
-					Your slogan here...
+					${User}'s Bookstore is #1
 				</div>
 		</div>
 	  </div>
 	  
       <div class="page-header well visible-sm visible-xs">
             <h3 class="page-banner">
-                ${pageTitle}
+               ${User}'s Bookstore
             </h3>
       </div>
 	  
@@ -57,7 +57,7 @@
 	  <div class="container" style="padding: 50px 15px 0;">
 		<div id="content" >
         	<br/><br/>
-            <p class="lead">Your welcome message here...</p>
+            <p class="lead">Welcome to the ${User}'s Bookstore</p>
             <br/><br/>
 		</div>
 	  </div>
@@ -79,13 +79,13 @@
 
 	<script>
 		  $( document ).ready(function() {
-		    $\.getJSON("main.menu", function(data) {
-				$\.each(data, function(i, item) {
+		    $.getJSON("main.menu", function(data) {
+				$.each(data, function(i, item) {
 					var itemContent = "";
 					if (item.subMenu.length > 0) {
 						itemContent += "<li class=\"dropdown\"><a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" + item.name + " <b class=\"caret\"></b></a>";
 						itemContent += "<ul class=\"dropdown-menu\">";
-						$\.each(item.subMenu, function(j, subitem) {
+						$.each(item.subMenu, function(j, subitem) {
 							itemContent += "<li><a href=\"" + subitem.link + "\" >" + subitem.name + "</a></li>";
 						});
 						itemContent += "</ul>";

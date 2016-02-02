@@ -44,4 +44,16 @@ public class TemplateUtils {
 		return resourceManager.createImage(imageDescriptor);
 	}
 
+	public static byte[] normalizeEscapes(byte[] bytes) {
+		String content = new String(bytes);
+		content = content.replace("\\$", "$"); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\{", "{"); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\}", "}"); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\[", "["); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\]", "]"); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\.", "."); //$NON-NLS-1$ //$NON-NLS-2$
+		byte[] result = content.getBytes();
+		return result;
+	}
+
 }

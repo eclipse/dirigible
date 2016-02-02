@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 
 public class IntegrationServiceTemplateGenerator extends TemplateGenerator {
 
@@ -58,40 +59,8 @@ public class IntegrationServiceTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		String content = new String(bytes);
-		content = content.replace("\\$", "$"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\{", "{"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\}", "}"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\.", "."); //$NON-NLS-1$ //$NON-NLS-2$
-		byte[] result = content.getBytes();
+		byte[] result = TemplateUtils.normalizeEscapes(bytes);
 		return result;
-	}
-
-	@Override
-	public void generate() throws Exception {
-		super.generate();
-		// IPath targetLocationPath = new Path(getModel().getTargetLocation());
-		// String projectName = getModel().getProjectName();
-		// targetLocationPath = targetLocationPath.removeLastSegments(targetLocationPath.segmentCount() - 1);
-		// String targetLocationPathJavaScriptServices = targetLocationPath.append(IRepository.SEPARATOR)
-		// .append(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES).append(IRepository.SEPARATOR).append(projectName).toString();
-		//
-		// if ("/org/eclipse/dirigible/ide/template/ui/is/templates/shielding-js.flow" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) {
-		//
-		// generateFile("/org/eclipse/dirigible/ide/template/ui/is/templates/javascript-sync.js", //$NON-NLS-1$
-		// targetLocationPathJavaScriptServices, model.getEndpointAddress() +
-		// ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT);
-		// }
-		//
-		// if ("/org/eclipse/dirigible/ide/template/ui/is/templates/trigger-to-javascript.job" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) {
-		//
-		// generateFile("/org/eclipse/dirigible/ide/template/ui/is/templates/javascript-async.js", //$NON-NLS-1$
-		// targetLocationPathJavaScriptServices, model.getEndpointAddress() +
-		// ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT);
-		// }
-
 	}
 
 }

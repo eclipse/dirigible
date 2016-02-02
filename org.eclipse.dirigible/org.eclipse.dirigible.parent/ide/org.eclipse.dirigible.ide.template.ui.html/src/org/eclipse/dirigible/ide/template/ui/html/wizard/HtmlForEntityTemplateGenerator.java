@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
@@ -15,14 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 
-//	private static final String REST_SERVICE_ROOT_JS = "/dirigible/services/js"; //$NON-NLS-1$
+	//	private static final String REST_SERVICE_ROOT_JS = "/dirigible/services/js"; //$NON-NLS-1$
 	private static final String REST_SERVICE_ROOT_JS = "../../js"; //$NON-NLS-1$
 
 	private static final String LOG_TAG = "HTML_FOR_ENTITY_GENERATOR"; //$NON-NLS-1$
@@ -65,7 +64,7 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 		if (index >= 0) {
 			result = entityPath.substring(index + ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES.length());
 		} else {
-			result = entityPath; //$NON-NLS-1$
+			result = entityPath;
 		}
 		result = result.replace(source.getFileExtension(), ""); //$NON-NLS-1$
 		result += "js"; //$NON-NLS-1$
@@ -80,6 +79,12 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 	@Override
 	protected String getLogTag() {
 		return LOG_TAG;
+	}
+
+	@Override
+	protected byte[] afterGeneration(byte[] bytes) {
+		byte[] result = TemplateUtils.normalizeEscapes(bytes);
+		return result;
 	}
 
 }

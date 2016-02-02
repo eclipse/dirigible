@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 
 /**
  * Mobile template generator
@@ -54,14 +55,7 @@ public class MobileTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		String content = new String(bytes);
-		content = content.replace("\\$", "$"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\{", "{"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\}", "}"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\[", "["); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\]", "]"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\.", "."); //$NON-NLS-1$ //$NON-NLS-2$
-		byte[] result = content.getBytes();
+		byte[] result = TemplateUtils.normalizeEscapes(bytes);
 		return result;
 	}
 

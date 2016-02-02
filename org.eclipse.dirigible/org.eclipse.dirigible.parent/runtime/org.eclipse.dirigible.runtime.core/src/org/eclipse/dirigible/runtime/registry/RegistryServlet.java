@@ -53,7 +53,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 	private static final String ACCEPT_HEADER = "Accept"; //$NON-NLS-1$
 
-	private static final String INDEX_HTML = "index.html"; //$NON-NLS-1$
+	protected static final String INDEX_HTML = "index.html"; //$NON-NLS-1$
 
 	private static final String LISTING_OF_FOLDERS_IS_FORBIDDEN = Messages.getString("RegistryServlet.LISTING_OF_FOLDERS_IS_FORBIDDEN"); //$NON-NLS-1$
 
@@ -181,8 +181,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		return data;
 	}
 
-	protected byte[] buildResourceData(final IEntity entity, final HttpServletRequest request, final HttpServletResponse response)
-			throws IOException {
+	protected byte[] buildResourceData(final IEntity entity, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
 		byte[] data = new byte[] {};
 		if (!setCacheHeaders(entity, request, response)) {
 			data = readResourceData((IResource) entity);
@@ -207,7 +206,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 			if ((!StringUtils.isEmpty(modifiedSinceHeader))) {
 				Calendar modifiedSince = getCalendar(parseDate(modifiedSinceHeader));
 
-				if (lastModified.compareTo(modifiedSince) <= 0) {
+				if (lastModified.getTimeInMillis() <= modifiedSince.getTimeInMillis()) {
 
 					Calendar expires = getCalendar(lastModified);
 					expires.add(Calendar.MONTH, 1);
@@ -251,6 +250,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		}
 		return null;
 	}
+
 	// --------------------------------------------------------------------
 
 	private Calendar getCalendar(Calendar calendar) {

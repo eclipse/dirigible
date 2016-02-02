@@ -1,20 +1,17 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.wizard.project.getstarted;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -52,8 +49,7 @@ public class GetStartedProjectWizardModel {
 
 	private static final String INVALID_PROJECT_NAME = Messages.NewProjectWizardModel_INVALID_PROJECT_NAME;
 
-	public static final Logger logger = Logger
-			.getLogger(GetStartedProjectWizardModel.class.getCanonicalName());
+	public static final Logger logger = Logger.getLogger(GetStartedProjectWizardModel.class.getCanonicalName());
 
 	private static final String INITIAL_LOCATION = "MyFirstProject"; //$NON-NLS-1$
 
@@ -75,8 +71,7 @@ public class GetStartedProjectWizardModel {
 
 	public IValidationStatus validate() {
 		IWorkspace workspace = WorkspaceLocator.getWorkspace();
-		IStatus pathValidation = workspace.validateName(projectName,
-				IResource.PROJECT);
+		IStatus pathValidation = workspace.validateName(projectName, IResource.PROJECT);
 		if (!pathValidation.isOK()) {
 			return ValidationStatus.createError(INVALID_PROJECT_NAME);
 		}
@@ -84,28 +79,23 @@ public class GetStartedProjectWizardModel {
 		IWorkspaceRoot root = workspace.getRoot();
 		IProject project = root.getProject(projectName);
 		if (project.exists()) {
-			return ValidationStatus
-					.createError(PROJECT_WITH_THIS_NAME_ALREADY_EXISTS);
+			return ValidationStatus.createError(PROJECT_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
 		if (!isValidRepositoryProject()) {
-			return ValidationStatus.createError(String.format(
-					PROJECT_WITH_NAME_S_WAS_ALREADY_CREATED_FROM_USER_S,
-					projectName, conflictUser));
+			return ValidationStatus.createError(String.format(PROJECT_WITH_NAME_S_WAS_ALREADY_CREATED_FROM_USER_S, projectName, conflictUser));
 		}
 		return ValidationStatus.createOk();
 	}
 
 	private boolean isValidRepositoryProject() {
 		IRepository repository = RepositoryFacade.getInstance().getRepository();
-		ICollection userFolders = repository
-				.getCollection(IRepositoryPaths.DB_DIRIGIBLE_USERS);
+		ICollection userFolders = repository.getCollection(IRepositoryPaths.DB_DIRIGIBLE_USERS);
 		boolean isValid = true;
 		try {
 			for (ICollection user : userFolders.getCollections()) {
 				if (user.exists()) {
-					ICollection workspace = user
-							.getCollection(IRepositoryPaths.WORKSPACE_FOLDER_NAME);
+					ICollection workspace = user.getCollection(IRepositoryPaths.WORKSPACE_FOLDER_NAME);
 					for (ICollection nextProject : workspace.getCollections()) {
 						if (nextProject.exists()) {
 							if (nextProject.getName().equals(projectName)) {
@@ -134,33 +124,29 @@ public class GetStartedProjectWizardModel {
 		// create the project first
 		try {
 			project.create(null);
-		} catch(CoreException e) {
+		} catch (CoreException e) {
 			logger.error(e.getMessage(), e);
 		}
-		
+
 		project.open(null);
-		
-		
+
 		// create default folders
 		List<IPublisher> publishers = PublishManager.getPublishers();
 		for (IPublisher publisher : publishers) {
 			IFolder folder = project.getFolder(publisher.getFolderType());
 			folder.create(true, false, null);
 		}
-		
-		
+
 		ProjectCreatorEnhancer.enhance(project);
-		
+
 		createGetStartedArtifacts(project);
-		
+
 		activateAndPublish(project);
-		
+
 		project.refreshLocal(2, null);
-		
+
 		return project;
 	}
-
-	
 
 	private void createGetStartedArtifacts(IProject project) {
 		generateAndStoreArtifact(project, "user_books.table", "DataStructures");
@@ -168,8 +154,12 @@ public class GetStartedProjectWizardModel {
 		generateAndStoreArtifact(project, "user_books.js", "ScriptingServices");
 		generateAndStoreArtifact(project, "user_books.entity", "ScriptingServices");
 		generateAndStoreArtifact(project, "user_books.html", "WebContent");
+		generateAndStoreArtifact(project, "header.html", "WebContent");
+		generateAndStoreArtifact(project, "footer.html", "WebContent");
+		generateAndStoreArtifact(project, "main.menu", "WebContent");
+		generateAndStoreArtifact(project, "index.html", "WebContent");
 	}
-	
+
 	private void generateAndStoreArtifact(IProject project, String resource, String folder) {
 		InputStream in = GetStartedProjectWizardModel.class.getResourceAsStream(resource);
 		String user = CommonParameters.getUserName();
@@ -179,7 +169,7 @@ public class GetStartedProjectWizardModel {
 			content = content.replace("${User}", CommonUtils.toCamelCase(user));
 			content = content.replace("${user}", user);
 			content = content.replace("${USER}", user.toUpperCase());
-			
+
 			IFolder pckg = project.getFolder(folder + "/" + user + "_books");
 			if (!pckg.exists()) {
 				pckg.create(true, false, null);
@@ -191,7 +181,7 @@ public class GetStartedProjectWizardModel {
 		} catch (CoreException e) {
 			logger.error(e.getMessage(), e);
 		}
-		
+
 	}
 
 	private void activateAndPublish(IProject project) {

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
@@ -114,49 +115,8 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		String content = new String(bytes);
-		content = content.replace("\\$", "$"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\{", "{"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\}", "}"); //$NON-NLS-1$ //$NON-NLS-2$
-		content = content.replace("\\.", "."); //$NON-NLS-1$ //$NON-NLS-2$
-		byte[] result = content.getBytes();
+		byte[] result = TemplateUtils.normalizeEscapes(bytes);
 		return result;
 	}
 
-	@Override
-	public void generate() throws Exception {
-		super.generate();
-
-		if ("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.js" //$NON-NLS-1$
-				.equals(model.getTemplate().getLocation())) {
-			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud.entity", //$NON-NLS-1$
-					model.getTargetLocation(), model.getFileNameNoExtension() + ".entity"); //$NON-NLS-1$
-			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/database-crud-lib.js", //$NON-NLS-1$
-					model.getTargetLocation(), model.getFileNameNoExtension() + "_lib.js"); //$NON-NLS-1$
-
-		}
-
-		if ("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.js" //$NON-NLS-1$
-				.equals(model.getTemplate().getLocation())) {
-			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read.entity", //$NON-NLS-1$
-					model.getTargetLocation(), model.getFileNameNoExtension() + ".entity"); //$NON-NLS-1$
-			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/database-read-lib.js", //$NON-NLS-1$
-					model.getTargetLocation(), model.getFileNameNoExtension() + "_lib.js"); //$NON-NLS-1$
-
-		}
-
-		if ("/org/eclipse/dirigible/ide/template/ui/js/templates/ruby-service.rb" //$NON-NLS-1$
-				.equals(model.getTemplate().getLocation())) {
-			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/ruby-module.rb", //$NON-NLS-1$
-					model.getTargetLocation(), "module1.rb"); //$NON-NLS-1$
-
-		}
-
-		if ("/org/eclipse/dirigible/ide/template/ui/js/templates/groovy-service.groovy" //$NON-NLS-1$
-				.equals(model.getTemplate().getLocation())) {
-			generateFile("/org/eclipse/dirigible/ide/template/ui/js/templates/groovy-module.groovy", //$NON-NLS-1$
-					model.getTargetLocation(), "module1.groovy"); //$NON-NLS-1$
-
-		}
-	}
 }
