@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.osgi,
  org.eclipse.core.resources,
  org.eclipse.equinox.registry,
- org.eclipse.dirigible.repository.db.init
+ org.eclipse.dirigible.repository.db.init,
+ org.eclipse.dirigible.repository.zip
 Import-Package: org.eclipse.dirigible.repository.logging
 Service-Component: OSGi-INF/repository-local.xml, OSGi-INF/master-repository-fs.xml
 Bundle-Activator: org.eclipse.dirigible.repository.local.LocalRepositoryActivator

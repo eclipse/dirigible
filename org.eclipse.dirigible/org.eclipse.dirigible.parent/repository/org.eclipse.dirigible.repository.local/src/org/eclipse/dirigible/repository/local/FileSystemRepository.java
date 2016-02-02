@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.repository.local;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
@@ -28,6 +26,8 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.repository.zip.ZipExporter;
+import org.eclipse.dirigible.repository.zip.ZipImporter;
 
 /**
  * The File System based implementation of {@link IRepository}
@@ -52,8 +52,8 @@ public class FileSystemRepository implements IRepository {
 	private String infoPath = IRepository.SEPARATOR;
 
 	private LocalRepositoryDAO repositoryDAO;
-	private LocalZipImporter importer;
-	private LocalZipExporter exporter;
+//	private LocalZipImporter importer;
+//	private LocalZipExporter exporter;
 
 	private String user;
 
@@ -85,8 +85,8 @@ public class FileSystemRepository implements IRepository {
 
 		this.user = user;
 		this.repositoryDAO = new LocalRepositoryDAO(this);
-		this.importer = new LocalZipImporter(this);
-		this.exporter = new LocalZipExporter(this);
+//		this.importer = new LocalZipImporter(this);
+//		this.exporter = new LocalZipExporter(this);
 
 		initializeRepository(root);
 	}
@@ -249,14 +249,14 @@ public class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public void importZip(ZipInputStream zipInputStream, String path, boolean override, boolean excludeRootFolderName) throws IOException {
+	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName) throws IOException {
 		if (zipInputStream == null) {
 			logger.error(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 			throw new IOException(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 		}
 		// TODO make use of override and excludeRootFolderName arguments?
-		importer.unzip(path, zipInputStream, null);
-
+//		importer.unzip(relativeRoot, zipInputStream, null);
+		ZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
 	}
 
 	@Override
@@ -270,47 +270,47 @@ public class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public void importZip(byte[] data, String path, boolean override, boolean excludeRootFolderName, Map<String, String> filter) throws IOException {
+	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter) throws IOException {
 		if (data == null) {
 			logger.error(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 			throw new IOException(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 		}
 		// TODO make use of override and excludeRootFolderName arguments?
-		importer.unzip(path, new ZipInputStream(new ByteArrayInputStream(data)), filter);
-
+		// importer.unzip(relativeRoot, new ZipInputStream(new ByteArrayInputStream(data)), filter);
+		ZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
 	}
 
-	@Override
-	public byte[] exportZip(List<String> relativeRoots) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
-		exporter.zip(relativeRoots, zipOutputStream);
-		return baos.toByteArray();
-	}
+//	@Override
+//	public byte[] exportZip(List<String> relativeRoots) throws IOException {
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
+//		exporter.zip(relativeRoots, zipOutputStream);
+//		return baos.toByteArray();
+//	}
+//
+//	@Override
+//	public byte[] exportZip(String path, boolean inclusive) throws IOException {
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
+//		try {
+//			exporter.zip(path, zipOutputStream, inclusive);
+//		} finally {
+//			zipOutputStream.flush();
+//			zipOutputStream.close();
+//		}
+//
+//		return baos.toByteArray();
+//	}
 
-	@Override
-	public byte[] exportZip(String path, boolean inclusive) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
-		try {
-			exporter.zip(path, zipOutputStream, inclusive);
-		} finally {
-			zipOutputStream.flush();
-			zipOutputStream.close();
-		}
-
-		return baos.toByteArray();
-	}
-
-	// @Override
-	// public byte[] exportZip(List<String> relativeRoots) throws IOException {
-	// return ZipExporter.exportZip(this, relativeRoots);
-	// }
-	//
-	// @Override
-	// public byte[] exportZip(String relativeRoot, boolean inclusive) throws IOException {
-	// return ZipExporter.exportZip(this, relativeRoot, inclusive);
-	// }
+	 @Override
+	 public byte[] exportZip(List<String> relativeRoots) throws IOException {
+		 return ZipExporter.exportZip(this, relativeRoots);
+	 }
+	
+	 @Override
+	 public byte[] exportZip(String relativeRoot, boolean inclusive) throws IOException {
+		 return ZipExporter.exportZip(this, relativeRoot, inclusive);
+	 }
 
 	@Override
 	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws IOException {
