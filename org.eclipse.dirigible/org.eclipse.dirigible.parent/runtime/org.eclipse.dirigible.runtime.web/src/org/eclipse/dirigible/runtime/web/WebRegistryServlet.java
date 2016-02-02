@@ -40,6 +40,7 @@ public class WebRegistryServlet extends RegistryServlet {
 	//	protected static final String FOOTER_HTML = "footer.html"; //$NON-NLS-1$
 	//	private static final String FOOTER_REF = "footer.ref"; //$NON-NLS-1$
 	//	protected static final String HTML_EXTENSION = ".html"; //$NON-NLS-1$
+
 	//	protected static final String INDEX_HTML = "index.html"; //$NON-NLS-1$
 
 	@Override

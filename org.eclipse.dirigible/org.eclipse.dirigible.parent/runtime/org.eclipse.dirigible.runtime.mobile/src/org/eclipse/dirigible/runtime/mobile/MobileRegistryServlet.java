@@ -28,7 +28,7 @@ public class MobileRegistryServlet extends RegistryServlet {
 
 	private static final long serialVersionUID = -491670839750494628L;
 
-	private static final String CONTENT_FOLDER = "/" + ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS; //$NON-NLS-1$
+	private static final String CONTENT_FOLDER = IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS; //$NON-NLS-1$
 
 	@Override
 	protected String extractRepositoryPath(HttpServletRequest request) throws IllegalArgumentException {
