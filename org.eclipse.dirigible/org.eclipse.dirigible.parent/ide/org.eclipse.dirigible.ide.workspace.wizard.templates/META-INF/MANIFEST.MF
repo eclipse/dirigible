@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.workspace.wizard.templates
 Bundle-SymbolicName: org.eclipse.dirigible.ide.workspace.wizard.templates;singleton:=true
-Bundle-Version: 2.2.160119
+Bundle-Version: 2.2.160203
 Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.dirigible.ide.template.ui.common,

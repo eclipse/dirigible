@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.debug.model
 Bundle-SymbolicName: org.eclipse.dirigible.ide.debug.model;singleton:=true
-Bundle-Version: 2.2.160119
+Bundle-Version: 2.2.160203
 Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.dirigible.ide.common,
