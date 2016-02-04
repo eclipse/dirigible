@@ -39,6 +39,7 @@ require([
 	'json!tern/defs/ecma6.json',
 	'json!tern/defs/browser.json',
 	'json!tern/defs/dirigible.json',
+	'json!tern/defs/tabris.json',
 	'javascript/handlers/ternAssistHandler',
 	'javascript/handlers/ternDeclarationHandler',
 	'javascript/handlers/ternHoverHandler',
@@ -52,7 +53,7 @@ require([
 ],
 /* @callback */ function(Tern, docPlugin, orionAMQPPlugin, angularPlugin,/* componentPlugin,*/ orionExpressPlugin, orionMongoDBPlugin,
 							orionMySQLPlugin, orionNodePlugin, orionPostgresPlugin, orionRedisPlugin, orionRequirePlugin, ternPluginsPlugin, 
-							openImplPlugin, ecma5, ecma6, browser, dirigible, AssistHandler, DeclarationHandler, HoverHandler, OccurrencesHandler, 
+							openImplPlugin, ecma5, ecma6, browser, dirigible, tabris, AssistHandler, DeclarationHandler, HoverHandler, OccurrencesHandler, 
 							RenameHandler, PluginsHandler, RefsHandler, ImplHandler, Messages, i18nUtil) {
     
     var ternserver, pendingReads = Object.create(null);
@@ -64,7 +65,7 @@ require([
         var options = {
                 async: true,
                 debug:true,
-                defs: [ecma5, ecma6, browser, dirigible],
+                defs: [ecma5, ecma6, browser, dirigible, tabris],
                 projectDir: '/', //$NON-NLS-1$
                 plugins: {
                     doc_comment: {

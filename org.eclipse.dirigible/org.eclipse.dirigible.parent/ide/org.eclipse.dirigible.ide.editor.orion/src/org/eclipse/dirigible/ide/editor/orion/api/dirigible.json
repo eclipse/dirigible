@@ -33,27 +33,20 @@
       "getConnection": "fn() -> $.getDatasource.!ret.getConnection.!ret"
     },
     "$.getDatasource.!ret.getConnection.!ret": {
-      "prepareStatement": "fn() -> $.getDatasource.!ret.getConnection.!ret.prepareStatement.!ret",
+      "createStatement": "fn() -> $.getDatasource.!ret.getConnection.!ret.createStatement.!ret",
+      "prepareStatement": "fn(sql: ?) -> $.getDatasource.!ret.getConnection.!ret.prepareStatement.!ret",
       "setAutoCommit": "fn(autoCommit: ?)",
       "commit": "fn()",
       "rollback": "fn()",
       "close": "fn()"
     },
-    "$.getDatasource.!ret.getConnection.!ret.prepareStatement.!ret": {
-      "executeQuery": "fn() -> $.getDatasource.!ret.getConnection.!ret.prepareStatement.!ret.executeQuery.!ret",
-      "executeUpdate": "fn()",
-      "execute": "fn()",
-      "setString": "fn(index: ?, value: ?)",
-      "setLong": "fn(index: ?, value: ?)",
-      "setInt": "fn(index: ?, value: ?)",
-      "setDouble": "fn(index: ?, value: ?)",
-      "setFloat": "fn(index: ?, value: ?)",
-      "setDate": "fn(index: ?, value: ?)",
-      "setTime": "fn(index: ?, value: ?)",
-      "setTimestamp": "fn(index: ?, value: ?)",
+    "$.getDatasource.!ret.getConnection.!ret.createStatement.!ret": {
+      "executeQuery": "fn(sql: ?) -> $.getDatasource.!ret.getConnection.!ret.createStatement.!ret.executeQuery.!ret",
+      "executeUpdate": "fn(sql: ?)",
+      "execute": "fn(sql: ?)",
       "close": "fn()"
     },
-    "$.getDatasource.!ret.getConnection.!ret.prepareStatement.!ret.executeQuery.!ret": {
+    "$.getDatasource.!ret.getConnection.!ret.createStatement.!ret.executeQuery.!ret": {
       "next": "fn() -> bool",
       "execute": "fn()",
       "getString": "fn(index: ?) -> string",
@@ -64,6 +57,20 @@
       "getDate": "fn(index: ?) -> $.getDatabaseUtils.!ret.createDate.!ret",
       "getTime": "fn(index: ?) -> $.getDatabaseUtils.!ret.createDate.!ret",
       "getTimestamp": "fn(index: ?) -> $.getDatabaseUtils.!ret.createDate.!ret",
+      "close": "fn()"
+    },
+    "$.getDatasource.!ret.getConnection.!ret.prepareStatement.!ret": {
+      "executeQuery": "fn() -> $.getDatasource.!ret.getConnection.!ret.createStatement.!ret.executeQuery.!ret",
+      "executeUpdate": "fn()",
+      "execute": "fn()",
+      "setString": "fn(index: ?, value: ?)",
+      "setLong": "fn(index: ?, value: ?)",
+      "setInt": "fn(index: ?, value: ?)",
+      "setDouble": "fn(index: ?, value: ?)",
+      "setFloat": "fn(index: ?, value: ?)",
+      "setDate": "fn(index: ?, value: ?)",
+      "setTime": "fn(index: ?, value: ?)",
+      "setTimestamp": "fn(index: ?, value: ?)",
       "close": "fn()"
     },
     "$.getRequest.!ret": {
@@ -337,6 +344,10 @@
         "!doc": "Removes older messages"
       }
     },
+    "$.getTemplatingService.!ret": {
+      "generate": "fn(template: ?, parameters: ?, String: ?, tag: ?) -> string",
+      "createParameters": "fn() -> $.getExecutionContext.!ret"
+    },
     "$.getIOUtils.!ret": {
       "toString": "fn(inputStream: ?) -> string"
     },
@@ -425,7 +436,10 @@
       "fromJson": "fn(json: ?) -> string",
       "toJson": "fn(xml: ?) -> string"
     },
-    "$.getDatasource.!ret.getConnection.!ret.prepareStatement.!ret.executeQuery.!ret.getDate.!ret": {
+    "$.getNamedDatasources.!ret": {
+      "get": "fn(name: ?) -> $.getDatasource.!ret"
+    },
+    "$.getDatasource.!ret.getConnection.!ret.createStatement.!ret.executeQuery.!ret.getDate.!ret": {
       "getTime": "getTime",
       "toString": "$.getDatabaseUtils.!ret.createDate.!ret.toString"
     },
@@ -518,6 +532,10 @@
       "!type": "fn() -> $.getMessagingService.!ret",
       "!doc": "Passive Messaging Service enabling asynchronous execution, if required"
     },
+    "getTemplatingService": {
+      "!type": "fn() -> $.getTemplatingService.!ret",
+      "!doc": "Templating Engine using Velocity syntax"
+    },
     "getIOUtils": {
       "!type": "fn() -> $.getIOUtils.!ret",
       "!doc": "IO utility operations"
@@ -569,6 +587,10 @@
     "set": {
       "!type": "fn(key: ?, value: ?)",
       "!doc": "Setter for the instance parameters"
+    },
+    "getNamedDatasources": {
+      "!type": "fn() -> $.getNamedDatasources.!ret",
+      "!doc": "Datasources container"
     }
   }
 }
