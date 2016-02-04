@@ -116,8 +116,13 @@ public class RegistryServlet extends AbstractRegistryServlet {
 					return;
 				}
 			} else {
-				exceptionHandler(response, repositoryPath, HttpServletResponse.SC_NOT_FOUND,
-						String.format("Resource at [%s] does not exist", requestPath));
+				if (requestPath != null) {
+					exceptionHandler(response, repositoryPath, HttpServletResponse.SC_NOT_FOUND,
+							String.format("Resource at [%s] does not exist", requestPath));
+					return;
+				}
+				// artifact root folder doesn't exist at the public registry - no published artifacts at all
+				sendData(out, new byte[] {});
 				return;
 			}
 
@@ -181,7 +186,8 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		return data;
 	}
 
-	protected byte[] buildResourceData(final IEntity entity, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+	protected byte[] buildResourceData(final IEntity entity, final HttpServletRequest request, final HttpServletResponse response)
+			throws IOException {
 		byte[] data = new byte[] {};
 		if (!setCacheHeaders(entity, request, response)) {
 			data = readResourceData((IResource) entity);
