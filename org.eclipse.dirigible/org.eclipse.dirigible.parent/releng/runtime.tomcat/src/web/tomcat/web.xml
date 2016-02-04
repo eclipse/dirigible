@@ -240,6 +240,19 @@
 		</form-login-config>
 	</login-config>
   	-->
+  	
+  	<!-- IDE Services -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>IDE Services</web-resource-name>
+			<url-pattern>/services/workspace</url-pattern>
+			<url-pattern>/services/ui/index.html#/workspace</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Developer</role-name>
+			<role-name>Operator</role-name>
+		</auth-constraint>
+	</security-constraint>
 
 	<!-- Registry Import/Export Services -->
 	<security-constraint>

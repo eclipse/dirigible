@@ -251,6 +251,8 @@
 		<web-resource-collection>
 			<web-resource-name>IDE Services</web-resource-name>
 			<url-pattern>/services/index.html</url-pattern>
+			<url-pattern>/services/workspace</url-pattern>
+			<url-pattern>/services/ui/index.html#/workspace</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Developer</role-name>
