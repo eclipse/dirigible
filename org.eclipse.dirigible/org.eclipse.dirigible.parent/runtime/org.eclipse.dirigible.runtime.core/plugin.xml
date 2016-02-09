@@ -2,9 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-	 
-	 
-	 
 	 <extension
            id="RegistryServlet"
            point="org.eclipse.equinox.http.registry.servlets">
@@ -89,6 +86,16 @@
         <servlet
               alias="/publish"
               class="org.eclipse.dirigible.runtime.registry.WorkspacePublishServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="RuntimeServicesServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/runtime"
+              class="org.eclipse.dirigible.runtime.registry.RuntimeServicesServlet"
               load-on-startup="true">
         </servlet>
      </extension>
