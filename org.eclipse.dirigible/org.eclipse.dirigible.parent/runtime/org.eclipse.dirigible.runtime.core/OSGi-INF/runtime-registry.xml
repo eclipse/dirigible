@@ -3,5 +3,5 @@
    <service>
       <provide interface="org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor"/>
    </service>
-   <implementation class="org.eclipse.dirigible.runtime.registry.RegistryServlet"/>
+   <implementation class="org.eclipse.dirigible.runtime.registry.RegistryRuntimeServiceDescriptor"/>
 </scr:component>

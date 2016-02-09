@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="JavaScript Execution">
+   <service>
+      <provide interface="org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor"/>
+   </service>
+   <implementation class="org.eclipse.dirigible.runtime.js.JavaScriptRuntimeServiceDescriptor"/>
+</scr:component>

@@ -26,6 +26,9 @@ import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+/**
+ * Repository Service gives full access to the Dirigible Repository API.
+ */
 public class RepositoryServlet extends RegistryServlet {
 
 	private static final String REQUEST_PROCESSING_FAILED_S = Messages.getString("RepositoryServlet.REQUEST_PROCESSING_FAILED_S"); //$NON-NLS-1$
@@ -39,12 +42,6 @@ public class RepositoryServlet extends RegistryServlet {
 	private static final long serialVersionUID = 726309327921007381L;
 
 	private static final Logger logger = Logger.getLogger(RepositoryServlet.class);
-
-	// @Override
-	// protected String extractRepositoryPath(HttpServletRequest request) throws IllegalArgumentException {
-	// String requestPath = PathUtils.extractPath(request);
-	// return requestPath;
-	// }
 
 	@Override
 	protected String getRepositoryPathPrefix(HttpServletRequest req) {
@@ -150,4 +147,5 @@ public class RepositoryServlet extends RegistryServlet {
 			out.close();
 		}
 	}
+
 }

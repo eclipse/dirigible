@@ -43,7 +43,13 @@ public class RuntimeServicesServlet extends HttpServlet {
 				}
 			}
 		}
-		String runtimeServicesJson = gson.toJson(runtimeServiceDescriptors);
+		String runtimeServicesJson = "";
+		try {
+			runtimeServicesJson = gson.toJson(runtimeServiceDescriptors);
+		} catch (Throwable e) {
+			logger.error(e.getMessage(), e);
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+		}
 		resp.getWriter().append(runtimeServicesJson);
 		resp.getWriter().flush();
 		resp.getWriter().close();
