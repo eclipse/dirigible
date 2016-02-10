@@ -37,7 +37,8 @@ public class CommonParameters {
 	}
 
 	public static String getMobileApplicationsSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
 	}
 
 	public static String getScriptingContentSandbox() {
@@ -64,7 +65,7 @@ public class CommonParameters {
 	}
 
 	// github url
-	public static final String GIT_REPOSITORY_URL = "https://github.com/SAP/cloud-dirigible-samples.git";
+	public static final String GIT_REPOSITORY_URL = "https://github.com/eclipse/dirigible-samples.git";
 
 	public static final String WEB_CONTENT_CONTAINER_MAPPING = "/web"; //$NON-NLS-1$
 	public static final String JAVASCRIPT_CONTAINER_MAPPING = "/js"; //$NON-NLS-1$
