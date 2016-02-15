@@ -25,4 +25,5 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.runtime.metrics,
  org.eclipse.dirigible.runtime.memory
 Bundle-Activator: org.eclipse.dirigible.runtime.metrics.MetricsActivator
+Service-Component: OSGi-INF/runtime-memory.xml, OSGi-INF/runtime-acclog.xml
 Bundle-ClassPath: .
