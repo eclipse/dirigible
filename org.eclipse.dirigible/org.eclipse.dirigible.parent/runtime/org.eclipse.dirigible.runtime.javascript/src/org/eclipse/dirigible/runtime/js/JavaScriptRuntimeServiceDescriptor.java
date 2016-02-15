@@ -3,7 +3,7 @@ package org.eclipse.dirigible.runtime.js;
 import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
 
 /**
- * Descriptor for the Repository Service
+ * Descriptor for the JavaScript Execution Service
  */
 public class JavaScriptRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 

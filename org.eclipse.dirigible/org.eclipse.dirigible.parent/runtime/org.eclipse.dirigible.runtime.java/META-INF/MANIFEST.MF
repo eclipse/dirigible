@@ -37,5 +37,5 @@ Export-Package: org.eclipse.dirigible.runtime.filter,
  org.eclipse.dirigible.runtime.java.dynamic.compilation,
  org.eclipse.dirigible.runtime.registry
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGi-INF/java-executor.xml
+Service-Component: OSGi-INF/java-executor.xml, OSGi-INF/runtime-java.xml, OSGi-INF/runtime-registry-java.xml
 Bundle-ClassPath: .

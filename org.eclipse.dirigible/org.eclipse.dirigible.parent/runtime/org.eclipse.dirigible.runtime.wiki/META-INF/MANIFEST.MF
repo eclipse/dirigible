@@ -27,5 +27,5 @@ Import-Package: javax.servlet,
  org.slf4j
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.runtime.wiki
-Service-Component: OSGi-INF/wiki-service.xml, OSGi-INF/wiki-executor.xml
+Service-Component: OSGi-INF/wiki-service.xml, OSGi-INF/wiki-executor.xml, OSGi-INF/runtime-wiki.xml, OSGi-INF/runtime-registry-wiki.xml
 Bundle-ClassPath: .

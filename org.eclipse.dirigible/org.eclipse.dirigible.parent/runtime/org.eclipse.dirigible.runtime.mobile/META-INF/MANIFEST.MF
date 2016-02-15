@@ -20,5 +20,5 @@ Import-Package: javax.servlet,
  org.slf4j
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.runtime.mobile
-Service-Component: OSGi-INF/mobile-executor.xml
+Service-Component: OSGi-INF/mobile-executor.xml, OSGi-INF/runtime-mobile.xml, OSGi-INF/runtime-registry-mobile.xml
 Bundle-ClassPath: .

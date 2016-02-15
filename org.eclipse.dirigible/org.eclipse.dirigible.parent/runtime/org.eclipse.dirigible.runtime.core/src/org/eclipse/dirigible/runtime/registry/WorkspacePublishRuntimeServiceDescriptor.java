@@ -5,10 +5,10 @@ package org.eclipse.dirigible.runtime.registry;
  */
 public class WorkspacePublishRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Workspace";
-	private final String description = "Workspace service gives full access for management of projects artifacts within the User's workspace.";
-	private final String endpoint = "/workspace";
-	private final String documentation = "http://www.dirigible.io/help/service_workspace.html";
+	private final String name = "Publish";
+	private final String description = "Publish service performs publication of a single artifact from the User's workspace to the Registry";
+	private final String endpoint = "/publish";
+	private final String documentation = "http://www.dirigible.io/help/service_publish.html";
 
 	@Override
 	public String getName() {

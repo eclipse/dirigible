@@ -20,5 +20,5 @@ Import-Package: javax.servlet,
  org.slf4j
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.runtime.web
-Service-Component: OSGi-INF/web-executor.xml
+Service-Component: OSGi-INF/web-executor.xml, OSGi-INF/runtime-web.xml, OSGi-INF/runtime-registry-web.xml
 Bundle-ClassPath: .

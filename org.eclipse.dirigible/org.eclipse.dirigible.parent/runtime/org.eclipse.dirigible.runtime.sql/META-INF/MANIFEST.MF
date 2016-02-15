@@ -37,5 +37,5 @@ Export-Package: org.eclipse.dirigible.runtime.filter,
  org.eclipse.dirigible.runtime.sql,
  org.eclipse.dirigible.runtime.registry
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGi-INF/sql-executor.xml
+Service-Component: OSGi-INF/sql-executor.xml, OSGi-INF/runtime-sql.xml, OSGi-INF/runtime-registry-sql.xml
 Bundle-ClassPath: .
