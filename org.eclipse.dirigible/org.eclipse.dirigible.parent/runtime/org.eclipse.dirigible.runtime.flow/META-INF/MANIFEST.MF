@@ -27,5 +27,5 @@ Export-Package: org.eclipse.dirigible.runtime.flow,
  org.eclipse.dirigible.runtime.job,
  org.eclipse.dirigible.runtime.messaging
 Bundle-Activator: org.eclipse.dirigible.runtime.flow.FlowsActivator
-Service-Component: OSGi-INF/flow-executor.xml, OSGi-INF/job-executor.xml, OSGi-INF/runtime-flow.xml, OSGi-INF/runtime-registry-flow.xml, OSGi-INF/runtime-job.xml, OSGi-INF/runtime-registry-job.xml
+Service-Component: OSGi-INF/flow-executor.xml, OSGi-INF/job-executor.xml, OSGi-INF/runtime-flow.xml, OSGi-INF/runtime-registry-flow.xml, OSGi-INF/runtime-job.xml, OSGi-INF/runtime-registry-job.xml, OSGi-INF/runtime-messaging.xml
 Bundle-ClassPath: .

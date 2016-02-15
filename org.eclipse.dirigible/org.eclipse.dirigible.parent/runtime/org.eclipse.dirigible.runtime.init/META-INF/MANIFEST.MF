@@ -29,5 +29,5 @@ Import-Package: javax.servlet,
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.runtime.content
 Bundle-Activator: org.eclipse.dirigible.runtime.content.InitActivator
-Service-Component: OSGi-INF/runtime-import.xml, OSGi-INF/runtime-export.xml, OSGi-INF/runtime-clone-import.xml, OSGi-INF/runtime-clone-export.xml, OSGi-INF/runtime-project-import.xml
+Service-Component: OSGi-INF/runtime-import.xml, OSGi-INF/runtime-export.xml, OSGi-INF/runtime-clone-import.xml, OSGi-INF/runtime-clone-export.xml, OSGi-INF/runtime-project-import.xml, OSGi-INF/runtime-data-import.xml, OSGi-INF/runtime-data-export.xml
 Bundle-ClassPath: .
