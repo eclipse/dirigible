@@ -32,6 +32,19 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.hamcrest,
  org.eclipse.dirigible.runtime.java,
  org.eclipse.dirigible.runtime.metrics,
- org.eclipse.dirigible.repository.db
+ org.eclipse.dirigible.repository.db,
+ org.eclipse.dirigible.runtime.command,
+ org.eclipse.dirigible.runtime.flow,
+ org.eclipse.dirigible.runtime.init,
+ org.eclipse.dirigible.runtime.javascript,
+ org.eclipse.dirigible.runtime.mobile,
+ org.eclipse.dirigible.runtime.scheduler,
+ org.eclipse.dirigible.runtime.security,
+ org.eclipse.dirigible.runtime.sql,
+ org.eclipse.dirigible.runtime.ui,
+ org.eclipse.dirigible.runtime.web,
+ org.eclipse.dirigible.runtime.wiki,
+ org.eclipse.dirigible.repository.local,
+ com.google.guava
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.apache.derby.jdbc

@@ -34,7 +34,7 @@ public abstract class AbstractRegistryServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -9115022531455267478L;
 
-	protected static final String REPOSITORY_ATTRIBUTE = "org.eclipse.dirigible.services.registry.repository"; //$NON-NLS-1$
+	public static final String REPOSITORY_ATTRIBUTE = "org.eclipse.dirigible.services.registry.repository"; //$NON-NLS-1$
 
 	/**
 	 * @see HttpServlet#HttpServlet()

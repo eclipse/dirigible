@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.workspace.dual;
+package org.eclipse.dirigible.runtime.commons;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

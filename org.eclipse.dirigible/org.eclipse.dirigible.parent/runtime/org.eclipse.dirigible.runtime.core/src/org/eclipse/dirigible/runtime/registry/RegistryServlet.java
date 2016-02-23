@@ -76,7 +76,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 	private static final Logger logger = Logger.getLogger(RegistryServlet.class);
 
 	@Override
-	protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 
 		String repositoryPath = null;
 		final String requestPath = request.getPathInfo();

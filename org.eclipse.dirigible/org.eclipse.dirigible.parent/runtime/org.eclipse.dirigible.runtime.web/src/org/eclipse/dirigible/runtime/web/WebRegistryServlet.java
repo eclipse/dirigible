@@ -30,18 +30,18 @@ import org.eclipse.dirigible.runtime.scripting.IScriptExecutor;
 public class WebRegistryServlet extends RegistryServlet {
 
 	private static final String WEB_CONTENT = IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
-	//	private static final String PARAMETER_NO_HEADER_AND_FOOTER = "nohf"; //$NON-NLS-1$
+	// private static final String PARAMETER_NO_HEADER_AND_FOOTER = "nohf"; //$NON-NLS-1$
 	private static final String PARAMETER_LIST = "list"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = -1484072696377972535L;
 
-	//	protected static final String HEADER_REF = "header.ref"; //$NON-NLS-1$
-	//	protected static final String HEADER_HTML = "header.html"; //$NON-NLS-1$
-	//	protected static final String FOOTER_HTML = "footer.html"; //$NON-NLS-1$
-	//	private static final String FOOTER_REF = "footer.ref"; //$NON-NLS-1$
-	//	protected static final String HTML_EXTENSION = ".html"; //$NON-NLS-1$
+	// protected static final String HEADER_REF = "header.ref"; //$NON-NLS-1$
+	// protected static final String HEADER_HTML = "header.html"; //$NON-NLS-1$
+	// protected static final String FOOTER_HTML = "footer.html"; //$NON-NLS-1$
+	// private static final String FOOTER_REF = "footer.ref"; //$NON-NLS-1$
+	// protected static final String HTML_EXTENSION = ".html"; //$NON-NLS-1$
 
-	//	protected static final String INDEX_HTML = "index.html"; //$NON-NLS-1$
+	// protected static final String INDEX_HTML = "index.html"; //$NON-NLS-1$
 
 	@Override
 	protected String extractRepositoryPath(HttpServletRequest request) throws IllegalArgumentException {
@@ -77,7 +77,7 @@ public class WebRegistryServlet extends RegistryServlet {
 
 		// if (checkExtensions(entity) && !INDEX_HTML.equals(entity.getName().toLowerCase())) {
 		// it is *.html and it is NOT index.html
-		// ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 		// // lookup for header.html
 		// IResource header = entity.getParent().getResource(HEADER_HTML);
@@ -96,7 +96,7 @@ public class WebRegistryServlet extends RegistryServlet {
 		// }
 
 		// put the content
-		// outputStream.write(preprocessContent(rawContent, entity));
+		outputStream.write(preprocessContent(rawContent, entity));
 
 		// // lookup for footer.html
 		// IResource footer = entity.getParent().getResource(FOOTER_HTML);
@@ -113,10 +113,10 @@ public class WebRegistryServlet extends RegistryServlet {
 		// // end with footer
 		// outputStream.write(footer.getContent());
 		// }
-		// outputStream.flush();
-		// return outputStream.toByteArray();
+		outputStream.flush();
+		return outputStream.toByteArray();
 		// }
-		return rawContent;
+		// return rawContent;
 	}
 
 	// protected boolean checkExtensions(IEntity entity) {
@@ -146,8 +146,8 @@ public class WebRegistryServlet extends RegistryServlet {
 	}
 
 	public IScriptExecutor createExecutor(HttpServletRequest request) throws IOException {
-		WebExecutor executor = new WebExecutor(getRepository(request), getWebRegistryPath(request), IRepositoryPaths.REGISTRY_DEPLOY_PATH
-				+ getContentFolder());
+		WebExecutor executor = new WebExecutor(getRepository(request), getWebRegistryPath(request),
+				IRepositoryPaths.REGISTRY_DEPLOY_PATH + getContentFolder());
 		return executor;
 	}
 }
