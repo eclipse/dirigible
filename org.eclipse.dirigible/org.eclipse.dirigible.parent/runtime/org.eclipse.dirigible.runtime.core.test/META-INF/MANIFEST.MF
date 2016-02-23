@@ -45,6 +45,7 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.runtime.web,
  org.eclipse.dirigible.runtime.wiki,
  org.eclipse.dirigible.repository.local,
- com.google.guava
+ com.google.guava,
+ org.apache.commons.collections
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.apache.derby.jdbc

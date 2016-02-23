@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.runtime.wiki;
+package org.eclipse.dirigible.runtime.web;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,14 +31,14 @@ import org.eclipse.dirigible.runtime.registry.AbstractRegistryServlet;
 import org.junit.Before;
 import org.junit.Test;
 
-public class WikiServiceTest {
+public class WebServiceTest {
 
 	protected IRepository repository;
 
 	@Before
 	public void setUp() {
 		try {
-			repository = new LocalRepository("wiki");
+			repository = new LocalRepository("web");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -46,33 +46,33 @@ public class WikiServiceTest {
 	}
 
 	@Test
-	public void testWikiService() {
+	public void testWebService() {
 		if (repository == null) {
 			fail("Repository has not been created.");
 		}
 
-		String wikiPath = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC + IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT
-				+ IRepositoryPaths.SEPARATOR + "wiki/test1.md";
+		String webPath = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC + IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT
+				+ IRepositoryPaths.SEPARATOR + "web/test1.html";
 
 		IResource resource = null;
 		try {
 
-			byte[] bytes = "First Level Header\n====================".getBytes();
+			byte[] bytes = "<html></html>".getBytes();
 
-			resource = repository.createResource(wikiPath, bytes, false, "text/plain");
+			resource = repository.createResource(webPath, bytes, false, "text/plain");
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
 
-			WikiRegistryServlet wikiRegistryServlet = new WikiRegistryServlet();
+			WebRegistryServlet webRegistryServlet = new WebRegistryServlet();
 
-			LocalHttpServletRequest request = new LocalHttpServletRequest(new URL("http://local/wiki/test1.md"));
+			LocalHttpServletRequest request = new LocalHttpServletRequest(new URL("http://local/web/test1.html"));
 			request.getSession().setAttribute(AbstractRegistryServlet.REPOSITORY_ATTRIBUTE, repository);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			LocalHttpServletResponse response = new LocalHttpServletResponse(out);
-			wikiRegistryServlet.doGet(request, response);
+			webRegistryServlet.doGet(request, response);
 			response.getWriter().flush();
-			assertEquals("<h1 id=\"first-level-header\">First Level Header</h1>", new String(out.toByteArray()));
+			assertEquals("<html></html>", new String(out.toByteArray()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,8 +80,8 @@ public class WikiServiceTest {
 		} finally {
 			try {
 				if ((resource != null) && resource.exists()) {
-					repository.removeResource(wikiPath);
-					resource = repository.getResource(wikiPath);
+					repository.removeResource(webPath);
+					resource = repository.getResource(webPath);
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}

@@ -45,7 +45,7 @@ public class RepositoryFacade {
 
 	private static final String LOCAL_DB_NAME = "derby"; //$NON-NLS-1$
 
-	private static final String REPOSITORY = "repository-instance"; //$NON-NLS-1$
+	public static final String REPOSITORY = "repository-instance"; //$NON-NLS-1$
 
 	private static final String MASTER_REPOSITORY = "master-repository-instance"; //$NON-NLS-1$
 

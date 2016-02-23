@@ -8,15 +8,15 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.runtime.wiki;
+package org.eclipse.dirigible.runtime.java;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -31,14 +31,14 @@ import org.eclipse.dirigible.runtime.registry.AbstractRegistryServlet;
 import org.junit.Before;
 import org.junit.Test;
 
-public class WikiServiceTest {
+public class JavaServiceTest {
 
 	protected IRepository repository;
 
 	@Before
 	public void setUp() {
 		try {
-			repository = new LocalRepository("wiki");
+			repository = new LocalRepository("java");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -46,33 +46,47 @@ public class WikiServiceTest {
 	}
 
 	@Test
-	public void testWikiService() {
+	public void testJavaScriptService() {
 		if (repository == null) {
 			fail("Repository has not been created.");
 		}
 
-		String wikiPath = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC + IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT
-				+ IRepositoryPaths.SEPARATOR + "wiki/test1.md";
+		String javaPath = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC + IRepositoryPaths.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES + IRepositoryPaths.SEPARATOR + "test/test1.java";
 
 		IResource resource = null;
 		try {
 
-			byte[] bytes = "First Level Header\n====================".getBytes();
+			byte[] bytes = ("package test;" + "import java.util.Map;" + "import javax.servlet.http.HttpServletRequest;"
+					+ "import javax.servlet.http.HttpServletResponse;" + "public class test1 {"
+					+ "public void service(HttpServletRequest request, HttpServletResponse response, Map<String, Object> scope) throws Exception {"
+					+ "response.getWriter().println(\"Hello World!\");" + "response.getWriter().flush();" + "response.getWriter().close();" + "}"
+					+ "}").getBytes();
 
-			resource = repository.createResource(wikiPath, bytes, false, "text/plain");
+			resource = repository.createResource(javaPath, bytes, false, "text/plain");
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
 
-			WikiRegistryServlet wikiRegistryServlet = new WikiRegistryServlet();
+			JavaServlet javaServlet = new JavaServlet();
 
-			LocalHttpServletRequest request = new LocalHttpServletRequest(new URL("http://local/wiki/test1.md"));
+			String userDir = System.getProperty("user.dir");
+			File userDirFile = new File(userDir);
+			File libDir = new File(
+					userDirFile.getParentFile().getParentFile().getCanonicalPath() + "/p2.external/external.p2/target/repository/plugins");
+			System.setProperty("osgi.syspath", libDir.getCanonicalPath());
+
+			javaServlet.init();
+
+			LocalHttpServletRequest request = new LocalHttpServletRequest(new URL("http://local/test/test1.java"));
 			request.getSession().setAttribute(AbstractRegistryServlet.REPOSITORY_ATTRIBUTE, repository);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			LocalHttpServletResponse response = new LocalHttpServletResponse(out);
-			wikiRegistryServlet.doGet(request, response);
+			javaServlet.doGet(request, response);
 			response.getWriter().flush();
-			assertEquals("<h1 id=\"first-level-header\">First Level Header</h1>", new String(out.toByteArray()));
+			String output = new String(out.toByteArray());
+			output = output.trim();
+			assertTrue("Hello World!".equals(output));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,8 +94,8 @@ public class WikiServiceTest {
 		} finally {
 			try {
 				if ((resource != null) && resource.exists()) {
-					repository.removeResource(wikiPath);
-					resource = repository.getResource(wikiPath);
+					repository.removeResource(javaPath);
+					resource = repository.getResource(javaPath);
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}

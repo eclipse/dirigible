@@ -32,7 +32,7 @@ public class ContentBaseServlet extends HttpServlet {
 	static final String COULD_NOT_INITIALIZE_REPOSITORY = Messages
 			.getString("ContentInitializerServlet.COULD_NOT_INITIALIZE_REPOSITORY"); //$NON-NLS-1$
 	
-	static final String REPOSITORY_ATTRIBUTE = "org.eclipse.dirigible.services.content.repository"; //$NON-NLS-1$
+	static final String REPOSITORY_ATTRIBUTE = RepositoryFacade.REPOSITORY; //"org.eclipse.dirigible.services.content.repository"; //$NON-NLS-1$
 
 	private static final Logger logger = Logger.getLogger(ContentBaseServlet.class);
 

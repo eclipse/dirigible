@@ -8,9 +8,8 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.runtime.wiki;
+package org.eclipse.dirigible.runtime.js;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -31,14 +30,14 @@ import org.eclipse.dirigible.runtime.registry.AbstractRegistryServlet;
 import org.junit.Before;
 import org.junit.Test;
 
-public class WikiServiceTest {
+public class JavaScriptServiceTest {
 
 	protected IRepository repository;
 
 	@Before
 	public void setUp() {
 		try {
-			repository = new LocalRepository("wiki");
+			repository = new LocalRepository("js");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -46,33 +45,35 @@ public class WikiServiceTest {
 	}
 
 	@Test
-	public void testWikiService() {
+	public void testJavaScriptService() {
 		if (repository == null) {
 			fail("Repository has not been created.");
 		}
 
-		String wikiPath = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC + IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT
-				+ IRepositoryPaths.SEPARATOR + "wiki/test1.md";
+		String jsPath = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC + IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES
+				+ IRepositoryPaths.SEPARATOR + "js/test1.js";
 
 		IResource resource = null;
 		try {
 
-			byte[] bytes = "First Level Header\n====================".getBytes();
+			byte[] bytes = "var a=5; var b=6; var c = a + b; c;".getBytes();
 
-			resource = repository.createResource(wikiPath, bytes, false, "text/plain");
+			resource = repository.createResource(jsPath, bytes, false, "text/plain");
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
 
-			WikiRegistryServlet wikiRegistryServlet = new WikiRegistryServlet();
+			JavaScriptServlet jsServlet = new JavaScriptServlet();
 
-			LocalHttpServletRequest request = new LocalHttpServletRequest(new URL("http://local/wiki/test1.md"));
+			LocalHttpServletRequest request = new LocalHttpServletRequest(new URL("http://local/js/test1.js"));
 			request.getSession().setAttribute(AbstractRegistryServlet.REPOSITORY_ATTRIBUTE, repository);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			LocalHttpServletResponse response = new LocalHttpServletResponse(out);
-			wikiRegistryServlet.doGet(request, response);
+			jsServlet.doGet(request, response);
 			response.getWriter().flush();
-			assertEquals("<h1 id=\"first-level-header\">First Level Header</h1>", new String(out.toByteArray()));
+			String output = new String(out.toByteArray());
+			output = output.trim();
+			assertTrue("11.0".equals(output));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,8 +81,8 @@ public class WikiServiceTest {
 		} finally {
 			try {
 				if ((resource != null) && resource.exists()) {
-					repository.removeResource(wikiPath);
-					resource = repository.getResource(wikiPath);
+					repository.removeResource(jsPath);
+					resource = repository.getResource(jsPath);
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
