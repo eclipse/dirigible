@@ -8,7 +8,7 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
 public class WebRegistryRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
 	private final String name = "Web Content Registry";
-	private final String description = "Web Content Registry Service lists all the artifacts under the Web Content space";
+	private final String description = "Web Content Registry Service lists all the artifacts under the Web Content space.";
 	private final String endpoint = "/registry-web";
 	private final String documentation = "http://www.dirigible.io/help/service_registry_web.html";
 

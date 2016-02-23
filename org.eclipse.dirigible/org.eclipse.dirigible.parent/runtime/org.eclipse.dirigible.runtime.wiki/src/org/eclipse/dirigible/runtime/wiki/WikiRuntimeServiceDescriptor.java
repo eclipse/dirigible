@@ -8,7 +8,7 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
 public class WikiRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
 	private final String name = "Wiki Pages Provisioning";
-	private final String description = "Wiki Pages Provisioning Service transforms and sends the requested Wiki page";
+	private final String description = "Wiki Pages Provisioning Service transforms and provides the requested Wiki page.";
 	private final String endpoint = "/wiki";
 	private final String documentation = "http://www.dirigible.io/help/service_wiki.html";
 

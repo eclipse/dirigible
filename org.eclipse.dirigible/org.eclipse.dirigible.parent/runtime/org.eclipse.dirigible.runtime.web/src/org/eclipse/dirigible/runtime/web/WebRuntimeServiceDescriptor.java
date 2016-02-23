@@ -8,7 +8,7 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
 public class WebRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
 	private final String name = "Web Content Provisioning";
-	private final String description = "Web Content Provisioning Service sends the requested Web Content artifact";
+	private final String description = "Web Content Provisioning Service provides the requested Web Content artifact.";
 	private final String endpoint = "/web";
 	private final String documentation = "http://www.dirigible.io/help/service_web.html";
 
