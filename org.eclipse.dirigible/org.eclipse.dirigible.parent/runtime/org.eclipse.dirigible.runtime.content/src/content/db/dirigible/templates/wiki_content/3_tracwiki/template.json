@@ -2,7 +2,7 @@
  "description":"Tracwiki notation guide template",
  "image":"wiki-notation-guide.png",
  "sources":[
-   {"name":"tracwiki-notation-guide.md", "action":"generate"}
+   {"name":"tracwiki-notation-guide.tracwiki", "action":"generate"}
    ],
  "parameters":[
    {"name":"name",

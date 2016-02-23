@@ -2,7 +2,7 @@
  "description":"Textile notation guide template",
  "image":"wiki-notation-guide.png",
  "sources":[
-   {"name":"textile-notation-guide.md", "action":"generate"}
+   {"name":"textile-notation-guide.textile", "action":"generate"}
    ],
  "parameters":[
    {"name":"name",

@@ -2,7 +2,7 @@
  "description":"Confluence notation guide template",
  "image":"wiki-notation-guide.png",
  "sources":[
-   {"name":"confluence-notation-guide.md", "action":"generate"}
+   {"name":"confluence-notation-guide.confluence", "action":"generate"}
    ],
  "parameters":[
    {"name":"name",

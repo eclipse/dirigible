@@ -2,7 +2,7 @@
  "description":"TWiki notation guide template",
  "image":"wiki-notation-guide.png",
  "sources":[
-   {"name":"twiki-notation-guide.md", "action":"generate"}
+   {"name":"twiki-notation-guide.twiki", "action":"generate"}
    ],
  "parameters":[
    {"name":"name",
