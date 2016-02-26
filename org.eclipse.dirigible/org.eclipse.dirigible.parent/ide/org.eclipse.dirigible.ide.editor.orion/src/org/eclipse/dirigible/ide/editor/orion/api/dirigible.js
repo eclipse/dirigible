@@ -552,18 +552,17 @@ $ = (function(){
 
 })();
 /**
- * Build the json definition with
- * npm install tern
- * git clone orion.client
- * git reset --hard origin/stable_20150817
- * replace ternWorkerCore.js
- * 		> cp {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/ternWorkerCore.js {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/javascript/plugins/
- * generate definition     
- *      > {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/node_modules/tern/bin/condense --name dirigible --no-spans --plugin doc_comment --def ecma5 --def browser  {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/dirigible.js > {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/dirigible.json
+* Include the tern.js json definitions with (use your local github root folder for {git_root_dir} placeholder):
+ * git clone org.eclipse.orion.client
+ * git reset --hard R11_0
+ * replace ternDefaults.js
+ * 		> cp {git_root_dir}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/ternDefaults.js {git_root_dir}/org.eclipse.orion.client/bundles/org.eclipse.orion.client.javascript/web/javascript/plugins/
+ * copy dirigible.json
+ *      > cp {git_root_dir}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/dirigible.json {git_root_dir}/org.eclipse.orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/
  * copy tabris.json
- *      > cp {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/tabris.json {github_root_directory}/orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/
+ *      > cp {git_root_dir}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/src/org/eclipse/dirigible/ide/editor/orion/api/tabris.json {git_root_dir}/org.eclipse.orion.client/bundles/org.eclipse.orion.client.javascript/web/tern/defs/
  * mvn clean install
  * copy codeEdit/* to resources
- *      > cp -r {github_root_directory}/orion.client/built-js/codeEdit/* {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/resources/
- *      > cp -r {github_root_directory}/orion.client/built-js/codeEdit/* {github_root_directory}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/runtime/org.eclipse.dirigible.runtime.ui/resources/ui/orion/
+ *      > cp -r {git_root_dir}/org.eclipse.orion.client/built-js/codeEdit/* {git_root_dir}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/ide/org.eclipse.dirigible.ide.editor.orion/resources/
+ *      > cp -r {git_root_dir}/org.eclipse.orion.client/built-js/codeEdit/* {git_root_dir}/dirigible/org.eclipse.dirigible/org.eclipse.dirigible.parent/runtime/org.eclipse.dirigible.runtime.ui/resources/ui/orion/
  */
