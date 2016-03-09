@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Dirigible External Dependencies" sequenceNumber="260">
+<?pde version="3.8"?><target name="Dirigible External Dependencies" sequenceNumber="261">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.rap.examples.feature.feature.group" version="0.0.0"/>
@@ -16,7 +16,7 @@
 <unit id="org.slf4j.impl.log4j12" version="1.7.2.v20131105-2200"/>
 <unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201411290715"/>
 <unit id="javax.activation" version="0.0.0"/>
-<unit id="javax.mail" version="0.0.0"/>
+<unit id="javax.mail.glassfish" version="0.0.0"/>
 <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
 <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
 <unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
@@ -39,7 +39,7 @@
 <unit id="org.apache.lucene.highlighter" version="3.5.0.v20121015-1317"/>
 <unit id="org.apache.lucene.queries" version="3.5.0.v20120725-1805"/>
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
-<unit id="org.mozilla.javascript" version="1.7.4.v201504221540"/>
+<unit id="org.mozilla.javascript" version="1.7.5.v201504281450"/>
 <unit id="org.quartz" version="1.8.3.v20110329-1420"/>
 <unit id="org.json" version="1.0.0.v201011060100"/>
 <unit id="org.apache.velocity" version="1.5.0.v200905192330"/>

@@ -53,7 +53,7 @@
 <unit id="org.slf4j.impl.log4j12" version="1.7.2.v20131105-2200"/>
 <unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201411290715"/>
 <unit id="javax.activation" version="0.0.0"/>
-<unit id="javax.mail" version="0.0.0"/>
+<unit id="javax.mail.glassfish" version="0.0.0"/>
 <unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
 <unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
 <unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
