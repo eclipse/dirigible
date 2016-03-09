@@ -37,7 +37,7 @@ RUN set -x \
 	&& rm tomcat.tar.gz*
 
 RUN rm -R /usr/local/tomcat/webapps/*
-RUN wget http://download.eclipse.org/dirigible/drops/M20160119-1919/trial/allinone/ROOT.war -P /usr/local/tomcat/webapps/
+RUN wget http://download.eclipse.org/dirigible/drops/R-2.2-201602032020/trial/allinone/ROOT.war -P /usr/local/tomcat/webapps/
 
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
