@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.flow;
@@ -14,6 +13,9 @@ package org.eclipse.dirigible.runtime.flow;
 import java.io.InputStream;
 
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.flow.log.FlowLogCleanupTask;
+import org.eclipse.dirigible.runtime.job.log.JobLogCleanupTask;
+import org.eclipse.dirigible.runtime.task.TaskManagerLong;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.quartz.Scheduler;
@@ -27,6 +29,12 @@ public class FlowsActivator implements BundleActivator {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		FlowsActivator.context = context;
+
+		FlowLogCleanupTask flowLogCleanupTask = new FlowLogCleanupTask();
+		TaskManagerLong.getInstance().registerRunnableTask(flowLogCleanupTask);
+
+		JobLogCleanupTask jobLogCleanupTask = new JobLogCleanupTask();
+		TaskManagerLong.getInstance().registerRunnableTask(jobLogCleanupTask);
 	}
 
 	@Override

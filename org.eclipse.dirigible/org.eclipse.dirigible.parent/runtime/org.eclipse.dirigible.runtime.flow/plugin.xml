@@ -188,4 +188,24 @@
         </servlet>
      </extension>
      
+     <extension
+           id="FlowLogServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow-log"
+              class="org.eclipse.dirigible.runtime.flow.log.FlowLogServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+
+     <extension
+           id="JobLogServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/job-log"
+              class="org.eclipse.dirigible.runtime.job.log.JobLogServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
 </plugin>

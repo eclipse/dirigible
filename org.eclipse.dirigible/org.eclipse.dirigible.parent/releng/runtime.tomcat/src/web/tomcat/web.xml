@@ -305,6 +305,8 @@
 			<url-pattern>/services/java-sandbox/*</url-pattern>
 			<url-pattern>/services/sql-secured/*</url-pattern>
 			<url-pattern>/services/sql-sandbox/*</url-pattern>
+			<url-pattern>/services/flow-log/*</url-pattern>
+			<url-pattern>/services/job-log/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Everyone</role-name>

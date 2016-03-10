@@ -127,4 +127,6 @@ public interface ICommonConstants {
 
 	public static final String PARAM_REPOSITORY_PROVIDER_MASTER = "repositoryProviderMaster"; //$NON-NLS-1$
 
+	public static final String PARAM_INSTANCE_NAME = "dirigibleInstanceName"; //$NON-NLS-1$
+
 }
