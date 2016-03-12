@@ -208,4 +208,23 @@
         </servlet>
      </extension>
      
+      <extension
+           id="ListenerRegistryUiContentServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/flow/listener"
+              class="org.eclipse.dirigible.runtime.listener.ListenerRegistryUiContentServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="ListenerLogServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/listener-log"
+              class="org.eclipse.dirigible.runtime.listener.log.ListenerLogServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
 </plugin>

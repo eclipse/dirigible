@@ -21,6 +21,7 @@ import org.eclipse.dirigible.repository.ext.db.DsvUpdater;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionUpdater;
 import org.eclipse.dirigible.repository.ext.security.SecurityUpdater;
 import org.eclipse.dirigible.runtime.job.JobsUpdater;
+import org.eclipse.dirigible.runtime.listener.ListenersUpdater;
 
 public class ContentPostImportUpdater {
 
@@ -60,6 +61,10 @@ public class ContentPostImportUpdater {
 				JobsUpdater.REGISTRY_INTEGRATION_DEFAULT);
 		jobsUpdater.applyUpdates();
 
+		// 6. Listener
+		ListenersUpdater listenersUpdater = new ListenersUpdater(getRepository(), DataSourceFacade.getInstance().getDataSource(request),
+				ListenersUpdater.REGISTRY_INTEGRATION_DEFAULT);
+		listenersUpdater.applyUpdates();
 	}
 
 }

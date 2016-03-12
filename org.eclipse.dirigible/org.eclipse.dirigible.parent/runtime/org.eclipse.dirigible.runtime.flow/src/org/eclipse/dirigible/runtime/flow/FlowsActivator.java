@@ -15,7 +15,11 @@ import java.io.InputStream;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.flow.log.FlowLogCleanupTask;
 import org.eclipse.dirigible.runtime.job.log.JobLogCleanupTask;
+import org.eclipse.dirigible.runtime.listener.ListenerEventProcessorFactory;
+import org.eclipse.dirigible.runtime.listener.log.ListenerLogCleanupTask;
+import org.eclipse.dirigible.runtime.listener.message.MessageListenerTask;
 import org.eclipse.dirigible.runtime.task.TaskManagerLong;
+import org.eclipse.dirigible.runtime.task.TaskManagerMedium;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.quartz.Scheduler;
@@ -30,11 +34,19 @@ public class FlowsActivator implements BundleActivator {
 	public void start(BundleContext context) throws Exception {
 		FlowsActivator.context = context;
 
+		ListenerEventProcessorFactory.registerListenerEventProcessorProviders(context);
+
 		FlowLogCleanupTask flowLogCleanupTask = new FlowLogCleanupTask();
 		TaskManagerLong.getInstance().registerRunnableTask(flowLogCleanupTask);
 
 		JobLogCleanupTask jobLogCleanupTask = new JobLogCleanupTask();
 		TaskManagerLong.getInstance().registerRunnableTask(jobLogCleanupTask);
+
+		ListenerLogCleanupTask listenerLogCleanupTask = new ListenerLogCleanupTask();
+		TaskManagerLong.getInstance().registerRunnableTask(listenerLogCleanupTask);
+
+		MessageListenerTask messageListenerTask = new MessageListenerTask();
+		TaskManagerMedium.getInstance().registerRunnableTask(messageListenerTask);
 	}
 
 	@Override
