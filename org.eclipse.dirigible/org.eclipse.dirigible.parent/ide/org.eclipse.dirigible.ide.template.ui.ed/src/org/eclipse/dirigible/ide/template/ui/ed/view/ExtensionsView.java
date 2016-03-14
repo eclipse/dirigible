@@ -72,11 +72,11 @@ public class ExtensionsView extends ViewPart {
 					if (firstElement instanceof ExtensionPointDefinition) {
 						ExtensionPointDefinition extensionPoint = (ExtensionPointDefinition) firstElement;
 						openEditor(CommonUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extensionPoint.getLocation())
-								+ ICommonConstants.ARTIFACT_EXTENSION.EXTENSION_POINT);
+								+ ICommonConstants.DOT + ICommonConstants.ARTIFACT_EXTENSION.EXTENSION_POINT);
 					} else if (firstElement instanceof ExtensionDefinition) {
 						ExtensionDefinition extension = (ExtensionDefinition) firstElement;
 						openEditor(CommonUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extension.getLocation())
-								+ ICommonConstants.ARTIFACT_EXTENSION.EXTENSION);
+								+ ICommonConstants.DOT + ICommonConstants.ARTIFACT_EXTENSION.EXTENSION);
 					}
 				}
 			}

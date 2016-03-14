@@ -131,7 +131,7 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 	@Override
 	public boolean recognizedFile(IFile file) {
 		if (checkFolderType(file)) {
-			final String ext = ICommonConstants.DOT + file.getFileExtension();
+			final String ext = file.getFileExtension();
 			if (RECOGNIZED_EXTENSIONS.contains(ext)) {
 				return true;
 			}
@@ -141,13 +141,13 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	public String getPublishedContainerMapping(IFile file) {
-		final String ext = ICommonConstants.DOT + file.getFileExtension();
+		final String ext = file.getFileExtension();
 		return PUBLISH_CONTAINERS.get(ext);
 	}
 
 	@Override
 	public String getActivatedContainerMapping(IFile file) {
-		final String ext = ICommonConstants.DOT + file.getFileExtension();
+		final String ext = file.getFileExtension();
 		return ACTIVATE_CONTAINERS.get(ext);
 	}
 
@@ -163,7 +163,7 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	public String getDebugEndpoint(IFile file) {
-		if (ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT.equals(ICommonConstants.DOT + file.getFileExtension())) {
+		if (ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT.equals(file.getFileExtension())) {
 			return CommonParameters.getServicesUrl() + CommonParameters.JAVASCRIPT_DEBUG_CONTAINER_MAPPING + generatePublishedPath(file);
 		}
 		return null;

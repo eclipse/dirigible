@@ -61,8 +61,7 @@ public class TestCasesPublisher extends AbstractPublisher implements IPublisher 
 	@Override
 	public boolean recognizedFile(IFile file) {
 		if (checkFolderType(file)) {
-			if (ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT.equals("." //$NON-NLS-1$
-					+ file.getFileExtension())) {
+			if (ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT.equals(file.getFileExtension())) {
 				return true;
 			}
 		}

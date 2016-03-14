@@ -17,7 +17,15 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.apache.commons.io,
  org.eclipse.dirigible.repository.datasource
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: javax.servlet,
+Import-Package: com.sun.mail.iap,
+ com.sun.mail.imap,
+ com.sun.mail.imap.protocol,
+ javax.mail;version="1.4.1",
+ javax.mail.event;version="1.4.1",
+ javax.mail.internet;version="1.4.1",
+ javax.mail.search;version="1.4.1",
+ javax.mail.util;version="1.4.1",
+ javax.servlet,
  javax.servlet.annotation,
  javax.servlet.descriptor,
  javax.servlet.http,
@@ -26,7 +34,9 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.runtime.flow,
  org.eclipse.dirigible.runtime.job,
  org.eclipse.dirigible.runtime.listener,
+ org.eclipse.dirigible.runtime.listener.mail,
+ org.eclipse.dirigible.runtime.listener.message,
  org.eclipse.dirigible.runtime.messaging
 Bundle-Activator: org.eclipse.dirigible.runtime.flow.FlowsActivator
-Service-Component: OSGi-INF/flow-executor.xml, OSGi-INF/job-executor.xml, OSGi-INF/runtime-flow.xml, OSGi-INF/runtime-registry-flow.xml, OSGi-INF/runtime-job.xml, OSGi-INF/runtime-registry-job.xml, OSGi-INF/runtime-messaging.xml, OSGi-INF/message-listener-event-processor.xml
+Service-Component: OSGi-INF/flow-executor.xml, OSGi-INF/job-executor.xml, OSGi-INF/runtime-flow.xml, OSGi-INF/runtime-registry-flow.xml, OSGi-INF/runtime-job.xml, OSGi-INF/runtime-registry-job.xml, OSGi-INF/runtime-messaging.xml, OSGi-INF/message-listener-event-processor.xml, OSGi-INF/imaps-listener-event-processor.xml
 Bundle-ClassPath: .

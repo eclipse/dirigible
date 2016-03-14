@@ -79,6 +79,7 @@ public class CommonParameters {
 	public static final String MOBILE_APPLICATIONS_CONTAINER_MAPPING = "/mobile"; //$NON-NLS-1$
 	public static final String FLOW_CONTAINER_MAPPING = "/flow"; //$NON-NLS-1$
 	public static final String JOB_CONTAINER_MAPPING = "/job"; //$NON-NLS-1$
+	public static final String LISTENER_CONTAINER_MAPPING = "/listener"; //$NON-NLS-1$
 	public static final String SQL_CONTAINER_MAPPING = "/sql"; //$NON-NLS-1$
 
 	public static final String WEB_CONTENT_SANDBOX_MAPPING = "/web-sandbox"; //$NON-NLS-1$
@@ -93,6 +94,7 @@ public class CommonParameters {
 	public static final String FLOW_SANDBOX_MAPPING = "/flow-sandbox"; //$NON-NLS-1$
 	public static final String JOB_SANDBOX_MAPPING = "/job-sandbox"; //$NON-NLS-1$
 	public static final String SQL_SANDBOX_MAPPING = "/sql-sandbox"; //$NON-NLS-1$
+	public static final String LISTENER_SANDBOX_MAPPING = "/listener-sandbox"; //$NON-NLS-1$
 
 	public static final String CONTENT_EXPORT = "/content-export/"; //$NON-NLS-1$
 
@@ -101,8 +103,8 @@ public class CommonParameters {
 	public static final String PARAMETER_PROJECT = "project"; //$NON-NLS-1$
 	public static final String PARAMETER_PACKAGE = "package"; //$NON-NLS-1$
 
-	public static final String DIRIGIBLE_DEBUGGER_BRIDGE = "dirigible.debugger.bridge"; //$NON-NLS-1$
-	public static final String DIRIGIBLE_RUNTIME_BRIDGE = "dirigible.runtime.bridge"; //$NON-NLS-1$
+	// public static final String DIRIGIBLE_DEBUGGER_BRIDGE = "dirigible.debugger.bridge"; //$NON-NLS-1$
+	// public static final String DIRIGIBLE_RUNTIME_BRIDGE = "dirigible.runtime.bridge"; //$NON-NLS-1$
 
 	private static final String SELECTED_DATASOURCE_NAME = "SELECTED_DATASOURCE_NAME"; //$NON-NLS-1$
 

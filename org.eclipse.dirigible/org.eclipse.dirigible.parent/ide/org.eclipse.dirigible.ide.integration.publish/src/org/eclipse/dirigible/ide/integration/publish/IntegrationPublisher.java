@@ -74,8 +74,9 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 	@Override
 	public boolean recognizedFile(IFile file) {
 		if (checkFolderType(file)) {
-			if (ICommonConstants.ARTIFACT_EXTENSION.FLOW.equals(ICommonConstants.DOT + file.getFileExtension())
-					|| ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(ICommonConstants.DOT + file.getFileExtension())) {
+			if (ICommonConstants.ARTIFACT_EXTENSION.FLOW.equals(file.getFileExtension())
+					|| ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(file.getFileExtension())
+					|| ICommonConstants.ARTIFACT_EXTENSION.LISTENER.equals(file.getFileExtension())) {
 				return true;
 			}
 		}
@@ -84,22 +85,28 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 
 	@Override
 	public String getPublishedContainerMapping(IFile file) {
-		if (ICommonConstants.ARTIFACT_EXTENSION.FLOW.equals(ICommonConstants.DOT + file.getFileExtension())) {
+		if (ICommonConstants.ARTIFACT_EXTENSION.FLOW.equals(file.getFileExtension())) {
 			return CommonParameters.FLOW_CONTAINER_MAPPING;
 		}
-		if (ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(ICommonConstants.DOT + file.getFileExtension())) {
+		if (ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(file.getFileExtension())) {
 			return CommonParameters.JOB_CONTAINER_MAPPING;
+		}
+		if (ICommonConstants.ARTIFACT_EXTENSION.LISTENER.equals(file.getFileExtension())) {
+			return CommonParameters.LISTENER_CONTAINER_MAPPING;
 		}
 		return null;
 	}
 
 	@Override
 	public String getActivatedContainerMapping(IFile file) {
-		if (ICommonConstants.ARTIFACT_EXTENSION.FLOW.equals(ICommonConstants.DOT + file.getFileExtension())) {
+		if (ICommonConstants.ARTIFACT_EXTENSION.FLOW.equals(file.getFileExtension())) {
 			return CommonParameters.FLOW_SANDBOX_MAPPING;
 		}
-		if (ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(ICommonConstants.DOT + file.getFileExtension())) {
+		if (ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(file.getFileExtension())) {
 			return CommonParameters.JOB_SANDBOX_MAPPING;
+		}
+		if (ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(file.getFileExtension())) {
+			return CommonParameters.LISTENER_SANDBOX_MAPPING;
 		}
 		return null;
 	}

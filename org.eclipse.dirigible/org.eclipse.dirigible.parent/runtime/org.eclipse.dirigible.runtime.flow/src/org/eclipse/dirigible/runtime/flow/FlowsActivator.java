@@ -15,7 +15,6 @@ import java.io.InputStream;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.flow.log.FlowLogCleanupTask;
 import org.eclipse.dirigible.runtime.job.log.JobLogCleanupTask;
-import org.eclipse.dirigible.runtime.listener.ListenerEventProcessorFactory;
 import org.eclipse.dirigible.runtime.listener.log.ListenerLogCleanupTask;
 import org.eclipse.dirigible.runtime.listener.message.MessageListenerTask;
 import org.eclipse.dirigible.runtime.task.TaskManagerLong;
@@ -34,7 +33,7 @@ public class FlowsActivator implements BundleActivator {
 	public void start(BundleContext context) throws Exception {
 		FlowsActivator.context = context;
 
-		ListenerEventProcessorFactory.registerListenerEventProcessorProviders(context);
+		// ListenerEventProcessorFactory.registerListenerEventProcessorProviders(context);
 
 		FlowLogCleanupTask flowLogCleanupTask = new FlowLogCleanupTask();
 		TaskManagerLong.getInstance().registerRunnableTask(flowLogCleanupTask);
