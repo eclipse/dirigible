@@ -109,5 +109,15 @@
               load-on-startup="true">
         </servlet>
      </extension>
+     
+     <extension
+           id="RegistryHomeServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/ui/home"
+              class="org.eclipse.dirigible.runtime.registry.RegistryHomeServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
         
 </plugin>

@@ -1,4 +1,11 @@
 <html><head><script>
+function httpGet(url)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
 var url = window.location.toString();
-window.location='services/ui/anonymous.html' + ((url.indexOf("?") !== -1) ? url.substring(url.indexOf("?")) : '');
+window.location=httpGet('services/ui/home') + ((url.indexOf("?") !== -1) ? url.substring(url.indexOf("?")) : '');
 </script></head></html>
