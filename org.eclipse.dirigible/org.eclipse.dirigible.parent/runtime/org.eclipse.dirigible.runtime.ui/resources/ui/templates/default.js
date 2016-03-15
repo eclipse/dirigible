@@ -149,6 +149,10 @@ defaultControllers.controller('JobCtrl', function($scope, $resource) {
   $scope.restService = $resource('../flow/job');
 });
 
+defaultControllers.controller('ListenerCtrl', function($scope, $resource) {
+  $scope.restService = $resource('../flow/listener');
+});
+
 defaultControllers.controller('MonitoringAccessCtrl', function($scope, $resource) {
 	$resource('../acclog').query({}, function(data) {
 		$scope.logs = data;

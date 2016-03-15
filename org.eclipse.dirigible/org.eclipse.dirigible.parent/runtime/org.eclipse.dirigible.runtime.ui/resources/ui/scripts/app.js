@@ -70,6 +70,9 @@ fileApp.config(function($routeProvider) {
     }).when('/integration/job', {
       controller: 'JobCtrl',
       templateUrl: 'templates/integration/jobs/jobs.html'
+    }).when('/integration/listener', {
+        controller: 'ListenerCtrl',
+        templateUrl: 'templates/integration/listeners/listeners.html'
     }).when('/monitoring', {
       controller: 'MonitoringCtrl',
       templateUrl: 'templates/monitoring/monitoring.html'
@@ -305,6 +308,12 @@ menuControllers.controller('DiscoverCtrl', ['$scope',
         title: "Jobs",
         description: "Job Integration Services"
       }, {
+    	image: "phone",
+	    color: 'orange',
+	    path: "#/integration/listener",
+	    title: "Listeners",
+	    description: "Listener Integration Services"
+	  }, {
         image: "flash",
         color: 'purple',
         path: "#/scripting/tests",

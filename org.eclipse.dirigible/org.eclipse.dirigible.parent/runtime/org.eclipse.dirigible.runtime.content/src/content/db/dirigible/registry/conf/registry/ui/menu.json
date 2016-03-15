@@ -45,6 +45,9 @@
     }, {
         "name": "Jobs",
         "link": "#/integration/job"
+    }, {
+        "name": "Listeners",
+        "link": "#/integration/listener"
     }]
 }, {
     "name": "Operate",
