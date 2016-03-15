@@ -99,5 +99,15 @@
               load-on-startup="true">
         </servlet>
      </extension>
+     
+     <extension
+           id="RegistryMenuServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/ui/menu"
+              class="org.eclipse.dirigible.runtime.registry.RegistryMenuServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
         
 </plugin>

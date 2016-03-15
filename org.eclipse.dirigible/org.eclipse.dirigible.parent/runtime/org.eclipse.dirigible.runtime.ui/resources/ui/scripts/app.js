@@ -165,7 +165,7 @@ var menuControllers = angular.module('menuControllers', []);
 
 menuControllers.controller('MenuCtrl', ['$scope', '$http',
   function($scope, $http) {
-    $http.get('menu.json').success(function(data) {
+    $http.get('menu').success(function(data) {
       $scope.menus = data;
     });
   }

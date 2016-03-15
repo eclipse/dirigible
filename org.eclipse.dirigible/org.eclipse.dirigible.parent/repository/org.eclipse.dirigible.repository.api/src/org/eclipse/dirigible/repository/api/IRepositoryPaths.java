@@ -90,6 +90,9 @@ public interface IRepositoryPaths {
 	/** The registry folder name */
 	public static final String REGISTRY = "registry";
 
+	/** The UI folder name */
+	public static final String UI = "ui";
+
 	/** The public registry path folder name */
 	public static final String REGISTRY_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + "registry/public"; //$NON-NLS-1$
 
