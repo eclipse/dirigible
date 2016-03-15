@@ -102,6 +102,13 @@ public interface IRepositoryPaths {
 	/** The sandbox import folder path */
 	public static final String SANDBOX_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + SANDBOX;
 
+	/** Registry Main Menu Name */
+	public static final String MENU_JSON = "menu.json";
+
+	/** Registry Main Menu Full Path */
+	public static final String REPOSITORY_MENU = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_CONF + IRepositoryPaths.REGISTRY + IRepositoryPaths.SEPARATOR
+			+ IRepositoryPaths.UI + IRepositoryPaths.SEPARATOR + MENU_JSON;
+
 	/** Home Page Location Name */
 	public static final String HOME_URL = "home.location";
 

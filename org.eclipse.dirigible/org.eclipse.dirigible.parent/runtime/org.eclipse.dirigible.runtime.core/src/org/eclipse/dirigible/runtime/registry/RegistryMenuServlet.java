@@ -30,9 +30,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 public class RegistryMenuServlet extends AbstractRegistryServlet {
 
 	private static final String MENU_ERROR_FALLBACK = "[{\"name\": \"Error\",\"link\":\"http://bugs.dirigible.io\"}]";
-	private static final String MENU_JSON = "menu.json";
-	private static final String REPOSITORY_MENU = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_CONF + IRepositoryPaths.REGISTRY + IRepositoryPaths.SEPARATOR
-			+ IRepositoryPaths.UI + IRepositoryPaths.SEPARATOR + MENU_JSON;
+
 	private static final Logger logger = Logger.getLogger(RegistryMenuServlet.class);
 
 	@Override
@@ -41,7 +39,7 @@ public class RegistryMenuServlet extends AbstractRegistryServlet {
 		OutputStream out = response.getOutputStream();
 		response.setContentType(ContentTypeHelper.APPLICATION_JSON);
 		try {
-			final IEntity entity = getEntity(REPOSITORY_MENU, request);
+			final IEntity entity = getEntity(IRepositoryPaths.REPOSITORY_MENU, request);
 			byte[] data;
 			if (entity != null) {
 				if (entity instanceof IResource) {
