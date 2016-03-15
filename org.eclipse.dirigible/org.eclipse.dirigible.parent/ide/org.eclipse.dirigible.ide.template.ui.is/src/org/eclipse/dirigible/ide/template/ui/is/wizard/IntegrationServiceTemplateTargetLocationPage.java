@@ -16,21 +16,23 @@ import org.eclipse.dirigible.ide.template.ui.common.TemplateTargetLocationPage;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 
+/**
+ * Wizard page for IntegrationService template target location
+ */
 public class IntegrationServiceTemplateTargetLocationPage extends TemplateTargetLocationPage {
 
-	private static final String FILE_JOB_NAME = "job_name.job"; //$NON-NLS-1$
-
-	private static final String FILE_FLOW_NAME = "flow_name.flow"; //$NON-NLS-1$
-
-	private static final String EXT_JOB = ".job"; //$NON-NLS-1$
-
-	private static final String EXT_FLOW = ".flow"; //$NON-NLS-1$
+	private static final String PAGE_NAME = "org.eclipse.dirigible.ide.template.ui.is.wizard.IntegrationServiceTemplateTargetLocationPage"; //$NON-NLS-1$
 
 	private static final String SELECT_THE_TARGET_LOCATION_AND_THE_TARGET_FILE_NAME = Messages.IntegrationServiceTemplateTargetLocationPage_SELECT_THE_TARGET_LOCATION_AND_THE_TARGET_FILE_NAME;
-
 	private static final String TARGET_LOCATION = Messages.IntegrationServiceTemplateTargetLocationPage_TARGET_LOCATION;
 
-	private static final String PAGE_NAME = "org.eclipse.dirigible.ide.template.ui.is.wizard.IntegrationServiceTemplateTargetLocationPage"; //$NON-NLS-1$
+	private static final String FILE_JOB_NAME = "job_name.job"; //$NON-NLS-1$
+	private static final String FILE_FLOW_NAME = "flow_name.flow"; //$NON-NLS-1$
+	private static final String FILE_LISTENER_NAME = "listener_name.listener"; //$NON-NLS-1$
+
+	private static final String EXT_JOB = ".job"; //$NON-NLS-1$
+	private static final String EXT_FLOW = ".flow"; //$NON-NLS-1$
+	private static final String EXT_LISTENER = ".listener"; //$NON-NLS-1$
 
 	private IntegrationServiceTemplateModel model;
 
@@ -76,6 +78,8 @@ public class IntegrationServiceTemplateTargetLocationPage extends TemplateTarget
 			defaultName = (preset == null) ? FILE_FLOW_NAME : CommonUtils.getFileNameNoExtension(preset) + EXT_FLOW;
 		} else if (model.getTemplate().getLocation().endsWith(EXT_JOB)) {
 			defaultName = (preset == null) ? FILE_JOB_NAME : CommonUtils.getFileNameNoExtension(preset) + EXT_JOB;
+		} else if (model.getTemplate().getLocation().endsWith(EXT_LISTENER)) {
+			defaultName = (preset == null) ? FILE_LISTENER_NAME : CommonUtils.getFileNameNoExtension(preset) + EXT_LISTENER;
 		}
 		return defaultName;
 	}
