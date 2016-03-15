@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -27,30 +28,38 @@ import org.eclipse.dirigible.repository.logging.Logger;
  * Servlet implementation class RegistryMenuServlet
  * Returns the customizable menu for the Registry UI
  */
-public class RegistryMenuServlet extends AbstractRegistryServlet {
+public class RegistryHomeServlet extends AbstractRegistryServlet {
 
-	private static final String MENU_ERROR_FALLBACK = "[{\"name\": \"Error\",\"link\":\"http://bugs.dirigible.io\"}]";
-	private static final String MENU_JSON = "menu.json";
-	private static final String REPOSITORY_MENU = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_CONF + IRepositoryPaths.REGISTRY + IRepositoryPaths.SEPARATOR
-			+ IRepositoryPaths.UI + IRepositoryPaths.SEPARATOR + MENU_JSON;
-	private static final Logger logger = Logger.getLogger(RegistryMenuServlet.class);
+	private static final String PARAM_HOME_URL = "homeLocation";
+	private static final Logger logger = Logger.getLogger(RegistryHomeServlet.class);
 
 	@Override
 	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 
 		OutputStream out = response.getOutputStream();
-		response.setContentType(ContentTypeHelper.APPLICATION_JSON);
+		response.setContentType(ContentTypeHelper.TEXT_PLAIN);
 		try {
-			final IEntity entity = getEntity(REPOSITORY_MENU, request);
-			byte[] data;
-			if (entity != null) {
-				if (entity instanceof IResource) {
-					data = buildResourceData(entity, request, response);
-					sendData(out, data);
-					return;
+			try {
+				final IEntity entity = getEntity(IRepositoryPaths.REPOSITORY_HOME_URL, request);
+				byte[] data;
+				if (entity != null) {
+					if (entity instanceof IResource) {
+						data = buildResourceData(entity, request, response);
+						sendData(out, data);
+						return;
+					}
 				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
 			}
-			sendData(out, MENU_ERROR_FALLBACK.getBytes());
+
+			String homeUrl = System.getProperty(PARAM_HOME_URL);
+			if ((homeUrl != null) && !ICommonConstants.EMPTY_STRING.equals(homeUrl.trim())) {
+				sendData(out, homeUrl.getBytes());
+				return;
+			}
+
+			sendData(out, IRepositoryPaths.INDEX_HTML_FALLBACK.getBytes());
 		} finally {
 			out.flush();
 			out.close();

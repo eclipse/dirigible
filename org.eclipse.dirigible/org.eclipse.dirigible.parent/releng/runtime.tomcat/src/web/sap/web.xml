@@ -149,6 +149,12 @@
 			<param-name>mailSender</param-name>
 			<param-value>provided</param-value>
 		</init-param>
+		
+		<!-- Default Home Location -->
+		<init-param>
+			<param-name>homeLocation</param-name>
+			<param-value>services/ui/index.html</param-value>
+		</init-param>
 
 		<load-on-startup>2</load-on-startup>
 

@@ -20,5 +20,12 @@
             restorable="true">
       </view>
    </extension>
+   
+   <extension
+      point = "org.eclipse.ui.preferencePages">
+      <page id="org.eclipse.dirigible.ide.registry.conf.HomeLocationPreferencePage"
+	   	class="org.eclipse.dirigible.ide.registry.conf.HomeLocationPreferencePage" name="Home Location">
+      </page>
+   </extension>
 
 </plugin>

@@ -102,4 +102,13 @@ public interface IRepositoryPaths {
 	/** The sandbox import folder path */
 	public static final String SANDBOX_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + SANDBOX;
 
+	/** Home Page Location Name */
+	public static final String HOME_URL = "home.location";
+
+	/** Home Page Location Full Path */
+	public static final String REPOSITORY_HOME_URL = DB_DIRIGIBLE_REGISTRY_CONF + REGISTRY + SEPARATOR + UI + SEPARATOR + HOME_URL;
+
+	/** Fallback for the Home Page Location */
+	public static final String INDEX_HTML_FALLBACK = "services/ui/index.html";
+
 }

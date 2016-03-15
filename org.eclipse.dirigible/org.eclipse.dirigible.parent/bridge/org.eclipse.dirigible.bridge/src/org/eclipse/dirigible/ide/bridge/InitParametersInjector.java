@@ -39,6 +39,7 @@ public class InitParametersInjector implements IInjector {
 	public static final String DEFAULT_MAIL_SERVICE = "mailSender"; //$NON-NLS-1$
 	public static final String DEFAULT_MAIL_SERVICE_PROVIDED = "provided"; //$NON-NLS-1$
 	public static final String DEFAULT_MAIL_SERVICE_BUILTIN = "built-in"; //$NON-NLS-1$
+	public static final String HOME_URL = "homeLocation"; //$NON-NLS-1$
 
 	@Override
 	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

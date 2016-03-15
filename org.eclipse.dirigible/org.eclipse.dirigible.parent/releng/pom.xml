@@ -71,7 +71,7 @@
 							</resources>
 						</configuration>
 					</execution>
-					<execution>
+					<!-- <execution>
 						<id>copy-index.html</id>
 						<phase>package</phase>
 						<goals>
@@ -85,7 +85,7 @@
 								</resource>
 							</resources>
 						</configuration>
-					</execution>
+					</execution> -->
 				</executions>
 			</plugin>
 			<plugin>
