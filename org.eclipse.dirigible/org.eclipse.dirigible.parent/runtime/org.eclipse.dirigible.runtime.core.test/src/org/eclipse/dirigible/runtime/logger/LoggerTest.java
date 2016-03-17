@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.logger;
@@ -16,16 +15,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
-import org.junit.Test;
-
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.commons.AbstractConsoleOutputTest;
-
+import org.junit.Test;
 
 public class LoggerTest extends AbstractConsoleOutputTest {
 
 	private static final Logger logger = LoggerStub.getLogger(LoggerTest.class);
-	
+
 	private static final String ERROR = "Error";
 	private static final String DEBUG = "Debug";
 	private static final String WARN = "Warn";
@@ -33,7 +31,7 @@ public class LoggerTest extends AbstractConsoleOutputTest {
 	private static final String TRACE = "Trace";
 
 	private static Throwable THROWABLE;
-	
+
 	static {
 		try {
 			THROWABLE = new Exception("Exception");
@@ -49,7 +47,7 @@ public class LoggerTest extends AbstractConsoleOutputTest {
 
 		assertContains(t.getMessage(), output);
 		assertContains(baos.toString(), output);
-		
+
 		writer.close();
 		baos.close();
 	}
@@ -63,13 +61,15 @@ public class LoggerTest extends AbstractConsoleOutputTest {
 	public void test() throws Exception {
 		// Workaround for failing tests. When these tests are executed in
 		// separate test methods, only the first one passes successfully.
-		
+
+		System.setProperty(ICommonConstants.INIT_PARAM_LOG_IN_SYSTEM_OUTPUT, "true");
+
 		testLogDebug();
 		testLogError();
 		testLogWarn();
 		testLogInfo();
 		testLogTrace();
-		
+
 		testLogDebugWithThrowable();
 		testLogErrorWithThrowable();
 		testLogWarnWithThrowable();
@@ -85,7 +85,7 @@ public class LoggerTest extends AbstractConsoleOutputTest {
 	protected void testLogErrorWithThrowable() throws Exception {
 		logger.error(ERROR, THROWABLE);
 		String output = getOutput();
-		
+
 		assertContains(ERROR, output);
 		assertContains(THROWABLE, output);
 	}
@@ -115,7 +115,7 @@ public class LoggerTest extends AbstractConsoleOutputTest {
 		assertContains(WARN, output);
 		assertContains(THROWABLE, output);
 	}
-	
+
 	protected void testLogInfo() throws Exception {
 		logger.info(INFO);
 		assertContains(INFO, getOutput());

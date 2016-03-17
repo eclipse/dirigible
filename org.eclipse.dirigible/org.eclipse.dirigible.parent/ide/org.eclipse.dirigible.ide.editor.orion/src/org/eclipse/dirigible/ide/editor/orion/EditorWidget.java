@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.editor.orion;
@@ -54,9 +53,9 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	private boolean breakpointsEnabled;
 
 	private int row;
-	
+
 	private static Map<String, String> ORION_MODES = new HashMap<String, String>();
-	
+
 	static {
 		ORION_MODES.put("javascript", "application/javascript");
 		ORION_MODES.put("html", "text/html");
@@ -66,6 +65,16 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		ORION_MODES.put("java", "text/x-java-source");
 		ORION_MODES.put("xml", "application/xml");
 		ORION_MODES.put("yaml", "text/x-yaml");
+		ORION_MODES.put("table", "application/json");
+		ORION_MODES.put("view", "application/json");
+		ORION_MODES.put("entity", "application/json");
+		ORION_MODES.put("access", "application/json");
+		ORION_MODES.put("extensionpoint", "application/json");
+		ORION_MODES.put("extension", "application/json");
+		ORION_MODES.put("command", "application/json");
+		ORION_MODES.put("flow", "application/json");
+		ORION_MODES.put("job", "application/json");
+		ORION_MODES.put("listener", "application/json");
 	}
 
 	public EditorWidget(final Composite parent) {
@@ -85,14 +94,12 @@ public class EditorWidget extends AbstractTextEditorWidget {
 			public void completed(final ProgressEvent event) {
 				loaded = true;
 				updateWidgetContents();
-				if (javaScriptEditor && DebugModelFacade.getDebugModel() != null) {
+				if (javaScriptEditor && (DebugModelFacade.getDebugModel() != null)) {
 					final DebugSessionModel session = DebugModelFacade.getDebugModel().getActiveSession();
 
-					if (session != null
-							&& session.getCurrentLineBreak() != null) {
+					if ((session != null) && (session.getCurrentLineBreak() != null)) {
 						final String filePath = session.getCurrentLineBreak().getBreakpoint().getFullPath();
-						final String path = CommonUtils.formatToRuntimePath(
-								ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, filePath);
+						final String path = CommonUtils.formatToRuntimePath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, filePath);
 						final int[] breakpoints = DebugModelFacade.getDebugModel().getBreakpointsMetadata().getBreakpoints(path);
 
 						loadBreakpoints(breakpoints);
@@ -157,11 +164,10 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	}
 
 	@Override
-	public void setText(final String text, final EditorMode mode, final boolean readOnly,
-			final boolean breakpointsEnabled, final int row) {
+	public void setText(final String text, final EditorMode mode, final boolean readOnly, final boolean breakpointsEnabled, final int row) {
 		this.text = text;
 		this.mode = mode.getName();
-		
+
 		String orionMode = ORION_MODES.get(this.mode);
 		if (orionMode != null) {
 			this.mode = orionMode;

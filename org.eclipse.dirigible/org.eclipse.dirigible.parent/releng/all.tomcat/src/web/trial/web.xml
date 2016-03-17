@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	id="dirigible-ide" version="2.5">
+<web-app 
+  version="3.1" 
+  metadata-complete="false"  
+  xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
 	<display-name>Dirigible Cloud Toolkit</display-name>
 	<welcome-file-list>
@@ -108,6 +110,24 @@
 		<init-param>
 			<param-name>jdbcAutoCommit</param-name>
 			<param-value>false</param-value>  <!-- set to true in case of PostgreSQL -->
+		</init-param>
+		
+		<!-- Available JDBC connections count --> 
+		<init-param>
+			<param-name>jdbcMaxConnectionsCount</param-name>
+			<param-value>8</param-value>
+		</init-param>
+		
+		<!-- Maximum waiting timeout of a connection before to be considered as a hanging connection --> 
+		<init-param>
+			<param-name>jdbcWaitTimeout</param-name>
+			<param-value>500</param-value>
+		</init-param>
+		
+		<!-- Maximum number of tries to keep it alive, if free connections are still available --> 
+		<init-param>
+			<param-name>jdbcWaitCount</param-name>
+			<param-value>5</param-value>
 		</init-param>
 		
 		<!-- Default Repository Provider --> 

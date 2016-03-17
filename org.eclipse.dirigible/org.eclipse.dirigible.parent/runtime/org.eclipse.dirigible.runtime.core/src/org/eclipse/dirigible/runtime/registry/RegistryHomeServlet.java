@@ -30,9 +30,11 @@ import org.eclipse.dirigible.repository.logging.Logger;
  */
 public class RegistryHomeServlet extends AbstractRegistryServlet {
 
+	private static final long serialVersionUID = 6417395529878256611L;
+
 	private static final Logger logger = Logger.getLogger(RegistryHomeServlet.class);
 
-	private static final String PARAM_HOME_URL = "homeLocation";
+	private static final String PARAM_HOME_URL = ICommonConstants.HOME_URL;
 
 	@Override
 	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {

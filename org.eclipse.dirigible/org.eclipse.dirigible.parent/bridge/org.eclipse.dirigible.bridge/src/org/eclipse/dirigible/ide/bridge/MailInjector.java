@@ -41,7 +41,7 @@ public class MailInjector implements IInjector {
 				if (session != null) {
 					req.getSession().setAttribute(DEFAULT_MAIL_SESSION, session);
 				} else {
-					logger.warn(InitParametersInjector.JNDI_MAIL_SESSION + " not present");
+					logger.warn(InitParametersInjector.INIT_PARAM_JNDI_MAIL_SESSION + " not present");
 				}
 			} catch (Exception e) {
 				logger.error(DirigibleBridge.class.getCanonicalName(), e);
@@ -66,7 +66,7 @@ public class MailInjector implements IInjector {
 				if (session != null) {
 					System.getProperties().put(DEFAULT_MAIL_SESSION, session);
 				} else {
-					logger.warn(InitParametersInjector.JNDI_MAIL_SESSION + " not present");
+					logger.warn(InitParametersInjector.INIT_PARAM_JNDI_MAIL_SESSION + " not present");
 				}
 			} catch (Exception e) {
 				logger.error(DirigibleBridge.class.getCanonicalName(), e);
@@ -89,7 +89,7 @@ public class MailInjector implements IInjector {
 	 */
 	private Session lookupMailSession() throws NamingException {
 		final InitialContext ctx = new InitialContext();
-		String key = InitParametersInjector.get(InitParametersInjector.JNDI_MAIL_SESSION);
+		String key = InitParametersInjector.get(InitParametersInjector.INIT_PARAM_JNDI_MAIL_SESSION);
 		if (key != null) {
 			return (Session) ctx.lookup(key);
 		}

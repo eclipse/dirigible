@@ -72,10 +72,10 @@ public class ImapsClient {
 			imapsIdleThread.setDaemon(false);
 			imapsIdleThread.start();
 
-			imapsIdleThread.join();
+			// imapsIdleThread.join();
 
-		} catch (InterruptedException e) {
-			logger.error("ImapsClient interrupted");
+			// } catch (InterruptedException e) {
+			// logger.error("ImapsClient interrupted");
 		} catch (Exception e) {
 			logger.error("ImapsClient", e);
 		} finally {

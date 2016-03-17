@@ -110,6 +110,24 @@
 			<param-value>true</param-value>  <!-- set to true in case of PostgreSQL -->
 		</init-param>
 		
+		<!-- Available JDBC connections count --> 
+		<init-param>
+			<param-name>jdbcMaxConnectionsCount</param-name>
+			<param-value>8</param-value>
+		</init-param>
+		
+		<!-- Maximum waiting timeout of a connection before to be considered as a hanging connection --> 
+		<init-param>
+			<param-name>jdbcWaitTimeout</param-name>
+			<param-value>500</param-value>
+		</init-param>
+		
+		<!-- Maximum number of tries to keep it alive, if free connections are still available --> 
+		<init-param>
+			<param-name>jdbcWaitCount</param-name>
+			<param-value>5</param-value>
+		</init-param>
+		
 		<!-- Default Repository Provider --> 
 		<init-param>
 			<param-name>repositoryProvider</param-name>

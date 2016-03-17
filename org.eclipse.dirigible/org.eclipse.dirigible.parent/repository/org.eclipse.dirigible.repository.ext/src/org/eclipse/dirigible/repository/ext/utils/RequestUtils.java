@@ -59,7 +59,7 @@ public class RequestUtils {
 	}
 
 	public static Boolean isRolesEnabled(HttpServletRequest request) {
-		Boolean rolesEnabled = Boolean.parseBoolean(get(request, ICommonConstants.ENABLE_ROLES));
+		Boolean rolesEnabled = Boolean.parseBoolean(get(request, ICommonConstants.INIT_PARAM_ENABLE_ROLES));
 		return rolesEnabled;
 	}
 }

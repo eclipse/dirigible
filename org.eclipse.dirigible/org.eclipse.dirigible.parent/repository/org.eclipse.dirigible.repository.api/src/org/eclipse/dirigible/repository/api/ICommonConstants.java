@@ -115,8 +115,6 @@ public interface ICommonConstants {
 
 	public static final String COOKIE_THEME = "dirigible_theme"; //$NON-NLS-1$
 
-	public static final String ENABLE_ROLES = "enableRoles"; //$NON-NLS-1$
-
 	// Platform specific
 	public static final String MAIL_SESSION = "MailSession"; //$NON-NLS-1$
 
@@ -124,10 +122,28 @@ public interface ICommonConstants {
 
 	public static final String CONNECTIVITY_CONFIGURATION = "ConnectivityConfiguration"; //$NON-NLS-1$
 
-	public static final String PARAM_REPOSITORY_PROVIDER = "repositoryProvider"; //$NON-NLS-1$
-
-	public static final String PARAM_REPOSITORY_PROVIDER_MASTER = "repositoryProviderMaster"; //$NON-NLS-1$
-
 	public static final String PARAM_INSTANCE_NAME = "dirigibleInstanceName"; //$NON-NLS-1$
 
+	// Initi Parameters Names
+	public static final String INIT_PARAM_RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
+	public static final String INIT_PARAM_SERVICES_URL = "servicesUrl"; //$NON-NLS-1$
+	public static final String INIT_PARAM_ENABLE_ROLES = "enableRoles"; //$NON-NLS-1$
+	public static final String INIT_PARAM_LOG_IN_SYSTEM_OUTPUT = "logInSystemOutput"; //$NON-NLS-1$
+	public static final String INIT_PARAM_JNDI_DEFAULT_DATASOURCE = "jndiDefaultDataSource"; //$NON-NLS-1$
+	public static final String INIT_PARAM_JNDI_CONNECTIVITY_CONFIGURATION = "jndiConnectivityService"; //$NON-NLS-1$
+	public static final String INIT_PARAM_JNDI_MAIL_SESSION = "jndiMailService"; //$NON-NLS-1$
+	public static final String INIT_PARAM_JDBC_SET_AUTO_COMMIT = "jdbcAutoCommit"; //$NON-NLS-1$
+	public static final String INIT_PARAM_JDBC_MAX_CONNECTIONS_COUNT = "jdbcMaxConnectionsCount";
+	public static final String INIT_PARAM_JDBC_WAIT_TIMEOUT = "jdbcWaitTimeout";
+	public static final String INIT_PARAM_JDBC_WAIT_COUNT = "jdbcWaitCount";
+	public static final String INIT_PARAM_REPOSITORY_PROVIDER = "repositoryProvider"; //$NON-NLS-1$
+	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER = "repositoryProviderMaster"; //$NON-NLS-1$
+	public static final String INIT_PARAM_DEFAULT_DATASOURCE_TYPE = "defaultDataSourceType"; //$NON-NLS-1$
+	public static final String INIT_PARAM_DEFAULT_DATASOURCE_TYPE_JNDI = "jndi"; //$NON-NLS-1$
+	public static final String INIT_PARAM_DEFAULT_DATASOURCE_TYPE_LOCAL = "local"; //$NON-NLS-1$
+	public static final String INIT_PARAM_DEFAULT_MAIL_SERVICE = "mailSender"; //$NON-NLS-1$
+	public static final String INIT_PARAM_DEFAULT_MAIL_SERVICE_PROVIDED = "provided"; //$NON-NLS-1$
+	public static final String INIT_PARAM_DEFAULT_MAIL_SERVICE_BUILTIN = "built-in"; //$NON-NLS-1$
+	public static final String HOME_URL = "homeLocation"; //$NON-NLS-1$
+	// ---
 }

@@ -2,13 +2,14 @@ package org.eclipse.dirigible.runtime.mail;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.runtime.scripting.IMailService;
 
 public class MailServiceFactory {
 
-	public static final String DEFAULT_MAIL_SERVICE = "mailSender"; //$NON-NLS-1$
-	public static final String DEFAULT_MAIL_SERVICE_PROVIDED = "provided"; //$NON-NLS-1$
-	public static final String DEFAULT_MAIL_SERVICE_BUILTIN = "built-in"; //$NON-NLS-1$
+	public static final String DEFAULT_MAIL_SERVICE = ICommonConstants.INIT_PARAM_DEFAULT_MAIL_SERVICE;
+	public static final String DEFAULT_MAIL_SERVICE_PROVIDED = ICommonConstants.INIT_PARAM_DEFAULT_MAIL_SERVICE_PROVIDED;
+	public static final String DEFAULT_MAIL_SERVICE_BUILTIN = ICommonConstants.INIT_PARAM_DEFAULT_MAIL_SERVICE_BUILTIN;
 
 	public static IMailService createMailService(HttpServletRequest request) {
 		IMailService mailService = null;

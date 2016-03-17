@@ -5,7 +5,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.dirigible.ide.editor.orion.OrionEditor"
-            extensions="js,html,css,java,xml,yaml"
+            extensions="js,html,css,java,xml,yaml,json,table,view,entity,menu,access,extensionpoint,extension,command,flow,job,listener"
             icon="icons/editor-icon.png"
             id="org.eclipse.dirigible.ide.editor.orion.OrionEditor"
             name="Orion Editor">

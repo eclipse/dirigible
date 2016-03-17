@@ -13,6 +13,7 @@ package org.eclipse.dirigible.ide.common.dual;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.utils.EnvUtils;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.rap.rwt.RWT;
@@ -25,9 +26,6 @@ import org.eclipse.rap.rwt.client.service.ClientService;
 public class DualParameters {
 
 	private static final Logger logger = Logger.getLogger(DualParameters.class);
-
-	public static final String RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
-	public static final String SERVICES_URL = "servicesUrl"; //$NON-NLS-1$
 
 	public static final String SET_AUTO_ACTIVATE = "autoActivateEnabled"; //$NON-NLS-1$
 	public static final String SET_AUTO_PUBLISH = "autoPublishEnabled"; //$NON-NLS-1$
@@ -113,7 +111,7 @@ public class DualParameters {
 	}
 
 	public static String getRuntimeUrl() {
-		String runtimeUrl = get(RUNTIME_URL);
+		String runtimeUrl = EnvUtils.getEnv(ICommonConstants.INIT_PARAM_RUNTIME_URL);
 		if (runtimeUrl == null) {
 			runtimeUrl = RUNTIME_URL_DEFAULT;
 		}
@@ -121,7 +119,7 @@ public class DualParameters {
 	}
 
 	public static boolean isAutoPublishEnabled() {
-		String autoPublishEnabled = System.getProperty(SET_AUTO_PUBLISH);
+		String autoPublishEnabled = EnvUtils.getEnv(SET_AUTO_PUBLISH);
 		boolean result = SET_AUTO_PUBLIUSH_DEFAULT;
 		if (autoPublishEnabled != null) {
 			result = Boolean.parseBoolean(autoPublishEnabled);
@@ -130,7 +128,7 @@ public class DualParameters {
 	}
 
 	public static boolean isAutoActivateEnabled() {
-		String autoPublishEnabled = System.getProperty(SET_AUTO_ACTIVATE);
+		String autoPublishEnabled = EnvUtils.getEnv(SET_AUTO_ACTIVATE);
 		boolean result = SET_AUTO_ACTIVATE_DEFAULT;
 		if (autoPublishEnabled != null) {
 			result = Boolean.parseBoolean(autoPublishEnabled);
@@ -139,7 +137,7 @@ public class DualParameters {
 	}
 
 	public static boolean isSandboxEnabled() {
-		String sandboxEnabledStr = System.getProperty(SANDBOX_ENABLED);
+		String sandboxEnabledStr = EnvUtils.getEnv(SANDBOX_ENABLED);
 		boolean result = SET_SANDBOX_ENABLED_DEFAULT;
 		if (sandboxEnabledStr != null) {
 			result = Boolean.parseBoolean(sandboxEnabledStr);
@@ -148,11 +146,11 @@ public class DualParameters {
 	}
 
 	public static String getServicesUrl() {
-		String runtimeUrl = get(RUNTIME_URL);
+		String runtimeUrl = EnvUtils.getEnv(ICommonConstants.INIT_PARAM_RUNTIME_URL);
 		if ((runtimeUrl == null) || "".equals(runtimeUrl)) {
 			runtimeUrl = RWT.getRequest().getContextPath();
 		}
-		String servicesUrl = get(SERVICES_URL);
+		String servicesUrl = EnvUtils.getEnv(ICommonConstants.INIT_PARAM_SERVICES_URL);
 		if (servicesUrl == null) {
 			servicesUrl = SERVICES_URL_DEFAULT;
 		}
@@ -191,7 +189,7 @@ public class DualParameters {
 	}
 
 	public static Boolean isRolesEnabled() {
-		Boolean rolesEnabled = Boolean.parseBoolean(get(ICommonConstants.ENABLE_ROLES));
+		Boolean rolesEnabled = Boolean.parseBoolean(EnvUtils.getEnv(ICommonConstants.INIT_PARAM_ENABLE_ROLES));
 		return rolesEnabled;
 	}
 

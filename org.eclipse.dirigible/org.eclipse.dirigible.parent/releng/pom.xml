@@ -28,12 +28,6 @@
 		<finalName>${deployment.name}</finalName>
 		<pluginManagement>
 			<plugins>
-				<!-- <plugin> <artifactId>maven-antrun-plugin</artifactId> <executions> 
-					<execution> <phase>prepare-package</phase> <configuration> <tasks> <replace 
-					dir="${project.build.directory}/temp"> <include name="**/web.xml" /> <replacefilter 
-					token="@RUNTIME_URL@" value="${deployment.context}" /> </replace> </tasks> 
-					</configuration> <goals> <goal>run</goal> </goals> </execution> </executions> 
-					</plugin> -->
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -158,8 +152,8 @@
 			</activation>
 			<properties>
 				<deployment.type>tomcat</deployment.type>
-				<deployment.name>dirigible</deployment.name>
-				<deployment.context>dirigible</deployment.context>
+				<deployment.name>ROOT</deployment.name>
+				<deployment.context></deployment.context>
 				<deployment.executable>dont-use</deployment.executable>
 			</properties>
 		</profile>
@@ -173,27 +167,9 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>trial-postgres</id>
-			<properties>
-				<deployment.type>trial-postgres</deployment.type>
-				<deployment.name>ROOT</deployment.name>
-				<deployment.context></deployment.context>
-				<deployment.executable>dont-use</deployment.executable>
-			</properties>
-		</profile>
-		<profile>
 			<id>sap</id>
 			<properties>
 				<deployment.type>sap</deployment.type>
-				<deployment.name>dirigible</deployment.name>
-				<deployment.context>dirigible</deployment.context>
-				<deployment.executable>dont-use</deployment.executable>
-			</properties>
-		</profile>
-		<profile>
-			<id>tomcat-postgres</id>
-			<properties>
-				<deployment.type>tomcat-postgres</deployment.type>
 				<deployment.name>dirigible</deployment.name>
 				<deployment.context>dirigible</deployment.context>
 				<deployment.executable>dont-use</deployment.executable>

@@ -48,10 +48,10 @@ public class DataSourceFacade {
 	private static final String LOCAL_DB_NAME = "derby"; //$NON-NLS-1$
 
 	private static final String DATASOURCE_DEFAULT = "DEFAULT_DATASOURCE"; //$NON-NLS-1$
-	private static final String DEFAULT_DATASOURCE_TYPE = "defaultDataSourceType"; //$NON-NLS-1$
-	private static final String DEFAULT_DATASOURCE_TYPE_JNDI = "jndi"; //$NON-NLS-1$
-	private static final String DEFAULT_DATASOURCE_TYPE_LOCAL = "local"; //$NON-NLS-1$
-	private static final String JNDI_DEFAULT_DATASOURCE = "jndiDefaultDataSource"; //$NON-NLS-1$
+	private static final String DEFAULT_DATASOURCE_TYPE = ICommonConstants.INIT_PARAM_DEFAULT_DATASOURCE_TYPE;
+	private static final String DEFAULT_DATASOURCE_TYPE_JNDI = ICommonConstants.INIT_PARAM_DEFAULT_DATASOURCE_TYPE_JNDI;
+	private static final String DEFAULT_DATASOURCE_TYPE_LOCAL = ICommonConstants.INIT_PARAM_DEFAULT_DATASOURCE_TYPE_LOCAL;
+	private static final String JNDI_DEFAULT_DATASOURCE = ICommonConstants.INIT_PARAM_JNDI_DEFAULT_DATASOURCE;
 
 	public static final String DATASOURCE_PREFIX = "DATASOURCE_"; //$NON-NLS-1$
 

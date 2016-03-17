@@ -77,12 +77,12 @@ public class DatabaseInjector implements IInjector {
 		if (dataSource == null) {
 			try {
 
-				String defaultDataSourceType = System.getProperty(InitParametersInjector.DEFAULT_DATASOURCE_TYPE);
-				if (!InitParametersInjector.DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
+				String defaultDataSourceType = System.getProperty(InitParametersInjector.INIT_PARAM_DEFAULT_DATASOURCE_TYPE);
+				if (!InitParametersInjector.INIT_PARAM_DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
 					return;
 				}
 
-				String key = InitParametersInjector.get(InitParametersInjector.JNDI_DEFAULT_DATASOURCE);
+				String key = InitParametersInjector.get(InitParametersInjector.INIT_PARAM_JNDI_DEFAULT_DATASOURCE);
 				dataSource = lookupDataSource(key);
 				if (dataSource != null) {
 					req.getSession().setAttribute(DATASOURCE_DEFAULT, dataSource);
@@ -102,7 +102,7 @@ public class DatabaseInjector implements IInjector {
 						// throw new ServletException(ERROR_WHILE_GETTING_DATABASE_METADATA, e);
 					}
 				} else {
-					logger.warn(InitParametersInjector.JNDI_DEFAULT_DATASOURCE + " not present");
+					logger.warn(InitParametersInjector.INIT_PARAM_JNDI_DEFAULT_DATASOURCE + " not present");
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -116,12 +116,12 @@ public class DatabaseInjector implements IInjector {
 		if (dataSource == null) {
 			try {
 
-				String defaultDataSourceType = System.getProperty(InitParametersInjector.DEFAULT_DATASOURCE_TYPE);
-				if (!InitParametersInjector.DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
+				String defaultDataSourceType = System.getProperty(InitParametersInjector.INIT_PARAM_DEFAULT_DATASOURCE_TYPE);
+				if (!InitParametersInjector.INIT_PARAM_DEFAULT_DATASOURCE_TYPE_JNDI.equals(defaultDataSourceType)) {
 					return;
 				}
 
-				String key = InitParametersInjector.get(InitParametersInjector.JNDI_DEFAULT_DATASOURCE);
+				String key = InitParametersInjector.get(InitParametersInjector.INIT_PARAM_JNDI_DEFAULT_DATASOURCE);
 				dataSource = lookupDataSource(key);
 				if (dataSource != null) {
 					System.getProperties().put(DATASOURCE_DEFAULT, dataSource);
@@ -140,7 +140,7 @@ public class DatabaseInjector implements IInjector {
 						// throw new ServletException(ERROR_WHILE_GETTING_DATABASE_METADATA, e);
 					}
 				} else {
-					logger.warn(InitParametersInjector.JNDI_DEFAULT_DATASOURCE + " not present");
+					logger.warn(InitParametersInjector.INIT_PARAM_JNDI_DEFAULT_DATASOURCE + " not present");
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);

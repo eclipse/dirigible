@@ -56,7 +56,7 @@ public class RepositoryFactory {
 
 		logger.info("Registering Repository Providers...");
 
-		String defaultRepositoryProvider = System.getProperty(ICommonConstants.PARAM_REPOSITORY_PROVIDER);
+		String defaultRepositoryProvider = System.getProperty(ICommonConstants.INIT_PARAM_REPOSITORY_PROVIDER);
 		String localRepositoryProviderClass = "org.eclipse.dirigible.repository.local.LocalRepositoryProvider";
 
 		// IRepositoryProvider services
@@ -94,7 +94,7 @@ public class RepositoryFactory {
 
 		logger.info("Registering Master Repository Providers...");
 
-		String defaultMasterRepositoryProvider = System.getProperty(ICommonConstants.PARAM_REPOSITORY_PROVIDER_MASTER);
+		String defaultMasterRepositoryProvider = System.getProperty(ICommonConstants.INIT_PARAM_REPOSITORY_PROVIDER_MASTER);
 
 		// IMasterRepositoryProvider services
 		Collection<ServiceReference<IMasterRepositoryProvider>> masterServiceReferences = context
