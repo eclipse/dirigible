@@ -35,11 +35,18 @@
       		<div class="" ng-show="searchError && search">
         		<div class="alert alert-danger"> <strong>Oh snap!</strong>{{ searchError.status }} - {{ searchError.data }}</div>
       		</div>
-      		<ol ng-show="paths" class="breadcrumb" style="font-size: initial; padding-top: 5px">
-        		<li ng-repeat="path in paths">
-          			<a href="" ng-click="crumbsChanged(path)">{{ path.name }}</a>
-        		</li>
-      		</ol>
+      		<div>
+	      		<ol ng-show="paths" class="breadcrumb" style="font-size: initial; padding-top: 5px">
+	        		<li ng-repeat="path in paths">
+	          			<a href="" ng-click="crumbsChanged(path)">{{ path.name }}</a>
+	        		</li>
+	        		<div style="float:right">
+	        			<button type="button" class="btn btn-info" ng-click="newFile()" style="margin-right:5px; padding:3px"><span class="fa fa-file-o"></span> New</button>
+		      			<!-- <button type="button" class="btn btn-info" ng-click="newFolder()" style="margin-right:5px; padding:3px"><span class="fa fa-folder-o"></span> New Folder</button> -->
+		      		</div>
+	      		</ol>
+	      		
+      		</div>
       		<div class="list-group">
         		<div class="list-group-item" ng-repeat="single in selected.files" ng-click="change(single)">
           			<span class="fa fa-{{ single.folder ? (single.files?'folder':'folder-o') : 'file-code-o' }}"></span>

@@ -15,7 +15,7 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
 
     $scope.mapping = {
     		"application/javascript": ["js"],
-			"application/json": ["json", "odata", "ws", "table", "view", "entity", "menu", "access", "extensionpoint", "extension", "command", "flow", "job"],
+			"application/json": ["json", "odata", "ws", "table", "view", "entity", "menu", "access", "extensionpoint", "extension", "command", "flow", "job", "listener"],
 			"application/xml": ["xml", "xsd", "wsdl", "xsl", "xslt", "routes"],
 			"text/html": ["html"],
 			"text/x-java-source": ["java"],
@@ -32,6 +32,12 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
     } else {
     	$scope.restService.query({}, onArrayQuery, onError);
     }
+    
+    var codeEdit = null;
+    require.config({waitSeconds: 0});
+    require(["orion/code_edit/built-codeEdit.min", "orion/keyBinding"], function(widget, mKeyBinding) {
+        codeEdit = new widget();
+    });
 
     $scope.change = function(newData) {
     	if (!newData.folder) {
@@ -123,6 +129,20 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
     		onError("Error saving " + $scope.path + "\n" + response);
     	});
     };
+    
+    $scope.newFile = function() {
+    	var fileName = prompt("Please enter the full path of the new file", $scope.selected.path);
+
+    	if (fileName != null) {
+    		$scope.path = fileName;
+	    	$http.put($scope.path, "").success(function(response) {
+	    		onSuccess("Save of " + $scope.path + " passed successfully");
+	    	}).error(function(response) {
+				onError("Error saving " + $scope.path + "\n" + response);
+	    	});
+    	}
+    };
+    
 
     function onArrayQuery(data) {
     	$scope.searchError = undefined;
@@ -152,48 +172,46 @@ workspaceControllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSe
     }
 
     function createEditor(content, contentType) {
-    	require.config({waitSeconds: 0});
-        require(["orion/code_edit/built-codeEdit.min", "orion/keyBinding"], function(widget, mKeyBinding) {
-            var codeEdit = new widget();
-            $scope.editor = {};
-            codeEdit.create({
-            	parent: "editor",
-            	contentType: contentType,
-            	contents: content
-            }).then(function(editorViewer) {
-            	$scope.editor = editorViewer.editor;
-            	var savedText = content;
-            	var isDirty = false;
-            	$scope.editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("s", true), "save");
-            	$scope.editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("p", true), "toggleZoomRuler");
+    	
+        $scope.editor = {};
+        codeEdit.create({
+        	parent: "editor",
+        	contentType: contentType,
+        	contents: content
+        }).then(function(editorViewer) {
+        	$scope.editor = editorViewer.editor;
+        	var savedText = content;
+        	var isDirty = false;
+        	$scope.editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("s", true), "save");
+        	$scope.editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("p", true), "toggleZoomRuler");
 
-            	editorViewer.editor.getTextView().setAction("save", function(){ //$NON-NLS-0$
-            		isDirty = false;
-            		$scope.saveCalled();
-            		return true;
-            	});
+        	editorViewer.editor.getTextView().setAction("save", function(){ //$NON-NLS-0$
+        		isDirty = false;
+        		$scope.saveCalled();
+        		return true;
+        	});
 
-            	editorViewer.editor.getTextView().setAction("toggleZoomRuler", function(){ //$NON-NLS-0$
-            		isDirty = false;
-            		$scope.publishCalled();
-            		return true;
-            	});
+        	editorViewer.editor.getTextView().setAction("toggleZoomRuler", function(){ //$NON-NLS-0$
+        		isDirty = false;
+        		$scope.publishCalled();
+        		return true;
+        	});
 
-            	$scope.editor.addEventListener("DirtyChanged", function(event) {
-            		var newText = $scope.editor.getText();
-            		if (savedText !== newText && !isDirty) {
-            			isDirty = true;
-            			dirtyChanged(true);
-            		} else if (savedText === newText && isDirty) {
-            			isDirty = false;
-            			dirtyChanged(false);
-            		}
-            	});
+        	$scope.editor.addEventListener("DirtyChanged", function(event) {
+        		var newText = $scope.editor.getText();
+        		if (savedText !== newText && !isDirty) {
+        			isDirty = true;
+        			dirtyChanged(true);
+        		} else if (savedText === newText && isDirty) {
+        			isDirty = false;
+        			dirtyChanged(false);
+        		}
+        	});
 
-    	        // explicitly set the read only mode for empty files
-    	        $scope.editor.getTextView()._readonly = false;
-            });
+	        // explicitly set the read only mode for empty files
+	        $scope.editor.getTextView()._readonly = false;
         });
+    
     }
 
     function getText() {
