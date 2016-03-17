@@ -56,7 +56,7 @@
 		<!-- Print logs in System output in addition to the standard logger. Workaround for some application servers -->
 		<init-param>
 			<param-name>logInSystemOutput</param-name>
-			<param-value>true</param-value>
+			<param-value>false</param-value>
 		</init-param>
 		
 		<!-- Type of the Default Database DataSource -->
