@@ -12,7 +12,7 @@
 	<description>Dirigible Parent</description>
 	<groupId>org.eclipse.dirigible</groupId>
 	<artifactId>org.eclipse.dirigible.parent</artifactId>
-	<version>2.2.160203</version>
+	<version>2.3.160317</version>
 	<packaging>pom</packaging>
 
 	<properties>

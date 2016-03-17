@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible.bridge</groupId>
 		<artifactId>org.eclipse.dirigible.bridge.parent</artifactId>
-		<version>2.2.160203</version>
+		<version>2.3.160317</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
