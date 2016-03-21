@@ -84,6 +84,7 @@
 <unit id="com.google.guava" version="15.0.0.v201403281430"/>
 <unit id="org.jsoup" version="1.7.2.v201411291515"/>
 <unit id="org.eclipse.orbit.mongodb" version="2.10.1.v20130422-1135"/>
+<unit id="javax.websocket" version="1.0.0.v20140310-1603"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository"/>
 </location>
 
