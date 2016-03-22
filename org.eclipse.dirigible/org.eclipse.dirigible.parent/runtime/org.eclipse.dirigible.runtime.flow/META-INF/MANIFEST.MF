@@ -29,6 +29,8 @@ Import-Package: com.sun.mail.iap,
  javax.servlet.annotation,
  javax.servlet.descriptor,
  javax.servlet.http,
+ javax.websocket,
+ javax.websocket.server,
  org.slf4j
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dirigible.runtime.flow,

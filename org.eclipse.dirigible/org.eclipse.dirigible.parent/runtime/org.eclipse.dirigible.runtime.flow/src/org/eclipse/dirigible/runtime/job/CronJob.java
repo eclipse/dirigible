@@ -75,6 +75,7 @@ public class CronJob implements org.quartz.Job {
 				if ((type != null) && type.equalsIgnoreCase(job.getType())) {
 					IScriptExecutor scriptExecutor = EngineUtils.createExecutor(type, request);
 					scriptExecutor.executeServiceModule(request, response, module, executionContext);
+					break;
 				}
 			}
 		} catch (IOException e) {

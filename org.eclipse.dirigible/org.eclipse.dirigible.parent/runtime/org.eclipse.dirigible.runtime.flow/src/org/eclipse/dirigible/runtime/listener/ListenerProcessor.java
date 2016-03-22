@@ -36,6 +36,7 @@ public class ListenerProcessor {
 				if ((type != null) && type.equalsIgnoreCase(listener.getType())) {
 					IScriptExecutor scriptExecutor = EngineUtils.createExecutor(type, null);
 					scriptExecutor.executeServiceModule(null, null, module, executionContext);
+					break;
 				}
 			}
 		} catch (IOException e) {
