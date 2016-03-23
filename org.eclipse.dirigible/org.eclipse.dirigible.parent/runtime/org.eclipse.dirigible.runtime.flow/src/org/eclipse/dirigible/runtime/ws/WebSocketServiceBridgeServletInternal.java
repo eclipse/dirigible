@@ -12,13 +12,18 @@ import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.IScriptExecutor;
 import org.eclipse.dirigible.runtime.scripting.utils.EngineUtils;
 
+/**
+ * WebSocket OSGi Proxy for Scripting Services support
+ * It
+ */
 public class WebSocketServiceBridgeServletInternal {
 
 	private static final Logger logger = Logger.getLogger(WebSocketServiceBridgeServletInternal.class);
 
 	private static final String PARAM_SESSION = "wsSession";
+	private static final String PARAM_SESSIONS = "wsSessions";
 
-	private static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
+	public static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
 
 	public void onOpen(Session session) throws IOException {
 		openSessions.put(session.getId(), session);
@@ -28,9 +33,24 @@ public class WebSocketServiceBridgeServletInternal {
 	public void onMessage(String message, Session session, String type) {
 		logger.debug("[Internal] onMessage: " + message + ", type: " + type);
 
+		WebSocketRequest webSocketRequest = null;
+		try {
+			webSocketRequest = WebSocketRequestParser.parseRequest(message);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			try {
+				session.getBasicRemote().sendText("Wrong format of the request");
+			} catch (IOException e1) {
+				logger.error(e.getMessage(), e);
+			}
+			return;
+		}
+
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();
 		executionContext.put(PARAM_SESSION, session);
-		executeByEngineType(message, executionContext, type);
+		executionContext.put(PARAM_SESSIONS, openSessions);
+		executionContext.putAll(webSocketRequest.getParams());
+		executeByEngineType(webSocketRequest.getModule(), executionContext, type);
 	}
 
 	private static void executeByEngineType(String module, Map<Object, Object> executionContext, String serviceType) {

@@ -30,11 +30,11 @@ public class ListenerParser {
 		// "description": "MyListener Description",
 		// "trigger": "message",
 		// "type": "javascript",
-		// "module": "/${projectName}/service1.js",
+		// "module": "/${packageName}/service1.js",
 		// "params": {
-		//				"client": "client1",
-		//				"topic": "/topic1"
-		//			}
+		// "client": "client1",
+		// "topic": "/topic1"
+		// }
 		// }
 
 		return gson.fromJson(listenerDefinition, Listener.class);

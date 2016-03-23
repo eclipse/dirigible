@@ -15,7 +15,10 @@ import java.io.IOException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class WebSocketServiceServlet extends HttpServlet {
@@ -46,6 +49,15 @@ public class WebSocketServiceServlet extends HttpServlet {
 
 		logger.debug("Debug channel internal has been set.");
 
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String json = WebSocketRequestParser.gson.toJsonTree(WebSocketServiceBridgeServletInternal.openSessions).getAsString();
+		resp.setContentType(ContentTypeHelper.APPLICATION_JSON);
+		resp.getWriter().print(json);
+		resp.getWriter().flush();
+		resp.getWriter().close();
 	}
 
 }
