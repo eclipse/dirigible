@@ -2,6 +2,8 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="org.eclipse.dirigible.ide.ui.rap.init" name="WorkbenchInitializer" schema="schema/org.eclipse.dirigible.ide.ui.rap.init.exsd"/>
+   
+   <!--
    <extension
          point="org.eclipse.rap.ui.layouts">
       <layout
@@ -42,7 +44,7 @@
                id="org.eclipse.dirigible.ide.ui.rap.layoutsets.fancy.configdialog"
                name="Config Dialog">
          </layoutSet>
-         <!--
+         
          <layoutSet
                class="org.eclipse.dirigible.ide.ui.rap.layoutsets.fancy.CoolbarInitializer"
                id="org.eclipse.dirigible.ide.ui.rap.layoutsets.fancy.coolbar"
@@ -53,7 +55,7 @@
                id="org.eclipse.dirigible.ide.ui.rap.layoutsets.fancy.coolbaroverflow"
                name="Coolbar Overflow">
          </layoutSet>
-         -->
+         
       </layout>
    </extension>
    <extension
@@ -146,6 +148,9 @@
             name="Dirigible Presentation Factory">
       </factory>
    </extension>
+   
+   -->
+   
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -164,4 +169,123 @@
             base-name="resources/ping.html">
       </resource>
    </extension>
+   
+   
+   
+   
+   <!-- ORIGINAL -->
+   
+   
+   <extension
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            brandingId="org.eclipse.rap.design.example.fancy.branding"
+            class="org.eclipse.dirigible.ide.ui.rap.entry.DirigibleWorkbench"
+            id="org.eclipse.dirigible.ide.ui.rap.entry.DefaultEntrypoint"
+            path="/index.html">
+      </entrypoint>
+   </extension>
+   
+   
+   <extension
+         point="org.eclipse.ui.presentationFactories">
+      <factory
+            class="org.eclipse.rap.internal.design.example.fancy.FancyPresentationFactory"
+            id="org.eclipse.rap.design.example.fancy.factory"
+            name="Fancy Presentation Factory">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.branding">
+      <branding
+            favicon="img/fancy/favicon.png"
+            id="org.eclipse.rap.design.example.fancy.branding"
+            themeId="org.eclipse.rap.design.example.fancy.theme"
+            title="Dirigible">
+         <presentationFactory
+               defaultLayoutId="org.eclipse.rap.design.example.fancy.layout"
+               id="org.eclipse.rap.design.example.fancy.factory"
+               name="Fancy Presentation Factory"
+               viewActionsVisible="false">
+            <defaultStackPresentation
+                  id="org.eclipse.rap.design.example.stack.view">
+            </defaultStackPresentation>
+         </presentationFactory>
+      </branding>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.layouts">
+      <layout
+            id="org.eclipse.rap.design.example.fancy.layout"
+            name="Fancy Layout">
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.LogoInitializer"
+               id="org.eclipse.rap.design.example.layoutset.logo"
+               name="Logo">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.HeaderInitializer"
+               id="org.eclipse.rap.design.example.layoutset.header"
+               name="Header">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.FooterInitializer"
+               id="org.eclipse.rap.design.example.layoutset.footer"
+               name="Footer">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.MenuBarInitializer"
+               id="org.eclipse.rap.design.example.layoutset.menubar"
+               name="MenuBar">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.PerspectiveSwitcherInitializer"
+               id="org.eclipse.rap.design.example.layoutset.perspective"
+               name="Perspective Switcher">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.StackInitializer"
+               id="org.eclipse.rap.design.example.layoutset.stack"
+               name="Fancy Stack">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.ConfigDialogInitializer"
+               id="org.eclipse.rap.design.example.layoutset.confdialog"
+               name="Config Dialog">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.CoolbarInitializer"
+               id="org.eclipse.rap.design.example.layoutset.coolbar"
+               name="Coolbar">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.CoolbarOverflowInitializer"
+               id="org.eclipse.rap.design.example.layoutset.coolbaroverflow"
+               name="Coolbar Overflow">
+         </layoutSet>
+      </layout>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.themes">
+      <theme
+            file="theme/fancy/fancy.css"
+            id="org.eclipse.rap.design.example.fancy.theme"
+            name="Fancy Theme">
+      </theme>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.stackPresentations">
+      <stackPresentation
+            actionClass="org.eclipse.rap.internal.design.example.stacks.ConfigAction"
+            class="org.eclipse.rap.internal.design.example.stacks.ViewStackPresentation"
+            id="org.eclipse.rap.design.example.stack.view"
+            name="Example Stack Presentation"
+            type="view">
+      </stackPresentation>
+   </extension>
+   
+   
+   
+   
+   
 </plugin>

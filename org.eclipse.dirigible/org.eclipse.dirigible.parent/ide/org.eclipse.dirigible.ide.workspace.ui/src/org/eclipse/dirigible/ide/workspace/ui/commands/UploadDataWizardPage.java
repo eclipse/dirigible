@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.ui.commands;
@@ -16,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -30,13 +30,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 
-import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
-
 /**
  * The upload wizard page, that contains: 1) an info message about the possible
  * user input 2) a browse button for selecting files 3) an SWT list that
  * contains the selected .dsv files
- * 
  */
 public class UploadDataWizardPage extends FocusableWizardPage {
 
@@ -79,8 +76,7 @@ public class UploadDataWizardPage extends FocusableWizardPage {
 		gridDataInfoImage.horizontalAlignment = GridData.END;
 		gridDataInfoImage.verticalAlignment = GridData.FILL;
 		Label infoImage = new Label(composite, SWT.NONE);
-		infoImage.setImage(JFaceResources
-				.getImage(TitleAreaDialog.DLG_IMG_MESSAGE_INFO));
+		infoImage.setImage(JFaceResources.getImage(TitleAreaDialog.DLG_IMG_MESSAGE_INFO));
 		infoImage.setLayoutData(gridDataInfoImage);
 		// create the info text
 		Text infoMsg = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -104,6 +100,7 @@ public class UploadDataWizardPage extends FocusableWizardPage {
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			private static final long serialVersionUID = 2205011133121002918L;
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleFileBrowseButtonPressed(e);
 			}
@@ -115,9 +112,9 @@ public class UploadDataWizardPage extends FocusableWizardPage {
 
 	private void handleFileBrowseButtonPressed(SelectionEvent event) {
 		dlg = new FileDialog(getShell(), SWT.TITLE | SWT.MULTI);
-//		dlg.setAutoUpload(true);
+		// dlg.setAutoUpload(true);
 		dlg.setText(Messages.UploadDataWizardPage_UPLOAD_DATA);
-		dlg.setFilterExtensions(new String[] { FILE_EXTENSION_DSV });
+		// dlg.setFilterExtensions(new String[] { FILE_EXTENSION_DSV });
 		dlg.open();
 		if (dlg.getFileNames().length > 0) {
 			filesPaths.addAll(Arrays.asList(dlg.getFileNames()));

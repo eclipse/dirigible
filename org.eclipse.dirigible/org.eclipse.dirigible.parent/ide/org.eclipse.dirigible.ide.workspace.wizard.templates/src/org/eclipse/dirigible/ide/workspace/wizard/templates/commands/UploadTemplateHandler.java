@@ -45,7 +45,7 @@ public class UploadTemplateHandler extends AbstractWorkspaceHandler {
 		FileDialog dlg = new FileDialog(HandlerUtil.getActiveShell(event), SWT.TITLE | SWT.MULTI);
 		// dlg.setAutoUpload(true);
 		dlg.setText(UPLOAD_TEMPLATES_ARCHIVE);
-		dlg.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
+		// dlg.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
 		String projectPath = dlg.open();
 
 		if ((projectPath != null)

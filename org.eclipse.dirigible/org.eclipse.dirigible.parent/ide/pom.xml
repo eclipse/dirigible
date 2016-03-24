@@ -66,11 +66,6 @@
 						<environment>
 							<os>macosx</os>
 							<ws>cocoa</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
@@ -132,7 +127,6 @@
 		<module>org.eclipse.dirigible.ide.template.ui.html</module>
 		<module>org.eclipse.dirigible.ide.template.ui.is</module>
 		<module>org.eclipse.dirigible.ide.template.ui.mobile</module>
-		<module>org.eclipse.dirigible.org.eclipse.rap.rwt.supplemental.filedialog</module>
 		<module>org.eclipse.dirigible.ide.registry</module>
 		<module>org.eclipse.dirigible.ide.debug.model</module>
 		<module>org.eclipse.dirigible.ide.debug.ui</module>

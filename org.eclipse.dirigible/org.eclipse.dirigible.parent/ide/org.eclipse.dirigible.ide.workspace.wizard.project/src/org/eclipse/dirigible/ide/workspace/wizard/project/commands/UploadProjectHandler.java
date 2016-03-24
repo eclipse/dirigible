@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.wizard.project.commands;
@@ -45,14 +44,13 @@ public class UploadProjectHandler extends AbstractWorkspaceHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		FileDialog dlg = new FileDialog(HandlerUtil.getActiveShell(event), SWT.TITLE | SWT.MULTI);
-//		dlg.setAutoUpload(true);
+		// dlg.setAutoUpload(true);
 		dlg.setText(UPLOAD_PROJECT_ARCHIVE);
-		dlg.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
+		// dlg.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
 		String projectPath = dlg.open();
 
-		if (projectPath != null
-				&& MessageDialog.openConfirm(null, OVERRIDE_PROJECTS,
-						THIS_PROCESS_WILL_OVERRIDE_YOUR_EXISTING_PROJECTS_DO_YOU_WANT_TO_CONTINUE)) {
+		if ((projectPath != null)
+				&& MessageDialog.openConfirm(null, OVERRIDE_PROJECTS, THIS_PROCESS_WILL_OVERRIDE_YOUR_EXISTING_PROJECTS_DO_YOU_WANT_TO_CONTINUE)) {
 			String fileName = null;
 			for (String fullFileName : dlg.getFileNames()) {
 				fileName = fullFileName.substring(fullFileName.lastIndexOf(File.separatorChar) + 1);
@@ -66,8 +64,7 @@ public class UploadProjectHandler extends AbstractWorkspaceHandler {
 					refreshWorkspace();
 				} catch (Exception e) {
 					error.error(CANNOT_SAVE_UPLOADED_FILE + fileName, e);
-					MessageDialog.openError(null, UPLOAD_ERROR, CANNOT_UPLOAD + fileName + REASON
-							+ e.getMessage());
+					MessageDialog.openError(null, UPLOAD_ERROR, CANNOT_UPLOAD + fileName + REASON + e.getMessage());
 				} finally {
 					if (in != null) {
 						try {

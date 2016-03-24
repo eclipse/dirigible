@@ -9,7 +9,7 @@
 <unit id="org.eclipse.help.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/luna/"/>
+<repository location="http://download.eclipse.org/releases/mars/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.commons.io" version="2.2.0.v201405211200"/>

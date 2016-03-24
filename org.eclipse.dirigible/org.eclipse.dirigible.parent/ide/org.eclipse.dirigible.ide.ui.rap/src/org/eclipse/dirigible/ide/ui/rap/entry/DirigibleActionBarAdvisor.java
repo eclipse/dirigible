@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.ui.rap.entry;
@@ -15,6 +14,8 @@ import java.net.URL;
 import java.util.Dictionary;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ICoolBarManager;
@@ -42,9 +43,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 
-import org.eclipse.dirigible.repository.api.ICommonConstants;
-import org.eclipse.dirigible.repository.logging.Logger;
-
 public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 
 	private static final String HELP = Messages.DirigibleActionBarAdvisor_HELP;
@@ -56,33 +54,32 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 	private static final String WORKBENCH = Messages.DirigibleActionBarAdvisor_WORKBENCH;
 
 	private static final String HTTP_DIRIGIBLE_HOME = "http://www.dirigible.io"; //$NON-NLS-1$
-	
+
 	private static final String HTTP_DIRIGIBLE_HELP = "http://help.dirigible.io"; //$NON-NLS-1$
-	
+
 	private static final String HTTP_DIRIGIBLE_SAMPLES = "http://samples.dirigible.io"; //$NON-NLS-1$
-	
+
 	private static final String HTTP_DIRIGIBLE_FORUM = "http://forum.dirigible.io"; //$NON-NLS-1$
-	
+
 	private static final String HTTP_DIRIGIBLE_BUG = "https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Dirigible"; //$NON-NLS-1$
 
 	private static final String ABOUT = Messages.DirigibleActionBarAdvisor_ABOUT;
 
 	private static final String DIRIGIBLE_HOME = Messages.DirigibleActionBarAdvisor_DIRIGIBLE_HOME;
-	
+
 	private static final String DIRIGIBLE_HELP = Messages.DirigibleActionBarAdvisor_DIRIGIBLE_HELP;
-	
+
 	private static final String DIRIGIBLE_SAMPLES = Messages.DirigibleActionBarAdvisor_DIRIGIBLE_SAMPLES;
-	
+
 	private static final String DIRIGIBLE_FORUM = Messages.DirigibleActionBarAdvisor_DIRIGIBLE_FORUM;
-	
+
 	private static final String DIRIGIBLE_BUG = Messages.DirigibleActionBarAdvisor_DIRIGIBLE_BUG;
 
 	private static final String SHOW_VIEW = Messages.DirigibleActionBarAdvisor_SHOW_VIEW;
 
 	private static final String SHOW_PERSPECTIVE = Messages.DirigibleActionBarAdvisor_SHOW_PERSPECTIVE;
 
-	private static final Logger logger = Logger
-			.getLogger(DirigibleActionBarAdvisor.class);
+	private static final Logger logger = Logger.getLogger(DirigibleActionBarAdvisor.class);
 
 	private static final String WEB_PAGE_ERROR = Messages.DirigibleActionBarAdvisor_WEB_PAGE_ERROR;
 	private static final String COULD_NOT_OPEN_WEB_PAGE = Messages.DirigibleActionBarAdvisor_COULD_NOT_OPEN_WEB_PAGE;
@@ -94,8 +91,8 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 	private IWorkbenchAction exportAction;
 	private IWorkbenchAction exitAction;
 
-	private IWorkbenchAction undoAction;
-	private IWorkbenchAction redoAction;
+	// private IWorkbenchAction undoAction;
+	// private IWorkbenchAction redoAction;
 
 	private Action dirigibleHomeAction;
 	private Action dirigibleHelpAction;
@@ -113,6 +110,7 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		super(configurer);
 	}
 
+	@Override
 	protected void makeActions(final IWorkbenchWindow window) {
 		newAction = ActionFactory.NEW.create(window);
 		register(newAction);
@@ -132,18 +130,16 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		exitAction = ActionFactory.QUIT.create(window);
 		register(exitAction);
 
-		undoAction = ActionFactory.UNDO.create(window);
-		register(undoAction);
+		// undoAction = ActionFactory.UNDO.create(window);
+		// register(undoAction);
+		//
+		// redoAction = ActionFactory.REDO.create(window);
+		// register(redoAction);
 
-		redoAction = ActionFactory.REDO.create(window);
-		register(redoAction);
-
-		showPerspectiveMenuMgr = new MenuManager(SHOW_PERSPECTIVE,
-				"showPerspective"); //$NON-NLS-1$
+		showPerspectiveMenuMgr = new MenuManager(SHOW_PERSPECTIVE, "showPerspective"); //$NON-NLS-1$
 
 		showViewMenuMgr = new MenuManager(SHOW_VIEW, "showView"); //$NON-NLS-1$
-		IContributionItem showViewMenu = ContributionItemFactory.VIEWS_SHORTLIST
-				.create(window);
+		IContributionItem showViewMenu = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
 		showViewMenuMgr.add(showViewMenu);
 
 		preferencesAction = ActionFactory.PREFERENCES.create(window);
@@ -164,7 +160,8 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		// Home
 		dirigibleHomeAction = new Action() {
 			private static final long serialVersionUID = 7112545561507879756L;
-			
+
+			@Override
 			public void run() {
 				onWebPageAction(window.getWorkbench(), dirigibleHomeAction, HTTP_DIRIGIBLE_HOME);
 			}
@@ -172,11 +169,12 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		dirigibleHomeAction.setText(DIRIGIBLE_HOME);
 		dirigibleHomeAction.setId("org.eclipse.dirigible.ide.home"); //$NON-NLS-1$
 		register(dirigibleHomeAction);
-		
+
 		// Help
 		dirigibleHelpAction = new Action() {
 			private static final long serialVersionUID = 7112545561507879756L;
-			
+
+			@Override
 			public void run() {
 				onWebPageAction(window.getWorkbench(), dirigibleHelpAction, HTTP_DIRIGIBLE_HELP);
 			}
@@ -184,11 +182,12 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		dirigibleHelpAction.setText(DIRIGIBLE_HELP);
 		dirigibleHelpAction.setId("org.eclipse.dirigible.ide.help"); //$NON-NLS-1$
 		register(dirigibleHelpAction);
-		
+
 		// Samples
 		dirigibleSamplesAction = new Action() {
 			private static final long serialVersionUID = 7112545561507879756L;
-			
+
+			@Override
 			public void run() {
 				onWebPageAction(window.getWorkbench(), dirigibleSamplesAction, HTTP_DIRIGIBLE_SAMPLES);
 			}
@@ -196,11 +195,12 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		dirigibleSamplesAction.setText(DIRIGIBLE_SAMPLES);
 		dirigibleSamplesAction.setId("org.eclipse.dirigible.ide.samples"); //$NON-NLS-1$
 		register(dirigibleSamplesAction);
-		
+
 		// Forum
 		dirigibleForumAction = new Action() {
 			private static final long serialVersionUID = 7112545561507879756L;
-			
+
+			@Override
 			public void run() {
 				onWebPageAction(window.getWorkbench(), dirigibleForumAction, HTTP_DIRIGIBLE_FORUM);
 			}
@@ -208,11 +208,12 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		dirigibleForumAction.setText(DIRIGIBLE_FORUM);
 		dirigibleForumAction.setId("org.eclipse.dirigible.ide.forum"); //$NON-NLS-1$
 		register(dirigibleForumAction);
-		
+
 		// Bug
 		dirigibleBugAction = new Action() {
 			private static final long serialVersionUID = 7112545561507879756L;
-			
+
+			@Override
 			public void run() {
 				onWebPageAction(window.getWorkbench(), dirigibleBugAction, HTTP_DIRIGIBLE_BUG);
 			}
@@ -220,11 +221,12 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		dirigibleBugAction.setText(DIRIGIBLE_BUG);
 		dirigibleBugAction.setId("org.eclipse.dirigible.ide.bug"); //$NON-NLS-1$
 		register(dirigibleBugAction);
-		
+
 		// About
 		aboutAction = new Action() {
 			private static final long serialVersionUID = 8477239924815783883L;
 
+			@Override
 			public void run() {
 				onAboutAction(window.getShell());
 			}
@@ -238,13 +240,11 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		IWorkbenchBrowserSupport browserSupport = workbench.getBrowserSupport();
 		int style = IWorkbenchBrowserSupport.AS_EXTERNAL;
 		try {
-			IWebBrowser browser = browserSupport.createBrowser(style,
-					action.getId(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			IWebBrowser browser = browserSupport.createBrowser(style, action.getId(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			browser.openURL(new URL(url));
 		} catch (Exception e) {
 			logger.error(COULD_NOT_OPEN_WEB_PAGE, e);
-			MessageDialog.openError(null, WEB_PAGE_ERROR,
-					COULD_NOT_OPEN_WEB_PAGE);
+			MessageDialog.openError(null, WEB_PAGE_ERROR, COULD_NOT_OPEN_WEB_PAGE);
 		}
 	}
 
@@ -252,21 +252,20 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		Bundle bundle = Platform.getBundle(PlatformUI.PLUGIN_ID);
 		Dictionary<?, ?> headers = bundle.getHeaders();
 		Object version = headers.get(Constants.BUNDLE_VERSION);
-		MessageDialog.openInformation(shell,
-				ICommonConstants.DIRIGIBLE_PRODUCT_NAME + WORKBENCH,
+		MessageDialog.openInformation(shell, ICommonConstants.DIRIGIBLE_PRODUCT_NAME + WORKBENCH,
 				ICommonConstants.DIRIGIBLE_PRODUCT_NAME + " " //$NON-NLS-1$
 						+ ICommonConstants.DIRIGIBLE_PRODUCT_VERSION + "\n" //$NON-NLS-1$
-						+ RUNNING_ON_RAP_VERSION + version + "\n"
-						+ "under Eclipse Public License v1.0");
+						+ RUNNING_ON_RAP_VERSION + version + "\n" + "under Eclipse Public License v1.0");
 
 	}
 
+	@Override
 	protected void fillMenuBar(IMenuManager menuBar) {
 		// MenuManager newMenu = new MenuManager("New", "id.file");
 		// newMenu.add(newAction);
 
 		// File menu
-		MenuManager fileMenu = new MenuManager(Messages.DirigibleActionBarAdvisor_FILE, "id.file"); //$NON-NLS-2$
+		MenuManager fileMenu = new MenuManager(Messages.DirigibleActionBarAdvisor_FILE, "id.file");
 		// Other plug-ins can contribute there actions here
 		fileMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
@@ -289,8 +288,7 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		// menuBar.add(editMenu);
 
 		// Window menu
-		MenuManager windowMenu = new MenuManager(WINDOW,
-				IWorkbenchActionConstants.M_WINDOW);
+		MenuManager windowMenu = new MenuManager(WINDOW, IWorkbenchActionConstants.M_WINDOW);
 		windowMenu.add(showPerspectiveMenuMgr);
 		windowMenu.add(showViewMenuMgr);
 		windowMenu.add(new Separator());
@@ -298,8 +296,7 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		menuBar.add(windowMenu);
 
 		// Help menu
-		MenuManager helpMenu = new MenuManager(HELP,
-				IWorkbenchActionConstants.M_HELP);
+		MenuManager helpMenu = new MenuManager(HELP, IWorkbenchActionConstants.M_HELP);
 		helpMenu.add(dirigibleHelpAction);
 		helpMenu.add(new Separator());
 		helpMenu.add(dirigibleHomeAction);
@@ -312,20 +309,22 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		menuBar.add(helpMenu);
 	}
 
+	@Override
 	protected void fillCoolBar(ICoolBarManager coolBar) {
 		IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
-		toolbar.add(undoAction);
-		toolbar.add(redoAction);
+		// toolbar.add(undoAction);
+		// toolbar.add(redoAction);
 		toolbar.add(saveAction);
 		toolbar.add(saveAllAction);
 		toolbar.add(new Separator("control")); //$NON-NLS-1$
 		coolBar.add(new ToolBarContributionItem(toolbar, "main")); //$NON-NLS-1$
 	}
 
+	@Override
 	protected void fillStatusLine(IStatusLineManager statusLine) {
-//		statusLine.add(dirigibleHomeAction);
-//		statusLine.add(dirigibleForumAction);
+		// statusLine.add(dirigibleHomeAction);
+		// statusLine.add(dirigibleForumAction);
 		statusLine.add(dirigibleBugAction);
-//		statusLine.add(aboutAction);
+		// statusLine.add(aboutAction);
 	}
 }

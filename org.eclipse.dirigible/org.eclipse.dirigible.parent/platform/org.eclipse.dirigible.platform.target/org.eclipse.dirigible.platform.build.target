@@ -10,29 +10,29 @@
 -->
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jdt.source.feature.group" version="3.9.2.v20140221-1700"/>
-<unit id="org.eclipse.pde.source.feature.group" version="3.9.1.v20140221-1700"/>
-<unit id="org.eclipse.platform.sdk" version="4.3.2.M20140221-1700"/>
-<unit id="org.eclipse.rcp.source.feature.group" version="4.3.2.v20140221-1700"/>
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.9.0.v20140221-1852"/>
-<unit id="org.eclipse.sdk.ide" version="4.3.2.M20140221-1700"/>
-<unit id="org.eclipse.rcp.feature.group" version="4.3.2.v20140221-1700"/>
-<unit id="org.eclipse.jdt.feature.group" version="3.9.2.v20140221-1700"/>
-<unit id="org.eclipse.pde.feature.group" version="3.9.1.v20140221-1700"/>
-<unit id="org.eclipse.platform.ide" version="4.3.2.M20140221-1700"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.3"/>
+<unit id="org.eclipse.jdt.source.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.pde.source.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
+<unit id="org.eclipse.rcp.source.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.platform.ide" version="0.0.0"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.5"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jst.web_ui.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.wst.jsdt.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/luna/"/>
+<repository location="http://download.eclipse.org/releases/mars/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/mylyn/releases/luna"/>
+<repository location="http://download.eclipse.org/mylyn/releases/mars"/>
 </location>
 
 <!-- Base -->
@@ -45,7 +45,7 @@
 <unit id="org.eclipse.help.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/luna/"/>
+<repository location="http://download.eclipse.org/releases/mars/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">

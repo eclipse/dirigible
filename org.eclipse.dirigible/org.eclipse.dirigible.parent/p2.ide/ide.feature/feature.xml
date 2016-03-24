@@ -313,12 +313,14 @@ Contributors:
          version="0.0.0"
          unpack="false"/>
 
+   <!--
    <plugin
          id="org.eclipse.dirigible.org.eclipse.rap.rwt.supplemental.filedialog"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+   -->
 
    <plugin
          id="org.eclipse.dirigible.org.eclipse.ui.ide"
