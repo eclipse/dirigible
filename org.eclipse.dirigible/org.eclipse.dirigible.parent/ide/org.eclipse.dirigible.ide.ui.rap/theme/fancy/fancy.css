@@ -351,7 +351,7 @@ Combo-List-Item:hover, Combo-List-Item:even:hover {
   background-image: gradient(
     linear, left top, left bottom,
     from( #eeeeee ),
-    to( #d9e3c2 )
+    to( #dae9f7 )
   );
 }
 
@@ -395,7 +395,7 @@ DropDown-Item:hover {
   background-image: gradient(
     linear, left top, left bottom,
     from( #eeeeee ),
-    to( #d9e3c2 )
+    to( #dae9f7 )
   );
 }
 
@@ -702,7 +702,7 @@ Shell {
 Shell[TITLE], Shell[BORDER] {
   box-shadow: 5px 5px 3px rgba( 0, 0, 0, 0.5 );
   background-color: white;
-  border: 2px solid #99c92c;
+  border: 2px solid #005092;
   border-radius: 6px;
   padding: 5px;
 }
@@ -2044,7 +2044,7 @@ CCombo-List-Item:hover, CCombo-List-Item:even:hover {
   background-image: gradient(
     linear, left top, left bottom,
     from( #eeeeee ),
-    to( #d9e3c2 )
+    to( #dae9f7 )
   );
 }
 
@@ -2488,8 +2488,7 @@ Button-FocusIndicator.tabOverflowInactive {
 /* Shell */
 
 Shell-Titlebar {
-  background-image: gradient( linear, left top, left bottom,
-                              from( #a8dd32 ), to( #87b127 ) );
+	background-image: gradient( linear, left top, left bottom, from( #005fac ), to( #005092 ) );
 }
 
 Shell-Titlebar:inactive {
@@ -2732,7 +2731,7 @@ List-Item:hover {
   background-image: gradient(
     linear, left top, left bottom,
     from( #eeeeee ),
-    to( #d9e3c2 )
+    to( #dae9f7 )
   );
 }
 
@@ -3197,7 +3196,7 @@ ToolItem.menuBar:hover {
     from( #ababab ),
     to( #898989 )
   );
-  border: 1px solid #83a438;
+  border: 1px solid ##898989;
   border-radius: 3px 3px 0px 0px;
   color: white;
   padding: 0px 10px 0px 10px;
@@ -3209,12 +3208,12 @@ ToolItem-DropDownIcon.menuBar {
 
 ToolItem-DropDownIcon.menuBar:hover {
   background-image: url( img/fancy/menu_arrow_hover.png );
-  border: 1px solid #83a438;
+  border: 1px solid ##898989;
 }
 
 Menu.menuBar {
   color: #656565;
-  background-color: #efefef;
+  background-color: #fefefe;
   border: 1px solid #898989;
   border-radius: 0px 0px 3px 3px;
   animation: slideIn 250ms ease-out, slideOut 50ms ease-out;
