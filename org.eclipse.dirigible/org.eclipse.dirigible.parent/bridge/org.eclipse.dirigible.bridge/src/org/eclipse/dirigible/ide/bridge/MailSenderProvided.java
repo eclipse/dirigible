@@ -10,8 +10,6 @@
 
 package org.eclipse.dirigible.ide.bridge;
 
-import java.util.logging.Logger;
-
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -20,6 +18,9 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.internet.MimeMultipart;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MailSenderProvided {
 
@@ -31,7 +32,7 @@ public class MailSenderProvided {
 		this.session = session;
 	}
 
-	private static final Logger logger = Logger.getLogger(MailSenderProvided.class.getCanonicalName());
+	private static final Logger logger = LoggerFactory.getLogger(MailSenderProvided.class.getCanonicalName());
 
 	public String sendMail(String from, String to, String subject, String content) {
 		try {
@@ -43,7 +44,7 @@ public class MailSenderProvided {
 			transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
 			transport.close();
 		} catch (Exception e) {
-			logger.severe(String.format("Exception occurred in class %s in method %s with message %s", this.getClass().getCanonicalName(), //$NON-NLS-1$
+			logger.error(String.format("Exception occurred in class %s in method %s with message %s", this.getClass().getCanonicalName(), //$NON-NLS-1$
 					"#sendMail()", e.getMessage()));
 			e.printStackTrace();
 			return e.getMessage();

@@ -2,8 +2,8 @@ package org.eclipse.dirigible.repository.datasource;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Logger;
 
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -37,7 +37,7 @@ public class DataSourcesActivator implements BundleActivator {
 			}
 
 		} catch (InvalidSyntaxException e) {
-			logger.severe(e.getMessage());
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 		return services;

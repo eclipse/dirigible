@@ -37,10 +37,9 @@ public class DirigibleBridge extends BridgeServlet {
 	static Class<IInjector>[] INJECTOR_CLASSES;
 
 	static {
-		INJECTOR_CLASSES = new Class[] { InitParametersInjector.class,
-
-				InitialContextInjector.class, DatabaseInjector.class, ProxyParametersInjector.class, LocalParametersInjector.class,
-				MailInjector.class, RuntimeBridgeInjector.class, ConnectivityInjector.class, AnonymousUserInjector.class };
+		INJECTOR_CLASSES = new Class[] { InitParametersInjector.class, InitialContextInjector.class, DatabaseInjector.class,
+				ProxyParametersInjector.class, LocalParametersInjector.class, MailInjector.class, RuntimeBridgeInjector.class,
+				ConnectivityInjector.class, AnonymousUserInjector.class };
 	}
 
 	@Override

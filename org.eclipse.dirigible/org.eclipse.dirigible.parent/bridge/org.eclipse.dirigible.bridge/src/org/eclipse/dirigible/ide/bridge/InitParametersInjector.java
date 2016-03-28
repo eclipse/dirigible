@@ -12,16 +12,18 @@ package org.eclipse.dirigible.ide.bridge;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class InitParametersInjector implements IInjector {
 
-	private static final Logger logger = Logger.getLogger(InitParametersInjector.class.getCanonicalName());
+	private static final Logger logger = LoggerFactory.getLogger(InitParametersInjector.class.getCanonicalName());
 
 	// Initi Parameters Names
 	public static final String INIT_PARAM_RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
@@ -52,10 +54,18 @@ public class InitParametersInjector implements IInjector {
 		Enumeration<String> parameterNames = servletConfig.getInitParameterNames();
 		while (parameterNames.hasMoreElements()) {
 			String parameterName = parameterNames.nextElement();
-			String parameterValue = servletConfig.getInitParameter(parameterName);
+			String parameterValue = null;
+			if (System.getProperties().containsKey(parameterName)) {
+				parameterValue = get(parameterName);
+				logger.debug(String.format("Initial Parameter per Request retreived from the Environment: name=%s value=%s", parameterName,
+						parameterValue));
+			} else {
+				parameterValue = servletConfig.getInitParameter(parameterName);
+				logger.debug(String.format("Initial Parameter per Request retreived from the Servlet Configuration: name=%s value=%s", parameterName,
+						parameterValue));
+			}
 			req.getSession().setAttribute(parameterName, parameterValue);
 		}
-
 	}
 
 	@Override
@@ -64,11 +74,18 @@ public class InitParametersInjector implements IInjector {
 		Enumeration<String> parameterNames = servletConfig.getInitParameterNames();
 		while (parameterNames.hasMoreElements()) {
 			String parameterName = parameterNames.nextElement();
-			String parameterValue = servletConfig.getInitParameter(parameterName);
-			System.getProperties().put(parameterName, parameterValue);
-			logger.info(String.format("Initial Parameter set to Environment: name=%s value=%s", parameterName, parameterValue));
+			String parameterValue = null;
+			if (System.getProperties().containsKey(parameterName)) {
+				parameterValue = get(parameterName);
+				logger.info(String.format("Initial Parameter exists in the Environment: name=%s value=%s", parameterName, parameterValue));
+				System.out.println(String.format("Initial Parameter exists in the Environment: name=%s value=%s", parameterName, parameterValue));
+			} else {
+				parameterValue = servletConfig.getInitParameter(parameterName);
+				System.getProperties().put(parameterName, parameterValue);
+				logger.info(String.format("Initial Parameter set to the Environment: name=%s value=%s", parameterName, parameterValue));
+				System.out.println(String.format("Initial Parameter set to the Environment: name=%s value=%s", parameterName, parameterValue));
+			}
 		}
-
 	}
 
 	public static String get(String key) {

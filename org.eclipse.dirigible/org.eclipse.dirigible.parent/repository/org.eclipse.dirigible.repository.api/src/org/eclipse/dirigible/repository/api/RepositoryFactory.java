@@ -14,15 +14,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RepositoryFactory {
 
-	private static final Logger logger = Logger.getLogger(RepositoryFactory.class.getCanonicalName());
+	private static final Logger logger = LoggerFactory.getLogger(RepositoryFactory.class.getCanonicalName());
 
 	static IRepositoryProvider localRepositoryProvider;
 
@@ -46,7 +47,7 @@ public class RepositoryFactory {
 			registerMasterRepositoryProviders(context);
 
 		} catch (InvalidSyntaxException e) {
-			logger.severe(e.getMessage());
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 

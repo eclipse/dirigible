@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.logging;
@@ -26,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class LoggingServlet extends HttpServlet {
-	
+
 	private static final String B_CLOSE = "</b>";
 	private static final String B = "<b>";
 	private static final String A_HREF_JAVASCRIPT_LOCATION_RELOAD_TRUE_REFRESH_A = "<a href=\"javascript:location.reload(true);\">Refresh</a>";
@@ -59,11 +58,11 @@ public class LoggingServlet extends HttpServlet {
 	private static final String LOGGING_FILES_LIST_LOCATION = "logging";
 	private static final String LOGGING_FILE_LOCATION = LOGGING_FILES_LIST_LOCATION + "?log=";
 	private static final long serialVersionUID = 1L;
-	
+
 	private static Logger logger = Logger.getLogger(LoggingServlet.class.getCanonicalName());
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String initLoggingDirectory = getInitParameter(INIT_LOGGING_DIRECTORY);
 		String serverFileSystemPath = getServerFileSystemPath();
 
@@ -72,11 +71,11 @@ public class LoggingServlet extends HttpServlet {
 			String err = String.format(BAD_INITIAL_CONFIGURATION_PLEASE_SET_PROPERLY_LOGGING_DIRECTORY, loggingDirectory.getCanonicalPath());
 			response.sendError(500, err);
 			logger.severe(err);
-			
+
 		} else {
 			File[] loggingFiles = loggingDirectory.listFiles();
 			String logFile = request.getParameter(LOG_PARAMETER);
-			if (logFile != null && !logFile.equals(EMPTY_STRING)) {
+			if ((logFile != null) && !logFile.equals(EMPTY_STRING)) {
 				printLogFile(response, loggingFiles, logFile);
 			} else {
 				printLogFilesList(response, loggingDirectory);
@@ -84,8 +83,7 @@ public class LoggingServlet extends HttpServlet {
 		}
 	}
 
-	private void printLogFilesList(HttpServletResponse response, File loggingDirectory)
-			throws IOException {
+	private void printLogFilesList(HttpServletResponse response, File loggingDirectory) throws IOException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(MM_DD_YYYY_HH_MM_SS);
 
 		StringBuilder fileLinks = new StringBuilder(HTML_START);
@@ -110,8 +108,7 @@ public class LoggingServlet extends HttpServlet {
 		writer.close();
 	}
 
-	private void printLogFile(HttpServletResponse response, File[] loggingFiles, String logFile)
-			throws FileNotFoundException, IOException {
+	private void printLogFile(HttpServletResponse response, File[] loggingFiles, String logFile) throws FileNotFoundException, IOException {
 		response.setContentType(CONTENT_TYPE_TEXT_HTML);
 		PrintWriter writer = response.getWriter();
 
@@ -162,12 +159,12 @@ public class LoggingServlet extends HttpServlet {
 		writer.print(TABLE_CLOSE);
 		writer.flush();
 	}
-	
+
 	private String getServerFileSystemPath() throws IOException {
 		String binDir = new File(DOT).getCanonicalPath();
 		binDir = binDir.replace("\\", "/");
 		String logDir = binDir.substring(0, binDir.lastIndexOf('/') + 1);
 		return logDir;
 	}
-	
+
 }

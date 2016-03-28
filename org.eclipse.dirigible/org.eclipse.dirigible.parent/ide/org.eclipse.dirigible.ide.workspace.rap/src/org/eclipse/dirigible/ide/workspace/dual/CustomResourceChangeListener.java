@@ -1,9 +1,8 @@
 package org.eclipse.dirigible.ide.workspace.dual;
 
-import java.util.logging.Logger;
-
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.UISession;
@@ -33,7 +32,7 @@ public class CustomResourceChangeListener implements IResourceChangeListener {
 					try {
 						callbackObject.callback();
 					} catch (Exception e) {
-						logger.severe(e.getMessage());
+						logger.error(e.getMessage());
 					}
 				}
 			}
