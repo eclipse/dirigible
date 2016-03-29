@@ -161,5 +161,15 @@
               class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
         </filter>
      </extension>
-          
+     
+     <extension
+           id="JavaScriptSourceRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/js-src"
+              class="org.eclipse.dirigible.runtime.js.debug.JavaScriptSourceRegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+
 </plugin>
