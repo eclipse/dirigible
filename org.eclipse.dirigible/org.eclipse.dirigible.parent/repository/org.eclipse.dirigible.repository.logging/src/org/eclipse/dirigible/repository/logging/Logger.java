@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.repository.logging;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,16 @@ public class Logger {
 	private static final String LOG_IN_SYSTEM_OUTPUT = "logInSystemOutput";
 	private static final String DISABLE_LOGGING = "disableLogging";
 	private static final boolean LOGGING_DISABLED = isLoggingDisabled();
+
+	private static final List<ILogListener> logListeners = Collections.synchronizedList(new ArrayList<ILogListener>());
+
+	public static void addListener(ILogListener logListener) {
+		logListeners.add(logListener);
+	}
+
+	public static void removeListener(ILogListener logListener) {
+		logListeners.remove(logListener);
+	}
 
 	private static boolean isLoggingDisabled() {
 		String disableLogging = System.getProperty(DISABLE_LOGGING);
@@ -75,11 +88,20 @@ public class Logger {
 	 * that caused the logging.
 	 */
 	public void error(String message, Throwable t) {
+		notifyListeners("error", message);
 		if (isErrorEnabled()) {
 			logger1.error(message, t);
 			logger2.log(Level.SEVERE, message, t);
 		}
 		logInSystemOutput(message, t);
+	}
+
+	private void notifyListeners(String level, String message) {
+		for (ILogListener logListener : logListeners) {
+			logListener.log(level, message);
+
+		}
+
 	}
 
 	/**
@@ -94,6 +116,7 @@ public class Logger {
 	 * that caused the logging.
 	 */
 	public void warn(String message, Throwable t) {
+		notifyListeners("warning", message);
 		if (isWarnEnabled()) {
 			logger1.warn(message, t);
 			logger2.log(Level.WARNING, message, t);
@@ -113,6 +136,7 @@ public class Logger {
 	 * that caused the logging.
 	 */
 	public void info(String message, Throwable t) {
+		notifyListeners("info", message);
 		if (isInfoEnabled()) {
 			logger1.info(message, t);
 			logger2.log(Level.INFO, message, t);
@@ -132,6 +156,7 @@ public class Logger {
 	 * that caused the logging.
 	 */
 	public void debug(String message, Throwable t) {
+		notifyListeners("debug", message);
 		if (isDebugEnabled()) {
 			logger1.debug(message, t);
 			logger2.log(Level.FINE, message, t);
@@ -151,6 +176,7 @@ public class Logger {
 	 * that caused the logging.
 	 */
 	public void trace(String message, Throwable t) {
+		notifyListeners("trace", message);
 		if (isTraceEnabled()) {
 			logger1.trace(message, t);
 			logger2.log(Level.FINE, message, t);
