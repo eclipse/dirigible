@@ -98,6 +98,8 @@ public class JavaScriptExecutor extends AbstractScriptExecutor {
 						result = REQUESTED_ENDPOINT_IS_NOT_A_SERVICE_BUT_RATHER_A_LIBRARY;
 					}
 					logger.error(e.getMessage(), e);
+				} catch (Throwable e) {
+					logger.error(e.getMessage(), e);
 				}
 			} catch (URISyntaxException e) {
 				throw new IOException(e.getMessage(), e);

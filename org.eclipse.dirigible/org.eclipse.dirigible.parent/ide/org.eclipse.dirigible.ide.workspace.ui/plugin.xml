@@ -29,10 +29,19 @@
       <view
             allowMultiple="false"
             category="org.eclipse.dirigible.ide.workspace.ui.category"
+            class="org.eclipse.dirigible.ide.workspace.ui.view.LogConsoleView"
+            icon="resources/icons/icon-logs.png"
+            id="org.eclipse.dirigible.ide.workspace.ui.view.LogConsoleView"
+            name="Log Console"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            category="org.eclipse.dirigible.ide.workspace.ui.category"
             class="org.eclipse.dirigible.ide.workspace.ui.view.LogsView"
             icon="resources/icons/icon-logs.png"
             id="org.eclipse.dirigible.ide.workspace.ui.view.LogsView"
-            name="Log Viewer"
+            name="Log Files"
             restorable="true">
       </view>
       <view

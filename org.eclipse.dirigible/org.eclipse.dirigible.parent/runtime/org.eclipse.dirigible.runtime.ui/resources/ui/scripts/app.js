@@ -90,6 +90,8 @@ fileApp.config(function($routeProvider) {
       templateUrl: 'templates/monitoring/acclog/acclog.html'
     }).when('/monitoring/logging', {
       templateUrl: 'templates/monitoring/logging/logging.html'
+    }).when('/monitoring/log', {
+        templateUrl: 'templates/monitoring/logging/log.html'
     }).otherwise({
       redirectTo: '/home'
     });

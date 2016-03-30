@@ -1,21 +1,19 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.ui.perspective;
 
+import org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-
-import org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView;
 
 public class WorkspacePerspective implements IPerspectiveFactory {
 
@@ -30,6 +28,8 @@ public class WorkspacePerspective implements IPerspectiveFactory {
 
 	public static final String LOGS_VIEW_ID = "org.eclipse.dirigible.ide.workspace.ui.view.LogsView";
 
+	public static final String LOG_CONSOLE_VIEW_ID = "org.eclipse.dirigible.ide.workspace.ui.view.LogConsoleView";
+
 	public static final String WEB_VIEWER_VIEW_ID = WebViewerView.class.getName();
 
 	public static final String SECURITY_MANAGER_VIEW_ID = "org.eclipse.dirigible.ide.services.security.manager.views.SecurityManagerView"; //$NON-NLS-1$
@@ -39,6 +39,7 @@ public class WorkspacePerspective implements IPerspectiveFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true);
@@ -62,6 +63,7 @@ public class WorkspacePerspective implements IPerspectiveFactory {
 		bottom.addView(WEB_VIEWER_VIEW_ID);
 		// bottom.addView(CONTENT_OUTLINE_VIEW_ID);
 		bottom.addView(LOGS_VIEW_ID);
+		bottom.addView(LOG_CONSOLE_VIEW_ID);
 		bottom.addView(SECURITY_MANAGER_VIEW_ID);
 
 		layout.addShowViewShortcut(WORKSPACE_EXPLORER_VIEW_ID);
