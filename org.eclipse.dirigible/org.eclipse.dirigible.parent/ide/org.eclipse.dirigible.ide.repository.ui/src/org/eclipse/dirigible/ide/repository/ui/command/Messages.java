@@ -18,11 +18,20 @@ public class Messages extends NLS {
 	public static String DeleteHandler_ARE_YOU_SURE_YOU_WANT_TO_DELETE_SELECTED_ITEMS_D;
 	public static String DeleteHandler_CONFIRM_DELETE;
 	public static String DeleteHandler_DELETE_ERROR;
+	public static String DeleteHandler_DELETE_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE;
 	public static String DeleteHandler_SOME_OR_ALL_OF_THE_FILES_COULD_NOT_BE_DELETED;
 	public static String OpenHandler_COULD_NOT_OPEN_ONE_OR_MORE_FILES;
 	public static String OpenHandler_OPEN_FAILURE;
 	public static String PasteHandler_PASTE_ERROR;
 	public static String PasteHandler_SOME_OR_ALL_OF_THE_FILES_COULD_NOT_BE_PASTED;
+
+	public static String CutHandler_CUT_ERROR;
+	public static String CutHandler_CUT_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE;
+
+	public static String CopyHandler_COPY_ERROR;
+	public static String CopyHandler_COPY_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE;
+
+	public static String PasteHandler_PASTE_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE;
 
 	static {
 		// initialize resource bundle

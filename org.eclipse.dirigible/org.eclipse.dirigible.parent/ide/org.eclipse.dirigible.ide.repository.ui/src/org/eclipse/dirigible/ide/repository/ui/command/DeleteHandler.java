@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.repository.ui.command;
@@ -19,17 +18,18 @@ import java.util.TreeSet;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import org.eclipse.dirigible.repository.api.IEntity;
-
 public class DeleteHandler extends AbstractHandler {
 
 	// TODO: Must determine when this command is enabled or not.
 
+	private static final String DELETE_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE = Messages.DeleteHandler_DELETE_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE;
 	private static final String CONFIRM_DELETE = Messages.DeleteHandler_CONFIRM_DELETE;
 	private static final String ARE_YOU_SURE_YOU_WANT_TO_DELETE_SELECTED_ITEMS_D = Messages.DeleteHandler_ARE_YOU_SURE_YOU_WANT_TO_DELETE_SELECTED_ITEMS_D;
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
@@ -37,6 +37,7 @@ public class DeleteHandler extends AbstractHandler {
 	private static final String SOME_OR_ALL_OF_THE_FILES_COULD_NOT_BE_DELETED = Messages.DeleteHandler_SOME_OR_ALL_OF_THE_FILES_COULD_NOT_BE_DELETED;
 	private static final String DELETE_ERROR = Messages.DeleteHandler_DELETE_ERROR;
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
@@ -63,6 +64,13 @@ public class DeleteHandler extends AbstractHandler {
 	 * root.
 	 */
 	private void execute(SortedSet<IEntity> resources) {
+
+		if (!CommonParameters.isRolesEnabled()) {
+			// assume trial instance, hence disable this function
+			MessageDialog.openInformation(null, DELETE_ERROR, DELETE_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE);
+			return;
+		}
+
 		if (resources.size() == 0) {
 			return;
 		}
@@ -80,8 +88,7 @@ public class DeleteHandler extends AbstractHandler {
 			}
 		}
 		if (throwable != null) {
-			MessageDialog.openWarning(null, DELETE_ERROR,
-					SOME_OR_ALL_OF_THE_FILES_COULD_NOT_BE_DELETED);
+			MessageDialog.openWarning(null, DELETE_ERROR, SOME_OR_ALL_OF_THE_FILES_COULD_NOT_BE_DELETED);
 		}
 	}
 
@@ -90,8 +97,7 @@ public class DeleteHandler extends AbstractHandler {
 		if (count == 1) {
 			message = ARE_YOU_SURE_YOU_WANT_TO_DELETE_SELECTED_ITEM;
 		} else {
-			message = String.format(
-					ARE_YOU_SURE_YOU_WANT_TO_DELETE_SELECTED_ITEMS_D, count);
+			message = String.format(ARE_YOU_SURE_YOU_WANT_TO_DELETE_SELECTED_ITEMS_D, count);
 		}
 		return MessageDialog.openConfirm(null, CONFIRM_DELETE, message);
 	}
