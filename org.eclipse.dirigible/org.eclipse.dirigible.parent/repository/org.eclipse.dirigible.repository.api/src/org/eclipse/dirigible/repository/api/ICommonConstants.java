@@ -13,7 +13,6 @@ package org.eclipse.dirigible.repository.api;
 public interface ICommonConstants {
 
 	public static final String DIRIGIBLE_PRODUCT_NAME = "Eclipse Dirigible"; //$NON-NLS-1$
-	public static final String DIRIGIBLE_PRODUCT_VERSION = "2.3.160317-R"; //$NON-NLS-1$
 
 	public static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	public static final String SEPARATOR = "/"; //$NON-NLS-1$

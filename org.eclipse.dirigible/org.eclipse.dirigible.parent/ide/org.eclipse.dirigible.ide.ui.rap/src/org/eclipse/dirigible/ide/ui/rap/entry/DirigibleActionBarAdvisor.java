@@ -15,6 +15,7 @@ import java.util.Dictionary;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.api.RepositoryActivator;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
@@ -253,9 +254,9 @@ public class DirigibleActionBarAdvisor extends ActionBarAdvisor {
 		Dictionary<?, ?> headers = bundle.getHeaders();
 		Object version = headers.get(Constants.BUNDLE_VERSION);
 		MessageDialog.openInformation(shell, ICommonConstants.DIRIGIBLE_PRODUCT_NAME + WORKBENCH,
-				ICommonConstants.DIRIGIBLE_PRODUCT_NAME + " " //$NON-NLS-1$
-						+ ICommonConstants.DIRIGIBLE_PRODUCT_VERSION + "\n" //$NON-NLS-1$
-						+ RUNNING_ON_RAP_VERSION + version + "\n" + "under Eclipse Public License v1.0");
+				ICommonConstants.DIRIGIBLE_PRODUCT_NAME + "\n Version: " //$NON-NLS-1$
+						+ RepositoryActivator.DIRIGIBLE_PRODUCT_VERSION + "\n" //$NON-NLS-1$
+						+ RUNNING_ON_RAP_VERSION + version + "\n" + "License: Eclipse Public License v1.0");
 
 	}
 
