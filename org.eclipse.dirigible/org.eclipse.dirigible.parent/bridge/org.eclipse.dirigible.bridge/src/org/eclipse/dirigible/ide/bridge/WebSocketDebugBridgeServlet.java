@@ -32,11 +32,19 @@ public class WebSocketDebugBridgeServlet {
 	protected void callInternal(String methodName, Session session, String message) {
 
 		logger.debug("Getting internal pair...");
-		Object debugInternal = System.getProperties().get("websocket_debug_channel_internal");
+
+		Object debugInternal = DirigibleBridge.BRIDGES.get("websocket_debug_channel_internal");
+
 		logger.debug("Getting internal pair passed: " + (debugInternal != null));
 
 		if (debugInternal == null) {
-			logger.error("Internal WebSocket peer is null.");
+			String peerError = "Internal WebSocket peer for Debug Service is null.";
+			logger.error(peerError);
+			try {
+				session.getBasicRemote().sendText(peerError);
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
 			return;
 		}
 

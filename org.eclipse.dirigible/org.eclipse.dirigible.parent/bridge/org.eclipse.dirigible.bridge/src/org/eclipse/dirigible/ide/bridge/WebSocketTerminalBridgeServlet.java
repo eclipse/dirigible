@@ -32,11 +32,19 @@ public class WebSocketTerminalBridgeServlet {
 	protected void callInternal(String methodName, Session session, String message) {
 
 		logger.debug("Getting internal pair...");
-		Object terminalInternal = System.getProperties().get("websocket_terminal_channel_internal");
+
+		Object terminalInternal = DirigibleBridge.BRIDGES.get("websocket_terminal_channel_internal");
+
 		logger.debug("Getting internal pair passed: " + (terminalInternal != null));
 
 		if (terminalInternal == null) {
-			logger.error("Internal WebSocket peer is null.");
+			String peerError = "Internal WebSocket peer for Terminal Service is null.";
+			logger.error(peerError);
+			try {
+				session.getBasicRemote().sendText(peerError);
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
 			return;
 		}
 

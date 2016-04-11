@@ -27,11 +27,11 @@ public class WebSocketServiceBridgeServletInternal {
 
 	public void onOpen(Session session) throws IOException {
 		openSessions.put(session.getId(), session);
-		logger.debug("[Internal] onOpen: " + session.getId());
+		logger.debug("[ws:exec] onOpen: " + session.getId());
 	}
 
 	public void onMessage(String message, Session session, String type) {
-		logger.debug("[Internal] onMessage: " + message + ", type: " + type);
+		logger.debug("[ws:exec] onMessage: " + message + ", type: " + type);
 
 		WebSocketRequest webSocketRequest = null;
 		try {
@@ -69,12 +69,12 @@ public class WebSocketServiceBridgeServletInternal {
 	}
 
 	public void onError(Session session, String error) {
-		logger.debug("[Internal] onError: " + error);
+		logger.debug("[ws:exec] onError: " + error);
 	}
 
 	public void onClose(Session session) {
 		openSessions.remove(session.getId());
-		logger.debug("[Internal] onClose: Session " + session.getId() + " has ended");
+		logger.debug("[ws:exec] onClose: Session " + session.getId() + " has ended");
 	}
 
 }

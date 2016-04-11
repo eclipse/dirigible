@@ -19,3 +19,4 @@ Import-Package: javax.mail,
  javax.websocket.server,
  org.slf4j
 Bundle-ClassPath: .
+Export-Package: org.eclipse.dirigible.ide.bridge

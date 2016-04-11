@@ -32,11 +32,19 @@ public class WebSocketLogBridgeServlet {
 	protected void callInternal(String methodName, Session session, String message) {
 
 		logger.debug("Getting internal pair...");
-		Object logInternal = System.getProperties().get("websocket_log_channel_internal");
+
+		Object logInternal = DirigibleBridge.BRIDGES.get("websocket_log_channel_internal");
+
 		logger.debug("Getting internal pair passed: " + (logInternal != null));
 
 		if (logInternal == null) {
-			logger.error("Internal WebSocket peer is null.");
+			String peerError = "Internal WebSocket peer for Log Service is null.";
+			logger.error(peerError);
+			try {
+				session.getBasicRemote().sendText(peerError);
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
 			return;
 		}
 

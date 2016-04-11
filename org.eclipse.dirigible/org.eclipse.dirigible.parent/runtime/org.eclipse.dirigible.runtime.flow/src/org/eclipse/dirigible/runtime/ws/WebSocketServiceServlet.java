@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.ide.bridge.DirigibleBridge;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -45,7 +46,8 @@ public class WebSocketServiceServlet extends HttpServlet {
 		logger.debug("Setting debug channel internal ...");
 
 		webSocketServiceBridgeServletInternal = new WebSocketServiceBridgeServletInternal();
-		System.getProperties().put("websocket_service_channel_internal", webSocketServiceBridgeServletInternal);
+
+		DirigibleBridge.BRIDGES.put("websocket_service_channel_internal", webSocketServiceBridgeServletInternal);
 
 		logger.debug("Debug channel internal has been set.");
 

@@ -16,6 +16,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.dirigible.ide.bridge.DirigibleBridge;
 import org.eclipse.dirigible.repository.ext.debug.DebugModel;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.js.JavaScriptServlet;
@@ -47,19 +48,12 @@ public class JavaScriptDebugServlet extends JavaScriptServlet {
 		logger.debug("Setting debug channel internal ...");
 
 		webSocketDebugBridgeServletInternal = new WebSocketDebugBridgeServletInternal();
-		System.getProperties().put("websocket_debug_channel_internal", webSocketDebugBridgeServletInternal);
+
+		DirigibleBridge.BRIDGES.put("websocket_debug_channel_internal", webSocketDebugBridgeServletInternal);
 
 		logger.debug("Debug channel internal has been set.");
 
 	}
-
-	// // TESTS !!!!!!!!!!!
-	// @Override
-	// public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	// // super.doGet(req, resp);
-
-	// webSocketDebugBridgeServletInternal.sendText(null, "test message");
-	// }
 
 	@Override
 	public JavaScriptDebuggingExecutor createExecutor(HttpServletRequest request) throws IOException {

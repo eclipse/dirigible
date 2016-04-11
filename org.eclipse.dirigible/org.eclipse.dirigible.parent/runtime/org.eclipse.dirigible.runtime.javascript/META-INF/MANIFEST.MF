@@ -34,6 +34,7 @@ Import-Package: javax.mail,
  javax.servlet.http,
  javax.websocket,
  javax.websocket.server,
+ org.eclipse.dirigible.ide.bridge,
  org.slf4j
 Export-Package: org.eclipse.dirigible.runtime.filter,
  org.eclipse.dirigible.runtime.js,

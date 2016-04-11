@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.runtime.metrics;
 
+import org.eclipse.dirigible.ide.bridge.DirigibleBridge;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.log.WebSocketLogBridgeServletInternal;
 import org.eclipse.dirigible.runtime.memory.MemoryLogCleanupTask;
@@ -60,7 +61,10 @@ public class MetricsActivator implements BundleActivator {
 		logger.debug("Setting log channel internal ...");
 
 		webSocketLogBridgeServletInternal = new WebSocketLogBridgeServletInternal();
-		System.getProperties().put("websocket_log_channel_internal", webSocketLogBridgeServletInternal);
+
+		// System.getProperties().put("websocket_log_channel_internal", webSocketLogBridgeServletInternal);
+
+		DirigibleBridge.BRIDGES.put("websocket_log_channel_internal", webSocketLogBridgeServletInternal);
 
 		Logger.addListener(webSocketLogBridgeServletInternal);
 

@@ -11,6 +11,9 @@
 package org.eclipse.dirigible.ide.bridge;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -32,9 +35,11 @@ public class DirigibleBridge extends BridgeServlet {
 
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleBridge.class);
 
-	public static Properties ENV_PROPERTIES = new Properties();
+	static Properties ENV_PROPERTIES = new Properties();
 
 	static Class<IInjector>[] INJECTOR_CLASSES;
+
+	public static Map<String, Object> BRIDGES = Collections.synchronizedMap(new HashMap<String, Object>());
 
 	static {
 		INJECTOR_CLASSES = new Class[] { InitParametersInjector.class, InitialContextInjector.class, DatabaseInjector.class,

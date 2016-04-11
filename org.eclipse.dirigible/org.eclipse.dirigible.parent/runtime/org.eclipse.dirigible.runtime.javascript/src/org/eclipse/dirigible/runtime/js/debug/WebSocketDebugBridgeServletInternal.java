@@ -21,24 +21,24 @@ public class WebSocketDebugBridgeServletInternal {
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
 		openSessions.put(session.getId(), session);
-		session.getBasicRemote().sendText("[Internal] onOpen: " + session.getId());
-		logger.debug("[Internal] onOpen: " + session.getId());
+		session.getBasicRemote().sendText("[debug] open: " + session.getId());
+		logger.debug("[ws:debug] onOpen: " + session.getId());
 	}
 
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		logger.debug("[Internal] onMessage: " + message);
+		logger.debug("[ws:debug] onMessage: " + message);
 	}
 
 	@OnError
 	public void onError(Session session, String error) {
-		logger.debug("[Internal] onError: " + error);
+		logger.debug("[ws:debug] onError: " + error);
 	}
 
 	@OnClose
 	public void onClose(Session session) {
 		openSessions.remove(session.getId());
-		logger.debug("[Internal] onClose: Session " + session.getId() + " has ended");
+		logger.debug("[ws:debug] onClose: Session " + session.getId() + " has ended");
 	}
 
 	public static void sendText(String sessionId, String message) {

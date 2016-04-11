@@ -33,22 +33,30 @@ public class WebSocketServiceBridgeServlet {
 	protected void callInternal(String methodName, Session session, String message, String type) {
 
 		logger.debug("Getting internal pair...");
-		Object debugInternal = System.getProperties().get("websocket_service_channel_internal");
-		logger.debug("Getting internal pair passed: " + (debugInternal != null));
 
-		if (debugInternal == null) {
-			logger.error("Internal WebSocket Exec peer is null.");
+		Object execInternal = DirigibleBridge.BRIDGES.get("websocket_service_channel_internal");
+
+		logger.debug("Getting internal pair passed: " + (execInternal != null));
+
+		if (execInternal == null) {
+			String peerError = "Internal WebSocket peer for Execution Service is null.";
+			logger.error(peerError);
+			try {
+				session.getBasicRemote().sendText(peerError);
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
 			return;
 		}
 
 		try {
 			Method method = null;
 			if (message == null) {
-				method = debugInternal.getClass().getMethod(methodName, Session.class);
-				method.invoke(debugInternal, session);
+				method = execInternal.getClass().getMethod(methodName, Session.class);
+				method.invoke(execInternal, session);
 			} else {
-				method = debugInternal.getClass().getMethod(methodName, String.class, Session.class, String.class);
-				method.invoke(debugInternal, message, session, type);
+				method = execInternal.getClass().getMethod(methodName, String.class, Session.class, String.class);
+				method.invoke(execInternal, message, session, type);
 			}
 		} catch (NoSuchMethodException e) {
 			logger.error(e.getMessage(), e);

@@ -1,8 +1,11 @@
 package org.eclipse.dirigible.runtime.command;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,14 +32,13 @@ public class WebSocketTerminalBridgeServletInternal {
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
 		openSessions.put(session.getId(), session);
-
-		session.getAsyncRemote().sendText("[Internal] onOpen: " + session.getId());
-		logger.debug("[Internal] onOpen: " + session.getId());
+		session.getBasicRemote().sendText("[terminal] open: " + session.getId());
+		logger.debug("[ws:terminal] onOpen: " + session.getId());
 	}
 
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		logger.debug("[Internal] onMessage: " + message);
+		logger.debug("[ws:terminal] onMessage: " + message);
 
 		Process process = session2process.get(session.getId());
 		if (process != null) {
@@ -75,7 +77,7 @@ public class WebSocketTerminalBridgeServletInternal {
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Process process = ProcessUtils.startProcess(args, processBuilder);
-		// Piper piper = new Piper(process.getInputStream(), session.getAsyncRemote().getSendStream());
+		// Piper piper = new Piper(process.getInputStream(), session.getBasicRemote().getSendStream());
 		Piper pipe = new Piper(process.getInputStream(), out);
 
 		new Thread(pipe).start();
@@ -88,14 +90,17 @@ public class WebSocketTerminalBridgeServletInternal {
 				Thread.sleep(ProcessUtils.DEFAULT_WAIT_TIME);
 				try {
 					synchronized (out) {
-						String toClient = new String(out.toByteArray());
-						logger.debug("sending process data: " + toClient);
-						// synchronized (session) {
-						if (session.isOpen()) {
-							session.getAsyncRemote().sendText(toClient);
-							out.reset();
+						BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
+						String line = null;
+						while ((line = reader.readLine()) != null) {
+							logger.debug("sending process data: " + line);
+							// synchronized (session) {
+							if (session.isOpen()) {
+								session.getBasicRemote().sendText(line);
+								out.reset();
+							}
+							// }
 						}
-						// }
 					}
 
 					process.exitValue();
@@ -114,7 +119,7 @@ public class WebSocketTerminalBridgeServletInternal {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-		session.getAsyncRemote().sendText(new String(out.toByteArray()));
+		session.getBasicRemote().sendText(new String(out.toByteArray()));
 
 		logger.debug("exiting startProcess: " + message + " | " + session.getId());
 
@@ -134,7 +139,7 @@ public class WebSocketTerminalBridgeServletInternal {
 
 	@OnError
 	public void onError(Session session, String error) {
-		logger.debug("[Internal] onError: " + error);
+		logger.debug("[ws:terminal] onError: " + error);
 	}
 
 	@OnClose
@@ -142,7 +147,7 @@ public class WebSocketTerminalBridgeServletInternal {
 		Process process = session2process.get(session.getId());
 		process.destroy();
 		openSessions.remove(session.getId());
-		logger.debug("[Internal] onClose: Session " + session.getId() + " has ended");
+		logger.debug("[ws:terminal] onClose: Session " + session.getId() + " has ended");
 	}
 
 	public void closeAll() {

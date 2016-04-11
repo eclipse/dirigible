@@ -22,24 +22,24 @@ public class WebSocketLogBridgeServletInternal implements ILogListener {
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
 		openSessions.put(session.getId(), session);
-		session.getBasicRemote().sendText("[Internal] onOpen: " + session.getId());
-		logger.debug("[Internal] onOpen: " + session.getId());
+		session.getBasicRemote().sendText("[log] open: " + session.getId());
+		logger.debug("[ws:log] onOpen: " + session.getId());
 	}
 
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		logger.debug("[Internal] onMessage: " + message);
+		logger.debug("[ws:log] onMessage: " + message);
 	}
 
 	@OnError
 	public void onError(Session session, String error) {
-		logger.debug("[Internal] onError: " + error);
+		logger.debug("[ws:log] onError: " + error);
 	}
 
 	@OnClose
 	public void onClose(Session session) {
 		openSessions.remove(session.getId());
-		logger.debug("[Internal] onClose: Session " + session.getId() + " has ended");
+		logger.debug("[ws:log] onClose: Session " + session.getId() + " has ended");
 	}
 
 	public static void sendText(String sessionId, String message) {

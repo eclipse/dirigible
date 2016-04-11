@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.runtime.command;
 
+import org.eclipse.dirigible.ide.bridge.DirigibleBridge;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -25,7 +26,8 @@ public class CommandActivator implements BundleActivator {
 		logger.debug("Setting terminal channel internal ...");
 
 		webSocketTerminalBridgeServletInternal = new WebSocketTerminalBridgeServletInternal();
-		System.getProperties().put("websocket_terminal_channel_internal", webSocketTerminalBridgeServletInternal);
+
+		DirigibleBridge.BRIDGES.put("websocket_terminal_channel_internal", webSocketTerminalBridgeServletInternal);
 
 		logger.debug("Terminal channel internal has been set.");
 
