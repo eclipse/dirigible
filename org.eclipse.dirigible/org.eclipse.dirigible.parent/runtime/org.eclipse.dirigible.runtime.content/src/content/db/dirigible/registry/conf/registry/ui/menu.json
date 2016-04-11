@@ -81,6 +81,9 @@
     }, {
         "name": "Applications Log",
         "link": "#/monitoring/logging"
+    }, {
+        "name": "Log Console",
+        "link": "#/monitoring/log-console"
     }]
 }, {
     "name": "Help",
