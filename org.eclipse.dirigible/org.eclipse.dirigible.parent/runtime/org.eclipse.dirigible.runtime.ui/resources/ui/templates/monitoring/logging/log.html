@@ -12,7 +12,8 @@
 <script>
 var connectToLog = function() {
 	try {
-		var logSocket = new WebSocket("ws://" + window.location.host + "/log");
+		var logSocket = new WebSocket(((location.protocol === 'https:') ? "wss://" : "ws://") 
+				+ window.location.host + "/log");
 	} catch(e) {
 		document.writeln("<div style='background-color: black; font-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
 		
