@@ -28,11 +28,12 @@ Require-Bundle: org.apache.lucene.analysis,
  org.apache.velocity,
  org.eclipse.dirigible.repository.velocity,
  org.eclipse.dirigible.repository.datasource,
- org.eclipse.dirigible.repository.datasource.dialects,
- javax.websocket
+ org.eclipse.dirigible.repository.datasource.dialects
 Import-Package: com.google.gson,
  javax.servlet,
  javax.servlet.http,
+ javax.websocket,
+ javax.websocket.server,
  org.eclipse.dirigible.repository.logging,
- org.osgi.framework;version="1.8.0"
+ org.osgi.framework
 Bundle-ClassPath: .
