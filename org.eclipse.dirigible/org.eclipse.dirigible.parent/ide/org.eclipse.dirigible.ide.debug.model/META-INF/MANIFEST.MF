@@ -15,5 +15,6 @@ Require-Bundle: org.eclipse.dirigible.ide.common,
  org.eclipse.dirigible.repository.ext
 Export-Package: org.eclipse.dirigible.ide.debug.model
 Import-Package: javax.servlet,
- javax.servlet.http
+ javax.servlet.http,
+ org.eclipse.dirigible.runtime.js.debug
 Bundle-ClassPath: .

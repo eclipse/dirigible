@@ -10,6 +10,8 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
+import org.eclipse.dirigible.repository.ext.debug.DebugModelFacade;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class WebSocketDebugBridgeServletInternal {
@@ -22,6 +24,7 @@ public class WebSocketDebugBridgeServletInternal {
 	public void onOpen(Session session) throws IOException {
 		openSessions.put(session.getId(), session);
 		session.getBasicRemote().sendText("[debug] open: " + session.getId());
+		DebugModelFacade.createDebugModel(RequestUtils.getUser(session), new WebSocketDebugController(RequestUtils.getUser(session)));
 		logger.debug("[ws:debug] onOpen: " + session.getId());
 	}
 

@@ -1,17 +1,25 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.editor.ace;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
+import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
+import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.debug.DebugModelFacade;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
@@ -19,15 +27,6 @@ import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.CommonUtils;
-import org.eclipse.dirigible.ide.debug.model.DebugModelFacade;
-import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
-import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
-import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
-import org.eclipse.dirigible.repository.api.ICommonConstants;
-import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 @SuppressWarnings("unused")
 public class EditorWidget extends AbstractTextEditorWidget {
@@ -68,15 +67,14 @@ public class EditorWidget extends AbstractTextEditorWidget {
 			public void completed(final ProgressEvent event) {
 				loaded = true;
 				updateWidgetContents();
-				if (javaScriptEditor && DebugModelFacade.getDebugModel() != null) {
-					DebugSessionModel session = DebugModelFacade.getDebugModel().getActiveSession();
+				if (javaScriptEditor && (DebugModelFacade.getDebugModel(CommonParameters.getUserName()) != null)) {
+					DebugSessionModel session = DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getActiveSession();
 
-					if (session != null
-							&& session.getCurrentLineBreak() != null) {
+					if ((session != null) && (session.getCurrentLineBreak() != null)) {
 						String filePath = session.getCurrentLineBreak().getBreakpoint().getFullPath();
-						String path = CommonUtils.formatToRuntimePath(
-								ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, filePath);
-						int[] breakpoints = DebugModelFacade.getDebugModel().getBreakpointsMetadata().getBreakpoints(path);
+						String path = CommonUtils.formatToRuntimePath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, filePath);
+						int[] breakpoints = DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getBreakpointsMetadata()
+								.getBreakpoints(path);
 
 						loadBreakpoints(breakpoints);
 					}
@@ -139,8 +137,8 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		this.listener = listener;
 	}
 
-	public void setText(final String text, final EditorMode mode, boolean readOnly,
-			boolean breakpointsEnabled, int row) {
+	@Override
+	public void setText(final String text, final EditorMode mode, boolean readOnly, boolean breakpointsEnabled, int row) {
 		this.text = text;
 		this.mode = mode.getName();
 		this.readOnly = readOnly;
@@ -151,6 +149,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		}
 	}
 
+	@Override
 	public String getText() {
 		return (String) browser.evaluate("return getText();"); //$NON-NLS-1$
 	}
@@ -164,8 +163,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	}
 
 	public void loadBreakpoints(int[] breakpoints) {
-		for (int i = 0; i < breakpoints.length; i++) {
-			int breakpoint = breakpoints[i];
+		for (int breakpoint : breakpoints) {
 			execute("loadBreakpoint", breakpoint); //$NON-NLS-1$
 		}
 	}

@@ -17,7 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.ide.bridge.DirigibleBridge;
+import org.eclipse.dirigible.repository.ext.debug.DebugManager;
 import org.eclipse.dirigible.repository.ext.debug.DebugModel;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.js.JavaScriptServlet;
 
@@ -60,7 +62,8 @@ public class JavaScriptDebugServlet extends JavaScriptServlet {
 
 		logger.debug("entering JavaScriptDebugServlet.createExecutor()");
 
-		DebugModel debugModel = (DebugModel) request.getSession(true).getAttribute(DebugModel.DEBUG_MODEL);
+		// DebugModel debugModel = (DebugModel) request.getSession(true).getAttribute(DebugModel.DEBUG_MODEL);
+		DebugModel debugModel = DebugManager.getDebugModel(RequestUtils.getUser(request));
 		if (debugModel == null) {
 			String error = "Debug model is not present in the session";
 			logger.error(error);
