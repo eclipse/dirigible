@@ -63,7 +63,10 @@ public class LoggingServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String initLoggingDirectory = getInitParameter(INIT_LOGGING_DIRECTORY);
+		String initLoggingDirectory = System.getProperty(INIT_LOGGING_DIRECTORY);
+		if (initLoggingDirectory == null) {
+			initLoggingDirectory = getInitParameter(INIT_LOGGING_DIRECTORY);
+		}
 		String serverFileSystemPath = getServerFileSystemPath();
 
 		File loggingDirectory = new File(serverFileSystemPath + initLoggingDirectory);
