@@ -116,90 +116,54 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 
 		// put the default data source
 		DataSource dataSource = null;
-		dataSource = DataSourceFacade.getInstance().getDataSource(request);
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DEFAULT_DATASOURCE, dataSource);
-		apiBuilder.setDatasource(dataSource);
+		dataSource = registerDefaultDatasource(request, executionContext, scope, apiBuilder);
 
 		// put request
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_REQUEST, request);
-		apiBuilder.setRequest(request);
-		if (request != null) {
-
-			// put session
-			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_SESSION, request.getSession());
-			apiBuilder.setSession(request.getSession());
-		}
+		registerRequest(request, executionContext, scope, apiBuilder);
 
 		// put response
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_RESPONSE, response);
-		apiBuilder.setResponse(response);
+		registerResponse(response, executionContext, scope, apiBuilder);
 
 		// put repository
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.REPOSITORY, repository);
-		apiBuilder.setRepository(repository);
+		registerRepository(executionContext, repository, scope, apiBuilder);
 
 		// user name
-		String userName = RepositoryFacade.getUser(request);
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.USER, userName);
-		apiBuilder.setUserName(userName);
+		registerUserName(request, executionContext, scope, apiBuilder);
 
 		// the input from the execution chain if any
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.REQUEST_INPUT, input);
-		apiBuilder.setRequestInput(input);
+		registerRequestInput(input, executionContext, scope, apiBuilder);
 
-		if (request != null) {
-			// JNDI context
-			InitialContext initialContext = (InitialContext) request.getSession().getAttribute(ICommonConstants.INITIAL_CONTEXT);
-			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.INITIAL_CONTEXT, initialContext);
-			apiBuilder.setInitialContext(initialContext);
-		}
+		// put JNDI
+		registerInitialContext(request, executionContext, scope, apiBuilder);
 
 		// Simple binary storage
-		StorageUtils storageUtils = new StorageUtils(dataSource);
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.STORAGE, storageUtils);
-		apiBuilder.setBinaryStorage(storageUtils);
+		registerBinaryStorage(executionContext, scope, apiBuilder, dataSource);
 
 		// Simple file storage
-		FileStorageUtils fileStorageUtils = new FileStorageUtils(dataSource);
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.FILE_STORAGE, fileStorageUtils);
-		apiBuilder.setFileStorage(fileStorageUtils);
+		registerFileStorage(executionContext, scope, apiBuilder, dataSource);
 
 		// Simple configuration storage
-		ConfigStorageUtils configStorageUtils = new ConfigStorageUtils(dataSource);
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONFIGURATION_STORAGE, configStorageUtils);
-		apiBuilder.setConfigurationStorage(configStorageUtils);
+		registerConfigurationStorage(executionContext, scope, apiBuilder, dataSource);
 
 		// Services
 
 		// put mail sender
-		IMailService mailSender = MailServiceFactory.createMailService(request);
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MAIL_SERVICE, mailSender);
-		apiBuilder.setMailService(mailSender);
+		registerMailService(request, executionContext, scope, apiBuilder);
 
 		// Extension Manager
-		ExtensionManager extensionManager = new ExtensionManager(repository, dataSource, request);
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.EXTENSIONS_SERVICE, extensionManager);
-		apiBuilder.setExtensionService(extensionManager);
+		registerExtensionManager(request, executionContext, repository, scope, apiBuilder, dataSource);
 
 		// Apache Lucene Indexer
-		IndexingService<Document> indexingUtils = new IndexingService<Document>();
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.INDEXING_SERVICE, indexingUtils);
-		apiBuilder.setIndexingService(indexingUtils);
+		registerIndexingService(executionContext, scope, apiBuilder);
 
 		// Connectivity Configuration service
-		ConnectivityConfigurationUtils configurationUtils = new ConnectivityConfigurationUtils();
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONNECTIVITY_SERVICE, configurationUtils);
-		apiBuilder.setConnectivityService(configurationUtils);
+		registerConnectivityService(executionContext, scope, apiBuilder);
 
 		// Messaging Service
-		MessageHub messageHub = new MessageHub(dataSource, request);
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MESSAGE_HUB, messageHub);
-		apiBuilder.setMessagingService(messageHub);
+		registerMessagingService(request, executionContext, scope, apiBuilder, dataSource);
 
 		// Templating Service
-		TemplatingEngine templatingEngine = new TemplatingEngine();
-		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.TEMPLATING_ENGINE, templatingEngine);
-		apiBuilder.setTemplatingService(templatingEngine);
+		registerTemplatingService(executionContext, scope, apiBuilder);
 
 		// Utils
 
@@ -272,9 +236,13 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 			if (context != null) {
 				Collection<ServiceReference<IContextService>> serviceReferences = context.getServiceReferences(IContextService.class, null);
 				for (ServiceReference<IContextService> serviceReference : serviceReferences) {
-					IContextService contextService = context.getService(serviceReference);
-					registerDefaultVariableInContextAndScope(executionContext, scope, contextService.getName(), contextService.getInstance());
-					apiBuilder.set(contextService.getName(), contextService.getInstance());
+					try {
+						IContextService contextService = context.getService(serviceReference);
+						registerDefaultVariableInContextAndScope(executionContext, scope, contextService.getName(), contextService.getInstance());
+						apiBuilder.set(contextService.getName(), contextService.getInstance());
+					} catch (Throwable t) {
+						logger.error(t.getMessage(), t);
+					}
 				}
 			}
 		} catch (InvalidSyntaxException e) {
@@ -283,6 +251,155 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 
 		InjectedAPIWrapper api = new InjectedAPIWrapper(apiBuilder);
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.API, api);
+	}
+
+	protected void registerTemplatingService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		try {
+			TemplatingEngine templatingEngine = new TemplatingEngine();
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.TEMPLATING_ENGINE, templatingEngine);
+			apiBuilder.setTemplatingService(templatingEngine);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerMessagingService(HttpServletRequest request, Map<Object, Object> executionContext, Object scope,
+			InjectedAPIBuilder apiBuilder, DataSource dataSource) {
+		try {
+			MessageHub messageHub = new MessageHub(dataSource, request);
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MESSAGE_HUB, messageHub);
+			apiBuilder.setMessagingService(messageHub);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerConnectivityService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		try {
+			ConnectivityConfigurationUtils configurationUtils = new ConnectivityConfigurationUtils();
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONNECTIVITY_SERVICE, configurationUtils);
+			apiBuilder.setConnectivityService(configurationUtils);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerIndexingService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		try {
+			IndexingService<Document> indexingUtils = new IndexingService<Document>();
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.INDEXING_SERVICE, indexingUtils);
+			apiBuilder.setIndexingService(indexingUtils);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerExtensionManager(HttpServletRequest request, Map<Object, Object> executionContext, IRepository repository, Object scope,
+			InjectedAPIBuilder apiBuilder, DataSource dataSource) {
+		try {
+			ExtensionManager extensionManager = new ExtensionManager(repository, dataSource, request);
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.EXTENSIONS_SERVICE, extensionManager);
+			apiBuilder.setExtensionService(extensionManager);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerMailService(HttpServletRequest request, Map<Object, Object> executionContext, Object scope,
+			InjectedAPIBuilder apiBuilder) {
+		try {
+			IMailService mailSender = MailServiceFactory.createMailService(request);
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.MAIL_SERVICE, mailSender);
+			apiBuilder.setMailService(mailSender);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerConfigurationStorage(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder,
+			DataSource dataSource) {
+		try {
+			ConfigStorageUtils configStorageUtils = new ConfigStorageUtils(dataSource);
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONFIGURATION_STORAGE, configStorageUtils);
+			apiBuilder.setConfigurationStorage(configStorageUtils);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerFileStorage(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder, DataSource dataSource) {
+		try {
+			FileStorageUtils fileStorageUtils = new FileStorageUtils(dataSource);
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.FILE_STORAGE, fileStorageUtils);
+			apiBuilder.setFileStorage(fileStorageUtils);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerBinaryStorage(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder, DataSource dataSource) {
+		try {
+			StorageUtils storageUtils = new StorageUtils(dataSource);
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.STORAGE, storageUtils);
+			apiBuilder.setBinaryStorage(storageUtils);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerInitialContext(HttpServletRequest request, Map<Object, Object> executionContext, Object scope,
+			InjectedAPIBuilder apiBuilder) {
+		try {
+			if (request != null) {
+				// JNDI context
+				InitialContext initialContext = (InitialContext) request.getSession().getAttribute(ICommonConstants.INITIAL_CONTEXT);
+				registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.INITIAL_CONTEXT, initialContext);
+				apiBuilder.setInitialContext(initialContext);
+			}
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerRequestInput(Object input, Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.REQUEST_INPUT, input);
+		apiBuilder.setRequestInput(input);
+	}
+
+	protected void registerUserName(HttpServletRequest request, Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		String userName = RepositoryFacade.getUser(request);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.USER, userName);
+		apiBuilder.setUserName(userName);
+	}
+
+	protected void registerRepository(Map<Object, Object> executionContext, IRepository repository, Object scope, InjectedAPIBuilder apiBuilder) {
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.REPOSITORY, repository);
+		apiBuilder.setRepository(repository);
+	}
+
+	protected void registerResponse(HttpServletResponse response, Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_RESPONSE, response);
+		apiBuilder.setResponse(response);
+	}
+
+	protected void registerRequest(HttpServletRequest request, Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		// put request
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_REQUEST, request);
+		apiBuilder.setRequest(request);
+		if (request != null) {
+			// put session
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.HTTP_SESSION, request.getSession());
+			apiBuilder.setSession(request.getSession());
+		}
+	}
+
+	protected DataSource registerDefaultDatasource(HttpServletRequest request, Map<Object, Object> executionContext, Object scope,
+			InjectedAPIBuilder apiBuilder) {
+		DataSource dataSource;
+		dataSource = DataSourceFacade.getInstance().getDataSource(request);
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DEFAULT_DATASOURCE, dataSource);
+		apiBuilder.setDatasource(dataSource);
+		return dataSource;
 	}
 
 	public byte[] readResourceData(IRepository repository, String repositoryPath) throws IOException {
