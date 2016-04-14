@@ -175,6 +175,15 @@
 				<deployment.executable>dont-use</deployment.executable>
 			</properties>
 		</profile>
+		<profile>
+			<id>saptrial</id>
+			<properties>
+				<deployment.type>saptrial</deployment.type>
+				<deployment.name>ROOT</deployment.name>
+				<deployment.context></deployment.context>
+				<deployment.executable>dont-use</deployment.executable>
+			</properties>
+		</profile>
 	</profiles>
 	<modules>
 		<module>runtime.tomcat</module>
