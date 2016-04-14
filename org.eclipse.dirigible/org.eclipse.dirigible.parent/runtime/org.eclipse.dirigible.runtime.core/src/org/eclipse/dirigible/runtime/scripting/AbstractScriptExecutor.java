@@ -29,6 +29,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.lucene.document.Document;
@@ -444,6 +445,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 	}
 
 	private String getModuleName(String path) {
+		path = FilenameUtils.separatorsToUnix(path);
 		String workspace = ICommonConstants.WORKSPACE + ICommonConstants.SEPARATOR;
 		String scriptingServices = getModuleType(path) // ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES
 				+ ICommonConstants.SEPARATOR;

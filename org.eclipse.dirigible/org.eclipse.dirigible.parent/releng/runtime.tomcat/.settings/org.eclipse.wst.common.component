@@ -5,7 +5,7 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <property name="component.exclusion.patterns" value="**/*.source_*.jar"/>
-        <property name="java-output-path" value="/dirigible-runtime-tomcat/target/classes"/>
-        <property name="context-root" value="dirigible"/>
+        <property name="java-output-path" value="/runtime/target/classes"/>
+        <property name="context-root" value="ROOT"/>
     </wb-module>
 </project-modules>
