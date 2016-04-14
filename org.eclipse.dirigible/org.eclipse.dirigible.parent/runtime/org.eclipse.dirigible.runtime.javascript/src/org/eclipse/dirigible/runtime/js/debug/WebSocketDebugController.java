@@ -1,12 +1,20 @@
 package org.eclipse.dirigible.runtime.js.debug;
 
+import java.util.Iterator;
+import java.util.Set;
+
+import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
+import org.eclipse.dirigible.repository.ext.debug.DebugModelFacade;
 import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
 import org.eclipse.dirigible.repository.ext.debug.IDebugController;
 import org.eclipse.dirigible.repository.ext.debug.LinebreakMetadata;
+import org.eclipse.dirigible.repository.logging.Logger;
 
 public class WebSocketDebugController implements IDebugController {
 
 	private String user;
+	private static final Logger LOGGER = Logger.getLogger(WebSocketDebugController.class);
 
 	public WebSocketDebugController(String user) {
 		this.user = user;
@@ -14,80 +22,96 @@ public class WebSocketDebugController implements IDebugController {
 
 	@Override
 	public void register(DebugSessionModel session) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void finish(DebugSessionModel session) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onLineChange(LinebreakMetadata linebreak, DebugSessionModel session) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void refreshVariables() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void refreshBreakpoints() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void refresh() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void stepInto() {
-		// TODO Auto-generated method stub
-
+		if (checkDebugExecutor()) {
+			getDebugModel().getActiveSession().getDebugExecutor().stepInto();
+		}
 	}
 
 	@Override
 	public void stepOver() {
-		// TODO Auto-generated method stub
-
+		if (checkDebugExecutor()) {
+			getDebugModel().getActiveSession().getDebugExecutor().stepOver();
+		}
 	}
 
 	@Override
 	public void continueExecution() {
-		// TODO Auto-generated method stub
-
+		if (checkDebugExecutor()) {
+			getDebugModel().getActiveSession().getDebugExecutor().continueExecution();
+		}
 	}
 
 	@Override
 	public void skipAllBreakpoints() {
-		// TODO Auto-generated method stub
-
+		if (checkDebugExecutor()) {
+			getDebugModel().getActiveSession().getDebugExecutor().skipAllBreakpoints();
+		}
 	}
 
 	@Override
 	public void setBreakpoint(String path, int row) {
-		// TODO Auto-generated method stub
-
+		BreakpointMetadata breakpoint = new BreakpointMetadata(path, row);
+		getDebugModel().getBreakpointsMetadata().getBreakpoints().add(breakpoint);
 	}
 
 	@Override
 	public void clearBreakpoint(String path, int row) {
-		// TODO Auto-generated method stub
-
+		BreakpointMetadata breakpoint = new BreakpointMetadata(path, row);
+		Set<BreakpointMetadata> breakpoints = getDebugModel().getBreakpointsMetadata().getBreakpoints();
+		for (Iterator<BreakpointMetadata> iterator = breakpoints.iterator(); iterator.hasNext();) {
+			BreakpointMetadata breakpointMetadata = (BreakpointMetadata) iterator.next();
+			if (breakpointMetadata.equals(breakpoint)) {
+				iterator.remove();
+				break;
+			}
+		}
 	}
 
 	@Override
 	public void clearAllBreakpoints() {
-		// TODO Auto-generated method stub
-
+		getDebugModel().getBreakpointsMetadata().getBreakpoints().clear();
 	}
 
+	private DebugModel getDebugModel() {
+		return DebugModelFacade.getDebugModel(this.user);
+	}
+
+	private boolean checkDebugExecutor() {
+		if (getDebugModel().getActiveSession() == null) {
+			LOGGER.error("No active debug session");
+			return false;
+		}
+		if (getDebugModel().getActiveSession().getDebugExecutor() == null) {
+			LOGGER.error("Active debug session exists, but there is no executor assigned");
+			return false;
+		}
+		return true;
+	}
 }
