@@ -28,6 +28,9 @@ public class ScriptUtils {
 	public static String getEnclosingFunctionName(final String scriptId, final Integer breakpointLine) {
 		final Location startLocation = getStartLocation(scriptId, breakpointLine);
 		final int lineWithFunction = startLocation.getLineNumber().intValue();
+		if(lineWithFunction == -1){
+			return null;
+		}
 		final String source = ScriptRepository.getInstance().getSourceFor(scriptId);
 		final String line = getLine(source, lineWithFunction);
 		final Integer indexOfFunc = line.indexOf(FUNCTION_PREFIX) + FUNCTION_PREFIX.length();
@@ -127,7 +130,7 @@ public class ScriptUtils {
 	 *            the source text in which to look for function scopes
 	 * @return a map representing the scopes in the {@code source} text
 	 */
-	private static Map<Integer, Integer> getFunctionScopes(final String source) {
+	public static Map<Integer, Integer> getFunctionScopes(final String source) {
 		final Map<Integer, Integer> scopes = new HashMap<Integer, Integer>();
 		final List<Integer> indexes = getMatchingIndexes(source, FUNCTION_PREFIX);
 		Integer endIndex;
@@ -152,8 +155,8 @@ public class ScriptUtils {
 	private static List<Integer> getMatchingIndexes(final String source, final String match) {
 		final List<Integer> indexes = new ArrayList<Integer>();
 		int index = ((source.indexOf(match) + match.length())) - 1;
-		while (index >= 0) {
-			while (source.charAt(index) != '{') {
+		while (index >= 0 && index < source.length()) {
+			while (source.charAt(index) != '{' && index < source.length() - 1) {
 				index++;
 			}
 			indexes.add(index);
@@ -179,7 +182,7 @@ public class ScriptUtils {
 	private static Integer getClosingBracketIndex(final String text, int startingIndex) {
 		final Deque<Character> stack = new ArrayDeque<Character>();
 
-		while ((text.charAt(startingIndex) != '{') && (startingIndex < text.length())) {
+		while ((startingIndex < text.length()) && (text.charAt(startingIndex) != '{')) {
 			startingIndex++;
 		}
 
@@ -408,5 +411,70 @@ public class ScriptUtils {
 			columnNum++;
 		}
 		return columnNum;
+	}
+
+	public static boolean hasFunctions(String scriptId) {
+		ScriptRepository scriptRepo = ScriptRepository.getInstance();
+		String source = scriptRepo.getSourceFor(scriptId);
+		return source.contains(FUNCTION_PREFIX);
+	}
+
+	public static Double getLastLine(String scriptId) {
+		ScriptRepository scriptRepo = ScriptRepository.getInstance();
+		String source = scriptRepo.getSourceFor(scriptId);
+		return Double.valueOf(getLineNumberForIndex(source, source.length() - 1));
+	}
+
+	public static Double getLastColumn(String scriptId) {
+		ScriptRepository scriptRepo = ScriptRepository.getInstance();
+		String source = scriptRepo.getSourceFor(scriptId);
+		return Double.valueOf(getColumnNumberForIndex(source, source.length() - 1));
+	}
+
+	public static Double getFirstLine(String scriptId) {
+		ScriptRepository scriptRepo = ScriptRepository.getInstance();
+		String source = scriptRepo.getSourceFor(scriptId);
+		for(int i = 0; i<source.length(); i++){
+			Integer lineNumber = getLineNumberForIndex(source, i);
+			String line = getLine(source, lineNumber);
+			i += line.length();
+			if(!isComment(line)){
+				return Double.valueOf(lineNumber);
+			}
+		}
+		
+		return null;
+	}
+
+	private static boolean isComment(String line) {
+		return line.startsWith("//") || line.startsWith("/*") || line.trim().isEmpty();
+	}
+
+	public static Double getStartColumnForLine(String scriptId, Double lineNumber) {
+		ScriptRepository repo = ScriptRepository.getInstance();
+		String source = repo.getSourceFor(scriptId);
+		String line = getLine(source, lineNumber.intValue());
+		int column = 0;
+		while(Character.isWhitespace(line.indexOf(column)) && column < line.length()){
+			column++;
+		}
+		return Double.valueOf(column);
+	}
+
+	public static Location getFirstLocationAfter(Location functionEndLocation) {
+		Double line = functionEndLocation.getLineNumber();
+		String scriptId = functionEndLocation.getScriptId();
+		ScriptRepository repo = ScriptRepository.getInstance();
+		String source = repo.getSourceFor(scriptId);
+		String nextSourceLine = "";
+		while(nextSourceLine.trim().isEmpty()){
+			line++;
+			nextSourceLine = getLine(source, line.intValue());
+		}
+		Location location = new Location();
+		location.setColumnNumber(getStartColumnForLine(scriptId, line));
+		location.setLineNumber(line);
+		location.setScriptId(scriptId);
+		return location;
 	}
 }

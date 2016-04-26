@@ -14,7 +14,6 @@ import org.eclipse.dirigible.runtime.chrome.debugger.models.Location;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.BreakpointRepository;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.MessageDispatcher;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.ScriptRepository;
-import org.eclipse.dirigible.runtime.chrome.debugger.utils.ScriptUtils;
 
 import com.google.gson.Gson;
 
@@ -112,9 +111,6 @@ public class DebuggerPausedRequest extends MessageRequest {
 		}
 	}
 	
-
-	private static Integer currentObjectId = 1;
-	
 	public static synchronized void sendRequest(Session session){
 		Location location = DebugConfiguration.getCurrentExecutionLocation(session.getUserPrincipal().getName());
 		String scriptId = location.getScriptId();
@@ -125,49 +121,24 @@ public class DebuggerPausedRequest extends MessageRequest {
 	public static void sendRequest(final String scriptId, final Session session, final Integer breakpointLine) {
 		final MessageRequest debuggerPausedRequest = new DebuggerPausedRequest();
 		final Map<String, Object> params = new HashMap<String, Object>();
-		final Location startLocation = ScriptUtils.getStartLocation(scriptId, breakpointLine);
-
-		// TODO: create call frames
-		final List<CallFrame> callFrames = new ArrayList<CallFrame>();
-		final CallFrame callFrame = new CallFrame();
-		callFrame.setFunctionLocation(startLocation);
+		
 		String userId = session.getUserPrincipal().getName();
-		callFrame.setLocation(DebugConfiguration.getCurrentExecutionLocation(userId));
-
-		final int injectedScriptId = 0; // common for all callFrames within a
-										// script
-		int ordinal = 0; // increment with each callFrame
-
-		final List<Scope> scopeChain = new ArrayList<Scope>();
-		final Scope scope = new Scope();
-		scope.setEndLocation(ScriptUtils.getEndLocation(scriptId, breakpointLine));
-		scope.setStartLocation(startLocation);
-		scope.setEndLocation(ScriptUtils.getEndLocation(scriptId, breakpointLine));
-		
-		final Map<String, String> object = new HashMap<String, String>();
-		object.put("className", "Object");
-		object.put("description", "Object");
-		object.put("objectId",
-				String.format("{\"injectedScriptId\":%d,\"id\":%d", injectedScriptId, currentObjectId++));
-		object.put("type", "object");
-		scope.setObject(object);
-		scope.setType("local");
-		scopeChain.add(scope);
-		
-		callFrame.setCallFrameId(String.format("{\"ordinal\":%d,\"injectedScriptId\":%d}", ordinal, injectedScriptId)); 
-		callFrame.setScopeChain(scopeChain);
-		callFrame.setFunctionName(ScriptUtils.getEnclosingFunctionName(scriptId, breakpointLine));
-		callFrames.add(callFrame);
+		final List<CallFrame> callFrames = CallFrameProvider.get(userId, scriptId, breakpointLine);
 		params.put("callFrames", callFrames);
 		persistFrames(callFrames);
 
 		final BreakpointRepository breakpointRepo = BreakpointRepository.getInstance();
 		Set<Breakpoint> breakpoints = breakpointRepo.getSortedBreakpointsForScript(userId, scriptId);
-		final Breakpoint firstBreakpoint = breakpoints.toArray(new Breakpoint[breakpoints.size()])[0];
-		final List<String> hitBreakpoints = new ArrayList<String>();
-		hitBreakpoints.add(firstBreakpoint.getId());
+		for(Breakpoint b : breakpoints){
+			int bpLine = b.getLocation().getLineNumber().intValue();
+			if(bpLine == breakpointLine){
+				final List<String> hitBreakpoints = new ArrayList<String>();
+				hitBreakpoints.add(b.getId());
+				params.put("hitBreakpoints", hitBreakpoints);
+				break;
+			}
+		}
 		final String reason = "other";
-		params.put("hitBreakpoints", hitBreakpoints);
 		params.put("reason", reason);
 		debuggerPausedRequest.setParams(params);
 		MessageDispatcher.sendMessage(new Gson().toJson(debuggerPausedRequest), session);

@@ -11,21 +11,22 @@
 
 package org.eclipse.dirigible.runtime.js.debug;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.dirigible.repository.ext.debug.BreakpointMetadata;
 import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
 import org.eclipse.dirigible.repository.ext.debug.IDebugExecutor;
+import org.mozilla.javascript.debug.DebugFrame;
+import org.mozilla.javascript.debug.Debugger;
 
 public class DebuggerActionCommander implements IDebugExecutor {
 
 	private boolean executing = false;
 	private DebugCommand currentCommand;
 
-	private JavaScriptDebugFrame debugFrame;
+	private DebugFrame debugFrame;
 
-	private JavaScriptDebugger debugger;
+	private Debugger debugger;
 
 	private String sessionId;
 	
@@ -128,19 +129,19 @@ public class DebuggerActionCommander implements IDebugExecutor {
 //		return debuggerActionManager;
 //	}
 
-	public JavaScriptDebugFrame getDebugFrame() {
+	public DebugFrame getDebugFrame() {
 		return debugFrame;
 	}
 
-	public void setDebugFrame(JavaScriptDebugFrame debugFrame) {
+	public void setDebugFrame(DebugFrame debugFrame) {
 		this.debugFrame = debugFrame;
 	}
 
-	public JavaScriptDebugger getDebugger() {
+	public Debugger getDebugger() {
 		return debugger;
 	}
 
-	public void setDebugger(JavaScriptDebugger debugger) {
+	public void setDebugger(Debugger debugger) {
 		this.debugger = debugger;
 	}
 

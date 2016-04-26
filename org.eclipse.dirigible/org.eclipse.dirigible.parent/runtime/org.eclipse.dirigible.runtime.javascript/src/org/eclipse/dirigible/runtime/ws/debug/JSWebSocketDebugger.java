@@ -1,6 +1,8 @@
 package org.eclipse.dirigible.runtime.ws.debug;
 
-import org.eclipse.dirigible.runtime.js.debug.JavaScriptDebugFrame;
+import javax.servlet.http.HttpServletRequest;
+
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
@@ -8,7 +10,11 @@ import org.mozilla.javascript.debug.Debugger;
 
 public class JSWebSocketDebugger implements Debugger{
 	
-	private JavaScriptDebugFrame debugFrame = null;
+	private DebugFrame debugFrame = null;
+
+	public JSWebSocketDebugger(DebugModel debugModel, HttpServletRequest request) {
+		this.debugFrame = new WebSocketDebugFrame(debugModel, request, this);
+	}
 
 	public DebugFrame getFrame(Context context, DebuggableScript fnOrScript) {
 		context.setDebugger(this, fnOrScript);

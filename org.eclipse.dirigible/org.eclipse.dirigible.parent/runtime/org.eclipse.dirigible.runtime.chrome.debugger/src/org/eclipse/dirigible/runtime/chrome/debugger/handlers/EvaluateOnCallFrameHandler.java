@@ -29,7 +29,7 @@ public class EvaluateOnCallFrameHandler implements MessageHandler {
 		final ScriptRepository repository = ScriptRepository.getInstance();
 		final Map<String, Object> params = request.getParams();
 		final String variableName = (String) params.get("expression");
-		final Value variableValue = repository.getVariableValueByName(variableName);
+		final Value variableValue = repository.getVariableValueByName(session.getUserPrincipal().getName(), variableName);
 		final JSONObject response = new JSONObject();
 		try {
 			response.put("id", RequestUtils.getMessageId(message));

@@ -38,6 +38,7 @@ Import-Package: javax.mail,
  org.eclipse.dirigible.runtime.chrome.debugger,
  org.eclipse.dirigible.runtime.chrome.debugger.communication,
  org.eclipse.dirigible.runtime.chrome.debugger.handlers,
+ org.eclipse.dirigible.runtime.chrome.debugger.models,
  org.eclipse.dirigible.runtime.chrome.debugger.processing,
  org.eclipse.dirigible.runtime.chrome.debugger.utils,
  org.slf4j

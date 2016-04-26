@@ -11,7 +11,6 @@
 
 package org.eclipse.dirigible.runtime.js.debug;
 
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +37,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.debug.DebugFrame;
 import org.mozilla.javascript.debug.DebuggableScript;
+import org.mozilla.javascript.debug.Debugger;
 
 import com.google.gson.Gson;
 
@@ -54,9 +54,9 @@ public class JavaScriptDebugFrame implements DebugFrame {
 
 	private static final int SLEEP_TIME = 50;
 //	private DebuggerActionManager debuggerActionManager;
-	private DebuggerActionCommander debuggerActionCommander;
-	private Stack<DebuggableScript> scriptStack;
-	private Stack<Scriptable> activationStack;
+	protected DebuggerActionCommander debuggerActionCommander;
+	protected Stack<DebuggableScript> scriptStack;
+	protected Stack<Scriptable> activationStack;
 	private int stepOverLineNumber = 0;
 	private int previousLineNumber = 0;
 	private boolean stepOverFinished = true;
@@ -66,7 +66,7 @@ public class JavaScriptDebugFrame implements DebugFrame {
 	private DebugSessionModel session;
 
 	public JavaScriptDebugFrame(DebugModel debugModel, HttpServletRequest request,
-			JavaScriptDebugger javaScriptDebugger) {
+			Debugger javaScriptDebugger) {
 		// get the instance of debugger action manager from the session
 
 		logDebug("entering JavaScriptDebugFrame.constructor");
@@ -188,7 +188,7 @@ public class JavaScriptDebugFrame implements DebugFrame {
 		}
 	}
 
-	private void processAction(int lineNumber, DebugCommand nextCommand) {
+	protected void processAction(int lineNumber, DebugCommand nextCommand) {
 		if (nextCommand != DebugCommand.SKIP_ALL_BREAKPOINTS) {
 			if (isBreakpoint(lineNumber)) {
 				hitBreakpoint(lineNumber);
@@ -212,7 +212,7 @@ public class JavaScriptDebugFrame implements DebugFrame {
 		}
 	}
 
-	private void hitBreakpoint(int lineNumber) {
+	protected void hitBreakpoint(int lineNumber) {
 		logDebug("entering JavaScriptDebugFrame.hitBreakpoint(): " + lineNumber);
 		print(lineNumber);
 		debuggerActionCommander.stepOver();
@@ -220,14 +220,14 @@ public class JavaScriptDebugFrame implements DebugFrame {
 		logDebug("exiting JavaScriptDebugFrame.hitBreakpoint()");
 	}
 
-	private void stepInto(int lineNumber) {
+	protected void stepInto(int lineNumber) {
 		logDebug("entering JavaScriptDebugFrame.stepInto(): " + lineNumber);
 		print(lineNumber);
 		debuggerActionCommander.pauseExecution();
 		logDebug("exiting JavaScriptDebugFrame.stepInto()");
 	}
 
-	private void stepOver(int lineNumber) {
+	protected void stepOver(int lineNumber) {
 		logDebug("entering JavaScriptDebugFrame.stepOver(): " + lineNumber);
 		if (stepOverFinished) {
 			stepOverFinished = false;
@@ -254,11 +254,11 @@ public class JavaScriptDebugFrame implements DebugFrame {
 		logDebug("exiting JavaScriptDebugFrame.blockExecution()");
 	}
 
-	private DebugCommand getNextCommand() {
+	protected DebugCommand getNextCommand() {
 		return debuggerActionCommander.getCommand();
 	}
 
-	private boolean isBreakpoint(int row) {
+	protected boolean isBreakpoint(int row) {
 		String path = scriptStack.peek().getSourceName();
 		DebuggerActionCommander commander = getDebuggerActionCommander();
 		LinebreakMetadata breakpoint = new LinebreakMetadata(commander.getSessionId(),
@@ -271,6 +271,18 @@ public class JavaScriptDebugFrame implements DebugFrame {
 		DebuggerActionCommander commander = getDebuggerActionCommander();
 		DebuggableScript script = scriptStack.peek();
 		Scriptable activation = activationStack.peek();
+		List<VariableValue> variableValuesList = getVariables(script, activation);
+//		if (variableValuesMetadata == null) {
+		VariableValuesMetadata variableValuesMetadata = new VariableValuesMetadata(commander.getSessionId(),
+					commander.getExecutionId(), commander.getUserId(), variableValuesList);
+//		}
+		this.session.setVariableValuesMetadata(variableValuesMetadata);
+		notifyVariableValuesMetadata();
+		String sourceName = script.getSourceName();
+		sendOnBreakLineChange(sourceName, row);
+	}
+
+	protected List<VariableValue> getVariables(DebuggableScript script, Scriptable activation) {
 		List<VariableValue> variableValuesList = new ArrayList<VariableValue>();
 		for (int i = 0; i < script.getParamAndVarCount(); i++) {
 			String variable = script.getParamOrVarName(i);
@@ -281,14 +293,7 @@ public class JavaScriptDebugFrame implements DebugFrame {
 				variableValuesList.add(new VariableValue(variable, valueContent));
 			}
 		}
-//		if (variableValuesMetadata == null) {
-		VariableValuesMetadata variableValuesMetadata = new VariableValuesMetadata(commander.getSessionId(),
-					commander.getExecutionId(), commander.getUserId(), variableValuesList);
-//		}
-		this.session.setVariableValuesMetadata(variableValuesMetadata);
-		notifyVariableValuesMetadata();
-		String sourceName = script.getSourceName();
-		sendOnBreakLineChange(sourceName, row);
+		return variableValuesList;
 	}
 
 	private String parseValueToString(Object value) {

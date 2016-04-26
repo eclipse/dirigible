@@ -9,13 +9,17 @@ import java.util.Random;
 import javax.websocket.Session;
 
 import org.eclipse.dirigible.runtime.chrome.debugger.DebugConfiguration;
+import org.eclipse.dirigible.runtime.chrome.debugger.communication.DebuggerPausedRequest;
+import org.eclipse.dirigible.runtime.chrome.debugger.communication.MessageRequest;
 import org.eclipse.dirigible.runtime.chrome.debugger.communication.NoIdResponse;
 import org.eclipse.dirigible.runtime.chrome.debugger.communication.PageGetResourceTreeResponse;
+import org.eclipse.dirigible.runtime.chrome.debugger.models.Location;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.MessageDispatcher;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.ScriptProcessor;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.ScriptProcessor.ScriptResponse;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.ScriptRepository;
 import org.eclipse.dirigible.runtime.chrome.debugger.utils.RequestUtils;
+import org.eclipse.dirigible.runtime.chrome.debugger.utils.ScriptUtils;
 
 import com.google.gson.Gson;
 
@@ -33,6 +37,26 @@ public class GetResourceTreeHandler implements MessageHandler {
 		this.registerScripts(resourceTree);
 		final Integer contextId = this.initializeExecutionContext(session, resourceTree);
 		this.parseScripts(session, resourceTree, contextId);
+		sendResumeDebugger(session);
+		sendPauseDebugger(session);
+	}
+
+	private void sendPauseDebugger(Session session) {
+		Location currentExecutionLocation = new Location();
+		currentExecutionLocation.setColumnNumber(0.0);
+		currentExecutionLocation.setLineNumber(0.0);
+		ScriptRepository repo = ScriptRepository.getInstance();
+		String scriptId = repo.getScriptIdRelativePath("dirigible_books/alabala.js");
+		currentExecutionLocation.setScriptId(scriptId);
+		DebugConfiguration.setCurrentExecutionLocation(session.getUserPrincipal().getName(), currentExecutionLocation);
+		DebuggerPausedRequest.sendRequest(session);
+	}
+
+	private void sendResumeDebugger(Session session) {
+		MessageRequest request = new MessageRequest();
+		request.setMethod("Debugger.resumed");
+		request.setParams(new HashMap<String, Object>());
+		MessageDispatcher.sendMessage(GSON.toJson(request), session);
 	}
 
 	private void registerScripts(final PageGetResourceTreeResponse resourceTree) {

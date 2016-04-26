@@ -141,12 +141,12 @@ public class ScriptRepository {
 //		return variables;
 //	}
 
-	public Value getVariableValueByName(final String variableName) {
+	public Value getVariableValueByName(String userId, final String variableName) {
 		for (final CallFrame frame : frames) {
 			final List<Scope> scopeChain = frame.getScopeChain();
 			for (final Scope scope : scopeChain) {
 				final String objectId = scope.getObject().get("objectId");
-				final List<Variable> variables = new ArrayList<Variable>();//this.getVariablesForObject(objectId);
+				final List<Variable> variables = this.variablesForObjectId(userId, objectId);
 				for (final Variable var : variables) {
 					if (var.getName().equalsIgnoreCase(variableName)) {
 						return var.getValue();
@@ -155,6 +155,22 @@ public class ScriptRepository {
 			}
 		}
 
+		return null;
+	}
+	
+	public List<Variable> variablesForObjectId(String userId, String objectId){
+		Map<String, List<Variable>> variables = DebugConfiguration.getUserVariablesForObjectId(userId);
+		List<Variable> objectIdVariables = variables.get(objectId);
+		return objectIdVariables;
+	}
+
+	public String getScriptIdRelativePath(String sourceName) {
+		for(Map.Entry<String, String> e : mappedBps.entrySet()){
+			String url = e.getKey();
+			if(url.contains(sourceName)){
+				return e.getValue();
+			}
+		}
 		return null;
 	}
 }

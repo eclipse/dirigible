@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.websocket.CloseReason;
+import javax.websocket.CloseReason.CloseCode;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -28,8 +30,18 @@ public class WebSocketDebugBridgeServletInternal {
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
 		List<Session> userSessions = openUserSessions.get(session.getUserPrincipal().getName());
+		// multi-session support is planned, but currently if a user opens a second session then the first one is closed
 		if (userSessions == null) {
 			userSessions = new ArrayList<Session>();
+		}else{
+			Iterator<Session> iterator = userSessions.iterator();
+			while(iterator.hasNext()){
+				Session s = iterator.next();
+				CloseCode closeCode = CloseReason.CloseCodes.NORMAL_CLOSURE;
+				CloseReason reason = new CloseReason(closeCode, "Only one session per user is supported!");
+				s.close(reason);
+				iterator.remove();
+			}
 		}
 		userSessions.add(session);
 		openUserSessions.put(session.getUserPrincipal().getName(), userSessions);
@@ -82,5 +94,9 @@ public class WebSocketDebugBridgeServletInternal {
 		} catch (IOException e1) {
 			logger.error(e1.getMessage(), e1);
 		}
+	}
+	
+	public static List<Session> getSessionsForUser(String userId){
+		return openUserSessions.get(userId);
 	}
 }
