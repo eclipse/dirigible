@@ -22,6 +22,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.eclipse.dirigible.repository.api.RepositoryFactory;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 
 public class RepositoryFacade {
 
@@ -70,8 +71,8 @@ public class RepositoryFacade {
 	public String getUser(HttpServletRequest request) {
 		String user = CommonParameters.getUserName(); // shared one
 		try {
-			if ((request != null) && (request.getUserPrincipal() != null)) {
-				user = request.getUserPrincipal().getName();
+			if (request != null) {
+				user = RequestUtils.getUser(request);
 			}
 		} catch (Exception e) {
 			// TODO - do nothing

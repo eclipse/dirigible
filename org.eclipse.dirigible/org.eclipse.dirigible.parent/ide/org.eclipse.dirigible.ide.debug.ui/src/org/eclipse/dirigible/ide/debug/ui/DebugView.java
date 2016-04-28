@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IViewPart;
@@ -101,8 +100,8 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 	private final ResourceManager resourceManager;
 
-	private TreeViewer sessionsTreeViewer;
-	private SessionsViewContentProvider sessionsContentProvider;
+	// private TreeViewer sessionsTreeViewer;
+	// private SessionsViewContentProvider sessionsContentProvider;
 
 	private TreeViewer variablesTreeViewer;
 	private VariablesViewContentProvider variablesContentProvider;
@@ -159,6 +158,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 		// registerPreviewListener(this);
 
+		enableDebugButtons(true);
 	}
 
 	private boolean previewListenerRegistered = false;
@@ -195,16 +195,16 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	Button skipAllBreakpointsButton;
 
 	private void createButtonsRow(final Composite holder) {
-		Button refreshButton = createButton(holder, REFRESH, DIRIGIBLE_REFRESH_ICON_URL);
-		refreshButton.addSelectionListener(new SelectionAdapter() {
-			private static final long serialVersionUID = 1316287800753595995L;
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				waitForMetadata(refreshMetaData());
-			}
-
-		});
+		// Button refreshButton = createButton(holder, REFRESH, DIRIGIBLE_REFRESH_ICON_URL);
+		// refreshButton.addSelectionListener(new SelectionAdapter() {
+		// private static final long serialVersionUID = 1316287800753595995L;
+		//
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		// waitForMetadata(refreshMetaData());
+		// }
+		//
+		// });
 
 		stepIntoButton = createButton(holder, STEP_INTO, DIRIGIBLE_STEP_INTO_ICON_URL);
 		stepIntoButton.addSelectionListener(new SelectionAdapter() {
@@ -277,31 +277,35 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		return button;
 	}
 
+	// private void createSessionsTable(final Composite holder) {
+	// sessionsTreeViewer = new TreeViewer(holder, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+	// sessionsTreeViewer.getTree().setHeaderVisible(true);
+	//
+	// Tree tree = sessionsTreeViewer.getTree();
+	//
+	// TreeColumn column = new TreeColumn(tree, SWT.LEFT);
+	// column.setText(SESSIONS);
+	// column.setWidth(150);
+	//
+	// sessionsContentProvider = new SessionsViewContentProvider();
+	// sessionsTreeViewer.setContentProvider(sessionsContentProvider);
+	// sessionsTreeViewer.setLabelProvider(new SessionsViewLabelProvider());
+	// sessionsTreeViewer.setInput(getViewSite());
+	// sessionsTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+	//
+	// @Override
+	// public void selectionChanged(SelectionChangedEvent event) {
+	// if (!event.getSelection().isEmpty() && (event.getSelection() instanceof IStructuredSelection)) {
+	// IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
+	// String sessionInfo = (String) structuredSelection.getFirstElement();
+	// // selectedSessionTreeItem(sessionInfo);
+	// }
+	// }
+	// });
+	// }
+
 	private void createSessionsTable(final Composite holder) {
-		sessionsTreeViewer = new TreeViewer(holder, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		sessionsTreeViewer.getTree().setHeaderVisible(true);
-
-		Tree tree = sessionsTreeViewer.getTree();
-
-		TreeColumn column = new TreeColumn(tree, SWT.LEFT);
-		column.setText(SESSIONS);
-		column.setWidth(150);
-
-		sessionsContentProvider = new SessionsViewContentProvider();
-		sessionsTreeViewer.setContentProvider(sessionsContentProvider);
-		sessionsTreeViewer.setLabelProvider(new SessionsViewLabelProvider());
-		sessionsTreeViewer.setInput(getViewSite());
-		sessionsTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				if (!event.getSelection().isEmpty() && (event.getSelection() instanceof IStructuredSelection)) {
-					IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
-					String sessionInfo = (String) structuredSelection.getFirstElement();
-					// selectedSessionTreeItem(sessionInfo);
-				}
-			}
-		});
+		SessionsWSView sessionsWSView = new SessionsWSView(holder);
 	}
 
 	private void selectedSessionTreeItem(String sessionInfo) {
@@ -379,15 +383,17 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		try {
 			breakpointsTreeViewer.refresh(true);
 			variablesTreeViewer.refresh(true);
-			sessionsTreeViewer.refresh(true);
-			if (sessionsTreeViewer.getSelection().isEmpty()
-					&& !DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getSessions().isEmpty()) {
-				TreeItem treeItem = sessionsTreeViewer.getTree().getTopItem();
-				sessionsTreeViewer.getTree().setSelection(treeItem);
-				// selectedSessionTreeItem(treeItem.getText());
-			}
+			// sessionsTreeViewer.refresh(true);
+			// if (sessionsTreeViewer.getSelection().isEmpty()
+			// && !DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getSessions().isEmpty()) {
+			// TreeItem treeItem = sessionsTreeViewer.getTree().getTopItem();
+			// sessionsTreeViewer.getTree().setSelection(treeItem);
+			// // selectedSessionTreeItem(treeItem.getText());
+			// }
+			//
+			// enableDebugButtons(!sessionsTreeViewer.getSelection().isEmpty());
 
-			enableDebugButtons(!sessionsTreeViewer.getSelection().isEmpty());
+			enableDebugButtons(true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
@@ -727,9 +733,10 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	}
 
 	private void refreshSessionsView() {
-		if ((sessionsTreeViewer == null) || (sessionsTreeViewer.getTree() == null) || sessionsTreeViewer.getTree().isDisposed()) {
-			return;
-		}
+		// if ((sessionsTreeViewer == null) || (sessionsTreeViewer.getTree() == null) ||
+		// sessionsTreeViewer.getTree().isDisposed()) {
+		// return;
+		// }
 
 		final Display display = PlatformUI.createDisplay();
 		final ServerPushSession pushSession = new ServerPushSession();

@@ -27,15 +27,15 @@ public class WebSocketDebugBridgeServletInternal {
 
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
-		List<Session> userSessions = openUserSessions.get(session.getUserPrincipal().getName());
+		String userId = RequestUtils.getUser(session);
+		List<Session> userSessions = openUserSessions.get(userId);
 		if (userSessions == null) {
 			userSessions = new ArrayList<Session>();
 		}
 		userSessions.add(session);
-		openUserSessions.put(session.getUserPrincipal().getName(), userSessions);
-		DebugModelFacade.createDebugModel(RequestUtils.getUser(session),
-				new WebSocketDebugController(RequestUtils.getUser(session)));
-		logger.debug("[Internal] onOpen: " + session.getUserPrincipal().getName());
+		openUserSessions.put(userId, userSessions);
+		DebugModelFacade.createDebugModel(RequestUtils.getUser(session), new WebSocketDebugController(userId));
+		logger.debug("[Internal] onOpen: " + userId);
 	}
 
 	@OnMessage
@@ -57,7 +57,8 @@ public class WebSocketDebugBridgeServletInternal {
 
 	@OnClose
 	public void onClose(Session session) {
-		List<Session> userSessions = openUserSessions.get(session.getUserPrincipal().getName());
+		String userId = RequestUtils.getUser(session);
+		List<Session> userSessions = openUserSessions.get(userId);
 		if (userSessions == null) {
 			logger.error("[Internal] onClose: Could not find the given session for currently active user!");
 			return;
@@ -70,11 +71,11 @@ public class WebSocketDebugBridgeServletInternal {
 			}
 		}
 		if (userSessions.isEmpty()) {
-			openUserSessions.remove(session.getUserPrincipal().getName());
+			openUserSessions.remove(userId);
 		}
-		logger.debug("[Internal] onClose: Session " + session.getUserPrincipal().getName() + " has ended");
+		logger.debug("[Internal] onClose: Session " + userId + " has ended");
 	}
-	
+
 	private void handleError(Session session, Throwable e) {
 		logger.error(e.getMessage(), e);
 		try {

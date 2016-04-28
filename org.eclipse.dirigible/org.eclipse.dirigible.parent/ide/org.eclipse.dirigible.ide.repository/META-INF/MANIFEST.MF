@@ -18,5 +18,7 @@ Import-Package: javax.servlet,
  javax.servlet.annotation,
  javax.servlet.descriptor,
  javax.servlet.http,
+ javax.websocket,
+ javax.websocket.server,
  org.slf4j
 Bundle-ClassPath: .

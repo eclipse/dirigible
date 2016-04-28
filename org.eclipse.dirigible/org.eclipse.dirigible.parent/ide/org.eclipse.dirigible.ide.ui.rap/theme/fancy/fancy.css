@@ -3196,7 +3196,7 @@ ToolItem.menuBar:hover {
     from( #ababab ),
     to( #898989 )
   );
-  border: 1px solid ##898989;
+  border: 1px solid #898989;
   border-radius: 3px 3px 0px 0px;
   color: white;
   padding: 0px 10px 0px 10px;
@@ -3208,7 +3208,7 @@ ToolItem-DropDownIcon.menuBar {
 
 ToolItem-DropDownIcon.menuBar:hover {
   background-image: url( img/fancy/menu_arrow_hover.png );
-  border: 1px solid ##898989;
+  border: 1px solid #898989;
 }
 
 Menu.menuBar {
