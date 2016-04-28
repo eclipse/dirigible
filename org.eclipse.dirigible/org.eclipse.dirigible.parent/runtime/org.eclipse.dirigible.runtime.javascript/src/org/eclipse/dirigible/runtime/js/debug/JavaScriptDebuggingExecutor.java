@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.debug.DebugModel;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.js.JavaScriptExecutor;
 import org.mozilla.javascript.Context;
@@ -51,6 +52,10 @@ public class JavaScriptDebuggingExecutor extends JavaScriptExecutor {
 		context.setDebugger(debugger, JAVA_SCRIPT_DEBUGGER);
 		logger.debug("created JavaScriptDebugger");
 
+
+		String userId = RequestUtils.getUser(request);
+		WebSocketDebugSessionServletInternal.sendCurrentDebugModelSessionsToUser(userId, debugModel);
+		
 		context.setGeneratingDebug(true);
 		context.setOptimizationLevel(-1);
 		logger.debug("exiting JavaScriptDebuggingExecutor.beforeExecution()");

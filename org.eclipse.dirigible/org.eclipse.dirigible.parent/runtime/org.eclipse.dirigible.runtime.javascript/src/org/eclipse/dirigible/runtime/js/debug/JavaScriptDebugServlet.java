@@ -65,9 +65,10 @@ public class JavaScriptDebugServlet extends JavaScriptServlet {
 		logger.debug("Setting debug channel internal ...");
 
 		webSocketDebugBridgeServletInternal = new WebSocketDebugBridgeServletInternal();
-
+		WebSocketDebugSessionServletInternal webScoketDebugSessionsServletInternal = new WebSocketDebugSessionServletInternal();
 		DirigibleBridge.BRIDGES.put("websocket_debug_channel_internal", webSocketDebugBridgeServletInternal);
-
+		DirigibleBridge.BRIDGES.put("websocket_debug_sessions_internal", webScoketDebugSessionsServletInternal);
+		
 		logger.debug("Debug channel internal has been set.");
 
 	}
@@ -97,7 +98,7 @@ public class JavaScriptDebugServlet extends JavaScriptServlet {
 			logger.error(error);
 			throw new IOException(error);
 		}
-
+		
 		String rootPath = getScriptingRegistryPath(request);
 		logger.debug("rootPath=" + rootPath);
 		JavaScriptDebuggingExecutor executor = new JavaScriptDebuggingExecutor(getRepository(request), rootPath,
@@ -186,5 +187,16 @@ public class JavaScriptDebugServlet extends JavaScriptServlet {
 
 	private boolean shouldAddResource(IResource res) throws IOException {
 		return res.getContentType().contains("javascript");
+	}
+	
+	@Override
+	protected void postExecution(HttpServletRequest request) {
+		endDebugSession(request);
+	}
+	
+	private void endDebugSession(HttpServletRequest request) {
+			//we've reached the end of the script, the debug session is over and should be removed from the list
+		String userId = RequestUtils.getUser(request);
+		WebSocketDebugSessionServletInternal.clearCurrentSession(userId);
 	}
 }

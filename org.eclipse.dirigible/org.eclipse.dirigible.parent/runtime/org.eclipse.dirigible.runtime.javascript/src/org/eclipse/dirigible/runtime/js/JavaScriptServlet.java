@@ -18,7 +18,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.repository.ext.debug.DebugManager;
+import org.eclipse.dirigible.repository.ext.debug.DebugModel;
+import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.js.debug.WebSocketDebugSessionServletInternal;
 import org.eclipse.dirigible.runtime.scripting.AbstractScriptingServlet;
 import org.mozilla.javascript.Undefined;
 
@@ -40,14 +44,22 @@ public class JavaScriptServlet extends AbstractScriptingServlet {
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();
 		try {
 			Object result = executor.executeServiceModule(request, response, module, executionContext);
+			
 			if ((result != null) && !(result instanceof Undefined)) {
 				response.getWriter().println(result);
 			}
+			
+			postExecution(request);
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
+		
+	}
 
+	protected void postExecution(HttpServletRequest request) {
+		//
 	}
 
 	public JavaScriptExecutor createExecutor(HttpServletRequest request) throws IOException {

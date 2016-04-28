@@ -36,6 +36,7 @@ import org.eclipse.dirigible.repository.ext.debug.DebugModelFacade;
 import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
 import org.eclipse.dirigible.repository.ext.debug.LinebreakMetadata;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.runtime.js.debug.WebSocketDebugSessionServletInternal;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -297,7 +298,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 				if (!event.getSelection().isEmpty() && (event.getSelection() instanceof IStructuredSelection)) {
 					IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 					String sessionInfo = (String) structuredSelection.getFirstElement();
-					selectedSessionTreeItem(sessionInfo);
+					// selectedSessionTreeItem(sessionInfo);
 				}
 			}
 		});
@@ -383,7 +384,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 					&& !DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getSessions().isEmpty()) {
 				TreeItem treeItem = sessionsTreeViewer.getTree().getTopItem();
 				sessionsTreeViewer.getTree().setSelection(treeItem);
-				selectedSessionTreeItem(treeItem.getText());
+				// selectedSessionTreeItem(treeItem.getText());
 			}
 
 			enableDebugButtons(!sessionsTreeViewer.getSelection().isEmpty());
@@ -473,6 +474,8 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		Thread backGroundThread = new Thread(backGroundRunnable);
 		backGroundThread.setDaemon(true);
 		backGroundThread.start();
+
+		WebSocketDebugSessionServletInternal.debugActionPerformedOnSession(CommonParameters.getUserName(), session.getDebugExecutor().getCommand());
 	}
 
 	@Override
