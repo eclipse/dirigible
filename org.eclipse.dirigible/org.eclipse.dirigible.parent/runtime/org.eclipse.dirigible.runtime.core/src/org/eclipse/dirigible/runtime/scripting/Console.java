@@ -24,9 +24,11 @@ public class Console {
 
 	public void trace(String message, Object... args) {
 		logger.error(String.format(message, args));
+		StringBuilder buff = new StringBuilder();
 		for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-			logger.error(element.toString());
+			buff.append(element.toString()).append(System.getProperty("line.separator"));
 		}
+		logger.error(buff.toString());
 	}
 
 }
