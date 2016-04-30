@@ -39,6 +39,11 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	private Map<Object, Object> executionContext;
 
 	/**
+	 * The console object using the logger
+	 */
+	private Console console;
+
+	/**
 	 * The default (system) output set before the execution
 	 */
 	private PrintStream systemOutput;
@@ -491,6 +496,16 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	@Override
 	public void setNamedDataSourcesUtils(NamedDataSourcesUtils namedDataSourceUtils) {
 		this.namedDataSourceUtils = namedDataSourceUtils;
+	}
+
+	@Override
+	public Console getConsole() {
+		return this.console;
+	}
+
+	@Override
+	public void setConsole(Console console) {
+		this.console = console;
 	}
 
 }

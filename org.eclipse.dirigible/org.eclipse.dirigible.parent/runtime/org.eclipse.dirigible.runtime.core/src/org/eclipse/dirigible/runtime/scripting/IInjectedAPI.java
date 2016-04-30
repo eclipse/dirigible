@@ -277,4 +277,9 @@ public interface IInjectedAPI {
 	 */
 	public NamedDataSourcesUtils getNamedDatasources();
 
+	/**
+	 * The console object using the logger
+	 */
+	public Console getConsole();
+
 }

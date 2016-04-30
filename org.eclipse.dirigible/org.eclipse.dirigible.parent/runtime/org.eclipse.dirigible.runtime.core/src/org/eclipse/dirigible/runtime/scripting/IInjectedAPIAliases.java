@@ -7,6 +7,7 @@ public interface IInjectedAPIAliases {
 
 	// Object
 	public static final String EXECUTION_CONTEXT = "context"; //$NON-NLS-1$
+	public static final String CONSOLE = "console"; //$NON-NLS-1$
 	public static final String SYSTEM_OUTPUT = "out"; //$NON-NLS-1$
 	public static final String DEFAULT_DATASOURCE = "datasource"; //$NON-NLS-1$
 	public static final String HTTP_REQUEST = "request"; //$NON-NLS-1$

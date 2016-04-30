@@ -93,4 +93,6 @@ public interface IInjectedAPIModifiers {
 
 	public void setNamedDataSourcesUtils(NamedDataSourcesUtils namedDataSourceUtils);
 
+	public void setConsole(Console console);
+
 }

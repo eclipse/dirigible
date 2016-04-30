@@ -208,4 +208,9 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 		return builder.getNamedDatasources();
 	}
 
+	@Override
+	public Console getConsole() {
+		return builder.getConsole();
+	}
+
 }

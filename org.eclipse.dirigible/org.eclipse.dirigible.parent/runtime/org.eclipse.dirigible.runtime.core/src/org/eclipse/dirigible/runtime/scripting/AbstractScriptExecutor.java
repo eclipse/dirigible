@@ -111,6 +111,11 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		registerDefaultVariable(scope, IInjectedAPIAliases.EXECUTION_CONTEXT, executionContext);
 		apiBuilder.setExecutionContext(executionContext);
 
+		// put the console
+		Console console = new Console();
+		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONSOLE, console);
+		apiBuilder.setConsole(console);
+
 		// put the system out
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.SYSTEM_OUTPUT, System.out);
 		apiBuilder.setSystemOutput(System.out);
