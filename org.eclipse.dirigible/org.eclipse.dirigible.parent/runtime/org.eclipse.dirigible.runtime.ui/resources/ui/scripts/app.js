@@ -46,9 +46,9 @@ fileApp.config(function($routeProvider) {
 //    }).when('/scripting/groovy', {
 //      controller: 'GroovyCtrl',
 //      templateUrl: 'templates/scripting/groovy/groovy.html'
-    }).when('/scripting/java', {
-      controller: 'JavaCtrl',
-      templateUrl: 'templates/scripting/java/java.html'
+//    }).when('/scripting/java', {
+//      controller: 'JavaCtrl',
+//      templateUrl: 'templates/scripting/java/java.html'
     }).when('/scripting/command', {
       controller: 'CommandCtrl',
       templateUrl: 'templates/scripting/command/command.html'
@@ -282,12 +282,12 @@ menuControllers.controller('DiscoverCtrl', ['$scope',
         title: "JavaScript",
         description: "JavaScript Services Endpoints"
       }, {
-        image: "coffee",
-        color: 'lblue',
-        path: "#/scripting/java",
-        title: "Java",
-        description: "Java Services Endpoints"
-      }, {
+//        image: "coffee",
+//        color: 'lblue',
+//        path: "#/scripting/java",
+//        title: "Java",
+//        description: "Java Services Endpoints"
+//      }, {
         image: "database",
         color: 'lblue',
         path: "#/scripting/sql",

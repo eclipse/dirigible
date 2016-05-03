@@ -28,9 +28,6 @@
         "name": "JavaScript Services",
         "link": "#/scripting/javascript"
     }, {
-        "name": "Java Services",
-        "link": "#/scripting/java"
-    }, {
         "name": "SQL Services",
         "link": "#/scripting/sql"
     }, {

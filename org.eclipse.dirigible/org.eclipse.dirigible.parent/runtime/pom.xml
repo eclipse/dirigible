@@ -65,7 +65,7 @@
 		<module>org.eclipse.dirigible.runtime.security</module>
 		<module>org.eclipse.dirigible.runtime.web</module>
 		<module>org.eclipse.dirigible.runtime.wiki</module>
-		<module>org.eclipse.dirigible.runtime.java</module>
+		
 		<module>org.eclipse.dirigible.runtime.sql</module>
 		<!-- <module>org.eclipse.dirigible.runtime.java.test</module> -->
 		<!-- <module>org.eclipse.dirigible.runtime.groovy</module> -->
