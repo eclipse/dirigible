@@ -262,25 +262,25 @@ menuControllers.controller('DiscoverCtrl', ['$scope',
         color: 'yellow',
         path: "#/web/content",
         title: "Web",
-        description: "Browse Applications User Interfaces"
+        description: "Browse User Interfaces"
       }, {
         image: "book",
         color: 'yellow',
         path: "#/web/wiki",
         title: "Wiki",
-        description: "Browse Applications Documentation"
+        description: "Browse Documentation"
       }, {
         image: "mobile-phone",
         color: 'blue',
         path: "#/mobile",
         title: "Mobile",
-        description: "Native Mobile Applications"
+        description: "Native Mobile Apps"
       }, {
         image: "file-code-o",
         color: 'lblue',
         path: "#/scripting/javascript",
         title: "JavaScript",
-        description: "JavaScript Services Endpoints"
+        description: "JavaScript Services"
       }, {
 //        image: "coffee",
 //        color: 'lblue',
@@ -292,37 +292,38 @@ menuControllers.controller('DiscoverCtrl', ['$scope',
         color: 'lblue',
         path: "#/scripting/sql",
         title: "SQL",
-        description: "SQL Services Endpoints"
+        description: "SQL Services"
       }, {
         image: "gear",
         color: 'lblue',
         path: "#/scripting/command",
         title: "Command",
-        description: "Command Services Endpoints"
+        description: "Command Services"
       }, {
         image: "caret-square-o-right",
         color: 'orange',
         path: "#/integration/flow",
         title: "Flows",
-        description: "Flow Integration Services"
-      }, {
-        image: "clock-o",
-        color: 'orange',
-        path: "#/integration/job",
-        title: "Jobs",
-        description: "Job Integration Services"
-      }, {
-    	image: "phone",
-	    color: 'orange',
-	    path: "#/integration/listener",
-	    title: "Listeners",
-	    description: "Listener Integration Services"
-	  }, {
-        image: "flash",
-        color: 'purple',
-        path: "#/scripting/tests",
-        title: "Tests",
-        description: "Test Cases Endpoints"
+        description: "Integration Flows"
+//      }
+//      , {
+//        image: "clock-o",
+//        color: 'orange',
+//        path: "#/integration/job",
+//        title: "Jobs",
+//        description: "Job Integration Services"
+//      }, {
+//    	image: "phone",
+//	    color: 'orange',
+//	    path: "#/integration/listener",
+//	    title: "Listeners",
+//	    description: "Listener Integration Services"
+//	  }, {
+//        image: "flash",
+//        color: 'purple',
+//        path: "#/scripting/tests",
+//        title: "Tests",
+//        description: "Test Cases"
       }];
     }
   ]);

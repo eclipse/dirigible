@@ -34,7 +34,7 @@
         "name": "Command Services",
         "link": "#/scripting/command"
     }, {
-        "name": "Test Services",
+        "name": "Test Cases",
         "link": "#/scripting/tests"
     }, {
         "name": "Flows",
