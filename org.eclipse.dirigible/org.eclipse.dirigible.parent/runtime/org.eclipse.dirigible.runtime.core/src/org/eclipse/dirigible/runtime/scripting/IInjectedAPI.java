@@ -231,6 +231,15 @@ public interface IInjectedAPI {
 	public DbUtils getDatabaseUtils();
 
 	/**
+	 * Getter for the Database Utilities for DataSource
+	 * 
+	 * @param dataSource
+	 *            the datasource assigned to this utils
+	 * @return the Database Utilities
+	 */
+	public DbUtils getDatabaseUtils(DataSource dataSource);
+
+	/**
 	 * Getter for the XSS Utilities
 	 *
 	 * @return the XSS Utilities

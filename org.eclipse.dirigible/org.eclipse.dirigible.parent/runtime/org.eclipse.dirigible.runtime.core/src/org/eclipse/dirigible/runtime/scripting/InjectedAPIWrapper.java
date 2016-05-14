@@ -169,6 +169,11 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 	}
 
 	@Override
+	public DbUtils getDatabaseUtils(DataSource dataSource) {
+		return builder.getDatabaseUtils(dataSource);
+	}
+
+	@Override
 	public StringEscapeUtils getXssUtils() {
 		return builder.getXssUtils();
 	}

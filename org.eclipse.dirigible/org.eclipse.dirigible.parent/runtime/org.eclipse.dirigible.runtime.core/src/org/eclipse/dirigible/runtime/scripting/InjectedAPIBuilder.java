@@ -508,4 +508,9 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 		this.console = console;
 	}
 
+	@Override
+	public DbUtils getDatabaseUtils(DataSource dataSource) {
+		return new DbUtils(dataSource);
+	}
+
 }
