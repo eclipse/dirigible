@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.scripting.utils;
@@ -20,7 +19,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.naming.NamingException;
@@ -30,8 +31,14 @@ import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.AbstractStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.EStorageException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
 
 public class ConfigStorageUtils extends AbstractStorageUtils {
+
+	private static final Gson GSON = new Gson();
 
 	public static final String NO_PROPERTY_FOUND_ON_PATH = "No property found on path ";
 
@@ -44,31 +51,26 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 	private static final String CONFIG_STORAGE_DATA = "CONFIG_STORAGE_DATA";
 	private static final String CONFIG_STORAGE_TIMESTAMP = "CONFIG_STORAGE_TIMESTAMP";
 
-	private static final String INSERT_INTO_DGB_CONFIG_STORAGE = "INSERT INTO "
-			+ DGB_CONFIG_STORAGE + " (" + CONFIG_STORAGE_PATH + ", " + CONFIG_STORAGE_DATA + ", "
-			+ CONFIG_STORAGE_TIMESTAMP + ")" + "VALUES (?,?,?)";
+	private static final String INSERT_INTO_DGB_CONFIG_STORAGE = "INSERT INTO " + DGB_CONFIG_STORAGE + " (" + CONFIG_STORAGE_PATH + ", "
+			+ CONFIG_STORAGE_DATA + ", " + CONFIG_STORAGE_TIMESTAMP + ")" + "VALUES (?,?,?)";
 
-	private static final String UPDATE_DGB_CONFIG_STORAGE = "UPDATE " + DGB_CONFIG_STORAGE
-			+ " SET " + CONFIG_STORAGE_PATH + " = ?, " + CONFIG_STORAGE_DATA + " = ?, "
-			+ CONFIG_STORAGE_TIMESTAMP + " = ?";
+	// private static final String UPDATE_DGB_CONFIG_STORAGE = "UPDATE " + DGB_CONFIG_STORAGE + " SET " +
+	// CONFIG_STORAGE_PATH + " = ?, "
+	// + CONFIG_STORAGE_DATA + " = ?, " + CONFIG_STORAGE_TIMESTAMP + " = ?";
 
 	private static final String DELETE_DGB_CONFIG_STORAGE = "DELETE FROM " + DGB_CONFIG_STORAGE;
 
-	private static final String DELETE_DGB_STORAGE_PATH = "DELETE FROM " + DGB_CONFIG_STORAGE
-			+ " WHERE " + CONFIG_STORAGE_PATH + " = ?";
+	private static final String DELETE_DGB_STORAGE_PATH = "DELETE FROM " + DGB_CONFIG_STORAGE + " WHERE " + CONFIG_STORAGE_PATH + " = ?";
 
-	private static final String CREATE_TABLE_DGB_CONFIG_STORAGE = "CREATE TABLE "
-			+ DGB_CONFIG_STORAGE + " (" + CONFIG_STORAGE_PATH + " $KEY_VARCHAR$ PRIMARY KEY, "
-			+ CONFIG_STORAGE_DATA + " $BLOB$, " + CONFIG_STORAGE_TIMESTAMP + " TIMESTAMP" + " )";
+	private static final String CREATE_TABLE_DGB_CONFIG_STORAGE = "CREATE TABLE " + DGB_CONFIG_STORAGE + " (" + CONFIG_STORAGE_PATH
+			+ " $KEY_VARCHAR$ PRIMARY KEY, " + CONFIG_STORAGE_DATA + " $BLOB$, " + CONFIG_STORAGE_TIMESTAMP + " TIMESTAMP" + " )";
 
-	private static final String SELECT_COUNT_FROM_DGB_CONFIG_STORAGE = "SELECT COUNT(*) FROM "
-			+ DGB_CONFIG_STORAGE;
+	private static final String SELECT_COUNT_FROM_DGB_CONFIG_STORAGE = "SELECT COUNT(*) FROM " + DGB_CONFIG_STORAGE;
 
-	private static final String SELECT_DGB_CONFIG_STORAGE = "SELECT * FROM " + DGB_CONFIG_STORAGE
-			+ " WHERE " + CONFIG_STORAGE_PATH + " = ?";
+	private static final String SELECT_DGB_CONFIG_STORAGE = "SELECT * FROM " + DGB_CONFIG_STORAGE + " WHERE " + CONFIG_STORAGE_PATH + " = ?";
 
-	private static final String SELECT_DGB_CONFIG_STORAGE_EXISTS = "SELECT " + CONFIG_STORAGE_PATH
-			+ " FROM " + DGB_CONFIG_STORAGE + " WHERE " + CONFIG_STORAGE_PATH + " = ?";
+	private static final String SELECT_DGB_CONFIG_STORAGE_EXISTS = "SELECT " + CONFIG_STORAGE_PATH + " FROM " + DGB_CONFIG_STORAGE + " WHERE "
+			+ CONFIG_STORAGE_PATH + " = ?";
 
 	public ConfigStorageUtils(DataSource dataSource) {
 		super(dataSource);
@@ -78,28 +80,28 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 		super.checkDB(SELECT_COUNT_FROM_DGB_CONFIG_STORAGE, CREATE_TABLE_DGB_CONFIG_STORAGE);
 	}
 
+	@Override
 	public boolean exists(String path) throws EStorageException {
 		try {
-			return super.exists(path, SELECT_DGB_CONFIG_STORAGE_EXISTS,
-					SELECT_COUNT_FROM_DGB_CONFIG_STORAGE, CREATE_TABLE_DGB_CONFIG_STORAGE);
+			return super.exists(path, SELECT_DGB_CONFIG_STORAGE_EXISTS, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE, CREATE_TABLE_DGB_CONFIG_STORAGE);
 		} catch (SQLException e) {
 			throw new EStorageException(e);
 		}
 	}
 
+	@Override
 	public void clear() throws EStorageException {
 		try {
-			super.clear(DELETE_DGB_CONFIG_STORAGE, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE,
-					CREATE_TABLE_DGB_CONFIG_STORAGE);
+			super.clear(DELETE_DGB_CONFIG_STORAGE, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE, CREATE_TABLE_DGB_CONFIG_STORAGE);
 		} catch (SQLException e) {
 			throw new EStorageException(e);
 		}
 	}
 
+	@Override
 	public void delete(String path) throws EStorageException {
 		try {
-			super.delete(path, DELETE_DGB_STORAGE_PATH, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE,
-					CREATE_TABLE_DGB_CONFIG_STORAGE);
+			super.delete(path, DELETE_DGB_STORAGE_PATH, SELECT_COUNT_FROM_DGB_CONFIG_STORAGE, CREATE_TABLE_DGB_CONFIG_STORAGE);
 		} catch (SQLException e) {
 			throw new EStorageException(e);
 		}
@@ -125,7 +127,9 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 			checkDB();
 
 			if (exists(path)) {
-				update(path, data);
+				delete(path);
+				insert(path, data);
+				// update(path, data);
 			} else {
 				insert(path, data);
 			}
@@ -178,26 +182,26 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 		}
 	}
 
-	private void update(String path, byte[] data) throws SQLException {
-		DataSource dataSource = this.dataSource;
-		Connection connection = null;
-		try {
-			connection = dataSource.getConnection();
-			PreparedStatement pstmt = connection.prepareStatement(UPDATE_DGB_CONFIG_STORAGE);
-
-			int i = 0;
-			pstmt.setString(++i, path);
-			pstmt.setBinaryStream(++i, new ByteArrayInputStream(data), data.length);
-			pstmt.setTimestamp(++i, new Timestamp(GregorianCalendar.getInstance().getTime().getTime()));
-
-			pstmt.executeUpdate();
-
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
-	}
+	// private void update(String path, byte[] data) throws SQLException {
+	// DataSource dataSource = this.dataSource;
+	// Connection connection = null;
+	// try {
+	// connection = dataSource.getConnection();
+	// PreparedStatement pstmt = connection.prepareStatement(UPDATE_DGB_CONFIG_STORAGE);
+	//
+	// int i = 0;
+	// pstmt.setString(++i, path);
+	// pstmt.setBinaryStream(++i, new ByteArrayInputStream(data), data.length);
+	// pstmt.setTimestamp(++i, new Timestamp(GregorianCalendar.getInstance().getTime().getTime()));
+	//
+	// pstmt.executeUpdate();
+	//
+	// } finally {
+	// if (connection != null) {
+	// connection.close();
+	// }
+	// }
+	// }
 
 	public Object getProperty(String path, Object key) throws EStorageException {
 		Properties properties = getProperties(path);
@@ -207,7 +211,6 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 		return properties.get(key);
 	}
 
-	// Retrieve photo data from the cache
 	public Properties getProperties(String path) throws EStorageException {
 		try {
 			checkDB();
@@ -252,12 +255,46 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 		} catch (IOException e) {
 			throw new EStorageException(e);
 		}
-		
+
+	}
+
+	public void putJson(String path, String json) throws EStorageException {
+		try {
+			Properties properties = new Properties();
+			JSONObject jsonData = new JSONObject(json);
+			Iterator keys = jsonData.keys();
+			while (keys.hasNext()) {
+				String key = new String(keys.next().toString());
+				String value = new String(jsonData.get(key).toString());
+				properties.setProperty(key, value);
+			}
+			putProperties(path, properties);
+		} catch (JSONException e) {
+			throw new EStorageException(e);
+		}
+	}
+
+	public String getJson(String path) throws EStorageException {
+		try {
+			JSONObject jsonObject = new JSONObject();
+			Properties properties = getProperties(path);
+			if (properties != null) {
+				Enumeration keys = properties.keys();
+				while (keys.hasMoreElements()) {
+					String key = keys.nextElement().toString();
+					String value = properties.getProperty(key);
+					jsonObject.put(key, value);
+				}
+				return jsonObject.toString();
+			}
+		} catch (JSONException e) {
+			throw new EStorageException(e);
+		}
+		return null;
 	}
 
 	@Override
-	public void put(String path, byte[] data, String contentType)
-			throws EStorageException {
+	public void put(String path, byte[] data, String contentType) throws EStorageException {
 		put(path, data);
 	}
 

@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.scripts;
@@ -19,18 +18,19 @@ import static org.junit.Assert.fail;
 import java.security.InvalidParameterException;
 import java.util.Properties;
 
+import org.eclipse.dirigible.runtime.scripting.AbstractStorageUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
+import org.eclipse.dirigible.runtime.utils.DataSourceUtils;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.eclipse.dirigible.runtime.scripting.AbstractStorageUtils;
-import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
-import org.eclipse.dirigible.runtime.utils.DataSourceUtils;
-
 public class ConfigStorageUtilsTest {
 
 	private static final String PATH = "/a/b/c";
+	private static final String PATH2 = "/a/b/c/json";
 	private static final String KEY = "Key";
 	private static final String VALUE1 = "Value1";
 	private static final String VALUE2 = "Value2";
@@ -47,8 +47,7 @@ public class ConfigStorageUtilsTest {
 		properties.put(KEY, VALUE1);
 
 		tooBigProperties = new Properties();
-		tooBigProperties.put(KEY, new String(
-				new byte[AbstractStorageUtils.MAX_STORAGE_FILE_SIZE_IN_BYTES + 1]));
+		tooBigProperties.put(KEY, new String(new byte[AbstractStorageUtils.MAX_STORAGE_FILE_SIZE_IN_BYTES + 1]));
 
 		otherProperties = new Properties();
 		otherProperties.put(KEY, VALUE2);
@@ -76,7 +75,7 @@ public class ConfigStorageUtilsTest {
 		configStorage.putProperty(PATH, KEY, VALUE2);
 		assertEquals(VALUE2, configStorage.getProperty(PATH, KEY));
 	}
-	
+
 	@Test
 	public void testPutPropertyNotInStorage() throws Exception {
 		configStorage.putProperty(PATH, KEY, VALUE1);
@@ -131,5 +130,15 @@ public class ConfigStorageUtilsTest {
 		configStorage.putProperties(PATH, properties);
 		configStorage.putProperties(PATH, otherProperties);
 		assertEquals(otherProperties, configStorage.getProperties(PATH));
+	}
+
+	@Test
+	public void testPutJson() throws Exception {
+		String json = "{\"key1\":\"value1\",\"key2\":\"value2\"}";
+		configStorage.putJson(PATH2, json);
+		System.out.println(configStorage.getJson(PATH2));
+		JSONObject jsonData = new JSONObject(configStorage.getJson(PATH2));
+		assertEquals("value1", jsonData.get("key1"));
+		assertEquals("value2", jsonData.get("key2"));
 	}
 }
