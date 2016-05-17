@@ -19,7 +19,6 @@ import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.debug.DebugManager;
 import org.eclipse.dirigible.repository.ext.debug.DebugModel;
 import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
-import org.eclipse.dirigible.repository.ext.debug.IDebugExecutor.DebugCommand;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -130,27 +129,15 @@ public class WebSocketDebugSessionServletInternal {
 		}
 	}
 
-	public static void debugActionPerformedOnSession(String userId, DebugCommand command) {
-		if (command == null) {
-			return;
-		}
-		switch (command) {
-			case CONTINUE:
-			case SKIP_ALL_BREAKPOINTS:
-				clearCurrentSession(userId);
-				break;
-			case PAUSE:
-			case STEPINTO:
-			case STEPOVER:
-			default:
-				break;
-		}
-	}
-
 	public static void clearCurrentSession(String userId) {
 		DebugModel debugModel = DebugManager.getDebugModel(userId);
 		DebugSessionModel currentSession = debugModel.getActiveSession();
 		debugModel.removeSession(currentSession);
+		List<DebugSessionModel> sessions = debugModel.getSessions();
+		if(!sessions.isEmpty()){
+			debugModel.setActiveSession(sessions.get(0));
+		}
+		DebugManager.registerDebugModel(userId, debugModel);		
 		sendCurrentDebugModelSessionsToUser(userId, debugModel);
 	}
 

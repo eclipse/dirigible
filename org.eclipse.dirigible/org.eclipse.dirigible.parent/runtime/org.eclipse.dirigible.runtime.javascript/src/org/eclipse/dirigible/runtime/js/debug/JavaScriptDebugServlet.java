@@ -20,6 +20,8 @@ import org.eclipse.dirigible.ide.bridge.DirigibleBridge;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.debug.DebugManager;
 import org.eclipse.dirigible.repository.ext.debug.DebugModel;
+import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
+import org.eclipse.dirigible.repository.ext.debug.IDebugExecutor.DebugCommand;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.js.JavaScriptServlet;
