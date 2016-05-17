@@ -36,7 +36,6 @@ import org.eclipse.dirigible.repository.ext.debug.DebugModelFacade;
 import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
 import org.eclipse.dirigible.repository.ext.debug.LinebreakMetadata;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.js.debug.WebSocketDebugSessionServletInternal;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -412,7 +411,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 			// refresh(session);
 			return;
 		}
-
 		final Display display = PlatformUI.createDisplay();
 		final ServerPushSession pushSession = new ServerPushSession();
 		Runnable backGroundRunnable = new Runnable() {
@@ -480,8 +478,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		Thread backGroundThread = new Thread(backGroundRunnable);
 		backGroundThread.setDaemon(true);
 		backGroundThread.start();
-
-		WebSocketDebugSessionServletInternal.debugActionPerformedOnSession(CommonParameters.getUserName(), session.getDebugExecutor().getCommand());
 	}
 
 	@Override
