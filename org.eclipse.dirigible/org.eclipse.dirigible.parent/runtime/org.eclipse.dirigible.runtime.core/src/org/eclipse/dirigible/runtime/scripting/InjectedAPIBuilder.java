@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.runtime.scripting;
 
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -164,7 +165,7 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	/**
 	 * The generic map for custom object and services registered via the extension point
 	 */
-	private Map<String, Object> generic = new HashMap<String, Object>();
+	private static final Map<String, Object> generic = Collections.synchronizedMap(new HashMap<String, Object>());
 
 	private NamedDataSourcesUtils namedDataSourceUtils;
 

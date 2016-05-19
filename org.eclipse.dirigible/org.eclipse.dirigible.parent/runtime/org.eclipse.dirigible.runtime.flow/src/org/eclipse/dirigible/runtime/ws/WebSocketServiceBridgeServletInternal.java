@@ -20,8 +20,8 @@ public class WebSocketServiceBridgeServletInternal {
 
 	private static final Logger logger = Logger.getLogger(WebSocketServiceBridgeServletInternal.class);
 
-	private static final String PARAM_SESSION = "wsSession";
-	private static final String PARAM_SESSIONS = "wsSessions";
+	private static final String PARAM_SESSION = "websocket-session";
+	private static final String PARAM_SESSIONS = "websocket-sessions";
 
 	public static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
 

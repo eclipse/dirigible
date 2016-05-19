@@ -11,7 +11,10 @@
 /* globals $ javax */
 /* eslint-env node, dirigible */
 
-exports.httpClient = require('api/http/client');
-exports.request = require('api/http/request');
-exports.response = require('api/http/response');
-exports.session = require('api/http/session');
+exports.get = function(key) {
+	return $.getExecutionContext().get(key);
+};
+
+exports.set = function(key, value) {
+	$.getExecutionContext().set(key, value);
+};
