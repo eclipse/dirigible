@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Dirigible - IDE - Publish Test
 Bundle-SymbolicName: org.eclipse.dirigible.ide.publish.test
 Fragment-Host: org.eclipse.dirigible.ide.publish
-Bundle-Version: 2.3.160317
+Bundle-Version: 2.4.160519
 Bundle-Vendor: SAP
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,

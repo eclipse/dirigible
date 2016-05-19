@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dirigible.ide.feature"
       label="Dirigible IDE Bundles Feature"
-      version="2.3.160317"
+      version="2.4.160519"
       provider-name="Eclipse.org - Dirigible">
 
    <description url="http://www.dirigible.io/">
