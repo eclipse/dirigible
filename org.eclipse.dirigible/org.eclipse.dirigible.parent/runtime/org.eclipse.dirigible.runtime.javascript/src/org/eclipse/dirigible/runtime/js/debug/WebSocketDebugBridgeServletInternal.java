@@ -84,4 +84,18 @@ public class WebSocketDebugBridgeServletInternal {
 			logger.error(e1.getMessage(), e1);
 		}
 	}
+
+	public void closeAll() {
+		for (List<Session> openSessions : openUserSessions.values()) {
+			for (Session session : openSessions) {
+				try {
+					synchronized (session) {
+						session.close();
+					}
+				} catch (Throwable e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+	}
 }

@@ -134,10 +134,10 @@ public class WebSocketDebugSessionServletInternal {
 		DebugSessionModel currentSession = debugModel.getActiveSession();
 		debugModel.removeSession(currentSession);
 		List<DebugSessionModel> sessions = debugModel.getSessions();
-		if(!sessions.isEmpty()){
+		if (!sessions.isEmpty()) {
 			debugModel.setActiveSession(sessions.get(0));
 		}
-		DebugManager.registerDebugModel(userId, debugModel);		
+		DebugManager.registerDebugModel(userId, debugModel);
 		sendCurrentDebugModelSessionsToUser(userId, debugModel);
 	}
 
@@ -148,4 +148,19 @@ public class WebSocketDebugSessionServletInternal {
 			this.sessionId = sessionId;
 		}
 	}
+
+	public void closeAll() {
+		for (List<Session> openSessions : openUserSessions.values()) {
+			for (Session session : openSessions) {
+				try {
+					synchronized (session) {
+						session.close();
+					}
+				} catch (Throwable e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+	}
+
 }
