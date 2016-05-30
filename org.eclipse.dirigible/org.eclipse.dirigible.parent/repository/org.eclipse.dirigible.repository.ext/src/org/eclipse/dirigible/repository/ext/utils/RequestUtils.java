@@ -48,6 +48,13 @@ public class RequestUtils {
 			if (session != null) {
 				if (session.getUserPrincipal() != null) {
 					user = session.getUserPrincipal().getName();
+				} else {
+					if (!isRolesEnabled()) {
+						String fromProps = (String) session.getUserProperties().get("user");
+						if (fromProps != null) {
+							user = fromProps;
+						}
+					}
 				}
 			}
 		} catch (Exception e) {

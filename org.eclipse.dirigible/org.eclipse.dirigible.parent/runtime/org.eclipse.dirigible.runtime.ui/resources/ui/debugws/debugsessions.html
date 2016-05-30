@@ -15,8 +15,10 @@
 		
 		var connectToDebug = function() {
 			try {
-				socket = new WebSocket(((location.protocol === 'https:') ? "wss://" : "ws://") 
-						+ window.location.host + "/debugsessions");
+				var user = getCookie("dirigible_anonymous_user");
+				user_param =  user ? "/" + user : "";
+				var protocol = ((location.protocol === 'https:') ? "wss://" : "ws://");
+				socket = new WebSocket(protocol	+ window.location.host + "/debugsessions" + user_param);
 			} catch(e) {
 				document.writeln("<div style='background-color: lightgray; font-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
 				
@@ -58,6 +60,22 @@
 				setActiveSession(0);
 			}
 		}
+		
+		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i];
+		        while (c.charAt(0)==' ') {
+		            c = c.substring(1);
+		        }
+		        if (c.indexOf(name) == 0) {
+		            return c.substring(name.length, c.length);
+		        }
+		    }
+		    return "";
+		}
+		
 	</script>
 	
     <div>

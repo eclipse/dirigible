@@ -11,12 +11,13 @@ import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ServerEndpoint("/debugsessions")
+@ServerEndpoint("/debugsessions/{user}")
 public class WebSocketDebugSessionsBridgeServlet {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebSocketDebugBridgeServlet.class);
@@ -24,8 +25,11 @@ public class WebSocketDebugSessionsBridgeServlet {
 	private static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
 
 	@OnOpen
-	public void onOpen(Session session) throws IOException {
+	public void onOpen(Session session, @PathParam("user") String user) throws IOException {
 		openSessions.put(session.getId(), session);
+		if (user != null) {
+			session.getUserProperties().put("user", user);
+		}
 		callInternal("onOpen", session, null);
 	}
 
