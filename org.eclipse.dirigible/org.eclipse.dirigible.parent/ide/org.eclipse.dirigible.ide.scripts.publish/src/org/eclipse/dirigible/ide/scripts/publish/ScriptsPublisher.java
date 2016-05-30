@@ -18,7 +18,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -53,21 +53,21 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 		// put your extension here...
 
 		// URL container per extension - publish
-		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT, CommonParameters.JAVASCRIPT_CONTAINER_MAPPING);
-		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.RUBY, CommonParameters.RUBY_CONTAINER_MAPPING);
-		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.GROOVY, CommonParameters.GROOVY_CONTAINER_MAPPING);
-		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVA, CommonParameters.JAVA_CONTAINER_MAPPING);
-		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.COMMAND, CommonParameters.COMMAND_CONTAINER_MAPPING);
-		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.SQL, CommonParameters.SQL_CONTAINER_MAPPING);
+		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT, CommonIDEParameters.JAVASCRIPT_CONTAINER_MAPPING);
+		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.RUBY, CommonIDEParameters.RUBY_CONTAINER_MAPPING);
+		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.GROOVY, CommonIDEParameters.GROOVY_CONTAINER_MAPPING);
+		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVA, CommonIDEParameters.JAVA_CONTAINER_MAPPING);
+		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.COMMAND, CommonIDEParameters.COMMAND_CONTAINER_MAPPING);
+		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.SQL, CommonIDEParameters.SQL_CONTAINER_MAPPING);
 		// put your mapping here...
 
 		// URL container per extension - activate
-		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT, CommonParameters.JAVASCRIPT_SANDBOX_MAPPING);
-		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.RUBY, CommonParameters.RUBY_SANDBOX_MAPPING);
-		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.GROOVY, CommonParameters.GROOVY_SANDBOX_MAPPING);
-		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVA, CommonParameters.JAVA_SANDBOX_MAPPING);
-		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.COMMAND, CommonParameters.COMMAND_SANDBOX_MAPPING);
-		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.SQL, CommonParameters.SQL_SANDBOX_MAPPING);
+		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT, CommonIDEParameters.JAVASCRIPT_SANDBOX_MAPPING);
+		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.RUBY, CommonIDEParameters.RUBY_SANDBOX_MAPPING);
+		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.GROOVY, CommonIDEParameters.GROOVY_SANDBOX_MAPPING);
+		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVA, CommonIDEParameters.JAVA_SANDBOX_MAPPING);
+		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.COMMAND, CommonIDEParameters.COMMAND_SANDBOX_MAPPING);
+		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.SQL, CommonIDEParameters.SQL_SANDBOX_MAPPING);
 		// put your mapping here...
 	}
 
@@ -104,7 +104,7 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 	@Override
 	public void activate(IProject project) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(CommonParameters.getScriptingContentSandbox());
+			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getScriptingContentSandbox());
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES);
 			copyAllFromTo(sourceFolder, targetContainer);
 		} catch (Exception ex) {
@@ -158,13 +158,13 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	protected String getSandboxLocation() {
-		return CommonParameters.getScriptingContentSandbox();
+		return CommonIDEParameters.getScriptingContentSandbox();
 	}
 
 	@Override
 	public String getDebugEndpoint(IFile file) {
 		if (ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT.equals(file.getFileExtension())) {
-			return CommonParameters.getServicesUrl() + CommonParameters.JAVASCRIPT_DEBUG_CONTAINER_MAPPING + generatePublishedPath(file);
+			return CommonIDEParameters.getServicesUrl() + CommonIDEParameters.JAVASCRIPT_DEBUG_CONTAINER_MAPPING + generatePublishedPath(file);
 		}
 		return null;
 	}

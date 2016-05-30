@@ -13,7 +13,7 @@ package org.eclipse.dirigible.ide.workspace;
 
 import org.eclipse.core.resources.IWorkspace;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.workspace.impl.Workspace;
 
 /**
@@ -50,7 +50,7 @@ public class RemoteResourcesPlugin {
 	}
 
 	public static String getUserName() {
-		return CommonParameters.getUserName();
+		return CommonIDEParameters.getUserName();
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class RemoteResourcesPlugin {
 	 * @return a {@link Workspace} instance.
 	 */
 	public static IWorkspace getWorkspace(String user) {
-		CommonParameters.initSystemParameters();
-		Workspace workspace = (Workspace) CommonParameters.getObject(Workspace.class.getCanonicalName());
+		CommonIDEParameters.initSystemParameters();
+		Workspace workspace = (Workspace) CommonIDEParameters.getObject(Workspace.class.getCanonicalName());
 		if (workspace == null) {
 			workspace = new Workspace();
 		}
@@ -91,7 +91,7 @@ public class RemoteResourcesPlugin {
 	 * @return an {@link IWorkspace} instance.
 	 */
 	public static IWorkspace getSharedWorkspace() {
-		return getWorkspace(CommonParameters.getUserName());
+		return getWorkspace(CommonIDEParameters.getUserName());
 	}
 
 }

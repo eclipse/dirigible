@@ -14,7 +14,7 @@ package org.eclipse.dirigible.ide.repository;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.ext.conf.IConfigurationStore;
 
 public class RepositoryUserPreferenceStore extends
@@ -30,14 +30,14 @@ public class RepositoryUserPreferenceStore extends
 	@Override
 	protected byte[] loadSettings(IConfigurationStore configurationStorage)
 			throws IOException {
-		byte[] bytes = configurationStorage.getUserSettingsAsBytes(getPath(), getName(), CommonParameters.getUserName());
+		byte[] bytes = configurationStorage.getUserSettingsAsBytes(getPath(), getName(), CommonIDEParameters.getUserName());
 		return bytes;
 	}
 
 
 	@Override
 	protected void saveSettingd(ByteArrayOutputStream baos) throws IOException {
-		getConfigurationStore().setUserSettingsAsBytes(getPath(), getName(), baos.toByteArray(), CommonParameters.getUserName());
+		getConfigurationStore().setUserSettingsAsBytes(getPath(), getName(), baos.toByteArray(), CommonIDEParameters.getUserName());
 	}
 
 

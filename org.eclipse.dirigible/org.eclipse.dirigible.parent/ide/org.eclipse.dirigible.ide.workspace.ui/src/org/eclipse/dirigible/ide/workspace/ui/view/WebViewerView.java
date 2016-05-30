@@ -16,7 +16,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishManager;
 import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
@@ -103,7 +103,7 @@ public class WebViewerView extends ViewPart {
 	public WebViewerView() {
 		super();
 		resourceManager = new LocalResourceManager(JFaceResources.getResources());
-		isSandbox = CommonParameters.isSandboxEnabled();
+		isSandbox = CommonIDEParameters.isSandboxEnabled();
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class WebViewerView extends ViewPart {
 		holder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		holder.setLayout(new GridLayout(4, false));
 
-		if (CommonParameters.isSandboxEnabled()) {
+		if (CommonIDEParameters.isSandboxEnabled()) {
 			createSandboxToggleButton(holder);
 		}
 		// createOpenInNewTabButton(holder);
@@ -324,7 +324,7 @@ public class WebViewerView extends ViewPart {
 			return;
 		}
 		try {
-			HttpServletRequest request = CommonParameters.getRequest();
+			HttpServletRequest request = CommonIDEParameters.getRequest();
 			if (request != null) {
 				updateByUrl(text, request);
 			} else {

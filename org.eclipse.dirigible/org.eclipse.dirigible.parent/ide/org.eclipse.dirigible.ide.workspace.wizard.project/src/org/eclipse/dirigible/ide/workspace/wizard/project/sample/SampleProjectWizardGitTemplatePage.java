@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.image.ImageUtils;
 import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
 import org.eclipse.dirigible.ide.workspace.ui.shared.IValidationStatus;
@@ -257,7 +257,7 @@ public class SampleProjectWizardGitTemplatePage extends WizardPage {
 
 	private static void doClone(File gitDirectory) {
 		try {
-			JGitConnector.cloneRepository(gitDirectory, CommonParameters.GIT_REPOSITORY_URL);
+			JGitConnector.cloneRepository(gitDirectory, CommonIDEParameters.GIT_REPOSITORY_URL);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

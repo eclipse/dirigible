@@ -12,7 +12,7 @@ package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
 import java.util.Random;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.db.export.DataExportDialog;
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
@@ -94,7 +94,7 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 					if (selectedTableName != null) {
 						model.setTableName(selectedTableName.getName());
 
-						DBTableExporter dataFinder = new DBTableExporter(DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()));
+						DBTableExporter dataFinder = new DBTableExporter(DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()));
 						dataFinder.setTableName(selectedTableName.getName());
 						dataFinder.getTableData();
 

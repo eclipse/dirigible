@@ -10,7 +10,7 @@
 
 package org.eclipse.dirigible.ide.debug.ui;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -25,7 +25,7 @@ public class SessionsWSView extends Viewer {
 	private static String DEBUG_SESSIONS_LOCATION;
 
 	static {
-		DEBUG_SESSIONS_LOCATION = ((CommonParameters.getRuntimeUrl() == null) || "".equals(CommonParameters.getRuntimeUrl()))
+		DEBUG_SESSIONS_LOCATION = ((CommonIDEParameters.getRuntimeUrl() == null) || "".equals(CommonIDEParameters.getRuntimeUrl()))
 				? "/ui/debugws/debugsessions.html" : "/services/ui/debugws/debugsessions.html";
 	}
 

@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.jgit.command.ui.CloneCommandDialog;
@@ -77,7 +77,7 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 	private void cloneGitRepository(final String repositoryURI, final String username, final String password) {
 		File gitDirectory = null;
 		try {
-			String user = CommonParameters.getUserName();
+			String user = CommonIDEParameters.getUserName();
 			String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SLASH) + 1, repositoryURI.lastIndexOf(DOT_GIT));
 			gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 

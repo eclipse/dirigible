@@ -14,12 +14,12 @@ package org.eclipse.dirigible.ide.workspace.dual;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 
 public class WorkspaceLocator {
 
 	public static IWorkspace getWorkspace() {
-		CommonParameters.initSystemParameters();
+		CommonIDEParameters.initSystemParameters();
 		return ResourcesPlugin.getWorkspace();
 	}
 	

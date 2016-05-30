@@ -13,7 +13,7 @@ package org.eclipse.dirigible.ide.mobile.publish;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -39,7 +39,7 @@ public class MobilePublisher extends AbstractPublisher implements IPublisher {
 	@Override
 	public void activate(IProject project) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(CommonParameters.getMobileApplicationsSandbox());
+			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getMobileApplicationsSandbox());
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS);
 			copyAllFromTo(sourceFolder, targetContainer);
 		} catch (Exception ex) {
@@ -49,7 +49,7 @@ public class MobilePublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	protected String getSandboxLocation() {
-		return CommonParameters.getMobileApplicationsSandbox();
+		return CommonIDEParameters.getMobileApplicationsSandbox();
 	}
 
 	@Override
@@ -65,12 +65,12 @@ public class MobilePublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	public String getPublishedContainerMapping(IFile file) {
-		return CommonParameters.MOBILE_APPLICATIONS_CONTAINER_MAPPING;
+		return CommonIDEParameters.MOBILE_APPLICATIONS_CONTAINER_MAPPING;
 	}
 
 	@Override
 	public String getActivatedContainerMapping(IFile file) {
-		return CommonParameters.MOBILE_APPLICATIONS_SANDBOX_MAPPING;
+		return CommonIDEParameters.MOBILE_APPLICATIONS_SANDBOX_MAPPING;
 	}
 
 	@Override

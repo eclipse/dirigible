@@ -23,8 +23,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
 import org.eclipse.dirigible.ide.publish.PublishManager;
@@ -37,6 +36,7 @@ import org.eclipse.dirigible.ide.workspace.wizard.project.create.Messages;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class GetStartedProjectWizardModel {
@@ -162,7 +162,7 @@ public class GetStartedProjectWizardModel {
 
 	private void generateAndStoreArtifact(IProject project, String resource, String folder) {
 		InputStream in = GetStartedProjectWizardModel.class.getResourceAsStream(resource);
-		String user = CommonParameters.getUserName();
+		String user = CommonIDEParameters.getUserName();
 		user = user.toLowerCase();
 		try {
 			String content = IOUtils.toString(in, "UTF-8");

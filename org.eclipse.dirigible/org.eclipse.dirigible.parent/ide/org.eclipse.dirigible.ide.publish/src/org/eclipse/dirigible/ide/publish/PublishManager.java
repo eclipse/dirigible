@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.ExtensionPointUtils;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -143,8 +143,8 @@ public final class PublishManager {
 	}
 
 	public static void publishProject(IProject project) throws PublishException {
-		if (!CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
-			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION, CommonParameters.getUserName());
+		if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
+			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION, CommonIDEParameters.getUserName());
 			MessageDialog.openError(null, PUBLISH_ERROR, message);
 			return;
 		}

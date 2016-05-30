@@ -18,8 +18,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEUtils;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.template.ui.ed.wizard.Messages;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
@@ -50,7 +50,7 @@ public class ExtensionsView extends ViewPart {
 	private TreeViewer viewer;
 
 	private ExtensionManager extensionManager = new ExtensionManager(RepositoryFacade.getInstance().getRepository(),
-			DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()), CommonParameters.getRequest());
+			DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()), CommonIDEParameters.getRequest());
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -71,11 +71,11 @@ public class ExtensionsView extends ViewPart {
 				if (firstElement != null) {
 					if (firstElement instanceof ExtensionPointDefinition) {
 						ExtensionPointDefinition extensionPoint = (ExtensionPointDefinition) firstElement;
-						openEditor(CommonUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extensionPoint.getLocation())
+						openEditor(CommonIDEUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extensionPoint.getLocation())
 								+ ICommonConstants.DOT + ICommonConstants.ARTIFACT_EXTENSION.EXTENSION_POINT);
 					} else if (firstElement instanceof ExtensionDefinition) {
 						ExtensionDefinition extension = (ExtensionDefinition) firstElement;
-						openEditor(CommonUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extension.getLocation())
+						openEditor(CommonIDEUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS, extension.getLocation())
 								+ ICommonConstants.DOT + ICommonConstants.ARTIFACT_EXTENSION.EXTENSION);
 					}
 				}

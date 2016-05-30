@@ -10,7 +10,7 @@
 
 package org.eclipse.dirigible.ide.services.security.manager.views;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.security.SecurityException;
@@ -80,7 +80,7 @@ public class SecurityManagerView extends ViewPart {
 	private Action actionRefresh;
 
 	private SecurityManager securityManager = SecurityManager.getInstance(RepositoryFacade.getInstance().getRepository(),
-			DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()));
+			DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()));
 
 	public TreeViewer getViewer() {
 		return viewer;
@@ -199,7 +199,7 @@ public class SecurityManagerView extends ViewPart {
 						new LengthValidator());
 				if (dlg.open() == Window.OK) {
 					try {
-						securityManager.secureLocation(dlg.getValue(), CommonParameters.getRequest());
+						securityManager.secureLocation(dlg.getValue(), CommonIDEParameters.getRequest());
 						viewer.refresh();
 					} catch (SecurityException e) {
 						logger.error(SECURITY_ERROR, e);

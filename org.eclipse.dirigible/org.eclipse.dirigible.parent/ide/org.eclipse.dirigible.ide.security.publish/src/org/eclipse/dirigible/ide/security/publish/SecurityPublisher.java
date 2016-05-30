@@ -19,8 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -29,6 +28,7 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.security.SecurityUpdater;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class SecurityPublisher extends AbstractPublisher implements IPublisher {
@@ -48,7 +48,7 @@ public class SecurityPublisher extends AbstractPublisher implements IPublisher {
 
 			List<String> knownFiles = new ArrayList<String>();
 			SecurityUpdater securityUpdater = new SecurityUpdater(RepositoryFacade.getInstance().getRepository(),
-					DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()), getRegistryLocation());
+					DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()), getRegistryLocation());
 
 			// # 177
 			// securityUpdater.enumerateKnownFiles(targetContainer, knownFiles);
@@ -57,7 +57,7 @@ public class SecurityPublisher extends AbstractPublisher implements IPublisher {
 			securityUpdater.enumerateKnownFiles(sourceContainer, knownFiles);
 
 			List<String> errors = new ArrayList<String>();
-			securityUpdater.executeUpdate(knownFiles, CommonParameters.getRequest(), errors);
+			securityUpdater.executeUpdate(knownFiles, CommonIDEParameters.getRequest(), errors);
 			if (errors.size() > 0) {
 				throw new PublishException(CommonUtils.concatenateListOfStrings(errors, "\n"));
 			}

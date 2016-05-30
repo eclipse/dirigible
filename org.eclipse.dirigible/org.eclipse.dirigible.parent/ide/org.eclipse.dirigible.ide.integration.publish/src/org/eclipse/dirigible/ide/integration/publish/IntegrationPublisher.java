@@ -16,7 +16,7 @@ import static org.eclipse.dirigible.ide.integration.publish.IntegrationConstants
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -42,7 +42,7 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 			copyAllFromTo(sourceFolder, targetContainer);
 
 			ListenersUpdater listenersUpdater = new ListenersUpdater(RepositoryFacade.getInstance().getRepository(),
-					DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()), getRegistryLocation());
+					DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()), getRegistryLocation());
 			listenersUpdater.applyUpdates();
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
@@ -81,13 +81,13 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 	@Override
 	public String getPublishedContainerMapping(IFile file) {
 		if (ICommonConstants.ARTIFACT_EXTENSION.FLOW.equals(file.getFileExtension())) {
-			return CommonParameters.FLOW_CONTAINER_MAPPING;
+			return CommonIDEParameters.FLOW_CONTAINER_MAPPING;
 		}
 		if (ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(file.getFileExtension())) {
-			return CommonParameters.JOB_CONTAINER_MAPPING;
+			return CommonIDEParameters.JOB_CONTAINER_MAPPING;
 		}
 		if (ICommonConstants.ARTIFACT_EXTENSION.LISTENER.equals(file.getFileExtension())) {
-			return CommonParameters.LISTENER_CONTAINER_MAPPING;
+			return CommonIDEParameters.LISTENER_CONTAINER_MAPPING;
 		}
 		return null;
 	}
@@ -95,13 +95,13 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 	@Override
 	public String getActivatedContainerMapping(IFile file) {
 		if (ICommonConstants.ARTIFACT_EXTENSION.FLOW.equals(file.getFileExtension())) {
-			return CommonParameters.FLOW_SANDBOX_MAPPING;
+			return CommonIDEParameters.FLOW_SANDBOX_MAPPING;
 		}
 		if (ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(file.getFileExtension())) {
-			return CommonParameters.JOB_SANDBOX_MAPPING;
+			return CommonIDEParameters.JOB_SANDBOX_MAPPING;
 		}
 		if (ICommonConstants.ARTIFACT_EXTENSION.JOB.equals(file.getFileExtension())) {
-			return CommonParameters.LISTENER_SANDBOX_MAPPING;
+			return CommonIDEParameters.LISTENER_SANDBOX_MAPPING;
 		}
 		return null;
 	}
@@ -113,7 +113,7 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 
 	@Override
 	protected String getSandboxLocation() {
-		return CommonParameters.getIntegrationContentSandbox();
+		return CommonIDEParameters.getIntegrationContentSandbox();
 	}
 
 	@Override

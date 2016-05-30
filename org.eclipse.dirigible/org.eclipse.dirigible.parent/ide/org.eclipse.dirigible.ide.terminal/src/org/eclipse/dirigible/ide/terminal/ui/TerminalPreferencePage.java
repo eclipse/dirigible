@@ -12,7 +12,7 @@ package org.eclipse.dirigible.ide.terminal.ui;
 
 import java.io.IOException;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryGlobalPreferenceStore;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -40,7 +40,7 @@ public class TerminalPreferencePage extends FieldEditorPreferencePage implements
 
 	public static RepositoryGlobalPreferenceStore getTerminalPreferenceStore() {
 		try {
-			RepositoryGlobalPreferenceStore repositoryPreferenceStore = new RepositoryGlobalPreferenceStore(CommonParameters.CONF_PATH_IDE,
+			RepositoryGlobalPreferenceStore repositoryPreferenceStore = new RepositoryGlobalPreferenceStore(CommonIDEParameters.CONF_PATH_IDE,
 					CONF_NAME_TERMINAL);
 			repositoryPreferenceStore.load();
 			return repositoryPreferenceStore;
@@ -52,7 +52,7 @@ public class TerminalPreferencePage extends FieldEditorPreferencePage implements
 
 	public TerminalPreferencePage() {
 		super(FieldEditorPreferencePage.GRID);
-		this.repositoryPreferenceStore = new RepositoryGlobalPreferenceStore(CommonParameters.CONF_PATH_IDE, CONF_NAME_TERMINAL);
+		this.repositoryPreferenceStore = new RepositoryGlobalPreferenceStore(CommonIDEParameters.CONF_PATH_IDE, CONF_NAME_TERMINAL);
 		try {
 			repositoryPreferenceStore.load();
 			setPreferenceStore(repositoryPreferenceStore);

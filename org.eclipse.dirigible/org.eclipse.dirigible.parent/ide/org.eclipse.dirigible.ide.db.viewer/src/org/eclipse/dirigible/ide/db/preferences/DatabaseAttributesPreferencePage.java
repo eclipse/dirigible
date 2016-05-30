@@ -16,7 +16,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -39,7 +39,7 @@ public class DatabaseAttributesPreferencePage extends FieldEditorPreferencePage 
 	protected void createFieldEditors() {
 		Text text = null;
 
-		DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
+		DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest());
 		Connection connection = null;
 		try {
 			try {

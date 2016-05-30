@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
@@ -121,7 +121,7 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 
 			Connection connection = null;
 			try {
-				connection = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()).getConnection();
+				connection = DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()).getConnection();
 
 				List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
 

@@ -1,7 +1,7 @@
 package org.eclipse.dirigible.ide.workspace.wizard.project.gitinit;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.jgit.command.CloneCommandHandler;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.swt.widgets.Display;
@@ -17,7 +17,7 @@ public class GitStartup implements IStartup {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				String git = CommonParameters.get("git");
+				String git = CommonIDEParameters.get("git");
 				if (git != null) {
 					CloneCommandHandler cloneCommandHandler = new CloneCommandHandler();
 					try {

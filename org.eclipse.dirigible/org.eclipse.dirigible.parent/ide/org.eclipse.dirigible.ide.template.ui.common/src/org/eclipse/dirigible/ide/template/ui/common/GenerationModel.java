@@ -21,13 +21,13 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public abstract class GenerationModel {

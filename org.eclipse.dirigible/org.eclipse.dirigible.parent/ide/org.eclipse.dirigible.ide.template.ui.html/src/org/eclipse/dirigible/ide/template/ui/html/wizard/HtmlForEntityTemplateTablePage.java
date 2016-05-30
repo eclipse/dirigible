@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -368,7 +368,7 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 
 	protected Connection getConnection() throws SQLException {
 		try {
-			return DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()).getConnection();
+			return DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()).getConnection();
 		} catch (Exception e) {
 			throw new SQLException(e);
 		}

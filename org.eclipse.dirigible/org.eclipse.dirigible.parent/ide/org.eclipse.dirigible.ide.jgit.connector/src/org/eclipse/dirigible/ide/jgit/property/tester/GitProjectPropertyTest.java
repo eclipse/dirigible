@@ -16,7 +16,7 @@ import java.io.IOException;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IProject;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -36,7 +36,7 @@ public class GitProjectPropertyTest extends PropertyTester {
 			IProject project = (IProject) receiver;
 			IRepository repository = RepositoryFacade.getInstance().getRepository();
 
-			String user = CommonParameters.getUserName();
+			String user = CommonIDEParameters.getUserName();
 			String projectName = project.getName();
 			String gitFilePath = String.format(GitProjectProperties.GIT_PROPERTY_FILE_LOCATION,
 					user, projectName);

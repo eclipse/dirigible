@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.db.viewer.views.format.ResultSetStringWriter;
 import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
@@ -123,7 +123,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 			}
 		});
 
-		boolean isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
+		boolean isOperator = CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 		if (isOperator) {
 			new ToolItem(toolBar, SWT.SEPARATOR);
 			ToolItem itemUpdate = new ToolItem(toolBar, SWT.PUSH);

@@ -12,7 +12,7 @@
 package org.eclipse.dirigible.ide.workspace.wizard.project.getstarted;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.workspace.wizard.project.create.Messages;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -50,7 +50,7 @@ public class GetStartedProjectWizard extends Wizard {
 
 		model = new GetStartedProjectWizardModel();
 		
-		model.setProjectName(CommonParameters.getUserName() + "_" + model.getProjectName());
+		model.setProjectName(CommonIDEParameters.getUserName() + "_" + model.getProjectName());
 		
 		welcomePage = new GetStartedProjectWizardWelcomePage();
 		mainPage = new GetStartedProjectWizardMainPage(model);

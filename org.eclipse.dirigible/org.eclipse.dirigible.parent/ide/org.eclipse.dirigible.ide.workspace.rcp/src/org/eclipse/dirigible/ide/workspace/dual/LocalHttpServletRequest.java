@@ -38,7 +38,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 
 public class LocalHttpServletRequest implements HttpServletRequest {
 	
@@ -448,7 +448,7 @@ public class LocalHttpServletRequest implements HttpServletRequest {
 
 		@Override
 		public String getName() {
-			return CommonParameters.getUserName();
+			return CommonIDEParameters.getUserName();
 		}
 		
 	}

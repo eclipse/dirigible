@@ -13,7 +13,7 @@ package org.eclipse.dirigible.ide.scripts.publish;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -40,7 +40,7 @@ public class TestCasesPublisher extends AbstractPublisher implements IPublisher 
 	@Override
 	public void activate(IProject project) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(CommonParameters.getTestingContentSandbox());
+			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getTestingContentSandbox());
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.TEST_CASES);
 			copyAllFromTo(sourceFolder, targetContainer);
 		} catch (Exception ex) {
@@ -50,7 +50,7 @@ public class TestCasesPublisher extends AbstractPublisher implements IPublisher 
 
 	@Override
 	protected String getSandboxLocation() {
-		return CommonParameters.getTestingContentSandbox();
+		return CommonIDEParameters.getTestingContentSandbox();
 	}
 
 	@Override
@@ -70,12 +70,12 @@ public class TestCasesPublisher extends AbstractPublisher implements IPublisher 
 
 	@Override
 	public String getPublishedContainerMapping(IFile file) {
-		return CommonParameters.TEST_CASES_CONTAINER_MAPPING;
+		return CommonIDEParameters.TEST_CASES_CONTAINER_MAPPING;
 	}
 
 	@Override
 	public String getActivatedContainerMapping(IFile file) {
-		return CommonParameters.TEST_CASES_SANDBOX_MAPPING;
+		return CommonIDEParameters.TEST_CASES_SANDBOX_MAPPING;
 	}
 
 	@Override

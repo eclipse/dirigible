@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -132,20 +132,20 @@ public class Workspace implements IWorkspace {
 
 	private Map<IResourceChangeListener, Integer> lookupChangeListenersFlags() {
 		Map<IResourceChangeListener, Integer> changeListenersFlags
-				= (Map<IResourceChangeListener, Integer>) CommonParameters.getObject(WORKSPACE_CHANGE_LISTENERS_FLAGS);
+				= (Map<IResourceChangeListener, Integer>) CommonIDEParameters.getObject(WORKSPACE_CHANGE_LISTENERS_FLAGS);
 		if (changeListenersFlags == null) {
 			changeListenersFlags = new HashMap<IResourceChangeListener, Integer>();
-			CommonParameters.setObject(WORKSPACE_CHANGE_LISTENERS_FLAGS, changeListenersFlags);
+			CommonIDEParameters.setObject(WORKSPACE_CHANGE_LISTENERS_FLAGS, changeListenersFlags);
 		}
 		return changeListenersFlags;
 	}
 
 	private Set<IResourceChangeListener> lookupChangeListeners() {
 		Set<IResourceChangeListener> changeListeners = 
-				(Set<IResourceChangeListener>) CommonParameters.getObject(WORKSPACE_CHANGE_LISTENERS);
+				(Set<IResourceChangeListener>) CommonIDEParameters.getObject(WORKSPACE_CHANGE_LISTENERS);
 		if (changeListeners == null) {
 			changeListeners = new HashSet<IResourceChangeListener>();
-			CommonParameters.setObject(WORKSPACE_CHANGE_LISTENERS, changeListeners);
+			CommonIDEParameters.setObject(WORKSPACE_CHANGE_LISTENERS, changeListeners);
 		}
 		return changeListeners;
 	}

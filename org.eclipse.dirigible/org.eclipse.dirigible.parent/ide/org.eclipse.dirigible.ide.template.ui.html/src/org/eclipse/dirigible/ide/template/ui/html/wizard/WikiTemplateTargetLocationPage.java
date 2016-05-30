@@ -1,21 +1,20 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
-import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTargetLocationPage;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 
 public class WikiTemplateTargetLocationPage extends TemplateTargetLocationPage {
 
@@ -38,13 +37,11 @@ public class WikiTemplateTargetLocationPage extends TemplateTargetLocationPage {
 
 	@Override
 	protected void checkPageStatus() {
-		if (getModel().getTargetLocation() == null
-				|| "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
+		if ((getModel().getTargetLocation() == null) || "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
 			setPageComplete(false);
 			return;
 		}
-		if (getModel().getFileName() == null
-				|| "".equals(getModel().getFileName())) { //$NON-NLS-1$
+		if ((getModel().getFileName() == null) || "".equals(getModel().getFileName())) { //$NON-NLS-1$
 			setPageComplete(false);
 			return;
 		}
@@ -65,7 +62,7 @@ public class WikiTemplateTargetLocationPage extends TemplateTargetLocationPage {
 	protected GenerationModel getModel() {
 		return model;
 	}
-	
+
 	@Override
 	protected boolean isForcedFileName() {
 		return true;
@@ -94,9 +91,8 @@ public class WikiTemplateTargetLocationPage extends TemplateTargetLocationPage {
 		} else {
 			defaultExt = ".html";
 		}
-//		return defaultName;
-		return (preset == null) ? defaultName
-				: CommonUtils.getFileNameNoExtension(preset) + defaultExt; //$NON-NLS-1$
+		// return defaultName;
+		return (preset == null) ? defaultName : CommonUtils.getFileNameNoExtension(preset) + defaultExt;
 	}
 
 	@Override

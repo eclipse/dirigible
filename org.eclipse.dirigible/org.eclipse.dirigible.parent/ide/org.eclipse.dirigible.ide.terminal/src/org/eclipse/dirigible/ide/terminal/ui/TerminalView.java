@@ -13,7 +13,7 @@ package org.eclipse.dirigible.ide.terminal.ui;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.ext.command.Piper;
 import org.eclipse.dirigible.repository.ext.command.ProcessUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -80,7 +80,7 @@ public class TerminalView extends ViewPart {
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.CR) {
 
-					if (!CommonParameters.isRolesEnabled()) {
+					if (!CommonIDEParameters.isRolesEnabled()) {
 						// assume trial instance, hence disable this function
 						MessageDialog.openInformation(null, SHELL_COMMAND, EXECUTING_SHELL_COMMANDS_IS_DISABLED_IN_THIS_INSTANCE);
 						return;

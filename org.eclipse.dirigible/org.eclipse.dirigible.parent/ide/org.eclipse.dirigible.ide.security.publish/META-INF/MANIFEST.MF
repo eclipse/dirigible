@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.dirigible.ide.repository,
  org.eclipse.core.runtime,
  org.eclipse.dirigible.repository.logging,
  org.eclipse.dirigible.repository.datasource,
- org.eclipse.dirigible.ide.publish
+ org.eclipse.dirigible.ide.publish,
+ org.eclipse.dirigible.repository.ext
 Import-Package: com.google.gson,
  org.eclipse.dirigible.ide.common,
  org.eclipse.dirigible.ide.common.io,

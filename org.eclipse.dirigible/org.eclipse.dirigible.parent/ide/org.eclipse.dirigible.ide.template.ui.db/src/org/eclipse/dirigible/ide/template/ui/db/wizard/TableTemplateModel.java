@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
@@ -97,7 +97,7 @@ public class TableTemplateModel extends GenerationModel {
 	private boolean isTableExists(String tableName) {
 		Connection connection = null;
 		try {
-			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest());
 			connection = dataSource.getConnection();
 
 			return DBUtils.isTableOrViewExists(connection, tableName);

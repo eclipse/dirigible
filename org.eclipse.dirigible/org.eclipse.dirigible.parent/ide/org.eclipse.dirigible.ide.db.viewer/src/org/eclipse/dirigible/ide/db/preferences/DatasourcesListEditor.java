@@ -7,7 +7,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
@@ -124,7 +124,7 @@ public class DatasourcesListEditor extends ListEditor {
 	}
 
 	private void reinitializeDatasources() {
-		new NamedDataSourcesInitializer().initializeAvailableDataSources(CommonParameters.getRequest(),
+		new NamedDataSourcesInitializer().initializeAvailableDataSources(CommonIDEParameters.getRequest(),
 				RepositoryFacade.getInstance().getRepository());
 	}
 

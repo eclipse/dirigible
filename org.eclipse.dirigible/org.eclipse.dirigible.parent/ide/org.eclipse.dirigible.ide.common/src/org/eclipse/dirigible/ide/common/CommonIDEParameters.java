@@ -17,7 +17,7 @@ import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 // import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 
-public class CommonParameters {
+public class CommonIDEParameters {
 
 	public static String getWorkspace() {
 		return IRepositoryPaths.DB_DIRIGIBLE_USERS + getUserName() + ICommonConstants.SEPARATOR + IRepositoryPaths.WORKSPACE_FOLDER_NAME;

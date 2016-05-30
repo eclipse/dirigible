@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.ext.db.transfer.TableName;
@@ -122,7 +122,7 @@ public class DataExportDialog extends TitleAreaDialog {
 		try {
 			Connection connection = null;
 			try {
-				connection = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest()).getConnection();
+				connection = DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()).getConnection();
 
 				ResultSet tableNames = DBUtils.getAllTables(connection);
 

@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.datasource.DataSources;
 import org.eclipse.dirigible.repository.datasource.DataSources.Filter;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
@@ -105,19 +105,19 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 			List<TreeParent> schemesContainerNode = new ArrayList<TreeParent>();
 			String catalogName = null;// TODO never used... remove?
 			// list schemes
-			List<String> schemeNames = DataSources.listSchemeNames(connection, CommonParameters.getSelectedDatasource(), catalogName, null);
+			List<String> schemeNames = DataSources.listSchemeNames(connection, CommonIDEParameters.getSelectedDatasource(), catalogName, null);
 
 			for (String schemeName : schemeNames) {
 
 				TreeParent schemeContainerNode = new TreeParent(schemeName, this.databaseViewer);
 
 				// get a list of all table names
-				List<String> tableNames = DataSources.listTableNames(connection, CommonParameters.getSelectedDatasource(), catalogName, schemeName,
+				List<String> tableNames = DataSources.listTableNames(connection, CommonIDEParameters.getSelectedDatasource(), catalogName, schemeName,
 						new Filter<String>() {
 							@Override
 							public boolean accepts(String tableName) {
 								if (tableName.startsWith(DIRIGIBLE_SYSTEM_TALBES_PREFIX)) {
-									if (!CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
+									if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
 										return false;
 									}
 								}
@@ -129,11 +129,11 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 					TableDefinition tableDef = new TableDefinition(catalogName, schemeName, tableName);
 					TreeObject tableNode = new TreeObject(tableName, tableDef);
 					List<Capability> capabilities = tableNode.getTableDefinition().getCapabilities();
-					if (!DataSources.getDialect(connection, CommonParameters.getSelectedDatasource()).isSchemaless()) {
+					if (!DataSources.getDialect(connection, CommonIDEParameters.getSelectedDatasource()).isSchemaless()) {
 						capabilities.add(Capability.ShowTableDefinition);
 					}
 					capabilities.add(Capability.ViewTableContent);
-					tableDef.setContentScript(DataSources.getDialect(connection, CommonParameters.getSelectedDatasource())
+					tableDef.setContentScript(DataSources.getDialect(connection, CommonIDEParameters.getSelectedDatasource())
 							.getContentQueryScript(catalogName, schemeName, tableName));
 					capabilities.add(Capability.ExportData);
 					capabilities.add(Capability.Delete);
@@ -142,7 +142,7 @@ public class DatabaseViewContentProvider implements IStructuredContentProvider, 
 				schemesContainerNode.add(schemeContainerNode);
 			}
 
-			TreeParent dataSourceContainerNode = new TreeParent(DataSources.getDataSourceLabel(connection, CommonParameters.getSelectedDatasource()),
+			TreeParent dataSourceContainerNode = new TreeParent(DataSources.getDataSourceLabel(connection, CommonIDEParameters.getSelectedDatasource()),
 					this.databaseViewer);
 
 			if (schemesContainerNode.size() == 1) {

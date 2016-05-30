@@ -13,7 +13,7 @@ package org.eclipse.dirigible.ide.ui.publish;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -40,7 +40,7 @@ public class WikiPublisher extends AbstractPublisher implements IPublisher {
 	@Override
 	public void activate(IProject project) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(CommonParameters.getWikiContentSandbox());
+			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getWikiContentSandbox());
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT);
 			copyAllFromTo(sourceFolder, targetContainer);
 		} catch (Exception ex) {
@@ -50,7 +50,7 @@ public class WikiPublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	protected String getSandboxLocation() {
-		return CommonParameters.getWikiContentSandbox();
+		return CommonIDEParameters.getWikiContentSandbox();
 	}
 
 	@Override
@@ -66,12 +66,12 @@ public class WikiPublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	public String getPublishedContainerMapping(IFile file) {
-		return CommonParameters.WIKI_CONTENT_CONTAINER_MAPPING;
+		return CommonIDEParameters.WIKI_CONTENT_CONTAINER_MAPPING;
 	}
 
 	@Override
 	public String getActivatedContainerMapping(IFile file) {
-		return CommonParameters.WIKI_CONTENT_SANDBOX_MAPPING;
+		return CommonIDEParameters.WIKI_CONTENT_SANDBOX_MAPPING;
 	}
 
 	@Override

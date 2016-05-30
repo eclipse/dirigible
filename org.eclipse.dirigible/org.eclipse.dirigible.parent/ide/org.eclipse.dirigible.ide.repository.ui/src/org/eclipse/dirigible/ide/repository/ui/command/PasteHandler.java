@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.SortedSet;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -33,7 +33,7 @@ public class PasteHandler extends AbstractClipboardHandler {
 			return;
 		}
 
-		if (!CommonParameters.isRolesEnabled()) {
+		if (!CommonIDEParameters.isRolesEnabled()) {
 			// assume trial instance, hence disable this function
 			MessageDialog.openInformation(null, PASTE_ERROR, PASTE_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE);
 			return;

@@ -14,7 +14,7 @@ package org.eclipse.dirigible.ide.publish.ui.command;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class PublishActivator implements BundleActivator {
@@ -24,7 +24,7 @@ public class PublishActivator implements BundleActivator {
 	@Override
 	public void start(BundleContext arg0) throws Exception {
 		try {
-			if (CommonParameters.isRCP()) {
+			if (CommonIDEParameters.isRCP()) {
 				new AutoActivateAction().init(null);
 			}
 		} catch (Exception e) {

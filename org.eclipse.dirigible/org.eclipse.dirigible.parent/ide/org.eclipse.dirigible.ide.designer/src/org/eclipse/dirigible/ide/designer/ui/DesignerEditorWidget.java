@@ -20,7 +20,7 @@ import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 @SuppressWarnings("unused")
@@ -44,7 +44,7 @@ public class DesignerEditorWidget extends Composite {
 		super.setLayout(new FillLayout());
 
 		browser = new Browser(this, SWT.NONE);
-		browser.setUrl(CommonParameters.getContextPath() + EDITOR_URL);
+		browser.setUrl(CommonIDEParameters.getContextPath() + EDITOR_URL);
 		browser.addProgressListener(new ProgressListener() {
 
 			@Override

@@ -13,7 +13,7 @@ package org.eclipse.dirigible.ide.repository.ui.command;
 
 import java.util.ArrayList;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 
 public class Clipboard extends ArrayList<Object> {
 
@@ -24,10 +24,10 @@ public class Clipboard extends ArrayList<Object> {
 	private String command;
 
 	public static Clipboard getInstance() {
-		Clipboard clipboard = (Clipboard) CommonParameters.getObject(DIRIGIBLE_CLIPBOARD);
+		Clipboard clipboard = (Clipboard) CommonIDEParameters.getObject(DIRIGIBLE_CLIPBOARD);
 		if (clipboard == null) {
 			clipboard = new Clipboard();
-			CommonParameters.setObject(DIRIGIBLE_CLIPBOARD, clipboard);
+			CommonIDEParameters.setObject(DIRIGIBLE_CLIPBOARD, clipboard);
 		}
 		return clipboard;
 	}

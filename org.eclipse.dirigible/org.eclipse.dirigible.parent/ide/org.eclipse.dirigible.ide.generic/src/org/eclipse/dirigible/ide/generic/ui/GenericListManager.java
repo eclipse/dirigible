@@ -19,7 +19,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.conf.ConfigurationStore;
 
@@ -70,7 +70,7 @@ public class GenericListManager {
 		Properties properties = new Properties();
 		properties.setProperty("generic.view.name", name);
 		properties.setProperty("generic.view.location", location);
-		configurationStore.setGlobalSettings(CommonParameters.CONF_PATH_GENERIC_VIEWS, name, properties);
+		configurationStore.setGlobalSettings(CommonIDEParameters.CONF_PATH_GENERIC_VIEWS, name, properties);
 	}
 
 	public void removeLocation(String name) throws IOException {
@@ -79,7 +79,7 @@ public class GenericListManager {
 			throw new IllegalArgumentException("Name has to be provided");
 		}
 		
-		configurationStore.removeGlobalSettings(CommonParameters.CONF_PATH_GENERIC_VIEWS, name);
+		configurationStore.removeGlobalSettings(CommonIDEParameters.CONF_PATH_GENERIC_VIEWS, name);
 	}
 	
 	public boolean existsLocation(String name) throws IOException {
@@ -87,16 +87,16 @@ public class GenericListManager {
 				|| "".equals(name.trim())) {
 			throw new IllegalArgumentException("Name has to be provided");
 		}
-		return configurationStore.existsGlobalSettings(CommonParameters.CONF_PATH_GENERIC_VIEWS, name);
+		return configurationStore.existsGlobalSettings(CommonIDEParameters.CONF_PATH_GENERIC_VIEWS, name);
 	}
 
 	public List<GenericLocationMetadata> getLocationsList() throws IOException {
 		List<GenericLocationMetadata> result = new ArrayList<GenericLocationMetadata>();
-		List<String> names = configurationStore.listGlobalSettingsNames(CommonParameters.CONF_PATH_GENERIC_VIEWS);
+		List<String> names = configurationStore.listGlobalSettingsNames(CommonIDEParameters.CONF_PATH_GENERIC_VIEWS);
 		for (Iterator<String> iterator = names.iterator(); iterator.hasNext();) {
 			String name = iterator.next();
 			name = name.replaceAll(".properties", "");
-			Properties properties = configurationStore.getGlobalSettings(CommonParameters.CONF_PATH_GENERIC_VIEWS, name);
+			Properties properties = configurationStore.getGlobalSettings(CommonIDEParameters.CONF_PATH_GENERIC_VIEWS, name);
 			String genericViewName = properties.getProperty("generic.view.name");
 			String genericViewLocation = properties.getProperty("generic.view.location");
 			GenericLocationMetadata genericLocationMetadata = 

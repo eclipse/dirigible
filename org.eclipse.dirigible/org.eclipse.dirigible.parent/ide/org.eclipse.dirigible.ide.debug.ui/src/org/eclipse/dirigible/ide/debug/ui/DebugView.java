@@ -21,8 +21,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEUtils;
 import org.eclipse.dirigible.ide.debug.model.IDebugIDEController;
 import org.eclipse.dirigible.ide.editor.ace.AceEditor;
 import org.eclipse.dirigible.ide.editor.orion.OrionEditor;
@@ -126,7 +126,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		GridLayout layout = new GridLayout(1, false);
 		parent.setLayout(layout);
 
-		DebugModelFacade.createDebugModel(CommonParameters.getUserName(), this);
+		DebugModelFacade.createDebugModel(CommonIDEParameters.getUserName(), this);
 
 		final Composite holder = new Composite(parent, SWT.NONE);
 		holder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
@@ -183,7 +183,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	};
 
 	private DebugSessionModel refreshMetaData() {
-		DebugSessionModel session = getDebugModel(CommonParameters.getUserName()).getActiveSession();
+		DebugSessionModel session = getDebugModel(CommonIDEParameters.getUserName()).getActiveSession();
 		refreshAllViews();
 		return session;
 	}
@@ -211,7 +211,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DebugSessionModel session = getDebugModel(CommonParameters.getUserName()).getActiveSession();
+				DebugSessionModel session = getDebugModel(CommonIDEParameters.getUserName()).getActiveSession();
 				if (session != null) {
 					stepInto();
 					waitForMetadata(session);
@@ -226,7 +226,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DebugSessionModel session = getDebugModel(CommonParameters.getUserName()).getActiveSession();
+				DebugSessionModel session = getDebugModel(CommonIDEParameters.getUserName()).getActiveSession();
 				if (session != null) {
 					stepOver();
 					waitForMetadata(session);
@@ -241,7 +241,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DebugSessionModel session = getDebugModel(CommonParameters.getUserName()).getActiveSession();
+				DebugSessionModel session = getDebugModel(CommonIDEParameters.getUserName()).getActiveSession();
 				if (session != null) {
 					continueExecution();
 					waitForMetadata(session);
@@ -256,7 +256,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DebugSessionModel session = getDebugModel(CommonParameters.getUserName()).getActiveSession();
+				DebugSessionModel session = getDebugModel(CommonIDEParameters.getUserName()).getActiveSession();
 				if (session != null) {
 					skipAllBreakpoints();
 					waitForMetadata(session);
@@ -316,8 +316,8 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	}
 
 	private void selectedDebugSession(String executionId) {
-		DebugSessionModel session = getDebugModel(CommonParameters.getUserName()).getSessionByExecutionId(executionId);
-		getDebugModel(CommonParameters.getUserName()).setActiveSession(session);
+		DebugSessionModel session = getDebugModel(CommonIDEParameters.getUserName()).getSessionByExecutionId(executionId);
+		getDebugModel(CommonIDEParameters.getUserName()).setActiveSession(session);
 		// refresh(session);
 		// waitForMetadata(session);
 	}
@@ -336,7 +336,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		column.setText(VALUES);
 		column.setWidth(595);
 
-		variablesContentProvider = new VariablesViewContentProvider(getDebugModel(CommonParameters.getUserName()));
+		variablesContentProvider = new VariablesViewContentProvider(getDebugModel(CommonIDEParameters.getUserName()));
 		variablesTreeViewer.setContentProvider(variablesContentProvider);
 		variablesTreeViewer.setLabelProvider(new VariablesViewLabelProvider());
 		variablesTreeViewer.setInput(getViewSite());
@@ -360,7 +360,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		column.setText(SOURCE);
 		column.setWidth(350);
 
-		breakpointsContentProvider = new BreakpointViewContentProvider(getDebugModel(CommonParameters.getUserName()).getBreakpointsMetadata());
+		breakpointsContentProvider = new BreakpointViewContentProvider(getDebugModel(CommonIDEParameters.getUserName()).getBreakpointsMetadata());
 		breakpointsTreeViewer.setContentProvider(breakpointsContentProvider);
 		breakpointsTreeViewer.setLabelProvider(new BreakpointViewLabelProvider());
 		breakpointsTreeViewer.setInput(getViewSite());
@@ -371,7 +371,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 				if (!event.getSelection().isEmpty() && (event.getSelection() instanceof IStructuredSelection)) {
 					IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 					BreakpointMetadata breakpointMetadata = (BreakpointMetadata) structuredSelection.getFirstElement();
-					openEditor(CommonUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, breakpointMetadata.getFullPath()),
+					openEditor(CommonIDEUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, breakpointMetadata.getFullPath()),
 							breakpointMetadata.getRow());
 				}
 			}
@@ -615,11 +615,11 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	}
 
 	private boolean checkDebugExecutor() {
-		if (getDebugModel(CommonParameters.getUserName()).getActiveSession() == null) {
+		if (getDebugModel(CommonIDEParameters.getUserName()).getActiveSession() == null) {
 			logger.error("No active debug session");
 			return false;
 		}
-		if (getDebugModel(CommonParameters.getUserName()).getActiveSession().getDebugExecutor() == null) {
+		if (getDebugModel(CommonIDEParameters.getUserName()).getActiveSession().getDebugExecutor() == null) {
 			logger.error("Active debug session exists, but there is no executor assigned");
 			return false;
 		}
@@ -629,28 +629,28 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	@Override
 	public void stepInto() {
 		if (checkDebugExecutor()) {
-			getDebugModel(CommonParameters.getUserName()).getActiveSession().getDebugExecutor().stepInto();
+			getDebugModel(CommonIDEParameters.getUserName()).getActiveSession().getDebugExecutor().stepInto();
 		}
 	}
 
 	@Override
 	public void stepOver() {
 		if (checkDebugExecutor()) {
-			getDebugModel(CommonParameters.getUserName()).getActiveSession().getDebugExecutor().stepOver();
+			getDebugModel(CommonIDEParameters.getUserName()).getActiveSession().getDebugExecutor().stepOver();
 		}
 	}
 
 	@Override
 	public void continueExecution() {
 		if (checkDebugExecutor()) {
-			getDebugModel(CommonParameters.getUserName()).getActiveSession().getDebugExecutor().continueExecution();
+			getDebugModel(CommonIDEParameters.getUserName()).getActiveSession().getDebugExecutor().continueExecution();
 		}
 	}
 
 	@Override
 	public void skipAllBreakpoints() {
 		if (checkDebugExecutor()) {
-			getDebugModel(CommonParameters.getUserName()).getActiveSession().getDebugExecutor().skipAllBreakpoints();
+			getDebugModel(CommonIDEParameters.getUserName()).getActiveSession().getDebugExecutor().skipAllBreakpoints();
 		}
 	}
 
@@ -687,14 +687,14 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	@Override
 	public void setBreakpoint(String path, int row) {
 		BreakpointMetadata breakpoint = new BreakpointMetadata(path, row);
-		getDebugModel(CommonParameters.getUserName()).getBreakpointsMetadata().getBreakpoints().add(breakpoint);
+		getDebugModel(CommonIDEParameters.getUserName()).getBreakpointsMetadata().getBreakpoints().add(breakpoint);
 		refreshAllViews();
 	}
 
 	@Override
 	public void clearBreakpoint(String path, int row) {
 		BreakpointMetadata breakpoint = new BreakpointMetadata(path, row);
-		Set<BreakpointMetadata> breakpoints = getDebugModel(CommonParameters.getUserName()).getBreakpointsMetadata().getBreakpoints();
+		Set<BreakpointMetadata> breakpoints = getDebugModel(CommonIDEParameters.getUserName()).getBreakpointsMetadata().getBreakpoints();
 		for (Iterator iterator = breakpoints.iterator(); iterator.hasNext();) {
 			BreakpointMetadata breakpointMetadata = (BreakpointMetadata) iterator.next();
 			if (breakpointMetadata.equals(breakpoint)) {
@@ -707,7 +707,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 	@Override
 	public void clearAllBreakpoints() {
-		getDebugModel(CommonParameters.getUserName()).getBreakpointsMetadata().getBreakpoints().clear();
+		getDebugModel(CommonIDEParameters.getUserName()).getBreakpointsMetadata().getBreakpoints().clear();
 	}
 
 	private void logError(String message, Throwable t) {
@@ -774,7 +774,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 	@Override
 	public void propertyChanged(Object source, int propId) {
-		waitForMetadata(getDebugModel(CommonParameters.getUserName()).getActiveSession());
+		waitForMetadata(getDebugModel(CommonIDEParameters.getUserName()).getActiveSession());
 	}
 
 }

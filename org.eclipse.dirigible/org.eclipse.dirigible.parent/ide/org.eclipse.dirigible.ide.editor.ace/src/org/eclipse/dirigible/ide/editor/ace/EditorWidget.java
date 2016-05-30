@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.ide.editor.ace;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEUtils;
 import org.eclipse.dirigible.ide.editor.text.editor.AbstractTextEditorWidget;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
 import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
@@ -60,20 +60,20 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		super.setLayout(new FillLayout());
 
 		browser = new Browser(this, SWT.NONE);
-		browser.setUrl(CommonParameters.getContextPath() + EDITOR_URL);
+		browser.setUrl(CommonIDEParameters.getContextPath() + EDITOR_URL);
 		browser.addProgressListener(new ProgressListener() {
 
 			@Override
 			public void completed(final ProgressEvent event) {
 				loaded = true;
 				updateWidgetContents();
-				if (javaScriptEditor && (DebugModelFacade.getDebugModel(CommonParameters.getUserName()) != null)) {
-					DebugSessionModel session = DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getActiveSession();
+				if (javaScriptEditor && (DebugModelFacade.getDebugModel(CommonIDEParameters.getUserName()) != null)) {
+					DebugSessionModel session = DebugModelFacade.getDebugModel(CommonIDEParameters.getUserName()).getActiveSession();
 
 					if ((session != null) && (session.getCurrentLineBreak() != null)) {
 						String filePath = session.getCurrentLineBreak().getBreakpoint().getFullPath();
-						String path = CommonUtils.formatToRuntimePath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, filePath);
-						int[] breakpoints = DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getBreakpointsMetadata()
+						String path = CommonIDEUtils.formatToRuntimePath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, filePath);
+						int[] breakpoints = DebugModelFacade.getDebugModel(CommonIDEParameters.getUserName()).getBreakpointsMetadata()
 								.getBreakpoints(path);
 
 						loadBreakpoints(breakpoints);

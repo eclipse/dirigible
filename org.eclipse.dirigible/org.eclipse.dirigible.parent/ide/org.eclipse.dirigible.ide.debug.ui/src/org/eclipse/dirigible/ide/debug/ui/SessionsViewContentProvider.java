@@ -10,7 +10,7 @@
 
 package org.eclipse.dirigible.ide.debug.ui;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.debug.DebugModelFacade;
 import org.eclipse.dirigible.repository.ext.debug.DebugSessionModel;
@@ -32,9 +32,9 @@ public class SessionsViewContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		String[] elements = new String[DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getSessions().size()];
+		String[] elements = new String[DebugModelFacade.getDebugModel(CommonIDEParameters.getUserName()).getSessions().size()];
 		int i = 0;
-		for (DebugSessionModel session : DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getSessions()) {
+		for (DebugSessionModel session : DebugModelFacade.getDebugModel(CommonIDEParameters.getUserName()).getSessions()) {
 			StringBuilder label = new StringBuilder();
 			label.append(session.getUserId()).append(ICommonConstants.DEBUG_SEPARATOR).append(i + 1).append(ICommonConstants.DEBUG_SEPARATOR)
 					.append(session.getExecutionId()).append(ICommonConstants.DEBUG_SEPARATOR);

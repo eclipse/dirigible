@@ -38,7 +38,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class ProxyUtils {
@@ -130,35 +130,35 @@ public class ProxyUtils {
 	}
 
 	private static void setSystemProxySettings() {
-		String parameterHTTP_PROXY_HOST = CommonParameters.get(HTTP_PROXY_HOST);
+		String parameterHTTP_PROXY_HOST = CommonIDEParameters.get(HTTP_PROXY_HOST);
 		if (parameterHTTP_PROXY_HOST != null) {
 			System.setProperty(HTTP_PROXY_HOST, parameterHTTP_PROXY_HOST);
 			logger.debug("HTTP_PROXY_HOST:" + parameterHTTP_PROXY_HOST);
 		} else {
 			logger.debug("HTTP_PROXY_HOST not set");
 		}
-		String parameterHTTP_PROXY_PORT = CommonParameters.get(HTTP_PROXY_PORT);
+		String parameterHTTP_PROXY_PORT = CommonIDEParameters.get(HTTP_PROXY_PORT);
 		if (parameterHTTP_PROXY_PORT != null) {
 			System.setProperty(HTTP_PROXY_PORT, parameterHTTP_PROXY_PORT);
 			logger.debug("HTTP_PROXY_PORT:" + parameterHTTP_PROXY_PORT);
 		} else {
 			logger.debug("HTTP_PROXY_PORT not set");
 		}
-		String parameterHTTPS_PROXY_HOST = CommonParameters.get(HTTPS_PROXY_HOST);
+		String parameterHTTPS_PROXY_HOST = CommonIDEParameters.get(HTTPS_PROXY_HOST);
 		if (parameterHTTPS_PROXY_HOST != null) {
 			System.setProperty(HTTPS_PROXY_HOST, parameterHTTPS_PROXY_HOST);
 			logger.debug("HTTPS_PROXY_HOST:" + parameterHTTPS_PROXY_HOST);
 		} else {
 			logger.debug("HTTPS_PROXY_HOST not set");
 		}
-		String parameterHTTPS_PROXY_PORT = CommonParameters.get(HTTPS_PROXY_PORT);
+		String parameterHTTPS_PROXY_PORT = CommonIDEParameters.get(HTTPS_PROXY_PORT);
 		if (parameterHTTPS_PROXY_PORT != null) {
 			System.setProperty(HTTPS_PROXY_PORT, parameterHTTPS_PROXY_PORT);
 			logger.debug("HTTPS_PROXY_PORT:" + parameterHTTPS_PROXY_PORT);
 		} else {
 			logger.debug("HTTPS_PROXY_PORT not set");
 		}
-		String parameterHTTP_NON_PROXY_HOSTS = CommonParameters.get(HTTP_NON_PROXY_HOSTS);
+		String parameterHTTP_NON_PROXY_HOSTS = CommonIDEParameters.get(HTTP_NON_PROXY_HOSTS);
 		if (parameterHTTP_NON_PROXY_HOSTS != null) {
 			System.setProperty(HTTP_NON_PROXY_HOSTS, parameterHTTP_NON_PROXY_HOSTS);
 			logger.debug("HTTP_NON_PROXY_HOSTS:" + parameterHTTP_NON_PROXY_HOSTS);

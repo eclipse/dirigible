@@ -23,6 +23,7 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableImporter;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 import com.google.gson.JsonObject;
@@ -110,13 +111,16 @@ public class DsvUpdater extends AbstractDataUpdater {
 	}
 
 	private void executeDSVUpdate(Connection connection, String dsDefinition) throws Exception {
-		String dsDefinitionTable = dsDefinition.replace(EXTENSION_DSV, EXTENSION_TABLE);
-		JsonObject dsDefinitionObject = parseTable(dsDefinitionTable);
-		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
-		tableName = tableName.toUpperCase();
+		// String dsDefinitionTable = dsDefinition.replace(EXTENSION_DSV, EXTENSION_TABLE);
+		// JsonObject dsDefinitionObject = parseTable(dsDefinitionTable);
+		// String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
+		// tableName = tableName.toUpperCase();
+
+		// CHANGED BEHAVIOR - THE NAME OF THE DSV FILE IS WITH THE EXACT NAME OF THE TABLE IT IS FOR!
+		String tableName = CommonUtils.getFileNameFromRepositoryPathNoExtension(dsDefinition);
 		deleteAllDataFromTable(tableName);
 
-		IRepository repository = this.repository;
+		// IRepository repository = this.repository;
 		// # 177
 		// IResource resource = repository.getResource(this.location + dsDefinition);
 		IResource resource = repository.getResource(dsDefinition);
@@ -129,7 +133,7 @@ public class DsvUpdater extends AbstractDataUpdater {
 	}
 
 	private JsonObject parseTable(String dsDefinition) throws IOException {
-		IRepository repository = this.repository;
+		// IRepository repository = this.repository;
 		// # 177
 		// IResource resource = repository.getResource(this.location + dsDefinition);
 		IResource resource = repository.getResource(dsDefinition);

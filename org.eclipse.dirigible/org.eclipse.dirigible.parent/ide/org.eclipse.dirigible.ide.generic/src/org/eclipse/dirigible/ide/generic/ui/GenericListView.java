@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.generic.ui;
@@ -14,6 +13,10 @@ package org.eclipse.dirigible.ide.generic.ui;
 import java.io.IOException;
 import java.net.URI;
 
+import org.eclipse.dirigible.ide.common.UriValidator;
+import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -44,21 +47,16 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import org.eclipse.dirigible.ide.common.CommonUtils;
-import org.eclipse.dirigible.ide.common.UriValidator;
-import org.eclipse.dirigible.ide.repository.RepositoryFacade;
-import org.eclipse.dirigible.repository.logging.Logger;
-
 public class GenericListView extends ViewPart {
 
 	private static final String REMOVE_LOCATION_FROM_THE_GENERIC_VIEWS_LIST = "Remove Location from the Generic Views list";
-	
+
 	private static final String OPEN_LOCATION_FROM_THE_GENERIC_VIEWS_LIST = "Open Location from the Generic Views list";
 
 	private static final String ARE_YOU_SURE_YOU_WANT_TO_REMOVE_THIS_LOCATION = "Are you sure you want to remove this location?";
 
 	private static final String REMOVE_LOCATION = "Remove Location";
-	
+
 	private static final String OPEN_LOCATION = "Open Location";
 
 	private static final String ADD_LOCATION_TO_THE_GENERIC_VIEWS_LIST = "Add Location to the Generic Views list";
@@ -73,8 +71,7 @@ public class GenericListView extends ViewPart {
 
 	private static final String NAME = "Name";
 
-	private static final Logger logger = Logger
-			.getLogger(GenericListView.class);
+	private static final Logger logger = Logger.getLogger(GenericListView.class);
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -85,9 +82,8 @@ public class GenericListView extends ViewPart {
 	private Action actionAddLocation;
 	private Action actionRemoveLocation;
 	private Action actionOpenLocation;
-	
-	private GenericListManager genericListManager = GenericListManager.getInstance(
-			RepositoryFacade.getInstance().getRepository());
+
+	private GenericListManager genericListManager = GenericListManager.getInstance(RepositoryFacade.getInstance().getRepository());
 
 	public TreeViewer getViewer() {
 		return viewer;
@@ -103,12 +99,8 @@ public class GenericListView extends ViewPart {
 
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 != null && e2 != null
-					&& e1 instanceof GenericLocationMetadata
-					&& e2 instanceof GenericLocationMetadata) {
-				return super.compare(viewer,
-						((GenericLocationMetadata) e1).getLocation(),
-						((GenericLocationMetadata) e2).getLocation());
+			if ((e1 != null) && (e2 != null) && (e1 instanceof GenericLocationMetadata) && (e2 instanceof GenericLocationMetadata)) {
+				return super.compare(viewer, ((GenericLocationMetadata) e1).getLocation(), ((GenericLocationMetadata) e2).getLocation());
 			}
 			return super.compare(viewer, e1, e2);
 		}
@@ -125,6 +117,7 @@ public class GenericListView extends ViewPart {
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		// PatternFilter filter = new PatternFilter();
 		// FilteredTree tree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL
@@ -153,6 +146,7 @@ public class GenericListView extends ViewPart {
 		menuMgr.addMenuListener(new IMenuListener() {
 			private static final long serialVersionUID = -8683354310299838422L;
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				GenericListView.this.fillContextMenu(manager);
 			}
@@ -168,9 +162,10 @@ public class GenericListView extends ViewPart {
 		fillLocalToolBar(bars.getToolBarManager());
 		hookDoubleClickAction();
 	}
-	
+
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				actionOpenLocation.run();
 			}
@@ -201,21 +196,18 @@ public class GenericListView extends ViewPart {
 		actionAddLocation = new Action() {
 			private static final long serialVersionUID = -6534944336694980431L;
 
+			@Override
 			public void run() {
-				InputDialog dlg = new InputDialog(viewer.getControl()
-						.getShell(), ADD_LOCATION, URL,
-						"http://", new UriValidator()); //$NON-NLS-1$
+				InputDialog dlg = new InputDialog(viewer.getControl().getShell(), ADD_LOCATION, URL, "http://", new UriValidator()); //$NON-NLS-1$
 				if (dlg.open() == Window.OK) {
 					try {
 						// TODO - parse for name
 						URI uri = new URI(dlg.getValue());
-						genericListManager.addLocation(
-								getNameForLocation(uri), dlg.getValue());
+						genericListManager.addLocation(getNameForLocation(uri), dlg.getValue());
 						viewer.refresh();
 					} catch (Exception e) {
 						logger.error(GENERIC_VIEW_ERROR, e);
-						MessageDialog.openError(viewer.getControl().getShell(),
-								GENERIC_VIEW_ERROR, e.getMessage());
+						MessageDialog.openError(viewer.getControl().getShell(), GENERIC_VIEW_ERROR, e.getMessage());
 					}
 				}
 			}
@@ -223,66 +215,54 @@ public class GenericListView extends ViewPart {
 			private String getNameForLocation(URI uri) throws IOException {
 				String name = CommonUtils.replaceNonAlphaNumericCharacters(uri.getHost());
 				String originalName = name;
-				int i=1;
+				int i = 1;
 				while (genericListManager.existsLocation(name)) {
 					name = originalName + i++;
 				}
-				
+
 				return name;
 			}
 		};
 		actionAddLocation.setText(ADD_LOCATION);
 		actionAddLocation.setToolTipText(ADD_LOCATION_TO_THE_GENERIC_VIEWS_LIST);
-		actionAddLocation.setImageDescriptor(PlatformUI.getWorkbench()
-				.getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_OBJ_ADD));
+		actionAddLocation.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_ADD));
 
 		actionRemoveLocation = new Action() {
 			private static final long serialVersionUID = 1336014167502247774L;
 
+			@Override
 			public void run() {
 
 				if (!viewer.getSelection().isEmpty()) {
-					StructuredSelection selection = (StructuredSelection) viewer
-							.getSelection();
+					StructuredSelection selection = (StructuredSelection) viewer.getSelection();
 					GenericLocationMetadata location = (GenericLocationMetadata) selection.getFirstElement();
-					if (MessageDialog
-							.openConfirm(
-									viewer.getControl().getShell(),
-									REMOVE_LOCATION,
-									ARE_YOU_SURE_YOU_WANT_TO_REMOVE_THIS_LOCATION
-											+ location.getLocation())) {
+					if (MessageDialog.openConfirm(viewer.getControl().getShell(), REMOVE_LOCATION,
+							ARE_YOU_SURE_YOU_WANT_TO_REMOVE_THIS_LOCATION + location.getLocation())) {
 						try {
 							genericListManager.removeLocation(location.getName());
 							viewer.refresh();
 						} catch (Exception e) {
 							logger.error(GENERIC_VIEW_ERROR, e);
-							MessageDialog
-									.openError(viewer.getControl().getShell(),
-											GENERIC_VIEW_ERROR, e.getMessage());
+							MessageDialog.openError(viewer.getControl().getShell(), GENERIC_VIEW_ERROR, e.getMessage());
 						}
 					}
 				}
 			}
 		};
 		actionRemoveLocation.setText(REMOVE_LOCATION);
-		actionRemoveLocation
-				.setToolTipText(REMOVE_LOCATION_FROM_THE_GENERIC_VIEWS_LIST);
-		actionRemoveLocation.setImageDescriptor(PlatformUI.getWorkbench()
-				.getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ELCL_REMOVE));
-		
-		
+		actionRemoveLocation.setToolTipText(REMOVE_LOCATION_FROM_THE_GENERIC_VIEWS_LIST);
+		actionRemoveLocation.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_REMOVE));
+
 		actionOpenLocation = new Action() {
 			private static final long serialVersionUID = 1336014167502247774L;
 
+			@Override
 			public void run() {
 
 				if (!viewer.getSelection().isEmpty()) {
-					StructuredSelection selection = (StructuredSelection) viewer
-							.getSelection();
+					StructuredSelection selection = (StructuredSelection) viewer.getSelection();
 					GenericLocationMetadata location = (GenericLocationMetadata) selection.getFirstElement();
-					
+
 					IWorkbench wb = PlatformUI.getWorkbench();
 					IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 					IWorkbenchPage page = win.getActivePage();
@@ -294,24 +274,22 @@ public class GenericListView extends ViewPart {
 					} catch (PartInitException e) {
 						logger.error(GENERIC_VIEW_ERROR, e);
 					}
-						
+
 				}
 			}
 		};
 		actionOpenLocation.setText(OPEN_LOCATION);
-		actionOpenLocation
-				.setToolTipText(OPEN_LOCATION_FROM_THE_GENERIC_VIEWS_LIST);
-		actionOpenLocation.setImageDescriptor(PlatformUI.getWorkbench()
-				.getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_DEF_VIEW));
+		actionOpenLocation.setToolTipText(OPEN_LOCATION_FROM_THE_GENERIC_VIEWS_LIST);
+		actionOpenLocation.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_DEF_VIEW));
 
 	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
-	
+
 }

@@ -10,11 +10,11 @@
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
-import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTargetLocationPage;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 
 public class DataStructureTemplateTargetLocationPage extends TemplateTargetLocationPage {
 
@@ -78,7 +78,7 @@ public class DataStructureTemplateTargetLocationPage extends TemplateTargetLocat
 			defaultName = (preset == null) ? VIEW_NAME_VIEW : CommonUtils.getFileNameNoExtension(preset) + "." + DataStructureTemplateWizard.EXT_VIEW;
 		} else if (templateExt.equals(DataStructureTemplateWizard.EXT_DSV)) {
 			String tableName = ((DataStructureTemplateModel) model).getTableName();
-			defaultName = tableName.toLowerCase() + "." + DataStructureTemplateWizard.EXT_DSV;
+			defaultName = tableName + "." + DataStructureTemplateWizard.EXT_DSV;
 		}
 		return defaultName;
 	}

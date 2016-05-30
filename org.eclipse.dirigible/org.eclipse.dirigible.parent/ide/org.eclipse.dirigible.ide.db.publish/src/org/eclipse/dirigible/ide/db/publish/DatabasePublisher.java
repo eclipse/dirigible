@@ -21,8 +21,7 @@ import javax.sql.DataSource;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -33,6 +32,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DatabaseUpdater;
 import org.eclipse.dirigible.repository.ext.db.DsvUpdater;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DatabasePublisher extends AbstractPublisher implements IPublisher {
@@ -52,7 +52,7 @@ public class DatabasePublisher extends AbstractPublisher implements IPublisher {
 			copyAllFromTo(sourceFolder, targetContainer);
 
 			IRepository repository = RepositoryFacade.getInstance().getRepository();
-			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest());
 
 			ICollection sourceProjectContainer = getSourceProjectContainer(project);
 			ICollection sourceContainer = sourceProjectContainer.getCollection(ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES);

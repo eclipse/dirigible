@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.io.ProxyUtils;
 import org.eclipse.dirigible.ide.ui.rap.api.DirigibleWorkbenchInitializersManager;
 import org.eclipse.dirigible.ide.ui.rap.api.IDirigibleWorkbenchInitializer;
@@ -41,7 +41,7 @@ public class DirigibleWorkbench extends AbstractEntryPoint {
 
 		createContents(display.getActiveShell());
 
-		ExitConfirmation service = (ExitConfirmation) CommonParameters.getService(ExitConfirmation.class);
+		ExitConfirmation service = (ExitConfirmation) CommonIDEParameters.getService(ExitConfirmation.class);
 		service.setMessage(String.format(ARE_YOU_SURE_YOU_WANT_TO_QUIT, ICommonConstants.DIRIGIBLE_PRODUCT_NAME));
 
 		try {
@@ -59,7 +59,7 @@ public class DirigibleWorkbench extends AbstractEntryPoint {
 		// set the parameter from the request
 		Collection<String> paramaters = getParameterNames();
 		for (String parameter : paramaters) {
-			CommonParameters.set(parameter, getParameter(parameter));
+			CommonIDEParameters.set(parameter, getParameter(parameter));
 		}
 
 		List<IDirigibleWorkbenchInitializer> initializersList = DirigibleWorkbenchInitializersManager.getInitializers();

@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.ide.workspace.ui.view;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.image.ImageUtils;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -64,12 +64,12 @@ public class ToolBarMenuViewProvider {
 			.createImage(ImageUtils.getIconURL("org.eclipse.dirigible.ide.publish.ui", "/resources/icons/", "activate.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	public static void createToolBarMenu(Composite parent, Shell shell) {
-		if (CommonParameters.isRAP()) {
+		if (CommonIDEParameters.isRAP()) {
 			int style = SWT.FLAT | SWT.WRAP | SWT.RIGHT | SWT.BORDER | SWT.SHADOW_OUT;
 
 			final ToolBar toolBar = new ToolBar(parent, style);
 
-			if (CommonParameters.isSandboxEnabled()) {
+			if (CommonIDEParameters.isSandboxEnabled()) {
 				createActivateToolItem(toolBar, shell);
 				createSeparator(toolBar);
 			}

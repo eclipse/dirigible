@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.image.ImageUtils;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
@@ -47,7 +47,7 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 	private Combo datasourcesCombo;
 
 	public void createToolBar(Composite parent, Shell shell) {
-		if (CommonParameters.isRAP()) {
+		if (CommonIDEParameters.isRAP()) {
 			int style = SWT.FLAT | SWT.FILL | SWT.RIGHT | SWT.BORDER | SWT.SHADOW_OUT;
 			final Composite panel = new Composite(parent, style);
 			panel.setLayout(new GridLayout(2, false));
@@ -93,7 +93,7 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new NamedDataSourcesInitializer().initializeAvailableDataSources(CommonParameters.getRequest(), RepositoryFacade.getInstance()
+				new NamedDataSourcesInitializer().initializeAvailableDataSources(CommonIDEParameters.getRequest(), RepositoryFacade.getInstance()
 						.getRepository());
 				fillDatasources();
 			}

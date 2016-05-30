@@ -23,7 +23,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
@@ -104,7 +104,7 @@ public abstract class AbstractPublisher implements IPublisher {
 	 * @return
 	 */
 	public String getUser() {
-		String user = CommonParameters.getUserName();
+		String user = CommonIDEParameters.getUserName();
 		return user;
 	}
 
@@ -194,13 +194,13 @@ public abstract class AbstractPublisher implements IPublisher {
 
 	@Override
 	public String getPublishedLocation(IFile file) {
-		return CommonParameters.getServicesUrl() + IPath.SEPARATOR + ICommonConstants.REGISTRY + IPath.SEPARATOR + getFolderType()
+		return CommonIDEParameters.getServicesUrl() + IPath.SEPARATOR + ICommonConstants.REGISTRY + IPath.SEPARATOR + getFolderType()
 				+ generatePublishedPath(file);
 	}
 
 	@Override
 	public String getActivatedLocation(IFile file) {
-		return CommonParameters.getServicesUrl() + IPath.SEPARATOR + ICommonConstants.SANDBOX + IPath.SEPARATOR + getFolderType()
+		return CommonIDEParameters.getServicesUrl() + IPath.SEPARATOR + ICommonConstants.SANDBOX + IPath.SEPARATOR + getFolderType()
 				+ generatePublishedPath(file);
 	}
 
@@ -210,7 +210,7 @@ public abstract class AbstractPublisher implements IPublisher {
 			// no real container at runtime
 			return null;
 		}
-		return CommonParameters.getServicesUrl() + getPublishedContainerMapping(file) + generatePublishedPath(file);
+		return CommonIDEParameters.getServicesUrl() + getPublishedContainerMapping(file) + generatePublishedPath(file);
 	}
 
 	@Override
@@ -219,7 +219,7 @@ public abstract class AbstractPublisher implements IPublisher {
 			// no real container at runtime
 			return null;
 		}
-		return (IRepository.SEPARATOR.equals(CommonParameters.getServicesUrl()) ? "" : CommonParameters.getServicesUrl())
+		return (IRepository.SEPARATOR.equals(CommonIDEParameters.getServicesUrl()) ? "" : CommonIDEParameters.getServicesUrl())
 				+ getActivatedContainerMapping(file) + generatePublishedPath(file);
 	}
 
@@ -268,7 +268,7 @@ public abstract class AbstractPublisher implements IPublisher {
 	 * @return
 	 */
 	public String getWorkspaceLocation() {
-		return CommonParameters.getWorkspace();
+		return CommonIDEParameters.getWorkspace();
 	}
 
 	/**

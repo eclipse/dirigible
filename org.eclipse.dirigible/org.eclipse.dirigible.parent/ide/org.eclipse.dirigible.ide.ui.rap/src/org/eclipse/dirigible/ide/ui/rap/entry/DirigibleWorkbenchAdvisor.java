@@ -10,7 +10,7 @@
 
 package org.eclipse.dirigible.ide.ui.rap.entry;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -28,7 +28,7 @@ public class DirigibleWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	@Override
 	public String getInitialWindowPerspectiveId() {
-		String activeWorkspace = CommonParameters.get("perspective"); //$NON-NLS-1$
+		String activeWorkspace = CommonIDEParameters.get("perspective"); //$NON-NLS-1$
 		if (activeWorkspace != null) {
 			return activeWorkspace;
 		}

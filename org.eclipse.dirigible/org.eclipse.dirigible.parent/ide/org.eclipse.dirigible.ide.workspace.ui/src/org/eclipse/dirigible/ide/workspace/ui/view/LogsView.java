@@ -10,7 +10,7 @@
 
 package org.eclipse.dirigible.ide.workspace.ui.view;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -24,7 +24,7 @@ public class LogsView extends ViewPart {
 	private static String LOGGING_LOCATION;
 
 	static {
-		LOGGING_LOCATION = ((CommonParameters.getRuntimeUrl() == null) || "".equals(CommonParameters.getRuntimeUrl())) ? "/services/logging"
+		LOGGING_LOCATION = ((CommonIDEParameters.getRuntimeUrl() == null) || "".equals(CommonIDEParameters.getRuntimeUrl())) ? "/services/logging"
 				: "/logging";
 	}
 

@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.editor.text.input.ContentEditorInput;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -98,7 +98,7 @@ public class DefaultContentProvider implements IContentProvider,
 		IRepository repository = RepositoryFacade.getInstance().getRepository();
 		
 		String resourcePath = 
-				IRepositoryPaths.DB_DIRIGIBLE_USERS + CommonParameters.getUserName() +
+				IRepositoryPaths.DB_DIRIGIBLE_USERS + CommonIDEParameters.getUserName() +
 				IRepositoryPaths.SEPARATOR +
 				IRepositoryPaths.WORKSPACE_FOLDER_NAME + file.getFullPath();
 		IResource resource = repository.getResource(resourcePath);

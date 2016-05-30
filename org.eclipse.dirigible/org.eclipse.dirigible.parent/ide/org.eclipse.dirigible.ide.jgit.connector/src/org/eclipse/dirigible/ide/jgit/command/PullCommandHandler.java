@@ -19,7 +19,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.jgit.utils.CommandHandlerUtils;
@@ -101,7 +101,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 		final String errorMessage = String.format(WHILE_PULLING_PROJECT_ERROR_OCCURED, selectedProject.getName());
 		GitProjectProperties gitProperties = null;
 		try {
-			gitProperties = GitFileUtils.getGitPropertiesForProject(selectedProject, CommonParameters.getUserName());
+			gitProperties = GitFileUtils.getGitPropertiesForProject(selectedProject, CommonIDEParameters.getUserName());
 		} catch (IOException e) {
 			MessageDialog.openError(null, THIS_IS_NOT_A_GIT_PROJECT, errorMessage);
 			return;
@@ -119,7 +119,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 
 			gitProperties.setSHA(jgit.getLastSHAForBranch(MASTER));
 
-			final String changesBranch = CHANGES_BRANCH + CommonParameters.getUserName();
+			final String changesBranch = CHANGES_BRANCH + CommonIDEParameters.getUserName();
 			jgit.checkout(lastSHA);
 			jgit.createBranch(changesBranch, lastSHA);
 			jgit.checkout(changesBranch);
@@ -135,7 +135,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 				jgit.checkout(MASTER);
 				jgit.rebase(changesBranch);
 
-				String dirigibleUser = CommonParameters.getUserName();
+				String dirigibleUser = CommonIDEParameters.getUserName();
 
 				GitFileUtils.deleteDGBRepositoryProject(selectedProject, dirigibleUser);
 

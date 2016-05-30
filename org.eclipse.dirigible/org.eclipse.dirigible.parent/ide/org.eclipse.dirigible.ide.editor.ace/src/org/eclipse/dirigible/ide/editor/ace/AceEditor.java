@@ -10,8 +10,8 @@
 
 package org.eclipse.dirigible.ide.editor.ace;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
-import org.eclipse.dirigible.ide.common.CommonUtils;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEUtils;
 import org.eclipse.dirigible.ide.editor.text.editor.ContentProviderException;
 import org.eclipse.dirigible.ide.editor.text.editor.EditorMode;
 import org.eclipse.dirigible.ide.editor.text.editor.IEditorWidgetListener;
@@ -100,9 +100,9 @@ public class AceEditor extends TextEditor {
 			public void setBreakpoint(final int row) {
 				IEditorInput editorInput = getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
-					DebugModel debugModel = DebugModelFacade.getDebugModel(CommonParameters.getUserName());
+					DebugModel debugModel = DebugModelFacade.getDebugModel(CommonIDEParameters.getUserName());
 					if (debugModel != null) {
-						debugModel.getDebugController().setBreakpoint(CommonUtils.formatToRuntimePath(
+						debugModel.getDebugController().setBreakpoint(CommonIDEUtils.formatToRuntimePath(
 								ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, ((FileEditorInput) editorInput).getPath().toString()), row);
 					}
 				}
@@ -112,9 +112,9 @@ public class AceEditor extends TextEditor {
 			public void clearBreakpoint(final int row) {
 				IEditorInput editorInput = getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
-					DebugModel debugModel = DebugModelFacade.getDebugModel(CommonParameters.getUserName());
+					DebugModel debugModel = DebugModelFacade.getDebugModel(CommonIDEParameters.getUserName());
 					if (debugModel != null) {
-						String formatToRuntimePath = CommonUtils.formatToRuntimePath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES,
+						String formatToRuntimePath = CommonIDEUtils.formatToRuntimePath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES,
 								((FileEditorInput) editorInput).getPath().toString());
 						debugModel.getDebugController().clearBreakpoint(formatToRuntimePath, row);
 					}

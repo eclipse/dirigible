@@ -18,7 +18,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.jgit.utils.CommandHandlerUtils;
@@ -93,7 +93,7 @@ public class ResetCommandHandler extends AbstractWorkspaceHandler {
 		final String errorMessage = String.format(WHILE_HARD_RESETING_PROJECT_ERROR_OCCURED, project.getName());
 		File tempGitDirectory = null;
 		try {
-			String dirigibleUser = CommonParameters.getUserName();
+			String dirigibleUser = CommonIDEParameters.getUserName();
 			GitProjectProperties gitProperties = GitFileUtils.getGitPropertiesForProject(project, dirigibleUser);
 			String gitRepositoryURI = gitProperties.getURL();
 			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));

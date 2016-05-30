@@ -13,7 +13,7 @@ package org.eclipse.dirigible.ide.repository.ui.command;
 import java.util.SortedSet;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.jface.dialogs.MessageDialog;
 
@@ -28,7 +28,7 @@ public class CopyHandler extends AbstractClipboardHandler {
 			return;
 		}
 
-		if (!CommonParameters.isRolesEnabled()) {
+		if (!CommonIDEParameters.isRolesEnabled()) {
 			// assume trial instance, hence disable this function
 			MessageDialog.openInformation(null, COPY_ERROR, COPY_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE);
 			return;

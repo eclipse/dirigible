@@ -23,7 +23,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.conf.ConfigurationStore;
 import org.eclipse.dirigible.repository.ext.conf.IConfigurationStore;
@@ -163,7 +163,7 @@ public abstract class AbstractRepositoryPreferenceStore implements IPreferenceSt
 	public void save() throws IOException {
 //		delegate.save();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		delegate.save(baos, CHANAGED_BY + CommonParameters.getUserName());
+		delegate.save(baos, CHANAGED_BY + CommonIDEParameters.getUserName());
 		saveSettingd(baos);
 	}
 

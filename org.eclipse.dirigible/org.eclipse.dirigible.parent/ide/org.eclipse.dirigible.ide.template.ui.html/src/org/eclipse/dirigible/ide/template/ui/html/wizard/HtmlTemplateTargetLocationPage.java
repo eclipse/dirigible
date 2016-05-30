@@ -10,11 +10,11 @@
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
-import org.eclipse.dirigible.ide.common.CommonUtils;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTargetLocationPage;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 
 public class HtmlTemplateTargetLocationPage extends TemplateTargetLocationPage {
 

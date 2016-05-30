@@ -14,7 +14,7 @@ package org.eclipse.dirigible.ide.repository.ui.tester;
 import java.io.IOException;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
@@ -28,15 +28,15 @@ public class RepositoryPermissionTester extends PropertyTester {
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		String operation = (String) expectedValue;
-		String currentUser = CommonParameters.getUserName();
+		String currentUser = CommonIDEParameters.getUserName();
 		String createdBy = null;
 		boolean allowed = false;
 
 		String allowedCopyPath = IRepositoryPaths.DB_DIRIGIBLE_ROOT;
-		String allowedWorkspacePath = CommonParameters.getWorkspace();
+		String allowedWorkspacePath = CommonIDEParameters.getWorkspace();
 		String allowedSandboxPath = IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + currentUser;
 		
-		boolean isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
+		boolean isOperator = CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 		
 		IEntity selectedEntity = (IEntity) receiver;
 		String selectedEntityPath = selectedEntity.getPath();

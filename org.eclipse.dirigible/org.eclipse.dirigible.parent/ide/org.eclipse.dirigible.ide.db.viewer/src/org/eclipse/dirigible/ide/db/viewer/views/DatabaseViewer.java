@@ -16,7 +16,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.db.viewer.views.DatabaseViewContentProvider.Capability;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.DeleteTableAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.ExportDataAction;
@@ -93,7 +93,7 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 	 * The constructor.
 	 */
 	public DatabaseViewer() {
-		isOperator = CommonParameters.isUserInRole(IRoles.ROLE_OPERATOR);
+		isOperator = CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR);
 	}
 
 	/**
@@ -272,7 +272,7 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 	}
 
 	public static String getSelectedDatasourceName() throws SQLException {
-		return CommonParameters.get(SELECTED_DATASOURCE_NAME);
+		return CommonIDEParameters.get(SELECTED_DATASOURCE_NAME);
 	}
 
 	/**
@@ -282,11 +282,11 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 	 * @throws SQLException
 	 */
 	public static Connection getConnectionFromSelectedDatasource() throws SQLException {
-		String datasourceName = CommonParameters.get(SELECTED_DATASOURCE_NAME);
+		String datasourceName = CommonIDEParameters.get(SELECTED_DATASOURCE_NAME);
 		DataSource dataSource = null;
 		if ((datasourceName == null) || datasourceName.equals(DEFAULT_DATASOURCE_NAME)) {
 			logger.debug("No selected datasource found. Make use of the default one");
-			dataSource = DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
+			dataSource = DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest());
 			if (dataSource != null) {
 				Connection connection = dataSource.getConnection();
 				return connection;
@@ -294,7 +294,7 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 			logger.error("Trying to use the default datasource, but it is null");
 		} else {
 			logger.debug(String.format("Selected datasource found %s", datasourceName));
-			dataSource = DataSourceFacade.getInstance().getNamedDataSource(CommonParameters.getRequest(), datasourceName);
+			dataSource = DataSourceFacade.getInstance().getNamedDataSource(CommonIDEParameters.getRequest(), datasourceName);
 			if (dataSource != null) {
 				Connection connection = dataSource.getConnection();
 				return connection;
@@ -312,7 +312,7 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 	public void selectionChanged(SelectionChangedEvent event) {
 		if (event.getSource() instanceof DatabaseViewerToolBar) {
 			String datasourceName = (String) ((IStructuredSelection) event.getSelection()).getFirstElement();
-			CommonParameters.set(SELECTED_DATASOURCE_NAME, datasourceName);
+			CommonIDEParameters.set(SELECTED_DATASOURCE_NAME, datasourceName);
 			viewer.setContentProvider(initContentProvider());
 			viewer.refresh();
 		}

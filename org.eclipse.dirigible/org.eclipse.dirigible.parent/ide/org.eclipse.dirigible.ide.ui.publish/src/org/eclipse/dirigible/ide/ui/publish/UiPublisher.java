@@ -13,7 +13,7 @@ package org.eclipse.dirigible.ide.ui.publish;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -54,7 +54,7 @@ public class UiPublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	protected String getSandboxLocation() {
-		return CommonParameters.getWebContentSandbox();
+		return CommonIDEParameters.getWebContentSandbox();
 	}
 
 	@Override
@@ -70,12 +70,12 @@ public class UiPublisher extends AbstractPublisher implements IPublisher {
 
 	@Override
 	public String getPublishedContainerMapping(IFile file) {
-		return CommonParameters.WEB_CONTENT_CONTAINER_MAPPING;
+		return CommonIDEParameters.WEB_CONTENT_CONTAINER_MAPPING;
 	}
 
 	@Override
 	public String getActivatedContainerMapping(IFile file) {
-		return CommonParameters.WEB_CONTENT_SANDBOX_MAPPING;
+		return CommonIDEParameters.WEB_CONTENT_SANDBOX_MAPPING;
 	}
 
 	@Override

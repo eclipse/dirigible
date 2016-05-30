@@ -12,7 +12,7 @@
 package org.eclipse.dirigible.ide.workspace.wizard.project.sample.property.tester;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
 
 public class SamplesProjectPropertyTester extends PropertyTester {
@@ -21,7 +21,7 @@ public class SamplesProjectPropertyTester extends PropertyTester {
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		boolean testResult = false;
 		try {
-			testResult = CommonParameters.isUserInRole(IRoles.ROLE_DEVELOPER);
+			testResult = CommonIDEParameters.isUserInRole(IRoles.ROLE_DEVELOPER);
 		} catch (UnsupportedOperationException e) {
 			testResult = false;
 		}

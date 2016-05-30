@@ -23,7 +23,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.shared.IValidationStatus;
@@ -77,7 +77,7 @@ public class SampleProjectWizardModel {
 				ZipInputStream zipInputStream = new ZipInputStream(fis);
 				
 				repository.importZip(zipInputStream,
-						CommonParameters.getWorkspace());
+						CommonIDEParameters.getWorkspace());
 				
 				IWorkspace workspace = WorkspaceLocator.getWorkspace();
 				IWorkspaceRoot root = workspace.getRoot();

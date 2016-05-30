@@ -1,7 +1,7 @@
 package org.eclipse.dirigible.ide.workspace.wizard.project.getstarted;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.wizard.project.commands.GetStartedProjectHandler;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -18,7 +18,7 @@ public class GetStartedStartup implements IStartup {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if (CommonParameters.get("git") != null) {
+				if (CommonIDEParameters.get("git") != null) {
 					// starting for git import - skip get started
 					return;
 				}

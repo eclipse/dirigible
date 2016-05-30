@@ -18,7 +18,7 @@ import java.util.TreeSet;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -65,7 +65,7 @@ public class DeleteHandler extends AbstractHandler {
 	 */
 	private void execute(SortedSet<IEntity> resources) {
 
-		if (!CommonParameters.isRolesEnabled()) {
+		if (!CommonIDEParameters.isRolesEnabled()) {
 			// assume trial instance, hence disable this function
 			MessageDialog.openInformation(null, DELETE_ERROR, DELETE_FUNCTION_IS_DISABLED_IN_THIS_INSTANCE);
 			return;

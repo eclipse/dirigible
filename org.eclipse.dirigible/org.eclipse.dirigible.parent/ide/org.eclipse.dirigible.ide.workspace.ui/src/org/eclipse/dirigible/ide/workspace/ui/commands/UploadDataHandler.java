@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableImporter;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -82,7 +82,7 @@ public class UploadDataHandler extends AbstractHandler {
 
 				HttpServletRequest request = null;
 				try {
-					request = CommonParameters.getRequest();
+					request = CommonIDEParameters.getRequest();
 				} catch (IllegalStateException e) {
 					// no valid request found
 				}

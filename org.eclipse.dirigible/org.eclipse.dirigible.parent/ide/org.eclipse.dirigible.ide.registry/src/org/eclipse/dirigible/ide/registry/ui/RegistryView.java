@@ -36,7 +36,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
 
 public class RegistryView extends ViewPart {
@@ -92,7 +92,7 @@ public class RegistryView extends ViewPart {
 		browser.getControl().setLayoutData(
 				new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		browser.setUrl(CommonParameters.getRuntimeUrl());
+		browser.setUrl(CommonIDEParameters.getRuntimeUrl());
 	}
 
 	@Override

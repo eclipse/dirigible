@@ -17,7 +17,7 @@ import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.eclipse.dirigible.repository.api.RepositoryFactory;
@@ -39,7 +39,7 @@ public class RepositoryFacade {
 
 	public IRepository getRepository() throws RepositoryException {
 
-		HttpServletRequest request = CommonParameters.getRequest();
+		HttpServletRequest request = CommonIDEParameters.getRequest();
 
 		IRepository repository = getRepositoryInstance(request);
 
@@ -65,11 +65,11 @@ public class RepositoryFacade {
 	}
 
 	public DataSource lookupDataSource() throws NamingException {
-		return DataSourceFacade.getInstance().getDataSource(CommonParameters.getRequest());
+		return DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest());
 	}
 
 	public String getUser(HttpServletRequest request) {
-		String user = CommonParameters.getUserName(); // shared one
+		String user = CommonIDEParameters.getUserName(); // shared one
 		try {
 			if (request != null) {
 				user = RequestUtils.getUser(request);
@@ -84,7 +84,7 @@ public class RepositoryFacade {
 		// if (request == null) {
 		// return null;
 		// }
-		return (IRepository) CommonParameters.getObject(REPOSITORY);
+		return (IRepository) CommonIDEParameters.getObject(REPOSITORY);
 		// return (IRepository) request.getSession().getAttribute(REPOSITORY);
 	}
 
@@ -92,7 +92,7 @@ public class RepositoryFacade {
 		if (request == null) {
 			return;
 		}
-		CommonParameters.setObject(REPOSITORY, repository);
+		CommonIDEParameters.setObject(REPOSITORY, repository);
 		// request.getSession().setAttribute(REPOSITORY, repository);
 	}
 

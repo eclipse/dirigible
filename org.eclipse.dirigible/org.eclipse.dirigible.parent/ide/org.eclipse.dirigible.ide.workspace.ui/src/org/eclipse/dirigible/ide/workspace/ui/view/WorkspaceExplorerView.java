@@ -34,7 +34,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
-import org.eclipse.dirigible.ide.common.CommonParameters;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.ui.view.IRefreshableView;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
@@ -92,7 +92,7 @@ public class WorkspaceExplorerView extends ViewPart implements IRefreshableView 
 
 	private void setSelectedProjectFromRequest() {
 		try {
-			String projectName = CommonParameters.get(CommonParameters.PARAMETER_PROJECT);
+			String projectName = CommonIDEParameters.get(CommonIDEParameters.PARAMETER_PROJECT);
 			if (projectName != null) {
 				List<Object> selected = new ArrayList<Object>();
 				TreeItem[] treeItems = viewer.getViewer().getTree().getItems();
