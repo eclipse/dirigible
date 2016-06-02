@@ -16,5 +16,5 @@ exports.get = function(key) {
 };
 
 exports.set = function(key, value) {
-	$.getExecutionContext().set(key, value);
+	$.getExecutionContext().put(key, value);
 };
