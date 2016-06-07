@@ -1,10 +1,9 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-// print in system output
-var systemLib = require('system');
+context = require("core/context");
 
-var recievedMessage = $.getExecutionContext().get("message");
+var recievedMessage = context.get("message");
 if(recievedMessage !== null) {
 	systemLib.println(JSON.stringify({
 		"id": recievedMessage.getId(),
@@ -16,5 +15,5 @@ if(recievedMessage !== null) {
 		"createdAt": recievedMessage.getCreatedAt().getTime()
 	}));
 } else {
-	systemLib.println("Health Check");
+	console.info("Health Check");
 }

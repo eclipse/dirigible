@@ -1,24 +1,25 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var systemLib = require('system');
+var database = require('db/database');
+var response = require('net/http/response');
 
-$\.getResponse().setContentType("application/json; charset=UTF-8");
-$\.getResponse().setCharacterEncoding("UTF-8");
+response.setContentType("application/json; charset=UTF-8");
+response.setCharacterEncoding("UTF-8");
 
 var count;
-var connection = $\.getDatasource().getConnection();
+var connection = database.getConnection();
 try {
     var statement = connection.createStatement();
     var rs = statement.executeQuery('SELECT COUNT(*) FROM ${tableName}');
     while (rs.next()) {
         count = rs.getInt(1);
     }
-    systemLib.println('count: '  + count);
+    console.log('count: '  + count);
 } finally {
     connection.close();
 }
 
-$\.getResponse().getWriter().println(count);
-$\.getResponse().getWriter().flush();
-$\.getResponse().getWriter().close();
+response.println(count);
+response.flush();
+response.close();

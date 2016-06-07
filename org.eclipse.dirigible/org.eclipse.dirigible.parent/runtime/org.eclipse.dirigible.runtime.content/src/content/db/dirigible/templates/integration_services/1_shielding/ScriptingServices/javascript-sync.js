@@ -1,7 +1,10 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-$.getResponse().setContentType("text/html; charset=UTF-8");
-$.getResponse().setCharacterEncoding("UTF-8");
-$.getResponse().getWriter().println("Hello World!");
-$.getResponse().getWriter().flush();
+var response = require('net/http/response');
+
+response.setContentType("text/html; charset=UTF-8");
+response.setCharacterEncoding("UTF-8");
+response.println("Hello World!");
+response.flush();
+response.close();

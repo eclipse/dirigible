@@ -1,12 +1,13 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
+var response = require('net/http/response');
+
 // print in system output
-var systemLib = require('system');
-systemLib.println("Hello World!");
+console.info("Hello World!");
 // print in response
-$\.getResponse().setContentType("text/html; charset=UTF-8");
-$\.getResponse().setCharacterEncoding("UTF-8");
-$\.getResponse().getWriter().println("Hello World!");
-$\.getResponse().getWriter().flush();
-$\.getResponse().getWriter().close();
+response.setContentType("text/html; charset=UTF-8");
+response.setCharacterEncoding("UTF-8");
+response.println("Hello World!");
+response.flush();
+response.close();

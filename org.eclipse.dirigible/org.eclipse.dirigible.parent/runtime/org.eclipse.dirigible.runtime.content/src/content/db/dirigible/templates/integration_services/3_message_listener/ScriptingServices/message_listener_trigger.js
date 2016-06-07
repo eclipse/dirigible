@@ -1,22 +1,25 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
+var messaging = require('service/messaging');
+var response = require('net/http/response');
+
 var clientName = "clinet1";
 var topicName = "topic1";
 
-if (!$.getMessagingService().isClientExists(clientName)) {
-	$.getMessagingService().registerClient(clientName);
+if (!messaging.isClientExists(clientName)) {
+	messaging.registerClient(clientName);
 }
 
-if (!$.getMessagingService().isTopicExists(topicName)) {
-	$.getMessagingService().registerTopic(topicName);
+if (!messaging.isTopicExists(topicName)) {
+	messaging.registerTopic(topicName);
 }
 
-$.getMessagingService().send("Message Sender", topicName, "Message Subject", "Message Body");
+messaging.send("Message Sender", topicName, "Message Subject", "Message Body");
 
 // print in response
-$.getResponse().setContentType("text/html; charset=UTF-8");
-$.getResponse().setCharacterEncoding("UTF-8");
-$.getResponse().getWriter().println("Message Trigger Activated");
-$.getResponse().getWriter().flush();
-$.getResponse().getWriter().close();
+response.setContentType("text/html; charset=UTF-8");
+response.setCharacterEncoding("UTF-8");
+response.println("Message Trigger Activated");
+response.flush();
+response.close();

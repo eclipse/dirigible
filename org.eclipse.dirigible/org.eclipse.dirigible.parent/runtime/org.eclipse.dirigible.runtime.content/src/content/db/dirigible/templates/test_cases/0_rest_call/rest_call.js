@@ -1,28 +1,24 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var assertLib = require('assert');
-var ioLib = require('io');
+/* globals $ */
+/* eslint-env node, dirigible */
 
-var httpClient = $\.getHttpUtils().createHttpClient();
-var httpGet = $\.getHttpUtils().createGet('<input the target URL of the service here>');
+var http = require('net/http/client');
+var response = require('net/http/response');
 
-var answer = httpClient.execute(httpGet);
-// sample response:  {"field1":"test field"}
-var entity = answer.getEntity();
-var content;
-var reply;
-var toBeChecked;
-try {
-    content = ioLib.read(entity.getContent());
-    reply = JSON.parse(content);
-    toBeChecked = reply.field1;
-    http.consume(entity);
-} finally {
-    entity.releaseConnection();
-}
+var options = {
+    method: 'GET', // default
+    host: '<service_endpoint_host>',
+    port: 80,
+    path: '<service_endpoint_path>',
+    binary: false 
+};
 
-assertLib.assertNotNull('reply is null', reply);
-assertLib.assertNotNull('reply.field1 is null', reply.field1);
-assertLib.assertEquals('check field is not correct', toBeChecked, 'test field');
+var httpResponse = http.request(options);
+
+response.println(httpResponse.statusMessage);
+response.println(httpResponse.data);
+response.flush();
+response.close();
 

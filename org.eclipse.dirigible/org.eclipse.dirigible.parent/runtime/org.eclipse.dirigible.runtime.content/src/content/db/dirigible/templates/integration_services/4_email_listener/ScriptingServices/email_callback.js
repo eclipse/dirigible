@@ -1,12 +1,12 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-// print in system output
-var systemLib = require('system');
-var mailObject = $.getExecutionContext().get("message");
+context = require("core/context");
+
+var mailObject = context.get("message");
 if (mailObject !== null) {
 	var mailParsed = JSON.parse(mailObject);
-	systemLib.println(mailParsed.subject + ": " + mailParsed.content);
+	console.info(mailParsed.subject + ": " + mailParsed.content);
 } else {
-    systemLib.println("sync call");   
+    console.warn("sync call");   
 }
