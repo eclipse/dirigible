@@ -11,6 +11,8 @@
 /* globals $ javax */
 /* eslint-env node, dirigible */
 
+var streams = require("io/streams");
+
 exports.getMethod = function() {
 	return $.getRequest().getMethod();
 };
@@ -89,4 +91,14 @@ exports.getInfo = function() {
 		"serverName": $.getRequest().getServerName(),
 		"serverPort": $.getRequest().getServerPort()
 	};
+};
+
+exports.readInput = function() {
+	var input = new streams.InputStream($.getRequest().getInputStream());
+	return streams.read(input);
+};
+
+exports.readInputText = function() {
+	var input = new streams.InputStream($.getRequest().getInputStream());
+	return streams.readText(input);
 };

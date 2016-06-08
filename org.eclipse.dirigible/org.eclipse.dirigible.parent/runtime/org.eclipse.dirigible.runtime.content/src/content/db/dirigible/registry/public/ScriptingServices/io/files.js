@@ -11,6 +11,8 @@
 /* globals $ javax */
 /* eslint-env node, dirigible */
 
+var streams = require("io/streams");
+
 /**
  * Getter for File reference
  */
@@ -217,10 +219,7 @@ exports.writeText = function(path, content) {
 exports.read = function(path) {
 	var internalPath = java.nio.file.Paths.get(path);
 	var internalBytes = java.nio.file.Files.readAllBytes(internalPath);
-	var bytes = [];
-	for (i=0; i<internalBytes.length; i++) {
-		bytes.push(internalBytes[i]);
-	}
+	var bytes = streams.toJavaScriptBytes(internalBytes);
 	return bytes;
 };
 
@@ -229,9 +228,7 @@ exports.read = function(path) {
  */
 exports.write = function(path, bytes) {
 	var internalPath = java.nio.file.Paths.get(path);
-	var internalBytes = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, bytes.length);
-	for (var i=0; i<bytes.length; i++) {
-		internalBytes[i] = bytes[i];
-	}
+	var internalBytes = streams.toJavaBytes(bytes);
 	java.nio.file.Files.write(internalPath, internalBytes);
 };
+

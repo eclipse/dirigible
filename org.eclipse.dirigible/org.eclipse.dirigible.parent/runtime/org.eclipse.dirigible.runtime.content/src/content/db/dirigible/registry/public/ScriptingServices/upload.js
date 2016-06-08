@@ -1,3 +1,4 @@
+// deprecated: use net/http/upload
 exports.consumeFiles = function(request) {
     var maxSize = 2 * 1024 * 1024;
 	var files = [];

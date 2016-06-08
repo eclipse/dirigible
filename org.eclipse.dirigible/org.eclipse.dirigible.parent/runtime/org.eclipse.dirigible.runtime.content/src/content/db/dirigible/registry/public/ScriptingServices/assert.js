@@ -1,3 +1,4 @@
+// deprecated: use console.assert()
 exports.assertTrue = function(message, condition) {
     return org.junit.Assert.assertTrue(message, condition);
 };

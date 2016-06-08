@@ -1,3 +1,4 @@
+// deprecated: use console.log() and core/env
 exports.print = function(s){
 	out.print(s + '');
 };

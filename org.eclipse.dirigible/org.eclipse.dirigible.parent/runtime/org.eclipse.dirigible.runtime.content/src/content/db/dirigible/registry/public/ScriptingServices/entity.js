@@ -1,3 +1,4 @@
+// deprecated: included to the templates themselves
 exports.hasConflictingParameters = function(id, count, metadata) {
     if(id !== null && count !== null){
     	printError(javax.servlet.http.HttpServletResponse.SC_EXPECTATION_FAILED, 1, "Precondition failed: conflicting parameters - id, count");
