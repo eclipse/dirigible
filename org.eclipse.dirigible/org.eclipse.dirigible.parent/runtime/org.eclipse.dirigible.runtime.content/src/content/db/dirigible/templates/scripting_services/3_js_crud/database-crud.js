@@ -1,31 +1,33 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var entityLib = require('entity');
 var entity${entityName} = require('${projectName}/${fileNameNoExtension}_lib');
+var request = require("net/http/request");
+var response = require("net/http/response");
+var xss = require("utils/xss");
 
 handleRequest();
 
 function handleRequest() {
 	
-	$\.getResponse().setContentType("application/json; charset=UTF-8");
-	$\.getResponse().setCharacterEncoding("UTF-8");
+	response.setContentType("application/json; charset=UTF-8");
+	response.setCharacterEncoding("UTF-8");
 	
 	// get method type
-	var method = $\.getRequest().getMethod();
+	var method = request.getMethod();
 	method = method.toUpperCase();
 	
 	//get primary keys (one primary key is supported!)
 	var idParameter = entity${entityName}.getPrimaryKey();
 	
 	// retrieve the id as parameter if exist 
-	var id = $\.getXssUtils().escapeSql($\.getRequest().getParameter(idParameter));
-	var count = $\.getXssUtils().escapeSql($\.getRequest().getParameter('count'));
-	var metadata = $\.getXssUtils().escapeSql($\.getRequest().getParameter('metadata'));
-	var sort = $\.getXssUtils().escapeSql($\.getRequest().getParameter('sort'));
-	var limit = $\.getXssUtils().escapeSql($\.getRequest().getParameter('limit'));
-	var offset = $\.getXssUtils().escapeSql($\.getRequest().getParameter('offset'));
-	var desc = $\.getXssUtils().escapeSql($\.getRequest().getParameter('desc'));
+	var id = xss.escapeSql(request.getParameter(idParameter));
+	var count = xss.escapeSql(request.getParameter('count'));
+	var metadata = xss.escapeSql(request.getParameter('metadata'));
+	var sort = xss.escapeSql(request.getParameter('sort'));
+	var limit = xss.escapeSql(request.getParameter('limit'));
+	var offset = xss.escapeSql(request.getParameter('offset'));
+	var desc = xss.escapeSql(request.getParameter('desc'));
 	
 	if (limit === null) {
 		limit = 100;
@@ -34,7 +36,7 @@ function handleRequest() {
 		offset = 0;
 	}
 	
-	if(!entityLib.hasConflictingParameters(id, count, metadata)) {
+	if(!entity${entityName}.hasConflictingParameters(id, count, metadata)) {
 		// switch based on method type
 		if ((method === 'POST')) {
 			// create
@@ -55,15 +57,15 @@ function handleRequest() {
 			entity${entityName}.update${entityName}();    
 		} else if ((method === 'DELETE')) {
 			// delete
-			if(entityLib.isInputParameterValid(idParameter)){
+			if(entity${entityName}.isInputParameterValid(idParameter)){
 				entity${entityName}.delete${entityName}(id);
 			}
 		} else {
-			entityLib.printError($\.getResponse().SC_BAD_REQUEST, 1, "Invalid HTTP Method", method);
+			entity${entityName}.printError(response.BAD_REQUEST, 4, "Invalid HTTP Method", method);
 		}
 	}
 	
 	// flush and close the response
-	$\.getResponse().getWriter().flush();
-	$\.getResponse().getWriter().close();
+	response.flush();
+	response.close();
 }

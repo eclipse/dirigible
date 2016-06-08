@@ -1,14 +1,17 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var ioLib = require('io');
-var entityLib = require('entity');
+var request = require("net/http/request");
+var response = require("net/http/response");
+var database = require("db/database");
+
+var datasource = database.getDatasource();
 
 // create entity by parsing JSON object from request body
 exports.create${entityName} = function() {
-    var input = ioLib.read($\.getRequest().getInputStream());
+    var input = request.readInputText();
     var requestBody = JSON.parse(input);
-    var connection = $\.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var sql = "INSERT INTO ${tableName} (";
 #foreach ($tableColumn in $tableColumns)
@@ -30,7 +33,7 @@ exports.create${entityName} = function() {
         var i = 0;
 #foreach ($tableColumn in $tableColumns)
 #if ($tableColumn.isKey())
-        var id = $\.getDatabaseUtils().getNext('${tableName}_${tableColumn.getName()}');
+        var id = datasource.getSequence('${tableName}_${tableColumn.getName()}').next();
         statement.setInt(++i, id);
 #else    
 #if ($tableColumn.getType() == $INTEGER)
@@ -50,21 +53,21 @@ exports.create${entityName} = function() {
 #elseif ($tableColumn.getType() == $DATE)
         if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
+            statement.setDate(++i, js_date_${tableColumn.getName().toLowerCase()});
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
         if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
+            statement.setTime(++i, js_date_${tableColumn.getName().toLowerCase()});
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
         if (requestBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(requestBody.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
+            statement.setTimestamp(++i, js_date_${tableColumn.getName().toLowerCase()});
         } else {
             statement.setTimestamp(++i, null);
         }
@@ -74,11 +77,11 @@ exports.create${entityName} = function() {
 #end
 #end
         statement.executeUpdate();
-		$\.getResponse().getWriter().println(id);
+		response.println(id);
         return id;
     } catch(e) {
-        var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message, sql);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -87,7 +90,7 @@ exports.create${entityName} = function() {
 
 // read single entity by id and print as JSON object to response
 exports.read${entityName}Entity = function(id) {
-    var connection = $\.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var result;
         var sql = "SELECT * FROM ${tableName} WHERE " + exports.pkToSQL();
@@ -98,13 +101,13 @@ exports.read${entityName}Entity = function(id) {
         if (resultSet.next()) {
             result = createEntity(resultSet);
         } else {
-        	entityLib.printError($\.getResponse().SC_NOT_FOUND, 1, "Record with id: " + id + " does not exist.", sql);
+        	exports.printError(response.NOT_FOUND, 1, "Record with id: " + id + " does not exist.", sql);
         }
         var jsonResponse = JSON.stringify(result, null, 2);
-        $\.getResponse().getWriter().println(jsonResponse);
+        response.println(jsonResponse);
     } catch(e){
-        var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message, sql);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -112,12 +115,12 @@ exports.read${entityName}Entity = function(id) {
 
 // read all entities and print them as JSON array to response
 exports.read${entityName}List = function(limit, offset, sort, desc) {
-    var connection = $\.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var result = [];
         var sql = "SELECT ";
         if (limit !== null && offset !== null) {
-            sql += " " + $\.getDatabaseUtils().createTopAndStart(limit, offset);
+            sql += " " + datasource.getPaging().genTopAndStart(limit, offset);
         }
         sql += " * FROM ${tableName}";
         if (sort !== null) {
@@ -127,7 +130,7 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
             sql += " DESC ";
         }
         if (limit !== null && offset !== null) {
-            sql += " " + $\.getDatabaseUtils().createLimitAndOffset(limit, offset);
+            sql += " " + datasource.getPaging().genLimitAndOffset(limit, offset);
         }
         var statement = connection.prepareStatement(sql);
         var resultSet = statement.executeQuery();
@@ -135,10 +138,10 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
             result.push(createEntity(resultSet));
         }
         var jsonResponse = JSON.stringify(result, null, 2);
-        $\.getResponse().getWriter().println(jsonResponse);
+        response.println(jsonResponse);
     } catch(e){
-        var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message, sql);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -196,9 +199,9 @@ function convertToDateString(date) {
 
 // update entity by id
 exports.update${entityName} = function() {
-    var input = ioLib.read($\.getRequest().getInputStream());
+    var input = request.readInputText();
     var responseBody = JSON.parse(input);
-    var connection = $\.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var sql = "UPDATE ${tableName} SET ";
 #foreach ($tableColumn in $tableColumnsWithoutKeys)
@@ -232,21 +235,21 @@ exports.update${entityName} = function() {
 #elseif ($tableColumn.getType() == $DATE)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, $\.getDatabaseUtils().createDate(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
+            statement.setDate(++i, js_date_${tableColumn.getName().toLowerCase()});
         } else {
             statement.setDate(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIME)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, $\.getDatabaseUtils().createTime(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
+            statement.setTime(++i, js_date_${tableColumn.getName().toLowerCase()});
         } else {
             statement.setTime(++i, null);
         }
 #elseif ($tableColumn.getType() == $TIMESTAMP)
         if (responseBody.${tableColumn.getName().toLowerCase()} !== null) {
             var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(responseBody.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, $\.getDatabaseUtils().createTimestamp(js_date_${tableColumn.getName().toLowerCase()}.getTime()));
+            statement.setTimestamp(++i, js_date_${tableColumn.getName().toLowerCase()});
         } else {
             statement.setTimestamp(++i, null);
         }
@@ -261,10 +264,10 @@ exports.update${entityName} = function() {
 #end
 #end
         statement.executeUpdate();
-		$\.getResponse().getWriter().println(id);
+		response.println(id);
     } catch(e){
-        var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message, sql);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -272,16 +275,16 @@ exports.update${entityName} = function() {
 
 // delete entity
 exports.delete${entityName} = function(id) {
-    var connection = $\.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
     	var sql = "DELETE FROM ${tableName} WHERE " + exports.pkToSQL();
         var statement = connection.prepareStatement(sql);
         statement.setString(1, id);
         statement.executeUpdate();
-        $\.getResponse().getWriter().println(id);
+        response.println(id);
     } catch(e){
-        var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message, sql);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -289,7 +292,7 @@ exports.delete${entityName} = function(id) {
 
 exports.count${entityName} = function() {
     var count = 0;
-    var connection = $\.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
     	var sql = 'SELECT COUNT(*) FROM ${tableName}';
         var statement = connection.createStatement();
@@ -298,12 +301,12 @@ exports.count${entityName} = function() {
             count = rs.getInt(1);
         }
     } catch(e){
-        var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message, sql);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
-    $\.getResponse().getWriter().println(count);
+    response.println(count);
 };
 
 exports.metadata${entityName} = function() {
@@ -368,7 +371,7 @@ exports.metadata${entityName} = function() {
 
 #end
 
-	$\.getResponse().getWriter().println(JSON.stringify(entityMetadata));
+	response.println(JSON.stringify(entityMetadata));
 };
 
 exports.getPrimaryKeys = function() {
@@ -380,9 +383,9 @@ exports.getPrimaryKeys = function() {
 #end
 #end
     if (result === 0) {
-        throw $\.getExceptionUtils().createException("There is no primary key");
+        throw new Error("There is no primary key");
     } else if(result.length > 1) {
-        throw $\.getExceptionUtils().createException("More than one Primary Key is not supported.");
+        throw new Error("More than one Primary Key is not supported.");
     }
     return result;
 };
@@ -395,3 +398,37 @@ exports.pkToSQL = function() {
     var pks = exports.getPrimaryKeys();
     return pks[0] + " = ?";
 };
+
+exports.hasConflictingParameters = function(id, count, metadata) {
+    if(id !== null && count !== null){
+    	printError(response.EXPECTATION_FAILED, 1, "Expectation failed: conflicting parameters - id, count");
+        return true;
+    }
+    if(id !== null && metadata !== null){
+    	printError(response.EXPECTATION_FAILED, 2, "Expectation failed: conflicting parameters - id, metadata");
+        return true;
+    }
+    return false;
+}
+
+// check whether the parameter exists 
+exports.isInputParameterValid = function(paramName) {
+    var param = request.getParameter(paramName);
+    if(param === null || param === undefined){
+    	printError(response.PRECONDITION_FAILED, 3, "Expected parameter is missing: " + paramName);
+        return false;
+    }
+    return true;
+}
+
+// print error
+exports.printError = function(httpCode, errCode, errMessage, errContext) {
+    var body = {'err': {'code': errCode, 'message': errMessage}};
+    response.setStatus(httpCode);
+    response.setHeader("Content-Type", "application/json");
+    response.print(JSON.stringify(body));
+    console.error(JSON.stringify(body));
+    if (errContext !== null) {
+    	console.error(JSON.stringify(errContext));
+    }
+}

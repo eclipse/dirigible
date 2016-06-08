@@ -3,9 +3,9 @@
 
 var response = require('net/http/response');
 
-// print in system output
+// print in the system output
 console.info("Hello World!");
-// print in response
+// print in the response
 response.setContentType("text/html; charset=UTF-8");
 response.setCharacterEncoding("UTF-8");
 response.println("Hello World!");

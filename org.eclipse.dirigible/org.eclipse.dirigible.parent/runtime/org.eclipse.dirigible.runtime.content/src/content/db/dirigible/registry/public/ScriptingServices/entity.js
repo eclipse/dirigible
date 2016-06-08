@@ -1,10 +1,10 @@
 exports.hasConflictingParameters = function(id, count, metadata) {
     if(id !== null && count !== null){
-        makeError(javax.servlet.http.HttpServletResponse.SC_EXPECTATION_FAILED, 1, "Precondition failed: conflicting parameters - id, count");
+    	printError(javax.servlet.http.HttpServletResponse.SC_EXPECTATION_FAILED, 1, "Precondition failed: conflicting parameters - id, count");
         return true;
     }
     if(id !== null && metadata !== null){
-        makeError(javax.servlet.http.HttpServletResponse.SC_EXPECTATION_FAILED, 1, "Precondition failed: conflicting parameters - id, metadata");
+    	printError(javax.servlet.http.HttpServletResponse.SC_EXPECTATION_FAILED, 2, "Precondition failed: conflicting parameters - id, metadata");
         return true;
     }
     return false;
@@ -14,7 +14,7 @@ exports.hasConflictingParameters = function(id, count, metadata) {
 exports.isInputParameterValid = function(paramName) {
     var param = request.getParameter(paramName);
     if(param === null || param === undefined){
-        makeError(javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED, 1, "Expected parameter is missing: " + paramName);
+    	printError(javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED, 3, "Expected parameter is missing: " + paramName);
         return false;
     }
     return true;

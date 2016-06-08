@@ -1,17 +1,20 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var ioLib = require('io');
-var entityLib = require('entity');
+var request = require("net/http/request");
+var response = require("net/http/response");
+var database = require("db/database");
+
+var datasource = database.getDatasource();
 
 // read all entities and print them as JSON array to response
 exports.read${entityName}List = function(limit, offset, sort, desc) {
-    var connection = $\.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var result = [];
         var sql = "SELECT ";
         if (limit !== null && offset !== null) {
-            sql += " " + $\.getDatabaseUtils().createTopAndStart(limit, offset);
+            sql += " " + datasource.getPaging().genTopAndStart(limit, offset);
         }
         sql += " * FROM ${tableName}";
         if (sort !== null) {
@@ -21,7 +24,7 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
             sql += " DESC ";
         }
         if (limit !== null && offset !== null) {
-            sql += " " + $\.getDatabaseUtils().createLimitAndOffset(limit, offset);
+            sql += " " + datasource.getPaging().genLimitAndOffset(limit, offset);
         }
         var statement = connection.prepareStatement(sql);
         var resultSet = statement.executeQuery();
@@ -29,10 +32,10 @@ exports.read${entityName}List = function(limit, offset, sort, desc) {
             result.push(createEntity(resultSet));
         }
         var jsonResponse = JSON.stringify(result, null, 2);
-        $\.getResponse().getWriter().println(jsonResponse);
+        response.println(jsonResponse);
     } catch(e){
-        var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message);
     } finally {
         connection.close();
     }
@@ -91,7 +94,7 @@ function convertToDateString(date) {
 
 exports.count${entityName} = function() {
     var count = 0;
-    var connection = $\.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var statement = connection.createStatement();
         var rs = statement.executeQuery('SELECT COUNT(*) FROM ${tableName}');
@@ -99,12 +102,12 @@ exports.count${entityName} = function() {
             count = rs.getInt(1);
         }
     } catch(e){
-        var errorCode = $\.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message);
     } finally {
         connection.close();
     }
-    $\.getResponse().getWriter().println(count);
+    response.println(count);
 };
 
 exports.metadata${entityName} = function() {
@@ -169,5 +172,40 @@ exports.metadata${entityName} = function() {
 
 #end
 
-	$\.getResponse().getWriter().println(JSON.stringify(entityMetadata));
+	response.println(JSON.stringify(entityMetadata));
 };
+
+exports.hasConflictingParameters = function(id, count, metadata) {
+    if(id !== null && count !== null){
+    	printError(response.EXPECTATION_FAILED, 1, "Expectation failed: conflicting parameters - id, count");
+        return true;
+    }
+    if(id !== null && metadata !== null){
+    	printError(response.EXPECTATION_FAILED, 2, "Expectation failed: conflicting parameters - id, metadata");
+        return true;
+    }
+    return false;
+}
+
+// check whether the parameter exists 
+exports.isInputParameterValid = function(paramName) {
+    var param = request.getParameter(paramName);
+    if(param === null || param === undefined){
+    	printError(response.PRECONDITION_FAILED, 3, "Expected parameter is missing: " + paramName);
+        return false;
+    }
+    return true;
+}
+
+// print error
+exports.printError = function(httpCode, errCode, errMessage, errContext) {
+    var body = {'err': {'code': errCode, 'message': errMessage}};
+    response.setStatus(httpCode);
+    response.setHeader("Content-Type", "application/json");
+    response.print(JSON.stringify(body));
+    console.error(JSON.stringify(body));
+    if (errContext !== null) {
+    	console.error(JSON.stringify(errContext));
+    }
+}
+
