@@ -1,4 +1,4 @@
-// deprecated: use console.assert()
+// deprecated: use core/assert
 exports.assertTrue = function(message, condition) {
     return org.junit.Assert.assertTrue(message, condition);
 };
