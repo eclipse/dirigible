@@ -96,8 +96,9 @@ exports.count${entityName} = function() {
     var count = 0;
     var connection = datasource.getConnection();
     try {
-        var statement = connection.createStatement();
-        var rs = statement.executeQuery('SELECT COUNT(*) FROM ${tableName}');
+    	var sql = 'SELECT COUNT(*) FROM ${tableName}';
+        var statement = connection.prepareStatement(sql);
+        var rs = statement.executeQuery();
         if (rs.next()) {
             count = rs.getInt(1);
         }

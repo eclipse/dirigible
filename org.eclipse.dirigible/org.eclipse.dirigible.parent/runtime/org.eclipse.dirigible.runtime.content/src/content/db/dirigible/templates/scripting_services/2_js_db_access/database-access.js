@@ -4,14 +4,16 @@
 var database = require('db/database');
 var response = require('net/http/response');
 
+var datasource = database.getDatasource();
+
 response.setContentType("application/json; charset=UTF-8");
 response.setCharacterEncoding("UTF-8");
 
 var count;
-var connection = database.getConnection();
+var connection = datasource.getConnection();
 try {
-    var statement = connection.createStatement();
-    var rs = statement.executeQuery('SELECT COUNT(*) FROM ${tableName}');
+    var statement = connection.prepareStatement('SELECT COUNT(*) FROM ${tableName}');
+    var rs = statement.executeQuery();
     while (rs.next()) {
         count = rs.getInt(1);
     }
