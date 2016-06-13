@@ -64,6 +64,7 @@ public interface ICommonConstants {
 		public static final String WIKI = "wiki"; //$NON-NLS-1$
 		public static final String MOBILE = "mobile"; //$NON-NLS-1$
 		public static final String SQL = "sql"; //$NON-NLS-1$
+		public static final String TEST = "test"; //$NON-NLS-1$
 	}
 
 	public interface ENGINE_ALIAS {
@@ -77,6 +78,7 @@ public interface ICommonConstants {
 		public static final String WIKI = "wiki"; //$NON-NLS-1$
 		public static final String MOBILE = "mobile"; //$NON-NLS-1$
 		public static final String SQL = "sql"; //$NON-NLS-1$
+		public static final String TEST = "test"; //$NON-NLS-1$
 	}
 
 	public static final String DATA_CONTENT_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC

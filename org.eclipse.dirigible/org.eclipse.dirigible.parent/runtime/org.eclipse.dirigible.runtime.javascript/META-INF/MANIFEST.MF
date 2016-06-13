@@ -46,6 +46,6 @@ Export-Package: org.eclipse.dirigible.runtime.filter,
  org.eclipse.dirigible.runtime.js.debug,
  org.eclipse.dirigible.runtime.registry
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGi-INF/javascript-executor.xml, OSGi-INF/runtime-javascript.xml, OSGi-INF/runtime-test.xml, OSGi-INF/runtime-registry-javascript.xml, OSGi-INF/runtime-registry-test.xml
+Service-Component: OSGi-INF/javascript-executor.xml, OSGi-INF/runtime-javascript.xml, OSGi-INF/runtime-test.xml, OSGi-INF/runtime-registry-javascript.xml, OSGi-INF/runtime-registry-test.xml, OSGi-INF/test-executor.xml
 Bundle-ClassPath: .
 Bundle-Activator: org.eclipse.dirigible.runtime.js.JavaScriptActivator

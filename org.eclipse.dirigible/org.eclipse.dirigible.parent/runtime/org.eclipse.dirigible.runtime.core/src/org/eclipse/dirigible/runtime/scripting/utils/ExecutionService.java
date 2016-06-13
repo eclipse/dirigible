@@ -42,7 +42,7 @@ public class ExecutionService implements IExecutionService {
 			Set<String> types = EngineUtils.getAliases();
 			for (String type : types) {
 				if ((type != null) && type.equalsIgnoreCase(serviceType)) {
-					IScriptExecutor scriptExecutor = EngineUtils.createExecutorByAlias(type, null);
+					IScriptExecutor scriptExecutor = EngineUtils.createExecutorByAlias(type, request);
 					return scriptExecutor.executeServiceModule(request, response, module, executionContext);
 				}
 			}
