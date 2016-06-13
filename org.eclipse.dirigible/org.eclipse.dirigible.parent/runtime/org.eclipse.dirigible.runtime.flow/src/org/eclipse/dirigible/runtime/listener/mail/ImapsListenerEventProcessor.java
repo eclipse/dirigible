@@ -98,7 +98,10 @@ public class ImapsListenerEventProcessor implements IListenerEventProcessor, IMa
 		}
 		logger.debug("Mail: " + mail);
 		executionContext.put(PARAM_MAIL, mail);
-		ListenerProcessor.executeByEngineType(getListener().getModule(), executionContext, getListener());
+		Object result = ListenerProcessor.executeByEngineType(getListener().getModule(), executionContext, getListener());
+		if (result != null) {
+			logger.info(result.toString());
+		}
 	}
 
 	private String parseMail(Message message) throws IOException, MessagingException {

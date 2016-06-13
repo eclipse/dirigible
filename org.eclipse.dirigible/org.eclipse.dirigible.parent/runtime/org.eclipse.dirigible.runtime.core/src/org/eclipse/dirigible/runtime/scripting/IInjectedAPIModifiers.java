@@ -95,4 +95,6 @@ public interface IInjectedAPIModifiers {
 
 	public void setConsole(Console console);
 
+	public void setExecutionService(IExecutionService executionService);
+
 }

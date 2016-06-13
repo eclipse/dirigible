@@ -209,6 +209,11 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 	}
 
 	@Override
+	public IExecutionService getExecutionService() {
+		return builder.getExecutionService();
+	}
+
+	@Override
 	public NamedDataSourcesUtils getNamedDatasources() {
 		return builder.getNamedDatasources();
 	}

@@ -27,6 +27,7 @@ public interface IInjectedAPIAliases {
 	public static final String INDEXING_SERVICE = "indexer"; //$NON-NLS-1$
 	public static final String MESSAGE_HUB = "messageHub"; //$NON-NLS-1$
 	public static final String TEMPLATING_ENGINE = "templatingEngine"; //$NON-NLS-1$
+	public static final String EXECUTION_SERVICE = "exec"; //$NON-NLS-1$
 
 	public static final String CONNECTIVITY_SERVICE = "connectivity"; //$NON-NLS-1$
 

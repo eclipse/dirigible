@@ -27,15 +27,15 @@ public class ListenerProcessor {
 
 	private static final Logger logger = Logger.getLogger(ListenerProcessor.class);
 
-	public static void executeByEngineType(String module, Map<Object, Object> executionContext, Listener listener) {
+	public static Object executeByEngineType(String module, Map<Object, Object> executionContext, Listener listener) {
 		logListener(listener, executionContext, ListenerLog.STATUS_STARTED, "");
-
+		Object result = null;
 		try {
 			Set<String> types = EngineUtils.getTypes();
 			for (String type : types) {
 				if ((type != null) && type.equalsIgnoreCase(listener.getType())) {
 					IScriptExecutor scriptExecutor = EngineUtils.createExecutor(type, null);
-					scriptExecutor.executeServiceModule(null, null, module, executionContext);
+					result = scriptExecutor.executeServiceModule(null, null, module, executionContext);
 					break;
 				}
 			}
@@ -45,6 +45,7 @@ public class ListenerProcessor {
 		}
 
 		logListener(listener, executionContext, ListenerLog.STATUS_COMPLETED, "");
+		return result;
 	}
 
 	private static void logListener(Listener listener, Map<Object, Object> executionContext, int status, String message) {

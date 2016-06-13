@@ -51,6 +51,7 @@ import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ConnectivityConfigurationUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.ExecutionService;
 import org.eclipse.dirigible.runtime.scripting.utils.FileStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.IndexingService;
@@ -171,6 +172,9 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		// Templating Service
 		registerTemplatingService(executionContext, scope, apiBuilder);
 
+		// Executing Service
+		registerExecutingService(executionContext, scope, apiBuilder);
+
 		// Utils
 
 		// put Apache Commons IOUtils
@@ -264,6 +268,16 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 			TemplatingEngine templatingEngine = new TemplatingEngine();
 			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.TEMPLATING_ENGINE, templatingEngine);
 			apiBuilder.setTemplatingService(templatingEngine);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerExecutingService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		try {
+			IExecutionService executionService = new ExecutionService();
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.EXECUTION_SERVICE, executionService);
+			apiBuilder.setExecutionService(executionService);
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
 		}

@@ -135,6 +135,11 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	private ITemplatingService templatingService;
 
 	/**
+	 * The templating service facade
+	 */
+	private IExecutionService executionService;
+
+	/**
 	 * Utilities
 	 */
 
@@ -487,6 +492,16 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	@Override
 	public void setTemplatingService(ITemplatingService templatingService) {
 		this.templatingService = templatingService;
+	}
+
+	@Override
+	public IExecutionService getExecutionService() {
+		return this.executionService;
+	}
+
+	@Override
+	public void setExecutionService(IExecutionService executionService) {
+		this.executionService = executionService;
 	}
 
 	@Override

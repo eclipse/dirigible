@@ -115,8 +115,10 @@ public class WrappedDataSource implements DataSource {
 			if (connections.size() == MAX_CONNECTIONS_COUNT) {
 				try {
 					synchronized (this) {
-						// wait some time and re-check
-						this.wait(WAIT_TIMEOUT);
+						while (getOldestConnection().getTimeUsed() < (WAIT_TIMEOUT * WAIT_COUNT)) {
+							// wait some time and re-check
+							this.wait(WAIT_TIMEOUT);
+						}
 					}
 				} catch (InterruptedException e) {
 					logger.error(e.getMessage(), e);
@@ -130,6 +132,16 @@ public class WrappedDataSource implements DataSource {
 
 	private void forceRelaseConnection() throws SQLException {
 		logger.debug("entring - forceRelaseConnection()");
+		WrappedConnection oldestConnection = getOldestConnection();
+		if (oldestConnection != null) {
+			logger.error("Potential connection leak; victim connection is: " + oldestConnection.hashCode() + ", used (ms): "
+					+ oldestConnection.getTimeUsed());
+			oldestConnection.close();
+		}
+		logger.debug("exiting - forceRelaseConnection()");
+	}
+
+	protected WrappedConnection getOldestConnection() {
 		WrappedConnection oldestConnection = null;
 		for (WrappedConnection connection : connections) {
 			if (oldestConnection == null) {
@@ -139,12 +151,7 @@ public class WrappedDataSource implements DataSource {
 				oldestConnection = connection;
 			}
 		}
-		if (oldestConnection != null) {
-			logger.error("Potential connection leak; victim connection is: " + oldestConnection.hashCode() + ", used (ms): "
-					+ oldestConnection.getTimeUsed());
-			oldestConnection.close();
-		}
-		logger.debug("exiting - forceRelaseConnection()");
+		return oldestConnection;
 	}
 
 	private void addConnection(WrappedConnection connection) {

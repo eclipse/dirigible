@@ -168,6 +168,13 @@ public interface IInjectedAPI {
 	public ITemplatingService getTemplatingService();
 
 	/**
+	 * Getter for the Execution Service
+	 *
+	 * @return the Execution Service
+	 */
+	public IExecutionService getExecutionService();
+
+	/**
 	 * Getter for the IO Utilities
 	 *
 	 * @return the IO Utilities
@@ -232,7 +239,7 @@ public interface IInjectedAPI {
 
 	/**
 	 * Getter for the Database Utilities for DataSource
-	 * 
+	 *
 	 * @param dataSource
 	 *            the datasource assigned to this utils
 	 * @return the Database Utilities

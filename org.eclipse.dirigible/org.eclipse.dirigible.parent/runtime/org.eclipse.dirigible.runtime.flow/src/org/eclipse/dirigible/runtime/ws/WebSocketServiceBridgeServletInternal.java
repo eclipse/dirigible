@@ -50,22 +50,29 @@ public class WebSocketServiceBridgeServletInternal {
 		executionContext.put(PARAM_SESSION, session);
 		executionContext.put(PARAM_SESSIONS, openSessions);
 		executionContext.putAll(webSocketRequest.getParams());
-		executeByEngineType(webSocketRequest.getModule(), executionContext, type);
+		Object result = executeByEngineType(webSocketRequest.getModule(), executionContext, type);
+		if (result != null) {
+			try {
+				session.getBasicRemote().sendText(result.toString());
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
 	}
 
-	private static void executeByEngineType(String module, Map<Object, Object> executionContext, String serviceType) {
+	private static Object executeByEngineType(String module, Map<Object, Object> executionContext, String serviceType) {
 		try {
 			Set<String> types = EngineUtils.getAliases();
 			for (String type : types) {
 				if ((type != null) && type.equalsIgnoreCase(serviceType)) {
 					IScriptExecutor scriptExecutor = EngineUtils.createExecutorByAlias(type, null);
-					scriptExecutor.executeServiceModule(null, null, module, executionContext);
-					break;
+					return scriptExecutor.executeServiceModule(null, null, module, executionContext);
 				}
 			}
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
+		return null;
 	}
 
 	public void onError(Session session, String error) {
