@@ -98,6 +98,11 @@ exports.readInput = function() {
 	return streams.read(input);
 };
 
+exports.getInput = function() {
+	var input = new streams.InputStream($.getRequest().getInputStream());
+	return input;
+};
+
 exports.readInputText = function() {
 	var input = new streams.InputStream($.getRequest().getInputStream());
 	return streams.readText(input);

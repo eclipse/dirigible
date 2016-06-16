@@ -35,28 +35,27 @@ function handleRequest(url, method, options) {
     if (url === null) {
 	    url = options.host + ":" + (options.port ? options.port : 80) + (options.path ? options.path : '/');
     }
+
     if (method === null) {
         method = "GET";
     }
-    
-	var request = createRequest(method, url);
-	if (options) {
-	    addHeaders(request, options.headers);
-    }
 
+	var request = createRequest(method, url, options);
 
 	var httpClient = $.getHttpUtils().createHttpClient(true);
 	return createResponse(httpClient.execute(request), options);
 }
 
-function createRequest(method, url) {
+function createRequest(method, url, options) {
 	var request = null;
 	switch(method) {
 		case 'POST':
 			request = $.getHttpUtils().createPost(url);
+			addBody(request, options);
 			break;
 		case 'PUT':
 			request = $.getHttpUtils().createPut(url);
+			addBody(request, options);
 			break;
 		case 'DELETE':
 			request = $.getHttpUtils().createDelete(url);
@@ -64,12 +63,22 @@ function createRequest(method, url) {
 		default:
 			request = $.getHttpUtils().createGet(url);
 	}
+	if (options) {
+	    addHeaders(request, options.headers);
+    }
 	return request;
 }
 
 function addHeaders(httpRequest, headers) {
 	for (var nextHeader in headers) {
 		httpRequest.addHeader(nextHeader, headers[nextHeader]);
+	}
+}
+
+function addBody(request, options) {
+	if (options.body) {
+		var charset = options.charset ? options.charset: "ISO-8859-1";
+		request.setEntity($.getHttpUtils().createHttpEntity(options.body, charset));
 	}
 }
 

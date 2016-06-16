@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 SAP and others.
+ * Copyright (c) 2016 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,19 +18,19 @@ exports.get = function(path, key) {
 		return null;
 	}
 	return new java.lang.String(value === null ? "" : value);
-}
+};
 
 exports.set = function(path, key, value) {
 	$.getConfigurationStorage().putProperty(path, key, value);
-}
+};
 
 exports.delete = function(path) {
 	$.getConfigurationStorage().delete(path);
-}
+};
 
 exports.clear = function() {
 	$.getConfigurationStorage().clear();
-}
+};
 
 exports.getJson = function(path) {
 	try {
@@ -39,8 +39,8 @@ exports.getJson = function(path) {
 		return null;
 	}
 	return new java.lang.String(value === null ? "" : value);
-}
+};
 
 exports.setJson = function(path, json) {
 	$.getConfigurationStorage().putJson(path, json);
-}
+};
