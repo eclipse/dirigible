@@ -56,15 +56,18 @@ public class WorkspacePerspective implements IPerspectiveFactory {
 		// 0.85f, editorArea);
 		// right.addView(CHEAT_SHEET_VIEW_ID);
 
+		// Logs
+		IFolderLayout logs = layout.createFolder("logs", //$NON-NLS-1$
+				IPageLayout.BOTTOM, 0.75f, editorArea);
+		logs.addView(LOG_CONSOLE_VIEW_ID);
+		logs.addView(LOGS_VIEW_ID);
+
 		// Bottom
 		IFolderLayout bottom = layout.createFolder("bottom", //$NON-NLS-1$
 				IPageLayout.BOTTOM, 0.35f, editorArea);
-
 		bottom.addView(WEB_VIEWER_VIEW_ID);
 		bottom.addView(PROPERTY_SHEET_VIEW_ID);
 		// bottom.addView(CONTENT_OUTLINE_VIEW_ID);
-		bottom.addView(LOGS_VIEW_ID);
-		bottom.addView(LOG_CONSOLE_VIEW_ID);
 		bottom.addView(SECURITY_MANAGER_VIEW_ID);
 
 		layout.addShowViewShortcut(WORKSPACE_EXPLORER_VIEW_ID);
