@@ -16,7 +16,6 @@ import static org.apache.commons.io.filefilter.TrueFileFilter.TRUE;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -341,44 +340,22 @@ public class FileSystemRepository implements IRepository {
 			return entities;
 		}
 
-		if (parameter.startsWith("%")) {
-			parameter = parameter.substring(1);
-		}
-
 		File dir = new File(workspacePath);
-		findInDirectory(dir, parameter, entities);
 
-		return entities;
-	}
-
-	private void findInDirectory(File dir, String parameter, List<IEntity> entities) throws IOException {
-
-		final String search = parameter;
-		File[] found = dir.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith(search);
-			}
-		});
-
-		for (File f : found) {
-			String repositoryName = f.getCanonicalPath().substring(getRepositoryPath().length());
+		Iterator<File> foundFiles = FileUtils.iterateFiles(dir,
+				new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
+		while (foundFiles.hasNext()) {
+			File foundFile = foundFiles.next();
+			String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
 			RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
 			entities.add(new LocalResource(this, localRepositoryPath));
 		}
 
-		File[] all = dir.listFiles();
-		for (File f : all) {
-			if (f.isDirectory()) {
-				findInDirectory(f, parameter, entities);
-			}
-		}
+		return entities;
 	}
 
 	@Override
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws IOException {
-		// return repositoryDAO.searchPath(parameter, caseInsensitive);
 		String rootRepositoryPath = getRepositoryPath();
 		List<IEntity> entities = new ArrayList<IEntity>();
 		Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath),
