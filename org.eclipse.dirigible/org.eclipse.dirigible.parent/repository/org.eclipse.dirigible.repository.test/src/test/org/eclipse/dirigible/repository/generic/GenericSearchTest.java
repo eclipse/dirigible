@@ -114,14 +114,14 @@ public class GenericSearchTest {
 			List<IEntity> entities = repository.searchPath("param1", false); //$NON-NLS-1$
 			assertEquals(2, entities.size());
 
-			entities = repository.searchPath("Search", false); //$NON-NLS-1$
-			assertEquals(4, entities.size());
+			entities = repository.searchPath("param", false); //$NON-NLS-1$
+			assertEquals(3, entities.size());
 
-			entities = repository.searchPath("search", false); //$NON-NLS-1$
+			entities = repository.searchPath("Param", false); //$NON-NLS-1$
 			assertEquals(0, entities.size());
 
-			entities = repository.searchPath("search", true); //$NON-NLS-1$
-			assertEquals(4, entities.size());
+			entities = repository.searchPath("Param", true); //$NON-NLS-1$
+			assertEquals(3, entities.size());
 
 			repository.removeResource("/testCollectionSearch/param1.txt"); //$NON-NLS-1$
 			repository.removeResource("/testCollectionSearch/param2.txt"); //$NON-NLS-1$

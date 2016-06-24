@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package test.org.eclipse.dirigible.repository.db;
@@ -22,13 +21,12 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.db.DBRepository;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SearchTest {
 
@@ -48,18 +46,15 @@ public class SearchTest {
 	@Test
 	public void testSearchName() {
 		try {
-			IResource resource = repository.createResource(
-					"/testCollectionSearch/param1.txt", "param1".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			IResource resource = repository.createResource("/testCollectionSearch/param1.txt", "param1".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource(
-					"/testCollectionSearch/param2.txt", "param2".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/param2.txt", "param2".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource(
-					"/testCollectionSearch/param12.txt", "param12".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/param12.txt", "param12".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
@@ -77,15 +72,15 @@ public class SearchTest {
 	@Test
 	public void testSearchNameUnderRoot() {
 		try {
-			IResource resource = repository.createResource("/dddd/file1.txt"); //$NON-NLS-1$ //$NON-NLS-2$
+			IResource resource = repository.createResource("/dddd/file1.txt"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource("/dddd/file2.txt"); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/dddd/file2.txt"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource("/dddd/file3.txt"); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/dddd/file3.txt"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
@@ -106,18 +101,15 @@ public class SearchTest {
 	@Test
 	public void testSearchPath() {
 		try {
-			IResource resource = repository.createResource(
-					"/testCollectionSearch/param1.txt", "param1".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			IResource resource = repository.createResource("/testCollectionSearch/param1.txt", "param1".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource(
-					"/testCollectionSearch/param2.txt", "param2".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/param2.txt", "param2".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource(
-					"/testCollectionSearch/param12.txt", "param12".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/param12.txt", "param12".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
@@ -125,14 +117,14 @@ public class SearchTest {
 			List<IEntity> entities = repository.searchPath("param1", false); //$NON-NLS-1$
 			assertEquals(2, entities.size());
 
-			entities = repository.searchPath("Search", false); //$NON-NLS-1$
-			assertEquals(4, entities.size());
+			entities = repository.searchPath("param", false); //$NON-NLS-1$
+			assertEquals(3, entities.size());
 
-			entities = repository.searchPath("search", false); //$NON-NLS-1$
+			entities = repository.searchPath("Param", false); //$NON-NLS-1$
 			assertEquals(0, entities.size());
 
-			entities = repository.searchPath("search", true); //$NON-NLS-1$
-			assertEquals(4, entities.size());
+			entities = repository.searchPath("Param", true); //$NON-NLS-1$
+			assertEquals(3, entities.size());
 
 			repository.removeResource("/testCollectionSearch/param1.txt"); //$NON-NLS-1$
 			repository.removeResource("/testCollectionSearch/param2.txt"); //$NON-NLS-1$
@@ -147,23 +139,19 @@ public class SearchTest {
 	@Test
 	public void testSearchText() {
 		try {
-			IResource resource = repository.createResource(
-					"/testCollectionSearch/abc1.txt", "abc def".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			IResource resource = repository.createResource("/testCollectionSearch/abc1.txt", "abc def".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource(
-					"/testCollectionSearch/abc2.txt", "ghi jkl".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/abc2.txt", "ghi jkl".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource(
-					"/testCollectionSearch/abc3.txt", "abc jkl".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/abc3.txt", "abc jkl".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource(
-					"/testCollectionSearch/xxx4.txt", "xxx yyy".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/xxx4.txt", "xxx yyy".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());

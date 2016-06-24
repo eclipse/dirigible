@@ -31,8 +31,7 @@ public class LocalSearchTest extends GenericSearchTest {
 
 	@Override
 	public void testSearchPath() {
-		// TODO to be implemented
-		// super.testSearchPath();
+		super.testSearchPath();
 	}
 
 	@Override
