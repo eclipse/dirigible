@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.runtime.commons;
+package org.eclipse.dirigible.runtime.mock;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

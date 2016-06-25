@@ -24,9 +24,9 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.local.LocalRepository;
-import org.eclipse.dirigible.runtime.commons.LocalHttpServletRequest;
-import org.eclipse.dirigible.runtime.commons.LocalHttpServletResponse;
 import org.eclipse.dirigible.runtime.js.rhino.RhinoJavaScriptEngineProvider;
+import org.eclipse.dirigible.runtime.mock.LocalHttpServletRequest;
+import org.eclipse.dirigible.runtime.mock.LocalHttpServletResponse;
 import org.eclipse.dirigible.runtime.registry.AbstractRegistryServlet;
 import org.eclipse.dirigible.runtime.scripting.IJavaScriptEngineExecutor;
 import org.eclipse.dirigible.runtime.scripting.IJavaScriptEngineProvider;
@@ -76,6 +76,7 @@ public class JavaScriptServiceTest {
 			IJavaScriptEngineExecutor javaScriptEngineExecutor = javascriptEngineProvider
 					.create(((JavaScriptExecutor) new JavaScriptScriptExecutorProvider().createExecutor(request)));
 			request.setAttribute("IJavaScriptEngineExecutor", javaScriptEngineExecutor);
+
 			jsServlet.doGet(request, response);
 			response.getWriter().flush();
 			String output = new String(out.toByteArray());

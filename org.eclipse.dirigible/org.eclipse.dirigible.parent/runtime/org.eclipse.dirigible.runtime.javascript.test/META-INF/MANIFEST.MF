@@ -25,6 +25,8 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.junit,
  org.hamcrest,
  org.eclipse.dirigible.runtime.metrics,
+ org.eclipse.dirigible.runtime.core,
+ org.eclipse.dirigible.runtime.javascript.rhino,
  org.eclipse.dirigible.repository.db
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.apache.derby.jdbc

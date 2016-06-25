@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.runtime.commons;
+package org.eclipse.dirigible.runtime.mock;
 
 import java.util.Collections;
 import java.util.Enumeration;

@@ -43,10 +43,12 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 		logger.debug("exiting: constructor()");
 	}
 
+	@Override
 	public IRepository getRepository() {
 		return repository;
 	}
 
+	@Override
 	public String[] getRootPaths() {
 		return rootPaths;
 	}
@@ -58,8 +60,8 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 		IJavaScriptEngineExecutor javascriptEngineExecutor = null;
 		try {
 			javascriptEngineExecutor = JavaScriptActivator.createExecutor("rhino", this);
-		} catch (Error e) {
-			logger.error(e.getMessage());
+		} catch (Throwable t) {
+			logger.error(t.getMessage());
 		}
 		if (javascriptEngineExecutor == null) {
 			javascriptEngineExecutor = (IJavaScriptEngineExecutor) request.getAttribute("IJavaScriptEngineExecutor");
@@ -68,6 +70,7 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 
 	}
 
+	@Override
 	public void beforeExecution(HttpServletRequest request, HttpServletResponse response, String module, Object context) {
 	}
 
