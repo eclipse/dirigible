@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.runtime.js;
+package org.eclipse.dirigible.runtime.js.rhino;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import org.mozilla.javascript.commonjs.module.provider.ModuleSource;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase;
 
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.runtime.scripting.AbstractScriptExecutor;
+import org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor;
 import org.eclipse.dirigible.runtime.scripting.Messages;
 
 public class RepositoryModuleSourceProvider extends ModuleSourceProviderBase {
@@ -33,11 +33,11 @@ public class RepositoryModuleSourceProvider extends ModuleSourceProviderBase {
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 	private static final String JSLIB_EXTENSION = ".js"; //$NON-NLS-1$
 	
-	private AbstractScriptExecutor executor;
+	private IBaseScriptExecutor executor;
 	private IRepository repository;
 	private String[] rootPaths;
 
-	public RepositoryModuleSourceProvider(AbstractScriptExecutor executor, IRepository repository, String ... rootPaths) {
+	public RepositoryModuleSourceProvider(IBaseScriptExecutor executor, IRepository repository, String ... rootPaths) {
 		super();
 		this.executor = executor;
 		this.repository = repository;

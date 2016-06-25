@@ -53,16 +53,6 @@
      </extension>
      
      <extension
-           id="JavaScriptDebugServlet"
-           point="org.eclipse.equinox.http.registry.servlets">
-        <servlet
-              alias="/js-debug"
-              class="org.eclipse.dirigible.runtime.js.debug.JavaScriptDebugServlet"
-              load-on-startup="true">
-        </servlet>
-     </extension>
-     
-     <extension
            point="org.eclipse.equinox.http.registry.filters">
         <filter
               alias="/js"

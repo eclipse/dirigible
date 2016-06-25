@@ -63,7 +63,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
-public abstract class AbstractScriptExecutor implements IScriptExecutor {
+public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseScriptExecutor {
 
 	private static final String THERE_IS_NO_RESOURCE_AT_THE_SPECIFIED_SERVICE_PATH = Messages
 			.getString("ScriptLoader.THERE_IS_NO_RESOURCE_AT_THE_SPECIFIED_SERVICE_PATH"); //$NON-NLS-1$
@@ -96,8 +96,12 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		}
 	}
 
-	protected void registerDefaultVariables(HttpServletRequest request, HttpServletResponse response, Object input,
-			Map<Object, Object> executionContext, IRepository repository, Object scope) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#registerDefaultVariables(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, java.util.Map, org.eclipse.dirigible.repository.api.IRepository, java.lang.Object)
+	 */
+	@Override
+	public void registerDefaultVariables(HttpServletRequest request, HttpServletResponse response, Object input, Map<Object, Object> executionContext,
+			IRepository repository, Object scope) {
 
 		InjectedAPIBuilder apiBuilder = new InjectedAPIBuilder();
 
@@ -422,6 +426,10 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		return dataSource;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#readResourceData(org.eclipse.dirigible.repository.api.IRepository, java.lang.String)
+	 */
+	@Override
 	public byte[] readResourceData(IRepository repository, String repositoryPath) throws IOException {
 		final IResource resource = repository.getResource(repositoryPath);
 		if (!resource.exists()) {
@@ -432,6 +440,10 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		return resource.getContent();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#retrieveModule(org.eclipse.dirigible.repository.api.IRepository, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
 	public Module retrieveModule(IRepository repository, String module, String extension, String... rootPaths) throws IOException {
 
 		for (String rootPath : rootPaths) {
@@ -447,6 +459,10 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		throw new FileNotFoundException(logMsg);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#retrieveModulesByExtension(org.eclipse.dirigible.repository.api.IRepository, java.lang.String, java.lang.String)
+	 */
+	@Override
 	public List<Module> retrieveModulesByExtension(IRepository repository, String extension, String... rootPaths) throws IOException {
 		Map<String, Module> modules = new HashMap<String, Module>();
 		for (int i = rootPaths.length - 1; i >= 0; i--) {
@@ -493,6 +509,10 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		return resourcePath;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#getCollection(org.eclipse.dirigible.repository.api.IRepository, java.lang.String)
+	 */
+	@Override
 	public ICollection getCollection(IRepository repository, String repositoryPath) throws IOException {
 		final ICollection collection = repository.getCollection(repositoryPath);
 		if (!collection.exists()) {
@@ -503,6 +523,10 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor {
 		return collection;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#getResource(org.eclipse.dirigible.repository.api.IRepository, java.lang.String)
+	 */
+	@Override
 	public IResource getResource(IRepository repository, String repositoryPath) throws IOException {
 		final IResource resource = repository.getResource(repositoryPath);
 		if (!resource.exists()) {

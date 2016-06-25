@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.eclipse.dirigible.runtime.javascript
-Bundle-SymbolicName: org.eclipse.dirigible.runtime.javascript;singleton:=true
+Bundle-Name: org.eclipse.dirigible.runtime.javascript.rhino
+Bundle-SymbolicName: org.eclipse.dirigible.runtime.javascript.rhino
 Bundle-Version: 2.4.160519
 Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.dirigible.repository.api,
@@ -21,8 +21,7 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.runtime.security,
  org.eclipse.dirigible.repository.logging,
  org.json,
- org.mozilla.javascript,
- org.eclipse.dirigible.runtime.javascript.rhino;resolution:=optional
+ org.mozilla.javascript
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.mail,
  javax.mail.event,
@@ -42,11 +41,7 @@ Import-Package: javax.mail,
  org.eclipse.dirigible.runtime.chrome.debugger.processing,
  org.eclipse.dirigible.runtime.chrome.debugger.utils,
  org.slf4j
-Export-Package: org.eclipse.dirigible.runtime.filter,
- org.eclipse.dirigible.runtime.js,
- org.eclipse.dirigible.runtime.js.debug,
- org.eclipse.dirigible.runtime.registry
-Bundle-ActivationPolicy: lazy
-Service-Component: OSGi-INF/javascript-executor.xml, OSGi-INF/runtime-javascript.xml, OSGi-INF/runtime-test.xml, OSGi-INF/runtime-registry-javascript.xml, OSGi-INF/runtime-registry-test.xml, OSGi-INF/test-executor.xml
+Export-Package: org.eclipse.dirigible.runtime.js.debug,
+ org.eclipse.dirigible.runtime.js.rhino
+Service-Component: OSGi-INF/rhino-javascript-engine.xml
 Bundle-ClassPath: .
-Bundle-Activator: org.eclipse.dirigible.runtime.js.JavaScriptActivator

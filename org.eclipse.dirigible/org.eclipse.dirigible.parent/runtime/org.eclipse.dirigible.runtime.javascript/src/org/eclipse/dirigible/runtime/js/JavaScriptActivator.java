@@ -1,50 +1,65 @@
 package org.eclipse.dirigible.runtime.js;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.eclipse.dirigible.ide.bridge.DirigibleBridge;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.js.debug.WebSocketDebugBridgeServletInternal;
-import org.eclipse.dirigible.runtime.js.debug.WebSocketDebugSessionServletInternal;
+import org.eclipse.dirigible.runtime.RuntimeActivator;
+import org.eclipse.dirigible.runtime.scripting.IJavaScriptEngineExecutor;
+import org.eclipse.dirigible.runtime.scripting.IJavaScriptEngineProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 
 public class JavaScriptActivator implements BundleActivator {
 
 	private static final Logger logger = Logger.getLogger(JavaScriptActivator.class);
 
-	private static final String DEBUG_ENDPOINT = "debug";
+	private static Map<String, IJavaScriptEngineProvider> javaScriptEngineProviders = Collections
+			.synchronizedMap(new HashMap<String, IJavaScriptEngineProvider>());
 
-	private static WebSocketDebugBridgeServletInternal webSocketDebugBridgeServletInternal;
-	private static WebSocketDebugSessionServletInternal webScoketDebugSessionsServletInternal;
+	private static boolean registered = false;
+
+	static void registerJavaScriptEngineProviders() {
+
+		synchronized (JavaScriptActivator.class) {
+			if (registered) {
+				return;
+			}
+
+			// register javascript engine providers
+			try {
+				BundleContext context = RuntimeActivator.getContext();
+				Collection<ServiceReference<IJavaScriptEngineProvider>> serviceReferences = context
+						.getServiceReferences(IJavaScriptEngineProvider.class, null);
+				for (ServiceReference<IJavaScriptEngineProvider> serviceReference : serviceReferences) {
+					IJavaScriptEngineProvider javaScriptEngineProvider = context.getService(serviceReference);
+					javaScriptEngineProviders.put(javaScriptEngineProvider.getType(), javaScriptEngineProvider);
+				}
+			} catch (InvalidSyntaxException e) {
+				logger.error(e.getMessage(), e);
+			}
+			registered = true;
+		}
+	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		try {
-			setupDebugChannel();
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-
-	}
-
-	protected void setupDebugChannel() throws IOException {
-
-		logger.debug("Setting debug channel internal ...");
-
-		webSocketDebugBridgeServletInternal = new WebSocketDebugBridgeServletInternal();
-		webScoketDebugSessionsServletInternal = new WebSocketDebugSessionServletInternal();
-		DirigibleBridge.BRIDGES.put("websocket_debug_channel_internal", webSocketDebugBridgeServletInternal);
-		DirigibleBridge.BRIDGES.put("websocket_debug_sessions_internal", webScoketDebugSessionsServletInternal);
-
-		logger.debug("Debug channel internal has been set.");
-
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		webSocketDebugBridgeServletInternal.closeAll();
-		webScoketDebugSessionsServletInternal.closeAll();
+	}
+
+	public static IJavaScriptEngineExecutor createExecutor(String type, JavaScriptExecutor javaScriptExecutor) throws IOException {
+		registerJavaScriptEngineProviders();
+		IJavaScriptEngineProvider javascriptEngineProvider = javaScriptEngineProviders.get(type);
+		IJavaScriptEngineExecutor javacriptExecutor = javascriptEngineProvider.create(javaScriptExecutor);
+		return javacriptExecutor;
 	}
 
 }

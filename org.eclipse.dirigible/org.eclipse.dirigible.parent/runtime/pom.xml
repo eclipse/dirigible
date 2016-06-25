@@ -58,6 +58,8 @@
 		<module>org.eclipse.dirigible.runtime.core</module>
 		<module>org.eclipse.dirigible.runtime.core.test</module>
 		<module>org.eclipse.dirigible.runtime.javascript</module>
+		<module>org.eclipse.dirigible.runtime.javascript.rhino</module>
+		<module>org.eclipse.dirigible.runtime.javascript.rhino.debugger</module>
 		<module>org.eclipse.dirigible.runtime.javascript.test</module>
 		<module>org.eclipse.dirigible.runtime.mobile</module>
 		<module>org.eclipse.dirigible.runtime.command</module>
