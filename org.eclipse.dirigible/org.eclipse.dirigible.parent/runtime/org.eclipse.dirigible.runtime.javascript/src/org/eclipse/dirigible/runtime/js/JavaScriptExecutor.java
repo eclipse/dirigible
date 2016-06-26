@@ -59,7 +59,9 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 
 		IJavaScriptEngineExecutor javascriptEngineExecutor = null;
 		try {
+			// Hard-coded to Rhino until Nashorn incompatibilities get solved
 			javascriptEngineExecutor = JavaScriptActivator.createExecutor("rhino", this);
+			// javascriptEngineExecutor = JavaScriptActivator.createExecutor("nashorn", this);
 		} catch (Throwable t) {
 			logger.error(t.getMessage());
 		}
