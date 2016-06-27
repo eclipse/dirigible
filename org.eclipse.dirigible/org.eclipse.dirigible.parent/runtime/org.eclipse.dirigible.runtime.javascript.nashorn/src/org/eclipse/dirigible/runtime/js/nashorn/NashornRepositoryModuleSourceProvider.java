@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 SAP and others.
+ * Copyright (c) 2016 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.runtime.js.nashorn.commonjs.ISourceProvider;
 import org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor;
 import org.eclipse.dirigible.runtime.scripting.Messages;
 

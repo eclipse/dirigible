@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 SAP and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * SAP - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.dirigible.runtime.js.nashorn;
 
 import java.io.IOException;
@@ -11,8 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.js.nashorn.commonjs.ISourceProvider;
-import org.eclipse.dirigible.runtime.js.nashorn.commonjs.Require;
 import org.eclipse.dirigible.runtime.scripting.IJavaScriptEngineExecutor;
 import org.eclipse.dirigible.runtime.scripting.IJavaScriptExecutor;
 
@@ -45,19 +53,20 @@ public class NashornJavaScriptEngineExecutor implements IJavaScriptEngineExecuto
 		NashornScriptEngine engine = (NashornScriptEngine) engineManager.getEngineByName("nashorn");
 
 		try {
-			ISourceProvider provider = createRepositoryModuleSourceProvider();
-			Require.enable(engine, provider);
-
+			ISourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 			Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+			bindings.put("sourceProvider", sourceProvider);
 
 			this.javaScriptExecutor.registerDefaultVariables(request, response, input, executionContext, this.javaScriptExecutor.getRepository(),
 					bindings);
 
 			this.javaScriptExecutor.beforeExecution(request, response, module, bindings);
 
-			String code = provider.loadSource(module);
+			String code = sourceProvider.loadSource(module);
 
 			try {
+				engine.eval(Require.CODE);
+				engine.eval("load(\"nashorn:mozilla_compat.js\");");
 				result = engine.eval(code);
 			} catch (ScriptException e) {
 				if ((e.getMessage() != null) && e.getMessage().contains(IJavaScriptExecutor.EXPORTS_ERR)) {

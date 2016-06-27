@@ -156,7 +156,7 @@ public class Logger {
 	 * that caused the logging.
 	 */
 	public void debug(String message, Throwable t) {
-		notifyListeners("debug", message);
+		// notifyListeners("debug", message);
 		if (isDebugEnabled()) {
 			logger1.debug(message, t);
 			logger2.log(Level.FINE, message, t);
@@ -176,7 +176,7 @@ public class Logger {
 	 * that caused the logging.
 	 */
 	public void trace(String message, Throwable t) {
-		notifyListeners("trace", message);
+		// notifyListeners("trace", message);
 		if (isTraceEnabled()) {
 			logger1.trace(message, t);
 			logger2.log(Level.FINE, message, t);

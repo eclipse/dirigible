@@ -27,6 +27,12 @@ import org.mozilla.javascript.ScriptableObject;
 
 public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaScriptExecutor {
 
+	private static final String JS_TYPE_INTERNAL = "IJavaScriptEngineExecutor";
+
+	private static final String JS_TYPE_RHINO = "rhino";
+
+	private static final String JS_TYPE_NASHORN = "nashorn";
+
 	private static final Logger logger = Logger.getLogger(JavaScriptExecutor.class);
 
 	private IRepository repository;
@@ -58,15 +64,23 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 			Map<Object, Object> executionContext) throws IOException {
 
 		IJavaScriptEngineExecutor javascriptEngineExecutor = null;
-		try {
-			// Hard-coded to Rhino until Nashorn incompatibilities get solved
-			javascriptEngineExecutor = JavaScriptActivator.createExecutor("rhino", this);
-			// javascriptEngineExecutor = JavaScriptActivator.createExecutor("nashorn", this);
-		} catch (Throwable t) {
-			logger.error(t.getMessage());
-		}
+
+		// lookup for externally provided engine executor - e.g. test framework
+		javascriptEngineExecutor = (IJavaScriptEngineExecutor) request.getAttribute(JS_TYPE_INTERNAL);
+
 		if (javascriptEngineExecutor == null) {
-			javascriptEngineExecutor = (IJavaScriptEngineExecutor) request.getAttribute("IJavaScriptEngineExecutor");
+			try {
+				String nashorn = request.getParameter(JS_TYPE_NASHORN);
+				if ((nashorn != null) && Boolean.parseBoolean(nashorn)) {
+					javascriptEngineExecutor = JavaScriptActivator.createExecutor(JS_TYPE_NASHORN, this);
+				} else {
+					// Hard-coded defaults to Rhino until Nashorn incompatibilities get solved
+					javascriptEngineExecutor = JavaScriptActivator.createExecutor(JS_TYPE_RHINO, this);
+				}
+			} catch (Throwable t) {
+				logger.error(t.getMessage());
+				throw new IOException(t);
+			}
 		}
 		return javascriptEngineExecutor.executeServiceModule(request, response, input, module, executionContext);
 
