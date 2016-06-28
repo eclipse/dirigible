@@ -55,7 +55,9 @@ public class NashornJavaScriptEngineExecutor implements IJavaScriptEngineExecuto
 		try {
 			ISourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 			Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-			bindings.put("sourceProvider", sourceProvider);
+			bindings.put("SourceProvider", sourceProvider);
+
+			bindings.put(IJavaScriptEngineExecutor.JS_ENGINE_TYPE, IJavaScriptEngineExecutor.JS_TYPE_NASHORN);
 
 			this.javaScriptExecutor.registerDefaultVariables(request, response, input, executionContext, this.javaScriptExecutor.getRepository(),
 					bindings);

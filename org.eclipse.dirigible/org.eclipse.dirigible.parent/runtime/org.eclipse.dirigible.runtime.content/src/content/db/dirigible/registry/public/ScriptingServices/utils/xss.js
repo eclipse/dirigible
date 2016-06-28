@@ -8,13 +8,19 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* globals $ java */
+/* globals $ java engine */
 /* eslint-env node, dirigible */
 
 exports.escapeCsv = function(data) {
 	try {
-		var value = $.getXssUtils().escapeCsv(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.escapeCsv(data);
+		} else {
+			value = $.getXssUtils().escapeCsv(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -22,8 +28,14 @@ exports.escapeCsv = function(data) {
 
 exports.escapeHtml = function(data) {
 	try {
-		var value = $.getXssUtils().escapeHtml(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.escapeHtml(data);
+		} else {
+			value = $.getXssUtils().escapeHtml(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -31,8 +43,14 @@ exports.escapeHtml = function(data) {
 
 exports.escapeJava = function(data) {
 	try {
-		var value = $.getXssUtils().escapeJava(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.escapeJava(data);
+		} else {
+			value = $.getXssUtils().escapeJava(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -40,8 +58,14 @@ exports.escapeJava = function(data) {
 
 exports.escapeJavaScript = function(data) {
 	try {
-		var value = $.getXssUtils().escapeJavaScript(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.escapeJavaScript(data);
+		} else {
+			value = $.getXssUtils().escapeJavaScript(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -49,8 +73,14 @@ exports.escapeJavaScript = function(data) {
 
 exports.escapeSql = function(data) {
 	try {
-		var value = $.getXssUtils().escapeSql(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.escapeSql(data);
+		} else {
+			value = $.getXssUtils().escapeSql(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -58,8 +88,14 @@ exports.escapeSql = function(data) {
 
 exports.escapeXml = function(data) {
 	try {
-		var value = $.getXssUtils().escapeXml(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.escapeXml(data);
+		} else {
+			value = $.getXssUtils().escapeXml(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -67,8 +103,14 @@ exports.escapeXml = function(data) {
 
 exports.unescapeCsv = function(data) {
 	try {
-		var value = $.getXssUtils().unescapeCsv(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.unescapeCsv(data);
+		} else {
+			value = $.getXssUtils().unescapeCsv(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -76,8 +118,14 @@ exports.unescapeCsv = function(data) {
 
 exports.unescapeHtml = function(data) {
 	try {
-		var value = $.getXssUtils().unescapeHtml(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.unescapeHtml(data);
+		} else {
+			value = $.getXssUtils().unescapeHtml(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -85,8 +133,14 @@ exports.unescapeHtml = function(data) {
 
 exports.unescapeJava = function(data) {
 	try {
-		var value = $.getXssUtils().unescapeJava(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.unescapeJava(data);
+		} else {
+			value = $.getXssUtils().unescapeJava(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -94,8 +148,14 @@ exports.unescapeJava = function(data) {
 
 exports.unescapeJavaScript = function(data) {
 	try {
-		var value = $.getXssUtils().unescapeJavaScript(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.unescapeJavaScript(data);
+		} else {
+			value = $.getXssUtils().unescapeJavaScript(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -103,8 +163,14 @@ exports.unescapeJavaScript = function(data) {
 
 exports.unescapeSql = function(data) {
 	try {
-		var value = $.getXssUtils().unescapeSql(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.unescapeSql(data);
+		} else {
+			value = $.getXssUtils().unescapeSql(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;
@@ -112,8 +178,14 @@ exports.unescapeSql = function(data) {
 
 exports.unescapeXml = function(data) {
 	try {
-		var value = $.getXssUtils().unescapeXml(data);
+		var value;
+		if (engine === "nashorn") {
+			value = $.getXssUtils().class.static.unescapeXml(data);
+		} else {
+			value = $.getXssUtils().unescapeXml(data);
+		}
 	} catch(e) {
+		console.error(e);
 		return null;
 	}
 	return value;

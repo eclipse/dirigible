@@ -63,15 +63,18 @@ exports.getCookies = function() {
 	var cookies = [];
 	var values = $.getRequest().getCookies();
 	for (var i = 0; i < values.length; i ++) {
-		var cookie = values[i];
-		cookies.push({
-			"name": cookie.getName(),
-			"value": cookie.getValue(),
-			"maxAge": cookie.getMaxAge(),
-			"path": cookie.getPath(),
-			"domain": cookie.getDomain(),
-			"secure": cookie.getSecure()
-		});
+		var internalCookie = values[i];
+		var cookie = new HttpCookie();
+		cookie.name = internalCookie.getName();
+		cookie.value = internalCookie.getValue();
+		cookie.comment = internalCookie.getComment();
+		cookie.maxAge = internalCookie.getMaxAge();
+		cookie.path = internalCookie.getPath();
+		cookie.domain = internalCookie.getDomain();
+		cookie.secure = internalCookie.getSecure();
+		cookie.version = internalCookie.getVersion();
+		cookie.httpOnly = internalCookie.isHttpOnly();
+		cookies.push(cookie);
 	}
 
 	return cookies;
@@ -82,15 +85,15 @@ exports.isUserInRole = function(role) {
 };
 
 exports.getInfo = function() {
-	return {
-		"contextPath": $.getRequest().getPathInfo(),
-		"pathInfo": $.getRequest().getPathInfo(),
-		"protocol": $.getRequest().getProtocol(),
-		"queryString": $.getRequest().getQueryString(),
-		"scheme": $.getRequest().getScheme(),
-		"serverName": $.getRequest().getServerName(),
-		"serverPort": $.getRequest().getServerPort()
-	};
+	var info = new HttpRequestInfo();
+	info.contextPath = $.getRequest().getContextPath();
+	info.pathInfo = $.getRequest().getPathInfo();
+	info.protocol = $.getRequest().getProtocol();
+	info.queryString = $.getRequest().getQueryString();
+	info.scheme = $.getRequest().getScheme();
+	info.serverName = $.getRequest().getServerName();
+	info.serverPort = $.getRequest().getServerPort();
+	return info;
 };
 
 exports.readInput = function() {
@@ -107,3 +110,31 @@ exports.readInputText = function() {
 	var input = new streams.InputStream($.getRequest().getInputStream());
 	return streams.readText(input);
 };
+
+/**
+ * HTTP Cookie object
+ */
+function HttpCookie() {
+	this.name = "";
+	this.value = "";
+	this.comment = "";
+	this.maxAge = 0;
+	this.path = "";
+	this.domain = "";
+	this.secure = false;
+	this.version = 0;
+	this.httpOnly = false;
+}
+
+/**
+ * HTTP Response object
+ */
+function HttpRequestInfo() {
+	this.contextPath = "";
+	this.pathInfo = "";
+	this.protocol = "";
+	this.queryString = "";
+	this.scheme = "";
+	this.serverName = "";
+	this.serverPort = 0;
+}

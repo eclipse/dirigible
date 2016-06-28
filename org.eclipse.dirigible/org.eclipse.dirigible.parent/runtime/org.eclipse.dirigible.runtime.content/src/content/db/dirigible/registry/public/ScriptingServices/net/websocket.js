@@ -13,17 +13,25 @@
 
 exports.getSession = function() {
 	var internalSession = $.getExecutionContext().get("websocket-session");
-	return new Session(internalSession);
+	return new WebsocketSession(internalSession);
 };
 
 exports.getOpenSessions = function() {
-	return $.getExecutionContext().get("websocket-sessions");
+	var openSessions = [];
+	var internalSessions = $.getExecutionContext().get("websocket-sessions");
+	var iterator = internalSessions.iterator();
+	while (iterator.hasNext()) {
+		var internalSession = iterator.next();
+		var session = new WebsocketSession(internalSession);
+		openSessions.push(session);
+	}
+	return openSessions;
 };
 
 /**
  * Session object
  */
-function Session(internalSession) {
+function WebsocketSession(internalSession) {
 	this.internalSession = internalSession;
 	this.getInternalObject = sessionGetInternalObject;
 	this.sendText = sessionSendText;

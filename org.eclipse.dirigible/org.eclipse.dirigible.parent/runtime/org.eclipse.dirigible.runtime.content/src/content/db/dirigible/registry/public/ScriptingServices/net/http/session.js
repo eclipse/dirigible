@@ -37,11 +37,11 @@ exports.getId = function() {
 };
 
 exports.getCreationTime = function() {
-	return $.getSession().getCreationTime();
+	return new Date($.getSession().getCreationTime());
 };
 
 exports.getLastAccessedTime = function() {
-	return $.getSession().getLastAccessedTime();
+	return new Date($.getSession().getLastAccessedTime());
 };
 
 exports.getMaxInactiveInterval = function() {

@@ -84,6 +84,13 @@ function fileGetParent() {
 	return this.internalFile.getParent();
 }
 
+function fileGetParentFile() {
+    if (this.internalFile.getParentFile()) {
+		return new File(this.internalFile.getParentFile());
+	}
+	return null;
+}
+
 function fileIsDirectory() {
 	return this.internalFile.isDirectory();
 }
@@ -97,7 +104,7 @@ function fileIsHidden() {
 }
 
 function fileLastModified() {
-	return this.internalFile.lastModified();
+	return new Date(this.internalFile.lastModified());
 }
 
 function fileLength() {
@@ -115,7 +122,13 @@ function fileList() {
 
 function fileListRoots() {
 	var list = [];
-	var internalList = this.internalFile.listRoots();
+	var internalList;
+	if (engine === "nashorn") {
+		internalList = this.internalFile.class.static.listRoots();
+	} else {
+		internalList = this.internalFile.listRoots();
+	}
+
 	for (i = 0; i < internalList.length; i++) {
 		list.push(internalList[i]);
 	}
@@ -202,15 +215,17 @@ exports.delete = function(path) {
 exports.readText = function(path) {
 	var internalPath = java.nio.file.Paths.get(path);
 	var bytes = java.nio.file.Files.readAllBytes(internalPath);
-	return new java.lang.String(bytes);
+	var result = new java.lang.String(bytes);
+	return result;
 };
 
 /**
  * Write a text content to a file
  */
-exports.writeText = function(path, content) {
+exports.writeText = function(path, text) {
 	var internalPath = java.nio.file.Paths.get(path);
-	java.nio.file.Files.write(internalPath, java.lang.String(content).getBytes());
+	var asString = new java.lang.String(text);
+	java.nio.file.Files.write(internalPath, asString.getBytes());
 };
 
 /**

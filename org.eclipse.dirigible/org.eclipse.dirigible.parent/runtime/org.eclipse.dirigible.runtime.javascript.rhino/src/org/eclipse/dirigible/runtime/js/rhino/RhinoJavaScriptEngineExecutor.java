@@ -58,6 +58,8 @@ public class RhinoJavaScriptEngineExecutor implements IJavaScriptEngineExecutor 
 
 			require.install(topLevelScope);
 
+			topLevelScope.put(IJavaScriptEngineExecutor.JS_ENGINE_TYPE, topLevelScope, IJavaScriptEngineExecutor.JS_TYPE_RHINO);
+
 			this.javaScriptExecutor.registerDefaultVariables(request, response, input, executionContext, this.javaScriptExecutor.getRepository(),
 					topLevelScope);
 

@@ -12,12 +12,16 @@
 
 package org.eclipse.dirigible.runtime.js.nashorn;
 
+/**
+ * This class contains the source code of the require() function (by CommonJS specification), added to the JavaScript
+ * scripting service execution with Nashorn engine, where it is not included by default
+ */
 public class Require {
 
 	public static final String CODE = "var Require = (function(modulePath) {" + "	var _loadedModules = {};" + " var _require = function(path) {"
 			+ " var moduleInfo, buffered, head = '(function(exports,module,require){ ', code = '', tail = '})', line = null;"
 			+ " moduleInfo = _loadedModules[path];" + " if (moduleInfo) {" + "   return moduleInfo;" + " }"
-			+ " code = sourceProvider.loadSource(path);" + " moduleInfo = {" + "   loaded : false," + "   id : path," + "   exports : {},"
+			+ " code = SourceProvider.loadSource(path);" + " moduleInfo = {" + "   loaded : false," + "   id : path," + "   exports : {},"
 			+ "   require : _requireClosure()" + " };" + " code = head + code + tail;" + " _loadedModules[path] = moduleInfo;"
 			+ " var compiledWrapper = null;" + " try {" + "   compiledWrapper = eval(code);" + " } catch (e) {"
 			+ "   throw new Error('Error evaluating module ' + path + ' line #' + e.lineNumber + ' : ' + e.message, path, e.lineNumber);" + " }"

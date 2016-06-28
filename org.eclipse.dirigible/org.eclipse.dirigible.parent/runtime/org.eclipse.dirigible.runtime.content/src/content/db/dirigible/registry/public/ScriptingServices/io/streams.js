@@ -8,14 +8,19 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* globals $ java javax */
+/* globals $ java javax engine */
 /* eslint-env node, dirigible */
 
 /**
  * Read the stream content as a byte array
  */
 exports.read = function(inputStream) {
-	var internalBytes = $.IOUtils.toByteArray(inputStream.getInternalObject());
+	var internalBytes;
+	if (engine === "nashorn") {
+		internalBytes = $.getIOUtils().class.static.toByteArray(inputStream.getInternalObject());
+	} else {
+		internalBytes = $.getIOUtils().toByteArray(inputStream.getInternalObject());
+	}
 	return exports.toJavaScriptBytes(internalBytes);
 };
 
@@ -24,14 +29,23 @@ exports.read = function(inputStream) {
  */
 exports.write = function(outputStream, bytes) {
 	var internalBytes = exports.toJavaBytes(bytes);
-	$.IOUtils.write(internalBytes, outputStream.getInternalObject());
+	if (engine === "nashorn") {
+		$.getIOUtils().class.static.write(internalBytes, outputStream.getInternalObject());
+	} else {
+		$.getIOUtils().write(internalBytes, outputStream.getInternalObject());
+	}
 };
 
 /**
  * Read the stream content as a String
  */
 exports.readText = function(inputStream) {
-	var internalBytes = $.IOUtils.toByteArray(inputStream.getInternalObject());
+	var internalBytes;
+	if (engine === "nashorn") {
+		internalBytes = $.IOUtils.class.static.toByteArray(inputStream.getInternalObject());
+	} else {
+		internalBytes = $.IOUtils.toByteArray(inputStream.getInternalObject());
+	}
 	return new java.lang.String(internalBytes);
 };
 
@@ -39,21 +53,33 @@ exports.readText = function(inputStream) {
  * Read the stream to a byte array
  */
 exports.writeText = function(outputStream, text) {
-	$.IOUtils.write(text, outputStream.getInternalObject());
+	if (engine === "nashorn") {
+		$.getIOUtils().class.static.write(text, outputStream.getInternalObject());
+	} else {
+		$.getIOUtils().write(text, outputStream.getInternalObject());
+	}
 };
 
 /**
  * Copy the input stream content to an output stream
  */
 exports.copy = function(inputStream, outputStream) {
-	$.IOUtils.copy(inputStream.getInternalObject(), outputStream.getInternalObject());
+	if (engine === "nashorn") {
+		$.getIOUtils().class.static.copy(inputStream.getInternalObject(), outputStream.getInternalObject());
+	} else {
+		$.getIOUtils().copy(inputStream.getInternalObject(), outputStream.getInternalObject());
+	}
 };
 
 /**
  * Copy the input stream large (>2GB) content to an output stream
  */
 exports.copyLarge = function(inputStream, outputStream) {
-	$.IOUtils.copyLarge(inputStream.getInternalObject(), outputStream.getInternalObject());
+	if (engine === "nashorn") {
+		$.getIOUtils().class.static.copyLarge(inputStream.getInternalObject(), outputStream.getInternalObject());
+	} else {
+		$.getIOUtils().copyLarge(inputStream.getInternalObject(), outputStream.getInternalObject());
+	}
 };
 
 /**

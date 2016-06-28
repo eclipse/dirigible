@@ -15,6 +15,17 @@ exports.get = function(path, key) {
 	try {
 		var value = $.getConfigurationStorage().getProperty(path, key);
 	} catch(e) {
+		console(e.message);
+		return null;
+	}
+	return new java.lang.String(value === null ? "" : value);
+};
+
+exports.get1 = function(path, key) {
+	try {
+		var value = $.getConfigurationStorage().getProperty(path, key);
+	} catch(e) {
+		console(e.message);
 		return null;
 	}
 	return new java.lang.String(value === null ? "" : value);

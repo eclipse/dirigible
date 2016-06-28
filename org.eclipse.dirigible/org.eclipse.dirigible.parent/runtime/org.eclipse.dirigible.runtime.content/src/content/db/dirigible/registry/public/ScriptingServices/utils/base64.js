@@ -8,18 +8,30 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* globals $ java */
+/* globals $ java engine */
 /* eslint-env node, dirigible */
 
 exports.decode = function(input) {
 	var inputBytes = getBytes(input);
-	var outputBytes = $.getBase64Utils().decodeBase64(inputBytes);
+	
+	var outputBytes;
+	if (engine === "nashorn") {
+		outputBytes = $.getBase64Utils().class.static.decodeBase64(inputBytes);
+	} else {
+		outputBytes = $.getBase64Utils().decodeBase64(inputBytes);
+	}
+	
 	return toString(outputBytes);
 };
 
 exports.encode = function(input) {
 	var inputBytes = getBytes(input);
-	var outputBytes = $.getBase64Utils().encodeBase64(inputBytes);
+	var outputBytes;
+	if (engine === "nashorn") {
+		outputBytes = $.getBase64Utils().class.static.encodeBase64(inputBytes);
+	} else {
+		outputBytes = $.getBase64Utils().encodeBase64(inputBytes);
+	}
 	return toString(outputBytes);
 };
 

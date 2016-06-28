@@ -29,10 +29,6 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 
 	private static final String JS_TYPE_INTERNAL = "IJavaScriptEngineExecutor";
 
-	private static final String JS_TYPE_RHINO = "rhino";
-
-	private static final String JS_TYPE_NASHORN = "nashorn";
-
 	private static final Logger logger = Logger.getLogger(JavaScriptExecutor.class);
 
 	private IRepository repository;
@@ -70,12 +66,12 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 
 		if (javascriptEngineExecutor == null) {
 			try {
-				String nashorn = request.getParameter(JS_TYPE_NASHORN);
-				if ((nashorn != null) && Boolean.parseBoolean(nashorn)) {
-					javascriptEngineExecutor = JavaScriptActivator.createExecutor(JS_TYPE_NASHORN, this);
+				String engine = request.getParameter(IJavaScriptEngineExecutor.JS_ENGINE_TYPE);
+				if (IJavaScriptEngineExecutor.JS_TYPE_NASHORN.equalsIgnoreCase(engine)) {
+					javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_NASHORN, this);
 				} else {
 					// Hard-coded defaults to Rhino until Nashorn incompatibilities get solved
-					javascriptEngineExecutor = JavaScriptActivator.createExecutor(JS_TYPE_RHINO, this);
+					javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_RHINO, this);
 				}
 			} catch (Throwable t) {
 				logger.error(t.getMessage());

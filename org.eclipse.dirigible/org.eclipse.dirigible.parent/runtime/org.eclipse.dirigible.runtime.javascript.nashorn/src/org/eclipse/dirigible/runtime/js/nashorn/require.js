@@ -27,7 +27,7 @@ var Require = (function(modulePath) {
 			return moduleInfo;
 		}
 		
-		code = sourceProvider.loadSource(path);
+		code = SourceProvider.loadSource(path);
 		
 		moduleInfo = {
 			loaded : false,

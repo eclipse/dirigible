@@ -12,7 +12,7 @@
 /* eslint-env node, dirigible */
 
 exports.fromJson = function(json) {
-	return $.getXmlUtils().fromJson(json);
+	return $.getXmlUtils().fromJson(JSON.stringify(json));
 };
 
 exports.toJson = function(xml) {
