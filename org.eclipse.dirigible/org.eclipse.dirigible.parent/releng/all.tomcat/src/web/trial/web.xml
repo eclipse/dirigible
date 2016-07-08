@@ -194,6 +194,12 @@
 			<param-name>homeLocation</param-name>
 			<param-value>services/ui/anonymous.html</param-value>
 		</init-param>
+		
+		<!-- Run the present Tests on the server start -->
+		<init-param>
+			<param-name>runTestsOnInit</param-name>
+			<param-value>false</param-value>
+		</init-param>
 
 		<load-on-startup>2</load-on-startup>
 

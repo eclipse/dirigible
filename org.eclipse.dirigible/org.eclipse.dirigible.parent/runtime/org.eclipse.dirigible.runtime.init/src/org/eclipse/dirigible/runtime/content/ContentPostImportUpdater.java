@@ -21,6 +21,7 @@ import org.eclipse.dirigible.repository.ext.db.DsvUpdater;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionUpdater;
 import org.eclipse.dirigible.repository.ext.security.SecurityUpdater;
 import org.eclipse.dirigible.runtime.job.JobsUpdater;
+import org.eclipse.dirigible.runtime.js.test.TestExecutionUpdater;
 import org.eclipse.dirigible.runtime.listener.ListenersUpdater;
 
 public class ContentPostImportUpdater {
@@ -65,6 +66,11 @@ public class ContentPostImportUpdater {
 		ListenersUpdater listenersUpdater = new ListenersUpdater(getRepository(), DataSourceFacade.getInstance().getDataSource(request),
 				ListenersUpdater.REGISTRY_INTEGRATION_DEFAULT);
 		listenersUpdater.applyUpdates();
+
+		// 7. Tests Execution
+		TestExecutionUpdater testExecutionUpdater = new TestExecutionUpdater(getRepository(), DataSourceFacade.getInstance().getDataSource(request),
+				TestExecutionUpdater.REGISTRY_TEST_DEFAULT);
+		testExecutionUpdater.applyUpdates();
 	}
 
 }

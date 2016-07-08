@@ -34,7 +34,7 @@ public class RegistryHomeServlet extends AbstractRegistryServlet {
 
 	private static final Logger logger = Logger.getLogger(RegistryHomeServlet.class);
 
-	private static final String PARAM_HOME_URL = ICommonConstants.HOME_URL;
+	private static final String PARAM_HOME_URL = ICommonConstants.INIT_PARAM_HOME_URL;
 
 	@Override
 	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
