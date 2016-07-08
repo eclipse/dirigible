@@ -14,6 +14,8 @@ import java.util.Map;
 
 public interface IMasterRepositoryProvider {
 
+	public String getType();
+
 	public IMasterRepository createRepository(Map<String, Object> parameters);
 
 }

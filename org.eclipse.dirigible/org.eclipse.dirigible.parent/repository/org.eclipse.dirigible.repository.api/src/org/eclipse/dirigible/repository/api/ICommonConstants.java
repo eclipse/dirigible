@@ -147,5 +147,8 @@ public interface ICommonConstants {
 	public static final String INIT_PARAM_DEFAULT_MAIL_SERVICE_BUILTIN = "built-in"; //$NON-NLS-1$
 	public static final String INIT_PARAM_HOME_URL = "homeLocation"; //$NON-NLS-1$
 	public static final String INIT_PARAM_RUN_TESTS_ON_INIT = "runTestsOnInit"; //$NON-NLS-1$
+	public static final String INIT_PARAM_AUTO_ACTIVATE_ENABLED = "autoActivateEnabled"; //$NON-NLS-1$
+	public static final String INIT_PARAM_AUTO_PUBLISH_ENABLED = "autoPublishEnabled"; //$NON-NLS-1$
+	public static final String INIT_PARAM_ENABLE_SANDBOX = "enableSandbox"; //$NON-NLS-1$
 	// ---
 }

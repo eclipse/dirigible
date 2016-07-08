@@ -23,12 +23,19 @@ public class LocalRepositoryProvider implements IRepositoryProvider {
 	private static final String PARAM_USER = "user";
 	// private static final String PARAM_RECREATE = "recreate";
 
+	public static final String TYPE = "local";
+
 	@Override
 	public IRepository createRepository(Map<String, Object> parameters) {
 		DataSource dataSource = (DataSource) parameters.get(PARAM_DATASOURCE);
 		String user = (String) parameters.get(PARAM_USER);
 		// Boolean forceRecreate = (Boolean) parameters.get(PARAM_RECREATE);
 		return new LocalRepository(dataSource, user);
+	}
+
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
 }

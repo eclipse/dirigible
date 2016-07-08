@@ -66,15 +66,14 @@ public class RepositoryFactory {
 			IRepositoryProvider repositoryProvider = context.getService(serviceReference);
 			repositoryProviders.add(repositoryProvider);
 
-			logger.info(String.format("%s added to the list of available Repository Providers", repositoryProvider.getClass().getCanonicalName()));
+			logger.info(String.format("%s added to the list of available Repository Providers", repositoryProvider.getType()));
 
 			if (defaultRepositoryProvider != null) {
-				if (repositoryProvider.getClass().getCanonicalName().equals(defaultRepositoryProvider)) {
-					logger.info(String.format("Repository Provider %s, set as Local Repository Provider",
-							repositoryProvider.getClass().getCanonicalName()));
+				if (repositoryProvider.getType().equals(defaultRepositoryProvider)) {
+					logger.info(String.format("Repository Provider %s, set as Local Repository Provider", repositoryProvider.getType()));
 					localRepositoryProvider = repositoryProvider;
 				}
-			} else if (repositoryProvider.getClass().getCanonicalName().equals(localRepositoryProviderClass)) {
+			} else if (repositoryProvider.getType().equals(localRepositoryProviderClass)) {
 				logger.info("Standard Local Repository Provider is used");
 				localRepositoryProvider = repositoryProvider;
 			}
@@ -83,7 +82,7 @@ public class RepositoryFactory {
 		if (localRepositoryProvider == null) {
 			for (Object element : repositoryProviders) {
 				IRepositoryProvider repositoryProvider = (IRepositoryProvider) element;
-				if (repositoryProvider.getClass().getCanonicalName().equals(localRepositoryProviderClass)) {
+				if (repositoryProvider.getType().equals(localRepositoryProviderClass)) {
 					logger.info("Fallback to standard Local Repository Provider is used");
 					localRepositoryProvider = repositoryProvider;
 				}
@@ -104,9 +103,8 @@ public class RepositoryFactory {
 			IMasterRepositoryProvider repositoryProvider = context.getService(serviceReference);
 			masterRepositoryProviders.add(repositoryProvider);
 			if (defaultMasterRepositoryProvider != null) {
-				if (repositoryProvider.getClass().getCanonicalName().equals(defaultMasterRepositoryProvider)) {
-					logger.info(String.format("Master Repository Provider %s, set as Master Repository Provider",
-							repositoryProvider.getClass().getCanonicalName()));
+				if (repositoryProvider.getType().equals(defaultMasterRepositoryProvider)) {
+					logger.info(String.format("Master Repository Provider %s, set as Master Repository Provider", repositoryProvider.getType()));
 					masterRepositoryProvider = repositoryProvider;
 				}
 			}

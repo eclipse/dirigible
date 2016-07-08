@@ -113,7 +113,7 @@
 		<!-- Default Repository Provider --> 
 		<init-param>
 			<param-name>repositoryProvider</param-name>
-			<param-value>org.eclipse.dirigible.repository.local.LocalRepositoryProvider</param-value>
+			<param-value>local</param-value>
 		</init-param>
 		
 		<!-- Mail Service Built-in --> 

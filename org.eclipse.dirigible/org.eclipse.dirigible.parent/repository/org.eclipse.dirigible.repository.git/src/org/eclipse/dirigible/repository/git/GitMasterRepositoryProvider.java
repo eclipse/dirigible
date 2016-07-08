@@ -29,6 +29,7 @@ public class GitMasterRepositoryProvider implements IMasterRepositoryProvider {
 	private static final String PARAM_GIT_USER = "masterRepositoryGitUser"; //$NON-NLS-1$
 	private static final String PARAM_GIT_PASSWORD = "masterRepositoryGitPassword"; //$NON-NLS-1$
 	private static final String PARAM_GIT_BRANCH = "masterRepositoryGitBranch"; //$NON-NLS-1$
+	public static final String TYPE = "git";
 
 	@Override
 	public IMasterRepository createRepository(Map<String, Object> parameters) {
@@ -64,6 +65,11 @@ public class GitMasterRepositoryProvider implements IMasterRepositoryProvider {
 
 		logger.debug("Git Mater Repository created.");
 		return result;
+	}
+
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
 }

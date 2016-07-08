@@ -9,12 +9,19 @@ import org.eclipse.dirigible.repository.api.IMasterRepositoryProvider;
 
 public class DBMasterRepositoryProvider implements IMasterRepositoryProvider {
 
+	public static final String TYPE = "db";
+
 	@Override
 	public IMasterRepository createRepository(Map<String, Object> parameters) {
 		DataSource dataSource = (DataSource) parameters.get(DBRepositoryProvider.PARAM_DATASOURCE);
 		String user = (String) parameters.get(DBRepositoryProvider.PARAM_USER);
 		Boolean forceRecreate = (Boolean) parameters.get(DBRepositoryProvider.PARAM_RECREATE);
 		return new DBMasterRepository(dataSource, user, forceRecreate);
+	}
+
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
 }

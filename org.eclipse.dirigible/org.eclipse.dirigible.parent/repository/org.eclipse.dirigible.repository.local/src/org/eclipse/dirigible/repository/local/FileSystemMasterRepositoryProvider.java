@@ -22,12 +22,18 @@ public class FileSystemMasterRepositoryProvider implements IMasterRepositoryProv
 
 	private static final String PARAM_USER = "user";
 	private static final String PARAM_FOLDER = "folder";
+	public static final String TYPE = "filesystem";
 
 	@Override
 	public IMasterRepository createRepository(Map<String, Object> parameters) {
 		String user = (String) parameters.get(PARAM_USER);
 		String folder = (String) parameters.get(PARAM_FOLDER);
 		return new FileSystemMasterRepository(user, folder);
+	}
+
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
 }

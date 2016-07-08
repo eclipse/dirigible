@@ -26,12 +26,19 @@ public class DBRepositoryProvider implements IRepositoryProvider {
 	public static final String PARAM_USER = "user";
 	public static final String PARAM_RECREATE = "recreate";
 
+	public static final String TYPE = "db";
+
 	@Override
 	public IRepository createRepository(Map<String, Object> parameters) {
 		DataSource dataSource = (DataSource) parameters.get(PARAM_DATASOURCE);
 		String user = (String) parameters.get(PARAM_USER);
 		Boolean forceRecreate = (Boolean) parameters.get(PARAM_RECREATE);
 		return new DBRepository(dataSource, user, forceRecreate);
+	}
+
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
 }
