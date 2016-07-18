@@ -45,6 +45,7 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 	static {
 		// recognized extensions
 		RECOGNIZED_EXTENSIONS.add(ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT);
+		RECOGNIZED_EXTENSIONS.add(ICommonConstants.ARTIFACT_EXTENSION.JSON);
 		RECOGNIZED_EXTENSIONS.add(ICommonConstants.ARTIFACT_EXTENSION.RUBY);
 		RECOGNIZED_EXTENSIONS.add(ICommonConstants.ARTIFACT_EXTENSION.GROOVY);
 		RECOGNIZED_EXTENSIONS.add(ICommonConstants.ARTIFACT_EXTENSION.JAVA);
@@ -54,6 +55,7 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 
 		// URL container per extension - publish
 		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT, CommonIDEParameters.JAVASCRIPT_CONTAINER_MAPPING);
+		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JSON, CommonIDEParameters.JAVASCRIPT_CONTAINER_MAPPING);
 		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.RUBY, CommonIDEParameters.RUBY_CONTAINER_MAPPING);
 		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.GROOVY, CommonIDEParameters.GROOVY_CONTAINER_MAPPING);
 		PUBLISH_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVA, CommonIDEParameters.JAVA_CONTAINER_MAPPING);
@@ -63,6 +65,7 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 
 		// URL container per extension - activate
 		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT, CommonIDEParameters.JAVASCRIPT_SANDBOX_MAPPING);
+		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JSON, CommonIDEParameters.JAVASCRIPT_SANDBOX_MAPPING);
 		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.RUBY, CommonIDEParameters.RUBY_SANDBOX_MAPPING);
 		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.GROOVY, CommonIDEParameters.GROOVY_SANDBOX_MAPPING);
 		ACTIVATE_CONTAINERS.put(ICommonConstants.ARTIFACT_EXTENSION.JAVA, CommonIDEParameters.JAVA_SANDBOX_MAPPING);

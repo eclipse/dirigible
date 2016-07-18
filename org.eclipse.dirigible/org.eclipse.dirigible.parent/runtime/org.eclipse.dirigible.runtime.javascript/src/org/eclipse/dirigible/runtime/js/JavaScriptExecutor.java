@@ -23,6 +23,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.AbstractScriptExecutor;
 import org.eclipse.dirigible.runtime.scripting.IJavaScriptEngineExecutor;
 import org.eclipse.dirigible.runtime.scripting.IJavaScriptExecutor;
+import org.eclipse.dirigible.runtime.scripting.Module;
 import org.mozilla.javascript.ScriptableObject;
 
 public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaScriptExecutor {
@@ -58,6 +59,14 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 	@Override
 	public Object executeServiceModule(HttpServletRequest request, HttpServletResponse response, Object input, String module,
 			Map<Object, Object> executionContext) throws IOException {
+
+		if ((module != null)
+				&& (module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.JSON) || module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.ENTITY))) {
+			// *.json files are returned back as raw content
+			Module scriptingModule = retrieveModule(this.repository, module, null, this.rootPaths);
+			byte[] result = scriptingModule.getContent();
+			return new String(result);
+		}
 
 		IJavaScriptEngineExecutor javascriptEngineExecutor = null;
 
