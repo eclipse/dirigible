@@ -18,10 +18,13 @@ import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.logging.Logger;
 
 public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 
-	//	private static final String REST_SERVICE_ROOT_JS = "/dirigible/services/js"; //$NON-NLS-1$
+	private static final Logger logger = Logger.getLogger(HtmlForEntityTemplateGenerator.class);
+
+	// private static final String REST_SERVICE_ROOT_JS = "/dirigible/services/js"; //$NON-NLS-1$
 	private static final String REST_SERVICE_ROOT_JS = "../../js"; //$NON-NLS-1$
 
 	private static final String LOG_TAG = "HTML_FOR_ENTITY_GENERATOR"; //$NON-NLS-1$
@@ -42,8 +45,24 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 		parameters.put("serviceFileName", generateServiceFileName()); //$NON-NLS-1$
 		parameters.put("createDataModel", createDataModel()); //$NON-NLS-1$
 		parameters.put("entityName", getEntityName()); //$NON-NLS-1$
+		parameters.put("primaryKey", getPrimaryKey()); //$NON-NLS-1$
 		// parameters.put("projectName", model.getProjectName());
 		return parameters;
+	}
+
+	private Object getPrimaryKey() {
+		TableColumn[] columns = model.getTableColumns();
+		TableColumn primaryKey = null;
+		for (TableColumn column : columns) {
+			if (column.isKey()) {
+				primaryKey = column;
+			}
+		}
+		if (primaryKey == null) {
+			logger.error(String.format("There is no primary key in table %s, which can produce errornous artifacts", model.getTableName()));
+			return null;
+		}
+		return primaryKey;
 	}
 
 	protected String getEntityName() {

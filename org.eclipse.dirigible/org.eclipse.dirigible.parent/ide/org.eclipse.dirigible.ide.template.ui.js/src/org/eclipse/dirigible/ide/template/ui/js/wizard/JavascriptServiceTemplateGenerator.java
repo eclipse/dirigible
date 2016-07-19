@@ -22,8 +22,11 @@ import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
+import org.eclipse.dirigible.repository.logging.Logger;
 
 public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
+
+	private static final Logger logger = Logger.getLogger(JavascriptServiceTemplateGenerator.class);
 
 	private static final String LOG_TAG = "JAVASCRIPT_SERVICE_GENERATOR"; //$NON-NLS-1$
 
@@ -50,12 +53,13 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 				getTableColumnsWithoutKeys(model.getTableColumns()));
 		parameters.put("fileName", model.getFileName()); //$NON-NLS-1$
 		parameters.put("fileNameNoExtension", model.getFileNameNoExtension()); //$NON-NLS-1$
+		parameters.put("primaryKey", getPrimaryKey()); //$NON-NLS-1$
 
 		parameters.put("INTEGER", java.sql.Types.INTEGER); //$NON-NLS-1$
 		parameters.put("BIGINT", java.sql.Types.BIGINT); //$NON-NLS-1$
 		parameters.put("SMALLINT", java.sql.Types.SMALLINT); //$NON-NLS-1$
 
-		parameters.put("REAL", java.sql.Types.REAL); //$NON-NLS-1$
+		parameters.put("FLOAT", java.sql.Types.REAL); //$NON-NLS-1$
 		parameters.put("DOUBLE", java.sql.Types.DOUBLE); //$NON-NLS-1$
 		// parameters.put("REAL", java.sql.Types.REAL);
 		// parameters.put("DECIMAL", java.sql.Types.DECIMAL);
@@ -68,10 +72,27 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 		parameters.put("TIME", java.sql.Types.TIME); //$NON-NLS-1$
 		parameters.put("TIMESTAMP", java.sql.Types.TIMESTAMP); //$NON-NLS-1$
 
+		parameters.put("BOOLEAN", java.sql.Types.BOOLEAN); //$NON-NLS-1$
+
 		// parameters.put("CLOB", java.sql.Types.CLOB); //$NON-NLS-1$
 		// parameters.put("BLOB", java.sql.Types.BLOB); //$NON-NLS-1$
 
 		return parameters;
+	}
+
+	private Object getPrimaryKey() {
+		TableColumn[] columns = model.getTableColumns();
+		TableColumn primaryKey = null;
+		for (TableColumn column : columns) {
+			if (column.isKey()) {
+				primaryKey = column;
+			}
+		}
+		if (primaryKey == null) {
+			logger.error(String.format("There is no primary key in table %s, which can produce errornous artifacts", model.getTableName()));
+			return null;
+		}
+		return primaryKey;
 	}
 
 	public String constructPackageName() {

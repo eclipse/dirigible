@@ -203,7 +203,7 @@ function statementSetBoolean(index, value) {
 }
 
 function statementSetDate(index, value) {
-	this.internalStatement.setDate(index, new java.util.Date(value.getTime()));
+	this.internalStatement.setDate(index, new java.sql.Date(value.getTime()));
 }
 
 function statementSetDouble(index, value) {
@@ -231,11 +231,11 @@ function statementSetString(index, value) {
 }
 
 function statementSetTime(index, value) {
-	this.internalStatement.setTime(index, new java.util.Time(value.getTime()));
+	this.internalStatement.setTime(index, new java.sql.Time(value.getTime()));
 }
 
 function statementSetTimestamp(index, value) {
-	this.internalStatement.setTimestamp(index, new java.util.Timestamp(value.getTime()));
+	this.internalStatement.setTimestamp(index, new java.sql.Timestamp(value.getTime()));
 }
 
 /**

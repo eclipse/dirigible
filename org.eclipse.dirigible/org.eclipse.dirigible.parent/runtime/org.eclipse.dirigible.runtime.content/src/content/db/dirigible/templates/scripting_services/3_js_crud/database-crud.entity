@@ -1,5 +1,15 @@
 {
-  "fileName":"${fileName}",
+  "entityName":"${entityName}",
   "tableName":"${tableName}",
-  "tableType":"${tableType}"
+  "tableType":"${tableType}",
+  "serviceName":"${fileName}",
+  "libraryName":"${fileNameNoExtension}_lib.js",
+  "specification":"${fileNameNoExtension}.json",
+  "getEnabled":"true",
+  "postEnabled":"true",
+  "putEnabled":"true",
+  "deleteEnabled":"true",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
 }
