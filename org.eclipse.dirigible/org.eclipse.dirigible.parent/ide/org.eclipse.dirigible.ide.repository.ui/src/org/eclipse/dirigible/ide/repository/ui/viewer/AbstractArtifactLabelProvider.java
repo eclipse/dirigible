@@ -100,7 +100,7 @@ public class AbstractArtifactLabelProvider extends LabelProvider {
 		if (resourceName.endsWith("java")) { //$NON-NLS-1$
 			return createImage(TYPE_JAVA_ICON_URL);
 		}
-		if (resourceName.endsWith("json")) { //$NON-NLS-1$
+		if (resourceName.endsWith("json") || resourceName.endsWith("swagger")) { //$NON-NLS-1$
 			return createImage(TYPE_JSON_ICON_URL);
 		}
 		if (resourceName.endsWith("xsd")) { //$NON-NLS-1$

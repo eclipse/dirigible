@@ -339,6 +339,18 @@
 			<url-pattern>/services/flow-log/*</url-pattern>
 			<url-pattern>/services/job-log/*</url-pattern>
 			<url-pattern>/services/listener-log/*</url-pattern>
+			<url-pattern>/services/registry-js</url-pattern>
+			<url-pattern>/services/registry-js-entity</url-pattern>
+			<url-pattern>/services/registry-js-swagger</url-pattern>
+			<url-pattern>/services/registry-flow</url-pattern>
+			<url-pattern>/services/registry-job</url-pattern>
+			<url-pattern>/services/registry-web</url-pattern>
+			<url-pattern>/services/registry-wiki</url-pattern>
+			<url-pattern>/services/registry-mobile</url-pattern>
+			<url-pattern>/services/registry-command</url-pattern>
+			<url-pattern>/services/registry-sql</url-pattern>
+			<url-pattern>/services/registry-test</url-pattern>
+			<url-pattern>/services/registry-listener</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Everyone</role-name>

@@ -5,7 +5,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.dirigible.ide.editor.ace.AceEditor"
-            extensions="xml,xsl,sql,odata,json,jslib,routes,ws,wsdl,table,view,entity,menu,txt,flow,job,groovy"
+            extensions="xml,xsl,sql,odata,json,jslib,routes,ws,wsdl,table,view,entity,menu,txt,flow,job,groovy,swagger"
             icon="icons/editor-icon.png"
             id="org.eclipse.dirigible.ide.editor.ace.AceEditor"
             name="ACE Editor">

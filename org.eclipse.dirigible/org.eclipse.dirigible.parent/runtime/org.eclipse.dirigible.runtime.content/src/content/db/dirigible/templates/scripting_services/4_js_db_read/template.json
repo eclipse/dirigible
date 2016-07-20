@@ -5,7 +5,7 @@
    {"name":"database-read.js", "action":"generate"},
    {"name":"database-read-lib.js", "action":"generate", "rename":"%s_lib"},
    {"name":"database-read.entity", "action":"generate", "rename":"%s"},
-   {"name":"database-read.json", "action":"generate", "rename":"%s"}
+   {"name":"database-read.swagger", "action":"generate", "rename":"%s"}
    ],
  "parameters":[
    {"name":"name",

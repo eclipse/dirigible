@@ -60,9 +60,9 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 	public Object executeServiceModule(HttpServletRequest request, HttpServletResponse response, Object input, String module,
 			Map<Object, Object> executionContext) throws IOException {
 
-		if ((module != null)
-				&& (module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.JSON) || module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.ENTITY))) {
-			// *.json files are returned back as raw content
+		if ((module != null) && (module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.JSON)
+				|| module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.ENTITY) || module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.SWAGGER))) {
+			// *.json, *.swagger and *.entity files are returned back as raw content
 			Module scriptingModule = retrieveModule(this.repository, module, null, this.rootPaths);
 			byte[] result = scriptingModule.getContent();
 			return new String(result);

@@ -16,16 +16,16 @@ public enum EditorMode {
 
 	JS("javascript", "js"), //$NON-NLS-1$ //$NON-NLS-2$
 	SQL("sql", "sql"), //$NON-NLS-1$ //$NON-NLS-2$
-	JSON("json", "json", "odata", "ws", "table", "view", "entity", "menu", "access", "extensionpoint", "extension", "command", "flow", "job"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
-	XML("xml", "xml", "xsd", "wsdl", "xsl", "xslt", "routes"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-	HTML("html", "html"), //$NON-NLS-1$ //$NON-NLS-2$
-	CSS("css", "css"), //$NON-NLS-1$ //$NON-NLS-2$
-	MARKDOWN("markdown", "markdown", "mdown", "mkdn", "md", "mkd", "mdwn"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-	TEXTILE("textile", "textile"), //$NON-NLS-1$ //$NON-NLS-2$
-	TXT("text", "txt"), //$NON-NLS-1$ //$NON-NLS-2$
-	RUBY("ruby", "rb"), //$NON-NLS-1$ //$NON-NLS-2$
-	JAVA("java", "java"), //$NON-NLS-1$ //$NON-NLS-2$
-	GROOVY("groovy", "groovy", "gvy", "gy", "gsh"), PROPERTIES("properties", "properties");
+	JSON("json", "json", "odata", "ws", "table", "view", "entity", "menu", "access", "extensionpoint", "extension", "command", "flow", "job", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
+			"listener", "swagger"), XML("xml", "xml", "xsd", "wsdl", "xsl", "xslt", "routes"), //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+			HTML("html", "html"), //$NON-NLS-1$ //$NON-NLS-2$
+			CSS("css", "css"), //$NON-NLS-1$ //$NON-NLS-2$
+			MARKDOWN("markdown", "markdown", "mdown", "mkdn", "md", "mkd", "mdwn"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+			TEXTILE("textile", "textile"), //$NON-NLS-1$ //$NON-NLS-2$
+			TXT("text", "txt"), //$NON-NLS-1$ //$NON-NLS-2$
+			RUBY("ruby", "rb"), //$NON-NLS-1$ //$NON-NLS-2$
+			JAVA("java", "java"), //$NON-NLS-1$ //$NON-NLS-2$
+			GROOVY("groovy", "groovy", "gvy", "gy", "gsh"), PROPERTIES("properties", "properties");
 
 	private static final EditorMode DEFAULT_MODE = TXT;
 	private String name;

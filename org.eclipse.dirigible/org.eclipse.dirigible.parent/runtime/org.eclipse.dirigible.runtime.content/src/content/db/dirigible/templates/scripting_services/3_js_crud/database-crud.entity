@@ -4,7 +4,7 @@
   "tableType":"${tableType}",
   "serviceName":"${fileName}",
   "libraryName":"${fileNameNoExtension}_lib.js",
-  "specification":"${fileNameNoExtension}.json",
+  "specification":"${fileNameNoExtension}.swagger",
   "getEnabled":"true",
   "postEnabled":"true",
   "putEnabled":"true",

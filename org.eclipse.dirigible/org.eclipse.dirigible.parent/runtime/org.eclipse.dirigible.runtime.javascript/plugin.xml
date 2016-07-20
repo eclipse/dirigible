@@ -51,6 +51,16 @@
               load-on-startup="false">
         </servlet>
      </extension>
+     
+     <extension
+           id="JavaScriptRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/registry-js-swagger"
+              class="org.eclipse.dirigible.runtime.registry.JavaScriptRegistrySwaggerServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
 	 
 	 <extension
            id="JavaScriptRegistryUiContentServlet"

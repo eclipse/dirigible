@@ -26,6 +26,7 @@ public interface ICommonConstants {
 	public interface ARTIFACT_EXTENSION {
 		public static final String JAVASCRIPT = "js"; //$NON-NLS-1$
 		public static final String JSON = "json"; //$NON-NLS-1$
+		public static final String SWAGGER = "swagger"; //$NON-NLS-1$
 		public static final String ENTITY = "entity"; //$NON-NLS-1$
 		public static final String RUBY = "rb"; //$NON-NLS-1$
 		public static final String GROOVY = "groovy"; //$NON-NLS-1$
