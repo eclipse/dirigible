@@ -50,6 +50,6 @@ function handleRequest() {
 	}
 	
 	// flush and close the response
-	response.getWriter().flush();
-	response.getWriter().close();
+	response.flush();
+	response.close();
 }
