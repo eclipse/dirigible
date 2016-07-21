@@ -72,6 +72,10 @@
 					</tr>
 				</tbody>
 			</table>
+			<div>
+				<div>View <select ng-model="viewby" ng-change="setItemsPerPage(viewby)"><option>10</option><option>20</option><option>50</option><option selected>100</option></select> records.<div>
+	    		<uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" force-ellipses="true" rotate="false"></uib-pagination>
+			</div>
 			<hr>
 			<br>
 			<!-- new, edit and delete buttons -->
@@ -324,6 +328,36 @@
 			$scope.bookpublicationdateStatus = {
 				opened: false
 			};
+			
+			//pagination
+			$scope.viewby = 100;
+			var urlCount = url + '?count';
+			$http.get(urlCount)
+				.success(function(count){
+					$scope.totalItems = count;
+				});
+				
+				$scope.currentPage = 1;
+				$scope.itemsPerPage = $scope.viewby;
+				$scope.maxSize = 5;
+			
+			$scope.setPage = function (pageNo) {
+			    $scope.currentPage = pageNo;
+			    $scope.pageChanged();
+			};
+			
+			$scope.pageChanged = function() {
+				var urlLimit = url + '?offset=' + ($scope.viewby*($scope.currentPage-1) + '&limit=' + $scope.viewby);
+				$http.get(urlLimit)
+					.success(function(data){
+						$scope.data = data;
+					});
+			};
+			
+			$scope.setItemsPerPage = function(num) {
+			  	$scope.itemsPerPage = num;
+			  	$scope.setPage(1);
+			}
 		});
 	</script>
 	<!-- Placed at the end of the document so the pages load faster -->

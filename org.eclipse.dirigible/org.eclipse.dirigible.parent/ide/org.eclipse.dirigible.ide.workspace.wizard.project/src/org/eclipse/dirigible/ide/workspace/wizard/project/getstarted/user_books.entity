@@ -1,5 +1,15 @@
 {
-  "fileName":"${user}_books.js",
+  "entityName":"${User}_books",
   "tableName":"${USER}_BOOKS",
-  "tableType":"TABLE"
+  "tableType":"TABLE",
+  "serviceName":"${user}_books.js",
+  "libraryName":"${user}_books_lib.js",
+  "specification":"${user}_books.swagger",
+  "getEnabled":"true",
+  "postEnabled":"true",
+  "putEnabled":"true",
+  "deleteEnabled":"true",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
 }

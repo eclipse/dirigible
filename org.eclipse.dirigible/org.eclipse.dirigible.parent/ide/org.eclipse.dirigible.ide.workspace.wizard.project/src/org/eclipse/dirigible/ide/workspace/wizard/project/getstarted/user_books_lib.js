@@ -1,14 +1,18 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var ioLib = require('io');
-var entityLib = require('entity');
+var request = require("net/http/request");
+var response = require("net/http/response");
+var database = require("db/database");
+var xss = require("utils/xss");
+
+var datasource = database.getDatasource();
 
 // create entity by parsing JSON object from request body
 exports.create${User}_books = function() {
-    var input = ioLib.read($.getRequest().getInputStream());
+    var input = request.readInputText();
     var requestBody = JSON.parse(input);
-    var connection = $.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var sql = "INSERT INTO ${USER}_BOOKS (";
         sql += "BOOKID";
@@ -50,7 +54,7 @@ exports.create${User}_books = function() {
 
         var statement = connection.prepareStatement(sql);
         var i = 0;
-        var id = $.getDatabaseUtils().getNext('${USER}_BOOKS_BOOKID');
+        var id = datasource.getSequence('${USER}_BOOKS_BOOKID').next();
         statement.setInt(++i, id);
         statement.setString(++i, requestBody.bookisbn);
         statement.setString(++i, requestBody.booktitle);
@@ -60,17 +64,17 @@ exports.create${User}_books = function() {
         statement.setString(++i, requestBody.bookformat);
         if (requestBody.bookpublicationdate !== null) {
             var js_date_bookpublicationdate =  new Date(Date.parse(requestBody.bookpublicationdate));
-            statement.setDate(++i, $.getDatabaseUtils().createDate(js_date_bookpublicationdate.getTime() + js_date_bookpublicationdate.getTimezoneOffset()*60*1000));
+            statement.setDate(++i, js_date_bookpublicationdate);
         } else {
             statement.setDate(++i, null);
         }
         statement.setDouble(++i, requestBody.bookprice);
         statement.executeUpdate();
-		$.getResponse().getWriter().println(id);
+		response.println(id);
         return id;
     } catch(e) {
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -79,23 +83,24 @@ exports.create${User}_books = function() {
 
 // read single entity by id and print as JSON object to response
 exports.read${User}_booksEntity = function(id) {
-    var connection = $.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var result;
-        var statement = connection.prepareStatement("SELECT * FROM ${USER}_BOOKS WHERE " + exports.pkToSQL());
-        statement.setString(1, id);
+        var sql = "SELECT * FROM ${USER}_BOOKS WHERE " + exports.pkToSQL();
+        var statement = connection.prepareStatement(sql);
+        statement.setInt(1, id);
         
         var resultSet = statement.executeQuery();
         if (resultSet.next()) {
             result = createEntity(resultSet);
         } else {
-        	entityLib.printError($.getResponse().SC_NOT_FOUND, 1, "Record with id: " + id + " does not exist.");
+        	exports.printError(response.NOT_FOUND, 1, "Record with id: " + id + " does not exist.", sql);
         }
         var jsonResponse = JSON.stringify(result, null, 2);
-        $.getResponse().getWriter().println(jsonResponse);
+        response.println(jsonResponse);
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -103,12 +108,12 @@ exports.read${User}_booksEntity = function(id) {
 
 // read all entities and print them as JSON array to response
 exports.read${User}_booksList = function(limit, offset, sort, desc) {
-    var connection = $.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var result = [];
         var sql = "SELECT ";
         if (limit !== null && offset !== null) {
-            sql += " " + $.getDatabaseUtils().createTopAndStart(limit, offset);
+            sql += " " + datasource.getPaging().genTopAndStart(limit, offset);
         }
         sql += " * FROM ${USER}_BOOKS";
         if (sort !== null) {
@@ -118,7 +123,7 @@ exports.read${User}_booksList = function(limit, offset, sort, desc) {
             sql += " DESC ";
         }
         if (limit !== null && offset !== null) {
-            sql += " " + $.getDatabaseUtils().createLimitAndOffset(limit, offset);
+            sql += " " + datasource.getPaging().genLimitAndOffset(limit, offset);
         }
         var statement = connection.prepareStatement(sql);
         var resultSet = statement.executeQuery();
@@ -126,10 +131,10 @@ exports.read${User}_booksList = function(limit, offset, sort, desc) {
             result.push(createEntity(resultSet));
         }
         var jsonResponse = JSON.stringify(result, null, 2);
-        $.getResponse().getWriter().println(jsonResponse);
+        response.println(jsonResponse);
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -146,7 +151,7 @@ function createEntity(resultSet) {
     result.bookpublisher = resultSet.getString("BOOKPUBLISHER");
     result.bookformat = resultSet.getString("BOOKFORMAT");
     if (resultSet.getDate("BOOKPUBLICATIONDATE") !== null) {
-		result.bookpublicationdate = convertToDateString(new Date(resultSet.getDate("BOOKPUBLICATIONDATE").getTime() - resultSet.getDate("BOOKPUBLICATIONDATE").getTimezoneOffset()*60*1000));
+		result.bookpublicationdate = convertToDateString(new Date(resultSet.getDate("BOOKPUBLICATIONDATE").getTime()));
     } else {
         result.bookpublicationdate = null;
     }
@@ -163,9 +168,9 @@ function convertToDateString(date) {
 
 // update entity by id
 exports.update${User}_books = function() {
-    var input = ioLib.read($.getRequest().getInputStream());
+    var input = request.readInputText();
     var responseBody = JSON.parse(input);
-    var connection = $.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
         var sql = "UPDATE ${USER}_BOOKS SET ";
         sql += "BOOKISBN = ?";
@@ -194,7 +199,7 @@ exports.update${User}_books = function() {
         statement.setString(++i, responseBody.bookformat);
         if (responseBody.bookpublicationdate !== null) {
             var js_date_bookpublicationdate =  new Date(Date.parse(responseBody.bookpublicationdate));
-            statement.setDate(++i, $.getDatabaseUtils().createDate(js_date_bookpublicationdate.getTime() + js_date_bookpublicationdate.getTimezoneOffset()*60*1000));
+            statement.setDate(++i, js_date_bookpublicationdate);
         } else {
             statement.setDate(++i, null);
         }
@@ -202,10 +207,10 @@ exports.update${User}_books = function() {
         var id = responseBody.bookid;
         statement.setInt(++i, id);
         statement.executeUpdate();
-		$.getResponse().getWriter().println(id);
+		response.println(id);
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -213,15 +218,16 @@ exports.update${User}_books = function() {
 
 // delete entity
 exports.delete${User}_books = function(id) {
-    var connection = $.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
-        var statement = connection.prepareStatement("DELETE FROM ${USER}_BOOKS WHERE " + exports.pkToSQL());
+    	var sql = "DELETE FROM ${USER}_BOOKS WHERE " + exports.pkToSQL();
+        var statement = connection.prepareStatement(sql);
         statement.setString(1, id);
         statement.executeUpdate();
-        $.getResponse().getWriter().println(id);
+        response.println(id);
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
@@ -229,20 +235,21 @@ exports.delete${User}_books = function(id) {
 
 exports.count${User}_books = function() {
     var count = 0;
-    var connection = $.getDatasource().getConnection();
+    var connection = datasource.getConnection();
     try {
-        var statement = connection.createStatement();
-        var rs = statement.executeQuery('SELECT COUNT(*) FROM ${USER}_BOOKS');
+    	var sql = 'SELECT COUNT(*) FROM ${USER}_BOOKS';
+        var statement = connection.prepareStatement(sql);
+        var rs = statement.executeQuery();
         if (rs.next()) {
             count = rs.getInt(1);
         }
     } catch(e){
-        var errorCode = $.getResponse().SC_BAD_REQUEST;
-        entityLib.printError(errorCode, errorCode, e.message);
+        var errorCode = response.BAD_REQUEST;
+        exports.printError(errorCode, errorCode, e.message, sql);
     } finally {
         connection.close();
     }
-    $.getResponse().getWriter().println(count);
+    response.println(count);
 };
 
 exports.metadata${User}_books = function() {
@@ -309,22 +316,17 @@ exports.metadata${User}_books = function() {
     entityMetadata.properties.push(propertybookprice);
 
 
-	$.getResponse().getWriter().println(JSON.stringify(entityMetadata));
+	response.println(JSON.stringify(entityMetadata));
 };
-
-function Exception${User}_books(message) {
-   this.message = message;
-   this.name = "Exception${User}_books";
-}
 
 exports.getPrimaryKeys = function() {
     var result = [];
     var i = 0;
     result[i++] = 'BOOKID';
     if (result === 0) {
-        throw new Exception${User}_books("There is no primary key");
+        throw new Error("There is no primary key");
     } else if(result.length > 1) {
-        throw new Exception${User}_books("More than one Primary Key is not supported.");
+        throw new Error("More than one Primary Key is not supported.");
     }
     return result;
 };
@@ -336,4 +338,41 @@ exports.getPrimaryKey = function() {
 exports.pkToSQL = function() {
     var pks = exports.getPrimaryKeys();
     return pks[0] + " = ?";
+};
+
+exports.hasConflictingParameters = function(id, count, metadata) {
+    if(id !== null && count !== null){
+    	exports.printError(response.EXPECTATION_FAILED, 1, "Expectation failed: conflicting parameters - id, count");
+        return true;
+    }
+    if(id !== null && metadata !== null){
+    	exports.printError(response.EXPECTATION_FAILED, 2, "Expectation failed: conflicting parameters - id, metadata");
+        return true;
+    }
+    return false;
+};
+
+// check whether the parameter exists 
+exports.isInputParameterValid = function(paramName) {
+	var param = xss.escapeSql(request.getAttribute("path"));
+	if (!param) {
+		param = xss.escapeSql(request.getParameter(paramName));
+	}
+    if(param === null || param === undefined){
+    	exports.printError(response.PRECONDITION_FAILED, 3, "Expected parameter is missing: " + paramName);
+        return false;
+    }
+    return true;
+};
+
+// print error
+exports.printError = function(httpCode, errCode, errMessage, errContext) {
+    var body = {'err': {'code': errCode, 'message': errMessage}};
+    response.setStatus(httpCode);
+    response.setHeader("Content-Type", "application/json");
+    response.print(JSON.stringify(body));
+    console.error(JSON.stringify(body));
+    if (errContext !== null) {
+    	console.error(JSON.stringify(errContext));
+    }
 };

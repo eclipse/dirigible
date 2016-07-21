@@ -153,6 +153,7 @@ public class GetStartedProjectWizardModel {
 		generateAndStoreArtifact(project, "user_books_lib.js", "ScriptingServices");
 		generateAndStoreArtifact(project, "user_books.js", "ScriptingServices");
 		generateAndStoreArtifact(project, "user_books.entity", "ScriptingServices");
+		generateAndStoreArtifact(project, "user_books.swagger", "ScriptingServices");
 		generateAndStoreArtifact(project, "user_books.html", "WebContent");
 		generateAndStoreArtifact(project, "header.html", "WebContent");
 		generateAndStoreArtifact(project, "footer.html", "WebContent");
