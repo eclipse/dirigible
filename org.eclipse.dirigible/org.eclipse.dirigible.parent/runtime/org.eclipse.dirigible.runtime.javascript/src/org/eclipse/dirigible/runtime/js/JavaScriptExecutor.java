@@ -60,12 +60,27 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 	public Object executeServiceModule(HttpServletRequest request, HttpServletResponse response, Object input, String module,
 			Map<Object, Object> executionContext) throws IOException {
 
-		if ((module != null) && (module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.JSON)
-				|| module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.ENTITY) || module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.SWAGGER))) {
+		if (module == null) {
+			throw new IOException("The module name for execution cannot be null");
+		}
+
+		if ((module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.JSON) || module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.ENTITY)
+				|| module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.SWAGGER))) {
 			// *.json, *.swagger and *.entity files are returned back as raw content
 			Module scriptingModule = retrieveModule(this.repository, module, null, this.rootPaths);
 			byte[] result = scriptingModule.getContent();
 			return new String(result);
+		}
+
+		// support for path parameters
+		if (!module.endsWith(ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT)) {
+			String ends = "." + ICommonConstants.ARTIFACT_EXTENSION.JAVASCRIPT;
+			int index = module.indexOf(ends);
+			if (index > 0) {
+				String pathInfo = module.substring(index + ends.length() + 1);
+				module = module.substring(0, (index + ends.length()));
+				request.setAttribute("path", pathInfo);
+			}
 		}
 
 		IJavaScriptEngineExecutor javascriptEngineExecutor = null;

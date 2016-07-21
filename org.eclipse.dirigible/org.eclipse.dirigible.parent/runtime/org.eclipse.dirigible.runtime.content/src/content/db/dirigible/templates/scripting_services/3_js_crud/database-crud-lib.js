@@ -4,6 +4,7 @@
 var request = require("net/http/request");
 var response = require("net/http/response");
 var database = require("db/database");
+var xss = require("utils/xss");
 
 var datasource = database.getDatasource();
 
@@ -401,25 +402,28 @@ exports.pkToSQL = function() {
 
 exports.hasConflictingParameters = function(id, count, metadata) {
     if(id !== null && count !== null){
-    	printError(response.EXPECTATION_FAILED, 1, "Expectation failed: conflicting parameters - id, count");
+    	exports.printError(response.EXPECTATION_FAILED, 1, "Expectation failed: conflicting parameters - id, count");
         return true;
     }
     if(id !== null && metadata !== null){
-    	printError(response.EXPECTATION_FAILED, 2, "Expectation failed: conflicting parameters - id, metadata");
+    	exports.printError(response.EXPECTATION_FAILED, 2, "Expectation failed: conflicting parameters - id, metadata");
         return true;
     }
     return false;
-}
+};
 
 // check whether the parameter exists 
 exports.isInputParameterValid = function(paramName) {
-    var param = request.getParameter(paramName);
+	var param = xss.escapeSql(request.getAttribute("path"));
+	if (!param) {
+		param = xss.escapeSql(request.getParameter(paramName));
+	}
     if(param === null || param === undefined){
-    	printError(response.PRECONDITION_FAILED, 3, "Expected parameter is missing: " + paramName);
+    	exports.printError(response.PRECONDITION_FAILED, 3, "Expected parameter is missing: " + paramName);
         return false;
     }
     return true;
-}
+};
 
 // print error
 exports.printError = function(httpCode, errCode, errMessage, errContext) {
@@ -431,4 +435,4 @@ exports.printError = function(httpCode, errCode, errMessage, errContext) {
     if (errContext !== null) {
     	console.error(JSON.stringify(errContext));
     }
-}
+};

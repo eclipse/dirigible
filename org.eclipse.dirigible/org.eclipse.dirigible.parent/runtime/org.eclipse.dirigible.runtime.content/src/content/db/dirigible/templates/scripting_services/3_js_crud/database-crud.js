@@ -21,7 +21,10 @@ function handleRequest() {
 	var idParameter = entity${entityName}.getPrimaryKey();
 	
 	// retrieve the id as parameter if exist 
-	var id = xss.escapeSql(request.getParameter(idParameter));
+	var id = xss.escapeSql(request.getAttribute("path"));
+	if (!id) {
+		id = xss.escapeSql(request.getParameter(idParameter));
+	}
 	var count = xss.escapeSql(request.getParameter('count'));
 	var metadata = xss.escapeSql(request.getParameter('metadata'));
 	var sort = xss.escapeSql(request.getParameter('sort'));

@@ -46,6 +46,24 @@ exports.getParameters = function() {
 	return parameters;
 };
 
+exports.getAttribute = function(name) {
+	return $.getRequest().getAttribute(name);
+};
+
+exports.setAttribute = function(name, value) {
+	return $.getRequest().setAttribute(name, value);
+};
+
+exports.getAttributeNames = function() {
+	var names = [];
+	var values = $.getRequest().getAttributeNames();
+	while (values.hasMoreElements()) {
+		names.push(values.nextElement());
+	}
+	return names;
+};
+
+
 exports.getHeader = function(name) {
 	return $.getRequest().getHeader(name);
 };
