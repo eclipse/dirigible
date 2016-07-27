@@ -20,12 +20,15 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.dirigible.ide.repository,
  com.google.gson,
  org.eclipse.dirigible.repository.ext
-Export-Package: org.eclipse.dirigible.ide.template.ui.common
-Import-Package: org.eclipse.dirigible.ide.common.io,
- org.eclipse.dirigible.repository.logging,
- org.eclipse.dirigible.repository.velocity,
+Export-Package: org.eclipse.dirigible.ide.template.ui.common,
+ org.eclipse.dirigible.ide.template.ui.common.service
+Import-Package: javax.servlet,
+ javax.servlet.http,
+ org.eclipse.dirigible.ide.common.io,
  org.eclipse.dirigible.ide.ui.common.validation,
- org.eclipse.dirigible.ide.workspace.ui.viewer
+ org.eclipse.dirigible.ide.workspace.ui.viewer,
+ org.eclipse.dirigible.repository.logging,
+ org.eclipse.dirigible.repository.velocity
 Bundle-ClassPath: .,
  jdi.jar,
  jdimodel.jar

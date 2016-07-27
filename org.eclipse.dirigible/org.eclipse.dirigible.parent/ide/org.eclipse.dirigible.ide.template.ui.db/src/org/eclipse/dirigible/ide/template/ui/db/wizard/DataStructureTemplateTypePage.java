@@ -12,12 +12,11 @@ package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeWizardPage;
-import org.eclipse.dirigible.repository.api.ICommonConstants;
-import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
+/**
+ * The wizard page for choosing the template type
+ */
 public class DataStructureTemplateTypePage extends TemplateTypeWizardPage {
-
-	private static final long serialVersionUID = 7502460417846401426L;
 
 	private static final String SELECT_THE_TYPE_OF_THE_TEMPLATE_WHICH_WILL_BE_USED_DURING_GENERATION = Messages.DataStructureTemplateTypePage_SELECT_THE_TYPE_OF_THE_TEMPLATE_WHICH_WILL_BE_USED_DURING_GENERATION;
 
@@ -41,12 +40,12 @@ public class DataStructureTemplateTypePage extends TemplateTypeWizardPage {
 
 	@Override
 	protected String getCategory() {
-		return ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES;
+		return DataStructureTemplateTypeDiscriminator.getCategory();
 	}
 
 	@Override
 	protected String getTemplatesPath() {
-		return IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_DATA_STRUCTURES;
+		return DataStructureTemplateTypeDiscriminator.getTemplatesPath();
 	}
 
 }

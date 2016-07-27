@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -25,6 +26,15 @@ public class TemplateUtils {
 		IResource imageResource = collection.getResource(imageName);
 		if (!imageResource.exists()) {
 			throw new IOException(String.format("Template image does not exist at: %s", imageName));
+		}
+		Image image = createImage(imageResource.getContent());
+		return image;
+	}
+
+	public static Image createImageFromResource(String imagePath) throws IOException {
+		IResource imageResource = RepositoryFacade.getInstance().getRepository().getResource(imagePath);
+		if (!imageResource.exists()) {
+			throw new IOException(String.format("Template image does not exist at: %s", imagePath));
 		}
 		Image image = createImage(imageResource.getContent());
 		return image;

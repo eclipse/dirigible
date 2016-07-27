@@ -170,16 +170,19 @@ public class DualParameters {
 		return RWT.getRequest();
 	}
 
-	public static String getUserName() {
+	public static String getUserName(HttpServletRequest request) {
 		String user = GUEST_USER;
 		try {
-			user = RWT.getRequest().getRemoteUser();
+			if (request == null) {
+				request = RWT.getRequest();
+			}
+			user = request.getRemoteUser();
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
 		}
 		if (user == null) {
 			if (!isRolesEnabled()) {
-				user = RequestUtils.getCookieValue(RWT.getRequest(), ICommonConstants.COOKIE_ANONYMOUS_USER);
+				user = RequestUtils.getCookieValue(request, ICommonConstants.COOKIE_ANONYMOUS_USER);
 			}
 		}
 		if (user == null) {

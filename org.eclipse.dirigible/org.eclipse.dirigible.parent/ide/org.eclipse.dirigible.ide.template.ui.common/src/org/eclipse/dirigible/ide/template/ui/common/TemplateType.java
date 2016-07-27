@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.ide.template.ui.common;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,11 +18,6 @@ import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.swt.graphics.Image;
 
 import com.google.gson.Gson;
 
@@ -41,27 +35,24 @@ public class TemplateType {
 
 	private String[] sourceRenamings;
 
-	private Image image;
+	private String image;
 
 	private Set<String> validParameters = new HashSet<String>();
 
 	private static Gson gson = new Gson();
 
-	private static final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
-
-	// public static TemplateType createTemplateType(String type, String location,
-	// String imageLocation, Class<?> loader, String... parameters)
-	// throws MalformedURLException {
-	// Image image = createImage(loader.getResource(imageLocation));
-	// TemplateType templateType = new TemplateType(type, location, image);
-	// for (int i = 0; i < parameters.length; i++) {
-	// templateType.getValidParameters().add(parameters[i]);
-	// }
-	// return templateType;
-	// }
+	// private static final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
 
 	public static TemplateType createTemplateType(String type, String location) throws IOException {
-		IRepository repository = RepositoryFacade.getInstance().getRepository();
+		return createTemplateType(type, location, null);
+	}
+
+	public static TemplateType createTemplateType(String type, String location, IRepository repository) throws IOException {
+
+		if (repository == null) {
+			repository = RepositoryFacade.getInstance().getRepository();
+		}
+
 		ICollection templateRoot = repository.getCollection(location);
 		if (!templateRoot.exists()) {
 			throw new IOException(String.format("Template location: %s is not valid", location));
@@ -73,7 +64,8 @@ public class TemplateType {
 
 		TemplateMetadata templateMetadata = gson.fromJson(new String(templateMetadataResource.getContent()), TemplateMetadata.class);
 
-		Image image = TemplateUtils.createImageFromResource(templateRoot, templateMetadata.getImage());
+		// Image image = TemplateUtils.createImageFromResource(templateRoot, templateMetadata.getImage());
+		String image = templateRoot.getResource(templateMetadata.getImage()).getPath();
 
 		TemplateSourceMetadata[] sources = templateMetadata.getSources();
 		String[] names = new String[sources.length];
@@ -95,7 +87,7 @@ public class TemplateType {
 		return templateType;
 	}
 
-	private TemplateType(String name, String[] names, String[] locations, boolean[] generates, String[] renamings, Image image) {
+	private TemplateType(String name, String[] names, String[] locations, boolean[] generates, String[] renamings, String image) {
 		super();
 		this.name = name;
 		this.sourceNames = names;
@@ -145,18 +137,19 @@ public class TemplateType {
 		this.sourceLocations = locations;
 	}
 
-	public Image getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(Image image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
-	private static Image createImage(URL imageURL) {
-		ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(imageURL);
-		return resourceManager.createImage(imageDescriptor);
-	}
+	// private static Image createImage(URL imageURL) {
+	// // ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(imageURL);
+	// // return resourceManager.createImage(imageDescriptor);
+	// return null;
+	// }
 
 	public Set<String> getValidParameters() {
 		return validParameters;

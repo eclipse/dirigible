@@ -107,7 +107,7 @@ public class DualParameters {
 		return null;
 	}
 
-	public static String getUserName() {
+	public static String getUserName(HttpServletRequest request) {
 		String user = null;
 		// try {
 		// user = RWT.getRequest().getRemoteUser();

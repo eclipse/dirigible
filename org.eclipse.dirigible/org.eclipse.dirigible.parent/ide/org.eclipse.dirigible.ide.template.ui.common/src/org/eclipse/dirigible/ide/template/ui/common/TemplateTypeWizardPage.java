@@ -22,10 +22,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.dirigible.ide.common.ExtensionPointUtils;
-import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
-import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -203,21 +200,7 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 	// }
 
 	protected TemplateType[] prepareTemplateTypes() throws IOException {
-		List<TemplateType> templateTypesList = new ArrayList<TemplateType>();
-		IRepository repository = RepositoryFacade.getInstance().getRepository();
-		ICollection templatesRoot = repository.getCollection(getTemplatesPath());
-		if (!templatesRoot.exists()) {
-			// model.setUseTemplate(false);
-			return new TemplateType[] {};
-		}
-		for (ICollection templateCollection : templatesRoot.getCollections()) {
-			try {
-				templateTypesList.add(TemplateType.createTemplateType(getCategory(), templateCollection.getPath()));
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return templateTypesList.toArray(new TemplateType[] {});
+		return TemplateTypesEnumerator.prepareTemplateTypes(getTemplatesPath(), getCategory());
 	}
 
 	protected abstract String getTemplatesPath();

@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.core.runtime,
  org.eclipse.dirigible.repository.ext,
  org.eclipse.dirigible.ide.editor.ace;resolution:=optional,
- org.eclipse.dirigible.ide.editor.text;resolution:=optional
+ org.eclipse.dirigible.ide.editor.text;resolution:=optional,
+ com.google.gson
 Import-Package: javax.servlet,
  javax.servlet.http,
  org.eclipse.core.resources,

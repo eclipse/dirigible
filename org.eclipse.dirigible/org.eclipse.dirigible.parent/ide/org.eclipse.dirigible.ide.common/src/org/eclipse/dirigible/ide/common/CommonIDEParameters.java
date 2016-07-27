@@ -162,7 +162,11 @@ public class CommonIDEParameters {
 	}
 
 	public static String getUserName() {
-		return DualParameters.getUserName();
+		return DualParameters.getUserName(null);
+	}
+
+	public static String getUserName(HttpServletRequest request) {
+		return DualParameters.getUserName(request);
 	}
 
 	public static boolean isUserInRole(String role) {

@@ -46,4 +46,14 @@
         </newMenuItem>
  	</extension>
 
+	<extension
+           id="DatabaseGenerationServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/generate-data-structure"
+              class="org.eclipse.dirigible.ide.template.ui.db.service.DatabaseGenerationServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+
 </plugin>

@@ -38,8 +38,14 @@ public class RepositoryFacade {
 	}
 
 	public IRepository getRepository() throws RepositoryException {
-
 		HttpServletRequest request = CommonIDEParameters.getRequest();
+		return getRepository(request);
+	}
+
+	public IRepository getRepository(HttpServletRequest request) throws RepositoryException {
+		if (request == null) {
+			request = CommonIDEParameters.getRequest();
+		}
 
 		IRepository repository = getRepositoryInstance(request);
 
@@ -48,7 +54,7 @@ public class RepositoryFacade {
 		}
 
 		try {
-			DataSource dataSource = lookupDataSource();
+			DataSource dataSource = lookupDataSource(request);
 			String user = getUser(request);
 			// repository = new DBRepository(dataSource, user, false);
 			Map<String, Object> parameters = new HashMap<String, Object>();
@@ -64,12 +70,12 @@ public class RepositoryFacade {
 		return repository;
 	}
 
-	public DataSource lookupDataSource() throws NamingException {
-		return DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest());
+	public DataSource lookupDataSource(HttpServletRequest request) throws NamingException {
+		return DataSourceFacade.getInstance().getDataSource(request);
 	}
 
 	public String getUser(HttpServletRequest request) {
-		String user = CommonIDEParameters.getUserName(); // shared one
+		String user = CommonIDEParameters.getUserName(request); // shared one
 		try {
 			if (request != null) {
 				user = RequestUtils.getUser(request);
