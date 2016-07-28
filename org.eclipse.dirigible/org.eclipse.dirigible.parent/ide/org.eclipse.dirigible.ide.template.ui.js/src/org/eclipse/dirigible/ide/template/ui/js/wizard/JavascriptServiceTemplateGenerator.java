@@ -81,18 +81,22 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 	}
 
 	private Object getPrimaryKey() {
-		TableColumn[] columns = model.getTableColumns();
-		TableColumn primaryKey = null;
-		for (TableColumn column : columns) {
-			if (column.isKey()) {
-				primaryKey = column;
+		if (model.getTableName() != null) {
+			TableColumn[] columns = model.getTableColumns();
+			TableColumn primaryKey = null;
+			for (TableColumn column : columns) {
+				if (column.isKey()) {
+					primaryKey = column;
+				}
 			}
+			if (primaryKey == null) {
+				logger.error(String.format("There is no primary key in table %s, which can produce errornous artifacts", model.getTableName()));
+				return null;
+			}
+			return primaryKey;
 		}
-		if (primaryKey == null) {
-			logger.error(String.format("There is no primary key in table %s, which can produce errornous artifacts", model.getTableName()));
-			return null;
-		}
-		return primaryKey;
+
+		return null;
 	}
 
 	public String constructPackageName() {

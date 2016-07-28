@@ -15,15 +15,25 @@
 		
 		var connectToDebug = function() {
 			try {
-				var user = getCookie("dirigible_anonymous_user");
-				user_param =  user ? "/" + user : "";
 				var protocol = ((location.protocol === 'https:') ? "wss://" : "ws://");
-				socket = new WebSocket(protocol	+ window.location.host + "/debugsessions" + user_param);
+				var user = getCookie("dirigible_anonymous_user");
+				if (!user) {
+					// user from the security session - assume productive instance
+					$.get( "/services/op?user", function(loggedInUser) {
+						  socket = new WebSocket(protocol	+ window.location.host + "/debugsessions/" + loggedInUser);
+						  socket.onmessage = onMessage;
+					});
+				} else {
+					// user from the Cookie - assume a trial instance
+					socket = new WebSocket(protocol	+ window.location.host + "/debugsessions/" + user);
+					socket.onmessage = onMessage;
+				}
+				
 			} catch(e) {
 				document.writeln("<div style='background-color: lightgray; font-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
 				
 			}
-			socket.onmessage = onMessage;
+			
 		}
 		
 		function onMessage(event) {
@@ -75,6 +85,8 @@
 		    }
 		    return "";
 		}
+		
+
 		
 	</script>
 	
