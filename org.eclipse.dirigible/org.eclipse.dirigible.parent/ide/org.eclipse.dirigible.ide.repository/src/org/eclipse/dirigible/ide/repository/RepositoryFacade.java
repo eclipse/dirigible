@@ -90,7 +90,7 @@ public class RepositoryFacade {
 		// if (request == null) {
 		// return null;
 		// }
-		return (IRepository) CommonIDEParameters.getObject(REPOSITORY);
+		return (IRepository) CommonIDEParameters.getObject(REPOSITORY, request);
 		// return (IRepository) request.getSession().getAttribute(REPOSITORY);
 	}
 

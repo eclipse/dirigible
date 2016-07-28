@@ -25,7 +25,7 @@ public class TemplateTypePageLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof TemplateType) {
-			return ((TemplateType) element).getName();
+			return ((TemplateType) element).getTemplateMetadata().getName();
 		}
 		return null;
 	}
@@ -35,7 +35,7 @@ public class TemplateTypePageLabelProvider extends LabelProvider {
 		if (element instanceof TemplateType) {
 			Image image;
 			try {
-				image = TemplateUtils.createImageFromResource(((TemplateType) element).getImage());
+				image = TemplateUtils.createImageFromResource(((TemplateType) element).getTemplateMetadata().getImage());
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 				return null;

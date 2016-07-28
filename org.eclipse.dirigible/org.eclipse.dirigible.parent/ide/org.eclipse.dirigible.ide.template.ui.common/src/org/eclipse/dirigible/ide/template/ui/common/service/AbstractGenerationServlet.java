@@ -40,31 +40,50 @@ public abstract class AbstractGenerationServlet extends HttpServlet {
 		super.service(request, response);
 	}
 
-	private IRepository getRepository() throws ServletException {
+	protected IRepository getRepository(HttpServletRequest request) throws ServletException {
 		try {
-			final IRepository repository = RepositoryFacade.getInstance().getRepository();
+			final IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 			return repository;
 		} catch (Exception ex) {
 			throw new ServletException(COULD_NOT_INITIALIZE_REPOSITORY, ex);
 		}
 	}
 
-	private IWorkspace getWorkspace() throws ServletException {
+	protected IWorkspace getWorkspace(HttpServletRequest request) throws ServletException {
 		try {
-			final IWorkspace workspace = WorkspaceLocator.getWorkspace();
+			final IWorkspace workspace = WorkspaceLocator.getWorkspace(request);
 			return workspace;
 		} catch (Exception ex) {
 			throw new ServletException(COULD_NOT_INITIALIZE_WORKSPACE, ex);
 		}
 	}
 
-	protected abstract void doGeneration(String parameters, HttpServletRequest request) throws GenerationException;
+	protected abstract String doGeneration(String parameters, HttpServletRequest request) throws GenerationException;
+
+	protected abstract String enumerateTemplates(HttpServletRequest req) throws GenerationException;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			String parameters = IOUtils.toString(req.getInputStream());
-			doGeneration(parameters, req);
+			String result = doGeneration(parameters, req);
+			printResult(resp, result);
+		} catch (GenerationException e) {
+			throw new ServletException(e);
+		}
+	}
+
+	private void printResult(HttpServletResponse resp, String result) throws IOException {
+		resp.getWriter().print(result);
+		resp.getWriter().flush();
+		resp.getWriter().close();
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try {
+			String result = enumerateTemplates(req);
+			printResult(resp, result);
 		} catch (GenerationException e) {
 			throw new ServletException(e);
 		}

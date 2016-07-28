@@ -53,19 +53,20 @@ public abstract class TemplateGenerator {
 	protected abstract String getLogTag();
 
 	public void generate() throws Exception {
-		String[] names = getModel().getTemplateNames();
-		String[] locations = getModel().getTemplateLocations();
-		boolean[] generates = getModel().getTemplateGenerates();
-		String[] renamings = getModel().getTemplateRenamings();
-		for (int i = 0; i < generates.length; i++) {
+		// String[] names = getModel().getTemplateNames();
+		// String[] locations = getModel().getTemplateLocations();
+		// boolean[] generates = getModel().getTemplateGenerates();
+		// String[] renamings = getModel().getTemplateRenamings();
+		TemplateSourceMetadata[] sources = getModel().getTemplate().getTemplateMetadata().getSources();
+		for (int i = 0; i < sources.length; i++) {
 			String targetLocation = getModel().getTargetLocation();
-			String name = names[i];
+			String name = sources[i].getName();
 			// alternative location check for surrounding template target
 			targetLocation = calcTargetLocation(targetLocation, name);
 			if ((name != null) && (name.indexOf(IRepository.SEPARATOR) > 1)) {
 				name = name.substring(name.indexOf(IRepository.SEPARATOR));
 			}
-			String renaming = renamings[i];
+			String renaming = sources[i].getRename();
 			if ((renaming != null) && !"".equals(renaming)) {
 				// rename the surrounding template target
 				String baseFilename = FilenameUtils.getBaseName(getModel().getFileName());
@@ -73,16 +74,16 @@ public abstract class TemplateGenerator {
 				name = String.format(renaming, baseFilename) + FilenameUtils.EXTENSION_SEPARATOR + originalExtension;
 			}
 
-			if (generates[i]) {
+			if (sources[i].isGenerate()) {
 				if (i == 0) {
 					// leading template
-					generateFile(locations[i], targetLocation, getModel().getFileName());
+					generateFile(sources[i].getLocation(), targetLocation, getModel().getFileName());
 				} else {
 					// surrounding templates
-					generateFile(locations[i], targetLocation, name);
+					generateFile(sources[i].getLocation(), targetLocation, name);
 				}
 			} else {
-				copyFile(name, targetLocation, locations[i]);
+				copyFile(name, targetLocation, sources[i].getLocation());
 			}
 		}
 

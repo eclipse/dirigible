@@ -77,8 +77,15 @@ public class DualParameters {
 	}
 
 	public static Object getObject(String name) {
+		return getObject(name, null);
+	}
+
+	public static Object getObject(String name, HttpServletRequest request) {
 		try {
-			Object parameter = RWT.getRequest().getSession().getAttribute(name);
+			if (request == null) {
+				request = RWT.getRequest();
+			}
+			Object parameter = request.getSession().getAttribute(name);
 			return parameter;
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);

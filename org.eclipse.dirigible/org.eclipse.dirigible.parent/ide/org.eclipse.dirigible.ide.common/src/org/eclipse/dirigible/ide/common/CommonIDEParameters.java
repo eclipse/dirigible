@@ -129,6 +129,10 @@ public class CommonIDEParameters {
 		return DualParameters.getObject(name);
 	}
 
+	public static Object getObject(String name, HttpServletRequest request) {
+		return DualParameters.getObject(name, request);
+	}
+
 	public static void set(String name, String value) {
 		DualParameters.set(name, value);
 	}
@@ -185,9 +189,9 @@ public class CommonIDEParameters {
 		return DualParameters.isRCP();
 	}
 
-	public static final void initSystemParameters() {
-		DualParameters.initSystemParameters();
-	}
+	// public static final void initSystemParameters() {
+	// DualParameters.initSystemParameters();
+	// }
 
 	public static boolean isAutoPublishEnabled() {
 		return DualParameters.isAutoPublishEnabled();

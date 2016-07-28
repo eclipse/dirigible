@@ -112,39 +112,40 @@ public abstract class GenerationModel {
 
 	public String getTemplateLocation() {
 		if (template != null) {
-			return template.getLocation();
+			return template.getTemplateMetadata().getSources()[0].getLocation();
 		}
 		return null;
 	}
 
-	public String[] getTemplateNames() {
-		if (template != null) {
-			return template.getSourceNames();
-		}
-		return null;
-	}
-
-	public String[] getTemplateLocations() {
-		if (template != null) {
-			return template.getSourceLocations();
-		}
-		return null;
-	}
-
-	public boolean[] getTemplateGenerates() {
-		if (template != null) {
-			return template.getSourceGenerates();
-		}
-		return null;
-	}
-
-	public String[] getTemplateRenamings() {
-		if (template != null) {
-			return template.getSourceRenamings();
-		}
-		return null;
-	}
-
+	//
+	// public String[] getTemplateNames() {
+	// if (template != null) {
+	// return template.getSourceNames();
+	// }
+	// return null;
+	// }
+	//
+	// public String[] getTemplateLocations() {
+	// if (template != null) {
+	// return template.getSourceLocations();
+	// }
+	// return null;
+	// }
+	//
+	// public boolean[] getTemplateGenerates() {
+	// if (template != null) {
+	// return template.getSourceGenerates();
+	// }
+	// return null;
+	// }
+	//
+	// public String[] getTemplateRenamings() {
+	// if (template != null) {
+	// return template.getSourceRenamings();
+	// }
+	// return null;
+	// }
+	//
 	public String getTemplateExtension() {
 		if (template != null) {
 			return template.getExtension();

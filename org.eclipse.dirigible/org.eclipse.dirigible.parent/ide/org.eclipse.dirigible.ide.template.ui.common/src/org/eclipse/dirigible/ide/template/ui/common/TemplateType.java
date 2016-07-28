@@ -11,8 +11,6 @@
 package org.eclipse.dirigible.ide.template.ui.common;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -25,23 +23,9 @@ public class TemplateType {
 
 	private static final String DOT = ".";
 
-	private String name;
-
-	private String[] sourceNames;
-
-	private String[] sourceLocations;
-
-	private boolean[] sourceGenerates;
-
-	private String[] sourceRenamings;
-
-	private String image;
-
-	private Set<String> validParameters = new HashSet<String>();
+	private TemplateMetadata templateMetadata;
 
 	private static Gson gson = new Gson();
-
-	// private static final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
 
 	public static TemplateType createTemplateType(String type, String location) throws IOException {
 		return createTemplateType(type, location, null);
@@ -64,86 +48,74 @@ public class TemplateType {
 
 		TemplateMetadata templateMetadata = gson.fromJson(new String(templateMetadataResource.getContent()), TemplateMetadata.class);
 
-		// Image image = TemplateUtils.createImageFromResource(templateRoot, templateMetadata.getImage());
 		String image = templateRoot.getResource(templateMetadata.getImage()).getPath();
+		templateMetadata.setImage(image);
 
 		TemplateSourceMetadata[] sources = templateMetadata.getSources();
-		String[] names = new String[sources.length];
-		String[] locations = new String[sources.length];
-		boolean[] generates = new boolean[sources.length];
-		String[] renamings = new String[sources.length];
-		for (int i = 0; i < sources.length; i++) {
-			IResource contentResource = templateRoot.getResource(sources[i].getName());
+		for (TemplateSourceMetadata source : sources) {
+			IResource contentResource = templateRoot.getResource(source.getName());
 			if (!contentResource.exists()) {
 				throw new IOException(String.format("Template source does not exist at: %s", contentResource.getPath()));
 			}
-			names[i] = sources[i].getName();
-			locations[i] = contentResource.getPath();
-			generates[i] = sources[i].isGenerate();
-			renamings[i] = sources[i].getRename();
+			source.setLocation(contentResource.getPath());
 		}
 
-		TemplateType templateType = new TemplateType(templateMetadata.getName(), names, locations, generates, renamings, image);
+		TemplateType templateType = new TemplateType(templateMetadata);
 		return templateType;
 	}
 
-	private TemplateType(String name, String[] names, String[] locations, boolean[] generates, String[] renamings, String image) {
+	private TemplateType(TemplateMetadata templateMetadata) {
 		super();
-		this.name = name;
-		this.sourceNames = names;
-		this.sourceLocations = locations;
-		this.sourceGenerates = generates;
-		this.sourceRenamings = renamings;
-		this.image = image;
+		this.templateMetadata = templateMetadata;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String[] getSourceNames() {
-		return sourceNames;
-	}
-
-	public String[] getSourceLocations() {
-		return sourceLocations;
-	}
-
-	public boolean[] getSourceGenerates() {
-		return sourceGenerates;
-	}
-
-	public String[] getSourceRenamings() {
-		return sourceRenamings;
-	}
-
+	// public String getName() {
+	// return name;
+	// }
+	//
+	// public void setName(String name) {
+	// this.name = name;
+	// }
+	//
+	// public String[] getSourceNames() {
+	// return sourceNames;
+	// }
+	//
+	// public String[] getSourceLocations() {
+	// return sourceLocations;
+	// }
+	//
+	// public boolean[] getSourceGenerates() {
+	// return sourceGenerates;
+	// }
+	//
+	// public String[] getSourceRenamings() {
+	// return sourceRenamings;
+	// }
+	//
 	public String getExtension() {
 		return getExtensionFor(0);
 	}
 
 	public String getExtensionFor(int i) {
-		int dotIndex = sourceLocations[i].lastIndexOf(DOT);
+		int dotIndex = this.templateMetadata.getSources()[i].getLocation().lastIndexOf(DOT);
 		if (dotIndex != -1) {
-			return sourceLocations[i].substring(dotIndex + 1);
+			return this.templateMetadata.getSources()[i].getLocation().substring(dotIndex + 1);
 		}
 		return "";
 	}
-
-	public void setLocations(String[] locations) {
-		this.sourceLocations = locations;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
+	//
+	// public void setLocations(String[] locations) {
+	// this.sourceLocations = locations;
+	// }
+	//
+	// public String getImage() {
+	// return image;
+	// }
+	//
+	// public void setImage(String image) {
+	// this.image = image;
+	// }
 
 	// private static Image createImage(URL imageURL) {
 	// // ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(imageURL);
@@ -151,12 +123,16 @@ public class TemplateType {
 	// return null;
 	// }
 
-	public Set<String> getValidParameters() {
-		return validParameters;
+	// public Set<TemplateParameterMetadata> getValidParameters() {
+	// return validParameters;
+	// }
+	//
+	public String getLocation() {
+		return this.templateMetadata.getSources()[0].getLocation();
 	}
 
-	public String getLocation() {
-		return this.sourceLocations[0];
+	public TemplateMetadata getTemplateMetadata() {
+		return templateMetadata;
 	}
 
 }

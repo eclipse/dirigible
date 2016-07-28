@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.impl;
@@ -19,6 +18,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IFile;
@@ -39,7 +40,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
-//import org.eclipse.core.resources.WorkspaceLock;
+// import org.eclipse.core.resources.WorkspaceLock;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -48,7 +49,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
@@ -110,9 +110,9 @@ public class Workspace implements IWorkspace {
 
 	private static final String WORKSPACE = "/workspace"; //$NON-NLS-1$
 
-	private static final String DB_DIRIGIBLE_USERS = IRepositoryPaths.DB_DIRIGIBLE_USERS; //$NON-NLS-1$
-	
-	private static final Logger logger = Logger.getLogger(Workspace.class); 
+	private static final String DB_DIRIGIBLE_USERS = IRepositoryPaths.DB_DIRIGIBLE_USERS;
+
+	private static final Logger logger = Logger.getLogger(Workspace.class);
 
 	private final IRepository repository;
 
@@ -124,15 +124,23 @@ public class Workspace implements IWorkspace {
 
 	public Workspace() throws RepositoryException {
 		repository = RepositoryFacade.getInstance().getRepository();
-		
+
+		if (repository == null) {
+			throw new RepositoryException(COULD_NOT_CREATE_REPOSITORY_HANDLER);
+		}
+	}
+
+	public Workspace(HttpServletRequest request) throws RepositoryException {
+		repository = RepositoryFacade.getInstance().getRepository(request);
+
 		if (repository == null) {
 			throw new RepositoryException(COULD_NOT_CREATE_REPOSITORY_HANDLER);
 		}
 	}
 
 	private Map<IResourceChangeListener, Integer> lookupChangeListenersFlags() {
-		Map<IResourceChangeListener, Integer> changeListenersFlags
-				= (Map<IResourceChangeListener, Integer>) CommonIDEParameters.getObject(WORKSPACE_CHANGE_LISTENERS_FLAGS);
+		Map<IResourceChangeListener, Integer> changeListenersFlags = (Map<IResourceChangeListener, Integer>) CommonIDEParameters
+				.getObject(WORKSPACE_CHANGE_LISTENERS_FLAGS);
 		if (changeListenersFlags == null) {
 			changeListenersFlags = new HashMap<IResourceChangeListener, Integer>();
 			CommonIDEParameters.setObject(WORKSPACE_CHANGE_LISTENERS_FLAGS, changeListenersFlags);
@@ -141,8 +149,7 @@ public class Workspace implements IWorkspace {
 	}
 
 	private Set<IResourceChangeListener> lookupChangeListeners() {
-		Set<IResourceChangeListener> changeListeners = 
-				(Set<IResourceChangeListener>) CommonIDEParameters.getObject(WORKSPACE_CHANGE_LISTENERS);
+		Set<IResourceChangeListener> changeListeners = (Set<IResourceChangeListener>) CommonIDEParameters.getObject(WORKSPACE_CHANGE_LISTENERS);
 		if (changeListeners == null) {
 			changeListeners = new HashSet<IResourceChangeListener>();
 			CommonIDEParameters.setObject(WORKSPACE_CHANGE_LISTENERS, changeListeners);
@@ -158,7 +165,7 @@ public class Workspace implements IWorkspace {
 	 * Use this method to initialize the workspace for the given username. If
 	 * this is not done, the workspace will use a default shared workspace
 	 * location.
-	 * 
+	 *
 	 * @param username
 	 *            the username for which this workspace is active.
 	 */
@@ -201,8 +208,7 @@ public class Workspace implements IWorkspace {
 		if (!root.getLocation().isPrefixOf(path)) {
 			return null;
 		}
-		IPath extractedPath = path.removeFirstSegments(root.getLocation().segmentCount())
-				.makeAbsolute();
+		IPath extractedPath = path.removeFirstSegments(root.getLocation().segmentCount()).makeAbsolute();
 		// Root
 		if (extractedPath.equals(Path.ROOT)) {
 			return root;
@@ -245,6 +251,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Class adapter) {
 		return null;
@@ -253,15 +260,16 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addResourceChangeListener(IResourceChangeListener listener) {
-		final int flags = IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE
-				| IResourceChangeEvent.POST_CHANGE;
+		final int flags = IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.POST_CHANGE;
 		addResourceChangeListener(listener, flags);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addResourceChangeListener(IResourceChangeListener listener, int eventMask) {
 		if (listener == null) {
 			throw new IllegalArgumentException(LISTENER_MAY_NOT_BE_NULL);
@@ -271,8 +279,7 @@ public class Workspace implements IWorkspace {
 	}
 
 	public void notifyResourceChanged(IResourceChangeEvent event) {
-		for (IResourceChangeListener listener : new HashSet<IResourceChangeListener>(
-				lookupChangeListeners())) {
+		for (IResourceChangeListener listener : new HashSet<IResourceChangeListener>(lookupChangeListeners())) {
 			int flags = lookupChangeListenersFlags().get(listener);
 			if ((event.getType() & flags) != 0) {
 				listener.resourceChanged(event);
@@ -293,6 +300,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void build(int kind, IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException(PROJECT_BUILDING_IS_NOT_SUPPORTED);
 	}
@@ -315,23 +323,22 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IStatus copy(IResource[] resources, IPath destination, boolean force,
-			IProgressMonitor monitor) throws CoreException {
+	@Override
+	public IStatus copy(IResource[] resources, IPath destination, boolean force, IProgressMonitor monitor) throws CoreException {
 		int flags = (force ? IResource.FORCE : IResource.NONE);
 		return copy(resources, destination, flags, monitor);
 	}
 
 	@Override
-	public IStatus copy(IResource[] arg0, IPath arg1, int arg2, IProgressMonitor arg3)
-			throws CoreException {
+	public IStatus copy(IResource[] arg0, IPath arg1, int arg2, IProgressMonitor arg3) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public IStatus delete(IResource[] resources, boolean force, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public IStatus delete(IResource[] resources, boolean force, IProgressMonitor monitor) throws CoreException {
 		int flags = IResource.KEEP_HISTORY | (force ? IResource.FORCE : IResource.NONE);
 		return delete(resources, flags, monitor);
 	}
@@ -339,8 +346,8 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IStatus delete(IResource[] resources, int updateFlags, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public IStatus delete(IResource[] resources, int updateFlags, IProgressMonitor monitor) throws CoreException {
 		boolean deleteFailed = false;
 		for (IResource resource : resources) {
 			if (!resource.exists()) {
@@ -361,6 +368,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void deleteMarkers(IMarker[] marksers) throws CoreException {
 		throw new UnsupportedOperationException(MARKERS_ARE_NOT_SUPPORTED);
 	}
@@ -408,6 +416,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IWorkspaceRoot getRoot() {
 		if (root == null) {
 			throw new IllegalStateException(WORKSPACE_IS_NOT_INITIALIZED);
@@ -428,6 +437,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isAutoBuilding() {
 		logger.error(AUTO_BUILDING_IS_NOT_SUPPORTED);
 		return false;
@@ -451,15 +461,14 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IStatus move(IResource[] resources, IPath destination, boolean force,
-			IProgressMonitor monitor) throws CoreException {
+	@Override
+	public IStatus move(IResource[] resources, IPath destination, boolean force, IProgressMonitor monitor) throws CoreException {
 		int flags = IResource.KEEP_HISTORY | (force ? IResource.FORCE : IResource.NONE);
 		return move(resources, destination, flags, monitor);
 	}
 
 	@Override
-	public IStatus move(IResource[] resources, IPath destination, int updateFlags,
-			IProgressMonitor monitor) throws CoreException {
+	public IStatus move(IResource[] resources, IPath destination, int updateFlags, IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -471,6 +480,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeResourceChangeListener(IResourceChangeListener listener) {
 		if (listener != null) {
 			lookupChangeListeners().remove(listener);
@@ -491,13 +501,13 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void run(IWorkspaceRunnable action, IProgressMonitor monitor) throws CoreException {
 		run(action, getRoot(), IWorkspace.AVOID_UPDATE, monitor);
 	}
 
 	@Override
-	public void run(IWorkspaceRunnable action, ISchedulingRule rule, int flags,
-			IProgressMonitor monitor) throws CoreException {
+	public void run(IWorkspaceRunnable action, ISchedulingRule rule, int flags, IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -511,15 +521,16 @@ public class Workspace implements IWorkspace {
 		throw new UnsupportedOperationException();
 	}
 
-//	@Override
-//	@Deprecated
-//	public void setWorkspaceLock(WorkspaceLock arg0) {
-//		throw new UnsupportedOperationException();
-//	}
+	// @Override
+	// @Deprecated
+	// public void setWorkspaceLock(WorkspaceLock arg0) {
+	// throw new UnsupportedOperationException();
+	// }
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] sortNatureSet(String[] natureIds) {
 		throw new UnsupportedOperationException(NATURES_ARE_NOT_SUPPORTED);
 	}
@@ -537,6 +548,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStatus validateLinkLocationURI(IResource resource, URI location) {
 		return validateLinkLocation(resource, new Path(location.toString()));
 	}
@@ -544,6 +556,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStatus validateName(String segment, int typeMask) {
 		// Specification
 		if (segment == null) {
@@ -577,17 +590,17 @@ public class Workspace implements IWorkspace {
 		IStatus status;
 		String fileRegExPattern = "([a-zA-Z_0-9.-]+([a-zA-Z_0-9]+))$"; //$NON-NLS-1$
 		if (Pattern.matches(fileRegExPattern, segment)) {
-			
-			if(segment.lastIndexOf("..") != -1){
+
+			if (segment.lastIndexOf("..") != -1) {
 				return status = createErrorStatus(Messages.FILE_NAME_FORMAT);
-			}else if(segment.lastIndexOf("--") != -1){
+			} else if (segment.lastIndexOf("--") != -1) {
 				return status = createErrorStatus(Messages.FILE_NAME_FORMAT);
-			}else if(segment.lastIndexOf(".-") != -1){
+			} else if (segment.lastIndexOf(".-") != -1) {
 				return status = createErrorStatus(Messages.FILE_NAME_FORMAT);
-			}else if(segment.lastIndexOf("-.") != -1){
+			} else if (segment.lastIndexOf("-.") != -1) {
 				return status = createErrorStatus(Messages.FILE_NAME_FORMAT);
 			}
-			
+
 			status = createOkStatus();
 		} else {
 			status = createErrorStatus(Messages.FILE_NAME_FORMAT);
@@ -598,6 +611,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStatus validateNatureSet(String[] natureIds) {
 		throw new UnsupportedOperationException(NATURES_ARE_NOT_SUPPORTED);
 	}
@@ -605,6 +619,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStatus validatePath(String path, int typeMask) {
 		if (path == null) {
 			throw new IllegalArgumentException(PATH_MAY_NOT_BE_NULL);
@@ -675,7 +690,7 @@ public class Workspace implements IWorkspace {
 			return createErrorStatus(FILE_PATH_MUST_HAVE_ATLEAST_2_SEGMENTS);
 		}
 		IStatus status = validateName(path.segment(0), IResource.PROJECT);
-		for (int i = 1; i < path.segmentCount() - 1; ++i) {
+		for (int i = 1; i < (path.segmentCount() - 1); ++i) {
 			status = validateName(path.segment(i), IResource.FOLDER);
 			if (!status.isOK()) {
 				return status;
@@ -700,6 +715,7 @@ public class Workspace implements IWorkspace {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IStatus validateProjectLocationURI(IProject project, URI location) {
 		return validateProjectLocation(project, new Path(location.toString()));
 	}
@@ -747,16 +763,13 @@ public class Workspace implements IWorkspace {
 	}
 
 	@Override
-	public void build(IBuildConfiguration[] buildConfigs, int kind,
-			boolean buildReferences, IProgressMonitor monitor)
-			throws CoreException {
+	public void build(IBuildConfiguration[] buildConfigs, int kind, boolean buildReferences, IProgressMonitor monitor) throws CoreException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public IBuildConfiguration newBuildConfig(String projectName,
-			String configName) {
+	public IBuildConfiguration newBuildConfig(String projectName, String configName) {
 		// TODO Auto-generated method stub
 		return null;
 	}

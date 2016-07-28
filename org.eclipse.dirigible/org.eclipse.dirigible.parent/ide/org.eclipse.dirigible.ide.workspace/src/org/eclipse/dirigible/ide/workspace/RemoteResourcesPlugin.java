@@ -1,18 +1,18 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace;
 
-import org.eclipse.core.resources.IWorkspace;
+import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.workspace.impl.Workspace;
 
@@ -24,7 +24,6 @@ import org.eclipse.dirigible.ide.workspace.impl.Workspace;
  * What differs this class from the original is that it provides a unique
  * workspace for each of the users. This is required because of the milti-user
  * architecture of RAP.
- * 
  */
 public class RemoteResourcesPlugin {
 
@@ -39,7 +38,7 @@ public class RemoteResourcesPlugin {
 	 * <strong>Node:</strong>Currently, the returned implementation will not
 	 * support most of the methods and will throw an
 	 * {@link UnsupportedOperationException} exception when that is the case.
-	 * 
+	 *
 	 * @see UnsupportedOperationException
 	 * @see IWorkspace
 	 * @return an {@link IWorkspace} instance.
@@ -53,21 +52,40 @@ public class RemoteResourcesPlugin {
 		return CommonIDEParameters.getUserName();
 	}
 
+	public static IWorkspace getWorkspace(HttpServletRequest request) {
+		String user = getUserName(request);
+		return getWorkspace(user, request);
+	}
+
+	public static String getUserName(HttpServletRequest request) {
+		return CommonIDEParameters.getUserName(request);
+	}
+
 	/**
 	 * Returns a {@link Workspace} instance for the specified user name.
 	 * <p>
 	 * <strong>Node:</strong>Currently, the returned implementation will not
 	 * support most of the methods and will throw an
 	 * {@link UnsupportedOperationException} exception when that is the case.
-	 * 
+	 *
 	 * @see UnsupportedOperationException
 	 * @see IWorkspace
 	 * @param user
 	 *            the user for which a workspace must be returned.
 	 * @return a {@link Workspace} instance.
 	 */
+	public static IWorkspace getWorkspace(String user, HttpServletRequest request) {
+		// CommonIDEParameters.initSystemParameters();
+		Workspace workspace = (Workspace) CommonIDEParameters.getObject(Workspace.class.getCanonicalName(), request);
+		if (workspace == null) {
+			workspace = new Workspace(request);
+		}
+		workspace.initialize(user);
+		return workspace;
+	}
+
 	public static IWorkspace getWorkspace(String user) {
-		CommonIDEParameters.initSystemParameters();
+		// CommonIDEParameters.initSystemParameters();
 		Workspace workspace = (Workspace) CommonIDEParameters.getObject(Workspace.class.getCanonicalName());
 		if (workspace == null) {
 			workspace = new Workspace();
@@ -85,7 +103,7 @@ public class RemoteResourcesPlugin {
 	 * <strong>Node:</strong>Currently, the returned implementation will not
 	 * support most of the methods and will throw an
 	 * {@link UnsupportedOperationException} exception when that is the case.
-	 * 
+	 *
 	 * @see UnsupportedOperationException
 	 * @see IWorkspace
 	 * @return an {@link IWorkspace} instance.

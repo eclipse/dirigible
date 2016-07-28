@@ -12,6 +12,8 @@ public class TemplateSourceMetadata {
 
 	private String rename;
 
+	private String location;
+
 	public String getName() {
 		return name;
 	}
@@ -46,5 +48,13 @@ public class TemplateSourceMetadata {
 
 	public boolean isRenaming() {
 		return (this.rename != null) && !"".equals(this.rename);
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 }
