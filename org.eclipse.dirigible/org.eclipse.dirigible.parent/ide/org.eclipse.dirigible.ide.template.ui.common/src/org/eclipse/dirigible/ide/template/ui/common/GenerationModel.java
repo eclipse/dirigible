@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -206,7 +208,7 @@ public abstract class GenerationModel {
 		}
 		InputStream in;
 		try {
-			in = getInputStreamByTemplateLocation(getTemplateLocation());
+			in = getInputStreamByTemplateLocation(getTemplateLocation(), null);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 			return ValidationStatus.createError(e.getMessage());
@@ -219,9 +221,9 @@ public abstract class GenerationModel {
 		return ValidationStatus.createOk();
 	}
 
-	public static InputStream getInputStreamByTemplateLocation(String location) throws IOException {
+	public static InputStream getInputStreamByTemplateLocation(String location, HttpServletRequest request) throws IOException {
 		InputStream in = null;
-		IRepository repository = RepositoryFacade.getInstance().getRepository();
+		IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 		org.eclipse.dirigible.repository.api.IResource resource = repository.getResource(location);
 		if (resource != null) {
 			in = new ByteArrayInputStream(resource.getContent());

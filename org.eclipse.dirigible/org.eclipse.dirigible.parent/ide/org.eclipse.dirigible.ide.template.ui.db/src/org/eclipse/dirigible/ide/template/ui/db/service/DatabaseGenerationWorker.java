@@ -11,6 +11,7 @@ import org.eclipse.dirigible.ide.template.ui.common.service.AbstractGenerationWo
 import org.eclipse.dirigible.ide.template.ui.db.wizard.DataStructureTemplateGenerator;
 import org.eclipse.dirigible.ide.template.ui.db.wizard.DataStructureTemplateModel;
 import org.eclipse.dirigible.ide.template.ui.db.wizard.DataStructureTemplateTypeDiscriminator;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 
 import com.google.gson.Gson;
@@ -19,6 +20,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class DatabaseGenerationWorker extends AbstractGenerationWorker {
+
+	private static final String MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED = "Mandatory parameter [%s] has not been provided";
+	private static final String TEMPLATE_S_DOES_NOT_EXIST_IN_THIS_INSTANCE = "Template %s does not exist in this instance";
 
 	public DatabaseGenerationWorker(IRepository repository, IWorkspace workspace) {
 		super(repository, workspace);
@@ -38,7 +42,7 @@ public class DatabaseGenerationWorker extends AbstractGenerationWorker {
 
 			setParametersToModel(parametersObject, model, templates);
 
-			generator.generate();
+			generator.generate(request);
 
 		} catch (Exception e) {
 			throw new GenerationException(e);
@@ -59,18 +63,18 @@ public class DatabaseGenerationWorker extends AbstractGenerationWorker {
 				}
 
 				if (model.getTemplate() == null) {
-					throw new GenerationException(String.format("Template %s does not exist in this instance", templateType));
+					throw new GenerationException(String.format(TEMPLATE_S_DOES_NOT_EXIST_IN_THIS_INSTANCE, templateType));
 				}
 			}
 		} else {
-			throw new GenerationException(String.format("Mandatory parameter %s has not been provided", "templateType"));
+			throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, "templateType"));
 		}
 
 		// file name
 		if (parametersObject.has("fileName")) {
 			model.setFileName(parametersObject.get("fileName").getAsString());
 		} else {
-			throw new GenerationException(String.format("Mandatory parameter %s has not been provided", "fileName"));
+			throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, "fileName"));
 		}
 
 		// project name
@@ -81,29 +85,30 @@ public class DatabaseGenerationWorker extends AbstractGenerationWorker {
 				model.setTargetContainer(project.getFullPath().toString());
 			}
 		} else {
-			throw new GenerationException(String.format("Mandatory parameter %s has not been provided", "projectName"));
+			throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, "projectName"));
 		}
 
 		// package name
 		if (parametersObject.has("packageName")) {
-			model.setPackageName(parametersObject.get("packageName").getAsString());
+			model.setPackageName(
+					ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES + IRepository.SEPARATOR + parametersObject.get("packageName").getAsString());
 		} else {
-			throw new GenerationException(String.format("Mandatory parameter %s has not been provided", "packageName"));
+			throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, "packageName"));
 		}
 
 		// table name
 		if (parametersObject.has("tableName")) {
 			model.setTableName(parametersObject.get("tableName").getAsString());
 		} else {
-			throw new GenerationException(String.format("Mandatory parameter %s has not been provided", "tableName"));
+			throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, "tableName"));
 		}
 
-		// query
-		if (parametersObject.has("query")) {
-			model.setQuery(parametersObject.get("query").getAsString());
-		} else {
-			throw new GenerationException(String.format("Mandatory parameter %s has not been provided", "query"));
-		}
+		// // query
+		// if (parametersObject.has("query")) {
+		// model.setQuery(parametersObject.get("query").getAsString());
+		// } else {
+		// throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, "query"));
+		// }
 	}
 
 	@Override

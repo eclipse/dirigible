@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
@@ -28,7 +30,9 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dirigible.ide.common.status.LogProgressMonitor;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceViewerUtils;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
@@ -53,10 +57,10 @@ public abstract class TemplateGenerator {
 	protected abstract String getLogTag();
 
 	public void generate() throws Exception {
-		// String[] names = getModel().getTemplateNames();
-		// String[] locations = getModel().getTemplateLocations();
-		// boolean[] generates = getModel().getTemplateGenerates();
-		// String[] renamings = getModel().getTemplateRenamings();
+		generate(null);
+	}
+
+	public void generate(HttpServletRequest request) throws Exception {
 		TemplateSourceMetadata[] sources = getModel().getTemplate().getTemplateMetadata().getSources();
 		for (int i = 0; i < sources.length; i++) {
 			String targetLocation = getModel().getTargetLocation();
@@ -77,13 +81,13 @@ public abstract class TemplateGenerator {
 			if (sources[i].isGenerate()) {
 				if (i == 0) {
 					// leading template
-					generateFile(sources[i].getLocation(), targetLocation, getModel().getFileName());
+					generateFile(sources[i].getLocation(), targetLocation, getModel().getFileName(), request);
 				} else {
 					// surrounding templates
-					generateFile(sources[i].getLocation(), targetLocation, name);
+					generateFile(sources[i].getLocation(), targetLocation, name, request);
 				}
 			} else {
-				copyFile(name, targetLocation, sources[i].getLocation());
+				copyFile(name, targetLocation, sources[i].getLocation(), request);
 			}
 		}
 
@@ -131,14 +135,18 @@ public abstract class TemplateGenerator {
 	}
 
 	public void generateFile(String templateLocation, String targetLocation, String fileName) throws Exception {
+		generateFile(templateLocation, targetLocation, fileName, null);
+	}
+
+	public void generateFile(String templateLocation, String targetLocation, String fileName, HttpServletRequest request) throws Exception {
 		Map<String, Object> parameters = prepareParameters();
-		InputStream in = GenerationModel.getInputStreamByTemplateLocation(templateLocation);
+		InputStream in = GenerationModel.getInputStreamByTemplateLocation(templateLocation, request);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		velocityGenerator.generate(in, out, parameters, getLogTag());
 		byte[] bytes = out.toByteArray();
 		bytes = afterGeneration(bytes);
 		IPath location = new Path(targetLocation).append(fileName);
-		createFile(location, bytes);
+		createFile(location, bytes, request);
 	}
 
 	// default implementation - do nothing
@@ -146,26 +154,32 @@ public abstract class TemplateGenerator {
 		return bytes;
 	}
 
-	protected void createFile(IPath location, byte[] bytes) throws Exception {
-		IWorkspace workspace = WorkspaceLocator.getWorkspace();
+	protected void createFile(IPath location, byte[] bytes, HttpServletRequest request) throws Exception {
+		IWorkspace workspace = WorkspaceLocator.getWorkspace(request);
 		IWorkspaceRoot root = workspace.getRoot();
 		IFile file = root.getFile(location);
 		if (file.exists()) {
 			// TODO add as Markers as well
 			logger.warn(String.format(THE_FILE_ALREADY_EXISTS_SKIPPED_GENERATION_OF, location));
 		} else {
-			createMissingParents(file);
-			file.create(new ByteArrayInputStream(bytes), false, null);
+			IProgressMonitor monitor = null;
+			if (request != null) {
+				monitor = new LogProgressMonitor();
+			}
+			createMissingParents(file, monitor);
+			file.create(new ByteArrayInputStream(bytes), false, monitor);
 			createdFiles.add(file);
 		}
-		IContainer parent = file.getParent();
-		if (parent != null) {
-			WorkspaceViewerUtils.expandElement(parent);
+		if (request == null) {
+			IContainer parent = file.getParent();
+			if (parent != null) {
+				WorkspaceViewerUtils.expandElement(parent);
+			}
+			WorkspaceViewerUtils.selectElement(file);
 		}
-		WorkspaceViewerUtils.selectElement(file);
 	}
 
-	private void createMissingParents(IFile file) throws CoreException {
+	private void createMissingParents(IFile file, IProgressMonitor monitor) throws CoreException {
 		Stack<IContainer> missingParents = new Stack<IContainer>();
 		for (IContainer parent = file.getParent(); !parent.exists(); parent = parent.getParent()) {
 			missingParents.push(parent);
@@ -173,17 +187,18 @@ public abstract class TemplateGenerator {
 		while (!missingParents.isEmpty()) {
 			IContainer next = missingParents.pop();
 			if (next instanceof IFolder) {
-				((IFolder) next).create(false, true, null);
+				((IFolder) next).create(false, true, monitor);
 			}
 		}
 	}
 
-	protected void copyFile(String targetFileName, String targetLocation, String templateLocation) throws IOException, Exception {
+	protected void copyFile(String targetFileName, String targetLocation, String templateLocation, HttpServletRequest request)
+			throws IOException, Exception {
 		IPath location = new Path(targetLocation).append(targetFileName);
-		InputStream in = GenerationModel.getInputStreamByTemplateLocation(templateLocation);
+		InputStream in = GenerationModel.getInputStreamByTemplateLocation(templateLocation, request);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		IOUtils.copy(in, out);
-		createFile(location, out.toByteArray());
+		createFile(location, out.toByteArray(), request);
 	}
 
 	public List<IFile> getGeneratedFiles() {
