@@ -49,21 +49,23 @@ public class OrionEditor extends TextEditor {
 
 		final OrionEditor textEditor = this;
 		final IEditorInput input = getEditorInput();
-		text = new EditorWidget(parent, true);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 		String fileName = null;
 		try {
-			if (input instanceof SourceFileEditorInput) {
-				SourceFileEditorInput sfei = (SourceFileEditorInput) input;
-				fileName = sfei.getName();
-			}
 			final String content = getContentProvider(input).getContent(input);
 			if (input instanceof SourceFileEditorInput) {
 				SourceFileEditorInput sfei = (SourceFileEditorInput) input;
-				fileName = sfei.getName();
-				text.setText(content, getMode(), sfei.isReadOnly(), sfei.isBreakpointsEnabled(), sfei.getRow());
+				fileName = sfei.getPath().toString();
+			}
+
+			text = new EditorWidget(parent, true, fileName);
+			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+			if (input instanceof SourceFileEditorInput) {
+				SourceFileEditorInput sfei = (SourceFileEditorInput) input;
+				text.setText(content, getMode(), sfei.isReadOnly(), sfei.isBreakpointsEnabled(), sfei.getRow(), fileName);
 			} else {
-				text.setText(content, getMode(), false, false, 0);
+				text.setText(content, getMode(), false, false, 0, fileName);
 			}
 
 		} catch (final ContentProviderException e) {

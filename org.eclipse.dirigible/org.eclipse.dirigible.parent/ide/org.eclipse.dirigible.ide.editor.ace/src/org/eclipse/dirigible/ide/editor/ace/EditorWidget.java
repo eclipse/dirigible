@@ -50,6 +50,8 @@ public class EditorWidget extends AbstractTextEditorWidget {
 
 	private int row;
 
+	private String filename;
+
 	public EditorWidget(final Composite parent) {
 		this(parent, false);
 	}
@@ -138,12 +140,13 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	}
 
 	@Override
-	public void setText(final String text, final EditorMode mode, boolean readOnly, boolean breakpointsEnabled, int row) {
+	public void setText(final String text, final EditorMode mode, boolean readOnly, boolean breakpointsEnabled, int row, String filename) {
 		this.text = text;
 		this.mode = mode.getName();
 		this.readOnly = readOnly;
 		this.breakpointsEnabled = breakpointsEnabled;
 		this.row = row;
+		this.filename = filename;
 		if (loaded) {
 			updateWidgetContents();
 		}
@@ -169,7 +172,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	}
 
 	private void updateWidgetContents() {
-		evaluate("setText", text, mode, readOnly, breakpointsEnabled, row); //$NON-NLS-1$
+		evaluate("setText", text, mode, readOnly, breakpointsEnabled, row, filename); //$NON-NLS-1$
 	}
 
 	public void setMode(final String mode) {

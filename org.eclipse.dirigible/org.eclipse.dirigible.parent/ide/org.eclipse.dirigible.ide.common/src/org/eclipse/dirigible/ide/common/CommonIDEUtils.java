@@ -30,6 +30,9 @@ public class CommonIDEUtils {
 	public static String formatToRuntimePath(String folder, String idePath) {
 		StringBuilder path = new StringBuilder(idePath);
 		int indexOfWorkspace = path.indexOf(IRepositoryPaths.WORKSPACE_FOLDER_NAME);
+		if (indexOfWorkspace == -1) {
+			return idePath;
+		}
 		int indexOfSlash = path.indexOf(ICommonConstants.SEPARATOR, indexOfWorkspace);
 		path.replace(0, indexOfSlash, ICommonConstants.EMPTY_STRING);
 		int indexOfFolder = path.indexOf(folder);

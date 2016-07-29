@@ -65,7 +65,7 @@ public class DataStructureTemplateQueryPage extends FocusableWizardPage {
 		// queryText = new Text(parent, SWT.BORDER);
 
 		queryText = new EditorWidget(parent);
-		queryText.setText("", EditorMode.SQL, false, false, 0);
+		queryText.setText("", EditorMode.SQL, false, false, 0, "sql");
 
 		queryText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		// queryText.addKeyListener(new KeyListener() {

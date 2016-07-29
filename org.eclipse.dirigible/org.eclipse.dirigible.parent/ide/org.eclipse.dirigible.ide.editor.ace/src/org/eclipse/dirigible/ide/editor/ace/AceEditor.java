@@ -61,9 +61,9 @@ public class AceEditor extends TextEditor {
 			if (input instanceof SourceFileEditorInput) {
 				SourceFileEditorInput sfei = (SourceFileEditorInput) input;
 				fileName = sfei.getName();
-				text.setText(content, getMode(), sfei.isReadOnly(), sfei.isBreakpointsEnabled(), sfei.getRow());
+				text.setText(content, getMode(), sfei.isReadOnly(), sfei.isBreakpointsEnabled(), sfei.getRow(), fileName);
 			} else {
-				text.setText(content, getMode(), false, false, 0);
+				text.setText(content, getMode(), false, false, 0, fileName);
 			}
 
 		} catch (final ContentProviderException e) {

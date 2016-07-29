@@ -137,7 +137,11 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		SashForm sashFormSessions = new SashForm(parent, SWT.HORIZONTAL | SWT.BORDER);
 		sashFormSessions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		createSessionsTable(sashFormSessions);
+		if (isRAPView) {
+			createSessionsTableRAP(sashFormSessions);
+		} else {
+			createSessionsTable(sashFormSessions);
+		}
 
 		SashForm sashForm = new SashForm(sashFormSessions, SWT.HORIZONTAL | SWT.BORDER);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -183,19 +187,23 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	Button continueButton;
 	Button skipAllBreakpointsButton;
 
+	private boolean isRAPView = true;
+
 	private void createButtonsRow(final Composite holder) {
 
-		// Make sense for RAP based View only
-		// Button refreshButton = createButton(holder, REFRESH, DIRIGIBLE_REFRESH_ICON_URL);
-		// refreshButton.addSelectionListener(new SelectionAdapter() {
-		// private static final long serialVersionUID = 1316287800753595995L;
-		//
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// waitForMetadata(refreshMetaData());
-		// }
-		//
-		// });
+		if (isRAPView) {
+			// Make sense for RAP based View only
+			Button refreshButton = createButton(holder, REFRESH, DIRIGIBLE_REFRESH_ICON_URL);
+			refreshButton.addSelectionListener(new SelectionAdapter() {
+				private static final long serialVersionUID = 1316287800753595995L;
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					waitForMetadata(refreshMetaData());
+				}
+
+			});
+		}
 
 		stepIntoButton = createButton(holder, STEP_INTO, DIRIGIBLE_STEP_INTO_ICON_URL);
 		stepIntoButton.addSelectionListener(new SelectionAdapter() {
@@ -269,32 +277,32 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	}
 
 	// RAP based View
-	// private void createSessionsTable(final Composite holder) {
-	// sessionsTreeViewer = new TreeViewer(holder, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-	// sessionsTreeViewer.getTree().setHeaderVisible(true);
-	//
-	// Tree tree = sessionsTreeViewer.getTree();
-	//
-	// TreeColumn column = new TreeColumn(tree, SWT.LEFT);
-	// column.setText(SESSIONS);
-	// column.setWidth(150);
-	//
-	// sessionsContentProvider = new SessionsViewContentProvider();
-	// sessionsTreeViewer.setContentProvider(sessionsContentProvider);
-	// sessionsTreeViewer.setLabelProvider(new SessionsViewLabelProvider());
-	// sessionsTreeViewer.setInput(getViewSite());
-	// sessionsTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-	//
-	// @Override
-	// public void selectionChanged(SelectionChangedEvent event) {
-	// if (!event.getSelection().isEmpty() && (event.getSelection() instanceof IStructuredSelection)) {
-	// IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
-	// String sessionInfo = (String) structuredSelection.getFirstElement();
-	// selectedSessionTreeItem(sessionInfo);
-	// }
-	// }
-	// });
-	// }
+	private void createSessionsTableRAP(final Composite holder) {
+		sessionsTreeViewer = new TreeViewer(holder, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		sessionsTreeViewer.getTree().setHeaderVisible(true);
+
+		Tree tree = sessionsTreeViewer.getTree();
+
+		TreeColumn column = new TreeColumn(tree, SWT.LEFT);
+		column.setText(SESSIONS);
+		column.setWidth(150);
+
+		sessionsContentProvider = new SessionsViewContentProvider();
+		sessionsTreeViewer.setContentProvider(sessionsContentProvider);
+		sessionsTreeViewer.setLabelProvider(new SessionsViewLabelProvider());
+		sessionsTreeViewer.setInput(getViewSite());
+		sessionsTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (!event.getSelection().isEmpty() && (event.getSelection() instanceof IStructuredSelection)) {
+					IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
+					String sessionInfo = (String) structuredSelection.getFirstElement();
+					selectedSessionTreeItem(sessionInfo);
+				}
+			}
+		});
+	}
 
 	// WebSocket based View
 	private void createSessionsTable(final Composite holder) {

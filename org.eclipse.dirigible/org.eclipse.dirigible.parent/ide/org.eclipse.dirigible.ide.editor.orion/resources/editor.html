@@ -23,11 +23,11 @@
 		
 		<style type="text/css">
 			.lineHighlight{
-				outline: 1px dotted gray;
-				background: #ffe7e7; 
+				outline: 1px dotted silver;
+				background: #fff8f8; 
 			}
 			.lineHighlightGutter{
-				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAIVBMVEX///8/n78/f58/v78/X3+/v78/P1/f379/v7+goKQAAAC7+sW9AAAANklEQVQYlbXINxIAIAzEQJ8T4f8PBlccNYO6lci/mgFxuRucThnqZ6CsSaPsNMK35xA+mey3FlHPAKrp8/+uAAAAAElFTkSuQmCC");
+				background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AcdDDk7fFZ/igAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAArklEQVQ4y+WSIQ6DQBBF3zatwdEQFAfoKdZwAtQehVOs6z3WcwUEAouhXVNESUXXVGxNIWkbkk1w7TcjZv7Pn5kvvPeswYaV+AGB7VLj1rb+UlU4awFIpCQrChHkYCLv4pgoywBotMYa44MEJvJjHGcH+zSl0TpsBWct0asC3PsegJNz4Uf8JF+HIfwLiZSc6/qNfOw6cqW+ZsVSlK0xvtF6tp0rxaEsRbDAH0X5CQSgUeIYHhECAAAAAElFTkSuQmCC');
 			}
 			.demoTitle{
 				border: none;
@@ -40,6 +40,10 @@
 				position: relative;
 			}
 			
+			.annotationLine.currentLine {
+				outline: 1px dotted gray;
+			}
+			
 		</style>
 		
 		
@@ -47,16 +51,18 @@
         <script>
 			// this needs to be in the global scope
 			editor = null;
+			viewer = null;
 			breakpointsEnabled = false;
 			
-			function createEditor(content, contentType, readOnlyStatus, breakpointsEnabledStatus, row) {
+			function createEditor(content, contentType, readOnlyStatus, breakpointsEnabledStatus, row, filename) {
 				setBreakpointsEnabled(breakpointsEnabledStatus);
 				require.config({waitSeconds: 0});
 			    require(["code_edit/built-codeEdit.min", "orion/keyBinding"], function(widget, mKeyBinding) {
 			        var codeEdit = new widget();
 			        codeEdit.create({parent: "embeddedEditor", contentType: contentType, contents: content})
 			            .then(function(editorViewer) {
-			                editor = editorViewer.editor;
+			            	viewer = editorViewer;
+			                editor = editorViewer.editor;		                
 			                editor.setAnnotationRulerVisible(getBreakpointsEnabled());
 			                var savedText = content;
 			                var isDirty = false;
@@ -97,14 +103,14 @@
 			                editor.getTextView()._readonly = false;
 			                
 			                document.getElementById("progressMessageDiv").textContent = "Plugins loaded!";
-			            	setupOnce(editorViewer);
+			            	setupOnce(editorViewer, filename);
 			            });
 			    });
 			}
 
 
 
-			function setupOnce(editorViewer) {
+			function setupOnce(editorViewer, filename) {
 				editorViewer.editor.addEventListener("InputChanged", function(){ //$NON-NLS-0$
 		 			/*
 		 			 * Things you only need to do once per editor
@@ -117,27 +123,41 @@
 		 		 	//Add the same annotation type ot the annotation ruler(gutter)
 		 		 	editor.getAnnotationRuler().addAnnotationType("my.customize.linehighlight");
 		 		 	editor.getAnnotationRuler().onDblClick = function(lineIndex, e) {
-						if (lineIndex === undefined) { return; }
-						if (lineIndex === -1) { return; }
-						var view = editor.getTextView();
-						var viewModel = view.getModel();
-						var annotationModel = editor.getAnnotationModel();
-						var lineStart = editor.mapOffset(viewModel.getLineStart(lineIndex));
-						var lineEnd = editor.mapOffset(viewModel.getLineEnd(lineIndex));
-						var annotations = annotationModel.getAnnotations(lineStart, lineEnd);
-						var gutter = null;
-						while (annotations.hasNext()) {
-							var annotation = annotations.next();
-							if (annotation.type === "my.customize.linehighlight") {
-								gutter = annotation;
-								break;
-							}
-						}
-		 		 		setCursorAndGotoLine(editorViewer, lineIndex, gutter);
-		 		 		handleAddRemoveBreakpoint(lineIndex);
+						setEditorBreakpoint(editorViewer, lineIndex);
+		 		 		handleAddRemoveBreakpoint(filename, lineIndex);
 		 		 	};
+		 		 	if (sessionStorage.breakpoints) {
+			    		breakpointsArray = JSON.parse(sessionStorage.breakpoints);
+			    		breakpointsArray.forEach(function(b) {
+			    			if (b.fileName === filename) {
+			    				setEditorBreakpoint(editorViewer, b.lineIndex);
+			    				setBreakpoint(b.lineIndex);
+			    			}
+			    		});
+		 		 	}
 			 	});
 			}
+			
+			function setEditorBreakpoint(editorViewer, lineIndex) {
+				if (lineIndex === undefined) { return; }
+				if (lineIndex === -1) { return; }
+				var view = editor.getTextView();
+				var viewModel = view.getModel();
+				var annotationModel = editor.getAnnotationModel();
+				var lineStart = editor.mapOffset(viewModel.getLineStart(lineIndex));
+				var lineEnd = editor.mapOffset(viewModel.getLineEnd(lineIndex));
+				var annotations = annotationModel.getAnnotations(lineStart, lineEnd);
+				var gutter = null;
+				while (annotations.hasNext()) {
+					var annotation = annotations.next();
+					if (annotation.type === "my.customize.linehighlight") {
+						gutter = annotation;
+						break;
+					}
+				}
+ 		 		setCursorAndGotoLine(editorViewer, lineIndex, gutter);
+			}
+			
 			function setCursorAndGotoLine(editorViewer, lineNumber/*zero based*/, gutter) {
 		 		editorViewer.editor.onGotoLine(lineNumber, 0, 0, function() {
 		 			var editor = editorViewer.editor;
@@ -179,8 +199,8 @@
 			    return editor.getText();
 			}
 			
-			function setText(text, mode, readOnlyStatus, breakpointsEnabledStatus, row) {
-			    createEditor(text, mode, readOnlyStatus, breakpointsEnabledStatus, row);
+			function setText(text, mode, readOnlyStatus, breakpointsEnabledStatus, row, filename) {
+			    createEditor(text, mode, readOnlyStatus, breakpointsEnabledStatus, row, filename);
 			}
 			
 			function setReadOnly(status) {
@@ -196,7 +216,13 @@
 			}
 			
 			function loadBreakpoint(breakpoint) {
-				handleAddRemoveBreakpoint(breakpoint);
+				/* if (sessionStorage.breakpoints) {
+		    		breakpointsArray = JSON.parse(sessionStorage.breakpoints);
+		    	} else {
+		    		breakpointsArray = [];
+		    	}
+				breakpointsArray.push(breakpoint);
+			    sessionStorage.breakpoints = JSON.stringify(breakpointsArray); */
 			}
 			
 			
@@ -204,24 +230,33 @@
 				editor.setCaretOffset(editor.getLineStart(row));
 			}
 			
-			function handleAddRemoveBreakpoint(lineIndex) {
+			function handleAddRemoveBreakpoint(fileName, lineIndex) {
 				if(typeof(Storage) === "undefined") {
 			    	alert("Session storage is not available!")
 			    } else if (getBreakpointsEnabled()) {
 					var breakpointsArray;
-			    	if (sessionStorage.breakpoints) {
+			    	if (sessionStorage.breakpoints !== undefined && sessionStorage.breakpoints !== null) {
 			    		breakpointsArray = JSON.parse(sessionStorage.breakpoints);
-			    		var index = breakpointsArray.indexOf(lineIndex);
+			    		breakpoint = {};
+		    			breakpoint.fileName = fileName;
+		    			breakpoint.lineIndex = lineIndex;
+			    		var index, i = -1;
+			    		breakpointsArray.forEach(function(b) {
+			    			i++;
+			    			if ((b.fileName === breakpoint.fileName) && (b.lineIndex === breakpoint.lineIndex)) {
+			    				index = i;
+			    			}
+			    		});
 			    		if (index > -1) {
 			    			breakpointsArray.splice(index, 1);
 			    		    clearBreakpoint(lineIndex);
 			    		} else {
-			    			breakpointsArray.push(lineIndex);
+			    			breakpointsArray.push(breakpoint);
 			    			setBreakpoint(lineIndex);
 			    		}
 			    	} else {
 			    		breakpointsArray = [];
-			    		breakpointsArray.push(lineIndex);
+			    		breakpointsArray.push(breakpoint);
 			    	    setBreakpoint(lineIndex);
 			    	}
 				    sessionStorage.breakpoints = JSON.stringify(breakpointsArray);

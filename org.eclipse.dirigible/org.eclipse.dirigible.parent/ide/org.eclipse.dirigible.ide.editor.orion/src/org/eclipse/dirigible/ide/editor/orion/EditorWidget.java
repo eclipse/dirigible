@@ -54,6 +54,8 @@ public class EditorWidget extends AbstractTextEditorWidget {
 
 	private int row;
 
+	private String filename;
+
 	private static Map<String, String> ORION_MODES = new HashMap<String, String>();
 
 	static {
@@ -78,13 +80,15 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	}
 
 	public EditorWidget(final Composite parent) {
-		this(parent, false);
+		this(parent, false, "");
 	}
 
 	@SuppressWarnings("serial")
-	public EditorWidget(final Composite parent, final boolean javaScriptEditor) {
+	public EditorWidget(final Composite parent, final boolean javaScriptEditor, String filename) {
 		super(parent, SWT.NONE);
 		super.setLayout(new FillLayout());
+
+		this.filename = filename;
 
 		browser = new Browser(this, SWT.NONE);
 		browser.setUrl(CommonIDEParameters.getContextPath() + EDITOR_URL);
@@ -165,7 +169,8 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	}
 
 	@Override
-	public void setText(final String text, final EditorMode mode, final boolean readOnly, final boolean breakpointsEnabled, final int row) {
+	public void setText(final String text, final EditorMode mode, final boolean readOnly, final boolean breakpointsEnabled, final int row,
+			String filename) {
 		this.text = text;
 		this.mode = mode.getName();
 
@@ -176,6 +181,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 		this.readOnly = readOnly;
 		this.breakpointsEnabled = breakpointsEnabled;
 		this.row = row;
+		this.filename = filename;
 		if (loaded) {
 			updateWidgetContents();
 		}
@@ -201,7 +207,7 @@ public class EditorWidget extends AbstractTextEditorWidget {
 	}
 
 	private void updateWidgetContents() {
-		evaluate("setText", text, mode, readOnly, breakpointsEnabled, row); //$NON-NLS-1$
+		evaluate("setText", text, mode, readOnly, breakpointsEnabled, row, filename); //$NON-NLS-1$
 	}
 
 	public void setMode(final String mode) {

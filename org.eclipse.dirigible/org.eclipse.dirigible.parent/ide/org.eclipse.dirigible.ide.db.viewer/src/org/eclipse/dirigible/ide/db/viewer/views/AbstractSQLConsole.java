@@ -98,7 +98,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		scriptArea = createSQLEditorWidget(sashForm);
 		scriptArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		scriptArea.setText(EMPTY, getMode(), false, false, 0);
+		scriptArea.setText(EMPTY, getMode(), false, false, 0, "sql");
 
 		outputArea = new Text(sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
 		outputArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -281,7 +281,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 
 	@Override
 	public void setQuery(String query) {
-		scriptArea.setText(query, getMode(), false, false, 0);
+		scriptArea.setText(query, getMode(), false, false, 0, "sql");
 	}
 
 	private EditorMode getMode() {
