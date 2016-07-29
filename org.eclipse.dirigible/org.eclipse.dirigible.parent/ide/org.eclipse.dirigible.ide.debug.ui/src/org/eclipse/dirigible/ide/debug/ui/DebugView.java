@@ -145,17 +145,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		createVariablesTable(sashForm);
 		createBreakpointsTable(sashForm);
 
-		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(this);
-		//
-		// ServiceReference<IDebugProtocol> sr =
-		// DebugUIActivator.getContext().getServiceReference(IDebugProtocol.class);
-		// this.debugProtocol = DebugUIActivator.getContext().getService(sr);
-		// if (debugProtocol == null) {
-		// logger.error("DebuggerBridge not present");
-		// } else {
-		// this.debugProtocol.addPropertyChangeListener(this);
-		// }
-
 		registerPreviewListener(this);
 
 		enableDebugButtons(true);
@@ -323,8 +312,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	private void selectedDebugSession(String executionId) {
 		DebugSessionModel session = getDebugModel(CommonIDEParameters.getUserName()).getSessionByExecutionId(executionId);
 		getDebugModel(CommonIDEParameters.getUserName()).setActiveSession(session);
-		// refresh(session);
-		// waitForMetadata(session);
 	}
 
 	private void createVariablesTable(final Composite holder) {
@@ -396,8 +383,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 				sessionsTreeViewer.getTree().setSelection(treeItem);
 				selectedSessionTreeItem(treeItem.getText());
 			}
-			//
-			// enableDebugButtons(!sessionsTreeViewer.getSelection().isEmpty());
 
 			enableDebugButtons(true);
 		} catch (Exception e) {
@@ -440,15 +425,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 						refreshAllViews();
 					}
 
-					// if (session.getVariableValuesMetadata() != null) {
-					// variablesContentProvider.setVariablesMetaData(session.getVariableValuesMetadata());
-					// wait = MAX_WAITS;
-					// }
-					// if (session.getModel().getBreakpointsMetadata() != null) {
-					// breakpointsContentProvider.setBreakpointMetadata(session.getModel().getBreakpointsMetadata());
-					// wait = MAX_WAITS;
-					// }
-
 					if (session.getCurrentLineBreak() != null) {
 						openEditor = true;
 						wait = MAX_WAITS;
@@ -462,7 +438,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 					@Override
 					public void run() {
 						refreshMetaData();
-						// refreshAllViews();
 
 						if (openEditor) {
 							String path = session.getCurrentLineBreak().getBreakpoint().getFullPath();
@@ -502,72 +477,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		return resourceManager.createImage(imageDescriptor);
 	}
 
-	// @Override
-	// public void propertyChange(PropertyChangeEvent evt) {
-	// String commandId = evt.getPropertyName();
-	// String clientId = (String) evt.getOldValue();
-	// String commandBody = (String) evt.getNewValue();
-	// logDebug("DebugView.propertyChange() with commandId: " + commandId + ", clientId: "
-	// + clientId + ", commandBody: " + commandBody);
-	// Gson gson = new Gson();
-	//
-	// if (commandId.startsWith(DebugConstants.VIEW)) {
-	//
-	// if (commandId.equals(DebugConstants.VIEW_REGISTER)) {
-	// DebugSessionMetadata debugSessionMetadata = gson.fromJson(commandBody,
-	// DebugSessionMetadata.class);
-	// createDebugModel(debugSessionMetadata.getSessionId(),
-	// debugSessionMetadata.getExecutionId(), debugSessionMetadata.getUserId());
-	// sessionsMetadataRecieved = true;
-	//
-	// } else if (commandId.equals(DebugConstants.VIEW_FINISH)) {
-	// DebugSessionMetadata debugSessionMetadata = gson.fromJson(commandBody,
-	// DebugSessionMetadata.class);
-	// removeDebugModel(debugSessionMetadata.getSessionId(),
-	// debugSessionMetadata.getExecutionId(), debugSessionMetadata.getUserId());
-	// sessionsMetadataRecieved = true;
-	//
-	// } else if (commandId.equals(DebugConstants.VIEW_SESSIONS)) {
-	// DebugSessionsMetadata debugSessionsMetadata = gson.fromJson(commandBody,
-	// DebugSessionsMetadata.class);
-	// reinitializeDebugModels(debugSessionsMetadata);
-	// sessionsMetadataRecieved = true;
-	//
-	// } else if (commandId.equals(DebugConstants.VIEW_VARIABLE_VALUES)) {
-	// VariableValuesMetadata variableValuesMetadata = gson.fromJson(commandBody,
-	// VariableValuesMetadata.class);
-	// DebugSessionModel debugModel = getDebugModel(variableValuesMetadata.getSessionId(),
-	// variableValuesMetadata.getExecutionId(), variableValuesMetadata.getUserId());
-	// debugModel.setVariableValuesMetadata(variableValuesMetadata);
-	// sessionsMetadataRecieved = true;
-	//
-	//// } else if (commandId.equals(DebugConstants.VIEW_BREAKPOINT_METADATA)) {
-	//// BreakpointsMetadata breakpointsMetadata = gson.fromJson(commandBody,
-	//// BreakpointsMetadata.class);
-	//// DebugModel debugModel = getDebugModel(breakpointsMetadata.getSessionId(),
-	//// breakpointsMetadata.getExecutionId(), breakpointsMetadata.getUserId());
-	//// debugModel.setBreakpointsMetadata(breakpointsMetadata);
-	//// sessionsMetadataRecieved = true;
-	//
-	// } else if (commandId.equals(DebugConstants.VIEW_ON_LINE_CHANGE)) {
-	// LinebreakMetadata currentLineBreak = gson.fromJson(commandBody,
-	// LinebreakMetadata.class);
-	// DebugSessionModel debugModel = getDebugModel(currentLineBreak.getSessionId(),
-	// currentLineBreak.getExecutionId(), currentLineBreak.getUserId());
-	// debugModel.setCurrentLineBreak(currentLineBreak);
-	// StringBuilder path = new StringBuilder(currentLineBreak.getBreakpoint().getFullPath());
-	//// int lastIndex = path.lastIndexOf(SLASH);
-	//// if (lastIndex != -1) {
-	//// # 177
-	//// path.insert(lastIndex, SCRIPTING_SERVICES);
-	// path.insert(0, SCRIPTING_SERVICES);
-	// currentLineBreak.getBreakpoint().setFullPath(path.toString());
-	//// }
-	// sessionsMetadataRecieved = true;
-	// }
-	// }
-	// }
-
 	@Override
 	public void register(DebugSessionModel session) {
 		sessionsMetadataRecieved = true;
@@ -582,18 +491,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 	@Override
 	public void onLineChange(LinebreakMetadata linebreak, DebugSessionModel session) {
-		// DebugSessionModel session = getDebugModel().getSessionByExecutionId(linebreak.getSessionId());
 		session.setCurrentLineBreak(linebreak);
-
-		// StringBuilder path = new StringBuilder(linebreak.getBreakpoint().getFullPath());
-		// // int lastIndex = path.lastIndexOf(SLASH);
-		// // if (lastIndex != -1) {
-		// // # 177
-		// // path.insert(lastIndex, SCRIPTING_SERVICES);
-		//
-		// path.insert(0, SCRIPTING_SERVICES);
-		// linebreak.getBreakpoint().setWorkspacePath(path.toString());
-		// }
 		sessionsMetadataRecieved = true;
 	}
 
@@ -738,11 +636,6 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	}
 
 	private void refreshSessionsView() {
-		// if ((sessionsTreeViewer == null) || (sessionsTreeViewer.getTree() == null) ||
-		// sessionsTreeViewer.getTree().isDisposed()) {
-		// return;
-		// }
-
 		final Display display = PlatformUI.createDisplay();
 		final ServerPushSession pushSession = new ServerPushSession();
 		Runnable backGroundRunnable = new Runnable() {
