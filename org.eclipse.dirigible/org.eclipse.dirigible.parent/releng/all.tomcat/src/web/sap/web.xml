@@ -286,6 +286,7 @@
 			<url-pattern>/services/workspace</url-pattern>
 			<url-pattern>/services/ui/index.html#/workspace</url-pattern>
 			<url-pattern>/services/js-src/*</url-pattern>
+			<url-pattern>/services/generate-data-structure</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Developer</role-name>
