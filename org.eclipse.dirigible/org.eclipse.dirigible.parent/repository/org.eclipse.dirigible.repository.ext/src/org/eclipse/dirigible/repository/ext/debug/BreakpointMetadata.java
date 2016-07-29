@@ -1,23 +1,22 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.debug;
 
 public class BreakpointMetadata implements Comparable<BreakpointMetadata> {
-	
+
 	private static final String SLASH = "/";
 	private static final String ROW_D_PATH_S = "[row: %d | full path: %s]";
 	private String fullPath;
 	private Integer row;
-	
+
 	public BreakpointMetadata(String fullPath, Integer row) {
 		super();
 		this.fullPath = fullPath;
@@ -60,30 +59,37 @@ public class BreakpointMetadata implements Comparable<BreakpointMetadata> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fullPath == null) ? 0 : fullPath.hashCode());
-		result = prime * result + ((row == null) ? 0 : row.hashCode());
+		result = (prime * result) + ((fullPath == null) ? 0 : fullPath.hashCode());
+		result = (prime * result) + ((row == null) ? 0 : row.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		BreakpointMetadata other = (BreakpointMetadata) obj;
 		if (fullPath == null) {
-			if (other.fullPath != null)
+			if (other.fullPath != null) {
 				return false;
-		} else if (!fullPath.equals(other.fullPath))
+			}
+		} else if (!fullPath.equals(other.fullPath)) {
 			return false;
+		}
 		if (row == null) {
-			if (other.row != null)
+			if (other.row != null) {
 				return false;
-		} else if (!row.equals(other.row))
+			}
+		} else if (!row.equals(other.row)) {
 			return false;
+		}
 		return true;
 	}
 

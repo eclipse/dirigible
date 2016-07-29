@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IViewPart;
@@ -99,8 +100,8 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 	private final ResourceManager resourceManager;
 
-	// private TreeViewer sessionsTreeViewer;
-	// private SessionsViewContentProvider sessionsContentProvider;
+	private TreeViewer sessionsTreeViewer;
+	private SessionsViewContentProvider sessionsContentProvider;
 
 	private TreeViewer variablesTreeViewer;
 	private VariablesViewContentProvider variablesContentProvider;
@@ -145,7 +146,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		createBreakpointsTable(sashForm);
 
 		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(this);
-
+		//
 		// ServiceReference<IDebugProtocol> sr =
 		// DebugUIActivator.getContext().getServiceReference(IDebugProtocol.class);
 		// this.debugProtocol = DebugUIActivator.getContext().getService(sr);
@@ -155,7 +156,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		// this.debugProtocol.addPropertyChangeListener(this);
 		// }
 
-		// registerPreviewListener(this);
+		registerPreviewListener(this);
 
 		enableDebugButtons(true);
 	}
@@ -194,6 +195,8 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	Button skipAllBreakpointsButton;
 
 	private void createButtonsRow(final Composite holder) {
+
+		// Make sense for RAP based View only
 		// Button refreshButton = createButton(holder, REFRESH, DIRIGIBLE_REFRESH_ICON_URL);
 		// refreshButton.addSelectionListener(new SelectionAdapter() {
 		// private static final long serialVersionUID = 1316287800753595995L;
@@ -276,6 +279,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		return button;
 	}
 
+	// RAP based View
 	// private void createSessionsTable(final Composite holder) {
 	// sessionsTreeViewer = new TreeViewer(holder, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	// sessionsTreeViewer.getTree().setHeaderVisible(true);
@@ -297,12 +301,13 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	// if (!event.getSelection().isEmpty() && (event.getSelection() instanceof IStructuredSelection)) {
 	// IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 	// String sessionInfo = (String) structuredSelection.getFirstElement();
-	// // selectedSessionTreeItem(sessionInfo);
+	// selectedSessionTreeItem(sessionInfo);
 	// }
 	// }
 	// });
 	// }
 
+	// WebSocket based View
 	private void createSessionsTable(final Composite holder) {
 		SessionsWSView sessionsWSView = new SessionsWSView(holder);
 	}
@@ -368,6 +373,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
+				logger.debug("DebugView -> BreakpointsView -> selectionChanged");
 				if (!event.getSelection().isEmpty() && (event.getSelection() instanceof IStructuredSelection)) {
 					IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 					BreakpointMetadata breakpointMetadata = (BreakpointMetadata) structuredSelection.getFirstElement();
@@ -382,13 +388,14 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 		try {
 			breakpointsTreeViewer.refresh(true);
 			variablesTreeViewer.refresh(true);
-			// sessionsTreeViewer.refresh(true);
-			// if (sessionsTreeViewer.getSelection().isEmpty()
-			// && !DebugModelFacade.getDebugModel(CommonParameters.getUserName()).getSessions().isEmpty()) {
-			// TreeItem treeItem = sessionsTreeViewer.getTree().getTopItem();
-			// sessionsTreeViewer.getTree().setSelection(treeItem);
-			// // selectedSessionTreeItem(treeItem.getText());
-			// }
+
+			sessionsTreeViewer.refresh(true);
+			if (sessionsTreeViewer.getSelection().isEmpty()
+					&& !DebugModelFacade.getDebugModel(CommonIDEParameters.getUserName()).getSessions().isEmpty()) {
+				TreeItem treeItem = sessionsTreeViewer.getTree().getTopItem();
+				sessionsTreeViewer.getTree().setSelection(treeItem);
+				selectedSessionTreeItem(treeItem.getText());
+			}
 			//
 			// enableDebugButtons(!sessionsTreeViewer.getSelection().isEmpty());
 
@@ -461,7 +468,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 							String path = session.getCurrentLineBreak().getBreakpoint().getFullPath();
 							Integer row = session.getCurrentLineBreak().getBreakpoint().getRow();
 							try {
-								openEditor(path, row);
+								openEditor(CommonIDEUtils.formatToIDEPath(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES, path), row);
 							} catch (Exception e) {
 								logger.warn(e.getMessage());
 							}
@@ -577,13 +584,15 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	public void onLineChange(LinebreakMetadata linebreak, DebugSessionModel session) {
 		// DebugSessionModel session = getDebugModel().getSessionByExecutionId(linebreak.getSessionId());
 		session.setCurrentLineBreak(linebreak);
-		StringBuilder path = new StringBuilder(linebreak.getBreakpoint().getFullPath());
-		// int lastIndex = path.lastIndexOf(SLASH);
-		// if (lastIndex != -1) {
-		// # 177
-		// path.insert(lastIndex, SCRIPTING_SERVICES);
-		path.insert(0, SCRIPTING_SERVICES);
-		linebreak.getBreakpoint().setFullPath(path.toString());
+
+		// StringBuilder path = new StringBuilder(linebreak.getBreakpoint().getFullPath());
+		// // int lastIndex = path.lastIndexOf(SLASH);
+		// // if (lastIndex != -1) {
+		// // # 177
+		// // path.insert(lastIndex, SCRIPTING_SERVICES);
+		//
+		// path.insert(0, SCRIPTING_SERVICES);
+		// linebreak.getBreakpoint().setWorkspacePath(path.toString());
 		// }
 		sessionsMetadataRecieved = true;
 	}

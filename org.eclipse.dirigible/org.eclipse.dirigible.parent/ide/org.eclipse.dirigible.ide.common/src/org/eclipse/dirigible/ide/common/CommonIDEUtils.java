@@ -17,10 +17,13 @@ public class CommonIDEUtils {
 
 	public static String formatToIDEPath(String folder, String runtimePath) {
 		StringBuilder path = new StringBuilder(runtimePath);
-		int metaFolderIndex = runtimePath.indexOf(ICommonConstants.SEPARATOR, runtimePath.indexOf(ICommonConstants.SEPARATOR) + 1);
-		if (metaFolderIndex != -1) {
-			path.insert(metaFolderIndex, ICommonConstants.SEPARATOR + folder);
-		}
+		// int metaFolderIndex = runtimePath.indexOf(ICommonConstants.SEPARATOR,
+		// runtimePath.indexOf(ICommonConstants.SEPARATOR) + 1);
+		// if (metaFolderIndex != -1) {
+		// path.insert(metaFolderIndex, ICommonConstants.SEPARATOR + folder);
+		// }
+
+		path.insert(0, ICommonConstants.SEPARATOR + folder + (runtimePath.startsWith(ICommonConstants.SEPARATOR) ? "" : ICommonConstants.SEPARATOR));
 		return path.toString();
 	}
 
