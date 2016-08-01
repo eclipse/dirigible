@@ -187,7 +187,7 @@ public class DebugView extends ViewPart implements IDebugIDEController, IPropert
 	Button continueButton;
 	Button skipAllBreakpointsButton;
 
-	private boolean isRAPView = true;
+	private boolean isRAPView = false;
 
 	private void createButtonsRow(final Composite holder) {
 
