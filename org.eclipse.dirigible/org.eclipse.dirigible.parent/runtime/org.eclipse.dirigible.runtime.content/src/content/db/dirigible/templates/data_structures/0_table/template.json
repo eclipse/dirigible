@@ -5,7 +5,10 @@
    {"name":"table.table", "action":"generate"}
    ],
  "parameters":[
-   {"name":"name",
-   "required":"true"}
+   {"name":"templateType", "required":"true"},
+   {"name":"fileName", "required":"true"},
+   {"name":"projectName", "required":"true"},
+   {"name":"packageName", "required":"true"},
+   {"name":"columns", "required":"true"}
    ]
 }
