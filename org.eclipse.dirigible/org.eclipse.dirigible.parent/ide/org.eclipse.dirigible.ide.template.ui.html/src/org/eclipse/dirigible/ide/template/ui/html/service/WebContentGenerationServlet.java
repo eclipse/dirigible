@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.template.ui.js.service;
+package org.eclipse.dirigible.ide.template.ui.html.service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,37 +17,27 @@ import org.eclipse.dirigible.ide.template.ui.common.GenerationException;
 import org.eclipse.dirigible.ide.template.ui.common.service.AbstractGenerationServlet;
 
 /**
- * Generation Service for ScriptingService
+ * Generation Service for WebContent artifacts
  * Sample requests:
  * POST Request for Table:
  * ====
  * {
- * "templateType":"3_js_crud",
- * "fileName":"myservice.js",
+ * "templateType":"1_index_page",
+ * "fileName":"index.html",
  * "projectName":"myproject",
- * "packageName":"mypackage",
- * "tableName":"BOOKS",
- * "tableType":"TABLE",
- * "columns":
- * [
- * { "name":"BOOKID", "type":"INTEGER", "primaryKey":"true", "visible":"true" },
- * { "name":"BOOKISBN", "type":"CHAR", "primaryKey":"false", "visible":"true" },
- * { "name":"BOOKTITLE", "type":"VARCHAR", "primaryKey":"false", "visible":"true" },
- * { "name":"BOOKAUTHOR", "type":"VARCHAR", "primaryKey":"false", "visible":"true" },
- * { "name":"BOOKPRICE", "type":"DOUBLE", "primaryKey":"false", "visible":"true" }
- * ]
+ * "packageName":"mypackage"
  * }
  * ====
- * Get Request returns all the available ScriptingServices related templates
+ * Get Request returns all the available WebContent related templates
  */
-public class ScriptingGenerationServlet extends AbstractGenerationServlet {
+public class WebContentGenerationServlet extends AbstractGenerationServlet {
 
 	private static final long serialVersionUID = -3650506905899341103L;
 
 	@Override
 	protected String doGeneration(String parameters, HttpServletRequest request) throws GenerationException {
 		try {
-			return new ScriptingGenerationWorker(getRepository(request), getWorkspace(request)).generate(parameters, request);
+			return new WebContentGenerationWorker(getRepository(request), getWorkspace(request)).generate(parameters, request);
 		} catch (ServletException e) {
 			throw new GenerationException(e);
 		}
@@ -56,7 +46,7 @@ public class ScriptingGenerationServlet extends AbstractGenerationServlet {
 	@Override
 	protected String enumerateTemplates(HttpServletRequest request) throws GenerationException {
 		try {
-			return new ScriptingGenerationWorker(getRepository(request), getWorkspace(request)).enumerateTemplates(request);
+			return new WebContentGenerationWorker(getRepository(request), getWorkspace(request)).enumerateTemplates(request);
 		} catch (ServletException e) {
 			throw new GenerationException(e);
 		}

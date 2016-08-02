@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dirigible.ide.common.status.LogProgressMonitor;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationException;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateType;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTypesEnumerator;
@@ -102,9 +104,14 @@ public class ScriptingGenerationWorker extends AbstractGenerationWorker {
 		if (parametersObject.has(PARAM_PROJECT_NAME)) {
 			String projectName = parametersObject.get(PARAM_PROJECT_NAME).getAsString();
 			IProject project = getWorkspace().getRoot().getProject(projectName);
-			if (project.exists()) {
-				model.setTargetContainer(project.getFullPath().toString());
+			if (!project.exists()) {
+				try {
+					project.create(new LogProgressMonitor());
+				} catch (CoreException e) {
+					throw new GenerationException(e);
+				}
 			}
+			model.setTargetContainer(project.getFullPath().toString());
 		} else {
 			throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, PARAM_PROJECT_NAME));
 		}

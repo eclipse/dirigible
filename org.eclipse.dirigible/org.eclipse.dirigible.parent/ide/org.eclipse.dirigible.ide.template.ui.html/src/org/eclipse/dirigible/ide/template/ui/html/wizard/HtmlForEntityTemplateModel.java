@@ -31,6 +31,8 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 
 	private String pageTitle;
 
+	private String serviceEndpoint;
+
 	public String getTableName() {
 		return tableName;
 	}
@@ -125,6 +127,14 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 			return (IFile) resource;
 		}
 		return null;
+	}
+
+	public String getServiceEndpoint() {
+		return serviceEndpoint;
+	}
+
+	public void setServiceEndpoint(String serviceEndpoint) {
+		this.serviceEndpoint = serviceEndpoint;
 	}
 
 }

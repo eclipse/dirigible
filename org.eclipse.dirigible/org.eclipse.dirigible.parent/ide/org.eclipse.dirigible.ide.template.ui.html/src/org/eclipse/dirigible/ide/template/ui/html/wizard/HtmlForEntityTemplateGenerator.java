@@ -75,17 +75,23 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 
 	protected Object generateServiceFileName() {
 		// /project1/ScriptingServices/te1.entity
-		IFile source = model.getSourceFile();
-		String entityPath = source.getFullPath().toString();
 		String result = "";
-		int index = entityPath.indexOf(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES);
-		if (index >= 0) {
-			result = entityPath.substring(index + ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES.length());
+		if (model.getSourceFile() != null) {
+			IFile source = model.getSourceFile();
+			String entityPath = source.getFullPath().toString();
+
+			int index = entityPath.indexOf(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES);
+			if (index >= 0) {
+				result = entityPath.substring(index + ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES.length());
+			} else {
+				result = entityPath;
+			}
+			result = result.replace(source.getFileExtension(), ""); //$NON-NLS-1$
+			result += "js"; //$NON-NLS-1$
 		} else {
-			result = entityPath;
+			result = model.getServiceEndpoint();
 		}
-		result = result.replace(source.getFileExtension(), ""); //$NON-NLS-1$
-		result += "js"; //$NON-NLS-1$
+
 		return REST_SERVICE_ROOT_JS + result;
 	}
 

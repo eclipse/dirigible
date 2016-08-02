@@ -113,4 +113,24 @@
         </newMenuItem>
  	</extension>
  	
+ 	<extension
+           id="WebContentGenerationServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/generate-web-content"
+              class="org.eclipse.dirigible.ide.template.ui.html.service.WebContentGenerationServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+     
+     <extension
+           id="WebContentEntityGenerationServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/generate-web-content-entity"
+              class="org.eclipse.dirigible.ide.template.ui.html.service.WebContentEntityGenerationServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
+ 	
 </plugin>

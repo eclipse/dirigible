@@ -1,9 +1,6 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-/* globals $ */
-/* eslint-env node, dirigible */
-
 var http = require('net/http/client');
 var response = require('net/http/response');
 
