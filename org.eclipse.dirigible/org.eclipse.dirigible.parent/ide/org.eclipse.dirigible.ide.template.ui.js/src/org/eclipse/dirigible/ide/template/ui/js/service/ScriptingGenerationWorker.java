@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.template.ui.db.service;
+package org.eclipse.dirigible.ide.template.ui.js.service;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,11 +22,12 @@ import org.eclipse.dirigible.ide.template.ui.common.GenerationException;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateType;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTypesEnumerator;
 import org.eclipse.dirigible.ide.template.ui.common.service.AbstractGenerationWorker;
-import org.eclipse.dirigible.ide.template.ui.db.wizard.ColumnDefinition;
-import org.eclipse.dirigible.ide.template.ui.db.wizard.DataStructureTemplateGenerator;
-import org.eclipse.dirigible.ide.template.ui.db.wizard.DataStructureTemplateModel;
+import org.eclipse.dirigible.ide.template.ui.js.wizard.JavascriptServiceTemplateGenerator;
+import org.eclipse.dirigible.ide.template.ui.js.wizard.JavascriptServiceTemplateModel;
+import org.eclipse.dirigible.ide.template.ui.js.wizard.TableColumn;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -34,19 +35,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class DatabaseGenerationWorker extends AbstractGenerationWorker {
+public class ScriptingGenerationWorker extends AbstractGenerationWorker {
 
-	private static final String PARAM_COLUMN_DEFAULT_VALUE = "defaultValue";
-	private static final String PARAM_COLUMN_NOT_NULL = "notNull";
+	private static final String PARAM_COLUMN_VISIBLE = "visible";
 	private static final String PARAM_COLUMN_PRIMARY_KEY = "primaryKey";
-	private static final String PARAM_COLUMN_LENGTH = "length";
 	private static final String PARAM_COLUMN_TYPE = "type";
 	private static final String PARAM_COLUMN_NAME = "name";
-	private static final String PARAM_ROWS = "rows";
-	private static final String PARAM_QUERY = "query";
+	private static final String PARAM_TABLE_TYPE = "tableType";
+	private static final String PARAM_TABLE_NAME = "tableName";
 	private static final String PARAM_COLUMNS = "columns";
 
-	public DatabaseGenerationWorker(IRepository repository, IWorkspace workspace) {
+	public ScriptingGenerationWorker(IRepository repository, IWorkspace workspace) {
 		super(repository, workspace);
 	}
 
@@ -56,11 +55,11 @@ public class DatabaseGenerationWorker extends AbstractGenerationWorker {
 			JsonElement parametersElement = new JsonParser().parse(parameters);
 			JsonObject parametersObject = parametersElement.getAsJsonObject();
 
-			DataStructureTemplateModel model = new DataStructureTemplateModel();
-			DataStructureTemplateGenerator generator = new DataStructureTemplateGenerator(model);
+			JavascriptServiceTemplateModel model = new JavascriptServiceTemplateModel();
+			JavascriptServiceTemplateGenerator generator = new JavascriptServiceTemplateGenerator(model);
 
-			TemplateType[] templates = TemplateTypesEnumerator.prepareTemplateTypes(DataStructureTemplateTypeDiscriminator.getTemplatesPath(),
-					DataStructureTemplateTypeDiscriminator.getCategory(), request);
+			TemplateType[] templates = TemplateTypesEnumerator.prepareTemplateTypes(ScriptingServiceTemplateTypeDiscriminator.getTemplatesPath(),
+					ScriptingServiceTemplateTypeDiscriminator.getCategory(), request);
 
 			setParametersToModel(parametersObject, model, templates);
 
@@ -72,14 +71,14 @@ public class DatabaseGenerationWorker extends AbstractGenerationWorker {
 		return GENERATION_PASSED_SUCCESSFULLY;
 	}
 
-	protected void setParametersToModel(JsonObject parametersObject, DataStructureTemplateModel model, TemplateType[] templates)
+	protected void setParametersToModel(JsonObject parametersObject, JavascriptServiceTemplateModel model, TemplateType[] templates)
 			throws GenerationException {
 
 		// template type
 		if (parametersObject.has(PARAM_TEMPLATE_TYPE)) {
 			String templateType = parametersObject.get(PARAM_TEMPLATE_TYPE).getAsString();
 			for (TemplateType template : templates) {
-				if (template.getLocation().substring(DataStructureTemplateTypeDiscriminator.getTemplatesPath().length())
+				if (template.getLocation().substring(ScriptingServiceTemplateTypeDiscriminator.getTemplatesPath().length())
 						.indexOf(templateType + ICommonConstants.SEPARATOR) == 0) {
 					model.setTemplate(template);
 					break;
@@ -113,7 +112,7 @@ public class DatabaseGenerationWorker extends AbstractGenerationWorker {
 		// package name
 		if (parametersObject.has(PARAM_PACKAGE_NAME)) {
 			String packageName = parametersObject.get(PARAM_PACKAGE_NAME).getAsString();
-			model.setProjectPackageName(ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES + IRepository.SEPARATOR + packageName);
+			model.setProjectPackageName(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES + IRepository.SEPARATOR + packageName);
 			model.setPackageName(packageName);
 		} else {
 			throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, PARAM_PACKAGE_NAME));
@@ -121,50 +120,46 @@ public class DatabaseGenerationWorker extends AbstractGenerationWorker {
 
 		// columns
 		if (parametersObject.has(PARAM_COLUMNS)) {
-			List<ColumnDefinition> columnDefinitions = new ArrayList<ColumnDefinition>();
+			List<TableColumn> columnDefinitions = new ArrayList<TableColumn>();
 			JsonArray columns = parametersObject.get(PARAM_COLUMNS).getAsJsonArray();
 			Iterator<JsonElement> iter = columns.iterator();
 			while (iter.hasNext()) {
 				JsonElement columnElement = iter.next();
 				if (columnElement.isJsonObject()) {
 					JsonObject columnObject = columnElement.getAsJsonObject();
-					ColumnDefinition columnDefinition = new ColumnDefinition();
-					columnDefinition.setName(columnObject.get(PARAM_COLUMN_NAME).getAsString());
-					columnDefinition.setType(columnObject.get(PARAM_COLUMN_TYPE).getAsString());
-					columnDefinition.setLength(columnObject.get(PARAM_COLUMN_LENGTH).getAsInt());
-					columnDefinition.setPrimaryKey(columnObject.get(PARAM_COLUMN_PRIMARY_KEY).getAsBoolean());
-					columnDefinition.setNotNull(columnObject.get(PARAM_COLUMN_NOT_NULL).getAsBoolean());
-					columnDefinition.setDefaultValue(columnObject.get(PARAM_COLUMN_DEFAULT_VALUE).getAsString());
+					TableColumn columnDefinition = new TableColumn(columnObject.get(PARAM_COLUMN_NAME).getAsString(),
+							DBSupportedTypesMap.getTypeNumber(columnObject.get(PARAM_COLUMN_TYPE).getAsString()),
+							columnObject.get(PARAM_COLUMN_PRIMARY_KEY).getAsBoolean(), columnObject.get(PARAM_COLUMN_VISIBLE).getAsBoolean());
 					columnDefinitions.add(columnDefinition);
 				}
 			}
 
-			model.setColumnDefinitions(columnDefinitions.toArray(new ColumnDefinition[] {}));
+			model.setTableColumns(columnDefinitions.toArray(new TableColumn[] {}));
 		} else {
 			checkIfRequired(model, PARAM_COLUMNS);
 		}
 
-		// query
-		if (parametersObject.has(PARAM_QUERY)) {
-			model.setQuery(parametersObject.get(PARAM_QUERY).getAsString());
+		// table name
+		if (parametersObject.has(PARAM_TABLE_NAME)) {
+			model.setTableName(parametersObject.get(PARAM_TABLE_NAME).getAsString());
 		} else {
-			checkIfRequired(model, PARAM_QUERY);
+			checkIfRequired(model, PARAM_TABLE_NAME);
 		}
 
-		// query
-		if (parametersObject.has(PARAM_ROWS)) {
-			String rows = parametersObject.get(PARAM_ROWS).getAsString();
-			model.setDsvSampleRows(rows.split((rows.indexOf("\n") >= 0) ? "\n" : "\r"));
+		// table type
+		if (parametersObject.has(PARAM_TABLE_TYPE)) {
+			model.setTableType(parametersObject.get(PARAM_TABLE_TYPE).getAsString());
 		} else {
-			checkIfRequired(model, PARAM_ROWS);
+			checkIfRequired(model, PARAM_TABLE_TYPE);
 		}
+
 	}
 
 	@Override
 	public String enumerateTemplates(HttpServletRequest request) throws GenerationException {
 		try {
-			TemplateType[] templates = TemplateTypesEnumerator.prepareTemplateTypes(DataStructureTemplateTypeDiscriminator.getTemplatesPath(),
-					DataStructureTemplateTypeDiscriminator.getCategory(), request);
+			TemplateType[] templates = TemplateTypesEnumerator.prepareTemplateTypes(ScriptingServiceTemplateTypeDiscriminator.getTemplatesPath(),
+					ScriptingServiceTemplateTypeDiscriminator.getCategory(), request);
 			String result = new Gson().toJson(templates);
 			return result;
 		} catch (Exception e) {

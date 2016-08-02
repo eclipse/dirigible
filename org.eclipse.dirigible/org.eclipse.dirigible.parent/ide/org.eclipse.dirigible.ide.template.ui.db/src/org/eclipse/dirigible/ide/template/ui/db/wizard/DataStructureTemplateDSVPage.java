@@ -15,6 +15,7 @@ import java.util.Random;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.db.export.DataExportDialog;
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
 import org.eclipse.dirigible.repository.ext.db.transfer.TableColumn;
@@ -94,7 +95,8 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 					if (selectedTableName != null) {
 						model.setTableName(selectedTableName.getName());
 
-						DBTableExporter dataFinder = new DBTableExporter(DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()));
+						DBTableExporter dataFinder = new DBTableExporter(
+								DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()));
 						dataFinder.setTableName(selectedTableName.getName());
 						dataFinder.getTableData();
 
@@ -135,20 +137,21 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 
 			private String getSampleValue(TableColumn column) {
 				String type = DBSupportedTypesMap.getTypeName(column.getType());
-				boolean numeric = type.equals(DBSupportedTypesMap.BIGINT) || type.equals(DBSupportedTypesMap.SMALLINT)
-						|| type.equals(DBSupportedTypesMap.BINARY) || type.equals(DBSupportedTypesMap.BIT) || type.equals(DBSupportedTypesMap.INTEGER)
-						|| type.equals(DBSupportedTypesMap.NUMERIC) || type.equals(DBSupportedTypesMap.TINYINT);
-				boolean blob = type.equals(DBSupportedTypesMap.BLOB);
-				boolean clob = type.equals(DBSupportedTypesMap.CLOB);
-				boolean booleanType = type.equals(DBSupportedTypesMap.BOOLEAN);
-				boolean textChar = type.equals(DBSupportedTypesMap.CHAR);
-				boolean textVarchar = type.equals(DBSupportedTypesMap.NVARCHAR) || type.equals(DBSupportedTypesMap.VARCHAR);
-				boolean date = type.equals(DBSupportedTypesMap.DATE);
+				boolean numeric = type.equals(DataTypes.BIGINT.toString()) || type.equals(DataTypes.SMALLINT.toString())
+						|| type.equals(DataTypes.BINARY.toString()) || type.equals(DataTypes.BIT.toString())
+						|| type.equals(DataTypes.INTEGER.toString()) || type.equals(DataTypes.NUMERIC.toString())
+						|| type.equals(DataTypes.TINYINT.toString());
+				boolean blob = type.equals(DataTypes.BLOB.toString());
+				boolean clob = type.equals(DataTypes.CLOB.toString());
+				boolean booleanType = type.equals(DataTypes.BOOLEAN.toString());
+				boolean textChar = type.equals(DataTypes.CHAR.toString());
+				boolean textVarchar = type.equals(DataTypes.NVARCHAR.toString()) || type.equals(DataTypes.VARCHAR.toString());
+				boolean date = type.equals(DataTypes.DATE.toString());
 
-				boolean floatingPoint = type.equals(DBSupportedTypesMap.REAL) || type.equals(DBSupportedTypesMap.DECIMAL)
-						|| type.equals(DBSupportedTypesMap.DOUBLE) || type.equals(DBSupportedTypesMap.FLOAT);
-				boolean time = type.equals(DBSupportedTypesMap.TIME);
-				boolean timeStamp = type.equals(DBSupportedTypesMap.TIMESTAMP);
+				boolean floatingPoint = type.equals(DataTypes.REAL.toString()) || type.equals(DataTypes.DECIMAL.toString())
+						|| type.equals(DataTypes.DOUBLE.toString()) || type.equals(DataTypes.FLOAT.toString());
+				boolean time = type.equals(DataTypes.TIME.toString());
+				boolean timeStamp = type.equals(DataTypes.TIMESTAMP.toString());
 
 				String value = null;
 				Random rand = new Random();
@@ -173,7 +176,7 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 				} else if (floatingPoint) {
 					value = Float.toString(rand.nextFloat());
 				} else {
-					value = DBSupportedTypesMap.UNSUPPORTED_TYPE;
+					value = DataTypes.UNSUPPORTED_TYPE.toString();
 				}
 
 				return value;

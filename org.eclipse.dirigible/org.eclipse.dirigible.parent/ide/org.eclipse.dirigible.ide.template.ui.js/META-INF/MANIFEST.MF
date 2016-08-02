@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.dirigible.ide.common,
  org.eclipse.dirigible.repository.api,
  org.eclipse.core.runtime,
- org.eclipse.dirigible.repository.ext
+ org.eclipse.dirigible.repository.ext,
+ com.google.gson
 Import-Package: javax.servlet,
  javax.servlet.http,
  org.eclipse.core.resources,
@@ -23,3 +24,6 @@ Import-Package: javax.servlet,
  org.eclipse.dirigible.ide.workspace.ui.commands,
  org.eclipse.dirigible.repository.logging
 Bundle-ClassPath: .
+Export-Package: org.eclipse.dirigible.ide.template.ui.js.command,
+ org.eclipse.dirigible.ide.template.ui.js.service,
+ org.eclipse.dirigible.ide.template.ui.js.wizard

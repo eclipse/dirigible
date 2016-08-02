@@ -8,15 +8,15 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.template.ui.db.wizard;
+package org.eclipse.dirigible.ide.template.ui.js.service;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 /**
- * Class holding the discrimination parameters for the Data Structure templates
+ * Class holding the discrimination parameters for the Scripting Services templates
  */
-public class DataStructureTemplateTypeDiscriminator {
+public class ScriptingServiceTemplateTypeDiscriminator {
 
 	/**
 	 * Category of the template
@@ -24,7 +24,7 @@ public class DataStructureTemplateTypeDiscriminator {
 	 * @return the category
 	 */
 	public static String getCategory() {
-		return ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES;
+		return ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class DataStructureTemplateTypeDiscriminator {
 	 * @return the templates path
 	 */
 	public static String getTemplatesPath() {
-		return IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_DATA_STRUCTURES;
+		return IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_SCRIPTING_SERVICES;
 	}
 
 }

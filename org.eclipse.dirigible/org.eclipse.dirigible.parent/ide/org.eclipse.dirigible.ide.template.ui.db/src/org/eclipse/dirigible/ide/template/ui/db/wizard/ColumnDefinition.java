@@ -1,17 +1,16 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
-import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 
 public class ColumnDefinition {
 
@@ -76,8 +75,7 @@ public class ColumnDefinition {
 
 	public boolean isLengthSupported() {
 		if (getType() != null) {
-			if (DBSupportedTypesMap.VARCHAR.equals(getType())
-					|| DBSupportedTypesMap.CHAR.equals(getType())) {
+			if (DataTypes.VARCHAR.equals(DataTypes.valueOf(getType())) || DataTypes.CHAR.equals(DataTypes.valueOf(getType()))) {
 				return true;
 			}
 		}

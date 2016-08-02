@@ -1,7 +1,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var entity${entityName} = require('${projectName}/${fileNameNoExtension}_lib');
+var entity${entityName} = require('${packageName}/${fileNameNoExtension}_lib');
 var request = require("net/http/request");
 var response = require("net/http/response");
 var xss = require("utils/xss");

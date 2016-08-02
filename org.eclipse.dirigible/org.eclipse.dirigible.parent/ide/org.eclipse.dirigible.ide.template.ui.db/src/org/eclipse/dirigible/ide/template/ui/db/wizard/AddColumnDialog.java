@@ -1,16 +1,18 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -27,11 +29,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 public class AddColumnDialog extends TitleAreaDialog {
-	
+
 	private static final Logger logger = Logger.getLogger(AddColumnDialog.class);
 
 	private static final String END_OF_LINE = "\n"; //$NON-NLS-1$
@@ -72,13 +72,12 @@ public class AddColumnDialog extends TitleAreaDialog {
 	private Text defaultText;
 	private Shell parentShell;
 
-	public AddColumnDialog(ColumnDefinition columnDefinition,
-			ColumnDefinition[] columnDefinitions, Shell parentShell) {
+	public AddColumnDialog(ColumnDefinition columnDefinition, ColumnDefinition[] columnDefinitions, Shell parentShell) {
 		super(parentShell);
-		
+
 		this.parentShell = parentShell;
 		this.parentShell.setEnabled(false);
-		
+
 		this.columnDefinition = columnDefinition;
 		this.columnDefinitions = columnDefinitions;
 	}
@@ -97,16 +96,14 @@ public class AddColumnDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		final Composite composite = (Composite) super.createDialogArea(parent);
-		ScrolledComposite sc = new ScrolledComposite(composite, SWT.H_SCROLL
-				| SWT.V_SCROLL);
+		ScrolledComposite sc = new ScrolledComposite(composite, SWT.H_SCROLL | SWT.V_SCROLL);
 		sc.setLayout(new GridLayout());
 		sc.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true));
 		sc.setExpandVertical(true);
 		sc.setExpandHorizontal(true);
 		sc.setMinSize(200, 200);
 		final Composite compositeInternal = new Composite(sc, SWT.NONE);
-		compositeInternal.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
-				true));
+		compositeInternal.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true));
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginBottom = 20;
 		compositeInternal.setLayout(layout);
@@ -128,12 +125,8 @@ public class AddColumnDialog extends TitleAreaDialog {
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		defaultText = new Text(parent, SWT.BORDER);
-		defaultText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false));
+		defaultText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		defaultText.addModifyListener(new ModifyListener() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = -8689439856255951278L;
 
 			@Override
@@ -154,10 +147,6 @@ public class AddColumnDialog extends TitleAreaDialog {
 		pkButton = new Button(parent, SWT.CHECK);
 		pkButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		pkButton.addSelectionListener(new SelectionListener() {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = -7266916932639020009L;
 
 			@Override
@@ -180,10 +169,6 @@ public class AddColumnDialog extends TitleAreaDialog {
 		nnButton = new Button(parent, SWT.CHECK);
 		nnButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		nnButton.addSelectionListener(new SelectionListener() {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 6729005491684506604L;
 
 			@Override
@@ -204,21 +189,15 @@ public class AddColumnDialog extends TitleAreaDialog {
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		lengthText = new Text(parent, SWT.BORDER);
-		lengthText
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		lengthText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		lengthText.addModifyListener(new ModifyListener() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 70852273750274067L;
 
 			@Override
 			public void modifyText(ModifyEvent event) {
-				if (lengthText.getText() == null
-						|| "".equals(lengthText.getText())) { //$NON-NLS-1$
-					if (DBSupportedTypesMap.VARCHAR.equals(typeCombo.getText())
-							|| DBSupportedTypesMap.CHAR.equals(typeCombo
-									.getText())) {
+				if ((lengthText.getText() == null) || "".equals(lengthText.getText())) { //$NON-NLS-1$
+					if (DataTypes.VARCHAR.equals(DataTypes.valueOf(typeCombo.getText()))
+							|| DataTypes.CHAR.equals(DataTypes.valueOf(typeCombo.getText()))) {
 						setErrorMessage(INPUT_THE_LENGTH);
 					} else {
 						setErrorMessage(null);
@@ -235,8 +214,7 @@ public class AddColumnDialog extends TitleAreaDialog {
 					}
 					if (isInt) {
 						setErrorMessage(null);
-						columnDefinition.setLength(Integer.parseInt(lengthText
-								.getText()));
+						columnDefinition.setLength(Integer.parseInt(lengthText.getText()));
 					} else {
 						lengthText.setText(""); //$NON-NLS-1$
 						columnDefinition.setLength(0);
@@ -256,18 +234,13 @@ public class AddColumnDialog extends TitleAreaDialog {
 
 		typeCombo = new Combo(parent, SWT.BORDER | SWT.READ_ONLY);
 		typeCombo.setItems(DBSupportedTypesMap.getSupportedTypes());
-		typeCombo
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		typeCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		typeCombo.addModifyListener(new ModifyListener() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 9064913692268796690L;
 
 			@Override
 			public void modifyText(ModifyEvent event) {
-				if (typeCombo.getText() == null
-						|| "".equals(typeCombo.getText())) { //$NON-NLS-1$
+				if ((typeCombo.getText() == null) || "".equals(typeCombo.getText())) { //$NON-NLS-1$
 					setErrorMessage(INPUT_THE_TYPE);
 				} else {
 					setErrorMessage(null);
@@ -287,14 +260,11 @@ public class AddColumnDialog extends TitleAreaDialog {
 		nameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		nameText.setFocus();
 		nameText.addModifyListener(new ModifyListener() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = -5729566562712894830L;
 
 			@Override
 			public void modifyText(ModifyEvent event) {
-				if (nameText.getText() == null || "".equals(nameText.getText())) { //$NON-NLS-1$
+				if ((nameText.getText() == null) || "".equals(nameText.getText())) { //$NON-NLS-1$
 					setErrorMessage(INPUT_THE_NAME);
 				} else {
 					setErrorMessage(null);
@@ -314,7 +284,7 @@ public class AddColumnDialog extends TitleAreaDialog {
 			setErrorMessage(errors);
 		}
 	}
-	
+
 	@Override
 	protected void cancelPressed() {
 		super.cancelPressed();
@@ -326,20 +296,17 @@ public class AddColumnDialog extends TitleAreaDialog {
 		super.handleShellCloseEvent();
 		this.parentShell.setEnabled(true);
 	}
-	
+
 	private String validateInput() {
 		StringBuilder buff = new StringBuilder();
-		if (columnDefinition.getName() == null
-				|| "".equals(columnDefinition.getName())) { //$NON-NLS-1$
+		if ((columnDefinition.getName() == null) || "".equals(columnDefinition.getName())) { //$NON-NLS-1$
 			buff.append(INPUT_THE_NAME + END_OF_LINE);
 		}
-		if (columnDefinition.getType() == null
-				|| "".equals(columnDefinition.getType())) { //$NON-NLS-1$
+		if ((columnDefinition.getType() == null) || "".equals(columnDefinition.getType())) { //$NON-NLS-1$
 			buff.append(INPUT_THE_TYPE + END_OF_LINE);
 		}
-		if (columnDefinition.getLength() == 0
-				&& (DBSupportedTypesMap.VARCHAR.equals(typeCombo.getText()) || DBSupportedTypesMap.CHAR
-						.equals(typeCombo.getText()))) {
+		if ((columnDefinition.getLength() == 0) && (DataTypes.VARCHAR.equals(DataTypes.valueOf(typeCombo.getText()))
+				|| DataTypes.CHAR.equals(DataTypes.valueOf(typeCombo.getText())))) {
 			buff.append(INPUT_THE_LENGTH + END_OF_LINE);
 		}
 		// check for duplicate column name

@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
@@ -18,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
+import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -37,9 +38,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-
-import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
-import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
 
 public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 
@@ -108,21 +106,24 @@ public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 		// state)
 		hideErrorMessages();
 	}
-	
+
 	class DataStructureTemplateStructurePageViewContentProvider implements ITreeContentProvider {
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 9053893213315991958L;
 
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 			//
 		}
 
+		@Override
 		public void dispose() {
 			//
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof Object[]) {
 				return (Object[]) inputElement;
@@ -154,8 +155,7 @@ public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 		label.setText(COLUMN_DEFINITIONS);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
 
-		typeViewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.BORDER
-				| SWT.FULL_SELECTION);
+		typeViewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 		typeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		typeViewer.setContentProvider(new DataStructureTemplateStructurePageViewContentProvider());
 		typeViewer.setLabelProvider(new DataStructureTemplateStructurePageLabelProvider());
@@ -200,12 +200,7 @@ public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 	private void createButtonsField(Composite parent) {
 		addButton = new Button(parent, SWT.BORDER);
 		addButton.setText(ADD);
-		// addButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-		// false));
 		addButton.addSelectionListener(new SelectionListener() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 7621468345508014093L;
 
 			@Override
@@ -219,15 +214,10 @@ public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 			}
 		});
 		setFocusable(addButton);
-		
+
 		removeButton = new Button(parent, SWT.BORDER);
 		removeButton.setText(REMOVE);
-		// removeButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-		// false));
 		removeButton.addSelectionListener(new SelectionListener() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = -301365843089640919L;
 
 			@Override
@@ -242,7 +232,7 @@ public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 		});
 
 	}
-	
+
 	private void addClickedEvent() {
 		setEnabled(false);
 		addClicked();
@@ -251,8 +241,7 @@ public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 
 	private void addClicked() {
 		ColumnDefinition columnDefinition = new ColumnDefinition();
-		AddColumnDialog addColumnDialog = new AddColumnDialog(columnDefinition,
-				columnDefinitions.clone(), getShell());
+		AddColumnDialog addColumnDialog = new AddColumnDialog(columnDefinition, columnDefinitions.clone(), getShell());
 		int result = addColumnDialog.open();
 		if (result == Dialog.OK) {
 			columnDefinitions = (ColumnDefinition[]) typeViewer.getInput();
@@ -268,10 +257,8 @@ public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 		TreeItem[] selection = typeViewer.getTree().getSelection();
 		List<Integer> removeIndexes = new ArrayList<Integer>();
 
-		if (selection != null
-				&& selection.length > 0
-				&& MessageDialog.openQuestion(null, REMOVE_COLUMN,
-						ARE_YOU_SURE_YOU_WANT_TO_REMOVE_THE_SELECTED_COLUMN)) {
+		if ((selection != null) && (selection.length > 0)
+				&& MessageDialog.openQuestion(null, REMOVE_COLUMN, ARE_YOU_SURE_YOU_WANT_TO_REMOVE_THE_SELECTED_COLUMN)) {
 
 			for (TreeItem nextSelection : selection) {
 				removeIndexes.add(typeViewer.getTree().indexOf(nextSelection));
@@ -285,8 +272,7 @@ public class DataStructureTemplateStructurePage extends FocusableWizardPage {
 		}
 	}
 
-	private ColumnDefinition[] removeColumnsFromTable(ColumnDefinition[] columns,
-			List<Integer> removeIndexes) {
+	private ColumnDefinition[] removeColumnsFromTable(ColumnDefinition[] columns, List<Integer> removeIndexes) {
 		Map<Integer, ColumnDefinition> columnDefinitions = new HashMap<Integer, ColumnDefinition>();
 		for (int i = 0; i < columns.length; i++) {
 			columnDefinitions.put(i, columns[i]);

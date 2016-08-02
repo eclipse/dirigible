@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 
 public class PostgreSQLDBSpecifier extends RDBGenericDialectSpecifier {
 
@@ -50,16 +51,16 @@ public class PostgreSQLDBSpecifier extends RDBGenericDialectSpecifier {
 
 	@Override
 	public String getSpecificType(String commonType) {
-		if (DBSupportedTypesMap.FLOAT.equals(commonType)) {
+		if (DataTypes.FLOAT.equals(DataTypes.valueOf(commonType))) {
 			return POSTGRESQL_FLOAT;
 		}
-		if (DBSupportedTypesMap.DOUBLE.equals(commonType)) {
+		if (DataTypes.DOUBLE.equals(DataTypes.valueOf(commonType))) {
 			return POSTGRESQL_DOUBLE;
 		}
-		if (DBSupportedTypesMap.BLOB.equals(commonType)) {
+		if (DataTypes.BLOB.equals(DataTypes.valueOf(commonType))) {
 			return POSTGRESQL_BLOB;
 		}
-		if (DBSupportedTypesMap.CLOB.equals(commonType)) {
+		if (DataTypes.CLOB.equals(DataTypes.valueOf(commonType))) {
 			return POSTGRESQL_CLOB;
 		}
 		return commonType;

@@ -55,7 +55,7 @@ public class MobileTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		byte[] result = TemplateUtils.normalizeEscapes(bytes);
+		byte[] result = model.normalizeEscapes(bytes);
 		return result;
 	}
 

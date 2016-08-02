@@ -69,27 +69,8 @@ public class JavascriptServiceTemplateTargetLocationPage extends TemplateTargetL
 		String name = model.getTemplate().getLocation();
 		String jsOrLibName = (name.endsWith("guid-generator.js")) ? "library" : "service";
 
-		// String jsOrLibExt = ("/org/eclipse/dirigible/ide/template/ui/js/templates/guid-generator.jslib" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) ? "jslib" : "js"; //$NON-NLS-1$ //$NON-NLS-2$
 		String jsOrLibExt = ext;
-		// if ("/org/eclipse/dirigible/ide/template/ui/js/templates/ruby-service.rb" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) {
-		// jsOrLibExt = "rb"; //$NON-NLS-1$
-		// } else if ("/org/eclipse/dirigible/ide/template/ui/js/templates/groovy-service.groovy" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) {
-		// jsOrLibExt = "groovy"; //$NON-NLS-1$
-		// } else if ("/org/eclipse/dirigible/ide/template/ui/js/templates/sql-service.sql" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) {
-		// jsOrLibExt = "sql"; //$NON-NLS-1$
-		// } else if ("/org/eclipse/dirigible/ide/template/ui/js/templates/terminal-command.command" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) {
-		// jsOrLibExt = "command"; //$NON-NLS-1$
-		// } else if ("/org/eclipse/dirigible/ide/template/ui/js/templates/java-service.java_" //$NON-NLS-1$
-		// .equals(model.getTemplate().getLocation())) {
-		// jsOrLibExt = "java"; //$NON-NLS-1$
-		// }
 		return (preset == null) ? jsOrLibName + "_name." + jsOrLibExt : CommonUtils.getFileNameNoExtension(preset) + "." + jsOrLibExt; //$NON-NLS-1$
-
 	}
 
 	@Override

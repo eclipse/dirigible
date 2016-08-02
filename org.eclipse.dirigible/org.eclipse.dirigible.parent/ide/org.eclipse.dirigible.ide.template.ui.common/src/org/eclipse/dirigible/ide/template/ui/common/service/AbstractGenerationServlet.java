@@ -23,6 +23,7 @@ import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationException;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
  * Abstract Servlet for Template Generation Services
@@ -35,6 +36,8 @@ public abstract class AbstractGenerationServlet extends HttpServlet {
 
 	private static final String COULD_NOT_INITIALIZE_WORKSPACE = "Could not initialize Workspace"; //$NON-NLS-1$
 
+	private static final Logger logger = Logger.getLogger(AbstractGenerationServlet.class);
+
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		super.service(request, response);
@@ -45,6 +48,7 @@ public abstract class AbstractGenerationServlet extends HttpServlet {
 			final IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 			return repository;
 		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
 			throw new ServletException(COULD_NOT_INITIALIZE_REPOSITORY, ex);
 		}
 	}
@@ -54,6 +58,7 @@ public abstract class AbstractGenerationServlet extends HttpServlet {
 			final IWorkspace workspace = WorkspaceLocator.getWorkspace(request);
 			return workspace;
 		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
 			throw new ServletException(COULD_NOT_INITIALIZE_WORKSPACE, ex);
 		}
 	}
@@ -69,6 +74,7 @@ public abstract class AbstractGenerationServlet extends HttpServlet {
 			String result = doGeneration(parameters, req);
 			printResult(resp, result);
 		} catch (GenerationException e) {
+			logger.error(e.getMessage(), e);
 			throw new ServletException(e);
 		}
 	}
@@ -85,6 +91,7 @@ public abstract class AbstractGenerationServlet extends HttpServlet {
 			String result = enumerateTemplates(req);
 			printResult(resp, result);
 		} catch (GenerationException e) {
+			logger.error(e.getMessage(), e);
 			throw new ServletException(e);
 		}
 	}

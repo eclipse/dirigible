@@ -54,6 +54,8 @@ public abstract class GenerationModel {
 
 	private String targetContainer;
 
+	private String projectPackageName;
+
 	private String packageName;
 
 	private String fileName;
@@ -75,10 +77,10 @@ public abstract class GenerationModel {
 		if (this.targetContainer == null) {
 			return null;
 		}
-		if (getPackageName() == null) {
+		if (getProjectPackageName() == null) {
 			return this.targetContainer;
 		}
-		return this.targetContainer + IRepository.SEPARATOR + getPackageName();
+		return this.targetContainer + IRepository.SEPARATOR + getProjectPackageName();
 	}
 
 	// public void setTargetLocation(String targetLocation) {
@@ -93,14 +95,23 @@ public abstract class GenerationModel {
 		this.targetContainer = targetContainer;
 	}
 
+	public String getProjectPackageName() {
+		return this.projectPackageName;
+	}
+
+	public void setProjectPackageName(String packageName) {
+		if ((this.projectPackageName != null) && (this.projectPackageName.length() > 1)
+				&& this.projectPackageName.startsWith(IRepository.SEPARATOR)) {
+			this.projectPackageName = this.projectPackageName.substring(1);
+		}
+		this.projectPackageName = packageName;
+	}
+
 	public String getPackageName() {
-		return this.packageName;
+		return packageName;
 	}
 
 	public void setPackageName(String packageName) {
-		if ((this.packageName != null) && (this.packageName.length() > 1) && this.packageName.startsWith(IRepository.SEPARATOR)) {
-			this.packageName = this.packageName.substring(1);
-		}
 		this.packageName = packageName;
 	}
 
@@ -287,5 +298,17 @@ public abstract class GenerationModel {
 		IPath location = new Path(getTargetLocation()).append(getFileName());
 		IResource resource = root.findMember(location.toString());
 		return resource;
+	}
+
+	public byte[] normalizeEscapes(byte[] bytes) {
+		String content = new String(bytes);
+		content = content.replace("\\$", "$"); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\{", "{"); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\}", "}"); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\[", "["); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\]", "]"); //$NON-NLS-1$ //$NON-NLS-2$
+		content = content.replace("\\.", "."); //$NON-NLS-1$ //$NON-NLS-2$
+		byte[] result = content.getBytes();
+		return result;
 	}
 }

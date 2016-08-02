@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.repository.datasource.db.dialect;
 
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 
 public class MySQLDBSpecifier extends RDBGenericDialectSpecifier {
 
@@ -39,13 +40,13 @@ public class MySQLDBSpecifier extends RDBGenericDialectSpecifier {
 
 	@Override
 	public String getSpecificType(String commonType) {
-		if (DBSupportedTypesMap.FLOAT.equals(commonType)) {
+		if (DataTypes.FLOAT.equals(DataTypes.valueOf(commonType))) {
 			return MYSQL_FLOAT;
 		}
-		if (DBSupportedTypesMap.BLOB.equals(commonType)) {
+		if (DataTypes.BLOB.equals(DataTypes.valueOf(commonType))) {
 			return MYSQL_BLOB;
 		}
-		if (DBSupportedTypesMap.CLOB.equals(commonType)) {
+		if (DataTypes.CLOB.equals(DataTypes.valueOf(commonType))) {
 			return MYSQL_CLOB;
 		}
 		return commonType;

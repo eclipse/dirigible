@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 
 public class SybaseDBSpecifier extends RDBGenericDialectSpecifier {
 
@@ -40,13 +41,13 @@ public class SybaseDBSpecifier extends RDBGenericDialectSpecifier {
 
 	@Override
 	public String getSpecificType(String commonType) {
-		if (DBSupportedTypesMap.TIMESTAMP.equals(commonType)) {
+		if (DataTypes.TIMESTAMP.equals(DataTypes.valueOf(commonType))) {
 			return SYBASE_TIMESTAMP;
 		}
-		if (DBSupportedTypesMap.FLOAT.equals(commonType)) {
+		if (DataTypes.FLOAT.equals(DataTypes.valueOf(commonType))) {
 			return SYBASE_FLOAT;
 		}
-		if (DBSupportedTypesMap.BLOB.equals(commonType)) {
+		if (DataTypes.BLOB.equals(DataTypes.valueOf(commonType))) {
 			return SYBASE_BLOB;
 		}
 

@@ -12,6 +12,7 @@ package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeWizardPage;
+import org.eclipse.dirigible.ide.template.ui.db.service.DataStructureTemplateTypeDiscriminator;
 
 /**
  * The wizard page for choosing the template type

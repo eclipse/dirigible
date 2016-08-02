@@ -28,5 +28,6 @@ Import-Package: javax.servlet,
  org.eclipse.dirigible.ide.workspace.ui.shared,
  org.eclipse.dirigible.repository.logging
 Export-Package: org.eclipse.dirigible.ide.template.ui.db.command,
+ org.eclipse.dirigible.ide.template.ui.db.service,
  org.eclipse.dirigible.ide.template.ui.db.wizard
 Bundle-ClassPath: .

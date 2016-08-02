@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.repository.datasource.db.dialect;
 
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 
 public class SAPDBSpecifier extends RDBGenericDialectSpecifier {
 
@@ -36,7 +37,7 @@ public class SAPDBSpecifier extends RDBGenericDialectSpecifier {
 
 	@Override
 	public String getSpecificType(String commonType) {
-		if (DBSupportedTypesMap.FLOAT.equals(commonType)) {
+		if (DataTypes.FLOAT.equals(DataTypes.valueOf(commonType))) {
 			return SAPDB_FLOAT;
 		}
 		return commonType;

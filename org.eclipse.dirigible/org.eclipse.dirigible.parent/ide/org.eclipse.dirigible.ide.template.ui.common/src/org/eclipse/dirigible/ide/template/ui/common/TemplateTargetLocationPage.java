@@ -98,15 +98,15 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 					if (getModel().getTargetContainer() == null) {
 						getModel().setTargetContainer(targetLocation);
 					}
-					if (getModel().getPackageName() == null) {
+					if (getModel().getProjectPackageName() == null) {
 						if (container.getProjectRelativePath().segmentCount() <= 1) {
 							if (getModel().getProjectName() != null) {
-								getModel().setPackageName(getModel().getProjectName());
+								getModel().setProjectPackageName(getModel().getProjectName());
 							} else {
 								if (WorkspaceLocator.getWorkspace().getRoot().getProjects().length == 0) {
 									setErrorMessage(THERE_IS_NO_SELECTED_PROJECT);
 								} else {
-									getModel().setPackageName(WorkspaceLocator.getWorkspace().getRoot().getProjects()[0].getName());
+									getModel().setProjectPackageName(WorkspaceLocator.getWorkspace().getRoot().getProjects()[0].getName());
 								}
 							}
 						} else {
@@ -221,7 +221,7 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 					setErrorMessage(INPUT_THE_PACKAGE_NAME);
 				} else {
 					setErrorMessage(null);
-					getModel().setPackageName(packageNameText.getText());
+					getModel().setProjectPackageName(packageNameText.getText());
 				}
 				checkPageStatus();
 			}
@@ -258,7 +258,7 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 	}
 
 	private String getDefaultPackageName() {
-		return (getModel().getPackageName() == null) ? getModel().getProjectName() : getModel().getPackageName();
+		return (getModel().getProjectPackageName() == null) ? getModel().getProjectName() : getModel().getProjectPackageName();
 	}
 
 	private void preselectFileNameText() {

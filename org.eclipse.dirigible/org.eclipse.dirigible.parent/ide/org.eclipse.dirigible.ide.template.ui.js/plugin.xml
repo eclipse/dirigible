@@ -46,5 +46,15 @@
             defaultHandler="org.eclipse.dirigible.ide.template.ui.js.command.JavascriptServiceCommandHandler">
         </newMenuItem>
  	</extension>
+ 	
+ 	<extension
+           id="ScriptingGenerationServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/generate-scripting-service"
+              class="org.eclipse.dirigible.ide.template.ui.js.service.ScriptingGenerationServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
 
 </plugin>

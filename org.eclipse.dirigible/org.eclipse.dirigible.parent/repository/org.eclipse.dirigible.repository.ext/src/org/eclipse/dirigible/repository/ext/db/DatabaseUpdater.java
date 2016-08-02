@@ -27,6 +27,7 @@ import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
+import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -124,8 +125,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		executeUpdate(knownFiles, errors);
 	}
 
-	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition) throws SQLException,
-	IOException {
+	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition)
+			throws SQLException, IOException {
 		JsonObject dsDefinitionObject = parseTable(dsDefinition);
 		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
 		tableName = tableName.toUpperCase();
@@ -146,8 +147,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	}
 
-	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition) throws SQLException,
-	IOException {
+	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition)
+			throws SQLException, IOException {
 		JsonObject dsDefinitionObject = parseView(dsDefinition);
 		String viewName = dsDefinitionObject.get(VIEW_NAME).getAsString();
 		viewName = viewName.toUpperCase();
@@ -176,7 +177,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 				String defaultValue = jsonObject.get(COLUMN_DEFAULT_VALUE).getAsString();
 
 				sql.append(name + " " + type); //$NON-NLS-1$
-				if (DBSupportedTypesMap.VARCHAR.equals(type) || DBSupportedTypesMap.CHAR.equals(type)) {
+				if (DataTypes.VARCHAR.equals(DataTypes.valueOf(type)) || DataTypes.CHAR.equals(DataTypes.valueOf(type))) {
 					sql.append("(" + length + ") "); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
 					sql.append(" "); //$NON-NLS-1$
@@ -253,7 +254,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 					}
 
 					addSql.append(name + " " + type); //$NON-NLS-1$
-					if (DBSupportedTypesMap.VARCHAR.equals(type) || DBSupportedTypesMap.CHAR.equals(type)) {
+					if (DataTypes.VARCHAR.equals(DataTypes.valueOf(type)) || DataTypes.CHAR.equals(DataTypes.valueOf(type))) {
 						addSql.append("(" + length + ") "); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
 						addSql.append(" "); //$NON-NLS-1$

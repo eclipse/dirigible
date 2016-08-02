@@ -12,27 +12,31 @@ package org.eclipse.dirigible.repository.datasource;
 
 public class DBSupportedTypesMap {
 
-	public static final String VARCHAR = "VARCHAR"; //$NON-NLS-1$
-	public static final String TINYINT = "TINYINT"; //$NON-NLS-1$
-	public static final String TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
-	public static final String TIME = "TIME"; //$NON-NLS-1$
-	public static final String SMALLINT = "SMALLINT"; //$NON-NLS-1$
-	public static final String NVARCHAR = "NVARCHAR"; //$NON-NLS-1$
-	public static final String NUMERIC = "NUMERIC"; //$NON-NLS-1$
-	public static final String INTEGER = "INTEGER"; //$NON-NLS-1$
-	public static final String REAL = "REAL"; //$NON-NLS-1$
-	public static final String FLOAT = "FLOAT"; //$NON-NLS-1$
-	public static final String DOUBLE = "DOUBLE"; //$NON-NLS-1$
-	public static final String DECIMAL = "DECIMAL"; //$NON-NLS-1$
-	public static final String DATE = "DATE"; //$NON-NLS-1$
-	public static final String CLOB = "CLOB"; //$NON-NLS-1$
-	public static final String CHAR = "CHAR"; //$NON-NLS-1$
-	public static final String BOOLEAN = "BOOLEAN"; //$NON-NLS-1$
-	public static final String BLOB = "BLOB"; //$NON-NLS-1$
-	public static final String BIT = "BIT"; //$NON-NLS-1$
-	public static final String BINARY = "BINARY"; //$NON-NLS-1$
-	public static final String BIGINT = "BIGINT"; //$NON-NLS-1$
-	public static final String UNSUPPORTED_TYPE = "Unsupported Type:"; //$NON-NLS-1$
+	public enum DataTypes {
+		VARCHAR, TINYINT, TIMESTAMP, TIME, SMALLINT, NVARCHAR, NUMERIC, INTEGER, REAL, FLOAT, DOUBLE, DECIMAL, DATE, CLOB, CHAR, BOOLEAN, BLOB, BIT, BINARY, BIGINT, UNSUPPORTED_TYPE
+	}
+
+	// public static final String VARCHAR = "VARCHAR"; //$NON-NLS-1$
+	// public static final String TINYINT = "TINYINT"; //$NON-NLS-1$
+	// public static final String TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
+	// public static final String TIME = "TIME"; //$NON-NLS-1$
+	// public static final String SMALLINT = "SMALLINT"; //$NON-NLS-1$
+	// public static final String NVARCHAR = "NVARCHAR"; //$NON-NLS-1$
+	// public static final String NUMERIC = "NUMERIC"; //$NON-NLS-1$
+	// public static final String INTEGER = "INTEGER"; //$NON-NLS-1$
+	// public static final String REAL = "REAL"; //$NON-NLS-1$
+	// public static final String FLOAT = "FLOAT"; //$NON-NLS-1$
+	// public static final String DOUBLE = "DOUBLE"; //$NON-NLS-1$
+	// public static final String DECIMAL = "DECIMAL"; //$NON-NLS-1$
+	// public static final String DATE = "DATE"; //$NON-NLS-1$
+	// public static final String CLOB = "CLOB"; //$NON-NLS-1$
+	// public static final String CHAR = "CHAR"; //$NON-NLS-1$
+	// public static final String BOOLEAN = "BOOLEAN"; //$NON-NLS-1$
+	// public static final String BLOB = "BLOB"; //$NON-NLS-1$
+	// public static final String BIT = "BIT"; //$NON-NLS-1$
+	// public static final String BINARY = "BINARY"; //$NON-NLS-1$
+	// public static final String BIGINT = "BIGINT"; //$NON-NLS-1$
+	// public static final String UNSUPPORTED_TYPE = "Unsupported Type:"; //$NON-NLS-1$
 
 	/**
 	 * Gives the meaningful subset of all the existing types in JDBC
@@ -41,84 +45,160 @@ public class DBSupportedTypesMap {
 	 * @return
 	 */
 	public static String[] getSupportedTypes() {
-		return new String[] { VARCHAR, CHAR, INTEGER, BIGINT, SMALLINT, REAL, DOUBLE, DATE, TIME, TIMESTAMP, BLOB };
+		return new String[] { DataTypes.VARCHAR.toString(), DataTypes.CHAR.toString(), DataTypes.INTEGER.toString(), DataTypes.BIGINT.toString(),
+				DataTypes.SMALLINT.toString(), DataTypes.REAL.toString(), DataTypes.DOUBLE.toString(), DataTypes.DATE.toString(),
+				DataTypes.TIME.toString(), DataTypes.TIMESTAMP.toString(), DataTypes.BLOB.toString() };
 	}
 
 	/**
 	 * Retrieve the type name by given JDBC type as integer
 	 *
 	 * @param type
-	 * @return
+	 *            number
+	 * @return type name
 	 */
 	public static String getTypeName(int type) {
 		String typeName = null;
 		switch (type) {
 			case java.sql.Types.BIGINT:
-				typeName = BIGINT;
+				typeName = DataTypes.BIGINT.toString();
 				break;
 			case java.sql.Types.BINARY:
-				typeName = BINARY;
+				typeName = DataTypes.BINARY.toString();
 				break;
 			case java.sql.Types.BIT:
-				typeName = BIT;
+				typeName = DataTypes.BIT.toString();
 				break;
 			case java.sql.Types.BLOB:
-				typeName = BLOB;
+				typeName = DataTypes.BLOB.toString();
 				break;
 			case java.sql.Types.BOOLEAN:
-				typeName = BOOLEAN;
+				typeName = DataTypes.BOOLEAN.toString();
 				break;
 			case java.sql.Types.CHAR:
-				typeName = CHAR;
+				typeName = DataTypes.CHAR.toString();
 				break;
 			case java.sql.Types.CLOB:
-				typeName = CLOB;
+				typeName = DataTypes.CLOB.toString();
 				break;
 			case java.sql.Types.DATE:
-				typeName = DATE;
+				typeName = DataTypes.DATE.toString();
 				break;
 			case java.sql.Types.DECIMAL:
-				typeName = DECIMAL;
+				typeName = DataTypes.DECIMAL.toString();
 				break;
 			case java.sql.Types.DOUBLE:
-				typeName = DOUBLE;
+				typeName = DataTypes.DOUBLE.toString();
 				break;
 			case java.sql.Types.FLOAT:
-				typeName = FLOAT;
+				typeName = DataTypes.FLOAT.toString();
 				break;
 			case java.sql.Types.INTEGER:
-				typeName = INTEGER;
+				typeName = DataTypes.INTEGER.toString();
 				break;
 			case java.sql.Types.NUMERIC:
-				typeName = NUMERIC;
+				typeName = DataTypes.NUMERIC.toString();
 				break;
 			case java.sql.Types.NVARCHAR:
-				typeName = NVARCHAR;
+				typeName = DataTypes.NVARCHAR.toString();
 				break;
 			case java.sql.Types.SMALLINT:
-				typeName = SMALLINT;
+				typeName = DataTypes.SMALLINT.toString();
 				break;
 			case java.sql.Types.TIME:
-				typeName = TIME;
+				typeName = DataTypes.TIME.toString();
 				break;
 			case java.sql.Types.TIMESTAMP:
-				typeName = TIMESTAMP;
+				typeName = DataTypes.TIMESTAMP.toString();
 				break;
 			case java.sql.Types.TINYINT:
-				typeName = TINYINT;
+				typeName = DataTypes.TINYINT.toString();
 				break;
 			case java.sql.Types.REAL:
-				typeName = REAL;
+				typeName = DataTypes.REAL.toString();
 				break;
 			case java.sql.Types.VARCHAR:
-				typeName = VARCHAR;
+				typeName = DataTypes.VARCHAR.toString();
 				break;
 			default:
-				typeName = UNSUPPORTED_TYPE + type;
+				typeName = DataTypes.UNSUPPORTED_TYPE.toString() + type;
 				break;
 		}
 
 		return typeName;
 	}
 
+	/**
+	 * Retrieve the JDBC type number by a given type name
+	 *
+	 * @param name
+	 * @return the JDBC type number
+	 */
+	public static int getTypeNumber(String name) {
+		int typeNumber = -1;
+		switch (DataTypes.valueOf(name)) {
+			case BIGINT:
+				typeNumber = java.sql.Types.BIGINT;
+				break;
+			case BINARY:
+				typeNumber = java.sql.Types.BINARY;
+				break;
+			case BIT:
+				typeNumber = java.sql.Types.BIT;
+				break;
+			case BLOB:
+				typeNumber = java.sql.Types.BLOB;
+				break;
+			case BOOLEAN:
+				typeNumber = java.sql.Types.BOOLEAN;
+				break;
+			case CHAR:
+				typeNumber = java.sql.Types.CHAR;
+				break;
+			case CLOB:
+				typeNumber = java.sql.Types.CLOB;
+				break;
+			case DATE:
+				typeNumber = java.sql.Types.DATE;
+				break;
+			case DECIMAL:
+				typeNumber = java.sql.Types.DECIMAL;
+				break;
+			case DOUBLE:
+				typeNumber = java.sql.Types.DOUBLE;
+				break;
+			case FLOAT:
+				typeNumber = java.sql.Types.FLOAT;
+				break;
+			case INTEGER:
+				typeNumber = java.sql.Types.INTEGER;
+				break;
+			case NUMERIC:
+				typeNumber = java.sql.Types.NUMERIC;
+				break;
+			case NVARCHAR:
+				typeNumber = java.sql.Types.NVARCHAR;
+				break;
+			case SMALLINT:
+				typeNumber = java.sql.Types.SMALLINT;
+				break;
+			case TIME:
+				typeNumber = java.sql.Types.TIME;
+				break;
+			case TIMESTAMP:
+				typeNumber = java.sql.Types.TIMESTAMP;
+				break;
+			case TINYINT:
+				typeNumber = java.sql.Types.TINYINT;
+				break;
+			case REAL:
+				typeNumber = java.sql.Types.REAL;
+				break;
+			case VARCHAR:
+				typeNumber = java.sql.Types.VARCHAR;
+				break;
+		}
+
+		return typeNumber;
+	}
 }
