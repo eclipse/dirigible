@@ -281,6 +281,7 @@
 			<url-pattern>/services/generate-data-structure</url-pattern>
 			<url-pattern>/services/generate-scripting-service</url-pattern>
 			<url-pattern>/services/generate-web-content</url-pattern>
+			<url-pattern>/services/generate-web-content-entity</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Developer</role-name>
