@@ -1,11 +1,11 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-context = require("core/context");
+var context = require("core/context");
 
 var recievedMessage = context.get("message");
 if(recievedMessage !== null) {
-	systemLib.println(JSON.stringify({
+	console.info(JSON.stringify({
 		"id": recievedMessage.getId(),
 		"topic": recievedMessage.getTopic(),
 		"subject": recievedMessage.getSubject(),
