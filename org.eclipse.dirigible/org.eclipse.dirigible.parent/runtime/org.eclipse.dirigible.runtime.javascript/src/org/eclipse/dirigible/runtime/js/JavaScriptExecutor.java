@@ -86,15 +86,22 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 		IJavaScriptEngineExecutor javascriptEngineExecutor = null;
 
 		// lookup for externally provided engine executor - e.g. test framework
-		javascriptEngineExecutor = (IJavaScriptEngineExecutor) request.getAttribute(JS_TYPE_INTERNAL);
+		if (request != null) {
+			javascriptEngineExecutor = (IJavaScriptEngineExecutor) request.getAttribute(JS_TYPE_INTERNAL);
+		}
 
 		if (javascriptEngineExecutor == null) {
 			try {
-				String engine = request.getParameter(IJavaScriptEngineExecutor.JS_ENGINE_TYPE);
-				if (IJavaScriptEngineExecutor.JS_TYPE_NASHORN.equalsIgnoreCase(engine)) {
-					javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_NASHORN, this);
+				if (request != null) {
+					String engine = request.getParameter(IJavaScriptEngineExecutor.JS_ENGINE_TYPE);
+					if (IJavaScriptEngineExecutor.JS_TYPE_NASHORN.equalsIgnoreCase(engine)) {
+						javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_NASHORN, this);
+					} else {
+						// Hard-coded defaults to Rhino until Nashorn incompatibilities get solved
+						javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_RHINO, this);
+					}
 				} else {
-					// Hard-coded defaults to Rhino until Nashorn incompatibilities get solved
+					// TODO: Jobs and Listeners only with Rhino for now - to be defined non-request configuration
 					javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_RHINO, this);
 				}
 			} catch (Throwable t) {

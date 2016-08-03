@@ -234,12 +234,12 @@
 				if(typeof(Storage) === "undefined") {
 			    	alert("Session storage is not available!")
 			    } else if (getBreakpointsEnabled()) {
+			    	breakpoint = {};
+	    			breakpoint.fileName = fileName;
+	    			breakpoint.lineIndex = lineIndex;
 					var breakpointsArray;
 			    	if (sessionStorage.breakpoints !== undefined && sessionStorage.breakpoints !== null) {
 			    		breakpointsArray = JSON.parse(sessionStorage.breakpoints);
-			    		breakpoint = {};
-		    			breakpoint.fileName = fileName;
-		    			breakpoint.lineIndex = lineIndex;
 			    		var index, i = -1;
 			    		breakpointsArray.forEach(function(b) {
 			    			i++;
