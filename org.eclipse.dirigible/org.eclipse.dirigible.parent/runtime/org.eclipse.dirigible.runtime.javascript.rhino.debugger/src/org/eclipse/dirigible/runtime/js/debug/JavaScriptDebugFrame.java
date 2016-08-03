@@ -41,6 +41,9 @@ import org.mozilla.javascript.debug.DebuggableScript;
 import com.google.gson.Gson;
 
 public class JavaScriptDebugFrame implements DebugFrame {
+
+	private static final String ILLEGAL = "illegal";
+
 	private static final String NULL = "null";
 
 	private static final String NATIVE = "native";
@@ -305,8 +308,8 @@ public class JavaScriptDebugFrame implements DebugFrame {
 		} else if (value instanceof ScriptableObject) {
 			try {
 				result = new Gson().toJson(value);
-			} catch (StackOverflowError error) {
-				result = NATIVE;
+			} catch (Throwable error) {
+				result = ILLEGAL;
 			}
 		} else {
 			result = NULL;
@@ -314,63 +317,8 @@ public class JavaScriptDebugFrame implements DebugFrame {
 		return result;
 	}
 
-	// @Override
-	// public void propertyChange(PropertyChangeEvent event) {
-	// String commandId = event.getPropertyName();
-	// String clientId = (String) event.getOldValue();
-	// String commandBody = (String) event.getNewValue();
-	// logDebug("JavaScriptDebugFrame propertyChange() command: " + commandId + ", clientId: "
-	// + clientId + ", body: " + commandBody);
-	//
-	// if (clientId == null || !clientId.equals(getDebuggerActionCommander().getExecutionId())) {
-	// // skip as the command is not for the current frame
-	// return;
-	// }
-	//
-	// Gson gson = new Gson();
-	// if (commandId.startsWith(DebugConstants.DEBUG)) {
-	// if (commandId.equals(DebugConstants.DEBUG_REFRESH)) {
-	// sendBreakpointsMetadata();
-	// notifyVariableValuesMetadata();
-	// } else if (commandId.equals(DebugConstants.DEBUG_STEP_INTO)) {
-	// debuggerActionCommander.stepInto();
-	// debuggerActionCommander.resumeExecution();
-	// } else if (commandId.equals(DebugConstants.DEBUG_STEP_OVER)) {
-	// debuggerActionCommander.stepOver();
-	// debuggerActionCommander.resumeExecution();
-	// } else if (commandId.equals(DebugConstants.DEBUG_CONTINUE)) {
-	// debuggerActionCommander.continueExecution();
-	// debuggerActionCommander.resumeExecution();
-	// } else if (commandId.equals(DebugConstants.DEBUG_SKIP_ALL_BREAKPOINTS)) {
-	// debuggerActionCommander.skipAllBreakpoints();
-	// debuggerActionCommander.resumeExecution();
-	// } else if (commandId.equals(DebugConstants.DEBUG_SET_BREAKPOINT)) {
-	// BreakpointMetadata breakpoint = gson
-	// .fromJson(commandBody, BreakpointMetadata.class);
-	// debuggerActionCommander.addBreakpoint(breakpoint);
-	// sendBreakpointsMetadata();
-	// } else if (commandId.equals(DebugConstants.DEBUG_CLEAR_BREAKPOINT)) {
-	// BreakpointMetadata breakpoint = gson
-	// .fromJson(commandBody, BreakpointMetadata.class);
-	// debuggerActionCommander.clearBreakpoint(breakpoint);
-	// sendBreakpointsMetadata();
-	// } else if (commandId.equals(DebugConstants.DEBUG_CLEAR_ALL_BREAKPOINTS)) {
-	// debuggerActionCommander.clearAllBreakpoints();
-	//// sendBreakpointsMetadata();
-	// } else if (commandId.equals(DebugConstants.DEBUG_CLEAR_ALL_BREAKPOINTS_FOR_FILE)) {
-	// String path = commandBody;
-	// debuggerActionCommander.clearAllBreakpoints(path);
-	//// sendBreakpointsMetadata();
-	// }
-	// }
-	// }
-
 	private void notifyVariableValuesMetadata() {
 		if (this.session.getVariableValuesMetadata() != null) {
-			// Gson gson = new Gson();
-			// String variableValuesJson = gson.toJson(variableValuesMetadata);
-			// send(DebugConstants.VIEW_VARIABLE_VALUES, variableValuesJson);
-			// this.session.setUpdated(true);
 			this.session.getDebugController().refreshVariables();
 		}
 	}
@@ -379,25 +327,9 @@ public class JavaScriptDebugFrame implements DebugFrame {
 		DebuggerActionCommander commander = getDebuggerActionCommander();
 		LinebreakMetadata currentLineBreak = new LinebreakMetadata(commander.getSessionId(), commander.getExecutionId(), commander.getUserId(), path,
 				row);
-				// Gson gson = new Gson();
-				// String variableValuesJson = gson.toJson(breakLine);
-				// send(DebugConstants.VIEW_ON_LINE_CHANGE, variableValuesJson);
-
-		// this.session.setUpdated(true);
 		this.session.setCurrentLineBreak(currentLineBreak);
 		this.session.getDebugController().onLineChange(currentLineBreak, this.session);
 	}
-
-	// private void sendBreakpointsMetadata() {
-	// Set<BreakpointMetadata> breakpoints = debuggerActionCommander.getBreakpoints();
-	// DebuggerActionCommander commander = getDebuggerActionCommander();
-	// BreakpointsMetadata metadata = new BreakpointsMetadata(commander.getSessionId(),
-	// commander.getExecutionId(), commander.getUserId(), breakpoints);
-	//// String json = new Gson().toJson(metadata);
-	//// send(DebugConstants.VIEW_BREAKPOINT_METADATA, json);
-	//
-	//
-	// }
 
 	public DebuggerActionCommander getDebuggerActionCommander() {
 		return debuggerActionCommander;
