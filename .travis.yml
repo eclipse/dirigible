@@ -1,3 +1,5 @@
 language: java
+jdk:
+  - oraclejdk8
 install: mvn install -f org.eclipse.dirigible/org.eclipse.dirigible.parent/pom.xml -DskipTests=true
 script: mvn test -f org.eclipse.dirigible/org.eclipse.dirigible.parent/pom.xml
