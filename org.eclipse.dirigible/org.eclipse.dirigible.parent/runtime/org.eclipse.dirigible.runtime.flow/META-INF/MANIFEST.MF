@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.runtime.flow
 Bundle-SymbolicName: org.eclipse.dirigible.runtime.flow;singleton:=true
-Bundle-Version: 2.4.160519
+Bundle-Version: 2.5.160804
 Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.ext,

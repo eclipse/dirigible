@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.db.export.rcp
 Bundle-SymbolicName: org.eclipse.dirigible.ide.db.export.rcp;singleton:=true
-Bundle-Version: 2.4.160519
+Bundle-Version: 2.5.160804
 Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui;resolution:=optional,
