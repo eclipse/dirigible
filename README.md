@@ -176,7 +176,7 @@ The IDE part can be run directly via Eclipse. This is useful when testing new fe
 
 2. Deploy on the CloudFoundry supported Cloud Platform with:
 
-		cf push dirigible -p [path to the target directory]/dirigible-all-tomcat-xxx.war -b https://github.com/dirigible-io/java-buildpack
+		cf push dirigible -p [path to the target directory]/dist/tomcat/allinone/ROOT.war -b https://github.com/dirigiblelabs/java-buildpack
 
 3. Open a web browser and go to:
 
