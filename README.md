@@ -118,7 +118,7 @@ Deploy on [HANA Cloud Platform](https://account.hana.ondemand.com/) with the [Cl
 
 The Tomcat specific WAR files can be deployed on [Tomcat](http://tomcat.apache.org/) web container. In this case the built-in Derby database is used.
 
-More information about how to deploy on Tomcat can be found [here](http://tomcat.apache.org/tomcat-7.0-doc/appdev/deployment.html).
+More information about how to deploy on Tomcat can be found [here](http://tomcat.apache.org/tomcat-8.0-doc/appdev/deployment.html).
 
 ##### Steps
 
@@ -192,19 +192,19 @@ The IDE part can be run directly via Eclipse. This is useful when testing new fe
 
 ##### Steps
       
-1. Pull the already built container from Quay.io
+1. Pull the already built container from Docker Hub
 
-        docker pull quay.io/delchevn/dirigible223
+        docker pull dirigiblelabs/dirigible-trial
         
 2. Start the container
 
-        docker run -p 8888:8080 -p quay.io/delchevn/dirigible223
+        docker run -p 8888:8080 dirigiblelabs/dirigible-trial <&- &
 
 3. Open a web browser and go to:
 
-        http://[docker container ip]:8888/
+        http://localhost:8888/
         
-4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/docker/Dockerfile)
+4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/docker/)
 
 ## Additional Information
 
