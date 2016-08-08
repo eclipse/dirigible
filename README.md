@@ -1,7 +1,7 @@
 # dirigible 
 
 [![Eclipse License](http://img.shields.io/badge/license-Eclipse-brightgreen.svg)](https://github.com/eclipse/dirigible/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/eclipse/dirigible.svg)](https://travis-ci.org/eclipse/dirigible)
+[![Build Status](https://img.shields.io/jenkins/s/https/hudson.eclipse.org/dirigible/dirigible-nightly.svg?maxAge=2592000)](https://hudson.eclipse.org/dirigible/)
 
 **Dirigible** is an Integrated Development Environment as a Service (IDEaaS) for dynamic applications. It provides both development tools and runtime environment.
 
