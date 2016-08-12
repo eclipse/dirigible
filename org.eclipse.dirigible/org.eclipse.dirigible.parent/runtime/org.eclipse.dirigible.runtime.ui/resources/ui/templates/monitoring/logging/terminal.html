@@ -1,0 +1,52 @@
+<html>
+<head>
+<style>
+	body {
+	    background-color: black;
+	    color: #44EE44;
+	    font-family: monospace;
+	}
+</style>
+</head>
+<body onload="connectToTerminal(terminalSocket)">
+<script>
+window.terminalSocket = null;
+var connectToTerminal = function(terminalSocket) {
+
+	try {
+		if (window.terminalSocket === null) {
+			window.terminalSocket = new WebSocket(((location.protocol === 'https:') ? "wss://" : "ws://") 
+					+ window.location.host + "/terminal");
+					
+			document.writeln("<div style='background-color: black; font-family: monospace;'>\
+				<input id=\"command\" type=\"text\" style='background-color: black; font-family: monospace; color: #44EE44' onkeydown=\"onCommand(event)\" /></div>");
+				
+		}
+
+
+	} catch(e) {
+		document.writeln("<div style='background-color: black; font-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
+	}
+	
+	window.terminalSocket.onmessage = function (message) {
+		var color = "#44EE44";
+		if (message.data.startsWith("[error]")) {
+			color = "red";
+		}
+
+		document.writeln("<div style='background-color: black; font-family: monospace; color: " + color + "'>" + message.data + "</div>");
+	};
+	
+}
+
+var onCommand = function(event) {
+	if(event.keyCode == 13){
+        window.terminalSocket.send(document.getElementById('command').value + "\n");
+    }
+	
+}
+
+
+</script>
+</body>
+</html>
