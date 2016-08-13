@@ -22,6 +22,8 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 public class WebSocketTerminalBridgeServletInternal {
 
+	private static final String Ctrl_C = "^C";
+
 	private static final Logger logger = Logger.getLogger(WebSocketTerminalBridgeServletInternal.class);
 
 	private static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
@@ -30,7 +32,7 @@ public class WebSocketTerminalBridgeServletInternal {
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
 		openSessions.put(session.getId(), session);
-		session.getBasicRemote().sendText("[terminal] open: " + session.getId());
+		// session.getBasicRemote().sendText("[terminal] open: " + session.getId());
 		logger.debug("[ws:terminal] onOpen: " + session.getId());
 		try {
 			ProcessRunnable processRunnable = new ProcessRunnable(session);
@@ -51,7 +53,7 @@ public class WebSocketTerminalBridgeServletInternal {
 		Process process = processRunnable.getProcess();
 		if (process != null) {
 			try {
-				if ("^C".equalsIgnoreCase(message)) {
+				if (Ctrl_C.equalsIgnoreCase(message.trim())) {
 					logger.debug("onMessage: exit command received");
 					process.destroy();
 					session2process.remove(session);
@@ -70,6 +72,7 @@ public class WebSocketTerminalBridgeServletInternal {
 	class ProcessRunnable implements Runnable {
 
 		private static final String BASH_COMMAND = "bash";
+		private static final String CMD_COMMAND = "cmd";
 
 		private Session session;
 
@@ -86,7 +89,13 @@ public class WebSocketTerminalBridgeServletInternal {
 		@Override
 		public void run() {
 			try {
-				this.process = startProcess(BASH_COMMAND, session);
+
+				String os = System.getProperty("os.name").toLowerCase();
+				String command = BASH_COMMAND;
+				if (os.indexOf("windows") >= 0) {
+					command = CMD_COMMAND;
+				}
+				this.process = startProcess(command, session);
 
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				Piper pipe = new Piper(process.getInputStream(), out);

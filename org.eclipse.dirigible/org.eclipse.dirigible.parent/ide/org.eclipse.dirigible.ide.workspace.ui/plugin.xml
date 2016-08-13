@@ -35,6 +35,15 @@
             name="Log Console"
             restorable="true">
       </view>
+       <view
+            allowMultiple="false"
+            category="org.eclipse.dirigible.ide.workspace.ui.category"
+            class="org.eclipse.dirigible.ide.workspace.ui.view.TerminalView"
+            icon="resources/icons/terminal.png"
+            id="org.eclipse.dirigible.ide.workspace.ui.view.TerminalView"
+            name="Terminal"
+            restorable="true">
+      </view>
       <view
             allowMultiple="false"
             category="org.eclipse.dirigible.ide.workspace.ui.category"
