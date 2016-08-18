@@ -39,14 +39,14 @@
 			var editor = ace.edit("editor");
 			var aceRange = ace.require('ace/range').Range;
 			var beforeSaveText = "";
-			var breakLineId;
-			var breakpointsEnabled = false;
+			/* var breakLineId;
+			var breakpointsEnabled = false; */
 			var dirtyContent = false;
 			
 		    editor.setOptions({
 		        enableBasicAutocompletion: true,
 		        enableSnippets: true,
-		        enableLiveAutocompletion: false
+		        enableLiveAutocompletion: true
 		    });
 
 			editor.on("change", editorContentsChanged);
@@ -80,7 +80,7 @@
 					editor.getSession().getUndoManager().reset();
 					
 					setReadOnly(readOnlyStatus);
-					setBreakpointsEnabled(breakpointsenabledStatus);
+					/* setBreakpointsEnabled(breakpointsenabledStatus); */
 					
 					editor.gotoLine(row, 0, true);
 				}, 500);
@@ -91,9 +91,9 @@
 			}
 
 			function editorContentsChanged(e, ed) {
-				updateDataOnDocChange.call(ed.getSession(), e);
+				/* updateDataOnDocChange.call(ed.getSession(), e); */
 				dirty = (ed.getSession().getValue() !== beforeSaveText);
-				if (ed.getSession().getValue() !== beforeSaveText) {
+				if (dirty) {
 					if (!dirtyContent) {
 						dirtyChanged(true);
 						editor.getSession().clearBreakpoints();
@@ -111,7 +111,7 @@
 			}
 			
 			
-			function getBreakpointsEnabled() {
+			/* function getBreakpointsEnabled() {
 			    return breakpointsEnabled;
 			}
 			
@@ -128,14 +128,14 @@
 			function loadBreakpoint(breakpoint){
 				var s = editor.getSession();
 				s.setBreakpoint(breakpoint);
-			}
+			} */
 
 			// Do we really need this?
 			function setDirty(dirtyStatus) {
 				dirtyContent = dirtyStatus;
 			}
 
-			function onGutterClick(e) {
+			/* function onGutterClick(e) {
 				// if (editor.getReadOnly()) {
 					var s = editor.getSession();
 					var className = e.domEvent.target.className;
@@ -153,9 +153,9 @@
 					}
 				// }
 			}
-			editor.on('gutterclick', onGutterClick);
+			editor.on('gutterclick', onGutterClick); */
 
-			function updateDataOnDocChange(e) {
+			/* function updateDataOnDocChange(e) {
 				var delta = e.data;
 				var range = delta.range;
 				var len, firstRow, f1;
@@ -193,7 +193,7 @@
 						}
 					}
 				}
-			}
+			} */
 		</script>
 	</body>
 </html>
