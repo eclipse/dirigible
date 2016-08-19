@@ -1,8 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2016 SAP and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * SAP - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.dirigible.ide.bridge;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.Principal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,15 +28,36 @@ import javax.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ServerEndpoint("/service/{type}")
+/**
+ * WebSocket channel for the custom scripting services handlers
+ */
+@ServerEndpoint(value = "/service/{type}", configurator = WebSocketServiceBridgeServletConfigurator.class)
 public class WebSocketServiceBridgeServlet {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebSocketServiceBridgeServlet.class);
 
 	private static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
 
+	/**
+	 * On open connection handler
+	 *
+	 * @param session
+	 * @throws IOException
+	 */
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
+		if (Boolean.parseBoolean(InitParametersInjector.get(InitParametersInjector.INIT_PARAM_ENABLE_ROLES))) {
+			Principal principal = session.getUserPrincipal();
+			if (principal == null) {
+				// no logged in user
+				session.getBasicRemote().sendText("Login first to be able to use the Services websocket channel.");
+				session.close();
+			}
+		}
+		// else {
+		// // assume trial instance
+		// session.getBasicRemote().sendText("Scripting Services websocket channel is disabled on this instance");
+		// }
 		openSessions.put(session.getId(), session);
 		callInternal("onOpen", session, null, null);
 	}

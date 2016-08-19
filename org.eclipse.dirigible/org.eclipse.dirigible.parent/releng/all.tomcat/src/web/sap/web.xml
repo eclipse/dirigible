@@ -290,6 +290,8 @@
 			<url-pattern>/services/generate-scripting-service</url-pattern>
 			<url-pattern>/services/generate-web-content</url-pattern>
 			<url-pattern>/services/generate-web-content-entity</url-pattern>
+			<url-pattern>/debug</url-pattern>
+			<url-pattern>/debugsessions/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Developer</role-name>
@@ -310,6 +312,8 @@
 			<url-pattern>/services/data-export</url-pattern>
 			<url-pattern>/services/content-init</url-pattern>
 			<url-pattern>/services/reset</url-pattern>
+			<url-pattern>/log</url-pattern>
+			<url-pattern>/terminal</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Operator</role-name>
@@ -365,6 +369,7 @@
 			<url-pattern>/services/registry-sql</url-pattern>
 			<url-pattern>/services/registry-test</url-pattern>
 			<url-pattern>/services/registry-listener</url-pattern>
+			<url-pattern>/service/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Everyone</role-name>

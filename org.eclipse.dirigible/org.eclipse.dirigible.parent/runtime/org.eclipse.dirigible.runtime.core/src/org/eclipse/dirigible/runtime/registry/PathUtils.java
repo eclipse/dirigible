@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.runtime.registry;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.HandshakeRequest;
 
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
@@ -37,6 +38,14 @@ public class PathUtils {
 
 	public static String getWorkspacePrefix(HttpServletRequest req) {
 		return IRepositoryPaths.DB_DIRIGIBLE_USERS + RequestUtils.getUser(req) + IRepository.SEPARATOR + IRepositoryPaths.WORKSPACE_FOLDER_NAME;
+	}
+
+	public static String extractPathWebSocket(HandshakeRequest request) {
+		String requestPath = request.getRequestURI().toString();
+		if (requestPath == null) {
+			requestPath = IRepository.SEPARATOR;
+		}
+		return requestPath;
 	}
 
 }

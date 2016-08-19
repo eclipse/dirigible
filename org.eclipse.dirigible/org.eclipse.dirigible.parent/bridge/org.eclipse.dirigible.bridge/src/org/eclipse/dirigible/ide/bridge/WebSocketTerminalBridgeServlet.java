@@ -1,8 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2016 SAP and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * SAP - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.dirigible.ide.bridge;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.Principal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,6 +27,9 @@ import javax.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Terminal WebSocket channel
+ */
 @ServerEndpoint("/terminal")
 public class WebSocketTerminalBridgeServlet {
 
@@ -23,8 +37,26 @@ public class WebSocketTerminalBridgeServlet {
 
 	private static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
 
+	/**
+	 * On open connection handler
+	 *
+	 * @param session
+	 * @throws IOException
+	 */
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
+		if (Boolean.parseBoolean(InitParametersInjector.get(InitParametersInjector.INIT_PARAM_ENABLE_ROLES))) {
+			Principal principal = session.getUserPrincipal();
+			if (principal == null) {
+				// no logged in user
+				session.getBasicRemote().sendText("Login first to be able to use the Terminal websocket channel.");
+				session.close();
+			}
+		}
+		// else {
+		// // assume trial instance
+		// session.getBasicRemote().sendText("Terminal websocket channel is disabled on this instance");
+		// }
 		openSessions.put(session.getId(), session);
 		callInternal("onOpen", session, null);
 	}
@@ -70,17 +102,34 @@ public class WebSocketTerminalBridgeServlet {
 		}
 	}
 
+	/**
+	 * On message handler
+	 *
+	 * @param message
+	 * @param session
+	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
 		callInternal("onMessage", session, message);
 	}
 
+	/**
+	 * On error raised handler
+	 *
+	 * @param session
+	 * @param t
+	 */
 	@OnError
 	public void onError(Session session, Throwable t) {
 		callInternal("onError", session, t.getMessage());
 		logger.error(t.getMessage(), t);
 	}
 
+	/**
+	 * On close handler
+	 *
+	 * @param session
+	 */
 	@OnClose
 	public void onClose(Session session) {
 		openSessions.remove(session.getId());

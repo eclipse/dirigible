@@ -43,13 +43,13 @@ public class WebSocketServiceServlet extends HttpServlet {
 
 	protected void setupDebugChannel() throws IOException {
 
-		logger.debug("Setting debug channel internal ...");
+		logger.debug("Setting Service channel internal ...");
 
 		webSocketServiceBridgeServletInternal = new WebSocketServiceBridgeServletInternal();
 
 		DirigibleBridge.BRIDGES.put("websocket_service_channel_internal", webSocketServiceBridgeServletInternal);
 
-		logger.debug("Debug channel internal has been set.");
+		logger.debug("Service channel internal has been set.");
 
 	}
 
