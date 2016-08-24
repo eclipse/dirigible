@@ -42,7 +42,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * Share the local project to the remote Git repository
+ */
 public class ShareCommandHandler extends AbstractWorkspaceHandler {
+
 	private static final String TASK_SHARING_PROJECT = Messages.ShareCommandHandler_TASK_SHARING_PROJECT;
 	private static final String PROJECT_S_SUCCESSFULY_SHARED = Messages.ShareCommandHandler_PROJECT_S_SUCCESSFULY_SHARED;
 	private static final String MASTER = "master"; //$NON-NLS-1$

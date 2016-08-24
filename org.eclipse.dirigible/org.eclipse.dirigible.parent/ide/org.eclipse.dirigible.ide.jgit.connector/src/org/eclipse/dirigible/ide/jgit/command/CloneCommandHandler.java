@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
@@ -24,7 +25,10 @@ import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.jgit.command.ui.CloneCommandDialog;
 import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
 import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
+import org.eclipse.dirigible.ide.publish.PublishException;
+import org.eclipse.dirigible.ide.publish.PublishManager;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.git.JGitConnector;
@@ -38,8 +42,15 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * Clone project(s) from a Git repository and optionally publish it
+ */
 public class CloneCommandHandler extends AbstractWorkspaceHandler {
 
+	private static final String PROJECT_S_HAS_BEEN_CLONED_SUCCESSFULLY = "Project(s) has been cloned successfully";
+	private static final String PROJECT_S_HAS_BEEN_PUBLISHED = "Project %s has been published";
+	private static final String DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_CLONED = "Do you want to publish the project(s) you just cloned?";
+	private static final String PUBLISH_CLONED_PROJECT = "Publish Cloned Project?";
 	private static final String TASK_CLONING_REPOSITORY = Messages.CloneCommandHandler_TASK_CLONING_REPOSITORY;
 	private static final String MASTER = "master"; //$NON-NLS-1$
 	private static final String PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY = Messages.CloneCommandHandler_MASTER;
@@ -95,6 +106,29 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, repository, workspacePath, user, gitProperties);
 			StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_WAS_CLONED, importedProjects));
 			refreshWorkspace();
+
+			if (MessageDialog.openConfirm(null, PUBLISH_CLONED_PROJECT, DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_CLONED)) {
+				String[] projectNames = gitDirectory.list();
+				for (String projectName : projectNames) {
+					IProject[] projects = WorkspaceLocator.getWorkspace(CommonIDEParameters.getRequest()).getRoot().getProjects();
+					for (IProject project : projects) {
+						if (project.getName().equals(projectName)) {
+							try {
+								PublishManager.publishProject(project);
+								logger.info(String.format(PROJECT_S_HAS_BEEN_PUBLISHED, project));
+							} catch (PublishException e) {
+								logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);
+								String causedBy = NO_REMOTE_REPOSITORY_FOR + e.getCause().getMessage();
+								MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, causedBy);
+							}
+							break;
+						}
+					}
+				}
+			}
+
+			StatusLineManagerUtil.setInfoMessage(PROJECT_S_HAS_BEEN_CLONED_SUCCESSFULLY);
+
 		} catch (InvalidRemoteException e) {
 			logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);
 			String causedBy = NO_REMOTE_REPOSITORY_FOR + e.getCause().getMessage();

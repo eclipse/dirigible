@@ -39,7 +39,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * Reset the state of the local project, clear local changes
+ */
 public class ResetCommandHandler extends AbstractWorkspaceHandler {
+
 	private static final String TASK_RESETING_PROJECT = Messages.ResetCommandHandler_TASK_RESETING_PROJECT;
 	private static final String PROJECT_S_SUCCESSFULY_RESETED = Messages.ResetCommandHandler_PROJECT_S_SUCCESSFULY_RESETED;
 	private static final String DO_YOU_REALLY_WANT_TO_HARD_RESET_PROJECT_S = Messages.HardResetCommandHandler_DO_YOU_REALLY_WANT_TO_HARD_RESET_PROJECT_S;

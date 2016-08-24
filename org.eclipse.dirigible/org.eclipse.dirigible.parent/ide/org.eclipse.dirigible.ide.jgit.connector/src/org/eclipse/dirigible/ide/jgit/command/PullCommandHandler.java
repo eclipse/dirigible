@@ -25,7 +25,10 @@ import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.jgit.utils.CommandHandlerUtils;
 import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
 import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
+import org.eclipse.dirigible.ide.publish.PublishException;
+import org.eclipse.dirigible.ide.publish.PublishManager;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
+import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.git.JGitConnector;
@@ -39,7 +42,13 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * Pull project(s) from a Git repository and optionally publish it
+ */
 public class PullCommandHandler extends AbstractWorkspaceHandler {
+
+	private static final String DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_PULLED = "Do you want to publish the project(s) you just pulled?";
+	private static final String PUBLISH_PULLED_PROJECT = "Publish Pulled Project?";
 	private static final String TASK_PULLING_FROM_REMOTE_REPOSITORY = Messages.PullCommandHandler_TASK_PULLING_FROM_REMOTE_REPOSITORY;
 	private static final String PROJECT_HAS_D_CONFILCTING_FILES_DO_PUSH_OR_RESET = Messages.PushCommandHandler_PROJECT_HAS_D_CONFILCTING_FILES_DO_PUSH_OR_RESET;
 	private static final String CONFLICTING_FILES = Messages.PushCommandHandler_CONFLICTING_FILES;
@@ -146,12 +155,31 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 				GitFileUtils.importProject(tempGitDirectory, dirigibleRepository, workspacePath, dirigibleUser, gitProperties);
 
 				refreshWorkspace();
+
+				if (MessageDialog.openConfirm(null, PUBLISH_PULLED_PROJECT, DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_PULLED)) {
+					String[] projectNames = tempGitDirectory.list();
+					for (String projectName : projectNames) {
+						IProject[] projects = WorkspaceLocator.getWorkspace(CommonIDEParameters.getRequest()).getRoot().getProjects();
+						for (IProject project : projects) {
+							if (project.getName().equals(projectName)) {
+								try {
+									PublishManager.publishProject(project);
+								} catch (PublishException e) {
+									logger.error(errorMessage, e);
+									MessageDialog.openError(null, ERROR_DURING_PULL, errorMessage);
+								}
+								break;
+							}
+						}
+					}
+				}
 				StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY, selectedProject.getName()));
 			} else {
 				String message = String.format(PROJECT_HAS_D_CONFILCTING_FILES_DO_PUSH_OR_RESET, numberOfConflictingFiles);
 				MessageDialog.openError(null, CONFLICTING_FILES, message);
 			}
 		} catch (CheckoutConflictException e) {
+			logger.error(errorMessage, e);
 			MessageDialog.openError(null, CONFLICTING_FILES, e.getMessage());
 		} catch (IOException e) {
 			logger.error(errorMessage, e);

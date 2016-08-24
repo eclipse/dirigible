@@ -15,7 +15,7 @@ Import-Package: org.eclipse.dirigible.ide.common,
  org.eclipse.core.runtime.jobs,
  org.eclipse.jface.dialogs,
  org.eclipse.jface.viewers
-Export-Package: org.eclipse.dirigible.ide.publish;version="1.0.0";uses:="org.eclipse.core.resources"
+Export-Package: org.eclipse.dirigible.ide.publish;uses:="org.eclipse.core.resources"
 Require-Bundle: org.eclipse.dirigible.repository.logging,
  org.apache.commons.io,
  org.eclipse.ui;resolution:=optional,

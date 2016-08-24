@@ -42,7 +42,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * Push the changes of a project from the local repository to remote Git repository
+ */
 public class PushCommandHandler extends AbstractWorkspaceHandler {
+
 	private static final String TASK_PUSHING_TO_REMOTE_REPOSITORY = Messages.PushCommandHandler_TASK_PUSHING_TO_REMOTE_REPOSITORY;
 	private static final String PLEASE_MERGE_TO_MASTER_AND_THEN_CONTINUE_WORKING_ON_PROJECT = Messages.PushCommandHandler_PLEASE_MERGE_TO_MASTER_AND_THEN_CONTINUE_WORKING_ON_PROJECT;
 	private static final String PUSHED_TO_REMOTE_BRANCH_S = Messages.PushCommandHandler_PUSHED_TO_REMOTE_BRANCH_S;
@@ -63,10 +67,6 @@ public class PushCommandHandler extends AbstractWorkspaceHandler {
 	private static final String PROJECT_HAS_BEEN_PUSHED_TO_REMOTE_REPOSITORY = Messages.PushCommandHandler_PROJECT_HAS_BEEN_PUSHED_TO_REMOTE_REPOSITORY;
 	private static final String NO_PROJECT_IS_SELECTED_FOR_PUSH = Messages.PushCommandHandler_NO_PROJECT_IS_SELECTED_FOR_PUSH;
 	private static final Logger logger = Logger.getLogger(PushCommandHandler.class);
-
-	public PushCommandHandler() {
-		super();
-	}
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
