@@ -165,6 +165,13 @@ Contributors:
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+         
+   <plugin
+         id="org.eclipse.dirigible.ide.template.publish"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.dirigible.ide.services.security.manager"
@@ -364,11 +371,5 @@ Contributors:
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.eclipse.dirigible.ide.workspace.wizard.templates"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>

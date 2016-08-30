@@ -119,4 +119,10 @@ public class ExtensionsPublisher extends AbstractPublisher implements IPublisher
 	protected String getRegistryLocation() {
 		return REGISTYRY_PUBLISH_LOCATION;
 	}
+
+	@Override
+	public void template(IProject project) throws PublishException {
+		// TODO Auto-generated method stub
+
+	}
 }

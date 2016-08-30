@@ -183,4 +183,10 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 		return ICommonConstants.SCRIPTING_REGISTRY_PUBLISH_LOCATION;
 	}
 
+	@Override
+	public void template(IProject project) throws PublishException {
+		// TODO Auto-generated method stub
+
+	}
+
 }

@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - Workspace - Wizard Templates</name>
-	<artifactId>org.eclipse.dirigible.ide.workspace.wizard.templates</artifactId>
+	<name>IDE - Template - Publish</name>
+	<artifactId>org.eclipse.dirigible.ide.template.publish</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 </project>

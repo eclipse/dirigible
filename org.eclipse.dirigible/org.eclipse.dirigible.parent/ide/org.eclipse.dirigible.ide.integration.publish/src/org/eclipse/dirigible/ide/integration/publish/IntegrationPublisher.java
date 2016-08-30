@@ -121,4 +121,10 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 		return IS_REGISTYRY_PUBLISH_LOCATION;
 	}
 
+	@Override
+	public void template(IProject project) throws PublishException {
+		// TODO Auto-generated method stub
+
+	}
+
 }

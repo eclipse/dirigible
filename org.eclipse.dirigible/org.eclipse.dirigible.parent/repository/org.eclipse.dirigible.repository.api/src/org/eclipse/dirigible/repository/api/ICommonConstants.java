@@ -42,6 +42,7 @@ public interface ICommonConstants {
 	}
 
 	public interface ARTIFACT_TYPE {
+		public final static String PROJECT_ROOT = "/"; //$NON-NLS-1$
 		public final static String DATA_STRUCTURES = "DataStructures"; //$NON-NLS-1$
 		public final static String INTEGRATION_SERVICES = "IntegrationServices"; //$NON-NLS-1$
 		public final static String SCRIPTING_SERVICES = "ScriptingServices"; //$NON-NLS-1$
@@ -110,6 +111,8 @@ public interface ICommonConstants {
 
 	public static final String EXTENSION_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
 			+ ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
+
+	public static final String TEMPLATE_DEFINITIONS_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES;
 
 	public static final String INITIAL_CONTEXT = "InitialContext"; //$NON-NLS-1$
 

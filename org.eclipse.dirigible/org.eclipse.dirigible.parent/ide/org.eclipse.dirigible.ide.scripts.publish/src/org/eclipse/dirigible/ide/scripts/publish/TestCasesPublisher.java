@@ -88,4 +88,10 @@ public class TestCasesPublisher extends AbstractPublisher implements IPublisher 
 		return ICommonConstants.TESTS_REGISTRY_PUBLISH_LOCATION;
 	}
 
+	@Override
+	public void template(IProject project) throws PublishException {
+		// TODO Auto-generated method stub
+
+	}
+
 }

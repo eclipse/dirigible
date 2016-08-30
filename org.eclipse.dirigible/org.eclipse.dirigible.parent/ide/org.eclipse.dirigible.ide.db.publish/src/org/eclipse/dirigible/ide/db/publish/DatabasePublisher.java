@@ -145,4 +145,10 @@ public class DatabasePublisher extends AbstractPublisher implements IPublisher {
 		return null;
 	}
 
+	@Override
+	public void template(IProject project) throws PublishException {
+		// TODO Auto-generated method stub
+
+	}
+
 }

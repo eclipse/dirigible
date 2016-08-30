@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.jgit,
  org.eclipse.dirigible.ide.workspace.rap;resolution:=optional,
  org.eclipse.dirigible.ide.repository,
  org.eclipse.dirigible.ide.publish
-Import-Package: javax.servlet.http;version="3.1.0",
+Import-Package: javax.servlet.http,
  org.eclipse.core.resources,
  org.eclipse.dirigible.repository.logging
 Export-Package: org.eclipse.dirigible.ide.jgit.command,

@@ -62,6 +62,12 @@ public final class PublishManager {
 
 	static List<IPublisher> publishers = null;
 
+	public static final int ACTION_PUBLISH = 1;
+
+	public static final int ACTION_ACTIVATE = 2;
+
+	public static final int ACTION_TEMPLATE = 3;
+
 	/**
 	 * Returns a list {@link IPublisher}
 	 *
@@ -139,7 +145,7 @@ public final class PublishManager {
 	}
 
 	public static void activateProject(IProject project) throws PublishException {
-		publish(project, false);
+		publish(project, ACTION_ACTIVATE);
 	}
 
 	public static void publishProject(IProject project) throws PublishException {
@@ -148,19 +154,38 @@ public final class PublishManager {
 			MessageDialog.openError(null, PUBLISH_ERROR, message);
 			return;
 		}
-		publish(project, true);
+		publish(project, ACTION_PUBLISH);
 	}
 
-	private static void publish(IProject project, boolean publish) throws PublishException {
-		final List<IPublisher> publishers = PublishManager.getPublishers();
+	public static void publishTemplate(IProject project) throws PublishException {
+		if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
+			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION, CommonIDEParameters.getUserName());
+			MessageDialog.openError(null, PUBLISH_ERROR, message);
+			return;
+		}
+		publish(project, ACTION_TEMPLATE);
+	}
 
-		for (IPublisher iPublisher : publishers) {
+	private static void publish(IProject project, int action) throws PublishException {
+		final List<IPublisher> registeredPublishers = PublishManager.getPublishers();
+
+		for (IPublisher iPublisher : registeredPublishers) {
 			IPublisher publisher = iPublisher;
-			if (publish) {
-				publisher.publish(project);
-			} else {
-				publisher.activate(project);
+
+			switch (action) {
+				case ACTION_ACTIVATE:
+					publisher.activate(project);
+					break;
+				case ACTION_PUBLISH:
+					publisher.publish(project);
+					break;
+				case ACTION_TEMPLATE:
+					publisher.template(project);
+					break;
+				default:
+					throw new PublishException("Unknown action for publish");
 			}
+
 		}
 	}
 

@@ -84,4 +84,10 @@ public class WikiPublisher extends AbstractPublisher implements IPublisher {
 		return ICommonConstants.WIKI_CONTENT_REGISTRY_PUBLISH_LOCATION;
 	}
 
+	@Override
+	public void template(IProject project) throws PublishException {
+		// TODO Auto-generated method stub
+
+	}
+
 }

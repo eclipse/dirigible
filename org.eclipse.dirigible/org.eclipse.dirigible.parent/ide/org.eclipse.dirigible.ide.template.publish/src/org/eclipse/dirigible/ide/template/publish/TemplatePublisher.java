@@ -8,85 +8,83 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.ide.mobile.publish;
+package org.eclipse.dirigible.ide.template.publish;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.logging.Logger;
 
-/**
- * Publisher for MobileApplications artefacts
- */
-public class MobilePublisher extends AbstractPublisher implements IPublisher {
+public class TemplatePublisher extends AbstractPublisher implements IPublisher {
+
+	private static final Logger logger = Logger.getLogger(TemplatePublisher.class);
+
+	public TemplatePublisher() {
+		super();
+	}
 
 	@Override
 	public void publish(IProject project) throws PublishException {
-		try {
-			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
-			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS);
-			copyAllFromTo(sourceFolder, targetContainer);
-		} catch (Exception ex) {
-			throw new PublishException(ex.getMessage(), ex);
-		}
+		// nothing on publish
 	}
 
 	@Override
 	public void activate(IProject project) throws PublishException {
-		try {
-			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getMobileApplicationsSandbox());
-			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS);
-			copyAllFromTo(sourceFolder, targetContainer);
-		} catch (Exception ex) {
-			throw new PublishException(ex.getMessage(), ex);
-		}
+		// nothing on activation
 	}
 
 	@Override
 	protected String getSandboxLocation() {
-		return CommonIDEParameters.getMobileApplicationsSandbox();
+		return null;
 	}
 
 	@Override
 	public String getFolderType() {
-		return ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
+		return ICommonConstants.ARTIFACT_TYPE.PROJECT_ROOT;
 	}
 
 	@Override
 	public boolean recognizedFile(IFile file) {
-		// any file under MobileApplications folder is valid
-		return checkFolderType(file);
+		// used in standard artifacts publishing only - hence false here
+		return false;
 	}
 
 	@Override
 	public String getPublishedContainerMapping(IFile file) {
-		return CommonIDEParameters.MOBILE_APPLICATIONS_CONTAINER_MAPPING;
+		return null;
 	}
 
 	@Override
 	public String getActivatedContainerMapping(IFile file) {
-		return CommonIDEParameters.MOBILE_APPLICATIONS_SANDBOX_MAPPING;
+		return null;
 	}
 
 	@Override
 	public boolean isAutoActivationAllowed() {
-		return true;
+		return false;
 	}
 
 	@Override
 	protected String getRegistryLocation() {
-		return ICommonConstants.MOBILE_APPLICATIONS_REGISTRY_PUBLISH_LOCATION;
+		return ICommonConstants.TEMPLATE_DEFINITIONS_REGISTRY_PUBLISH_LOCATION;
 	}
 
 	@Override
 	public void template(IProject project) throws PublishException {
-		// TODO Auto-generated method stub
-		
+		try {
+			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
+			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.PROJECT_ROOT);
+			logger.debug("Copy all from " + sourceFolder.getFullPath().toString() + " to folder: " + targetContainer.getPath());
+			copyAllFromTo(sourceFolder, targetContainer);
+		} catch (Exception ex) {
+			throw new PublishException(ex.getMessage(), ex);
+		}
+
 	}
 
 }
