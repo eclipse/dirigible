@@ -114,7 +114,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 						if (index.exists() && (collectionPath.endsWith(IRepository.SEPARATOR))) {
 							data = buildResourceData(index, request, response);
-						} else if (tabrisJs.exists() || (tabrisJsMin.exists() && collectionPath.contains(NODE_MODULES_TABRIS))) {
+						} else if ((tabrisJs.exists() || tabrisJsMin.exists()) && collectionPath.contains(NODE_MODULES_TABRIS)) {
 							data = buildResourceData(tabrisJs.exists() ? tabrisJs : tabrisJsMin, request, response);
 						} else {
 							// listing of collections is forbidden
