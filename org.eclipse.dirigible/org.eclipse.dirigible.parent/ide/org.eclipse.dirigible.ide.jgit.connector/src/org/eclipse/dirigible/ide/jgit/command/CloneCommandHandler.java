@@ -115,7 +115,7 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 						if (project.getName().equals(projectName)) {
 							try {
 								PublishManager.publishProject(project);
-								logger.info(String.format(PROJECT_S_HAS_BEEN_PUBLISHED, project));
+								logger.info(String.format(PROJECT_S_HAS_BEEN_PUBLISHED, project.getName()));
 							} catch (PublishException e) {
 								logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);
 								String causedBy = NO_REMOTE_REPOSITORY_FOR + e.getCause().getMessage();
