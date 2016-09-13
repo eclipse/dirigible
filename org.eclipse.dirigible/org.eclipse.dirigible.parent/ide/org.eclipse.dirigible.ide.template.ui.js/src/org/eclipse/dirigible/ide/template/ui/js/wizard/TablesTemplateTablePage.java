@@ -19,10 +19,9 @@ import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -30,6 +29,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 
 public class TablesTemplateTablePage extends WizardPage {
 
@@ -49,7 +50,7 @@ public class TablesTemplateTablePage extends WizardPage {
 
 	private JavascriptServiceTemplateModel model;
 
-	private TableViewer typeViewer;
+	private TreeViewer typeViewer;
 
 	private Label labelSelected;
 
@@ -75,9 +76,11 @@ public class TablesTemplateTablePage extends WizardPage {
 		label.setText(AVAILABLE_TABLES_AND_VIEWS);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
 
-		typeViewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+		PatternFilter filter = new PatternFilter();
+		FilteredTree tree = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL, filter, true);
+		typeViewer = tree.getViewer();
 		typeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		typeViewer.setContentProvider(new ArrayContentProvider());
+		typeViewer.setContentProvider(new TablesTemplateTablePageContentProvider());
 		typeViewer.setLabelProvider(new TablesTemplateTablePageLabelProvider());
 		typeViewer.setSorter(new ViewerSorter());
 		TableName[] tableNames = createTableNames();
@@ -98,8 +101,8 @@ public class TablesTemplateTablePage extends WizardPage {
 	}
 
 	private void updateTableNames() {
-		if ((typeViewer.getTable().getSelection() != null) && (typeViewer.getTable().getSelection().length > 0)) {
-			TableName selectedTableName = (TableName) typeViewer.getTable().getSelection()[0].getData();
+		if ((typeViewer.getTree().getSelection() != null) && (typeViewer.getTree().getSelection().length > 0)) {
+			TableName selectedTableName = (TableName) typeViewer.getTree().getSelection()[0].getData();
 			if (selectedTableName != null) {
 				model.setTableName(selectedTableName.getName());
 				model.setTableType(selectedTableName.getType());
