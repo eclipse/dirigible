@@ -55,6 +55,12 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 	protected static final String INDEX_HTML = "index.html"; //$NON-NLS-1$
 
+	private static final String NODE_MODULES_TABRIS = "node_modules/tabris"; //$NON-NLS-1$
+
+	private static final String TABRIS_JS_MIN = "tabris.min.js"; //$NON-NLS-1$
+
+	private static final String TABRIS_JS = "tabris.js"; //$NON-NLS-1$
+
 	private static final String LISTING_OF_FOLDERS_IS_FORBIDDEN = Messages.getString("RegistryServlet.LISTING_OF_FOLDERS_IS_FORBIDDEN"); //$NON-NLS-1$
 
 	private static final String JSON = "json"; //$NON-NLS-1$
@@ -101,10 +107,15 @@ public class RegistryServlet extends AbstractRegistryServlet {
 						}
 						data = buildCollectionData(deep, entity, collectionPath);
 					} else {
-						// welcome file support
+						// welcome file and tabris.js support
 						IResource index = ((ICollection) entity).getResource(INDEX_HTML);
+						IResource tabrisJs = ((ICollection) entity).getResource(TABRIS_JS);
+						IResource tabrisJsMin = ((ICollection) entity).getResource(TABRIS_JS_MIN);
+
 						if (index.exists() && (collectionPath.endsWith(IRepository.SEPARATOR))) {
 							data = buildResourceData(index, request, response);
+						} else if ((tabrisJs.exists() || tabrisJsMin.exists()) && collectionPath.contains(NODE_MODULES_TABRIS)) {
+							data = buildResourceData(tabrisJs.exists() ? tabrisJs : tabrisJsMin, request, response);
 						} else {
 							// listing of collections is forbidden
 							exceptionHandler(response, repositoryPath, HttpServletResponse.SC_FORBIDDEN, LISTING_OF_FOLDERS_IS_FORBIDDEN);
