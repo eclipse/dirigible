@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 SAP and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * SAP - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.dirigible.runtime.command;
 
 import java.io.BufferedReader;
@@ -34,15 +44,19 @@ public class WebSocketTerminalBridgeServletInternal {
 		openSessions.put(session.getId(), session);
 		// session.getBasicRemote().sendText("[terminal] open: " + session.getId());
 		logger.debug("[ws:terminal] onOpen: " + session.getId());
+		startProcessRunnable(session);
+
+	}
+
+	protected void startProcessRunnable(Session session) {
 		try {
 			ProcessRunnable processRunnable = new ProcessRunnable(session);
 			new Thread(processRunnable).start();
-			logger.debug("onOpen: process started");
+			logger.debug("process started");
 			session2process.put(session.getId(), processRunnable);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
-
 	}
 
 	@OnMessage
@@ -56,7 +70,8 @@ public class WebSocketTerminalBridgeServletInternal {
 				if (Ctrl_C.equalsIgnoreCase(message.trim())) {
 					logger.debug("onMessage: exit command received");
 					process.destroy();
-					session2process.remove(session);
+					session2process.remove(session.getId());
+					// startProcessRunnable(session);
 					session.close();
 				} else {
 					byte[] data = message.getBytes();
