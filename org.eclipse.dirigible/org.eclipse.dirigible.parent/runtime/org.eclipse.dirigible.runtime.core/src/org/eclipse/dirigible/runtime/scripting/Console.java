@@ -22,6 +22,10 @@ public class Console {
 		logger.warn(String.format(message, args));
 	}
 
+	public void debug(String message, Object... args) {
+		logger.debug(String.format(message, args));
+	}
+
 	public void trace(String message, Object... args) {
 		logger.error(String.format(message, args));
 		StringBuilder buff = new StringBuilder();
