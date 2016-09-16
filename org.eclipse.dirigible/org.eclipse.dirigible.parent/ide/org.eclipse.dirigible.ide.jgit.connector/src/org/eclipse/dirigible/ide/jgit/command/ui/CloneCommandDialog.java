@@ -26,14 +26,20 @@ public class CloneCommandDialog extends BaseCommandDialog {
 	private static final String ENTER_GIT_REPOSITORY_URL = Messages.CloneCommandDialog_ENTER_GIT_REPOSITORY_URL;
 	private static final String INVALID_GIT_REPOSITORY_URL = Messages.CloneCommandDialog_INVALID_GIT_REPOSITORY_URL;
 	private static final String REPOSITORY_URI = Messages.CommandDialog_REPOSITORY_URI;
+	private static final String REPOSITORY_BRANCH = Messages.CommandDialog_REPOSITORY_BRANCH;
 
 	private Text textRepositoryURI;
 
+	private Text textRepositoryBranch;
+
 	private String repositoryURI;
+
+	private String repositoryBranch;
 
 	public CloneCommandDialog(Shell parentShell, String git) {
 		super(parentShell);
 		this.repositoryURI = git;
+		this.repositoryBranch = MASTER;
 	}
 
 	@Override
@@ -46,6 +52,7 @@ public class CloneCommandDialog extends BaseCommandDialog {
 	@Override
 	protected void addWidgets(Composite container) {
 		createRepositoryURIField(container);
+		createRepositoryBranchField(container);
 		super.addWidgets(container);
 	}
 
@@ -61,6 +68,21 @@ public class CloneCommandDialog extends BaseCommandDialog {
 		textRepositoryURI.setLayoutData(dataRepositoryURI);
 		if (this.repositoryURI != null) {
 			textRepositoryURI.setText(this.repositoryURI);
+		}
+	}
+
+	private void createRepositoryBranchField(Composite container) {
+		Label labelRepositoryBranch = new Label(container, SWT.NONE);
+		labelRepositoryBranch.setText(REPOSITORY_BRANCH);
+
+		GridData dataRepositoryBranch = new GridData();
+		dataRepositoryBranch.grabExcessHorizontalSpace = true;
+		dataRepositoryBranch.horizontalAlignment = GridData.FILL;
+
+		textRepositoryBranch = new Text(container, SWT.BORDER);
+		textRepositoryBranch.setLayoutData(dataRepositoryBranch);
+		if (this.repositoryBranch != null) {
+			textRepositoryBranch.setText(this.repositoryBranch);
 		}
 	}
 
@@ -81,5 +103,9 @@ public class CloneCommandDialog extends BaseCommandDialog {
 
 	public String getRepositoryURI() {
 		return repositoryURI;
+	}
+
+	public String getRepositoryBranch() {
+		return repositoryBranch;
 	}
 }

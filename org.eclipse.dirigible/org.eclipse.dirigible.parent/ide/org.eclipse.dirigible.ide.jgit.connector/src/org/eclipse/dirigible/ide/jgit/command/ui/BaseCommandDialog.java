@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.jgit.command.ui;
@@ -30,6 +29,8 @@ public abstract class BaseCommandDialog extends TitleAreaDialog {
 	private static final String PASSWORD = Messages.BaseCommandDialog_PASSWORD;
 	private static final String USERNAME_IS_EMPTY = Messages.BaseCommandDialog_USERNAME_IS_EMPTY;
 	private static final String PASSWORD_IS_EMPTY = Messages.BaseCommandDialog_PASSWORD_IS_EMPTY;
+
+	protected static final String MASTER = "master"; //$NON-NLS-1$
 
 	private Text textUsername;
 	private Text textPassword;
