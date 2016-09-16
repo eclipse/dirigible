@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
-Export-Package: org.eclipse.dirigible.repository.git
+Export-Package: org.eclipse.dirigible.repository.git,
+ org.eclipse.dirigible.repository.project
 Bundle-ActivationPolicy: lazy
 Bundle-Name: org.eclipse.dirigible.repository.git
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -16,7 +17,8 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.equinox.registry,
  org.eclipse.dirigible.repository.db.init,
  org.eclipse.dirigible.repository.local,
- org.eclipse.jgit
+ org.eclipse.jgit,
+ com.google.gson
 Import-Package: org.eclipse.dirigible.repository.logging
 Service-Component: OSGi-INF/master-repository-git.xml
 Bundle-ClassPath: .

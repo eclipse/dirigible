@@ -9,7 +9,8 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.dirigible.repository.ext.test;singleton:=true
 Fragment-Host: org.eclipse.dirigible.repository.ext
 Require-Bundle: org.eclipse.dirigible.repository.api,
- org.eclipse.dirigible.repository.db
+ org.eclipse.dirigible.repository.db,
+ org.eclipse.dirigible.repository.git
 Import-Package: org.apache.derby.jdbc,
  org.hamcrest,
  org.hamcrest.core,
