@@ -115,20 +115,34 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 			MessageDialog.openError(null, THIS_IS_NOT_A_GIT_PROJECT, errorMessage);
 			return;
 		}
+
+		String gitRepositoryURI = gitProperties.getURL();
+		String branch = MASTER;
+		try {
+			ProjectMetadataManager.ensureProjectMetadata(selectedProject.getName(), gitRepositoryURI, MASTER);
+			branch = ProjectMetadataManager.getBranch(selectedProject);
+		} catch (CoreException e) {
+			logger.error(errorMessage, e);
+			MessageDialog.openError(null, ERROR_DURING_PULL, errorMessage);
+		} catch (IOException e) {
+			logger.error(errorMessage, e);
+			MessageDialog.openError(null, ERROR_DURING_PULL, errorMessage);
+		}
+
 		File tempGitDirectory = null;
 		try {
-			String gitRepositoryURI = gitProperties.getURL();
+
 			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
 			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
-			JGitConnector.cloneRepository(tempGitDirectory, gitRepositoryURI);
+			JGitConnector.cloneRepository(tempGitDirectory, gitRepositoryURI, null, null, branch);
 
-			Repository repository = JGitConnector.getRepository(tempGitDirectory.toString());
+			Repository repository = JGitConnector.getRepository(tempGitDirectory.getCanonicalPath());
 			JGitConnector jgit = new JGitConnector(repository);
 			String lastSHA = gitProperties.getSHA();
 
-			gitProperties.setSHA(jgit.getLastSHAForBranch(MASTER));
+			gitProperties.setSHA(jgit.getLastSHAForBranch(branch));
 
-			final String changesBranch = CHANGES_BRANCH + CommonIDEParameters.getUserName();
+			final String changesBranch = CHANGES_BRANCH + System.currentTimeMillis() + "_" + CommonIDEParameters.getUserName();
 			jgit.checkout(lastSHA);
 			jgit.createBranch(changesBranch, lastSHA);
 			jgit.checkout(changesBranch);
@@ -141,7 +155,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 			jgit.pull();
 			int numberOfConflictingFiles = jgit.status().getConflicting().size();
 			if (numberOfConflictingFiles == 0) {
-				jgit.checkout(MASTER);
+				jgit.checkout(branch);
 				jgit.rebase(changesBranch);
 
 				String dirigibleUser = CommonIDEParameters.getUserName();

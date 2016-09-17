@@ -10,18 +10,14 @@
 
 package org.eclipse.dirigible.ide.jgit.command;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.UnknownHostException;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
@@ -36,9 +32,6 @@ import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.git.JGitConnector;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.repository.project.ProjectMetadata;
-import org.eclipse.dirigible.repository.project.ProjectMetadataRepository;
-import org.eclipse.dirigible.repository.project.ProjectMetadataUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -98,9 +91,9 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 			String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SLASH) + 1, repositoryURI.lastIndexOf(DOT_GIT));
 			gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 
-			JGitConnector.cloneRepository(gitDirectory, repositoryURI, username, password);
+			JGitConnector.cloneRepository(gitDirectory, repositoryURI, username, password, repositoryBranch);
 
-			Repository gitRepository = JGitConnector.getRepository(gitDirectory.getAbsolutePath());
+			Repository gitRepository = JGitConnector.getRepository(gitDirectory.getCanonicalPath());
 			JGitConnector jgit = new JGitConnector(gitRepository);
 
 			// final String lastSha = jgit.getLastSHAForBranch(MASTER);
@@ -115,7 +108,10 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 			StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_WAS_CLONED, importedProjects));
 			refreshWorkspace();
 
-			describeProjects(gitDirectory, repositoryURI, repositoryBranch);
+			String[] projectNames = gitDirectory.list();
+			for (String projectName : projectNames) {
+				ProjectMetadataManager.ensureProjectMetadata(projectName, repositoryURI, repositoryBranch);
+			}
 
 			publishProjects(gitDirectory);
 
@@ -171,30 +167,6 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 				}
 			}
 		}
-	}
-
-	protected void describeProjects(File gitDirectory, String repositoryURI, String branch) throws CoreException {
-
-		IProject[] projects = WorkspaceLocator.getWorkspace(CommonIDEParameters.getRequest()).getRoot().getProjects();
-		for (IProject project : projects) {
-			IFile projectFile = project.getFile("project.json");
-			if (!projectFile.exists()) {
-				ProjectMetadata projectMetadata = new ProjectMetadata();
-				projectMetadata.setGuid(project.getName());
-				ProjectMetadataRepository projectMetadataRepository = new ProjectMetadataRepository();
-				projectMetadataRepository.setType("git");
-				projectMetadataRepository.setUrl(repositoryURI);
-				projectMetadataRepository.setBranch(branch);
-				projectMetadata.setRepository(projectMetadataRepository);
-				String projectMetadataJson = ProjectMetadataUtils.toJson(projectMetadata);
-				ByteArrayInputStream in = new ByteArrayInputStream(projectMetadataJson.getBytes());
-				projectFile.create(in, true, new NullProgressMonitor());
-
-			} else {
-				// TODO update branch info?
-			}
-		}
-
 	}
 
 }

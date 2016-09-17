@@ -257,7 +257,7 @@ public class SampleProjectWizardGitTemplatePage extends WizardPage {
 
 	private static void doClone(File gitDirectory) {
 		try {
-			JGitConnector.cloneRepository(gitDirectory, CommonIDEParameters.GIT_REPOSITORY_URL);
+			JGitConnector.cloneRepository(gitDirectory, CommonIDEParameters.GIT_REPOSITORY_URL, null, null, "master");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

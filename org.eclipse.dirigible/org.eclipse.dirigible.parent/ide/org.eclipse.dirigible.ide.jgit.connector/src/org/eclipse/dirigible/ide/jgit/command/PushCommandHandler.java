@@ -125,15 +125,28 @@ public class PushCommandHandler extends AbstractWorkspaceHandler {
 		File tempGitDirectory = null;
 		try {
 			String gitRepositoryURI = gitProperties.getURL();
+
+			String branch = MASTER;
+			try {
+				ProjectMetadataManager.ensureProjectMetadata(selectedProject.getName(), gitRepositoryURI, MASTER);
+				branch = ProjectMetadataManager.getBranch(selectedProject);
+			} catch (CoreException e) {
+				logger.error(errorMessage, e);
+				MessageDialog.openError(null, ERROR_DURING_PUSH, errorMessage);
+			} catch (IOException e) {
+				logger.error(errorMessage, e);
+				MessageDialog.openError(null, ERROR_DURING_PUSH, errorMessage);
+			}
+
 			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
 			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
-			JGitConnector.cloneRepository(tempGitDirectory, gitRepositoryURI, username, password);
+			JGitConnector.cloneRepository(tempGitDirectory, gitRepositoryURI, username, password, branch);
 
-			Repository repository = JGitConnector.getRepository(tempGitDirectory.toString());
+			Repository repository = JGitConnector.getRepository(tempGitDirectory.getCanonicalPath());
 			JGitConnector jgit = new JGitConnector(repository);
 			String lastSHA = gitProperties.getSHA();
 
-			final String changesBranch = CHANGES_BRANCH + CommonIDEParameters.getUserName();
+			final String changesBranch = CHANGES_BRANCH + System.currentTimeMillis() + "_" + CommonIDEParameters.getUserName();
 			jgit.checkout(lastSHA);
 			jgit.createBranch(changesBranch, lastSHA);
 			jgit.checkout(changesBranch);
@@ -146,7 +159,7 @@ public class PushCommandHandler extends AbstractWorkspaceHandler {
 			jgit.pull();
 			int numberOfConflictingFiles = jgit.status().getConflicting().size();
 			if (numberOfConflictingFiles == 0) {
-				jgit.checkout(MASTER);
+				jgit.checkout(branch);
 				jgit.rebase(changesBranch);
 				jgit.push(username, password);
 
@@ -158,7 +171,7 @@ public class PushCommandHandler extends AbstractWorkspaceHandler {
 
 				String workspacePath = String.format(GitProjectProperties.DB_DIRIGIBLE_USERS_S_WORKSPACE, dirigibleUser);
 
-				String newLastSHA = jgit.getLastSHAForBranch(MASTER);
+				String newLastSHA = jgit.getLastSHAForBranch(branch);
 				gitProperties.setSHA(newLastSHA);
 
 				GitFileUtils.importProject(tempGitDirectory, dirigibleRepository, workspacePath, dirigibleUser, gitProperties);

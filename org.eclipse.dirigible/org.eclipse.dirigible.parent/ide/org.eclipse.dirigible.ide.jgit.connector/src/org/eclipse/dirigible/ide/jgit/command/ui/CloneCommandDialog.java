@@ -99,6 +99,7 @@ public class CloneCommandDialog extends BaseCommandDialog {
 	protected void saveInput() {
 		super.saveInput();
 		repositoryURI = textRepositoryURI.getText();
+		repositoryBranch = textRepositoryBranch.getText();
 	}
 
 	public String getRepositoryURI() {

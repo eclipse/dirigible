@@ -49,7 +49,7 @@ public class ShareCommandHandler extends AbstractWorkspaceHandler {
 
 	private static final String TASK_SHARING_PROJECT = Messages.ShareCommandHandler_TASK_SHARING_PROJECT;
 	private static final String PROJECT_S_SUCCESSFULY_SHARED = Messages.ShareCommandHandler_PROJECT_S_SUCCESSFULY_SHARED;
-	private static final String MASTER = "master"; //$NON-NLS-1$
+	// private static final String MASTER = "master"; //$NON-NLS-1$
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 	private static final String SLASH = "/"; //$NON-NLS-1$
 	private static final String INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI = Messages.ShareCommandHandler_INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI;
@@ -88,11 +88,13 @@ public class ShareCommandHandler extends AbstractWorkspaceHandler {
 			case Window.OK:
 				String commitMessage = shareCommandDialog.getCommitMessage();
 				String repositoryURI = shareCommandDialog.getRepositoryURI();
+				String repositoryBranch = shareCommandDialog.getRepositoryBranch();
 				String username = shareCommandDialog.getUsername();
 				String email = shareCommandDialog.getEmail();
 				String password = shareCommandDialog.getPassword();
 
-				shareToGitRepository(projects[0], commitMessage, username, email, password, repositoryURI);
+				IProject selectedProject = projects[0];
+				shareToGitRepository(selectedProject, commitMessage, username, email, password, repositoryURI, repositoryBranch);
 				break;
 		}
 		monitor.done();
@@ -100,15 +102,24 @@ public class ShareCommandHandler extends AbstractWorkspaceHandler {
 		return null;
 	}
 
-	private void shareToGitRepository(IProject project, String commitMessage, String username, String email, String password, String repositoryURI) {
+	private void shareToGitRepository(IProject project, String commitMessage, String username, String email, String password, String repositoryURI,
+			String repositoryBranch) {
 		final String errorMessage = String.format(WHILE_SHARING_PROJECT_ERROR_OCCURED, project.getName());
+
+		try {
+			ProjectMetadataManager.ensureProjectMetadata(project.getName(), repositoryURI, repositoryBranch);
+		} catch (CoreException e) {
+			logger.error(errorMessage, e);
+			MessageDialog.openError(null, ERROR_DURING_SHARE, errorMessage);
+		}
+
 		File gitDirectory = null;
 		try {
 			final String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SLASH) + 1, repositoryURI.lastIndexOf(DOT_GIT));
 			gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
-			JGitConnector.cloneRepository(gitDirectory, repositoryURI, username, password);
+			JGitConnector.cloneRepository(gitDirectory, repositoryURI, username, password, repositoryBranch);
 
-			Repository repository = JGitConnector.getRepository(gitDirectory.getAbsolutePath());
+			Repository repository = JGitConnector.getRepository(gitDirectory.getCanonicalPath());
 			JGitConnector jgit = new JGitConnector(repository);
 
 			GitFileUtils.copyProjectToDirectory(project, gitDirectory);
@@ -118,7 +129,7 @@ public class ShareCommandHandler extends AbstractWorkspaceHandler {
 
 			IRepository dirigibleRepository = RepositoryFacade.getInstance().getRepository();
 
-			String lastSHA = jgit.getLastSHAForBranch(MASTER);
+			String lastSHA = jgit.getLastSHAForBranch(repositoryBranch);
 			GitProjectProperties properties = new GitProjectProperties(repositoryURI, lastSHA);
 			String user = CommonIDEParameters.getUserName();
 

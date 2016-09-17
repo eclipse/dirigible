@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
@@ -100,12 +101,25 @@ public class ResetCommandHandler extends AbstractWorkspaceHandler {
 			String dirigibleUser = CommonIDEParameters.getUserName();
 			GitProjectProperties gitProperties = GitFileUtils.getGitPropertiesForProject(project, dirigibleUser);
 			String gitRepositoryURI = gitProperties.getURL();
+
+			String branch = MASTER;
+			try {
+				ProjectMetadataManager.ensureProjectMetadata(project.getName(), gitRepositoryURI, MASTER);
+				branch = ProjectMetadataManager.getBranch(project);
+			} catch (CoreException e) {
+				logger.error(errorMessage, e);
+				MessageDialog.openError(null, ERROR_DURING_HARD_RESET, errorMessage);
+			} catch (IOException e) {
+				logger.error(errorMessage, e);
+				MessageDialog.openError(null, ERROR_DURING_HARD_RESET, errorMessage);
+			}
+
 			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
 			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 
 			// FIXME: Won't work for secured git repositories. Maybe default
 			// should prompt for username and password?
-			JGitConnector.cloneRepository(tempGitDirectory, gitRepositoryURI);
+			JGitConnector.cloneRepository(tempGitDirectory, gitRepositoryURI, null, null, branch);
 
 			GitFileUtils.deleteDGBRepositoryProject(project, dirigibleUser);
 
@@ -115,7 +129,7 @@ public class ResetCommandHandler extends AbstractWorkspaceHandler {
 
 			Repository repository = JGitConnector.getRepository(tempGitDirectory.getAbsolutePath());
 			JGitConnector jgit = new JGitConnector(repository);
-			final String lastSHA = jgit.getLastSHAForBranch(MASTER);
+			final String lastSHA = jgit.getLastSHAForBranch(branch);
 			gitProperties.setSHA(lastSHA);
 
 			GitFileUtils.importProject(tempGitDirectory, dirigibleRepository, workspacePath, dirigibleUser, gitProperties);
