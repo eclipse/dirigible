@@ -57,9 +57,6 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 - [Maven 3.0.x](http://maven.apache.org/docs/3.0.5/release-notes.html)
 
 
-### `--- Use Maven 3.0.x! ---` ###
-
-
 ##### Steps
 
 1. Clone the [project repository](https://github.com/eclipse/dirigible.git) or [download the latest release](https://github.com/eclipse/dirigible/archive/master.zip).
