@@ -171,7 +171,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 				refreshWorkspace();
 
 				if (MessageDialog.openConfirm(null, PUBLISH_PULLED_PROJECT, DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_PULLED)) {
-					String[] projectNames = tempGitDirectory.list();
+					String[] projectNames = GitFileUtils.getValidProjectFolders(tempGitDirectory);
 					for (String projectName : projectNames) {
 						IProject[] projects = WorkspaceLocator.getWorkspace(CommonIDEParameters.getRequest()).getRoot().getProjects();
 						for (IProject project : projects) {

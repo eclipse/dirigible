@@ -11,12 +11,16 @@
 package org.eclipse.dirigible.ide.jgit.command;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
@@ -32,6 +36,8 @@ import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.git.JGitConnector;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.repository.project.ProjectMetadataDependency;
+import org.eclipse.dirigible.repository.project.ProjectMetadataRepository;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -46,18 +52,19 @@ import org.eclipse.ui.PlatformUI;
  */
 public class CloneCommandHandler extends AbstractWorkspaceHandler {
 
-	private static final String PROJECT_S_HAS_BEEN_CLONED_SUCCESSFULLY = "Project(s) has been cloned successfully";
+	protected static final String PROJECT_S_HAS_BEEN_CLONED_SUCCESSFULLY = "Project(s) has been cloned successfully";
 	private static final String PROJECT_S_HAS_BEEN_PUBLISHED = "Project %s has been published";
 	private static final String DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_CLONED = "Do you want to publish the project(s) you just cloned?";
 	private static final String PUBLISH_CLONED_PROJECT = "Publish Cloned Project?";
-	private static final String TASK_CLONING_REPOSITORY = Messages.CloneCommandHandler_TASK_CLONING_REPOSITORY;
+	protected static final String TASK_CLONING_REPOSITORY = Messages.CloneCommandHandler_TASK_CLONING_REPOSITORY;
 	// private static final String MASTER = "master"; //$NON-NLS-1$
 	private static final String PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY = Messages.CloneCommandHandler_MASTER;
 	private static final String NO_REMOTE_REPOSITORY_FOR = Messages.CloneCommandHandler_NO_REMOTE_REPOSITORY_FOR;
-	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	private static final String DOT_GIT = ".git";
 
 	private static final String PROJECT_WAS_CLONED = Messages.CloneCommandHandler_PROJECT_WAS_CLONED;
-	private static final String WHILE_CLONING_REPOSITORY_ERROR_OCCURED = Messages.CloneCommandHandler_WHILE_CLONING_REPOSITORY_ERROR_OCCURED;
+	protected static final String WHILE_CLONING_REPOSITORY_ERROR_OCCURED = Messages.CloneCommandHandler_WHILE_CLONING_REPOSITORY_ERROR_OCCURED;
+	private static final String NOT_SUPPORTED_REPOSITORY_TYPE = Messages.CloneCommandHandler_NOT_SUPPORTED_REPOSITORY_TYPE;
 	private static final String SLASH = "/"; //$NON-NLS-1$
 
 	private static final Logger logger = Logger.getLogger(CloneCommandHandler.class);
@@ -76,7 +83,19 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 
 		switch (dialog.open()) {
 			case Window.OK:
-				cloneGitRepository(dialog.getRepositoryURI(), dialog.getRepositoryBranch(), dialog.getUsername(), dialog.getPassword());
+				try {
+					File gitDirectory = createGitDirectory(dialog.getRepositoryURI());
+					Set<String> clonedProjects = new HashSet<String>();
+					cloneProject(dialog.getRepositoryURI(), dialog.getRepositoryBranch(), dialog.getUsername(), dialog.getPassword(), gitDirectory,
+							clonedProjects);
+					refreshWorkspace();
+					publishProjects(clonedProjects);
+					StatusLineManagerUtil.setInfoMessage(PROJECT_S_HAS_BEEN_CLONED_SUCCESSFULLY);
+
+				} catch (IOException e) {
+					logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);
+					MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e.getCause().getMessage());
+				}
 				break;
 		}
 
@@ -84,12 +103,16 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 		return null;
 	}
 
-	private void cloneGitRepository(final String repositoryURI, final String repositoryBranch, final String username, final String password) {
-		File gitDirectory = null;
+	protected File createGitDirectory(String repositoryURI) throws IOException {
+		String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SLASH) + 1, repositoryURI.lastIndexOf(DOT_GIT));
+		File gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
+		return gitDirectory;
+	}
+
+	protected void cloneProject(final String repositoryURI, final String repositoryBranch, final String username, final String password,
+			File gitDirectory, Set<String> clonedProjects) {
 		try {
 			String user = CommonIDEParameters.getUserName();
-			String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SLASH) + 1, repositoryURI.lastIndexOf(DOT_GIT));
-			gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 
 			JGitConnector.cloneRepository(gitDirectory, repositoryURI, username, password, repositoryBranch);
 
@@ -106,16 +129,16 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 
 			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, repository, workspacePath, user, gitProperties);
 			StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_WAS_CLONED, importedProjects));
-			refreshWorkspace();
 
-			String[] projectNames = gitDirectory.list();
+			String[] projectNames = GitFileUtils.getValidProjectFolders(gitDirectory);
 			for (String projectName : projectNames) {
 				ProjectMetadataManager.ensureProjectMetadata(projectName, repositoryURI, repositoryBranch);
+				clonedProjects.add(projectName);
 			}
 
-			publishProjects(gitDirectory);
-
-			StatusLineManagerUtil.setInfoMessage(PROJECT_S_HAS_BEEN_CLONED_SUCCESSFULLY);
+			for (String projectName : projectNames) {
+				cloneDependencies(username, password, clonedProjects, projectName);
+			}
 
 		} catch (InvalidRemoteException e) {
 			logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);
@@ -147,10 +170,38 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 		}
 	}
 
-	protected void publishProjects(File gitDirectory) {
+	protected void cloneDependencies(final String username, final String password, Set<String> clonedProjects, String projectName)
+			throws IOException, CoreException {
+		IProject selectedProject = WorkspaceLocator.getWorkspace(CommonIDEParameters.getRequest()).getRoot().getProject(projectName);
+		ProjectMetadataDependency[] dependencies = ProjectMetadataManager.getDependencies(selectedProject);
+		if (dependencies != null) {
+			for (ProjectMetadataDependency dependency : dependencies) {
+				if (ProjectMetadataRepository.GIT.equalsIgnoreCase(dependency.getType())) {
+					String projectGuid = dependency.getGuid();
+					if (!clonedProjects.contains(projectGuid)) {
+						String projectRepositoryURI = dependency.getUrl();
+						String projectRepositoryBranch = dependency.getBranch();
+						File projectGitDirectory = createGitDirectory(projectRepositoryURI);
+						cloneProject(projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, clonedProjects); // assume
+																																				// username/password
+																																				// reuse
+						clonedProjects.add(projectGuid);
+					} else {
+						logger.info(String.format("Project % has been already cloned during this session.", projectGuid));
+					}
+
+				} else {
+					String errorMessage = String.format(NOT_SUPPORTED_REPOSITORY_TYPE, dependency.getType());
+					logger.error(errorMessage);
+					MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, errorMessage);
+				}
+			}
+		}
+	}
+
+	protected void publishProjects(Set<String> clonedProjects) {
 		if (MessageDialog.openConfirm(null, PUBLISH_CLONED_PROJECT, DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_CLONED)) {
-			String[] projectNames = gitDirectory.list();
-			for (String projectName : projectNames) {
+			for (String projectName : clonedProjects) {
 				IProject[] projects = WorkspaceLocator.getWorkspace(CommonIDEParameters.getRequest()).getRoot().getProjects();
 				for (IProject project : projects) {
 					if (project.getName().equals(projectName)) {

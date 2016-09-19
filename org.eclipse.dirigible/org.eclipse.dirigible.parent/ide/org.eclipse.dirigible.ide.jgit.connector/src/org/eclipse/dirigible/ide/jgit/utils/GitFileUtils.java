@@ -217,4 +217,20 @@ public class GitFileUtils {
 		GitProjectProperties gitProperties = new GitProjectProperties(in);
 		return gitProperties;
 	}
+
+	public static String[] getValidProjectFolders(File gitDirectory) throws IOException {
+		List<String> valid = new ArrayList<String>();
+		String[] all = gitDirectory.list();
+		for (String name : all) {
+			if (name.equals(DOT_GIT)) {
+				continue;
+			}
+			File file = new File(gitDirectory.getCanonicalPath() + File.pathSeparator + name);
+			if (file.isDirectory()) {
+				valid.add(name);
+			}
+		}
+		return valid.toArray(new String[] {});
+	}
+
 }

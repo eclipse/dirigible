@@ -30,6 +30,8 @@ public class Messages extends NLS {
 	public static String PushCommandDialog_COMMIT_MESSAGE_IS_EMPTY;
 	public static String PushCommandDialog_EMAIL;
 	public static String PushCommandDialog_EMAIL_IS_EMPTY;
+	public static String CloneDependenciesCommandDialog_CLONING_GIT_REPOSITORY;
+	public static String CloneDependenciesCommandDialog_ENTER_GIT_REPOSITORY_URL;
 
 	static {
 		// initialize resource bundle

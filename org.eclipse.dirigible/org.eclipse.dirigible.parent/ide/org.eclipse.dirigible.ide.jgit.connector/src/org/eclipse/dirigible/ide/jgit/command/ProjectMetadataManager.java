@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.repository.project.ProjectMetadata;
+import org.eclipse.dirigible.repository.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.repository.project.ProjectMetadataRepository;
 import org.eclipse.dirigible.repository.project.ProjectMetadataUtils;
 
@@ -55,8 +56,23 @@ public class ProjectMetadataManager {
 		IFile projectFile = selectedProject.getFile(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
 		String content = IOUtils.toString(projectFile.getContents());
 		ProjectMetadata projectMetadata = ProjectMetadataUtils.fromJson(content);
-		String branch = projectMetadata.getRepository().getBranch();
+		ProjectMetadataRepository repository = projectMetadata.getRepository();
+		String branch = "master";
+		if (repository != null) {
+			branch = repository.getBranch();
+		}
 		return branch;
+	}
+
+	public static ProjectMetadataDependency[] getDependencies(IProject selectedProject) throws IOException, CoreException {
+		IFile projectFile = selectedProject.getFile(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
+		if (!projectFile.exists()) {
+			return null;
+		}
+		String content = IOUtils.toString(projectFile.getContents());
+		ProjectMetadata projectMetadata = ProjectMetadataUtils.fromJson(content);
+		ProjectMetadataDependency[] dependencies = projectMetadata.getDependencies();
+		return dependencies;
 	}
 
 }

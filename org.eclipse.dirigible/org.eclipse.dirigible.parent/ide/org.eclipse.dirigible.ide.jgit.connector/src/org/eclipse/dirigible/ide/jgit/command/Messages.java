@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.jgit.command;
@@ -21,6 +20,7 @@ public class Messages extends NLS {
 	public static String CloneCommandHandler_PROJECT_WAS_CLONED;
 	public static String CloneCommandHandler_TASK_CLONING_REPOSITORY;
 	public static String CloneCommandHandler_WHILE_CLONING_REPOSITORY_ERROR_OCCURED;
+	public static String CloneCommandHandler_NOT_SUPPORTED_REPOSITORY_TYPE;
 	public static String HardResetCommandHandler_DO_YOU_REALLY_WANT_TO_HARD_RESET_PROJECT_S;
 	public static String HardResetCommandHandler_ERROR_DURING_HARD_RESET;
 	public static String HardResetCommandHandler_HARD_RESET;
@@ -36,6 +36,7 @@ public class Messages extends NLS {
 	public static String PullCommandHandler_PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY;
 	public static String PullCommandHandler_TASK_PULLING_FROM_REMOTE_REPOSITORY;
 	public static String PullCommandHandler_WHILE_PULLING_PROJECT_ERROR_OCCURED;
+	public static String CloneDependenciesCommandHandler_NO_PROJECT_IS_SELECTED_FOR_CLONE_DEPENDENCIES;
 	public static String PushCommandHandler_CONFLICTING_FILES;
 	public static String PushCommandHandler_ERROR_DURING_PUSH;
 	public static String PushCommandHandler_INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI;
@@ -62,6 +63,7 @@ public class Messages extends NLS {
 	public static String ShareCommandHandler_PROJECT_S_SUCCESSFULY_SHARED;
 	public static String ShareCommandHandler_TASK_SHARING_PROJECT;
 	public static String ShareCommandHandler_WHILE_SHARING_PROJECT_ERROR_OCCURED;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

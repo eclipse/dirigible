@@ -34,7 +34,14 @@
 		               label="Share"
 		               style="push">
 		         </command>
-
+           <separator
+                 name="dependencies">
+           </separator>
+				 <command
+		               commandId="org.eclipse.dirigible.ide.jgit.command.CloneDependenciesCommand"
+		               label="Clone Dependencies"
+		               style="push">
+		         </command>
 		   </menu>
 	   </menuContribution>
    </extension>
@@ -66,6 +73,13 @@
             description="Cloning"
             id="org.eclipse.dirigible.ide.jgit.command.CloneCommand"
             name="Clone">
+      </command>
+      
+      <command
+      		defaultHandler="org.eclipse.dirigible.ide.jgit.command.CloneDependenciesCommandHandler"
+            description="Cloning Dependencies"
+            id="org.eclipse.dirigible.ide.jgit.command.CloneDependenciesCommand"
+            name="Clone Dependencies">
       </command>
    </extension>
    
@@ -134,6 +148,7 @@
 	            </with>
             </enabledWhen>
       </handler>
+      
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -156,6 +171,10 @@
       <image
             commandId="org.eclipse.dirigible.ide.jgit.command.ShareCommand"
             icon="resources/icons/share.png">
+      </image>
+      <image
+            commandId="org.eclipse.dirigible.ide.jgit.command.CloneDependenciesCommand"
+            icon="resources/icons/clone-dependencies.png">
       </image>
    </extension>
    
