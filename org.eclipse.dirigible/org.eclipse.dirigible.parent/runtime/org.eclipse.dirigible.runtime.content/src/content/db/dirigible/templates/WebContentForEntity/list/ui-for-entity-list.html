@@ -70,37 +70,37 @@
 				});
 			$scope.formats = ['yyyy/MM/dd', 'dd-MMMM-yyyy', 'dd.MM.yyyy', 'shortDate'];
   			$scope.format = $scope.formats[0];
-		});
 		
-		// pagination
-		$scope.viewby = 100;
-		var urlCount = url + '?count';
-		$http.get(urlCount)
-			.success(function(count){
-				$scope.totalItems = count;
-			});
-			
-			$scope.currentPage = 1;
-			$scope.itemsPerPage = $scope.viewby;
-			$scope.maxSize = 5;
-		
-		$scope.setPage = function (pageNo) {
-		    $scope.currentPage = pageNo;
-		    $scope.pageChanged();
-		};
-		
-		$scope.pageChanged = function() {
-			var urlLimit = url + '?offset=' + ($scope.viewby*($scope.currentPage-1) + '&limit=' + $scope.viewby);
-			$http.get(urlLimit)
-				.success(function(data){
-					$scope.data = data;
+			// pagination
+			$scope.viewby = 100;
+			var urlCount = url + '?count';
+			$http.get(urlCount)
+				.success(function(count){
+					$scope.totalItems = count;
 				});
-		};
-		
-		$scope.setItemsPerPage = function(num) {
-		  	$scope.itemsPerPage = num;
-		  	$scope.setPage(1);
-		}
+				
+				$scope.currentPage = 1;
+				$scope.itemsPerPage = $scope.viewby;
+				$scope.maxSize = 5;
+			
+			$scope.setPage = function (pageNo) {
+			    $scope.currentPage = pageNo;
+			    $scope.pageChanged();
+			};
+			
+			$scope.pageChanged = function() {
+				var urlLimit = url + '?offset=' + ($scope.viewby*($scope.currentPage-1) + '&limit=' + $scope.viewby);
+				$http.get(urlLimit)
+					.success(function(data){
+						$scope.data = data;
+					});
+			};
+			
+			$scope.setItemsPerPage = function(num) {
+			  	$scope.itemsPerPage = num;
+			  	$scope.setPage(1);
+			}
+		});
 	</script>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
