@@ -21,9 +21,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-public class CloneDependenciesCommandHandler extends CloneCommandHandler {
+public class UpdateDependenciesCommandHandler extends CloneCommandHandler {
 
-	private static final Logger logger = Logger.getLogger(CloneDependenciesCommandHandler.class);
+	private static final Logger logger = Logger.getLogger(UpdateDependenciesCommandHandler.class);
 
 	private static final String NO_PROJECT_IS_SELECTED_FOR_CLONE_DEPENDENCIES = Messages.CloneDependenciesCommandHandler_NO_PROJECT_IS_SELECTED_FOR_CLONE_DEPENDENCIES;
 	private static final String PLEASE_SELECT_ONE = Messages.PushCommandHandler_PLEASE_SELECT_ONE;
@@ -52,9 +52,9 @@ public class CloneDependenciesCommandHandler extends CloneCommandHandler {
 		final Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		CloneDependenciesCommandDialog dialog = new CloneDependenciesCommandDialog(parent);
 
-		for (IProject selectedProject : projects) {
-			switch (dialog.open()) {
-				case Window.OK:
+		switch (dialog.open()) {
+			case Window.OK:
+				for (IProject selectedProject : projects) {
 					try {
 						Set<String> clonedProjects = new HashSet<String>();
 						cloneDependencies(dialog.getUsername(), dialog.getPassword(), clonedProjects, selectedProject.getName());
@@ -69,7 +69,7 @@ public class CloneDependenciesCommandHandler extends CloneCommandHandler {
 						MessageDialog.openError(null, WHILE_CLONING_REPOSITORY_ERROR_OCCURED, e.getCause().getMessage());
 					}
 					break;
-			}
+				}
 		}
 
 		monitor.done();

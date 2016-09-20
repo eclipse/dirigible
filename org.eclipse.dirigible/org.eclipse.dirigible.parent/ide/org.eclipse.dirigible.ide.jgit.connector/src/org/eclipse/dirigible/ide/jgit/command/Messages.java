@@ -32,10 +32,12 @@ public class Messages extends NLS {
 	public static String HardResetCommandHandler_WHILE_HARD_RESETING_PROJECT_ERROR_OCCURED;
 	public static String PullCommandHandler_ERROR_DURING_PULL;
 	public static String PullCommandHandler_NO_PROJECT_IS_SELECTED_FOR_PULL;
+	public static String PullCommandHandler_NO_VALID_PROJECT_IS_SELECTED_FOR_PULL;
 	public static String PullCommandHandler_ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME;
 	public static String PullCommandHandler_PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY;
 	public static String PullCommandHandler_TASK_PULLING_FROM_REMOTE_REPOSITORY;
 	public static String PullCommandHandler_WHILE_PULLING_PROJECT_ERROR_OCCURED;
+	public static String PullCommandHandler_PLEASE_SELECT_ONE;
 	public static String CloneDependenciesCommandHandler_NO_PROJECT_IS_SELECTED_FOR_CLONE_DEPENDENCIES;
 	public static String PushCommandHandler_CONFLICTING_FILES;
 	public static String PushCommandHandler_ERROR_DURING_PUSH;

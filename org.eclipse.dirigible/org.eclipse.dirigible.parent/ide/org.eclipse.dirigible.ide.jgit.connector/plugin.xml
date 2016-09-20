@@ -38,8 +38,8 @@
                  name="dependencies">
            </separator>
 				 <command
-		               commandId="org.eclipse.dirigible.ide.jgit.command.CloneDependenciesCommand"
-		               label="Clone Dependencies"
+		               commandId="org.eclipse.dirigible.ide.jgit.command.UpdateDependenciesCommand"
+		               label="Update Dependencies"
 		               style="push">
 		         </command>
 		   </menu>
@@ -76,10 +76,10 @@
       </command>
       
       <command
-      		defaultHandler="org.eclipse.dirigible.ide.jgit.command.CloneDependenciesCommandHandler"
-            description="Cloning Dependencies"
-            id="org.eclipse.dirigible.ide.jgit.command.CloneDependenciesCommand"
-            name="Clone Dependencies">
+      		defaultHandler="org.eclipse.dirigible.ide.jgit.command.UpdateDependenciesCommandHandler"
+            description="Updating Dependencies"
+            id="org.eclipse.dirigible.ide.jgit.command.UpdateDependenciesCommand"
+            name="Update Dependencies">
       </command>
    </extension>
    
@@ -112,15 +112,17 @@
       <handler
      		class="org.eclipse.dirigible.ide.jgit.command.PullCommandHandler"
             commandId="org.eclipse.dirigible.ide.jgit.command.PullCommand">
+            <!--
             <enabledWhen>
 	            <with variable="selection">
-	               <count value="1"></count>
+	               <count value="*"></count>
 	               <iterate ifEmpty="false" operator="and">
 			            <instanceof value="org.eclipse.core.resources.IProject"></instanceof>
 			           	<test property="org.eclipse.dirigible.ide.jgit.property.tester.GitProjectPropertyTest" value="true"></test>
 					</iterate>
 	            </with>
             </enabledWhen>
+            -->
       </handler>
       <handler
      		class="org.eclipse.dirigible.ide.jgit.command.ResetCommandHandler"
@@ -173,8 +175,8 @@
             icon="resources/icons/share.png">
       </image>
       <image
-            commandId="org.eclipse.dirigible.ide.jgit.command.CloneDependenciesCommand"
-            icon="resources/icons/clone-dependencies.png">
+            commandId="org.eclipse.dirigible.ide.jgit.command.UpdateDependenciesCommand"
+            icon="resources/icons/update-dependencies.png">
       </image>
    </extension>
    

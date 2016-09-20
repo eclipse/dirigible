@@ -13,6 +13,8 @@ package org.eclipse.dirigible.ide.jgit.command;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -22,13 +24,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.DefaultProgressMonitor;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
+import org.eclipse.dirigible.ide.jgit.property.tester.GitProjectPropertyTest;
 import org.eclipse.dirigible.ide.jgit.utils.CommandHandlerUtils;
 import org.eclipse.dirigible.ide.jgit.utils.GitFileUtils;
 import org.eclipse.dirigible.ide.jgit.utils.GitProjectProperties;
 import org.eclipse.dirigible.ide.publish.PublishException;
 import org.eclipse.dirigible.ide.publish.PublishManager;
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
-import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.commands.AbstractWorkspaceHandler;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.git.JGitConnector;
@@ -60,12 +62,15 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 	private static final String INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI = Messages.PushCommandHandler_INCORRECT_USERNAME_AND_OR_PASSWORD_OR_GIT_REPOSITORY_URI;
 	private static final String PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY = Messages.PushCommandHandler_PLEASE_CHECK_IF_PROXY_SETTINGS_ARE_SET_PROPERLY;
 	private static final String PLEASE_SELECT_ONE = Messages.PushCommandHandler_PLEASE_SELECT_ONE;
+	private static final String SELECT_CLONED = Messages.PullCommandHandler_PLEASE_SELECT_ONE;
 
-	private static final String ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME = Messages.PullCommandHandler_ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME;
+	// private static final String ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME =
+	// Messages.PullCommandHandler_ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME;
 	private static final String ERROR_DURING_PULL = Messages.PullCommandHandler_ERROR_DURING_PULL;
 	private static final String WHILE_PULLING_PROJECT_ERROR_OCCURED = Messages.PullCommandHandler_WHILE_PULLING_PROJECT_ERROR_OCCURED;
 	private static final String PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY = Messages.PullCommandHandler_PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY;
 	private static final String NO_PROJECT_IS_SELECTED_FOR_PULL = Messages.PullCommandHandler_NO_PROJECT_IS_SELECTED_FOR_PULL;
+	private static final String NO_VALID_PROJECT_IS_SELECTED_FOR_PULL = Messages.PullCommandHandler_NO_VALID_PROJECT_IS_SELECTED_FOR_PULL;
 	private static final Logger logger = Logger.getLogger(PullCommandHandler.class);
 
 	public PullCommandHandler() {
@@ -87,32 +92,55 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 			StatusLineManagerUtil.setWarningMessage(NO_PROJECT_IS_SELECTED_FOR_PULL);
 			MessageDialog.openWarning(null, NO_PROJECT_IS_SELECTED_FOR_PULL, PLEASE_SELECT_ONE);
 			return null;
-		} else if (projects.length > 1) {
-			logger.warn(ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME);
-			StatusLineManagerUtil.setWarningMessage(ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME);
-			MessageDialog.openWarning(null, ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME, PLEASE_SELECT_ONE);
-			return null;
 		}
+		// else if (projects.length > 1) {
+		// logger.warn(ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME);
+		// StatusLineManagerUtil.setWarningMessage(ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME);
+		// MessageDialog.openWarning(null, ONLY_ONE_PROJECT_CAN_BE_PULLEDT_AT_A_TIME, PLEASE_SELECT_ONE);
+		// return null;
+		// }
 
-		final IProject selectedProject = projects[0];
+		// final IProject selectedProject = projects[0];
 
 		DefaultProgressMonitor monitor = new DefaultProgressMonitor();
 		monitor.beginTask(TASK_PULLING_FROM_REMOTE_REPOSITORY, IProgressMonitor.UNKNOWN);
 
-		pullProjectFromGitRepository(selectedProject);
+		List<IProject> publishedProjects = new ArrayList<IProject>();
+		GitProjectPropertyTest tester = new GitProjectPropertyTest();
+		for (IProject selectedProject : projects) {
+			if (tester.test(selectedProject, null, null, true)) {
+				logger.debug(String.format("Start pulling %s project...", selectedProject.getName()));
+				pullProjectFromGitRepository(selectedProject);
+				logger.debug(String.format("Pull of the Project %s finished.", selectedProject.getName()));
+				publishedProjects.add(selectedProject);
+			} else {
+				logger.debug(String.format("Project % is local only", selectedProject));
+				MessageDialog.openInformation(null, NO_VALID_PROJECT_IS_SELECTED_FOR_PULL, SELECT_CLONED);
+			}
+		}
+
+		refreshWorkspace();
+
+		publishProjects(publishedProjects.toArray(new IProject[] {}));
 
 		monitor.done();
 		return null;
 	}
 
-	private void pullProjectFromGitRepository(final IProject selectedProject) {
-
+	void pullProjectFromGitRepository(final IProject selectedProject) {
 		final String errorMessage = String.format(WHILE_PULLING_PROJECT_ERROR_OCCURED, selectedProject.getName());
 		GitProjectProperties gitProperties = null;
 		try {
 			gitProperties = GitFileUtils.getGitPropertiesForProject(selectedProject, CommonIDEParameters.getUserName());
+			if (gitProperties != null) {
+				logger.debug(String.format("Git properties for the project %s: %s", selectedProject.getName(), gitProperties.toString()));
+			} else {
+				logger.debug(String.format("Git properties file for the project %s is null", selectedProject.getName()));
+				return;
+			}
 		} catch (IOException e) {
 			MessageDialog.openError(null, THIS_IS_NOT_A_GIT_PROJECT, errorMessage);
+			logger.error(errorMessage, e);
 			return;
 		}
 
@@ -121,6 +149,8 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 		try {
 			ProjectMetadataManager.ensureProjectMetadata(selectedProject.getName(), gitRepositoryURI, MASTER);
 			branch = ProjectMetadataManager.getBranch(selectedProject);
+			logger.debug(String.format("Repository URL for the project %s: %s", selectedProject.getName(), gitRepositoryURI));
+			logger.debug(String.format("Branch for the project %s: %s", selectedProject.getName(), branch));
 		} catch (CoreException e) {
 			logger.error(errorMessage, e);
 			MessageDialog.openError(null, ERROR_DURING_PULL, errorMessage);
@@ -134,6 +164,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 
 			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
 			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
+			logger.debug(String.format("Temp Git Directory for the project %s: %s", selectedProject.getName(), tempGitDirectory.getCanonicalPath()));
 			JGitConnector.cloneRepository(tempGitDirectory, gitRepositoryURI, null, null, branch);
 
 			Repository repository = JGitConnector.getRepository(tempGitDirectory.getCanonicalPath());
@@ -143,20 +174,41 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 			gitProperties.setSHA(jgit.getLastSHAForBranch(branch));
 
 			final String changesBranch = CHANGES_BRANCH + System.currentTimeMillis() + "_" + CommonIDEParameters.getUserName();
-			jgit.checkout(lastSHA);
-			jgit.createBranch(changesBranch, lastSHA);
-			jgit.checkout(changesBranch);
+			logger.debug(String.format("Last SHA for the project %s: %s", selectedProject.getName(), lastSHA));
+			logger.debug(String.format("'Changes' branch for the project %s: %s", selectedProject.getName(), changesBranch));
 
+			logger.debug(String.format("Staring checkout of the project %s for the branch %s...", selectedProject.getName(), branch));
+			jgit.checkout(lastSHA);
+			logger.debug(String.format("Checkout of the project %s finished.", selectedProject.getName()));
+
+			jgit.createBranch(changesBranch, lastSHA);
+
+			logger.debug(String.format("Staring checkout of the project %s for the branch %s...", selectedProject.getName(), changesBranch));
+			jgit.checkout(changesBranch);
+			logger.debug(String.format("Checkout of the project %s finished.", selectedProject.getName()));
+
+			logger.debug(String.format("Clean and copy the sources of the project %s in directory %s...", selectedProject.getName(),
+					tempGitDirectory.getCanonicalPath()));
 			GitFileUtils.deleteProjectFolderFromDirectory(tempGitDirectory, selectedProject.getName());
 			GitFileUtils.copyProjectToDirectory(selectedProject, tempGitDirectory);
+			logger.debug(String.format("Clean and copy the sources of the project %s finished.", selectedProject.getName()));
 
 			jgit.add(JGitConnector.ADD_ALL_FILE_PATTERN);
 			jgit.commit("", "", "", true); //$NON-NLS-1$
+			logger.debug(String.format("Commit changes for the project %s finished.", selectedProject.getName()));
+
+			logger.debug(String.format("Staring pull of the project %s for the branch %s...", selectedProject.getName(), branch));
 			jgit.pull();
+			logger.debug(String.format("Pull of the project %s finished.", selectedProject.getName()));
+
 			int numberOfConflictingFiles = jgit.status().getConflicting().size();
+			logger.debug(String.format("Number of conflicting files in the project %s: %d.", selectedProject.getName(), numberOfConflictingFiles));
 			if (numberOfConflictingFiles == 0) {
+				logger.debug(String.format("No conflicting files in the project %s. Staring checkout and rebase...", selectedProject.getName()));
 				jgit.checkout(branch);
+				logger.debug(String.format("Checkout for the project %s finished.", selectedProject.getName()));
 				jgit.rebase(changesBranch);
+				logger.debug(String.format("Rebase for the project %s finished.", selectedProject.getName()));
 
 				String dirigibleUser = CommonIDEParameters.getUserName();
 
@@ -166,30 +218,13 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 
 				String workspacePath = String.format(GitProjectProperties.DB_DIRIGIBLE_USERS_S_WORKSPACE, dirigibleUser);
 
+				logger.debug(String.format("Starting importing projects from the Git directory %s.", tempGitDirectory.getCanonicalPath()));
 				GitFileUtils.importProject(tempGitDirectory, dirigibleRepository, workspacePath, dirigibleUser, gitProperties);
-
-				refreshWorkspace();
-
-				if (MessageDialog.openConfirm(null, PUBLISH_PULLED_PROJECT, DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_PULLED)) {
-					String[] projectNames = GitFileUtils.getValidProjectFolders(tempGitDirectory);
-					for (String projectName : projectNames) {
-						IProject[] projects = WorkspaceLocator.getWorkspace(CommonIDEParameters.getRequest()).getRoot().getProjects();
-						for (IProject project : projects) {
-							if (project.getName().equals(projectName)) {
-								try {
-									PublishManager.publishProject(project);
-								} catch (PublishException e) {
-									logger.error(errorMessage, e);
-									MessageDialog.openError(null, ERROR_DURING_PULL, errorMessage);
-								}
-								break;
-							}
-						}
-					}
-				}
-				StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY, selectedProject.getName()));
+				logger.debug(String.format("Importing projects from the Git directory %s finished.", tempGitDirectory.getCanonicalPath()));
 			} else {
+				logger.debug(String.format("Conflicting files exist in the project %s.", selectedProject.getName()));
 				String message = String.format(PROJECT_HAS_D_CONFILCTING_FILES_DO_PUSH_OR_RESET, numberOfConflictingFiles);
+				logger.error(message);
 				MessageDialog.openError(null, CONFLICTING_FILES, message);
 			}
 		} catch (CheckoutConflictException e) {
@@ -222,4 +257,23 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 			GitFileUtils.deleteDirectory(tempGitDirectory);
 		}
 	}
+
+	protected void publishProjects(final IProject[] projects) {
+		if (projects.length > 0) {
+			if (MessageDialog.openConfirm(null, PUBLISH_PULLED_PROJECT, DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_PULLED)) {
+				for (IProject project : projects) {
+					try {
+						PublishManager.publishProject(project);
+						StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY, project.getName()));
+					} catch (PublishException e) {
+						final String errorMessage = String.format(WHILE_PULLING_PROJECT_ERROR_OCCURED, project.getName());
+						logger.error(errorMessage, e);
+						MessageDialog.openError(null, ERROR_DURING_PULL, errorMessage);
+					}
+					break;
+				}
+			}
+		}
+	}
+
 }
