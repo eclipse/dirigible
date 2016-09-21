@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.content;
@@ -31,7 +30,6 @@ import org.eclipse.dirigible.runtime.PermissionsUtils;
 
 /**
  * Exports the current content of the Registry
- *
  */
 public class ContentExporterServlet extends ContentBaseServlet {
 
@@ -50,8 +48,7 @@ public class ContentExporterServlet extends ContentBaseServlet {
 
 	protected String getExportFilePrefix() {
 		StringBuilder buff = new StringBuilder();
-		buff.append(IRepositoryPaths.REGISTRY)
-			.append(UNDERSCORE);
+		buff.append(IRepositoryPaths.REGISTRY).append(UNDERSCORE);
 		try {
 			buff.append(java.net.InetAddress.getLocalHost().getHostName());
 		} catch (UnknownHostException e) {
@@ -61,14 +58,12 @@ public class ContentExporterServlet extends ContentBaseServlet {
 		return buff.toString();
 	}
 
-	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 
@@ -77,8 +72,7 @@ public class ContentExporterServlet extends ContentBaseServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
 			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Export");
@@ -87,7 +81,7 @@ public class ContentExporterServlet extends ContentBaseServlet {
 		}
 
 		// put guid in the session
-		request.getSession().setAttribute(GUID, createGUID()); //$NON-NLS-1$
+		request.setAttribute(GUID, createGUID());
 
 		try {
 			byte[] zippedContent = getContentFromRepository(request);
@@ -101,11 +95,11 @@ public class ContentExporterServlet extends ContentBaseServlet {
 
 	/**
 	 * Return the constructed zip in servlet response
-	 * 
+	 *
 	 * @param response
 	 * @param tmpFile
 	 * @param request
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void sendZip(HttpServletRequest request, HttpServletResponse response, byte[] content) throws IOException {
 		String fileName = null;
@@ -115,7 +109,7 @@ public class ContentExporterServlet extends ContentBaseServlet {
 		response.setContentType("application/zip"); //$NON-NLS-1$
 		response.setHeader("Content-Disposition", "attachment;filename=\"" //$NON-NLS-1$ //$NON-NLS-2$
 				+ fileName + "\""); //$NON-NLS-1$
-		
+
 		BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
 		ByteArrayInputStream fis = new ByteArrayInputStream(content);
 		int len;
@@ -130,13 +124,13 @@ public class ContentExporterServlet extends ContentBaseServlet {
 	private String defaultFileName(HttpServletRequest request) {
 		String fileName;
 		String guid = EMPTY.equals(getGUID(request)) ? EMPTY : getGUID(request);
-		fileName = getExportFilePrefix()+ UNDERSCORE + guid;
+		fileName = getExportFilePrefix() + UNDERSCORE + guid;
 		return fileName;
 	}
 
 	/**
 	 * Extract the Dirigible project as a zip from the repository.
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -157,7 +151,7 @@ public class ContentExporterServlet extends ContentBaseServlet {
 
 	/**
 	 * Create guid. Currently timestamp.
-	 * 
+	 *
 	 * @return
 	 */
 	private String createGUID() {
@@ -170,7 +164,7 @@ public class ContentExporterServlet extends ContentBaseServlet {
 	}
 
 	private String getGUID(HttpServletRequest request) {
-		return (String) request.getSession().getAttribute(GUID);
+		return (String) request.getAttribute(GUID);
 	}
 
 }

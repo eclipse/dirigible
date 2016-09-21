@@ -393,7 +393,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		try {
 			if (request != null) {
 				// JNDI context
-				InitialContext initialContext = (InitialContext) request.getSession().getAttribute(ICommonConstants.INITIAL_CONTEXT);
+				InitialContext initialContext = (InitialContext) request.getAttribute(ICommonConstants.INITIAL_CONTEXT);
 				registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.INITIAL_CONTEXT, initialContext);
 				apiBuilder.setInitialContext(initialContext);
 			}

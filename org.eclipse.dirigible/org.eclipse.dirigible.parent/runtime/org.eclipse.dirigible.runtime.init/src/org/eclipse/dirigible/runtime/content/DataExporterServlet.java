@@ -90,7 +90,7 @@ public class DataExporterServlet extends ContentBaseServlet {
 		}
 
 		// put guid in the session
-		request.getSession().setAttribute(GUID, createGUID());
+		request.setAttribute(GUID, createGUID());
 
 		try {
 			byte[] data = getData(tableName, request);
@@ -159,7 +159,7 @@ public class DataExporterServlet extends ContentBaseServlet {
 	}
 
 	private String getGUID(HttpServletRequest request) {
-		return (String) request.getSession().getAttribute(GUID);
+		return (String) request.getAttribute(GUID);
 	}
 
 }

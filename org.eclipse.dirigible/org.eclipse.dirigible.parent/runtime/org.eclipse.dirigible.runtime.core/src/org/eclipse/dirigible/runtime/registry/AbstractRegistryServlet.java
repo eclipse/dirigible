@@ -59,7 +59,7 @@ public abstract class AbstractRegistryServlet extends HttpServlet {
 		try {
 			final IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 			if (request != null) {
-				request.getSession().setAttribute(REPOSITORY_ATTRIBUTE, repository);
+				request.setAttribute(REPOSITORY_ATTRIBUTE, repository);
 			}
 			return repository;
 			// getServletContext().setAttribute(REPOSITORY_ATTRIBUTE, repository);
@@ -71,7 +71,7 @@ public abstract class AbstractRegistryServlet extends HttpServlet {
 	protected IRepository getRepository(HttpServletRequest request) throws IOException {
 		IRepository repository = null;
 		if (request != null) {
-			repository = (IRepository) request.getSession().getAttribute(REPOSITORY_ATTRIBUTE);
+			repository = (IRepository) request.getAttribute(REPOSITORY_ATTRIBUTE);
 		}
 		if (repository == null) {
 			try {

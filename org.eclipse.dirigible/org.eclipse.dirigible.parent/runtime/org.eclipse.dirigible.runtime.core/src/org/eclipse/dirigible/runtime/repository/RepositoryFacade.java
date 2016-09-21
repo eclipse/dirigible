@@ -159,14 +159,14 @@ public class RepositoryFacade {
 		if (request == null) {
 			return;
 		}
-		request.getSession().setAttribute(REPOSITORY, repository);
+		request.setAttribute(REPOSITORY, repository);
 	}
 
 	private void saveMasterRepositoryInstance(HttpServletRequest request, IMasterRepository repository) {
 		if (request == null) {
 			return;
 		}
-		request.getSession().setAttribute(MASTER_REPOSITORY, repository);
+		request.setAttribute(MASTER_REPOSITORY, repository);
 	}
 
 }

@@ -87,11 +87,7 @@ public class RepositoryFacade {
 	}
 
 	private IRepository getRepositoryInstance(HttpServletRequest request) {
-		// if (request == null) {
-		// return null;
-		// }
 		return (IRepository) CommonIDEParameters.getObject(REPOSITORY, request);
-		// return (IRepository) request.getSession().getAttribute(REPOSITORY);
 	}
 
 	public void saveRepositoryInstance(HttpServletRequest request, IRepository repository) {
@@ -99,7 +95,6 @@ public class RepositoryFacade {
 			return;
 		}
 		CommonIDEParameters.setObject(REPOSITORY, repository);
-		// request.getSession().setAttribute(REPOSITORY, repository);
 	}
 
 }

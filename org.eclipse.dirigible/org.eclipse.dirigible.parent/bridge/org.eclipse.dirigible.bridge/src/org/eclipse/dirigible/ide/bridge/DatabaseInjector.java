@@ -59,7 +59,7 @@ public class DatabaseInjector implements IInjector {
 				try {
 					DataSource dataSource = lookupDataSource(parameterValue);
 					logger.error(parameterValue + " found and injected in the request");
-					req.getSession().setAttribute(DATASOURCE_PREFIX + customDataSourceName, dataSource);
+					req.setAttribute(DATASOURCE_PREFIX + customDataSourceName, dataSource);
 				} catch (NamingException e) {
 					logger.error(e.getMessage(), e);
 				}
@@ -73,7 +73,7 @@ public class DatabaseInjector implements IInjector {
 	}
 
 	private void injectDefaultDataSourceOnRequest(HttpServletRequest req) {
-		DataSource dataSource = (DataSource) req.getSession().getAttribute(DATASOURCE_DEFAULT);
+		DataSource dataSource = (DataSource) req.getAttribute(DATASOURCE_DEFAULT);
 		if (dataSource == null) {
 			try {
 
@@ -85,7 +85,7 @@ public class DatabaseInjector implements IInjector {
 				String key = InitParametersInjector.get(InitParametersInjector.INIT_PARAM_JNDI_DEFAULT_DATASOURCE);
 				dataSource = lookupDataSource(key);
 				if (dataSource != null) {
-					req.getSession().setAttribute(DATASOURCE_DEFAULT, dataSource);
+					req.setAttribute(DATASOURCE_DEFAULT, dataSource);
 					Connection connection = null;
 					try {
 						try {
@@ -149,14 +149,14 @@ public class DatabaseInjector implements IInjector {
 	}
 
 	private void setMetaDataToSession(HttpServletRequest req, Connection connection, DatabaseMetaData metaData) throws SQLException {
-		req.getSession().setAttribute(DATABASE_PRODUCT_NAME, metaData.getDatabaseProductName());
-		req.getSession().setAttribute(DATABASE_PRODUCT_VERSION, metaData.getDatabaseProductVersion());
-		req.getSession().setAttribute(DATABASE_MINOR_VERSION, metaData.getDatabaseMinorVersion());
-		req.getSession().setAttribute(DATABASE_MAJOR_VERSION, metaData.getDatabaseMajorVersion());
-		req.getSession().setAttribute(DATABASE_DRIVER_NAME, metaData.getDriverName());
-		req.getSession().setAttribute(DATABASE_DRIVER_MINOR_VERSION, metaData.getDriverMinorVersion());
-		req.getSession().setAttribute(DATABASE_DRIVER_MAJOR_VERSION, metaData.getDriverMajorVersion());
-		req.getSession().setAttribute(DATABASE_CONNECTION_CLASS_NAME, connection.getClass().getCanonicalName());
+		req.setAttribute(DATABASE_PRODUCT_NAME, metaData.getDatabaseProductName());
+		req.setAttribute(DATABASE_PRODUCT_VERSION, metaData.getDatabaseProductVersion());
+		req.setAttribute(DATABASE_MINOR_VERSION, metaData.getDatabaseMinorVersion());
+		req.setAttribute(DATABASE_MAJOR_VERSION, metaData.getDatabaseMajorVersion());
+		req.setAttribute(DATABASE_DRIVER_NAME, metaData.getDriverName());
+		req.setAttribute(DATABASE_DRIVER_MINOR_VERSION, metaData.getDriverMinorVersion());
+		req.setAttribute(DATABASE_DRIVER_MAJOR_VERSION, metaData.getDriverMajorVersion());
+		req.setAttribute(DATABASE_CONNECTION_CLASS_NAME, connection.getClass().getCanonicalName());
 	}
 
 	private void setMetaDataToEnv(Connection connection) throws SQLException {

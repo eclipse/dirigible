@@ -43,7 +43,7 @@ public class AnonymousUserInjector implements IInjector {
 			value = defaultValue;
 		}
 
-		req.getSession().setAttribute(COOKIE_ANONYMOUS_USER, value);
+		req.setAttribute(COOKIE_ANONYMOUS_USER, value);
 	}
 
 	@Override

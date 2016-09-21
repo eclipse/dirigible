@@ -31,12 +31,12 @@ public class ConnectivityInjector implements IInjector {
 	@Override
 	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		Object connectivityConfiguration = req.getSession().getAttribute(CONNECTIVITY_CONFIGURATION);
+		Object connectivityConfiguration = req.getAttribute(CONNECTIVITY_CONFIGURATION);
 		if (connectivityConfiguration == null) {
 			try {
 				connectivityConfiguration = lookupConnectivityConfiguration();
 				if (connectivityConfiguration != null) {
-					req.getSession().setAttribute(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
+					req.setAttribute(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
 					System.getProperties().put(CONNECTIVITY_CONFIGURATION, connectivityConfiguration);
 				} else {
 					logger.warn(InitParametersInjector.INIT_PARAM_JNDI_CONNECTIVITY_CONFIGURATION + " not present");

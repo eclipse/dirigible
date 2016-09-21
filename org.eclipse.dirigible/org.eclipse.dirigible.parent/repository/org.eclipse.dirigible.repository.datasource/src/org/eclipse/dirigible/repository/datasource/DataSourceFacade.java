@@ -123,7 +123,7 @@ public class DataSourceFacade {
 		logger.debug("Try to get datasource from the Request");
 
 		DataSource dataSource = null;
-		dataSource = (DataSource) request.getSession().getAttribute(DATASOURCE_DEFAULT);
+		dataSource = (DataSource) request.getAttribute(DATASOURCE_DEFAULT);
 		if (dataSource != null) {
 			WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource);
 			logger.debug("Datasource retrieved from the Request");
@@ -266,12 +266,12 @@ public class DataSourceFacade {
 		DataSource namedDataSource = null;
 		if (request != null) {
 			String nameInSession = DATASOURCE_PREFIX + id;
-			namedDataSource = (DataSource) request.getSession().getAttribute(nameInSession);
+			namedDataSource = (DataSource) request.getAttribute(nameInSession);
 			if (namedDataSource == null) {
 				if (PARAM_DB_TYPE_JNDI.equals(type)) {
 					namedDataSource = getFromContext(loc, false);
 					if (namedDataSource != null) {
-						request.getSession().setAttribute(nameInSession, namedDataSource);
+						request.setAttribute(nameInSession, namedDataSource);
 					} else {
 						logger.error(String.format(
 								"Named DataSource %s has not been injected in the request's session. Check the initial parameters.", nameInSession));
@@ -279,7 +279,7 @@ public class DataSourceFacade {
 				} else if (PARAM_DB_TYPE_DIRECT.equals(type)) {
 					namedDataSource = createDirectDataSource(properties);
 					if (namedDataSource != null) {
-						request.getSession().setAttribute(nameInSession, namedDataSource);
+						request.setAttribute(nameInSession, namedDataSource);
 					} else {
 						logger.error(String.format("Named DataSource %s cannot be created based on the configurations metadata", nameInSession));
 					}

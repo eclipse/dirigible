@@ -104,7 +104,7 @@ public class TestExecutionUpdater extends AbstractDataUpdater {
 	private void executeTestUpdate(String resourcePath) throws IOException {
 
 		LocalHttpServletRequest request = new LocalHttpServletRequest(new URL(URL_HTTP_LOCAL + resourcePath));
-		request.getSession().setAttribute(AbstractRegistryServlet.REPOSITORY_ATTRIBUTE, repository);
+		request.setAttribute(AbstractRegistryServlet.REPOSITORY_ATTRIBUTE, repository);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		LocalHttpServletResponse response = new LocalHttpServletResponse(out);
 

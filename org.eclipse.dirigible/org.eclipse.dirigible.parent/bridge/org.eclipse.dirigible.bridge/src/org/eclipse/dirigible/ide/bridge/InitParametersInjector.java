@@ -68,7 +68,7 @@ public class InitParametersInjector implements IInjector {
 				logger.debug(String.format("Initial Parameter per Request retreived from the Servlet Configuration: name=%s value=%s", parameterName,
 						parameterValue));
 			}
-			req.getSession().setAttribute(parameterName, parameterValue);
+			req.setAttribute(parameterName, parameterValue);
 		}
 	}
 
