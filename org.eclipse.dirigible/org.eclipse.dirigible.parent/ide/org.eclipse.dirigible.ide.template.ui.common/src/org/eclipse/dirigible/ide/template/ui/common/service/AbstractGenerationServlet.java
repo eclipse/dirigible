@@ -19,9 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationException;
-import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -32,10 +30,6 @@ public abstract class AbstractGenerationServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -9115022531455267478L;
 
-	private static final String COULD_NOT_INITIALIZE_REPOSITORY = "Could not initialize Repository"; //$NON-NLS-1$
-
-	private static final String COULD_NOT_INITIALIZE_WORKSPACE = "Could not initialize Workspace"; //$NON-NLS-1$
-
 	private static final Logger logger = Logger.getLogger(AbstractGenerationServlet.class);
 
 	@Override
@@ -44,23 +38,11 @@ public abstract class AbstractGenerationServlet extends HttpServlet {
 	}
 
 	protected IRepository getRepository(HttpServletRequest request) throws ServletException {
-		try {
-			final IRepository repository = RepositoryFacade.getInstance().getRepository(request);
-			return repository;
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-			throw new ServletException(COULD_NOT_INITIALIZE_REPOSITORY, ex);
-		}
+		return GenerationUtils.getRepository(request);
 	}
 
 	protected IWorkspace getWorkspace(HttpServletRequest request) throws ServletException {
-		try {
-			final IWorkspace workspace = WorkspaceLocator.getWorkspace(request);
-			return workspace;
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-			throw new ServletException(COULD_NOT_INITIALIZE_WORKSPACE, ex);
-		}
+		return GenerationUtils.getWorkspace(request);
 	}
 
 	protected abstract String doGeneration(String parameters, HttpServletRequest request) throws GenerationException;

@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
+import org.eclipse.dirigible.repository.ext.generation.IGenerationService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
@@ -115,7 +116,7 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	private IExtensionService extensionService;
 
 	/**
-	 * The indexing service facade
+	 * The Indexing Service facade
 	 */
 	private IIndexingService<?> indexingService;
 
@@ -125,19 +126,24 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	private IConnectivityService connectivityService;
 
 	/**
-	 * The messaging service facade
+	 * The Messaging Service facade
 	 */
 	private IMessagingService messagingService;
 
 	/**
-	 * The templating service facade
+	 * The Templating Service facade
 	 */
 	private ITemplatingService templatingService;
 
 	/**
-	 * The templating service facade
+	 * The Execution Service facade
 	 */
 	private IExecutionService executionService;
+
+	/**
+	 * The Generation Service facade
+	 */
+	private IGenerationService generationService;
 
 	/**
 	 * Utilities
@@ -527,6 +533,16 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	@Override
 	public DbUtils getDatabaseUtils(DataSource dataSource) {
 		return new DbUtils(dataSource);
+	}
+
+	@Override
+	public IGenerationService getGenerationService() {
+		return this.generationService;
+	}
+
+	@Override
+	public void setGenerationService(IGenerationService generationService) {
+		this.generationService = generationService;
 	}
 
 }

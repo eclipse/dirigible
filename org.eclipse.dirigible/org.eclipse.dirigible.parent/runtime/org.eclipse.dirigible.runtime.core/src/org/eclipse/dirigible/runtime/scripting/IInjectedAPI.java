@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
+import org.eclipse.dirigible.repository.ext.generation.IGenerationService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
@@ -173,6 +174,13 @@ public interface IInjectedAPI {
 	 * @return the Execution Service
 	 */
 	public IExecutionService getExecutionService();
+
+	/**
+	 * Getter for the Generation Service
+	 *
+	 * @return the Generation Service
+	 */
+	public IGenerationService getGenerationService();
 
 	/**
 	 * Getter for the IO Utilities

@@ -168,7 +168,7 @@ public class DatabaseGenerationWorker extends AbstractGenerationWorker {
 	}
 
 	@Override
-	public String enumerateTemplates(HttpServletRequest request) throws GenerationException {
+	public String getTemplates(HttpServletRequest request) throws GenerationException {
 		try {
 			TemplateType[] templates = TemplateTypesEnumerator.prepareTemplateTypes(DataStructureTemplateTypeDiscriminator.getTemplatesPath(),
 					DataStructureTemplateTypeDiscriminator.getCategory(), request);

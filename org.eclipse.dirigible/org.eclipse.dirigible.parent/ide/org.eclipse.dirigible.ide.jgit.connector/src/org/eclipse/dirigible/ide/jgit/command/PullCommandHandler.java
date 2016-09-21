@@ -107,10 +107,12 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 
 		List<IProject> publishedProjects = new ArrayList<IProject>();
 		GitProjectPropertyTest tester = new GitProjectPropertyTest();
+		boolean atLeastOne = false;
 		for (IProject selectedProject : projects) {
 			if (tester.test(selectedProject, null, null, true)) {
 				logger.debug(String.format("Start pulling %s project...", selectedProject.getName()));
-				pullProjectFromGitRepository(selectedProject);
+				boolean pulled = pullProjectFromGitRepository(selectedProject);
+				atLeastOne = atLeastOne ? atLeastOne : pulled;
 				logger.debug(String.format("Pull of the Project %s finished.", selectedProject.getName()));
 				publishedProjects.add(selectedProject);
 			} else {
@@ -121,13 +123,15 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 
 		refreshWorkspace();
 
-		publishProjects(publishedProjects.toArray(new IProject[] {}));
+		if (atLeastOne) {
+			publishProjects(publishedProjects.toArray(new IProject[] {}));
+		}
 
 		monitor.done();
 		return null;
 	}
 
-	void pullProjectFromGitRepository(final IProject selectedProject) {
+	boolean pullProjectFromGitRepository(final IProject selectedProject) {
 		final String errorMessage = String.format(WHILE_PULLING_PROJECT_ERROR_OCCURED, selectedProject.getName());
 		GitProjectProperties gitProperties = null;
 		try {
@@ -136,12 +140,12 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 				logger.debug(String.format("Git properties for the project %s: %s", selectedProject.getName(), gitProperties.toString()));
 			} else {
 				logger.debug(String.format("Git properties file for the project %s is null", selectedProject.getName()));
-				return;
+				return false;
 			}
 		} catch (IOException e) {
 			MessageDialog.openError(null, THIS_IS_NOT_A_GIT_PROJECT, errorMessage);
 			logger.error(errorMessage, e);
-			return;
+			return false;
 		}
 
 		String gitRepositoryURI = gitProperties.getURL();
@@ -256,6 +260,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 		} finally {
 			GitFileUtils.deleteDirectory(tempGitDirectory);
 		}
+		return true;
 	}
 
 	protected void publishProjects(final IProject[] projects) {

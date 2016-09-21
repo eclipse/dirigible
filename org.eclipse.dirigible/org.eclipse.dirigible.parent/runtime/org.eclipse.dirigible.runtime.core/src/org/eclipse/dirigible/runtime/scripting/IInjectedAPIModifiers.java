@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.extensions.IExtensionService;
+import org.eclipse.dirigible.repository.ext.generation.IGenerationService;
 import org.eclipse.dirigible.repository.ext.messaging.IMessagingService;
 import org.eclipse.dirigible.repository.ext.template.ITemplatingService;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
@@ -96,5 +97,7 @@ public interface IInjectedAPIModifiers {
 	public void setConsole(Console console);
 
 	public void setExecutionService(IExecutionService executionService);
+
+	public void setGenerationService(IGenerationService generationService);
 
 }

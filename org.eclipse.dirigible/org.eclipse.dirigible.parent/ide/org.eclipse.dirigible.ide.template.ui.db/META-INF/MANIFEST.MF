@@ -30,4 +30,5 @@ Import-Package: javax.servlet,
 Export-Package: org.eclipse.dirigible.ide.template.ui.db.command,
  org.eclipse.dirigible.ide.template.ui.db.service,
  org.eclipse.dirigible.ide.template.ui.db.wizard
+Service-Component: OSGi-INF/gen-data-structures.xml
 Bundle-ClassPath: .

@@ -56,7 +56,7 @@ public class ScriptingGenerationServlet extends AbstractGenerationServlet {
 	@Override
 	protected String enumerateTemplates(HttpServletRequest request) throws GenerationException {
 		try {
-			return new ScriptingGenerationWorker(getRepository(request), getWorkspace(request)).enumerateTemplates(request);
+			return new ScriptingGenerationWorker(getRepository(request), getWorkspace(request)).getTemplates(request);
 		} catch (ServletException e) {
 			throw new GenerationException(e);
 		}

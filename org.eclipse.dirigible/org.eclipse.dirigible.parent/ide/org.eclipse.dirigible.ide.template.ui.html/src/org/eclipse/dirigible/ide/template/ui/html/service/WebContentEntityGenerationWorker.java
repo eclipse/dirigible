@@ -173,7 +173,7 @@ public class WebContentEntityGenerationWorker extends AbstractGenerationWorker {
 	}
 
 	@Override
-	public String enumerateTemplates(HttpServletRequest request) throws GenerationException {
+	public String getTemplates(HttpServletRequest request) throws GenerationException {
 		try {
 			TemplateType[] templates = TemplateTypesEnumerator.prepareTemplateTypes(WebContentEntityTemplateTypeDiscriminator.getTemplatesPath(),
 					WebContentEntityTemplateTypeDiscriminator.getCategory(), request);

@@ -41,6 +41,7 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 // import org.eclipse.dirigible.repository.db.DBRepository;
 import org.eclipse.dirigible.repository.ext.extensions.ExtensionManager;
+import org.eclipse.dirigible.repository.ext.generation.IGenerationService;
 import org.eclipse.dirigible.repository.ext.messaging.MessageHub;
 import org.eclipse.dirigible.repository.ext.template.TemplatingEngine;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -96,8 +97,11 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#registerDefaultVariables(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, java.util.Map, org.eclipse.dirigible.repository.api.IRepository, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#registerDefaultVariables(javax.servlet.http.
+	 * HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, java.util.Map,
+	 * org.eclipse.dirigible.repository.api.IRepository, java.lang.Object)
 	 */
 	@Override
 	public void registerDefaultVariables(HttpServletRequest request, HttpServletResponse response, Object input, Map<Object, Object> executionContext,
@@ -178,6 +182,9 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 
 		// Executing Service
 		registerExecutingService(executionContext, scope, apiBuilder);
+
+		// Generation Service
+		registerGenerationService(executionContext, scope, apiBuilder);
 
 		// Utils
 
@@ -282,6 +289,16 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 			IExecutionService executionService = new ExecutionService();
 			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.EXECUTION_SERVICE, executionService);
 			apiBuilder.setExecutionService(executionService);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerGenerationService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		try {
+			IGenerationService generationService = new GenerationService();
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.GENERATION_SERVICE, generationService);
+			apiBuilder.setGenerationService(generationService);
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
 		}
@@ -426,8 +443,11 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		return dataSource;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#readResourceData(org.eclipse.dirigible.repository.api.IRepository, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#readResourceData(org.eclipse.dirigible.repository.api
+	 * .IRepository, java.lang.String)
 	 */
 	@Override
 	public byte[] readResourceData(IRepository repository, String repositoryPath) throws IOException {
@@ -440,8 +460,11 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		return resource.getContent();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#retrieveModule(org.eclipse.dirigible.repository.api.IRepository, java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#retrieveModule(org.eclipse.dirigible.repository.api.
+	 * IRepository, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public Module retrieveModule(IRepository repository, String module, String extension, String... rootPaths) throws IOException {
@@ -459,8 +482,11 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		throw new FileNotFoundException(logMsg);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#retrieveModulesByExtension(org.eclipse.dirigible.repository.api.IRepository, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#retrieveModulesByExtension(org.eclipse.dirigible.
+	 * repository.api.IRepository, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<Module> retrieveModulesByExtension(IRepository repository, String extension, String... rootPaths) throws IOException {
@@ -509,8 +535,11 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		return resourcePath;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#getCollection(org.eclipse.dirigible.repository.api.IRepository, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#getCollection(org.eclipse.dirigible.repository.api.
+	 * IRepository, java.lang.String)
 	 */
 	@Override
 	public ICollection getCollection(IRepository repository, String repositoryPath) throws IOException {
@@ -523,8 +552,11 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		return collection;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#getResource(org.eclipse.dirigible.repository.api.IRepository, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.runtime.scripting.IBaseScriptExecutor#getResource(org.eclipse.dirigible.repository.api.
+	 * IRepository, java.lang.String)
 	 */
 	@Override
 	public IResource getResource(IRepository repository, String repositoryPath) throws IOException {

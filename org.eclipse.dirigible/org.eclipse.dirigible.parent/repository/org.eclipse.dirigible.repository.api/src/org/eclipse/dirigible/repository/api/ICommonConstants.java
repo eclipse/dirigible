@@ -55,6 +55,19 @@ public interface ICommonConstants {
 		public static final String CONFIGURATION_SETTINGS = "ConfigurationSettings";
 	}
 
+	public interface TEMPLATE_TYPE {
+		public final static String DATA_STRUCTURES = "DataStructures"; //$NON-NLS-1$
+		public final static String INTEGRATION_SERVICES = "IntegrationServices"; //$NON-NLS-1$
+		public final static String SCRIPTING_SERVICES = "ScriptingServices"; //$NON-NLS-1$
+		public final static String TEST_CASES = "TestCases"; //$NON-NLS-1$
+		public final static String WEB_CONTENT = "WebContent"; //$NON-NLS-1$
+		public final static String WEB_CONTENT_FOR_ENTITY = "WebContentForEntity"; //$NON-NLS-1$
+		public final static String SECURITY_CONSTRAINTS = "SecurityConstraints"; //$NON-NLS-1$
+		public final static String WIKI_CONTENT = "WikiContent"; //$NON-NLS-1$
+		public final static String MOBILE_APPLICATIONS = "MobileApplications"; //$NON-NLS-1$
+		public final static String EXTENSION_DEFINITIONS = "ExtensionDefinitions"; //$NON-NLS-1$
+	}
+
 	public interface ENGINE_TYPE {
 		public static final String JAVASCRIPT = "javascript"; //$NON-NLS-1$
 		public static final String JAVA = "java"; //$NON-NLS-1$

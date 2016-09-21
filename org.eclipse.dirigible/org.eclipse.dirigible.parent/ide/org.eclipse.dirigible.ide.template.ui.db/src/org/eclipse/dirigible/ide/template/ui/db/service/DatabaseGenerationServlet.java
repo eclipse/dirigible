@@ -76,7 +76,7 @@ public class DatabaseGenerationServlet extends AbstractGenerationServlet {
 	@Override
 	protected String enumerateTemplates(HttpServletRequest request) throws GenerationException {
 		try {
-			return new DatabaseGenerationWorker(getRepository(request), getWorkspace(request)).enumerateTemplates(request);
+			return new DatabaseGenerationWorker(getRepository(request), getWorkspace(request)).getTemplates(request);
 		} catch (ServletException e) {
 			throw new GenerationException(e);
 		}

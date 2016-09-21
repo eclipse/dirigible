@@ -61,7 +61,7 @@ public class WebContentEntityGenerationServlet extends AbstractGenerationServlet
 	@Override
 	protected String enumerateTemplates(HttpServletRequest request) throws GenerationException {
 		try {
-			return new WebContentEntityGenerationWorker(getRepository(request), getWorkspace(request)).enumerateTemplates(request);
+			return new WebContentEntityGenerationWorker(getRepository(request), getWorkspace(request)).getTemplates(request);
 		} catch (ServletException e) {
 			throw new GenerationException(e);
 		}

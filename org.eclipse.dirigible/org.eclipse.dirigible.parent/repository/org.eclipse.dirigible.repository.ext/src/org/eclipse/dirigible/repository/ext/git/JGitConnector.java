@@ -143,8 +143,8 @@ public class JGitConnector {
 			cloneCommand.setBranch(branch);
 			cloneCommand.setDirectory(gitDirectory);
 			cloneCommand.call();
-		} catch (NullPointerException e) {
-			throw new TransportException(INVALID_USERNAME_AND_PASSWORD);
+		} catch (Exception e) {
+			throw new TransportException(e.getMessage());
 		}
 	}
 

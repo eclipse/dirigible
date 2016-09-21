@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="Generation of Web Content for Entity">
+   <service>
+      <provide interface="org.eclipse.dirigible.repository.ext.generation.IGenerationWorkerProvider"/>
+   </service>
+   <implementation class="org.eclipse.dirigible.ide.template.ui.html.service.WebContentForEntityGenerationWorkerProvider"/>
+</scr:component>

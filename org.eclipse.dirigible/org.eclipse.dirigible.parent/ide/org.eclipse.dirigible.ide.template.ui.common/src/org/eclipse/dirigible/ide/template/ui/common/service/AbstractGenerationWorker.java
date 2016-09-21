@@ -17,8 +17,9 @@ import org.eclipse.dirigible.ide.template.ui.common.GenerationException;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateParameterMetadata;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.ext.generation.IGenerationWorker;
 
-public abstract class AbstractGenerationWorker {
+public abstract class AbstractGenerationWorker implements IGenerationWorker {
 
 	protected static final String PARAM_PACKAGE_NAME = "packageName";
 	protected static final String PARAM_PROJECT_NAME = "projectName";
@@ -38,9 +39,11 @@ public abstract class AbstractGenerationWorker {
 		this.workspace = workspace;
 	}
 
-	public abstract String generate(String parameters, HttpServletRequest request) throws GenerationException;
+	@Override
+	public abstract String generate(String parameters, HttpServletRequest request) throws Exception;
 
-	public abstract String enumerateTemplates(HttpServletRequest request) throws GenerationException;
+	@Override
+	public abstract String getTemplates(HttpServletRequest request) throws Exception;
 
 	public IRepository getRepository() {
 		return this.repository;
