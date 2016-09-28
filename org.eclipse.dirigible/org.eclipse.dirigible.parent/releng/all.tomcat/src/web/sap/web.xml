@@ -186,7 +186,7 @@
 		<!-- Default Home Location -->
 		<init-param>
 			<param-name>homeLocation</param-name>
-			<param-value>services/ui/index.html</param-value>
+			<param-value>services/web/registry/</param-value>
 		</init-param>
 		
 		<!-- Run the present Tests on the server start -->
@@ -284,7 +284,7 @@
 			<web-resource-name>IDE Services</web-resource-name>
 			<url-pattern>/services/index.html</url-pattern>
 			<url-pattern>/services/workspace</url-pattern>
-			<url-pattern>/services/ui/index.html#/workspace</url-pattern>
+			<url-pattern>/services/web/registry/index.html#/workspace</url-pattern>
 			<url-pattern>/services/js-src/*</url-pattern>
 			<url-pattern>/services/generate-data-structure</url-pattern>
 			<url-pattern>/services/generate-scripting-service</url-pattern>
@@ -341,7 +341,7 @@
 			<url-pattern>/services/wiki-secured/*</url-pattern>
 			<url-pattern>/services/web/wiki-secured/*</url-pattern>
 			<url-pattern>/services/mobile-secured/*</url-pattern>
-			<url-pattern>/services/ui/index.html</url-pattern>
+			<url-pattern>/services/web/registry/*</url-pattern>
 			<url-pattern>/services/js-sandbox/*</url-pattern>
 			<url-pattern>/services/groovy-sandbox/*</url-pattern>
 			<url-pattern>/services/web-sandbox/*</url-pattern>
@@ -412,7 +412,7 @@
 		<web-resource-collection>
 			<web-resource-name>Anonymous Service</web-resource-name>
 			<url-pattern>/services/anonymous/*</url-pattern>
-			<url-pattern>/services/ui/anonymous.html/*</url-pattern>
+			<url-pattern>/services/web/registry/anonymous.html/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Anonymous</role-name>

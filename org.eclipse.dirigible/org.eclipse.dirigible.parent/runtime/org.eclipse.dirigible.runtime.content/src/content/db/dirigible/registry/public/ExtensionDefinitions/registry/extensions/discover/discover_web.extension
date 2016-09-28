@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/discover/discover_web",
+  "extension-point":"/registry/extension_points/discover",
+  "description":"Extension for 'Develop' in Registry UI "
+}

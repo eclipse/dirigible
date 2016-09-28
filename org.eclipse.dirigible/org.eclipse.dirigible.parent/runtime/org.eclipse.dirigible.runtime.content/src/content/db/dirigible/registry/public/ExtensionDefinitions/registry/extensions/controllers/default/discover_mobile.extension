@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/controllers/default/discover_mobile",
+  "extension-point":"/registry/extension_points/registry_app_controller",
+  "description":"Extension for 'Develop' in Registry UI "
+}

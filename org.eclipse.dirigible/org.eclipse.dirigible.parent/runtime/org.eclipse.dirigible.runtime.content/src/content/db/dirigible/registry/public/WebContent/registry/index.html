@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="registryApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="images/favicon.png">
+
+  <title>Eclipse Dirigible | Cloud Development Platform</title>
+
+  <link href="styles/default/bootstrap.min.css" rel="stylesheet">
+  <link href="styles/font-awesome.min.css" rel="stylesheet">
+
+  <!-- end -->
+  <!-- styles/app.css -->
+  <link href="styles/custom.css" rel="stylesheet">
+  <link href="styles/main.css" rel="stylesheet">
+  <!-- end -->
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+
+  <!-- scripts/jquery.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <!-- end -->
+
+  <!-- scripts/angular.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.17/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.17/angular-resource.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.17/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.17/angular-sanitize.min.js"></script>
+  <script src="components/angular-file-upload/angular-file-upload.min.js"></script>
+  <!-- end -->
+
+  <!-- scripts/app.js -->
+  <script src="../../js/registry/app.js"></script>
+
+  <script src="scripts/bootstrap-notify.min.js"></script>
+  <link rel="stylesheet" href="scripts/animate.min.css">
+  <!-- end -->
+  
+  <!-- jqplot -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.8/jquery.jqplot.min.css" />
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.8/jquery.jqplot.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.8/plugins/jqplot.cursor.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.8/plugins/jqplot.dateAxisRenderer.min.js"></script>
+  <!-- end -->
+
+  <link rel="stylesheet" type="text/css" href="orion/code_edit/built-codeEdit.css" />
+  <script src="orion/requirejs/require.min.js"></script>
+
+  <script>
+
+  	/** Themes from
+  		http://getbootstrap.com/
+  		http://bootswatch.com/
+  	*/
+	var themes = {
+	    "default": "styles/default/bootstrap.min.css",
+	    "cosmo" : "styles/cosmo/bootstrap.min.css",
+	    "cyborg" : "styles/cyborg/bootstrap.min.css",
+	    "flatly" : "styles/flatly/bootstrap.min.css",
+	    "journal" : "styles/journal/bootstrap.min.css",
+	    "readable" : "styles/readable/bootstrap.min.css",
+	    "simplex" : "styles/simplex/bootstrap.min.css",
+	    "yeti" : "styles/yeti/bootstrap.min.css"
+	};
+
+	$(function() {
+		$.get( "../../theme", function( data ) {
+			var themesheet = $('<link href="'+themes[data.trim()]+'" rel="stylesheet" />');
+			themesheet.appendTo('head');
+		    $('.theme-link').click(function(){
+		    	var themeName = $(this).attr('data-theme');
+		        var themeUrl = themes[$(this).attr('data-theme')];
+		        themesheet.attr('href',themeUrl);
+		        $.get( "../../theme?name=" + themeName);
+	    	});
+		});
+	});
+  </script>
+</head>
+<body>
+
+  <div id="wrap">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Eclipse Dirigible <sup>&trade;</sup></a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbar-collapse">
+
+        <ul id="main-menu" class="nav navbar-nav" ng-controller="MenuCtrl">
+          <li ng-class="{dropdown: !!menu.subMenu}" ng-repeat="menu in menus">
+            <a ng-hide="menu.subMenu" href="{{ menu.link }}">{{ menu.name }}</a>
+            <a ng-show="menu.subMenu" href="" class="dropdown-toggle" data-toggle="dropdown">{{ menu.name }}</a>
+            <ul class="dropdown-menu">
+              <li ng-repeat="subMenu in menu.subMenu">
+                <a href="{{ subMenu.link }}">{{ subMenu.name }}</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <ul id="main-menu" class="nav navbar-nav"></ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+          	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Themes <b class="caret"></b></a>
+          	<ul class="dropdown-menu">
+                <li><a href="#" data-theme="default" class="theme-link">Default</a></li>
+                <li><a href="#" data-theme="cosmo" class="theme-link">Cosmo</a></li>
+                <li><a href="#" data-theme="cyborg" class="theme-link">Cyborg</a></li>
+                <li><a href="#" data-theme="flatly" class="theme-link">Flatly</a></li>
+                <li><a href="#" data-theme="journal" class="theme-link">Journal</a></li>
+                <li><a href="#" data-theme="readable" class="theme-link">Readable</a></li>
+                <li><a href="#" data-theme="simplex" class="theme-link">Simplex</a></li>
+                <li><a href="#" data-theme="yeti" class="theme-link">Yeti</a></li>
+              </ul>
+          </li>	
+
+          <li class="hidden-xs" ng-controller="UserCtrl">
+            <a href=""><span class="fa fa-user"></span> {{ name }}&nbsp;</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+	<div class="container" ng-view></div>
+    
+    <!-- End page content --> </div>
+	<div class="footer">
+	  
+	  <div class="container">
+	    <hr>
+	    <p class="copyright text-muted small">Copyright &copy; 2010-2016 Eclipse Foundation, Inc. All Rights Reserved. Eclipse is a registered trademark of the Eclipse Foundation, Inc. Dirigible is a trademark of the Eclipse Foundation, Inc.</p>
+	  </div>
+	</div>	
+
+</body>
+</html>

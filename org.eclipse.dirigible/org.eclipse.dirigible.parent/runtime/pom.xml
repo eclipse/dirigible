@@ -54,7 +54,6 @@
 	</build>
 	<modules>
 		
-		<module>org.eclipse.dirigible.runtime.ui</module>
 		<module>org.eclipse.dirigible.runtime.core</module>
 		<module>org.eclipse.dirigible.runtime.core.test</module>
 		<module>org.eclipse.dirigible.runtime.javascript</module>

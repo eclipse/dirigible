@@ -1,0 +1,4 @@
+{
+  "extension-point":"/registry/menu_item",
+  "description":"Home controller extension point for AngularJS routes"
+}

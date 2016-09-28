@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/routes/develop_light_ide",
+  "extension-point":"/registry/extension_points/routes",
+  "description":"Extension for 'Develop' in Registry UI "
+}

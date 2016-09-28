@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/routes/monitor",
+  "extension-point":"/registry/extension_points/routes",
+  "description":"Extension for 'Develop' in Registry UI "
+}

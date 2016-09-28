@@ -185,7 +185,7 @@
 		<!-- Default Home Location -->
 		<init-param>
 			<param-name>homeLocation</param-name>
-			<param-value>services/ui/anonymous.html</param-value>
+			<param-value>services/web/registry/anonymous.html</param-value>
 		</init-param>
 		
 		<!-- Run the present Tests on the server start -->

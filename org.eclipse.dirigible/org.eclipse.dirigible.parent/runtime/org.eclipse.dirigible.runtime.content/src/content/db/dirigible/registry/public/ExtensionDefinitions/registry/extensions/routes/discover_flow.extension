@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/routes/discover_flow",
+  "extension-point":"/registry/extension_points/routes",
+  "description":"Extension for 'Develop' in Registry UI "
+}

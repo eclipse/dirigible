@@ -1,0 +1,85 @@
+<div class="row">
+	<div class="col-lg-12">
+    	<h1 class="page-header">Hit Statistics</h1>
+	</div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="templates/monitoring/hits/graphics.css" />
+<div>
+	<h2><span class="label label-default">Hits per URI</span></h2>
+	<div id="hits-per-uri"></div>
+</div>
+<script>
+$(document).ready(function(){
+	$.get( "../../acclog?hitsPerURI&series", function(series) {
+		var seriesArray = series;
+		$.get( "../../acclog?hitsPerURI", function(data) {
+			var seriesModel = [];
+			seriesArray.forEach(function(nextSeries) {
+				seriesModel.push({
+					label: nextSeries,
+					showMarker:false,
+					shadow: false,
+					lineWidth: 1.5
+				});
+			});
+			$.jqplot('hits-per-uri', data, {  
+				series: seriesModel,
+			    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Hits'}},
+			    legend: {show: true},
+			    cursor:{show:true, zoom:true, showTooltip:false},
+			    grid: {background: '#ffffff'},
+			    seriesColors: [ "#0000ff", "#00ff00", "#ff0000", "#ffff00", "#00ffff", "#ff00ff"]
+			});
+		});
+	});
+});
+</script>
+<hr>
+<div>
+	<h2><span class="label label-default">Hits per Project</span></h2>
+	<div id="hits-per-project"></div>
+</div>
+<script>
+$(document).ready(function(){
+	$.get( "../../acclog?hitsPerProject&series", function(series) {
+		var seriesArray = series;
+		$.get( "../../acclog?hitsPerProject", function(data) {
+			var seriesModel = [];
+			seriesArray.forEach(function(nextSeries) {
+				seriesModel.push({
+					label: nextSeries,
+					showMarker:false,
+					shadow: false,
+					lineWidth: 1.5
+				});
+			});
+			var plot = $.jqplot('hits-per-project', data, {  
+				series: seriesModel,
+			    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Hits'}},
+			    legend: {show: true},
+			    cursor:{show:true, zoom:true, showTooltip:false},
+			    grid: {background: '#ffffff'},
+			    seriesColors: [ "#0000ff", "#00ff00", "#ff0000", "#ffff00", "#00ffff", "#ff00ff"]
+			});
+		});
+	});
+});
+</script>
+<div>
+	<h2><span class="label label-default">Hits by URI</span></h2>
+	<div id="hits-by-uri"></div>
+</div>
+<script>
+$(document).ready(function(){
+	$.get( "../../acclog?hitsByURI", function(data) {
+		$.jqplot('hits-by-uri', data, {  
+		    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Hits'}},
+		    legend: {show: true},
+		    cursor:{show:true, zoom:true, showTooltip:false},
+		    grid: {background: '#ffffff'},
+		    seriesColors: [ "#0000ff", "#00ff00", "#ff0000", "#ffff00", "#00ffff", "#ff00ff"]
+		});
+	});
+});
+</script>

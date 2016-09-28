@@ -1,0 +1,99 @@
+<div class="row">
+	<div class="col-lg-12">
+    	<h1 class="page-header">Response Statistics</h1>
+	</div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="templates/monitoring/hits/graphics.css" />
+<div>
+	<h2><span class="label label-default">Response Time per URI</span></h2>
+	<div id="response-time-per-uri"></div>
+</div>
+<script>
+$(document).ready(function(){
+	$.get( "../../acclog?rtimePerURI&series", function(series) {
+		var seriesArray = series;
+		$.get( "../../acclog?rtimePerURI", function(data) {
+			var seriesModel = [];
+			seriesArray.forEach(function(nextSeries) {
+				seriesModel.push({
+					label: nextSeries,
+					showMarker:false,
+					shadow: false,
+					lineWidth: 1.5
+				});
+			});
+			$.jqplot('response-time-per-uri', data, {  
+				series: seriesModel,
+			    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Hits'}},
+			    legend: {show: true},
+			    cursor:{show:true, zoom:true, showTooltip:false},
+			    grid: {background: '#ffffff'},
+			    seriesColors: [ "#0000ff", "#00ff00", "#ff0000", "#ffff00", "#00ffff", "#ff00ff"]
+			});
+		});
+	});
+});
+</script>
+<hr>
+<div>
+	<h2><span class="label label-default">Response Time per Project</span></h2>
+	<div id="response-time-per-project"></div>
+</div>
+<script>
+$(document).ready(function(){
+	$.get( "../../acclog?rtimePerProject&series", function(series) {
+		var seriesArray = series;
+		$.get( "../../acclog?rtimePerProject", function(data) {
+			var seriesModel = [];
+			seriesArray.forEach(function(nextSeries) {
+				seriesModel.push({
+					label: nextSeries,
+					showMarker:false,
+					shadow: false,
+					lineWidth: 1.5
+				});
+			});
+			$.jqplot('response-time-per-project', data, {  
+				series: seriesModel,
+			    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Hits'}},
+			    legend: {show: true},
+			    cursor:{show:true, zoom:true, showTooltip:false},
+			    grid: {background: '#ffffff'},
+			    seriesColors: [ "#0000ff", "#00ff00", "#ff0000", "#ffff00", "#00ffff", "#ff00ff"]
+			});
+		});
+	});
+});
+</script>
+<hr>
+<div>
+	<h2><span class="label label-default">Response Time per Pattern</span></h2>
+	<div id="response-time-per-pattern"></div>
+</div>
+<script>
+$(document).ready(function(){
+	$.get( "../../acclog?rtimePerPattern&series", function(series) {
+		var seriesArray = series;
+		$.get( "../../acclog?rtimePerPattern", function(data) {
+			var seriesModel = [];
+			seriesArray.forEach(function(nextSeries) {
+				seriesModel.push({
+					label: nextSeries,
+					showMarker:false,
+					shadow: false,
+					lineWidth: 1.5
+				});
+			});
+			$.jqplot('response-time-per-pattern', data, {  
+				series: seriesModel,
+			    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Response Time'}},
+			    legend: {show: true},
+			    cursor:{show:true, zoom:true, showTooltip:false},
+			    grid: {background: '#ffffff'},
+			    seriesColors: [ "#0000ff", "#00ff00", "#ff0000", "#ffff00", "#00ffff", "#ff00ff"]
+			});
+		});
+	});
+});
+</script>
