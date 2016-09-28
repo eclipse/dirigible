@@ -116,7 +116,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 				logger.debug(String.format("Pull of the Project %s finished.", selectedProject.getName()));
 				publishedProjects.add(selectedProject);
 			} else {
-				logger.debug(String.format("Project % is local only", selectedProject));
+				logger.debug(String.format("Project %s is local only", selectedProject));
 				MessageDialog.openInformation(null, NO_VALID_PROJECT_IS_SELECTED_FOR_PULL, SELECT_CLONED);
 			}
 		}

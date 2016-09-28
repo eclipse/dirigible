@@ -116,7 +116,7 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 		try {
 			String user = CommonIDEParameters.getUserName();
 
-			logger.debug(String.format("Cloning repository %s, with username % for branch % in the directory % ...", repositoryURI, username,
+			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", repositoryURI, username,
 					repositoryBranch, gitDirectory.getAbsolutePath()));
 			JGitConnector.cloneRepository(gitDirectory, repositoryURI, username, password, repositoryBranch);
 			logger.debug(String.format("Cloning repository %s finished.", repositoryURI));
@@ -200,17 +200,17 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 							String projectRepositoryBranch = dependency.getBranch();
 							File projectGitDirectory = createGitDirectory(projectRepositoryURI);
 							logger.debug(
-									String.format("Start cloning of the project % from the repository %s and branch %s into the directory %s ...",
+									String.format("Start cloning of the project %s from the repository %s and branch %s into the directory %s ...",
 											projectGuid, projectRepositoryURI, projectRepositoryBranch, projectGitDirectory.getCanonicalPath()));
 							cloneProject(projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, clonedProjects); // assume
 						} else {
-							logger.debug(String.format("Project % has been already cloned, hence do pull instead.", projectGuid));
+							logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
 							pull.pullProjectFromGitRepository(alreadyClonedProject);
 						}
 						clonedProjects.add(projectGuid);
 
 					} else {
-						logger.debug(String.format("Project % has been already cloned during this session.", projectGuid));
+						logger.debug(String.format("Project %s has been already cloned during this session.", projectGuid));
 					}
 
 				} else {
