@@ -53,22 +53,22 @@ public class DualParameters {
 	public static void initSystemParameters() {
 		HttpServletRequest req = RWT.getRequest();
 		String parameterHC_HOST = System.getProperty(HC_HOST);
-		req.setAttribute(HC_HOST, parameterHC_HOST);
+		req.getSession().setAttribute(HC_HOST, parameterHC_HOST);
 		String parameterHC_REGION = System.getProperty(HC_REGION);
-		req.setAttribute(HC_REGION, parameterHC_REGION);
+		req.getSession().setAttribute(HC_REGION, parameterHC_REGION);
 		String parameterHC_ACCOUNT = System.getProperty(HC_ACCOUNT);
-		req.setAttribute(HC_ACCOUNT, parameterHC_ACCOUNT);
+		req.getSession().setAttribute(HC_ACCOUNT, parameterHC_ACCOUNT);
 		String parameterHC_APPLICATION = System.getProperty(HC_APPLICATION);
-		req.setAttribute(HC_APPLICATION, parameterHC_APPLICATION);
+		req.getSession().setAttribute(HC_APPLICATION, parameterHC_APPLICATION);
 		String parameterHC_APPLICATION_URL = System.getProperty(HC_APPLICATION_URL);
-		req.setAttribute(HC_APPLICATION_URL, parameterHC_APPLICATION_URL);
+		req.getSession().setAttribute(HC_APPLICATION_URL, parameterHC_APPLICATION_URL);
 		String parameterHC_LOCAL_HTTP_PORT = System.getProperty(HC_LOCAL_HTTP_PORT);
-		req.setAttribute(HC_LOCAL_HTTP_PORT, parameterHC_LOCAL_HTTP_PORT);
+		req.getSession().setAttribute(HC_LOCAL_HTTP_PORT, parameterHC_LOCAL_HTTP_PORT);
 	}
 
 	public static String get(String name) {
 		try {
-			String parameter = (String) RWT.getRequest().getAttribute(name);
+			String parameter = (String) RWT.getRequest().getSession().getAttribute(name);
 			return parameter;
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);
@@ -85,7 +85,7 @@ public class DualParameters {
 			if (request == null) {
 				request = RWT.getRequest();
 			}
-			Object parameter = request.getAttribute(name);
+			Object parameter = request.getSession().getAttribute(name);
 			return parameter;
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);
@@ -95,7 +95,7 @@ public class DualParameters {
 
 	public static void set(String name, String value) {
 		try {
-			RWT.getRequest().setAttribute(name, value);
+			RWT.getRequest().getSession().setAttribute(name, value);
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);
 		}
@@ -103,7 +103,7 @@ public class DualParameters {
 
 	public static void set(String name, Object value) {
 		try {
-			RWT.getRequest().setAttribute(name, value);
+			RWT.getRequest().getSession().setAttribute(name, value);
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);
 		}
@@ -111,7 +111,7 @@ public class DualParameters {
 
 	public static void setObject(String name, Object value) {
 		try {
-			RWT.getRequest().setAttribute(name, value);
+			RWT.getRequest().getSession().setAttribute(name, value);
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);
 		}
