@@ -31,7 +31,7 @@ public class ConnectivityInjector implements IInjector {
 	@Override
 	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		Object connectivityConfiguration = req.getAttribute(CONNECTIVITY_CONFIGURATION);
+		Object connectivityConfiguration = System.getProperties().get(CONNECTIVITY_CONFIGURATION);
 		if (connectivityConfiguration == null) {
 			try {
 				connectivityConfiguration = lookupConnectivityConfiguration();

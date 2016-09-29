@@ -155,6 +155,13 @@ public interface IInjectedAPI {
 	public IConnectivityService getConnectivityService();
 
 	/**
+	 * Getter for the Document Service
+	 *
+	 * @return the Document Service
+	 */
+	public IDocumentService getDocumentService();
+
+	/**
 	 * Getter for the Messaging Service
 	 *
 	 * @return the Messaging Service

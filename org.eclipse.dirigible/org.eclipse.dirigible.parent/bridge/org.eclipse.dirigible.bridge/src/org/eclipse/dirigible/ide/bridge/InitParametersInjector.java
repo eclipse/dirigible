@@ -32,6 +32,9 @@ public class InitParametersInjector implements IInjector {
 	public static final String INIT_PARAM_LOG_IN_SYSTEM_OUTPUT = "logInSystemOutput"; //$NON-NLS-1$
 	public static final String INIT_PARAM_JNDI_DEFAULT_DATASOURCE = "jndiDefaultDataSource"; //$NON-NLS-1$
 	public static final String INIT_PARAM_JNDI_CONNECTIVITY_CONFIGURATION = "jndiConnectivityService"; //$NON-NLS-1$
+	public static final String INIT_PARAM_JNDI_CMIS_CONFIGURATION = "jndiCmisService"; //$NON-NLS-1$
+	public static final String INIT_PARAM_JNDI_CMIS_CONFIGURATION_NAME = "jndiCmisServiceName"; //$NON-NLS-1$
+	public static final String INIT_PARAM_JNDI_CMIS_CONFIGURATION_KEY = "jndiCmisServiceKey"; //$NON-NLS-1$
 	public static final String INIT_PARAM_JNDI_MAIL_SESSION = "jndiMailService"; //$NON-NLS-1$
 	public static final String INIT_PARAM_JDBC_SET_AUTO_COMMIT = "jdbcAutoCommit"; //$NON-NLS-1$
 	public static final String INIT_PARAM_JDBC_MAX_CONNECTIONS_COUNT = "jdbcMaxConnectionsCount";

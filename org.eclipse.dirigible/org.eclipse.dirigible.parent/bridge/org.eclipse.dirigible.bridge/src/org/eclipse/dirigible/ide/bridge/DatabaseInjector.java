@@ -73,7 +73,7 @@ public class DatabaseInjector implements IInjector {
 	}
 
 	private void injectDefaultDataSourceOnRequest(HttpServletRequest req) {
-		DataSource dataSource = (DataSource) req.getAttribute(DATASOURCE_DEFAULT);
+		DataSource dataSource = (DataSource) System.getProperties().get(DATASOURCE_DEFAULT);
 		if (dataSource == null) {
 			try {
 
@@ -86,12 +86,14 @@ public class DatabaseInjector implements IInjector {
 				dataSource = lookupDataSource(key);
 				if (dataSource != null) {
 					req.setAttribute(DATASOURCE_DEFAULT, dataSource);
+					System.getProperties().put(DATASOURCE_DEFAULT, dataSource);
 					Connection connection = null;
 					try {
 						try {
 							connection = dataSource.getConnection();
 							DatabaseMetaData metaData = connection.getMetaData();
 							setMetaDataToSession(req, connection, metaData);
+							setMetaDataToEnv(connection);
 						} finally {
 							if (connection != null) {
 								connection.close();

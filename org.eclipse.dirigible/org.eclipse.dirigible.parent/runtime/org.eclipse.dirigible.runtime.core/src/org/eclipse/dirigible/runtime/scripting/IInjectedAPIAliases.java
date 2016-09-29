@@ -31,6 +31,7 @@ public interface IInjectedAPIAliases {
 	public static final String GENERATION_SERVICE = "generator"; //$NON-NLS-1$
 
 	public static final String CONNECTIVITY_SERVICE = "connectivity"; //$NON-NLS-1$
+	public static final String DOCUMENT_SERVICE = "cmis"; //$NON-NLS-1$
 
 	// Utils
 	public static final String IO_UTILS = "io"; //$NON-NLS-1$

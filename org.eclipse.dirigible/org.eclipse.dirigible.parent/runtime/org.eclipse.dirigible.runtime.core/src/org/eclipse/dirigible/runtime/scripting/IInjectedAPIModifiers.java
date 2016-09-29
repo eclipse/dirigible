@@ -64,6 +64,8 @@ public interface IInjectedAPIModifiers {
 
 	public void setConnectivityService(IConnectivityService connectivityService);
 
+	public void setDocumentService(IDocumentService documentService);
+
 	public void setMessagingService(IMessagingService messagingService);
 
 	public void setTemplatingService(ITemplatingService templatingService);

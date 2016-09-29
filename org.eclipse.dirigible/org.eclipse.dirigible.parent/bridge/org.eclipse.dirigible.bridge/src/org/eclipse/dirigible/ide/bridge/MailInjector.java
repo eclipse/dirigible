@@ -34,12 +34,13 @@ public class MailInjector implements IInjector {
 	@Override
 	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		Session session = (Session) req.getAttribute(DEFAULT_MAIL_SESSION);
+		Session session = (Session) System.getProperties().get(DEFAULT_MAIL_SESSION);
 		if (session == null) {
 			try {
 				session = lookupMailSession();
 				if (session != null) {
 					req.setAttribute(DEFAULT_MAIL_SESSION, session);
+					System.getProperties().put(DEFAULT_MAIL_SESSION, session);
 				} else {
 					logger.warn(InitParametersInjector.INIT_PARAM_JNDI_MAIL_SESSION + " not present");
 				}
@@ -48,10 +49,11 @@ public class MailInjector implements IInjector {
 			}
 		}
 
-		MailSenderProvided mailSenderProvided = (MailSenderProvided) req.getAttribute(PROVIDED_MAIL_SESSION);
+		MailSenderProvided mailSenderProvided = (MailSenderProvided) System.getProperties().get(PROVIDED_MAIL_SESSION);
 		if (mailSenderProvided == null) {
 			mailSenderProvided = new MailSenderProvided(session);
 			req.setAttribute(PROVIDED_MAIL_SESSION, mailSenderProvided);
+			System.getProperties().put(PROVIDED_MAIL_SESSION, mailSenderProvided);
 		}
 
 	}

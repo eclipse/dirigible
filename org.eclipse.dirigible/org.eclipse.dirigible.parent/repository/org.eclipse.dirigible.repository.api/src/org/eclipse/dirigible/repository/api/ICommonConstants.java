@@ -142,6 +142,8 @@ public interface ICommonConstants {
 
 	public static final String CONNECTIVITY_CONFIGURATION = "ConnectivityConfiguration"; //$NON-NLS-1$
 
+	public static final String CMIS_CONFIGURATION = "CmisSession"; //$NON-NLS-1$
+
 	public static final String PARAM_INSTANCE_NAME = "dirigibleInstanceName"; //$NON-NLS-1$
 
 	// Initi Parameters Names

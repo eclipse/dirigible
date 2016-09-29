@@ -125,6 +125,11 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 	}
 
 	@Override
+	public IDocumentService getDocumentService() {
+		return builder.getDocumentService();
+	}
+
+	@Override
 	public IOUtils getIOUtils() {
 		return builder.getIOUtils();
 	}

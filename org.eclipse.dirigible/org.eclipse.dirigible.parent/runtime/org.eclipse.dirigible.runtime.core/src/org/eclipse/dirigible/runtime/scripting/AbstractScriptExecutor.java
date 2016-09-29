@@ -51,6 +51,7 @@ import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ConnectivityConfigurationUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.DbUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.DocumentConfigurationUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExceptionUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ExecutionService;
 import org.eclipse.dirigible.runtime.scripting.utils.FileStorageUtils;
@@ -173,6 +174,9 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 
 		// Connectivity Configuration service
 		registerConnectivityService(executionContext, scope, apiBuilder);
+
+		// Document service
+		registerDocumentService(executionContext, scope, apiBuilder);
 
 		// Messaging Service
 		registerMessagingService(request, executionContext, scope, apiBuilder, dataSource);
@@ -320,6 +324,16 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 			ConnectivityConfigurationUtils configurationUtils = new ConnectivityConfigurationUtils();
 			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.CONNECTIVITY_SERVICE, configurationUtils);
 			apiBuilder.setConnectivityService(configurationUtils);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerDocumentService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		try {
+			DocumentConfigurationUtils documentUtils = new DocumentConfigurationUtils();
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DOCUMENT_SERVICE, documentUtils);
+			apiBuilder.setDocumentService(documentUtils);
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
 		}

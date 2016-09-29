@@ -57,7 +57,7 @@
 		<!-- Print logs in System output in addition to the standard logger. Workaround for some application servers -->
 		<init-param>
 			<param-name>logInSystemOutput</param-name>
-			<param-value>true</param-value>
+			<param-value>false</param-value>
 		</init-param>
 		
 		<!-- Type of the Default Database DataSource -->
@@ -100,6 +100,24 @@
 		<init-param>
 			<param-name>jndiMailService</param-name>
 			<param-value>java:comp/env/mail/SAPInternalNWCloudSession</param-value>
+		</init-param>
+		
+		<!-- JNDI key for the CMIS Service -->
+		<init-param>
+			<param-name>jndiCmisService</param-name>
+			<param-value>java:comp/env/EcmService</param-value>
+		</init-param>
+		
+		<!-- JNDI key for the CMIS Service - Name -->
+		<init-param>
+			<param-name>jndiCmisServiceName</param-name>
+			<param-value>cmis:dirigible</param-value>
+		</init-param>
+		
+		<!-- JNDI key for the CMIS Service - Key -->
+		<init-param>
+			<param-name>jndiCmisServiceKey</param-name>
+			<param-value>cmis:dirigible:key</param-value>
 		</init-param>
 		
 		<!-- Auto Commit property for JDBC connection --> 
@@ -186,7 +204,7 @@
 		<!-- Default Home Location -->
 		<init-param>
 			<param-name>homeLocation</param-name>
-			<param-value>services/web/registry/</param-value>
+			<param-value>services/ui/index.html</param-value>
 		</init-param>
 		
 		<!-- Run the present Tests on the server start -->
@@ -264,6 +282,11 @@
   	    <res-type>javax.mail.Session</res-type>
   	</resource-ref>
   	
+  	<resource-ref>
+   		<res-ref-name>EcmService</res-ref-name>
+   		<res-type>com.sap.ecm.api.EcmService</res-type>
+	</resource-ref>
+  	
   	<!-- Custom Data Source
   	<resource-ref>
 		<res-ref-name>jdbc/XXX</res-ref-name>
@@ -284,7 +307,7 @@
 			<web-resource-name>IDE Services</web-resource-name>
 			<url-pattern>/services/index.html</url-pattern>
 			<url-pattern>/services/workspace</url-pattern>
-			<url-pattern>/services/web/registry/index.html#/workspace</url-pattern>
+			<url-pattern>/services/ui/index.html#/workspace</url-pattern>
 			<url-pattern>/services/js-src/*</url-pattern>
 			<url-pattern>/services/generate-data-structure</url-pattern>
 			<url-pattern>/services/generate-scripting-service</url-pattern>
@@ -341,7 +364,7 @@
 			<url-pattern>/services/wiki-secured/*</url-pattern>
 			<url-pattern>/services/web/wiki-secured/*</url-pattern>
 			<url-pattern>/services/mobile-secured/*</url-pattern>
-			<url-pattern>/services/web/registry/*</url-pattern>
+			<url-pattern>/services/ui/index.html</url-pattern>
 			<url-pattern>/services/js-sandbox/*</url-pattern>
 			<url-pattern>/services/groovy-sandbox/*</url-pattern>
 			<url-pattern>/services/web-sandbox/*</url-pattern>
@@ -412,7 +435,7 @@
 		<web-resource-collection>
 			<web-resource-name>Anonymous Service</web-resource-name>
 			<url-pattern>/services/anonymous/*</url-pattern>
-			<url-pattern>/services/web/registry/anonymous.html/*</url-pattern>
+			<url-pattern>/services/ui/anonymous.html/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Anonymous</role-name>

@@ -126,6 +126,11 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	private IConnectivityService connectivityService;
 
 	/**
+	 * The document service injected by the platform
+	 */
+	private IDocumentService documentService;
+
+	/**
 	 * The Messaging Service facade
 	 */
 	private IMessagingService messagingService;
@@ -348,6 +353,16 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	@Override
 	public void setConnectivityService(IConnectivityService connectivityService) {
 		this.connectivityService = connectivityService;
+	}
+
+	@Override
+	public IDocumentService getDocumentService() {
+		return documentService;
+	}
+
+	@Override
+	public void setDocumentService(IDocumentService documentService) {
+		this.documentService = documentService;
 	}
 
 	@Override
