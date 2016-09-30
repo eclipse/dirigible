@@ -119,7 +119,13 @@ exports.readInput = function() {
 	return streams.read(input);
 };
 
+// deprecated
 exports.getInput = function() {
+	var input = new streams.InputStream($.getRequest().getInputStream());
+	return input;
+};
+
+exports.getInputStream = function() {
 	var input = new streams.InputStream($.getRequest().getInputStream());
 	return input;
 };

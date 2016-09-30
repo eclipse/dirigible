@@ -72,8 +72,8 @@ function createRequest(method, url, options) {
 }
 
 function addHeaders(httpRequest, headers) {
-	for (var nextHeader in headers) {
-		httpRequest.addHeader(nextHeader, headers[nextHeader]);
+	for (var i = 0; i < headers.length; ++i) {
+		httpRequest.addHeader(headers[i].name, headers[i].value);
 	}
 }
 

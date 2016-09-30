@@ -11,6 +11,8 @@
 /* globals $ javax */
 /* eslint-env node, dirigible */
 
+var streams = require("io/streams");
+
 exports.print = function(input) {
 	if (input === undefined) {
 		input = "";
@@ -23,6 +25,24 @@ exports.println = function(input) {
 		input = "";
 	}
 	return $.getResponse().getWriter().println(input + "");
+};
+
+exports.getOutputStream = function() {
+	var internalOutputStream = $.getResponse().getOutputStream();
+	return new streams.OutputStream(internalOutputStream);
+};
+
+exports.writeStream = function(inputStream) {
+	var internalOutputStream = $.getResponse().getOutputStream();
+	var outputStream = new streams.OutputStream(internalOutputStream);
+	streams.copy(inputStream, outputStream);	
+};
+
+exports.writeOutput = function(bytes) {
+	var internalOutputStream = $.getResponse().getOutputStream();
+	var outputStream = new streams.OutputStream(internalOutputStream);
+	var inputStream = streams.createByteArrayInputStream(bytes);
+	streams.copy(inputStream, outputStream);	
 };
 
 exports.flush = function() {
