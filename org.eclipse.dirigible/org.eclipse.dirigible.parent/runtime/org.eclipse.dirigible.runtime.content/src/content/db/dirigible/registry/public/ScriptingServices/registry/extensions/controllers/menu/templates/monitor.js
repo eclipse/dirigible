@@ -5,41 +5,47 @@ menuControllers.controller('MonitoringCtrl', ['$scope', '$http',
 	function($scope, $http) {
 		$scope.descriptionInfoItems = [];
 		$scope.monitoringData = [{
-			image: "wrench",
+			image: 'wrench',
 			color: 'blue',
-			path: "#/monitoring/manage",
-			title: "Configure",
-			description: "Configure locations"
+			path: '#/monitoring/manage',
+			title: 'Configure',
+			description: 'Configure locations'
 		}, {
-			image: "bar-chart",
+			image: 'bar-chart',
 			color: 'green',
-			path: "#/monitoring/hits",
-			title: "Hits",
-			description: "Hit count statistics"
+			path: '#/monitoring/hits',
+			title: 'Hits',
+			description: 'Hit count statistics'
 		}, {
-			image: "hourglass-o",
+			image: 'hourglass-o',
 			color: 'orange',
-			path: "#/monitoring/response",
-			title: "Response",
-			description: "Response time statistics"
+			path: '#/monitoring/response',
+			title: 'Response',
+			description: 'Response time statistics'
 		}, {
-			image: "line-chart",
+			image: 'line-chart',
 			color: 'red',
-			path: "#/monitoring/memory",
-			title: "Memory",
-			description: "Memory statistics"
+			path: '#/monitoring/memory',
+			title: 'Memory',
+			description: 'Memory statistics'
 		}, {
-			image: "ticket",
-			color: 'lila',
-			path: "#/monitoring/acclog",
-			title: "Access Log",
-			description: "Access Log"
-		}, {
-			image: "film",
+			image: 'ticket',
 			color: 'lblue',
-			path: "#/monitoring/logging",
-			title: "Applications Log",
-			description: "Applications Log"
+			path: '#/monitoring/acclog',
+			title: 'Access Log',
+			description: 'Access Log'
+		}, {
+			image: 'film',
+			color: 'lblue',
+			path: '#/monitoring/logging',
+			title: 'Applications Log',
+			description: 'Applications Log'
+		}, {  
+		   image:'search',
+		   color:'lblue',
+		   path:'#/monitoring/log-console',
+		   title:'Log Console',
+		   description:'Real-time Logs'
 		}];
 
 		loadDescriptions();
