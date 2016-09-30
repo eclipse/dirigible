@@ -27,3 +27,4 @@ Export-Package: org.eclipse.dirigible.ide.template.ui.html.command,
  org.eclipse.dirigible.ide.template.ui.html.wizard
 Service-Component: OSGi-INF/gen-web-content.xml, OSGi-INF/gen-web-content-for-entity.xml
 Bundle-ClassPath: .
+Bundle-ActivationPolicy: lazy

@@ -20,3 +20,4 @@ Import-Package: org.eclipse.dirigible.ide.common.io,
  org.eclipse.dirigible.ide.workspace.ui.shared,
  org.eclipse.core.resources
 Bundle-ClassPath: .
+Bundle-ActivationPolicy: lazy

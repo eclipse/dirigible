@@ -8,6 +8,10 @@ public class TemplateMetadata {
 
 	private String image;
 
+	private String type;
+
+	private String category;
+
 	private TemplateSourceMetadata[] sources;
 
 	private TemplateParameterMetadata[] parameters;
@@ -50,6 +54,22 @@ public class TemplateMetadata {
 
 	public void setParameters(TemplateParameterMetadata[] parameters) {
 		this.parameters = parameters;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	// public static void main(String[] args) {

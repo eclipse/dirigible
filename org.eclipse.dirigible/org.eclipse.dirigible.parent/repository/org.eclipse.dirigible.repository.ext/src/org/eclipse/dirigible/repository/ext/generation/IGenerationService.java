@@ -16,4 +16,6 @@ public interface IGenerationService {
 
 	public IGenerationWorker getGenerationWorker(String type, HttpServletRequest request);
 
+	public String[] getGenerationWorkerTypes();
+
 }

@@ -20,3 +20,4 @@ Import-Package: javax.servlet,
 Export-Package: org.eclipse.dirigible.ide.template.ui.mobile.command,
  org.eclipse.dirigible.ide.template.ui.mobile.wizard
 Bundle-ClassPath: .
+Bundle-ActivationPolicy: lazy
