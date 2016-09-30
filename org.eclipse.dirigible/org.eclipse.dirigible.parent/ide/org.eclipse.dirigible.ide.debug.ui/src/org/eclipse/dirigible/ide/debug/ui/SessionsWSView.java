@@ -26,7 +26,7 @@ public class SessionsWSView extends Viewer {
 
 	static {
 		DEBUG_SESSIONS_LOCATION = ((CommonIDEParameters.getRuntimeUrl() == null) || "".equals(CommonIDEParameters.getRuntimeUrl()))
-				? "/ui/debugws/debugsessions.html" : "/services/ui/debugws/debugsessions.html";
+				? "/web/registry/debugws/debugsessions.html" : "/services/web/registry/debugws/debugsessions.html";
 	}
 
 	private ExtendedBrowser browser = null;
