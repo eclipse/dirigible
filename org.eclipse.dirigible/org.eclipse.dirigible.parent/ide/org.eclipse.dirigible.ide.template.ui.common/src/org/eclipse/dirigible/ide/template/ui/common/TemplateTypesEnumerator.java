@@ -58,7 +58,9 @@ public class TemplateTypesEnumerator {
 		}
 		for (ICollection templateCollection : templatesRoot.getCollections()) {
 			try {
-				templateTypesList.add(TemplateType.createTemplateType(category, templateCollection.getPath(), repository));
+				String type = templateCollection.getName();
+				TemplateType templateType = TemplateType.createTemplateType(category, templateCollection.getPath(), type, repository);
+				templateTypesList.add(templateType);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}

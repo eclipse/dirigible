@@ -27,11 +27,11 @@ public class TemplateType {
 
 	private static Gson gson = new Gson();
 
-	public static TemplateType createTemplateType(String type, String location) throws IOException {
-		return createTemplateType(type, location, null);
+	public static TemplateType createTemplateType(String category, String location, String type) throws IOException {
+		return createTemplateType(category, location, type, null);
 	}
 
-	public static TemplateType createTemplateType(String type, String location, IRepository repository) throws IOException {
+	public static TemplateType createTemplateType(String category, String location, String type, IRepository repository) throws IOException {
 
 		if (repository == null) {
 			repository = RepositoryFacade.getInstance().getRepository();
@@ -47,6 +47,8 @@ public class TemplateType {
 		}
 
 		TemplateMetadata templateMetadata = gson.fromJson(new String(templateMetadataResource.getContent()), TemplateMetadata.class);
+		templateMetadata.setCategory(category);
+		templateMetadata.setType(type);
 
 		String image = templateRoot.getResource(templateMetadata.getImage()).getPath();
 		templateMetadata.setImage(image);

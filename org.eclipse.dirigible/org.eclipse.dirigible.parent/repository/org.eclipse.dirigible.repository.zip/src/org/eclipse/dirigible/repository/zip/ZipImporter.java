@@ -19,11 +19,14 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
  * Utility class which imports all the content from a given zip
  */
 public class ZipImporter {
+
+	private static final Logger logger = Logger.getLogger(ZipImporter.class);
 
 	/**
 	 * Import all the content from a given zip to the target repository instance
@@ -105,24 +108,25 @@ public class ZipImporter {
 
 				ByteArrayOutputStream output = new ByteArrayOutputStream();
 				try {
-
 					IOUtils.copy(zipInputStream, output);
-
-					if (output.toByteArray().length > 0) {
-						// TODO filter for binary extensions
-						String mimeType = null;
-						String extension = ContentTypeHelper.getExtension(entry.getName());
-						if ((mimeType = ContentTypeHelper.getContentType(extension)) != null) {
-							repository.createResource(outpath, output.toByteArray(), ContentTypeHelper.isBinary(mimeType), mimeType, override);
+					try {
+						if (output.toByteArray().length > 0) {
+							// TODO filter for binary extensions
+							String mimeType = null;
+							String extension = ContentTypeHelper.getExtension(entry.getName());
+							if ((mimeType = ContentTypeHelper.getContentType(extension)) != null) {
+								repository.createResource(outpath, output.toByteArray(), ContentTypeHelper.isBinary(mimeType), mimeType, override);
+							} else {
+								repository.createResource(outpath, output.toByteArray());
+							}
 						} else {
-							repository.createResource(outpath, output.toByteArray());
+							if (outpath.endsWith("/")) {
+								repository.createCollection(outpath);
+							}
 						}
-					} else {
-						if (outpath.endsWith(Messages.getString("ZipImporter.1"))) { //$NON-NLS-1$
-							repository.createCollection(outpath);
-						}
+					} catch (Exception e) {
+						logger.error(String.format("Error importing %s", outpath), e);
 					}
-
 				} finally {
 					output.close();
 				}
@@ -130,6 +134,7 @@ public class ZipImporter {
 		} finally {
 			zipInputStream.close();
 		}
+
 	}
 
 	private static String getEntryName(ZipEntry entry, String parentFolder, boolean excludeParentFolder) {
