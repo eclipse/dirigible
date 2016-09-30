@@ -25,7 +25,7 @@ public class TerminalView extends ViewPart {
 
 	static {
 		TERMINAL_LOCATION = ((CommonIDEParameters.getRuntimeUrl() == null) || "".equals(CommonIDEParameters.getRuntimeUrl()))
-				? "/ui/templates/monitoring/logging/terminal.html" : "/services/ui/templates/monitoring/logging/terminal.html";
+				? "/web/registry/templates/monitoring/logging/terminal.html" : "/services/web/registry/templates/monitoring/logging/terminal.html";
 	}
 
 	private ExtendedBrowser browser = null;
