@@ -3,7 +3,7 @@
 	"description":"${id} Description",
 	"trigger":"message",
 	"type":"javascript",
-	"module":"/${projectName}/message_listener_callback.js",
+	"module":"/${packageName}/${fileNameNoExtension}_message_listener_callback.js",
 	"params":{
 		"client": "client1",
 		"topic": "topic1"

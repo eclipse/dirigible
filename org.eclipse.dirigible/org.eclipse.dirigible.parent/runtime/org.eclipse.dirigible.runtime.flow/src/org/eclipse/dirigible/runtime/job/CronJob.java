@@ -60,7 +60,11 @@ public class CronJob implements org.quartz.Job {
 		logger.debug(String.format("Job processing name: %s, type: %s, module: %s ...", instName, jobType, jobModule));
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();
 		Object inputOutput = null;
-		inputOutput = executeByEngineType(null, null, jobModule, executionContext, job, inputOutput);
+		try {
+			inputOutput = executeByEngineType(null, null, jobModule, executionContext, job, inputOutput);
+		} catch (Throwable t) {
+			logger.error(String.format("Error in job name: %s, type: %s, module: %s.", job.getName(), jobType, jobModule), t);
+		}
 		logger.debug(String.format("Job name: %s, type: %s, module: %s finished.", job.getName(), jobType, jobModule));
 	}
 

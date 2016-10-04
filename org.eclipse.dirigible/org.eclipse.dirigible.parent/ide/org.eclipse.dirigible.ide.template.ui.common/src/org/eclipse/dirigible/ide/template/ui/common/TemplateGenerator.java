@@ -208,4 +208,19 @@ public abstract class TemplateGenerator {
 	public VelocityGenerator getVelocityGenerator() {
 		return velocityGenerator;
 	}
+
+	public String constructPackageName() {
+		StringBuilder result = new StringBuilder();
+		IPath location = new Path(getModel().getTargetContainer());
+		if (location.segmentCount() > 2) {
+			for (int i = 2; i < location.segmentCount(); i++) {
+				result.append(location.segment(i) + ICommonConstants.SEPARATOR);
+			}
+			result.delete(result.length() - ICommonConstants.SEPARATOR.length(), result.length());
+		} else {
+			result.append(location.segment(0));
+		}
+		String constructedPackage = result.toString().replace(ICommonConstants.SEPARATOR, ".");
+		return constructedPackage;
+	}
 }

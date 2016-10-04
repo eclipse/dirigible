@@ -15,11 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
-import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -96,21 +93,6 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 		}
 
 		return null;
-	}
-
-	public String constructPackageName() {
-		StringBuilder result = new StringBuilder();
-		IPath location = new Path(model.getTargetContainer());
-		if (location.segmentCount() > 2) {
-			for (int i = 2; i < location.segmentCount(); i++) {
-				result.append(location.segment(i) + ICommonConstants.SEPARATOR);
-			}
-			result.delete(result.length() - ICommonConstants.SEPARATOR.length(), result.length());
-		} else {
-			result.append(location.segment(0));
-		}
-		String constructedPackage = result.toString().replace(ICommonConstants.SEPARATOR, ".");
-		return constructedPackage;
 	}
 
 	private TableColumn[] getTableColumnsWithoutKeys(TableColumn[] tableColumns) {

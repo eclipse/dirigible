@@ -2,18 +2,16 @@
 	"name": "Message Listener calling JavaScript Service",
  	"description": "Setting-up message listener which call a JavaScript based scripting service, when event occurs",
  	"image": "message-listener.png",
- 	"sources": [{
- 		"name":"message-listener.listener", 
- 		"action":"generate"
- 	}, {
- 		"name": "ScriptingServices/message_listener_callback.js",
- 		"action": "copy"
- 	}, {
- 		"name": "ScriptingServices/message_listener_trigger.js",
- 		"action":"copy"
- 	}], 
- 	"parameters": [{
- 		"name":"name",
-   		"required":"true"
-   	}]
+ 	"sources": [
+ 		{"name":"message-listener.listener","action":"generate"}, 
+ 		{"name": "ScriptingServices/message_listener_callback.js","action": "copy", "rename":"%s_message_listener_callback"},
+ 		{"name": "ScriptingServices/message_listener_trigger.js","action":"copy", "rename":"%s_message_listener_trigger"}], 
+ 	"parameters": [
+   {"name":"templateType", "required":"true"},
+   {"name":"fileNameNoExtension", "required":"true"},
+   {"name":"projectName", "required":"true"},
+   {"name":"packageName", "required":"true"},
+   {"name":"id", "required":"true"},
+   {"name":"endpointAddress", "required":"true"}
+   ]
 }

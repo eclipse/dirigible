@@ -33,6 +33,12 @@ public class IntegrationServiceTemplateGenerator extends TemplateGenerator {
 		parameters.put("endpointAddress", model.getEndpointAddress()); //$NON-NLS-1$
 		// parameters.put("parameterName", model.getParameterName()); //$NON-NLS-1$
 		parameters.put("projectName", model.getProjectName()); //$NON-NLS-1$
+		if (model.getPackageName() != null) {
+			parameters.put("packageName", model.getPackageName()); //$NON-NLS-1$
+		} else {
+			parameters.put("packageName", constructPackageName()); //$NON-NLS-1$
+		}
+		parameters.put("fileName", model.getFileName()); //$NON-NLS-1$
 		String fileNameNoExtension = model.getFileNameNoExtension();
 		parameters.put("fileNameNoExtension", fileNameNoExtension); //$NON-NLS-1$
 		String fileNameNoExtensionTitle = fileNameNoExtension;

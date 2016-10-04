@@ -7,7 +7,7 @@
    "steps":[  
       {  
          "type":"javascript",
-         "module":"/${projectName}/${endpointAddress}.js",
+         "module":"/${packageName}/${fileNameNoExtension}.js",
          "name":"1",
          "properties":{
             "step1Key1":"step1Value1",

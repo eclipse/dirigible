@@ -3,5 +3,5 @@
   "description":"${id} Description",
   "expression":"0/5 * * * * ?",
   "type":"javascript",
-  "module":"/${projectName}/${endpointAddress}.js"
+  "module":"/${packageName}/${fileNameNoExtension}.js"
 }

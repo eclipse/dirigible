@@ -6,7 +6,11 @@
    {"name":"ScriptingServices/javascript-async.js", "action":"copy", "rename":"%s"}
    ],
  "parameters":[
-   {"name":"name",
-   "required":"true"}
+   {"name":"templateType", "required":"true"},
+   {"name":"fileNameNoExtension", "required":"true"},
+   {"name":"projectName", "required":"true"},
+   {"name":"packageName", "required":"true"},
+   {"name":"id", "required":"true"},
+   {"name":"endpointAddress", "required":"true"}
    ]
 }
