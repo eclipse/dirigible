@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible.releng</groupId>
 		<artifactId>org.eclipse.dirigible.releng.parent</artifactId>
-		<version>2.5.160804</version>
+		<version>2.6.161005</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
