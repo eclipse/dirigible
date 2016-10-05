@@ -15,7 +15,7 @@ import org.eclipse.dirigible.runtime.filter.AbstractRegistrySecureFilter;
 
 public class MobileRegistrySecureFilter extends AbstractRegistrySecureFilter {
 
-	private static final String MOBILE_SECURED_MAPPING = "/services/mobile-secured"; //$NON-NLS-1$
+	private static final String MOBILE_SECURED_MAPPING = "/mobile-secured"; //$NON-NLS-1$
 
 	@Override
 	protected String getSecuredMapping() {

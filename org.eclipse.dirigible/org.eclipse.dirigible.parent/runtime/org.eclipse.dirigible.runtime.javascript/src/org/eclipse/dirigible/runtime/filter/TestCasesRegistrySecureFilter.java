@@ -12,7 +12,7 @@ package org.eclipse.dirigible.runtime.filter;
 
 public class TestCasesRegistrySecureFilter extends AbstractRegistrySecureFilter {
 
-	private static final String WEB_SECURED_MAPPING = "/services/test-secured"; //$NON-NLS-1$
+	private static final String WEB_SECURED_MAPPING = "/test-secured"; //$NON-NLS-1$
 
 	@Override
 	protected String getSecuredMapping() {

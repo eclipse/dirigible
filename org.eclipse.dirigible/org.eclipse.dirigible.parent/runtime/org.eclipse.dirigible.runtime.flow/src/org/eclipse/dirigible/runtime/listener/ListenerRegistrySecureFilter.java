@@ -14,7 +14,7 @@ import org.eclipse.dirigible.runtime.filter.AbstractRegistrySecureFilter;
 
 public class ListenerRegistrySecureFilter extends AbstractRegistrySecureFilter {
 
-	private static final String LISTENER_SECURED_MAPPING = "/services/listener-secured"; //$NON-NLS-1$
+	private static final String LISTENER_SECURED_MAPPING = "/listener-secured"; //$NON-NLS-1$
 
 	@Override
 	protected String getSecuredMapping() {

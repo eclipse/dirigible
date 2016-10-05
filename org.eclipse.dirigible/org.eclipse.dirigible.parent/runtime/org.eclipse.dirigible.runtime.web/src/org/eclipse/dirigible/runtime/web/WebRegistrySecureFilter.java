@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.web;
@@ -15,7 +14,7 @@ import org.eclipse.dirigible.runtime.filter.AbstractRegistrySecureFilter;
 
 public class WebRegistrySecureFilter extends AbstractRegistrySecureFilter {
 
-	private static final String WEB_SECURED_MAPPING = "/services/web-secured"; //$NON-NLS-1$
+	private static final String WEB_SECURED_MAPPING = "/web-secured"; //$NON-NLS-1$
 
 	@Override
 	protected String getSecuredMapping() {
