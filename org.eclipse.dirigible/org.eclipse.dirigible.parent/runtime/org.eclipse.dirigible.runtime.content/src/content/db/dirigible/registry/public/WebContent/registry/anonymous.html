@@ -16,7 +16,7 @@
 					</p>
 					<div class="account-wall">
 						<img class="logo-img" src="images/dirigible_logo.svg" alt="">
-						<form class="form-tryout" name="tryoutForm" method="GET" action="../anonymous">
+						<form class="form-tryout" name="tryoutForm" method="GET" action="../../anonymous">
 						<input id="username" type="text" name="user" class="form-control" placeholder="Username" required autofocus pattern="[A-Za-z0-9_]{3,64}">
 						<input id="redirect" type="hidden" name="redirect" value="true">
 						<input id="git" type="hidden" name="git" value="">
@@ -30,7 +30,7 @@
 		<script type="text/javascript">
 			var parameters = {};
 			$(function() {
-				$.get( "../anonymous", function( data ) {
+				$.get( "../../anonymous", function( data ) {
 					$('#username').val(data);
 				});
 				

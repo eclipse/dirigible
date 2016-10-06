@@ -65,7 +65,7 @@ public class AnonymousUserServlet extends HttpServlet {
 			if ((git != null) && !"".equals(git.trim())) {
 				resp.sendRedirect("index.html?perspective=workspace&git=" + git);
 			} else {
-				resp.sendRedirect("ui/index.html");
+				resp.sendRedirect("web/registry/index.html");
 			}
 		} else {
 			resp.getWriter().println(cookieValue);
