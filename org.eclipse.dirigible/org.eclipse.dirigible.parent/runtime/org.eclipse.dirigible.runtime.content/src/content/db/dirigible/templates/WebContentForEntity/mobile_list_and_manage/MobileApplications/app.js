@@ -8,11 +8,25 @@ var primaryKey;
 primaryKey = "${tableColumn.getName()}";
 #end 
 #end
-var getRequest = new tabris.XMLHttpRequest();
-getRequest.onreadystatechange = function() {
-  if (getRequest.readyState === getRequest.DONE) {
-	  var response = JSON.parse(getRequest.responseText);
-	  entities = response;
+
+function makeRequest(url, method, callback, body){
+	var request = new tabris.XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(request.readyState === request.DONE){
+			callback(JSON.parse(request.responseText));
+		}
+	}
+	request.open(method, url);
+	if(body !== null){
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify(body));
+	}else{
+		request.send();
+	}
+};
+
+makeRequest(service, "GET", function(response){
+	 entities = response;
 	  	
 	 var maxElements = Object.keys(entities[0]).length;
 	
@@ -40,14 +54,9 @@ getRequest.onreadystatechange = function() {
 	                }).on("select", function() {
 						var entity = cell.get("item");
 						var url = service + "?"+primaryKey+"="+ entity[primaryKey];
-	                  	var deleteRequest = new tabris.XMLHttpRequest();
-	                  	deleteRequest.open("DELETE", url);
-	                  	deleteRequest.onreadystatechange = function(){
-	                  		if (deleteRequest.readyState === deleteRequest.DONE) {
-								cell.parent().remove(cell.get("itemIndex"));
-							}
-          				}
-          				deleteRequest.send();
+						makeRequest(url, "DELETE", function(){
+							cell.parent().remove(cell.get("itemIndex"));
+						});
 	                }).appendTo(confirmationComposite);
 	                new tabris.Button({
 	                    layoutData: {centerY:0, left:confirmationComposite.children().last()},
@@ -93,26 +102,20 @@ getRequest.onreadystatechange = function() {
 	  }).on("select", function(target, value){
 	    createEditPage(value).open();
 	  }).on("refresh", function(view){
-	  	var refreshRequest = new tabris.XMLHttpRequest();
-	  	refreshRequest.open("GET", service);
-	  	refreshRequest.send();
-		refreshRequest.onreadystatechange = function() {
-			if (refreshRequest.readyState === refreshRequest.DONE) {
-	 			var response = JSON.parse(refreshRequest.responseText);
-	 			entities = response;
-	 			 view.set({
+	  	makeRequest(service, "GET", function(response){
+	  		entities = response;
+ 			 view.set({
 			      items: entities,
 			      refreshIndicator: false,
 			      refreshMessage: ""
-			    });
- 			}
-		}
+		    });
+	  	});
 	  });
 	}
 	
 	function createEditPage(entity){
 	  var page = new tabris.Page({
-	    title: "Editing " + entity[Object.keys(entity)[primaryKey]]
+	    title: "Editing " + entity[primaryKey]
 	  });
 	  
 	  var scrollView = new tabris.ScrollView({left: 0, top: 0, right: 0, bottom: 0}).appendTo(page);
@@ -144,17 +147,10 @@ getRequest.onreadystatechange = function() {
 	      var key = scrollView.find("#inputLabel"+i).get("text");
 	      var value = scrollView.find("#input"+i).get("text");
 	      entity[key]=value;
-	    }
-	    
-	    var updateRequest = new tabris.XMLHttpRequest();
-	    updateRequest.open("PUT", service);
-	    updateRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-		updateRequest.send(JSON.stringify(entity));
-		updateRequest.onreadystatechange = function(){
-			if (updateRequest.readyState === updateRequest.DONE) {
-		    	mainPage.open();
-    		}
-		}
+    	}
+	    makeRequest(service, "PUT", function(){
+	    	mainPage.open();
+	    }, entity);
 	  }).appendTo(scrollView);
 	  return page;
 	}
@@ -171,7 +167,4 @@ getRequest.onreadystatechange = function() {
 	
 	var mainPage = createItemsPage("${pageTitle}");
 	mainPage.open();
-  }
-};
-getRequest.open("GET", service);
-getRequest.send();
+});
