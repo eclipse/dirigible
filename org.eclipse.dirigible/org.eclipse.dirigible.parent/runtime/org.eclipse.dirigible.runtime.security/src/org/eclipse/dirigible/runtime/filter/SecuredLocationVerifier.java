@@ -12,12 +12,15 @@ package org.eclipse.dirigible.runtime.filter;
 
 import javax.servlet.ServletException;
 
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.security.SecuritySynchronizer;
 
 /**
  * Utility class that checks whether the location is secured via the *.access file
  */
 public class SecuredLocationVerifier {
+
+	private static final Logger logger = Logger.getLogger(SecuredLocationVerifier.class);
 
 	/**
 	 * Checks whether the location is secured via the *.access file or not
@@ -29,9 +32,11 @@ public class SecuredLocationVerifier {
 	public static boolean isLocationSecured(String location) throws ServletException {
 		for (String securedLocation : SecuritySynchronizer.getSecuredLocations()) {
 			if (location.startsWith(securedLocation)) {
+				logger.debug(String.format("Location: %s is secured because of definition: %s", location, securedLocation));
 				return true;
 			}
 		}
+		logger.debug(String.format("Location: %s is NOT secured", location));
 		return false;
 	}
 

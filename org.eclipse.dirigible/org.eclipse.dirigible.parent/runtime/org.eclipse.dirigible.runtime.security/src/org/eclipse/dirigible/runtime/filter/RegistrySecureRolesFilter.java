@@ -44,7 +44,9 @@ public class RegistrySecureRolesFilter extends AbstractRegistrySecureFilter {
 		String location = PathUtils.extractPath(request);
 		if (isLocationSecured(location)) {
 			if (!isUserInRole(req, location)) {
+				logger.debug(String.format("Location: %s is forbidden", location));
 				((HttpServletResponse) res).sendError(HttpServletResponse.SC_FORBIDDEN, YOU_DO_NOT_HAVE_REQUIRED_ROLE_S_TO_ACCESS_THIS_LOCATION);
+				return;
 			}
 		}
 		chain.doFilter(req, res);
@@ -62,11 +64,15 @@ public class RegistrySecureRolesFilter extends AbstractRegistrySecureFilter {
 					List<String> roles = securityManager.getRolesForLocation(location);
 					for (String role : roles) {
 						if (request.isUserInRole(role)) {
+							logger.debug(String.format("Allowed access to the location: %s for the user: %s who has the role: %s", location,
+									principal.getName(), role));
 							return true;
 						}
 					}
+					logger.warn(String.format("Access to the location: %s for the user: %s NOT allowed", location, principal.getName()));
 				}
 			}
+
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage(), e);
 		} catch (SQLException e) {
