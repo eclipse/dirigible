@@ -134,6 +134,18 @@ public class ScriptingGenerationWorker extends AbstractGenerationWorker {
 				JsonElement columnElement = iter.next();
 				if (columnElement.isJsonObject()) {
 					JsonObject columnObject = columnElement.getAsJsonObject();
+					if (columnObject.get(PARAM_COLUMN_NAME) == null) {
+						throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, PARAM_COLUMN_NAME));
+					}
+					if (columnObject.get(PARAM_COLUMN_TYPE) == null) {
+						throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, PARAM_COLUMN_TYPE));
+					}
+					if (columnObject.get(PARAM_COLUMN_PRIMARY_KEY) == null) {
+						throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, PARAM_COLUMN_PRIMARY_KEY));
+					}
+					if (columnObject.get(PARAM_COLUMN_VISIBLE) == null) {
+						throw new GenerationException(String.format(MANDATORY_PARAMETER_S_HAS_NOT_BEEN_PROVIDED, PARAM_COLUMN_VISIBLE));
+					}
 					TableColumn columnDefinition = new TableColumn(columnObject.get(PARAM_COLUMN_NAME).getAsString(),
 							DBSupportedTypesMap.getTypeNumber(columnObject.get(PARAM_COLUMN_TYPE).getAsString()),
 							columnObject.get(PARAM_COLUMN_PRIMARY_KEY).getAsBoolean(), columnObject.get(PARAM_COLUMN_VISIBLE).getAsBoolean());
