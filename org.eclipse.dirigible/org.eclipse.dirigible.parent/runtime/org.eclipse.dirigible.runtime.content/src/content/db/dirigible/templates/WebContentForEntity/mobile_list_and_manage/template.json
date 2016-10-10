@@ -3,7 +3,7 @@
  "image":"ui-for-entity-list.png",
  "sources":[
    {"name":"MobileApplications/app.js", "action":"generate"},
-   {"name":"MobileApplications/package.json", "action":"copy"},
+   {"name":"MobileApplications/package.json", "action":"generate"},
    {"name":"MobileApplications/node_modules/polyfill.min.js", "action": "copy"}, 
    {"name":"MobileApplications/node_modules/tabris/package.json", "action": "copy"}, 
    {"name":"MobileApplications/node_modules/tabris/tabris.min.js", "action": "copy"}

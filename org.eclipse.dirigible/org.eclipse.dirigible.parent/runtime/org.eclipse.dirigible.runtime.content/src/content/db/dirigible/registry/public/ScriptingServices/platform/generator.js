@@ -11,6 +11,17 @@
 /* globals $ java org */
 /* eslint-env node, dirigible */
 
+exports.generate = function(template, parameters) {
+	var temlatingService = $.getTemplatingService();
+	var internalParameters = $.getTemplatingService().createParameters();
+	for (var parameter in parameters) {
+		internalParameters.put(parameter, parameters[parameter]);		
+		var generated = temlatingService.generate(template, internalParameters, "generation_service_api");
+		return generated;
+	}
+};
+
+
 exports.getWorker = function(category) {
 	var internalWorker = $.getGenerationService().getGenerationWorker(category, $.getRequest());
 	return new Worker(internalWorker);
