@@ -74,13 +74,13 @@ public abstract class GenerationModel {
 
 	public String getTargetLocation() {
 		// return targetLocation;
-		if (this.targetContainer == null) {
-			return null;
-		}
-		if (getProjectPackageName() == null) {
-			return this.targetContainer;
-		}
-		return this.targetContainer + IRepository.SEPARATOR + getProjectPackageName();
+		// if (this.targetContainer == null) {
+		// return null;
+		// }
+		// if (getProjectPackageName() == null) {
+		return this.targetContainer;
+		// }
+		// return this.targetContainer + IRepository.SEPARATOR + getProjectPackageName();
 	}
 
 	// public void setTargetLocation(String targetLocation) {
@@ -310,5 +310,27 @@ public abstract class GenerationModel {
 		content = content.replace("\\.", "."); //$NON-NLS-1$ //$NON-NLS-2$
 		byte[] result = content.getBytes();
 		return result;
+	}
+
+	public String constructPackageName() {
+		if (getProjectPackageName() != null) {
+			IPath packagePath = new Path(getProjectPackageName());
+			return packagePath.toString();
+		}
+		return genPackageName();
+	}
+
+	protected String genPackageName() {
+		StringBuilder result = new StringBuilder();
+		IPath location = new Path(getTargetContainer());
+		if (location.segmentCount() > 2) {
+			for (int i = 2; i < location.segmentCount(); i++) {
+				result.append(location.segment(i) + ICommonConstants.SEPARATOR);
+			}
+			result.delete(result.length() - ICommonConstants.SEPARATOR.length(), result.length());
+		} else {
+			result.append(location.segment(0));
+		}
+		return result.toString();
 	}
 }

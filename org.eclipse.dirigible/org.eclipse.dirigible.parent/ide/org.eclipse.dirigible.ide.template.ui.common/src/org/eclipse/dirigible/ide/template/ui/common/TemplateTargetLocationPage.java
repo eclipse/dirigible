@@ -18,6 +18,7 @@ import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.viewer.ReservedFolderFilter;
 import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceContainerFilter;
 import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceViewer;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -56,6 +57,8 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 
 	private Text fileNameText;
 
+	private String targetLocation = null;
+
 	protected TemplateTargetLocationPage(String pageName) {
 		super(pageName);
 	}
@@ -84,7 +87,7 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				String targetLocation = null;
+
 				IStructuredSelection selection = (IStructuredSelection) projectViewer.getSelectionProvider().getSelection();
 				if ((selection.getFirstElement() == null) || !(selection.getFirstElement() instanceof IContainer)) {
 					setErrorMessage(SELECT_THE_LOCATION_OF_THE_GENERATED_PAGE);
@@ -94,24 +97,27 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 					// #177
 					targetLocation = container.getFullPath().toString();
 
-					// getModel().setTargetLocation(targetLocation);
-					if (getModel().getTargetContainer() == null) {
-						getModel().setTargetContainer(targetLocation);
-					}
-					if (getModel().getProjectPackageName() == null) {
-						if (container.getProjectRelativePath().segmentCount() <= 1) {
-							if (getModel().getProjectName() != null) {
-								getModel().setProjectPackageName(getModel().getProjectName());
-							} else {
-								if (WorkspaceLocator.getWorkspace().getRoot().getProjects().length == 0) {
-									setErrorMessage(THERE_IS_NO_SELECTED_PROJECT);
-								} else {
-									getModel().setProjectPackageName(WorkspaceLocator.getWorkspace().getRoot().getProjects()[0].getName());
-								}
-							}
+					getModel().setTargetContainer(targetLocation);
+
+					if (container.getProjectRelativePath().segmentCount() <= 1) {
+						// project is selected
+						if (getModel().getProjectName() != null) {
+							// set package name equal to project name - default
+							getModel().setProjectPackageName(getModel().getProjectName());
 						} else {
-							packageNameText.setEnabled(false);
+							// get first project as a target
+							if (WorkspaceLocator.getWorkspace().getRoot().getProjects().length == 0) {
+								setErrorMessage(THERE_IS_NO_SELECTED_PROJECT);
+							} else {
+								getModel().setProjectPackageName(WorkspaceLocator.getWorkspace().getRoot().getProjects()[0].getName());
+							}
 						}
+					} else {
+						// a sub-folder of project is selected
+						String packageName = getModel().genPackageName();
+						getModel().setProjectPackageName(packageName);
+						packageNameText.setText(packageName);
+						packageNameText.setEnabled(false);
 					}
 				}
 				checkPageStatus();
@@ -222,6 +228,9 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 				} else {
 					setErrorMessage(null);
 					getModel().setProjectPackageName(packageNameText.getText());
+					if (!targetLocation.endsWith(packageNameText.getText())) {
+						getModel().setTargetContainer(targetLocation + IRepository.SEPARATOR + packageNameText.getText());
+					}
 				}
 				checkPageStatus();
 			}
