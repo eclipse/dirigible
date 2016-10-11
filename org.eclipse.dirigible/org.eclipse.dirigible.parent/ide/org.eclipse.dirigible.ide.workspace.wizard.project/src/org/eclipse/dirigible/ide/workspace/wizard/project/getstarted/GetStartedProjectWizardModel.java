@@ -133,8 +133,11 @@ public class GetStartedProjectWizardModel {
 		// create default folders
 		List<IPublisher> publishers = PublishManager.getPublishers();
 		for (IPublisher publisher : publishers) {
-			IFolder folder = project.getFolder(publisher.getFolderType());
-			folder.create(true, false, null);
+			String folderType = publisher.getFolderType();
+			if (!folderType.equals(IRepository.SEPARATOR)) {
+				IFolder folder = project.getFolder(folderType);
+				folder.create(true, false, null);
+			}
 		}
 
 		ProjectCreatorEnhancer.enhance(project);
