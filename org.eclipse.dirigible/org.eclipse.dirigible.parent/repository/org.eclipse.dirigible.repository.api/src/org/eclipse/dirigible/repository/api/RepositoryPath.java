@@ -141,6 +141,7 @@ public class RepositoryPath {
 
 	public static String normalizePath(String path, String name) {
 		String normalizedPath = null;
+		name = normalizeName(name);
 		if (path != null) {
 			if (path.endsWith(IRepository.SEPARATOR)) {
 				normalizedPath = path + name;
@@ -149,5 +150,9 @@ public class RepositoryPath {
 			}
 		}
 		return normalizedPath;
+	}
+
+	public static String normalizeName(String name) {
+		return name.replaceAll("[^A-Za-z0-9_]", "_");
 	}
 }
