@@ -12,25 +12,23 @@ package org.eclipse.dirigible.repository.local;
 
 import java.util.Map;
 
-import javax.sql.DataSource;
-
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryProvider;
 
 public class LocalRepositoryProvider implements IRepositoryProvider {
 
-	private static final String PARAM_DATASOURCE = "datasource";
 	private static final String PARAM_USER = "user";
-	// private static final String PARAM_RECREATE = "recreate";
-
 	public static final String TYPE = "local";
 
 	@Override
 	public IRepository createRepository(Map<String, Object> parameters) {
-		DataSource dataSource = (DataSource) parameters.get(PARAM_DATASOURCE);
+
 		String user = (String) parameters.get(PARAM_USER);
-		// Boolean forceRecreate = (Boolean) parameters.get(PARAM_RECREATE);
-		return new LocalRepository(dataSource, user);
+		String rootFolder = (String) parameters.get(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER);
+		boolean absolute = Boolean.parseBoolean((String) parameters.get(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE));
+
+		return new LocalRepository(user, rootFolder, absolute);
 	}
 
 	@Override

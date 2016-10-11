@@ -44,6 +44,8 @@ import org.eclipse.dirigible.repository.zip.ZipImporter;
  */
 public class FileSystemRepository implements IRepository {
 
+	private static final String CURRENT_DIR = ".";
+	private static final String DIRIGIBLE_LOCAL = "dirigible_local";
 	public static final String PATH_SEGMENT_ROOT = "root";
 	public static final String PATH_SEGMENT_VERSIONS = "versions";
 	public static final String PATH_SEGMENT_INFO = "info";
@@ -74,7 +76,7 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException
 	 */
 	public FileSystemRepository(String user) throws LocalBaseException {
-		this(user, null);
+		this(user, null, false);
 	}
 
 	/**
@@ -85,18 +87,34 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException
 	 */
 	public FileSystemRepository(String user, String rootFolder) throws LocalBaseException {
+		this(user, rootFolder, false);
+	}
 
-		String root = System.getProperty("user.dir");
-
-		if (rootFolder != null) {
-			root += File.separator;
-			root += rootFolder;
+	/**
+	 * Constructor with root folder parameter
+	 *
+	 * @param user
+	 * @param rootFolder
+	 * @param absolute
+	 * @throws LocalBaseException
+	 */
+	public FileSystemRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
+		String root;
+		if (absolute) {
+			if (rootFolder != null) {
+				root = rootFolder;
+			} else {
+				throw new LocalBaseException("Creating a FileSystemRepository with absolute path flag, but the path itself is null");
+			}
+		} else {
+			root = System.getProperty("user.dir");
+			if ((rootFolder != null) && !rootFolder.equals(CURRENT_DIR)) {
+				root += File.separator;
+				root += rootFolder;
+			}
 		}
-
 		this.user = user;
 		this.repositoryDAO = new LocalRepositoryDAO(this);
-		// this.importer = new LocalZipImporter(this);
-		// this.exporter = new LocalZipExporter(this);
 
 		initializeRepository(root);
 	}
@@ -114,7 +132,7 @@ public class FileSystemRepository implements IRepository {
 	}
 
 	protected String getRepositoryRootFolder() {
-		return "dirigible_local";
+		return DIRIGIBLE_LOCAL;
 	}
 
 	private void initializeRepository(String rootFolder) {

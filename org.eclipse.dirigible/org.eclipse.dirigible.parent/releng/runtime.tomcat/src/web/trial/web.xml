@@ -116,6 +116,16 @@
 			<param-value>local</param-value>
 		</init-param>
 		
+		<init-param>
+			<param-name>localRepositoryRootFolder</param-name>
+			<param-value>.</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>localRepositoryRootFolderIsAbsolute</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		
 		<!-- Mail Service Built-in --> 
 		<init-param>
 			<param-name>mailSender</param-name>

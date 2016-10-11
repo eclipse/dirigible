@@ -53,6 +53,9 @@ public class InitParametersInjector implements IInjector {
 	public static final String INIT_PARAM_AUTO_ACTIVATE_ENABLED = "autoActivateEnabled"; //$NON-NLS-1$
 	public static final String INIT_PARAM_AUTO_PUBLISH_ENABLED = "autoPublishEnabled"; //$NON-NLS-1$
 	public static final String INIT_PARAM_ENABLE_SANDBOX = "enableSandbox"; //$NON-NLS-1$
+	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER = "localRepositoryRootFolder"; //$NON-NLS-1$
+	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "localRepositoryRootFolderIsAbsolute"; //$NON-NLS-1$
+
 	// ---
 
 	@Override

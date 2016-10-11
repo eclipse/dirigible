@@ -10,16 +10,12 @@
 
 package org.eclipse.dirigible.repository.local;
 
-import javax.sql.DataSource;
-
 import org.eclipse.dirigible.repository.api.IRepository;
 
 /**
  * The File System based Local Repository implementation of {@link IRepository}
  */
 public class LocalRepository extends FileSystemRepository {
-
-	// private static Logger logger = Logger.getLogger(LocalRepository.class);
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -28,30 +24,30 @@ public class LocalRepository extends FileSystemRepository {
 	 * @throws LocalBaseException
 	 */
 	public LocalRepository(String user) throws LocalBaseException {
-		this(null, user);
-	}
-
-	/**
-	 * Constructor with default root folder - user.dir
-	 *
-	 * @param dataSource
-	 * @param user
-	 * @throws LocalBaseException
-	 */
-	public LocalRepository(DataSource dataSource, String user) throws LocalBaseException {
-		this(dataSource, user, null);
+		this(user, null);
 	}
 
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param dataSource
 	 * @param user
 	 * @param rootFolder
 	 * @throws LocalBaseException
 	 */
-	public LocalRepository(DataSource dataSource, String user, String rootFolder) throws LocalBaseException {
+	public LocalRepository(String user, String rootFolder) throws LocalBaseException {
 		super(user, rootFolder);
+	}
+
+	/**
+	 * Constructor with root folder parameter
+	 *
+	 * @param user
+	 * @param rootFolder
+	 * @param absolute
+	 * @throws LocalBaseException
+	 */
+	public LocalRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
+		super(user, rootFolder, absolute);
 	}
 
 }
