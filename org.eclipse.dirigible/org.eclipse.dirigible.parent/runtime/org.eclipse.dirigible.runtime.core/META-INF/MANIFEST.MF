@@ -24,7 +24,9 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.logging,
  org.json,
  org.mozilla.javascript,
- org.eclipse.dirigible.repository.datasource
+ org.eclipse.dirigible.repository.datasource,
+ org.eclipse.dirigible.repository.local,
+ org.eclipse.dirigible.runtime.cmis
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.mail,
  javax.mail.event,

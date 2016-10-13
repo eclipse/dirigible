@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.runtime.cmis;
 
+import java.io.InputStream;
+
 public class ObjectFactory {
 
 	private CmisSession session;
@@ -12,8 +14,8 @@ public class ObjectFactory {
 	/**
 	 * Returns a newly created ContentStream object
 	 */
-	public ContentStream createContentStream() {
-		return new ContentStream(this);
+	public ContentStream createContentStream(String filename, long length, String mimetype, InputStream inputStream) {
+		return new ContentStream(this.session, filename, length, mimetype, inputStream);
 	}
 
 }

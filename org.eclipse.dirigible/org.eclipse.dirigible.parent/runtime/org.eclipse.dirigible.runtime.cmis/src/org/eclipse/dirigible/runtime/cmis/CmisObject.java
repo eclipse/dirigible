@@ -16,6 +16,7 @@ public class CmisObject {
 	public CmisObject(CmisSession session, String path) throws IOException {
 		super();
 		this.session = session;
+		path = sanitize(path);
 		IRepository repository = ((IRepository) session.getCmisRepository().getInternalObject());
 		if (repository.hasCollection(path)) {
 			this.internalEntity = repository.getCollection(path);
@@ -24,6 +25,10 @@ public class CmisObject {
 			this.internalEntity = repository.getResource(path);
 			this.typeCollection = false;
 		}
+	}
+
+	protected String sanitize(String path) {
+		return path.replace("\\", "");
 	}
 
 	public IEntity getInternalEntity() {
@@ -53,8 +58,8 @@ public class CmisObject {
 	 *
 	 * @return
 	 */
-	public String getType() {
-		return this.isCollection() ? CmisConstants.OBJECT_TYPE_FOLDER : CmisConstants.OBJECT_TYPE_DOCUMENT;
+	public ObjectType getType() {
+		return this.isCollection() ? ObjectType.FOLDER : ObjectType.DOCUMENT;
 	}
 
 	protected boolean isCollection() {

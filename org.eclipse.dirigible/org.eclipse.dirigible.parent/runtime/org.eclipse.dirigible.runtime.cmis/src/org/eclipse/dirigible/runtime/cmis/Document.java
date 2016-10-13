@@ -21,6 +21,14 @@ public class Document extends CmisObject {
 		this.internalResource = internalResource;
 	}
 
+	public Document(CmisSession session, String id) throws IOException {
+		super(session, id);
+		id = sanitize(id);
+		this.session = session;
+		this.repository = (IRepository) session.getCmisRepository().getInternalObject();
+		this.internalResource = this.repository.getResource(id);
+	}
+
 	public IResource getInternalFolder() {
 		return internalResource;
 	}

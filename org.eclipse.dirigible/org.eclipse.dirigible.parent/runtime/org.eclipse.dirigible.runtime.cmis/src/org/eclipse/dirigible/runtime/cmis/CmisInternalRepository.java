@@ -26,8 +26,9 @@ public class CmisInternalRepository implements CmisRepository {
 		return new CmisSession(this);
 	}
 
-	public IRepository getInternalRepository() {
-		return internalRepository;
+	@Override
+	public Object getInternalObject() {
+		return this.internalRepository;
 	}
 
 }

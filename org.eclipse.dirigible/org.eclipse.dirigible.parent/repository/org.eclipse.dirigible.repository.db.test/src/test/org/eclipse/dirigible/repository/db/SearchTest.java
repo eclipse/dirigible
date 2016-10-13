@@ -101,6 +101,10 @@ public class SearchTest {
 	@Test
 	public void testSearchPath() {
 		try {
+			if (repository.hasCollection("/testCollectionSearch")) { //$NON-NLS-1$
+				repository.removeCollection("/testCollectionSearch"); //$NON-NLS-1$
+			}
+
 			IResource resource = repository.createResource("/testCollectionSearch/param1.txt", "param1".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
@@ -139,6 +143,10 @@ public class SearchTest {
 	@Test
 	public void testSearchText() {
 		try {
+			if (repository.hasCollection("/testCollectionSearch")) { //$NON-NLS-1$
+				repository.removeCollection("/testCollectionSearch"); //$NON-NLS-1$
+			}
+
 			IResource resource = repository.createResource("/testCollectionSearch/abc1.txt", "abc def".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
@@ -156,7 +164,8 @@ public class SearchTest {
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
 
-			List<IEntity> entities = repository.searchText("abc", false); //$NON-NLS-1$
+			List<IEntity> entities = null;
+			entities = repository.searchText("abc", false); //$NON-NLS-1$
 			assertEquals(3, entities.size());
 
 			entities = repository.searchText("jkl", false); //$NON-NLS-1$

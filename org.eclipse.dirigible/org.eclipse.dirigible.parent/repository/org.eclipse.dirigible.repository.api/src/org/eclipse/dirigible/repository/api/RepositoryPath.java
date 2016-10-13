@@ -141,7 +141,6 @@ public class RepositoryPath {
 
 	public static String normalizePath(String path, String name) {
 		String normalizedPath = null;
-		name = normalizeName(name);
 		if (path != null) {
 			if (path.endsWith(IRepository.SEPARATOR)) {
 				normalizedPath = path + name;

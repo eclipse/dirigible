@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.runtime.cmis;
 
+import java.io.IOException;
+
 public class CmisSession {
 
 	private CmisRepository cmisRepository;
@@ -35,8 +37,9 @@ public class CmisSession {
 	 * Returns the root folder of this repository
 	 *
 	 * @return
+	 * @throws IOException
 	 */
-	public Folder getRootFolder() {
+	public Folder getRootFolder() throws IOException {
 		return new Folder(this);
 	}
 
@@ -44,18 +47,26 @@ public class CmisSession {
 	 * Returns a CMIS Object by name
 	 *
 	 * @return
+	 * @throws IOException
 	 */
-	public CmisObject getObject(String id) {
-		return new CmisObject(this);
+	public CmisObject getObject(String id) throws IOException {
+		CmisObject cmisObject = new CmisObject(this, id);
+		if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType().getId())) {
+			return new Folder(this, id);
+		} else if (CmisConstants.OBJECT_TYPE_DOCUMENT.equals(cmisObject.getType().getId())) {
+			return new Document(this, id);
+		}
+		return cmisObject;
 	}
 
 	/**
 	 * Returns a CMIS Object by path
 	 *
 	 * @return
+	 * @throws IOException
 	 */
-	public CmisObject getObjectByPath(String path) {
-		return new CmisObject(this);
+	public CmisObject getObjectByPath(String path) throws IOException {
+		return getObject(path);
 	}
 
 }
