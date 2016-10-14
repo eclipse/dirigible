@@ -1,0 +1,56 @@
+{  
+    "name":"JavaScript Extended Entity Service on Table",
+    "description":"JavaScript Extended RESTful entity service on a relational database table",
+    "image":"database-crud.png",
+    "sources": [{
+        "name":"database-crud.js",
+        "action":"generate"
+    }, {
+        "name":"database-crud-dao.js",
+        "action":"generate",
+        "rename":"%sDao"
+    }, {
+        "name":"database-crud-dao-extension-utils.js",
+        "action":"generate",
+        "rename":"%sDaoExtensionUtils"
+    }, {
+        "name":"database-crud-extension.js",
+        "action":"generate",
+        "rename":"%sExtension"
+    }, {
+        "name":"database-crud.entity",
+        "action":"generate",
+        "rename":"%s"
+    }, {
+        "name":"database-crud.swagger",
+        "action":"generate",
+        "rename":"%s"
+    }, {
+        "name":"ExtensionDefinitions/database-crud-hooks.extensionpoint",
+        "action":"generate",
+        "rename":"%s_database_crud_hooks"
+    }, {
+        "name":"ExtensionDefinitions/database-crud-hooks.extension",
+        "action":"generate",
+        "rename":"%s_database_crud_hooks"
+    }],
+    "parameters": [{
+        "name":"templateType",
+        "required":"true"
+    }, {
+        "name":"fileName",
+        "required":"true"
+    }, {
+        "name":"projectName",
+        "required":"true"
+    }, {
+        "name":"packageName",
+        "required":"true"
+    }, {  
+        "name":"tableName",
+        "required":"true"
+    }, {  
+        "name":"columns",
+        "required":"true"
+    }]
+}

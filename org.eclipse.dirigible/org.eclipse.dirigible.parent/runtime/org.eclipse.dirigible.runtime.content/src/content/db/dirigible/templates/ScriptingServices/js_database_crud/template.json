@@ -1,0 +1,40 @@
+{  
+   "name":"JavaScript Entity Service on Table",
+   "description":"JavaScript RESTful entity service on a relational database table",
+   "image":"database-crud.png",
+   "sources":[{  
+         "name":"database-crud.js",
+         "action":"generate"
+      }, {  
+         "name":"database-crud-dao.js",
+         "action":"generate",
+         "rename":"%sDao"
+      }, {  
+         "name":"database-crud.entity",
+         "action":"generate",
+         "rename":"%s"
+      }, {  
+         "name":"database-crud.swagger",
+         "action":"generate",
+         "rename":"%s"
+    }],
+   "parameters":[{  
+         "name":"templateType",
+         "required":"true"
+      }, {  
+         "name":"fileName",
+         "required":"true"
+      }, {  
+         "name":"projectName",
+         "required":"true"
+      }, {  
+         "name":"packageName",
+         "required":"true"
+      }, {  
+         "name":"tableName",
+         "required":"true"
+      }, {  
+         "name":"columns",
+         "required":"true"
+    }]
+}

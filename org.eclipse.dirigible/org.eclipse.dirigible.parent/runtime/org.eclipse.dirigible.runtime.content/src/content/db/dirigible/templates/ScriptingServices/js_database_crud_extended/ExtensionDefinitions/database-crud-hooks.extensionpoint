@@ -1,0 +1,4 @@
+{
+  "extension-point":"/${packageName}/${fileNameNoExtension}_database_crud_hooks",
+  "description":"Database CRUD hooks for the '/ScriptingServices/${packageName}/${fileNameNoExtension}.js' service, managing the '${tableName}' table"
+}

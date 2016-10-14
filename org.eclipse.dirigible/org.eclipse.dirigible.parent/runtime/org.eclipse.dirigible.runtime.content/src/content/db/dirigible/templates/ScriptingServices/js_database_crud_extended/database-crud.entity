@@ -1,0 +1,15 @@
+{
+  "entityName":"${entityName}",
+  "tableName":"${tableName}",
+  "tableType":"${tableType}",
+  "serviceName":"${fileName}",
+  "libraryName":"${fileNameNoExtension}_lib.js",
+  "specification":"${fileNameNoExtension}.swagger",
+  "getEnabled":"true",
+  "postEnabled":"true",
+  "putEnabled":"true",
+  "deleteEnabled":"true",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
+}
