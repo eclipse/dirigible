@@ -50,6 +50,9 @@ public class CmisObject {
 	 * @return
 	 */
 	public String getName() {
+		if ("".equals(this.getInternalEntity().getName())) {
+			return "root";
+		}
 		return this.getInternalEntity().getName();
 	}
 

@@ -9,5 +9,5 @@ exports.getItem = function() {
 };
 
 exports.getOrder = function() {
-	return 3;
+	return 2;
 };

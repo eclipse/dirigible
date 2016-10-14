@@ -12,5 +12,5 @@ exports.getItem = function() {
 };
 
 exports.getOrder = function() {
-	return 2;
+	return 3;
 };

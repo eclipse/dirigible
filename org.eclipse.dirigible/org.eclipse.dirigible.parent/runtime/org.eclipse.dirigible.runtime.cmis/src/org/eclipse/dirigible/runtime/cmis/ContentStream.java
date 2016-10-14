@@ -48,7 +48,7 @@ public class ContentStream {
 		return length;
 	}
 
-	public String getMimetype() {
+	public String getMimeType() {
 		return mimetype;
 	}
 

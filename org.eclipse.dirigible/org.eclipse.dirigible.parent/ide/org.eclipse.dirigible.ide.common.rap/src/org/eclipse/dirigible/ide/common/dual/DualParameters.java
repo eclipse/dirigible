@@ -13,6 +13,7 @@ package org.eclipse.dirigible.ide.common.dual;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.utils.EnvUtils;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -162,7 +163,11 @@ public class DualParameters {
 			servicesUrl = SERVICES_URL_DEFAULT;
 		}
 
+		if (runtimeUrl.endsWith(IRepository.SEPARATOR) && servicesUrl.startsWith(IRepository.SEPARATOR)) {
+			servicesUrl = servicesUrl.substring(1);
+		}
 		return runtimeUrl + servicesUrl;
+
 	}
 
 	public static <T extends ClientService> T getService(Class<T> clazz) {

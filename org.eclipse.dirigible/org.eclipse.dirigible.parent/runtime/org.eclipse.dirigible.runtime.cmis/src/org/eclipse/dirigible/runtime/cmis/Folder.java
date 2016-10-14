@@ -91,7 +91,7 @@ public class Folder extends CmisObject {
 		String name = properties.get(CmisConstants.NAME);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		IOUtils.copy(contentStream.getStream(), out);
-		return new Document(this.session, this.internalFolder.createResource(name, out.toByteArray(), true, contentStream.getMimetype()));
+		return new Document(this.session, this.internalFolder.createResource(name, out.toByteArray(), true, contentStream.getMimeType()));
 	}
 
 	public List<CmisObject> getChildren() throws IOException {
