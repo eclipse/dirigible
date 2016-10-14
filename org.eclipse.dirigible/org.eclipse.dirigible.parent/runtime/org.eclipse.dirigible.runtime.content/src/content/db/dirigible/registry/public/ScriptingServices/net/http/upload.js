@@ -11,12 +11,14 @@
 /* globals $ javax engine */
 /* eslint-env node, dirigible */
 
-exports.parseRequest = function() {
+var streams = require("io/streams");
+
+exports.parseRequest = function(lazy) {
 	var files = [];
 	if($.getUploadUtils().isMultipartContent($.getRequest())) {
-        var fileItems = $.getUploadUtils().parseRequest($.getRequest());
+        var fileItems = $.getUploadUtils(). parseRequest($.getRequest());
         for(var i = 0; i < fileItems.size(); i ++){
-            var file = createFileEntity(fileItems.get(i));
+            var file = createFileEntity(fileItems.get(i), lazy);
             if(file.name){
                 files.push(file);
             }
@@ -29,19 +31,28 @@ exports.isMultipartContent = function() {
 	return $.getUploadUtils().isMultipartContent($.getRequest());
 };
 
-function createFileEntity(fileItem) {
-    var file = new HttpFileEntry();
+function createFileEntity(fileItem, lazy) {
+    var file = new HttpFileEntry(fileItem, lazy);
     file.name = fileItem.getName();
 
-	if (engine === "nashorn") {
-		file.data = convertByteAray($.getIOUtils().class.static.toByteArray(fileItem.getInputStream()));
+	if (lazy) {
+		file.internalStream = fileItem.getInputStream();
+		file.data = null;
 	} else {
-		file.data = convertByteAray($.getIOUtils().toByteArray(fileItem.getInputStream()));
+		file.data = loadData(fileItem);
+		file.internalStream = null;
 	}
     
     file.contentType = getContentType(fileItem.getContentType());
     file.size = fileItem.getSize();
     return file;
+}
+
+function loadData(fileItem) {
+	if (engine === "nashorn") {
+		return convertByteAray($.getIOUtils().class.static.toByteArray(fileItem.getInputStream()));
+	}
+	return convertByteAray($.getIOUtils().toByteArray(fileItem.getInputStream()));
 }
 
 function getContentType(contentType){
@@ -60,9 +71,39 @@ function convertByteAray(internalBytes) {
 /**
  * HTTP File Entry object
  */
-function HttpFileEntry() {
+function HttpFileEntry(fileItem, lazy) {
+	this.internalFileItem = fileItem;
 	this.name = "";
-	this.data = [];
+	this.lazy = lazy;
+	this.data = null;
 	this.contentType = "";
 	this.size = 0;
+	this.internalStream = null;
+	this.loadData = httpFileEntryLoadData;
+	this.copyData = httpFileEntryCopyData;
+	this.getInputStream = httpFileEntryGetInputStream;
+}
+
+function httpFileEntryLoadData() {
+	if (this.internalStream && this.internalStream !== null) {
+		if (this.data !== null) {
+			return this.data; // already loaded
+		}
+		this.data = loadData(this.internalFileItem); // load once
+		return this.data;
+	}
+	if (this.lazy) {
+		throw new Error("The stream element is null in a lazy file item.");
+	} else {
+		return this.data;
+	}
+}
+
+function httpFileEntryCopyData(outputStream) {
+	var inputStream = new streams.InputStream(this.internalStream);
+	streams.copy(inputStream, outputStream);
+}
+
+function httpFileEntryGetInputStream() {
+	return new streams.InputStream(this.internalStream);
 }

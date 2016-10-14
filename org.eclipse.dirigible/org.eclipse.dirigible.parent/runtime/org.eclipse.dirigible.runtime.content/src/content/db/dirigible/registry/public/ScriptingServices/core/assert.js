@@ -11,42 +11,44 @@
 /* globals $ java */
 /* eslint-env node, dirigible */
 
+var errorUtils = require('utils/error');
+
 exports.assertTrue = function(condition, message) {
-    if (!condition) {
-        console.error(message);
-        throw new Error(message);
+	if (!condition) {
+		console.error(message);
+		throw errorUtils.createError(message);
 	}
 };
 
 exports.assertFalse = function(condition, message) {
-    if (condition) {
-        console.error(message);
-        throw new Error(message);
+	if (condition) {
+		console.error(message);
+		throw errorUtils.createError(message);
 	}
 };
 
 exports.assertEquals = function(o1, o2, message) {
-    if (JSON.stringify(o1) !== JSON.stringify(o2) ) {
-        console.error(message);
-        throw new Error(message);
+	if (JSON.stringify(o1) !== JSON.stringify(o2) ) {
+		console.error(message);
+		throw errorUtils.createError(message);
 	}
 };
 
 exports.assertNull = function(o, message) {
-    if (o !== null) {
-        console.error(message);
-        throw new Error(message);
+	if (o !== undefined && o !== null) {
+		console.error(message);
+		throw errorUtils.createError(message);
 	}
 };
 
 exports.assertNotNull = function(o, message) {
-    if (o === null) {
-        console.error(message);
-        throw new Error(message);
+	if (o === undefined || o === null) {
+		console.error(message);
+		throw errorUtils.createError(message);
 	}
 };
 
 exports.fail = function(message) {
-    console.error(message);
-    throw new Error(message);
+	console.error(message);
+	throw errorUtils.createError(message);
 };
