@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.common.rap
 Bundle-SymbolicName: org.eclipse.dirigible.ide.common.rap;singleton:=true
-Bundle-Version: 2.6.161005
+Bundle-Version: 2.6.161014
 Bundle-Vendor: SAP AG
 Export-Package: org.eclipse.dirigible.ide.common.dual
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
