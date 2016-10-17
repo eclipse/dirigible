@@ -73,6 +73,7 @@ public class NashornJavaScriptEngineExecutor implements IJavaScriptEngineExecuto
 			} catch (ScriptException e) {
 				if ((e.getMessage() != null) && e.getMessage().contains(IJavaScriptExecutor.EXPORTS_ERR)) {
 					result = IJavaScriptExecutor.REQUESTED_ENDPOINT_IS_NOT_A_SERVICE_BUT_RATHER_A_LIBRARY;
+					logger.error(e.getMessage());
 				} else {
 					logger.error(e.getMessage(), e);
 				}

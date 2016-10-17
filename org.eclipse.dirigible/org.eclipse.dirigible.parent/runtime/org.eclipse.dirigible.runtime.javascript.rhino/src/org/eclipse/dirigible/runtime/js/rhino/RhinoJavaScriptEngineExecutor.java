@@ -72,8 +72,11 @@ public class RhinoJavaScriptEngineExecutor implements IJavaScriptEngineExecutor 
 				} catch (EcmaError e) {
 					if ((e.getMessage() != null) && e.getMessage().contains(IJavaScriptExecutor.EXPORTS_ERR)) {
 						result = IJavaScriptExecutor.REQUESTED_ENDPOINT_IS_NOT_A_SERVICE_BUT_RATHER_A_LIBRARY;
+						logger.error(e.getMessage());
+
+					} else {
+						logger.error(e.getMessage(), e);
 					}
-					logger.error(e.getMessage(), e);
 				} catch (Throwable e) {
 					logger.error(e.getMessage(), e);
 				}
