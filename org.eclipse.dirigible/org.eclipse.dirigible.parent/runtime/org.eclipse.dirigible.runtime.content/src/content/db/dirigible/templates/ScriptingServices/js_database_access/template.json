@@ -1,0 +1,29 @@
+{
+    "name":"JavaScript Database Access",
+    "description":"JavaScript database access service",
+    "image":"database-access.png",
+    "sources":[
+        {
+            "name":"database-access.js",
+            "action":"generate"
+        }
+    ],
+   "parameters":[
+       {
+           "name":"templateType",
+           "required":"true"
+       }, {
+           "name":"fileName",
+           "required":"true"
+       }, {
+         "name":"projectName",
+         "required":"true"
+      }, {
+          "name":"packageName",
+          "required":"true"
+      }, {
+          "name":"tableName",
+          "required":"true"
+      }
+   ]
+}

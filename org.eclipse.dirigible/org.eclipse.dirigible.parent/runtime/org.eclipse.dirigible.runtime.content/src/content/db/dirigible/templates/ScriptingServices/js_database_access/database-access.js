@@ -6,8 +6,8 @@ var response = require('net/http/response');
 
 var datasource = database.getDatasource();
 
-response.setContentType("application/json; charset=UTF-8");
-response.setCharacterEncoding("UTF-8");
+response.setContentType('application/json; charset=UTF-8');
+response.setCharacterEncoding('UTF-8');
 
 var count;
 var connection = datasource.getConnection();
@@ -17,7 +17,7 @@ try {
     while (rs.next()) {
         count = rs.getInt(1);
     }
-    console.log('count: '  + count);
+    console.log('Count: '  + count);
 } finally {
     connection.close();
 }
