@@ -14,6 +14,9 @@
 var streams = require("io/streams");
 
 exports.parseRequest = function(lazy) {
+	if (lazy === undefined) {
+		lazy = true;
+	}
 	var files = [];
 	if($.getUploadUtils().isMultipartContent($.getRequest())) {
         var fileItems = $.getUploadUtils(). parseRequest($.getRequest());
@@ -35,7 +38,7 @@ function createFileEntity(fileItem, lazy) {
     var file = new HttpFileEntry(fileItem, lazy);
     file.name = fileItem.getName();
 
-	if (lazy) {
+	if (lazy === true) {
 		file.internalStream = fileItem.getInputStream();
 		file.data = null;
 	} else {
