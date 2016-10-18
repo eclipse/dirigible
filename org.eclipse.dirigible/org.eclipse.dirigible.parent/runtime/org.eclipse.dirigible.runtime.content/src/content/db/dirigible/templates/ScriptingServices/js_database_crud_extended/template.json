@@ -1,5 +1,5 @@
 {  
-    "name":"JavaScript Extended Entity Service on Table",
+    "name":"Extended Entity Service on Table (JavaScript)",
     "description":"JavaScript Extended RESTful entity service on a relational database table",
     "image":"database-crud.png",
     "sources": [{

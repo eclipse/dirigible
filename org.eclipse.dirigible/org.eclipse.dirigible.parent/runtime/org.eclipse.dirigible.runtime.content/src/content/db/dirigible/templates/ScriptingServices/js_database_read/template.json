@@ -1,5 +1,5 @@
 {
-    "name":"JavaScript Entities List Service on Table or View",
+    "name":"Entities List Service on Table or View (JavaScript)",
     "description":"JavaScript read-only entity service on a relational database table or view",
     "image":"database-read.png",
     "sources":[
