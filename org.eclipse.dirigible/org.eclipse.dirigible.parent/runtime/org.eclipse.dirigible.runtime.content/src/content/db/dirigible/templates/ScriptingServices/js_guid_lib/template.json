@@ -1,13 +1,26 @@
-{"name":"JavaScript Guid Generator Library",
- "description":"JavaScript guid generator library",
- "image":"guid-generator.png",
- "sources":[
-   {"name":"guid-generator.js", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"templateType", "required":"true"},
-   {"name":"fileName", "required":"true"},
-   {"name":"projectName", "required":"true"},
-   {"name":"packageName", "required":"true"}
-   ]
+{
+    "name":"JavaScript GUID Generator Library",
+    "description":"JavaScript GUID generator library",
+    "image":"guid-generator.png",
+    "sources":[
+        {
+            "name":"guid-generator.js",
+            "action":"generate"
+        }
+    ],
+    "parameters":[
+        {
+            "name":"templateType",
+            "required":"true"
+        }, {
+            "name":"fileName",
+            "required":"true"
+        }, {
+            "name":"projectName",
+            "required":"true"
+        }, {
+            "name":"packageName",
+            "required":"true"
+        }
+    ]
 }
