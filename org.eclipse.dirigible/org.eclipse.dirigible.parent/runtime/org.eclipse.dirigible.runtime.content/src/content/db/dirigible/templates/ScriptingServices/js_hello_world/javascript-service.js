@@ -3,11 +3,16 @@
 
 var response = require('net/http/response');
 
-// print in the system output
-console.info("Hello World!");
-// print in the response
-response.setContentType("text/html; charset=UTF-8");
-response.setCharacterEncoding("UTF-8");
-response.println("Hello World!");
+var message = 'Hello World!';
+
+// Print in the system output
+console.info(message);
+
+response.setContentType('text/html; charset=UTF-8');
+response.setCharacterEncoding('UTF-8');
+
+// Print in the response
+response.println(message);
+
 response.flush();
 response.close();
