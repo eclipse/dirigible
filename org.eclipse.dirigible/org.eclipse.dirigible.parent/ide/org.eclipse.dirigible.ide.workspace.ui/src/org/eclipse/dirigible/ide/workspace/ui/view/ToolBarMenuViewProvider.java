@@ -233,13 +233,13 @@ public class ToolBarMenuViewProvider {
 
 	private static void publish() throws PublishException {
 		for (IProject project : PublishManager.getProjects(getSelection())) {
-			PublishManager.publishProject(project);
+			PublishManager.publishProject(project, CommonIDEParameters.getRequest());
 		}
 	}
 
 	private static void activate() throws PublishException {
 		for (IProject project : PublishManager.getProjects(getSelection())) {
-			PublishManager.activateProject(project);
+			PublishManager.activateProject(project, CommonIDEParameters.getRequest());
 		}
 	}
 

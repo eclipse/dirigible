@@ -146,6 +146,8 @@ public interface ICommonConstants {
 
 	public static final String PARAM_INSTANCE_NAME = "dirigibleInstanceName"; //$NON-NLS-1$
 
+	public static final String LIFECYCLE_SERVICE = "LifecycleService"; //$NON-NLS-1$
+
 	// Initi Parameters Names
 	public static final String INIT_PARAM_RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
 	public static final String INIT_PARAM_SERVICES_URL = "servicesUrl"; //$NON-NLS-1$

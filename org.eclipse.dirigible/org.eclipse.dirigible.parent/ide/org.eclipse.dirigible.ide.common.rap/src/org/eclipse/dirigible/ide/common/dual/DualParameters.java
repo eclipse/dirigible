@@ -127,30 +127,56 @@ public class DualParameters {
 	}
 
 	public static boolean isAutoPublishEnabled() {
-		String autoPublishEnabled = EnvUtils.getEnv(SET_AUTO_PUBLISH);
 		boolean result = SET_AUTO_PUBLIUSH_DEFAULT;
+		String autoPublishEnabled = get(SET_AUTO_PUBLISH);
 		if (autoPublishEnabled != null) {
 			result = Boolean.parseBoolean(autoPublishEnabled);
+		} else {
+			autoPublishEnabled = EnvUtils.getEnv(getUserName(null) + "_" + SET_AUTO_PUBLISH);
+			if (autoPublishEnabled != null) {
+				result = Boolean.parseBoolean(autoPublishEnabled);
+			}
 		}
+
 		return result;
 	}
 
 	public static boolean isAutoActivateEnabled() {
-		String autoPublishEnabled = EnvUtils.getEnv(SET_AUTO_ACTIVATE);
 		boolean result = SET_AUTO_ACTIVATE_DEFAULT;
-		if (autoPublishEnabled != null) {
-			result = Boolean.parseBoolean(autoPublishEnabled);
+		String autoActivateEnabled = get(SET_AUTO_ACTIVATE);
+		if (autoActivateEnabled != null) {
+			result = Boolean.parseBoolean(autoActivateEnabled);
+		} else {
+			autoActivateEnabled = EnvUtils.getEnv(getUserName(null) + "_" + SET_AUTO_ACTIVATE);
+			if (autoActivateEnabled != null) {
+				result = Boolean.parseBoolean(autoActivateEnabled);
+			}
 		}
 		return result;
 	}
 
 	public static boolean isSandboxEnabled() {
-		String sandboxEnabledStr = EnvUtils.getEnv(SANDBOX_ENABLED);
 		boolean result = SET_SANDBOX_ENABLED_DEFAULT;
+		String sandboxEnabledStr = get(SANDBOX_ENABLED);
 		if (sandboxEnabledStr != null) {
 			result = Boolean.parseBoolean(sandboxEnabledStr);
+		} else {
+			sandboxEnabledStr = EnvUtils.getEnv(SANDBOX_ENABLED);
+			if (sandboxEnabledStr != null) {
+				result = Boolean.parseBoolean(sandboxEnabledStr);
+			}
 		}
 		return result;
+	}
+
+	public static void setAutoActivate(boolean checked) {
+		set(DualParameters.SET_AUTO_ACTIVATE, checked);
+		EnvUtils.setEnv(getUserName(null) + "_" + DualParameters.SET_AUTO_ACTIVATE, Boolean.toString(checked));
+	}
+
+	public static void setAutoPublish(boolean checked) {
+		set(DualParameters.SET_AUTO_PUBLISH, checked);
+		EnvUtils.setEnv(getUserName(null) + "_" + DualParameters.SET_AUTO_PUBLISH, Boolean.toString(checked));
 	}
 
 	public static String getServicesUrl() {

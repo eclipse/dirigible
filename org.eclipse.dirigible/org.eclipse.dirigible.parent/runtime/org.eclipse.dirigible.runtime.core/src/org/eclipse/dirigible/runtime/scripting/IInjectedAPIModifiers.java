@@ -70,6 +70,8 @@ public interface IInjectedAPIModifiers {
 
 	public void setTemplatingService(ITemplatingService templatingService);
 
+	public void setLifecycleService(ILifecycleService lifecycleService);
+
 	public void setIOUtils(IOUtils ioUtils);
 
 	public void setHttpUtils(HttpUtils httpUtils);

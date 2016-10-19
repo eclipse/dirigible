@@ -57,6 +57,7 @@ import org.eclipse.dirigible.runtime.scripting.utils.ExecutionService;
 import org.eclipse.dirigible.runtime.scripting.utils.FileStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.HttpUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.IndexingService;
+import org.eclipse.dirigible.runtime.scripting.utils.LifecycleServiceUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.NamedDataSourcesUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.StorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
@@ -190,6 +191,9 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		// Generation Service
 		registerGenerationService(executionContext, scope, apiBuilder);
 
+		// Lifecycle Service
+		registerLifecycleService(executionContext, scope, apiBuilder);
+
 		// Utils
 
 		// put Apache Commons IOUtils
@@ -303,6 +307,16 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 			IGenerationService generationService = new GenerationService();
 			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.GENERATION_SERVICE, generationService);
 			apiBuilder.setGenerationService(generationService);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerLifecycleService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		try {
+			ILifecycleService lifecycleService = new LifecycleServiceUtils();
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.LIFECYCLE_SERVICE, lifecycleService);
+			apiBuilder.setLifecycleService(lifecycleService);
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
 		}

@@ -190,7 +190,7 @@ public class GetStartedProjectWizardModel {
 
 	private void activateAndPublish(IProject project) {
 		try {
-			PublishManager.publishProject(project);
+			PublishManager.publishProject(project, CommonIDEParameters.getRequest());
 		} catch (PublishException e) {
 			logger.error(e.getMessage(), e);
 		}

@@ -190,6 +190,13 @@ public interface IInjectedAPI {
 	public IGenerationService getGenerationService();
 
 	/**
+	 * Getter for the Lifecycle Service
+	 *
+	 * @return the Lifecycle Service
+	 */
+	public ILifecycleService getLifecycleService();
+
+	/**
 	 * Getter for the IO Utilities
 	 *
 	 * @return the IO Utilities

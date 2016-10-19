@@ -13,6 +13,8 @@ package org.eclipse.dirigible.ide.integration.publish;
 import static org.eclipse.dirigible.ide.integration.publish.IntegrationConstants.IS_CONTENT_FOLDER;
 import static org.eclipse.dirigible.ide.integration.publish.IntegrationConstants.IS_REGISTYRY_PUBLISH_LOCATION;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -35,14 +37,14 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 	private static final Logger logger = Logger.getLogger(IntegrationPublisher.class);
 
 	@Override
-	public void publish(IProject project) throws PublishException {
+	public void publish(IProject project, HttpServletRequest request) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
+			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation(), request);
 			final IFolder sourceFolder = getSourceFolder(project, IS_CONTENT_FOLDER);
-			copyAllFromTo(sourceFolder, targetContainer);
+			copyAllFromTo(sourceFolder, targetContainer, request);
 
-			ListenersUpdater listenersUpdater = new ListenersUpdater(RepositoryFacade.getInstance().getRepository(),
-					DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest()), getRegistryLocation());
+			ListenersUpdater listenersUpdater = new ListenersUpdater(RepositoryFacade.getInstance().getRepository(request),
+					DataSourceFacade.getInstance().getDataSource(request), getRegistryLocation());
 			listenersUpdater.applyUpdates();
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
@@ -52,13 +54,13 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 
 	// no sandboxing for integration services
 	@Override
-	public void activate(IProject project) throws PublishException {
-		publish(project);
+	public void activate(IProject project, HttpServletRequest request) throws PublishException {
+		publish(project, request);
 	}
 
 	@Override
-	public void activateFile(IFile file) throws PublishException {
-		publish(file.getProject());
+	public void activateFile(IFile file, HttpServletRequest request) throws PublishException {
+		publish(file.getProject(), request);
 	}
 
 	@Override
@@ -112,8 +114,8 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 	}
 
 	@Override
-	protected String getSandboxLocation() {
-		return CommonIDEParameters.getIntegrationContentSandbox();
+	protected String getSandboxLocation(HttpServletRequest request) {
+		return CommonIDEParameters.getIntegrationContentSandbox(request);
 	}
 
 	@Override
@@ -122,8 +124,7 @@ public class IntegrationPublisher extends AbstractPublisher implements IPublishe
 	}
 
 	@Override
-	public void template(IProject project) throws PublishException {
-		// TODO Auto-generated method stub
+	public void template(IProject project, HttpServletRequest request) throws PublishException {
 
 	}
 

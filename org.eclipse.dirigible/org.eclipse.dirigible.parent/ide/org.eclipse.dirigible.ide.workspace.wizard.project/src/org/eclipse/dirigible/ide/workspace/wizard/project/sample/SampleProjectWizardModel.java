@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.wizard.project.sample;
@@ -45,8 +44,7 @@ public class SampleProjectWizardModel {
 
 	private static final String INVALID_PROJECT_NAME = Messages.NewProjectWizardModel_INVALID_PROJECT_NAME;
 
-	public static final Logger logger = Logger
-			.getLogger(SampleProjectWizardModel.class.getCanonicalName());
+	public static final Logger logger = Logger.getLogger(SampleProjectWizardModel.class.getCanonicalName());
 
 	private static final String INITIAL_LOCATION = "project"; //$NON-NLS-1$
 
@@ -67,24 +65,21 @@ public class SampleProjectWizardModel {
 		if (isUseTemplate()) {
 
 			try {
-				IRepository repository = RepositoryFacade.getInstance()
-						.getRepository();
+				IRepository repository = RepositoryFacade.getInstance().getRepository();
 
 				String contentPath = getTemplate().getContentPath();
 				File projectFile = new File(contentPath);
 
 				FileInputStream fis = new FileInputStream(projectFile);
 				ZipInputStream zipInputStream = new ZipInputStream(fis);
-				
-				repository.importZip(zipInputStream,
-						CommonIDEParameters.getWorkspace());
-				
+
+				repository.importZip(zipInputStream, CommonIDEParameters.getWorkspace(CommonIDEParameters.getRequest()));
+
 				IWorkspace workspace = WorkspaceLocator.getWorkspace();
 				IWorkspaceRoot root = workspace.getRoot();
 
 				String gitProjectName = projectFile.getName();
-				gitProjectName = gitProjectName.substring(0,
-						gitProjectName.indexOf(ZIP));
+				gitProjectName = gitProjectName.substring(0, gitProjectName.indexOf(ZIP));
 
 				project = root.getProject(getProjectName());
 			} catch (RepositoryException e) {
@@ -99,11 +94,10 @@ public class SampleProjectWizardModel {
 		}
 		return project;
 	}
-	
+
 	public IValidationStatus validate() {
 		IWorkspace workspace = WorkspaceLocator.getWorkspace();
-		IStatus pathValidation = workspace.validateName(projectName,
-				IResource.PROJECT);
+		IStatus pathValidation = workspace.validateName(projectName, IResource.PROJECT);
 		if (!pathValidation.isOK()) {
 			return ValidationStatus.createError(INVALID_PROJECT_NAME);
 		}
@@ -111,28 +105,23 @@ public class SampleProjectWizardModel {
 		IWorkspaceRoot root = workspace.getRoot();
 		IProject project = root.getProject(projectName);
 		if (project.exists()) {
-			return ValidationStatus
-					.createError(PROJECT_WITH_THIS_NAME_ALREADY_EXISTS);
+			return ValidationStatus.createError(PROJECT_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
 		if (!isValidRepositoryProject()) {
-			return ValidationStatus.createError(String.format(
-					PROJECT_WITH_NAME_S_WAS_ALREADY_CREATED_FROM_USER_S,
-					projectName, conflictUser));
+			return ValidationStatus.createError(String.format(PROJECT_WITH_NAME_S_WAS_ALREADY_CREATED_FROM_USER_S, projectName, conflictUser));
 		}
 		return ValidationStatus.createOk();
 	}
 
 	private boolean isValidRepositoryProject() {
 		IRepository repository = RepositoryFacade.getInstance().getRepository();
-		ICollection userFolders = repository
-				.getCollection(IRepositoryPaths.DB_DIRIGIBLE_USERS);
+		ICollection userFolders = repository.getCollection(IRepositoryPaths.DB_DIRIGIBLE_USERS);
 		boolean isValid = true;
 		try {
 			for (ICollection user : userFolders.getCollections()) {
 				if (user.exists()) {
-					ICollection workspace = user
-							.getCollection(IRepositoryPaths.WORKSPACE_FOLDER_NAME);
+					ICollection workspace = user.getCollection(IRepositoryPaths.WORKSPACE_FOLDER_NAME);
 					for (ICollection nextProject : workspace.getCollections()) {
 						if (nextProject.exists()) {
 							if (nextProject.getName().equals(projectName)) {

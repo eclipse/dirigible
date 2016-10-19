@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -144,46 +146,50 @@ public final class PublishManager {
 		return project;
 	}
 
-	public static void activateProject(IProject project) throws PublishException {
-		publish(project, ACTION_ACTIVATE);
+	public static void activateProject(IProject project, HttpServletRequest request) throws PublishException {
+		publish(project, ACTION_ACTIVATE, request);
 	}
 
-	public static void publishProject(IProject project) throws PublishException {
+	public static void publishProject(IProject project, HttpServletRequest request) throws PublishException {
 		if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
 			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION, CommonIDEParameters.getUserName());
 			MessageDialog.openError(null, PUBLISH_ERROR, message);
 			return;
 		}
-		publish(project, ACTION_PUBLISH);
+		publish(project, ACTION_PUBLISH, request);
 	}
 
-	public static void publishTemplate(IProject project) throws PublishException {
+	public static void publishTemplate(IProject project, HttpServletRequest request) throws PublishException {
 		if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
 			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION, CommonIDEParameters.getUserName());
 			MessageDialog.openError(null, PUBLISH_ERROR, message);
 			return;
 		}
-		publish(project, ACTION_TEMPLATE);
+		publish(project, ACTION_TEMPLATE, request);
 	}
 
-	private static void publish(IProject project, int action) throws PublishException {
+	private static void publish(IProject project, int action, HttpServletRequest request) throws PublishException {
 		final List<IPublisher> registeredPublishers = PublishManager.getPublishers();
 
 		for (IPublisher iPublisher : registeredPublishers) {
-			IPublisher publisher = iPublisher;
 
-			switch (action) {
-				case ACTION_ACTIVATE:
-					publisher.activate(project);
-					break;
-				case ACTION_PUBLISH:
-					publisher.publish(project);
-					break;
-				case ACTION_TEMPLATE:
-					publisher.template(project);
-					break;
-				default:
-					throw new PublishException("Unknown action for publish");
+			try {
+				IPublisher publisher = iPublisher;
+				switch (action) {
+					case ACTION_ACTIVATE:
+						publisher.activate(project, request);
+						break;
+					case ACTION_PUBLISH:
+						publisher.publish(project, request);
+						break;
+					case ACTION_TEMPLATE:
+						publisher.template(project, request);
+						break;
+					default:
+						throw new PublishException("Unknown action for publish");
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
 			}
 
 		}

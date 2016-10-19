@@ -230,7 +230,7 @@ public class CloneCommandHandler extends AbstractWorkspaceHandler {
 					for (IProject project : projects) {
 						if (project.getName().equals(projectName)) {
 							try {
-								PublishManager.publishProject(project);
+								PublishManager.publishProject(project, CommonIDEParameters.getRequest());
 								logger.info(String.format(PROJECT_S_HAS_BEEN_PUBLISHED, project.getName()));
 							} catch (PublishException e) {
 								logger.error(WHILE_CLONING_REPOSITORY_ERROR_OCCURED + e.getMessage(), e);

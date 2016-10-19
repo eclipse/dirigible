@@ -10,18 +10,20 @@
 
 package org.eclipse.dirigible.ide.publish;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 
 public interface IPublisher {
 
-	public void publish(IProject project) throws PublishException;
+	public void publish(IProject project, HttpServletRequest request) throws PublishException;
 
-	public void activate(IProject project) throws PublishException;
+	public void activate(IProject project, HttpServletRequest request) throws PublishException;
 
-	public void template(IProject project) throws PublishException;
+	public void template(IProject project, HttpServletRequest request) throws PublishException;
 
-	public void activateFile(IFile file) throws PublishException;
+	public void activateFile(IFile file, HttpServletRequest request) throws PublishException;
 
 	// returns the name of the folder recognizable by the specific publisher
 	public String getFolderType();

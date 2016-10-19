@@ -10,10 +10,12 @@ Require-Bundle: org.eclipse.dirigible.ide.repository,
  org.eclipse.dirigible.repository.logging,
  org.eclipse.dirigible.repository.datasource
 Import-Package: com.google.gson;version="1.6.0",
+ javax.servlet,
+ javax.servlet.http,
+ org.eclipse.core.resources,
  org.eclipse.dirigible.ide.common,
  org.eclipse.dirigible.ide.common.io,
  org.eclipse.dirigible.ide.publish,
- org.eclipse.dirigible.repository.api,
- org.eclipse.core.resources
+ org.eclipse.dirigible.repository.api
 Export-Package: org.eclipse.dirigible.ide.ui.publish
 Bundle-ClassPath: .

@@ -268,7 +268,7 @@ public class PullCommandHandler extends AbstractWorkspaceHandler {
 			if (MessageDialog.openConfirm(null, PUBLISH_PULLED_PROJECT, DO_YOU_WANT_TO_PUBLISH_THE_PROJECT_YOU_JUST_PULLED)) {
 				for (IProject project : projects) {
 					try {
-						PublishManager.publishProject(project);
+						PublishManager.publishProject(project, CommonIDEParameters.getRequest());
 						StatusLineManagerUtil.setInfoMessage(String.format(PROJECT_HAS_BEEN_PULLED_FROM_REMOTE_REPOSITORY, project.getName()));
 					} catch (PublishException e) {
 						final String errorMessage = String.format(WHILE_PULLING_PROJECT_ERROR_OCCURED, project.getName());

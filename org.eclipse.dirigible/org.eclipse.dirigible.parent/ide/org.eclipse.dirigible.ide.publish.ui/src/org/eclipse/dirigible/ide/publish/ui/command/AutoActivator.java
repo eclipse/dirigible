@@ -67,7 +67,7 @@ public class AutoActivator implements // ISaveParticipant {
 		IResource delta = event.getResource();
 		IProject project = delta.getProject();
 		try {
-			PublishManager.publishProject(project);
+			PublishManager.publishProject(project, CommonIDEParameters.getRequest());
 		} catch (PublishException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), AUTO_PUBLISH_FAILED,
 					FAILED_TO_PUBLISH_PROJECT + project.getName());
@@ -114,7 +114,7 @@ public class AutoActivator implements // ISaveParticipant {
 
 	private void activate(IProject project) {
 		try {
-			PublishManager.activateProject(project);
+			PublishManager.activateProject(project, CommonIDEParameters.getRequest());
 		} catch (PublishException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), AUTO_ACTIVATION_FAILED,
 					FAILED_TO_ACTIVATE_PROJECT + project.getName());
@@ -129,7 +129,7 @@ public class AutoActivator implements // ISaveParticipant {
 			for (IPublisher iPublisher : publishers) {
 				IPublisher publisher = iPublisher;
 				if (publisher.isAutoActivationAllowed()) {
-					publisher.activateFile(file);
+					publisher.activateFile(file, CommonIDEParameters.getRequest());
 				}
 			}
 		} catch (PublishException e) {

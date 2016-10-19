@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -38,9 +40,9 @@ public abstract class AbstractPublisher implements IPublisher {
 
 	private static final Logger logger = Logger.getLogger(AbstractPublisher.class);
 
-	protected ICollection getTargetProjectContainer(String registryLocation) throws IOException {
+	protected ICollection getTargetProjectContainer(String registryLocation, HttpServletRequest request) throws IOException {
 
-		final IRepository repository = RepositoryFacade.getInstance().getRepository();
+		final IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 		final ICollection publishContainer = repository.getCollection(registryLocation);
 		// final ICollection projectContainer = publishContainer.getCollection(project.getName());
 		// #177
@@ -54,8 +56,9 @@ public abstract class AbstractPublisher implements IPublisher {
 		return projectContainer;
 	}
 
-	protected org.eclipse.dirigible.repository.api.IResource getTargetFileLocation(IFile file, String registryLocation) throws IOException {
-		final IRepository repository = RepositoryFacade.getInstance().getRepository();
+	protected org.eclipse.dirigible.repository.api.IResource getTargetFileLocation(IFile file, String registryLocation, HttpServletRequest request)
+			throws IOException {
+		final IRepository repository = RepositoryFacade.getInstance().getRepository(request);
 		final ICollection publishContainer = repository.getCollection(registryLocation);
 		// final ICollection projectContainer = publishContainer.getCollection(file.getProject().getName());
 		// #177
@@ -77,20 +80,20 @@ public abstract class AbstractPublisher implements IPublisher {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public void copyAllFromTo(IContainer source, ICollection target) throws CoreException, IOException {
+	public void copyAllFromTo(IContainer source, ICollection target, HttpServletRequest request) throws CoreException, IOException {
 
 		if (!source.exists()) {
 			return;
 		}
 
-		String user = getUser();
+		String user = getUser(request);
 
 		// #177
 		// synchronizeRepositoryWithWorkspace(source, target);
 
 		for (IResource resource : source.members()) {
 			if (resource instanceof IFolder) {
-				copyFolderInto((IFolder) resource, target, user);
+				copyFolderInto((IFolder) resource, target, user, request);
 			}
 			if (resource instanceof IFile) {
 				copyFileInto((IFile) resource, target, user);
@@ -103,8 +106,8 @@ public abstract class AbstractPublisher implements IPublisher {
 	 *
 	 * @return
 	 */
-	public String getUser() {
-		String user = CommonIDEParameters.getUserName();
+	public String getUser(HttpServletRequest request) {
+		String user = CommonIDEParameters.getUserName(request);
 		return user;
 	}
 
@@ -117,13 +120,13 @@ public abstract class AbstractPublisher implements IPublisher {
 	 * @throws IOException
 	 * @throws CoreException
 	 */
-	public void copyFolderInto(IFolder folder, ICollection target, String user) throws IOException, CoreException {
+	public void copyFolderInto(IFolder folder, ICollection target, String user, HttpServletRequest request) throws IOException, CoreException {
 		final ICollection targetFolder = target.getCollection(folder.getName());
 
 		if (!targetFolder.exists()) {
 			targetFolder.create();
 		}
-		copyAllFromTo(folder, targetFolder);
+		copyAllFromTo(folder, targetFolder, request);
 	}
 
 	/**
@@ -234,19 +237,19 @@ public abstract class AbstractPublisher implements IPublisher {
 		return false;
 	}
 
-	protected abstract String getSandboxLocation();
+	protected abstract String getSandboxLocation(HttpServletRequest request);
 
 	protected abstract String getRegistryLocation();
 
 	@Override
-	public void activateFile(IFile file) throws PublishException {
+	public void activateFile(IFile file, HttpServletRequest request) throws PublishException {
 		if (!recognizedFile(file)) {
 			return;
 		}
 		try {
-			final org.eclipse.dirigible.repository.api.IResource targetFile = getTargetFileLocation(file, getSandboxLocation());
+			final org.eclipse.dirigible.repository.api.IResource targetFile = getTargetFileLocation(file, getSandboxLocation(request), request);
 			if (file.exists()) {
-				copyFileInto(file, targetFile.getParent(), getUser());
+				copyFileInto(file, targetFile.getParent(), getUser(request));
 			} else {
 				if (targetFile.exists()) {
 					targetFile.delete();
@@ -267,8 +270,8 @@ public abstract class AbstractPublisher implements IPublisher {
 	 *
 	 * @return
 	 */
-	public String getWorkspaceLocation() {
-		return CommonIDEParameters.getWorkspace();
+	public String getWorkspaceLocation(HttpServletRequest request) {
+		return CommonIDEParameters.getWorkspace(request);
 	}
 
 	/**
@@ -277,9 +280,9 @@ public abstract class AbstractPublisher implements IPublisher {
 	 * @param project
 	 * @return
 	 */
-	public ICollection getSourceProjectContainer(IProject project) {
-		final IRepository repository = RepositoryFacade.getInstance().getRepository();
-		final ICollection workspaceContainer = repository.getCollection(getWorkspaceLocation());
+	public ICollection getSourceProjectContainer(IProject project, HttpServletRequest request) {
+		final IRepository repository = RepositoryFacade.getInstance().getRepository(request);
+		final ICollection workspaceContainer = repository.getCollection(getWorkspaceLocation(request));
 		final ICollection projectContainer = workspaceContainer.getCollection(project.getName());
 		return projectContainer;
 	}

@@ -234,4 +234,9 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 		return builder.getGenerationService();
 	}
 
+	@Override
+	public ILifecycleService getLifecycleService() {
+		return builder.getLifecycleService();
+	}
+
 }

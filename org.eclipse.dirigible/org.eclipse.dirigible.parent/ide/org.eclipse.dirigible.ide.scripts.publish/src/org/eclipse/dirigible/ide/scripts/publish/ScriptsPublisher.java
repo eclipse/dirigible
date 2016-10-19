@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -94,11 +96,11 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 	 * @throws PublishException
 	 */
 	@Override
-	public void publish(IProject project) throws PublishException {
+	public void publish(IProject project, HttpServletRequest request) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
+			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation(), request);
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES);
-			copyAllFromTo(sourceFolder, targetContainer);
+			copyAllFromTo(sourceFolder, targetContainer, request);
 		} catch (Exception ex) {
 			throw new PublishException(ex.getMessage(), ex);
 		}
@@ -111,11 +113,11 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 	 * @throws PublishException
 	 */
 	@Override
-	public void activate(IProject project) throws PublishException {
+	public void activate(IProject project, HttpServletRequest request) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getScriptingContentSandbox());
+			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getScriptingContentSandbox(request), request);
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES);
-			copyAllFromTo(sourceFolder, targetContainer);
+			copyAllFromTo(sourceFolder, targetContainer, request);
 		} catch (Exception ex) {
 			throw new PublishException(ex.getMessage(), ex);
 		}
@@ -166,8 +168,8 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 	}
 
 	@Override
-	protected String getSandboxLocation() {
-		return CommonIDEParameters.getScriptingContentSandbox();
+	protected String getSandboxLocation(HttpServletRequest request) {
+		return CommonIDEParameters.getScriptingContentSandbox(request);
 	}
 
 	@Override
@@ -184,8 +186,7 @@ public class ScriptsPublisher extends AbstractPublisher implements IPublisher {
 	}
 
 	@Override
-	public void template(IProject project) throws PublishException {
-		// TODO Auto-generated method stub
+	public void template(IProject project, HttpServletRequest request) throws PublishException {
 
 	}
 

@@ -151,6 +151,11 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	private IGenerationService generationService;
 
 	/**
+	 * The Lifecycle Service facade
+	 */
+	private ILifecycleService lifecycleService;
+
+	/**
 	 * Utilities
 	 */
 
@@ -363,6 +368,16 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	@Override
 	public void setDocumentService(IDocumentService documentService) {
 		this.documentService = documentService;
+	}
+
+	@Override
+	public ILifecycleService getLifecycleService() {
+		return lifecycleService;
+	}
+
+	@Override
+	public void setLifecycleService(ILifecycleService lifecycleService) {
+		this.lifecycleService = lifecycleService;
 	}
 
 	@Override

@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.ide.ui.publish;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -27,30 +29,30 @@ public class WikiPublisher extends AbstractPublisher implements IPublisher {
 	}
 
 	@Override
-	public void publish(IProject project) throws PublishException {
+	public void publish(IProject project, HttpServletRequest request) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
+			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation(), request);
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT);
-			copyAllFromTo(sourceFolder, targetContainer);
+			copyAllFromTo(sourceFolder, targetContainer, request);
 		} catch (Exception ex) {
 			throw new PublishException(ex.getMessage(), ex);
 		}
 	}
 
 	@Override
-	public void activate(IProject project) throws PublishException {
+	public void activate(IProject project, HttpServletRequest request) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getWikiContentSandbox());
+			final ICollection targetContainer = getTargetProjectContainer(CommonIDEParameters.getWikiContentSandbox(request), request);
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT);
-			copyAllFromTo(sourceFolder, targetContainer);
+			copyAllFromTo(sourceFolder, targetContainer, request);
 		} catch (Exception ex) {
 			throw new PublishException(ex.getMessage(), ex);
 		}
 	}
 
 	@Override
-	protected String getSandboxLocation() {
-		return CommonIDEParameters.getWikiContentSandbox();
+	protected String getSandboxLocation(HttpServletRequest request) {
+		return CommonIDEParameters.getWikiContentSandbox(request);
 	}
 
 	@Override
@@ -85,7 +87,7 @@ public class WikiPublisher extends AbstractPublisher implements IPublisher {
 	}
 
 	@Override
-	public void template(IProject project) throws PublishException {
+	public void template(IProject project, HttpServletRequest request) throws PublishException {
 		// TODO Auto-generated method stub
 
 	}

@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.publish.AbstractPublisher;
 import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishException;
@@ -45,16 +45,16 @@ public class DatabasePublisher extends AbstractPublisher implements IPublisher {
 	}
 
 	@Override
-	public void publish(IProject project) throws PublishException {
+	public void publish(IProject project, HttpServletRequest request) throws PublishException {
 		try {
-			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation());
+			final ICollection targetContainer = getTargetProjectContainer(getRegistryLocation(), request);
 			final IFolder sourceFolder = getSourceFolder(project, ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES);
-			copyAllFromTo(sourceFolder, targetContainer);
+			copyAllFromTo(sourceFolder, targetContainer, request);
 
-			IRepository repository = RepositoryFacade.getInstance().getRepository();
-			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(CommonIDEParameters.getRequest());
+			IRepository repository = RepositoryFacade.getInstance().getRepository(request);
+			DataSource dataSource = DataSourceFacade.getInstance().getDataSource(request);
 
-			ICollection sourceProjectContainer = getSourceProjectContainer(project);
+			ICollection sourceProjectContainer = getSourceProjectContainer(project, request);
 			ICollection sourceContainer = sourceProjectContainer.getCollection(ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES);
 
 			// # 177
@@ -77,13 +77,13 @@ public class DatabasePublisher extends AbstractPublisher implements IPublisher {
 
 	// no sandboxing for database artifacts
 	@Override
-	public void activate(IProject project) throws PublishException {
-		publish(project);
+	public void activate(IProject project, HttpServletRequest request) throws PublishException {
+		publish(project, request);
 	}
 
 	@Override
-	public void activateFile(IFile file) throws PublishException {
-		publish(file.getProject());
+	public void activateFile(IFile file, HttpServletRequest request) throws PublishException {
+		publish(file.getProject(), request);
 	}
 
 	private void processTablesAndViews(final ICollection targetContainer, IRepository repository, DataSource dataSource)
@@ -141,13 +141,12 @@ public class DatabasePublisher extends AbstractPublisher implements IPublisher {
 	}
 
 	@Override
-	protected String getSandboxLocation() {
+	protected String getSandboxLocation(HttpServletRequest request) {
 		return null;
 	}
 
 	@Override
-	public void template(IProject project) throws PublishException {
-		// TODO Auto-generated method stub
+	public void template(IProject project, HttpServletRequest request) throws PublishException {
 
 	}
 

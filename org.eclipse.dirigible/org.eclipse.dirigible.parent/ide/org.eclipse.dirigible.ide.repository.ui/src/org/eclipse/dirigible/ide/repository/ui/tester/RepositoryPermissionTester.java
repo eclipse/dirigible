@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.repository.ui.tester;
@@ -33,11 +32,11 @@ public class RepositoryPermissionTester extends PropertyTester {
 		boolean allowed = false;
 
 		String allowedCopyPath = IRepositoryPaths.DB_DIRIGIBLE_ROOT;
-		String allowedWorkspacePath = CommonIDEParameters.getWorkspace();
+		String allowedWorkspacePath = CommonIDEParameters.getWorkspace(CommonIDEParameters.getRequest());
 		String allowedSandboxPath = IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + currentUser;
-		
+
 		boolean isOperator = CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR);
-		
+
 		IEntity selectedEntity = (IEntity) receiver;
 		String selectedEntityPath = selectedEntity.getPath();
 
@@ -48,8 +47,8 @@ public class RepositoryPermissionTester extends PropertyTester {
 				allowed = selectedEntityPath.startsWith(allowedCopyPath);
 			} else {
 				createdBy = selectedEntity.getInformation().getCreatedBy();
-				allowed = (selectedEntityPath.startsWith(allowedWorkspacePath) || selectedEntityPath
-						.startsWith(allowedSandboxPath)) && currentUser.equalsIgnoreCase(createdBy);
+				allowed = (selectedEntityPath.startsWith(allowedWorkspacePath) || selectedEntityPath.startsWith(allowedSandboxPath))
+						&& currentUser.equalsIgnoreCase(createdBy);
 			}
 
 		} catch (IOException e) {

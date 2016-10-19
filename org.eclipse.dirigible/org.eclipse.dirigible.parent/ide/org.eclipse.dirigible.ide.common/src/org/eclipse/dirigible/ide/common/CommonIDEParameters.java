@@ -19,8 +19,8 @@ import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 public class CommonIDEParameters {
 
-	public static String getWorkspace() {
-		return IRepositoryPaths.DB_DIRIGIBLE_USERS + getUserName() + ICommonConstants.SEPARATOR + IRepositoryPaths.WORKSPACE_FOLDER_NAME;
+	public static String getWorkspace(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_USERS + getUserName(request) + ICommonConstants.SEPARATOR + IRepositoryPaths.WORKSPACE_FOLDER_NAME;
 	}
 
 	public static final String DB_DIRIGIBLE_CONFIGURATIONS = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
@@ -28,39 +28,41 @@ public class CommonIDEParameters {
 
 	public static final String LOGGER_FACTORY = "loggerFactory"; //$NON-NLS-1$
 
-	public static String getWebContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
+	public static String getWebContentSandbox(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName(request) + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
 	}
 
-	public static String getWikiContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
+	public static String getWikiContentSandbox(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName(request) + ICommonConstants.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
 	}
 
-	public static String getMobileApplicationsSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
+	public static String getMobileApplicationsSandbox(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName(request) + ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
 	}
 
-	public static String getScriptingContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
+	public static String getScriptingContentSandbox(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName(request) + ICommonConstants.SEPARATOR
+				+ ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
 	}
 
-	public static String getIntegrationContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
+	public static String getIntegrationContentSandbox(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName(request) + ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES;
 	}
 
-	public static String getSecuritContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
+	public static String getSecuritContentSandbox(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName(request) + ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.SECURITY_CONSTRAINTS;
 	}
 
-	public static String getTestingContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
+	public static String getTestingContentSandbox(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName(request) + ICommonConstants.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
 	}
 
-	public static String getExtensionContentSandbox() {
-		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName() + ICommonConstants.SEPARATOR
+	public static String getExtensionContentSandbox(HttpServletRequest request) {
+		return IRepositoryPaths.DB_DIRIGIBLE_SANDBOX + getUserName(request) + ICommonConstants.SEPARATOR
 				+ ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
 	}
 
@@ -206,11 +208,11 @@ public class CommonIDEParameters {
 	}
 
 	public static void setAutoActivate(boolean checked) {
-		DualParameters.set(DualParameters.SET_AUTO_ACTIVATE, checked);
+		DualParameters.setAutoActivate(checked);
 	}
 
 	public static void setAutoPublish(boolean checked) {
-		DualParameters.set(DualParameters.SET_AUTO_PUBLISH, checked);
+		DualParameters.setAutoPublish(checked);
 	}
 
 	public static String getSelectedDatasource() {

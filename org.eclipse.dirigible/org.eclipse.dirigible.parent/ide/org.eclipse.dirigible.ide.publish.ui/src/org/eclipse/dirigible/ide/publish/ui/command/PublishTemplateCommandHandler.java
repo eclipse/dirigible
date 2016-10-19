@@ -14,6 +14,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.publish.PublishException;
 import org.eclipse.dirigible.ide.publish.PublishManager;
@@ -79,7 +80,7 @@ public class PublishTemplateCommandHandler extends AbstractHandler {
 	}
 
 	protected void publishProject(IProject project) throws PublishException {
-		PublishManager.publishTemplate(project);
+		PublishManager.publishTemplate(project, CommonIDEParameters.getRequest());
 	}
 
 }
