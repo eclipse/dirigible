@@ -179,3 +179,21 @@ exports.toJavaScriptBytes = function(internalBytes) {
 	}
 	return bytes;
 };
+
+/**
+ * Converts a text to a byte array
+ */
+exports.textToByteArray = function(text) {
+	var internalString = new java.lang.String(text);
+	var internalBytes = internalString.getBytes();
+	return exports.toJavaScriptBytes(internalBytes);
+};
+
+/**
+ * Converts a text to a byte array
+ */
+exports.byteArrayToText = function(bytes) {
+	var internalBytes = exports.toJavaBytes(bytes);
+	var text = new java.lang.String(internalBytes);
+	return text;
+};

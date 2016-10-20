@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.impl;
@@ -30,7 +29,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
-
 import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
 import org.eclipse.dirigible.ide.workspace.impl.event.ResourceChangeEvent;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
@@ -49,7 +47,7 @@ public class File extends Resource implements IFile {
 	private static final String COULD_NOT_APPEND_CONTENTS = Messages.File_COULD_NOT_APPEND_CONTENTS;
 	private static final String RESOURCE_DOES_NOT_EXIST = Messages.File_RESOURCE_DOES_NOT_EXIST;
 	private String charset = null;
-	
+
 	private static final Logger logger = Logger.getLogger(File.class);
 
 	public File(IPath path, Workspace workspace) {
@@ -59,12 +57,14 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void appendContents(InputStream source, int updateFlags, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public void appendContents(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException {
 		monitor = monitorWrapper(monitor);
 		try {
-			monitor.beginTask("appending file contents", //$NON-NLS-1$
-					IProgressMonitor.UNKNOWN);
+			if (monitor != null) {
+				monitor.beginTask("appending file contents", //$NON-NLS-1$
+						IProgressMonitor.UNKNOWN);
+			}
 			if (!exists()) {
 				throw new CoreException(createErrorStatus(RESOURCE_DOES_NOT_EXIST));
 			}
@@ -78,28 +78,28 @@ public class File extends Resource implements IFile {
 			} catch (IOException ex) {
 				throw new CoreException(createErrorStatus(COULD_NOT_APPEND_CONTENTS, ex));
 			}
-			workspace.notifyResourceChanged(new ResourceChangeEvent(this,
-					ResourceChangeEvent.POST_CHANGE));
+			workspace.notifyResourceChanged(new ResourceChangeEvent(this, ResourceChangeEvent.POST_CHANGE));
 		} finally {
-			monitor.done();
+			if (monitor != null) {
+				monitor.done();
+			}
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void appendContents(InputStream source, boolean force, boolean keepHistory,
-			IProgressMonitor monitor) throws CoreException {
-		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE)
-				| (force ? FORCE : IResource.NONE);
+	@Override
+	public void appendContents(InputStream source, boolean force, boolean keepHistory, IProgressMonitor monitor) throws CoreException {
+		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE) | (force ? FORCE : IResource.NONE);
 		appendContents(source, flags, monitor);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void create(InputStream source, boolean force, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public void create(InputStream source, boolean force, IProgressMonitor monitor) throws CoreException {
 		int flags = (force ? FORCE : IResource.NONE);
 		create(source, flags, monitor);
 	}
@@ -107,11 +107,13 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void create(InputStream source, int updateFlags, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public void create(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException {
 		monitor = monitorWrapper(monitor);
 		try {
-			monitor.beginTask("file creation", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+			if (monitor != null) {
+				monitor.beginTask("file creation", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+			}
 			IStatus pathValidation = workspace.validatePath(path.toString(), FILE);
 			if (!pathValidation.isOK()) {
 				throw new CoreException(pathValidation);
@@ -129,13 +131,13 @@ public class File extends Resource implements IFile {
 				org.eclipse.dirigible.repository.api.IResource resource = (org.eclipse.dirigible.repository.api.IResource) getEntity();
 				resource.setContent(readContent(source), isBinary(), getContentType());
 			} catch (IOException ex) {
-				throw new CoreException(createErrorStatus(
-						COULD_NOT_CREATE_RESOURCE + this.getName(), ex));
+				throw new CoreException(createErrorStatus(COULD_NOT_CREATE_RESOURCE + this.getName(), ex));
 			}
-			workspace.notifyResourceChanged(new ResourceChangeEvent(this,
-					ResourceChangeEvent.POST_CHANGE));
+			workspace.notifyResourceChanged(new ResourceChangeEvent(this, ResourceChangeEvent.POST_CHANGE));
 		} finally {
-			monitor.done();
+			if (monitor != null) {
+				monitor.done();
+			}
 		}
 	}
 
@@ -156,8 +158,8 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void createLink(IPath localLocation, int updateFlags, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public void createLink(IPath localLocation, int updateFlags, IProgressMonitor monitor) throws CoreException {
 		// File linking is not supported.
 		throw new UnsupportedOperationException();
 	}
@@ -165,8 +167,8 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void createLink(URI location, int updateFlags, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public void createLink(URI location, int updateFlags, IProgressMonitor monitor) throws CoreException {
 		// File linking is not supported.
 		throw new UnsupportedOperationException();
 	}
@@ -174,16 +176,16 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void delete(boolean force, boolean keepHistory, IProgressMonitor monitor)
-			throws CoreException {
-		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE)
-				| (force ? FORCE : IResource.NONE);
+	@Override
+	public void delete(boolean force, boolean keepHistory, IProgressMonitor monitor) throws CoreException {
+		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE) | (force ? FORCE : IResource.NONE);
 		delete(flags, monitor);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getCharset() throws CoreException {
 		return getCharset(true);
 	}
@@ -191,6 +193,7 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getCharset(boolean checkImplicit) throws CoreException {
 		if (checkImplicit) {
 			if (charset != null) {
@@ -206,6 +209,7 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getCharsetFor(Reader reader) throws CoreException {
 		if (exists()) {
 			return getCharset(false);
@@ -217,6 +221,7 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IContentDescription getContentDescription() throws CoreException {
 		// XXX: Could be implemented later on..
 		return null;
@@ -225,6 +230,7 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public InputStream getContents() throws CoreException {
 		return getContents(false);
 	}
@@ -232,17 +238,17 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public InputStream getContents(boolean force) throws CoreException {
 		if (!exists()) {
-			throw new CoreException(new Status(IStatus.ERROR, RemoteResourcesPlugin.PLUGIN_ID, //$NON-NLS-1$
-					FILE_DOES_NOT_EXIST));
+			throw new CoreException(new Status(IStatus.ERROR, RemoteResourcesPlugin.PLUGIN_ID, FILE_DOES_NOT_EXIST));
 		}
 		try {
 			org.eclipse.dirigible.repository.api.IResource resource = (org.eclipse.dirigible.repository.api.IResource) getEntity();
 			return new ByteArrayInputStream(resource.getContent());
 		} catch (IOException ex) {
 			logger.debug(ex.getMessage(), ex);
-			throw new CoreException(new Status(IStatus.ERROR, RemoteResourcesPlugin.PLUGIN_ID, //$NON-NLS-1$ // NOPMD
+			throw new CoreException(new Status(IStatus.ERROR, RemoteResourcesPlugin.PLUGIN_ID, // NOPMD
 					COULD_NOT_READ_FILE)); // NOPMD
 		}
 	}
@@ -250,6 +256,7 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@Deprecated
 	public int getEncoding() throws CoreException {
 		return IFile.ENCODING_UTF_8;
@@ -258,22 +265,22 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IFileState[] getHistory(IProgressMonitor monitor) throws CoreException {
 		// We do not support rollback
 		return new IFileState[0];
 	}
 
 	@Override
-	public void move(IPath destination, boolean force, boolean keepHistory, IProgressMonitor monitor)
-			throws CoreException {
-		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE)
-				| (force ? FORCE : IResource.NONE);
+	public void move(IPath destination, boolean force, boolean keepHistory, IProgressMonitor monitor) throws CoreException {
+		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE) | (force ? FORCE : IResource.NONE);
 		move(destination, flags, monitor);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	@Deprecated
 	public void setCharset(String newCharset) throws CoreException {
 		setCharset(newCharset, null);
@@ -282,6 +289,7 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setCharset(String newCharset, IProgressMonitor monitor) throws CoreException {
 		this.charset = newCharset;
 	}
@@ -289,14 +297,15 @@ public class File extends Resource implements IFile {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setContents(InputStream source, int updateFlags, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public void setContents(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException {
 		monitor = monitorWrapper(monitor);
 		try {
-			monitor.beginTask("file content change", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+			if (monitor != null) {
+				monitor.beginTask("file content change", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+			}
 			if (!exists()) {
-				throw new CoreException(new Status(IStatus.ERROR, RemoteResourcesPlugin.PLUGIN_ID, //$NON-NLS-1$
-						FILE_DOES_NOT_EXIST));
+				throw new CoreException(new Status(IStatus.ERROR, RemoteResourcesPlugin.PLUGIN_ID, FILE_DOES_NOT_EXIST));
 			}
 			try {
 				org.eclipse.dirigible.repository.api.IResource resource = (org.eclipse.dirigible.repository.api.IResource) getEntity();
@@ -305,41 +314,39 @@ public class File extends Resource implements IFile {
 				resource.setContent(out.toByteArray());
 			} catch (IOException ex) {
 				logger.error(ex.getMessage(), ex);
-				throw new CoreException(new Status(IStatus.ERROR, RemoteResourcesPlugin.PLUGIN_ID, //$NON-NLS-1$
-						COULD_NOT_WRITE_TO_FILE));
+				throw new CoreException(new Status(IStatus.ERROR, RemoteResourcesPlugin.PLUGIN_ID, COULD_NOT_WRITE_TO_FILE));
 			}
-			workspace.notifyResourceChanged(new ResourceChangeEvent(this,
-					ResourceChangeEvent.POST_CHANGE));
+			workspace.notifyResourceChanged(new ResourceChangeEvent(this, ResourceChangeEvent.POST_CHANGE));
 		} finally {
-			monitor.done();
+			if (monitor != null) {
+				monitor.done();
+			}
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setContents(IFileState source, int updateFlags, IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public void setContents(IFileState source, int updateFlags, IProgressMonitor monitor) throws CoreException {
 		throw new UnsupportedOperationException(ROLLBACK_NOT_SUPPORTED);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setContents(InputStream source, boolean force, boolean keepHistory,
-			IProgressMonitor monitor) throws CoreException {
-		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE)
-				| (force ? FORCE : IResource.NONE);
+	@Override
+	public void setContents(InputStream source, boolean force, boolean keepHistory, IProgressMonitor monitor) throws CoreException {
+		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE) | (force ? FORCE : IResource.NONE);
 		setContents(source, flags, monitor);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setContents(IFileState source, boolean force, boolean keepHistory,
-			IProgressMonitor monitor) throws CoreException {
-		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE)
-				| (force ? FORCE : IResource.NONE);
+	@Override
+	public void setContents(IFileState source, boolean force, boolean keepHistory, IProgressMonitor monitor) throws CoreException {
+		int flags = (keepHistory ? KEEP_HISTORY : IResource.NONE) | (force ? FORCE : IResource.NONE);
 		setContents(source, flags, monitor);
 	}
 
@@ -370,10 +377,9 @@ public class File extends Resource implements IFile {
 	}
 
 	@Override
-	public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags)
-			throws CoreException {
+	public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags) throws CoreException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

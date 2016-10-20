@@ -61,6 +61,7 @@ import org.eclipse.dirigible.runtime.scripting.utils.LifecycleServiceUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.NamedDataSourcesUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.StorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
+import org.eclipse.dirigible.runtime.scripting.utils.WorkspacesServiceUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -194,6 +195,9 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		// Lifecycle Service
 		registerLifecycleService(executionContext, scope, apiBuilder);
 
+		// Workspaces Service
+		registerWorkspacesService(executionContext, scope, apiBuilder);
+
 		// Utils
 
 		// put Apache Commons IOUtils
@@ -317,6 +321,16 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 			ILifecycleService lifecycleService = new LifecycleServiceUtils();
 			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.LIFECYCLE_SERVICE, lifecycleService);
 			apiBuilder.setLifecycleService(lifecycleService);
+		} catch (Throwable t) {
+			logger.error(t.getMessage(), t);
+		}
+	}
+
+	protected void registerWorkspacesService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
+		try {
+			IWorkspacesService workspacesService = new WorkspacesServiceUtils();
+			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.WORKSPACES_SERVICE, workspacesService);
+			apiBuilder.setWorkspacesService(workspacesService);
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
 		}

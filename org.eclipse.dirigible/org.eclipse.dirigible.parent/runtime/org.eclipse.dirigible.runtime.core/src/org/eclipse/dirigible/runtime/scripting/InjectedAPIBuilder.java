@@ -156,6 +156,11 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	private ILifecycleService lifecycleService;
 
 	/**
+	 * The Workspaces Service facade
+	 */
+	private IWorkspacesService workspacesService;
+
+	/**
 	 * Utilities
 	 */
 
@@ -573,6 +578,16 @@ public class InjectedAPIBuilder implements IInjectedAPI, IInjectedAPIModifiers {
 	@Override
 	public void setGenerationService(IGenerationService generationService) {
 		this.generationService = generationService;
+	}
+
+	@Override
+	public IWorkspacesService getWorkspacesService() {
+		return workspacesService;
+	}
+
+	@Override
+	public void setWorkspacesService(IWorkspacesService workspacesService) {
+		this.workspacesService = workspacesService;
 	}
 
 }

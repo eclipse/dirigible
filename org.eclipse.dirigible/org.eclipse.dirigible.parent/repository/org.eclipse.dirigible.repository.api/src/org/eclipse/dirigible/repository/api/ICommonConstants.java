@@ -148,6 +148,8 @@ public interface ICommonConstants {
 
 	public static final String LIFECYCLE_SERVICE = "LifecycleService"; //$NON-NLS-1$
 
+	public static final String WORKSPACES_SERVICE = "WorkspacesService"; //$NON-NLS-1$
+
 	// Initi Parameters Names
 	public static final String INIT_PARAM_RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
 	public static final String INIT_PARAM_SERVICES_URL = "servicesUrl"; //$NON-NLS-1$

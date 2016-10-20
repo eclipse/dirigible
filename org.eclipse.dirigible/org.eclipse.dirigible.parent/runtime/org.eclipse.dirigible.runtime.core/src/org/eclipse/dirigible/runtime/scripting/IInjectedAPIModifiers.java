@@ -72,6 +72,8 @@ public interface IInjectedAPIModifiers {
 
 	public void setLifecycleService(ILifecycleService lifecycleService);
 
+	public void setWorkspacesService(IWorkspacesService workspacesService);
+
 	public void setIOUtils(IOUtils ioUtils);
 
 	public void setHttpUtils(HttpUtils httpUtils);

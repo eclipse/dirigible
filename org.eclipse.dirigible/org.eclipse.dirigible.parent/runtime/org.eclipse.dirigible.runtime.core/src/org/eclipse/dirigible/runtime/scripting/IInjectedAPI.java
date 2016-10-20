@@ -197,6 +197,13 @@ public interface IInjectedAPI {
 	public ILifecycleService getLifecycleService();
 
 	/**
+	 * Getter for the Workspaces Service
+	 *
+	 * @return the Workspaces Service
+	 */
+	public IWorkspacesService getWorkspacesService();
+
+	/**
 	 * Getter for the IO Utilities
 	 *
 	 * @return the IO Utilities

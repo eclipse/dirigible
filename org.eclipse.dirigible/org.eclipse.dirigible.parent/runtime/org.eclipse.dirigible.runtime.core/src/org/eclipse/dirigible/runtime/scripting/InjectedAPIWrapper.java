@@ -239,4 +239,9 @@ public class InjectedAPIWrapper implements IInjectedAPI {
 		return builder.getLifecycleService();
 	}
 
+	@Override
+	public IWorkspacesService getWorkspacesService() {
+		return builder.getWorkspacesService();
+	}
+
 }
