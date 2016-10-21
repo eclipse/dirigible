@@ -1,6 +1,6 @@
 {"name":"Mobile Create Entities ",
  "description":"Create entities based on TabrisJS",
- "image":"ui-for-entity-list.png",
+ "image":"ui-for-new-entity.png",
  "sources":[
    {"name":"MobileApplications/app.js", "action":"generate"},
    {"name":"MobileApplications/package.json", "action":"generate"},
