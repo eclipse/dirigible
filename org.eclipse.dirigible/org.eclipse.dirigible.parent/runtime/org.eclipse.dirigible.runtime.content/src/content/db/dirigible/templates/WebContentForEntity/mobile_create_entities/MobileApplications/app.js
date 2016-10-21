@@ -33,12 +33,11 @@ var page = new tabris.Page({
 });
 
 var scrollView = new tabris.ScrollView({left: 0, top: 0, right: 0, bottom: 0});
-var j = 0;
 for(var i = 0; i<entities.length; i++){
   if(entities[i].visible === true && entities[i].key !== true){
     new tabris.TextView({
       id:"inputLabel"+i,
-      text: entities[i].name,
+      text: entities[i].label,
       layoutData: {left: 20, top : ["#inputLabel"+(i-1), 28]}
     }).appendTo(scrollView);
     new tabris.TextInput({
@@ -60,7 +59,6 @@ for(var i = 0; i<entities.length; i++){
       }
       saveBtn.set("enabled", shouldEnabled);
     }).appendTo(scrollView);
-    j = i;
   }
 }
 
@@ -69,7 +67,7 @@ var saveBtn = new tabris.Button({
   text: "Save",
   textColor: "white",
   background: "green",
-  layoutData : {top:["#input"+j, PAGE_MARGIN]},
+  layoutData : {top:["#input"+(entities.length - 1), PAGE_MARGIN]},
   width: 240,
   centerX: 0,
   enabled: false
