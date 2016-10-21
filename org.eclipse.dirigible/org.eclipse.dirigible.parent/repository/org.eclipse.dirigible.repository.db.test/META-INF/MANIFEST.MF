@@ -4,7 +4,7 @@ Bundle-Name: Dirigible Repository RDBMS Implementation - Test
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: SAP
 Build-Jdk: 1.6.0_33
-Bundle-Version: 2.6.161014
+Bundle-Version: 2.6.161021
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.dirigible.repository.db.test;singleton:=true
 Fragment-Host: org.eclipse.dirigible.repository.db

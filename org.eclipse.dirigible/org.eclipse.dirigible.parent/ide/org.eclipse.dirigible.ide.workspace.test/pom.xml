@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible.ide</groupId>
 		<artifactId>org.eclipse.dirigible.ide.parent</artifactId>
-		<version>2.6.161014</version>
+		<version>2.6.161021</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
