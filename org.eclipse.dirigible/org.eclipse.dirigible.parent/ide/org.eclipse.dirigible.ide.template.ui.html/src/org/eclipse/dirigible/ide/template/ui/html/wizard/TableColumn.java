@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
+import com.google.gson.Gson;
+
 public class TableColumn {
 
 	private String name;
@@ -91,5 +93,9 @@ public class TableColumn {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public String toJson() {
+		return new Gson().toJson(this);
 	}
 }

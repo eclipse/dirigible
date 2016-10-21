@@ -33,7 +33,7 @@ makeRequest(service, "GET", function(response){
 	 function getItems(){
 	  return new tabris.CollectionView({
 	    layoutData: {left: 0, right: 0, top: 0, bottom: 0},
-	    itemHeight: 80,
+	    itemHeight: 90,
 	    items: entities,
 	    refreshEnabled: true,
 	    initializeCell: function(cell) {
