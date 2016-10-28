@@ -70,7 +70,7 @@ public class CmisObject {
 	}
 
 	/**
-	 * Returns the Name of this CmisObject
+	 * Delete this CmisObject
 	 *
 	 * @return
 	 * @throws IOException
@@ -80,9 +80,18 @@ public class CmisObject {
 	}
 
 	/**
-	 * Returns the Name of this CmisObject
+	 * Delete this CmisObject
 	 *
 	 * @return
+	 * @throws IOException
+	 */
+	public void delete(boolean allVersions) throws IOException {
+		delete();
+	}
+
+	/**
+	 * Rename this CmisObject
+	 *
 	 * @throws IOException
 	 */
 	public void rename(String newName) throws IOException {
