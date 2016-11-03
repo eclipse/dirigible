@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 public class AnonymousUserInjector implements IInjector {
 
-	private static final Logger logger = LoggerFactory.getLogger(AnonymousUserInjector.class);
+	private static final Logger logger = LoggerFactory.getLogger(AnonymousUserInjector.class.getCanonicalName());
 
 	private static final String COOKIE_ANONYMOUS_USER = "dirigible_anonymous_user";
 

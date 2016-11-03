@@ -41,7 +41,7 @@ public class DatabaseInjector implements IInjector {
 	public static final String CUSTOM_DATASOURCE_PARAM_PREFIX = "jndiCustomDataSource-"; //$NON-NLS-1$
 	public static final String DATASOURCE_PREFIX = "DATASOURCE_"; //$NON-NLS-1$
 
-	private static final Logger logger = LoggerFactory.getLogger(DatabaseInjector.class);
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseInjector.class.getCanonicalName());
 
 	@Override
 	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

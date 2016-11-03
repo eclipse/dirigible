@@ -29,7 +29,7 @@ public class MailInjector implements IInjector {
 
 	static final String PROVIDED_MAIL_SESSION = "MailSessionProvided"; //$NON-NLS-1$
 
-	private static final Logger logger = LoggerFactory.getLogger(MailInjector.class);
+	private static final Logger logger = LoggerFactory.getLogger(MailInjector.class.getCanonicalName());
 
 	@Override
 	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class ProxyParametersInjector implements IInjector {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProxyParametersInjector.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProxyParametersInjector.class.getCanonicalName());
 
 	public static final String HTTP_PROXY_HOST = "http.proxyHost"; //$NON-NLS-1$
 	public static final String HTTP_PROXY_PORT = "http.proxyPort"; //$NON-NLS-1$

@@ -108,6 +108,12 @@
 			<param-value>java:comp/env/EcmService</param-value>
 		</init-param>
 		
+		<!-- JNDI key for the CMIS Service - Authentication Method (key, destination) -->
+		<init-param>
+			<param-name>jndiCmisServiceAuth</param-name>
+			<param-value>key</param-value>
+		</init-param>
+		
 		<!-- JNDI key for the CMIS Service - Name -->
 		<init-param>
 			<param-name>jndiCmisServiceName</param-name>
@@ -118,6 +124,12 @@
 		<init-param>
 			<param-name>jndiCmisServiceKey</param-name>
 			<param-value>cmis:dirigible:key</param-value>
+		</init-param>
+		
+		<!-- JNDI key for the CMIS Service - Key -->
+		<init-param>
+			<param-name>jndiCmisServiceDestination</param-name>
+			<param-value>cmis</param-value>
 		</init-param>
 		
 		<!-- Auto Commit property for JDBC connection --> 

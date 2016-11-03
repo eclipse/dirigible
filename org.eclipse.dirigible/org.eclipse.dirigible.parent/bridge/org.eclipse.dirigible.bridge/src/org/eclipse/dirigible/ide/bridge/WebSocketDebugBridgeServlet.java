@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 @ServerEndpoint("/debug")
 public class WebSocketDebugBridgeServlet {
 
-	private static final Logger logger = LoggerFactory.getLogger(WebSocketDebugBridgeServlet.class);
+	private static final Logger logger = LoggerFactory.getLogger(WebSocketDebugBridgeServlet.class.getCanonicalName());
 
 	private static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
 

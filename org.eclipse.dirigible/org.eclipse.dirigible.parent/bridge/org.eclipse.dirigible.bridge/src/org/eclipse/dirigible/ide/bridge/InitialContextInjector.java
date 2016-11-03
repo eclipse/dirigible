@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 public class InitialContextInjector implements IInjector {
 
-	private static final Logger logger = LoggerFactory.getLogger(InitialContextInjector.class);
+	private static final Logger logger = LoggerFactory.getLogger(InitialContextInjector.class.getCanonicalName());
 
 	public static final String INITIAL_CONTEXT = "InitialContext"; //$NON-NLS-1$
 

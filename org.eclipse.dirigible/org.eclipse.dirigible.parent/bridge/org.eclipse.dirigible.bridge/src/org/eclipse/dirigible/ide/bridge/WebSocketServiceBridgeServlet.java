@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 @ServerEndpoint(value = "/service/{type}", configurator = WebSocketServiceBridgeServletConfigurator.class)
 public class WebSocketServiceBridgeServlet {
 
-	private static final Logger logger = LoggerFactory.getLogger(WebSocketServiceBridgeServlet.class);
+	private static final Logger logger = LoggerFactory.getLogger(WebSocketServiceBridgeServlet.class.getCanonicalName());
 
 	private static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
 

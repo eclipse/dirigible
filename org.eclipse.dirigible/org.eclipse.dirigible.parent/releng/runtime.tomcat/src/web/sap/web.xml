@@ -89,6 +89,12 @@
 			<param-value>java:comp/env/EcmService</param-value>
 		</init-param>
 		
+		<!-- JNDI key for the CMIS Service - Authentication Method (key, destination) -->
+		<init-param>
+			<param-name>jndiCmisServiceAuth</param-name>
+			<param-value>key</param-value>
+		</init-param>
+		
 		<!-- JNDI key for the CMIS Service - Name -->
 		<init-param>
 			<param-name>jndiCmisServiceName</param-name>

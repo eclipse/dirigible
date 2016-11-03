@@ -33,7 +33,7 @@ public class DirigibleBridge extends BridgeServlet {
 
 	private static final long serialVersionUID = -8043662807856187626L;
 
-	private static final Logger logger = LoggerFactory.getLogger(DirigibleBridge.class);
+	private static final Logger logger = LoggerFactory.getLogger(DirigibleBridge.class.getCanonicalName());
 
 	static Properties ENV_PROPERTIES = new Properties();
 

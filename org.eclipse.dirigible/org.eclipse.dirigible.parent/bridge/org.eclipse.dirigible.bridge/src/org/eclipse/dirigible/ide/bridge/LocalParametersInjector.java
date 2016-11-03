@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class LocalParametersInjector implements IInjector {
 
-	private static final Logger logger = LoggerFactory.getLogger(LocalParametersInjector.class);
+	private static final Logger logger = LoggerFactory.getLogger(LocalParametersInjector.class.getCanonicalName());
 
 	public static final String HC_LOCAL_HTTP_PORT = "HC_LOCAL_HTTP_PORT"; //$NON-NLS-1$
 	public static final String HC_APPLICATION_URL = "HC_APPLICATION_URL"; //$NON-NLS-1$

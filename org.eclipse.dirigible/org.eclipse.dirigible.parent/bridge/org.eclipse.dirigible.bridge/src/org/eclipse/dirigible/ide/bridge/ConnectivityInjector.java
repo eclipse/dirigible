@@ -26,7 +26,7 @@ public class ConnectivityInjector implements IInjector {
 
 	public static final String CONNECTIVITY_CONFIGURATION = "ConnectivityConfiguration"; //$NON-NLS-1$
 
-	private static final Logger logger = LoggerFactory.getLogger(ConnectivityInjector.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConnectivityInjector.class.getCanonicalName());
 
 	@Override
 	public void injectOnRequest(ServletConfig servletConfig, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -71,7 +71,7 @@ public class ConnectivityInjector implements IInjector {
 	 * @return
 	 * @throws NamingException
 	 */
-	private Object lookupConnectivityConfiguration() throws NamingException {
+	static Object lookupConnectivityConfiguration() throws NamingException {
 		final InitialContext ctx = new InitialContext();
 		String key = InitParametersInjector.get(InitParametersInjector.INIT_PARAM_JNDI_CONNECTIVITY_CONFIGURATION);
 		if (key != null) {
