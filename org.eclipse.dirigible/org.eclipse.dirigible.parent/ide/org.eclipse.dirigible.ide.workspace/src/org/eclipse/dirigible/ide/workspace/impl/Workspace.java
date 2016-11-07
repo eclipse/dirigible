@@ -42,6 +42,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 // import org.eclipse.core.resources.WorkspaceLock;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -772,6 +773,16 @@ public class Workspace implements IWorkspace {
 	public IBuildConfiguration newBuildConfig(String projectName, String configName) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void run(ICoreRunnable action, ISchedulingRule rule, int flags, IProgressMonitor monitor) throws CoreException {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void run(ICoreRunnable action, IProgressMonitor monitor) throws CoreException {
+		// TODO Auto-generated method stub
 	}
 
 }

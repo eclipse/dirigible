@@ -2,37 +2,22 @@
 <?pde version="3.8"?><target name="Dirigible Build Target Platform" sequenceNumber="253">
 <locations>
 
-<!--
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.dirigible.external.feature.feature.group" version="0.0.0"/>
-<repository location="http://dirigible.io/p2/external/"/>
-</location>
--->
-
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jdt.source.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.pde.source.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.platform.sdk" version="0.0.0"/>
-<unit id="org.eclipse.rcp.source.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 <unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.platform.ide" version="0.0.0"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.5"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.6"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jst.web_ui.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.wst.jsdt.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/mars/"/>
-</location>
-
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/mylyn/releases/mars"/>
+<repository location="http://download.eclipse.org/releases/oxygen"/>
 </location>
 
 <!-- Base -->
@@ -45,53 +30,58 @@
 <unit id="org.eclipse.help.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/releases/mars/"/>
+<repository location="http://download.eclipse.org/releases/oxygen"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.apache.commons.io" version="2.0.1.v201105210651"/>
+<unit id="org.apache.commons.io" version="2.2.0.v201405211200"/>
 <unit id="org.slf4j.impl.log4j12" version="1.7.2.v20131105-2200"/>
-<unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201411290715"/>
+<unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201511171540"/>
 <unit id="javax.activation" version="0.0.0"/>
 <unit id="javax.mail.glassfish" version="0.0.0"/>
-<unit id="org.apache.commons.pool" version="1.6.0.v201204271246"/>
-<unit id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
-<unit id="org.apache.commons.beanutils" version="1.8.0.v201205091237"/>
-<unit id="org.apache.commons.net" version="3.2.0.v201305141515"/>
-<unit id="org.apache.commons.codec" version="1.4.0.v201209201156"/>
-<unit id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-<unit id="org.apache.commons.dbcp" version="1.4.0.v201204271417"/>
-<unit id="com.google.gson" version="2.1.0.v201303041604"/>
-<unit id="org.apache.commons.fileupload" version="1.2.2.v20111214-1400"/>
-<unit id="javax.servlet" version="3.0.0.v201112011016"/>
-<unit id="org.apache.commons.collections" version="3.2.0.v2013030210310"/>
-<unit id="org.apache.commons.lang" version="2.6.0.v201404270220"/>
-<unit id="org.apache.derby" version="10.8.2.2_v201211210650"/>
-<unit id="org.mockito" version="1.8.4.v201303031500"/>
-<unit id="org.objenesis" version="1.0.0.v201505121915"/>
-<unit id="org.jdom" version="1.0.0.v201005080400"/>
-<unit id="org.apache.lucene.core" version="3.5.0.v20120725-1805"/>
-<unit id="org.apache.lucene.analysis" version="3.5.0.v20120725-1805"/>
-<unit id="org.apache.lucene.memory" version="3.5.0.v20120725-1805"/>
-<unit id="org.apache.lucene.highlighter" version="3.5.0.v20121015-1317"/>
-<unit id="org.apache.lucene.queries" version="3.5.0.v20120725-1805"/>
+<unit id="org.apache.commons.pool" version="0.0.0"/>
+<unit id="org.slf4j.api" version="0.0.0"/>
+<unit id="org.apache.commons.beanutils" version="0.0.0"/>
+<unit id="org.apache.commons.net" version="0.0.0"/>
+<unit id="org.apache.commons.codec" version="0.0.0"/>
+<unit id="org.apache.commons.logging" version="0.0.0"/>
+<unit id="org.apache.commons.dbcp" version="0.0.0"/>
+<unit id="com.google.gson" version="0.0.0"/>
+<unit id="org.apache.commons.fileupload" version="0.0.0"/>
+<unit id="javax.servlet" version="0.0.0"/>
+<unit id="org.apache.commons.collections" version="0.0.0"/>
+<unit id="org.apache.commons.lang" version="0.0.0"/>
+<unit id="org.apache.derby" version="10.11.1.1_v201605202053"/>
+<unit id="org.mockito" version="0.0.0"/>
+<unit id="org.objenesis" version="0.0.0"/>
+<unit id="org.jdom" version="0.0.0"/>
+<unit id="org.apache.lucene.core" version="0.0.0"/>
+<unit id="org.apache.lucene.analysis" version="0.0.0"/>
+<unit id="org.apache.lucene.memory" version="0.0.0"/>
+<unit id="org.apache.lucene.highlighter" version="0.0.0"/>
+<unit id="org.apache.lucene.queries" version="0.0.0"/>
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
-<unit id="org.mozilla.javascript" version="1.7.4.v201504221540"/>
-<unit id="org.quartz" version="1.8.3.v20110329-1420"/>
-<unit id="org.json" version="1.0.0.v201011060100"/>
-<unit id="org.apache.velocity" version="1.5.0.v200905192330"/>
+<unit id="org.mozilla.javascript" version="0.0.0"/>
+<unit id="org.quartz" version="0.0.0"/>
+<unit id="org.json" version="0.0.0"/>
+<unit id="org.apache.velocity" version="0.0.0"/>
 <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
-<unit id="com.google.guava" version="15.0.0.v201403281430"/>
-<unit id="org.jsoup" version="1.7.2.v201411291515"/>
-<unit id="org.eclipse.orbit.mongodb" version="2.10.1.v20130422-1135"/>
-<unit id="javax.websocket" version="1.0.0.v20140310-1603"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository"/>
+<unit id="com.google.guava" version="0.0.0"/>
+<unit id="org.jsoup" version="0.0.0"/>
+<unit id="org.eclipse.orbit.mongodb" version="0.0.0"/>
+<unit id="javax.websocket" version="0.0.0"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.jgit.http.apache.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/egit/updates/"/>
+</location>
+
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/mylyn/releases/oxygen"/>
 </location>
 
 </locations>
