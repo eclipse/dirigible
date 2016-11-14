@@ -94,235 +94,190 @@ exports.removeResource = function(path) {
  */
 function Collection(internalCollection) {
 	this.internalCollection = internalCollection;
-	this.getInternalObject = collectionGetInternalObject;
-	this.create = collectionCreate;
-	this.delete = collectionDelete;
-	this.exists = collectionExists;
-	this.getName = collectionGetName;
-	this.getParent = collectionGetParent;
-	this.getPath = collectionGetPath;
-	this.createCollection = collectionCreateCollection;
-	this.createResource = collectionCreateResource;
-//	this.getChildren = collectionGetChildren;
-	this.getCollection = collectionGetCollection;
-	this.getCollections = collectionGetCollections;
-	this.getCollectionNames = collectionGetCollectionNames;
-	this.getResource = collectionGetResource;
-	this.getResources = collectionGetResources;
-	this.getResourceNames = collectionGetResourceNames;
-	this.isEmpty = collectionIsEmpty;
-	this.removeCollection = collectionRemoveCollection;
-	this.removeResource = collectionRemoveResource;
-	this.renameTo = collectionRenameTo;
-	this.moveTo = collectionMoveTo;
-	this.copyTo = collectionCopyTo;
-}
 
-function collectionGetInternalObject() {
-	return this.internalCollection;
-}
+	this.getInternalObject = function() {
+		return this.internalCollection;
+	};
 
-function collectionCreate() {
-	this.internalCollection.create();
-}
+	this.create = function() {
+		this.internalCollection.create();
+	};
 
-function collectionDelete() {
-	this.internalCollection.delete();
-}
+	this.delete = function() {
+		this.internalCollection.delete();
+	};
 
-function collectionExists() {
-	return this.internalCollection.exists();
-}
+	this.exists = function() {
+		return this.internalCollection.exists();
+	};
 
-function collectionGetName() {
-	return this.internalCollection.getName();
-}
+	this.getName = function() {
+		return this.internalCollection.getName();
+	};
 
-function collectionGetParent() {
-	var internalParent = this.internalCollection.getParent();
-	return new Collection(internalParent);
-}
+	this.getParent = function() {
+		var internalParent = this.internalCollection.getParent();
+		return new Collection(internalParent);
+	};
 
-function collectionGetPath() {
-	return this.internalCollection.getPath();
-}
+	this.getPath = function() {
+		return this.internalCollection.getPath();
+	};
 
-function collectionCreateCollection(name) {
-	return new Collection(this.internalCollection.createCollection(name));
-}
+	this.createCollection = function(name) {
+		return new Collection(this.internalCollection.createCollection(name));
+	};
 
-function collectionCreateResource(name, content, isBinary, contentType) {
-	return new Resource(this.internalCollection.createResource(name, streams.toJavaBytes(content), isBinary ? isBinary : false, contentType ? contentType : "plain/text"));
-}
+	this.createResource = function(name, content, isBinary, contentType) {
+		return new Resource(this.internalCollection.createResource(name, streams.toJavaBytes(content), isBinary ? isBinary : false, contentType ? contentType : "plain/text"));
+	};
 
+//	this.getChildren = collectionGetChildren
 //function collectionGetChildren() {
 //	return this.internalCollection.getChildren();
 //}
 
-function collectionGetCollection(name) {
-	return new Collection(this.internalCollection.getCollection(name));
+	this.getCollection = function(name) {
+		return new Collection(this.internalCollection.getCollection(name));
+	};
+
+	this.getCollections = function() {
+		var collections = [];
+		var internalCollections = this.internalCollection.getCollections();
+		for (var i = 0; i< internalCollections.size(); i++) {
+			collections.push(new Collection(internalCollections.get(i)));
+		}
+		return collections;
+	};
+
+	this.getCollectionNames = function() {
+		var collectionNames = [];
+		var internalCollectionNames = this.internalCollection.getCollectionsNames();
+		for (var i = 0; i< internalCollectionNames.size(); i++) {
+			collectionNames.push(internalCollectionNames.get(i));
+		}
+		return collectionNames;
+	};
+
+	this.getResource = function(name) {
+		return new Collection(this.internalCollection.getResource(name));
+	};
+
+	this.getResources = function() {
+		var resources = [];
+		var internalResources = this.internalCollection.getResources();
+		for (var i = 0; i< internalResources.size(); i++) {
+			resources.push(new Collection(internalResources.get(i)));
+		}
+		return resources;
+	};
+
+	this.getResourceNames = function() {
+		var resourceNames = [];
+		var internalResourceNames = this.internalCollection.getResourcesNames();
+		for (var i = 0; i< internalResourceNames.size(); i++) {
+			resourceNames.push(internalResourceNames.get(i));
+		}
+		return resourceNames;
+	};
+
+	this.isEmpty = function() {
+		return this.internalCollection.isEmpty();
+	};
+
+	this.removeCollection = function(name) {
+		return this.internalCollection.removeCollection(name);
+	};
+
+	this.removeResource = function(name) {
+		return this.internalCollection.removeResoruce(name);
+	};
+
+	this.renameTo = function(name) {
+		return this.internalCollection.renameTo(name);
+	};
+
+	this.moveTo = function(path) {
+		return this.internalCollection.moveTo(path);
+	};
+
+	this.copyTo = function(path) {
+		return this.internalCollection.copyTo(path);
+	};
 }
-
-function collectionGetCollection(name) {
-	return new Collection(this.internalCollection.getCollection(name));
-}
-
-function collectionGetCollections() {
-	var collections = [];
-	var internalCollections = this.internalCollection.getCollections();
-	for (var i = 0; i< internalCollections.size(); i++) {
-		collections.push(new Collection(internalCollections.get(i)));
-	}
-	return collections;
-}
-
-function collectionGetCollectionNames() {
-	var collectionNames = [];
-	var internalCollectionNames = this.internalCollection.getCollectionNames();
-	for (var i = 0; i< internalCollectionNames.size(); i++) {
-		collectionNames.push(internalCollectionNames.get(i));
-	}
-	return collectionNames;
-}
-
-function collectionGetResource(name) {
-	return new Collection(this.internalCollection.getResource(name));
-}
-
-function collectionGetResources() {
-	var resources = [];
-	var internalResources = this.internalCollection.getResources();
-	for (var i = 0; i< internalResources.size(); i++) {
-		resources.push(new Collection(internalResources.get(i)));
-	}
-	return resources;
-}
-
-function collectionGetResourceNames() {
-	var resourceNames = [];
-	var internalResourceNames = this.internalResource.getResourceNames();
-	for (var i = 0; i< internalResourceNames.size(); i++) {
-		resourceNames.push(internalResourceNames.get(i));
-	}
-	return resourceNames;
-}
-
-function collectionIsEmpty() {
-	return this.internalCollection.isEmpty();
-}
-
-function collectionRemoveCollection(name) {
-	return this.internalCollection.removeCollection(name);
-}
-
-function collectionRemoveResource(name) {
-	return this.internalCollection.removeResoruce(name);
-}
-
-function collectionRenameTo(name) {
-	return this.internalCollection.renameTo(name);
-}
-
-function collectionMoveTo(path) {
-	return this.internalCollection.moveTo(path);
-}
-
-function collectionCopyTo(path) {
-	return this.internalCollection.copyTo(path);
-}
-
-
-
 
 /**
  * Resource object
  */
 function Resource(internalResource) {
 	this.internalResource = internalResource;
-	this.getInternalObject = resourceGetInternalObject;
-	this.create = resourceCreate;
-	this.delete = resourceDelete;
-	this.exists = resourceExists;
-	this.getName = resourceGetName;
-	this.getParent = resourceGetParent;
-	this.getPath = resourceGetPath;
-	this.getContent = resourceGetContent;
-	this.getTextContent = resourceGetTextContent;
-	this.getContentType = resourceGetContentType;
-	this.isBinary = resourceIsBinary;
-	this.isEmpty = resourceIsEmpty;
-	this.renameTo = resourceRenameTo;
-	this.moveTo = resourceMoveTo;
-	this.copyTo = resourceCopyTo;
-	this.setContent = resourceSetContent;
-	this.setTextContent = resourceSetTextContent;
-}
 
-function resourceGetInternalObject() {
-	return this.internalResource;
-}
+	this.getInternalObject = function() {
+		return this.internalResource;
+	};
 
-function resourceCreate() {
-	this.internalResource.create();
-}
+	this.create = function() {
+		this.internalResource.create();
+	};
 
-function resourceDelete() {
-	this.internalResource.delete();
-}
+	this.delete = function() {
+		this.internalResource.delete();
+	};
 
-function resourceExists() {
-	return this.internalResource.exists();
-}
+	this.exists = function() {
+		return this.internalResource.exists();
+	};
 
-function resourceGetName() {
-	return this.internalResource.getName();
-}
+	this.getName = function() {
+		return this.internalResource.getName();
+	};
 
-function resourceGetParent() {
-	return new Collection(this.internalResource.getParent());
-}
+	this.getParent = function() {
+		return new Collection(this.internalResource.getParent());
+	};
 
-function resourceGetPath() {
-	return this.internalResource.getPath();
-}
+	this.getPath = function() {
+		return this.internalResource.getPath();
+	};
 
-function resourceGetContent() {
-	return streams.toJavaScriptBytes(this.internalResource.getContent());
-}
+	this.getContent = function() {
+		return streams.toJavaScriptBytes(this.internalResource.getContent());
+	};
 
-function resourceGetTextContent() {
-	return new java.lang.String(this.internalResource.getContent()) + "";
-}
+	this.getTextContent = function() {
+		return new java.lang.String(this.internalResource.getContent()) + "";
+	};
 
-function resourceGetContentType() {
-	return this.internalResource.getContentType();
-}
+	this.getContentType = function() {
+		return this.internalResource.getContentType();
+	};
 
-function resourceIsBinary() {
-	return this.internalResource.isBinary();
-}
+	this.isBinary = function() {
+		return this.internalResource.isBinary();
+	};
 
-function resourceIsEmpty() {
-	return this.internalResource.isEmpty();
-}
+	this.isEmpty = function() {
+		return this.internalResource.isEmpty();
+	};
 
-function resourceRenameTo(name) {
-	return this.internalResource.renameTo(name);
-}
+	this.renameTo = function(name) {
+		return this.internalResource.renameTo(name);
+	};
 
-function resourceMoveTo(path) {
-	return this.internalResource.moveTo(path);
-}
+	this.moveTo = function(path) {
+		return this.internalResource.moveTo(path);
+	};
 
-function resourceCopyTo(path) {
-	return this.internalResource.copyTo(path);
-}
+	this.copyTo = function(path) {
+		return this.internalResource.copyTo(path);
+	};
 
-function resourceSetContent(content) {
-	this.internalResource.setContent(streams.toJavaBytes(content));
-}
+	this.setContent = function(content) {
+		this.internalResource.setContent(streams.toJavaBytes(content));
+	};
 
-function resourceSetTextContent(text) {
-	var content = new java.lang.String(text).getBytes();
-	this.internalResource.setTextContent(streams.toJavaBytes(content));
+	this.setTextContent = function(text) {
+		var content = new java.lang.String(text).getBytes();
+		this.internalResource.setTextContent(streams.toJavaBytes(content));
+	};
 }

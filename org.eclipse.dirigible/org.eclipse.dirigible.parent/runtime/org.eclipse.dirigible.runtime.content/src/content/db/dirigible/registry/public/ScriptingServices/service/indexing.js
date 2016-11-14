@@ -21,41 +21,37 @@ exports.getIndex = function(name) {
  */
 function Index(internalIndex) {
 	this.internalIndex = internalIndex;
-	this.getInternalObject = indexGetInternalObject;
-	this.add = indexAdd;
-	this.search = indexSearch;
-	this.clear = indexClear;
-}
 
-function indexGetInternalObject() {
-	return this.internalIndex;
-}
+	this.getInternalObject = function() {
+		return this.internalIndex;
+	};
 
-function indexAdd(document) {
-	if (!document.id) {
-		throw new Error("Document should have an 'id' filed");
-	}
-	
-	if (!document.content) {
-		throw new Error("Document should have an 'content' filed");
-	}
-	var internalDocument = this.internalIndex.createDocument(document.id, document.content);
-	this.internalIndex.indexDocument(internalDocument);
-}
+	this.add = function(document) {
+		if (!document.id) {
+			throw new Error("Document should have an 'id' filed");
+		}
+		
+		if (!document.content) {
+			throw new Error("Document should have an 'content' filed");
+		}
+		var internalDocument = this.internalIndex.createDocument(document.id, document.content);
+		this.internalIndex.indexDocument(internalDocument);
+	};
 
-function indexSearch(term) {
-	var internalDocuments = this.internalIndex.search(term);
-	var documents = [];
-	for (var i=0;i<internalDocuments.size();i++) {
-		var internalDocument = internalDocuments.get(i);
-		var document = {};
-		document.id = internalDocument.get('id');
-		document.content = internalDocument.get('content');
-		documents.push(document);
-	}
-	return documents;
-}
+	this.search = function(term) {
+		var internalDocuments = this.internalIndex.search(term);
+		var documents = [];
+		for (var i=0;i<internalDocuments.size();i++) {
+			var internalDocument = internalDocuments.get(i);
+			var document = {};
+			document.id = internalDocument.get('id');
+			document.content = internalDocument.get('content');
+			documents.push(document);
+		}
+		return documents;
+	};
 
-function indexClear() {
-	this.internalIndex.clearIndex();
+	this.clear = function() {
+		this.internalIndex.clearIndex();
+	};
 }

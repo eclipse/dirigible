@@ -57,35 +57,30 @@ exports.createMimeHeaders = function() {
  */
 function Message(internalMessage) {
 	this.internalMessage = internalMessage;
-	this.getInternalObject = messageGetInternalObject;
-	this.getPart = messageGetPart;
-	this.getMimeHeaders = messageGetMimeHeaders;
-	this.save = messageSaveChanges;
-	this.getText = messageGetText;
-}
 
-function messageGetInternalObject() {
-	return this.internalMessage;
-}
+	this.getInternalObject = function() {
+		return this.internalMessage;
+	};
 
-function messageGetPart() {
-	var internalPart = this.internalMessage.getSOAPPart();
-	return new Part(internalPart);
-}
+	this.getPart = function() {
+		var internalPart = this.internalMessage.getSOAPPart();
+		return new Part(internalPart);
+	};
 
-function messageGetMimeHeaders() {
-	var internalMimeHeaders = this.internalMessage.getMimeHeaders();
-	return new MimeHeaders(internalMimeHeaders);
-}
+	this.getMimeHeaders = function() {
+		var internalMimeHeaders = this.internalMessage.getMimeHeaders();
+		return new MimeHeaders(internalMimeHeaders);
+	};
 
-function messageSaveChanges() {
-	this.internalMessage.saveChanges();
-}
+	this.save = function() {
+		this.internalMessage.saveChanges();
+	};
 
-function messageGetText() {
-	var outputStream = streams.createByteArrayOutputStream();
-	this.internalMessage.writeTo(outputStream.getInternalObject());
-	return outputStream.getText();
+	this.getText = function() {
+		var outputStream = streams.createByteArrayOutputStream();
+		this.internalMessage.writeTo(outputStream.getInternalObject());
+		return outputStream.getText();
+	};
 }
 
 /**
@@ -93,17 +88,15 @@ function messageGetText() {
  */
 function Part(internalPart) {
 	this.internalPart = internalPart;
-	this.getInternalObject = partGetInternalObject;
-	this.getEnvelope = partGetEnvelope;
-}
 
-function partGetInternalObject() {
-	return this.internalPart;
-}
+	this.getInternalObject = function() {
+		return this.internalPart;
+	};
 
-function partGetEnvelope() {
-	var internalEnvelope = this.internalPart.getEnvelope();
-	return new Envelope(internalEnvelope);
+	this.getEnvelope = function() {
+		var internalEnvelope = this.internalPart.getEnvelope();
+		return new Envelope(internalEnvelope);
+	};
 }
 
 /**
@@ -111,16 +104,14 @@ function partGetEnvelope() {
  */
 function MimeHeaders(internalMimeHeaders) {
 	this.internalMimeHeaders = internalMimeHeaders;
-	this.getInternalObject = mimeHeadersGetInternalObject;
-	this.addHeader = mimeHeadersAddHeader;
-}
 
-function mimeHeadersGetInternalObject() {
-	return this.internalMimeHeaders;
-}
+	this.getInternalObject = function() {
+		return this.internalMimeHeaders;
+	};
 
-function mimeHeadersAddHeader(name, value) {
-	this.internalMimeHeaders.addHeader(name, value);
+	this.addHeader = function(name, value) {
+		this.internalMimeHeaders.addHeader(name, value);
+	};
 }
 
 /**
@@ -128,34 +119,29 @@ function mimeHeadersAddHeader(name, value) {
  */
 function Envelope(internalEnvelope) {
 	this.internalEnvelope = internalEnvelope;
-	this.getInternalObject = envelopeGetInternalObject;
-	this.addNamespaceDeclaration = envelopeAddNamespaceDeclaration;
-	this.getBody = envelopeGetBody;
-	this.getHeader = envelopeGetHeader;
-	this.createName = envelopeCreateName;
-}
 
-function envelopeGetInternalObject() {
-	return this.internalEnvelope;
-}
+	this.getInternalObject = function() {
+		return this.internalEnvelope;
+	};
 
-function envelopeAddNamespaceDeclaration(prefix, uri) {
-	this.internalEnvelope.addNamespaceDeclaration(prefix, uri);
-}
+	this.addNamespaceDeclaration = function(prefix, uri) {
+		this.internalEnvelope.addNamespaceDeclaration(prefix, uri);
+	};
 
-function envelopeGetBody() {
-	var internalBody = this.internalEnvelope.getBody();
-	return new Body(internalBody);
-}
+	this.getBody = function() {
+		var internalBody = this.internalEnvelope.getBody();
+		return new Body(internalBody);
+	};
 
-function envelopeGetHeader() {
-	var internalHeader = this.internalEnvelope.getHeader();
-	return new Header(internalHeader);
-}
+	this.getHeader = function() {
+		var internalHeader = this.internalEnvelope.getHeader();
+		return new Header(internalHeader);
+	};
 
-function envelopeCreateName(localName, prefix, uri) {
-	var internalName = this.internalEnvelope.createName(localName, prefix, uri);
-	return new Name(internalName);
+	this.createName = function(localName, prefix, uri) {
+		var internalName = this.internalEnvelope.createName(localName, prefix, uri);
+		return new Name(internalName);
+	};
 }
 
 /**
@@ -163,28 +149,25 @@ function envelopeCreateName(localName, prefix, uri) {
  */
 function Body(internalBody) {
 	this.internalBody = internalBody;
-	this.getInternalObject = bodyGetInternalObject;
-	this.addChildElement = bodyAddChildElement;
-	this.getChildElements = bodyGetChildElements;
-}
 
-function bodyGetInternalObject() {
-	return this.internalBody;
-}
+	this.getInternalObject = function() {
+		return this.internalBody;
+	};
 
-function bodyAddChildElement(localName, prefix) {
-	var internalElement = this.internalBody.addChildElement(localName, prefix);
-	return new Element(internalElement);
-}
+	this.addChildElement = function(localName, prefix) {
+		var internalElement = this.internalBody.addChildElement(localName, prefix);
+		return new Element(internalElement);
+	};
 
-function bodyGetChildElements() {
-	var childElements = [];
-	var internalElementsIterator = this.internalBody.getChildElements();
-	while (internalElementsIterator.hasNext()) {
-		var internalElement = internalElementsIterator.next();
-		childElements.push(new Element(internalElement));
-	}
-	return childElements;
+	this.getChildElements = function() {
+		var childElements = [];
+		var internalElementsIterator = this.internalBody.getChildElements();
+		while (internalElementsIterator.hasNext()) {
+			var internalElement = internalElementsIterator.next();
+			childElements.push(new Element(internalElement));
+		}
+		return childElements;
+	};
 }
 
 /**
@@ -192,17 +175,15 @@ function bodyGetChildElements() {
  */
 function Header(internalHeader) {
 	this.internalHeader = internalHeader;
-	this.getInternalObject = headerGetInternalObject;
-	this.addHeaderElement = headerAddHeaderElement;
-}
 
-function headerGetInternalObject() {
-	return this.internalNeader;
-}
+	this.getInternalObject = function() {
+		return this.internalNeader;
+	};
 
-function headerAddHeaderElement(name) {
-	var internalElement = this.internalHeader.addHeaderElement(name.getInternalObject());
-	return new Element(internalElement);
+	this.addHeaderElement = function(name) {
+		var internalElement = this.internalHeader.addHeaderElement(name.getInternalObject());
+		return new Element(internalElement);
+	};
 }
 
 /**
@@ -210,96 +191,82 @@ function headerAddHeaderElement(name) {
  */
 function Name(internalName) {
 	this.internalName = internalName;
-	this.getInternalObject = nameGetInternalObject;
-	this.getLocalName = nameGetLocalName;
-	this.getPrefix = nameGetPrefix;
-	this.getQualifiedName = nameGetQualifiedName;
-	this.getURI = nameGetURI;
-}
 
-function nameGetInternalObject() {
-	return this.internalName;
-}
+	this.getInternalObject = function() {
+		return this.internalName;
+	};
 
-function nameGetLocalName() {
-	return this.internalName.getLocalName();
-}
+	this.getLocalName = function() {
+		return this.internalName.getLocalName();
+	};
 
-function nameGetPrefix() {
-	return this.internalName.getPrefix();
-}
+	this.getPrefix = function() {
+		return this.internalName.getPrefix();
+	};
 
-function nameGetQualifiedName() {
-	return this.internalName.getQualifiedName();
-}
+	this.getQualifiedName = function() {
+		return this.internalName.getQualifiedName();
+	};
 
-function nameGetURI() {
-	return this.internalName.getURI();
+	this.getURI = function() {
+		return this.internalName.getURI();
+	};
 }
 
 /**
  * SOAP Element
  */
-function Element(internalElement) {
-	this.internalElement = internalElement;
-	this.getInternalObject = elementGetInternalObject;
-	this.addChildElement = elementAddChildElement;
-	this.addTextNode = elementAddTextNode;
-	this.addAttribute = elementAddAttribute;
-	this.getChildElements = elementGetChildElements;
-	this.getElementName = elementGetElementName;
-	this.getValue = elementGetValue;
-	this.isSOAPElement = elementIsSOAPElement;
-}
+function Element(element) {
+	this.internalElement = element;
 
-function elementGetInternalObject() {
-	return this.internalElement;
-}
+	this.getInternalObject = function() {
+		return this.internalElement;
+	};
 
-function elementAddChildElement(localName, prefix) {
-	var internalElement = this.internalElement.addChildElement(localName, prefix);
-	return new Element(internalElement);
-}
+	this.addChildElement = function(localName, prefix) {
+		var internalElement = this.internalElement.addChildElement(localName, prefix);
+		return new Element(internalElement);
+	};
 
-function elementAddTextNode(text) {
-	var internalElement = this.internalElement.addTextNode(text);
-	return new Element(internalElement);
-}
+	this.addTextNode = function(text) {
+		var internalElement = this.internalElement.addTextNode(text);
+		return new Element(internalElement);
+	};
 
-function elementAddAttribute(name, value) {
-	var internalElement = this.internalElement.addAttribute(name.getInternalObject(), value);
-	return new Element(internalElement);
-}
+	this.addAttribute = function(name, value) {
+		var internalElement = this.internalElement.addAttribute(name.getInternalObject(), value);
+		return new Element(internalElement);
+	};
 
-function elementGetChildElements() {
-	var childElements = [];
-	var internalElementsIterator = this.internalElement.getChildElements();
-	while (internalElementsIterator.hasNext()) {
-		var internalElement = internalElementsIterator.next();
-		childElements.push(new Element(internalElement));
-	}
-	return childElements;
-}
+	this.getChildElements = function() {
+		var childElements = [];
+		var internalElementsIterator = this.internalElement.getChildElements();
+		while (internalElementsIterator.hasNext()) {
+			var internalElement = internalElementsIterator.next();
+			childElements.push(new Element(internalElement));
+		}
+		return childElements;
+	};
 
-function elementGetElementName() {
-	try {
-		var internalName = this.internalElement.getElementName();
-		return new Name(internalName);
-	} catch(e) {
-	//  can we assume that always an exception here means the element is not an SOAPElement
-	//	console.log(e);
-	}
-	return null;
-}
+	this.getElementName = function() {
+		try {
+			var internalName = this.internalElement.getElementName();
+			return new Name(internalName);
+		} catch(e) {
+		//  can we assume that always an exception here means the element is not an SOAPElement
+		//	console.log(e);
+		}
+		return null;
+	};
 
-function elementGetValue() {
-	return this.internalElement.getValue();
-}
+	this.getValue = function() {
+		return this.internalElement.getValue();
+	};
 
-function elementIsSOAPElement() {
-	return this.getElementName() !== null;
+	this.isSOAPElement = function() {
+		return this.getElementName() !== null;
+	};
 }
-
 
 /**
  * Call a given SOAP endpoint with a given request message

@@ -26,139 +26,119 @@ exports.get = function(path) {
  */
 function File(internalFile) {
 	this.internalFile = internalFile;
-	this.getInternalObject = fileGetInternalObject;
-	this.exists = fileExists;
-	this.isExecutable = fileIsExecutable;
-	this.isReadable = fileIsReadable;
-	this.isWritable = fileIsWritable;
-	this.getCanonicalPath = fileGetCanonicalPath;
-	this.getPath = fileGetPath;
-	this.getName = fileGetName;
-	this.getParent = fileGetParent;
-	this.isDirectory = fileIsDirectory;
-	this.isFile = fileIsFile;
-	this.isHidden = fileIsHidden;
-	this.lastModified = fileLastModified;
-	this.length = fileLength;
-	this.list = fileList;
-	this.listRoots = fileListRoots;
-	this.filter = fileFilter;
-	this.setExecutable = fileSetExecutable;
-	this.setReadable = fileSetReadable;
-	this.setWritable = fileSetWritable;
-}
 
-function fileGetInternalObject() {
-	return this.internalFile;
-}
+	this.getInternalObject = function() {
+		return this.internalFile;
+	};
 
-function fileExists() {
-	return this.internalFile.exists();
-}
+	this.exists = function() {
+		return this.internalFile.exists();
+	};
 
-function fileIsExecutable() {
-	return this.internalFile.canExecute();
-}
+	this.isExecutable = function() {
+		return this.internalFile.canExecute();
+	};
 
-function fileIsReadable() {
-	return this.internalFile.canRead();
-}
+	this.isReadable = function() {
+		return this.internalFile.canRead();
+	};
 
-function fileIsWritable() {
-	return this.internalFile.canWrite();
-}
+	this.isWritable = function() {
+		return this.internalFile.canWrite();
+	};
 
-function fileGetCanonicalPath() {
-	return this.internalFile.getCanonicalPath();
-}
+	this.getCanonicalPath = function() {
+		return this.internalFile.getCanonicalPath();
+	};
 
-function fileGetPath() {
-	return this.internalFile.getPath();
-}
+	this.getPath = function() {
+		return this.internalFile.getPath();
+	};
 
-function fileGetName() {
-	return this.internalFile.getName();
-}
+	this.getName = function() {
+		return this.internalFile.getName();
+	};
 
-function fileGetParent() {
-	return this.internalFile.getParent();
-}
+	this.getParent = function() {
+		return this.internalFile.getParent();
+	};
 
-function fileGetParentFile() {
-    if (this.internalFile.getParentFile()) {
-		return new File(this.internalFile.getParentFile());
-	}
-	return null;
-}
-
-function fileIsDirectory() {
-	return this.internalFile.isDirectory();
-}
-
-function fileIsFile() {
-	return this.internalFile.isFile();
-}
-
-function fileIsHidden() {
-	return this.internalFile.isHidden();
-}
-
-function fileLastModified() {
-	return new Date(this.internalFile.lastModified());
-}
-
-function fileLength() {
-	return this.internalFile.length();
-}
-
-function fileList() {
-	var list = [];
-	var internalList = this.internalFile.list();
-	for (i = 0; i < internalList.length; i++) {
-		list.push(internalList[i]);
-	}
-	return list;
-}
-
-function fileListRoots() {
-	var list = [];
-	var internalList;
-	if (engine === "nashorn") {
-		internalList = this.internalFile.class.static.listRoots();
-	} else {
-		internalList = this.internalFile.listRoots();
+	this.getParentFile = function() {
+	    if (this.internalFile.getParentFile()) {
+			return new File(this.internalFile.getParentFile());
+		}
+		return null;
 	}
 
-	for (i = 0; i < internalList.length; i++) {
-		list.push(internalList[i]);
-	}
-	return list;
-}
+	this.isDirectory = function() {
+		return this.internalFile.isDirectory();
+	};
 
-function fileFilter(pattern) {
-	var list = [];
-	var filter = new java.io.FilenameFilter() {
-		    accept: function(dir, name) {
-		        return name.search(pattern) >= 0;
-		    }
-		};
-	var internalList = this.internalFile.list(filter);
-	for (i = 0; i < internalList.length; i++) {
-		list.push(internalList[i]);
-	}
-	return list;
-}
+	this.isFile = function() {
+		return this.internalFile.isFile();
+	};
 
-function fileSetExecutable(executable) {
-	return this.internalFile.setExecutable(executable, false);
-}
+	this.isHidden = function() {
+		return this.internalFile.isHidden();
+	};
 
-function fileSetReadable(readable) {
-	return this.internalFile.setReadable(readable, false);
-}
+	this.lastModified = function() {
+		return new Date(this.internalFile.lastModified());
+	};
 
-function fileSetWritable(writable) {
-	return this.internalFile.setWritable(writable, false);
+	this.length = function() {
+		return this.internalFile.length();
+	};
+
+	this.list = function() {
+		var list = [];
+		var internalList = this.internalFile.list();
+		for (i = 0; i < internalList.length; i++) {
+			list.push(internalList[i]);
+		}
+		return list;
+	};
+
+	this.listRoots = function() {
+		var list = [];
+		var internalList;
+		if (engine === "nashorn") {
+			internalList = this.internalFile.class.static.listRoots();
+		} else {
+			internalList = this.internalFile.listRoots();
+		}
+	
+		for (i = 0; i < internalList.length; i++) {
+			list.push(internalList[i]);
+		}
+		return list;
+	};
+
+	this.filter = function(pattern) {
+		var list = [];
+		var filter = new java.io.FilenameFilter() {
+			    accept: function(dir, name) {
+			        return name.search(pattern) >= 0;
+			    }
+			};
+		var internalList = this.internalFile.list(filter);
+		for (i = 0; i < internalList.length; i++) {
+			list.push(internalList[i]);
+		}
+		return list;
+	};
+
+	this.setExecutable = function(executable) {
+		return this.internalFile.setExecutable(executable, false);
+	};
+
+	this.setReadable = function(readable) {
+		return this.internalFile.setReadable(readable, false);
+	};
+
+	this.setWritable = function(writable) {
+		return this.internalFile.setWritable(writable, false);
+	};
 }
 
 /**
@@ -215,8 +195,7 @@ exports.delete = function(path) {
 exports.readText = function(path) {
 	var internalPath = java.nio.file.Paths.get(path);
 	var bytes = java.nio.file.Files.readAllBytes(internalPath);
-	var result = new java.lang.String(bytes);
-	return result;
+	return String.fromCharCode.apply(String, streams.toJavaScriptBytes(bytes));
 };
 
 /**

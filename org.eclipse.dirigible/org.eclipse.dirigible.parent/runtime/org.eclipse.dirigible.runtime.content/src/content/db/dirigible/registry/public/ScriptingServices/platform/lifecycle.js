@@ -27,7 +27,6 @@ exports.activateAll = function() {
 	$.getLifecycleService().activateAll($.getRequest());
 };
 
-
 exports.publishAll = function() {
 	$.getLifecycleService().publishAll($.getRequest());
 };

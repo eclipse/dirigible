@@ -26,28 +26,25 @@ exports.getNamedDatasource = function(name) {
  */
 function Datasource(internalDatasource) {
 	this.internalDatasource = internalDatasource;
+
 	this.internalDbUtils = $.getDatabaseUtils(this.internalDatasource);
-	this.getInternalObject = datasourceGetInternalObject;
-	this.getConnection = datasourceGetConnection;
-	this.getSequence = datasourceGetSequence;
-	this.getPaging = datasourceGetPaging;
-}
 
-function datasourceGetInternalObject() {
-	return this.internalDatasource;
-}
+	this.getInternalObject = function() {
+		return this.internalDatasource;
+	};
 
-function datasourceGetConnection() {
-	var internalConnection = this.internalDatasource.getConnection();
-	return new Connection(internalConnection);
-}
+	this.getConnection = function() {
+		var internalConnection = this.internalDatasource.getConnection();
+		return new Connection(internalConnection);
+	};
 
-function datasourceGetSequence(name) {
-	return new Sequence(this.internalDbUtils, name);
-}
+	this.getSequence = function(name) {
+		return new Sequence(this.internalDbUtils, name);
+	};
 
-function datasourceGetPaging() {
-	return new Paging(this.internalDbUtils);
+	this.getPaging = function() {
+		return new Paging(this.internalDbUtils);
+	};
 }
 
 /**
@@ -55,187 +52,156 @@ function datasourceGetPaging() {
  */
 function Connection(internalConnection) {
 	this.internalConnection = internalConnection;
-	this.getInternalObject = connectionGetInternalObject;
-	this.prepareStatement = prepareStatement;
-	this.close = connectionClose;
-	this.commit = connectionCommit;
-	this.getAutoCommit = connectionGetAutoCommit;
-	this.getCatalog = connectionGetCatalog;
+
+	this.getInternalObject = function() {
+		return this.internalConnection;
+	};
+
+	this.prepareStatement = function(sql) {
+		var internalStatement = this.internalConnection.prepareStatement(sql);
+		return new Statement(internalStatement);
+	};
+
+	this.close = function() {
+		this.internalConnection.close();
+	};
+
+	this.commit = function() {
+		this.internalConnection.commit();
+	};
+
+	this.getAutoCommit = function() {
+		return this.internalConnection.getAutoCommit();
+	};
+
+	this.getCatalog = function() {
+		return this.internalConnection.getCatalog();
+	};
+
 	// getClientInfo
 	// getMetaData
-	this.getSchema = connectionGetSchema;
-	this.getTransactionIsolation = connectionGetTransactionIsolation;
-	this.isClosed = connectionIsClosed;
-	this.isReadOnly = connectionIsReadOnly;
-	this.isValid = connectionIsValid;
+
+	this.getSchema = function() {
+		return this.internalConnection.getSchema();
+	};
+
+	this.getTransactionIsolation = function() {
+		return this.internalConnection.getTransactionIsolation();
+	};
+
+	this.isClosed = function() {
+		return this.internalConnection.isClosed();
+	};
+
+	this.isReadOnly = function() {
+		return this.internalConnection.isReadOnly();
+	};
+
+	this.isValid = function() {
+		return this.internalConnection.isValid();
+	};
+
 	// prepareCall
-	this.rollback = connectionRollback;
-	this.setAutoCommit = connectionSetAutoCommit;
-	this.setCatalog = connectionSetCatalog;
+	this.rollback = function() {
+		this.internalConnection.rollback();
+	};
+
+	this.setAutoCommit = function(autoCommit) {
+		this.internalConnection.setAutoCommit(autoCommit);
+	};
+
+	this.setCatalog = function(catalog) {
+		this.internalConnection.setCatalog(catalog);
+	};
+
 	// setClientInfo
-	this.setReadOnly = connectionSetReadOnly;
-	this.setSchema = connectionSetSchema;
-	this.setTransactionIsolation = connectionSetTransactionIsolation;
-}
+	this.setReadOnly = function(readOnly) {
+		this.internalConnection.setReadOnly(readOnly);
+	};
 
-function connectionGetInternalObject() {
-	return this.internalConnection;
-}
+	this.setSchema = function(schema) {
+		this.internalConnection.setSchema(schema);
+	};
 
-function prepareStatement(sql) {
-	var internalStatement = this.internalConnection.prepareStatement(sql);
-	return new Statement(internalStatement);
+	this.setTransactionIsolation = function(transactionIsolation) {
+		this.internalConnection.setTransactionIsolation(transactionIsolation);
+	};
 }
-
-function connectionClose() {
-	this.internalConnection.close();
-}
-
-function connectionCommit() {
-	this.internalConnection.commit();
-}
-
-function connectionGetAutoCommit() {
-	return this.internalConnection.getAutoCommit();
-}
-
-function connectionGetCatalog() {
-	return this.internalConnection.getCatalog();
-}
-
-function connectionGetSchema() {
-	return this.internalConnection.getSchema();
-}
-
-function connectionGetTransactionIsolation() {
-	return this.internalConnection.getTransactionIsolation();
-}
-
-function connectionIsClosed() {
-	return this.internalConnection.isClosed();
-}
-
-function connectionIsReadOnly() {
-	return this.internalConnection.isReadOnly();
-}
-
-function connectionIsValid() {
-	return this.internalConnection.isValid();
-}
-
-function connectionRollback() {
-	this.internalConnection.rollback();
-}
-
-function connectionSetAutoCommit(autoCommit) {
-	this.internalConnection.setAutoCommit(autoCommit);
-}
-
-function connectionSetCatalog(catalog) {
-	this.internalConnection.setCatalog(catalog);
-}
-
-function connectionSetReadOnly(readOnly) {
-	this.internalConnection.setReadOnly(readOnly);
-}
-
-function connectionSetSchema(schema) {
-	this.internalConnection.setSchema(schema);
-}
-
-function connectionSetTransactionIsolation(transactionIsolation) {
-	this.internalConnection.setTransactionIsolation(transactionIsolation);
-}
-
 
 /**
  * Statement object
  */
 function Statement(internalStatement) {
 	this.internalStatement = internalStatement;
-	this.getInternalObject = statementGetInternalObject;
-	this.close = statementClose;
-	
-	this.execute = statementExecute;
-	this.executeQuery = statementExecuteQuery;
-	this.executeUpdate = statementExecuteUpdate;
+
+	this.getInternalObject = function() {
+		return this.internalStatement;
+	};
+
+	this.close = function() {
+		this.internalStatement.close();
+	};
+
+	this.execute = function() {
+		return this.internalStatement.execute();
+	};
+
+	this.executeQuery = function() {
+		var internalResultset = this.internalStatement.executeQuery();
+		return new ResultSet(internalResultset);
+	};
+
+	this.executeUpdate = function() {
+		return this.internalStatement.executeUpdate();
+	};
+
 	// getMetaData
 	// setBigDecimal
 	// setBlob
-	this.setBoolean = statementSetBoolean;
+
+	this.setBoolean = function(index, value) {
+		this.internalStatement.setBoolean(index, value);
+	};
+
 	// setByte
 	// setBytes
 	// setClob
-	this.setDate = statementSetDate;
-	this.setDouble = statementSetDouble;
-	this.setFloat = statementSetFloat;
-	this.setInt = statementSetInt;
-	this.setLong = statementSetLong;
-	this.setShort = statementSetShort;
-	this.setString = statementSetString;
-	this.setTime = statementSetTime;
-	this.setTimestamp = statementSetTimestamp;
-}
 
-function statementGetInternalObject() {
-	return this.internalStatement;
-}
+	this.setDate = function(index, value) {
+		this.internalStatement.setDate(index, new java.sql.Date(value.getTime()));
+	};
 
-function statementClose() {
-	this.internalStatement.close();
-}
+	this.setDouble = function(index, value) {
+		this.internalStatement.setDouble(index, value);
+	};
 
-function statementExecute() {
-	return this.internalStatement.execute();
-}
+	this.setFloat = function(index, value) {
+		this.internalStatement.setFloat(index, value);
+	};
 
-function statementExecuteQuery() {
-	var internalResultset = this.internalStatement.executeQuery();
-	return new ResultSet(internalResultset);
-}
+	this.setInt = function(index, value) {
+		this.internalStatement.setInt(index, value);
+	};
 
-function statementExecuteUpdate() {
-	return this.internalStatement.executeUpdate();
-}
+	this.setLong = function(index, value) {
+		this.internalStatement.setLong(index, value);
+	};
 
-function statementSetBoolean(index, value) {
-	this.internalStatement.setBoolean(index, value);
-}
+	this.setShort = function(index, value) {
+		this.internalStatement.setShort(index, value);
+	};
 
-function statementSetDate(index, value) {
-	this.internalStatement.setDate(index, new java.sql.Date(value.getTime()));
-}
+	this.setString = function(index, value) {
+		this.internalStatement.setString(index, value);
+	};
 
-function statementSetDouble(index, value) {
-	this.internalStatement.setDouble(index, value);
-}
+	this.setTime = function(index, value) {
+		this.internalStatement.setTime(index, new java.sql.Time(value.getTime()));
+	};
 
-function statementSetFloat(index, value) {
-	this.internalStatement.setFloat(index, value);
-}
-
-function statementSetInt(index, value) {
-	this.internalStatement.setInt(index, value);
-}
-
-function statementSetLong(index, value) {
-	this.internalStatement.setLong(index, value);
-}
-
-function statementSetShort(index, value) {
-	this.internalStatement.setShort(index, value);
-}
-
-function statementSetString(index, value) {
-	this.internalStatement.setString(index, value);
-}
-
-function statementSetTime(index, value) {
-	this.internalStatement.setTime(index, new java.sql.Time(value.getTime()));
-}
-
-function statementSetTimestamp(index, value) {
-	this.internalStatement.setTimestamp(index, new java.sql.Timestamp(value.getTime()));
+	this.setTimestamp = function(index, value) {
+		this.internalStatement.setTimestamp(index, new java.sql.Timestamp(value.getTime()));
+	};
 }
 
 /**
@@ -243,142 +209,121 @@ function statementSetTimestamp(index, value) {
  */
 function ResultSet(internalResultset) {
 	this.internalResultset = internalResultset;
-	this.getInternalObject = resultsetGetInternalObject;
-	this.close = resultsetClose;
+
+	this.getInternalObject = function() {
+		return this.internalResultset;
+	};
+
+	this.close = function() {
+		this.internalResultset.close();
+	};
+
 	// getBigDecimal
 	// getBlob
-	this.getBoolean = resultsetGetBoolean;
+
+	this.getBoolean = function(identifier) {
+		return this.internalResultset.getBoolean(identifier);
+	};
+
 	// getByte
 	// getBytes
 	// getClob
-	this.getDate = resultsetGetDate;
-	this.getDouble = resultsetGetDouble;
-	this.getFloat = resultsetGetFloat;
-	this.getInt = resultsetGetInt;
-	this.getLong = resultsetGetLong;
-	this.getShort = resultsetGetShort;
-	this.getString = resultsetGetString;
-	this.getTime = resultsetGetTime;
-	this.getTimestamp = resultsetGetTimestamp;
-	this.isAfterLast = resultsetIsAfterLast;
-	this.isBeforeFirst = resultsetIsBeforeFirst;
-	this.isClosed = resultsetIsClosed;
-	this.isFirst = resultsetIsFirst;
-	this.isLast = resultsetIsLast;
-	this.next = resultsetNext;
-}
 
-function resultsetGetInternalObject() {
-	return this.internalResultset;
-}
+	this.getDate = function(identifier) {
+		return new Date(this.internalResultset.getDate(identifier).getTime());
+	};
 
-function resultsetClose() {
-	this.internalResultset.close();
-}
+	this.getDouble = function(identifier) {
+		return this.internalResultset.getDouble(identifier);
+	};
 
-function resultsetGetBoolean(identifier) {
-	return this.internalResultset.getBoolean(identifier);
-}
+	this.getFloat = function(identifier) {
+		return this.internalResultset.getFloat(identifier);
+	};
 
-function resultsetGetDate(identifier) {
-	return new Date(this.internalResultset.getDate(identifier).getTime());
-}
+	this.getInt = function(identifier) {
+		return this.internalResultset.getInt(identifier);
+	};
 
-function resultsetGetDouble(identifier) {
-	return this.internalResultset.getDouble(identifier);
-}
+	this.getLong = function(identifier) {
+		return this.internalResultset.getLong(identifier);
+	};
 
-function resultsetGetFloat(identifier) {
-	return this.internalResultset.getFloat(identifier);
-}
+	this.getShort = function(identifier) {
+		return this.internalResultset.getShort(identifier);
+	};
 
-function resultsetGetInt(identifier) {
-	return this.internalResultset.getInt(identifier);
-}
+	this.getString = function(identifier) {
+		return this.internalResultset.getString(identifier);
+	};
 
-function resultsetGetLong(identifier) {
-	return this.internalResultset.getLong(identifier);
-}
+	this.getTime = function(identifier) {
+		return new Date(this.internalResultset.getTime(identifier).getTime());
+	};
 
-function resultsetGetShort(identifier) {
-	return this.internalResultset.getShort(identifier);
-}
+	this.getTimestamp = function(identifier) {
+		return new Date(this.internalResultset.getTimestamp(identifier).getTime());
+	};
 
-function resultsetGetString(identifier) {
-	return this.internalResultset.getString(identifier);
-}
+	this.isAfterLast = function(identifier) {
+		return this.internalResultset.isAfterLast(identifier);
+	};
 
-function resultsetGetTime(identifier) {
-	return new Date(this.internalResultset.getTime(identifier).getTime());
-}
+	this.isBeforeFirst = function(identifier) {
+		return this.internalResultset.isBeforeFirst(identifier);
+	};
 
-function resultsetGetTimestamp(identifier) {
-	return new Date(this.internalResultset.getTimestamp(identifier).getTime());
-}
+	this.isClosed = function(identifier) {
+		return this.internalResultset.isClosed(identifier);
+	};
 
-function resultsetIsAfterLast(identifier) {
-	return this.internalResultset.isAfterLast(identifier);
-}
+	this.isFirst = function(identifier) {
+		return this.internalResultset.isFirst(identifier);
+	};
 
-function resultsetIsBeforeFirst(identifier) {
-	return this.internalResultset.isBeforeFirst(identifier);
-}
+	this.isLast = function(identifier) {
+		return this.internalResultset.isLast(identifier);
+	};
 
-function resultsetIsClosed(identifier) {
-	return this.internalResultset.isClosed(identifier);
+	this.next = function() {
+		return this.internalResultset.next();
+	};
 }
-
-function resultsetIsFirst(identifier) {
-	return this.internalResultset.isFirst(identifier);
-}
-
-function resultsetIsLast(identifier) {
-	return this.internalResultset.isLast(identifier);
-}
-
-function resultsetNext() {
-	return this.internalResultset.next();
-}
-
 
 /**
  * Sequence object
  */
 function Sequence(internalDbUtils, name) {
 	this.internalDbUtils = internalDbUtils;
-	this.getInternalObject = sequenceGetInternalObject;
+
+	this.getInternalObject = function() {
+		return this.internalDbUtils;
+	};
+
 	this.name = name;
-	this.getName = sequenceGetName;
-	this.create = sequenceCreateSequence;
-	this.next = sequenceNextSequence;
-	this.drop = sequenceDropSequence;
-	this.exists = sequenceExistsSequence;
-//	this.createLimitAndOffset = dbutilsCreateLimitAndOffset;
-//	this.createTopAndStart = dbutilsCreateTopAndStart;
-}
 
-function sequenceGetInternalObject() {
-	return this.internalDbUtils;
-}
+	this.getName = function() {
+		return this.name;
+	};
 
-function sequenceGetName() {
-	return this.name;
-}
+	this.create = function(start) {
+		return this.internalDbUtils.createSequence(this.name, start);
+	};
 
-function sequenceCreateSequence(start) {
-	return this.internalDbUtils.createSequence(this.name, start);
-}
+	this.next = function() {
+		return this.internalDbUtils.getNext(this.name);
+	};
 
-function sequenceNextSequence() {
-	return this.internalDbUtils.getNext(this.name);
-}
+	this.drop = function() {
+		return this.internalDbUtils.dropSequence(this.name);
+	};
 
-function sequenceDropSequence() {
-	return this.internalDbUtils.dropSequence(this.name);
-}
+	this.exists = function() {
+		return this.internalDbUtils.existSequence(this.name);
+	};
 
-function sequenceExistsSequence() {
-	return this.internalDbUtils.existSequence(this.name);
+	//	this.createLimitAndOffset = dbutilsCreateLimitAndOffset;
+	//	this.createTopAndStart = dbutilsCreateTopAndStart;
 }
 
 /**
@@ -386,19 +331,16 @@ function sequenceExistsSequence() {
  */
 function Paging(internalDbUtils) {
 	this.internalDbUtils = internalDbUtils;
-	this.getInternalObject = pagingGetInternalObject;
-	this.genLimitAndOffset = pagingCreateLimitAndOffset;
-	this.genTopAndStart = pagingCreateTopAndStart;
-}
 
-function pagingGetInternalObject() {
-	return this.internalDbUtils;
-}
+	this.getInternalObject = function() {
+		return this.internalDbUtils;
+	};
 
-function pagingCreateLimitAndOffset(limit, offset) {
-	return this.internalDbUtils.createLimitAndOffset(limit, offset);
-}
+	this.genLimitAndOffset = function(limit, offset) {
+		return this.internalDbUtils.createLimitAndOffset(limit, offset);
+	};
 
-function pagingCreateTopAndStart(limit, offset) {
-	return this.internalDbUtils.createTopAndStart(limit, offset);
+	this.genTopAndStart = function(limit, offset) {
+		return this.internalDbUtils.createTopAndStart(limit, offset);
+	};
 }

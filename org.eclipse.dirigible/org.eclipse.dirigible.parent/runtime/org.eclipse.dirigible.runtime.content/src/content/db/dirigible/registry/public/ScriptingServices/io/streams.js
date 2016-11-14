@@ -46,7 +46,7 @@ exports.readText = function(inputStream) {
 	} else {
 		internalBytes = $.IOUtils.toByteArray(inputStream.getInternalObject());
 	}
-	return new java.lang.String(internalBytes);
+	return String.fromCharCode.apply(String, exports.toJavaScriptBytes(internalBytes));
 };
 
 /**
@@ -99,12 +99,11 @@ function inputStreamGetInternalObject() {
  */
 exports.OutputStream = function(internalOutputStream) {
 	this.internalOutputStream = internalOutputStream;
-	this.getInternalObject = outputStreamGetInternalObject;
-};
 
-function outputStreamGetInternalObject() {
-	return this.internalOutputStream;
-}
+	this.getInternalObject = function() {
+		return this.internalOutputStream;
+	};
+};
 
 /**
  * Create an ByteArrayInputStream for byte array provided
@@ -118,13 +117,13 @@ exports.createByteArrayInputStream = function(bytes) {
  */
 exports.ByteArrayInputStream = function(bytes) {
 	var internalBytes = exports.toJavaBytes(bytes);
-	this.internalInputStream = new java.io.ByteArrayInputStream(internalBytes);
-	this.getInternalObject = byteArrayInputStreamGetInternalObject;
-};
 
-function byteArrayInputStreamGetInternalObject() {
-	return this.internalInputStream;
-}
+	this.internalInputStream = new java.io.ByteArrayInputStream(internalBytes);
+
+	this.getInternalObject = function() {
+		return this.internalInputStream;
+	};
+};
 
 /**
  * Create a ByteArrayOutputStream
@@ -138,25 +137,22 @@ exports.createByteArrayOutputStream = function() {
  */
 exports.ByteArrayOutputStream = function() {
 	this.internalOutputStream = new java.io.ByteArrayOutputStream();
-	this.getInternalObject = byteArrayOutputStreamGetInternalObject;
-	this.getBytes = byteArrayOutputStreamGetBytes;
-	this.getText = byteArrayOutputStreamGetText;
+
+	this.getInternalObject = function() {
+		return this.internalOutputStream;
+	};
+
+	this.getBytes = function() {
+		var internalBytes = this.internalOutputStream.toByteArray();
+		return exports.toJavaScriptBytes(internalBytes);
+	};
+
+	this.getText = function() {
+		var bytes = this.getBytes();
+		var text = String.fromCharCode.apply(String, bytes);
+		return text;
+	};
 };
-
-function byteArrayOutputStreamGetInternalObject() {
-	return this.internalOutputStream;
-}
-
-function byteArrayOutputStreamGetBytes() {
-	var internalBytes = this.internalOutputStream.toByteArray();
-	return exports.toJavaScriptBytes(internalBytes);
-}
-
-function byteArrayOutputStreamGetText() {
-	var bytes = this.getBytes();
-	var text = String.fromCharCode.apply(String, bytes);
-	return text;
-}
 
 /**
  * Convert the native JavaScript byte array to Java one. To be used internally by the API layer
@@ -194,6 +190,5 @@ exports.textToByteArray = function(text) {
  */
 exports.byteArrayToText = function(bytes) {
 	var internalBytes = exports.toJavaBytes(bytes);
-	var text = new java.lang.String(internalBytes);
-	return text;
+	return String.fromCharCode.apply(String, exports.toJavaScriptBytes(internalBytes));
 };

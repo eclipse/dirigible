@@ -102,18 +102,24 @@ exports.receive = function(receiver) {
  */
 function MessageDefiniton(internalMessage) {
 	this.internalMessage = internalMessage;
-	this.getInternalObject = messageGetInternalObject;
-	this.id = internalMessage.getId();
-	this.topic = internalMessage.getTopic();
-	this.subject = internalMessage.getSubject();
-	this.body = internalMessage.getBody();
-	this.sender = internalMessage.getSender();
-	this.createdBy = internalMessage.getCreatedBy();
-	this.createdAt = new Date(internalMessage.getCreatedAt().getTime());
-}
 
-function messageGetInternalObject() {
-	return this.internalDatasource;
+	this.getInternalObject = function() {
+		return this.internalDatasource;
+	};
+
+	this.id = internalMessage.getId();
+
+	this.topic = internalMessage.getTopic();
+
+	this.subject = internalMessage.getSubject();
+
+	this.body = internalMessage.getBody();
+
+	this.sender = internalMessage.getSender();
+
+	this.createdBy = internalMessage.getCreatedBy();
+
+	this.createdAt = new Date(internalMessage.getCreatedAt().getTime());
 }
 	
 /**

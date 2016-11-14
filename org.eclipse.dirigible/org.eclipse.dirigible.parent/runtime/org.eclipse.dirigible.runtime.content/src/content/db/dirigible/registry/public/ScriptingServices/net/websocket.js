@@ -33,29 +33,24 @@ exports.getOpenSessions = function() {
  */
 function WebsocketSession(internalSession) {
 	this.internalSession = internalSession;
-	this.getInternalObject = sessionGetInternalObject;
-	this.sendText = sessionSendText;
-	this.sendTextAsync = sessionSendTextAsync;
-	this.getId = sessionGetId;
-	this.close = sessionClose;
-}
 
-function sessionGetInternalObject() {
-	return this.internalSession;
-}
+	this.getInternalObject = function() {
+		return this.internalSession;
+	};
 
-function sessionSendText(text) {
-	this.internalSession.getBasicRemote().sendText(text);	
-}
+	this.sendText = function(text) {
+		this.internalSession.getBasicRemote().sendText(text);	
+	};
 
-function sessionSendTextAsync(text) {
-	this.internalSession.getAsyncRemote().sendText(text);	
-}
+	this.sendTextAsync = function(text) {
+		this.internalSession.getAsyncRemote().sendText(text);	
+	};
 
-function sessionGetId() {
-	this.internalSession.getId();	
-}
+	this.getId = function() {
+		this.internalSession.getId();	
+	};
 
-function sessionClose() {
-	this.internalSession.close();	
+	this.close = function() {
+		this.internalSession.close();	
+	};
 }

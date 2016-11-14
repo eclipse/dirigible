@@ -32,21 +32,18 @@ exports.getWorker = function(category) {
  */
 function Worker(internalWorker) {
 	this.internalWorker = internalWorker;
-	this.getInternalObject = workerGetInternalObject;
-	this.generate = workerGenerate;
-	this.getTemplates = workerGetTemplates;
-}
 
-function workerGetInternalObject() {
-	return this.internalWorker;
-}
+	this.getInternalObject = function() {
+		return this.internalWorker;
+	};
 
-function workerGenerate(parameters) {
-	return this.internalWorker.generate(parameters, $.getRequest());
-}
+	this.generate = function(parameters) {
+		return this.internalWorker.generate(parameters, $.getRequest());
+	};
 
-function workerGetTemplates() {
-	return this.internalWorker.getTemplates($.getRequest());
+	this.getTemplates = function() {
+		return this.internalWorker.getTemplates($.getRequest());
+	};
 }
 
 // CONSTANTS

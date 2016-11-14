@@ -70,7 +70,7 @@ function isSystemMethodName(methodName) {
 }
 
 function isSystemFileName(fileName) {
-	return fileName === 'utils/error.js' || fileName === 'core/assert.js';
+	return fileName === 'utils/error.js' || fileName === 'core/assert.js' || fileName === 'service/tests.js';
 }
 
 function constructMessage(fileName, lineNumber, methodName) {

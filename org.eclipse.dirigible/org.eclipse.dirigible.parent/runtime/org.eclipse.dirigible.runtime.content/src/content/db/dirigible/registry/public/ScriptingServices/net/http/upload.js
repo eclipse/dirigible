@@ -82,31 +82,27 @@ function HttpFileEntry(fileItem, lazy) {
 	this.contentType = "";
 	this.size = 0;
 	this.internalStream = null;
-	this.loadData = httpFileEntryLoadData;
-	this.copyData = httpFileEntryCopyData;
-	this.getInputStream = httpFileEntryGetInputStream;
-}
-
-function httpFileEntryLoadData() {
-	if (this.internalStream && this.internalStream !== null) {
-		if (this.data !== null) {
-			return this.data; // already loaded
+	this.loadData = function() {
+		if (this.internalStream && this.internalStream !== null) {
+			if (this.data !== null) {
+				return this.data; // already loaded
+			}
+			this.data = loadData(this.internalFileItem); // load once
+			return this.data;
 		}
-		this.data = loadData(this.internalFileItem); // load once
-		return this.data;
-	}
-	if (this.lazy) {
-		throw new Error("The stream element is null in a lazy file item.");
-	} else {
-		return this.data;
-	}
-}
+		if (this.lazy) {
+			throw new Error("The stream element is null in a lazy file item.");
+		} else {
+			return this.data;
+		}
+	};
 
-function httpFileEntryCopyData(outputStream) {
-	var inputStream = new streams.InputStream(this.internalStream);
-	streams.copy(inputStream, outputStream);
-}
+	this.copyData = function(outputStream) {
+		var inputStream = new streams.InputStream(this.internalStream);
+		streams.copy(inputStream, outputStream);
+	};
 
-function httpFileEntryGetInputStream() {
-	return new streams.InputStream(this.internalStream);
+	this.getInputStream = function() {
+		return new streams.InputStream(this.internalStream);
+	};
 }

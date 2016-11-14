@@ -11,6 +11,8 @@
 /* globals $ java */
 /* eslint-env node, dirigible */
 
+var streams = require('io/streams');
+
 exports.encode = function(input) {
 	var inputBytes = getBytes(input);
 	var outputBytes = $.getHexUtils().encode(inputBytes);
@@ -28,5 +30,5 @@ function getBytes(input) {
 }
 
 function toString(bytes) {
-	return new java.lang.String(bytes);
+	return String.fromCharCode.apply(String, streams.toJavaScriptBytes(bytes))
 }
