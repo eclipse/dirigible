@@ -216,7 +216,7 @@
 		<!-- Default Home Location -->
 		<init-param>
 			<param-name>homeLocation</param-name>
-			<param-value>services/ui/index.html</param-value>
+			<param-value>services/web/registry/</param-value>
 		</init-param>
 		
 		<!-- Run the present Tests on the server start -->
