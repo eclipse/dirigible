@@ -9,7 +9,7 @@
     		"command":"bash -c \"cat /proc/version\""
 		}, {
 			"osName": "Windows",
-			"command":"cmd /c \"systeminfo\""
+			"command":"cmd /c \"ver\""
 		}, {
 			"osName": "Mac",
 			"command":"bash -c \"uname -s -v\""
