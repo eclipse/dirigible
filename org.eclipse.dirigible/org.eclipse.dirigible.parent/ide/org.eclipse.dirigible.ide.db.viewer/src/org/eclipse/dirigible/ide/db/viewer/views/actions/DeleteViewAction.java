@@ -28,30 +28,30 @@ import org.eclipse.jface.viewers.TreeViewer;
 /**
  * Action that will trigger opening of Table Definition editor.
  */
-public class DeleteTableAction extends Action {
+public class DeleteViewAction extends Action {
 
-	private static final String DROP_TABLE = "DROP TABLE "; //$NON-NLS-1$
+	private static final Logger logger = Logger.getLogger(DeleteViewAction.class);
+
+	private static final String DROP_VIEW = "DROP VIEW "; //$NON-NLS-1$
 
 	private static final String DATABASE_VIEW = Messages.DeleteTableAction_DATABASE_VIEW;
 
 	private static final String FAILED_TO_DELETE_TABLE_S = Messages.DeleteTableAction_FAILED_TO_DELETE_TABLE_S;
 
-	private static final Logger logger = Logger.getLogger(DeleteTableAction.class);
+	private static final String WARNING_THIS_ACTION_WILL_DELETE_THE_VIEW_CONTINUE = Messages.DeleteTableAction_WARNING_THIS_ACTION_WILL_DELETE_THE_VIEW_CONTINUE;
 
-	private static final String WARNING_THIS_ACTION_WILL_DELETE_THE_TABLE_AND_ALL_OF_ITS_CONTENT_CONTINUE = Messages.DeleteTableAction_WARNING_THIS_ACTION_WILL_DELETE_THE_TABLE_AND_ALL_OF_ITS_CONTENT_CONTINUE;
+	private static final String WILL_DELETE_THE_VIEW = Messages.DeleteTableAction_WILL_DELETE_THE_VIEW;
 
-	private static final String WILL_DELETE_THE_TABLE_AND_ITS_CONTENT = Messages.DeleteTableAction_WILL_DELETE_THE_TABLE_AND_ITS_CONTENT;
-
-	private static final String DELETE_TABLE = Messages.DeleteTableAction_DELETE_TABLE;
+	private static final String DELETE_VIEW = Messages.DeleteTableAction_DELETE_VIEW;
 
 	private static final long serialVersionUID = 3872859942737870851L;
 
 	private TreeViewer viewer;
 
-	public DeleteTableAction(TreeViewer viewer) {
+	public DeleteViewAction(TreeViewer viewer) {
 		this.viewer = viewer;
-		setText(DELETE_TABLE);
-		setToolTipText(WILL_DELETE_THE_TABLE_AND_ITS_CONTENT);
+		setText(DELETE_VIEW);
+		setToolTipText(WILL_DELETE_THE_VIEW);
 	}
 
 	@Override
@@ -66,15 +66,15 @@ public class DeleteTableAction extends Action {
 				if (((TreeObject) obj).getTableDefinition() != null) {
 					TableDefinition tableDefinition = ((TreeObject) obj).getTableDefinition();
 
-					boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), DELETE_TABLE,
-							String.format(WARNING_THIS_ACTION_WILL_DELETE_THE_TABLE_AND_ALL_OF_ITS_CONTENT_CONTINUE, tableDefinition.getTableName()));
+					boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), DELETE_VIEW,
+							String.format(WARNING_THIS_ACTION_WILL_DELETE_THE_VIEW_CONTINUE, tableDefinition.getTableName()));
 					if (!confirm) {
 						continue;
 					}
 					parent = ((TreeObject) obj).getParent();
 					IDatabaseConnectionFactory connectionFactory = parent.getConnectionFactory();
 					try {
-						deleteTable(tableDefinition, connectionFactory);
+						deleteView(tableDefinition, connectionFactory);
 					} catch (SQLException e) {
 						showMessage(String.format(FAILED_TO_DELETE_TABLE_S, tableDefinition.getTableName()));
 						logger.error(e.getMessage(), e);
@@ -92,12 +92,12 @@ public class DeleteTableAction extends Action {
 		MessageDialog.openError(viewer.getControl().getShell(), DATABASE_VIEW, message);
 	}
 
-	private void deleteTable(TableDefinition tableDefinition, IDatabaseConnectionFactory connectionFactory) throws SQLException {
+	private void deleteView(TableDefinition tableDefinition, IDatabaseConnectionFactory connectionFactory) throws SQLException {
 		Connection connection = connectionFactory.getDatabaseConnection();
 		try {
 			Statement createStatement = connection.createStatement();
 			String name = tableDefinition.getFqn();
-			createStatement.execute(DROP_TABLE + name);
+			createStatement.execute(DROP_VIEW + name);
 		} finally {
 			if (connection != null) {
 				connection.close();

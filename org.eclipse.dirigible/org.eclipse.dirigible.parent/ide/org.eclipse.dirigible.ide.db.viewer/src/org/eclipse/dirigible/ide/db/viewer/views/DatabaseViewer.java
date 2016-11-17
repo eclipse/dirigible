@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.db.viewer.views.DatabaseViewContentProvider.Capability;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.DeleteTableAction;
+import org.eclipse.dirigible.ide.db.viewer.views.actions.DeleteViewAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.ExportDataAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.RefreshViewAction;
 import org.eclipse.dirigible.ide.db.viewer.views.actions.ShowTableDefinitionAction;
@@ -76,7 +77,8 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 	@SuppressWarnings("unused")
 	private DrillDownAdapter drillDownAdapter;
 	protected Action viewTableContentAction;
-	private Action deleteAction;
+	private Action deleteTableAction;
+	private Action deleteViewAction;
 	private Action exportDataAction;
 	private Action doubleClickAction;
 	private boolean isOperator;
@@ -164,7 +166,8 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 		manager.add(exportDataAction);
 		manager.add(new Separator());
 		if (isOperator) {
-			manager.add(deleteAction);
+			manager.add(deleteTableAction);
+			manager.add(deleteViewAction);
 		}
 		manager.add(new Separator());
 		manager.add(refreshViewAction);
@@ -191,7 +194,8 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 						manager.add(new Separator());
 					}
 					if (isOperator && capabilities.contains(Capability.Delete)) {
-						manager.add(deleteAction);
+						manager.add(deleteTableAction);
+						manager.add(deleteViewAction);
 					}
 					if (!manager.isEmpty()) {
 						manager.add(new Separator());
@@ -210,7 +214,8 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 		manager.add(exportDataAction);
 		manager.add(new Separator());
 		if (isOperator) {
-			manager.add(deleteAction);
+			manager.add(deleteTableAction);
+			manager.add(deleteViewAction);
 		}
 		manager.add(new Separator());
 		manager.add(refreshViewAction);
@@ -222,7 +227,8 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 		createViewTableContentAction();
 		createShowTableDefinitionAction();
 		if (isOperator) {
-			deleteAction = new DeleteTableAction(viewer);
+			deleteTableAction = new DeleteTableAction(viewer);
+			deleteViewAction = new DeleteViewAction(viewer);
 		}
 		doubleClickAction = new ShowTableDefinitionAction(viewer);
 
