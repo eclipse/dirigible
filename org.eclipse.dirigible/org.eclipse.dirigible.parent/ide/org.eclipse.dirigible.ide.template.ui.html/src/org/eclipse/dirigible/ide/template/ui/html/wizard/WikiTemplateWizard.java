@@ -36,8 +36,8 @@ public class WikiTemplateWizard extends TemplateWizard {
 	@Override
 	public void addPages() {
 		addPage(typesPage);
-		addPage(targetLocationPage);
 		addPage(titlePage);
+		addPage(targetLocationPage);
 	}
 
 	@Override

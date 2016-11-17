@@ -36,8 +36,8 @@ public class IntegrationServiceTemplateWizard extends TemplateWizard {
 	@Override
 	public void addPages() {
 		addPage(typesPage);
-		addPage(targetLocationPage);
 		addPage(serviceEndpointPage);
+		addPage(targetLocationPage);
 	}
 
 	@Override

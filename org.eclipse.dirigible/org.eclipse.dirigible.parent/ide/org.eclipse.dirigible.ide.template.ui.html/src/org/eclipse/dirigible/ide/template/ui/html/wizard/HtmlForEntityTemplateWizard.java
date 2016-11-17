@@ -40,8 +40,8 @@ public class HtmlForEntityTemplateWizard extends TemplateWizard {
 	public void addPages() {
 		addPage(typesPage);
 		addPage(tablePage);
-		addPage(targetLocationPage);
 		addPage(titlePage);
+		addPage(targetLocationPage);
 	}
 
 	@Override
