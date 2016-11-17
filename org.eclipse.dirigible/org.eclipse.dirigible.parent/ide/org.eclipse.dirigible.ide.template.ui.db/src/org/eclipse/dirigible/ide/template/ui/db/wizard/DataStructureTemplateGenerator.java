@@ -10,7 +10,6 @@
 
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
@@ -28,9 +27,7 @@ public class DataStructureTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected Map<String, Object> prepareParameters() {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		String fileNameNoExtension = model.getFileNameNoExtension();
-		parameters.put("fileNameNoExtension", fileNameNoExtension.toUpperCase()); //$NON-NLS-1$
+		Map<String, Object> parameters = super.prepareParameters();
 		parameters.put("columnDefinitions", model.getColumnDefinitions()); //$NON-NLS-1$
 		parameters.put("query", model.getQuery()); //$NON-NLS-1$
 		parameters.put("dsvSamples", model.getDsvSampleRows()); //$NON-NLS-1$

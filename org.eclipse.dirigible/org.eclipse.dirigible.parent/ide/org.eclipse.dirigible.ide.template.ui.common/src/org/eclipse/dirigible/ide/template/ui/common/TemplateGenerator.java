@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -52,7 +53,20 @@ public abstract class TemplateGenerator {
 
 	protected abstract GenerationModel getModel();
 
-	protected abstract Map<String, Object> prepareParameters();
+	protected Map<String, Object> prepareParameters() {
+		GenerationModel model = getModel();
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("projectName", model.getProjectName()); //$NON-NLS-1$
+		if (model.getPackageName() != null) {
+			parameters.put("packageName", model.getPackageName()); //$NON-NLS-1$
+		} else {
+			parameters.put("packageName", constructPackageName()); //$NON-NLS-1$
+		}
+		parameters.put("fileName", model.getFileName()); //$NON-NLS-1$
+		parameters.put("fileNameNoExtension", model.getFileNameNoExtension()); //$NON-NLS-1$
+
+		return parameters;
+	}
 
 	protected abstract String getLogTag();
 

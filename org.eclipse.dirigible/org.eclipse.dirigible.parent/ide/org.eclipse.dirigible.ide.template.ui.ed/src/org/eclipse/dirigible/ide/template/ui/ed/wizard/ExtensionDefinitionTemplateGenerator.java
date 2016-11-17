@@ -10,9 +10,6 @@
 
 package org.eclipse.dirigible.ide.template.ui.ed.wizard;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 
@@ -26,14 +23,11 @@ public class ExtensionDefinitionTemplateGenerator extends TemplateGenerator {
 		this.model = model;
 	}
 
-	@Override
-	protected Map<String, Object> prepareParameters() {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fileNameNoExtension", model.getFileNameNoExtension()); //$NON-NLS-1$
-		parameters.put("projectName", model.getProjectName()); //$NON-NLS-1$
-
-		return parameters;
-	}
+	// @Override
+	// protected Map<String, Object> prepareParameters() {
+	// Map<String, Object> parameters = super.prepareParameters();
+	// return parameters;
+	// }
 
 	@Override
 	protected GenerationModel getModel() {

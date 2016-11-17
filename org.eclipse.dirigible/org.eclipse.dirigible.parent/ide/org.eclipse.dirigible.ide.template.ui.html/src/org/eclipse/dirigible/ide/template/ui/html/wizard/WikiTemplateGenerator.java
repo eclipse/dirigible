@@ -1,17 +1,15 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
@@ -29,7 +27,7 @@ public class WikiTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected Map<String, Object> prepareParameters() {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = super.prepareParameters();
 		parameters.put("pageTitle", model.getPageTitle()); //$NON-NLS-1$
 		return parameters;
 	}

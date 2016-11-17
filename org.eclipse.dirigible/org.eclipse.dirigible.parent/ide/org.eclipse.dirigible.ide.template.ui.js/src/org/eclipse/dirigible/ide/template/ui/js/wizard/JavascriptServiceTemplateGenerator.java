@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.ide.template.ui.js.wizard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,21 +33,14 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected Map<String, Object> prepareParameters() {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("projectName", model.getProjectName()); //$NON-NLS-1$
-		if (model.getPackageName() != null) {
-			parameters.put("packageName", model.getPackageName()); //$NON-NLS-1$
-		} else {
-			parameters.put("packageName", constructPackageName()); //$NON-NLS-1$
-		}
+		Map<String, Object> parameters = super.prepareParameters();
 		parameters.put("tableName", model.getTableName()); //$NON-NLS-1$
 		parameters.put("tableType", model.getTableType()); //$NON-NLS-1$
 		parameters.put("entityName", CommonUtils.toCamelCase(model.getTableName())); //$NON-NLS-1$
 		parameters.put("tableColumns", model.getTableColumns()); //$NON-NLS-1$
 		parameters.put("tableColumnsWithoutKeys", //$NON-NLS-1$
 				getTableColumnsWithoutKeys(model.getTableColumns()));
-		parameters.put("fileName", model.getFileName()); //$NON-NLS-1$
-		parameters.put("fileNameNoExtension", model.getFileNameNoExtension()); //$NON-NLS-1$
+
 		parameters.put("primaryKey", getPrimaryKey()); //$NON-NLS-1$
 
 		parameters.put("INTEGER", java.sql.Types.INTEGER); //$NON-NLS-1$

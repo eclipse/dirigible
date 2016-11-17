@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.viewer.ReservedFolderFilter;
 import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceContainerFilter;
@@ -59,6 +60,10 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 
 	private String targetLocation = null;
 
+	private boolean packageUserInput = false;
+
+	private boolean fileUserInput = false;
+
 	protected TemplateTargetLocationPage(String pageName) {
 		super(pageName);
 	}
@@ -75,8 +80,13 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 		checkPageStatus();
 	}
 
+	boolean selectInitial = false;
+
 	private void setPreselectedElement() {
-		projectViewer.getViewer().setSelection(getPreselectedElement(), true);
+		if (!selectInitial) {
+			projectViewer.getViewer().setSelection(getPreselectedElement(), true);
+			selectInitial = true;
+		}
 	}
 
 	private void createProjectViewerField(Composite parent) {
@@ -97,7 +107,9 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 					// #177
 					targetLocation = container.getFullPath().toString();
 
+					// if (getModel().getTargetContainer() == null) {
 					getModel().setTargetContainer(targetLocation);
+					// }
 
 					if (container.getProjectRelativePath().segmentCount() <= 1) {
 						// project is selected
@@ -113,11 +125,16 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 							}
 						}
 					} else {
+						// if (!packageUserInput) {
 						// a sub-folder of project is selected
 						String packageName = getModel().genPackageName();
 						getModel().setProjectPackageName(packageName);
 						packageNameText.setText(packageName);
+						// } else {
+						// packageNameText.setText(targetLocation);
+						// }
 						packageNameText.setEnabled(false);
+						packageUserInput = false;
 					}
 				}
 				checkPageStatus();
@@ -198,6 +215,7 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 
 			@Override
 			public void modifyText(ModifyEvent event) {
+				fileUserInput = true;
 				if ((fileNameText.getText() == null) || EMPTY_STRING.equals(fileNameText.getText())) {
 					setErrorMessage(INPUT_THE_FILE_NAME);
 				} else {
@@ -223,6 +241,7 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 
 			@Override
 			public void modifyText(ModifyEvent event) {
+				packageUserInput = true;
 				if ((packageNameText.getText() == null) || EMPTY_STRING.equals(packageNameText.getText())) {
 					setErrorMessage(INPUT_THE_PACKAGE_NAME);
 				} else {
@@ -238,7 +257,27 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 
 	}
 
-	protected abstract void checkPageStatus();
+	protected void checkPageStatus() {
+		if ((getModel().getTargetLocation() == null) || "".equals(getModel().getTargetLocation())) { //$NON-NLS-1$
+			setPageComplete(false);
+			return;
+		}
+		if ((getModel().getFileName() == null) || "".equals(getModel().getFileName())) { //$NON-NLS-1$
+			setPageComplete(false);
+			return;
+		}
+		IValidationStatus status = getModel().validateLocation();
+		if (status.hasErrors()) {
+			setErrorMessage(status.getMessage());
+			setPageComplete(false);
+		} else if (status.hasWarnings()) {
+			setErrorMessage(status.getMessage());
+			setPageComplete(true);
+		} else {
+			setErrorMessage(null);
+			setPageComplete(true);
+		}
+	}
 
 	protected abstract String getDefaultFileName(String preset);
 
@@ -246,17 +285,15 @@ public abstract class TemplateTargetLocationPage extends WizardPage {
 	public void setVisible(boolean visible) {
 		setPreselectedElement();
 
-		if (packageNameText.isEnabled()) {
+		if (packageNameText.isEnabled() && !packageUserInput) {
 			String packageName = getDefaultPackageName();
 			packageNameText.setText((packageName == null) ? "" : packageName);
 		}
 
-		if ((fileNameText.getText() == null) || EMPTY_STRING.equals(fileNameText.getText())) {
+		if ((fileNameText.getText() == null) || (EMPTY_STRING.equals(fileNameText.getText()) && !fileUserInput)) {
 			fileNameText.setText(getDefaultFileName(null));
 		} else {
-			if (isForcedFileName()
-			// && getModel().getFileName() == null
-			) {
+			if (isForcedFileName() && !fileUserInput) {
 				fileNameText.setText(getDefaultFileName(fileNameText.getText()));
 			}
 		}

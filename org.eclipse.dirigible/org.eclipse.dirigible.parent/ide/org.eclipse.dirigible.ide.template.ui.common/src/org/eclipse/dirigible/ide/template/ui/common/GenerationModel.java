@@ -243,6 +243,8 @@ public abstract class GenerationModel {
 		return in;
 	}
 
+	protected abstract IValidationStatus validateLocation();
+
 	protected abstract IValidationStatus validate();
 
 	public String getFileNameNoExtension() {

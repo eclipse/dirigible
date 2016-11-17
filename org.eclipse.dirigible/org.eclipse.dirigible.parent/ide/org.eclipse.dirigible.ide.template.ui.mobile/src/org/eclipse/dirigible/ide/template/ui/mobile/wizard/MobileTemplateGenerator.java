@@ -38,7 +38,7 @@ public class MobileTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected Map<String, Object> prepareParameters() {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = super.prepareParameters();
 		parameters.put(PARAMETER_FILE_NAME, model.getFileName());
 		return parameters;
 	}

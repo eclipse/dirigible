@@ -118,6 +118,8 @@ public class CmisInjector implements IInjector {
 				} catch (Exception e) {
 					logger.error("Connection to CMIS Repository was failed.", e);
 				}
+			} else {
+				logger.error("ECM Service is requested, but not available");
 			}
 		}
 		return null;

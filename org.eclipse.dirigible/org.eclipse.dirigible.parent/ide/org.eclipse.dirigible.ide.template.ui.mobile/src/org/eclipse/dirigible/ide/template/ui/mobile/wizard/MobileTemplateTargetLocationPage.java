@@ -38,28 +38,6 @@ public class MobileTemplateTargetLocationPage extends TemplateTargetLocationPage
 	}
 
 	@Override
-	protected void checkPageStatus() {
-		boolean isTargetLocationSet = (getModel().getTargetLocation() != null) && !getModel().getTargetLocation().equals(""); //$NON-NLS-1$
-		boolean isFileNameSet = (getModel().getFileName() != null) && !getModel().getFileName().equals(""); //$NON-NLS-1$
-
-		if (isTargetLocationSet && isFileNameSet) {
-			IValidationStatus status = model.validateLocation();
-			if (status.hasErrors()) {
-				setErrorMessage(status.getMessage());
-				setPageComplete(false);
-			} else if (status.hasWarnings()) {
-				setErrorMessage(status.getMessage());
-				setPageComplete(true);
-			} else {
-				setErrorMessage(null);
-				setPageComplete(true);
-			}
-		} else {
-			setPageComplete(false);
-		}
-	}
-
-	@Override
 	protected GenerationModel getModel() {
 		return model;
 	}

@@ -28,13 +28,12 @@ public class HtmlForEntityTemplateWizard extends TemplateWizard {
 
 	public HtmlForEntityTemplateWizard(IFile file) {
 		setWindowTitle(CREATE_USER_INTERFACE_FOR_RES_TFUL_PERSISTENCE_SERVICE);
-
 		model = new HtmlForEntityTemplateModel();
 		model.setSourceResource(file);
 		typesPage = new HtmlForEntityTemplateTypePage(model);
 		tablePage = new HtmlForEntityTemplateTablePage(model);
-		targetLocationPage = new HtmlForEntityTemplateTargetLocationPage(model);
 		titlePage = new HtmlForEntityTemplateTitlePage(model);
+		targetLocationPage = new HtmlForEntityTemplateTargetLocationPage(model);
 	}
 
 	@Override

@@ -10,7 +10,6 @@
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -36,11 +35,10 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected Map<String, Object> prepareParameters() {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = super.prepareParameters();
 		parameters.put("pageTitle", model.getPageTitle()); //$NON-NLS-1$
 		parameters.put("tableName", model.getTableName()); //$NON-NLS-1$
 		parameters.put("tableColumns", model.getTableColumns()); //$NON-NLS-1$
-		parameters.put("fileName", model.getFileName()); //$NON-NLS-1$
 		parameters.put("serviceFileName", generateServiceFileName()); //$NON-NLS-1$
 		parameters.put("createDataModel", createDataModel()); //$NON-NLS-1$
 		parameters.put("entityName", getEntityName()); //$NON-NLS-1$

@@ -28,7 +28,6 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 
 	public JavascriptServiceTemplateWizard(IResource resource) {
 		setWindowTitle(CREATE_SCRIPTING_SERVICE);
-
 		model = new JavascriptServiceTemplateModel();
 		model.setSourceResource(resource);
 		typesPage = new JavascriptServiceTemplateTypePage(model);
