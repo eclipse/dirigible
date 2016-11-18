@@ -126,12 +126,18 @@
 			<param-value>cmis:dirigible:key</param-value>
 		</init-param>
 		
-		<!-- JNDI key for the CMIS Service - Key -->
+		<!-- JNDI key for the CMIS Service - Destination -->
 		<init-param>
 			<param-name>jndiCmisServiceDestination</param-name>
 			<param-value>cmis</param-value>
 		</init-param>
-		
+
+		<!-- JNDI key for the Password Service -->
+		<init-param>
+			<param-name>jndiPasswordStorage</param-name>
+			<param-value>java:comp/env/PasswordStorage</param-value>
+		</init-param>
+
 		<!-- Auto Commit property for JDBC connection --> 
 		<init-param>
 			<param-name>jdbcAutoCommit</param-name>
@@ -269,36 +275,40 @@
 		<filter-name>XSSFilter</filter-name>
 		<filter-class>org.eclipse.dirigible.ide.bridge.ext.XSSFilter</filter-class>
 	</filter>
-	
+
 	<filter-mapping>
 		<filter-name>XSSFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-
 	<!-- Resource References  -->
-	
+
 	<resource-ref>
 		<res-ref-name>jdbc/DefaultDB</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
 	</resource-ref>
-	
+
 	<resource-ref>
     	<res-ref-name>connectivity/Configuration</res-ref-name>
     	<res-type>com.sap.core.connectivity.api.configuration.ConnectivityConfiguration</res-type>
 	</resource-ref>
-	
+
 	<resource-ref>
   		<res-ref-name>mail/SAPInternalNWCloudSession</res-ref-name>
   	    <res-type>javax.mail.Session</res-type>
   	</resource-ref>
-  	
+
   	<resource-ref>
    		<res-ref-name>EcmService</res-ref-name>
    		<res-type>com.sap.ecm.api.EcmService</res-type>
 	</resource-ref>
-  	
+
+	<resource-ref>
+		<res-ref-name>PasswordStorage</res-ref-name>
+		<res-type>com.sap.cloud.security.password.PasswordStorage</res-type>
+	</resource-ref>
+
   	<!-- Custom Data Source
   	<resource-ref>
 		<res-ref-name>jdbc/XXX</res-ref-name>
