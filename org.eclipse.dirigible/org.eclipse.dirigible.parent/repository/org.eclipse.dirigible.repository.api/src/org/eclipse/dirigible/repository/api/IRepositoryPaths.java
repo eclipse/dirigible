@@ -97,7 +97,7 @@ public interface IRepositoryPaths {
 	public static final String REGISTRY_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + "registry/public"; //$NON-NLS-1$
 
 	/** The default import folder path */
-	public static final String REGISTRY_IMPORT_PATH = REGISTRY_DEPLOY_PATH;
+	public static final String REGISTRY_IMPORT_PATH = DB_DIRIGIBLE_REGISTRY;
 
 	/** The sandbox import folder path */
 	public static final String SANDBOX_DEPLOY_PATH = DB_DIRIGIBLE_ROOT + SANDBOX;
