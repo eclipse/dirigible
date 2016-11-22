@@ -73,8 +73,11 @@ function ZipOutputStream(internalZipOutputStream) {
 
 	this.putNextEntry = function(zipEntry) {
 		this.internalZipOutputStream.putNextEntry(zipEntry.getInternalObject());
-		var internalBytes = streams.toJavaBytes(zipEntry.getBytes());
-		this.internalZipOutputStream.write(internalBytes);
+		
+		if (!zipEntry.isDirectory()){
+			var internalBytes = streams.toJavaBytes(zipEntry.getBytes());
+			this.internalZipOutputStream.write(internalBytes);
+		}
 //		zipEntry.getInternalObject().closeEntry();
 	};
 

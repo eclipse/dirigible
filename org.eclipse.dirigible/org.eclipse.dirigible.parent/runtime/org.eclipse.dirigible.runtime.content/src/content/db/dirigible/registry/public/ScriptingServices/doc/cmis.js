@@ -12,10 +12,13 @@
 /* eslint-env node, dirigible */
 
 var streams = require('io/streams');
+var env = require('core/env');
 
 exports.getSession = function() {
 	var internalSession = $.getDocumentService().getSession();
-	return new Session(internalSession);
+	var session = new Session(internalSession);
+	session = validateSession(session);
+	return session;
 };
 
 /**
@@ -272,6 +275,73 @@ function Document(internalDocument) {
 	};
 }
 
+function validateSession(session) {
+	if (session === null || session === undefined) {
+		throw new Error("CMIS Session is not present");
+	}
+	if (session.getRepositoryInfo().getId().indexOf("local") !== -1) {
+		// local session
+		var cmisService = env.get("jndiCmisService");
+		if (cmisService) {
+			// we have to re-inject the underlying cmis service, which seems failed before
+			var internalSession = null;
+			var cmisAuthType = env.get("jndiCmisServiceAuth");
+			if (cmisAuthType === null) {
+				cmisAuthType = "key"; //default
+			}
+			if (cmisAuthType === "key") {
+				var cmisName = env.get("jndiCmisServiceName");
+				var cmisKey = env.get("jndiCmisServiceKey");
+				if (cmisName === null || cmisKey === null) {
+					var message = "CMIS Name or Key parameter is null";
+					console.error(message);
+					throw new Error(message);
+				}
+				internalSession = $.getInitialContext().lookup(cmisService).connect(cmisName, cmisKey);
+			} else if (cmisAuthType === "destination"){
+				var cmisServiceDestination = env.get("jndiCmisServiceDestination");
+				if (cmisServiceDestination === null) {
+					var message = "CMIS Service Destination is null";
+					console.error(message);
+					throw new Error(message);
+				}
+
+				var destination = getDestination(cmisServiceDestination);
+				var cmisName = destination.get("User");
+				var cmisKey = destination.get("Password");
+				if (cmisName === null || cmisKey === null) {
+					var message = "CMIS Name or Key parameter is null";
+					console.error(message);
+					throw new Error(message);
+				}
+				internalSession = $.getInitialContext().lookup(cmisService).connect(cmisName, cmisKey);
+			} else {
+				var message = "CMIS Authentication Type is unknown: " + cmisAuthType;
+				console.error(message);
+				throw new Error(message);
+			}
+			session = new Session(internalSession);
+		}
+	
+	}
+	return session;
+}
+
+function getDestination(destName) {
+    
+    var ctx = $.getInitialContext();
+ 
+    if (ctx != null) {
+        var configuration = $.getConnectivityService().getConnectivityConfiguration();
+        var destinationConfiguration = configuration.getConfiguration(destName);
+        var destinationPropeties = destinationConfiguration.getAllProperties();
+        return destinationPropeties;
+    }
+    return null;
+}
+ 
+
+
 
 // CONSTANTS
 
@@ -327,3 +397,5 @@ exports.OBJECT_TYPE_RELATIONSHIP = "cmis:relationship";
 exports.OBJECT_TYPE_POLICY = "cmis:policy";
 exports.OBJECT_TYPE_ITEM = "cmis:item";
 exports.OBJECT_TYPE_SECONDARY = "cmis:secondary";
+
+
