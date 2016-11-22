@@ -107,6 +107,12 @@
 			<param-value>cmis:dirigible:key</param-value>
 		</init-param>
 		
+		<!-- JNDI key for the Password Service -->
+		<init-param>
+			<param-name>jndiPasswordStorage</param-name>
+			<param-value>java:comp/env/PasswordStorage</param-value>
+		</init-param>
+		
 		<!-- Auto Commit property for JDBC connection --> 
 		<init-param>
 			<param-name>jdbcAutoCommit</param-name>
@@ -278,6 +284,10 @@
    		<res-type>com.sap.ecm.api.EcmService</res-type>
 	</resource-ref>
   	
+  	<resource-ref>
+		<res-ref-name>PasswordStorage</res-ref-name>
+		<res-type>com.sap.cloud.security.password.PasswordStorage</res-type>
+	</resource-ref>
 	
 
 	<!-- Security -->
