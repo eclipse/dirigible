@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.ui.rap
 Bundle-SymbolicName: org.eclipse.dirigible.ide.ui.rap;singleton:=true
-Bundle-Version: 2.6.161021
+Bundle-Version: 2.6.161122
 Bundle-Vendor: SAP AG
 Require-Bundle: org.eclipse.rap.ui,
  org.eclipse.dirigible.repository.api,
