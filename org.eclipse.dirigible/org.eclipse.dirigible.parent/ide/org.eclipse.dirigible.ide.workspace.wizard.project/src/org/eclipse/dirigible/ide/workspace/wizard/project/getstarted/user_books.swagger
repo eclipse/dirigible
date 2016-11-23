@@ -13,7 +13,7 @@
       }
     ],
     "paths": {
-        "/js/${user}_MyFirstProject/${user}_books.js": {
+        "/js/${user}_books/${user}_books.js": {
             "get": {
             	"tags":[
                		"${User}_books"
