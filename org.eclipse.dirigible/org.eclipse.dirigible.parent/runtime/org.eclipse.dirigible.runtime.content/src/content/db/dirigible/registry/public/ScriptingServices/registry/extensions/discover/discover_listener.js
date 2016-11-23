@@ -2,7 +2,7 @@
 
 exports.getItem = function() {
 	var item = {
-		image: "caret-square-o-right",
+		image: "deaf",
 		color: 'orange',
 		path: "#/integration/listener",
 		title: "Listeners",

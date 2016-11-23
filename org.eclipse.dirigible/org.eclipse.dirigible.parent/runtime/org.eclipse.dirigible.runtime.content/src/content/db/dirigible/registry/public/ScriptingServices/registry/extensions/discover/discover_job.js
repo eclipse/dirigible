@@ -2,7 +2,7 @@
 
 exports.getItem = function() {
 	var item = {
-		image: "caret-square-o-right",
+		image: "tasks",
 		color: 'orange',
 		path: "#/integration/job",
 		title: "Jobs",

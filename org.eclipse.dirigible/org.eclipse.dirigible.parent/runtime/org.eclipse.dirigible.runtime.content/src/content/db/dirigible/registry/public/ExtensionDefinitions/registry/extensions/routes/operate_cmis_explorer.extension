@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/routes/operate_cmis_explorer",
+  "extension-point":"/registry/extension_points/routes",
+  "description":"Extension for 'Operate' in Registry UI "
+}

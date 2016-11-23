@@ -3,7 +3,7 @@
 exports.getItem = function() {
 	var item = {
 		image: "mobile-phone",
-		color: 'blue',
+		color: 'lila',
 		path: "#/mobile",
 		title: "Mobile",
 		description: "Native Mobile Apps"

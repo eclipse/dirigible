@@ -30,19 +30,19 @@ menuControllers.controller('MonitoringCtrl', ['$scope', '$http',
 			description: 'Memory statistics'
 		}, {
 			image: 'ticket',
-			color: 'lblue',
+			color: 'purple',
 			path: '#/monitoring/acclog',
 			title: 'Access Log',
 			description: 'Access Log'
 		}, {
-			image: 'film',
+			image: 'search',
 			color: 'lblue',
 			path: '#/monitoring/logging',
-			title: 'Applications Log',
+			title: 'Apps Log',
 			description: 'Applications Log'
 		}, {  
-		   image:'search',
-		   color:'lblue',
+		   image:'film',
+		   color:'lila',
 		   path:'#/monitoring/log-console',
 		   title:'Log Console',
 		   description:'Real-time Logs'

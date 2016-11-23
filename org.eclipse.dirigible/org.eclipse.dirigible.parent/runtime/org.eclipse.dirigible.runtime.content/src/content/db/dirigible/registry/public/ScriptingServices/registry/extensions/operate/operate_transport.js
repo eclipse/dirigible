@@ -6,7 +6,7 @@ exports.getItem = function() {
 		color: 'blue',
 		path: "#/content/import",
 		title: "Transport",
-		description: "Transport Registry Content"
+		description: "Transport Registry"
 	};
 	return item;
 };

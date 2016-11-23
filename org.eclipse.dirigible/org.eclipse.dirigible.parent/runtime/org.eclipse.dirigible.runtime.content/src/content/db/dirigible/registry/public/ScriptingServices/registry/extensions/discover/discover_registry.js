@@ -3,7 +3,7 @@
 exports.getItem = function() {
 	var item = {
 		image: "search",
-		color: 'green',
+		color: 'blue',
 		path: "#/content",
 		title: "Registry",
 		description: "Browse Registry Content"

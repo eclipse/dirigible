@@ -2,7 +2,7 @@
 
 exports.getItem = function() {
 	var item = {
-		"name": "Monitoring",
+		"name": "Monitor",
 	    "link": "#/monitoring"
 	};
 	return item;

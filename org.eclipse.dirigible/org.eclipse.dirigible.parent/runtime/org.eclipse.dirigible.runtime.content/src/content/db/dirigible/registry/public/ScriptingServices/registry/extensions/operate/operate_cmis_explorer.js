@@ -2,15 +2,15 @@
 
 exports.getItem = function() {
 	var item = {
-		image: "cogs",
+		image: "book",
 		color: 'red',
-		path: "#/scripting/tests",
-		title: "Tests",
-		description: "Test Cases"
+		path: "#/content/cmis",
+		title: "Documents",
+		description: "Manage Documents"
 	};
 	return item;
 };
 
 exports.getOrder = function() {
-	return 7;
+	return 4;
 };

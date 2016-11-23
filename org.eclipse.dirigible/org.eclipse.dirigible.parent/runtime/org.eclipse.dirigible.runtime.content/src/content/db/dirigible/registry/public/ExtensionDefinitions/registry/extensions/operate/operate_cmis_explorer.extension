@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/operate/operate_cmis_explorer",
+  "extension-point":"/registry/extension_points/operate",
+  "description":""
+}

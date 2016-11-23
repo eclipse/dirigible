@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/controllers/operate_cmis_explorer",
+  "extension-point":"/registry/extension_points/registry_app_controller",
+  "description":"Extension for 'Project' common AngularJS controller in Registry UI"
+}

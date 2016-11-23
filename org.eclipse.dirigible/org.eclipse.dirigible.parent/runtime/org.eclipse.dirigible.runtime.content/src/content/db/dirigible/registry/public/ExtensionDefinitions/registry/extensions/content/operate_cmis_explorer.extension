@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extensions/content/operate/operate_cmis_explorer",
+  "extension-point":"/registry/extension_points/operate_content_item",
+  "description":"Extension for 'Develop' in Registry UI "
+}

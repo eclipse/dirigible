@@ -7,7 +7,7 @@
 
 	<div class="center container row">
 		<a ng-repeat="data in operateData" href="{{ data.path }}">
-		    <div class="col-lg-4 col-md-6" >
+		    <div class="col-lg-3 col-md-6" >
 		        <div class="panel panel-{{ data.color }}">
 		            <div class="panel-heading">
 		                <div class="row">
@@ -33,7 +33,7 @@
     </div>
     
 	<div class="center container">
-        <div class="col-lg-4 heading-lead page-scroll" ng-repeat="nextInfoItem in descriptionInfoItems">
+        <div class="col-lg-3 heading-lead page-scroll" ng-repeat="nextInfoItem in descriptionInfoItems">
 			<hr class="section-heading-spacer">
             <div class="clearfix"></div>
             <h2><i class="fa {{nextInfoItem.icon}} fa-fw"></i>{{nextInfoItem.title}}</h2>

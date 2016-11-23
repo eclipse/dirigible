@@ -120,21 +120,21 @@ code {
 }
 
 .panel-purple {
-    border-color: #947cdc;
+    border-color: #857cdc;
 }
 
 .panel-purple .panel-heading {
-    border-color: #947cdc;
+    border-color: #857cdc;
     color: #fff;
-    background-color: #947cdc;
+    background-color: #857cdc;
 }
 
 .panel-purple a {
-    color: #947cdc;
+    color: #857cdc;
 }
 
 .panel-purple a:hover {
-    color: #745cbc;
+    color: #545cbc;
 }
 
 .panel-orange {
