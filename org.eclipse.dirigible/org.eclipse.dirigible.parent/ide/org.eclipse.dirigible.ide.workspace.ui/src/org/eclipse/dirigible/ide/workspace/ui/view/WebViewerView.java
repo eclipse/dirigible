@@ -21,6 +21,7 @@ import org.eclipse.dirigible.ide.publish.IPublisher;
 import org.eclipse.dirigible.ide.publish.PublishManager;
 import org.eclipse.dirigible.ide.ui.widget.extbrowser.ExtendedBrowser;
 import org.eclipse.dirigible.ide.workspace.dual.DirectRenderer;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -55,7 +56,13 @@ import org.eclipse.ui.part.ViewPart;
 
 public class WebViewerView extends ViewPart {
 
+	private static final String SCHEME_SEPARATOR = "://"; //$NON-NLS-1$
+
+	private static final String HOST_PORT_SEPARATOR = ":"; //$NON-NLS-1$
+
 	public static String ID = "org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView";
+
+	private static final Logger logger = Logger.getLogger(WebViewerView.class);
 
 	private static final String PUBLIC = Messages.WebViewerView_PUBLIC;
 
@@ -71,7 +78,8 @@ public class WebViewerView extends ViewPart {
 
 	private static final URL DIRIGIBLE_SANDBOX_ICON_URL = WebViewerView.class.getResource("/resources/icons/sandbox.png"); //$NON-NLS-1$
 
-	private static final URL DIRIGIBLE_OPEN_ICON_URL = WebViewerView.class.getResource("/resources/icons/open.png"); //$NON-NLS-1$
+	// private static final URL DIRIGIBLE_OPEN_ICON_URL = WebViewerView.class.getResource("/resources/icons/open.png");
+	// //$NON-NLS-1$
 
 	private final ISelectionListener selectionListener = new SelectionListenerImpl();
 
@@ -332,8 +340,7 @@ public class WebViewerView extends ViewPart {
 			}
 			firePropertyChange(0);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 	}
@@ -342,18 +349,23 @@ public class WebViewerView extends ViewPart {
 		pageUrlText.setText(text);
 		String content = DirectRenderer.renderContent(text);
 		browser.setContent(content);
-		// browser.refresh();
 		isContent = true;
 	}
 
 	private void updateByUrl(String text, HttpServletRequest request) {
-		String url = request.getScheme() + "://" + request.getServerName() //$NON-NLS-1$
-				+ ":" //$NON-NLS-1$
-				+ request.getServerPort() + text;
-		pageUrlText.setText(url);
-		browser.setUrl(url);
-		browser.refresh();
-		isContent = false;
+		String updatedPath = updatePath(text);
+		if (updatedPath != null) {
+			String url = request.getScheme() + SCHEME_SEPARATOR + request.getServerName() + HOST_PORT_SEPARATOR + request.getServerPort()
+					+ updatedPath;
+			pageUrlText.setText(url);
+			browser.setUrl(url);
+			browser.refresh();
+			isContent = false;
+		}
+	}
+
+	protected String updatePath(String text) {
+		return text;
 	}
 
 }

@@ -55,10 +55,17 @@
       </view>
       <view
             name="Preview"
-            icon="resources/icons/preview-browser.png"
+            icon="resources/icons/preview.png"
             category="org.eclipse.dirigible.ide.workspace.ui.category"
             class="org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView"
             id="org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView">
+      </view>
+      <view
+            name="Swagger"
+            icon="resources/icons/swagger.png"
+            category="org.eclipse.dirigible.ide.workspace.ui.category"
+            class="org.eclipse.dirigible.ide.workspace.ui.view.SwaggerView"
+            id="org.eclipse.dirigible.ide.workspace.ui.view.SwaggerView">
       </view>
    </extension>
    <extension
