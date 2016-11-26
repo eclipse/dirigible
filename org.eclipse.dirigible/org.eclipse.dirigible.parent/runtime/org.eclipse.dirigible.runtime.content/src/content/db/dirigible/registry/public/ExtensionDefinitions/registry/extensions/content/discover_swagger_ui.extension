@@ -1,5 +1,0 @@
-{
-  "extension":"/registry/extensions/content/discover/swagger_ui",
-  "extension-point":"/registry/extension_points/discover_content_item",
-  "description":"Extension for 'Discover' in Registry UI "
-}
