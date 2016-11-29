@@ -153,7 +153,7 @@ public class DataSourceFacade {
 
 		String defaultDataSourceType = System.getProperty(DEFAULT_DATASOURCE_TYPE);
 		if (!DEFAULT_DATASOURCE_TYPE_JNDI.equalsIgnoreCase(defaultDataSourceType)) {
-			logger.warn("Getting from Context not possible - no configured default DataSource as initial parameter");
+			logger.warn("Default DataSource Type Parameter is not 'jndi', hence the local type will be used");
 			return null;
 		}
 
