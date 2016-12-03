@@ -16,9 +16,9 @@ exports.generate = function(template, parameters) {
 	var internalParameters = $.getTemplatingService().createParameters();
 	for (var parameter in parameters) {
 		internalParameters.put(parameter, parameters[parameter]);		
-		var generated = temlatingService.generate(template, internalParameters, "generation_service_api");
-		return generated;
 	}
+	var generated = temlatingService.generate(template, internalParameters, "generation_service_api");
+	return generated;
 };
 
 

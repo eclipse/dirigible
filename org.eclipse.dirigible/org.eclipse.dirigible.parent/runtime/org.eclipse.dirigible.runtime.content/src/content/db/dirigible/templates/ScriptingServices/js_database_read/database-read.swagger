@@ -13,7 +13,7 @@
       }
     ],
     "paths": {
-        "/js/${projectName}/${fileName}": {
+        "/js/${packageName}/${fileName}": {
             "get": {
             	"tags":[
                		"${entityName}"
