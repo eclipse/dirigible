@@ -19,6 +19,6 @@ after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - export REPO=dirigiblelabs/dirigible-tomcat
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker build -f org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/Dockerfile-tomcat -t $REPO:$COMMIT org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/
+  - docker build -f org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/Dockerfile-tomcat org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/
   - docker tag $REPO:$COMMIT $REPO:$TAG
   - docker push $REPO
