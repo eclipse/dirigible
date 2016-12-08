@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +90,16 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		if (knownFiles.size() == 0) {
 			return;
 		}
+
+		// preliminary sorting, so that the tables to be executed first and then the views
+		knownFiles.sort(new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				boolean b1 = o1.endsWith(EXTENSION_TABLE);
+				boolean b2 = o2.endsWith(EXTENSION_TABLE);
+				return b1 & b2 ? 0 : b1 && !b2 ? -1 : 1;
+			}
+		});
 
 		try {
 			Connection connection = dataSource.getConnection();
