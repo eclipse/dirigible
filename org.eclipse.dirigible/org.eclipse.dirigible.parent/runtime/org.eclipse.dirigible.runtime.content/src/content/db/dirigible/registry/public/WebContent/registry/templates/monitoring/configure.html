@@ -1,0 +1,34 @@
+<div class="row">
+	<div class="col-lg-12">
+    	<h1 class="page-header">Configure Locations</h1>
+	</div>
+</div>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th style="width: 60%">Location</th>
+			<th style="width: 40%">Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="location in locations track by $index">
+			<td>{{location}}</td>
+			<td><button class="btn btn-danger btn-xs"
+					ng-click="remove(location)">
+					Remove</a></td>
+		</tr>
+	</tbody>
+</table>
+<hr>
+<div class="row">
+	<div class="col-sm-4">
+		<div class="input-group">
+			<input type="text" class="form-control" ng-model="newLocation"
+				placeholder="Access location's path"> <span
+				class="input-group-btn">
+				<button class="btn btn-default" ng-click="addNewLocation()">Add</button>
+			</span>
+		</div>
+	</div>
+</div>

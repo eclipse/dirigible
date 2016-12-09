@@ -1,5 +1,0 @@
-{
-  "extension":"/registry/extensions/home_items/monitor",
-  "extension-point":"/registry/extension_points/home_item",
-  "description":"Extension for 'Home' AngularJS controller in Registry UI "
-}

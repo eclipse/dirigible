@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/discover/mobile",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Discover Mobile extension for the Launchpad extension point"
+}

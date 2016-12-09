@@ -1,5 +1,0 @@
-{
-  "extension":"/registry/extensions/controllers/default/discover_web",
-  "extension-point":"/registry/extension_points/registry_app_controller",
-  "description":"Extension for 'Develop' in Registry UI "
-}

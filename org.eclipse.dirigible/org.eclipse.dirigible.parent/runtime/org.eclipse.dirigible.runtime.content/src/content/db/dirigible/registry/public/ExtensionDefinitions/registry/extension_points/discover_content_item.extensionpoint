@@ -1,4 +1,0 @@
-{
-  "extension-point":"/registry/discover_content_item",
-  "description":"Registry UI extension point for AngularJS routes"
-}

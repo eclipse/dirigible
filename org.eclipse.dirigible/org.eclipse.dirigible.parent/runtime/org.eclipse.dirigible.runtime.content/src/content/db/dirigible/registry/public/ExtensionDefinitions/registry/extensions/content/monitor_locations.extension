@@ -1,5 +1,0 @@
-{
-  "extension":"/registry/extensions/content/monitor/locations",
-  "extension-point":"/registry/extension_points/monitor_content_item",
-  "description":"Extension for 'Develop' in Registry UI "
-}

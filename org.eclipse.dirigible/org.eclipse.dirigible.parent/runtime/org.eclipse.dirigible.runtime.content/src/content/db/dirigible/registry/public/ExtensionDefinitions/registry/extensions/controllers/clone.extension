@@ -1,5 +1,0 @@
-{
-  "extension":"/registry/extensions/controllers/clone",
-  "extension-point":"/registry/extension_points/registry_app_controller",
-  "description":"Extension for 'Clone' common AngularJS controller in Registry UI "
-}

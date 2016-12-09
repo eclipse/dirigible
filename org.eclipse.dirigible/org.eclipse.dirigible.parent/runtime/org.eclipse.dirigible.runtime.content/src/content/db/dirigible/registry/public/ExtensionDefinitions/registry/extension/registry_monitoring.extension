@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/monitoring",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Monitor extension for the Launchpad extension point"
+}

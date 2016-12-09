@@ -1,3 +1,0 @@
-    .otherwise({
-      redirectTo: '/home'
-    });

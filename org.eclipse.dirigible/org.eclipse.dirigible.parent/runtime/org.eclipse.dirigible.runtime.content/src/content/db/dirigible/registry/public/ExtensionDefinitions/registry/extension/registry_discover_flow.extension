@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/discover/flow",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Discover Flow extension for the Launchpad extension point"
+}

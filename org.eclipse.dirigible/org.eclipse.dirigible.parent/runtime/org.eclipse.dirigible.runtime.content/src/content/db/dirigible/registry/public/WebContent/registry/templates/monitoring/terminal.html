@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8" />
+		<title>Eclipse Dirigible Terminal Emulator</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script src="js/jquery.terminal.min.js"></script>
+		<link href="css/jquery.terminal.css" rel="stylesheet" />
+	</head>
+<body onload="connectToTerminal()">
+		<script>
+			window.terminalSocket = null;
+			var connectToTerminal = function() {
+				try {
+					if (window.terminalSocket === null || window.terminalSocket.readyState !== window.terminalSocket.OPEN) {
+						window.terminalSocket = new WebSocket(((location.protocol === 'https:') ? "wss://" : "ws://") + window.location.host + "/terminal");
+					}
+				} catch (e) {
+					console.error(e.message);
+				}
+			}
+			jQuery(document).ready(
+				function($) {
+					$('body').terminal(
+						function(command, term) {
+							term.pause();
+							connectToTerminal();
+							window.terminalSocket.onmessage = function(message) {
+								term.resume();
+								term.echo(message.data);
+							};
+							var waits = 0;
+							while (!window.terminalSocket.OPEN) {
+								setTimeout('', 1000);
+								waits++;
+								if (waits > 10) {
+									break;
+								}
+								}
+								try {
+									if (command.trim() !== "") {
+										window.terminalSocket.send(command + "\n");
+									}
+								} catch (e) {
+									console.error(e.message);
+								}
+							}, {
+								greetings : new Date().toString() + "\nUse Ctrl+C to stop the process",
+								onBlur : function() {
+									// prevent losing focus
+									return false;
+								},
+								keydown : function(event, term) {
+									var cKeyCode = 67;
+									if (event.ctrlKey && event.keyCode === cKeyCode) {
+										window.terminalSocket.send("^C\n");
+									}
+								}
+							});
+				});
+	</script>
+</body> 

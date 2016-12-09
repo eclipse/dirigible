@@ -1,5 +1,0 @@
-{
-  "extension":"/registry/extensions/operate/operate_clone",
-  "extension-point":"/registry/extension_points/operate",
-  "description":"Extension for 'Develop' in Registry UI "
-}

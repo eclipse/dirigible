@@ -1,0 +1,28 @@
+<div class="row">
+	<div class="col-lg-12">
+    	<h1 class="page-header">Memory Statistics</h1>
+	</div>
+</div>
+
+<div>
+	<h2><span class="label label-default">Memory</span></h2>
+	<div id="memory-log"></div>
+</div>
+
+<script>
+$(document).ready(function(){
+	$.get( "../../memory?log", function(data) {
+		$.jqplot('memory-log', data, {  
+			series:[
+		    	{showMarker:false, label: 'Free', shadow: false, lineWidth: 1.5},
+		        {showMarker:false, label: 'Total', shadow: false, lineWidth: 1.5},
+		        {showMarker:false, label: 'Max', shadow: false, lineWidth: 1.5}],
+		    axes:{xaxis:{label:'Time', renderer:$.jqplot.DateAxisRenderer}, yaxis:{label:'Memory (MB)'}},
+		    legend: {show: true},
+		    cursor:{show:true, zoom:true, showTooltip:false},
+		    grid: {background: '#ffffff'},
+		    seriesColors: [ "#0000ff", "#00ff00", "#ff0000", "#ffff00", "#00ffff", "#ff00ff"]
+		  });
+	});
+});
+</script>

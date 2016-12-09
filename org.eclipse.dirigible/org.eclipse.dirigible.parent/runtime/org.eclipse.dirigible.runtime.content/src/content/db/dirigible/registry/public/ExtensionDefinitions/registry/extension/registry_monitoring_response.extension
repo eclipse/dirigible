@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/monitoring/response",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Monitoring Response extension for the Launchpad extension point"
+}
