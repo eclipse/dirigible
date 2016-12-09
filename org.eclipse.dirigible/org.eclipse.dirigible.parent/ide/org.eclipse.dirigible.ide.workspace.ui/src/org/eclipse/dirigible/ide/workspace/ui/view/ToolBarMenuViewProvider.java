@@ -240,6 +240,7 @@ public class ToolBarMenuViewProvider {
 			try {
 				PublishManager.publishProject(project, CommonIDEParameters.getRequest());
 			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
 				MessageDialog.openError(null, PUBLISH_FAILED, e.getMessage());
 			}
 		}

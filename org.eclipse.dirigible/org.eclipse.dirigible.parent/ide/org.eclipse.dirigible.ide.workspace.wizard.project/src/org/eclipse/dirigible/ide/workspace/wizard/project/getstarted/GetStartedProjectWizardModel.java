@@ -38,6 +38,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 public class GetStartedProjectWizardModel {
 
@@ -48,6 +49,8 @@ public class GetStartedProjectWizardModel {
 	private static final String PROJECT_WITH_THIS_NAME_ALREADY_EXISTS = Messages.NewProjectWizardModel_PROJECT_WITH_THIS_NAME_ALREADY_EXISTS;
 
 	private static final String INVALID_PROJECT_NAME = Messages.NewProjectWizardModel_INVALID_PROJECT_NAME;
+
+	private static final String PUBLISH_PROJECT_FAILED = Messages.NewProjectWizardModel_PUBLISH_PROJECT_FAILED;
 
 	public static final Logger logger = Logger.getLogger(GetStartedProjectWizardModel.class.getCanonicalName());
 
@@ -193,6 +196,7 @@ public class GetStartedProjectWizardModel {
 			PublishManager.publishProject(project, CommonIDEParameters.getRequest());
 		} catch (PublishException e) {
 			logger.error(e.getMessage(), e);
+			MessageDialog.openError(null, PUBLISH_PROJECT_FAILED, e.getMessage());
 		}
 	}
 }
