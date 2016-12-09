@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/jenkins/s/https/hudson.eclipse.org/dirigible/dirigible-nightly.svg?maxAge=2592000)](https://hudson.eclipse.org/dirigible/)
 [![Eclipse License](http://img.shields.io/badge/license-Eclipse-brightgreen.svg)](https://github.com/eclipse/dirigible/blob/master/LICENSE)
 [![Download Dirigible](https://img.shields.io/badge/download-releases-green.svg)](http://download.eclipse.org/dirigible/)
-[![GitHub contributors](https://img.shields.io/github/contributors/eclipse/dirigible.svg)](https://github.com/eclipse/dirigible/tree/master)
+[![GitHub contributors](https://img.shields.io/github/contributors/eclipse/dirigible.svg)](https://github.com/eclipse/dirigible/graphs/contributors)
 
 
 **Eclipse Dirigible** is an Integrated Development Environment as a Service (IDEaaS) for dynamic applications. It provides both development tools and runtime environment.

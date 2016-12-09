@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/discover/tests",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Discover Test extension for the Launchpad extension point"
+}

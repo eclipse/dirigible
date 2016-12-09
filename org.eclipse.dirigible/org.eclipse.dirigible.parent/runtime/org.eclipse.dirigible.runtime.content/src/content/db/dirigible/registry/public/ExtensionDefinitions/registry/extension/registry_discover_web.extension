@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/discover/web",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Discover Web extension for the Launchpad extension point"
+}

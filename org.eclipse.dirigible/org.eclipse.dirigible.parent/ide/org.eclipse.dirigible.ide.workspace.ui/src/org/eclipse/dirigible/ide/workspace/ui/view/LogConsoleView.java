@@ -25,7 +25,7 @@ public class LogConsoleView extends ViewPart {
 
 	static {
 		LOGGING_LOCATION = ((CommonIDEParameters.getRuntimeUrl() == null) || "".equals(CommonIDEParameters.getRuntimeUrl()))
-				? "/web/registry/templates/monitoring/logging/log.html" : "/services/web/registry/templates/monitoring/logging/log.html";
+				? "/web/registry/templates/monitoring/console.html" : "/services/web/registry/templates/monitoring/console.html";
 	}
 
 	private ExtendedBrowser browser = null;

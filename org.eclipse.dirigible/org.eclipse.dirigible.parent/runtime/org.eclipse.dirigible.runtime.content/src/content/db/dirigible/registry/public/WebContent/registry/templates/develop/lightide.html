@@ -1,0 +1,73 @@
+<div class="row">
+	<div class="col-lg-12">
+    	<h1 class="page-header">Workspace</h1>
+	</div>
+</div>
+
+<style>
+	#editor {
+		border: 1px solid #ddd;
+		height: 40rem;
+		margin-bottom: 3rem;
+	}
+	#editor-toolbar {
+		background-color: #ddd;
+		padding: 1.3rem;
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+	}
+</style>
+<div ng-controller="WorkspaceListCtrl" class="container-fluid">
+	<div class="row">
+		<div class="col-xs-18 collapse in" id="left">
+			<!-- <div id="successMessageAlert" class="alert alert-success" role="alert" ng-show="successfullMessage">
+		  		<a href="#" class="alert-link">{{ successfullMessage }}</a>
+	  		</div>
+	    	<div class="alert alert-danger" role="alert" ng-show="mainError">
+	    		<strong>Oh snap!</strong>
+	    		<span ng-show="mainError.status && mainError.data">{{ mainError.status }} - {{ mainError.data }}</span>
+	    		<span ng-hide="mainError.status && mainError.data">{{ mainError }}</span>
+	    	</div> -->
+      		<div class="input-group list-group">
+        		<input type="text" class="form-control" placeholder="Search for file" ng-model="search">
+        		<span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="search = undefined">Clear</button></span>
+      		</div>
+      		<div class="" ng-show="searchError && search">
+        		<div class="alert alert-danger"> <strong>Oh snap!</strong>{{ searchError.status }} - {{ searchError.data }}</div>
+      		</div>
+      		<div>
+	      		<ol ng-show="paths" class="breadcrumb" style="font-size: initial; padding-top: 5px">
+	        		<li ng-repeat="path in paths">
+	          			<a href="" ng-click="crumbsChanged(path)">{{ path.name }}</a>
+	        		</li>
+	        		<div style="float:right">
+	        			<button type="button" class="btn btn-info" ng-click="newFile()" style="margin-right:5px; padding:3px"><span class="fa fa-file-o"></span> New</button>
+		      			<!-- <button type="button" class="btn btn-info" ng-click="newFolder()" style="margin-right:5px; padding:3px"><span class="fa fa-folder-o"></span> New Folder</button> -->
+		      		</div>
+	      		</ol>
+	      		
+      		</div>
+      		<div class="list-group">
+        		<div class="list-group-item" ng-repeat="single in selected.files" ng-click="change(single)">
+          			<span class="fa fa-{{ single.folder ? (single.files?'folder':'folder-o') : 'file-code-o' }}"></span>
+  		    		{{ single.name }}
+          			<span ng-show="single.files" class="badge">{{ single.files.length }}</span>
+        		</div>
+        		<div class="alert alert-warning" role="alert" ng-show="!selected.files || selected.files.length === 0">No content.</div>
+      		</div>
+    	</div>
+    	<div class="col-xs-18" ng-show="editor != null">
+	    	<div>
+	    		<div id="editor-toolbar">
+					<button type="button" class="btn btn-success" ng-click="saveCalled()"><span class="fa fa-floppy-o"></span> Save</button>
+					<button type="button" class="btn btn-info" ng-click="publishCalled()"><span class="fa fa-play-circle"></span> Publish</button>
+					<button type="button" class="btn" ng-click="toggleFullscreen()" data-toggle="collapse" data-target="#left" style="float:right"><i ng-class="isFullscreen?'fa fa-compress':'fa fa-expand'"></i></button>
+					
+					<span ng-hide="isDirty">{{ path.replace("/workspace", "") }}</span>
+					<span ng-show="isDirty">{{ path.replace("/workspace", "") }} *</span>
+				</div>
+      			<div id="editor"></div>
+      		</div>
+    	</div>
+ 	</div>
+</div>

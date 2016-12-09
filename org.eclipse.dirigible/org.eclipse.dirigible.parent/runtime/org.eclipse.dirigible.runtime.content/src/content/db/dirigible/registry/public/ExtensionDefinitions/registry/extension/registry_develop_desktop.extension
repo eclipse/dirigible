@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/develop/desktop",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Develop Desktop IDE extension for the Launchpad extension point"
+}

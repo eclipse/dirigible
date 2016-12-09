@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/discover/job",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Discover Job extension for the Launchpad extension point"
+}

@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/menu",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Menu extension for the Launchpad extension point"
+}

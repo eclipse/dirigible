@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/develop",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Develop extension for the Launchpad extension point"
+}

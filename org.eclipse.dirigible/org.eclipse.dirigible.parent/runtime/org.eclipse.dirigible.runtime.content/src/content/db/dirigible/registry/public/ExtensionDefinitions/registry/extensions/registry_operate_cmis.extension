@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/operate/cmis",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Operate CMIS extension for the Launchpad extension point"
+}

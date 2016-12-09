@@ -1,0 +1,40 @@
+<html>
+<head>
+<style>
+	body {
+	    background-color: black;
+	    color: #44EE44;
+	    font-family: monospace;
+	}
+</style>
+</head>
+<body onload="connectToLog()">
+<script>
+var connectToLog = function() {
+	try {
+		var logSocket = new WebSocket(((location.protocol === 'https:') ? "wss://" : "ws://") 
+				+ window.location.host + "/log");
+	} catch(e) {
+		document.writeln("<div style='background-color: black; font-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
+		
+	}
+	logSocket.onmessage = function (message) {
+		var color = "#44EE44";
+		if (message.data.startsWith("[error]")) {
+			color = "red";
+		}
+		var date = new Date();
+		var id = date.getTime();
+		document.writeln("<div id='" + id + "' style='background-color: black; font-family: monospace; color: " + color + "'>[" + date.toISOString() + "]" + message.data + "</div>");
+		window.location.hash = "#" + id;				
+	};
+	
+	setInterval(clear, 6000000);
+}
+var clear = function() {
+	document.body.innerHTML = '';
+	document.writeln("<div style='background-color: black; font-family: monospace; color: gray'>[" + new Date().toISOString() + "][clear]...</div>");
+}
+</script>
+</body>
+</html>

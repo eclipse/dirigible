@@ -1,5 +1,0 @@
-{
-  "extension":"/registry/extensions/content/develop/web_ide",
-  "extension-point":"/registry/extension_points/develop_content_item",
-  "description":"Extension for 'Develop' in Registry UI "
-}

@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/help",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Help extension for the Launchpad extension point"
+}

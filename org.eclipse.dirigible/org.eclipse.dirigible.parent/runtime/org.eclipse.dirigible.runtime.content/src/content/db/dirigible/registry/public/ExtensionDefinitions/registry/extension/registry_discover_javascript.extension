@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/discover/javascript",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Discover JavaScript extension for the Launchpad extension point"
+}

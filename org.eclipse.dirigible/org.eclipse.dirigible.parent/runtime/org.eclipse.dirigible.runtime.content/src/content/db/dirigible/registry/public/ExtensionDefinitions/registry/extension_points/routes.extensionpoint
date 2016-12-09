@@ -1,4 +1,0 @@
-{
-  "extension-point":"/registry/routes",
-  "description":"Registry UI extension point for AngularJS routes"
-}
