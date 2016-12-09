@@ -40,6 +40,10 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 public class ToolBarMenuViewProvider {
 
+	private static final String ACTIVATE_PROJECT_ERROR = "Activate Project Error";
+
+	private static final String PUBLISH_PROJECT_ERROR = "Publish Project Error";
+
 	private static final Logger logger = Logger.getLogger(ToolBarMenuViewProvider.class);
 
 	private static final String EMPTY = ""; //$NON-NLS-1$
@@ -233,13 +237,21 @@ public class ToolBarMenuViewProvider {
 
 	private static void publish() throws PublishException {
 		for (IProject project : PublishManager.getProjects(getSelection())) {
-			PublishManager.publishProject(project, CommonIDEParameters.getRequest());
+			try {
+				PublishManager.publishProject(project, CommonIDEParameters.getRequest());
+			} catch (Exception e) {
+				MessageDialog.openError(null, PUBLISH_FAILED, e.getMessage());
+			}
 		}
 	}
 
 	private static void activate() throws PublishException {
 		for (IProject project : PublishManager.getProjects(getSelection())) {
-			PublishManager.activateProject(project, CommonIDEParameters.getRequest());
+			try {
+				PublishManager.activateProject(project, CommonIDEParameters.getRequest());
+			} catch (Exception e) {
+				MessageDialog.openError(null, ACTIVATION_FAILED, e.getMessage());
+			}
 		}
 	}
 

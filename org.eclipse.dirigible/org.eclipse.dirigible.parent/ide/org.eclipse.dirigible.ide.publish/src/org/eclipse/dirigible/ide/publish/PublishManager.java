@@ -190,6 +190,7 @@ public final class PublishManager {
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
+				throw new PublishException(e.getMessage(), e);
 			}
 
 		}

@@ -15,8 +15,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +32,12 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
+import org.eclipse.dirigible.repository.ext.db.model.DataStructureModel;
 import org.eclipse.dirigible.repository.ext.db.model.DataStructureModelFactory;
 import org.eclipse.dirigible.repository.ext.db.model.EDataStructureModelFormatException;
 import org.eclipse.dirigible.repository.ext.db.model.TableColumnModel;
 import org.eclipse.dirigible.repository.ext.db.model.TableModel;
+import org.eclipse.dirigible.repository.ext.db.model.TopologicalSorter;
 import org.eclipse.dirigible.repository.ext.db.model.ViewModel;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -84,6 +88,14 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			return;
 		}
 
+		logger.debug("DatabaseUpdater->executeUpdate start...");
+
+		logger.debug("unsorted ------");
+
+		for (String fileName : knownFiles) {
+			logger.debug("fileName: " + fileName);
+		}
+
 		// preliminary sorting, so that the tables to be executed first and then the views
 		knownFiles.sort(new Comparator<String>() {
 			@Override
@@ -94,18 +106,72 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			}
 		});
 
+		logger.debug("preliminary sorting ------");
+
+		for (String fileName : knownFiles) {
+			logger.debug("fileName: " + fileName);
+		}
+
 		try {
 			Connection connection = dataSource.getConnection();
 			String productName = connection.getMetaData().getDatabaseProductName();
 			IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
 
 			try {
+
+				// parse models
+				Map<String, DataStructureModel> models = new LinkedHashMap<String, DataStructureModel>();
 				for (String dsDefinition : knownFiles) {
 					try {
 						if (dsDefinition.endsWith(EXTENSION_TABLE)) {
-							executeTableUpdateMain(connection, dialectSpecifier, dsDefinition);
+							TableModel tableModel = parseTable(dsDefinition);
+							models.put(tableModel.getName(), tableModel);
 						} else if (dsDefinition.endsWith(EXTENSION_VIEW)) {
-							executeViewUpdateMain(connection, dialectSpecifier, dsDefinition);
+							ViewModel viewModel = parseView(dsDefinition);
+							models.put(viewModel.getName(), viewModel);
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						if (errors != null) {
+							errors.add(e.getMessage());
+						}
+					}
+				}
+
+				// topology sort of dependencies
+				List<String> output = new ArrayList<String>();
+				List<String> external = new ArrayList<String>();
+				try {
+					TopologicalSorter.sort(models, output, external);
+
+					logger.debug("topological sorting ------");
+
+					for (String fileName : output) {
+						logger.debug("fileName: " + fileName);
+					}
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					if (errors != null) {
+						errors.add(e.getMessage());
+					}
+					output.clear();
+				}
+
+				if (output.isEmpty()) {
+					// something wrong happened with the sorting - probably cyclic dependencies
+					// we go for the back-up list and try to apply what would succeed
+					logger.debug("probably cyclic dependencies!");
+					output.addAll(models.keySet());
+				}
+
+				// process models in the proper order
+				for (String dsName : output) {
+					DataStructureModel model = models.get(dsName);
+					try {
+						if (model instanceof TableModel) {
+							executeTableUpdateMain(connection, dialectSpecifier, (TableModel) model);
+						} else if (model instanceof ViewModel) {
+							executeViewUpdateMain(connection, dialectSpecifier, (ViewModel) model);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -122,15 +188,11 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
+
+		logger.debug("DatabaseUpdater->executeUpdate end.");
 	}
 
-	@Override
-	public void executeUpdate(List<String> knownFiles, HttpServletRequest request, List<String> errors) throws Exception {
-		executeUpdate(knownFiles, errors);
-	}
-
-	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition)
-			throws SQLException, IOException {
+	private TableModel parseTable(String dsDefinition) throws IOException {
 		String content = getContent(dsDefinition);
 		TableModel tableModel;
 		try {
@@ -138,6 +200,28 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		} catch (EDataStructureModelFormatException e) {
 			throw new IOException(e);
 		}
+		return tableModel;
+	}
+
+	private ViewModel parseView(String dsDefinition) throws IOException {
+		String content = getContent(dsDefinition);
+		ViewModel viewModel;
+		try {
+			viewModel = DataStructureModelFactory.createViewModel(content);
+		} catch (EDataStructureModelFormatException e) {
+			throw new IOException(e);
+		}
+		return viewModel;
+	}
+
+	@Override
+	public void executeUpdate(List<String> knownFiles, HttpServletRequest request, List<String> errors) throws Exception {
+		executeUpdate(knownFiles, errors);
+	}
+
+	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel)
+			throws SQLException, IOException {
+
 		String tableName = tableModel.getName();
 		ResultSet rs = null;
 		try {
@@ -156,15 +240,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	}
 
-	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition)
+	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, ViewModel viewModel)
 			throws SQLException, IOException {
-		String content = getContent(dsDefinition);
-		ViewModel viewModel;
-		try {
-			viewModel = DataStructureModelFactory.createViewModel(content);
-		} catch (EDataStructureModelFormatException e) {
-			throw new IOException(e);
-		}
 		executeViewCreateOrReplace(connection, viewModel);
 	}
 
