@@ -164,6 +164,22 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 					output.addAll(models.keySet());
 				}
 
+				// drop view in a reverse order
+				for (int i = output.size() - 1; i >= 0; i--) {
+					String dsName = output.get(i);
+					DataStructureModel model = models.get(dsName);
+					try {
+						if (model instanceof ViewModel) {
+							executeViewDrop(connection, (ViewModel) model);
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						if (errors != null) {
+							errors.add(e.getMessage());
+						}
+					}
+				}
+
 				// process models in the proper order
 				for (String dsName : output) {
 					DataStructureModel model = models.get(dsName);
@@ -171,7 +187,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 						if (model instanceof TableModel) {
 							executeTableUpdateMain(connection, dialectSpecifier, (TableModel) model);
 						} else if (model instanceof ViewModel) {
-							executeViewUpdateMain(connection, dialectSpecifier, (ViewModel) model);
+							executeViewCreate(connection, (ViewModel) model);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -240,11 +256,6 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	}
 
-	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, ViewModel viewModel)
-			throws SQLException, IOException {
-		executeViewCreateOrReplace(connection, viewModel);
-	}
-
 	private void executeTableCreate(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel) throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		String tableName = tableModel.getName();
@@ -290,7 +301,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			executeUpdateSQL(connection, sqlExpression);
 		} catch (SQLException e) {
 			logger.error(sqlExpression);
-			throw new SQLException(sqlExpression, e);
+			logger.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
 		}
 	}
 
@@ -391,7 +403,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 				executeUpdateSQL(connection, sqlExpression);
 			} catch (SQLException e) {
 				logger.error(sqlExpression);
-				throw new SQLException(sqlExpression, e);
+				logger.error(e.getMessage(), e);
+				throw new SQLException(e.getMessage(), e);
 			}
 		}
 	}
@@ -406,10 +419,9 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		return content;
 	}
 
-	private void executeViewCreateOrReplace(Connection connection, ViewModel viewModel) throws SQLException {
+	private void executeViewDrop(Connection connection, ViewModel viewModel) throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		String viewName = viewModel.getName();
-		String query = viewModel.getQuery();
 
 		String sqlExpression = null;
 		boolean exists = DBUtils.isTableOrViewExists(connection, viewName);
@@ -424,17 +436,24 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 				logger.error(e.getMessage(), e);
 			}
 		}
+	}
+
+	private void executeViewCreate(Connection connection, ViewModel viewModel) throws SQLException {
+		StringBuilder sql = new StringBuilder();
+		String viewName = viewModel.getName();
+		String query = viewModel.getQuery();
 
 		sql = new StringBuilder();
 		sql.append(CREATE_VIEW + viewName + AS + query);
 
-		sqlExpression = sql.toString();
+		String sqlExpression = sql.toString();
 		try {
 			logger.info(sqlExpression);
 			executeUpdateSQL(connection, sqlExpression);
 		} catch (SQLException e) {
 			logger.error(sqlExpression);
-			throw new SQLException(sqlExpression, e);
+			logger.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
 		}
 	}
 

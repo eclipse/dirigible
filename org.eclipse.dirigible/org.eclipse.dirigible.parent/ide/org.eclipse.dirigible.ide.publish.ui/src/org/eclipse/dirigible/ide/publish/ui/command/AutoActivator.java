@@ -67,7 +67,7 @@ public class AutoActivator implements // ISaveParticipant {
 		} catch (PublishException e) {
 			logger.error(e.getMessage(), e);
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), AUTO_PUBLISH_FAILED,
-					FAILED_TO_PUBLISH_PROJECT + project.getName());
+					FAILED_TO_PUBLISH_PROJECT + project.getName() + "\n\n" + e.getMessage());
 		}
 	}
 
@@ -113,7 +113,7 @@ public class AutoActivator implements // ISaveParticipant {
 			PublishManager.activateProject(project, CommonIDEParameters.getRequest());
 		} catch (PublishException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), AUTO_ACTIVATION_FAILED,
-					FAILED_TO_ACTIVATE_PROJECT + project.getName());
+					FAILED_TO_ACTIVATE_PROJECT + project.getName() + "\n\n" + e.getMessage());
 		}
 		WebViewerView.refreshWebViewerViewIfVisible();
 	}
@@ -130,7 +130,7 @@ public class AutoActivator implements // ISaveParticipant {
 			}
 		} catch (PublishException e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), AUTO_ACTIVATION_FAILED,
-					FAILED_TO_ACTIVATE_FILE + file.getName());
+					FAILED_TO_ACTIVATE_FILE + file.getName() + "\n\n" + e.getMessage());
 		}
 		WebViewerView.refreshWebViewerViewIfVisible();
 	}

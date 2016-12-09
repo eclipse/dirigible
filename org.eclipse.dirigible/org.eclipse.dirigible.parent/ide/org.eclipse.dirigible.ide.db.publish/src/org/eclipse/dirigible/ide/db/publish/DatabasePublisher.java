@@ -94,7 +94,7 @@ public class DatabasePublisher extends AbstractPublisher implements IPublisher {
 		List<String> errors = new ArrayList<String>();
 		databaseUpdater.executeUpdate(knownFiles, errors);
 		if (errors.size() > 0) {
-			throw new PublishException(CommonUtils.concatenateListOfStrings(errors, "\n"));
+			throw new PublishException(CommonUtils.concatenateListOfStrings(errors, "\n---\n"));
 		}
 	}
 

@@ -76,7 +76,7 @@ public class DeleteViewAction extends Action {
 					try {
 						deleteView(tableDefinition, connectionFactory);
 					} catch (SQLException e) {
-						showMessage(String.format(FAILED_TO_DELETE_TABLE_S, tableDefinition.getTableName()));
+						showMessage(String.format(FAILED_TO_DELETE_TABLE_S, tableDefinition.getTableName()) + "\n\n" + e.getMessage());
 						logger.error(e.getMessage(), e);
 					}
 				}
