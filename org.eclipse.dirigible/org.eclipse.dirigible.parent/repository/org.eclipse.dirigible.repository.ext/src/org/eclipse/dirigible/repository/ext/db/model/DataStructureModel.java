@@ -26,12 +26,12 @@ public class DataStructureModel {
 	private static final String DEPENDENCY_NAME = "name"; //$NON-NLS-1$
 	private static final String DEPENDENCY_TYPE = "type"; //$NON-NLS-1$
 
-	static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_MODEL_S = "Element [%s] does not exist in this model [%s]";
-	static final String ELEMENT_S_MUST_BE_ARRAY_IN_THE_MODEL_S = "Element [%s] must be array in the model [%s]";
-	static final String ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_MODEL_S = "Element [%s] must be a single element not an array in this table model [%s]";
-	private static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_DEPENDENCIES_ARRAY_IN_THE_TABLE_MODEL_S = "Element [%s] does not exist in this dependencies array in the table model [%s]";
-	private static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_DEPENDENCY_S_IN_THE_TABLE_MODEL_S = "Element [%s] does not exist in this dependency [%s] in the table model [%s]";
-	private static final String ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_DEPENDENCY_S_IN_THE_TABLE_MODEL_S = "Element [%s] must be a single element not an array in this dependency [%s] in the table model [%s]";
+	static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_MODEL_S = Messages.DataStructureModel_ELEMENT_S_DOES_NOT_EXIST_IN_THIS_MODEL_S;
+	static final String ELEMENT_S_MUST_BE_ARRAY_IN_THE_MODEL_S = Messages.DataStructureModel_ELEMENT_S_MUST_BE_ARRAY_IN_THE_MODEL_S;
+	static final String ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_MODEL_S = Messages.DataStructureModel_ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_MODEL_S;
+	private static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_DEPENDENCIES_ARRAY_IN_THE_TABLE_MODEL_S = Messages.DataStructureModel_ELEMENT_S_DOES_NOT_EXIST_IN_THIS_DEPENDENCIES_ARRAY_IN_THE_TABLE_MODEL_S;
+	private static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_DEPENDENCY_S_IN_THE_TABLE_MODEL_S = Messages.DataStructureModel_ELEMENT_S_DOES_NOT_EXIST_IN_THIS_DEPENDENCY_S_IN_THE_TABLE_MODEL_S;
+	private static final String ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_DEPENDENCY_S_IN_THE_TABLE_MODEL_S = Messages.DataStructureModel_ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_DEPENDENCY_S_IN_THE_TABLE_MODEL_S;
 
 	private String name;
 

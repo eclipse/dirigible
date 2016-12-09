@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 public class TopologicalSorter {
 
-	private static final String CYCLIC_DEPENDENCY_S_IN_S = "Cyclic dependency %s in %s";
+	private static final String CYCLIC_DEPENDENCY_S_IN_S = Messages.TopologicalSorter_CYCLIC_DEPENDENCY_S_IN_S;
 
 	public static void sort(Map<String, DataStructureModel> input, List<String> output, List<String> external)
 			throws EDataStructureModelFormatException {

@@ -29,7 +29,7 @@ import com.google.gson.JsonParser;
  */
 public class ViewModel extends DataStructureModel {
 
-	private static final String VIEW = "VIEW";
+	private static final String VIEW = "VIEW"; //$NON-NLS-1$
 	private static final String VIEW_NAME = "viewName"; //$NON-NLS-1$
 	private static final String QUERY = "query"; //$NON-NLS-1$
 

@@ -49,7 +49,7 @@ import com.google.gson.JsonParser;
  */
 public class TableModel extends DataStructureModel {
 
-	private static final String TABLE = "TABLE";
+	private static final String TABLE = "TABLE"; //$NON-NLS-1$
 	private static final String TABLE_NAME = "tableName"; //$NON-NLS-1$
 	private static final String COLUMNS = "columns"; //$NON-NLS-1$
 	private static final String COLUMN_NAME = "name"; //$NON-NLS-1$
@@ -59,9 +59,9 @@ public class TableModel extends DataStructureModel {
 	private static final String COLUMN_PRIMARY_KEY = "primaryKey"; //$NON-NLS-1$
 	private static final String COLUMN_DEFAULT_VALUE = "defaultValue"; //$NON-NLS-1$
 
-	private static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_COLUMNS_ARRAY_IN_THE_TABLE_MODEL_S = "Element [%s] does not exist in this columns array in the table model [%s]";
-	private static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_COLUMN_S_IN_THE_TABLE_MODEL_S = "Element [%s] does not exist in this column [%s] in the table model [%s]";
-	private static final String ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_COLUMN_S_IN_THE_TABLE_MODEL_S = "Element [%s] must be a single element not an array in this column [%s] in the table model [%s]";
+	private static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_COLUMNS_ARRAY_IN_THE_TABLE_MODEL_S = Messages.TableModel_ELEMENT_S_DOES_NOT_EXIST_IN_THIS_COLUMNS_ARRAY_IN_THE_TABLE_MODEL_S;
+	private static final String ELEMENT_S_DOES_NOT_EXIST_IN_THIS_COLUMN_S_IN_THE_TABLE_MODEL_S = Messages.TableModel_ELEMENT_S_DOES_NOT_EXIST_IN_THIS_COLUMN_S_IN_THE_TABLE_MODEL_S;
+	private static final String ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_COLUMN_S_IN_THE_TABLE_MODEL_S = Messages.TableModel_ELEMENT_S_MUST_BE_A_SINGLE_ELEMENT_NOT_AN_ARRAY_IN_THIS_COLUMN_S_IN_THE_TABLE_MODEL_S;
 
 	private List<TableColumnModel> columns = new ArrayList<TableColumnModel>();
 
