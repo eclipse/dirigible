@@ -24,6 +24,7 @@ import org.eclipse.dirigible.ide.publish.PublishException;
 import org.eclipse.dirigible.ide.publish.PublishManager;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.view.WebViewerView;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 
@@ -37,19 +38,14 @@ public class AutoActivator implements // ISaveParticipant {
 	private static final String AUTO_ACTIVATION_FAILED = Messages.AutoActivateAction_AUTO_ACTIVATION_FAILED;
 	private static final String AUTO_PUBLISH_FAILED = Messages.AutoActivateAction_AUTO_PUBLISH_FAILED;
 
+	private static final Logger logger = Logger.getLogger(AutoActivator.class);
+
 	public void registerListener() {
 		WorkspaceLocator.getWorkspace().addResourceChangeListener(this);
-		// try {
-		// WorkspaceLocator.getWorkspace().addSaveParticipant("org.eclipse.dirigible.ide.publish.ui", this);
-		// } catch (CoreException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
 	}
 
 	public void unregisterListener() {
 		WorkspaceLocator.getWorkspace().removeResourceChangeListener(this);
-		// WorkspaceLocator.getWorkspace().removeSaveParticipant("org.eclipse.dirigible.ide.publish.ui");
 	}
 
 	@Override
@@ -69,10 +65,10 @@ public class AutoActivator implements // ISaveParticipant {
 		try {
 			PublishManager.publishProject(project, CommonIDEParameters.getRequest());
 		} catch (PublishException e) {
+			logger.error(e.getMessage(), e);
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), AUTO_PUBLISH_FAILED,
 					FAILED_TO_PUBLISH_PROJECT + project.getName());
 		}
-
 	}
 
 	private void autoActivate(IResourceChangeEvent event) {
@@ -138,44 +134,5 @@ public class AutoActivator implements // ISaveParticipant {
 		}
 		WebViewerView.refreshWebViewerViewIfVisible();
 	}
-
-	// @Override
-	// public void doneSaving(ISaveContext saveContext) {
-	//
-	// if (!AutoActivateAction.isAutoActivateStrategy()) {
-	// return;
-	// }
-	//
-	// activate(saveContext.getProject());
-	//
-	//// IResource delta = arg0.getResource();
-	//// if (delta != null) {
-	//// if (delta instanceof IFile) {
-	//// activateFile((IFile) delta);
-	//// } else {
-	//// activate(delta.getProject());
-	//// }
-	//// }
-	//
-	//
-	// }
-	//
-	// @Override
-	// public void prepareToSave(ISaveContext arg0) throws CoreException {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	//
-	// @Override
-	// public void rollback(ISaveContext arg0) {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	//
-	// @Override
-	// public void saving(ISaveContext arg0) throws CoreException {
-	// // TODO Auto-generated method stub
-	//
-	// }
 
 }

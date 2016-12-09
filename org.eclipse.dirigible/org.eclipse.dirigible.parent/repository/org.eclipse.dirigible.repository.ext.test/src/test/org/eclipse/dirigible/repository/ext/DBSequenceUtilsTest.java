@@ -1,18 +1,16 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package test.org.eclipse.dirigible.repository.ext;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
@@ -22,7 +20,6 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.repository.ext.db.DBSequenceUtils;
 import org.junit.Before;
 import org.junit.Test;
-
 
 public class DBSequenceUtilsTest {
 

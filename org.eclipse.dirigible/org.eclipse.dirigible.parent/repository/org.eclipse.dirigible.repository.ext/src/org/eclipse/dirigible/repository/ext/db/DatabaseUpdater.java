@@ -15,8 +15,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,12 +32,14 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap;
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 import org.eclipse.dirigible.repository.datasource.db.dialect.IDialectSpecifier;
+import org.eclipse.dirigible.repository.ext.db.model.DataStructureModel;
+import org.eclipse.dirigible.repository.ext.db.model.DataStructureModelFactory;
+import org.eclipse.dirigible.repository.ext.db.model.EDataStructureModelFormatException;
+import org.eclipse.dirigible.repository.ext.db.model.TableColumnModel;
+import org.eclipse.dirigible.repository.ext.db.model.TableModel;
+import org.eclipse.dirigible.repository.ext.db.model.TopologicalSorter;
+import org.eclipse.dirigible.repository.ext.db.model.ViewModel;
 import org.eclipse.dirigible.repository.logging.Logger;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class DatabaseUpdater extends AbstractDataUpdater {
 
@@ -44,7 +48,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 	private static final String AS = " AS "; //$NON-NLS-1$
 	private static final String CREATE_VIEW = "CREATE VIEW "; //$NON-NLS-1$
 	private static final String DROP_VIEW = "DROP VIEW "; //$NON-NLS-1$
-	private static final String QUERY = "query"; //$NON-NLS-1$
+
 	private static final String CANNOT_BE_CHANGED_TO = Messages.getString("DatabaseUpdater.CANNOT_BE_CHANGED_TO"); //$NON-NLS-1$
 	private static final String TYPE2 = Messages.getString("DatabaseUpdater.TYPE2"); //$NON-NLS-1$
 	private static final String ADDING_PRIMARY_KEY_COLUMN = Messages.getString("DatabaseUpdater.ADDING_PRIMARY_KEY_COLUMN"); //$NON-NLS-1$
@@ -53,16 +57,9 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 	private static final String INCOMPATIBLE_CHANGE_OF_TABLE = Messages.getString("DatabaseUpdater.INCOMPATIBLE_CHANGE_OF_TABLE"); //$NON-NLS-1$
 	private static final String ADD = "ADD "; //$NON-NLS-1$
 	private static final String ALTER_TABLE = "ALTER TABLE "; //$NON-NLS-1$
-	private static final String COLUMN_DEFAULT_VALUE = "defaultValue"; //$NON-NLS-1$
-	private static final String COLUMN_PRIMARY_KEY = "primaryKey"; //$NON-NLS-1$
-	private static final String COLUMN_NOT_NULL = "notNull"; //$NON-NLS-1$
-	private static final String COLUMN_LENGTH = "length"; //$NON-NLS-1$
-	private static final String COLUMN_TYPE = "type"; //$NON-NLS-1$
-	private static final String COLUMN_NAME = "name"; //$NON-NLS-1$
-	private static final String COLUMNS = "columns"; //$NON-NLS-1$
+
 	private static final String CREATE_TABLE = "CREATE TABLE "; //$NON-NLS-1$
-	private static final String VIEW_NAME = "viewName"; //$NON-NLS-1$
-	private static final String TABLE_NAME = "tableName"; //$NON-NLS-1$
+
 	private static final String DEFAULT = "DEFAULT "; //$NON-NLS-1$
 	private static final String PRIMARY_KEY = "PRIMARY KEY "; //$NON-NLS-1$
 	private static final String NOT_NULL = "NOT NULL "; //$NON-NLS-1$
@@ -91,6 +88,14 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			return;
 		}
 
+		logger.debug("DatabaseUpdater->executeUpdate start...");
+
+		logger.debug("unsorted ------");
+
+		for (String fileName : knownFiles) {
+			logger.debug("fileName: " + fileName);
+		}
+
 		// preliminary sorting, so that the tables to be executed first and then the views
 		knownFiles.sort(new Comparator<String>() {
 			@Override
@@ -101,18 +106,72 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			}
 		});
 
+		logger.debug("preliminary sorting ------");
+
+		for (String fileName : knownFiles) {
+			logger.debug("fileName: " + fileName);
+		}
+
 		try {
 			Connection connection = dataSource.getConnection();
 			String productName = connection.getMetaData().getDatabaseProductName();
 			IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
 
 			try {
+
+				// parse models
+				Map<String, DataStructureModel> models = new LinkedHashMap<String, DataStructureModel>();
 				for (String dsDefinition : knownFiles) {
 					try {
 						if (dsDefinition.endsWith(EXTENSION_TABLE)) {
-							executeTableUpdateMain(connection, dialectSpecifier, dsDefinition);
+							TableModel tableModel = parseTable(dsDefinition);
+							models.put(tableModel.getName(), tableModel);
 						} else if (dsDefinition.endsWith(EXTENSION_VIEW)) {
-							executeViewUpdateMain(connection, dialectSpecifier, dsDefinition);
+							ViewModel viewModel = parseView(dsDefinition);
+							models.put(viewModel.getName(), viewModel);
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						if (errors != null) {
+							errors.add(e.getMessage());
+						}
+					}
+				}
+
+				// topology sort of dependencies
+				List<String> output = new ArrayList<String>();
+				List<String> external = new ArrayList<String>();
+				try {
+					TopologicalSorter.sort(models, output, external);
+
+					logger.debug("topological sorting ------");
+
+					for (String fileName : output) {
+						logger.debug("fileName: " + fileName);
+					}
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					if (errors != null) {
+						errors.add(e.getMessage());
+					}
+					output.clear();
+				}
+
+				if (output.isEmpty()) {
+					// something wrong happened with the sorting - probably cyclic dependencies
+					// we go for the back-up list and try to apply what would succeed
+					logger.debug("probably cyclic dependencies!");
+					output.addAll(models.keySet());
+				}
+
+				// process models in the proper order
+				for (String dsName : output) {
+					DataStructureModel model = models.get(dsName);
+					try {
+						if (model instanceof TableModel) {
+							executeTableUpdateMain(connection, dialectSpecifier, (TableModel) model);
+						} else if (model instanceof ViewModel) {
+							executeViewUpdateMain(connection, dialectSpecifier, (ViewModel) model);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -129,6 +188,30 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
+
+		logger.debug("DatabaseUpdater->executeUpdate end.");
+	}
+
+	private TableModel parseTable(String dsDefinition) throws IOException {
+		String content = getContent(dsDefinition);
+		TableModel tableModel;
+		try {
+			tableModel = DataStructureModelFactory.createTableModel(content);
+		} catch (EDataStructureModelFormatException e) {
+			throw new IOException(e);
+		}
+		return tableModel;
+	}
+
+	private ViewModel parseView(String dsDefinition) throws IOException {
+		String content = getContent(dsDefinition);
+		ViewModel viewModel;
+		try {
+			viewModel = DataStructureModelFactory.createViewModel(content);
+		} catch (EDataStructureModelFormatException e) {
+			throw new IOException(e);
+		}
+		return viewModel;
 	}
 
 	@Override
@@ -136,19 +219,18 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		executeUpdate(knownFiles, errors);
 	}
 
-	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition)
+	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel)
 			throws SQLException, IOException {
-		JsonObject dsDefinitionObject = parseTable(dsDefinition);
-		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
-		tableName = tableName.toUpperCase();
+
+		String tableName = tableModel.getName();
 		ResultSet rs = null;
 		try {
 			boolean exists = DBUtils.isTableOrViewExists(connection, tableName);
 			if (exists) {
 				// String retrievedTableName = rs.getString(3);
-				executeTableUpdate(connection, dialectSpecifier, dsDefinitionObject);
+				executeTableUpdate(connection, dialectSpecifier, tableModel);
 			} else {
-				executeTableCreate(connection, dialectSpecifier, dsDefinitionObject);
+				executeTableCreate(connection, dialectSpecifier, tableModel);
 			}
 		} finally {
 			if (rs != null) {
@@ -158,50 +240,45 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	}
 
-	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, String dsDefinition)
+	private void executeViewUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, ViewModel viewModel)
 			throws SQLException, IOException {
-		JsonObject dsDefinitionObject = parseView(dsDefinition);
-		String viewName = dsDefinitionObject.get(VIEW_NAME).getAsString();
-		viewName = viewName.toUpperCase();
-		executeViewCreateOrReplace(connection, dsDefinitionObject);
+		executeViewCreateOrReplace(connection, viewModel);
 	}
 
-	private void executeTableCreate(Connection connection, IDialectSpecifier dialectSpecifier, JsonObject dsDefinitionObject) throws SQLException {
+	private void executeTableCreate(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel) throws SQLException {
 		StringBuilder sql = new StringBuilder();
-		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString();
+		String tableName = tableModel.getName();
 
 		sql.append(CREATE_TABLE + tableName + " ("); //$NON-NLS-1$
 
-		JsonArray columns = dsDefinitionObject.get(COLUMNS).getAsJsonArray();
+		List<TableColumnModel> columns = tableModel.getColumns();
 		int i = 0;
-		for (JsonElement jsonElement : columns) {
-			if (jsonElement instanceof JsonObject) {
-				if ((i > 0) && (i < columns.size())) {
-					sql.append(", "); //$NON-NLS-1$
-				}
-				JsonObject jsonObject = (JsonObject) jsonElement;
-				String name = jsonObject.get(COLUMN_NAME).getAsString();
-				String type = dbUtils.specifyDataType(connection, jsonObject.get(COLUMN_TYPE).getAsString());
-				String length = jsonObject.get(COLUMN_LENGTH).getAsString();
-				boolean notNull = jsonObject.get(COLUMN_NOT_NULL).getAsBoolean();
-				boolean primaryKey = jsonObject.get(COLUMN_PRIMARY_KEY).getAsBoolean();
-				String defaultValue = jsonObject.get(COLUMN_DEFAULT_VALUE).getAsString();
+		for (TableColumnModel columnModel : columns) {
 
-				sql.append(name + " " + type); //$NON-NLS-1$
-				if (DataTypes.VARCHAR.equals(DataTypes.valueOf(type)) || DataTypes.CHAR.equals(DataTypes.valueOf(type))) {
-					sql.append("(" + length + ") "); //$NON-NLS-1$ //$NON-NLS-2$
-				} else {
-					sql.append(" "); //$NON-NLS-1$
-				}
-				if (notNull) {
-					sql.append(NOT_NULL);
-				}
-				if (primaryKey) {
-					sql.append(PRIMARY_KEY);
-				}
-				if ((defaultValue != null) && !"".equals(defaultValue)) { //$NON-NLS-1$
-					sql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
-				}
+			if ((i > 0) && (i < columns.size())) {
+				sql.append(", "); //$NON-NLS-1$
+			}
+			String name = columnModel.getName();
+			String type = dbUtils.specifyDataType(connection, columnModel.getType());
+			String length = columnModel.getLength();
+			boolean notNull = columnModel.isNotNull();
+			boolean primaryKey = columnModel.isPrimaryKey();
+			String defaultValue = columnModel.getDefaultValue();
+
+			sql.append(name + " " + type); //$NON-NLS-1$
+			if (DataTypes.VARCHAR.equals(DataTypes.valueOf(type)) || DataTypes.CHAR.equals(DataTypes.valueOf(type))) {
+				sql.append("(" + length + ") "); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				sql.append(" "); //$NON-NLS-1$
+			}
+			if (notNull) {
+				sql.append(NOT_NULL);
+			}
+			if (primaryKey) {
+				sql.append(PRIMARY_KEY);
+			}
+			if ((defaultValue != null) && !"".equals(defaultValue)) { //$NON-NLS-1$
+				sql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
 			}
 			i++;
 		}
@@ -222,20 +299,20 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		preparedStatement.executeUpdate();
 	}
 
-	private void executeTableUpdate(Connection connection, IDialectSpecifier dialectSpecifier, JsonObject dsDefinitionObject) throws SQLException {
+	private void executeTableUpdate(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel) throws SQLException {
 		StringBuilder sql = new StringBuilder();
-		String tableName = dsDefinitionObject.get(TABLE_NAME).getAsString().toUpperCase();
+		String tableName = tableModel.getName();
 
 		Map<String, String> columnDefinitions = new HashMap<String, String>();
 		ResultSet rsColumns = DBUtils.getColumns(connection, tableName);
 		while (rsColumns.next()) {
 			String typeName = dbUtils.specifyDataType(connection, DBSupportedTypesMap.getTypeName(rsColumns.getInt(5)));
-			columnDefinitions.put(rsColumns.getString(4).toUpperCase(), typeName);
+			columnDefinitions.put(rsColumns.getString(4), typeName);
 		}
 
 		sql.append(ALTER_TABLE + tableName + " "); //$NON-NLS-1$
 
-		JsonArray columns = dsDefinitionObject.get(COLUMNS).getAsJsonArray();
+		List<TableColumnModel> columns = tableModel.getColumns();
 		int i = 0;
 		StringBuffer addSql = new StringBuffer();
 		String alterAddOpen = dialectSpecifier.getAlterAddOpen();
@@ -243,55 +320,52 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			addSql.append(alterAddOpen);
 		}
 
-		for (JsonElement jsonElement : columns) {
+		for (TableColumnModel columnModel : columns) {
 
-			if (jsonElement instanceof JsonObject) {
-				JsonObject jsonObject = (JsonObject) jsonElement;
-				String name = jsonObject.get(COLUMN_NAME).getAsString().toUpperCase();
-				String type = dbUtils.specifyDataType(connection, jsonObject.get(COLUMN_TYPE).getAsString().toUpperCase());
-				String length = jsonObject.get(COLUMN_LENGTH).getAsString();
-				boolean notNull = jsonObject.get(COLUMN_NOT_NULL).getAsBoolean();
-				boolean primaryKey = jsonObject.get(COLUMN_PRIMARY_KEY).getAsBoolean();
-				String defaultValue = jsonObject.get(COLUMN_DEFAULT_VALUE).getAsString();
+			String name = columnModel.getName();
+			String type = dbUtils.specifyDataType(connection, columnModel.getType());
+			String length = columnModel.getLength();
+			boolean notNull = columnModel.isNotNull();
+			boolean primaryKey = columnModel.isPrimaryKey();
+			String defaultValue = columnModel.getDefaultValue();
 
-				if (!columnDefinitions.containsKey(name)) {
-					if (i > 0) {
-						addSql.append(", "); //$NON-NLS-1$
-					}
-
-					String alterAddOpenEach = dialectSpecifier.getAlterAddOpenEach();
-					if (alterAddOpenEach != null) {
-						addSql.append(alterAddOpenEach);
-					}
-
-					addSql.append(name + " " + type); //$NON-NLS-1$
-					if (DataTypes.VARCHAR.equals(DataTypes.valueOf(type)) || DataTypes.CHAR.equals(DataTypes.valueOf(type))) {
-						addSql.append("(" + length + ") "); //$NON-NLS-1$ //$NON-NLS-2$
-					} else {
-						addSql.append(" "); //$NON-NLS-1$
-					}
-					if (notNull) {
-						// sql.append("NOT NULL ");
-						throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE + tableName + AND_COLUMN + name + ADDING_NOT_NULL_COLUMN);
-					}
-					if (primaryKey) {
-						// sql.append("PRIMARY KEY ");
-						throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE + tableName + AND_COLUMN + name + ADDING_PRIMARY_KEY_COLUMN);
-					}
-					if ((defaultValue != null) && !"".equals(defaultValue)) { //$NON-NLS-1$
-						sql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
-					}
-
-					String alterAddCloseEach = dialectSpecifier.getAlterAddCloseEach();
-					if (alterAddCloseEach != null) {
-						addSql.append(alterAddCloseEach);
-					}
-
-					i++;
-				} else if (!columnDefinitions.get(name).equals(type)) {
-					throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE + tableName + AND_COLUMN + name + TYPE2 + columnDefinitions.get(name)
-							+ CANNOT_BE_CHANGED_TO + type);
+			if (!columnDefinitions.containsKey(name)) {
+				if (i > 0) {
+					addSql.append(", "); //$NON-NLS-1$
 				}
+
+				String alterAddOpenEach = dialectSpecifier.getAlterAddOpenEach();
+				if (alterAddOpenEach != null) {
+					addSql.append(alterAddOpenEach);
+				}
+
+				addSql.append(name + " " + type); //$NON-NLS-1$
+				if (DataTypes.VARCHAR.equals(DataTypes.valueOf(type)) || DataTypes.CHAR.equals(DataTypes.valueOf(type))) {
+					addSql.append("(" + length + ") "); //$NON-NLS-1$ //$NON-NLS-2$
+				} else {
+					addSql.append(" "); //$NON-NLS-1$
+				}
+				if (notNull) {
+					// sql.append("NOT NULL ");
+					throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE + tableName + AND_COLUMN + name + ADDING_NOT_NULL_COLUMN);
+				}
+				if (primaryKey) {
+					// sql.append("PRIMARY KEY ");
+					throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE + tableName + AND_COLUMN + name + ADDING_PRIMARY_KEY_COLUMN);
+				}
+				if ((defaultValue != null) && !"".equals(defaultValue)) { //$NON-NLS-1$
+					sql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
+				}
+
+				String alterAddCloseEach = dialectSpecifier.getAlterAddCloseEach();
+				if (alterAddCloseEach != null) {
+					addSql.append(alterAddCloseEach);
+				}
+
+				i++;
+			} else if (!columnDefinitions.get(name).equals(type)) {
+				throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE + tableName + AND_COLUMN + name + TYPE2 + columnDefinitions.get(name)
+						+ CANNOT_BE_CHANGED_TO + type);
 			}
 
 		}
@@ -322,46 +396,20 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		}
 	}
 
-	private JsonObject parseTable(String dsDefinition) throws IOException {
-		// {
-		// "tableName":"table_name",
-		// "columns":
-		// [
-		// {
-		// "name":"id",
-		// "type":"INTEGER",
-		// "length":"0",
-		// "notNull":"true",
-		// "primaryKey":"true"
-		// },
-		// {
-		// "name":"text",
-		// "type":"VARCHAR",
-		// "length":"32",
-		// "notNull":"false",
-		// "primaryKey":"false"
-		// },
-		// ]
-		// }
-		IRepository repository = this.repository;
+	private String getContent(String dsDefinition) throws IOException {
 		// # 177
 		// IResource resource = repository.getResource(this.location +
 		// dsDefinition);
-		IResource resource = repository.getResource(dsDefinition);
+		IResource resource = this.repository.getResource(dsDefinition);
 
 		String content = new String(resource.getContent());
-		JsonParser parser = new JsonParser();
-		JsonObject dsDefinitionObject = (JsonObject) parser.parse(content);
-
-		// TODO validate the parsed content has the right structure
-
-		return dsDefinitionObject;
+		return content;
 	}
 
-	private void executeViewCreateOrReplace(Connection connection, JsonObject dsDefinitionObject) throws SQLException {
+	private void executeViewCreateOrReplace(Connection connection, ViewModel viewModel) throws SQLException {
 		StringBuilder sql = new StringBuilder();
-		String viewName = dsDefinitionObject.get(VIEW_NAME).getAsString().toUpperCase();
-		String query = dsDefinitionObject.get(QUERY).getAsString();
+		String viewName = viewModel.getName();
+		String query = viewModel.getQuery();
 
 		String sqlExpression = null;
 		boolean exists = DBUtils.isTableOrViewExists(connection, viewName);
@@ -388,22 +436,6 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 			logger.error(sqlExpression);
 			throw new SQLException(sqlExpression, e);
 		}
-	}
-
-	private JsonObject parseView(String dsDefinition) throws IOException {
-		// {
-		// "viewName":"view_name",
-		// "query":"SELECT * FROM table_name"
-		// }
-		IRepository repository = this.repository;
-		IResource resource = repository.getResource(dsDefinition);
-		String content = new String(resource.getContent());
-		JsonParser parser = new JsonParser();
-		JsonObject dsDefinitionObject = (JsonObject) parser.parse(content);
-
-		// TODO validate the parsed content has the right structure
-
-		return dsDefinitionObject;
 	}
 
 	@Override
