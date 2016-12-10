@@ -21,7 +21,7 @@ public class LogProgressMonitor implements IProgressMonitor {
 
 	@Override
 	public void internalWorked(double work) {
-		logger.info(String.format("internalWorked: %d ", work));
+		logger.info(String.format("internalWorked: %f ", work));
 	}
 
 	@Override
