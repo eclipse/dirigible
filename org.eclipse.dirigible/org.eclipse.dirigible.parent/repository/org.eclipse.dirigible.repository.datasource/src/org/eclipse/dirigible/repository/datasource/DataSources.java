@@ -250,8 +250,7 @@ public class DataSources {
 		try {
 			preparedStatement = conn.prepareStatement(sql);
 			if (isQuery) {
-				preparedStatement.executeQuery();
-				resultSet = preparedStatement.getResultSet();
+				resultSet = preparedStatement.executeQuery();
 				callback.queryDone(resultSet);
 			} else {
 				preparedStatement.executeUpdate();
