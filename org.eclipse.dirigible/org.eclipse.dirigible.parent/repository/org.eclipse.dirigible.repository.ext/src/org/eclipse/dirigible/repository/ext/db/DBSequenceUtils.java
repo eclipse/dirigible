@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 public class DBSequenceUtils {
-	
+
 	private static final String DELETE_FROM = "DELETE FROM "; //$NON-NLS-1$
 	private static final String VALUES = " VALUES (?, ?)"; //$NON-NLS-1$
 	private static final String INSERT_INTO = "INSERT INTO "; //$NON-NLS-1$
@@ -21,8 +21,7 @@ public class DBSequenceUtils {
 	private static final String CREATE_TABLE = "CREATE TABLE "; //$NON-NLS-1$
 	private static final String DGB_SEQUENCES = "DGB_SEQUENCES"; //$NON-NLS-1$
 	private static final String SELECT_COUNT_FROM = "SELECT COUNT(*) FROM "; //$NON-NLS-1$
-	
-	
+
 	private DataSource dataSource;
 
 	public DBSequenceUtils(DataSource dataSource) {
@@ -45,8 +44,7 @@ public class DBSequenceUtils {
 		}
 	}
 
-	public int createSequence(String sequenceName, int start)
-			throws SQLException {
+	public int createSequence(String sequenceName, int start) throws SQLException {
 		Connection connection = dataSource.getConnection();
 		try {
 			checkSequenceTable(connection);
@@ -90,13 +88,15 @@ public class DBSequenceUtils {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.executeQuery();
+			ResultSet rs = preparedStatement.executeQuery();
+			if (rs.next()) {
+				// seems exist
+			}
 		} catch (Exception e) {
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
-			sql = CREATE_TABLE + DGB_SEQUENCES
-					+ SEQ_NAME_VARCHAR_128_SEQ_VALUE_INTEGER;
+			sql = CREATE_TABLE + DGB_SEQUENCES + SEQ_NAME_VARCHAR_128_SEQ_VALUE_INTEGER;
 			preparedStatement = connection.prepareStatement(sql);
 			try {
 				preparedStatement.executeUpdate();
@@ -113,8 +113,7 @@ public class DBSequenceUtils {
 
 	}
 
-	private int increaseSequence(Connection connection, String sequenceName)
-			throws SQLException {
+	private int increaseSequence(Connection connection, String sequenceName) throws SQLException {
 		// TODO select for update...
 		String sql = SELECT_FROM + DGB_SEQUENCES + WHERE_SEQ_NAME;
 		PreparedStatement preparedStatement = null;
@@ -138,13 +137,11 @@ public class DBSequenceUtils {
 		return -1;
 	}
 
-	private void updateSequence(Connection connection, String sequenceName,
-			int value) throws SQLException {
+	private void updateSequence(Connection connection, String sequenceName, int value) throws SQLException {
 
 		PreparedStatement preparedStatement = null;
 		try {
-			String sql = UPDATE + DGB_SEQUENCES + SET_SEQ_VALUE
-					+ WHERE_SEQ_NAME;
+			String sql = UPDATE + DGB_SEQUENCES + SET_SEQ_VALUE + WHERE_SEQ_NAME;
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, value);
 			preparedStatement.setString(2, sequenceName);
@@ -156,8 +153,7 @@ public class DBSequenceUtils {
 		}
 	}
 
-	private void insertSequence(Connection connection, String sequenceName,
-			int start) throws SQLException {
+	private void insertSequence(Connection connection, String sequenceName, int start) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = INSERT_INTO + DGB_SEQUENCES + VALUES;
@@ -172,8 +168,7 @@ public class DBSequenceUtils {
 		}
 	}
 
-	private void deleteSequence(Connection connection, String sequenceName)
-			throws SQLException {
+	private void deleteSequence(Connection connection, String sequenceName) throws SQLException {
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = DELETE_FROM + DGB_SEQUENCES + WHERE_SEQ_NAME;
@@ -187,8 +182,7 @@ public class DBSequenceUtils {
 		}
 	}
 
-	private boolean selectSequence(Connection connection, String sequenceName)
-			throws SQLException {
+	private boolean selectSequence(Connection connection, String sequenceName) throws SQLException {
 		String sql = SELECT_FROM + DGB_SEQUENCES + WHERE_SEQ_NAME;
 		PreparedStatement preparedStatement = null;
 		try {
