@@ -25,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -42,6 +43,14 @@ import com.google.gson.JsonObject;
  * Servlet implementation class RegistryServlet
  */
 public class RegistryServlet extends AbstractRegistryServlet {
+
+	private static final String DASH = "-";
+
+	private static final String SEP = ",";
+
+	private static final String CONTENT_LANGUAGE = "Content-Language";
+
+	private static final String ACCEPT_LANGUAGE = "Accept-Language";
 
 	private static final String CONTENT_LENGTH_HEADER = "Content-Length";
 
@@ -148,17 +157,19 @@ public class RegistryServlet extends AbstractRegistryServlet {
 				}
 
 				// encoding
-				String acceptLang = request.getHeader("Accept-Language");
+				String acceptLang = request.getHeader(ACCEPT_LANGUAGE);
+				acceptLang = StringEscapeUtils.escapeHtml(acceptLang);
+				acceptLang = StringEscapeUtils.escapeJavaScript(acceptLang);
 				String contentLang = acceptLang;
-				if ((acceptLang != null) && (acceptLang.indexOf(",") > 0)) {
-					contentLang = acceptLang.substring(0, acceptLang.indexOf(","));
-					if (contentLang.indexOf("-") > 0) {
-						contentLang = contentLang.substring(0, contentLang.indexOf("-"));
+				if ((acceptLang != null) && (acceptLang.indexOf(SEP) > 0)) {
+					contentLang = acceptLang.substring(0, acceptLang.indexOf(SEP));
+					if (contentLang.indexOf(DASH) > 0) {
+						contentLang = contentLang.substring(0, contentLang.indexOf(DASH));
 					}
 				}
 
 				if (contentLang != null) {
-					response.setHeader("Content-Language", contentLang);
+					response.setHeader(CONTENT_LANGUAGE, contentLang);
 				}
 			}
 			sendData(out, data);
@@ -206,8 +217,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		return data;
 	}
 
-	private void setContentLengthHeader(IEntity entity, int contentLength, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	private void setContentLengthHeader(IEntity entity, int contentLength, HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader(CONTENT_LENGTH_HEADER, Integer.toString(contentLength));
 	}
 
