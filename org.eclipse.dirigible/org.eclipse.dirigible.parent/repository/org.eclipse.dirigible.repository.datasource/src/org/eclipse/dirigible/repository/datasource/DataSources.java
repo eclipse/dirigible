@@ -302,8 +302,7 @@ public class DataSources {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = conn.prepareStatement(sql);
-			preparedStatement.executeQuery();
-			resultSet = preparedStatement.getResultSet();
+			resultSet = preparedStatement.executeQuery();
 			int columnsCount = resultSet.getMetaData().getColumnCount();
 			List<NavigableMap<String, Object>> table = new ArrayList<NavigableMap<String, Object>>();
 			NavigableMap<String, Object> row = new TreeMap<String, Object>();
