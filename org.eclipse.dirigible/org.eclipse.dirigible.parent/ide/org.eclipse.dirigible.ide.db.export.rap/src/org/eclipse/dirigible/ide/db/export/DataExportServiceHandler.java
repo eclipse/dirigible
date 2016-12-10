@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -23,9 +24,20 @@ import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ServiceHandler;
 import org.eclipse.rap.rwt.service.ServiceManager;
 
+/**
+ * Data Export handler in the RAP environment
+ */
 public class DataExportServiceHandler implements ServiceHandler {
 
-	private static final String DSV_EXTENSION = ".dsv";
+	private static final String SLASH = "/"; //$NON-NLS-1$
+	private static final String EQ = "="; //$NON-NLS-1$
+	private static final String AMP = "&"; //$NON-NLS-1$
+	private static final String CONTENT_DISPOSITION_KEY = "Content-Disposition"; //$NON-NLS-1$
+	private static final String TEXT_PLAIN = "text/plain"; //$NON-NLS-1$
+	private static final String CONTENT_DISPOSITION_PARAM = "attachment; filename=\"%s\""; //$NON-NLS-1$
+	private static final String FILE_ERROR_TXT = "error.txt"; //$NON-NLS-1$
+	private static final String PARAM_FILENAME = "filename"; //$NON-NLS-1$
+	private static final String DSV_EXTENSION = ".dsv"; //$NON-NLS-1$
 	private static final String DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV = Messages.DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV;
 	static final String DataExportServiceHandler_SERVICE_HANDLER_ID = "org.eclipse.dirigible.ide.db.export.DataExportServiceHandler";
 
@@ -34,7 +46,9 @@ public class DataExportServiceHandler implements ServiceHandler {
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-		String fileName = request.getParameter("filename");//$NON-NLS-1$
+		String fileName = request.getParameter(PARAM_FILENAME);
+		fileName = StringEscapeUtils.escapeHtml(fileName);
+		fileName = StringEscapeUtils.escapeJavaScript(fileName);
 		String tableName = fileName.substring(0, fileName.lastIndexOf(DSV_EXTENSION)).toUpperCase();
 		byte[] download;
 
@@ -46,24 +60,30 @@ public class DataExportServiceHandler implements ServiceHandler {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			download = (DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV + tableName).getBytes();
-			tableName = "error.txt"; //$NON-NLS-1$
+			tableName = FILE_ERROR_TXT;
 		}
 
-		String contentDisposition = "attachment; filename=\"" + fileName + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-		response.setContentType("text/plain");//$NON-NLS-1$
-		response.setHeader("Content-Disposition", contentDisposition); //$NON-NLS-1$
+		String contentDisposition = String.format(CONTENT_DISPOSITION_PARAM, fileName);
+		response.setContentType(TEXT_PLAIN);
+		response.setHeader(CONTENT_DISPOSITION_KEY, contentDisposition);
 		response.getOutputStream().write(download);
 	}
 
+	/**
+	 * Generate the download URL
+	 *
+	 * @param tableName
+	 * @return the URL
+	 */
 	public static String getUrl(String tableName) {
 
 		ServiceManager manager = RWT.getServiceManager();
 		String rootURL = manager.getServiceHandlerUrl(DataExportServiceHandler_SERVICE_HANDLER_ID);
 		StringBuffer url = new StringBuffer();
 		url.append(rootURL);
-		url.append("&"); //$NON-NLS-1$
-		url.append("filename").append("=").append(tableName.toLowerCase()).append(DSV_EXTENSION); //$NON-NLS-1$ //$NON-NLS-2$
-		int relativeIndex = url.lastIndexOf("/"); //$NON-NLS-1$
+		url.append(AMP);
+		url.append(PARAM_FILENAME).append(EQ).append(tableName.toLowerCase()).append(DSV_EXTENSION);
+		int relativeIndex = url.lastIndexOf(SLASH);
 
 		if (relativeIndex > -1) {
 			url.delete(0, relativeIndex + 1);
