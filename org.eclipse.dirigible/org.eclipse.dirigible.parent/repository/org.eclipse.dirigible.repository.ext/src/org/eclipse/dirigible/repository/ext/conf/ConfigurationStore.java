@@ -146,10 +146,14 @@ public class ConfigurationStore implements IConfigurationStore {
 		String normalizedPath = normalizePath(path);
 		String resourcePath = root + normalizedPath + IRepository.SEPARATOR + name + PROPERTIES_EXT;
 		IResource resource = null;
-		if ((repository != null) && repository.hasResource(resourcePath)) {
-			resource = repository.getResource(resourcePath);
+		if (repository != null) {
+			if (repository.hasResource(resourcePath)) {
+				resource = repository.getResource(resourcePath);
+			} else {
+				resource = repository.createResource(resourcePath);
+			}
 		} else {
-			resource = repository.createResource(resourcePath);
+			throw new IOException(REPOSITORY_OBJECT_IS_NULL_WHEN_SETTING_PROPERTIES);
 		}
 
 		resource.setContent(bytes);
