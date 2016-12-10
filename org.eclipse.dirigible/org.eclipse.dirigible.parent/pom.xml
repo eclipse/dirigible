@@ -242,8 +242,8 @@
 	</build>
 	
 	<reporting>
-
 	  <plugins>
+	  
 	     <plugin>
 	           <groupId>org.codehaus.mojo</groupId>
 	           <artifactId>findbugs-maven-plugin</artifactId>
@@ -256,8 +256,18 @@
 	              <!-- <includeFilterFile>findbugs-include.xml</includeFilterFile> -->
 	           </configuration>
 	        </plugin>
+	        
+	        <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
+            
+            <plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+            
 	   </plugins>
-
 	</reporting>
 
 	<repositories>
