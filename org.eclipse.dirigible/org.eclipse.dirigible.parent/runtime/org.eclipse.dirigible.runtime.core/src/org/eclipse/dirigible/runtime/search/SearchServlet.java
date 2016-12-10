@@ -35,7 +35,7 @@ import com.google.gson.JsonObject;
  */
 public class SearchServlet extends AbstractRegistryServlet {
 
-	private static final String REQUEST_PROCESSING_FAILED_S = ""; //$NON-NLS-1$
+	private static final String REQUEST_PROCESSING_FAILED_S = "Request processing failed: %s with error: %s"; //$NON-NLS-1$
 	private static final String SEARCH_TERM = "q"; //$NON-NLS-1$
 	private static final String REINDEX = "reindex"; //$NON-NLS-1$
 	// private static final String CASE_INSENSITIVE_TERM = "caseInsensitive"; //$NON-NLS-1$
@@ -79,10 +79,10 @@ public class SearchServlet extends AbstractRegistryServlet {
 
 			enumeratePaths(request, response, paths);
 		} catch (final IllegalArgumentException ex) {
-			logger.error(String.format(REQUEST_PROCESSING_FAILED_S, searchTerm) + ex.getMessage(), ex);
+			logger.error(String.format(REQUEST_PROCESSING_FAILED_S, searchTerm, ex.getMessage()), ex);
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		} catch (final MissingResourceException ex) {
-			logger.error(String.format(REQUEST_PROCESSING_FAILED_S, searchTerm) + ex.getMessage(), ex);
+			logger.error(String.format(REQUEST_PROCESSING_FAILED_S, searchTerm, ex.getMessage()), ex);
 			response.sendError(HttpServletResponse.SC_NO_CONTENT, ex.getMessage());
 		}
 	}
