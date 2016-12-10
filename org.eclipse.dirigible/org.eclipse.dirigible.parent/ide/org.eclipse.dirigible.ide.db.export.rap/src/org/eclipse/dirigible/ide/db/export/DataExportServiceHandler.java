@@ -36,7 +36,7 @@ public class DataExportServiceHandler implements ServiceHandler {
 	private static final String TEXT_PLAIN = "text/plain"; //$NON-NLS-1$
 	private static final String CONTENT_DISPOSITION_PARAM = "attachment; filename=\"%s\""; //$NON-NLS-1$
 	private static final String FILE_ERROR_TXT = "error.txt"; //$NON-NLS-1$
-	private static final String PARAM_FILENAME = "filename"; //$NON-NLS-1$
+	private static final String FILENAME_PARAM = "filename"; //$NON-NLS-1$
 	private static final String DSV_EXTENSION = ".dsv"; //$NON-NLS-1$
 	private static final String DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV = Messages.DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV;
 	static final String DataExportServiceHandler_SERVICE_HANDLER_ID = "org.eclipse.dirigible.ide.db.export.DataExportServiceHandler";
@@ -46,7 +46,7 @@ public class DataExportServiceHandler implements ServiceHandler {
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-		String fileName = request.getParameter(PARAM_FILENAME);
+		String fileName = request.getParameter(FILENAME_PARAM);
 		fileName = StringEscapeUtils.escapeHtml(fileName);
 		fileName = StringEscapeUtils.escapeJavaScript(fileName);
 		String tableName = fileName.substring(0, fileName.lastIndexOf(DSV_EXTENSION)).toUpperCase();
@@ -82,7 +82,7 @@ public class DataExportServiceHandler implements ServiceHandler {
 		StringBuffer url = new StringBuffer();
 		url.append(rootURL);
 		url.append(AMP);
-		url.append(PARAM_FILENAME).append(EQ).append(tableName.toLowerCase()).append(DSV_EXTENSION);
+		url.append(FILENAME_PARAM).append(EQ).append(tableName.toLowerCase()).append(DSV_EXTENSION);
 		int relativeIndex = url.lastIndexOf(SLASH);
 
 		if (relativeIndex > -1) {
