@@ -252,6 +252,8 @@
 	              <findbugsXmlOutput>true</findbugsXmlOutput>
 	              <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
 	              <xmlOutput>true</xmlOutput>
+	              <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+	              <!-- <includeFilterFile>findbugs-include.xml</includeFilterFile> -->
 	           </configuration>
 	        </plugin>
 	   </plugins>

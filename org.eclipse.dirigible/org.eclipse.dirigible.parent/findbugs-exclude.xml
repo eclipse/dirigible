@@ -1,0 +1,16 @@
+<FindBugsFilter>
+
+	<Match>
+    	<Package name="~org\.eclipse\.ui\.dialogs.*"/>
+    	<Bug pattern="SE_BAD_FIELD"/>
+  	</Match>
+  
+     <!-- All bugs in test classes, except for JUnit-specific bugs -->
+     <Match>
+      <Class name="~.*\.*Test" />
+      <Not>
+          <Bug code="IJU" />
+      </Not>
+     </Match>
+
+</FindBugsFilter>
