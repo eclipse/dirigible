@@ -44,8 +44,8 @@ public class DataSourcesActivator implements BundleActivator {
 	}
 
 	@Override
-	public void stop(BundleContext context) throws Exception {
-		context = null;
+	public void stop(@SuppressWarnings("hiding") BundleContext context) throws Exception {
+		//
 	}
 
 }

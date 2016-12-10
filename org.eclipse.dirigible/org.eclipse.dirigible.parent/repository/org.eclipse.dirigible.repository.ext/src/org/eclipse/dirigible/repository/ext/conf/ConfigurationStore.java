@@ -22,12 +22,22 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.eclipse.dirigible.repository.api.IResource;
 
+/**
+ * Configuration Store Facade backed by the Repository
+ */
 public class ConfigurationStore implements IConfigurationStore {
 
-	private static final String PROPERTIES_EXT = ".properties";
+	private static final String REPOSITORY_OBJECT_IS_NULL_WHEN_SETTING_PROPERTIES = "Repository object is null, when setting properties"; //$NON-NLS-1$
+
+	private static final String PROPERTIES_EXT = ".properties"; //$NON-NLS-1$
 
 	private IRepository repository;
 
+	/**
+	 * The constructor
+	 *
+	 * @param repository
+	 */
 	public ConfigurationStore(IRepository repository) {
 		this.repository = repository;
 	}
@@ -106,10 +116,14 @@ public class ConfigurationStore implements IConfigurationStore {
 		String normalizedPath = normalizePath(path);
 		String resourcePath = root + normalizedPath + IRepository.SEPARATOR + name + PROPERTIES_EXT;
 		IResource resource = null;
-		if ((repository != null) && repository.hasResource(resourcePath)) {
-			resource = repository.getResource(resourcePath);
+		if (repository != null) {
+			if (repository.hasResource(resourcePath)) {
+				resource = repository.getResource(resourcePath);
+			} else {
+				resource = repository.createResource(resourcePath);
+			}
 		} else {
-			resource = repository.createResource(resourcePath);
+			throw new IOException(REPOSITORY_OBJECT_IS_NULL_WHEN_SETTING_PROPERTIES);
 		}
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -192,6 +206,15 @@ public class ConfigurationStore implements IConfigurationStore {
 		return existsSettingsByRoot(root, path, name);
 	}
 
+	/**
+	 * Checks whether the setting with this path and name exists in the root's space
+	 *
+	 * @param root
+	 * @param path
+	 * @param name
+	 * @return true if exists and false otherwise
+	 * @throws IOException
+	 */
 	public boolean existsSettingsByRoot(String root, String path, String name) throws IOException {
 		String normalizedPath = normalizePath(path);
 		String resourcePath = root + normalizedPath + IRepository.SEPARATOR + name + PROPERTIES_EXT;
