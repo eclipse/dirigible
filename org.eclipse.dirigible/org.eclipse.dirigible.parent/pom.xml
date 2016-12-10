@@ -93,13 +93,6 @@
 		               <format>xml</format>
 		               <failOnViolation>false</failOnViolation>
 		            </configuration>
-		            <executions>
-		               <execution>
-		                  <goals>
-		                     <goal>cpd-check</goal>
-		                  </goals>
-		               </execution>
-		            </executions>
 		         </plugin>
 
 		</plugins>
