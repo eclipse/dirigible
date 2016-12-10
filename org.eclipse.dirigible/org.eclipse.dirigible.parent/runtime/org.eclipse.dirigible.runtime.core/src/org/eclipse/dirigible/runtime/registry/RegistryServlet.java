@@ -75,7 +75,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 	private static final String JSON_FILES = "files"; //$NON-NLS-1$
 
-	private static final String REQUEST_PROCESSING_FAILED_S = ""; //$NON-NLS-1$
+	private static final String REQUEST_PROCESSING_FAILED_S = "Request processing failed: %s, with error: %s"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = 7435479651482177443L;
 
@@ -177,7 +177,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 	private void exceptionHandler(final HttpServletResponse response, final String repositoryPath, final int errorMessage,
 			final String exceptionMessage) throws IOException {
-		logger.error(String.format(REQUEST_PROCESSING_FAILED_S, repositoryPath) + exceptionMessage);
+		logger.error(String.format(REQUEST_PROCESSING_FAILED_S, repositoryPath, exceptionMessage));
 		response.sendError(errorMessage, exceptionMessage);
 	}
 
