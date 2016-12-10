@@ -82,6 +82,18 @@
 		               <failOnError>false</failOnError>
 		               <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
 		            </configuration>
+		            <executions>
+		                <!-- 
+		                    Ensures that FindBugs inspects source code when project is compiled. 
+		                -->
+		                <execution>
+		                    <id>analyze-compile</id>
+		                    <phase>compile</phase>
+		                    <goals>
+		                        <goal>check</goal>
+		                    </goals>
+		                </execution>
+		            </executions>
 		         </plugin>
 		         <plugin>
 		            <groupId>org.apache.maven.plugins</groupId>
