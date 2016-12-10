@@ -136,7 +136,7 @@ public class WebRegistryServlet extends RegistryServlet {
 		IResource index = entity.getParent().getResource(INDEX_HTML);
 		if (index.exists()) {
 			// start with index
-			writer.print(index.getContent());
+			writer.print(new String(index.getContent()));
 		} else {
 			return super.buildCollectionData(deep, entity, collectionPath);
 		}
