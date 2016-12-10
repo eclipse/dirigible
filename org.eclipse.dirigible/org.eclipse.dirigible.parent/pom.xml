@@ -82,13 +82,6 @@
 		               <failOnError>false</failOnError>
 		               <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
 		            </configuration>
-		            <executions>
-		               <execution>
-		                  <goals>
-		                     <goal>check</goal>
-		                  </goals>
-		               </execution>
-		            </executions>
 		         </plugin>
 		         <plugin>
 		            <groupId>org.apache.maven.plugins</groupId>
