@@ -83,6 +83,8 @@ public class AnonymousUserServlet extends HttpServlet {
 				resp.sendRedirect(REDIRECT_REGISTRY);
 			}
 		} else {
+			cookieValue = StringEscapeUtils.escapeHtml(cookieValue);
+			cookieValue = StringEscapeUtils.escapeJavaScript(cookieValue);
 			resp.getWriter().println(cookieValue);
 			resp.getWriter().flush();
 			resp.getWriter().close();
