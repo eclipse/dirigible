@@ -95,11 +95,13 @@ public class WorkspaceUndoUtil {
 	 * @return the bookmarks undo context
 	 */
 	public static IUndoContext getBookmarksUndoContext() {
-		if (bookmarksUndoContext == null) {
-			bookmarksUndoContext = new ObjectUndoContext(new Object(), BOOKMARKS_CONTEXT);
-			bookmarksUndoContext.addMatch(getWorkspaceUndoContext());
+		synchronized (WorkspaceUndoUtil.class) {
+			if (bookmarksUndoContext == null) {
+				bookmarksUndoContext = new ObjectUndoContext(new Object(), BOOKMARKS_CONTEXT);
+				bookmarksUndoContext.addMatch(getWorkspaceUndoContext());
+			}
+			return bookmarksUndoContext;
 		}
-		return bookmarksUndoContext;
 	}
 
 	/**
