@@ -40,7 +40,7 @@ import com.google.gson.JsonPrimitive;
  */
 public class SQLExecutor extends AbstractScriptExecutor {
 
-	private static final String SQL_MODULE_NAME_CANNOT_BE_NULL = "SQL module name cannot be null.";
+	private static final String SQL_MODULE_NAME_CANNOT_BE_NULL = "SQL module name cannot be null."; //$NON-NLS-1$
 
 	private static final Logger logger = Logger.getLogger(SQLExecutor.class);
 
@@ -50,7 +50,7 @@ public class SQLExecutor extends AbstractScriptExecutor {
 
 	/**
 	 * The constructor
-	 * 
+	 *
 	 * @param repository
 	 * @param rootPaths
 	 */

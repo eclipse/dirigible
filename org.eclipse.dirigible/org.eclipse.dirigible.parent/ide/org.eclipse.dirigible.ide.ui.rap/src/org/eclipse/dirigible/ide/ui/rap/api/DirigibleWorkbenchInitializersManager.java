@@ -14,17 +14,17 @@ import org.eclipse.dirigible.ide.ui.rap.entry.DirigibleWorkbench;
 
 public class DirigibleWorkbenchInitializersManager {
 
-	private static final String EXTENSION_POINT_CANNOT_BE_FOUND_S = "Extension point cannot be found: %s";
+	private static final String EXTENSION_POINT_CANNOT_BE_FOUND_S = "Extension point cannot be found: %s"; //$NON-NLS-1$
 
-	private static final String COULD_NOT_CREATE_INITIALIZER_INSTANCE = "Could not create Initializer instance";
+	private static final String COULD_NOT_CREATE_INITIALIZER_INSTANCE = "Could not create Initializer instance: %s"; //$NON-NLS-1$
 
-	private static final String INITIALIZER_CLASS_IS_INVALID = "Initializer class is invalid";
+	private static final String INITIALIZER_CLASS_IS_INVALID = "Initializer class is invalid"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_INITIALIZER = "initializer";
+	private static final String ATTRIBUTE_INITIALIZER = "initializer"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_CLASS = "class";
+	private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
 
-	private static final String EXTENSION_POINT_ID = "org.eclipse.dirigible.ide.ui.rap.init";
+	private static final String EXTENSION_POINT_ID = "org.eclipse.dirigible.ide.ui.rap.init"; //$NON-NLS-1$
 
 	static List<IDirigibleWorkbenchInitializer> initializers = null;
 
