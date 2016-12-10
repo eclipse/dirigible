@@ -35,6 +35,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * The Executor of the plain SQL services
+ */
 public class SQLExecutor extends AbstractScriptExecutor {
 
 	private static final String SQL_MODULE_NAME_CANNOT_BE_NULL = "SQL module name cannot be null.";
@@ -45,13 +48,16 @@ public class SQLExecutor extends AbstractScriptExecutor {
 	private String[] rootPaths;
 	private Map<String, Object> defaultVariables;
 
-	private String classpath;
-
+	/**
+	 * The constructor
+	 * 
+	 * @param repository
+	 * @param rootPaths
+	 */
 	public SQLExecutor(IRepository repository, String... rootPaths) {
 		this.repository = repository;
 		this.rootPaths = rootPaths;
 		this.defaultVariables = new HashMap<String, Object>();
-		this.classpath = classpath;
 	}
 
 	@Override
