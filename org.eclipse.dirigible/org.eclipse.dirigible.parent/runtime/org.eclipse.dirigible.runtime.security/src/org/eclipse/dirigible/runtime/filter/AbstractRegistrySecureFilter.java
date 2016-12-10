@@ -22,11 +22,18 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.runtime.registry.PathUtils;
 
 public abstract class AbstractRegistrySecureFilter implements Filter {
 
-	private static final String GET_METHOD = "GET";
+	private static final String EMPTY = ""; //$NON-NLS-1$
+
+	private static final String Q = "?"; //$NON-NLS-1$
+
+	private static final String ACCEPT = "Accept"; //$NON-NLS-1$
+
+	private static final String GET_METHOD = "GET"; //$NON-NLS-1$
 
 	private static final String HTTP_METHOD_CANNOT_BE_REDIRECTED_AUTOMATICALLY = "AbstractRegistrySecureFilter.2"; //$NON-NLS-1$
 
@@ -39,10 +46,12 @@ public abstract class AbstractRegistrySecureFilter implements Filter {
 
 		// SAML standard redirect
 		String location = PathUtils.extractPath(request);
+		location = StringEscapeUtils.escapeHtml(location);
+		location = StringEscapeUtils.escapeJavaScript(location);
 		if (isLocationSecured(location)) {
 			// SAML do not redirect in case of explicitly requested
 			// application/json without logged-in user
-			String acceptHeader = request.getHeader("Accept"); //$NON-NLS-1$
+			String acceptHeader = request.getHeader(ACCEPT);
 			if ((acceptHeader != null) && acceptHeader.contains(JSON)) {
 				if (request.getUserPrincipal() == null) {
 					((HttpServletResponse) res).sendError(HttpURLConnection.HTTP_FORBIDDEN,
@@ -53,7 +62,7 @@ public abstract class AbstractRegistrySecureFilter implements Filter {
 			}
 			if (GET_METHOD.equalsIgnoreCase(request.getMethod())) {
 				((HttpServletResponse) res).sendRedirect(req.getServletContext().getContextPath() + getSecuredMapping() + location
-						+ (request.getQueryString() != null ? "?" + request.getQueryString() : "")); //$NON-NLS-1$ //$NON-NLS-2$
+						+ (request.getQueryString() != null ? Q + request.getQueryString() : EMPTY));
 			} else {
 				((HttpServletResponse) res).sendError(HttpURLConnection.HTTP_FORBIDDEN,
 						String.format(Messages.getString(HTTP_METHOD_CANNOT_BE_REDIRECTED_AUTOMATICALLY), request.getMethod(),
@@ -72,13 +81,12 @@ public abstract class AbstractRegistrySecureFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-
+		//
 	}
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-
+		//
 	}
 
 }
