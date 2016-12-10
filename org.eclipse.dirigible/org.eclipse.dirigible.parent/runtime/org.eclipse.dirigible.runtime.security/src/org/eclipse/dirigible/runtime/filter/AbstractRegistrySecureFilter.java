@@ -48,10 +48,14 @@ public abstract class AbstractRegistrySecureFilter implements Filter {
 		String location = PathUtils.extractPath(request);
 		location = StringEscapeUtils.escapeHtml(location);
 		location = StringEscapeUtils.escapeJavaScript(location);
+		String queryString = request.getQueryString();
+		queryString = StringEscapeUtils.escapeHtml(queryString);
+		queryString = StringEscapeUtils.escapeJavaScript(queryString);
 		if (isLocationSecured(location)) {
 			// SAML do not redirect in case of explicitly requested
 			// application/json without logged-in user
 			String acceptHeader = request.getHeader(ACCEPT);
+
 			if ((acceptHeader != null) && acceptHeader.contains(JSON)) {
 				if (request.getUserPrincipal() == null) {
 					((HttpServletResponse) res).sendError(HttpURLConnection.HTTP_FORBIDDEN,
@@ -61,8 +65,8 @@ public abstract class AbstractRegistrySecureFilter implements Filter {
 				}
 			}
 			if (GET_METHOD.equalsIgnoreCase(request.getMethod())) {
-				((HttpServletResponse) res).sendRedirect(req.getServletContext().getContextPath() + getSecuredMapping() + location
-						+ (request.getQueryString() != null ? Q + request.getQueryString() : EMPTY));
+				((HttpServletResponse) res).sendRedirect(
+						req.getServletContext().getContextPath() + getSecuredMapping() + location + (queryString != null ? Q + queryString : EMPTY));
 			} else {
 				((HttpServletResponse) res).sendError(HttpURLConnection.HTTP_FORBIDDEN,
 						String.format(Messages.getString(HTTP_METHOD_CANNOT_BE_REDIRECTED_AUTOMATICALLY), request.getMethod(),
