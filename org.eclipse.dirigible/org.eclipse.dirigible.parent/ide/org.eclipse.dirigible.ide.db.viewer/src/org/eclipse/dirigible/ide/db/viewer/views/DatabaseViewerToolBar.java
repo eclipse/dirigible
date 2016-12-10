@@ -41,8 +41,8 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 
 	private static final Logger logger = Logger.getLogger(DatabaseViewerToolBar.class);
 
-	private static final Image REFRESH_ICON = ImageUtils.createImage(ImageUtils.getIconURL(
-			"org.eclipse.dirigible.ide.workspace.ui", "/resources/icons/", "refresh.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final Image REFRESH_ICON = ImageUtils
+			.createImage(ImageUtils.getIconURL("org.eclipse.dirigible.ide.workspace.ui", "/resources/icons/", "refresh.png")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private Combo datasourcesCombo;
 
@@ -93,8 +93,8 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new NamedDataSourcesInitializer().initializeAvailableDataSources(CommonIDEParameters.getRequest(), RepositoryFacade.getInstance()
-						.getRepository());
+				new NamedDataSourcesInitializer().initializeAvailableDataSources(CommonIDEParameters.getRequest(),
+						RepositoryFacade.getInstance().getRepository());
 				fillDatasources();
 			}
 
@@ -121,10 +121,10 @@ public class DatabaseViewerToolBar implements ISelectionProvider {
 				@Override
 				public int compare(String o1, String o2) {
 					if (DEFAULT_DS_NAME.equals(o2)) {
-						return Integer.MAX_VALUE;
+						return 1;
 					}
 					if (DEFAULT_DS_NAME.equals(o1)) {
-						return Integer.MIN_VALUE;
+						return -1;
 					}
 					return o1.compareTo(o2);
 				}
