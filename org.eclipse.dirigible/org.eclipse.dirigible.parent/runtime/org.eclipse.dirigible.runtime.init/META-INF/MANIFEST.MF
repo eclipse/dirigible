@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.logging,
  org.eclipse.dirigible.repository.datasource,
  org.eclipse.dirigible.repository.db.init,
- org.eclipse.dirigible.runtime.javascript
+ org.eclipse.dirigible.runtime.javascript,
+ org.apache.commons.lang
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.servlet,
  javax.servlet.annotation,
