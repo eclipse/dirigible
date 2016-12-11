@@ -6,5 +6,6 @@ Bundle-Version: 2.6.161203
 Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.eclipse.dirigible.repository.velocity
-Require-Bundle: org.apache.velocity
+Require-Bundle: org.apache.velocity,
+ org.eclipse.dirigible.repository.api
 Bundle-ClassPath: .

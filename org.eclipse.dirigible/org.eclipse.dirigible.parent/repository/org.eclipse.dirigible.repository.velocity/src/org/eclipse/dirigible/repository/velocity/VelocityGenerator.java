@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 public class VelocityGenerator {
 
@@ -90,8 +91,8 @@ public class VelocityGenerator {
 
 			final VelocityContext context = new VelocityContext();
 			prepareContextData(parameters, context);
-			final Reader reader = new InputStreamReader(in);
-			final Writer writer = new OutputStreamWriter(out);
+			final Reader reader = new InputStreamReader(in, ICommonConstants.UTF8);
+			final Writer writer = new OutputStreamWriter(out, ICommonConstants.UTF8);
 			engine.evaluate(context, writer, tag, reader);
 			writer.flush();
 			writer.close();

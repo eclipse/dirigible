@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.ext.fs.FileSystemUtils;
@@ -76,9 +77,9 @@ public class LocalRepositoryDAO {
 			if (bytes != null) {
 				Integer index;
 				try {
-					index = Integer.parseInt(new String(bytes));
+					index = Integer.parseInt(new String(bytes, ICommonConstants.UTF8));
 					FileSystemUtils.saveFile(versionsPath + File.separator + (++index), content);
-					FileSystemUtils.saveFile(versionsLastPath, index.toString().getBytes());
+					FileSystemUtils.saveFile(versionsLastPath, index.toString().getBytes(ICommonConstants.UTF8));
 				} catch (NumberFormatException e) {
 					logger.error(String.format("Invalid versions file: %s", versionsLastPath));
 					createInitialVersion(content, versionsPath);
@@ -91,7 +92,7 @@ public class LocalRepositoryDAO {
 
 	private void createInitialVersion(byte[] content, String versionsPath) throws FileNotFoundException, IOException {
 		FileSystemUtils.saveFile(versionsPath + File.separator + "1", content);
-		FileSystemUtils.saveFile(versionsPath + File.separator + LAST, "1".getBytes());
+		FileSystemUtils.saveFile(versionsPath + File.separator + LAST, "1".getBytes(ICommonConstants.UTF8));
 	}
 
 	private void createInfo(String workspacePath) throws FileNotFoundException, IOException {
@@ -238,9 +239,8 @@ public class LocalRepositoryDAO {
 			File objectFile = new File(workspacePath);
 			if (!objectFile.exists()) {
 				// This is folder, that was not created
-				if (ContentTypeHelper.getExtension(workspacePath).isEmpty()
-                        && !workspacePath.endsWith(".")) {
-//					FileSystemUtils.createFolder(workspacePath);
+				if (ContentTypeHelper.getExtension(workspacePath).isEmpty() && !workspacePath.endsWith(".")) {
+					// FileSystemUtils.createFolder(workspacePath);
 					return null;
 				}
 			}
