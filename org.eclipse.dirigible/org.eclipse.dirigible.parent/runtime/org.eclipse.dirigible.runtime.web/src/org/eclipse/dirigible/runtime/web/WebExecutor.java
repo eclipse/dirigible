@@ -71,7 +71,7 @@ public class WebExecutor extends AbstractScriptExecutor {
 
 	protected byte[] buildResourceData(final IEntity entity, final HttpServletRequest request, final HttpServletResponse response)
 			throws IOException {
-		byte[] data = new byte[] {};
+		byte[] data = null;
 		data = readResourceData((IResource) entity);
 		return data;
 	}
