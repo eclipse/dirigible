@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableExporter;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -55,8 +56,7 @@ public class DataExportServiceHandler implements ServiceHandler {
 		try {
 			DBTableExporter dataFinder = new DBTableExporter(DataSourceFacade.getInstance().getDataSource(request));
 			dataFinder.setTableName(tableName);
-			download = dataFinder.getTableData().getBytes();
-
+			download = dataFinder.getTableData().getBytes(ICommonConstants.UTF8);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			download = (DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV + tableName).getBytes();

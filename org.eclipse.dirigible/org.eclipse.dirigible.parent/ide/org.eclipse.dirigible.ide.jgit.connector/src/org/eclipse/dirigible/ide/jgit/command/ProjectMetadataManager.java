@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.project.ProjectMetadata;
 import org.eclipse.dirigible.repository.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.repository.project.ProjectMetadataRepository;
@@ -42,7 +43,7 @@ public class ProjectMetadataManager {
 					projectMetadataRepository.setBranch(branch);
 					projectMetadata.setRepository(projectMetadataRepository);
 					String projectMetadataJson = ProjectMetadataUtils.toJson(projectMetadata);
-					ByteArrayInputStream in = new ByteArrayInputStream(projectMetadataJson.getBytes());
+					ByteArrayInputStream in = new ByteArrayInputStream(projectMetadataJson.getBytes(ICommonConstants.UTF8));
 					projectFile.create(in, true, new NullProgressMonitor());
 
 				} else {
