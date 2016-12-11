@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ServiceHandler;
@@ -67,7 +68,7 @@ public class DownloadProjectServiceHandler implements ServiceHandler {
 			response.setContentType(APPLICATION_ZIP);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			download = (ERROR_WHILE_GETTING_CONTENT_FROM_LOCATION + fileName).getBytes();
+			download = (ERROR_WHILE_GETTING_CONTENT_FROM_LOCATION + fileName).getBytes(ICommonConstants.UTF8);
 			// Send the file in the response
 			response.setContentType(TEXT_PLAIN);
 			fileName = ERROR_TXT;
@@ -81,7 +82,7 @@ public class DownloadProjectServiceHandler implements ServiceHandler {
 
 	/**
 	 * Generator for the download URL
-	 * 
+	 *
 	 * @param token
 	 * @return the URL
 	 */

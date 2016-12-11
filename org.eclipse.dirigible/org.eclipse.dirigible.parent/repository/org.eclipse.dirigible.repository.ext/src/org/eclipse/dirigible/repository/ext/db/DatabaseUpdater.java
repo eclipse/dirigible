@@ -415,7 +415,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		// dsDefinition);
 		IResource resource = this.repository.getResource(dsDefinition);
 
-		String content = new String(resource.getContent());
+		String content = new String(resource.getContent(), ICommonConstants.UTF8);
 		return content;
 	}
 

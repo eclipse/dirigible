@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.ext.db.transfer.DBTableImporter;
@@ -137,7 +138,7 @@ public class DsvUpdater extends AbstractDataUpdater {
 		// # 177
 		// IResource resource = repository.getResource(this.location + dsDefinition);
 		IResource resource = repository.getResource(dsDefinition);
-		String content = new String(resource.getContent());
+		String content = new String(resource.getContent(), ICommonConstants.UTF8);
 		JsonParser parser = new JsonParser();
 		JsonObject dsDefinitionObject = (JsonObject) parser.parse(content);
 		return dsDefinitionObject;

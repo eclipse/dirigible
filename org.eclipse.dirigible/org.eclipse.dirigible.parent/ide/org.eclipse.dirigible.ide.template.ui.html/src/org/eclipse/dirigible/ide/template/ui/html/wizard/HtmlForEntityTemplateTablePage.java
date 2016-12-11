@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
@@ -353,7 +354,7 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 	protected void parseEntityDescriptor() throws Exception {
 		// {"tableName":"SOME_TABLE","tableType":"TABLE"}
 		JsonParser parser = new JsonParser();
-		JsonObject entityService = (JsonObject) parser.parse(new InputStreamReader(model.getSourceFile().getContents()));
+		JsonObject entityService = (JsonObject) parser.parse(new InputStreamReader(model.getSourceFile().getContents(), ICommonConstants.UTF8));
 		model.setTableName(entityService.get(ES_TABLE_NAME).getAsString());
 		model.setTableType(entityService.get(ES_TABLE_TYPE).getAsString());
 	}

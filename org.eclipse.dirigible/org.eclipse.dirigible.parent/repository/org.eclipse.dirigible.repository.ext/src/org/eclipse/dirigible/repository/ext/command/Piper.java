@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.repository.ext.command;
 
 import org.apache.commons.io.input.BoundedInputStream;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 public class Piper implements java.lang.Runnable {
 
@@ -42,7 +43,7 @@ public class Piper implements java.lang.Runnable {
 				}
 			}
 			if (sum >= (MAX_COMMAND_OUTPUT_LENGTH - 1)) {
-				output.write("\n...".getBytes());
+				output.write("\n...".getBytes(ICommonConstants.UTF8));
 			}
 		} catch (Exception e) {
 			// Something happened while reading or writing streams; pipe is broken

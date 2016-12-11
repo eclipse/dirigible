@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.db.transfer;
@@ -26,6 +25,7 @@ import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.db.InvalidNumberOfElementsException;
 import org.eclipse.dirigible.repository.ext.db.Messages;
 
@@ -65,18 +65,16 @@ public class DBTableImporter {
 			con = getConnection();
 
 			List<String[]> records = readRecords(new ByteArrayInputStream(csvFileContent));
-			
+
 			insertRecords(con, records, tableName);
 		} finally {
 			closeConnection(con);
 		}
 	}
 
-	private void insertRecords(Connection con, List<String[]> records,
-			String tableName) throws SQLException {
+	private void insertRecords(Connection con, List<String[]> records, String tableName) throws SQLException {
 		int columnsCount = records.get(0).length;
-		PreparedStatement insertStat = con.prepareStatement(INSERT_INTO
-				+ tableName + VALUES + generateQM(columnsCount) + CLOSE);
+		PreparedStatement insertStat = con.prepareStatement(INSERT_INTO + tableName + VALUES + generateQM(columnsCount) + CLOSE);
 
 		int recordsInBatch = 0;
 
@@ -102,7 +100,7 @@ public class DBTableImporter {
 		for (int i = 0; i < number; i++) {
 			result.append(Q);
 
-			if (i + 1 < number) {
+			if ((i + 1) < number) {
 				result.append(COMMA);
 			}
 		}
@@ -137,11 +135,8 @@ public class DBTableImporter {
 		return myArr;
 	}
 
-	private List<String[]> readRecords(InputStream csvFile)
-			throws FileNotFoundException, IOException,
-			InvalidNumberOfElementsException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				csvFile));
+	private List<String[]> readRecords(InputStream csvFile) throws FileNotFoundException, IOException, InvalidNumberOfElementsException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(csvFile, ICommonConstants.UTF8));
 		List<String[]> data = new ArrayList<String[]>();
 
 		int item_count = -1;
@@ -157,9 +152,7 @@ public class DBTableImporter {
 				item_count = items.length;
 			} else if (item_count != items.length) {
 				throw new InvalidNumberOfElementsException(
-						String.format(
-								INVALID_NUMBER_D_OF_ELEMENTS_AT_LINE_D_INITIAL_COLUMNS_NUMBER_D,
-								items.length, line_number, item_count));
+						String.format(INVALID_NUMBER_D_OF_ELEMENTS_AT_LINE_D_INITIAL_COLUMNS_NUMBER_D, items.length, line_number, item_count));
 			}
 			data.add(items);
 		}
