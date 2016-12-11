@@ -96,8 +96,14 @@ public class DeleteTableAction extends Action {
 		Connection connection = connectionFactory.getDatabaseConnection();
 		try {
 			Statement createStatement = connection.createStatement();
-			String name = tableDefinition.getFqn();
-			createStatement.execute(DROP_TABLE + name);
+			try {
+				String name = tableDefinition.getFqn();
+				createStatement.execute(DROP_TABLE + name);
+			} finally {
+				if (createStatement != null) {
+					createStatement.close();
+				}
+			}
 		} finally {
 			if (connection != null) {
 				connection.close();
