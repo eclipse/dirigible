@@ -30,6 +30,12 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DBFileDAO extends DBObjectDAO {
 
+	private static final String DOC_FILE_PATH = "DOC_FILE_PATH";
+
+	private static final String FILE_PATH = "FILE_PATH";
+
+	private static final String PERCENT = "%";
+
 	private static final String MAX_SIZE_OF_BINARY_RESOURCE_IS = Messages.getString("DBFileDAO.MAX_SIZE_OF_BINARY_RESOURCE_IS"); //$NON-NLS-1$
 
 	private static final String SINGLE_RESOURCES_BIGGER_THAN_4K_NOT_SUPPORTED = Messages
@@ -195,7 +201,7 @@ public class DBFileDAO extends DBObjectDAO {
 			connection = getRepository().getDbUtils().getConnection();
 			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_REMOVE_DOCS_CASCADE, this.getClass());
 			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
-			preparedStatement.setString(1, path + DBRepository.PATH_DELIMITER + "%"); //$NON-NLS-1$
+			preparedStatement.setString(1, path + DBRepository.PATH_DELIMITER + PERCENT);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DBBaseException(e);
@@ -419,12 +425,13 @@ public class DBFileDAO extends DBObjectDAO {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
 			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_DOCUMENT, this.getClass());
 			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 			preparedStatement.setString(1, resource.getPath());
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			byte[] bytes = null;
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			while (resultSet.next()) {
@@ -437,6 +444,7 @@ public class DBFileDAO extends DBObjectDAO {
 		} catch (IOException e) {
 			throw new DBBaseException(e);
 		} finally {
+			getRepository().getDbUtils().closeResultSet(resultSet);
 			getRepository().getDbUtils().closeStatement(preparedStatement);
 			getRepository().getDbUtils().closeConnection(connection);
 		}
@@ -520,12 +528,13 @@ public class DBFileDAO extends DBObjectDAO {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
 			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_BINARY, this.getClass());
 			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 			preparedStatement.setString(1, resource.getPath());
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			byte[] bytes = null;
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			if (resultSet.next()) {
@@ -538,6 +547,7 @@ public class DBFileDAO extends DBObjectDAO {
 		} catch (IOException e) {
 			throw new DBBaseException(e);
 		} finally {
+			getRepository().getDbUtils().closeResultSet(resultSet);
 			getRepository().getDbUtils().closeStatement(preparedStatement);
 			getRepository().getDbUtils().closeConnection(connection);
 		}
@@ -579,25 +589,24 @@ public class DBFileDAO extends DBObjectDAO {
 
 		if (bytes.length > BIN_MAX_SIZE) {
 			throw new DBBaseException(MAX_SIZE_OF_BINARY_RESOURCE_IS + BIN_MAX_SIZE);
-		} else {
+		}
 
-			Connection connection = null;
-			PreparedStatement preparedStatement = null;
-			try {
-				connection = getRepository().getDbUtils().getConnection();
-				String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_INSERT_BINARY, this.getClass());
-				preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
-				preparedStatement.setString(1, resource.getPath());
-				preparedStatement.setBinaryStream(2, new ByteArrayInputStream(bytes), bytes.length);
-				preparedStatement.executeUpdate();
-			} catch (SQLException e) {
-				throw new DBBaseException(e);
-			} catch (IOException e) {
-				throw new DBBaseException(e);
-			} finally {
-				getRepository().getDbUtils().closeStatement(preparedStatement);
-				getRepository().getDbUtils().closeConnection(connection);
-			}
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = getRepository().getDbUtils().getConnection();
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_INSERT_BINARY, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
+			preparedStatement.setString(1, resource.getPath());
+			preparedStatement.setBinaryStream(2, new ByteArrayInputStream(bytes), bytes.length);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DBBaseException(e);
+		} catch (IOException e) {
+			throw new DBBaseException(e);
+		} finally {
+			getRepository().getDbUtils().closeStatement(preparedStatement);
+			getRepository().getDbUtils().closeConnection(connection);
 		}
 
 	}
@@ -635,6 +644,7 @@ public class DBFileDAO extends DBObjectDAO {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
 
@@ -643,10 +653,10 @@ public class DBFileDAO extends DBObjectDAO {
 
 			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_FILES_BY_PATH_CASCADE, this.getClass());
 			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
-			preparedStatement.setString(1, path + "%");
-			ResultSet resultSet = preparedStatement.executeQuery();
+			preparedStatement.setString(1, path + PERCENT);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				String oldFilePath = resultSet.getString("FILE_PATH");
+				String oldFilePath = resultSet.getString(FILE_PATH);
 				String newFilePath = oldFilePath.replace(path, newPath);
 				String newName = new RepositoryPath(newFilePath).getLastSegment();
 				try {
@@ -665,6 +675,7 @@ public class DBFileDAO extends DBObjectDAO {
 		} catch (Exception e) {
 			throw new DBBaseException(e);
 		} finally {
+			getRepository().getDbUtils().closeResultSet(resultSet);
 			getRepository().getDbUtils().closeStatement(preparedStatement);
 			getRepository().getDbUtils().closeConnection(connection);
 		}
@@ -676,13 +687,14 @@ public class DBFileDAO extends DBObjectDAO {
 	private void renameDocuments(Connection connection, String path, String newPath) throws DBBaseException {
 
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_DOCUMENTS_BY_PATH_CASCADE, this.getClass());
 			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
-			preparedStatement.setString(1, path + "%");
-			ResultSet resultSet = preparedStatement.executeQuery();
+			preparedStatement.setString(1, path + PERCENT);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				String oldFilePath = resultSet.getString("DOC_FILE_PATH");
+				String oldFilePath = resultSet.getString(DOC_FILE_PATH);
 				String newFilePath = oldFilePath.replace(path, newPath);
 				try {
 					script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_RENAME_DOCUMENT, this.getClass());
@@ -699,6 +711,7 @@ public class DBFileDAO extends DBObjectDAO {
 		} catch (Exception e) {
 			throw new DBBaseException(e);
 		} finally {
+			getRepository().getDbUtils().closeResultSet(resultSet);
 			getRepository().getDbUtils().closeStatement(preparedStatement);
 		}
 
@@ -709,11 +722,12 @@ public class DBFileDAO extends DBObjectDAO {
 	private void renameBinaries(Connection connection, String path, String newPath) throws DBBaseException {
 
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_BINARIES_BY_PATH_CASCADE, this.getClass());
 			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
-			preparedStatement.setString(1, path + "%");
-			ResultSet resultSet = preparedStatement.executeQuery();
+			preparedStatement.setString(1, path + PERCENT);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				String oldFilePath = resultSet.getString("BIN_FILE_PATH");
 				String newFilePath = oldFilePath.replace(path, newPath);
@@ -732,6 +746,7 @@ public class DBFileDAO extends DBObjectDAO {
 		} catch (Exception e) {
 			throw new DBBaseException(e);
 		} finally {
+			getRepository().getDbUtils().closeResultSet(resultSet);
 			getRepository().getDbUtils().closeStatement(preparedStatement);
 		}
 

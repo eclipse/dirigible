@@ -55,12 +55,20 @@ public class DBUtils {
 	public static final String VIEW = "VIEW"; //$NON-NLS-1$
 	public static final String TABLE = "TABLE"; //$NON-NLS-1$
 
+	/**
+	 * Definitions for type table
+	 */
 	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
 	private static final String TABLE_NAME_PATTERN_ALL = "%"; //$NON-NLS-1$
 
 	private DataSource dataSource;
 
+	/**
+	 * The constructor
+	 *
+	 * @param dataSource
+	 */
 	public DBUtils(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -69,8 +77,11 @@ public class DBUtils {
 	 * Read whole SQL script from the class path. It can contain multiple
 	 * statements separated with ';'
 	 *
+	 * @param conn
 	 * @param path
+	 * @param clazz
 	 * @return the SQL script as a String
+	 * @throws IOException
 	 */
 	public String readScript(Connection conn, String path, Class<?> clazz) throws IOException {
 		logger.debug("entering readScript"); //$NON-NLS-1$
@@ -161,6 +172,14 @@ public class DBUtils {
 		return status;
 	}
 
+	/**
+	 * Getting a PreparedStatement
+	 *
+	 * @param connection
+	 * @param sql
+	 * @return the prepared statement
+	 * @throws SQLException
+	 */
 	public PreparedStatement getPreparedStatement(Connection connection, String sql) throws SQLException {
 		logger.debug("entering getPreparedStatement"); //$NON-NLS-1$
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -168,6 +187,12 @@ public class DBUtils {
 		return preparedStatement;
 	}
 
+	/**
+	 * Getting a Connection from the DataSource
+	 *
+	 * @return the connection
+	 * @throws SQLException
+	 */
 	public Connection getConnection() throws SQLException {
 		logger.debug("entering getConnection"); //$NON-NLS-1$
 		Connection connection = this.dataSource.getConnection();
@@ -175,6 +200,11 @@ public class DBUtils {
 		return connection;
 	}
 
+	/**
+	 * Safely closing a Connection
+	 *
+	 * @param connection
+	 */
 	public void closeConnection(Connection connection) {
 		logger.debug("entering closeConnection"); //$NON-NLS-1$
 		if (connection != null) {
@@ -187,6 +217,11 @@ public class DBUtils {
 		logger.debug("exiting closeConnection"); //$NON-NLS-1$
 	}
 
+	/**
+	 * Safely closing a Statement
+	 *
+	 * @param statement
+	 */
 	public void closeStatement(Statement statement) {
 		logger.debug("entering closeStatement"); //$NON-NLS-1$
 		if (statement != null) {
@@ -197,6 +232,23 @@ public class DBUtils {
 			}
 		}
 		logger.debug("exiting closeStatement"); //$NON-NLS-1$
+	}
+
+	/**
+	 * Safely closing a ResultSet
+	 *
+	 * @param resultSet
+	 */
+	public void closeResultSet(ResultSet resultSet) {
+		logger.debug("entering closeResultSet"); //$NON-NLS-1$
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		logger.debug("exiting closeResultSet"); //$NON-NLS-1$
 	}
 
 	public static IDialectSpecifier getDialectSpecifier(String productName) {
@@ -217,45 +269,11 @@ public class DBUtils {
 		return dialectSpecifier.getSpecificType(commonType);
 	}
 
-	// public List<String> getListOfSchemes(DatabaseMetaData dmd,
-	// String catalogName) throws SQLException {
-	//
-	// List<String> listOfSchemes = new ArrayList<String>();
-	//
-	// ResultSet rs = dmd.getSchemas(catalogName, null);
-	//
-	// while (rs.next()) {
-	// String schemeName = rs.getString(1);
-	// listOfSchemes.add(schemeName);
-	// }
-	// rs.close();
-	//
-	// return listOfSchemes;
-	// }
-	//
-	// public List<String> getListOfTables(DatabaseMetaData dmd,
-	// String catalogName, String schemeName) throws SQLException {
-	//
-	// List<String> listOfTables = new ArrayList<String>();
-	//
-	// String[] tableTypes = { "TABLE", "VIEW", "ALIAS", "SYNONYM",
-	// "GLOBAL TEMPORARY", "LOCAL TEMPORARY", "SYSTEM TABLE" };
-	// ResultSet rs = dmd.getTables(catalogName, schemeName, "%", tableTypes);
-	//
-	// while (rs.next()) {
-	// String tableName = rs.getString(3);
-	// listOfTables.add(tableName);
-	// }
-	// rs.close();
-	//
-	// return listOfTables;
-	// }
-
 	/**
 	 * ResultSet current row to Content transformation
 	 *
 	 * @param resultSet
-	 * @return
+	 * @return the array of bytes
 	 * @throws SQLException
 	 */
 	public static byte[] dbToData(ResultSet resultSet) throws SQLException {
