@@ -95,9 +95,15 @@ public class DeleteViewAction extends Action {
 	private void deleteView(TableDefinition tableDefinition, IDatabaseConnectionFactory connectionFactory) throws SQLException {
 		Connection connection = connectionFactory.getDatabaseConnection();
 		try {
-			Statement createStatement = connection.createStatement();
-			String name = tableDefinition.getFqn();
-			createStatement.execute(DROP_VIEW + name);
+			Statement dropStatement = connection.createStatement();
+			try {
+				String name = tableDefinition.getFqn();
+				dropStatement.execute(DROP_VIEW + name);
+			} finally {
+				if (dropStatement != null) {
+					dropStatement.close();
+				}
+			}
 		} finally {
 			if (connection != null) {
 				connection.close();

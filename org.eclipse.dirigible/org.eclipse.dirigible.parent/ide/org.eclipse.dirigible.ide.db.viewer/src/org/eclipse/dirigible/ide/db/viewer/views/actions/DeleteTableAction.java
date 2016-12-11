@@ -95,13 +95,13 @@ public class DeleteTableAction extends Action {
 	private void deleteTable(TableDefinition tableDefinition, IDatabaseConnectionFactory connectionFactory) throws SQLException {
 		Connection connection = connectionFactory.getDatabaseConnection();
 		try {
-			Statement createStatement = connection.createStatement();
+			Statement dropStatement = connection.createStatement();
 			try {
 				String name = tableDefinition.getFqn();
-				createStatement.execute(DROP_TABLE + name);
+				dropStatement.execute(DROP_TABLE + name);
 			} finally {
-				if (createStatement != null) {
-					createStatement.close();
+				if (dropStatement != null) {
+					dropStatement.close();
 				}
 			}
 		} finally {
