@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class TestRegistryRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Test Registry";
-	private final String description = "Test Registry Service lists all the unit tests written in JavaScript.";
-	private final String endpoint = "/registry-test";
-	private final String documentation = "http://www.dirigible.io/help/service_registry_test.html";
+	private static final String name = "Test Registry"; //$NON-NLS-1$
+	private static final String description = "Test Registry Service lists all the unit tests written in JavaScript.";
+	private static final String endpoint = "/registry-test"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_registry_test.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

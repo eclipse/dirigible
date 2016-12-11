@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class DataExportRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Data Export";
-	private final String description = "Data Export service helps in exporting the data of a table in delimiter separated values file (*.dsv).";
-	private final String endpoint = "/data-export";
-	private final String documentation = "http://www.dirigible.io/help/service_data_export.html";
+	private static final String name = "Data Export"; //$NON-NLS-1$
+	private static final String description = "Data Export service helps in exporting the data of a table in delimiter separated values file (*.dsv).";
+	private static final String endpoint = "/data-export"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_data_export.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

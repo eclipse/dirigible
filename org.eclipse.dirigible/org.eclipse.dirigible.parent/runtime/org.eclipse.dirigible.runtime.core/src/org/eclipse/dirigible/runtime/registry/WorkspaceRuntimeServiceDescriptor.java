@@ -5,10 +5,10 @@ package org.eclipse.dirigible.runtime.registry;
  */
 public class WorkspaceRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Workspace";
-	private final String description = "Workspace Service gives full access for management of projects artifacts within the User's workspace.";
-	private final String endpoint = "/workspace";
-	private final String documentation = "http://www.dirigible.io/help/service_workspace.html";
+	private static final String name = "Workspace"; //$NON-NLS-1$
+	private static final String description = "Workspace Service gives full access for management of projects artifacts within the User's workspace.";
+	private static final String endpoint = "/workspace"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_workspace.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

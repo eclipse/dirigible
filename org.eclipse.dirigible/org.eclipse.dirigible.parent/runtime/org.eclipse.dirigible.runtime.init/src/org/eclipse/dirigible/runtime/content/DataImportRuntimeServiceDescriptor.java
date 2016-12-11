@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class DataImportRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Data Import";
-	private final String description = "Data Import service provide the end-point for importing data of a table in delimiter separated values file (*.dsv).";
-	private final String endpoint = "/data-import";
-	private final String documentation = "http://www.dirigible.io/help/service_data_import.html";
+	private static final String name = "Data Import"; //$NON-NLS-1$
+	private static final String description = "Data Import service provide the end-point for importing data of a table in delimiter separated values file (*.dsv).";
+	private static final String endpoint = "/data-import"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_data_import.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

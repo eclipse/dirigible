@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class CloneExportRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Clone Export";
-	private final String description = "Clone Export Service provides capability to download the full Repository content as a ZIP archive.";
-	private final String endpoint = "/clone-export";
-	private final String documentation = "http://www.dirigible.io/help/service_clone_export.html";
+	private static final String name = "Clone Export"; //$NON-NLS-1$
+	private static final String description = "Clone Export Service provides capability to download the full Repository content as a ZIP archive.";
+	private static final String endpoint = "/clone-export"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_clone_export.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

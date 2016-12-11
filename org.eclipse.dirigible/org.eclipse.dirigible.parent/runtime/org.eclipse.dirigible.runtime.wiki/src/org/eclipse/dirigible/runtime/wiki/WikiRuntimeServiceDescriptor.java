@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class WikiRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Wiki Pages Provisioning";
-	private final String description = "Wiki Pages Provisioning Service transforms and provides the requested Wiki page.";
-	private final String endpoint = "/wiki";
-	private final String documentation = "http://www.dirigible.io/help/service_wiki.html";
+	private static final String name = "Wiki Pages Provisioning"; //$NON-NLS-1$
+	private static final String description = "Wiki Pages Provisioning Service transforms and provides the requested Wiki page.";
+	private static final String endpoint = "/wiki"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_wiki.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class JavaScriptRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "JavaScript Execution";
-	private final String description = "JavaScript Execution Service triggers the execution of a specified service written in JavaScript.";
-	private final String endpoint = "/js";
-	private final String documentation = "http://www.dirigible.io/help/service_javascript.html";
+	private static final String name = "JavaScript Execution"; //$NON-NLS-1$
+	private static final String description = "JavaScript Execution Service triggers the execution of a specified service written in JavaScript.";
+	private static final String endpoint = "/js"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_javascript.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

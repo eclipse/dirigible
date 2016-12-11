@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class ExportRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Export";
-	private final String description = "Export Service provides capability to download the whole Registry content as a ZIP archive.";
-	private final String endpoint = "/export";
-	private final String documentation = "http://www.dirigible.io/help/service_export.html";
+	private static final String name = "Export"; //$NON-NLS-1$
+	private static final String description = "Export Service provides capability to download the whole Registry content as a ZIP archive.";
+	private static final String endpoint = "/export"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_export.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

@@ -5,10 +5,10 @@ package org.eclipse.dirigible.runtime.registry;
  */
 public class OperationalRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Operational";
-	private final String description = "Operational Service exposes some utility functions.";
-	private final String endpoint = "/op";
-	private final String documentation = "http://www.dirigible.io/help/service_operational.html";
+	private static final String name = "Operational"; //$NON-NLS-1$
+	private static final String description = "Operational Service exposes some utility functions.";
+	private static final String endpoint = "/op"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_operational.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

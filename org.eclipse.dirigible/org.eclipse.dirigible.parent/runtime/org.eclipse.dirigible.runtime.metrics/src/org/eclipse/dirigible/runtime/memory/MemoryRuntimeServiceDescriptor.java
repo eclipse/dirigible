@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class MemoryRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Memory";
-	private final String description = "Memory Service gives the current values of the memory related metrics";
-	private final String endpoint = "/memory";
-	private final String documentation = "http://www.dirigible.io/help/service_memory.html";
+	private static final String name = "Memory"; //$NON-NLS-1$
+	private static final String description = "Memory Service gives the current values of the memory related metrics";
+	private static final String endpoint = "/memory"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_memory.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

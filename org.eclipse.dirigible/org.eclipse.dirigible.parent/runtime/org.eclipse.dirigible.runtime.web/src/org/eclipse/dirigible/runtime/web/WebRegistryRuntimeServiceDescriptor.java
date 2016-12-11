@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class WebRegistryRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Web Content Registry";
-	private final String description = "Web Content Registry Service lists all the artifacts under the Web Content space.";
-	private final String endpoint = "/registry-web";
-	private final String documentation = "http://www.dirigible.io/help/service_registry_web.html";
+	private static final String name = "Web Content Registry"; //$NON-NLS-1$
+	private static final String description = "Web Content Registry Service lists all the artifacts under the Web Content space.";
+	private static final String endpoint = "/registry-web"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_registry_web.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

@@ -7,10 +7,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class MessagingRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private final String name = "Messaging Registry";
-	private final String description = "Messaging Service provide a passive message hub functionality.";
-	private final String endpoint = "/message";
-	private final String documentation = "http://www.dirigible.io/help/service_messaging.html";
+	private static final String name = "Messaging Registry"; //$NON-NLS-1$
+	private static final String description = "Messaging Service provide a passive message hub functionality.";
+	private static final String endpoint = "/message"; //$NON-NLS-1$
+	private static final String documentation = "http://www.dirigible.io/help/service_messaging.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {
