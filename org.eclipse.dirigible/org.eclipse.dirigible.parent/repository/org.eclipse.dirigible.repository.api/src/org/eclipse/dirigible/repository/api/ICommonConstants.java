@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.repository.api;
 
+import java.nio.charset.Charset;
+
 public interface ICommonConstants {
 
 	public static final String DIRIGIBLE_PRODUCT_NAME = "Eclipse Dirigible"; //$NON-NLS-1$
@@ -178,4 +180,7 @@ public interface ICommonConstants {
 	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER = "localRepositoryRootFolder"; //$NON-NLS-1$
 	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "localRepositoryRootFolderIsAbsolute"; //$NON-NLS-1$
 	// ---
+
+	public static final Charset UTF8 = Charset.forName("UTF-8");
+
 }

@@ -59,7 +59,7 @@ public class WebExecutor extends AbstractScriptExecutor {
 
 		result = preprocessContent(result, getResource(repository, scriptingModule.getPath()));
 
-		response.getWriter().print(new String(result));
+		response.getWriter().print(new String(result, ICommonConstants.UTF8));
 		response.getWriter().flush();
 		logger.debug("exiting: executeServiceModule()");
 		return result;
