@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.common.io;
@@ -37,7 +36,6 @@ import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
-
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -77,8 +75,7 @@ public class ProxyUtils {
 		if (trustAll) {
 			try {
 				SchemeSocketFactory plainSocketFactory = PlainSocketFactory.getSocketFactory();
-				SchemeSocketFactory sslSocketFactory = new SSLSocketFactory(
-						createTrustAllSSLContext());
+				SchemeSocketFactory sslSocketFactory = new SSLSocketFactory(createTrustAllSSLContext());
 
 				Scheme httpScheme = new Scheme("http", 80, plainSocketFactory);
 				Scheme httpsScheme = new Scheme("https", 443, sslSocketFactory);
@@ -99,7 +96,7 @@ public class ProxyUtils {
 		String httpProxyHost = System.getProperty(HTTP_PROXY_HOST);
 		String httpProxyPort = System.getProperty(HTTP_PROXY_PORT);
 
-		if (httpProxyHost != null && httpProxyPort != null) {
+		if ((httpProxyHost != null) && (httpProxyPort != null)) {
 			HttpHost httpProxy = new HttpHost(httpProxyHost, Integer.parseInt(httpProxyPort));
 			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpProxy);
 		}
@@ -109,9 +106,14 @@ public class ProxyUtils {
 
 	// Local case only
 	private static void loadLocalBuildProxy() throws IOException {
-		InputStream in = ProxyUtils.class.getResourceAsStream(PROXY_PROPERTIES_FILE_LOCATION);
 		Properties properties = new Properties();
-		properties.load(in);
+
+		InputStream in = ProxyUtils.class.getResourceAsStream(PROXY_PROPERTIES_FILE_LOCATION);
+		try {
+			properties.load(in);
+		} finally {
+			in.close();
+		}
 
 		String proxy = properties.getProperty(PROXY, DEFAULT_PROXY_VALUE);
 		boolean needsProxy = Boolean.parseBoolean(proxy);
@@ -169,10 +171,10 @@ public class ProxyUtils {
 
 	private static void setTrustAllSSL() throws IOException {
 		try {
-			HttpsURLConnection.setDefaultSSLSocketFactory(createTrustAllSSLContext()
-					.getSocketFactory());
+			HttpsURLConnection.setDefaultSSLSocketFactory(createTrustAllSSLContext().getSocketFactory());
 			// Create all-trusting host name verifier
 			HostnameVerifier allHostsValid = new HostnameVerifier() {
+				@Override
 				public boolean verify(String hostname, SSLSession session) {
 					return true;
 				}
@@ -187,19 +189,21 @@ public class ProxyUtils {
 		}
 	}
 
-	private static SSLContext createTrustAllSSLContext() throws NoSuchAlgorithmException,
-			KeyManagementException {
+	private static SSLContext createTrustAllSSLContext() throws NoSuchAlgorithmException, KeyManagementException {
 		SSLContext sslContext = SSLContext.getInstance("SSL");
 
 		// Create a trust manager that does not validate certificate chains
 		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			@Override
 			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 				return null;
 			}
 
+			@Override
 			public void checkClientTrusted(X509Certificate[] certs, String authType) {
 			}
 
+			@Override
 			public void checkServerTrusted(X509Certificate[] certs, String authType) {
 			}
 		} };
