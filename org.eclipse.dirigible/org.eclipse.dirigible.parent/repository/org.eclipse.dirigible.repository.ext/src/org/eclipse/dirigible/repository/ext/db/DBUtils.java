@@ -329,54 +329,36 @@ public class DBUtils {
 	}
 
 	public static ResultSet getColumns(Connection connection, String name) throws SQLException {
-
 		DatabaseMetaData meta = connection.getMetaData();
-
 		if (name == null) {
-			meta.getColumns(null, null, name, null);
+			throw new SQLException("Error on getting columns of table: null");
 		}
-
 		ResultSet columns = meta.getColumns(null, null, name, null);
 		if (columns.next()) {
 			return meta.getColumns(null, null, name, null);
-		} else {
-			columns = meta.getColumns(null, null, name.toLowerCase(), null);
-			if (columns.next()) {
-				return meta.getColumns(null, null, name.toLowerCase(), null);
-			} else {
-				columns = meta.getColumns(null, null, name.toUpperCase(), null);
-				// if (columns.next()) {
-				// return meta.getColumns(null, null, name.toUpperCase(), null);
-				// }
-			}
 		}
-
+		columns = meta.getColumns(null, null, name.toLowerCase(), null);
+		if (columns.next()) {
+			return meta.getColumns(null, null, name.toLowerCase(), null);
+		}
+		columns = meta.getColumns(null, null, name.toUpperCase(), null);
 		return columns;
 	}
 
 	public static ResultSet getPrimaryKeys(Connection connection, String name) throws SQLException {
-
 		DatabaseMetaData meta = connection.getMetaData();
-
 		if (name == null) {
-			meta.getPrimaryKeys(null, null, name);
+			throw new SQLException("Error on getting primary keys of table: null");
 		}
-
 		ResultSet columns = meta.getPrimaryKeys(null, null, name);
 		if (columns.next()) {
 			return meta.getPrimaryKeys(null, null, name);
-		} else {
-			columns = meta.getPrimaryKeys(null, null, name.toLowerCase());
-			if (columns.next()) {
-				return meta.getPrimaryKeys(null, null, name.toLowerCase());
-			} else {
-				columns = meta.getPrimaryKeys(null, null, name.toUpperCase());
-				// if (columns.next()) {
-				// return meta.getColumns(null, null, name.toUpperCase(), null);
-				// }
-			}
 		}
-
+		columns = meta.getPrimaryKeys(null, null, name.toLowerCase());
+		if (columns.next()) {
+			return meta.getPrimaryKeys(null, null, name.toLowerCase());
+		}
+		columns = meta.getPrimaryKeys(null, null, name.toUpperCase());
 		return columns;
 	}
 

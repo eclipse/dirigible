@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.db.dao;
@@ -28,6 +27,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DBFolderDAO extends DBObjectDAO {
 
+	private static final String PERCENT = "%";
 	private static Logger logger = Logger.getLogger(DBFolderDAO.class);
 
 	DBFolderDAO(DBRepositoryDAO dbRepositoryDAO) {
@@ -36,7 +36,7 @@ public class DBFolderDAO extends DBObjectDAO {
 
 	/**
 	 * Return the database folder object
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 * @throws DBBaseException
@@ -58,7 +58,7 @@ public class DBFolderDAO extends DBObjectDAO {
 	/**
 	 * Create the database folder object in the target database schema, located
 	 * at the given path - cascading
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 * @throws DBBaseException
@@ -68,12 +68,11 @@ public class DBFolderDAO extends DBObjectDAO {
 
 		checkInitialized();
 
-		if (path == null || "".equals(path.trim())) { //$NON-NLS-1$
+		if ((path == null) || "".equals(path.trim())) { //$NON-NLS-1$
 			return null;
 		}
 
-		StringTokenizer tokenizer = new StringTokenizer(path,
-				DBRepository.PATH_DELIMITER);
+		StringTokenizer tokenizer = new StringTokenizer(path, DBRepository.PATH_DELIMITER);
 		StringBuffer pathBuffer = new StringBuffer();
 		pathBuffer.append(DBRepository.PATH_DELIMITER);
 		DBFolder parent = null;
@@ -96,19 +95,17 @@ public class DBFolderDAO extends DBObjectDAO {
 	/**
 	 * Create the database folder object in the target database schema, located
 	 * at the given path - single entity only
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 * @throws DBBaseException
 	 */
-	DBFolder createSingleFolder(String path, DBFolder parent)
-			throws DBBaseException {
+	DBFolder createSingleFolder(String path, DBFolder parent) throws DBBaseException {
 		logger.debug(" entering createSingleFolder"); //$NON-NLS-1$
 
 		checkInitialized();
 
-		String name = path.substring(path
-				.lastIndexOf(DBRepository.PATH_DELIMITER) + 1);
+		String name = path.substring(path.lastIndexOf(DBRepository.PATH_DELIMITER) + 1);
 		String createdBy = getRepository().getUser();
 		String modifiedBy = getRepository().getUser();
 
@@ -122,7 +119,7 @@ public class DBFolderDAO extends DBObjectDAO {
 
 	/**
 	 * Delete the database folder object based on the given path
-	 * 
+	 *
 	 * @param path
 	 * @throws DBBaseException
 	 */
@@ -138,13 +135,10 @@ public class DBFolderDAO extends DBObjectDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_REMOVE_FOLDER_BY_PATH, this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_REMOVE_FOLDER_BY_PATH, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 			preparedStatement.setString(1, path);
-			preparedStatement.setString(2, path + DBRepository.PATH_DELIMITER
-					+ "%"); //$NON-NLS-1$
+			preparedStatement.setString(2, path + DBRepository.PATH_DELIMITER + PERCENT);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DBBaseException(e);
@@ -154,13 +148,13 @@ public class DBFolderDAO extends DBObjectDAO {
 			getRepository().getDbUtils().closeStatement(preparedStatement);
 			getRepository().getDbUtils().closeConnection(connection);
 		}
-		
+
 		getRepository().getCacheManager().clear(path);
 	}
 
 	/**
 	 * Cascading - delete folder and its content
-	 * 
+	 *
 	 * @param path
 	 * @throws DBBaseException
 	 */
@@ -174,12 +168,9 @@ public class DBFolderDAO extends DBObjectDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_REMOVE_FOLDER_CASCADE, this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
-			preparedStatement.setString(1, path + DBRepository.PATH_DELIMITER
-					+ "%"); //$NON-NLS-1$
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_REMOVE_FOLDER_CASCADE, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
+			preparedStatement.setString(1, path + DBRepository.PATH_DELIMITER + PERCENT);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DBBaseException(e);
@@ -189,13 +180,13 @@ public class DBFolderDAO extends DBObjectDAO {
 			getRepository().getDbUtils().closeStatement(preparedStatement);
 			getRepository().getDbUtils().closeConnection(connection);
 		}
-		
+
 		getRepository().getCacheManager().clear();
 	}
 
 	/**
 	 * Check whether the folder is empty
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 * @throws DBBaseException
@@ -208,15 +199,13 @@ public class DBFolderDAO extends DBObjectDAO {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_IS_FOLDER_EMPTY, this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
-			preparedStatement.setString(1, path + DBRepository.PATH_DELIMITER
-					+ "%"); //$NON-NLS-1$
-			ResultSet resultSet = preparedStatement.executeQuery();
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_IS_FOLDER_EMPTY, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
+			preparedStatement.setString(1, path + DBRepository.PATH_DELIMITER + PERCENT);
+			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				empty = (resultSet.getInt(1) <= 1);
 			}
@@ -234,17 +223,16 @@ public class DBFolderDAO extends DBObjectDAO {
 
 	/**
 	 * Iterate the sub-folders and files of a given folder
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 * @throws DBBaseException
 	 */
-	public List<DBObject> getChildrenByFolder(String path)
-			throws DBBaseException {
+	public List<DBObject> getChildrenByFolder(String path) throws DBBaseException {
 
 		checkInitialized();
 
-		if (path == null || "".equals(path.trim())) { //$NON-NLS-1$
+		if ((path == null) || "".equals(path.trim())) { //$NON-NLS-1$
 			return null;
 		}
 
@@ -252,21 +240,18 @@ public class DBFolderDAO extends DBObjectDAO {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_GET_FILES_BY_PATH, this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_FILES_BY_PATH, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 			preparedStatement.setString(1, (IRepository.SEPARATOR.equals(path) ? "" : path) //$NON-NLS-1$
-					+ DBRepository.PATH_DELIMITER + "%"); //$NON-NLS-1$
+					+ DBRepository.PATH_DELIMITER + PERCENT);
 			preparedStatement.setString(2, (IRepository.SEPARATOR.equals(path) ? "" : path) //$NON-NLS-1$
-					+ DBRepository.PATH_DELIMITER + "%" //$NON-NLS-1$
-					+ DBRepository.PATH_DELIMITER + "%"); //$NON-NLS-1$
-			ResultSet resultSet = preparedStatement.executeQuery();
+					+ DBRepository.PATH_DELIMITER + PERCENT + DBRepository.PATH_DELIMITER + PERCENT);
+			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				DBObject dbObject = DBMapper.dbToObject(getRepository(),
-						resultSet);
+				DBObject dbObject = DBMapper.dbToObject(getRepository(), resultSet);
 				if (IRepository.SEPARATOR.equals(path) && IRepository.SEPARATOR.equals(dbObject.getPath())) {
 					continue;
 				}
@@ -278,15 +263,14 @@ public class DBFolderDAO extends DBObjectDAO {
 		} catch (IOException e) {
 			throw new DBBaseException(e);
 		} finally {
+			getRepository().getDbUtils().closeResultSet(resultSet);
 			getRepository().getDbUtils().closeStatement(preparedStatement);
 			getRepository().getDbUtils().closeConnection(connection);
 		}
 	}
-	
-	
-	public void renameFolderByPath(String path, String newPath)
-			throws DBBaseException {
-		getDbRepositoryDAO().getDbFileDAO().renameFileByPath(path, newPath);		
+
+	public void renameFolderByPath(String path, String newPath) throws DBBaseException {
+		getDbRepositoryDAO().getDbFileDAO().renameFileByPath(path, newPath);
 	}
 
 }
