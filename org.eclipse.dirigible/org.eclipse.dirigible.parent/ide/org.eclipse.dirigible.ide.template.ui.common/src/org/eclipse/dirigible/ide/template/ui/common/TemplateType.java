@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 
@@ -46,7 +47,8 @@ public class TemplateType {
 			throw new IOException(String.format("Template metadata does not exist at: %s", location));
 		}
 
-		TemplateMetadata templateMetadata = gson.fromJson(new String(templateMetadataResource.getContent()), TemplateMetadata.class);
+		TemplateMetadata templateMetadata = gson.fromJson(new String(templateMetadataResource.getContent(), ICommonConstants.UTF8),
+				TemplateMetadata.class);
 		templateMetadata.setCategory(category);
 		templateMetadata.setType(type);
 

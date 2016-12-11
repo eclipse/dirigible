@@ -303,14 +303,14 @@ public abstract class GenerationModel {
 	}
 
 	public byte[] normalizeEscapes(byte[] bytes) {
-		String content = new String(bytes);
+		String content = new String(bytes, ICommonConstants.UTF8);
 		content = content.replace("\\$", "$"); //$NON-NLS-1$ //$NON-NLS-2$
 		content = content.replace("\\{", "{"); //$NON-NLS-1$ //$NON-NLS-2$
 		content = content.replace("\\}", "}"); //$NON-NLS-1$ //$NON-NLS-2$
 		content = content.replace("\\[", "["); //$NON-NLS-1$ //$NON-NLS-2$
 		content = content.replace("\\]", "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		content = content.replace("\\.", "."); //$NON-NLS-1$ //$NON-NLS-2$
-		byte[] result = content.getBytes();
+		byte[] result = content.getBytes(ICommonConstants.UTF8);
 		return result;
 	}
 

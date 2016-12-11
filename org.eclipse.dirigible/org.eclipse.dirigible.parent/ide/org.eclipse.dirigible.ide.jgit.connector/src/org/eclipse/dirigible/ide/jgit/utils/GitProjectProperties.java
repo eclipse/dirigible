@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.jgit.utils;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 public class GitProjectProperties {
@@ -24,8 +24,7 @@ public class GitProjectProperties {
 	public static final String PROPERTY_GIT_REPOSITORY_URL = "git.repository.url";
 	public static final String DB_DIRIGIBLE_USERS_S_GIT_S_REPOSITORY = IRepositoryPaths.DB_DIRIGIBLE_ROOT + "users/%s/git/%s";
 	public static final String DB_DIRIGIBLE_USERS_S_WORKSPACE = IRepositoryPaths.DB_DIRIGIBLE_ROOT + "users/%s/workspace/";
-	public static final String GIT_PROPERTY_FILE_LOCATION = DB_DIRIGIBLE_USERS_S_GIT_S_REPOSITORY
-			+ "/" + PROJECT_GIT_PROPERTY;
+	public static final String GIT_PROPERTY_FILE_LOCATION = DB_DIRIGIBLE_USERS_S_GIT_S_REPOSITORY + "/" + PROJECT_GIT_PROPERTY;
 
 	public GitProjectProperties(String URL, String SHA) {
 		gitProperties = new Properties();
@@ -69,6 +68,6 @@ public class GitProjectProperties {
 	}
 
 	public byte[] getContent() {
-		return toString().getBytes();
+		return toString().getBytes(ICommonConstants.UTF8);
 	}
 }

@@ -45,7 +45,7 @@ public class HomeLocationPreferencePage extends FieldEditorPreferencePage implem
 			final IRepository repository = RepositoryFacade.getInstance().getRepository();
 			final IResource resource = repository.getResource(IRepositoryPaths.REPOSITORY_HOME_URL);
 			if (resource.exists()) {
-				return new String(resource.getContent());
+				return new String(resource.getContent(), ICommonConstants.UTF8);
 			}
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage(), e);
@@ -59,7 +59,7 @@ public class HomeLocationPreferencePage extends FieldEditorPreferencePage implem
 		try {
 			final IRepository repository = RepositoryFacade.getInstance().getRepository();
 			final IResource resource = repository.getResource(IRepositoryPaths.REPOSITORY_HOME_URL);
-			resource.setContent(url.getBytes());
+			resource.setContent(url.getBytes(ICommonConstants.UTF8));
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage(), e);
 		} catch (IOException e) {
