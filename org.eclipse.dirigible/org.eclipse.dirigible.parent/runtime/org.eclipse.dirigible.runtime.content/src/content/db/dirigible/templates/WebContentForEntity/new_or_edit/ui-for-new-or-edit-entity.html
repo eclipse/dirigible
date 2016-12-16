@@ -63,6 +63,16 @@
 #elseif ($tableColumn.getWidgetType() == "textarea")
 					<textarea class="form-control" 
 						ng-model="entity.${tableColumn.getName()}" cols="50" rows="5" required="required"></textarea>
+#elseif ($tableColumn.getWidgetType() == "dropdown")
+					<input type="hidden" class="form-control" ng-model="entry.${tableColumn.getName()}" required="required">
+					<div>
+						<select ng-model="entry.${tableColumn.getName()}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
+					</div>
+#elseif ($tableColumn.getWidgetType() == "list")
+					<input type="hidden" class="form-control" ng-model="entry.${tableColumn.getName()}" ng-readonly="operation == 'show'" required="required">
+					<div>
+						<select multiple="true" ng-model="entry.${tableColumn.getName()}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
+					</div>
 #elseif ($tableColumn.getWidgetType() == "integer")
 					<input type="number" class="form-control" 
 						ng-model="entity.${tableColumn.getName()}" required="required">
@@ -122,7 +132,17 @@
 	            	$scope.exist = false;
 				});
 			}
-	                    
+	        
+			/* ---- Uncomment and configure in case of using dropdown or list widgets in the form above  ----
+			
+			var urlItems = 'ENDPOINT_OF_THE_ITEMS_SERVICE';
+				
+			$http.get(urlItems)
+				.success(function(items){
+					$scope.items = items;
+				});
+			*/
+
 	        $scope.saveEntity = function(){
 	        	$http.post(url ,$scope.entity)
 	        	.success(function(response){

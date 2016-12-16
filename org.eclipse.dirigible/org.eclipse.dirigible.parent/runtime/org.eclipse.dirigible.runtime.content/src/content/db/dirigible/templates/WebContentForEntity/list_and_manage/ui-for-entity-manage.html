@@ -76,13 +76,13 @@
 			<br>
 			<!-- new, edit and delete buttons -->
 			<div class="btn-group">
-				<input class="btn btn-default" type="button" value="New"
+				<input class="btn btn-default btn-sm" type="button" value="New"
 					ng-click="setOperation('new')"
 					ng-disabled="errorMessage || operation == 'new' || operation == 'update'"> <input
-					class="btn btn-default" type="button" value="Edit"
+					class="btn btn-default btn-sm" type="button" value="Edit"
 					ng-click="setOperation('update')"
 					ng-disabled="errorMessage || operation == 'new' || operation == 'update'"> <input
-					class="btn btn-default" type="button" value="Delete"
+					class="btn btn-default btn-sm" type="button" value="Delete"
 					ng-click="delete()"
 					ng-disabled="errorMessage || operation == 'new' || operation == 'update'">
 			</div>
@@ -147,9 +147,9 @@
 				
 				<!-- save and cancel buttons -->
 				<div class="btn-group">
-					<input class="btn btn-primary" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
+					<input class="btn btn-primary btn-sm" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
 						ng-click="confirmAction()"> 
-					<input class="btn btn-default" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
+					<input class="btn btn-default btn-sm" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
 						ng-click="cancelAction()">
 				</div>
 			</div>
