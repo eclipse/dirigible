@@ -112,6 +112,20 @@
 					<textarea class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}" cols="50" rows="5" 
 						ng-readonly="operation == 'show'" required="required"></textarea>
+#elseif ($tableColumn.getWidgetType() == "dropdown")
+					<input type="hidden" class="form-control" 
+						ng-model="selectedEntry.${tableColumn.getName()}"
+						ng-readonly="operation == 'show'" required="required">
+					<div>
+						<select ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
+					</div>
+#elseif ($tableColumn.getWidgetType() == "list")
+					<input type="hidden" class="form-control" 
+						ng-model="selectedEntry.${tableColumn.getName()}"
+						ng-readonly="operation == 'show'" required="required">
+					<div>
+						<select multiple="true" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
+					</div>
 #elseif ($tableColumn.getWidgetType() == "integer")
 					<input type="number" class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}"
@@ -157,6 +171,16 @@
 				.success(function(data){
 					$scope.data = data;
 				});
+			
+			/* ---- Uncomment and configure in case of using dropdown or list widgets in the form above  ----
+			
+			var urlItems = 'ENDPOINT_OF_THE_ITEMS_SERVICE';
+				
+			$http.get(urlItems)
+				.success(function(items){
+					$scope.items = items;
+				});
+			*/
 			
 			$scope.selectedEntry;
             $scope.operation = 'show';
