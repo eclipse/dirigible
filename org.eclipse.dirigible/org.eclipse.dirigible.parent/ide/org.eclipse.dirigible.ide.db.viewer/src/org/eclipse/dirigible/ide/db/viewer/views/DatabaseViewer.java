@@ -87,7 +87,7 @@ public class DatabaseViewer extends ViewPart implements IDatabaseConnectionFacto
 
 	protected RefreshViewAction refreshViewAction;
 
-	class NameSorter extends ViewerSorter {
+	static class NameSorter extends ViewerSorter {
 		private static final long serialVersionUID = -7067479902071396325L;
 	}
 
