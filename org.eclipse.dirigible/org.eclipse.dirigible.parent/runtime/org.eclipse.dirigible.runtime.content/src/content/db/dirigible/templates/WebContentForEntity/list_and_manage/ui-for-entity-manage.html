@@ -75,30 +75,33 @@
 			<hr>
 			<br>
 			<!-- new, edit and delete buttons -->
-			<div class="btn-group">
-				<input class="btn btn-default btn-sm" type="button" value="New"
+			<div class="btn-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<input class="btn btn-default" type="button" value="New"
 					ng-click="setOperation('new')"
 					ng-disabled="errorMessage || operation == 'new' || operation == 'update'"> <input
-					class="btn btn-default btn-sm" type="button" value="Edit"
+					class="btn btn-default" type="button" value="Edit"
 					ng-click="setOperation('update')"
 					ng-disabled="errorMessage || operation == 'new' || operation == 'update'"> <input
-					class="btn btn-default btn-sm" type="button" value="Delete"
+					class="btn btn-default" type="button" value="Delete"
 					ng-click="delete()"
 					ng-disabled="errorMessage || operation == 'new' || operation == 'update'">
 			</div>
-			<br>
-			<br>
+			<br><br><br>
 			<div>
 				<!-- input form -->
 				<div>
+				  
 #foreach ($tableColumn in $tableColumns)
 #if($tableColumn.isVisible())
-					<label>${tableColumn.getLabel()}</label>
 #if ($tableColumn.isKey())
+				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+					<label>${tableColumn.getLabel()}</label>
 					<input type="text" class="form-control" 
-						ng-model="selectedEntry.${tableColumn.getName()}" readonly> <br>
+						ng-model="selectedEntry.${tableColumn.getName()}" readonly>
 #else
 #if ($tableColumn.getWidgetType() == "date")
+				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+					<label>${tableColumn.getLabel()}</label>
 					<p class="input-group">
 		            	<input type="text" ng-model="selectedEntry.${tableColumn.getName()}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
 		               		uib-datepicker-popup="" is-open="${tableColumn.getName()}Status.opened" 
@@ -109,10 +112,14 @@
 				        </span>
 		           	</p>
 #elseif ($tableColumn.getWidgetType() == "textarea")
+				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<label>${tableColumn.getLabel()}</label>
 					<textarea class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}" cols="50" rows="5" 
 						ng-readonly="operation == 'show'" required="required"></textarea>
 #elseif ($tableColumn.getWidgetType() == "dropdown")
+				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+					<label>${tableColumn.getLabel()}</label>
 					<input type="hidden" class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}"
 						ng-readonly="operation == 'show'" required="required">
@@ -120,6 +127,8 @@
 						<select ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
 					</div>
 #elseif ($tableColumn.getWidgetType() == "list")
+				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<label>${tableColumn.getLabel()}</label>
 					<input type="hidden" class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}"
 						ng-readonly="operation == 'show'" required="required">
@@ -127,29 +136,39 @@
 						<select multiple="true" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
 					</div>
 #elseif ($tableColumn.getWidgetType() == "integer")
+				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+					<label>${tableColumn.getLabel()}</label>
 					<input type="number" class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}"
 						ng-readonly="operation == 'show'" required="required"></textarea>
 #elseif ($tableColumn.getWidgetType() == "float")
+				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+					<label>${tableColumn.getLabel()}</label>
 					<input type="number" class="form-control" step="any"
 						ng-model="selectedEntry.${tableColumn.getName()}"
 						ng-readonly="operation == 'show'" required="required"></textarea>
 #else
+#if ($tableColumn.getSize() < 40)
+				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+#else
+				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+#end
+					<label>${tableColumn.getLabel()}</label>
 					<input type="text" class="form-control" 
 						ng-model="selectedEntry.${tableColumn.getName()}"
 						ng-readonly="operation == 'show'" required="required">
 #end
 #end
-					<br>
+					</div>
 #end
 #end
 				</div>
 				
 				<!-- save and cancel buttons -->
 				<div class="btn-group">
-					<input class="btn btn-primary btn-sm" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
+					<input class="btn btn-primary" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
 						ng-click="confirmAction()"> 
-					<input class="btn btn-default btn-sm" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
+					<input class="btn btn-default" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
 						ng-click="cancelAction()">
 				</div>
 			</div>
