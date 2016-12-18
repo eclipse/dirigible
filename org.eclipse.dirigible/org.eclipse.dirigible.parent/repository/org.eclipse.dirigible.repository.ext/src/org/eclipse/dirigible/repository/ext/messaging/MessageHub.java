@@ -20,76 +20,86 @@ import org.eclipse.dirigible.repository.ext.security.Messages;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+/**
+ * The Message Hub processing the sending, receiving and routing of the messages
+ */
 public class MessageHub implements IMessagingService {
-	
+
 	private static final Logger logger = Logger.getLogger(MessageHub.class);
-	
+
 	private static final String DATABASE_ERROR = Messages.getString("SecurityManager.DATABASE_ERROR"); //$NON-NLS-1$
-	
-	private static final String MSQ_CLIENT_SEQ =		"MSQ_CLIENT_SEQ";
-	
-	private static final String MSQ_TOPIC_SEQ =			"MSQ_TOPIC_SEQ";
-	
-	private static final String MSQ_SUBS_SEQ =			"MSQ_SUBS_SEQ";
-	
-	private static final String MSQ_MESSAGE_SEQ =		"MSQ_MESSAGE_SEQ";
-	
-	private static final String MSQ_IN_SEQ =			"MSQ_IN_SEQ";
-	
-	private static final String MSQ_OUT_SEQ =			"MSQ_OUT_SEQ";
-	
-	private static final String INSERT_CLIENT = 		"/org/eclipse/dirigible/repository/ext/messaging/sql/insert_client.sql"; //$NON-NLS-1$
-	
-	private static final String REMOVE_CLIENT = 		"/org/eclipse/dirigible/repository/ext/messaging/sql/remove_client.sql"; //$NON-NLS-1$
-	
-	private static final String GET_CLIENT = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/get_client.sql"; //$NON-NLS-1$
-	
-	private static final String INSERT_TOPIC = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/insert_topic.sql"; //$NON-NLS-1$
-	
-	private static final String REMOVE_TOPIC = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/remove_topic.sql"; //$NON-NLS-1$
-	
-	private static final String GET_TOPIC = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/get_topic.sql"; //$NON-NLS-1$
-	
-	private static final String INSERT_SUBS = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/insert_subs.sql"; //$NON-NLS-1$
-	
-	private static final String REMOVE_SUBS = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/remove_subs.sql"; //$NON-NLS-1$
-	
-	private static final String INSERT_MESSAGE = 		"/org/eclipse/dirigible/repository/ext/messaging/sql/insert_message.sql"; //$NON-NLS-1$
-	
-	private static final String INSERT_IN = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/insert_in.sql"; //$NON-NLS-1$
-	
-	private static final String GET_OUT = 				"/org/eclipse/dirigible/repository/ext/messaging/sql/get_out.sql"; //$NON-NLS-1$
-	
-	private static final String GET_OUT_BY_TOPIC = 		"/org/eclipse/dirigible/repository/ext/messaging/sql/get_out_by_topic.sql"; //$NON-NLS-1$
-	
-	private static final String SET_RECEIVED_STATUS = 	"/org/eclipse/dirigible/repository/ext/messaging/sql/update_received_status.sql"; //$NON-NLS-1$
-	
-	private static final String GET_IN_NEW = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/get_in_new.sql"; //$NON-NLS-1$
-	
-	private static final String INSERT_OUT = 			"/org/eclipse/dirigible/repository/ext/messaging/sql/insert_out.sql"; //$NON-NLS-1$
-	
-	private static final String GET_SUBS_BY_TOPIC = 	"/org/eclipse/dirigible/repository/ext/messaging/sql/get_subs_by_topic.sql"; //$NON-NLS-1$
-	
-	private static final String CLEANUP_MESSAGES = 		"/org/eclipse/dirigible/repository/ext/messaging/sql/cleanup_messages.sql"; //$NON-NLS-1$
-	
-	private static final String CLEANUP_MESSAGES_IN = 	"/org/eclipse/dirigible/repository/ext/messaging/sql/cleanup_messages_in.sql"; //$NON-NLS-1$
-	
-	private static final String CLEANUP_MESSAGES_OUT =	"/org/eclipse/dirigible/repository/ext/messaging/sql/cleanup_messages_out.sql"; //$NON-NLS-1$
-	
-	private static final String GET_SUB = 				"/org/eclipse/dirigible/repository/ext/messaging/sql/get_sub.sql"; //$NON-NLS-1$
-	
-	private static final String SET_ROUTED_STATUS = 	"/org/eclipse/dirigible/repository/ext/messaging/sql/update_routed_status.sql"; //$NON-NLS-1$
-	
+
+	private static final String MSQ_CLIENT_SEQ = "MSQ_CLIENT_SEQ";
+
+	private static final String MSQ_TOPIC_SEQ = "MSQ_TOPIC_SEQ";
+
+	private static final String MSQ_SUBS_SEQ = "MSQ_SUBS_SEQ";
+
+	private static final String MSQ_MESSAGE_SEQ = "MSQ_MESSAGE_SEQ";
+
+	private static final String MSQ_IN_SEQ = "MSQ_IN_SEQ";
+
+	private static final String MSQ_OUT_SEQ = "MSQ_OUT_SEQ";
+
+	private static final String INSERT_CLIENT = "/org/eclipse/dirigible/repository/ext/messaging/sql/insert_client.sql"; //$NON-NLS-1$
+
+	private static final String REMOVE_CLIENT = "/org/eclipse/dirigible/repository/ext/messaging/sql/remove_client.sql"; //$NON-NLS-1$
+
+	private static final String GET_CLIENT = "/org/eclipse/dirigible/repository/ext/messaging/sql/get_client.sql"; //$NON-NLS-1$
+
+	private static final String INSERT_TOPIC = "/org/eclipse/dirigible/repository/ext/messaging/sql/insert_topic.sql"; //$NON-NLS-1$
+
+	private static final String REMOVE_TOPIC = "/org/eclipse/dirigible/repository/ext/messaging/sql/remove_topic.sql"; //$NON-NLS-1$
+
+	private static final String GET_TOPIC = "/org/eclipse/dirigible/repository/ext/messaging/sql/get_topic.sql"; //$NON-NLS-1$
+
+	private static final String INSERT_SUBS = "/org/eclipse/dirigible/repository/ext/messaging/sql/insert_subs.sql"; //$NON-NLS-1$
+
+	private static final String REMOVE_SUBS = "/org/eclipse/dirigible/repository/ext/messaging/sql/remove_subs.sql"; //$NON-NLS-1$
+
+	private static final String INSERT_MESSAGE = "/org/eclipse/dirigible/repository/ext/messaging/sql/insert_message.sql"; //$NON-NLS-1$
+
+	private static final String INSERT_IN = "/org/eclipse/dirigible/repository/ext/messaging/sql/insert_in.sql"; //$NON-NLS-1$
+
+	private static final String GET_OUT = "/org/eclipse/dirigible/repository/ext/messaging/sql/get_out.sql"; //$NON-NLS-1$
+
+	private static final String GET_OUT_BY_TOPIC = "/org/eclipse/dirigible/repository/ext/messaging/sql/get_out_by_topic.sql"; //$NON-NLS-1$
+
+	private static final String SET_RECEIVED_STATUS = "/org/eclipse/dirigible/repository/ext/messaging/sql/update_received_status.sql"; //$NON-NLS-1$
+
+	private static final String GET_IN_NEW = "/org/eclipse/dirigible/repository/ext/messaging/sql/get_in_new.sql"; //$NON-NLS-1$
+
+	private static final String INSERT_OUT = "/org/eclipse/dirigible/repository/ext/messaging/sql/insert_out.sql"; //$NON-NLS-1$
+
+	private static final String GET_SUBS_BY_TOPIC = "/org/eclipse/dirigible/repository/ext/messaging/sql/get_subs_by_topic.sql"; //$NON-NLS-1$
+
+	private static final String CLEANUP_MESSAGES = "/org/eclipse/dirigible/repository/ext/messaging/sql/cleanup_messages.sql"; //$NON-NLS-1$
+
+	private static final String CLEANUP_MESSAGES_IN = "/org/eclipse/dirigible/repository/ext/messaging/sql/cleanup_messages_in.sql"; //$NON-NLS-1$
+
+	private static final String CLEANUP_MESSAGES_OUT = "/org/eclipse/dirigible/repository/ext/messaging/sql/cleanup_messages_out.sql"; //$NON-NLS-1$
+
+	private static final String GET_SUB = "/org/eclipse/dirigible/repository/ext/messaging/sql/get_sub.sql"; //$NON-NLS-1$
+
+	private static final String SET_ROUTED_STATUS = "/org/eclipse/dirigible/repository/ext/messaging/sql/update_routed_status.sql"; //$NON-NLS-1$
+
 	private DBUtils dbUtils;
-	
+
 	private DBSequenceUtils dbSequenceUtils;
 
 	private DataSource dataSource;
-	
+
 	private boolean silentMode = true;
-	
+
 	private HttpServletRequest request;
 
+	/**
+	 * The constructor with silent mode
+	 *
+	 * @param dataSource
+	 * @param silentMode
+	 * @param request
+	 */
 	public MessageHub(DataSource dataSource, boolean silentMode, HttpServletRequest request) {
 		this.dataSource = dataSource;
 		this.dbUtils = new DBUtils(dataSource);
@@ -97,19 +107,40 @@ public class MessageHub implements IMessagingService {
 		this.dbSequenceUtils = new DBSequenceUtils(dataSource);
 		this.request = request;
 	}
-	
+
+	/**
+	 * The constructor
+	 *
+	 * @param dataSource
+	 * @param request
+	 */
 	public MessageHub(DataSource dataSource, HttpServletRequest request) {
 		this(dataSource, true, request);
 	}
 
+	/**
+	 * Getter for the database utility object
+	 *
+	 * @return the database utility object
+	 */
 	public DBUtils getDBUtils() {
 		return this.dbUtils;
 	}
-	
+
+	/**
+	 * Checks the silent mode
+	 *
+	 * @return true if in silent mode
+	 */
 	public boolean isSilentMode() {
 		return silentMode;
 	}
-	
+
+	/**
+	 * Setter for the silent mode
+	 *
+	 * @param silentMode
+	 */
 	public void setSilentMode(boolean silentMode) {
 		this.silentMode = silentMode;
 	}
@@ -127,8 +158,8 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, INSERT_CLIENT, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				statement.setInt(++i, this.dbSequenceUtils.getNext(MSQ_CLIENT_SEQ));
 				statement.setString(++i, clientName);
 				statement.setString(++i, RequestUtils.getUser(request));
@@ -160,7 +191,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, REMOVE_CLIENT, this.getClass());
 				statement = connection.prepareStatement(script);
-				
+
 				statement.setString(1, clientName);
 
 				statement.executeUpdate();
@@ -180,10 +211,10 @@ public class MessageHub implements IMessagingService {
 			throw new EMessagingException(e);
 		}
 	}
-	
+
 	/**
 	 * Get a ClientDefinition by Name or {@code null} if such a Client exists
-	 * 
+	 *
 	 * @param clientName
 	 */
 	private ClientDefinition getClientDefinition(String clientName) throws EMessagingException {
@@ -195,7 +226,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, GET_CLIENT, this.getClass());
 				statement = connection.prepareStatement(script);
-				
+
 				statement.setString(1, clientName);
 
 				ResultSet resultSet = statement.executeQuery();
@@ -220,7 +251,7 @@ public class MessageHub implements IMessagingService {
 					logger.error(DATABASE_ERROR, e);
 				}
 			}
-			
+
 			return clientDefinition;
 		} catch (Exception e) {
 			throw new EMessagingException(e);
@@ -240,8 +271,8 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, INSERT_TOPIC, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				statement.setInt(++i, this.dbSequenceUtils.getNext(MSQ_TOPIC_SEQ));
 				statement.setString(++i, topic);
 				statement.setString(++i, RequestUtils.getUser(request));
@@ -273,7 +304,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, REMOVE_TOPIC, this.getClass());
 				statement = connection.prepareStatement(script);
-				
+
 				statement.setString(1, topic);
 
 				statement.executeUpdate();
@@ -293,10 +324,10 @@ public class MessageHub implements IMessagingService {
 			throw new EMessagingException(e);
 		}
 	}
-	
+
 	/**
 	 * Get a TopicDefinition by Name or {@code null} if such a Topic exists
-	 * 
+	 *
 	 * @param topic
 	 */
 	private TopicDefinition getTopicDefinition(String topic) throws EMessagingException {
@@ -308,7 +339,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, GET_TOPIC, this.getClass());
 				statement = connection.prepareStatement(script);
-				
+
 				statement.setString(1, topic);
 
 				ResultSet resultSet = statement.executeQuery();
@@ -333,7 +364,7 @@ public class MessageHub implements IMessagingService {
 					logger.error(DATABASE_ERROR, e);
 				}
 			}
-			
+
 			return topicDefinition;
 		} catch (Exception e) {
 			throw new EMessagingException(e);
@@ -361,8 +392,8 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, INSERT_SUBS, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				statement.setInt(++i, this.dbSequenceUtils.getNext(MSQ_SUBS_SEQ));
 				ClientDefinition clientDefinition = getClientDefinition(subscriber);
 				statement.setInt(++i, clientDefinition.getId());
@@ -387,7 +418,7 @@ public class MessageHub implements IMessagingService {
 			throw new EMessagingException(e);
 		}
 	}
-	
+
 	@Override
 	public void unsubscribe(String client, String topic) throws EMessagingException {
 		try {
@@ -397,8 +428,8 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, REMOVE_SUBS, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				ClientDefinition clientDefinition = getClientDefinition(client);
 				statement.setInt(++i, clientDefinition.getId());
 				TopicDefinition topicDefinition = getTopicDefinition(topic);
@@ -435,7 +466,7 @@ public class MessageHub implements IMessagingService {
 		int msgId = insertMessage(topic, subject, body);
 		insertIncoming(msgId, sender);
 	}
-	
+
 	@Override
 	public void sendMessage(MessageDefinition messageDefinition) throws EMessagingException {
 		send(messageDefinition.getSender(), messageDefinition.getTopic(), messageDefinition.getSubject(), messageDefinition.getBody());
@@ -450,8 +481,8 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, INSERT_MESSAGE, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				msgId = this.dbSequenceUtils.getNext(MSQ_MESSAGE_SEQ);
 				statement.setInt(++i, msgId);
 				TopicDefinition topicDefinition = getTopicDefinition(topic);
@@ -478,7 +509,7 @@ public class MessageHub implements IMessagingService {
 			throw new EMessagingException(e);
 		}
 	}
-	
+
 	private void insertIncoming(int msgId, String sender) throws EMessagingException {
 		try {
 			Connection connection = null;
@@ -487,8 +518,8 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, INSERT_IN, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				statement.setInt(++i, this.dbSequenceUtils.getNext(MSQ_IN_SEQ));
 				statement.setInt(++i, msgId);
 				ClientDefinition clientDefinition = getClientDefinition(sender);
@@ -514,7 +545,6 @@ public class MessageHub implements IMessagingService {
 		}
 	}
 
-
 	@Override
 	public List<MessageDefinition> receive(String receiver) throws EMessagingException {
 		if (isSilentMode()) {
@@ -525,7 +555,7 @@ public class MessageHub implements IMessagingService {
 		ClientDefinition clientDefinition = getClientDefinition(receiver);
 		int receiverId = clientDefinition.getId();
 		List<MessageDefinition> results = getOut(receiverId);
-		for (MessageDefinition message: results) {
+		for (MessageDefinition message : results) {
 			setReceivedStatus(receiverId, message.getId());
 		}
 		return results;
@@ -540,8 +570,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, GET_OUT, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				
+
 				statement.setInt(1, receiver);
 
 				ResultSet resultSet = statement.executeQuery();
@@ -551,7 +580,7 @@ public class MessageHub implements IMessagingService {
 					messageDefinition.setTopic(resultSet.getString("MSGTOPIC_NAME"));
 					messageDefinition.setSubject(resultSet.getString("MSG_SUBJECT"));
 					messageDefinition.setBody(resultSet.getString("MSG_BODY"));
-					messageDefinition.setSender(resultSet.getString("MSGCLIENT_NAME"));				
+					messageDefinition.setSender(resultSet.getString("MSGCLIENT_NAME"));
 					messageDefinition.setCreatedBy(resultSet.getString("MSG_CREATED_BY"));
 					messageDefinition.setCreatedAt(resultSet.getTimestamp("MSG_CREATED_AT"));
 					messageDefinitions.add(messageDefinition);
@@ -568,7 +597,7 @@ public class MessageHub implements IMessagingService {
 					logger.error(DATABASE_ERROR, e);
 				}
 			}
-			
+
 			return messageDefinitions;
 		} catch (Exception e) {
 			throw new EMessagingException(e);
@@ -588,12 +617,12 @@ public class MessageHub implements IMessagingService {
 		ClientDefinition clientDefinition = getClientDefinition(receiver);
 		int receiverId = clientDefinition.getId();
 		List<MessageDefinition> results = getOutByTopic(receiverId, topic);
-		for (MessageDefinition message: results) {
+		for (MessageDefinition message : results) {
 			setReceivedStatus(receiverId, message.getId());
 		}
 		return results;
 	}
-	
+
 	private List<MessageDefinition> getOutByTopic(int receiver, String topic) throws EMessagingException {
 		try {
 			List<MessageDefinition> messageDefinitions = new ArrayList<MessageDefinition>();
@@ -603,8 +632,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, GET_OUT_BY_TOPIC, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				
+
 				statement.setInt(1, receiver);
 				TopicDefinition topicDefinition = getTopicDefinition(topic);
 				statement.setInt(2, topicDefinition.getId());
@@ -616,7 +644,7 @@ public class MessageHub implements IMessagingService {
 					messageDefinition.setTopic(topic);
 					messageDefinition.setSubject(resultSet.getString("MSG_SUBJECT"));
 					messageDefinition.setBody(resultSet.getString("MSG_BODY"));
-					messageDefinition.setSender(resultSet.getString("MSGCLIENT_NAME"));				
+					messageDefinition.setSender(resultSet.getString("MSGCLIENT_NAME"));
 					messageDefinition.setCreatedBy(resultSet.getString("MSG_CREATED_BY"));
 					messageDefinition.setCreatedAt(resultSet.getTimestamp("MSG_CREATED_AT"));
 					messageDefinitions.add(messageDefinition);
@@ -633,13 +661,13 @@ public class MessageHub implements IMessagingService {
 					logger.error(DATABASE_ERROR, e);
 				}
 			}
-			
+
 			return messageDefinitions;
 		} catch (Exception e) {
 			throw new EMessagingException(e);
 		}
 	}
-	
+
 	private void setReceivedStatus(int receiver, int msgId) throws EMessagingException {
 		try {
 			Connection connection = null;
@@ -648,12 +676,12 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, SET_RECEIVED_STATUS, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				statement.setInt(++i, 1); // received
 				statement.setInt(++i, receiver);
 				statement.setInt(++i, msgId);
-				
+
 				statement.executeUpdate();
 			} finally {
 				try {
@@ -671,7 +699,7 @@ public class MessageHub implements IMessagingService {
 			throw new EMessagingException(e);
 		}
 	}
-	
+
 	private void setRoutedStatus(int msgId) throws EMessagingException {
 		try {
 			Connection connection = null;
@@ -680,11 +708,11 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, SET_ROUTED_STATUS, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				statement.setInt(++i, 1); // received
 				statement.setInt(++i, msgId);
-				
+
 				statement.executeUpdate();
 			} finally {
 				try {
@@ -713,12 +741,13 @@ public class MessageHub implements IMessagingService {
 			if (topic != currentTopic) {
 				subscribers = getSubscribersForTopic(topic);
 			}
-			for (SubscriptionPairDefinition subscription : subscribers) {
-				insertOut(incomingNewDefinition.getMessageId(), subscription.getSubscriberId());
-				setRoutedStatus(incomingNewDefinition.getMessageId());
+			if (subscribers != null) {
+				for (SubscriptionPairDefinition subscription : subscribers) {
+					insertOut(incomingNewDefinition.getMessageId(), subscription.getSubscriberId());
+					setRoutedStatus(incomingNewDefinition.getMessageId());
+				}
 			}
 		}
-		
 	}
 
 	private List<SubscriptionPairDefinition> getSubscribersForTopic(int topicId) throws EMessagingException {
@@ -730,8 +759,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, GET_SUBS_BY_TOPIC, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				
+
 				statement.setInt(1, topicId);
 
 				ResultSet resultSet = statement.executeQuery();
@@ -753,13 +781,13 @@ public class MessageHub implements IMessagingService {
 					logger.error(DATABASE_ERROR, e);
 				}
 			}
-			
+
 			return subscriptionPairDefinitions;
 		} catch (Exception e) {
 			throw new EMessagingException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean isSubscriptionExists(String subscriber, String topic) throws EMessagingException {
 		try {
@@ -769,8 +797,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, GET_SUB, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				
+
 				ClientDefinition clientDefinition = getClientDefinition(subscriber);
 				statement.setInt(1, clientDefinition.getId());
 				TopicDefinition topicDefinition = getTopicDefinition(topic);
@@ -792,7 +819,7 @@ public class MessageHub implements IMessagingService {
 					logger.error(DATABASE_ERROR, e);
 				}
 			}
-			
+
 			return false;
 		} catch (Exception e) {
 			throw new EMessagingException(e);
@@ -807,8 +834,8 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, INSERT_OUT, this.getClass());
 				statement = connection.prepareStatement(script);
-				
-				int i=0;
+
+				int i = 0;
 				statement.setInt(++i, this.dbSequenceUtils.getNext(MSQ_OUT_SEQ));
 				statement.setInt(++i, msgId);
 				statement.setInt(++i, receiverId);
@@ -842,7 +869,7 @@ public class MessageHub implements IMessagingService {
 				connection = dataSource.getConnection();
 				String script = getDBUtils().readScript(connection, GET_IN_NEW, this.getClass());
 				statement = connection.prepareStatement(script);
-				
+
 				ResultSet resultSet = statement.executeQuery();
 				while (resultSet.next()) {
 					IncomingNewDefinition incomingNewDefinition = new IncomingNewDefinition();
@@ -862,7 +889,7 @@ public class MessageHub implements IMessagingService {
 					logger.error(DATABASE_ERROR, e);
 				}
 			}
-			
+
 			return incomingNewDefinitions;
 		} catch (Exception e) {
 			throw new EMessagingException(e);
@@ -890,7 +917,7 @@ public class MessageHub implements IMessagingService {
 						statement.close();
 					}
 				}
-				
+
 				try {
 					script = getDBUtils().readScript(connection, CLEANUP_MESSAGES_IN, this.getClass());
 					statement = connection.prepareStatement(script);
@@ -901,7 +928,7 @@ public class MessageHub implements IMessagingService {
 						statement.close();
 					}
 				}
-				
+
 				try {
 					script = getDBUtils().readScript(connection, CLEANUP_MESSAGES, this.getClass());
 					statement = connection.prepareStatement(script);
@@ -912,8 +939,7 @@ public class MessageHub implements IMessagingService {
 						statement.close();
 					}
 				}
-				
-				
+
 			} finally {
 				try {
 					if (statement != null) {
@@ -929,7 +955,7 @@ public class MessageHub implements IMessagingService {
 		} catch (Exception e) {
 			throw new EMessagingException(e);
 		}
-		
+
 	}
 
 	@Override
