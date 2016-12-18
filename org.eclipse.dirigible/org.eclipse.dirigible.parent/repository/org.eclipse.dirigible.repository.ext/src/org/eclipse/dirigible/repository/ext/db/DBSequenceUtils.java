@@ -88,9 +88,16 @@ public class DBSequenceUtils {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			ResultSet rs = preparedStatement.executeQuery();
-			if (rs.next()) {
-				// seems exist
+			ResultSet rs = null;
+			try {
+				rs = preparedStatement.executeQuery();
+				if (rs.next()) {
+					// seems exist
+				}
+			} finally {
+				if (rs != null) {
+					rs.close();
+				}
 			}
 		} catch (Exception e) {
 			if (preparedStatement != null) {
@@ -120,12 +127,19 @@ public class DBSequenceUtils {
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, sequenceName);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				int value = resultSet.getInt(SEQ_VALUE);
-				value++;
-				updateSequence(connection, sequenceName, value);
-				return value;
+			ResultSet resultSet = null;
+			try {
+				resultSet = preparedStatement.executeQuery();
+				while (resultSet.next()) {
+					int value = resultSet.getInt(SEQ_VALUE);
+					value++;
+					updateSequence(connection, sequenceName, value);
+					return value;
+				}
+			} finally {
+				if (resultSet != null) {
+					resultSet.close();
+				}
 			}
 		} finally {
 			if (preparedStatement != null) {
@@ -188,9 +202,16 @@ public class DBSequenceUtils {
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, sequenceName);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				return true;
+			ResultSet resultSet = null;
+			try {
+				resultSet = preparedStatement.executeQuery();
+				while (resultSet.next()) {
+					return true;
+				}
+			} finally {
+				if (resultSet != null) {
+					resultSet.close();
+				}
 			}
 		} finally {
 			if (preparedStatement != null) {
