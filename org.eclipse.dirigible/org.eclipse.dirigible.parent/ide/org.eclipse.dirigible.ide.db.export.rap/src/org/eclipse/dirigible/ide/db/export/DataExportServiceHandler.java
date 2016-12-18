@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.ide.db.export;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class DataExportServiceHandler implements ServiceHandler {
 			download = dataFinder.getTableData().getBytes(ICommonConstants.UTF8);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			download = (DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV + tableName).getBytes();
+			download = (DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV + tableName).getBytes(StandardCharsets.UTF_8);
 			tableName = FILE_ERROR_TXT;
 		}
 
