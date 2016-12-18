@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -94,7 +93,7 @@ public class DBUtils {
 
 		BufferedInputStream bufferedInput = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintWriter writer = new PrintWriter(baos.toString(StandardCharsets.UTF_8.name()));
+		PrintWriter writer = new PrintWriter(baos);
 		byte[] buffer = new byte[1024];
 
 		try {
