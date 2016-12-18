@@ -29,7 +29,7 @@ public class TableColumnModel {
 
 	/**
 	 * The constructor from the fields
-	 * 
+	 *
 	 * @param name
 	 * @param type
 	 * @param length
@@ -47,50 +47,110 @@ public class TableColumnModel {
 		this.defaultValue = defaultValue;
 	}
 
+	/**
+	 * Getter for the name
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Setter for the name
+	 *
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Getter for the type
+	 *
+	 * @return the type
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * Setter for the type
+	 *
+	 * @param type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * Getter for the length
+	 *
+	 * @return the length
+	 */
 	public String getLength() {
 		return length;
 	}
 
+	/**
+	 * Setter for the length
+	 *
+	 * @param length
+	 */
 	public void setLength(String length) {
 		this.length = length;
 	}
 
+	/**
+	 * Check for notNull
+	 *
+	 * @return true if not null
+	 */
 	public boolean isNotNull() {
 		return notNull;
 	}
 
+	/**
+	 * Setter for the notNull
+	 *
+	 * @param notNull
+	 */
 	public void setNotNull(boolean notNull) {
 		this.notNull = notNull;
 	}
 
+	/**
+	 * Check for primary key
+	 *
+	 * @return true if primary key
+	 */
 	public boolean isPrimaryKey() {
 		return primaryKey;
 	}
 
+	/**
+	 * Setter for the primary key
+	 *
+	 * @param primaryKey
+	 */
 	public void setPrimaryKey(boolean primaryKey) {
 		this.primaryKey = primaryKey;
 	}
 
+	/**
+	 * Getter for the default value
+	 * 
+	 * @return the default value
+	 */
 	public String getDefaultValue() {
 		return defaultValue;
 	}
 
+	/**
+	 * Setter for the default value
+	 * 
+	 * @param defaultValue
+	 */
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}

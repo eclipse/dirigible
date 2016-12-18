@@ -31,18 +31,38 @@ public class DependencyModel {
 		this.type = type;
 	}
 
+	/**
+	 * Getter for the name
+	 * 
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Setter for the name
+	 *
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Getter for the type
+	 * 
+	 * @return the type
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * Setter for the type
+	 *
+	 * @param type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}

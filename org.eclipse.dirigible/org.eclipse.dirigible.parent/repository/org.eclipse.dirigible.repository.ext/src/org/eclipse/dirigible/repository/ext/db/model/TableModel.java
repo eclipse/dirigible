@@ -189,6 +189,11 @@ public class TableModel extends DataStructureModel {
 		}
 	}
 
+	/**
+	 * Getter for the columns
+	 * 
+	 * @return the columns
+	 */
 	public List<TableColumnModel> getColumns() {
 		return columns;
 	}

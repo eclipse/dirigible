@@ -3,6 +3,7 @@ package org.eclipse.dirigible.repository.ext.db.model;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+@SuppressWarnings("javadoc")
 public class Messages {
 
 	private static final String BUNDLE_NAME = "org.eclipse.dirigible.repository.ext.db.model.messages"; //$NON-NLS-1$

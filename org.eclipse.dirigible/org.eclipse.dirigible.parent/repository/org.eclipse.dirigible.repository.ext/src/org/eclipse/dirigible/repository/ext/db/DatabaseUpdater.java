@@ -55,7 +55,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 	private static final String ADDING_NOT_NULL_COLUMN = Messages.getString("DatabaseUpdater.ADDING_NOT_NULL_COLUMN"); //$NON-NLS-1$
 	private static final String AND_COLUMN = Messages.getString("DatabaseUpdater.AND_COLUMN"); //$NON-NLS-1$
 	private static final String INCOMPATIBLE_CHANGE_OF_TABLE = Messages.getString("DatabaseUpdater.INCOMPATIBLE_CHANGE_OF_TABLE"); //$NON-NLS-1$
-	private static final String ADD = "ADD "; //$NON-NLS-1$
+	// private static final String ADD = "ADD "; //$NON-NLS-1$
 	private static final String ALTER_TABLE = "ALTER TABLE "; //$NON-NLS-1$
 
 	private static final String CREATE_TABLE = "CREATE TABLE "; //$NON-NLS-1$
@@ -114,10 +114,9 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 		try {
 			Connection connection = dataSource.getConnection();
-			String productName = connection.getMetaData().getDatabaseProductName();
-			IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
-
 			try {
+				String productName = connection.getMetaData().getDatabaseProductName();
+				IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
 
 				// parse models
 				Map<String, DataStructureModel> models = new LinkedHashMap<String, DataStructureModel>();
@@ -235,28 +234,20 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		executeUpdate(knownFiles, errors);
 	}
 
-	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel)
-			throws SQLException, IOException {
+	private void executeTableUpdateMain(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel) throws SQLException {
 
 		String tableName = tableModel.getName();
-		ResultSet rs = null;
-		try {
-			boolean exists = DBUtils.isTableOrViewExists(connection, tableName);
-			if (exists) {
-				// String retrievedTableName = rs.getString(3);
-				executeTableUpdate(connection, dialectSpecifier, tableModel);
-			} else {
-				executeTableCreate(connection, dialectSpecifier, tableModel);
-			}
-		} finally {
-			if (rs != null) {
-				rs.close();
-			}
+		boolean exists = DBUtils.isTableOrViewExists(connection, tableName);
+		if (exists) {
+			// String retrievedTableName = rs.getString(3);
+			executeTableUpdate(connection, dialectSpecifier, tableModel);
+		} else {
+			executeTableCreate(connection, dialectSpecifier, tableModel);
 		}
-
 	}
 
-	private void executeTableCreate(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel) throws SQLException {
+	private void executeTableCreate(Connection connection, @SuppressWarnings("unused") IDialectSpecifier dialectSpecifier, TableModel tableModel)
+			throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		String tableName = tableModel.getName();
 
@@ -295,7 +286,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		}
 
 		sql.append(")"); //$NON-NLS-1$
-		String sqlExpression = sql.toString();
+		final String sqlExpression = sql.toString();
 		try {
 			logger.info(sqlExpression);
 			executeUpdateSQL(connection, sqlExpression);
@@ -397,7 +388,7 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		}
 
 		if (i > 0) {
-			String sqlExpression = sql.toString();
+			final String sqlExpression = sql.toString();
 			try {
 				logger.info(sqlExpression);
 				executeUpdateSQL(connection, sqlExpression);
@@ -443,7 +434,6 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		String viewName = viewModel.getName();
 		String query = viewModel.getQuery();
 
-		sql = new StringBuilder();
 		sql.append(CREATE_VIEW + viewName + AS + query);
 
 		String sqlExpression = sql.toString();
