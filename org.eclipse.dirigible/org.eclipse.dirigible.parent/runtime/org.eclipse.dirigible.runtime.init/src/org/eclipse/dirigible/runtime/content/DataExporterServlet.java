@@ -14,6 +14,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -105,7 +106,7 @@ public class DataExporterServlet extends ContentBaseServlet {
 	private byte[] getData(String tableName, HttpServletRequest request) {
 		DBTableExporter dbTableExporter = new DBTableExporter(DataSourceFacade.getInstance().getDataSource(request));
 		dbTableExporter.setTableName(tableName);
-		byte[] data = dbTableExporter.getTableData().getBytes();
+		byte[] data = dbTableExporter.getTableData().getBytes(StandardCharsets.UTF_8);
 		return data;
 	}
 

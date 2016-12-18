@@ -12,6 +12,7 @@ package org.eclipse.dirigible.runtime.registry;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +59,7 @@ public class RegistryHomeServlet extends AbstractRegistryServlet {
 
 			String homeUrl = System.getProperty(PARAM_HOME_URL);
 			if ((homeUrl != null) && !ICommonConstants.EMPTY_STRING.equals(homeUrl.trim())) {
-				sendData(out, homeUrl.getBytes());
+				sendData(out, homeUrl.getBytes(StandardCharsets.UTF_8));
 				return;
 			}
 

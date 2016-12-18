@@ -12,6 +12,7 @@ package org.eclipse.dirigible.runtime.job;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -119,7 +120,7 @@ public class JobsUpdater extends AbstractDataUpdater {
 		String resourcePath = jobDefinition;
 
 		IResource resource = repository.getResource(resourcePath);
-		String content = new String(resource.getContent());
+		String content = new String(resource.getContent(), StandardCharsets.UTF_8);
 
 		Job job = JobParser.parseJob(content);
 

@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -63,7 +64,7 @@ public class DefaultContentProvider implements IContentProvider, IExecutableExte
 		try {
 			BufferedReader in = null;
 			if (file.getClass().getCanonicalName().equals("org.eclipse.dirigible.ide.workspace.impl.File")) {
-				in = new BufferedReader(new InputStreamReader(file.getContents()));
+				in = new BufferedReader(new InputStreamReader(file.getContents(), StandardCharsets.UTF_8));
 			} else {
 				IResource resource = getFromRepository(file);
 				in = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(resource.getContent()), ICommonConstants.UTF8));

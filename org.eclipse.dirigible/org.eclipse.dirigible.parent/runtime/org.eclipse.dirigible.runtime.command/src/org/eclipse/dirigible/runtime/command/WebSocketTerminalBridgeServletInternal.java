@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -74,7 +75,7 @@ public class WebSocketTerminalBridgeServletInternal {
 					// startProcessRunnable(session);
 					session.close();
 				} else {
-					byte[] data = message.getBytes();
+					byte[] data = message.getBytes(StandardCharsets.UTF_8);
 					process.getOutputStream().write(data);
 					process.getOutputStream().flush();
 				}
@@ -124,7 +125,8 @@ public class WebSocketTerminalBridgeServletInternal {
 						Thread.sleep(ProcessUtils.DEFAULT_WAIT_TIME);
 						try {
 							synchronized (session) {
-								BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
+								BufferedReader reader = new BufferedReader(
+										new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 								String line = null;
 								while ((line = reader.readLine()) != null) {
 									logger.debug("sending process data: " + line);
@@ -152,7 +154,7 @@ public class WebSocketTerminalBridgeServletInternal {
 				}
 				synchronized (session) {
 					if (session.isOpen()) {
-						session.getBasicRemote().sendText(new String(out.toByteArray()));
+						session.getBasicRemote().sendText(new String(out.toByteArray(), StandardCharsets.UTF_8));
 					}
 				}
 

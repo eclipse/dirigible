@@ -12,6 +12,7 @@ package org.eclipse.dirigible.runtime.registry;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,7 @@ public class RegistryMenuServlet extends AbstractRegistryServlet {
 					return;
 				}
 			}
-			sendData(out, MENU_ERROR_FALLBACK.getBytes());
+			sendData(out, MENU_ERROR_FALLBACK.getBytes(StandardCharsets.UTF_8));
 		} finally {
 			out.flush();
 			out.close();

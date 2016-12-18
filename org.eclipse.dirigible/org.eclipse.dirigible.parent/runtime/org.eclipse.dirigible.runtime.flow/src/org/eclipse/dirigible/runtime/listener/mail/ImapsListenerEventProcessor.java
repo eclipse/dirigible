@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.runtime.listener.mail;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +108,7 @@ public class ImapsListenerEventProcessor implements IListenerEventProcessor, IMa
 	private String parseMail(Message message) throws IOException, MessagingException {
 		MailMessage mail = new MailMessage();
 		mail.setSubject(message.getSubject());
-		mail.setContent(new String(IOUtils.toByteArray(message.getInputStream())));
+		mail.setContent(new String(IOUtils.toByteArray(message.getInputStream()), StandardCharsets.UTF_8));
 		List<String> fromList = new ArrayList<String>();
 		for (Address address : message.getFrom()) {
 			fromList.add(address.toString());

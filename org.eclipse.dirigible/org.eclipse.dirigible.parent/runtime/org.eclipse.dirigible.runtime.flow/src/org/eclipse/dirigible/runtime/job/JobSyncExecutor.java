@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.runtime.job;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +56,7 @@ public class JobSyncExecutor extends AbstractScriptExecutor {
 		}
 
 		String result = null;
-		String jobDefinition = new String(retrieveModule(repository, module, "", rootPaths).getContent());
+		String jobDefinition = new String(retrieveModule(repository, module, "", rootPaths).getContent(), StandardCharsets.UTF_8);
 
 		Job job = JobParser.parseJob(jobDefinition);
 

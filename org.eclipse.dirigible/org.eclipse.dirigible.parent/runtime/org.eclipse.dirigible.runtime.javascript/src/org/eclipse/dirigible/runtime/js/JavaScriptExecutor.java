@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.runtime.js;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import javax.script.Bindings;
@@ -69,7 +70,7 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 			// *.json, *.swagger and *.entity files are returned back as raw content
 			Module scriptingModule = retrieveModule(this.repository, module, null, this.rootPaths);
 			byte[] result = scriptingModule.getContent();
-			return new String(result);
+			return new String(result, StandardCharsets.UTF_8);
 		}
 
 		// support for path parameters

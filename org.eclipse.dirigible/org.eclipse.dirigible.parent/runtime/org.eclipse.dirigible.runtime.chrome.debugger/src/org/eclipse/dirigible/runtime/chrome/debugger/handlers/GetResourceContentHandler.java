@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -65,6 +66,6 @@ public class GetResourceContentHandler implements MessageHandler {
 
 		final byte[] fileContent = baos.toByteArray();
 		final byte[] encoded = Base64.encodeBase64(fileContent);
-		return new String(encoded);
+		return new String(encoded, StandardCharsets.UTF_8);
 	}
 }

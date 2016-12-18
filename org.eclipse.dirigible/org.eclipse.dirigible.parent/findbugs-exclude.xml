@@ -3,42 +3,52 @@
 	<Match>
     	<Package name="~org\.eclipse\.ui\.dialogs.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.ide.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.ide\.dialogs.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.ide\.undo.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.internal\.ide.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.internal\.ide\.dialogs.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.internal\.ide\.filesystem.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.internal\.ide\.misc.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.internal\.ide\.registry.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   	<Match>
     	<Package name="~org\.eclipse\.ui\.internal\.ide\.undo.*"/>
     	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
   	</Match>
   
      <!-- All bugs in test classes, except for JUnit-specific bugs -->

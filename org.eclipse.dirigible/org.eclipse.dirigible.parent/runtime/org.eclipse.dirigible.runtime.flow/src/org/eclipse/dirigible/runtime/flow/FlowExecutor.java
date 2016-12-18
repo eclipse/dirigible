@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.runtime.flow;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +68,7 @@ public class FlowExecutor extends AbstractScriptExecutor {
 		}
 
 		String result = null;
-		String flowSource = new String(retrieveModule(repository, module, "", rootPaths).getContent());
+		String flowSource = new String(retrieveModule(repository, module, "", rootPaths).getContent(), StandardCharsets.UTF_8);
 
 		Flow flow = gson.fromJson(flowSource, Flow.class);
 

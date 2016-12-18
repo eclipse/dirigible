@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.runtime.listener;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class ListenersUpdater extends AbstractDataUpdater {
 		String resourcePath = listenerDefinition;
 
 		IResource resource = repository.getResource(resourcePath);
-		String content = new String(resource.getContent());
+		String content = new String(resource.getContent(), StandardCharsets.UTF_8);
 
 		Listener listener = ListenerParser.parseListener(content);
 

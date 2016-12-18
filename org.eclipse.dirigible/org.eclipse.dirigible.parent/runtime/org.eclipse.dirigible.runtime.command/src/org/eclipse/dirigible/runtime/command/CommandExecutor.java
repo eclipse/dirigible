@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.command;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,7 +63,7 @@ public class CommandExecutor extends AbstractScriptExecutor {
 		}
 
 		String result = null;
-		String commandSource = new String(retrieveModule(repository, module, "", rootPaths).getContent());
+		String commandSource = new String(retrieveModule(repository, module, "", rootPaths).getContent(), StandardCharsets.UTF_8);
 
 		CommandData commandData;
 		try {

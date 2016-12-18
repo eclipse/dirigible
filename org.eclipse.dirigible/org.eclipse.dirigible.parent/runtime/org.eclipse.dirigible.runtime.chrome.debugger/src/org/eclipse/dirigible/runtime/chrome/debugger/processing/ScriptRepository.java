@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.runtime.chrome.debugger.processing;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ public class ScriptRepository {
 		for(Map.Entry<String, List<IResource>> e : resources.entrySet()){
 			for(IResource res : e.getValue()){
 				if(url.equals(URIUtils.getUrlForResource(res))){
-					scriptSource = new String(res.getContent());
+					scriptSource = new String(res.getContent(), StandardCharsets.UTF_8);
 				}
 			}
 		}

@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.js.test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +112,7 @@ public class TestExecutionUpdater extends AbstractDataUpdater {
 		ExecutionService executionService = new ExecutionService();
 		Object result = executionService.execute(request, response, resourcePath, null, ICommonConstants.ENGINE_TYPE.TEST);
 
-		logger.info(new String(out.toByteArray()));
+		logger.info(new String(out.toByteArray(), StandardCharsets.UTF_8));
 
 		if (result instanceof Boolean) {
 			logger.info(String.format(TEST_EXECUTION_RESULT_FOR_S_S, resourcePath, result));
