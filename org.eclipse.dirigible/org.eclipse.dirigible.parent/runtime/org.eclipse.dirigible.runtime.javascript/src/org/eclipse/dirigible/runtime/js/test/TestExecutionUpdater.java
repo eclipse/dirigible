@@ -95,7 +95,9 @@ public class TestExecutionUpdater extends AbstractDataUpdater {
 				}
 			} catch (Throwable t) {
 				logger.error(t.getMessage(), t);
-				errors.add(t.getMessage());
+				if (errors != null) {
+					errors.add(t.getMessage());
+				}
 			}
 		}
 		logger.info(String.format(TESTS_EXECUTION_COMPLETED, System.currentTimeMillis() - globalTimeStart));

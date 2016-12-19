@@ -70,7 +70,9 @@ public class ListenersUpdater extends AbstractDataUpdater {
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
+						if (errors != null) {
+							errors.add(e.getMessage());
+						}
 					}
 				}
 			} finally {

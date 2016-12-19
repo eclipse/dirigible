@@ -50,7 +50,6 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 
 		try {
 			Connection connection = dataSource.getConnection();
-
 			try {
 				for (String dsDefinition : knownFiles) {
 					try {
@@ -61,7 +60,9 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
+						if (errors != null) {
+							errors.add(e.getMessage());
+						}
 					}
 				}
 			} finally {
@@ -75,7 +76,7 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 	}
 
 	private void executeExtensionUpdate(Connection connection, String scDefinition, HttpServletRequest request)
-			throws SQLException, IOException, EExtensionException {
+			throws IOException, EExtensionException {
 		JsonObject edDefinition = parseExtension(scDefinition);
 		String extensionName = edDefinition.get(NODE_EXTENSION).getAsString();
 		String extensionPointName = edDefinition.get(NODE_EXTENSION_POINT).getAsString();
@@ -89,7 +90,7 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 	}
 
 	private void executeExtensionPointUpdate(Connection connection, String scDefinition, HttpServletRequest request)
-			throws SQLException, IOException, EExtensionException {
+			throws IOException, EExtensionException {
 		JsonObject edDefinition = parseExtensionPoint(scDefinition);
 		String extensionPointName = edDefinition.get(NODE_EXTENSION_POINT).getAsString();
 		String extensionDescription = edDefinition.get(NODE_DESCRIPTION).getAsString();
@@ -108,7 +109,6 @@ public class ExtensionUpdater extends AbstractDataUpdater {
 		// "description":"description for the extension"
 		// }
 
-		IRepository repository = this.repository;
 		// # 177
 		// IResource resource = repository.getResource(this.location + dsDefinition);
 		IResource resource = repository.getResource(dsDefinition);
