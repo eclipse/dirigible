@@ -80,7 +80,7 @@ public abstract class TemplateGenerator {
 			// alternative location check for surrounding template target
 			targetLocation = calcTargetLocation(targetLocation, name);
 			if ((name != null) && (name.indexOf(IRepository.SEPARATOR) > 1)) {
-				name = name.substring(name.indexOf(IRepository.SEPARATOR));
+				name = name.substring(name.lastIndexOf(IRepository.SEPARATOR));
 			}
 			String renaming = sources[i].getRename();
 			if ((renaming != null) && !"".equals(renaming)) {
