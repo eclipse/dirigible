@@ -19,14 +19,41 @@ import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+/**
+ * JavaScript Service Template Generator
+ */
 public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 
 	private static final Logger logger = Logger.getLogger(JavascriptServiceTemplateGenerator.class);
 
 	private static final String LOG_TAG = "JAVASCRIPT_SERVICE_GENERATOR"; //$NON-NLS-1$
 
+	private static final String PARAMETER_TABLE_NAME = "tableName"; //$NON-NLS-1$
+	private static final String PARAMETER_TABLE_TYPE = "tableType"; //$NON-NLS-1$
+	private static final String PARAMETER_ENTITY_NAME = "entityName"; //$NON-NLS-1$
+	private static final String PARAMETER_TABLE_COLUMNS = "tableColumns"; //$NON-NLS-1$
+	private static final String PARAMETER_TABLE_COLUMNS_WITHOUT_KEYS = "tableColumnsWithoutKeys"; //$NON-NLS-1$
+	private static final String PARAMETER_PRIMARY_KEY = "primaryKey"; //$NON-NLS-1$
+
+	private static final String PARAMETER_INTEGER = "INTEGER"; //$NON-NLS-1$
+	private static final String PARAMETER_BIGINT = "BIGINT"; //$NON-NLS-1$
+	private static final String PARAMETER_SMALLINT = "SMALLINT"; //$NON-NLS-1$
+	private static final String PARAMETER_FLOAT = "FLOAT"; //$NON-NLS-1$
+	private static final String PARAMETER_DOUBLE = "DOUBLE"; //$NON-NLS-1$
+	private static final String PARAMETER_VARCHAR = "VARCHAR"; //$NON-NLS-1$
+	private static final String PARAMETER_CHAR = "CHAR"; //$NON-NLS-1$
+	private static final String PARAMETER_DATE = "DATE"; //$NON-NLS-1$
+	private static final String PARAMETER_TIME = "TIME"; //$NON-NLS-1$
+	private static final String PARAMETER_TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
+	private static final String PARAMETER_BOOLEAN = "BOOLEAN"; //$NON-NLS-1$
+
 	private JavascriptServiceTemplateModel model;
 
+	/**
+	 * Constructor
+	 *
+	 * @param model
+	 */
 	public JavascriptServiceTemplateGenerator(JavascriptServiceTemplateModel model) {
 		this.model = model;
 	}
@@ -34,37 +61,29 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 	@Override
 	protected Map<String, Object> prepareParameters() {
 		Map<String, Object> parameters = super.prepareParameters();
-		parameters.put("tableName", model.getTableName()); //$NON-NLS-1$
-		parameters.put("tableType", model.getTableType()); //$NON-NLS-1$
-		parameters.put("entityName", CommonUtils.toCamelCase(model.getTableName())); //$NON-NLS-1$
-		parameters.put("tableColumns", model.getTableColumns()); //$NON-NLS-1$
-		parameters.put("tableColumnsWithoutKeys", //$NON-NLS-1$
-				getTableColumnsWithoutKeys(model.getTableColumns()));
+		parameters.put(PARAMETER_TABLE_NAME, model.getTableName());
+		parameters.put(PARAMETER_TABLE_TYPE, model.getTableType());
+		parameters.put(PARAMETER_ENTITY_NAME, CommonUtils.toCamelCase(model.getTableName()));
+		parameters.put(PARAMETER_TABLE_COLUMNS, model.getTableColumns());
+		parameters.put(PARAMETER_TABLE_COLUMNS_WITHOUT_KEYS, getTableColumnsWithoutKeys(model.getTableColumns()));
+		parameters.put(PARAMETER_PRIMARY_KEY, getPrimaryKey());
 
-		parameters.put("primaryKey", getPrimaryKey()); //$NON-NLS-1$
-
-		parameters.put("INTEGER", java.sql.Types.INTEGER); //$NON-NLS-1$
-		parameters.put("BIGINT", java.sql.Types.BIGINT); //$NON-NLS-1$
-		parameters.put("SMALLINT", java.sql.Types.SMALLINT); //$NON-NLS-1$
-
-		parameters.put("FLOAT", java.sql.Types.REAL); //$NON-NLS-1$
-		parameters.put("DOUBLE", java.sql.Types.DOUBLE); //$NON-NLS-1$
+		parameters.put(PARAMETER_INTEGER, java.sql.Types.INTEGER);
+		parameters.put(PARAMETER_BIGINT, java.sql.Types.BIGINT);
+		parameters.put(PARAMETER_SMALLINT, java.sql.Types.SMALLINT);
+		parameters.put(PARAMETER_FLOAT, java.sql.Types.REAL);
+		parameters.put(PARAMETER_DOUBLE, java.sql.Types.DOUBLE);
 		// parameters.put("REAL", java.sql.Types.REAL);
 		// parameters.put("DECIMAL", java.sql.Types.DECIMAL);
 		// parameters.put("NUMERIC", java.sql.Types.NUMERIC);
-
-		parameters.put("VARCHAR", java.sql.Types.VARCHAR); //$NON-NLS-1$
-		parameters.put("CHAR", java.sql.Types.CHAR); //$NON-NLS-1$
-
-		parameters.put("DATE", java.sql.Types.DATE); //$NON-NLS-1$
-		parameters.put("TIME", java.sql.Types.TIME); //$NON-NLS-1$
-		parameters.put("TIMESTAMP", java.sql.Types.TIMESTAMP); //$NON-NLS-1$
-
-		parameters.put("BOOLEAN", java.sql.Types.BOOLEAN); //$NON-NLS-1$
-
+		parameters.put(PARAMETER_VARCHAR, java.sql.Types.VARCHAR);
+		parameters.put(PARAMETER_CHAR, java.sql.Types.CHAR);
+		parameters.put(PARAMETER_DATE, java.sql.Types.DATE);
+		parameters.put(PARAMETER_TIME, java.sql.Types.TIME);
+		parameters.put(PARAMETER_TIMESTAMP, java.sql.Types.TIMESTAMP);
+		parameters.put(PARAMETER_BOOLEAN, java.sql.Types.BOOLEAN);
 		// parameters.put("CLOB", java.sql.Types.CLOB); //$NON-NLS-1$
 		// parameters.put("BLOB", java.sql.Types.BLOB); //$NON-NLS-1$
-
 		return parameters;
 	}
 
@@ -113,8 +132,6 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		byte[] result = model.normalizeEscapes(bytes);
-		return result;
+		return model.normalizeEscapes(bytes);
 	}
-
 }

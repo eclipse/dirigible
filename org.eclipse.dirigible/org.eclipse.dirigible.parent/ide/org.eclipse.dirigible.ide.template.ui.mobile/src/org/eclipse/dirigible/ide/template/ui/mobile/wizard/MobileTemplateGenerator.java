@@ -10,12 +10,10 @@
 
 package org.eclipse.dirigible.ide.template.ui.mobile.wizard;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
-import org.eclipse.dirigible.ide.template.ui.common.TemplateUtils;
 
 /**
  * Mobile template generator
@@ -29,7 +27,7 @@ public class MobileTemplateGenerator extends TemplateGenerator {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param model
 	 */
 	public MobileTemplateGenerator(MobileTemplateModel model) {
@@ -55,8 +53,6 @@ public class MobileTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		byte[] result = model.normalizeEscapes(bytes);
-		return result;
+		return model.normalizeEscapes(bytes);
 	}
-
 }

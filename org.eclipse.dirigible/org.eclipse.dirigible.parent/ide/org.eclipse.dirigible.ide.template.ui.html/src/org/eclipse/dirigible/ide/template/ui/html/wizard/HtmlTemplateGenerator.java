@@ -10,26 +10,35 @@
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 
+/**
+ * HTML Template Generator
+ */
 public class HtmlTemplateGenerator extends TemplateGenerator {
 
 	private static final String LOG_TAG = "HTML_GENERATOR"; //$NON-NLS-1$
 
+	private static final String PARAMETER_PAGE_TITLE = "pageTitle";//$NON-NLS-1$
+
 	private HtmlTemplateModel model;
 
+	/**
+	 * Constructor
+	 *
+	 * @param model
+	 */
 	public HtmlTemplateGenerator(HtmlTemplateModel model) {
 		this.model = model;
 	}
 
 	@Override
 	protected Map<String, Object> prepareParameters() {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("pageTitle", model.getPageTitle()); //$NON-NLS-1$
+		Map<String, Object> parameters = super.prepareParameters();
+		parameters.put(PARAMETER_PAGE_TITLE, model.getPageTitle());
 		return parameters;
 	}
 
@@ -44,14 +53,7 @@ public class HtmlTemplateGenerator extends TemplateGenerator {
 	}
 
 	@Override
-	public void generate() throws Exception {
-		super.generate();
-	}
-
-	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		byte[] result = model.normalizeEscapes(bytes);
-		return result;
+		return model.normalizeEscapes(bytes);
 	}
-
 }

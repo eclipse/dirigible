@@ -18,17 +18,31 @@ import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+/**
+ * HTML for Entity Template Generator
+ */
 public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 
 	private static final Logger logger = Logger.getLogger(HtmlForEntityTemplateGenerator.class);
 
-	// private static final String REST_SERVICE_ROOT_JS = "/dirigible/services/js"; //$NON-NLS-1$
+	private static final String LOG_TAG = "HTML_FOR_ENTITY_GENERATOR"; //$NON-NLS-1$
+
 	private static final String REST_SERVICE_ROOT_JS = "../../js"; //$NON-NLS-1$
 
-	private static final String LOG_TAG = "HTML_FOR_ENTITY_GENERATOR"; //$NON-NLS-1$
+	private static final String PARAMETER_PAGE_TITLE = "pageTitle"; //$NON-NLS-1$
+	private static final String PARAMETER_TABLE_NAME = "tableName"; //$NON-NLS-1$
+	private static final String PARAMETER_TABLE_COLUMNS = "tableColumns"; //$NON-NLS-1$
+	private static final String PARAMETER_SERVICE_FILE_NAME = "serviceFileName"; //$NON-NLS-1$
+	private static final String PARAMETER_ENTITY_NAME = "entityName"; //$NON-NLS-1$
+	private static final String PARAMETER_PRIMARY_KEY = "primaryKey"; //$NON-NLS-1$
 
 	private HtmlForEntityTemplateModel model;
 
+	/**
+	 * Constructor
+	 *
+	 * @param model
+	 */
 	public HtmlForEntityTemplateGenerator(HtmlForEntityTemplateModel model) {
 		this.model = model;
 	}
@@ -36,14 +50,12 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 	@Override
 	protected Map<String, Object> prepareParameters() {
 		Map<String, Object> parameters = super.prepareParameters();
-		parameters.put("pageTitle", model.getPageTitle()); //$NON-NLS-1$
-		parameters.put("tableName", model.getTableName()); //$NON-NLS-1$
-		parameters.put("tableColumns", model.getTableColumns()); //$NON-NLS-1$
-		parameters.put("serviceFileName", generateServiceFileName()); //$NON-NLS-1$
-		parameters.put("createDataModel", createDataModel()); //$NON-NLS-1$
-		parameters.put("entityName", getEntityName()); //$NON-NLS-1$
-		parameters.put("primaryKey", getPrimaryKey()); //$NON-NLS-1$
-		// parameters.put("projectName", model.getProjectName());
+		parameters.put(PARAMETER_PAGE_TITLE, model.getPageTitle());
+		parameters.put(PARAMETER_TABLE_NAME, model.getTableName());
+		parameters.put(PARAMETER_TABLE_COLUMNS, model.getTableColumns());
+		parameters.put(PARAMETER_SERVICE_FILE_NAME, generateServiceFileName());
+		parameters.put(PARAMETER_ENTITY_NAME, getEntityName());
+		parameters.put(PARAMETER_PRIMARY_KEY, getPrimaryKey());
 		return parameters;
 	}
 
@@ -64,11 +76,6 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 
 	protected String getEntityName() {
 		return "data"; //$NON-NLS-1$
-	}
-
-	protected String createDataModel() {
-		return "tableModel = new sap.ui.model.json.JSONModel();\n		tableModel.loadData(\"" //$NON-NLS-1$
-				+ generateServiceFileName() + "\");"; //$NON-NLS-1$
 	}
 
 	protected Object generateServiceFileName() {
@@ -105,8 +112,6 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		byte[] result = model.normalizeEscapes(bytes);
-		return result;
+		return model.normalizeEscapes(bytes);
 	}
-
 }

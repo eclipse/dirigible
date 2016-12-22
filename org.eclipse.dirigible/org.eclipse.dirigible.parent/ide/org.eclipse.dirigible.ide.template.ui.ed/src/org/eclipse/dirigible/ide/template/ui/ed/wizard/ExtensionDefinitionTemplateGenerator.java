@@ -13,21 +13,23 @@ package org.eclipse.dirigible.ide.template.ui.ed.wizard;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 
+/**
+ * ExtensionDefinition Template Generator
+ */
 public class ExtensionDefinitionTemplateGenerator extends TemplateGenerator {
 
 	private static final String LOG_TAG = "SECURITY_CONSTRAINT_GENERATOR"; //$NON-NLS-1$
 
 	private ExtensionDefinitionTemplateModel model;
 
+	/**
+	 * Constructor
+	 *
+	 * @param model
+	 */
 	public ExtensionDefinitionTemplateGenerator(ExtensionDefinitionTemplateModel model) {
 		this.model = model;
 	}
-
-	// @Override
-	// protected Map<String, Object> prepareParameters() {
-	// Map<String, Object> parameters = super.prepareParameters();
-	// return parameters;
-	// }
 
 	@Override
 	protected GenerationModel getModel() {
@@ -41,7 +43,6 @@ public class ExtensionDefinitionTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		byte[] result = model.normalizeEscapes(bytes);
-		return result;
+		return model.normalizeEscapes(bytes);
 	}
 }

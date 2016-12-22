@@ -10,45 +10,46 @@
 
 package org.eclipse.dirigible.ide.template.ui.is.wizard;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 
+/**
+ * IntegrationService Template Generator
+ */
 public class IntegrationServiceTemplateGenerator extends TemplateGenerator {
 
 	private static final String LOG_TAG = "INTEGRATION_SERVICE_GENERATOR"; //$NON-NLS-1$
 
+	private static final String PARAMETER_ID = "id"; //$NON-NLS-1$
+	private static final String PARAMETER_ENDPOINT_ADDRESS = "endpointAddress"; //$NON-NLS-1$
+	private static final String PARAMETER_FILE_NAME_NO_EXTENSION_TITLE = "fileNameNoExtensionTitle"; //$NON-NLS-1$
+
 	private IntegrationServiceTemplateModel model;
 
+	/**
+	 * Constructor
+	 *
+	 * @param model
+	 */
 	public IntegrationServiceTemplateGenerator(IntegrationServiceTemplateModel model) {
 		this.model = model;
 	}
 
 	@Override
 	protected Map<String, Object> prepareParameters() {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("id", model.getId()); //$NON-NLS-1$
-		parameters.put("endpointAddress", model.getEndpointAddress()); //$NON-NLS-1$
-		// parameters.put("parameterName", model.getParameterName()); //$NON-NLS-1$
-		parameters.put("projectName", model.getProjectName()); //$NON-NLS-1$
-		if (model.getPackageName() != null) {
-			parameters.put("packageName", model.getPackageName()); //$NON-NLS-1$
-		} else {
-			parameters.put("packageName", constructPackageName()); //$NON-NLS-1$
-		}
-		parameters.put("fileName", model.getFileName()); //$NON-NLS-1$
+		Map<String, Object> parameters = super.prepareParameters();
+		parameters.put(PARAMETER_ID, model.getId());
+		parameters.put(PARAMETER_ENDPOINT_ADDRESS, model.getEndpointAddress());
 		String fileNameNoExtension = model.getFileNameNoExtension();
-		parameters.put("fileNameNoExtension", fileNameNoExtension); //$NON-NLS-1$
 		String fileNameNoExtensionTitle = fileNameNoExtension;
 		if ((fileNameNoExtension != null) && (fileNameNoExtension.length() > 1)) {
 			char[] chars = fileNameNoExtension.toCharArray();
 			chars[0] = Character.toUpperCase(chars[0]);
 			fileNameNoExtensionTitle = new String(chars);
 		}
-		parameters.put("fileNameNoExtensionTitle", fileNameNoExtensionTitle); //$NON-NLS-1$
-		// parameters.put("originalEndpoint", model.getOriginalEndpoint()); //$NON-NLS-1$
+		parameters.put(PARAMETER_FILE_NAME_NO_EXTENSION_TITLE, fileNameNoExtensionTitle);
 		return parameters;
 	}
 
@@ -64,8 +65,6 @@ public class IntegrationServiceTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		byte[] result = model.normalizeEscapes(bytes);
-		return result;
+		return model.normalizeEscapes(bytes);
 	}
-
 }

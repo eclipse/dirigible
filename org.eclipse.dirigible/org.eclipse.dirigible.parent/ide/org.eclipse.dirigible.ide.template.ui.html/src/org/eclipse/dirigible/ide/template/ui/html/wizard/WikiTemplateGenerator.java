@@ -15,12 +15,22 @@ import java.util.Map;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 
+/**
+ * Wiki Template Generator
+ */
 public class WikiTemplateGenerator extends TemplateGenerator {
 
 	private static final String LOG_TAG = "WIKI_GENERATOR"; //$NON-NLS-1$
 
+	private static final String PARAMETER_PAGE_TITLE = "pageTitle";//$NON-NLS-1$
+
 	private WikiTemplateModel model;
 
+	/**
+	 * Constructor
+	 *
+	 * @param model
+	 */
 	public WikiTemplateGenerator(WikiTemplateModel model) {
 		this.model = model;
 	}
@@ -28,7 +38,7 @@ public class WikiTemplateGenerator extends TemplateGenerator {
 	@Override
 	protected Map<String, Object> prepareParameters() {
 		Map<String, Object> parameters = super.prepareParameters();
-		parameters.put("pageTitle", model.getPageTitle()); //$NON-NLS-1$
+		parameters.put(PARAMETER_PAGE_TITLE, model.getPageTitle());
 		return parameters;
 	}
 
@@ -41,5 +51,4 @@ public class WikiTemplateGenerator extends TemplateGenerator {
 	protected String getLogTag() {
 		return LOG_TAG;
 	}
-
 }

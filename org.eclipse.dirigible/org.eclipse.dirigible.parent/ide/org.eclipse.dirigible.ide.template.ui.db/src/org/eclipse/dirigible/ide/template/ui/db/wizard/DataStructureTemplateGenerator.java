@@ -15,12 +15,23 @@ import java.util.Map;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 
+/**
+ * DataStructure Template Generator
+ */
 public class DataStructureTemplateGenerator extends TemplateGenerator {
 
 	private static final String LOG_TAG = "DATA_STRUCTURE_GENERATOR"; //$NON-NLS-1$
+	private static final String PARAMETER_COLUMN_DEFINITIONS = "columnDefinitions"; //$NON-NLS-1$
+	private static final String PARAMETER_QUERY = "query"; //$NON-NLS-1$
+	private static final String PARAMETER_DSV_SAMPLES = "dsvSamples"; //$NON-NLS-1$
 
 	private DataStructureTemplateModel model;
 
+	/**
+	 * Constructor
+	 *
+	 * @param model
+	 */
 	public DataStructureTemplateGenerator(DataStructureTemplateModel model) {
 		this.model = model;
 	}
@@ -28,9 +39,9 @@ public class DataStructureTemplateGenerator extends TemplateGenerator {
 	@Override
 	protected Map<String, Object> prepareParameters() {
 		Map<String, Object> parameters = super.prepareParameters();
-		parameters.put("columnDefinitions", model.getColumnDefinitions()); //$NON-NLS-1$
-		parameters.put("query", model.getQuery()); //$NON-NLS-1$
-		parameters.put("dsvSamples", model.getDsvSampleRows()); //$NON-NLS-1$
+		parameters.put(PARAMETER_COLUMN_DEFINITIONS, model.getColumnDefinitions());
+		parameters.put(PARAMETER_QUERY, model.getQuery());
+		parameters.put(PARAMETER_DSV_SAMPLES, model.getDsvSampleRows());
 		return parameters;
 	}
 

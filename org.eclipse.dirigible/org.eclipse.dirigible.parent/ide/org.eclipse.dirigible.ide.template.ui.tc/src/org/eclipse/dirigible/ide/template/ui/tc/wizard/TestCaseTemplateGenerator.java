@@ -13,21 +13,23 @@ package org.eclipse.dirigible.ide.template.ui.tc.wizard;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 
+/**
+ * TestCase Template Generator
+ */
 public class TestCaseTemplateGenerator extends TemplateGenerator {
 
 	private static final String LOG_TAG = "TEST_CASE_GENERATOR"; //$NON-NLS-1$
 
 	private TestCaseTemplateModel model;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param model
+	 */
 	public TestCaseTemplateGenerator(TestCaseTemplateModel model) {
 		this.model = model;
 	}
-
-	// @Override
-	// protected Map<String, Object> prepareParameters() {
-	// Map<String, Object> parameters = super.prepareParameters();
-	// return parameters;
-	// }
 
 	@Override
 	protected GenerationModel getModel() {
@@ -41,7 +43,6 @@ public class TestCaseTemplateGenerator extends TemplateGenerator {
 
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
-		byte[] result = model.normalizeEscapes(bytes);
-		return result;
+		return model.normalizeEscapes(bytes);
 	}
 }

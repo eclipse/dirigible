@@ -41,39 +41,37 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.repository.velocity.VelocityGenerator;
 
+/**
+ * Abstract Template Generator
+ */
 public abstract class TemplateGenerator {
-
-	private static final String THE_FILE_ALREADY_EXISTS_SKIPPED_GENERATION_OF = Messages.TemplateGenerator_THE_FILE_ALREADY_EXISTS_SKIPPED_GENERATION_OF;
 
 	private static final Logger logger = Logger.getLogger(TemplateGenerator.class);
 
-	private VelocityGenerator velocityGenerator = new VelocityGenerator();
+	private static final String THE_FILE_ALREADY_EXISTS_SKIPPED_GENERATION_OF = Messages.TemplateGenerator_THE_FILE_ALREADY_EXISTS_SKIPPED_GENERATION_OF;
+	private static final String PARAMETER_PROJECT_NAME = "projectName"; //$NON-NLS-1$
+	private static final String PARAMETER_PACKAGE_NAME = "packageName"; //$NON-NLS-1$
+	private static final String PARAMETER_FILE_NAME = "fileName"; //$NON-NLS-1$
+	private static final String PARAMETER_FILE_NAME_NO_EXTENSION = "fileNameNoExtension"; //$NON-NLS-1$
 
+	private VelocityGenerator velocityGenerator = new VelocityGenerator();
 	private List<IFile> createdFiles = new ArrayList<IFile>();
 
-	protected abstract GenerationModel getModel();
-
-	protected Map<String, Object> prepareParameters() {
-		GenerationModel model = getModel();
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("projectName", model.getProjectName()); //$NON-NLS-1$
-		if (model.getPackageName() != null) {
-			parameters.put("packageName", model.getPackageName()); //$NON-NLS-1$
-		} else {
-			parameters.put("packageName", constructPackageName()); //$NON-NLS-1$
-		}
-		parameters.put("fileName", model.getFileName()); //$NON-NLS-1$
-		parameters.put("fileNameNoExtension", model.getFileNameNoExtension()); //$NON-NLS-1$
-
-		return parameters;
-	}
-
-	protected abstract String getLogTag();
-
+	/**
+	 * Generate template
+	 *
+	 * @throws Exception
+	 */
 	public void generate() throws Exception {
 		generate(null);
 	}
 
+	/**
+	 * Generate template
+	 *
+	 * @param request
+	 * @throws Exception
+	 */
 	public void generate(HttpServletRequest request) throws Exception {
 		TemplateSourceMetadata[] sources = getModel().getTemplate().getTemplateMetadata().getSources();
 		for (int i = 0; i < sources.length; i++) {
@@ -104,7 +102,36 @@ public abstract class TemplateGenerator {
 				copyFile(name, targetLocation, sources[i].getLocation(), request);
 			}
 		}
+	}
 
+	/**
+	 * @return List of the generated files
+	 */
+	public List<IFile> getGeneratedFiles() {
+		return createdFiles;
+	}
+
+	protected abstract GenerationModel getModel();
+
+	protected abstract String getLogTag();
+
+	protected Map<String, Object> prepareParameters() {
+		GenerationModel model = getModel();
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put(PARAMETER_PROJECT_NAME, model.getProjectName());
+		if (model.getPackageName() != null) {
+			parameters.put(PARAMETER_PACKAGE_NAME, model.getPackageName());
+		} else {
+			parameters.put(PARAMETER_PACKAGE_NAME, constructPackageName());
+		}
+		parameters.put(PARAMETER_FILE_NAME, model.getFileName());
+		parameters.put(PARAMETER_FILE_NAME_NO_EXTENSION, model.getFileNameNoExtension());
+		return parameters;
+	}
+
+	// default implementation - do nothing
+	protected byte[] afterGeneration(byte[] bytes) {
+		return bytes;
 	}
 
 	private String calcTargetLocation(String targetLocation, String name) {
@@ -151,11 +178,7 @@ public abstract class TemplateGenerator {
 		return targetLocation;
 	}
 
-	public void generateFile(String templateLocation, String targetLocation, String fileName) throws Exception {
-		generateFile(templateLocation, targetLocation, fileName, null);
-	}
-
-	public void generateFile(String templateLocation, String targetLocation, String fileName, HttpServletRequest request) throws Exception {
+	private void generateFile(String templateLocation, String targetLocation, String fileName, HttpServletRequest request) throws Exception {
 		Map<String, Object> parameters = prepareParameters();
 		InputStream in = GenerationModel.getInputStreamByTemplateLocation(templateLocation, request);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -166,12 +189,7 @@ public abstract class TemplateGenerator {
 		createFile(location, bytes, request);
 	}
 
-	// default implementation - do nothing
-	protected byte[] afterGeneration(byte[] bytes) {
-		return bytes;
-	}
-
-	protected void createFile(IPath location, byte[] bytes, HttpServletRequest request) throws Exception {
+	private void createFile(IPath location, byte[] bytes, HttpServletRequest request) throws Exception {
 		IWorkspace workspace = WorkspaceLocator.getWorkspace(request);
 		IWorkspaceRoot root = workspace.getRoot();
 		IFile file = root.getFile(location);
@@ -209,7 +227,7 @@ public abstract class TemplateGenerator {
 		}
 	}
 
-	protected void copyFile(String targetFileName, String targetLocation, String templateLocation, HttpServletRequest request)
+	private void copyFile(String targetFileName, String targetLocation, String templateLocation, HttpServletRequest request)
 			throws IOException, Exception {
 		IPath location = new Path(targetLocation).append(targetFileName);
 		InputStream in = GenerationModel.getInputStreamByTemplateLocation(templateLocation, request);
@@ -218,15 +236,7 @@ public abstract class TemplateGenerator {
 		createFile(location, out.toByteArray(), request);
 	}
 
-	public List<IFile> getGeneratedFiles() {
-		return createdFiles;
-	}
-
-	public VelocityGenerator getVelocityGenerator() {
-		return velocityGenerator;
-	}
-
-	public String constructPackageName() {
+	private String constructPackageName() {
 		return getModel().constructPackageName();
 	}
 }
