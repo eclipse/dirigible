@@ -131,7 +131,7 @@ public abstract class TemplateGenerator {
 			}
 			if (alternativeTarget != null) {
 				IPath location = new Path(targetLocation);
-				IPath target = new Path("/");
+				IPath target = new Path(IRepository.SEPARATOR);
 				String[] segments = location.segments();
 				int i = 1;
 				for (String segment : segments) {
@@ -142,6 +142,9 @@ public abstract class TemplateGenerator {
 					}
 					i++;
 				}
+				String relativePath = name.substring(alternativeTarget.length());
+				relativePath = relativePath.substring(0, relativePath.lastIndexOf(IRepository.SEPARATOR));
+				target = target.append(relativePath);
 				return target.toString();
 			}
 		}

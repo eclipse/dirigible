@@ -73,30 +73,6 @@ public class TemplateType {
 		this.templateMetadata = templateMetadata;
 	}
 
-	// public String getName() {
-	// return name;
-	// }
-	//
-	// public void setName(String name) {
-	// this.name = name;
-	// }
-	//
-	// public String[] getSourceNames() {
-	// return sourceNames;
-	// }
-	//
-	// public String[] getSourceLocations() {
-	// return sourceLocations;
-	// }
-	//
-	// public boolean[] getSourceGenerates() {
-	// return sourceGenerates;
-	// }
-	//
-	// public String[] getSourceRenamings() {
-	// return sourceRenamings;
-	// }
-	//
 	public String getExtension() {
 		return getExtensionFor(0);
 	}
@@ -108,29 +84,7 @@ public class TemplateType {
 		}
 		return "";
 	}
-	//
-	// public void setLocations(String[] locations) {
-	// this.sourceLocations = locations;
-	// }
-	//
-	// public String getImage() {
-	// return image;
-	// }
-	//
-	// public void setImage(String image) {
-	// this.image = image;
-	// }
 
-	// private static Image createImage(URL imageURL) {
-	// // ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(imageURL);
-	// // return resourceManager.createImage(imageDescriptor);
-	// return null;
-	// }
-
-	// public Set<TemplateParameterMetadata> getValidParameters() {
-	// return validParameters;
-	// }
-	//
 	public String getLocation() {
 		return this.templateMetadata.getSources()[0].getLocation();
 	}
