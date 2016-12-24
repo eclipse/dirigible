@@ -37,50 +37,7 @@
 	          </execution>
 	        </executions>
 	      </plugin>
-	    
-	      <plugin>
-	        <artifactId>maven-resources-plugin</artifactId>
-	        <version>3.0.2</version>
-	        <executions>
-	          <execution>
-	            <id>copy-resources</id>
-	            <phase>generate-sources</phase>
-	            <goals>
-	              <goal>copy-resources</goal>
-	            </goals>
-	            <configuration>
-	              <outputDirectory>${basedir}/src/content/db/dirigible/templates</outputDirectory>
-	              <resources>          
-	                <resource>
-	                  <directory>${basedir}/template_web_new_or_edit</directory>
-	                  <excludes><exclude>project.json</exclude></excludes>
-	                </resource>
-	              </resources>              
-	            </configuration>            
-	          </execution>
-	        </executions>
-	      </plugin>
-	      
-	      
-	      <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-assembly-plugin</artifactId>
-	        <executions>
-	          <execution>
-	            <id>create-distribution</id>
-	            <phase>package</phase>
-	            <goals>
-	              <goal>single</goal>
-	            </goals>
-	            <configuration>
-	              <descriptors>
-	                <descriptor>assembly/content.xml</descriptor>
-	              </descriptors>
-	            </configuration>
-	          </execution>
-	        </executions>
-	      </plugin>
-      
+       	
 	    </plugins>
 	  </build>
 	
