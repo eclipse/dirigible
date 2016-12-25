@@ -12,7 +12,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 </head>
-<body>
+<body style="margin-left: 20px">
 <div ng-include="'header.html'"></div>
 
 	<div id="wrap" ng-controller="ListAndDetailsController">
@@ -33,7 +33,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="entry in data" ng-click="showInfoForEntry(entry)">
+					<tr class="selected-{{entry._selected_}}" ng-repeat="entry in data" ng-click="showInfoForEntry(entry)">
 #foreach ($tableColumn in $tableColumns)
 #if ($tableColumn.isVisible())
 #if ($tableColumn.getWidgetType() == "date")
@@ -50,18 +50,17 @@
 				<div>View <select ng-model="viewby" ng-change="setItemsPerPage(viewby)"><option>10</option><option>20</option><option>50</option><option selected>100</option></select> records.<div>
 	    		<uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" force-ellipses="true" rotate="false"></uib-pagination>
 			</div>
-			<table class="table table-bordered" ng-show="showEntry">
+			<table class="table" ng-show="showEntry">
 				<thead>
 					<tr>
-						<th>Attribute</th>
-						<th>Value</th>
+						<th colspan="2" class="text-center">Details</th>
 					</tr>
 				</thead>
 				<tbody ng-model="selectedEntry">
 #foreach ($tableColumn in $tableColumns)
 #if ($tableColumn.isVisible())
 					<tr>
-						<td width="50%">${tableColumn.getLabel()}</td>
+						<td width="50%" class="text-right text-muted">${tableColumn.getLabel()}</td>
 						
 #if ($tableColumn.getWidgetType() == "date")
 						<td width="50%">{{selectedEntry.${tableColumn.getName()}  | date:format}}</td>
@@ -99,7 +98,12 @@
 				if ($scope.selectedEntry === entry) {
 					$scope.showEntry = false;
 					$scope.selectedEntry = null;
+					entry._selected_ = false;
 				} else {
+					for(var i = 0 ; i < $scope.data.length; i ++){
+						$scope.data[i]._selected_ = false;
+					}
+					entry._selected_ = true;
 					$scope.showEntry = true;
 					$scope.selectedEntry = entry;
 				}

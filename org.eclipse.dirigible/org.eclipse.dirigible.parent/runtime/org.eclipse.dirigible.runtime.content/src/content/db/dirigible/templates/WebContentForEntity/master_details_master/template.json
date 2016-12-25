@@ -1,8 +1,9 @@
-{"name":"List and Manage Entity",
- "description":"List and manage entity page based on Bootstrap and AngularJS",
- "image":"ui-for-entity-manage.png",
+{"name":"Master-Details - List and Manage Master Entity",
+ "description":"Master-Details - Master Entity management on Bootstrap and AngularJS",
+ "image":"ui-for-entity-master-details-master.png",
  "sources":[
-   {"name":"ui-for-entity-manage.html", "action":"generate"}
+   {"name":"ui-for-entity-master-details-master.html", "action":"generate"},
+   {"name":"no_selection.html", "action":"copy"}
    ],
  "parameters":[
    {"name":"templateType", "required":"true"},

@@ -72,108 +72,124 @@
 				<div>View <select ng-model="viewby" ng-change="setItemsPerPage(viewby)"><option>10</option><option>20</option><option>50</option><option selected>100</option></select> records.<div>
 	    		<uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" force-ellipses="true" rotate="false"></uib-pagination>
 			</div>
-			<hr>
-			<br>
-			<!-- new, edit and delete buttons -->
-			<div class="btn-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				<input class="btn btn-default" type="button" value="New"
-					ng-click="setOperation('new')"
-					ng-disabled="errorMessage || operation == 'new' || operation == 'update'"> <input
-					class="btn btn-default" type="button" value="Edit"
-					ng-click="setOperation('update')"
-					ng-disabled="errorMessage || operation == 'new' || operation == 'update'"> <input
-					class="btn btn-default" type="button" value="Delete"
-					ng-click="delete()"
-					ng-disabled="errorMessage || operation == 'new' || operation == 'update'">
-			</div>
-			<br><br><br>
-			<div>
-				<!-- input form -->
-				<div>
+			
+			
+			<ul class="nav nav-tabs">
+			  <li class="active"><a data-toggle="tab" href="#details">Properties</a></li>
+			  <li><a data-toggle="tab" href="#items">Items</a></li>
+			</ul>
+			
+			
+			<div class="tab-content">
+  				<div id="details" class="tab-pane fade in active">
+  				
+					<br>
+					<!-- new, edit and delete buttons -->
+					<div class="btn-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<input class="btn btn-default" type="button" value="New"
+							ng-click="setOperation('new')"
+							ng-disabled="errorMessage || operation == 'new' || operation == 'update'"> <input
+							class="btn btn-default" type="button" value="Edit"
+							ng-click="setOperation('update')"
+							ng-disabled="errorMessage || operation == 'new' || operation == 'update'"> <input
+							class="btn btn-default" type="button" value="Delete"
+							ng-click="delete()"
+							ng-disabled="errorMessage || operation == 'new' || operation == 'update'">
+					</div>
+					<br><br>
+					<div>
+						<!-- input form -->
+						<div>
 				  
 #foreach ($tableColumn in $tableColumns)
 #if($tableColumn.isVisible())
 #if ($tableColumn.isKey())
-				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-					<label>${tableColumn.getLabel()}</label>
-					<input type="text" class="form-control" 
-						ng-model="selectedEntry.${tableColumn.getName()}" readonly>
+						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<label>${tableColumn.getLabel()}</label>
+							<input type="text" class="form-control" 
+								ng-model="selectedEntry.${tableColumn.getName()}" readonly>
 #else
 #if ($tableColumn.getWidgetType() == "date")
-				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-					<label>${tableColumn.getLabel()}</label>
-					<p class="input-group">
-		            	<input type="text" ng-model="selectedEntry.${tableColumn.getName()}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
-		               		uib-datepicker-popup="" is-open="${tableColumn.getName()}Status.opened" 
-		               		datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" 
-		               		required="required" style="" ng-readonly="operation == 'show'">
-				        <span class="input-group-btn">
-				        	<button type="button" class="btn btn-default" ng-click="${tableColumn.getName()}Open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-				        </span>
-		           	</p>
+						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<label>${tableColumn.getLabel()}</label>
+							<p class="input-group">
+				            	<input type="text" ng-model="selectedEntry.${tableColumn.getName()}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
+				               		uib-datepicker-popup="" is-open="${tableColumn.getName()}Status.opened" 
+				               		datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" 
+				               		required="required" style="" ng-readonly="operation == 'show'">
+						        <span class="input-group-btn">
+						        	<button type="button" class="btn btn-default" ng-click="${tableColumn.getName()}Open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+						        </span>
+				           	</p>
 #elseif ($tableColumn.getWidgetType() == "textarea")
-				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<label>${tableColumn.getLabel()}</label>
-					<textarea class="form-control" 
-						ng-model="selectedEntry.${tableColumn.getName()}" cols="50" rows="5" 
-						ng-readonly="operation == 'show'" required="required"></textarea>
+						  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label>${tableColumn.getLabel()}</label>
+							<textarea class="form-control" 
+								ng-model="selectedEntry.${tableColumn.getName()}" cols="50" rows="5" 
+								ng-readonly="operation == 'show'" required="required"></textarea>
 #elseif ($tableColumn.getWidgetType() == "dropdown")
-				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-					<label>${tableColumn.getLabel()}</label>
-					<input type="hidden" class="form-control" 
-						ng-model="selectedEntry.${tableColumn.getName()}"
-						ng-readonly="operation == 'show'" required="required">
-					<div>
-						<select ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
-					</div>
+						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<label>${tableColumn.getLabel()}</label>
+							<input type="hidden" class="form-control" 
+								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-readonly="operation == 'show'" required="required">
+							<div>
+								<select ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
+							</div>
 #elseif ($tableColumn.getWidgetType() == "list")
-				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<label>${tableColumn.getLabel()}</label>
-					<input type="hidden" class="form-control" 
-						ng-model="selectedEntry.${tableColumn.getName()}"
-						ng-readonly="operation == 'show'" required="required">
-					<div>
-						<select multiple="true" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
-					</div>
+						  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label>${tableColumn.getLabel()}</label>
+							<input type="hidden" class="form-control" 
+								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-readonly="operation == 'show'" required="required">
+							<div>
+								<select multiple="true" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
+							</div>
 #elseif ($tableColumn.getWidgetType() == "integer")
-				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-					<label>${tableColumn.getLabel()}</label>
-					<input type="number" class="form-control" 
-						ng-model="selectedEntry.${tableColumn.getName()}"
-						ng-readonly="operation == 'show'" required="required"></textarea>
+						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<label>${tableColumn.getLabel()}</label>
+							<input type="number" class="form-control" 
+								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-readonly="operation == 'show'" required="required"></textarea>
 #elseif ($tableColumn.getWidgetType() == "float")
-				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-					<label>${tableColumn.getLabel()}</label>
-					<input type="number" class="form-control" step="any"
-						ng-model="selectedEntry.${tableColumn.getName()}"
-						ng-readonly="operation == 'show'" required="required"></textarea>
+						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<label>${tableColumn.getLabel()}</label>
+							<input type="number" class="form-control" step="any"
+								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-readonly="operation == 'show'" required="required"></textarea>
 #else
 #if ($tableColumn.getSize() < 40)
-				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+				  		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 #else
-				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 #end
-					<label>${tableColumn.getLabel()}</label>
-					<input type="text" class="form-control" 
-						ng-model="selectedEntry.${tableColumn.getName()}"
-						ng-readonly="operation == 'show'" required="required">
-#end
-#end
-					</div>
+							<label>${tableColumn.getLabel()}</label>
+							<input type="text" class="form-control" 
+								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-readonly="operation == 'show'" required="required">
 #end
 #end
-				</div>
+							</div>
+#end
+#end
+						</div>
 				
-				<!-- save and cancel buttons -->
-				<div class="btn-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<br>
-					<input class="btn btn-primary" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
-						ng-click="confirmAction()"> 
-					<input class="btn btn-default" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
-						ng-click="cancelAction()">
+						<!-- save and cancel buttons -->
+						<div class="btn-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<br>
+							<input class="btn btn-primary" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
+								ng-click="confirmAction()"> 
+							<input class="btn btn-default" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
+								ng-click="cancelAction()">
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
+				<div id="items" class="tab-pane fade">
+  					<br>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<iframe id="items-iframe" ng-src="{{urlItems}}" frameborder="0" style="width: 100%; height: 1000px"></iframe>
+					</div>
+				</div>
 	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
@@ -186,6 +202,7 @@
 		angular.module('page').controller('ManageController', function ($scope, $http) {
 			
 			var url = '${serviceFileName}';
+			var urlItems = '${fileNameNoExtension}_items.html'; 
 
 			$http.get(url)
 				.success(function(data){
@@ -194,7 +211,7 @@
 			
 			/* ---- Uncomment and configure in case of using dropdown or list widgets in the form above  ----
 			
-			var urlRefs = 'ENDPOINT_OF_THE_REFS_SERVICE'; // e.g. '../../js/mypackage/mytypes.js'
+			var urlRefs = 'ENDPOINT_OF_THE_REFS_SERVICE';
 				
 			$http.get(urlRefs)
 				.success(function(refs){
@@ -212,6 +229,7 @@
 						$scope.showEntry = false;
 						$scope.selectedEntry = null;
 						entry._selected_ = false;
+						$scope.urlItems = 'no_selection.html';
 					}else{
 						for(var i = 0 ; i < $scope.data.length; i ++){
 							$scope.data[i]._selected_ = false;
@@ -219,6 +237,11 @@
 						entry._selected_ = true;
 						$scope.showEntry = true;
 						$scope.selectedEntry = entry;
+#foreach ($tableColumn in $tableColumns)
+#if ($tableColumn.isKey())
+						$scope.urlItems = urlItems + '?${tableColumn.getName()}=' + entry.${tableColumn.getName()};
+#end
+#end
 					}
 				}
 			};
