@@ -8,6 +8,8 @@ public class TemplateMetadata {
 
 	private String image;
 
+	private String preview;
+
 	private String type;
 
 	private String category;
@@ -74,7 +76,7 @@ public class TemplateMetadata {
 
 	// public static void main(String[] args) {
 	// String source = "{\"name\":\"table\"," + " \"description\":\"Relational Database Table\"," + "
-	// \"image\":\"table.png\"," + " \"sources\":["
+	// \"image\":\"table.png\",\"preview\":\"table_preview.png\"," + " \"sources\":["
 	// + " {\"name\":\"table.table\"}" + " ]," + " \"parameters\":[" + " {\"name\":\"name\"," + "
 	// \"required\":\"true\"}" + " ]"
 	// + "}";

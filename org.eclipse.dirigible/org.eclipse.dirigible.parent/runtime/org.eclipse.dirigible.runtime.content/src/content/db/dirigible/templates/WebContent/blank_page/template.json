@@ -1,6 +1,7 @@
 {"name":"Blank Page",
  "description":"Blank HTML5 page",
  "image":"blank.png",
+ "preview":"blank_preview.png",
  "sources":[
    {"name":"blank.html", "action":"generate"}
    ],

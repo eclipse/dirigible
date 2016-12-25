@@ -13,6 +13,7 @@ package org.eclipse.dirigible.ide.template.ui.common;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.dirigible.ide.common.ExtensionPointUtils;
+import org.eclipse.dirigible.ide.common.image.ImageUtils;
 import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -31,6 +33,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -64,6 +67,8 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 
 	private TableViewer typeViewer;
 
+	private Label labelPreview;
+
 	@Override
 	public void createControl(Composite parent) {
 		final Composite composite = new Composite(parent, SWT.NONE);
@@ -71,7 +76,24 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 		composite.setLayout(new GridLayout());
 		createTypeField(composite);
 
+		createPreviewLabel(composite);
+
 		checkPageStatus();
+	}
+
+	private static final Image previewImage = ImageUtils.createImage(getIconURL("preview.png"));
+
+	public static URL getIconURL(String iconName) {
+		URL url = ImageUtils.getIconURL("org.eclipse.dirigible.ide.template.ui.common", "/icons/", iconName);
+		return url;
+	}
+
+	private void createPreviewLabel(final Composite composite) {
+		labelPreview = new Label(composite, SWT.NONE);
+		labelPreview.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
+		labelPreview.setBounds(0, 0, 450, 300);
+		labelPreview.setBackground(new org.eclipse.swt.graphics.Color(null, 0, 0, 0));
+		labelPreview.setImage(previewImage);
 	}
 
 	private void createTypeField(Composite parent) {
@@ -92,15 +114,30 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if ((selection.getFirstElement() == null) || !(selection.getFirstElement() instanceof TemplateType)) {
 					setErrorMessage(SELECT_TEMPLATE_TYPE_FORM_THE_LIST);
+					labelPreview.setImage(previewImage);
+					labelPreview.pack(true);
 				} else {
 					setErrorMessage(null);
 					TemplateType templateType = ((TemplateType) selection.getFirstElement());
 					getModel().setTemplate(templateType);
+					labelPreview.setImage(getPreviewImage(templateType.getTemplateMetadata().getImage()));
+					labelPreview.pack(true);
 				}
 				checkPageStatus();
 			}
 		});
 
+	}
+
+	private Image getPreviewImage(String imageLocation) {
+		Image image;
+		try {
+			image = TemplateUtils.createImageFromResource(imageLocation);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			return null;
+		}
+		return image;
 	}
 
 	private TemplateType[] createTemplateTypes() {
