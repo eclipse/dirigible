@@ -38,6 +38,8 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 
 	private String tableType;
 
+	private String dependentColumn;
+
 	private TableColumn[] tableColumns;
 
 	private boolean columnsInit = false;
@@ -56,6 +58,14 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 
 	public void setTableType(String tableType) {
 		this.tableType = tableType;
+	}
+
+	public String getDependentColumn() {
+		return dependentColumn;
+	}
+
+	public void setDependentColumn(String dependentColumn) {
+		this.dependentColumn = dependentColumn;
 	}
 
 	public TableColumn[] getTableColumns() {
@@ -86,6 +96,7 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
 	}
 
+	@Override
 	public IValidationStatus validateLocation() {
 		IValidationStatus status;
 		try {
@@ -145,6 +156,7 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 				}
 
 				setTableColumns(availableTableColumns.toArray(new TableColumn[] {}));
+				columnsInit = true;
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -167,5 +179,9 @@ public class JavascriptServiceTemplateModel extends GenerationModel {
 			}
 		}
 		return false;
+	}
+
+	public boolean validateDependentColumn() {
+		return dependentColumn != null;
 	}
 }

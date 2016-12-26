@@ -30,6 +30,7 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 
 	private static final String PARAMETER_TABLE_NAME = "tableName"; //$NON-NLS-1$
 	private static final String PARAMETER_TABLE_TYPE = "tableType"; //$NON-NLS-1$
+	private static final String PARAMETER_DEPENDENT_COLUMN = "dependentColumn"; //$NON-NLS-1$
 	private static final String PARAMETER_ENTITY_NAME = "entityName"; //$NON-NLS-1$
 	private static final String PARAMETER_TABLE_COLUMNS = "tableColumns"; //$NON-NLS-1$
 	private static final String PARAMETER_TABLE_COLUMNS_WITHOUT_KEYS = "tableColumnsWithoutKeys"; //$NON-NLS-1$
@@ -63,6 +64,7 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 		Map<String, Object> parameters = super.prepareParameters();
 		parameters.put(PARAMETER_TABLE_NAME, model.getTableName());
 		parameters.put(PARAMETER_TABLE_TYPE, model.getTableType());
+		parameters.put(PARAMETER_DEPENDENT_COLUMN, model.getDependentColumn());
 		parameters.put(PARAMETER_ENTITY_NAME, CommonUtils.toCamelCase(model.getTableName()));
 		parameters.put(PARAMETER_TABLE_COLUMNS, model.getTableColumns());
 		parameters.put(PARAMETER_TABLE_COLUMNS_WITHOUT_KEYS, getTableColumnsWithoutKeys(model.getTableColumns()));

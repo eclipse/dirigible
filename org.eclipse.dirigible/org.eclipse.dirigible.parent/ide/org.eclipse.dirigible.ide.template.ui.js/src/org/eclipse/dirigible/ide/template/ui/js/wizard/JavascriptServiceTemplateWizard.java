@@ -25,6 +25,7 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 	private final JavascriptServiceTemplateTypePage typesPage;
 	private final TablesTemplateTablePage tablesTemplateTablePage;
 	private final JavascriptServiceTemplateTargetLocationPage targetLocationPage;
+	private final TableDependentTablePage tableDependentTablePage;
 
 	public JavascriptServiceTemplateWizard(IResource resource) {
 		setWindowTitle(CREATE_SCRIPTING_SERVICE);
@@ -33,12 +34,14 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 		typesPage = new JavascriptServiceTemplateTypePage(model);
 		tablesTemplateTablePage = new TablesTemplateTablePage(model);
 		targetLocationPage = new JavascriptServiceTemplateTargetLocationPage(model);
+		tableDependentTablePage = new TableDependentTablePage(model);
 	}
 
 	@Override
 	public void addPages() {
 		addPage(typesPage);
 		addPage(tablesTemplateTablePage);
+		addPage(tableDependentTablePage);
 		addPage(targetLocationPage);
 	}
 
@@ -55,6 +58,7 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
+
 		if (page instanceof JavascriptServiceTemplateTypePage) {
 			String location = model.getTemplate().getLocation();
 			if (location.indexOf("database") > -1) {
@@ -63,6 +67,10 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 			return targetLocationPage;
 		}
 		if (page instanceof TablesTemplateTablePage) {
+			String location = model.getTemplate().getLocation();
+			if (location.indexOf("dependent") > -1) {
+				return tableDependentTablePage;
+			}
 			return targetLocationPage;
 		}
 		return super.getNextPage(page);
@@ -73,9 +81,15 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 		if (page instanceof TablesTemplateTablePage) {
 			return typesPage;
 		}
+		if (page instanceof TableDependentTablePage) {
+			return tablesTemplateTablePage;
+		}
 		if (page instanceof JavascriptServiceTemplateTargetLocationPage) {
 			String location = model.getTemplate().getLocation();
 			if (location.indexOf("database") > -1) {
+				if (location.indexOf("dependent") > -1) {
+					return tableDependentTablePage;
+				}
 				return tablesTemplateTablePage;
 			}
 		}

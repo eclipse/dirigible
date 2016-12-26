@@ -46,7 +46,7 @@ public class TablesTemplateTablePage extends WizardPage {
 
 	private static final Logger logger = Logger.getLogger(TablesTemplateTablePage.class);
 
-	private static final String PAGE_NAME = "org.eclipse.dirigible.ide.template.ui.odata.wizard.UIForODataTemplateTablePage"; //$NON-NLS-1$
+	private static final String PAGE_NAME = "org.eclipse.dirigible.ide.template.ui.js.wizard.TableTemplateTablePage"; //$NON-NLS-1$
 
 	private JavascriptServiceTemplateModel model;
 
@@ -108,6 +108,10 @@ public class TablesTemplateTablePage extends WizardPage {
 				model.setTableType(selectedTableName.getType());
 				labelSelected.setText(selectedTableName.getName());
 				labelSelected.pack();
+
+				final TableColumn[] columns = model.getTableColumns();
+				((TableDependentTablePage) getWizard().getPage(TableDependentTablePage.PAGE_NAME)).getViewer().setInput(columns);
+
 			} else {
 				model.setTableName(null);
 				model.setTableType(null);
