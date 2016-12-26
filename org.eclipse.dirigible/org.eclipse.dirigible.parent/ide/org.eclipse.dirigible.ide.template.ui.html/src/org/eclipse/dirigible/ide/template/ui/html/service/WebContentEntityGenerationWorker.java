@@ -48,6 +48,7 @@ public class WebContentEntityGenerationWorker extends AbstractGenerationWorker {
 	private static final String PARAM_COLUMN_TYPE = "type";
 	private static final String PARAM_COLUMN_NAME = "name";
 	private static final String PARAM_TABLE_NAME = "tableName";
+	private static final String PARAM_DEPENDENT_COLUMN = "dependentColumn";
 	private static final String PARAM_COLUMNS = "columns";
 
 	public WebContentEntityGenerationWorker(IRepository repository, IWorkspace workspace) {
@@ -66,7 +67,7 @@ public class WebContentEntityGenerationWorker extends AbstractGenerationWorker {
 			TemplateType[] templates = TemplateTypesEnumerator.prepareTemplateTypes(WebContentEntityTemplateTypeDiscriminator.getTemplatesPath(),
 					WebContentEntityTemplateTypeDiscriminator.getCategory(), request);
 
-			setParametersToModel(parametersObject, model, templates);
+			readAndSetParametersToModel(parametersObject, model, templates);
 
 			generator.generate(request);
 
@@ -76,7 +77,7 @@ public class WebContentEntityGenerationWorker extends AbstractGenerationWorker {
 		return GENERATION_PASSED_SUCCESSFULLY;
 	}
 
-	protected void setParametersToModel(JsonObject parametersObject, HtmlForEntityTemplateModel model, TemplateType[] templates)
+	protected void readAndSetParametersToModel(JsonObject parametersObject, HtmlForEntityTemplateModel model, TemplateType[] templates)
 			throws GenerationException {
 
 		// template type
@@ -155,6 +156,13 @@ public class WebContentEntityGenerationWorker extends AbstractGenerationWorker {
 			model.setTableName(parametersObject.get(PARAM_TABLE_NAME).getAsString());
 		} else {
 			checkIfRequired(model, PARAM_TABLE_NAME);
+		}
+
+		// dependent column
+		if (parametersObject.has(PARAM_DEPENDENT_COLUMN)) {
+			model.setDependentColumn(parametersObject.get(PARAM_DEPENDENT_COLUMN).getAsString());
+		} else {
+			checkIfRequired(model, PARAM_DEPENDENT_COLUMN);
 		}
 
 		// page title

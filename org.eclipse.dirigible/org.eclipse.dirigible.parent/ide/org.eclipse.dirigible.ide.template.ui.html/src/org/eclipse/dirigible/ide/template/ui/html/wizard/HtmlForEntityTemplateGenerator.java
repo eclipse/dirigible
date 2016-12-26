@@ -31,6 +31,7 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 
 	private static final String PARAMETER_PAGE_TITLE = "pageTitle"; //$NON-NLS-1$
 	private static final String PARAMETER_TABLE_NAME = "tableName"; //$NON-NLS-1$
+	private static final String PARAMETER_DEPENDENT_COLUMN = "dependentColumn"; //$NON-NLS-1$
 	private static final String PARAMETER_TABLE_COLUMNS = "tableColumns"; //$NON-NLS-1$
 	private static final String PARAMETER_SERVICE_FILE_NAME = "serviceFileName"; //$NON-NLS-1$
 	private static final String PARAMETER_ENTITY_NAME = "entityName"; //$NON-NLS-1$
@@ -52,6 +53,7 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 		Map<String, Object> parameters = super.prepareParameters();
 		parameters.put(PARAMETER_PAGE_TITLE, model.getPageTitle());
 		parameters.put(PARAMETER_TABLE_NAME, model.getTableName());
+		parameters.put(PARAMETER_DEPENDENT_COLUMN, model.getDependentColumn());
 		parameters.put(PARAMETER_TABLE_COLUMNS, model.getTableColumns());
 		parameters.put(PARAMETER_SERVICE_FILE_NAME, generateServiceFileName());
 		parameters.put(PARAMETER_ENTITY_NAME, getEntityName());

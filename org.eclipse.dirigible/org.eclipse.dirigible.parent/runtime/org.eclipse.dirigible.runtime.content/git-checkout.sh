@@ -42,6 +42,9 @@ cp -r target/template_terminal_uname/template_terminal_uname/ScriptingServices s
 if cd target/template_js_database_crud_extended; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_js_database_crud_extended.git target/template_js_database_crud_extended; fi
 cp -r target/template_js_database_crud_extended/template_js_database_crud_extended/ScriptingServices src/content/db/dirigible/templates
 
+# template_js_database_crud_dependent
+if cd target/template_js_database_crud_dependent; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_js_database_crud_dependent.git target/template_js_database_crud_dependent; fi
+cp -r target/template_js_database_crud_dependent/template_js_database_crud_dependent/ScriptingServices src/content/db/dirigible/templates
 
 
 #### WebContent
@@ -73,6 +76,10 @@ cp -r target/template_web_list_and_details/template_web_list_and_details/WebCont
 # template_web_master_details_master
 if cd target/template_web_master_details_master; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_master_details_master.git target/template_web_master_details_master; fi
 cp -r target/template_web_master_details_master/template_web_master_details_master/WebContentForEntity src/content/db/dirigible/templates
+
+# template_web_master_details_details
+if cd target/template_web_master_details_details; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_master_details_details.git target/template_web_master_details_details; fi
+cp -r target/template_web_master_details_details/template_web_master_details_details/WebContentForEntity src/content/db/dirigible/templates
 
 
 

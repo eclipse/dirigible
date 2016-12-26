@@ -27,6 +27,8 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 
 	private String tableType;
 
+	private String dependentColumn;
+
 	private TableColumn[] tableColumns;
 
 	private String pageTitle;
@@ -43,6 +45,14 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 
 	public String getTableType() {
 		return tableType;
+	}
+
+	public String getDependentColumn() {
+		return dependentColumn;
+	}
+
+	public void setDependentColumn(String dependentColumn) {
+		this.dependentColumn = dependentColumn;
 	}
 
 	public TableColumn[] getOriginalTableColumns() {
@@ -91,6 +101,7 @@ public class HtmlForEntityTemplateModel extends GenerationModel {
 		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
 	}
 
+	@Override
 	public IValidationStatus validateLocation() {
 		IValidationStatus status;
 		try {

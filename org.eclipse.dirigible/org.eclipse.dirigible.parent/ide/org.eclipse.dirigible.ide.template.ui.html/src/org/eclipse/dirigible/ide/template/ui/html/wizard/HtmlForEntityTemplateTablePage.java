@@ -63,6 +63,8 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 
 	private static final String ES_TABLE_NAME = "tableName"; //$NON-NLS-1$
 
+	private static final String ES_DEPENDENT_COLUMN = "dependentColumn"; //$NON-NLS-1$
+
 	private static final String DB_COLUMN_SIZE = "COLUMN_SIZE"; //$NON-NLS-1$
 
 	private static final String DB_TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
@@ -357,6 +359,7 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 		JsonObject entityService = (JsonObject) parser.parse(new InputStreamReader(model.getSourceFile().getContents(), ICommonConstants.UTF8));
 		model.setTableName(entityService.get(ES_TABLE_NAME).getAsString());
 		model.setTableType(entityService.get(ES_TABLE_TYPE).getAsString());
+		model.setDependentColumn(entityService.get(ES_DEPENDENT_COLUMN).getAsString());
 	}
 
 	private void checkPageStatus() {

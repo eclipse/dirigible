@@ -58,7 +58,7 @@ public abstract class AbstractGenerationWorker implements IGenerationWorker {
 				|| PARAM_TEMPLATE_TYPE.equals(param));
 	}
 
-	protected void checkIfRequired(GenerationModel model, String param) throws GenerationException {
+	public static void checkIfRequired(GenerationModel model, String param) throws GenerationException {
 		TemplateParameterMetadata[] requiredParameters = model.getTemplate().getTemplateMetadata().getParameters();
 		for (TemplateParameterMetadata requiredParameter : requiredParameters) {
 			if ((requiredParameter != null) && param.equals(requiredParameter.getName()) && requiredParameter.isRequired()) {
