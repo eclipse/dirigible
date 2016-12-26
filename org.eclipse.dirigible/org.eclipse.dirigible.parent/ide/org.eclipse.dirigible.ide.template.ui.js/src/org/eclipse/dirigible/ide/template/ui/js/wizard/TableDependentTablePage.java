@@ -26,7 +26,9 @@ import org.eclipse.swt.widgets.Label;
 
 public class TableDependentTablePage extends WizardPage {
 
-	private static final long serialVersionUID = -4198853177500786981L;
+	private static final String SELECT_THE_DEPENDENT_COLUMN_WHICH_WILL_BE_USED_DURING_GENERATION = Messages.TableDependentTablePage_SELECT_THE_DEPENDENT_COLUMN_WHICH_WILL_BE_USED_DURING_GENERATION;
+
+	private static final String SELECT_DEPENDENT_COLUMN = Messages.TableDependentTablePage_SELECT_DEPENDENT_COLUMN;
 
 	private static final Logger logger = Logger.getLogger(TableDependentTablePage.class);
 
@@ -43,8 +45,8 @@ public class TableDependentTablePage extends WizardPage {
 	protected TableDependentTablePage(JavascriptServiceTemplateModel model) {
 		super(PAGE_NAME);
 		this.model = model;
-		setTitle("Select dependent column");
-		setDescription("Select the dependent column which will be used during generation");
+		setTitle(SELECT_DEPENDENT_COLUMN);
+		setDescription(SELECT_THE_DEPENDENT_COLUMN_WHICH_WILL_BE_USED_DURING_GENERATION);
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class TableDependentTablePage extends WizardPage {
 
 	private void createColumnsField(Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
-		label.setText("Select dependent column");
+		label.setText(SELECT_DEPENDENT_COLUMN);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
 
 		viewer = new ComboViewer(parent, SWT.READ_ONLY);

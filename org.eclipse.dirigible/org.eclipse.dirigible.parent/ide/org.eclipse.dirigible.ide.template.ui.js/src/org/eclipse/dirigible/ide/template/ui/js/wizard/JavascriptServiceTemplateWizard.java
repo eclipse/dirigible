@@ -20,6 +20,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 
 public class JavascriptServiceTemplateWizard extends TemplateWizard {
 
+	private static final String DEPENDENT_FILTER = "dependent";
+	private static final String DATABASE_FILTER = "database";
 	private static final String CREATE_SCRIPTING_SERVICE = Messages.JavascriptServiceTemplateWizard_CREATE_SCRIPTING_SERVICE;
 	private final JavascriptServiceTemplateModel model;
 	private final JavascriptServiceTemplateTypePage typesPage;
@@ -61,14 +63,14 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 
 		if (page instanceof JavascriptServiceTemplateTypePage) {
 			String location = model.getTemplate().getLocation();
-			if (location.indexOf("database") > -1) {
+			if (location.indexOf(DATABASE_FILTER) > -1) {
 				return tablesTemplateTablePage;
 			}
 			return targetLocationPage;
 		}
 		if (page instanceof TablesTemplateTablePage) {
 			String location = model.getTemplate().getLocation();
-			if (location.indexOf("dependent") > -1) {
+			if (location.indexOf(DEPENDENT_FILTER) > -1) {
 				return tableDependentTablePage;
 			}
 			return targetLocationPage;
@@ -86,8 +88,8 @@ public class JavascriptServiceTemplateWizard extends TemplateWizard {
 		}
 		if (page instanceof JavascriptServiceTemplateTargetLocationPage) {
 			String location = model.getTemplate().getLocation();
-			if (location.indexOf("database") > -1) {
-				if (location.indexOf("dependent") > -1) {
+			if (location.indexOf(DATABASE_FILTER) > -1) {
+				if (location.indexOf(DEPENDENT_FILTER) > -1) {
 					return tableDependentTablePage;
 				}
 				return tablesTemplateTablePage;
