@@ -3,9 +3,62 @@
 #exec 2>/dev/null
 
 
+####### Clone or Pull APIs
+
+# core_api
+if cd target/core_api; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/core_api.git target/core_api; fi
+cp -r target/core_api/core_api/ScriptingServices src/content/db/dirigible/registry/public
+
+# registry
+if cd target/registry; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry.git target/registry; fi
+cp -r target/registry/registry/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/registry/registry/WebContent src/content/db/dirigible/registry/public
+cp -r target/registry/registry/ExtensionDefinitions src/content/db/dirigible/registry/public
+
+# registry_develop
+if cd target/registry_develop; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_develop.git target/registry_develop; fi
+cp -r target/registry_develop/registry_develop/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/registry_develop/registry_develop/WebContent src/content/db/dirigible/registry/public
+cp -r target/registry_develop/registry_develop/ExtensionDefinitions src/content/db/dirigible/registry/public
+
+# registry_discover
+if cd target/registry_discover; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_discover.git target/registry_discover; fi
+cp -r target/registry_discover/registry_discover/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/registry_discover/registry_discover/WebContent src/content/db/dirigible/registry/public
+cp -r target/registry_discover/registry_discover/ExtensionDefinitions src/content/db/dirigible/registry/public
+
+# registry_operate
+if cd target/registry_operate; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_operate.git target/registry_operate; fi
+cp -r target/registry_operate/registry_operate/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/registry_operate/registry_operate/WebContent src/content/db/dirigible/registry/public
+cp -r target/registry_operate/registry_operate/ExtensionDefinitions src/content/db/dirigible/registry/public
+
+# registry_monitoring
+if cd target/registry_monitoring; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_monitoring.git target/registry_monitoring; fi
+cp -r target/registry_monitoring/registry_monitoring/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/registry_monitoring/registry_monitoring/WebContent src/content/db/dirigible/registry/public
+cp -r target/registry_monitoring/registry_monitoring/ExtensionDefinitions src/content/db/dirigible/registry/public
+
+# registry_ext_cmis_explorer
+if cd target/registry_ext_cmis_explorer; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_ext_cmis_explorer.git target/registry_ext_cmis_explorer; fi
+cp -r target/registry_ext_cmis_explorer/registry_ext_cmis_explorer/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/registry_ext_cmis_explorer/registry_ext_cmis_explorer/WebContent src/content/db/dirigible/registry/public
+cp -r target/registry_ext_cmis_explorer/registry_ext_cmis_explorer/ExtensionDefinitions src/content/db/dirigible/registry/public
+cp -r target/registry_ext_cmis_explorer/registry_ext_cmis_explorer/SecurityConstraints src/content/db/dirigible/registry/public
+
+# registry_ext_swagger_ui
+if cd target/registry_ext_swagger_ui; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_ext_swagger_ui.git target/registry_ext_swagger_ui; fi
+cp -r target/registry_ext_swagger_ui/registry_ext_swagger_ui/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/registry_ext_swagger_ui/registry_ext_swagger_ui/ExtensionDefinitions src/content/db/dirigible/registry/public
+
+# swagger_ui
+if cd target/swagger_ui; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/swagger_ui.git target/swagger_ui; fi
+cp -r target/swagger_ui/swagger_ui/WebContent src/content/db/dirigible/registry/public
+
+
+
 
 ####### Clone or Pull Templates
-
 
 
 #### ScriptingServices

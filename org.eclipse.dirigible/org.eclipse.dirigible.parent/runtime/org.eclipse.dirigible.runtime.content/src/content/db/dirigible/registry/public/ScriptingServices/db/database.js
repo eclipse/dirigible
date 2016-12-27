@@ -158,9 +158,29 @@ function Statement(internalStatement) {
 	// getMetaData
 	// setBigDecimal
 	// setBlob
+	
+	this.SQLTypes = Object.freeze({
+		"BOOLEAN": java.sql.Types.BOOLEAN,	
+		"DATE": java.sql.Types.DATE,
+		"DOUBLE": java.sql.Types.DOUBLE,
+		"FLOAT": java.sql.Types.FLOAT,		
+		"SMALLINT": java.sql.Types.SMALLINT,
+		"INTEGER": java.sql.Types.INTEGER,
+		"BIGINT": java.sql.Types.BIGINT,		
+		"VARCHAR": java.sql.Types.VARCHAR,
+		"TIME": java.sql.Types.TIME,
+		"TIMESTAMP": java.sql.Types.TIMESTAMP
+	});
+	
+	this.setNull = function(index, sqlType){
+		this.internalStatement.setNull(index, sqlType);
+	};
 
 	this.setBoolean = function(index, value) {
-		this.internalStatement.setBoolean(index, value);
+		if(value!==null && value!==undefined)
+			this.internalStatement.setBoolean(index, value);
+		else
+			this.setNull(index, this.SQLTypes.BOOLEAN);
 	};
 
 	// setByte
@@ -168,39 +188,66 @@ function Statement(internalStatement) {
 	// setClob
 
 	this.setDate = function(index, value) {
-		this.internalStatement.setDate(index, new java.sql.Date(value.getTime()));
+		if(value!==null && value!==undefined)
+			this.internalStatement.setDate(index, new java.sql.Date(value.getTime()));
+		else
+			this.setNull(index, this.SQLTypes.DATE);
 	};
 
 	this.setDouble = function(index, value) {
-		this.internalStatement.setDouble(index, value);
+		if(value!==null && value!==undefined)
+			this.internalStatement.setDouble(index, value);
+		else
+			this.setNull(index, this.SQLTypes.DOUBLE);
 	};
 
 	this.setFloat = function(index, value) {
-		this.internalStatement.setFloat(index, value);
+		if(value!==null && value!==undefined)
+			this.internalStatement.setFloat(index, value);
+		else
+			this.setNull(index, this.SQLTypes.FLOAT);
 	};
 
 	this.setInt = function(index, value) {
-		this.internalStatement.setInt(index, value);
+		if(value!==null && value!==undefined)
+			this.internalStatement.setInt(index, value);
+		else
+			this.setNull(index, this.SQLTypes.INTEGER);
 	};
 
 	this.setLong = function(index, value) {
-		this.internalStatement.setLong(index, value);
+		if(value!==null && value!==undefined)
+			this.internalStatement.setLong(index, value);
+		else
+			this.setNull(index, this.SQLTypes.BINGINT);
 	};
 
 	this.setShort = function(index, value) {
-		this.internalStatement.setShort(index, value);
+		if(value!==null && value!==undefined)	
+			this.internalStatement.setShort(index, value);
+		else
+			this.setNull(index, this.SQLTypes.SMALLINT);
 	};
 
 	this.setString = function(index, value) {
-		this.internalStatement.setString(index, value);
+		if(value!==null && value!==undefined)		
+			this.internalStatement.setString(index, value);
+		else
+			this.setNull(index, this.SQLTypes.VARCHAR);
 	};
 
 	this.setTime = function(index, value) {
-		this.internalStatement.setTime(index, new java.sql.Time(value.getTime()));
+		if(value!==null && value!==undefined)			
+			this.internalStatement.setTime(index, new java.sql.Time(value.getTime()));
+		else
+			this.setNull(index, this.SQLTypes.TIME);			
 	};
 
 	this.setTimestamp = function(index, value) {
-		this.internalStatement.setTimestamp(index, new java.sql.Timestamp(value.getTime()));
+		if(value!==null && value!==undefined)		
+			this.internalStatement.setTimestamp(index, new java.sql.Timestamp(value.getTime()));
+		else
+			this.setNull(index, this.SQLTypes.TIMESTAMP);
 	};
 }
 
