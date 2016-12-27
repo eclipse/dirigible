@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -357,9 +358,18 @@ public class HtmlForEntityTemplateTablePage extends WizardPage {
 		// {"tableName":"SOME_TABLE","tableType":"TABLE"}
 		JsonParser parser = new JsonParser();
 		JsonObject entityService = (JsonObject) parser.parse(new InputStreamReader(model.getSourceFile().getContents(), ICommonConstants.UTF8));
-		model.setTableName(entityService.get(ES_TABLE_NAME).getAsString());
-		model.setTableType(entityService.get(ES_TABLE_TYPE).getAsString());
-		model.setDependentColumn(entityService.get(ES_DEPENDENT_COLUMN).getAsString());
+		JsonElement tableNameElement = entityService.get(ES_TABLE_NAME);
+		if (tableNameElement != null) {
+			model.setTableName(tableNameElement.getAsString());
+		}
+		JsonElement tableTypeElement = entityService.get(ES_TABLE_TYPE);
+		if (tableTypeElement != null) {
+			model.setTableType(tableTypeElement.getAsString());
+		}
+		JsonElement dependentColumnElement = entityService.get(ES_DEPENDENT_COLUMN);
+		if (dependentColumnElement != null) {
+			model.setDependentColumn(dependentColumnElement.getAsString());
+		}
 	}
 
 	private void checkPageStatus() {

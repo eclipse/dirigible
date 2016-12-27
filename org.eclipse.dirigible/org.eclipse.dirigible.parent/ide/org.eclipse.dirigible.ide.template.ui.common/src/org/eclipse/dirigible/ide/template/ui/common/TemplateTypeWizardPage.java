@@ -149,7 +149,12 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 					getModel().setTemplate(templateType);
 					String preview = templateType.getTemplateMetadata().getPreview();
 					if (preview != null) {
-						labelPreview.setImage(getPreviewImage(preview));
+						Image image = getPreviewImage(preview);
+						if (image != null) {
+							labelPreview.setImage(image);
+						} else {
+							labelPreview.setImage(previewImage);
+						}
 					} else {
 						labelPreview.setImage(previewImage);
 					}
@@ -165,7 +170,7 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 		Image image;
 		try {
 			image = TemplateUtils.createImageFromResource(imageLocation);
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 			return null;
 		}

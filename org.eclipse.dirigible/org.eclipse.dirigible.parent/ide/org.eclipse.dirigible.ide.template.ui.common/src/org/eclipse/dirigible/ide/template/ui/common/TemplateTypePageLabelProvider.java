@@ -10,8 +10,6 @@
 
 package org.eclipse.dirigible.ide.template.ui.common;
 
-import java.io.IOException;
-
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -36,7 +34,7 @@ public class TemplateTypePageLabelProvider extends LabelProvider {
 			Image image;
 			try {
 				image = TemplateUtils.createImageFromResource(((TemplateType) element).getTemplateMetadata().getImage());
-			} catch (IOException e) {
+			} catch (Throwable e) {
 				logger.error(e.getMessage(), e);
 				return null;
 			}
