@@ -13,32 +13,49 @@
 	<artifactId>org.eclipse.dirigible.runtime.content</artifactId>
 	<packaging>jar</packaging>
 	
-	<build>
-	    <plugins>
-	    
-	      <plugin>
-	        <artifactId>maven-antrun-plugin</artifactId>
-	        <version>1.7</version>
-	        <executions>
-	          <execution>
-	            <phase>generate-sources</phase>
-	            <configuration>
-	                <target>
-                		<exec
-                  			dir="${basedir}"
-                 			executable="${basedir}/git-checkout.sh"
-                  			failonerror="true">
-                		</exec>
-              		</target>
-	            </configuration>
-	            <goals>
-	              <goal>run</goal>
-	            </goals>
-	          </execution>
-	        </executions>
-	      </plugin>
-       	
-	    </plugins>
-	  </build>
+	<profiles>
+	
+	
+	  <profile>
+	    <id>default</id>
+	    <activation>
+	      <activeByDefault>true</activeByDefault>
+	    </activation>
+	  </profile>
+	  
+	  
+	  <profile>
+	    <id>content</id>
+		<build>
+		    <plugins>
+		    
+		      <plugin>
+		        <artifactId>maven-antrun-plugin</artifactId>
+		        <version>1.7</version>
+		        <executions>
+		          <execution>
+		            <phase>generate-sources</phase>
+		            <configuration>
+		                <target>
+	                		<exec
+	                  			dir="${basedir}"
+	                 			executable="${basedir}/git-checkout.sh"
+	                  			failonerror="true">
+	                		</exec>
+	              		</target>
+		            </configuration>
+		            <goals>
+		              <goal>run</goal>
+		            </goals>
+		          </execution>
+		        </executions>
+		      </plugin>
+	       	
+		    </plugins>
+		  </build>
+		</profile>
+		
+		
+	  </profiles>
 	
 </project>
