@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -53,6 +54,7 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 	private static final String TEMPLATE_TYPE_TEXT_ATTRIBUTE = "text"; //$NON-NLS-1$
 	private static final String TEMPLATE_TYPE_LOCATION_ATTRIBUTE = "location"; //$NON-NLS-1$
 	private static final String TEMPLATE_TYPE_IMAGE_ATTRIBUTE = "image"; //$NON-NLS-1$
+	private static final String TEMPLATE_TYPE_PREVIEW_ATTRIBUTE = "preview"; //$NON-NLS-1$
 	private static final String TEMPLATE_TYPE_CATEGORY_ATTRIBUTE = "category"; //$NON-NLS-1$
 	private static final String TEMPLATE_TYPE_PARAMETER_ATTRIBUTE = "parameter"; //$NON-NLS-1$
 	private static final String TEMPLATE_TYPE_VALUE_ATTRIBUTE = "value"; //$NON-NLS-1$
@@ -74,9 +76,17 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 		final Composite composite = new Composite(parent, SWT.NONE);
 		setControl(composite);
 		composite.setLayout(new GridLayout());
-		createTypeField(composite);
 
-		createPreviewLabel(composite);
+		SashForm sashForm = new SashForm(composite, SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		createTypeField(sashForm);
+
+		createPreviewLabel(sashForm);
+
+		sashForm.setWeights(new int[] { 70, 30 });
+
+		composite.pack(true);
 
 		checkPageStatus();
 	}
@@ -89,20 +99,37 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 	}
 
 	private void createPreviewLabel(final Composite composite) {
-		labelPreview = new Label(composite, SWT.NONE);
+		Composite indexComposite = new Composite(composite, SWT.NONE);
+		GridLayout flat = new GridLayout();
+		flat.horizontalSpacing = 0;
+		flat.marginWidth = 0;
+		indexComposite.setLayout(flat);
+		labelPreview = new Label(indexComposite, SWT.NONE);
 		labelPreview.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
 		labelPreview.setBounds(0, 0, 450, 300);
-		labelPreview.setBackground(new org.eclipse.swt.graphics.Color(null, 0, 0, 0));
+		labelPreview.setBackground(new org.eclipse.swt.graphics.Color(null, 255, 255, 255));
 		labelPreview.setImage(previewImage);
 	}
 
 	private void createTypeField(Composite parent) {
-		final Label label = new Label(parent, SWT.NONE);
+		Composite indexComposite = new Composite(parent, SWT.NONE);
+		GridLayout flat = new GridLayout();
+		flat.horizontalSpacing = 0;
+		flat.marginWidth = 0;
+		indexComposite.setLayout(flat);
+		GridData gridDataTable = new GridData();
+		gridDataTable.horizontalAlignment = SWT.FILL;
+		gridDataTable.verticalAlignment = SWT.FILL;
+		gridDataTable.grabExcessHorizontalSpace = true;
+		gridDataTable.grabExcessVerticalSpace = true;
+		gridDataTable.horizontalIndent = 0;
+
+		final Label label = new Label(indexComposite, SWT.NONE);
 		label.setText(AVAILABLE_TEMPLATES);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
 
-		typeViewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
-		typeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		typeViewer = new TableViewer(indexComposite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+		typeViewer.getControl().setLayoutData(gridDataTable);
 		typeViewer.setContentProvider(new ArrayContentProvider());
 		typeViewer.setLabelProvider(new TemplateTypePageLabelProvider());
 		TemplateType[] templateTypes = createTemplateTypes();
@@ -120,7 +147,12 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 					setErrorMessage(null);
 					TemplateType templateType = ((TemplateType) selection.getFirstElement());
 					getModel().setTemplate(templateType);
-					labelPreview.setImage(getPreviewImage(templateType.getTemplateMetadata().getImage()));
+					String preview = templateType.getTemplateMetadata().getPreview();
+					if (preview != null) {
+						labelPreview.setImage(getPreviewImage(preview));
+					} else {
+						labelPreview.setImage(previewImage);
+					}
 					labelPreview.pack(true);
 				}
 				checkPageStatus();
@@ -206,6 +238,7 @@ public abstract class TemplateTypeWizardPage extends WizardPage {
 			templateTypeDescriptor.setText(templateTypeDescriptorElement.getAttribute(TEMPLATE_TYPE_TEXT_ATTRIBUTE));
 			templateTypeDescriptor.setLocation(templateTypeDescriptorElement.getAttribute(TEMPLATE_TYPE_LOCATION_ATTRIBUTE));
 			templateTypeDescriptor.setImage(templateTypeDescriptorElement.getAttribute(TEMPLATE_TYPE_IMAGE_ATTRIBUTE));
+			templateTypeDescriptor.setPreview(templateTypeDescriptorElement.getAttribute(TEMPLATE_TYPE_PREVIEW_ATTRIBUTE));
 
 			Set<String> parameters = new HashSet<String>();
 			IConfigurationElement[] parameterElements = templateTypeDescriptorElement.getChildren(TEMPLATE_TYPE_PARAMETER_ATTRIBUTE);

@@ -42,6 +42,14 @@ public class TemplateMetadata {
 		this.image = image;
 	}
 
+	public String getPreview() {
+		return preview;
+	}
+
+	public void setPreview(String preview) {
+		this.preview = preview;
+	}
+
 	public TemplateSourceMetadata[] getSources() {
 		return sources;
 	}

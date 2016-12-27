@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.workspace.wizard.project.create;
@@ -44,13 +43,12 @@ public class NewProjectWizardTemplateTypePage extends WizardPage {
 	private static final String PAGE_TITLE = Messages.NewProjectWizardTemplateTypePage_PAGE_TITLE;
 	private static final String PAGE_DESCRIPTION = Messages.NewProjectWizardTemplateTypePage_PAGE_DESCRIPTION;
 
-	private static final Logger logger = Logger
-			.getLogger(NewProjectWizardTemplateTypePage.class);
+	private static final Logger logger = Logger.getLogger(NewProjectWizardTemplateTypePage.class);
 
 	private final NewProjectWizardModel model;
 
 	private TableViewer typeViewer;
-	
+
 	private Label labelPreview;
 
 	public NewProjectWizardTemplateTypePage(NewProjectWizardModel model) {
@@ -66,24 +64,24 @@ public class NewProjectWizardTemplateTypePage extends WizardPage {
 		setControl(composite);
 		composite.setLayout(new GridLayout());
 		createTypeField(composite);
-		
+
 		createPreviewLabel(composite);
 
 		checkPageStatus();
 	}
-	
+
 	private static final Image previewImage = ImageUtils.createImage(getIconURL("preview.png"));
-	
+
 	public static URL getIconURL(String iconName) {
 		URL url = ImageUtils.getIconURL("org.eclipse.dirigible.ide.workspace.wizard.project", "/icons/", iconName);
 		return url;
 	}
 
 	private void createPreviewLabel(final Composite composite) {
-		labelPreview = new Label(composite,SWT.NONE);
+		labelPreview = new Label(composite, SWT.NONE);
 		labelPreview.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true));
-		labelPreview.setBounds(0,0,450,300);
-		labelPreview.setBackground(new org.eclipse.swt.graphics.Color(null, 0,0,0));
+		labelPreview.setBounds(0, 0, 450, 300);
+		labelPreview.setBackground(new org.eclipse.swt.graphics.Color(null, 255, 255, 255));
 		labelPreview.setImage(previewImage);
 	}
 
@@ -92,10 +90,8 @@ public class NewProjectWizardTemplateTypePage extends WizardPage {
 		label.setText(Messages.NewProjectWizardTemplateTypePage_AVAILABLE_TEMPLATES);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false));
 
-		typeViewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER
-				| SWT.V_SCROLL);
-		typeViewer.getControl().setLayoutData(
-				new GridData(SWT.FILL, SWT.FILL, true, true));
+		typeViewer = new TableViewer(parent, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+		typeViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		typeViewer.setContentProvider(new ArrayContentProvider());
 		typeViewer.setLabelProvider(new ProjectTemplateTypePageLabelProvider());
 		ProjectTemplateType[] templateTypes = createTemplateTypes();
@@ -104,10 +100,8 @@ public class NewProjectWizardTemplateTypePage extends WizardPage {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event
-						.getSelection();
-				if (selection.getFirstElement() == null
-						|| !(selection.getFirstElement() instanceof ProjectTemplateType)) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				if ((selection.getFirstElement() == null) || !(selection.getFirstElement() instanceof ProjectTemplateType)) {
 					setErrorMessage(SELECT_TEMPLATE_TYPE_FORM_THE_LIST);
 					setPageComplete(false);
 					labelPreview.setImage(previewImage);
@@ -115,8 +109,7 @@ public class NewProjectWizardTemplateTypePage extends WizardPage {
 					return;
 				} else {
 					setErrorMessage(null);
-					ProjectTemplateType templateType = ((ProjectTemplateType) selection
-							.getFirstElement());
+					ProjectTemplateType templateType = ((ProjectTemplateType) selection.getFirstElement());
 					getModel().setTemplate(templateType);
 					labelPreview.setImage(templateType.getImagePreview());
 					labelPreview.pack(true);
@@ -140,18 +133,14 @@ public class NewProjectWizardTemplateTypePage extends WizardPage {
 	protected ProjectTemplateType[] prepareTemplateTypes() throws IOException {
 		List<ProjectTemplateType> projectTemplateTypesList = new ArrayList<ProjectTemplateType>();
 		IRepository repository = RepositoryFacade.getInstance().getRepository();
-		ICollection projectTemplatesRoot = repository
-				.getCollection(IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_PROJECTS);
+		ICollection projectTemplatesRoot = repository.getCollection(IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_PROJECTS);
 		if (!projectTemplatesRoot.exists()) {
 			model.setUseTemplate(false);
 			return new ProjectTemplateType[] {};
 		}
-		for (ICollection projectCollection : projectTemplatesRoot
-				.getCollections()) {
+		for (ICollection projectCollection : projectTemplatesRoot.getCollections()) {
 			try {
-				projectTemplateTypesList.add(ProjectTemplateType
-						.createTemplateType(repository,
-								projectCollection.getPath()));
+				projectTemplateTypesList.add(ProjectTemplateType.createTemplateType(repository, projectCollection.getPath()));
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -161,8 +150,7 @@ public class NewProjectWizardTemplateTypePage extends WizardPage {
 
 	private void checkPageStatus() {
 		if (getModel().isUseTemplate()) {
-			if (getModel().getTemplateLocation() == null
-					|| "".equals(getModel().getTemplateLocation())) { //$NON-NLS-1$
+			if ((getModel().getTemplateLocation() == null) || "".equals(getModel().getTemplateLocation())) { //$NON-NLS-1$
 				setPageComplete(false);
 				return;
 			}
