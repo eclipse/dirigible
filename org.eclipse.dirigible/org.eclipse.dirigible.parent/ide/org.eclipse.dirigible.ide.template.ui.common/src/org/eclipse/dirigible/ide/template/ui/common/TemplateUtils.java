@@ -11,14 +11,18 @@ import org.eclipse.dirigible.ide.repository.RepositoryFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 
 public class TemplateUtils {
+
+	private static final Logger logger = Logger.getLogger(TemplateUtils.class);
 
 	private static final ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources());
 
@@ -50,8 +54,14 @@ public class TemplateUtils {
 	}
 
 	private static Image createImage(byte[] data) {
-		ImageDescriptor imageDescriptor = ImageDescriptor.createFromImageData(new ImageData(new ByteArrayInputStream(data)));
-		return resourceManager.createImage(imageDescriptor);
+		try {
+			ImageDescriptor imageDescriptor = ImageDescriptor.createFromImageData(new ImageData(new ByteArrayInputStream(data)));
+			return resourceManager.createImage(imageDescriptor);
+		} catch (SWTException ex) {
+			logger.warn(ex.getMessage());
+
+		}
+		return null;
 	}
 
 }
