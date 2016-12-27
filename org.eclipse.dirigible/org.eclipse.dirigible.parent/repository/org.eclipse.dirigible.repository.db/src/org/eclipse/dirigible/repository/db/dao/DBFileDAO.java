@@ -45,7 +45,7 @@ public class DBFileDAO extends DBObjectDAO {
 
 	private static Logger logger = Logger.getLogger(DBFileDAO.class);
 
-	private static int DOC_CHUNK_SIZE = 2000;
+	private static int DOC_CHUNK_SIZE = 1000;
 
 	private static int BIN_MAX_SIZE = 2097152;
 
@@ -240,6 +240,9 @@ public class DBFileDAO extends DBObjectDAO {
 	 */
 	public DBFile createFile(String path, byte[] bytes, boolean isBinary, String contentType, boolean override) throws DBBaseException {
 
+		logger.debug("createFile started...");
+		logger.debug("createFile path: " + path);
+
 		checkInitialized();
 
 		if ((path == null) || "".equals(path.trim())) { //$NON-NLS-1$
@@ -269,6 +272,8 @@ public class DBFileDAO extends DBObjectDAO {
 
 		}
 
+		logger.debug("createFile ended.");
+
 		return resource;
 	}
 
@@ -280,6 +285,9 @@ public class DBFileDAO extends DBObjectDAO {
 	 * @throws DBBaseException
 	 */
 	private void insertDocument(DBFile resource, byte[] bytes) throws DBBaseException {
+
+		logger.debug("insertDocument started...");
+		logger.debug("insertDocument resource: " + resource.getPath());
 
 		checkInitialized();
 
@@ -297,6 +305,7 @@ public class DBFileDAO extends DBObjectDAO {
 			insertDocumentSingle(resource, bytes, 0);
 		}
 
+		logger.debug("insertDocument ended.");
 	}
 
 	/**
@@ -335,11 +344,23 @@ public class DBFileDAO extends DBObjectDAO {
 	 */
 	private void insertDocumentSingle(DBFile resource, byte[] bytes, int order) throws DBBaseException {
 
+		logger.debug("insertDocumentSingle started...");
+		logger.debug("insertDocumentSingle resource: " + resource.getPath());
+
 		checkInitialized();
 
 		if (bytes.length > DOC_CHUNK_SIZE) {
-			// TODO refactor API - methods to throws typed exceptions
-			throw new RuntimeException(SINGLE_RESOURCES_BIGGER_THAN_4K_NOT_SUPPORTED);
+			throw new DBBaseException(SINGLE_RESOURCES_BIGGER_THAN_4K_NOT_SUPPORTED);
+		}
+
+		String asString = new String(bytes, Charset.defaultCharset());
+
+		logger.debug("insertDocumentSingle asString: " + asString);
+
+		logger.debug("insertDocumentSingle asString length: " + asString.getBytes().length);
+
+		if (asString.getBytes().length > DOC_CHUNK_SIZE) {
+			throw new DBBaseException(SINGLE_RESOURCES_BIGGER_THAN_4K_NOT_SUPPORTED);
 		}
 
 		Connection connection = null;
@@ -350,7 +371,7 @@ public class DBFileDAO extends DBObjectDAO {
 
 			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 			preparedStatement.setString(1, resource.getPath());
-			preparedStatement.setString(2, new String(bytes, Charset.defaultCharset()));
+			preparedStatement.setString(2, asString);
 			preparedStatement.setInt(3, order);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -362,6 +383,7 @@ public class DBFileDAO extends DBObjectDAO {
 			getRepository().getDbUtils().closeConnection(connection);
 		}
 
+		logger.debug("insertDocumentSingle ended.");
 	}
 
 	/**
@@ -373,12 +395,17 @@ public class DBFileDAO extends DBObjectDAO {
 	 */
 	void setDocument(DBFile resource, byte[] bytes) throws DBBaseException {
 
+		logger.debug("setDocument started...");
+		logger.debug("setDocument resource: " + resource.getPath());
+
 		checkInitialized();
 
 		removeDocument(resource);
 		insertDocument(resource, bytes);
 
 		setModified(resource);
+
+		logger.debug("setDocument ended.");
 	}
 
 	void setModified(DBFile resource) {

@@ -86,6 +86,9 @@ public class ZipImporter {
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
 			boolean excludeRootFolderName, Map<String, String> filter) throws IOException {
+
+		logger.debug("importZip started...");
+
 		try {
 			ZipEntry entry;
 			String parentFolder = null;
@@ -93,18 +96,21 @@ public class ZipImporter {
 
 				if (excludeRootFolderName && (parentFolder == null)) {
 					parentFolder = entry.getName();
+					logger.debug("importZip parentFolder: " + parentFolder);
 					continue;
 				}
 
 				String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
-
-				String outpath = relativeRoot + IRepository.SEPARATOR + entryName;
+				logger.debug("importZip entryName: " + entryName);
+				String outpath = relativeRoot + ((relativeRoot.endsWith(IRepository.SEPARATOR)) ? "" : IRepository.SEPARATOR) + entryName;
+				logger.debug("importZip outpath: " + outpath);
 
 				if (filter != null) {
 					for (Map.Entry<String, String> forReplacement : filter.entrySet()) {
 						outpath = outpath.replace(forReplacement.getKey(), forReplacement.getValue());
 					}
 				}
+				logger.debug("importZip outpath replaced: " + outpath);
 
 				ByteArrayOutputStream output = new ByteArrayOutputStream();
 				try {
@@ -112,15 +118,22 @@ public class ZipImporter {
 					try {
 						if (output.toByteArray().length > 0) {
 							// TODO filter for binary extensions
-							String mimeType = null;
+
 							String extension = ContentTypeHelper.getExtension(entry.getName());
-							if ((mimeType = ContentTypeHelper.getContentType(extension)) != null) {
-								repository.createResource(outpath, output.toByteArray(), ContentTypeHelper.isBinary(mimeType), mimeType, override);
+							String mimeType = ContentTypeHelper.getContentType(extension);
+							boolean isBinary = ContentTypeHelper.isBinary(mimeType);
+							if (mimeType != null) {
+								logger.debug("importZip creating resource: " + outpath);
+								logger.debug("importZip creating resource is binary?: " + isBinary);
+								repository.createResource(outpath, output.toByteArray(), isBinary, mimeType, override);
+
 							} else {
-								repository.createResource(outpath, output.toByteArray());
+								logger.debug("importZip creating resource: " + outpath);
+								repository.createResource(outpath, output.toByteArray(), true, ContentTypeHelper.APPLICATION_OCTET_STREAM, override);
 							}
 						} else {
-							if (outpath.endsWith("/")) {
+							if (outpath.endsWith(IRepository.SEPARATOR)) {
+								logger.debug("importZip creating collection: " + outpath);
 								repository.createCollection(outpath);
 							}
 						}
@@ -134,6 +147,8 @@ public class ZipImporter {
 		} finally {
 			zipInputStream.close();
 		}
+
+		logger.debug("importZip ended.");
 
 	}
 
