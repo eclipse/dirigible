@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.content;
@@ -33,15 +32,14 @@ import org.eclipse.dirigible.runtime.PermissionsUtils;
 
 /**
  * Imports the provided content into the Registry
- *
  */
 public class ProjectImporterServlet extends ContentBaseServlet {
 
 	private static final long serialVersionUID = -2889019459717507121L;
 
 	private static final Logger logger = Logger.getLogger(ProjectImporterServlet.class);
-	
-	private static final String DEFAULT_PATH_FOR_IMPORT = IRepositoryPaths.REGISTRY_IMPORT_PATH;
+
+	private static final String DEFAULT_PATH_FOR_IMPORT = IRepositoryPaths.REGISTRY_DEPLOY_PATH;
 	private static final String PARAMETER_OVERRIDE = "override";
 	private static final String HEADER_OVERRIDE = "override";
 
@@ -50,9 +48,8 @@ public class ProjectImporterServlet extends ContentBaseServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
 			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Import");
 			logger.debug(err);
@@ -97,39 +94,39 @@ public class ProjectImporterServlet extends ContentBaseServlet {
 	}
 
 	/**
-	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter. Exclude the root folder name.
-	 * 
+	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter. Exclude the
+	 * root folder name.
+	 *
 	 * @param content
 	 * @param request
 	 * @param override
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	private void importZipAndUpdate(InputStream content, HttpServletRequest request, boolean override) throws Exception {
 		importZipAndUpdate(content, getDefaultPathForImport(), request, override, true);
 	}
 
 	/**
-	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter. 
+	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter.
 	 * Exclude the root folder name depending on the excludeRootFolderName parameter.
-	 * 
+	 *
 	 * @param content
 	 * @param pathForImport
 	 * @param request
 	 * @param override
 	 * @param excludeRootFolderName
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request, boolean override, boolean excludeRootFolderName) throws Exception {
+	private void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request, boolean override,
+			boolean excludeRootFolderName) throws Exception {
 		// 1. Import content.zip into repository
 		getRepository(request).importZip(new ZipInputStream(content), pathForImport, override, excludeRootFolderName);
 		postImport(request);
 	}
 
-	private void postImport(HttpServletRequest request) throws IOException,
-			Exception {
+	private void postImport(HttpServletRequest request) throws IOException, Exception {
 		// 2. Post import actions
-		ContentPostImportUpdater contentPostImportUpdater = new ContentPostImportUpdater(
-				getRepository(request));
+		ContentPostImportUpdater contentPostImportUpdater = new ContentPostImportUpdater(getRepository(request));
 		contentPostImportUpdater.update(request);
 	}
 }
