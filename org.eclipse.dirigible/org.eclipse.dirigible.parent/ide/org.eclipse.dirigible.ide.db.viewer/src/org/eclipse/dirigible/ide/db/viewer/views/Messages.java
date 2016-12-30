@@ -15,6 +15,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.dirigible.ide.db.viewer.views.messages"; //$NON-NLS-1$
+	public static String AbstractSQLConsole_LIMIT_RESULTS_TO_100_ROWS;
 	public static String DatabaseViewer_DATABASE_VIEW;
 	public static String SQLConsole_EXECUTE_QUERY;
 	public static String SQLConsole_EXECUTE_QUERY_STATEMENT;

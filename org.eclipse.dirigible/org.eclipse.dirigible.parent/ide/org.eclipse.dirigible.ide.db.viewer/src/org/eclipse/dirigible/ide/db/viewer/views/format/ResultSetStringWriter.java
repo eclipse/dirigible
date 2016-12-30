@@ -15,6 +15,16 @@ public class ResultSetStringWriter implements ResultSetWriter<String> {
 	private HeaderFormatter<?> headerFormat = new StringHeaderFormatter();
 	private RowFormatter<?> rowFormat = new StringRowFormatter();
 
+	private boolean limited = true;
+
+	public boolean isLimited() {
+		return limited;
+	}
+
+	public void setLimited(boolean limited) {
+		this.limited = limited;
+	}
+
 	@Override
 	public String writeTable(ResultSet resultSet) throws SQLException {
 
@@ -62,8 +72,7 @@ public class ResultSetStringWriter implements ResultSetWriter<String> {
 
 			tableSb.append(this.rowFormat.write(columnHeaderDescriptors, resultSetMetaData, resultSet));
 
-			// limit to the first 100 rows. TODO: remove this limitation
-			if (++count > 100) {
+			if (this.isLimited() && (++count > 100)) {
 				tableSb.append("..."); //$NON-NLS-1$
 				break;
 			}

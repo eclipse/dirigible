@@ -50,6 +50,12 @@ import org.eclipse.ui.part.ViewPart;
  */
 public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole {
 
+	private static final String COURIER_NEW = "Courier New"; //$NON-NLS-1$
+
+	private static final String SQL = "sql"; //$NON-NLS-1$
+
+	private static final String LIMIT_RESULTS_TO_100_ROWS = Messages.AbstractSQLConsole_LIMIT_RESULTS_TO_100_ROWS;
+
 	private static final String EXECUTE_QUERY_STATEMENT = Messages.SQLConsole_EXECUTE_QUERY_STATEMENT;
 
 	private static final String EXECUTE_QUERY = Messages.SQLConsole_EXECUTE_QUERY;
@@ -73,6 +79,8 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 	private static final String EXECUTE_UPDATE = Messages.SQLConsole_EXECUTE_UPDATE;
 
 	private static final Logger logger = Logger.getLogger(AbstractSQLConsole.class);
+
+	private boolean limited = true;
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -98,14 +106,14 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		scriptArea = createSQLEditorWidget(sashForm);
 		scriptArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		scriptArea.setText(EMPTY, getMode(), false, false, 0, "sql");
+		scriptArea.setText(EMPTY, getMode(), false, false, 0, SQL);
 
 		outputArea = new Text(sashForm, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
 		outputArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		outputArea.setText(EMPTY);
-		outputArea.setFont(new Font(null, "Courier New", 12, SWT.NORMAL)); //$NON-NLS-1$
+		outputArea.setFont(new Font(null, COURIER_NEW, 12, SWT.NORMAL));
 
-		ToolItem itemQuery = new ToolItem(toolBar, SWT.PUSH | SWT.SEPARATOR);
+		ToolItem itemQuery = new ToolItem(toolBar, SWT.PUSH);
 		itemQuery.setText(EXECUTE_QUERY);
 		Image iconQuery = ImageDescriptor.createFromURL(AbstractSQLConsole.class.getResource(ICONS_SEGMENT + ICON_EXECUTE_QUERY_PNG)).createImage();
 		itemQuery.setImage(iconQuery);
@@ -145,6 +153,26 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 				}
 			});
 		}
+
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		ToolItem itemLimit = new ToolItem(toolBar, SWT.CHECK);
+		itemLimit.setText(LIMIT_RESULTS_TO_100_ROWS);
+		itemLimit.setSelection(true);
+		itemLimit.addSelectionListener(new SelectionListener() {
+			private static final long serialVersionUID = 1281159157504712273L;
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ToolItem toolItem = (ToolItem) e.getSource();
+				limited = toolItem.getSelection();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				//
+			}
+		});
+
 		// Create the help context id for the viewer's control
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(scriptArea,
 		// "org.eclipse.dirigible.ide.db.viewer.views.SQLConsole");
@@ -214,7 +242,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 					@Override
 					public void queryDone(ResultSet rs) {
 						try {
-							printResultSet(rs);
+							printResultSet(rs, limited);
 						} catch (SQLException e) {
 							logger.warn(e.getMessage(), e);
 							outputArea.setText(e.getMessage());
@@ -247,8 +275,9 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 		return DatabaseViewer.getConnectionFromSelectedDatasource();
 	}
 
-	protected void printResultSet(ResultSet resultSet) throws SQLException {
+	protected void printResultSet(ResultSet resultSet, boolean limited) throws SQLException {
 		ResultSetStringWriter writer = new ResultSetStringWriter();
+		writer.setLimited(limited);
 		String tableString = writer.writeTable(resultSet);
 		outputArea.setText(tableString);
 	}
@@ -281,7 +310,7 @@ public abstract class AbstractSQLConsole extends ViewPart implements ISQLConsole
 
 	@Override
 	public void setQuery(String query) {
-		scriptArea.setText(query, getMode(), false, false, 0, "sql");
+		scriptArea.setText(query, getMode(), false, false, 0, SQL);
 	}
 
 	private EditorMode getMode() {
