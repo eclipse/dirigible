@@ -79,7 +79,7 @@ public class ExtensionsManagerView extends ViewPart {
 		viewer = tree.getViewer();
 		TreeColumn column = new TreeColumn(viewer.getTree(), SWT.LEFT);
 		column.setText(Messages.ExtensionsManagerView_EXTENSIONS);
-		column.setWidth(300);
+		column.setWidth(600);
 
 		viewer.setContentProvider(new ExtensionsViewContentProvider(extensionManager));
 		viewer.setLabelProvider(new ExtensionsViewLabelProvider());
