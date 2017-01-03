@@ -115,6 +115,7 @@
 		<module>org.eclipse.dirigible.ide.publish.ui</module>
 		<module>org.eclipse.dirigible.ide.scripts.publish</module>
 		<module>org.eclipse.dirigible.ide.extensions.publish</module>
+		<module>org.eclipse.dirigible.ide.extensions.ui</module>
 		<module>org.eclipse.dirigible.ide.template.publish</module>
 		<!-- <module>org.eclipse.dirigible.ide.publish.test</module> -->
 		<module>org.eclipse.dirigible.ide.cheatsheets</module>
