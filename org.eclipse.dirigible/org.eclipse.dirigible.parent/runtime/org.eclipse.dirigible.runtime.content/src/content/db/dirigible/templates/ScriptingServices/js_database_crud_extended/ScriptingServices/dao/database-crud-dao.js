@@ -3,7 +3,7 @@
 
 var database = require('db/database');
 var datasource = database.getDatasource();
-var ${fileNameNoExtension}DaoExtensionsUtils = require('${packageName}/${fileNameNoExtension}DaoExtensionUtils');
+var ${fileNameNoExtension}DaoExtensionsUtils = require('${packageName}/utils/${fileNameNoExtension}DaoExtensionUtils');
 
 // Create an entity
 exports.create = function(entity) {

@@ -1,5 +1,5 @@
 {
-    "name":"Entities List Service on Table or View (JavaScript)",
+    "name":"List Service on Table or View (JavaScript)",
     "description":"JavaScript read-only entity service on a relational database table or view",
     "image":"database-read.png",
     "sources":[
@@ -7,15 +7,15 @@
             "name":"database-read.js",
             "action":"generate"
         }, {
-            "name":"database-read-dao.js",
+            "name":"ScriptingServices/dao/database-read-dao.js",
             "action":"generate",
             "rename":"%sDao"
         }, {
-            "name":"database-read.entity",
+            "name":"ScriptingServices/entity/database-read.entity",
             "action":"generate",
             "rename":"%s"
         }, {
-            "name":"database-read.swagger",
+            "name":"ScriptingServices/swagger/database-read.swagger",
             "action":"generate",
             "rename":"%s"
         }

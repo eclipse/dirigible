@@ -126,7 +126,7 @@
 								ng-model="selectedEntry.${tableColumn.getName()}"
 								ng-readonly="operation == 'show'" required="required">
 							<div>
-								<select ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
+								<select class="form-control" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
 							</div>
 #elseif ($tableColumn.getWidgetType() == "list")
 						  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -135,18 +135,18 @@
 								ng-model="selectedEntry.${tableColumn.getName()}"
 								ng-readonly="operation == 'show'" required="required">
 							<div>
-								<select multiple="true" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
+								<select class="form-control" multiple="true" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
 							</div>
 #elseif ($tableColumn.getWidgetType() == "integer")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<label>${tableColumn.getLabel()}</label>
-							<input type="number" class="form-control" pattern="\d*" step="1"
+							<input type="number" class="form-control text-right" pattern="\d*" step="1"
 								ng-model="selectedEntry.${tableColumn.getName()}"
 								ng-readonly="operation == 'show'" required="required">
 #elseif ($tableColumn.getWidgetType() == "float")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<label>${tableColumn.getLabel()}</label>
-							<input type="number" class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01"
+							<input type="number" class="form-control text-right" pattern="[0-9]+([\.,][0-9]+)?" step="0.01"
 								ng-model="selectedEntry.${tableColumn.getName()}"
 								ng-readonly="operation == 'show'" required="required">
 #else

@@ -4,7 +4,7 @@
 var request = require('net/http/request');
 var response = require('net/http/response');
 var xss = require('utils/xss');
-var ${fileNameNoExtension}Dao = require('${packageName}/${fileNameNoExtension}Dao');
+var ${fileNameNoExtension}Dao = require('${packageName}/dao/${fileNameNoExtension}Dao');
 
 
 handleRequest(request, response, xss);

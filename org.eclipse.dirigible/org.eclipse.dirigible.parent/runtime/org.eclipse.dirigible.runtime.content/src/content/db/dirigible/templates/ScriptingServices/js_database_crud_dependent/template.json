@@ -1,20 +1,20 @@
 {  
-   "name":"Entity Service on Table (JavaScript) Dependent",
+   "name":"CRUD Service on Table - Dependent (JavaScript)",
    "description":"JavaScript RESTful entity service on a relational database table dependent to another table",
    "image":"database-crud.png",
    "sources":[{  
          "name":"database-crud.js",
          "action":"generate"
       }, {  
-         "name":"database-crud-dao.js",
+         "name":"ScriptingServices/dao/database-crud-dao.js",
          "action":"generate",
          "rename":"%sDao"
       }, {  
-         "name":"database-crud.entity",
+         "name":"ScriptingServices/entity/database-crud.entity",
          "action":"generate",
          "rename":"%s"
       }, {  
-         "name":"database-crud.swagger",
+         "name":"ScriptingServices/swagger/database-crud.swagger",
          "action":"generate",
          "rename":"%s"
     }],

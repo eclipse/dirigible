@@ -1,7 +1,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-const EXT_POINT_NAME = "/${packageName}/${fileNameNoExtension}_database_crud_hooks";
+const EXT_POINT_NAME = "/${packageName}/extension_points/${fileNameNoExtension}_database_crud_hooks";
 
 var extensionService = require('core/extensions');
 

@@ -9,7 +9,7 @@
     "tags":[
       {
          "name":"${entityName}",
-         "description":"View and manage ${entityName} objects"
+         "description":"View ${entityName} objects"
       }
     ],
     "paths": {

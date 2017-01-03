@@ -9,8 +9,13 @@
 
 <title>${pageTitle}</title>
 
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<style>
+.selected-true {
+	background-color: #428bca;
+	color: white;
+}
+</style>
 </head>
 <body style="margin-left: 20px">
 <div ng-include="'header.html'"></div>
@@ -22,7 +27,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<table class="table table-condensed table-striped table-hover">
+			<table class="table table-condensed">
 				<thead>
 					<tr>
 #foreach ($tableColumn in $tableColumns) 
