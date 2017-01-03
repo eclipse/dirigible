@@ -60,7 +60,7 @@ public class UploadProjectHandler extends AbstractWorkspaceHandler {
 					IRepository repository = RepositoryFacade.getInstance().getRepository();
 					IWorkspace workspace = WorkspaceLocator.getWorkspace();
 					String root = WorkspaceLocator.getRepositoryPathForWorkspace(workspace);
-					repository.importZip(new ZipInputStream(in), root);
+					repository.importZip(new ZipInputStream(in), root, true);
 					refreshWorkspace();
 				} catch (Exception e) {
 					error.error(CANNOT_SAVE_UPLOADED_FILE + fileName, e);
