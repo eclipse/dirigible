@@ -22,18 +22,6 @@
             name="Extension Definition">
       </command>
    </extension>
-   <extension 
-	       point="org.eclipse.ui.views">
-      <view
-            allowMultiple="false"
-            category="org.eclipse.dirigible.ide.workspace.ui.category"
-            class="org.eclipse.dirigible.ide.template.ui.ed.view.ExtensionsView"
-            icon="icons/wizard_extension-definition.png"
-            id="org.eclipse.dirigible.ide.template.ui.ed.view.ExtensionsView"
-            name="Extensions Viewer"
-            restorable="true">
-      </view>
-	</extension>
 	<extension
        point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
        <newMenuItem

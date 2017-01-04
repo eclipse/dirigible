@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.dirigible.ide.repository,
  org.eclipse.dirigible.repository.ext,
  org.eclipse.rap.rwt,
  org.eclipse.rap.ui,
- org.eclipse.rap.ui.workbench
+ org.eclipse.rap.ui.workbench,
+ org.eclipse.dirigible.ide.common
 Import-Package: com.google.gson,
  javax.servlet,
  javax.servlet.http,
