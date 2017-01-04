@@ -103,12 +103,12 @@ cp -r target/template_js_database_crud_dependent/template_js_database_crud_depen
 #### WebContent
 
 # template_web_launchpad
-# if cd target/template_web_launchpad; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_launchpad.git target/template_web_launchpad; fi
-# cp -r target/template_web_launchpad/template_web_launchpad/WebContent src/content/db/dirigible/templates
+if cd target/template_web_launchpad; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_launchpad.git target/template_web_launchpad; fi
+cp -r target/template_web_launchpad/template_web_launchpad/WebContent src/content/db/dirigible/templates
 
 # template_web_launchpad_item
-# if cd target/template_web_launchpad_item; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_launchpad_item.git target/template_web_launchpad_item; fi
-# cp -r target/template_web_launchpad_item/template_web_launchpad_item/WebContent src/content/db/dirigible/templates
+if cd target/template_web_launchpad_item; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_launchpad_item.git target/template_web_launchpad_item; fi
+cp -r target/template_web_launchpad_item/template_web_launchpad_item/WebContent src/content/db/dirigible/templates
 
 
 
@@ -134,7 +134,9 @@ cp -r target/template_web_master_details_master/template_web_master_details_mast
 if cd target/template_web_master_details_details; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_master_details_details.git target/template_web_master_details_details; fi
 cp -r target/template_web_master_details_details/template_web_master_details_details/WebContentForEntity src/content/db/dirigible/templates
 
-
+# template_web_markers_on_map
+if cd target/template_web_markers_on_map; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_markers_on_map.git target/template_web_markers_on_map; fi
+cp -r target/template_web_markers_on_map/template_web_markers_on_map/WebContentForEntity src/content/db/dirigible/templates
 
 
 ####### Prepare content.zip

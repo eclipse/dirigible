@@ -1,0 +1,58 @@
+{  
+    "name": "Launchpad",
+    "description": "Launchpad application",
+    "image": "launchpad.png",
+    "sources": [{
+        "name": "index.html",
+        "action": "generate"
+    }, {
+        "name": "WebContent/styles/custom.css",
+        "action": "copy"
+    }, {
+        "name": "WebContent/styles/main.css",
+        "action": "copy"
+    }, {
+        "name": "WebContent/templates/home.html",
+        "action": "copy"
+    }, {
+        "name": "WebContent/templates/view.html",
+        "action": "copy"
+    }, {
+        "name": "ExtensionDefinitions/extension_point/launchpad.extensionpoint",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/api/home.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/api/menu.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/extension/launchpadExtensionUtils.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/templates/appTemplate.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/app.js",
+        "action": "generate"
+    }],
+    "parameters": [{
+        "name":"templateType",
+        "required":"true"
+    }, {
+        "name":"fileName",
+        "required":"true"
+    }, {
+        "name":"projectName",
+        "required":"true"
+    }, {
+        "name":"packageName",
+        "required":"true"
+    }, {  
+        "name":"tableName",
+        "required":"true"
+    }, {  
+        "name":"columns",
+        "required":"true"
+    }]
+}
