@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.security.publish
 Bundle-SymbolicName: org.eclipse.dirigible.ide.security.publish;singleton:=true
-Bundle-Version: 2.6.161203
+Bundle-Version: 2.7.170109
 Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.dirigible.ide.repository,
