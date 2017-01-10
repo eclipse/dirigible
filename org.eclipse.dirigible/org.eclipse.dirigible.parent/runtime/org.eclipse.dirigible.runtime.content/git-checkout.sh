@@ -61,15 +61,15 @@ cp -r target/core_test_runner/core_test_runner/ScriptingServices src/content/db/
 cp -r target/core_test_runner/core_test_runner/WebContent src/content/db/dirigible/registry/public
 
 # qunit
-if cd target/qunit; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/qunit.git; fi
+if cd target/qunit; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/qunit.git target/qunit; fi
 cp -r target/qunit/qunit/ScriptingServices src/content/db/dirigible/registry/public
 
 # jasmine
-if cd target/jasmine; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jasmine.git; fi
+if cd target/jasmine; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jasmine.git target/jasmine; fi
 cp -r target/jasmine/jasmine/ScriptingServices src/content/db/dirigible/registry/public
 
 # jsmockito
-if cd target/jsmockito; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jsmockito.git; fi
+if cd target/jsmockito; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jsmockito.git target/jsmockito; fi
 cp -r target/jsmockito/jsmockito/ScriptingServices src/content/db/dirigible/registry/public
 
 
