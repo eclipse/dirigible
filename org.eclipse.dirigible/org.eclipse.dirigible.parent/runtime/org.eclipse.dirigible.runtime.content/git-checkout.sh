@@ -56,21 +56,21 @@ if cd target/swagger_ui; then git pull; cd ../..; else git clone https://github.
 cp -r target/swagger_ui/swagger_ui/WebContent src/content/db/dirigible/registry/public
 
 # core_test_runner
-if cd target/registry_core_test_runner; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/core_test_runner.git target/registry_core_test_runner; fi
-cp -r target/registry_core_test_runner/registry_core_test_runner/ScriptingServices src/content/db/dirigible/registry/public
-cp -r target/registry_core_test_runner/registry_core_test_runner/WebContent src/content/db/dirigible/registry/public
+if cd target/core_test_runner; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/core_test_runner.git target/core_test_runner; fi
+cp -r target/core_test_runner/core_test_runner/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/core_test_runner/core_test_runner/WebContent src/content/db/dirigible/registry/public
 
 # qunit
-if cd target/registry_qunit; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/qunit.git; fi
-cp -r target/registry_qunit/registry_qunit/ScriptingServices src/content/db/dirigible/registry/public
+if cd target/qunit; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/qunit.git; fi
+cp -r target/qunit/qunit/ScriptingServices src/content/db/dirigible/registry/public
 
 # jasmine
-if cd target/registry_jasmine; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jasmine.git; fi
-cp -r target/registry_jasmine/registry_jasmine/ScriptingServices src/content/db/dirigible/registry/public
+if cd target/jasmine; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jasmine.git; fi
+cp -r target/jasmine/jasmine/ScriptingServices src/content/db/dirigible/registry/public
 
 # jsmockito
-if cd target/registry_jsmockito; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jsmockito.git; fi
-cp -r target/registry_jsmockito/registry_jsmockito/ScriptingServices src/content/db/dirigible/registry/public
+if cd target/jsmockito; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jsmockito.git; fi
+cp -r target/jsmockito/jsmockito/ScriptingServices src/content/db/dirigible/registry/public
 
 
 ####### Clone or Pull Templates
