@@ -159,8 +159,8 @@ cp -r target/template_web_markers_on_map/template_web_markers_on_map/WebContentF
 # zip the content
 cd src/content/db/
 rm ../../../content.zip
-zip -r ../../../content.zip *
-#tar -czvf ../../../content.zip *
+#zip -r ../../../content.zip *
+tar -czvf ../../../content.zip *
 
 # copy to the init plugin
 cd ../../..
