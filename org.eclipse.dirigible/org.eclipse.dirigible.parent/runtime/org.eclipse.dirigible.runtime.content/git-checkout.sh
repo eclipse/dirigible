@@ -154,6 +154,11 @@ if cd target/template_web_markers_on_map; then git pull; cd ../..; else git clon
 cp -r target/template_web_markers_on_map/template_web_markers_on_map/WebContentForEntity src/content/db/dirigible/templates
 
 
+# template_web_discussions
+if cd target/template_web_discussions; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_discussions.git target/template_web_discussions; fi
+cp -r target/template_web_discussions/template_web_discussions/WebContent src/content/db/dirigible/templates
+
+
 ####### Prepare content.zip
 
 # zip the content

@@ -1,0 +1,29 @@
+{
+  "viewName":"${packageName.toUpperCase()}_BOARD_STATS",
+  "query":"SELECT a.${packageName.toUpperCase()}B_ID,
+	  a.${packageName.toUpperCase()}B_SHORT_TEXT,
+	  a.${packageName.toUpperCase()}B_DESCRIPTION,
+	  u.IDMU_UNAME,
+	  u.IDMU_PIC,
+	  a.${packageName.toUpperCase()}B_PUBLISH_TIME,
+	  a.${packageName.toUpperCase()}B_LASTMODIFIED_TIME,
+	  a.${packageName.toUpperCase()}B_STATUS,
+	  a.${packageName.toUpperCase()}B_VISITS,
+	  b.LATEST_UPDATE_TIME,
+	  b.REPLIES,
+	  b.PARTICIPANTS,
+	  c.TOTAL_VOTES,
+	  c.UPVOTES,
+	  c.DOWNVOTES,
+	  c.RATING
+FROM ${packageName.toUpperCase()}_BOARD AS a 
+LEFT JOIN ${packageName.toUpperCase()}_DISCUSSION_STATS AS b ON b.${packageName.toUpperCase()}B_ID = a.${packageName.toUpperCase()}B_ID
+LEFT JOIN ${packageName.toUpperCase()}_BOARD_RATING AS c ON c.${packageName.toUpperCase()}B_ID = a.${packageName.toUpperCase()}B_ID
+LEFT JOIN IDM_USER AS u ON u.IDMU_UNAME = a.${packageName.toUpperCase()}B_USER
+ORDER BY b.LATEST_UPDATE_TIME, c.RATING, a.${packageName.toUpperCase()}B_VISITS, c.TOTAL_VOTES, b.REPLIES, b.PARTICIPANTS DESC",
+    "dependencies": [
+        {"name": "${packageName.toUpperCase()}_DISCUSSION_STATS", "type": "VIEW"},
+        {"name": "${packageName.toUpperCase()}_BOARD_RATING", "type": "VIEW"},
+        {"name": "IDM_USER", "type": "TABLE"}
+        ]
+}

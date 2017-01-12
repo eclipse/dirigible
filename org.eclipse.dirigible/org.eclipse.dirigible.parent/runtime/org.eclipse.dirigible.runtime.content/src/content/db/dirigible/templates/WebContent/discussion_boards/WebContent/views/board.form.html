@@ -1,0 +1,11 @@
+<div>
+	<form>
+	  <div class="form-group">
+	    <label>Short text</label><input type="text" class="form-control" placeholder="" ng-model="detailsVm.board.shortText">
+	  </div>
+	  <div class="form-group">
+	    <label>Description</label><textarea ck-editor style="width:100%;height:100%" class="form-control" placeholder="Type description here" ck-editor ng-model="detailsVm.board.description" ng-bind-html="detailsVm.board.description"></textarea>
+	  </div>	  
+	  <button type="submit" class="btn btn-default" ng-click="detailsVm.submit()" ng-disabled="!detailsVm.board.shortText && !detailsVm.board.description">Post</button>
+	</form>
+</div>

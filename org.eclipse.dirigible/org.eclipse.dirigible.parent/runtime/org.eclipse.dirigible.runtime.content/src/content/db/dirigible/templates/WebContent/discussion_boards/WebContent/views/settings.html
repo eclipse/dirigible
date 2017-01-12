@@ -1,0 +1,18 @@
+<div>
+	
+	<h3 class="title">Settings</h3>
+	<span style="color:red">Under construction!</span>
+	<div class="form-group">
+		<label>User name</label>
+		<div class="form-control">
+			<span ng-bind="settingsVm.user.uname"></span>
+	     </div>
+  	</div>	
+	<div class="form-group">
+		<label>Avatar image</label>
+		<div class="form-control">
+			<input type="file" nv-file-select uploader="settingsVm.uploader" style="display:inline-block"/>
+	        <img ng-src="{{settingsVm.user.avatarUrl}}" ng-show="settingsVm.user && settingsVm.user.avatarUrl" />
+	     </div>
+  	</div>
+</div>

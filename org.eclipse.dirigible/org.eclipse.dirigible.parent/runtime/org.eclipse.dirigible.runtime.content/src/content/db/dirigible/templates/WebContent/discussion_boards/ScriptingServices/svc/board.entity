@@ -1,0 +1,15 @@
+{
+  "entityName":"idea",
+  "tableName":"DIS_BOARD",
+  "tableType":"TABLE",
+  "serviceName":"board.js",
+  "libraryName":"board_dao.js",
+  "specification":"board.swagger",
+  "getEnabled":"true",
+  "postEnabled":"true",
+  "putEnabled":"true",
+  "deleteEnabled":"true",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"false"
+}

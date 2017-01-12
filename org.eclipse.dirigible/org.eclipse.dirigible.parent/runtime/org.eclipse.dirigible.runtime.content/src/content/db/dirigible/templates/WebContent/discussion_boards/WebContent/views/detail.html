@@ -1,0 +1,75 @@
+<div class="board-list-item list-group-item" style="display: flex;">
+
+	<div class="left-compartment">
+		<div class="user-box" style="">
+			<img ng-if="detailsVm.board.userDetails.avatar" src="{{detailsVm.board.userDetails.avatar}}" class="user-pic"/>
+			<i ng-if="!detailsVm.board.userDetails.avatar" class="glyphicon glyphicon-user user-pic"></i>
+			<span ng-bind="detailsVm.board.user" class="user-name"></span>
+		</div>
+		<span class="publish-time" title="{{detailsVm.board.publishTimeLocal}}" ng-bind="detailsVm.board.timeSincePublish"></span>
+	</div>				
+	
+	<div class="main-compartment">
+		
+		<a class="title" ng-bind="detailsVm.board.shortText" ui-sref="list.entity({boardId:detailsVm.board.id, board: detailsVm.board})" ui-sref-opts="{reload: true}"></a>
+
+		<div class="stats">
+			<span>{{detailsVm.board.visitsShort||0}} <i class="fa fa-eye"></i></span>
+			|
+			<div ng-if="detailsVm.board.comments.length" style="display:inline-block">
+				<span ng-if="detailsVm.board.comments.length">{{detailsVm.board.comments.length}} <i class="fa fa-comments-o"></i> by {{detailsVm.board.participantsCountShort}}
+					<span ng-if="detailsVm.board.participantsCount>1">people</span>
+					<span ng-if="detailsVm.board.participantsCount===1">person</span>
+				</span>
+			</div>
+			<div ng-if="!detailsVm.board.comments.length" style="display:inline-block">
+				No one is discussing this yet.
+			</div>
+		</div>
+
+		<div class="description" ng-bind-html="detailsVm.board.description" ng-if="!detailsVm.descriptionEdit"></div>
+		<span ng-if="detailsVm.board.timeSinceLastModified" title="{{detailsVm.board.lastModifiedTimeLocal}}" style="color:#767676;font-size:0.875em">- last edit {{detailsVm.board.timeSinceLastModified}}</span>
+		<div ng-if="detailsVm.descriptionEdit"> 
+			<textarea class="form-control" ng-model="detailsVm.descriptionEdit" style="width:100%; margin-bottom:3px" ck-editor></textarea>
+			<div class="button-group" style="margin: 5px 0;">
+				<button class="btn btn-primary" ng-click="detailsVm.postEdit()" ng-disabled="!detailsVm.descriptionEdit">Post</button>
+				<button class="btn btn-primary" ng-click="detailsVm.cancelEdit()">Cancel</button>
+			</div>
+		</div>		
+
+		<div class="tools" ng-if="!detailsVm.descriptionEdit">
+			<a ng-if="detailsVm.board.editable" ng-click="detailsVm.openBoardForEdit()" href>Edit</a> 
+		</div>
+
+	</div>
+
+	<div class="right-compartment">
+			
+		<div class="rating-box">
+			<span class="subtle">rating</span>
+			<span class="rating-number">{{detailsVm.board.ratingShort}}</span>
+			<span class="votes-number">{{detailsVm.board.totalVotesShort}} Votes</span>
+		</div>
+		<div class="vote-tool" style="display: flex;align-items: center;width: 100%;">
+			<a ng-click="detailsVm.saveVote(1)" href ng-if="detailsVm.board.currentUserVote!==1" style="flex: 1 0 auto;"><i class="fa fa-thumbs-up default" aria-hidden="true"></i></a>
+			<span ng-if="detailsVm.board.currentUserVote===1" style="flex: 1 0 auto;"><i class="fa fa-thumbs-up active" aria-hidden="true"></i></span>
+			<span style="font-size:1.6rem;color:#767676">{{detailsVm.board.upvotesShort}}</span>
+		</div>
+		<div class="vote-tool" style="display: flex;align-items: center;width: 100%;">
+			<a ng-click="detailsVm.saveVote(-1)" href ng-if="detailsVm.board.currentUserVote!==-1" style="flex: 1 0 auto;"><i class="fa fa-thumbs-up fa-rotate-180 default" aria-hidden="true"></i></a>
+			<span ng-if="detailsVm.board.currentUserVote===-1" style="flex: 1 0 auto;"><i class="fa fa-thumbs-up fa-rotate-180 active" aria-hidden="true"></i></span>			
+			<span style="font-size:1.6rem;color:#767676">{{detailsVm.board.downvotesShort}}</span>									
+		</div>
+		
+	</div>	
+</div>
+
+<div style="margin-top: 10px;margin-bottom: -15px;display: flex;align-content: space-between;">
+	<div ng-if="detailsVm.board.latestDiscussionUpdateTime" title="{{detailsVm.board.latestDiscussionUpdateTimeLocal}}" style="font-size: 0.875em;color: #767676;flex: 1 0 auto;display: flex;align-items: flex-end;">Last discussion update {{detailsVm.board.timeSinceLatestDiscussionUpdateTime}}</div>
+	<div style="flex: 0 0 auto;">
+		<button class="btn btn-default" ui-sref="list.entity.discussion"><i class="fa fa-list-ul"></i></button>		
+		<button class="btn btn-default" ui-sref="list.entity.discussion-timeline"><i class="fa fa-clock-o"></i></button>
+	</div>
+</div>
+
+<div ui-view></div>

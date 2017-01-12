@@ -1,0 +1,14 @@
+{
+  "viewName":"${packageName.toUpperCase()}_BOARD_RATING",
+  "query":"SELECT
+	${packageName.toUpperCase()}B_ID,
+	COUNT(DISTINCT ${packageName.toUpperCase()}V_ID) AS TOTAL_VOTES, 
+	SUM(${packageName.toUpperCase()}V_VOTE) AS RATING,
+    SUM(CASE WHEN ${packageName.toUpperCase()}V_VOTE > 0 THEN ${packageName.toUpperCase()}V_VOTE ELSE 0 END) AS UPVOTES,	
+	ABS(SUM(CASE WHEN ${packageName.toUpperCase()}V_VOTE < 0 THEN ${packageName.toUpperCase()}V_VOTE ELSE 0 END)) AS DOWNVOTES
+FROM ${packageName.toUpperCase()}_BOARD, ${packageName.toUpperCase()}_BOARD_VOTE
+WHERE ${packageName.toUpperCase()}B_ID = ${packageName.toUpperCase()}V_${packageName.toUpperCase()}B_ID
+GROUP BY ${packageName.toUpperCase()}B_ID, 
+	     ${packageName.toUpperCase()}B_PUBLISH_TIME
+ORDER BY RATING, TOTAL_VOTES, ${packageName.toUpperCase()}B_PUBLISH_TIME DESC"
+}

@@ -1,0 +1,49 @@
+<div class="items-list">
+	<div ng-hide="masterVm.list.length" class="nodata-text">Look, it's empty! Be the first to add here!</div>
+	<div class="list-group" ng-if="masterVm.list.length>0">
+	  <div class="list-group-item" ng-repeat="board in masterVm.list|filter:masterVm.filterList.filterText|orderBy:['-rating', '-lastModifiedTime', '-participants']">
+		<div class="board-list-item">
+			
+			<div class="left-compartment">
+				<div class="user-box" style="">
+					<img ng-if="board.userDetails.avatar" src="{{board.userDetails.avatar}}" class="user-pic"/>
+					<i ng-if="!board.userDetails.avatar" class="glyphicon glyphicon-user user-pic"></i>
+					<span ng-bind="board.user" class="user-name"></span>
+				</div>
+				<span class="publish-time" title="{{board.publishTimeLocal}}" ng-bind="board.timeSincePublish"></span>
+			</div>				
+			
+			<div class="main-compartment">
+				
+				<a class="title" ng-bind="board.shortText" ui-sref="list.entity({boardId:board.id, board: board})"></a>
+
+				<div class="stats">
+					<span>{{board.visitsShort||0}} <i class="fa fa-eye"></i></span>
+					|
+					<div ng-if="board.comments.length" style="display:inline-block">
+						<span ng-if="board.comments.length">{{board.comments.length}} <i class="fa fa-comments-o"></i> by {{board.participantsCountShort}}
+							<span ng-if="board.participantsCount>1">people</span>
+							<span ng-if="board.participantsCount===1">person</span>
+						</span>
+					</div>
+					<div ng-if="!board.comments.length" style="display:inline-block">
+						No one is discussing this yet. Be the first one to <a ui-sref="list.entity({boardId:board.id, board: board})" href>comment</a> !
+					</div>
+				</div>
+									
+				<!--<div class="description" ng-bind-html="board.description"></div>-->
+				<span ng-if="board.latestDiscussionUpdateTime" title="{{board.latestDiscussionUpdateTimeLocal}}" style="font-size: 0.875em;color: #767676;">Last discussion update {{board.timeSinceLatestDiscussionUpdateTime}}</span>
+			</div>
+
+			<div class="right-compartment">
+				<div class="rating-box">
+					<span class="subtle">rating</span>				
+					<span class="rating-number">{{board.ratingShort}}</span>
+					<span class="votes-number">{{board.totalVotesShort}} Votes</span>
+				</div>
+			</div>					
+			
+		</div>
+	  </div>	
+	</div>
+</div>

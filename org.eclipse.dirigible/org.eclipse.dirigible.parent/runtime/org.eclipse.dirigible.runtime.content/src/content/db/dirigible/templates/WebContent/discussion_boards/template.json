@@ -1,0 +1,124 @@
+{  
+    "name": "Discussion Boards",
+    "description": "Discussion Boards Application",
+    "image": "dboards-icon.png",
+    "sources": [{
+        "name": "WebContent/index.html",
+        "action": "generate"
+    }, {
+        "name": "WebContent/css/default.css",
+        "action": "copy"
+    }, {
+        "name": "WebContent/css/angular-timeline.css",
+        "action": "copy"
+    }, {
+        "name": "WebContent/css/angular-timeline-bootstrap.css",
+        "action": "copy"
+    }, {
+        "name": "WebContent/css/angular-timeline-animations.css",
+        "action": "copy"
+    }, {
+        "name": "WebContent/js/app.js",
+        "action": "copy"
+    }, {
+        "name": "WebContent/js/http-resources.js",
+        "action": "generate"
+    }, {
+        "name": "WebContent/js/app-services.js",
+        "action": "copy"
+    }, {
+        "name": "WebContent/js/app-directives.js",
+        "action": "copy"
+    }, {
+        "name": "WebContent/js/angular-timeline.js",
+        "action": "copy"
+    }, {
+        "name": "WebContent/js/angular-scroll-animate.js",
+        "action": "copy"
+    }, {
+        "name": "WebContent/views/master.html",
+        "action": "copy"
+    }, {
+        "name": "WebContent/views/detail.html",
+        "action": "copy"
+    }, {
+        "name": "WebContent/views/toolbar.html",
+        "action": "copy"
+    }, {
+        "name": "WebContent/views/discussion.html",
+        "action": "copy"
+    }, {
+        "name": "WebContent/views/discussion-timeline.html",
+        "action": "copy"
+    }, {
+        "name": "WebContent/views/settings.html",
+        "action": "copy"
+    }, {
+        "name": "WebContent/views/board.form.html",
+        "action": "copy"
+    }, {
+        "name": "ScriptingServices/logging/lib/logger.js",
+        "action": "copy"
+    }, {
+        "name": "ScriptingServices/lib/board_dao.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/lib/comment_dao.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/svc/board.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/svc/comment.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/idm/lib/user_dao.js",
+        "action": "copy"
+    }, {
+        "name": "ScriptingServices/idm/svc/user.js",
+        "action": "copy"
+    }, {
+        "name": "DataStructures/idm_user.table",
+        "action": "copy"
+    }, {
+        "name": "DataStructures/dis_board.table",
+        "action": "generate",
+        "rename": "%s_board"
+    }, {
+        "name": "DataStructures/dis_comment.table",
+        "action": "generate",
+        "rename": "%s_comment"
+    }, {
+        "name": "DataStructures/dis_board_vote.table",
+        "action": "generate",
+        "rename": "%s_board_vote"
+    }, {
+        "name": "DataStructures/dis_discussion_stats.view",
+        "action": "generate",
+        "rename": "%s_discussion_stats"
+    }, {
+        "name": "DataStructures/dis_board_rating.view",
+        "action": "generate",
+        "rename": "%s_board_rating"
+    }, {
+        "name": "DataStructures/dis_board_stats.view",
+        "action": "generate",
+        "rename": "%s_board_stats"
+    }, {
+        "name": "SecurityConstraints/main.access",
+        "action": "generate"
+    }],
+    "parameters": [{
+        "name":"templateType",
+        "required":"true"
+    }, {
+        "name":"fileName",
+        "required":"true"
+    }, {
+        "name":"projectName",
+        "required":"true"
+    }, {
+        "name":"packageName",
+        "required":"true"
+    }]
+}
