@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.security;
@@ -32,7 +31,7 @@ import org.eclipse.dirigible.repository.logging.Logger;
 public class SecurityManager {
 
 	private static final Logger logger = Logger.getLogger(SecurityManager.class);
-	
+
 	private static final String LOCATION_S_AND_S_DOES_NOT_EXIST = Messages.getString("SecurityManager.LOCATION_S_AND_S_DOES_NOT_EXIST"); //$NON-NLS-1$
 
 	private static final String LOCATION_S_DOES_NOT_EXIST = Messages.getString("SecurityManager.LOCATION_S_DOES_NOT_EXIST"); //$NON-NLS-1$
@@ -63,8 +62,7 @@ public class SecurityManager {
 
 	private DBUtils dbUtils;
 
-	public static SecurityManager getInstance(IRepository repository,
-			DataSource dataSource) {
+	public static SecurityManager getInstance(IRepository repository, DataSource dataSource) {
 		if (instance == null) {
 			instance = new SecurityManager(repository, dataSource);
 		}
@@ -108,8 +106,7 @@ public class SecurityManager {
 		return securedLocations;
 	}
 
-	public List<SecurityLocationMetadata> getAccessList()
-			throws SecurityException {
+	public List<SecurityLocationMetadata> getAccessList() throws SecurityException {
 		List<SecurityLocationMetadata> securedLocations = null;
 
 		Connection connection = null;
@@ -132,8 +129,7 @@ public class SecurityManager {
 		return securedLocations;
 	}
 
-	public void secureLocation(String location, HttpServletRequest request)
-			throws SecurityException {
+	public void secureLocation(String location, HttpServletRequest request) throws SecurityException {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
@@ -153,8 +149,7 @@ public class SecurityManager {
 		}
 	}
 
-	public void secureLocationWithRole(String location, String roleName,
-			HttpServletRequest request) throws SecurityException {
+	public void secureLocationWithRole(String location, String roleName, HttpServletRequest request) throws SecurityException {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
@@ -181,8 +176,7 @@ public class SecurityManager {
 			if (isSecuredLocationInternal(connection, location)) {
 				removeLocation(connection, location);
 			} else {
-				throw new SecurityException(String.format(
-						LOCATION_S_DOES_NOT_EXIST, location));
+				throw new SecurityException(String.format(LOCATION_S_DOES_NOT_EXIST, location));
 			}
 		} catch (Exception e) {
 			throw new SecurityException(e);
@@ -197,16 +191,14 @@ public class SecurityManager {
 		}
 	}
 
-	public void unsecureLocationForRole(String location, String roleName)
-			throws SecurityException {
+	public void unsecureLocationForRole(String location, String roleName) throws SecurityException {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
 			if (isSecuredLocationInternal(connection, location, roleName)) {
 				removeLocationWithRole(connection, location, roleName);
 			} else {
-				throw new SecurityException(String.format(
-						LOCATION_S_AND_S_DOES_NOT_EXIST, location, roleName));
+				throw new SecurityException(String.format(LOCATION_S_AND_S_DOES_NOT_EXIST, location, roleName));
 			}
 		} catch (Exception e) {
 			throw new SecurityException(e);
@@ -221,14 +213,12 @@ public class SecurityManager {
 		}
 	}
 
-	private List<String> getSecuredLocations(Connection connection)
-			throws SQLException, IOException {
+	private List<String> getSecuredLocations(Connection connection) throws SQLException, IOException {
 		List<String> securedLocations = new ArrayList<String>();
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			String script = getDBUtils().readScript(connection,
-					GET_ACCESS_LOCATIONS, this.getClass());
+			String script = getDBUtils().readScript(connection, GET_ACCESS_LOCATIONS, this.getClass());
 			ResultSet resultSet = statement.executeQuery(script);
 			while (resultSet.next()) {
 				securedLocations.add(resultSet.getString(1));
@@ -241,14 +231,12 @@ public class SecurityManager {
 		return securedLocations;
 	}
 
-	private List<SecurityLocationMetadata> getAccessList(Connection connection)
-			throws SQLException, IOException {
+	private List<SecurityLocationMetadata> getAccessList(Connection connection) throws SQLException, IOException {
 		List<SecurityLocationMetadata> securedLocations = new ArrayList<SecurityLocationMetadata>();
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			String script = getDBUtils().readScript(connection,
-					GET_ACCESS_LIST, this.getClass());
+			String script = getDBUtils().readScript(connection, GET_ACCESS_LIST, this.getClass());
 			ResultSet resultSet = statement.executeQuery(script);
 			SecurityLocationMetadata securityLocationMetadata = new SecurityLocationMetadata();
 			while (resultSet.next()) {
@@ -274,8 +262,7 @@ public class SecurityManager {
 		return securedLocations;
 	}
 
-	public boolean isSecuredLocation(String location)
-			throws SQLException, IOException {
+	public boolean isSecuredLocation(String location) throws SQLException, IOException {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
@@ -286,13 +273,11 @@ public class SecurityManager {
 			}
 		}
 	}
-	
-	private boolean isSecuredLocationInternal(Connection connection, String location)
-			throws SQLException, IOException {
+
+	private boolean isSecuredLocationInternal(Connection connection, String location) throws SQLException, IOException {
 		PreparedStatement statement = null;
 		try {
-			String script = getDBUtils().readScript(connection,
-					GET_ROLES_BY_LOCATION, this.getClass());
+			String script = getDBUtils().readScript(connection, GET_ROLES_BY_LOCATION, this.getClass());
 			statement = connection.prepareStatement(script);
 			statement.setString(1, location + "%"); //$NON-NLS-1$
 			ResultSet resultSet = statement.executeQuery();
@@ -307,8 +292,7 @@ public class SecurityManager {
 		return false;
 	}
 
-	public boolean isSecuredLocation(String location, String roleName)
-			throws SQLException, IOException {
+	public boolean isSecuredLocation(String location, String roleName) throws SQLException, IOException {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
@@ -320,12 +304,10 @@ public class SecurityManager {
 		}
 	}
 
-	public boolean isSecuredLocationInternal(Connection connection, String location,
-			String roleName) throws SQLException, IOException {
+	public boolean isSecuredLocationInternal(Connection connection, String location, String roleName) throws SQLException, IOException {
 		PreparedStatement statement = null;
 		try {
-			String script = getDBUtils().readScript(connection,
-					GET_ROLES_BY_LOCATION_AND_ROLE, this.getClass());
+			String script = getDBUtils().readScript(connection, GET_ROLES_BY_LOCATION_AND_ROLE, this.getClass());
 			statement = connection.prepareStatement(script);
 			statement.setString(1, location + "%"); //$NON-NLS-1$
 			statement.setString(2, roleName);
@@ -341,39 +323,36 @@ public class SecurityManager {
 		return false;
 	}
 
-	public List<String> getRolesForLocation(String location)
-			throws SQLException, IOException {
+	public List<String> getRolesForLocation(String location) throws SQLException, IOException {
 		List<String> securedRoles = new ArrayList<String>();
 		Connection connection = dataSource.getConnection();
 		try {
-				String script = getDBUtils().readScript(connection,
-						GET_ROLES_BY_LOCATION, this.getClass());
-				
-				PreparedStatement statement = null;
-				try {
-					statement = connection.prepareStatement(script);
-					
-					RepositoryPath path = new RepositoryPath(location);
-					for (int i = path.getSegments().length; i > 0; i--) {
-						
-						String transitiveLocation = path.constructPath(i);
-					
-							statement.setString(1, transitiveLocation);
-							ResultSet resultSet = statement.executeQuery();
-							while (resultSet.next()) {
-								securedRoles.add(resultSet.getString(1));
-							}
-							
-							if (securedRoles.size() > 0) {
-								break;
-							}
-						
-					}
-				} finally {
-					if (statement != null) {
-						statement.close();
+			String script = getDBUtils().readScript(connection, GET_ROLES_BY_LOCATION, this.getClass());
+
+			PreparedStatement statement = null;
+			try {
+				statement = connection.prepareStatement(script);
+
+				RepositoryPath path = new RepositoryPath(location);
+				for (int i = path.getSegments().length; i > 0; i--) {
+
+					String transitiveLocation = path.constructPath(i);
+					collectRoles(securedRoles, statement, transitiveLocation);
+					if (securedRoles.size() == 0) {
+						transitiveLocation += IRepository.SEPARATOR;
+						collectRoles(securedRoles, statement, transitiveLocation);
+						if (securedRoles.size() > 0) {
+							break;
+						}
+					} else {
+						break;
 					}
 				}
+			} finally {
+				if (statement != null) {
+					statement.close();
+				}
+			}
 		} finally {
 			if (connection != null) {
 				connection.close();
@@ -382,12 +361,19 @@ public class SecurityManager {
 		return securedRoles;
 	}
 
-	private void insertLocation(Connection connection, String location,
-			String roleName, HttpServletRequest request) throws SQLException, IOException {
+	protected void collectRoles(List<String> securedRoles, PreparedStatement statement, String transitiveLocation) throws SQLException {
+		statement.setString(1, transitiveLocation);
+		ResultSet resultSet = statement.executeQuery();
+		while (resultSet.next()) {
+			securedRoles.add(resultSet.getString(1));
+		}
+	}
+
+	private void insertLocation(Connection connection, String location, String roleName, HttpServletRequest request)
+			throws SQLException, IOException {
 		PreparedStatement statement = null;
 		try {
-			String script = getDBUtils().readScript(connection, INSERT_ACCESS,
-					this.getClass());
+			String script = getDBUtils().readScript(connection, INSERT_ACCESS, this.getClass());
 			statement = connection.prepareStatement(script);
 			statement.setString(1, location);
 			if (roleName == null) {
@@ -405,12 +391,10 @@ public class SecurityManager {
 		}
 	}
 
-	private void removeLocation(Connection connection, String location)
-			throws SQLException, IOException {
+	private void removeLocation(Connection connection, String location) throws SQLException, IOException {
 		PreparedStatement statement = null;
 		try {
-			String script = getDBUtils().readScript(connection,
-					REMOVE_BY_LOCATION, this.getClass());
+			String script = getDBUtils().readScript(connection, REMOVE_BY_LOCATION, this.getClass());
 			statement = connection.prepareStatement(script);
 			statement.setString(1, location);
 			statement.executeUpdate();
@@ -421,8 +405,7 @@ public class SecurityManager {
 		}
 	}
 
-	private void removeLocationWithRole(Connection connection, String location,
-			String roleName) throws SQLException, IOException {
+	private void removeLocationWithRole(Connection connection, String location, String roleName) throws SQLException, IOException {
 
 		if (roleName == null) {
 			removeLocation(connection, location);
@@ -431,8 +414,7 @@ public class SecurityManager {
 
 		PreparedStatement statement = null;
 		try {
-			String script = getDBUtils().readScript(connection,
-					REMOVE_BY_LOCATION_AND_ROLE, this.getClass());
+			String script = getDBUtils().readScript(connection, REMOVE_BY_LOCATION_AND_ROLE, this.getClass());
 			statement = connection.prepareStatement(script);
 			statement.setString(1, location);
 			statement.setString(2, roleName);

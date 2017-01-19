@@ -65,10 +65,11 @@ public class WebSocketServiceBridgeServletInternal {
 		}
 
 		try {
-			if (SecuredLocationVerifier.isLocationSecured(webSocketRequest.getModule())) {
+			String securedLocationConstraint = SecuredLocationVerifier.isLocationSecured(webSocketRequest.getModule());
+			if (securedLocationConstraint != null) {
 				// the locations is secured - check the user's role(s)
 				HandshakeRequest request = (HandshakeRequest) session.getUserProperties().get(PROP_REQUEST);
-				if (!isUserInRole(request, webSocketRequest.getModule())) {
+				if (!isUserInRole(request, securedLocationConstraint)) {
 					// the user doesn't have permissions to execute this service
 					String warning = String.format("The user doesn't have the required role(s) to execute the service [%s].",
 							webSocketRequest.getModule());

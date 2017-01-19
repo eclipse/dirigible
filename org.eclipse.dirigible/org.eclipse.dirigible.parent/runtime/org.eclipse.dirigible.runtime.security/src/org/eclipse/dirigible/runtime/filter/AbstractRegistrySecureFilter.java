@@ -22,7 +22,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.dirigible.runtime.registry.PathUtils;
 
 public abstract class AbstractRegistrySecureFilter implements Filter {
@@ -46,16 +45,11 @@ public abstract class AbstractRegistrySecureFilter implements Filter {
 
 		// SAML standard redirect
 		String location = PathUtils.extractPath(request);
-		location = StringEscapeUtils.escapeHtml(location);
-		location = StringEscapeUtils.escapeJavaScript(location);
 		String queryString = request.getQueryString();
-		queryString = StringEscapeUtils.escapeHtml(queryString);
-		queryString = StringEscapeUtils.escapeJavaScript(queryString);
-		if (isLocationSecured(location)) {
+		if (isLocationSecured(location) != null) {
 			// SAML do not redirect in case of explicitly requested
 			// application/json without logged-in user
 			String acceptHeader = request.getHeader(ACCEPT);
-
 			if ((acceptHeader != null) && acceptHeader.contains(JSON)) {
 				if (request.getUserPrincipal() == null) {
 					((HttpServletResponse) res).sendError(HttpURLConnection.HTTP_FORBIDDEN,
@@ -79,7 +73,7 @@ public abstract class AbstractRegistrySecureFilter implements Filter {
 
 	protected abstract String getSecuredMapping();
 
-	protected boolean isLocationSecured(String location) throws ServletException {
+	protected String isLocationSecured(String location) throws ServletException {
 		return SecuredLocationVerifier.isLocationSecured(location);
 	}
 

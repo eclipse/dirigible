@@ -42,9 +42,10 @@ public class RegistrySecureRolesFilter extends AbstractRegistrySecureFilter {
 		HttpServletRequest request = (HttpServletRequest) req;
 
 		String location = PathUtils.extractPath(request);
-		if (isLocationSecured(location)) {
-			if (!isUserInRole(req, location)) {
-				logger.debug(String.format("Location: %s is forbidden", location));
+		String securedLocationConstraint = isLocationSecured(location);
+		if (securedLocationConstraint != null) {
+			if (!isUserInRole(req, securedLocationConstraint)) {
+				logger.debug(String.format("Location: %s is forbidden", securedLocationConstraint));
 				((HttpServletResponse) res).sendError(HttpServletResponse.SC_FORBIDDEN, YOU_DO_NOT_HAVE_REQUIRED_ROLE_S_TO_ACCESS_THIS_LOCATION);
 				return;
 			}

@@ -29,15 +29,16 @@ public class SecuredLocationVerifier {
 	 * @return
 	 * @throws ServletException
 	 */
-	public static boolean isLocationSecured(String location) throws ServletException {
+	public static String isLocationSecured(String location) throws ServletException {
+
 		for (String securedLocation : SecuritySynchronizer.getSecuredLocations()) {
 			if (location.startsWith(securedLocation)) {
 				logger.debug(String.format("Location: %s is secured because of definition: %s", location, securedLocation));
-				return true;
+				return securedLocation;
 			}
 		}
 		logger.debug(String.format("Location: %s is NOT secured", location));
-		return false;
+		return null;
 	}
 
 }
