@@ -41,12 +41,14 @@
 	}])		
 	.service('BoardTags', ['${D}resource', function(${D}resource) {
 	  	return ${D}resource('../../js/${packageName}/svc/board.js/:boardId/tags', {}, 
-	  			{get: {method:'GET', params:{}, isArray:true, ignoreLoadingBar: true}},
-	  			{remove: {method:'DELETE', params:{}, isArray:true, ignoreLoadingBar: true}},
-	  			{save: {method:'POST', params:{}, isArray:true, ignoreLoadingBar: true}});
+	  			{
+	  				get: {method:'GET', params:{}, isArray:true, ignoreLoadingBar: true},
+	  				save: {method:'POST', params:{}, isArray:true, ignoreLoadingBar: true},
+	  				remove: {method:'DELETE', params:{}, isArray:true, ignoreLoadingBar: true}
+	  			});
 	}])	
-	.service('BoardCommentsTimeline', ['${D}resource', function(${D}resource) {
-	  	return ${D}resource('../../js/${packageName}/svc/board.js/:boardId/comments/timeline', {}, 
+	.service('BoardComments', ['${D}resource', function(${D}resource) {
+	  	return ${D}resource('../../js/${packageName}/svc/board.js/:boardId/comments/:listMode', {}, 
 	  			{get: {method:'GET', params:{}, isArray:true, ignoreLoadingBar: true}});
 	}])	
 	.service('${D}Comment', ['${D}resource', '${D}log', function(${D}resource, ${D}log) {
@@ -73,7 +75,7 @@
 			});
 	}])
 	.service('${D}LoggedUser', ['${D}resource', '${D}log', function(${D}resource) {
-		var UserSvc =  ${D}resource('../../js/idm/svc/user.js/${D}current', {}, 
+		var UserSvc =  ${D}resource('../../js/usr/svc/user.js/${D}current', {}, 
 	  					{get: {method:'GET', params:{}, isArray:false, ignoreLoadingBar: true}});
 	  	var get = function(){
 		  	return UserSvc.get().${D}promise;
@@ -83,7 +85,7 @@
 	  	};
 	}])
 	.service('${D}UserImg', ['${D}resource', function(${D}resource) {
-		var UserSvc = ${D}resource('../../js/idm/svc/user.js/${D}pics/:userName', {}, 
+		var UserSvc = ${D}resource('../../js/usr/svc/user.js/${D}pics/:userName', {}, 
 	  					{get: {method:'GET', params:{}, isArray:false, cache: true, ignoreLoadingBar: true}});
 		var get = function(userName){
 		  	return UserSvc.get({"userName":userName}).${D}promise

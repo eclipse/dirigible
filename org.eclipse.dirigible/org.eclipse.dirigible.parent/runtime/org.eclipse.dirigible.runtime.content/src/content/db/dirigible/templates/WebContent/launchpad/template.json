@@ -2,6 +2,7 @@
     "name": "Launchpad",
     "description": "Launchpad application",
     "image": "launchpad.png",
+    "preview": "launchpad-preview.png",
     "sources": [{
         "name": "index.html",
         "action": "generate"

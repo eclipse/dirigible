@@ -52,8 +52,19 @@ public class TemplateType {
 		templateMetadata.setCategory(category);
 		templateMetadata.setType(type);
 
-		String image = templateRoot.getResource(templateMetadata.getImage()).getPath();
-		templateMetadata.setImage(image);
+		IResource resource = templateRoot.getResource(templateMetadata.getImage());
+		if (resource != null) {
+			String image = resource.getPath();
+			templateMetadata.setImage(image);
+		}
+
+		if (templateMetadata.getPreview() != null) {
+			resource = templateRoot.getResource(templateMetadata.getPreview());
+			if (resource != null) {
+				String preview = resource.getPath();
+				templateMetadata.setPreview(preview);
+			}
+		}
 
 		TemplateSourceMetadata[] sources = templateMetadata.getSources();
 		for (TemplateSourceMetadata source : sources) {

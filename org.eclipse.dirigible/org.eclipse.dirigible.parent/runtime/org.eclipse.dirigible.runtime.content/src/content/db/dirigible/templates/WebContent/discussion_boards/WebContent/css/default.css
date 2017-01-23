@@ -109,6 +109,7 @@ body{
 }
 .stats>*{
 	margin: 0 5px;
+	display:inline-block;
 }
 
 .stats> :first-child{
@@ -126,6 +127,23 @@ body{
     border-radius: 4px;
 }
 
+.tag {
+	display: inline-block; 
+	float: left; 
+	margin: 2px; 
+	padding: 0 5px; 
+	height: 26px; 
+	line-height: 25px; 
+	border: 1px solid #acacac; 
+	border-radius: 3px;  
+	background: #f1f1f1
+}
+
+/* SO style: font-size: 0.9em;color:#848d95 */
+.text-muted{
+	color:#767676;
+	font-size:0.875em
+}
 
 .rating-box {
 	display: flex;
@@ -174,9 +192,62 @@ body{
     color: #767676;
 }
 
-.tools {
-	font-size: 0.875em;
+.tools a {
     text-decoration: none;
+    font-size: 0.875em;
+    margin-right:10px
+}
+
+.discussion-header {
+	margin-top: 10px;
+	margin-bottom: -15px;
+	display: flex;
+	align-content: space-between;
+}
+
+.discussion-header .toolbar {
+	flex: 0 0 auto;
+}
+
+.discussion-header .stats-text {
+	flex: 1 0 auto;
+	display: flex;
+	align-items: flex-end;
+}
+
+.comment {
+	display:flex; 
+	flex-direction:column; 
+	margin-bottom: 5px;
+}
+
+.comment .post-text{
+	font-size: 1.1em
+}
+
+.comment *[ck-editor]{
+	width:100%; 
+	margin-bottom:3px;	
+}
+
+.comment .replies{
+	margin-top:20px;
+	margin-left:40px
+}
+
+.replies .list-group-item {
+	border: none; 
+	border-top: 1px solid #ddd
+}
+
+.comment .replies .inline-editor {
+	display:flex; 
+	flex-direction:column; 
+	background: #f4f4f4	
+}
+
+.comment .replies *[ck-editor]{
+	margin: 15px 0;	
 }
 
 /*.rating-compartment .fa {

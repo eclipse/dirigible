@@ -1,0 +1,32 @@
+{
+  "tableName":"${packageName.toUpperCase()}_BOARD_TAG",
+  "columns":
+    [
+      {
+        "name":"${packageName.toUpperCase()}BT_ID",
+        "type":"BIGINT",
+        "length":"0",
+        "notNull":"true",
+        "primaryKey":"true",
+        "defaultValue":""
+      }
+      ,
+      {
+        "name":"${packageName.toUpperCase()}BT_${packageName.toUpperCase()}B_ID",
+        "type":"INTEGER",
+        "length":"0",
+        "notNull":"true",
+        "primaryKey":"false",
+        "defaultValue":""
+      }
+      ,
+      {
+        "name":"${packageName.toUpperCase()}BT_ANN_ID",
+        "type":"BIGINT",
+        "length":"0",
+        "notNull":"true",
+        "primaryKey":"false",
+        "defaultValue":""
+      }
+    ]
+}

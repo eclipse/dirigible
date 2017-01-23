@@ -1,6 +1,6 @@
 {
   "entityName":"idea",
-  "tableName":"DIS_BOARD",
+  "tableName":"${packageName}_BOARD",
   "tableType":"TABLE",
   "serviceName":"board.js",
   "libraryName":"board_dao.js",

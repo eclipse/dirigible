@@ -72,6 +72,22 @@ cp -r target/jasmine/jasmine/ScriptingServices src/content/db/dirigible/registry
 if cd target/jsmockito; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/jsmockito.git target/jsmockito; fi
 cp -r target/jsmockito/jsmockito/ScriptingServices src/content/db/dirigible/registry/public
 
+# arestme
+if cd target/arestme; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/arestme.git target/arestme; fi
+cp -r target/arestme/arestme/ScriptingServices src/content/db/dirigible/registry/public
+
+# core_users
+if cd target/core_users; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/core_users.git target/core_users; fi
+cp -r target/core_users/core_users/DataStructures src/content/db/dirigible/registry/public
+cp -r target/core_users/core_users/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/core_users/core_users/SecurityConstraints src/content/db/dirigible/registry/public
+cp -r target/core_users/core_users/WebContent src/content/db/dirigible/registry/public
+
+# tags
+if cd target/tags; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/tags.git target/tags; fi
+cp -r target/tags/tags/DataStructures src/content/db/dirigible/registry/public
+cp -r target/tags/tags/ScriptingServices src/content/db/dirigible/registry/public
+
 
 ####### Clone or Pull Templates
 
@@ -125,6 +141,13 @@ cp -r target/template_web_launchpad/template_web_launchpad/WebContent src/conten
 if cd target/template_web_launchpad_item; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_launchpad_item.git target/template_web_launchpad_item; fi
 cp -r target/template_web_launchpad_item/template_web_launchpad_item/WebContent src/content/db/dirigible/templates
 
+# template_web_index_page
+if cd target/template_web_index_page; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_index_page.git target/template_web_index_page; fi
+cp -r target/template_web_index_page/template_web_index_page/WebContent src/content/db/dirigible/templates
+
+# template_web_sample_form
+if cd target/template_web_sample_form; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/template_web_sample_form.git target/template_web_sample_form; fi
+cp -r target/template_web_sample_form/template_web_sample_form/WebContent src/content/db/dirigible/templates
 
 
 #### WebContentForEntity

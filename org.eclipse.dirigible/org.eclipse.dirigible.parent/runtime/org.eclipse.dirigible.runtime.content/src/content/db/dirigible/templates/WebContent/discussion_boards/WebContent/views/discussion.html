@@ -1,28 +1,35 @@
-<div ng-if="vm.board.comments.length<1" style="margin-top:20px">Be the first one to comment!</div>
+<div style="margin-top:20px">
+	<span ng-if="vm.loggedUser && vm.board.comments.length===0">Be the first one to comment!</span>
+	<span ng-if="!vm.loggedUser">Have something to tell about this? Sign in to comment</span>
+</div>
 <div class="list-group" ng-if="vm.board.comments.length>0" style="margin-top:20px">
 	<div class="list-group">
-		<div ng-repeat="comment in vm.board.comments" class="list-group-item" style="display:flex; flex-direction:column; margin-bottom: 5px;">
-			<div style="font-size: 0.9em;color:#848d95">
+		<div ng-repeat="comment in vm.board.comments" class="list-group-item comment">
+			<div class="text-muted">
 				<span ng-bind="comment.user"></span> said <span title="{{comment.lastModifiedTimeLocal || comment.publishTimeLocal}}" ng-bind="comment.timeSinceLastModified || comment.timeSincePublish">:</span>
 			</div>
-			<span ng-if="vm.comment !== comment || vm.replyEdit" ng-bind-html="comment.text" style="font-size: 1.1em"></span>
-			<div ng-if="vm.comment === comment && !vm.replyEdit"> 
-				<textarea class="form-control" ng-model="vm.comment.text" style="width:100%; margin-bottom:3px" ck-editor></textarea>
+			<span ng-if="vm.comment !== comment || vm.replyEdit" ng-bind-html="comment.text" class="post-text"></span>
+			<div ng-if="!vm.board.locked && vm.comment === comment && !vm.replyEdit"> 
+				<textarea class="form-control" ng-model="vm.comment.text" ck-editor></textarea>
 				<div class="button-group" style="margin: 5px 0;">
 					<button class="btn btn-primary" ng-click="vm.postComment()" ng-disabled="!vm.comment.text">Post</button>
 					<button class="btn btn-primary" ng-click="vm.cancelCommentEdit()">Cancel</button>
 				</div>
 			</div>
-			<a href ng-if="!vm.commentEdit" style="align-self:flex-end" ng-click="vm.openCommentForEdit(comment)">Edit</a>
-			<a href ng-click="vm.replyOpen(comment)" style="text-decoration:none; font-weight:bold" ng-hide="vm.replyEdit || vm.commentEdit">Reply</a>
-			<div style="margin-top:20px; margin-left:40px" ng-if="comment.replies.length>0">
-				<div ng-repeat="reply in comment.replies" class="list-group-item" style="border: none; border-top: 1px solid #ddd">
+			<div style="align-self:flex-end" >
+				<a href ng-if="vm.canPost() && !vm.commentEdit" ng-click="vm.openCommentForEdit(comment)">Edit</a>
+				<a href ng-if="vm.canPost() && !vm.commentEdit" ng-click="vm.remove(comment)"><i class="fa fa-trash-o"></i></a>
+			</div>
+			<a href ng-click="vm.replyOpen(comment)" style="text-decoration:none; font-weight:bold" ng-hide="!vm.canPost() || vm.replyEdit || vm.commentEdit">Reply</a>
+			<div ng-if="comment.replies.length>0" class="replies">
+				<div ng-repeat="reply in comment.replies" class="list-group-item reply">
 					<div ng-if="vm.reply!==reply">
-						<span ng-bind-html="reply.text" style="display: inline-block;"></span> <div style="display: inline-block; font-size: 0.9em; color:#848d95">- {{reply.user}} replied <span title="{{reply.lastModifiedTimeLocal || reply.publishTimeLocal}}" ng-bind="reply.timeSinceLastModified || reply.timeSincePublish"></span>
-						<a href ng-if="reply.editable" ng-click="vm.replyOpen(comment, reply)"><i class="fa fa-pencil" style="font-size: 1.1em"></i></a></div>
+						<span ng-bind-html="reply.text" style="display: inline-block;"></span> <div class="text-muted" style="display: inline-block;">- {{reply.user}} replied <span title="{{reply.lastModifiedTimeLocal || reply.publishTimeLocal}}" ng-bind="reply.timeSinceLastModified || reply.timeSincePublish"></span>
+						<a href ng-if="vm.canPost() && reply.editable" ng-click="vm.replyOpen(comment, reply)"><i class="fa fa-pencil" style="font-size: 1.1em"></i></a>
+						<a href ng-if="vm.canPost() && reply.editable" ng-click="vm.remove(reply)"><i class="fa fa-trash-o" style="font-size: 1.1em"></i></a></div>
 					</div>
-					<div ng-if="vm.reply===reply" class="list-group-item" style="display:flex; flex-direction:column; background: #f4f4f4">
-						<textarea class="form-control" placeholder="Type your reply here" ng-bind-html="reply.text" style="width:100%; margin: 15px 0;" ck-editor></textarea>
+					<div ng-if="vm.canPost() && vm.reply===reply" class="list-group-item inline-editor">
+						<textarea class="form-control" placeholder="Type your reply here" ng-model="reply.text" ck-editor></textarea>
 						<div class="button-group" style="margin: 5px 0;"> 
 							<button class="btn btn-default" ng-click="vm.replyPost()">Post</button>
 							<button class="btn btn-default" ng-click="vm.replyCancel()">Cancel</button>
@@ -30,8 +37,8 @@
 					</div>
 				</div>
 			</div>
-			<div ng-if="vm.comment===comment && vm.reply && vm.reply.id===undefined" class="list-group-item" style="margin-left:40px; display:flex; flex-direction:column; background: #f4f4f4">
-				<textarea class="form-control" placeholder="Type your reply here" ng-model="vm.reply.text" style="width:100%; margin: 15px 0;" ck-editor></textarea>
+			<div ng-if="vm.canPost() && vm.comment===comment && vm.reply && vm.reply.id===undefined" class="list-group-item inline-editor" style="margin-left:40px;">
+				<textarea class="form-control" placeholder="Type your reply here" ng-model="vm.reply.text" ck-editor></textarea>
 				<div class="button-group" style="margin: 5px 0;">
 					<button class="btn btn-default" ng-click="vm.replyPost()">Post</button>
 					<button class="btn btn-default" ng-click="vm.replyCancel()">Cancel</button>
@@ -41,7 +48,7 @@
 	</div>
 </div>
 
-<div style="display:flex; flex-direction:column; margin: 10px 0" ng-if="!vm.commentEdit && !vm.replyEdit">
+<div style="display:flex; flex-direction:column; margin: 10px 0" ng-if="vm.canPost() && !vm.commentEdit && !vm.replyEdit">
 	<span style="font-size: 1em;font-weight:bold; margin-bottom: 5px">Leave a comment</span>
 	<form>
 	  <div class="form-group">

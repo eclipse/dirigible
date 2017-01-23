@@ -2,6 +2,7 @@
     "name": "Discussion Boards",
     "description": "Discussion Boards Application",
     "image": "dboards-icon.png",
+    "preview": "dboards-preview.png",
     "sources": [{
         "name": "WebContent/index.html",
         "action": "generate"
@@ -63,6 +64,12 @@
         "name": "ScriptingServices/lib/board_dao.js",
         "action": "generate"
     }, {
+        "name": "ScriptingServices/lib/board_tags.js",
+        "action": "generate"
+    }, {
+        "name": "ScriptingServices/lib/board_votes.js",
+        "action": "generate"
+    }, {
         "name": "ScriptingServices/lib/comment_dao.js",
         "action": "generate"
     }, {
@@ -71,15 +78,6 @@
     }, {
         "name": "ScriptingServices/svc/comment.js",
         "action": "generate"
-    }, {
-        "name": "ScriptingServices/idm/lib/user_dao.js",
-        "action": "copy"
-    }, {
-        "name": "ScriptingServices/idm/svc/user.js",
-        "action": "copy"
-    }, {
-        "name": "DataStructures/idm_user.table",
-        "action": "copy"
     }, {
         "name": "DataStructures/dis_board.table",
         "action": "generate",
@@ -105,7 +103,14 @@
         "action": "generate",
         "rename": "%s_board_stats"
     }, {
+        "name": "DataStructures/dis_board_tag.table",
+        "action": "generate",
+        "rename": "%s_board_tag"
+    }, {
         "name": "SecurityConstraints/main.access",
+        "action": "generate"
+    }, {
+        "name": "project.json",
         "action": "generate"
     }],
     "parameters": [{

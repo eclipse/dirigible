@@ -65,6 +65,14 @@
         "notNull":"false",
         "primaryKey":"false",
         "defaultValue":"0"
+      },
+      {
+        "name":"${packageName.toUpperCase()}B_LOCKED",
+        "type":"SMALLINT",
+        "length":"0",        
+        "notNull":"false",
+        "primaryKey":"false",
+        "defaultValue":"0"
       }
     ]
 }

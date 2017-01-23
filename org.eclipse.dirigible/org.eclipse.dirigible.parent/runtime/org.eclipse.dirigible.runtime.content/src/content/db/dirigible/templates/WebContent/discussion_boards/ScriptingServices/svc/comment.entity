@@ -1,6 +1,6 @@
 {
   "entityName":"comment",
-  "tableName":"DIS_COMMENT",
+  "tableName":"${packageName}_COMMENT",
   "tableType":"TABLE",
   "serviceName":"comment.js",
   "libraryName":"comment_dao.js",

@@ -6,7 +6,7 @@
 			
 			<div class="left-compartment">
 				<div class="user-box" style="">
-					<img ng-if="board.userDetails.avatar" src="{{board.userDetails.avatar}}" class="user-pic"/>
+					<img ng-if="board.userDetails.avatar" ng-src="{{board.userDetails.avatar}}" class="user-pic"/>
 					<i ng-if="!board.userDetails.avatar" class="glyphicon glyphicon-user user-pic"></i>
 					<span ng-bind="board.user" class="user-name"></span>
 				</div>
@@ -32,6 +32,9 @@
 				</div>
 									
 				<!--<div class="description" ng-bind-html="board.description"></div>-->
+				<div ng-if="board.tags">
+					<span ng-repeat="tag in board.tags" ng-bind="tag.defaultLabel" style="margin: 2px; padding: 0 5px; display: inline-block; float: left; height: 26px; line-height: 25px; border: 1px solid #acacac; border-radius: 3px;  background: #f1f1f1"><span>
+				</div>
 				<span ng-if="board.latestDiscussionUpdateTime" title="{{board.latestDiscussionUpdateTimeLocal}}" style="font-size: 0.875em;color: #767676;">Last discussion update {{board.timeSinceLatestDiscussionUpdateTime}}</span>
 			</div>
 

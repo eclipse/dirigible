@@ -12,7 +12,7 @@ var persistentProperties = {
 	optional: ["text", "user", "publishTime", "lastModifiedTime", "replyToCommentId"]
 };
 
-var log = require("logging/lib/logger").logger;
+var log = require("logging/logger").logger;
 log.ctx = "${packageName.toUpperCase()} Comment DAO";
 
 // Parse JSON entity into SQL and insert in db. Returns the new record id.
@@ -84,7 +84,7 @@ exports.find = function(id, expanded) {
     var connection = datasource.getConnection();
     try {
         var item;
-        var sql = "SELECT * FROM ${packageName.toUpperCase()}_COMMENT LEFT JOIN IDM_USER AS u ON ${packageName.toUpperCase()}C_USER = u.IDMU_UNAME WHERE " + exports.pkToSQL();
+        var sql = "SELECT * FROM ${packageName.toUpperCase()}_COMMENT LEFT JOIN USR_USER AS u ON ${packageName.toUpperCase()}C_USER = u.USRU_UNAME WHERE " + exports.pkToSQL();
         var statement = connection.prepareStatement(sql);
         statement.setInt(1, id);
         
@@ -95,9 +95,11 @@ exports.find = function(id, expanded) {
             	log.info('${packageName.toUpperCase()}_COMMENT entity with id[' + id + '] found');
             	if(expanded){
             		item.comments = exports.findComments(item.boardId, expanded);
-            	}            	
-        	}
-        }
+            	} 
+            }           	
+		} else {
+        	log.info('${packageName.toUpperCase()}_COMMENT entity with id[' + id + '] found');
+       	}
         
         return item;
 
@@ -116,7 +118,7 @@ exports.findComments = function(boardId, expanded) {
     var connection = datasource.getConnection();
     try {
         var items = [];
-        var sql = "SELECT * FROM ${packageName.toUpperCase()}_COMMENT LEFT JOIN IDM_USER AS u ON ${packageName.toUpperCase()}C_USER = u.IDMU_UNAME WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID=? AND ${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID IS NULL";
+        var sql = "SELECT * FROM ${packageName.toUpperCase()}_COMMENT LEFT JOIN USR_USER AS u ON ${packageName.toUpperCase()}C_USER = u.USRU_UNAME WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID=? AND ${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID IS NULL";
         var statement = connection.prepareStatement(sql);
         statement.setInt(1, boardId);
         
@@ -143,12 +145,12 @@ exports.findComments = function(boardId, expanded) {
 
 exports.findReplies = function(boardId, commentId) {
 
-	log.info('Finding ${packageName.toUpperCase()}_COMMENT entities in reply to ${packageName.toUpperCase()}_COMMENT entity with id[' + commentId + '] for ${packageName.toUpperCase()}_BOARD entity with id['+boardId+']');
+	log.info('Finding ${packageName.toUpperCase()}_COMMENT entities in reply to ${packageName.toUpperCase()}_COMMENT entity with id[' + commentId + '] for ${packageName.toUpperCase()}_BOARD['+boardId+'] entity');
 
     var connection = datasource.getConnection();
     try {
         var items = [];
-        var sql = "SELECT * FROM ${packageName.toUpperCase()}_COMMENT LEFT JOIN IDM_USER AS u ON ${packageName.toUpperCase()}C_USER = u.IDMU_UNAME WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID=? AND ${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID=?";
+        var sql = "SELECT * FROM ${packageName.toUpperCase()}_COMMENT LEFT JOIN USR_USER AS u ON ${packageName.toUpperCase()}C_USER = u.USRU_UNAME WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID=? AND ${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID=?";
         var statement = connection.prepareStatement(sql);
         statement.setInt(1, boardId);
         statement.setInt(2, commentId);
@@ -158,7 +160,7 @@ exports.findReplies = function(boardId, commentId) {
             items.push(createEntity(resultSet));
         }
         
-        log.info('' + items.length +'  ${packageName.toUpperCase()}_COMMENT entities in reply to ${packageName.toUpperCase()}_COMMENT entity with id[' + commentId + '] for ${packageName.toUpperCase()}_BOARD entity with id['+boardId+'] found');
+        log.info('' + items.length +'  ${packageName.toUpperCase()}_COMMENT entities in reply to ${packageName.toUpperCase()}_COMMENT entity with id[' + commentId + '] for ${packageName.toUpperCase()}_BOARD['+boardId+'] entity');
         
         return items;
 
@@ -172,12 +174,12 @@ exports.findReplies = function(boardId, commentId) {
 
 exports.findDiscussionPosts = function(boardId, flat) {
 
-	log.info('Finding ${packageName.toUpperCase()}_COMMENT entities for ${packageName.toUpperCase()}_BOARD entity with id[' + boardId + ']');
+	log.info('Finding ${packageName.toUpperCase()}_COMMENT entities for ${packageName.toUpperCase()}_BOARD['+boardId+'] entity');
 
     var connection = datasource.getConnection();
     try {
         var items = [];
-        var sql = "SELECT * FROM ${packageName.toUpperCase()}_COMMENT LEFT JOIN IDM_USER AS u ON ${packageName.toUpperCase()}C_USER = u.IDMU_UNAME WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID=? ORDER BY ";
+        var sql = "SELECT * FROM ${packageName.toUpperCase()}_COMMENT LEFT JOIN USR_USER AS u ON ${packageName.toUpperCase()}C_USER = u.USRU_UNAME WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID=? ORDER BY ";
         
         if(!flat){
         	sql += "${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID,";
@@ -210,7 +212,7 @@ exports.findDiscussionPosts = function(boardId, flat) {
            	item.replies = exports.findReplies(boardId, item.id);
         }
         
-        log.info('' + items.length +' ${packageName.toUpperCase()}_COMMENT entities in reply to ${packageName.toUpperCase()}_BOARD entity with id['+boardId+'] found');
+        log.info('' + items.length +' ${packageName.toUpperCase()}_COMMENT entities in reply to ${packageName.toUpperCase()}_BOARD['+boardId+'] entity');
         
         return items;
 
@@ -226,7 +228,7 @@ exports.findDiscussionPosts = function(boardId, flat) {
 // Read all entities, parse and return them as an array of JSON objets
 exports.list = function(boardId, limit, offset, sort, order, expanded) {
 
-	log.info('Listing ${packageName.toUpperCase()}_COMMENT entity collection for ${packageName.toUpperCase()}_BOARD id [' + boardId + '] with list operators: limit['+limit+'], offset['+offset+'], sort['+sort+'], order['+order+'], expanded['+expanded+']');
+	log.info('Listing ${packageName.toUpperCase()}_COMMENT entity collection for ${packageName.toUpperCase()}_BOARD[' + boardId + '] with list operators: limit['+limit+'], offset['+offset+'], sort['+sort+'], order['+order+'], expanded['+expanded+']');
 
     var connection = datasource.getConnection();
     try {
@@ -236,7 +238,7 @@ exports.list = function(boardId, limit, offset, sort, order, expanded) {
             sql += " " + datasource.getPaging().genTopAndStart(limit, offset);
         }
         sql += " * FROM ${packageName.toUpperCase()}_COMMENT";
-        sql += " LEFT JOIN IDM_USER AS u ON ${packageName.toUpperCase()}C_USER = u.IDMU_UNAME";
+        sql += " LEFT JOIN USR_USER AS u ON ${packageName.toUpperCase()}C_USER = u.USRU_UNAME";
         if(boardId !== null && boardId !== undefined){
         	sql += " WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID=" + boardId;
         }
@@ -278,8 +280,8 @@ function createEntity(resultSet) {
 	entity.id = resultSet.getInt("${packageName.toUpperCase()}C_ID");
 	entity.text = resultSet.getString("${packageName.toUpperCase()}C_COMMENT_TEXT");
 	entity.boardId = resultSet.getString("${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID");
-    entity.user = resultSet.getString("IDMU_UNAME");
-    entity.pic = resultSet.getString("IDMU_PIC");
+    entity.user = resultSet.getString("USRU_UNAME");
+    entity.pic = resultSet.getString("USRU_PIC");
     entity.replyToCommentId = resultSet.getString("${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID");
     if(entity.replyToCommentId < 0){
     	entity.replyToCommentId = undefined;
@@ -321,7 +323,7 @@ function createSQLEntity(item) {
 // update entity from a JSON object. Returns the id of the updated entity.
 exports.update = function(item) {
 
-	log.info('Updating ${packageName.toUpperCase()}_COMMENT entity with id[' + item!==undefined?item.id:item + ']');
+	log.info('Updating ${packageName.toUpperCase()}_COMMENT[' + item!==undefined?item.id:item + '] entity');
 
 	if(item === undefined || item === null){
 		throw new Error('Illegal argument: entity is ' + item);
@@ -350,7 +352,7 @@ exports.update = function(item) {
         statement.setInt(++i, id);
         statement.executeUpdate();
         
-        log.info('${packageName.toUpperCase()}_COMMENT entity with id[' + id + '] updated');
+        log.info('${packageName.toUpperCase()}_COMMENT[' + id + '] entity updated');
         
         return this;
 
@@ -365,7 +367,7 @@ exports.update = function(item) {
 // delete entity by id. Returns the id of the deleted entity.
 exports.remove = function(id) {
 
-	log.info('Deleting ${packageName.toUpperCase()}_COMMENT entity with id[' + id + ']');
+	log.info('Deleting ${packageName.toUpperCase()}_COMMENT[' + id + '] entity');
 	
 	if(id === undefined || id === null){
 		throw new Error('Illegal argument: id[' + id + ']');
@@ -373,14 +375,15 @@ exports.remove = function(id) {
 
     var connection = datasource.getConnection();
     try {
-    	var sql = "DELETE FROM ${packageName.toUpperCase()}_COMMENT WHERE " + exports.pkToSQL();
+    	var sql = "DELETE FROM ${packageName.toUpperCase()}_COMMENT WHERE " + exports.pkToSQL() + " OR ${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID = ?";
         var statement = connection.prepareStatement(sql);
         statement.setInt(1, id);
+        statement.setInt(2, id);        
         statement.executeUpdate();
         
-        log.info('${packageName.toUpperCase()}_COMMENT entity with id[' + id + '] deleted');        
+        log.info('${packageName.toUpperCase()}_COMMENT[' + id + '] entity and dependent ${packageName.toUpperCase()}_COMMENT entities deleted');        
         
-        return this;
+        return id;
         
     }  catch(e) {
 		e.errContext = sql;

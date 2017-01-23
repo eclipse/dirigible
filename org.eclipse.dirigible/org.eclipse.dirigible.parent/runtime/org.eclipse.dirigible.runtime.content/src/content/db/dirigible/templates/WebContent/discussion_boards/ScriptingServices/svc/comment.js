@@ -43,9 +43,9 @@ Comment.prototype.cfg["{id}"].put.handler = function(context, io){
 };	
 
 
-var comment = new Comment(commentDAO);	
+var comment = new Comment(commentDAO);
 
 var request = require("net/http/request");
 var response = require("net/http/response");
-
+		
 comment.service(request, response);

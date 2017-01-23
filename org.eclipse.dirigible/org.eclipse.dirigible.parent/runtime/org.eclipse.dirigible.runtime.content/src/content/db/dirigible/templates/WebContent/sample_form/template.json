@@ -1,6 +1,7 @@
 {"name":"Sample Form Page",
  "description":"Sample HTML5 form page ",
  "image":"sample-form.png",
+ "preview":"sample-form-preview.png",
  "sources":[
    {"name":"sample-form.html", "action":"generate"}
    ],

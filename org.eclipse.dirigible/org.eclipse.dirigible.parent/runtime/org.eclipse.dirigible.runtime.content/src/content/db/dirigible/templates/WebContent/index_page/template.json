@@ -1,6 +1,7 @@
 {"name":"Index Page with Main Menu, Header and Footer",
  "description":"Index page with main menu, header and footer",
  "image":"index-page.png",
+ "preview":"index-page-preview.png",
  "sources":[
    {"name":"index.html", "action":"generate"},
    {"name":"main.menu", "action":"copy"},

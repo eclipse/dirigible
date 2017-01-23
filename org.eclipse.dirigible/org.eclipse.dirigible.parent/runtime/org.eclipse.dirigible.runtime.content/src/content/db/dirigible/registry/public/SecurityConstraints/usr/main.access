@@ -1,0 +1,10 @@
+[
+  {
+    "location":"/usr/",
+    "roles":
+      [
+        {"role":"Everyone"}
+      ]
+  }
+]
+

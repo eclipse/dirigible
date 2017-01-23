@@ -2,6 +2,7 @@
     "name": "Launchpad Item",
     "description": "Launchpad Item",
     "image": "launchpad-item.png",
+    "preview": "launchpad-item-preview.png",
     "sources": [{
         "name": "WebContent/items/index.html",
         "action": "generate"

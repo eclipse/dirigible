@@ -1,0 +1,30 @@
+{
+  "tableName":"USR_USER",
+  "columns":
+    [
+      {
+        "name":"USRU_ID",
+        "type":"INTEGER",
+        "length":"0",
+        "notNull":"true",
+        "primaryKey":"true",
+        "defaultValue":""
+      },
+      {
+        "name":"USRU_PIC",
+        "type":"VARCHAR",
+        "length":"2000",
+        "notNull":"false",
+        "primaryKey":"false",
+        "defaultValue":""
+      },
+      {
+        "name":"USRU_UNAME",
+        "type":"VARCHAR",
+        "length":"255",
+        "notNull":"false",
+        "primaryKey":"false",
+        "defaultValue":""
+      }
+    ]
+}
