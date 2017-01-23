@@ -2,6 +2,7 @@
     "name":"Database Access (JavaScript)",
     "description":"JavaScript database access service",
     "image":"database-access.png",
+    "preview":"database-access-preview.png",
     "sources":[
         {
             "name":"database-access.js",

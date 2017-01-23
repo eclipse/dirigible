@@ -2,6 +2,7 @@
     "name":"Hello World Service (JavaScript)",
     "description":"JavaScript hello world service",
     "image":"javascript-service.png",
+    "preview":"javascript-service-preview.png",
     "sources":[
         {
             "name":"javascript-service.js",

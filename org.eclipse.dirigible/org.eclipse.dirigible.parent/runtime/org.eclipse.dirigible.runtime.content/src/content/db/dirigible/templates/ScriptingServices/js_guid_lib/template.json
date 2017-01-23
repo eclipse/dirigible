@@ -2,6 +2,7 @@
     "name":"GUID Generator Library (JavaScript)",
     "description":"JavaScript GUID generator library",
     "image":"guid-generator.png",
+    "preview":"guid-generator-preview.png",
     "sources":[
         {
             "name":"guid-generator.js",

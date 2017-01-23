@@ -1,7 +1,8 @@
 {  
    "name":"CRUD Service on Table - Dependent (JavaScript)",
    "description":"JavaScript RESTful entity service on a relational database table dependent to another table",
-   "image":"database-crud.png",
+   "image":"database-crud-dep.png",
+   "preview":"database-crud-dep-preview.png",
    "sources":[{  
          "name":"database-crud.js",
          "action":"generate"

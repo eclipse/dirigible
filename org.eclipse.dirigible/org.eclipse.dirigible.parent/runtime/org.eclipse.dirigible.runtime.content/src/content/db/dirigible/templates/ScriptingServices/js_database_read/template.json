@@ -2,6 +2,7 @@
     "name":"List Service on Table or View (JavaScript)",
     "description":"JavaScript read-only entity service on a relational database table or view",
     "image":"database-read.png",
+    "preview":"database-read-preview.png",
     "sources":[
         {
             "name":"database-read.js",

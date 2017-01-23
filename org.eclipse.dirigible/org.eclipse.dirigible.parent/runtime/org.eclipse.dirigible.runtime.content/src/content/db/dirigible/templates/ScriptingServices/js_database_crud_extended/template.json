@@ -1,7 +1,8 @@
 {  
     "name":"CRUD Service on Table - Extended (JavaScript)",
     "description":"JavaScript Extended RESTful entity service on a relational database table",
-    "image":"database-crud.png",
+    "image":"database-crud-ext.png",
+    "preview":"database-crud-ext-preview.png",
     "sources": [{
         "name":"database-crud.js",
         "action":"generate"
