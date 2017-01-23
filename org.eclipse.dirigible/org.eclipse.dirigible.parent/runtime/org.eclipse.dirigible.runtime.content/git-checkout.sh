@@ -39,13 +39,6 @@ cp -r target/registry_monitoring/registry_monitoring/ScriptingServices src/conte
 cp -r target/registry_monitoring/registry_monitoring/WebContent src/content/db/dirigible/registry/public
 cp -r target/registry_monitoring/registry_monitoring/ExtensionDefinitions src/content/db/dirigible/registry/public
 
-# registry_ext_cmis_explorer
-if cd target/registry_ext_cmis_explorer; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_ext_cmis_explorer.git target/registry_ext_cmis_explorer; fi
-cp -r target/registry_ext_cmis_explorer/registry_ext_cmis_explorer/ScriptingServices src/content/db/dirigible/registry/public
-cp -r target/registry_ext_cmis_explorer/registry_ext_cmis_explorer/WebContent src/content/db/dirigible/registry/public
-cp -r target/registry_ext_cmis_explorer/registry_ext_cmis_explorer/ExtensionDefinitions src/content/db/dirigible/registry/public
-cp -r target/registry_ext_cmis_explorer/registry_ext_cmis_explorer/SecurityConstraints src/content/db/dirigible/registry/public
-
 # registry_ext_swagger_ui
 if cd target/registry_ext_swagger_ui; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_ext_swagger_ui.git target/registry_ext_swagger_ui; fi
 cp -r target/registry_ext_swagger_ui/registry_ext_swagger_ui/ScriptingServices src/content/db/dirigible/registry/public
@@ -87,6 +80,13 @@ cp -r target/core_users/core_users/WebContent src/content/db/dirigible/registry/
 if cd target/tags; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/tags.git target/tags; fi
 cp -r target/tags/tags/DataStructures src/content/db/dirigible/registry/public
 cp -r target/tags/tags/ScriptingServices src/content/db/dirigible/registry/public
+
+# docs_explorer
+if cd target/docs_explorer; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/docs_explorer.git target/docs_explorer; fi
+cp -r target/docs_explorer/docs_explorer/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/docs_explorer/docs_explorer/SecurityConstraints src/content/db/dirigible/registry/public
+cp -r target/docs_explorer/docs_explorer/WebContent src/content/db/dirigible/registry/public
+
 
 
 ####### Clone or Pull Templates

@@ -1,0 +1,5 @@
+{
+  "extension":"/registry/extension/operate/docs",
+  "extension-point":"/registry/extension_point/launchpad",
+  "description":"Operate Documents extension for the Launchpad extension point"
+}
