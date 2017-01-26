@@ -48,5 +48,10 @@ function printError(httpCode, errCode, errMessage, errContext) {
 
 function getNameFromPath(path){
 	var splittedFullName = path.split("/");
-	return splittedFullName[splittedFullName.length - 1];
+	var name = splittedFullName[splittedFullName.length - 1];
+	if (!name || name.lenght === 0) {
+		name = "root";
+	}
+
+	return name;
 }

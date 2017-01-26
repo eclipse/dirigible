@@ -10,6 +10,10 @@ exports.getObject = function(path){
 	return cmisSession.getObjectByPath(path);
 };
 
+exports.getById = function(id) {
+	return cmisSession.getObject(id);
+};
+
 exports.deleteObject = function(object){
 	object.delete();
 };
