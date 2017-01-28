@@ -65,21 +65,21 @@
 							</resources>
 						</configuration>
 					</execution>
-					<!-- <execution>
-						<id>copy-index.html</id>
-						<phase>package</phase>
+					<execution>
+						<id>copy-context.xml</id>
+						<phase>compile</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/${deployment.name}</outputDirectory>
+							<outputDirectory>${project.build.directory}/${deployment.name}/META-INF</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/src/index/${deployment.type}</directory>
+									<directory>${basedir}/src/context/${deployment.type}</directory>
 								</resource>
 							</resources>
 						</configuration>
-					</execution> -->
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -179,6 +179,15 @@
 			<id>saptrial</id>
 			<properties>
 				<deployment.type>saptrial</deployment.type>
+				<deployment.name>ROOT</deployment.name>
+				<deployment.context></deployment.context>
+				<deployment.executable>dont-use</deployment.executable>
+			</properties>
+		</profile>
+		<profile>
+			<id>iam</id>
+			<properties>
+				<deployment.type>iam</deployment.type>
 				<deployment.name>ROOT</deployment.name>
 				<deployment.context></deployment.context>
 				<deployment.executable>dont-use</deployment.executable>

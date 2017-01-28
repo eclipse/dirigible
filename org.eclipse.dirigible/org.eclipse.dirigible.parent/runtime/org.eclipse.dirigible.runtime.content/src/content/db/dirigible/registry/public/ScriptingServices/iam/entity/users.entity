@@ -1,0 +1,15 @@
+{
+  "entityName":"Iam_users",
+  "tableName":"IAM_USERS",
+  "tableType":"TABLE",
+  "serviceName":"users.js",
+  "libraryName":"users_lib.js",
+  "specification":"users.swagger",
+  "getEnabled":"true",
+  "postEnabled":"true",
+  "putEnabled":"true",
+  "deleteEnabled":"true",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
+}

@@ -465,7 +465,7 @@
 	</security-constraint>
 	
 	
-	<!-- Security Roles -->
+	<!-- Security Roles for Internal Usage -->
 	<security-role>
 		<description>All SAP NetWeaver Cloud users</description>
 		<role-name>Everyone</role-name>
@@ -479,31 +479,7 @@
 		<role-name>Operator</role-name>
 	</security-role>
 	<security-role>
-		<description>Predefined Role For Applications</description>
-		<role-name>Administrator</role-name>
-	</security-role>	
-	<security-role>
-		<description>Predefined Role For Applications</description>
-		<role-name>Manager</role-name>
-	</security-role>
-	<security-role>
-		<description>Predefined Role For Applications</description>		
-		<role-name>PowerUser</role-name>
-	</security-role>
-	<security-role>
-		<description>Predefined Role For Applications</description>
-		<role-name>User</role-name>
-	</security-role>
-	<security-role>
-		<description>Predefined Role For Applications</description>
-		<role-name>ReadWrite</role-name>
-	</security-role>
-	<security-role>
-		<description>Predefined Role For Applications</description>
-		<role-name>ReadOnly</role-name>
-	</security-role>
-	<security-role>
-		<description>Repository Service Access</description>
+		<description>Repository can perform direct manipulations on Repository</description>
 		<role-name>Repository</role-name>
 	</security-role>
 	<security-role>
@@ -513,6 +489,32 @@
 	<security-role>
 		<description>Anonymous can set explicit user name</description>
 		<role-name>Anonymous</role-name>
+	</security-role>
+	
+	<!-- Security Roles for Projects Usage -->
+	<security-role>
+		<description>Predefined Administrator Role For Applications</description>
+		<role-name>Administrator</role-name>
+	</security-role>	
+	<security-role>
+		<description>Predefined Manager Role For Applications</description>
+		<role-name>Manager</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined PowerUser Role For Applications</description>		
+		<role-name>PowerUser</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined User Role For Applications</description>
+		<role-name>User</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined ReadWrite Role For Applications</description>
+		<role-name>ReadWrite</role-name>
+	</security-role>
+	<security-role>
+		<description>Predefined ReadOnly Role For Applications</description>
+		<role-name>ReadOnly</role-name>
 	</security-role>
 	
 </web-app>

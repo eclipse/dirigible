@@ -1,0 +1,209 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.0",
+        "title": "Iam_assign Entity Service",
+        "description":"This is a RESTful web service for listing, viewing and managing entities of the type 'Iam_assign'"
+    },
+    "basePath":"/services",
+    "tags":[
+      {
+         "name":"Iam_assign",
+         "description":"View and manage Iam_assign objects"
+      }
+    ],
+    "paths": {
+        "/js/iam/assign.js": {
+            "get": {
+            	"tags":[
+               		"Iam_assign"
+            	],
+                "description": "Gets 'Iam_assign' objects.\n",
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "Count of all the records",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "assign_id",
+                        "in": "query",
+                        "description": "Identifier of the 'Iam_assign' object",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "metadata",
+                        "in": "query",
+                        "description": "Metadata of the 'Iam_assign' object",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Offset of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort parameter",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Descending order",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_assign"
+                        }
+                    }
+                }
+            },
+            "post": {
+            	"tags":[
+               		"Iam_assign"
+            	],
+                "description": "Creates a new 'Iam_assign' object.\n",
+                "consumes":[
+	               "application/json"
+	            ],
+	            "produces":[
+	               "plain/text"
+	            ],
+	            "parameters":[
+	               {
+	                  "in":"body",
+	                  "name":"body",
+	                  "description":"Iam_assign object that needs to be added",
+	                  "required":true,
+	                  "schema":{
+	                     "$ref":"#/definitions/Iam_assign"
+	                  }
+	               }
+	            ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_assign"
+                        }
+                    }
+                }
+            },
+            "put": {
+            	"tags":[
+               		"Iam_assign"
+            	],
+                "description": "Updates an existing 'Iam_assign' object.\n",
+                "consumes":[
+	               "application/json"
+	            ],
+	            "produces":[
+	               "plain/text"
+	            ],
+	            "parameters":[
+	               {
+	                  "in":"body",
+	                  "name":"body",
+	                  "description":"Iam_assign object that needs to be added",
+	                  "required":true,
+	                  "schema":{
+	                     "$ref":"#/definitions/Iam_assign"
+	                  }
+	               }
+	            ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_assign"
+                        }
+                    }
+                }
+            },
+            "delete": {
+            	"tags":[
+               		"Iam_assign"
+            	],
+                "description": "Deletes 'Iam_assign' objects.\n",
+                "parameters": [
+                    {
+                        "name": "assign_id",
+                        "in": "query",
+                        "description": "Identifier of the 'Iam_assign' object",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_assign"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions":{
+        "Iam_assign": {
+	        "type":"object",
+	        "properties": {
+        		"assign_id": {
+	            	"type": 
+        "integer"
+	    		}
+				,
+        		"assign_username": {
+	            	"type": 
+        "string"
+	    		}
+				,
+        		"assign_rolename": {
+	            	"type": 
+        "string"
+	    		}
+				,
+        		"assign_state": {
+	            	"type": 
+        "integer"
+	    		}
+				,
+        		"assign_created_at": {
+	            	"type": 
+        "number"
+	    		}
+				,
+        		"assign_created_by": {
+	            	"type": 
+        "string"
+	    		}
+	        }
+        }
+	}
+}

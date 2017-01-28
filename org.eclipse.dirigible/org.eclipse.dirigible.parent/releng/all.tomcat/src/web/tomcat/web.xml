@@ -463,28 +463,29 @@
 	
 	<!-- Security Roles for Projects Usage -->
 	<security-role>
-		<description>Predefined Role For Applications</description>
+		<description>Predefined Administrator Role For Applications</description>
 		<role-name>Administrator</role-name>
 	</security-role>	
 	<security-role>
-		<description>Predefined Role For Applications</description>
+		<description>Predefined Manager Role For Applications</description>
 		<role-name>Manager</role-name>
 	</security-role>
 	<security-role>
-		<description>Predefined Role For Applications</description>		
+		<description>Predefined PowerUser Role For Applications</description>		
 		<role-name>PowerUser</role-name>
 	</security-role>
 	<security-role>
-		<description>Predefined Role For Applications</description>
+		<description>Predefined User Role For Applications</description>
 		<role-name>User</role-name>
 	</security-role>
 	<security-role>
-		<description>Predefined Role For Applications</description>
+		<description>Predefined ReadWrite Role For Applications</description>
 		<role-name>ReadWrite</role-name>
 	</security-role>
 	<security-role>
-		<description>Predefined Role For Applications</description>
+		<description>Predefined ReadOnly Role For Applications</description>
 		<role-name>ReadOnly</role-name>
 	</security-role>
+	
 
 </web-app>

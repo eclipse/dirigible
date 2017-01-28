@@ -1,0 +1,17 @@
+[
+  {
+    "location":"/iam",
+    "roles":
+      [
+        {"role":"Operator"}
+      ]
+  },
+  {
+    "location":"/profile",
+    "roles":
+      [
+        {"role":"Everyone"}
+      ]
+  }
+]
+

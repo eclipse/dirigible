@@ -1,0 +1,15 @@
+{
+  "entityName":"Iam_assign",
+  "tableName":"IAM_ASSIGN",
+  "tableType":"TABLE",
+  "serviceName":"assign.js",
+  "libraryName":"assign_lib.js",
+  "specification":"assign.swagger",
+  "getEnabled":"true",
+  "postEnabled":"true",
+  "putEnabled":"true",
+  "deleteEnabled":"true",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
+}

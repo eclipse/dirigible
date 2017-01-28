@@ -1,0 +1,204 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.0",
+        "title": "Iam_roles Entity Service",
+        "description":"This is a RESTful web service for listing, viewing and managing entities of the type 'Iam_roles'"
+    },
+    "basePath":"/services",
+    "tags":[
+      {
+         "name":"Iam_roles",
+         "description":"View and manage Iam_roles objects"
+      }
+    ],
+    "paths": {
+        "/js/iam/roles.js": {
+            "get": {
+            	"tags":[
+               		"Iam_roles"
+            	],
+                "description": "Gets 'Iam_roles' objects.\n",
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "Count of all the records",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "description": "Identifier of the 'Iam_roles' object",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "metadata",
+                        "in": "query",
+                        "description": "Metadata of the 'Iam_roles' object",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Offset of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort parameter",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Descending order",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_roles"
+                        }
+                    }
+                }
+            },
+            "post": {
+            	"tags":[
+               		"Iam_roles"
+            	],
+                "description": "Creates a new 'Iam_roles' object.\n",
+                "consumes":[
+	               "application/json"
+	            ],
+	            "produces":[
+	               "plain/text"
+	            ],
+	            "parameters":[
+	               {
+	                  "in":"body",
+	                  "name":"body",
+	                  "description":"Iam_roles object that needs to be added",
+	                  "required":true,
+	                  "schema":{
+	                     "$ref":"#/definitions/Iam_roles"
+	                  }
+	               }
+	            ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_roles"
+                        }
+                    }
+                }
+            },
+            "put": {
+            	"tags":[
+               		"Iam_roles"
+            	],
+                "description": "Updates an existing 'Iam_roles' object.\n",
+                "consumes":[
+	               "application/json"
+	            ],
+	            "produces":[
+	               "plain/text"
+	            ],
+	            "parameters":[
+	               {
+	                  "in":"body",
+	                  "name":"body",
+	                  "description":"Iam_roles object that needs to be added",
+	                  "required":true,
+	                  "schema":{
+	                     "$ref":"#/definitions/Iam_roles"
+	                  }
+	               }
+	            ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_roles"
+                        }
+                    }
+                }
+            },
+            "delete": {
+            	"tags":[
+               		"Iam_roles"
+            	],
+                "description": "Deletes 'Iam_roles' objects.\n",
+                "parameters": [
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "description": "Identifier of the 'Iam_roles' object",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_roles"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions":{
+        "Iam_roles": {
+	        "type":"object",
+	        "properties": {
+        		"role_id": {
+	            	"type": 
+        "integer"
+	    		}
+				,
+        		"role_rolename": {
+	            	"type": 
+        "string"
+	    		}
+				,
+        		"role_description": {
+	            	"type": 
+        "string"
+	    		}
+				,
+        		"role_created_at": {
+	            	"type": 
+        "number"
+	    		}
+				,
+        		"role_created_by": {
+	            	"type": 
+        "string"
+	    		}
+	        }
+        }
+	}
+}

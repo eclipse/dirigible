@@ -1,0 +1,204 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.0",
+        "title": "Iam_users Entity Service",
+        "description":"This is a RESTful web service for listing, viewing and managing entities of the type 'Iam_users'"
+    },
+    "basePath":"/services",
+    "tags":[
+      {
+         "name":"Iam_users",
+         "description":"View and manage Iam_users objects"
+      }
+    ],
+    "paths": {
+        "/js/iam/users.js": {
+            "get": {
+            	"tags":[
+               		"Iam_users"
+            	],
+                "description": "Gets 'Iam_users' objects.\n",
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "Count of all the records",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "Identifier of the 'Iam_users' object",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "metadata",
+                        "in": "query",
+                        "description": "Metadata of the 'Iam_users' object",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Offset of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort parameter",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Descending order",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_users"
+                        }
+                    }
+                }
+            },
+            "post": {
+            	"tags":[
+               		"Iam_users"
+            	],
+                "description": "Creates a new 'Iam_users' object.\n",
+                "consumes":[
+	               "application/json"
+	            ],
+	            "produces":[
+	               "plain/text"
+	            ],
+	            "parameters":[
+	               {
+	                  "in":"body",
+	                  "name":"body",
+	                  "description":"Iam_users object that needs to be added",
+	                  "required":true,
+	                  "schema":{
+	                     "$ref":"#/definitions/Iam_users"
+	                  }
+	               }
+	            ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_users"
+                        }
+                    }
+                }
+            },
+            "put": {
+            	"tags":[
+               		"Iam_users"
+            	],
+                "description": "Updates an existing 'Iam_users' object.\n",
+                "consumes":[
+	               "application/json"
+	            ],
+	            "produces":[
+	               "plain/text"
+	            ],
+	            "parameters":[
+	               {
+	                  "in":"body",
+	                  "name":"body",
+	                  "description":"Iam_users object that needs to be added",
+	                  "required":true,
+	                  "schema":{
+	                     "$ref":"#/definitions/Iam_users"
+	                  }
+	               }
+	            ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_users"
+                        }
+                    }
+                }
+            },
+            "delete": {
+            	"tags":[
+               		"Iam_users"
+            	],
+                "description": "Deletes 'Iam_users' objects.\n",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "Identifier of the 'Iam_users' object",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_users"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions":{
+        "Iam_users": {
+	        "type":"object",
+	        "properties": {
+        		"user_id": {
+	            	"type": 
+        "integer"
+	    		}
+				,
+        		"user_username": {
+	            	"type": 
+        "string"
+	    		}
+				,
+        		"user_password": {
+	            	"type": 
+        "string"
+	    		}
+				,
+        		"user_created_at": {
+	            	"type": 
+        "number"
+	    		}
+				,
+        		"user_created_by": {
+	            	"type": 
+        "string"
+	    		}
+	        }
+        }
+	}
+}

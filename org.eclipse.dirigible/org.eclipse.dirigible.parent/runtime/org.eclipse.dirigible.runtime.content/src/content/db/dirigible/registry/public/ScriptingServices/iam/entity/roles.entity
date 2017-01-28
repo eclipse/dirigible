@@ -1,0 +1,15 @@
+{
+  "entityName":"Iam_roles",
+  "tableName":"IAM_ROLES",
+  "tableType":"TABLE",
+  "serviceName":"roles.js",
+  "libraryName":"roles_lib.js",
+  "specification":"roles.swagger",
+  "getEnabled":"true",
+  "postEnabled":"true",
+  "putEnabled":"true",
+  "deleteEnabled":"true",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
+}

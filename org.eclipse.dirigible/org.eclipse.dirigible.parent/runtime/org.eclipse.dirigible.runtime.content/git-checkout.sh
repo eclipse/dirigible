@@ -87,6 +87,12 @@ cp -r target/docs_explorer/docs_explorer/ScriptingServices src/content/db/dirigi
 cp -r target/docs_explorer/docs_explorer/SecurityConstraints src/content/db/dirigible/registry/public
 cp -r target/docs_explorer/docs_explorer/WebContent src/content/db/dirigible/registry/public
 
+# core_iam
+if cd target/core_iam; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/core_iam.git target/core_iam; fi
+cp -r target/core_iam/core_iam/DataStructures src/content/db/dirigible/registry/public
+cp -r target/core_iam/core_iam/ScriptingServices src/content/db/dirigible/registry/public
+cp -r target/core_iam/core_iam/SecurityConstraints src/content/db/dirigible/registry/public
+cp -r target/core_iam/core_iam/WebContent src/content/db/dirigible/registry/public
 
 
 ####### Clone or Pull Templates
