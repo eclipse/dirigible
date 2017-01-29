@@ -1,0 +1,14 @@
+{"name":"Append Data to a Table",
+ "description":"Append data to an existing relational table only once",
+ "image":"dsv.png",
+ "sources":[
+   {"name":"dsv.append", "action":"generate"}
+   ],
+ "parameters":[
+   {"name":"templateType", "required":"true"},
+   {"name":"fileName", "required":"true"},
+   {"name":"projectName", "required":"true"},
+   {"name":"packageName", "required":"true"},
+   {"name":"rows", "required":"true"}
+   ]
+}

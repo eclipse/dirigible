@@ -155,7 +155,10 @@ public class AbstractArtifactLabelProvider extends LabelProvider {
 		if (resourceName.endsWith("access")) { //$NON-NLS-1$
 			return createImage(TYPE_ACCESS_ICON_URL);
 		}
-		if (resourceName.endsWith("dsv")) { //$NON-NLS-1$
+		if (resourceName.endsWith("dsv") //$NON-NLS-1$
+				|| resourceName.endsWith("replace") //$NON-NLS-1$
+				|| resourceName.endsWith("append") //$NON-NLS-1$
+				|| resourceName.endsWith("delete")) { //$NON-NLS-1$
 			return createImage(TYPE_DSV_ICON_URL);
 		}
 		if (resourceName.endsWith("rb")) { //$NON-NLS-1$
@@ -172,7 +175,7 @@ public class AbstractArtifactLabelProvider extends LabelProvider {
 				|| resourceName.endsWith("mkdn") //$NON-NLS-1$
 				|| resourceName.endsWith("mdwn") //$NON-NLS-1$
 				|| resourceName.endsWith("mkd") //$NON-NLS-1$
-		// || resourceName.endsWith("mediawiki") //$NON-NLS-1$
+				// || resourceName.endsWith("mediawiki") //$NON-NLS-1$
 				|| resourceName.endsWith("textile") //$NON-NLS-1$
 				|| resourceName.endsWith("tracwiki") //$NON-NLS-1$
 				|| resourceName.endsWith("twiki") //$NON-NLS-1$

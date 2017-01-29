@@ -248,6 +248,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 
 	private void executeTableCreate(Connection connection, @SuppressWarnings("unused") IDialectSpecifier dialectSpecifier, TableModel tableModel)
 			throws SQLException {
+		logger.info("Processing table 'create': " + tableModel.getName());
+
 		StringBuilder sql = new StringBuilder();
 		String tableName = tableModel.getName();
 
@@ -303,6 +305,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 	}
 
 	private void executeTableUpdate(Connection connection, IDialectSpecifier dialectSpecifier, TableModel tableModel) throws SQLException {
+		logger.info("Processing table 'update': " + tableModel.getName());
+
 		StringBuilder sql = new StringBuilder();
 		String tableName = tableModel.getName();
 
@@ -411,6 +415,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 	}
 
 	private void executeViewDrop(Connection connection, ViewModel viewModel) throws SQLException {
+		logger.info("Processing view 'drop': " + viewModel.getName());
+
 		StringBuilder sql = new StringBuilder();
 		String viewName = viewModel.getName();
 
@@ -430,6 +436,8 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 	}
 
 	private void executeViewCreate(Connection connection, ViewModel viewModel) throws SQLException {
+		logger.info("Processing view 'create': " + viewModel.getName());
+
 		StringBuilder sql = new StringBuilder();
 		String viewName = viewModel.getName();
 		String query = viewModel.getQuery();
