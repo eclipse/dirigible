@@ -218,8 +218,10 @@ function Statement(internalStatement) {
 	this.setLong = function(index, value) {
 		if(value!==null && value!==undefined)
 			this.internalStatement.setLong(index, value);
-		else
+		else{
 			this.setNull(index, this.SQLTypes.BIGINT);
+		}
+
 	};
 
 	this.setShort = function(index, value) {

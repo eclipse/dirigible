@@ -4,8 +4,6 @@
 var cmis = require('doc/cmis');
 var cmisObjectLib = require("docs_explorer/lib/object_lib");
 
-var response = require("net/http/response");
-
 var cmisSession = cmis.getSession();
 
 function ChildSerializer(cmisObject){
@@ -54,12 +52,12 @@ exports.getFolderOrRoot = function(folderPath){
 		folder = cmisSession.getRootFolder();
 	}
 	return folder;
-}
+};
 
 exports.getFolder = function(path){
 	return cmisObjectLib.getObject(path);
 };
 
 exports.deleteTree = function(folder){
-	folder.getInternalObject().deleteTree(true, org.apache.chemistry.opencmis.commons.enums.UnfileObject.DELETE, true);
+	folder.deleteTree();
 };

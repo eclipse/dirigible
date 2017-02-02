@@ -175,6 +175,10 @@ function Folder(internalFolder) {
 	this.rename = function(newName) {
 		return this.internalFolder.rename(newName, true);
 	};
+	
+	this.deleteTree = function() {
+		return this.internalFolder.deleteTree(true, org.apache.chemistry.opencmis.commons.enums.UnfileObject.DELETE, true);
+	};
 }
 
 /**

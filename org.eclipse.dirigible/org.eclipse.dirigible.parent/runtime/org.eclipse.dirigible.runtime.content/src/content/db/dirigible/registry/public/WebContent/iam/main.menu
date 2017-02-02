@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Users",
+        "link": "users.html",
+        "subMenu": []
+    },
+    {
+        "name": "Roles",
+        "link": "roles.html",
+        "subMenu": []
+    },
+    {
+        "name": "Assignments",
+        "link": "assign.html",
+        "subMenu": []
+    }
+]

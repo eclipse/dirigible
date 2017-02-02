@@ -21,6 +21,10 @@ cp -r target/registry_develop/registry_develop/ScriptingServices src/content/db/
 cp -r target/registry_develop/registry_develop/WebContent src/content/db/dirigible/registry/public
 cp -r target/registry_develop/registry_develop/ExtensionDefinitions src/content/db/dirigible/registry/public
 
+# registry_orion
+if cd target/registry_orion; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_orion.git target/registry_orion; fi
+cp -r target/registry_orion/registry_orion/WebContent src/content/db/dirigible/registry/public
+
 # registry_discover
 if cd target/registry_discover; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/registry_discover.git target/registry_discover; fi
 cp -r target/registry_discover/registry_discover/ScriptingServices src/content/db/dirigible/registry/public
