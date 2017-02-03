@@ -51,6 +51,9 @@ public class CmisSession {
 	 */
 	public CmisObject getObject(String id) throws IOException {
 		CmisObject cmisObject = new CmisObject(this, id);
+		if (!cmisObject.getInternalEntity().exists()) {
+			throw new IOException(String.format("Object with id: %s does not exist", id));
+		}
 		if (CmisConstants.OBJECT_TYPE_FOLDER.equals(cmisObject.getType().getId())) {
 			return new Folder(this, id);
 		} else if (CmisConstants.OBJECT_TYPE_DOCUMENT.equals(cmisObject.getType().getId())) {
