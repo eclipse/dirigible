@@ -73,12 +73,9 @@ cp -r target/jsmockito/jsmockito/ScriptingServices src/content/db/dirigible/regi
 if cd target/arestme; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/arestme.git target/arestme; fi
 cp -r target/arestme/arestme/ScriptingServices src/content/db/dirigible/registry/public
 
-# core_users
-if cd target/core_users; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/core_users.git target/core_users; fi
-cp -r target/core_users/core_users/DataStructures src/content/db/dirigible/registry/public
-cp -r target/core_users/core_users/ScriptingServices src/content/db/dirigible/registry/public
-cp -r target/core_users/core_users/SecurityConstraints src/content/db/dirigible/registry/public
-cp -r target/core_users/core_users/WebContent src/content/db/dirigible/registry/public
+# daoism
+if cd target/daoism; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/daoism.git target/daoism; fi
+cp -r target/daoism/daoism/ScriptingServices src/content/db/dirigible/registry/public
 
 # tags
 if cd target/tags; then git pull; cd ../..; else git clone https://github.com/dirigiblelabs/tags.git target/tags; fi

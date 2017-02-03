@@ -10,7 +10,7 @@ var datasource = database.getDatasource();
 exports.create = function(entity) {
     var connection = datasource.getConnection();
     try {
-        var sql = 'INSERT INTO IAM_USERS (USER_ID,USER_USERNAME,USER_PASSWORD,USER_FIRSTNAME,USER_LASTNAME,USER_AVATAR,USER_CREATED_AT,USER_CREATED_BY) VALUES (?,?,?,?,?,?,?,?)';
+        var sql = 'INSERT INTO IAM_USERS (USER_ID,USER_USERNAME,USER_PASSWORD,USER_FIRSTNAME,USER_LASTNAME,USER_CREATED_AT,USER_CREATED_BY) VALUES (?,?,?,?,?,?,?)';
         var statement = connection.prepareStatement(sql);
         var i = 0;
         var id = datasource.getSequence('IAM_USERS_USER_ID').next();
@@ -19,7 +19,6 @@ exports.create = function(entity) {
         statement.setString(++i, entity.user_password);
         statement.setString(++i, entity.user_firstname);
         statement.setString(++i, entity.user_lastname);
-        statement.setString(++i, entity.user_avatar);
         statement.setTimestamp(++i, new Date());
         statement.setString(++i, user.getName());
         statement.executeUpdate();
@@ -82,14 +81,13 @@ exports.list = function(limit, offset, sort, desc) {
 exports.update = function(entity) {
     var connection = datasource.getConnection();
     try {
-        var sql = 'UPDATE IAM_USERS SET USER_USERNAME = ?,USER_PASSWORD = ?,USER_FIRSTNAME = ?,USER_LASTNAME = ?,USER_AVATAR = ? WHERE USER_ID = ?';
+        var sql = 'UPDATE IAM_USERS SET USER_USERNAME = ?,USER_PASSWORD = ?,USER_FIRSTNAME = ?,USER_LASTNAME = ? WHERE USER_ID = ?';
         var statement = connection.prepareStatement(sql);
         var i = 0;
         statement.setString(++i, entity.user_username);
         statement.setString(++i, entity.user_password);
         statement.setString(++i, entity.user_firstname);
         statement.setString(++i, entity.user_lastname);
-        statement.setString(++i, entity.user_avatar);
         var id = entity.user_id;
         statement.setInt(++i, id);
         statement.executeUpdate();
@@ -157,10 +155,6 @@ exports.metadata = function() {
 			type: 'string'
 		},
 		{
-			name: 'user_avatar',
-			type: 'string'
-		},
-		{
 			name: 'user_created_at',
 			type: 'timestamp'
 		},
@@ -180,7 +174,6 @@ function createEntity(resultSet) {
     result.user_username = resultSet.getString('USER_USERNAME');
     result.user_firstname = resultSet.getString('USER_FIRSTNAME');
     result.user_lastname = resultSet.getString('USER_LASTNAME');
-    result.user_avatar = resultSet.getString('USER_AVATAR');
     if (resultSet.getTimestamp('USER_CREATED_AT') !== null) {
         result.user_created_at = new Date(resultSet.getTimestamp('USER_CREATED_AT').getTime());
     } else {

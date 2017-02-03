@@ -189,7 +189,7 @@ angular
     };
     uploader.onBeforeUploadItem = function(item) {
 //        console.info('onBeforeUploadItem', item);
-		if ($scope.unpackZips && item.file.type === "application/zip"){
+		if ($scope.unpackZips && item.file.name.endsWith(".zip")) {
 			item.url = zipUploadPath + "?path=" + $scope.folder.path;
 		}
     };

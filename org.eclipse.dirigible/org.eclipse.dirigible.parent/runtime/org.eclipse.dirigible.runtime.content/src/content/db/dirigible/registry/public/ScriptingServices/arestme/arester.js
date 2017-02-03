@@ -5,20 +5,21 @@
 
 	var xss = require("utils/xss"); 
 
-	var $log = {
-		ctx: 'Service',
-		error: function(errCode, errMessage, errContext){
+	var $log = function(){
+		this.ctx = 'Service',
+		this.error = function(errCode, errMessage, errContext){
 			var ctxSegment = this.ctx!==undefined?'['+this.ctx+']: ':'';
 			var errCodeSegment = errCode!==undefined?'['+errCode+']: ':'';
 			console.error(ctxSegment + errCodeSegment + errMessage);
 		    if (errContext !== undefined && errContext !== null) {
 		    	console.error(JSON.stringify(errContext));
 		    }
-		},
-		info: function(message){
+		};
+		this.info = function(message){
 			var ctxSegment = this.ctx!==undefined?'['+this.ctx+']: ':'';
 			console.info(ctxSegment + message);
-		}
+		};
+		return this;
 	};
 	
 	function RestApi(){
@@ -30,7 +31,7 @@
 		  return NaN;
 		};
 		
-		this.logger = $log;
+		this.logger = new $log();
 
 		this.sendError = function(io, httpCode, errCode, errMessage, errContext, contentType) {
 			if(['text/html'].indexOf(contentType)){
@@ -45,6 +46,9 @@
 		var create = function(context, io){
 			var input = io.request.readInputText();
 		    var entity = JSON.parse(input);
+		    if(this.onEntityInsert){
+		    	this.onEntityInsert(entity);
+		    }
 		    try{
 				entity[this.dao.getPrimaryKey()] = this.dao.insert(entity, context.queryParams.cascaded);
 				io.response.setStatus(io.response.OK);
@@ -77,6 +81,9 @@
 			var input = io.request.readInputText();
 		    var item = JSON.parse(input);
 		    //check for potential mismatch in path id and id in input
+		    if(this.onEntityUpdate){
+		    	this.onEntityUpdate(item);
+		    }
 		    try{
 				item[this.dao.getPrimaryKey()] = this.dao.update(item, cascaded);
 				io.response.setStatus(io.response.NO_CONTENT);
@@ -91,6 +98,19 @@
 		var get = function(context, io){
 			var id = context.pathParams.id;
 			var expanded = context.queryParams.expanded;
+			var select = context.queryParams.select;
+			if(!select && expanded !== undefined && expanded){
+				if(this.dao.associations || this.dao.orm.associationSets)
+					select = Object.keys(this.dao.associations).join(',');
+				else
+					select = expanded;//old style daos
+			}
+			if(select){
+				select = String(new java.lang.String(""+select));
+				select = select.split(',').map(function(sel){
+					return sel.trim();
+				});
+			}
 			//id is mandatory parameter and an integer
 			if(id === undefined || isNaN(parseIntStrict(id))) {
 				self.sendError(io, io.response.BAD_REQUEST, 1, "Invallid id parameter: " + id);
@@ -98,7 +118,7 @@
 			}
 	
 		    try{
-				var item = this.dao.find(id, expanded);
+				var item = this.dao.find.apply(this.dao.ctx || this.dao, [id, select]);
 				if(!item){
 					self.logger.error(1, "Record with id: " + id + " does not exist.");
 	        		self.sendError(io, io.response.NOT_FOUND, 1, "Record with id: " + id + " does not exist.");
@@ -173,33 +193,48 @@
 			}
 		};
 		
-		function query(context, io){
+		var query = function(context, io){
 			var offset = context.queryParams.offset;
 			var limit = context.queryParams.limit;
 			var sort = context.queryParams.sort;
 			var order = context.queryParams.order;			
+			var id = context.pathParams.id;
+
 			var expanded = context.queryParams.expanded;
-			
-			//add any aditional params
-			var args = Array.prototype.slice.call(arguments);			
-			if(args.length>5){
-				args = [limit, offset, sort, order, expanded].concat(args.slice(args.length-1));
-			} else {
-				args = [limit, offset, sort, order, expanded];
+			var select = context.queryParams.select;
+			if(!select && expanded !== undefined && expanded){
+				if(this.dao.associations || this.dao.associationsSets)
+					select = Object.keys(this.dao.associations || this.dao.associationSets).join(',');
+				else {
+					select = expanded;//old style daos
+				}
 			}
+			var args = [];
+			if(this.dao.associations || this.dao.orm.associationSets){
+				args = [context.queryParams];
+//				args[0].id = id;
+			} else {
+				args = Array.prototype.slice.call(arguments);
+				if(args.length>5){
+					args = [limit, offset, sort, order, expanded].concat(args.slice(args.length-1));
+				} else {
+					args = [limit, offset, sort, order, expanded];
+				}
+			}
+
 		    try{
-				var entities = this.dao.list.apply(self, args);
+				var entities = this.dao.list.apply(this.dao.ctx || this.dao, args);
 		        var jsonResponse = JSON.stringify(entities, null, 2);
 		    	io.response.println(jsonResponse);
 			} catch(e) {
 	    	    var errorCode = io.response.INTERNAL_SERVER_ERROR ;
-	    	    self.logger.error(errorCode, e.message, e.errContext);
+	    	    self.logger.error(errorCode, e.message, e.errContext || e.stack);
 	        	self.sendError(io, errorCode, errorCode, e.message, e.errContext);
 	        	throw e;
 			}		
-		}	
+		};	
 		
-		function count(context, io){
+		var count = function(context, io){
 		    try{
 				var itemsCount = this.dao.count();
 	/*			this.response.setHeader("Content-Type", "text/plain");*/			
@@ -212,9 +247,9 @@
 	        	self.sendError(io, errorCode, errorCode, e.message, e.errContext);
 	        	throw e;
 			}
-		}
+		};
 		
-		function metadata(context, io){
+		var metadata = function(context, io){
 	 		try{
 				var entityMetadata = this.dao.metadata();
 				io.response.setHeader("Content-Type", "application/json");
@@ -225,7 +260,7 @@
 	        	self.sendError(io, errorCode, errorCode, e.message, e.errContext);
 	        	throw e;        	
 			}		
-		}
+		};
 		
 		this.cfg = {
 			"count": {
@@ -264,9 +299,32 @@
 					handler: create
 				}
 			}
-		};		
-
+		};
 		
+		//Associations handler
+		this.associationListHandler = function(context, io){
+		    try{
+		    	var associationName = context.pathParams.associationName;
+		    	if(!this.dao.orm.associationSets[associationName]){
+			    	var errorCode = io.response.BAD_REQUEST;
+				    this.logger.error(errorCode, 'Invalid asosciation set name requested: ' + associationName);
+			    	this.sendError(io, errorCode, errorCode, 'Invalid asosciation set name requested: ' + associationName);
+					return;
+		    	}
+ 			    var args = context.queryParams;
+		    	args[this.dao.getPrimaryKey().name] = context.pathParams.id;
+				var expansionPath = [associationName];//Until handler can be installed for paths with multiple segments
+				var associationSet = this.dao.expand.apply(this.dao, [expansionPath, context.pathParams.id]);
+				io.response.setStatus(io.response.OK);
+				io.response.println(JSON.stringify(associationSet, null, 2));
+			} catch(e) {
+			    var errorCode = io.response.INTERNAL_SERVER_ERROR;
+			    this.logger.error(errorCode, e.message, e.errContext);
+		    	this.sendError(io, errorCode, errorCode, e.message, e.errContext);
+		    	throw e;
+			}
+		};
+
 		function resourceHandlerLocator(requestPath, method, queryParams, cfg, io){	
 			var pathDefs = Object.keys(cfg);
 			var matches = [];
@@ -291,7 +349,7 @@
 									return reqPathSegments[i];
 								} else {
 									return pSeg;
-								}						
+								}
 							});
 							var p = resolvedPathDefSegments.join('/');
 							if(p === requestPath){
@@ -306,7 +364,22 @@
 					}
 				}
 			}
+			//sort matches by weight
 			matches = matches.sort(function(p, n){
+				if(n.w === p.w){
+					//the one with less placeholders wins
+					var placeholdersCount1 = p.d.split('/').filter(function(segment){
+						return new java.lang.String(segment).startsWith('{');
+					}).length;
+					var placeholdersCount2 = n.d.split('/').filter(function(segment){
+						return java.lang.String(segment).startsWith('{');
+					}).length;
+					if(placeholdersCount1 > placeholdersCount2){
+						n.w = n.w+1;
+					} else if(placeholdersCount1 < placeholdersCount2){
+						p.w = p.w+1;
+					}
+				}
 				return n.w - p.w;
 			});
 			if(matches[0]){
@@ -354,12 +427,15 @@
 						ctx.queryParams = queryParams;
 						if(verbHandler.beforeHandle && typeof verbHandler.beforeHandle === 'function')
 							verbHandler.beforeHandle.apply(self, [ctx, io]);
-						if(!ctx.err)
+						if(!ctx.err){
 							verbHandler.handler.apply(self, [ctx, io]);
+							return;
+						}
 					}
 				}
-			}
-			
+			} 
+			self.sendError(io, io.response.BAD_REQUEST, 1, null);
+			return;
 		}
 
 	  	this.service = function(request, response){
@@ -374,15 +450,26 @@
 					var seg = queryStringSegments[i];
 					var kv = seg.split('=');
 					var key = kv[0].trim();
-					var value = kv[1].trim();
+					var value = kv[1]===undefined?true:kv[1].trim();
 					queryParams[key] = value;
 				}
 			}
-			this.logger.info('Servicing HTTP Verb['+ method.toUpperCase() +'] for resource[/'+path+'] with query parameters: ' + queryParams);
+			var requestUrl = $.getRequest().getRequestURI();
+			var requestUrlSegments = requestUrl.split('/');
+			var inResourcePath = false;
+			requestUrlSegments = requestUrlSegments.filter(function(seg){
+				if(seg.trim().lastIndexOf('.js')>-1){
+					inResourcePath = true;
+				}
+				return inResourcePath;
+			});
+			var resourcePath = requestUrlSegments.join('/');
+			this.logger.info('Servicing HTTP Verb['+ method.toUpperCase() +'] for resource['+resourcePath+'] with query parameters: ' + queryParams);
+
 			resourceHandlerLocator.apply(self, [path, method, queryParams, self.cfg, {request: request, response:response}]);	  		
 	  	};
 	}	
-		
+
 	exports.asRestAPI = function(dao, target) {
 	
 		target = target || function(){};
@@ -390,10 +477,20 @@
 		//inject the dao dependency if not already present
 		if(dao && !target.prototype.dao)
 			target.prototype.dao = dao;
-		
+					
 		//mixin the rest api into target
 		RestApi.call(target.prototype);		
 		
+		//setup configuration for handling associations
+		if(target.prototype.dao.orm && target.prototype.dao.orm.associationSets && Object.keys(target.prototype.dao.orm.associationSets).length>0){
+			var resourcePathTemplate = "{id}/{associationName}";
+			target.prototype.cfg[resourcePathTemplate] = {
+				"get" : {
+					produces: ["application/json"],
+					handler: target.prototype.associationListHandler
+				}
+			};	
+		}
 		return target;
 	}; 
 	

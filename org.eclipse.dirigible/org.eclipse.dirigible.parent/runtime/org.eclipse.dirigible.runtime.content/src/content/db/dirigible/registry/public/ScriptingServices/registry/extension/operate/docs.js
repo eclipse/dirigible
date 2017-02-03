@@ -7,7 +7,7 @@ exports.getType = function() {
 exports.getHomeItem = function() {
 	return {
 		image: "book",
-		color: "red",
+		color: "yellow",
 		path: "../docs_explorer/web/index.html",
 		title: "Documents",
 		description: "Documents Explorer",
@@ -24,5 +24,5 @@ exports.getDescription = function() {
 };
 
 exports.getOrder = function() {
-	return 4;
+	return 3;
 };

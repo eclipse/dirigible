@@ -48,15 +48,6 @@
       }
       ,
       {
-        "name":"USER_AVATAR",
-        "type":"VARCHAR",
-        "length":"2000",
-        "notNull":"true",
-        "primaryKey":"false",
-        "defaultValue":""
-      }
-      ,
-      {
         "name":"USER_CREATED_AT",
         "type":"TIMESTAMP",
         "length":"0",

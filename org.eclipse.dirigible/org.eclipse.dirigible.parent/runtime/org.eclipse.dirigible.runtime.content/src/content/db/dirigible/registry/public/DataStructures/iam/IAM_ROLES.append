@@ -1,0 +1,12 @@
+1|Everyone|All Registered Users|2014-02-19 10:30:45|dirigible
+2|Developer|Developer can access the IDE|2014-02-19 10:30:45|dirigible
+3|Operator|Operator can perform actions on Registry and Repository|2014-02-19 10:30:45|dirigible
+4|Administrator|Predefined Administrator Role For Applications|2014-02-19 10:30:45|dirigible
+5|Manager|Predefined Manager Role For Applications|2014-02-19 10:30:45|dirigible
+6|PowerUser|Predefined PowerUser Role For Applications|2014-02-19 10:30:45|dirigible
+7|User|Predefined User Role For Applications|2014-02-19 10:30:45|dirigible
+8|ReadWrite|Predefined ReadWrite Role For Applications|2014-02-19 10:30:45|dirigible
+9|ReadOnly|Predefined ReadOnly Role For Applications|2014-02-19 10:30:45|dirigible
+10|Repository|Repository Service Access|2014-02-19 10:30:45|dirigible
+11|Messenger|Messenger can perform direct communication via Messaging Hub|2014-02-19 10:30:45|dirigible
+12|Anonymous|Anonymous can set explicit user name|2014-02-19 10:30:45|dirigible

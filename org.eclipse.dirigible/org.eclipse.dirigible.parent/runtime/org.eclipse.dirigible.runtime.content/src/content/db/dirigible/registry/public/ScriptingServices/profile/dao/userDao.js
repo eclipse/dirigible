@@ -6,7 +6,7 @@ var user = require('net/http/user');
 
 var datasource = database.getDatasource();
 
-// Return a single entity by Id
+// Return a single entity for the current user
 exports.get = function() {
 	var entity = null;
     var connection = datasource.getConnection();
@@ -34,13 +34,12 @@ exports.list = function(limit, offset, sort, desc) {
 exports.update = function(entity) {
     var connection = datasource.getConnection();
     try {
-        var sql = 'UPDATE IAM_USERS SET USER_PASSWORD = ?,USER_FIRSTNAME = ?,USER_LASTNAME = ?,USER_AVATAR = ? WHERE USER_ID = ?';
+        var sql = 'UPDATE IAM_USERS SET USER_PASSWORD = ?,USER_FIRSTNAME = ?,USER_LASTNAME = ? WHERE USER_ID = ?';
         var statement = connection.prepareStatement(sql);
         var i = 0;
         statement.setString(++i, entity.user_password);
         statement.setString(++i, entity.user_firstname);
         statement.setString(++i, entity.user_lastname);
-        statement.setString(++i, entity.user_avatar);
         var id = entity.user_id;
         statement.setInt(++i, id);
         statement.executeUpdate();
@@ -78,10 +77,6 @@ exports.metadata = function() {
 			type: 'string'
 		},
 		{
-			name: 'user_avatar',
-			type: 'string'
-		},
-		{
 			name: 'user_created_at',
 			type: 'timestamp'
 		},
@@ -101,7 +96,6 @@ function createEntity(resultSet) {
     result.user_username = resultSet.getString('USER_USERNAME');
     result.user_firstname = resultSet.getString('USER_FIRSTNAME');
     result.user_lastname = resultSet.getString('USER_LASTNAME');
-    result.user_avatar = resultSet.getString('USER_AVATAR');
     if (resultSet.getTimestamp('USER_CREATED_AT') !== null) {
         result.user_created_at = new Date(resultSet.getTimestamp('USER_CREATED_AT').getTime());
     } else {

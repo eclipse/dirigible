@@ -199,11 +199,6 @@
         "string"
 	    		}
 				,
-        		"user_avatar": {
-	            	"type": 
-        "string"
-	    		}
-				,
         		"user_created_at": {
 	            	"type": 
         "number"
