@@ -66,6 +66,7 @@ public class WorkspacePerspective implements IPerspectiveFactory {
 		IFolderLayout bottom = layout.createFolder("bottom", //$NON-NLS-1$
 				IPageLayout.BOTTOM, 0.35f, editorArea);
 		bottom.addView(WEB_VIEWER_VIEW_ID);
+		layout.getViewLayout(WEB_VIEWER_VIEW_ID).setCloseable(false);
 		bottom.addView(PROPERTY_SHEET_VIEW_ID);
 		// bottom.addView(CONTENT_OUTLINE_VIEW_ID);
 		bottom.addView(SECURITY_MANAGER_VIEW_ID);

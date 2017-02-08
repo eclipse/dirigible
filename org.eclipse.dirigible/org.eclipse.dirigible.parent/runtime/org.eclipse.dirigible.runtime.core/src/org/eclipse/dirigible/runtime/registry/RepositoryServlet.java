@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -63,15 +64,21 @@ public class RepositoryServlet extends RegistryServlet {
 			IEntity entity = getEntity(repositoryPath, request);
 			byte[] data;
 			if (entity == null) {
-				ByteArrayOutputStream buff = new ByteArrayOutputStream();
-				IOUtils.copy(request.getInputStream(), buff);
-				data = buff.toByteArray();
-				String contentType = request.getContentType();
-				if (contentType == null) {
-					contentType = "text/plain"; //$NON-NLS-1$
+				if (repositoryPath.endsWith(IRepository.SEPARATOR)) {
+					// create a collection
+					getRepository(request).createCollection(repositoryPath);
+				} else {
+					// create a resource
+					ByteArrayOutputStream buff = new ByteArrayOutputStream();
+					IOUtils.copy(request.getInputStream(), buff);
+					data = buff.toByteArray();
+					String contentType = request.getContentType();
+					if (contentType == null) {
+						contentType = "text/plain"; //$NON-NLS-1$
+					}
+					boolean isBinary = ContentTypeHelper.isBinary(contentType);
+					getRepository(request).createResource(repositoryPath, data, isBinary, contentType);
 				}
-				boolean isBinary = ContentTypeHelper.isBinary(contentType);
-				getRepository(request).createResource(repositoryPath, data, isBinary, contentType);
 			} else {
 				if (entity instanceof IResource) {
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST,
