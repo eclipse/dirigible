@@ -78,6 +78,7 @@
 		<module>org.eclipse.dirigible.runtime.scheduler</module>
 		<module>org.eclipse.dirigible.runtime.chrome.debugger</module>
         <module>org.eclipse.dirigible.runtime.cmis</module>
+        <module>org.eclipse.dirigible.runtime.workspace</module>
 	</modules>
 
 </project>

@@ -3,13 +3,19 @@
 "use strict";
 var database = require("db/database");
 
-var DAO = exports.DAO = function(orm, logCtxName){
+var DAO = exports.DAO = function(orm, logCtxName, ds){
 	if(orm === undefined)
 		throw Error('Illegal argument: orm['+ orm + ']');
-	this.orm = require("daoism/orm").get(orm);
 	this.$log = require('log/loggers').get(logCtxName || 'DAO');
-	this.datasource = database.getDatasource();
-	this.statements = require("daoism/statements").get();
+	this.datasource = ds || database.getDatasource();
+	this.orm = require("daoism/orm").get(orm);	
+	this.ormstatements = require('daoism/ormstatements').forDatasource(this.orm, this.datasource);
+};
+
+DAO.prototype.withDataSource = function(ds){
+	this.datasource = ds || database.getDatasource();
+	this.ormstatements = require('daoism/ormstatements').forDatasource(this.orm, this.datasource);
+	return this;
 };
 
 DAO.prototype.notify = function(event){
@@ -47,10 +53,16 @@ DAO.prototype.createSQLEntity = function(entity) {
 };
 
 //create entity as JSON object from ResultSet current Row
-DAO.prototype.createEntity = function(resultSet) {
+DAO.prototype.createEntity = function(resultSet, entityPropertyNames) {
     var entity = {};
-    for(var i=0; i<this.orm.properties.length; i++){
-    	var prop = this.orm.properties[i];
+    var properties = this.orm.properties;
+    if(entityPropertyNames && entityPropertyNames.length>0){
+    	properties = properties.filter(function(prop){
+    		return entityPropertyNames.indexOf(prop.name)>-1;
+    	});
+    }
+    for(var i=0; i<properties.length; i++){
+    	var prop = properties[i];
     	entity[prop.name] = resultSet['get'+prop.type](prop.dbName);
     	if(prop.value){
     		entity[prop.name] = prop.value(entity[prop.name]);
@@ -61,7 +73,11 @@ DAO.prototype.createEntity = function(resultSet) {
 		if(entity[key] === null)
 			entity[key] = undefined;
 	}
-    this.$log.info("Transformation from "+this.orm.dbName+"["+entity[this.orm.getPrimaryKey().name]+"] DB JSON object finished");
+	var entitySegment = "";
+	if(entity[this.orm.getPrimaryKey().name]){
+		entitySegment= "["+entity[this.orm.getPrimaryKey().name]+"]";
+	}
+    this.$log.info("Transformation from "+this.orm.dbName+entitySegment+" DB JSON object finished");
     return entity;
 };
 
@@ -97,11 +113,11 @@ DAO.prototype.insert = function(entity){
 
     var connection = this.datasource.getConnection();
     try {
-        var parametericStatement = this.orm.statements.insert.apply(this.orm);
+        var parametericStatement = this.ormstatements.insert.apply(this.ormstatements);
 
         var id = this.datasource.getSequence(this.orm.dbName+'_'+this.orm.getPrimaryKey.name.toUpperCase()).next();
         dbEntity[this.orm.getPrimaryKey().name] = id;
-		var updatedRecordCount = this.statements.execute(parametericStatement, connection, dbEntity);
+		var updatedRecordCount = this.ormstatements.execute(parametericStatement, connection, dbEntity);
 		this.notify('afterInsert', dbEntity);
 		this.notify('beforeInsertAssociationSets', dbEntity);
 		if(this.orm.associationSets && Object.keys(this.orm.associationSets).length){
@@ -164,14 +180,14 @@ DAO.prototype.update = function(entity) {
 							});
 	this.validateEntity(entity, ignoredProperties);
     
-    var parametericStatement = this.orm.statements.update.apply(this.orm, [entity]);
+    var parametericStatement = this.ormstatements.update.apply(this.ormstatements, [entity]);
 
 	var dbEntity = this.createSQLEntity(entity);
 
     var connection = this.datasource.getConnection();
     try {
      	this.notify('beforeUpdateEntity', dbEntity);
-    	var updatedRecordsCount = this.statements.execute(parametericStatement, connection, dbEntity);
+    	var updatedRecordsCount = this.ormstatements.execute(parametericStatement, connection, dbEntity);
         this.$log.info(updatedRecordsCount ? this.orm.dbName+'[' + dbEntity[this.orm.getPrimaryKey().name] + '] entity updated' : 'No changes incurred in '+this.orm.dbName);
         
         return this;
@@ -196,7 +212,7 @@ DAO.prototype.remove = function(id) {
     var connection = this.datasource.getConnection();
     try {
     
-    	var parametericStatement = this.orm.statements["delete"].apply(this.orm);
+    	var parametericStatement = this.ormstatements["delete"].apply(this.ormstatements);
     	this.notify('beforeRemoveEntity', id);
     	
 		//first we attempt to remove depndents if any
@@ -232,7 +248,7 @@ DAO.prototype.remove = function(id) {
     	
 		var params = {};
        	params[this.orm.getPrimaryKey().name] = id;
-		var updatedRecordsCount = this.statements.execute(parametericStatement, connection, params);
+		var updatedRecordsCount = this.ormstatements.execute(parametericStatement, connection, params);
    		this.$log.info(updatedRecordsCount>0?this.orm.dbName+'[' + id + '] entity deleted':'No changes incurred in '+this.orm.dbName);
 
         return this;
@@ -246,67 +262,77 @@ DAO.prototype.remove = function(id) {
     
 };
 
-DAO.prototype.expand = function(expansionPath, contextId){
+DAO.prototype.expand = function(expansionPath, context){
+	this.$log.info('Expanding for association path ' + expansionPath + ' and context entity ' + (typeof arguments[1] !== 'object' ? 'id ': '') + arguments[1]);
 	if(!expansionPath || !expansionPath.length){
 		throw Error('Illegal argument: expansionPath['+expansionPath+']');
 	}
-	if(!contextId){
-		throw Error('Illegal argument: contextId['+contextId+']');
+	if(!context){
+		throw Error('Illegal argument: context['+context+']');
 	}
-	this.$log.info('Expanding for relation path ' + expansionPath + ' and context entity id ' + contextId);
 	var associationName = expansionPath.splice?expansionPath.splice(0,1):expansionPath;
 	
 	if(!associationName || !this.orm.associationSets[associationName])
-		throw Error('Unknown association for this DAO: ' + associationName);
+		throw Error('Unknown association name for this DAO: ' + associationName);
 	
-	var contextEntity = this.find(contextId);
-	if(!contextEntity){
-		throw Error('No record found for context entity id['+contextId+']');
+	var contextEntity;
+	if(context[this.orm.getPrimaryKey().name] !== undefined){
+		contextEntity = context;
+	} else {
+		contextEntity = this.find(context);
 	}
 
-	var associationSet = [];
+	if(!contextEntity){
+		throw Error('No record found for context entity ['+context+']');
+	}
+
+	var associationSetEntities = [];
 	var associationSetDAO = (this.orm.associationSets[associationName].dao && this.orm.associationSets[associationName].dao()) || this;
 
 	if(this.orm.associationSets[associationName].associationType==='one-to-one' || this.orm.associationSets[associationName].associationType==='many-to-one'){
-		var joinId = contextEntity[this.orm.associationSets[associationName].joinKey];
-		var daoOne = this.orm.associationSets[associationName].dao ? this.orm.associationSets[associationName].dao() : this;
-		var expandedEntity = associationSetDAO.find.apply(associationSetDAO, [joinId, undefined, {"one":daoOne}]);
+		var joinKey = this.orm.associationSets[associationName].joinKey;
+		var joinId = contextEntity[joinKey];
+		//var daoOne = this.orm.associationSets[associationName].dao ? this.orm.associationSets[associationName].dao() : this;
+		var expandedEntity = associationSetDAO.find.apply(associationSetDAO, [joinId]);
 		if(expansionPath.length<1){
 			return expandedEntity;
 		} else {
-			this.expand(expansionPath, expandedEntity[associationSetDAO.orm.getPrimaryKey().name]);
+			this.expand(expansionPath, expandedEntity);
 		}
 	} else if(this.orm.associationSets[associationName].associationType==='one-to-many'){
 		var settings = {};
+		if(this.orm.associationSets[associationName].defaults)
+			settings = this.orm.associationSets[associationName].defaults;
 		var joinId = contextEntity[this.orm.getPrimaryKey().name];
-		settings[this.orm.associationSets[associationName].joinKey] = joinId;
-		if(this.orm.associationSets[associationName].defaults){
-			for(var i in this.orm.associationSets[associationName].defaults){
-				settings[i] = this.orm.associationSets[associationName].defaults[i];
-			}
-		}
-		var daoMany = this.orm.associationSets[associationName].dao? this.orm.associationSets[associationName].dao() : this;
-		associationSet = associationSet.concat(associationSetDAO.list.apply(associationSetDAO, [settings, {"many":daoMany}]));
+		var joinKey = this.orm.associationSets[associationName].joinKey;			
+		settings[joinKey] = joinId;
+		
+		//var daoMany = this.orm.associationSets[associationName].dao? this.orm.associationSets[associationName].dao() : this;
+		associationSetEntities = associationSetEntities.concat(associationSetDAO.list.apply(associationSetDAO, [settings]));
 		if(expansionPath.length<1){
-			return associationSet;
+			return associationSetEntities;
 		} else {
-			for(var i=0; i<associationSet.length; i++){
-				this.expand(expansionPath, associationSet[i][associationSetDAO.orm.getPrimaryKey().name]);	
+			for(var i=0; i<associationSetEntities.length; i++){
+				this.expand(expansionPath, associationSetEntities[i]);	
 			}
 		}
 	} else if(this.orm.associationSets[associationName].associationType==='many-to-many'){
-		var settings = {};
 		var associationSetMDAO = this;
 		var joinTableDAO = (this.orm.associationSets[associationName].daoJoin && this.orm.associationSets[associationName].daoJoin());
+		if(!joinTableDAO)
+			throw Error('No join table DAO instance available for association '+associationName);
 		var associationSetNDAO = (this.orm.associationSets[associationName].daoN && this.orm.associationSets[associationName].daoN());
-		var joinId = contextEntity[this.orm.getPrimaryKey().name];
+		if(!associationSetNDAO)
+			throw Error('No N assocaiton DAO instance available for association '+associationName);
+		var settings = {};
+		var joinId = contextEntity[this.orm.getPrimaryKey().name];		
 		settings[this.orm.associationSets[associationName].joinKey] = joinId;
-		associationSet = associationSet.concat(joinTableDAO.listJoins.apply(joinTableDAO, [settings, {"m":associationSetMDAO, "n":associationSetNDAO, "join": joinTableDAO}]));
+		associationSetEntities = associationSetEntities.concat(joinTableDAO.listJoins.apply(joinTableDAO, [settings, {"m": associationSetMDAO, "join":joinTableDAO, "n":associationSetNDAO}]));
 		if(expansionPath.length<1){
-			return associationSet;
+			return associationSetEntities;
 		} else {
-			for(var i=0; i<associationSet.length; i++){
-				this.expand(expansionPath, associationSet[i][associationSetDAO.orm.getPrimaryKey().name]);	
+			for(var i=0; i<associationSetEntities.length; i++){
+				this.expand(expansionPath, associationSetEntities[i]);	
 			}
 		}
 	}
@@ -315,10 +341,17 @@ DAO.prototype.expand = function(expansionPath, contextId){
 
 /* 
 	Reads a single entity by id, parsed into JSON object. 
-	If requested as expanded (=true) the returned entity will comprise associated (dependent) entities too. 
+	If requested as expanded the returned entity will comprise associated (dependent) entities too. Expand can be a string tha tis a valid association name defined in this dao orm or
+	an array of such names.
 */
-DAO.prototype.find = function(id, select) {
-	this.$log.info('Finding '+this.orm.dbName+'[' +  id + '] entity');
+DAO.prototype.find = function(id, expand, select) {
+	if(typeof arguments[0] === 'object'){
+		id = arguments[0].id;
+		expand = arguments[0].$expand || arguments[0].expand;
+		select = arguments[0].$select || arguments[0].select;
+	}
+
+	this.$log.info('Finding '+this.orm.dbName+'[' +  id + '] entity with list parameters expand[' + expand + '], select[' +select + ']');
 
 	if(id === undefined || id === null){
 		throw new Error('Illegal argument for id parameter:' + id);
@@ -327,33 +360,73 @@ DAO.prototype.find = function(id, select) {
     var connection = this.datasource.getConnection();
     try {
         var entity;
-        var parametericStatement = this.orm.statements.find.apply(this.orm);
+        if(select!==undefined){
+			if(select.constructor !== Array){
+				if(select.constructor === String){
+					select= String(new java.lang.String(""+expand));
+					select= select.split(',').map(function(sel){
+						if(sel.constructor !== String)
+							throw Error('Illegal argument: select array components are expected ot be strings but found ' + (typeof sel));
+						return sel.trim();
+					});
+				} else {
+					throw Error('Illegal argument: select is expected to be string or array of strings but was ' + (typeof select));
+				}
+			}
+		}
+		//ensure that joinkeys for required expands are available and not filtered by select
+		if(select!==undefined && expand!==undefined){
+			select.push(this.orm.getPrimaryKey().name);
+			//TODO: checks
+			/*if(expand.constructor !== Array){
+				if(expand.constructor === String){
+					expand = String(new java.lang.String(""+expand));
+					expand =  expand.split(',').map(function(exp){
+						if(exp.constructor !== String)
+							throw Error('Illegal argument: expand array components are expected ot be strings but found ' + (typeof exp));
+						return exp.trim();
+					});
+				} else {
+					throw Error('Illegal argument: expand is expected to be string or array of strings but was ' + (typeof expand));
+				}
+			}
+			for(var i in expand){
+				var association = this.orm.associationSets[expand[i]];
+				if(association && select.indexOf(association.joinKey)<1){ 
+					select.push(association.joinKey);
+				}
+			}*/
+		}
+		var findQbParams = {
+			select: select
+		};		
+        var parametericStatement = this.ormstatements.find.apply(this.ormstatements, [findQbParams]);
        	var params = {};
        	params[this.orm.getPrimaryKey().name] = id;
-       	var resultSet = this.statements.execute(parametericStatement, connection, params);
+       	var resultSet = this.ormstatements.execute(parametericStatement, connection, params);
  
         if (resultSet.next()) {
-        	entity = this.createEntity(resultSet);
+        	entity = this.createEntity(resultSet, select);
 			if(entity){
             	this.$log.info(this.orm.dbName+'[' +  id + '] entity found');
             	this.notify('afterFound', entity);
-				if(select!==undefined){
-					if(select.constructor !== Array){
-						if(select.constructor === String){
-							select = String(new java.lang.String(""+select));
-							select =  select.split(',').map(function(sel){
-								if(select.constructor !== String)
-									throw Error('Illegal argument: select array components are expected ot be strings but found ' + (typeof sel));
-								return sel.trim();
+				if(expand!==undefined){
+					if(expand.constructor !== Array){
+						if(expand.constructor === String){
+							expand = String(new java.lang.String(""+expand));
+							expand =  expand.split(',').map(function(exp){
+								if(exp.constructor !== String)
+									throw Error('Illegal argument: expand array components are expected ot be strings but found ' + (typeof exp));
+								return exp.trim();
 							});
 						} else {
-							throw Error('Illegal argument: select is expected to be string or array of strings but was ' + (typeof select));
+							throw Error('Illegal argument: expand is expected to be string or array of strings but was ' + (typeof expand));
 						}
 					}
 					for(var idx in Object.keys(this.orm.associationSets)){
 						var associationName = Object.keys(this.orm.associationSets)[idx];
-						if(select.indexOf(associationName)>-1){
-							entity[associationName] = this.expand([associationName], id);
+						if(expand.indexOf(associationName)>-1){
+							entity[associationName] = this.expand([associationName], entity);
 						}
 					}
 				}		
@@ -377,8 +450,8 @@ DAO.prototype.count = function() {
     var count = 0;
     var connection = this.datasource.getConnection();
     try {
-    	var parametericStatement = this.orm.statements.count.apply(this.orm);
-		var rs = this.statements.execute(parametericStatement, connection);
+    	var parametericStatement = this.ormstatements.count.apply(this.ormstatements);
+		var rs = this.ormstatements.execute(parametericStatement, connection);
         if (rs.next()) {
             count = rs.getInt(1);
         }
@@ -397,26 +470,21 @@ DAO.prototype.count = function() {
 };
 
 DAO.prototype.list = function(settings) {
-	var expanded = settings.expanded;
-	var select = settings.select;
-	if(expanded || select){
-		if(select){
-			if(select.constructor !== Array){
-				if(select.constructor === String){
-					select = String(new java.lang.String(""+select));
-					select = select.split(',').map(function(sel){
-						if(select.constructor !== String)
-							throw Error('Illegal argument: select array components are expected ot be strings but found ' + (typeof sel));
-						return sel.trim();
-					});
-				} else {
-					throw Error('Illegal argument: select expected to be string or array of strings but was ' + (typeof select));
-				}
+	var expand = settings.$expand || settings.expand;
+	if(expand!==undefined){
+		if(expand.constructor !== Array){
+			if(expand.constructor === String){
+				expand = String(new java.lang.String(""+expand));
+				expand =  expand.split(',').map(function(exp){
+					if(exp.constructor !== String)
+						throw Error('Illegal argument: expand array components are expected ot be strings but found ' + (typeof exp));
+					return exp.trim();
+				});
+			} else {
+				throw Error('Illegal argument: expand is expected to be string or array of strings but was ' + (typeof expand));
 			}
-		} else {
-			select = Object.keys(this.orm.associationSets);
-		}        		
-	}
+		}
+	}			
 
 	var listArgs = [];
 	for(var key in settings){
@@ -427,58 +495,45 @@ DAO.prototype.list = function(settings) {
 	}
 	
 	this.$log.info('Listing '+this.orm.dbName+' entity collection with list operators:' + listArgs.join(','));
-	var parametericStatement = this.orm.statements.list.apply(this.orm, [settings]);
+	
+	if(settings.$select!==undefined && expand!==undefined){
+		settings.$select.push(this.orm.getPrimaryKey().name);
+	}
+	
+   //simplistic filtering of (only) string properties with like
+   if(settings.$filter){
+		settings.$filter = settings.$filter.split(',');
+		var self = this;
+		settings.$filter = settings.$filter.filter(function(filterField){
+			var prop = self.ormstatements.orm.getProperty(filterField);
+			if(prop===undefined || prop.type!=='String' || settings[prop.name]===undefined)
+				return false;
+			settings[prop.name] = settings[prop.name] + '%%';
+			return true;
+		});
+	}
+	
+	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
     var connection = this.datasource.getConnection();
     try {
         var entities = [];
-        settings.select = select;
-		var resultSet = this.statements.execute(parametericStatement, connection, settings);
-/*        var sql = this.sql.list.apply(this,[settings]);
-		this.$log.info('Prepare statement: ' + sql);
-        var statement = connection.prepareStatement(sql);
-*/	
-		//Bind statement parameters if any
-/*		var self = this;
-		var keyDefinitions = this.associationKeys().filter(function(joinKey){
-        	for(var settingName in settings){
-        		if(settingName === joinKey)
-        			return joinKey;
-        	}
-        	return;
-        }).filter(function(keyDef){
-        	return keyDef!==undefined;
-        }).map(function(key){
-        	var matchedDefinition = self.orm.properties.filter(function(property){
-        		return key === property.name;
-        	});
-        	return matchedDefinition?matchedDefinition[0]:undefined;
-        }).filter(function(keyDef){
-        	return keyDef!==undefined;
-        });
-        
-        for(var i=0; i<keyDefinitions.length; i++){
-        	var val = settings[keyDefinitions[i].name];
-        	this.$log.info('Binding to parameter[' + (i+1) + ']:' + val);
-        	statement['set'+keyDefinitions[i].type]((i+1), val);
-        }
-		
-        var resultSet = statement.executeQuery();*/
+        settings.expand = expand;
+       
+		var resultSet = this.ormstatements.execute(parametericStatement, connection, settings);
         
         while (resultSet.next()) {
-        	var entity = this.createEntity(resultSet);
-        	if(select && this.orm.associationSets){
+        	var entity = this.createEntity(resultSet, settings.$select);
+        	if(expand && this.orm.associationSets){
 				for(var idx in Object.keys(this.orm.associationSets)){
 					var associationName = Object.keys(this.orm.associationSets)[idx];
-					if(select.indexOf(associationName)>-1){
-						var id = entity[this.orm.getPrimaryKey().name];
-						entity[associationName] = this.expand([associationName], id);
+					if(expand.indexOf(associationName)>-1){
+						entity[associationName] = this.expand([associationName], entity);
 					}
 				}
         	}
-        	this.notify('afterFound', entity);
+        	this.notify('afterFound', entity, settings);
             entities.push(entity);
         }
-        
         this.$log.info('' + entities.length +' '+this.orm.dbName+' entities found');
         
         return entities;
@@ -490,6 +545,40 @@ DAO.prototype.list = function(settings) {
     }
 };
 
-exports.get = function(orm, logCtxName){
-	return new DAO(orm, logCtxName);
+DAO.prototype.createTable = function() {
+	this.$log.info('Creating table '+this.orm.dbName);
+	var parametericStatement = this.ormstatements.createTable.apply(this.ormstatements);
+    var connection = this.datasource.getConnection();
+    try {
+    	this.ormstatements.execute(parametericStatement, connection);
+        this.$log.info(this.orm.dbName+' table created');
+        return this;
+    } catch(e) {
+    	this.$log.error(e.message, e);
+		throw e;
+    } finally {
+        connection.close();
+    }
+    return this;
+};
+
+DAO.prototype.dropTable = function() {
+	this.$log.info('Dropping table '+this.orm.dbName);
+	var parametericStatement = this.ormstatements.dropTable.apply(this.ormstatements);
+    var connection = this.datasource.getConnection();
+    try {
+    	this.ormstatements.execute(parametericStatement, connection);
+        this.$log.info(this.orm.dbName+' table dropped');
+        return this;
+    } catch(e) {
+    	this.$log.error(e.message, e);
+		throw e;
+    } finally {
+        connection.close();
+    }
+    return this;
+};
+
+exports.get = function(orm, logCtxName, ds){
+	return new DAO(orm, logCtxName, ds);
 };

@@ -41,11 +41,12 @@
 	          			<a href="" ng-click="crumbsChanged(path)">{{ path.name }}</a>
 	        		</li>
 	        		<div style="float:right">
-	        			<button type="button" class="btn btn-info" ng-click="newFile()" style="margin-right:5px; padding:3px"><span class="fa fa-file-o"></span> New</button>
-		      			<!-- <button type="button" class="btn btn-info" ng-click="newFolder()" style="margin-right:5px; padding:3px"><span class="fa fa-folder-o"></span> New Folder</button> -->
+	        			<button type="button" class="btn btn-info" ng-click="newFile()" style="margin-right:5px; padding:3px"><span class="fa fa-file-o"></span> New File</button>
+		      			<button type="button" class="btn btn-info" ng-click="newFolder()" style="margin-right:5px; padding:3px"><span class="fa fa-folder-o"></span> New Folder</button>
+		      			<button type="button" class="btn btn-info" ng-click="newProject()" style="margin-right:5px; padding:3px"><span class="fa fa-folder-o"></span> New Project</button>
 		      		</div>
 	      		</ol>
-	      		
+	      	
       		</div>
       		<div class="list-group">
         		<div class="list-group-item" ng-repeat="single in selected.files" ng-click="change(single)">

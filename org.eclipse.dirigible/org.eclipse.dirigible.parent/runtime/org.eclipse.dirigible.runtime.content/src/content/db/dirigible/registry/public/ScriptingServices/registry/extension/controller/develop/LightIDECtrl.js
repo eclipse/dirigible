@@ -58,6 +58,15 @@ controllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSearch', '$
     		$scope.editor = null;
     	}
     };
+    
+    $scope.refresh = function() {
+    	$scope.restService.get({}, function(data) {
+    		$scope.mainError = undefined;
+    		backupRoot = $scope.selected = data;
+    		$scope.paths = [data];
+    	}, onError);
+    };
+    
 
     $scope.getModeModule = function(resourcePath) {
     	var m = resourcePath.match(/(.*)[\/\\]([^\/\\]+)\.(\w+)$/);
@@ -131,15 +140,67 @@ controllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSearch', '$
     $scope.newFile = function() {
     	var fileName = prompt("Please enter the full path of the new file", $scope.selected.path);
 
-    	if (fileName != null) {
+    	if (fileName !== null) {
     		$scope.path = fileName;
 	    	$http.put($scope.path, "").success(function(response) {
 	    		onSuccess("Save of " + $scope.path + " passed successfully");
+	    		$scope.refresh();
 	    	}).error(function(response) {
 				onError("Error saving " + $scope.path + "\n" + response);
 	    	});
     	}
     };
+    
+    $scope.newFolder = function() {
+    	var fileName = prompt("Please enter the full path of the new folder", $scope.selected.path);
+
+    	if (fileName !== null) {
+    		$scope.path = fileName;
+    		if (!$scope.path.endsWith('/')) {
+    			$scope.path += '/';
+			}
+			createFolderInternal($scope.path);
+    	}
+    };
+    
+    $scope.newProject = function() {
+    	var projectName = prompt("Please enter name of the Project", "project");
+		
+		projectName = '/workspace/' + projectName + '/';
+    	if (projectName !== null) {
+	    	createFolderInternal(projectName);
+    	}
+    	
+    	var subFolderName = projectName + 'DataStructures/';
+    	createFolderInternal(subFolderName);
+    	subFolderName = projectName + 'ExtensionDefinitions/';
+    	createFolderInternal(subFolderName);
+    	subFolderName = projectName + 'IntegrationServices/';
+    	createFolderInternal(subFolderName);
+    	subFolderName = projectName + 'MobileApplications/';
+    	createFolderInternal(subFolderName);
+    	subFolderName = projectName + 'ScriptingServices/';
+    	createFolderInternal(subFolderName);
+    	subFolderName = projectName + 'SecurityConstraints/';
+    	createFolderInternal(subFolderName);
+    	subFolderName = projectName + 'TestCases/';
+    	createFolderInternal(subFolderName);
+    	subFolderName = projectName + 'WebContent/';
+    	createFolderInternal(subFolderName);
+    	subFolderName = projectName + 'WikiContent/';
+    	createFolderInternal(subFolderName);
+    	
+    };
+    
+    function createFolderInternal(path) {
+    	$http.put(path, "").success(function(response) {
+    		onSuccess("Save of " + path + " passed successfully");
+    		$scope.refresh();
+    	}).error(function(response) {
+			onError("Error saving " + path + "\n" + response);
+    	});
+	}
+
     
 
     function onArrayQuery(data) {

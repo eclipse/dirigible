@@ -127,7 +127,7 @@ var HttpController = exports.HttpController = function(oConfiguration){
 		if(!queryString)
 			return;
 		queryString = decodeURI(queryString);
-		queryString = xss.unescapeHtml(queryString).replace('amp;','');//??
+		queryString = xss.unescapeHtml(queryString).replace(/&amp;/g, '&');
 		var queryStringSegments = queryString.split('&');
 		var queryParams = {};
 		if(queryStringSegments.length>0){
