@@ -13,10 +13,15 @@
 
 var streams = require("io/streams");
 
+const RESPONSE_STATE_NAME = "state";
+const RESPONSE_STATE_WRITER = "1";
+const RESPONSE_STATE_STREAM = "2";
+
 exports.print = function(input) {
 	if (input === undefined) {
 		input = "";
 	}
+	checkWriterState();
 	return $.getResponse().getWriter().print(input + "");
 };
 
@@ -24,21 +29,25 @@ exports.println = function(input) {
 	if (input === undefined) {
 		input = "";
 	}
+	checkWriterState();
 	return $.getResponse().getWriter().println(input + "");
 };
 
 exports.getOutputStream = function() {
+	checkStreamState();
 	var internalOutputStream = $.getResponse().getOutputStream();
 	return new streams.OutputStream(internalOutputStream);
 };
 
 exports.writeStream = function(inputStream) {
+	checkStreamState();
 	var internalOutputStream = $.getResponse().getOutputStream();
 	var outputStream = new streams.OutputStream(internalOutputStream);
 	streams.copy(inputStream, outputStream);	
 };
 
 exports.writeOutput = function(bytes) {
+	checkStreamState();
 	var internalOutputStream = $.getResponse().getOutputStream();
 	var outputStream = new streams.OutputStream(internalOutputStream);
 	var inputStream = streams.createByteArrayInputStream(bytes);
@@ -46,10 +55,22 @@ exports.writeOutput = function(bytes) {
 };
 
 exports.flush = function() {
+	try {
+		checkWriterState();
+	} catch(e) {
+		// silently skip this in case of OutputStream state
+		return;
+	}
 	return $.getResponse().getWriter().flush();
 };
 
 exports.close = function() {
+	try {
+		checkWriterState();
+	} catch(e) {
+		// silently skip this in case of OutputStream state
+		return;
+	}
 	return $.getResponse().getWriter().close();
 };
 
@@ -332,3 +353,26 @@ exports.UNSUPPORTED_MEDIA_TYPE = 415;
  *  Status code (305) indicating that the requested resource MUST be accessed through the proxy given by the Location field.
  */
 exports.USE_PROXY = 305;
+
+
+// Internal Functions
+
+function checkWriterState() {
+	if ($.getResponse().getHeader(RESPONSE_STATE_NAME) === null) {
+		$.getResponse().setHeader(RESPONSE_STATE_NAME, RESPONSE_STATE_WRITER);
+	} else {
+		if ($.getResponse().getHeader(RESPONSE_STATE_NAME) === RESPONSE_STATE_STREAM) {
+			throw new Error("The Output of this Response is already used as a Stream and cannot be used as a String");
+		}
+	}
+}
+
+function checkStreamState() {
+	if ($.getResponse().getHeader(RESPONSE_STATE_NAME) === null) {
+		$.getResponse().setHeader(RESPONSE_STATE_NAME, RESPONSE_STATE_STREAM);
+	} else {
+		if ($.getResponse().getHeader(RESPONSE_STATE_NAME) === RESPONSE_STATE_WRITER) {
+			throw new Error("The Output of this Response is already used as a String and cannot be used as a Stream");
+		}
+	}
+}

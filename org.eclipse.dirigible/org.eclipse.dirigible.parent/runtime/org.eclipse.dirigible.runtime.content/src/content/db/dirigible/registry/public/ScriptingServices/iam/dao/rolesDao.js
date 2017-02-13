@@ -15,8 +15,8 @@ exports.create = function(entity) {
         var i = 0;
         var id = datasource.getSequence('IAM_ROLES_ROLE_ID').next();
         statement.setInt(++i, id);
-        statement.setString(++i, entity.role_rolename);
-        statement.setString(++i, entity.role_description);
+        statement.setString(++i, entity.rolename);
+        statement.setString(++i, entity.description);
         statement.setTimestamp(++i, new Date());
         statement.setString(++i, user.getName());
         statement.executeUpdate();
@@ -82,9 +82,9 @@ exports.update = function(entity) {
         var sql = 'UPDATE IAM_ROLES SET ROLE_ROLENAME = ?,ROLE_DESCRIPTION = ? WHERE ROLE_ID = ?';
         var statement = connection.prepareStatement(sql);
         var i = 0;
-        statement.setString(++i, entity.role_rolename);
-        statement.setString(++i, entity.role_description);
-        var id = entity.role_id;
+        statement.setString(++i, entity.rolename);
+        statement.setString(++i, entity.description);
+        var id = entity.id;
         statement.setInt(++i, id);
         statement.executeUpdate();
     } finally {
@@ -98,7 +98,7 @@ exports.delete = function(entity) {
     try {
     	var sql = 'DELETE FROM IAM_ROLES WHERE ROLE_ID = ?';
         var statement = connection.prepareStatement(sql);
-        statement.setString(1, entity.role_id);
+        statement.setString(1, entity.id);
         statement.executeUpdate();
     } finally {
         connection.close();
@@ -129,25 +129,25 @@ exports.metadata = function() {
 		type: 'object',
 		properties: [
 		{
-			name: 'role_id',
+			name: 'id',
 			type: 'integer',
 			key: 'true',
 			required: 'true'
 		},
 		{
-			name: 'role_rolename',
+			name: 'rolename',
 			type: 'string'
 		},
 		{
-			name: 'role_description',
+			name: 'description',
 			type: 'string'
 		},
 		{
-			name: 'role_created_at',
+			name: 'createdAt',
 			type: 'timestamp'
 		},
 		{
-			name: 'role_created_by',
+			name: 'createdBy',
 			type: 'string'
 		},
 		]
@@ -158,15 +158,15 @@ exports.metadata = function() {
 // Create an entity as JSON object from ResultSet current Row
 function createEntity(resultSet) {
     var result = {};
-	result.role_id = resultSet.getInt('ROLE_ID');
-    result.role_rolename = resultSet.getString('ROLE_ROLENAME');
-    result.role_description = resultSet.getString('ROLE_DESCRIPTION');
+	result.id = resultSet.getInt('ROLE_ID');
+    result.rolename = resultSet.getString('ROLE_ROLENAME');
+    result.description = resultSet.getString('ROLE_DESCRIPTION');
     if (resultSet.getTimestamp('ROLE_CREATED_AT') !== null) {
-        result.role_created_at = new Date(resultSet.getTimestamp('ROLE_CREATED_AT').getTime());
+        result.createdAt = new Date(resultSet.getTimestamp('ROLE_CREATED_AT').getTime());
     } else {
-        result.role_created_at = null;
+        result.createdAt = null;
     }
-    result.role_created_by = resultSet.getString('ROLE_CREATED_BY');
+    result.createdBy = resultSet.getString('ROLE_CREATED_BY');
     return result;
 }
 

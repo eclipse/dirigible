@@ -59,8 +59,9 @@ function handleGet(){
 		var defaultAvatar = repository.getResource("/db/dirigible/registry/public/WebContent/profile/default.png");
 		response.setContentType("image/png");
 		response.writeOutput(defaultAvatar.getContent());
-		response.flush();
 	}
+	response.flush();
+	response.close();
 }
 
 function printError(httpCode, errCode, errMessage, errContext) {
@@ -88,6 +89,4 @@ function checkFolder(path) {
 	}
 }
 
-exports.handleGet = function() {
-	return handleGet();
-};
+

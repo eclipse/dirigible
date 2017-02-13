@@ -57,13 +57,13 @@
 				<tbody>
 					<tr class="selected-{{entry._selected_}}" ng-repeat="entry in data"
 						ng-click="showInfoForEntry(entry)">
-						<td>{{entry.user_id}}</td>
-						<td><img src="../../js/profile/avatar.js/{{entry.user_username}}" width="24px"></img></td>
-						<td>{{entry.user_username}}</td>
-						<td>{{entry.user_firstname}}</td>
-						<td>{{entry.user_lastname}}</td>
-						<td>{{entry.user_created_at}}</td>
-						<td>{{entry.user_created_by}}</td>
+						<td>{{entry.id}}</td>
+						<td><img src="../../js/profile/avatar.js/{{entry.username}}" width="24px"></img></td>
+						<td>{{entry.username}}</td>
+						<td>{{entry.firstName}}</td>
+						<td>{{entry.lastName}}</td>
+						<td>{{entry.createdAt}}</td>
+						<td>{{entry.createdBy}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -96,13 +96,13 @@
 				  
 				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<input type="hidden" class="form-control" 
-						ng-model="selectedEntry.user_id" readonly>
+						ng-model="selectedEntry.id" readonly>
 				  </div>
 				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 						<label>Username</label>
 						<input type="text" class="form-control" 
-							ng-model="selectedEntry.user_username"
+							ng-model="selectedEntry.username"
 							ng-readonly="operation == 'show'" required="required">
 					  </div>
 				  </div>
@@ -110,7 +110,7 @@
 					  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 						<label>Password</label>
 						<input type="password" class="form-control" 
-							ng-model="selectedEntry.user_password"
+							ng-model="selectedEntry.password"
 							ng-readonly="operation == 'show'" required="required">
 					  </div>
 				  </div>
@@ -118,7 +118,7 @@
 					  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 						<label>Confirm</label>
 						<input type="password" class="form-control" 
-							ng-model="selectedEntry.user_confirm"
+							ng-model="selectedEntry.confirm"
 							ng-readonly="operation == 'show'" required="required">
 					  </div>
 				  </div>
@@ -126,7 +126,7 @@
 					  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 						<label>First Name</label>
 						<input type="text" class="form-control" 
-							ng-model="selectedEntry.user_firstname"
+							ng-model="selectedEntry.firstName"
 							ng-readonly="operation == 'show'" required="required">
 					  </div>
 				  </div>
@@ -134,7 +134,7 @@
 					  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 						<label>Last Name</label>
 						<input type="text" class="form-control" 
-							ng-model="selectedEntry.user_lastname"
+							ng-model="selectedEntry.lastName"
 							ng-readonly="operation == 'show'" required="required">
 					  </div>
 				  </div>
@@ -143,7 +143,7 @@
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 				 		   <div style="margin-top: 30px">
-						     <img ng-show="selectedEntry" src="../../js/profile/avatar.js/{{selectedEntry.user_username}}" width="48px"></img>
+						     <img ng-show="selectedEntry" src="../../js/profile/avatar.js/{{selectedEntry.username}}" width="48px"></img>
 				           <div>
 		       		</div>
 				</div>
@@ -279,7 +279,7 @@
 			};
                     
 			function newEntry(entry){
-				if (entry.user_password === entry.user_confirm) {
+				if (entry.password === entry.confirm) {
 					delete $scope.selectedEntry._selected_;
 					$http.post(url, entry)
 					.success(function(){
@@ -297,7 +297,7 @@
 			}
 			
 			function updateEntry(entry){
-				if (entry.user_password === entry.user_confirm) {
+				if (entry.password === entry.confirm) {
 					delete $scope.selectedEntry._selected_;
 					$http.put(url, entry)
 						.success(function(){
@@ -317,7 +317,7 @@
 
 			function deleteEntry(entry){
 				var primaryKey;
-				primaryKey = "user_id";
+				primaryKey = "id";
 				var deleteUrl = url+"?"+primaryKey+"="+entry[primaryKey];
 				$http.delete(deleteUrl)
 				.success(function(){

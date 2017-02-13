@@ -56,12 +56,12 @@
 				<tbody>
 					<tr class="selected-{{entry._selected_}}" ng-repeat="entry in data"
 						ng-click="showInfoForEntry(entry)">
-						<td>{{entry.assign_id}}</td>
-						<td>{{entry.assign_username}}</td>
-						<td>{{entry.assign_rolename}}</td>
-						<td>{{entry.assign_state}}</td>
-						<td>{{entry.assign_created_at}}</td>
-						<td>{{entry.assign_created_by}}</td>
+						<td>{{entry.id}}</td>
+						<td>{{entry.username}}</td>
+						<td>{{entry.rolename}}</td>
+						<td>{{entry.state}}</td>
+						<td>{{entry.createdAt}}</td>
+						<td>{{entry.createdBy}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -91,30 +91,30 @@
 				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 					<label>#</label>
 					<input type="text" class="form-control" 
-						ng-model="selectedEntry.assign_id" readonly>
+						ng-model="selectedEntry.id" readonly>
 				  </div>
 				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 					<label>Username</label>
 					<input type="hidden" class="form-control" 
-						ng-model="selectedEntry.assign_username"
+						ng-model="selectedEntry.username"
 						ng-readonly="operation == 'show'" required="required">
 					<div>
-						<select class="form-control" ng-model="selectedEntry.assign_username" ng-options="option.user_username as option.user_username for option in users" ng-disabled="operation == 'show'" required="required"></select>	
+						<select class="form-control" ng-model="selectedEntry.username" ng-options="option.user_username as option.user_username for option in users" ng-disabled="operation == 'show'" required="required"></select>	
 					</div>
 				  </div>
 				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 					<label>Role Name</label>
 					<input type="hidden" class="form-control" 
-						ng-model="selectedEntry.assign_rolename"
+						ng-model="selectedEntry.rolename"
 						ng-readonly="operation == 'show'" required="required">
 					<div>
-						<select class="form-control" ng-model="selectedEntry.assign_rolename" ng-options="option.role_rolename as option.role_rolename for option in roles" ng-disabled="operation == 'show'" required="required"></select>	
+						<select class="form-control" ng-model="selectedEntry.rolename" ng-options="option.role_rolename as option.role_rolename for option in roles" ng-disabled="operation == 'show'" required="required"></select>	
 					</div>
 				  </div>
 				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 					<label>State</label>
 					<input type="number" class="form-control text-right" pattern="\d*" step="1"
-						ng-model="selectedEntry.assign_state"
+						ng-model="selectedEntry.state"
 						ng-readonly="operation == 'show'" required="required">
 				  </div>
 				</div>
@@ -275,7 +275,7 @@
 
 			function deleteEntry(entry){
 				var primaryKey;
-				primaryKey = "assign_id";
+				primaryKey = "id";
 				var deleteUrl = url+"?"+primaryKey+"="+entry[primaryKey];
 				$http.delete(deleteUrl)
 				.success(function(){

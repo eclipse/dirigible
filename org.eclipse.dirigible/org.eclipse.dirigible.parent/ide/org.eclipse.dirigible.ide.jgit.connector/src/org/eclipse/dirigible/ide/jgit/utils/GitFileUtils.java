@@ -225,7 +225,7 @@ public class GitFileUtils {
 			if (name.equals(DOT_GIT)) {
 				continue;
 			}
-			File file = new File(gitDirectory.getCanonicalPath() + File.pathSeparator + name);
+			File file = new File(gitDirectory.getCanonicalPath() + File.separator + name);
 			if (file.isDirectory()) {
 				valid.add(name);
 			}

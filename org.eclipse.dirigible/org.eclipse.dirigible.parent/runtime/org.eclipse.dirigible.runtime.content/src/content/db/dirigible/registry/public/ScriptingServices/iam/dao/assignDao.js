@@ -15,9 +15,9 @@ exports.create = function(entity) {
         var i = 0;
         var id = datasource.getSequence('IAM_ASSIGN_ASSIGN_ID').next();
         statement.setInt(++i, id);
-        statement.setString(++i, entity.assign_username);
-        statement.setString(++i, entity.assign_rolename);
-        statement.setShort(++i, entity.assign_state);
+        statement.setString(++i, entity.username);
+        statement.setString(++i, entity.rolename);
+        statement.setShort(++i, entity.state);
         statement.setTimestamp(++i, new Date());
         statement.setString(++i, user.getName());
         statement.executeUpdate();
@@ -83,10 +83,10 @@ exports.update = function(entity) {
         var sql = 'UPDATE IAM_ASSIGN SET ASSIGN_USERNAME = ?,ASSIGN_ROLENAME = ?,ASSIGN_STATE = ? WHERE ASSIGN_ID = ?';
         var statement = connection.prepareStatement(sql);
         var i = 0;
-        statement.setString(++i, entity.assign_username);
-        statement.setString(++i, entity.assign_rolename);
-        statement.setShort(++i, entity.assign_state);
-        var id = entity.assign_id;
+        statement.setString(++i, entity.username);
+        statement.setString(++i, entity.rolename);
+        statement.setShort(++i, entity.state);
+        var id = entity.id;
         statement.setInt(++i, id);
         statement.executeUpdate();
     } finally {
@@ -100,7 +100,7 @@ exports.delete = function(entity) {
     try {
     	var sql = 'DELETE FROM IAM_ASSIGN WHERE ASSIGN_ID = ?';
         var statement = connection.prepareStatement(sql);
-        statement.setString(1, entity.assign_id);
+        statement.setString(1, entity.id);
         statement.executeUpdate();
     } finally {
         connection.close();
@@ -131,29 +131,29 @@ exports.metadata = function() {
 		type: 'object',
 		properties: [
 		{
-			name: 'assign_id',
+			name: 'id',
 			type: 'integer',
 			key: 'true',
 			required: 'true'
 		},
 		{
-			name: 'assign_username',
+			name: 'username',
 			type: 'string'
 		},
 		{
-			name: 'assign_rolename',
+			name: 'rolename',
 			type: 'string'
 		},
 		{
-			name: 'assign_state',
+			name: 'state',
 			type: 'smallint'
 		},
 		{
-			name: 'assign_created_at',
+			name: 'createdAt',
 			type: 'timestamp'
 		},
 		{
-			name: 'assign_created_by',
+			name: 'createdBy',
 			type: 'string'
 		},
 		]
@@ -164,16 +164,16 @@ exports.metadata = function() {
 // Create an entity as JSON object from ResultSet current Row
 function createEntity(resultSet) {
     var result = {};
-	result.assign_id = resultSet.getInt('ASSIGN_ID');
-    result.assign_username = resultSet.getString('ASSIGN_USERNAME');
-    result.assign_rolename = resultSet.getString('ASSIGN_ROLENAME');
-    result.assign_state = resultSet.getShort('ASSIGN_STATE');
+	result.id = resultSet.getInt('ASSIGN_ID');
+    result.username = resultSet.getString('ASSIGN_USERNAME');
+    result.rolename = resultSet.getString('ASSIGN_ROLENAME');
+    result.state = resultSet.getShort('ASSIGN_STATE');
     if (resultSet.getTimestamp('ASSIGN_CREATED_AT') !== null) {
-        result.assign_created_at = new Date(resultSet.getTimestamp('ASSIGN_CREATED_AT').getTime());
+        result.createdAt = new Date(resultSet.getTimestamp('ASSIGN_CREATED_AT').getTime());
     } else {
-        result.assign_created_at = null;
+        result.createdAt = null;
     }
-    result.assign_created_by = resultSet.getString('ASSIGN_CREATED_BY');
+    result.createdBy = resultSet.getString('ASSIGN_CREATED_BY');
     return result;
 }
 

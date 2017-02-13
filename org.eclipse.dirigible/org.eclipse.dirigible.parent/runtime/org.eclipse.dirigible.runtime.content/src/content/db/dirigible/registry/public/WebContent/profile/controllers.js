@@ -39,9 +39,6 @@ angular
     };
     uploader.onBeforeUploadItem = function(item) {
 //        console.info('onBeforeUploadItem', item);
-		if ($scope.unpackZips && item.file.type === "application/zip"){
-			item.url = zipUploadPath + "?path=" + $scope.folder.path;
-		}
     };
     uploader.onProgressItem = function(fileItem, progress) {
 //        console.info('onProgressItem', fileItem, progress);

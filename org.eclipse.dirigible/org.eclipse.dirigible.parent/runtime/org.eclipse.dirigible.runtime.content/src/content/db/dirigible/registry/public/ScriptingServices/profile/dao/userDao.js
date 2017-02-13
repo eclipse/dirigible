@@ -37,10 +37,10 @@ exports.update = function(entity) {
         var sql = 'UPDATE IAM_USERS SET USER_PASSWORD = ?,USER_FIRSTNAME = ?,USER_LASTNAME = ? WHERE USER_ID = ?';
         var statement = connection.prepareStatement(sql);
         var i = 0;
-        statement.setString(++i, entity.user_password);
-        statement.setString(++i, entity.user_firstname);
-        statement.setString(++i, entity.user_lastname);
-        var id = entity.user_id;
+        statement.setString(++i, entity.password);
+        statement.setString(++i, entity.firstName);
+        statement.setString(++i, entity.lastname);
+        var id = entity.id;
         statement.setInt(++i, id);
         statement.executeUpdate();
     } finally {
@@ -55,33 +55,33 @@ exports.metadata = function() {
 		type: 'object',
 		properties: [
 		{
-			name: 'user_id',
+			name: 'id',
 			type: 'integer',
 			key: 'true',
 			required: 'true'
 		},
 		{
-			name: 'user_username',
+			name: 'username',
 			type: 'string'
 		},
 		{
-			name: 'user_password',
+			name: 'password',
 			type: 'string'
 		},
 		{
-			name: 'user_firstname',
+			name: 'firstName',
 			type: 'string'
 		},
 		{
-			name: 'user_lastname',
+			name: 'lastName',
 			type: 'string'
 		},
 		{
-			name: 'user_created_at',
+			name: 'createdAt',
 			type: 'timestamp'
 		},
 		{
-			name: 'user_created_by',
+			name: 'createdBy',
 			type: 'string'
 		},
 		]
@@ -92,16 +92,16 @@ exports.metadata = function() {
 // Create an entity as JSON object from ResultSet current Row
 function createEntity(resultSet) {
     var result = {};
-	result.user_id = resultSet.getInt('USER_ID');
-    result.user_username = resultSet.getString('USER_USERNAME');
-    result.user_firstname = resultSet.getString('USER_FIRSTNAME');
-    result.user_lastname = resultSet.getString('USER_LASTNAME');
+	result.id = resultSet.getInt('USER_ID');
+    result.username = resultSet.getString('USER_USERNAME');
+    result.firstName = resultSet.getString('USER_FIRSTNAME');
+    result.lastName = resultSet.getString('USER_LASTNAME');
     if (resultSet.getTimestamp('USER_CREATED_AT') !== null) {
-        result.user_created_at = new Date(resultSet.getTimestamp('USER_CREATED_AT').getTime());
+        result.createdAt = new Date(resultSet.getTimestamp('USER_CREATED_AT').getTime());
     } else {
-        result.user_created_at = null;
+        result.createdAt = null;
     }
-    result.user_created_by = resultSet.getString('USER_CREATED_BY');
+    result.createdBy = resultSet.getString('USER_CREATED_BY');
     return result;
 }
 

@@ -55,11 +55,11 @@
 				<tbody>
 					<tr class="selected-{{entry._selected_}}" ng-repeat="entry in data"
 						ng-click="showInfoForEntry(entry)">
-						<td>{{entry.role_id}}</td>
-						<td>{{entry.role_rolename}}</td>
-						<td>{{entry.role_description}}</td>
-						<td>{{entry.role_created_at}}</td>
-						<td>{{entry.role_created_by}}</td>
+						<td>{{entry.id}}</td>
+						<td>{{entry.rolename}}</td>
+						<td>{{entry.description}}</td>
+						<td>{{entry.createdAt}}</td>
+						<td>{{entry.createdBy}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -89,31 +89,19 @@
 				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 					<label>#</label>
 					<input type="text" class="form-control" 
-						ng-model="selectedEntry.role_id" readonly>
+						ng-model="selectedEntry.id" readonly>
 				  </div>
 				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 					<label>Role Name</label>
 					<input type="text" class="form-control" 
-						ng-model="selectedEntry.role_rolename"
+						ng-model="selectedEntry.rolename"
 						ng-readonly="operation == 'show'" required="required">
 				  </div>
 				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<label>Description</label>
 					<textarea class="form-control" 
-						ng-model="selectedEntry.role_description" cols="50" rows="5" 
+						ng-model="selectedEntry.description" cols="50" rows="5" 
 						ng-readonly="operation == 'show'" required="required"></textarea>
-				  </div>
-				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-					<label>Created At</label>
-					<input type="text" class="form-control" 
-						ng-model="selectedEntry.role_created_at"
-						ng-readonly="operation == 'show'" required="required">
-				  </div>
-				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-					<label>Created By</label>
-					<input type="text" class="form-control" 
-						ng-model="selectedEntry.role_created_by"
-						ng-readonly="operation == 'show'" required="required">
 				  </div>
 				</div>
 				
@@ -270,7 +258,7 @@
 
 			function deleteEntry(entry){
 				var primaryKey;
-				primaryKey = "role_id";
+				primaryKey = "id";
 				var deleteUrl = url+"?"+primaryKey+"="+entry[primaryKey];
 				$http.delete(deleteUrl)
 				.success(function(){
