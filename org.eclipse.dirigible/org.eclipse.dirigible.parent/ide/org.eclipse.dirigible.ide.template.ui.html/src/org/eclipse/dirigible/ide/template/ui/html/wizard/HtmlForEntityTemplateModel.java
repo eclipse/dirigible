@@ -19,21 +19,17 @@ import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 
+@SuppressWarnings("javadoc")
 public class HtmlForEntityTemplateModel extends GenerationModel {
 
 	private static final String TARGET_LOCATION_IS_NOT_ALLOWED = Messages.HtmlForEntityTemplateModel_TARGET_LOCATION_IS_NOT_ALLOWED;
 
-	private String tableName;
-
-	private String tableType;
-
-	private String dependentColumn;
-
-	private TableColumn[] tableColumns;
-
-	private String pageTitle;
-
-	private String serviceEndpoint;
+	public String tableName;
+	public String tableType;
+	public String dependentColumn;
+	public TableColumn[] tableColumns;
+	public String pageTitle;
+	public String serviceEndpoint;
 
 	public String getTableName() {
 		return tableName;

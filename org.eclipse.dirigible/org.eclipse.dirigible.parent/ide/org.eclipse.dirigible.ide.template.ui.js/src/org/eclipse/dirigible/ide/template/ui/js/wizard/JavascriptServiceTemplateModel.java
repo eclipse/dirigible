@@ -26,23 +26,19 @@ import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+@SuppressWarnings("javadoc")
 public class JavascriptServiceTemplateModel extends GenerationModel {
-
-	private static final String ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_GENERATION = Messages.JavascriptServiceTemplateModel_ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_GENERATION;
-
-	private static final String TARGET_LOCATION_IS_NOT_ALLOWED = Messages.JavascriptServiceTemplateModel_TARGET_LOCATION_IS_NOT_ALLOWED;
 
 	private static final Logger logger = Logger.getLogger(JavascriptServiceTemplateModel.class);
 
-	private String tableName;
+	private static final String ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_GENERATION = Messages.JavascriptServiceTemplateModel_ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_GENERATION;
+	private static final String TARGET_LOCATION_IS_NOT_ALLOWED = Messages.JavascriptServiceTemplateModel_TARGET_LOCATION_IS_NOT_ALLOWED;
 
-	private String tableType;
-
-	private String dependentColumn;
-
-	private TableColumn[] tableColumns;
-
-	private boolean columnsInit = false;
+	public String tableName;
+	public String tableType;
+	public String dependentColumn;
+	public TableColumn[] tableColumns;
+	public boolean columnsInit = false;
 
 	public String getTableName() {
 		return tableName;

@@ -12,21 +12,16 @@ package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
 import com.google.gson.Gson;
 
+@SuppressWarnings("javadoc")
 public class TableColumn {
 
-	private String name;
-
-	private boolean key;
-
-	private boolean visible;
-
-	private String type;
-
-	private int size;
-
-	private String widgetType = "text";
-
-	private String label;
+	public String name;
+	public boolean key;
+	public boolean visible;
+	public String type;
+	public int size;
+	public String widgetType = "text";
+	public String label;
 
 	public TableColumn(String name, boolean key, boolean visible, String type, int size, String widgetType, String label) {
 		super();

@@ -28,6 +28,7 @@ import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+@SuppressWarnings("javadoc")
 public class TableTemplateModel extends GenerationModel {
 
 	private static final String TABLE_OR_VIEW_WITH_THE_SAME_NAME_ALREADY_EXISTS = Messages.TableTemplateModel_TABLE_OR_VIEW_WITH_THE_SAME_NAME_ALREADY_EXISTS;
@@ -38,7 +39,8 @@ public class TableTemplateModel extends GenerationModel {
 	private static final String NO_PRIMARY_KEY_FOUND = Messages.TableTemplateModel_NO_PRIMARY_KEY_FOUND;
 	private static final String DUPLICATE_COLUMN_NAMES_FOUND = Messages.TableTemplateModel_DUPLICATE_COLUMN_NAMES_FOUND;
 	private static final String NO_COLUMNS_DEFINED = Messages.TableTemplateModel_NO_COLUMNS_DEFINED;
-	private ColumnDefinition[] columnDefinitions;
+
+	public ColumnDefinition[] columnDefinitions;
 
 	public TableTemplateModel() {
 		super();
@@ -66,6 +68,7 @@ public class TableTemplateModel extends GenerationModel {
 		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
 	}
 
+	@Override
 	public IValidationStatus validateLocation() {
 		IValidationStatus status;
 		try {

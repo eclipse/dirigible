@@ -32,36 +32,25 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
+@SuppressWarnings("javadoc")
 public abstract class GenerationModel {
-
-	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
-
-	private static final String COULD_NOT_OPEN_INPUT_STREAM_FOR = Messages.GenerationModel_COULD_NOT_OPEN_INPUT_STREAM_FOR;
-
-	private static final String TEMPLATE_LOCATION_IS_EMPTY = Messages.GenerationModel_TEMPLATE_LOCATION_IS_EMPTY;
-
-	private static final String RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE = Messages.GenerationModel_RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE;
-
-	private static final String NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S = Messages.GenerationModel_NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S;
-
-	private static final String PATH_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S = Messages.GenerationModel_PATH_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S;
 
 	private static final Logger logger = Logger.getLogger(GenerationModel.class);
 
-	private IResource sourceResource;
+	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
+	private static final String COULD_NOT_OPEN_INPUT_STREAM_FOR = Messages.GenerationModel_COULD_NOT_OPEN_INPUT_STREAM_FOR;
+	private static final String TEMPLATE_LOCATION_IS_EMPTY = Messages.GenerationModel_TEMPLATE_LOCATION_IS_EMPTY;
+	private static final String RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE = Messages.GenerationModel_RESOURCE_ALREADY_EXISTS_IN_THE_WORKSPACE;
+	private static final String NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S = Messages.GenerationModel_NAME_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S;
+	private static final String PATH_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S = Messages.GenerationModel_PATH_IS_NOT_VALID_FOR_A_RESOURCE_OF_THE_GIVEN_TYPE_S;
 
-	// private String targetLocation;
-
-	private String targetContainer;
-
-	private String projectPackageName;
-
-	private String packageName;
-
-	private String fileName;
+	public String targetContainer;
+	public String projectPackageName;
+	public String packageName;
+	public String fileName;
 
 	private TemplateType template;
-
+	private IResource sourceResource;
 	private Class<?> templateClassLoader;
 
 	public IResource getSourceResource() {
@@ -73,19 +62,8 @@ public abstract class GenerationModel {
 	}
 
 	public String getTargetLocation() {
-		// return targetLocation;
-		// if (this.targetContainer == null) {
-		// return null;
-		// }
-		// if (getProjectPackageName() == null) {
 		return this.targetContainer;
-		// }
-		// return this.targetContainer + IRepository.SEPARATOR + getProjectPackageName();
 	}
-
-	// public void setTargetLocation(String targetLocation) {
-	// this.targetLocation = targetLocation;
-	// }
 
 	public String getTargetContainer() {
 		return targetContainer;
@@ -130,35 +108,6 @@ public abstract class GenerationModel {
 		return null;
 	}
 
-	//
-	// public String[] getTemplateNames() {
-	// if (template != null) {
-	// return template.getSourceNames();
-	// }
-	// return null;
-	// }
-	//
-	// public String[] getTemplateLocations() {
-	// if (template != null) {
-	// return template.getSourceLocations();
-	// }
-	// return null;
-	// }
-	//
-	// public boolean[] getTemplateGenerates() {
-	// if (template != null) {
-	// return template.getSourceGenerates();
-	// }
-	// return null;
-	// }
-	//
-	// public String[] getTemplateRenamings() {
-	// if (template != null) {
-	// return template.getSourceRenamings();
-	// }
-	// return null;
-	// }
-	//
 	public String getTemplateExtension() {
 		if (template != null) {
 			return template.getExtension();
@@ -257,17 +206,7 @@ public abstract class GenerationModel {
 			return null;
 		}
 		IPath location = new Path(getTargetContainer());
-		// if (location.segmentCount() > 2) {
-		// for (int i = 0; i < location.segmentCount(); i++) {
-		// if (i == 1) {
-		// continue;
-		// }
-		// result.append(location.segment(i) + ICommonConstants.SEPARATOR);
-		// }
-		// result.delete(result.length() - ICommonConstants.SEPARATOR.length(), result.length());
-		// } else {
 		result.append(location.segment(0));
-		// }
 		return result.toString();
 	}
 
@@ -279,10 +218,9 @@ public abstract class GenerationModel {
 		this.templateClassLoader = templateClassLoader;
 	}
 
-	private boolean isValidScriptingServiceFileName(String fileName) {
-
+	private boolean isValidScriptingServiceFileName(String scriptingServicefileName) {
 		String scriptingServicefileRegExPattern = "([a-zA-Z_0-9]+)+([\\.]){0,1}(([a-zA-Z0-9]*)*)"; //$NON-NLS-1$
-		if (Pattern.matches(scriptingServicefileRegExPattern, fileName)) {
+		if (Pattern.matches(scriptingServicefileRegExPattern, scriptingServicefileName)) {
 			return true;
 		}
 		return false;

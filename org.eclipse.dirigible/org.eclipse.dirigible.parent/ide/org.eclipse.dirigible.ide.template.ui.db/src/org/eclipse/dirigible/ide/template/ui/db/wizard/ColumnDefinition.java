@@ -12,14 +12,15 @@ package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
 import org.eclipse.dirigible.repository.datasource.DBSupportedTypesMap.DataTypes;
 
+@SuppressWarnings("javadoc")
 public class ColumnDefinition {
 
-	private String name;
-	private String type;
-	private boolean notNull;
-	private boolean primaryKey;
-	private String defaultValue = ""; //$NON-NLS-1$
-	private int length;
+	public String name;
+	public String type;
+	public boolean notNull;
+	public boolean primaryKey;
+	public String defaultValue = ""; //$NON-NLS-1$
+	public int length;
 
 	public String getName() {
 		return name;

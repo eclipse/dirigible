@@ -10,15 +10,13 @@
 
 package org.eclipse.dirigible.ide.template.ui.js.wizard;
 
+@SuppressWarnings("javadoc")
 public class TableColumn {
 
-	private String name;
-
-	private int type;
-
-	private boolean key;
-
-	private boolean visible;
+	public String name;
+	public int type;
+	public boolean key;
+	public boolean visible;
 
 	public TableColumn(String name, int type, boolean key, boolean visible) {
 		super();
