@@ -345,7 +345,7 @@
 				primaryKey = "${tableColumn.getName()}";
 #end 
 #end
-				var deleteUrl = url+"?"+primaryKey+"="+entry[primaryKey];
+				var deleteUrl = url+"/"+entry[primaryKey];
 				$http.delete(deleteUrl)
 				.success(function(){
 					refreshData();

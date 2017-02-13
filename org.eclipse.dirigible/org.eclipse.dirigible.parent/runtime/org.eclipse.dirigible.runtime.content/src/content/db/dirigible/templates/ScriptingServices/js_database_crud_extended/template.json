@@ -5,33 +5,49 @@
     "preview":"database-crud-ext-preview.png",
     "sources": [{
         "name":"database-crud.js",
-        "action":"generate"
+        "rootFolder":"ScriptingServices",
+        "action":"generate",
+        "rename":"%s"
     }, {
         "name":"ScriptingServices/dao/database-crud-dao.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"dao",
         "action":"generate",
         "rename":"%sDao"
     }, {
         "name":"ScriptingServices/utils/database-crud-dao-extension-utils.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"utils",
         "action":"generate",
         "rename":"%sDaoExtensionUtils"
     }, {
         "name":"ScriptingServices/extensions/database-crud-extension.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"extensions",
         "action":"generate",
         "rename":"%sExtension"
     }, {
         "name":"ScriptingServices/entity/database-crud.entity",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"entity",
         "action":"generate",
         "rename":"%s"
     }, {
         "name":"ScriptingServices/swagger/database-crud.swagger",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"swagger",
         "action":"generate",
         "rename":"%s"
     }, {
         "name":"ExtensionDefinitions/extension_points/database-crud-hooks.extensionpoint",
+        "rootFolder":"ExtensionDefinitions",
+        "packagePath":"extension_points",
         "action":"generate",
         "rename":"%s_database_crud_hooks"
     }, {
         "name":"ExtensionDefinitions/extensions/database-crud-hooks.extension",
+        "rootFolder":"ExtensionDefinitions",
+        "packagePath":"extensions",
         "action":"generate",
         "rename":"%s_database_crud_hooks"
     }],

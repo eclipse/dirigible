@@ -10,52 +10,52 @@ exports.create = function(entity) {
     var connection = datasource.getConnection();
     try {
         var sql = 'INSERT INTO ${tableName} (##
-#foreach ($tableColumn in $tableColumns)#if($velocityCount > 1),#end${tableColumn.getName()}#end) VALUES (##
+#foreach ($tableColumn in $tableColumns)#if($velocityCount > 1),#end${tableColumn.name.toUpperCase()}#end) VALUES (##
 #foreach ($tableColumn in $tableColumns)#if ($velocityCount > 1),#end?#end)';
         var statement = connection.prepareStatement(sql);
         var i = 0;
 #foreach ($tableColumn in $tableColumns)
-#if ($tableColumn.isKey())
-        var id = datasource.getSequence('${tableName}_${tableColumn.getName()}').next();
+#if ($tableColumn.key)
+        var id = datasource.getSequence('${tableName}_${tableColumn.name}').next();
         statement.setInt(++i, id);
 #else    
-#if ($tableColumn.getType() == $INTEGER)
-        statement.setInt(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $VARCHAR)
-        statement.setString(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $CHAR)
-        statement.setString(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $BIGINT)
-        statement.setLong(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $SMALLINT)
-        statement.setShort(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $FLOAT)
-        statement.setFloat(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $DOUBLE)
-        statement.setDouble(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $DATE)
-        if (entity.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, js_date_${tableColumn.getName().toLowerCase()});
+#if ($tableColumn.type == $INTEGER)
+        statement.setInt(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $VARCHAR)
+        statement.setString(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $CHAR)
+        statement.setString(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $BIGINT)
+        statement.setLong(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $SMALLINT)
+        statement.setShort(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $FLOAT)
+        statement.setFloat(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $DOUBLE)
+        statement.setDouble(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $DATE)
+        if (entity.${tableColumn.name.toLowerCase()} !== null) {
+            var js_date_${tableColumn.name.toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.name.toLowerCase()}));
+            statement.setDate(++i, js_date_${tableColumn.name.toLowerCase()});
         } else {
             statement.setDate(++i, null);
         }
-#elseif ($tableColumn.getType() == $TIME)
-        if (entity.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, js_date_${tableColumn.getName().toLowerCase()});
+#elseif ($tableColumn.type == $TIME)
+        if (entity.${tableColumn.name.toLowerCase()} !== null) {
+            var js_date_${tableColumn.name.toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.name.toLowerCase()})); 
+            statement.setTime(++i, js_date_${tableColumn.name.toLowerCase()});
         } else {
             statement.setTime(++i, null);
         }
-#elseif ($tableColumn.getType() == $TIMESTAMP)
-        if (entity.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, js_date_${tableColumn.getName().toLowerCase()});
+#elseif ($tableColumn.type == $TIMESTAMP)
+        if (entity.${tableColumn.name.toLowerCase()} !== null) {
+            var js_date_${tableColumn.name.toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.name.toLowerCase()}));
+            statement.setTimestamp(++i, js_date_${tableColumn.name.toLowerCase()});
         } else {
             statement.setTimestamp(++i, null);
         }
 #else
-    // not supported type: requestBody.${tableColumn.getName().toLowerCase()}
+    // not supported type: requestBody.${tableColumn.name.toLowerCase()}
 #end
 #end
 #end
@@ -73,7 +73,7 @@ exports.get = function(id) {
 	var entity = null;
     var connection = datasource.getConnection();
     try {
-        var sql = 'SELECT * FROM ${tableName} WHERE #foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName()}#end#end = ?';
+        var sql = 'SELECT * FROM ${tableName} WHERE #foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name}#end#end = ?';
         var statement = connection.prepareStatement(sql);
         statement.setInt(1, id);
 
@@ -122,56 +122,57 @@ exports.update = function(entity) {
     var connection = datasource.getConnection();
     try {
         var sql = 'UPDATE ${tableName} SET ##
-#foreach ($tableColumn in $tableColumnsWithoutKeys)#if ($velocityCount > 1),#end${tableColumn.getName()} = ?#end
-#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey()) WHERE ${tableColumn.getName()} = ?';
+#foreach ($tableColumn in $tableColumns)#if($addComma == true),#end #if($tableColumn.key == false)#set($addComma = true)${tableColumn.name} = ?#end#end
+#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key) WHERE ${tableColumn.name} = ?';
 #end
 #end
         var statement = connection.prepareStatement(sql);
         var i = 0;
-#foreach ($tableColumn in $tableColumnsWithoutKeys)
-#if ($tableColumn.getType() == $INTEGER)
-        statement.setInt(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $VARCHAR)
-        statement.setString(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $CHAR)
-        statement.setString(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $BIGINT)
-        statement.setLong(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $SMALLINT)
-        statement.setShort(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $FLOAT)
-        statement.setFloat(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $DOUBLE)
-        statement.setDouble(++i, entity.${tableColumn.getName().toLowerCase()});
-#elseif ($tableColumn.getType() == $DATE)
-        if (entity.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.getName().toLowerCase()}));
-            statement.setDate(++i, js_date_${tableColumn.getName().toLowerCase()});
+#foreach ($tableColumn in $tableColumns)
+#if ($tableColumn.key == false)
+#if ($tableColumn.type == $INTEGER)
+        statement.setInt(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $VARCHAR)
+        statement.setString(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $CHAR)
+        statement.setString(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $BIGINT)
+        statement.setLong(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $SMALLINT)
+        statement.setShort(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $FLOAT)
+        statement.setFloat(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $DOUBLE)
+        statement.setDouble(++i, entity.${tableColumn.name.toLowerCase()});
+#elseif ($tableColumn.type == $DATE)
+        if (entity.${tableColumn.name.toLowerCase()} !== null) {
+            var js_date_${tableColumn.name.toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.name.toLowerCase()}));
+            statement.setDate(++i, js_date_${tableColumn.name.toLowerCase()});
         } else {
             statement.setDate(++i, null);
         }
-#elseif ($tableColumn.getType() == $TIME)
-        if (entity.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.getName().toLowerCase()})); 
-            statement.setTime(++i, js_date_${tableColumn.getName().toLowerCase()});
+#elseif ($tableColumn.type == $TIME)
+        if (entity.${tableColumn.name.toLowerCase()} !== null) {
+            var js_date_${tableColumn.name.toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.name.toLowerCase()})); 
+            statement.setTime(++i, js_date_${tableColumn.name.toLowerCase()});
         } else {
             statement.setTime(++i, null);
         }
-#elseif ($tableColumn.getType() == $TIMESTAMP)
-        if (entity.${tableColumn.getName().toLowerCase()} !== null) {
-            var js_date_${tableColumn.getName().toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.getName().toLowerCase()}));
-            statement.setTimestamp(++i, js_date_${tableColumn.getName().toLowerCase()});
+#elseif ($tableColumn.type == $TIMESTAMP)
+        if (entity.${tableColumn.name.toLowerCase()} !== null) {
+            var js_date_${tableColumn.name.toLowerCase()} =  new Date(Date.parse(entity.${tableColumn.name.toLowerCase()}));
+            statement.setTimestamp(++i, js_date_${tableColumn.name.toLowerCase()});
         } else {
             statement.setTimestamp(++i, null);
         }
 #else
-    // not supported type: responseBody.${tableColumn.getName().toLowerCase()}
+    // not supported type: responseBody.${tableColumn.name.toLowerCase()}
+#end
 #end
 #end
 #foreach ($tableColumn in $tableColumns)
-#if ($tableColumn.isKey())
-        var id = entity.${tableColumn.getName().toLowerCase()};
-        statement.setInt(++i, id);
+#if ($tableColumn.key)
+        statement.setInt(++i, entity.${tableColumn.name.toLowerCase()});
 #end
 #end
 		${fileNameNoExtension}DaoExtensionsUtils.beforeUpdate(connection, entity);
@@ -186,9 +187,9 @@ exports.update = function(entity) {
 exports.delete = function(entity) {
     var connection = datasource.getConnection();
     try {
-    	var sql = 'DELETE FROM ${tableName} WHERE #foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName()}#end#end = ?';
+    	var sql = 'DELETE FROM ${tableName} WHERE #foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name}#end#end = ?';
         var statement = connection.prepareStatement(sql);
-        statement.setString(1, entity.#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName().toLowerCase()}#end#end);
+        statement.setString(1, entity.#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name.toLowerCase()}#end#end);
         ${fileNameNoExtension}DaoExtensionsUtils.beforeDelete(connection, entity);
         statement.executeUpdate();
         ${fileNameNoExtension}DaoExtensionsUtils.afterDelete(connection, entity);
@@ -222,51 +223,51 @@ exports.metadata = function() {
 		properties: [
 #foreach ($tableColumn in $tableColumns)
 		{
-			name: '$tableColumn.getName().toLowerCase()',
-#if ($tableColumn.getType() == $INTEGER && $tableColumn.isKey())
+			name: '$tableColumn.name.toLowerCase()',
+#if ($tableColumn.type == $INTEGER && $tableColumn.key)
 			type: 'integer',
-#elseif ($tableColumn.getType() == $INTEGER)
+#elseif ($tableColumn.type == $INTEGER)
 			type: 'integer'
-#elseif ($tableColumn.getType() == $VARCHAR && $tableColumn.isKey())
+#elseif ($tableColumn.type == $VARCHAR && $tableColumn.key)
     		type: 'string',
-#elseif ($tableColumn.getType() == $VARCHAR)
+#elseif ($tableColumn.type == $VARCHAR)
 			type: 'string'
-#elseif ($tableColumn.getType() == $CHAR && $tableColumn.isKey())
+#elseif ($tableColumn.type == $CHAR && $tableColumn.key)
 			type: 'string',
-#elseif ($tableColumn.getType() == $CHAR)
+#elseif ($tableColumn.type == $CHAR)
 			type: 'string'
-#elseif ($tableColumn.getType() == $BIGINT && $tableColumn.isKey())
+#elseif ($tableColumn.type == $BIGINT && $tableColumn.key)
 			type: 'bigint',
-#elseif ($tableColumn.getType() == $BIGINT)
+#elseif ($tableColumn.type == $BIGINT)
 			type: 'bigint'
-#elseif ($tableColumn.getType() == $SMALLINT && $tableColumn.isKey())
+#elseif ($tableColumn.type == $SMALLINT && $tableColumn.key)
 			type: 'smallint',
-#elseif ($tableColumn.getType() == $SMALLINT)
+#elseif ($tableColumn.type == $SMALLINT)
 			type: 'smallint'
-#elseif ($tableColumn.getType() == $FLOAT && $tableColumn.isKey())
+#elseif ($tableColumn.type == $FLOAT && $tableColumn.key)
 			type: 'float',
-#elseif ($tableColumn.getType() == $FLOAT)
+#elseif ($tableColumn.type == $FLOAT)
 			type: 'float'
-#elseif ($tableColumn.getType() == $DOUBLE && $tableColumn.isKey())
+#elseif ($tableColumn.type == $DOUBLE && $tableColumn.key)
 			type: 'double',
-#elseif ($tableColumn.getType() == $DOUBLE)
+#elseif ($tableColumn.type == $DOUBLE)
 			type: 'double'
-#elseif ($tableColumn.getType() == $DATE && $tableColumn.isKey())
+#elseif ($tableColumn.type == $DATE && $tableColumn.key)
 			type: 'date',
-#elseif ($tableColumn.getType() == $DATE)
+#elseif ($tableColumn.type == $DATE)
 			type: 'date'
-#elseif ($tableColumn.getType() == $TIME && $tableColumn.isKey())
+#elseif ($tableColumn.type == $TIME && $tableColumn.key)
 			type: 'time',
-#elseif ($tableColumn.getType() == $TIME)
+#elseif ($tableColumn.type == $TIME)
 			type: 'time'
-#elseif ($tableColumn.getType() == $TIMESTAMP && $tableColumn.isKey())
+#elseif ($tableColumn.type == $TIMESTAMP && $tableColumn.key)
 			type: 'timestamp',
-#elseif ($tableColumn.getType() == $TIMESTAMP)
+#elseif ($tableColumn.type == $TIMESTAMP)
 			type: 'timestamp'
 #else
  			type: 'unknown',
 #end
-#if ($tableColumn.isKey())
+#if ($tableColumn.key)
 			key: 'true',
 			required: 'true'
 #end
@@ -281,47 +282,47 @@ exports.metadata = function() {
 function createEntity(resultSet) {
     var result = {};
 #foreach ($tableColumn in $tableColumns)
-#if ($tableColumn.getType() == $INTEGER)
-	result.${tableColumn.getName().toLowerCase()} = resultSet.getInt('${tableColumn.getName()}');
-#elseif ($tableColumn.getType() == $VARCHAR)
-    result.${tableColumn.getName().toLowerCase()} = resultSet.getString('${tableColumn.getName()}');
-#elseif ($tableColumn.getType() == $CHAR)
-    result.${tableColumn.getName().toLowerCase()} = resultSet.getString('${tableColumn.getName()}');
-#elseif ($tableColumn.getType() == $BIGINT)
-    result.${tableColumn.getName().toLowerCase()} = resultSet.getLong('${tableColumn.getName()}');
-#elseif ($tableColumn.getType() == $SMALLINT)
-    result.${tableColumn.getName().toLowerCase()} = resultSet.getShort('${tableColumn.getName()}');
-#elseif ($tableColumn.getType() == $FLOAT)
-    result.${tableColumn.getName().toLowerCase()} = resultSet.getFloat('${tableColumn.getName()}');
-#elseif ($tableColumn.getType() == $DOUBLE)
-    result.${tableColumn.getName().toLowerCase()} = resultSet.getDouble('${tableColumn.getName()}');
-#elseif ($tableColumn.getType() == $DATE)
-    if (resultSet.getDate('${tableColumn.getName()}') !== null) {
-		result.${tableColumn.getName().toLowerCase()} = convertToDateString(new Date(resultSet.getDate('${tableColumn.getName()}').getTime()));
+#if ($tableColumn.type == $INTEGER)
+	result.${tableColumn.name.toLowerCase()} = resultSet.getInt('${tableColumn.name}');
+#elseif ($tableColumn.type == $VARCHAR)
+    result.${tableColumn.name.toLowerCase()} = resultSet.getString('${tableColumn.name}');
+#elseif ($tableColumn.type == $CHAR)
+    result.${tableColumn.name.toLowerCase()} = resultSet.getString('${tableColumn.name}');
+#elseif ($tableColumn.type == $BIGINT)
+    result.${tableColumn.name.toLowerCase()} = resultSet.getLong('${tableColumn.name}');
+#elseif ($tableColumn.type == $SMALLINT)
+    result.${tableColumn.name.toLowerCase()} = resultSet.getShort('${tableColumn.name}');
+#elseif ($tableColumn.type == $FLOAT)
+    result.${tableColumn.name.toLowerCase()} = resultSet.getFloat('${tableColumn.name}');
+#elseif ($tableColumn.type == $DOUBLE)
+    result.${tableColumn.name.toLowerCase()} = resultSet.getDouble('${tableColumn.name}');
+#elseif ($tableColumn.type == $DATE)
+    if (resultSet.getDate('${tableColumn.name}') !== null) {
+		result.${tableColumn.name.toLowerCase()} = convertToDateString(new Date(resultSet.getDate('${tableColumn.name}').getTime()));
     } else {
-        result.${tableColumn.getName().toLowerCase()} = null;
+        result.${tableColumn.name.toLowerCase()} = null;
     }
-#elseif ($tableColumn.getType() == $TIME)
-    if (resultSet.getTime('${tableColumn.getName()}') !== null) {
-        result.${tableColumn.getName().toLowerCase()} = new Date(resultSet.getTime('${tableColumn.getName()}').getTime()).toTimeString();
+#elseif ($tableColumn.type == $TIME)
+    if (resultSet.getTime('${tableColumn.name}') !== null) {
+        result.${tableColumn.name.toLowerCase()} = new Date(resultSet.getTime('${tableColumn.name}').getTime()).toTimeString();
     } else {
-        result.${tableColumn.getName().toLowerCase()} = null;
+        result.${tableColumn.name.toLowerCase()} = null;
     }
-#elseif ($tableColumn.getType() == $TIMESTAMP)
-    if (resultSet.getTimestamp('${tableColumn.getName()}') !== null) {
-        result.${tableColumn.getName().toLowerCase()} = new Date(resultSet.getTimestamp('${tableColumn.getName()}').getTime());
+#elseif ($tableColumn.type == $TIMESTAMP)
+    if (resultSet.getTimestamp('${tableColumn.name}') !== null) {
+        result.${tableColumn.name.toLowerCase()} = new Date(resultSet.getTimestamp('${tableColumn.name}').getTime());
     } else {
-        result.${tableColumn.getName().toLowerCase()} = null;
+        result.${tableColumn.name.toLowerCase()} = null;
     }
 #else
-    // not supported type: ${tableColumn.getName()}
+    // not supported type: ${tableColumn.name}
 #end
 #end
     return result;
 }
 
 #foreach ($tableColumn in $tableColumns)
-#if ($tableColumn.getType() == $DATE)
+#if ($tableColumn.type == $DATE)
 function convertToDateString(date) {
     var fullYear = date.getFullYear();
     var month = date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth();
