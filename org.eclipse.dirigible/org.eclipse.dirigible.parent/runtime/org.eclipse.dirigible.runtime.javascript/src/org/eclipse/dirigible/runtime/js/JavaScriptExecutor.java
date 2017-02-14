@@ -95,9 +95,12 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 			try {
 				if (request != null) {
 					String engine = request.getParameter(IJavaScriptEngineExecutor.JS_ENGINE_TYPE);
+					String userAgent = request.getHeader("User-Agent");
 					if (IJavaScriptEngineExecutor.JS_TYPE_NASHORN.equalsIgnoreCase(engine)) {
 						javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_NASHORN, this);
-					} else {
+					} else if(userAgent.contains("Chrome")) {
+						javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_V8, this);
+					}else{
 						// Hard-coded defaults to Rhino until Nashorn incompatibilities get solved
 						javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_RHINO, this);
 					}

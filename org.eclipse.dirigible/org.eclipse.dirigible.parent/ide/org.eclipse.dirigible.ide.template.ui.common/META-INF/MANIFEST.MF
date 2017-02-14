@@ -21,12 +21,14 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
  com.google.gson,
  org.eclipse.dirigible.repository.ext
 Export-Package: org.eclipse.dirigible.ide.template.ui.common,
- org.eclipse.dirigible.ide.template.ui.common.service
+ org.eclipse.dirigible.ide.template.ui.common.service,
+ org.eclipse.dirigible.ide.template.ui.common.table
 Import-Package: javax.servlet,
  javax.servlet.http,
  org.eclipse.dirigible.ide.common.io,
  org.eclipse.dirigible.ide.ui.common.validation,
  org.eclipse.dirigible.ide.workspace.ui.viewer,
+ org.eclipse.dirigible.repository.datasource,
  org.eclipse.dirigible.repository.logging,
  org.eclipse.dirigible.repository.velocity
 Bundle-ClassPath: .,

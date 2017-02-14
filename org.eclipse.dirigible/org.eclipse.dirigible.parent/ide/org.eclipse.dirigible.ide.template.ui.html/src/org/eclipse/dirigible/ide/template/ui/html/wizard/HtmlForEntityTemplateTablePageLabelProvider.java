@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
+import org.eclipse.dirigible.ide.template.ui.common.table.TableColumn;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;

@@ -12,6 +12,16 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.dirigible.ide.workspace.ui.view.Menu.generate">
+         <command
+               commandId="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileForEntityCommandHandler"
+               icon="icons/wizard_mobile-applications.png"
+               label="Mobile Application for Entity Service"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
    <extension point="org.eclipse.ui.commands">
       <command
@@ -19,6 +29,12 @@
             id="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileCommandHandler"
             name="Mobile App">
       </command>
+    <command
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileForEntityCommandHandler"
+            id="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileForEntityCommandHandler"
+            name="Mobile App for Entity Service">
+      </command>
+      
    </extension>
    
    <extension point="org.eclipse.dirigible.ide.workspace.ui.new.menu">
@@ -30,6 +46,34 @@
             imagePrefix="/icons/"
             imageName="wizard_mobile-applications.png"
             defaultHandler="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileCommandHandler">
+        </newMenuItem>
+        <newMenuItem
+            text="Mobile App"
+            toolTip="Mobile App"
+            order="9"
+            imageBundle="org.eclipse.dirigible.ide.template.ui.mobile"
+            imagePrefix="/icons/"
+            imageName="wizard_mobile-applications.png"
+            defaultHandler="org.eclipse.dirigible.ide.template.ui.mobile.command.MobileForEntityCommandHandler">
+             <visibleWhen
+                     checkEnabled="false">
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate
+                           ifEmpty="false"
+                           operator="and">
+                        <instanceof
+                              value="org.eclipse.core.resources.IFile">
+                        </instanceof>
+                        <test
+                              property="org.eclipse.core.resources.extension"
+                              value="entity">
+                        </test>
+                     </iterate>
+                  </and>
+               </visibleWhen>
         </newMenuItem>
  	</extension>
  	

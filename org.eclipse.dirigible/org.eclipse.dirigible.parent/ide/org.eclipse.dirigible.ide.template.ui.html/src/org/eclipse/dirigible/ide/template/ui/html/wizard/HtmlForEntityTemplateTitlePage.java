@@ -19,7 +19,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
+import org.eclipse.dirigible.ide.template.ui.common.table.ContentForEntityModel;
 import org.eclipse.dirigible.ide.workspace.ui.shared.FocusableWizardPage;
 
 public class HtmlForEntityTemplateTitlePage extends FocusableWizardPage {
@@ -34,11 +34,11 @@ public class HtmlForEntityTemplateTitlePage extends FocusableWizardPage {
 
 	private static final String PAGE_NAME = "org.eclipse.dirigible.ide.template.ui.html.wizard.HtmlForEntityTemplateParametersPage"; //$NON-NLS-1$
 
-	private HtmlForEntityTemplateModel model;
+	private ContentForEntityModel model;
 
 	private Text pageTitleText;
 
-	public HtmlForEntityTemplateTitlePage(HtmlForEntityTemplateModel model) {
+	public HtmlForEntityTemplateTitlePage(ContentForEntityModel model) {
 		super(PAGE_NAME);
 		this.model = model;
 		setTitle(PAGE_TITLE);

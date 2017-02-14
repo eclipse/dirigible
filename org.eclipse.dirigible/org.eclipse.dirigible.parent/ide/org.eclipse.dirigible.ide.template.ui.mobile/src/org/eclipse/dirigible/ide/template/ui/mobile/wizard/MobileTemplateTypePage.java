@@ -29,7 +29,11 @@ public class MobileTemplateTypePage extends TemplateTypeWizardPage {
 	private MobileTemplateModel model;
 
 	protected MobileTemplateTypePage(MobileTemplateModel model) {
-		super(PAGE_NAME);
+		this(model, PAGE_NAME);
+	}
+
+	public MobileTemplateTypePage(MobileTemplateModel model, String pageName) {
+		super(pageName);
 		this.model = model;
 		setTitle(SELECTION_OF_TEMPLATE_TYPE);
 		setDescription(SELECT_THE_TYPE_OF_THE_TEMPLATE_WHICH_WILL_BE_USED_DURING_GENERATION);

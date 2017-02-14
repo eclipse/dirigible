@@ -15,12 +15,13 @@ import org.eclipse.dirigible.ide.common.status.StatusLineManagerUtil;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateWizard;
+import org.eclipse.dirigible.ide.template.ui.common.table.ContentForEntityModel;
 import org.eclipse.jface.wizard.IWizardPage;
 
 public class HtmlForEntityTemplateWizard extends TemplateWizard {
 
 	private static final String CREATE_USER_INTERFACE_FOR_RES_TFUL_PERSISTENCE_SERVICE = Messages.HtmlForEntityTemplateWizard_CREATE_USER_INTERFACE_FOR_RES_TFUL_PERSISTENCE_SERVICE;
-	private final HtmlForEntityTemplateModel model;
+	private final ContentForEntityModel model;
 	private final HtmlForEntityTemplateTablePage tablePage;
 	private final HtmlForEntityTemplateTypePage typesPage;
 	private final HtmlForEntityTemplateTargetLocationPage targetLocationPage;

@@ -6,6 +6,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <property name="component.exclusion.patterns" value="**/*.source_*.jar"/>
         <property name="context-root" value="ROOT"/>
-        <property name="java-output-path" value="/Releng - Runtime/target/classes"/>
+        <property name="java-output-path" value="/runtime/target/classes"/>
     </wb-module>
 </project-modules>

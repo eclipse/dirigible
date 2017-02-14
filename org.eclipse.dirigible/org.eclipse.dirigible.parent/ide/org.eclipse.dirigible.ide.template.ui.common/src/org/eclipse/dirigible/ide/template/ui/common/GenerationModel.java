@@ -192,9 +192,43 @@ public abstract class GenerationModel {
 		return in;
 	}
 
-	protected abstract IValidationStatus validateLocation();
+	public IValidationStatus validate() {
+		IValidationStatus locationStatus = validateLocation();
+		if (locationStatus.hasErrors()) {
+			return locationStatus;
+		}
+		IValidationStatus templateStatus = validateTemplate();
+		if (locationStatus.hasErrors()) {
+			return locationStatus;
+		}
 
-	protected abstract IValidationStatus validate();
+		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
+	}
+
+	public IValidationStatus validateLocation() {
+		IValidationStatus status;
+		try {
+			status = validateLocationGeneric();
+			if (status.hasErrors()) {
+				return status;
+			}
+			IPath location = new Path(getTargetLocation()).append(getFileName());
+			// TODO - more precise test for the location ../<artifact_type>/...
+			if (location.toString().indexOf(getArtifactType()) == -1) {
+				return ValidationStatus.createError(getTargetLocationErrorMessage());
+			}
+		} catch (Exception e) {
+			// temp workaround due to another bug - context menu is not context
+			// aware => target location and name are null (in the first page of
+			// the wizard)
+			return ValidationStatus.createError(""); //$NON-NLS-1$
+		}
+		return status;
+	}
+
+	protected abstract String getArtifactType();
+
+	protected abstract String getTargetLocationErrorMessage();
 
 	public String getFileNameNoExtension() {
 		return CommonUtils.getFileNameNoExtension(fileName);

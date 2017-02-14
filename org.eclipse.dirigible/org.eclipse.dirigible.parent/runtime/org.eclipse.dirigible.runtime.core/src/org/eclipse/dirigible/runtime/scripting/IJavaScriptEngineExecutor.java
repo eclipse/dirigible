@@ -14,6 +14,8 @@ public interface IJavaScriptEngineExecutor {
 
 	public static final String JS_TYPE_NASHORN = "nashorn";
 
+	public static final String JS_TYPE_V8 = "v8";
+
 	public Object executeServiceModule(HttpServletRequest request, HttpServletResponse response, Object input, String module,
 			Map<Object, Object> executionContext) throws IOException;
 

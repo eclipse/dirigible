@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.IJavaScriptEngineExecutor;
 import org.eclipse.dirigible.runtime.scripting.IJavaScriptExecutor;
+import org.eclipse.dirigible.runtime.scripting.ISourceProvider;
+import org.eclipse.dirigible.runtime.scripting.RepositoryModuleSourceProvider;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 
@@ -87,9 +89,9 @@ public class NashornJavaScriptEngineExecutor implements IJavaScriptEngineExecuto
 
 	}
 
-	private NashornRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
-		NashornRepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
-		repositoryModuleSourceProvider = new NashornRepositoryModuleSourceProvider(this.javaScriptExecutor, this.javaScriptExecutor.getRepository(),
+	private RepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
+		RepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
+		repositoryModuleSourceProvider = new RepositoryModuleSourceProvider(this.javaScriptExecutor, this.javaScriptExecutor.getRepository(),
 				this.javaScriptExecutor.getRootPaths());
 		return repositoryModuleSourceProvider;
 	}

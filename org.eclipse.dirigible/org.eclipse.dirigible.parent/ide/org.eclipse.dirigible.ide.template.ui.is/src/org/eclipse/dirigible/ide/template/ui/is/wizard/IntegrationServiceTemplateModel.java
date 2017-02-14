@@ -10,11 +10,7 @@
 
 package org.eclipse.dirigible.ide.template.ui.is.wizard;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
-import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
-import org.eclipse.dirigible.ide.ui.common.validation.ValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 @SuppressWarnings("javadoc")
@@ -60,39 +56,13 @@ public class IntegrationServiceTemplateModel extends GenerationModel {
 	}
 
 	@Override
-	public IValidationStatus validate() {
-		IValidationStatus locationStatus = validateLocation();
-		if (locationStatus.hasErrors()) {
-			return locationStatus;
-		}
-		IValidationStatus templateStatus = validateTemplate();
-		if (locationStatus.hasErrors()) {
-			return locationStatus;
-		}
-
-		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
+	protected String getArtifactType() {
+		return ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES;
 	}
 
 	@Override
-	public IValidationStatus validateLocation() {
-		IValidationStatus status;
-		try {
-			status = validateLocationGeneric();
-			if (status.hasErrors()) {
-				return status;
-			}
-			IPath location = new Path(getTargetLocation()).append(getFileName());
-			// TODO - more precise test for the location ../IntegrationServices/...
-			if (location.toString().indexOf(ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES) == -1) {
-				return ValidationStatus.createError(TARGET_LOCATION_IS_NOT_ALLOWED);
-			}
-		} catch (Exception e) {
-			// temp workaround due to another bug - context menu is not context
-			// aware => target location and name are null (in the first page of
-			// the wizard)
-			return ValidationStatus.createError(""); //$NON-NLS-1$
-		}
-		return status;
+	protected String getTargetLocationErrorMessage() {
+		return TARGET_LOCATION_IS_NOT_ALLOWED;
 	}
 
 }

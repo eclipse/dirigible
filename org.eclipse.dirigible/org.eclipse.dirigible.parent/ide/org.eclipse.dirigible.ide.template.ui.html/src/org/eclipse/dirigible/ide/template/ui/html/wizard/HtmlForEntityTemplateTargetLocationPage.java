@@ -12,6 +12,7 @@ package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTargetLocationPage;
+import org.eclipse.dirigible.ide.template.ui.common.table.ContentForEntityModel;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 
@@ -25,9 +26,9 @@ public class HtmlForEntityTemplateTargetLocationPage extends TemplateTargetLocat
 
 	private static final String PAGE_NAME = "org.eclipse.dirigible.ide.template.ui.html.wizard.HtmlForEntityTemplateTargetLocationPage"; //$NON-NLS-1$
 
-	private HtmlForEntityTemplateModel model;
+	private ContentForEntityModel model;
 
-	protected HtmlForEntityTemplateTargetLocationPage(HtmlForEntityTemplateModel model) {
+	protected HtmlForEntityTemplateTargetLocationPage(ContentForEntityModel model) {
 		super(PAGE_NAME);
 		this.model = model;
 		setTitle(Messages.HtmlForEntityTemplateTargetLocationPage_TARGET_LOCATION);

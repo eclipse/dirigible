@@ -1,0 +1,6 @@
+{
+  "main": "${fileName}",
+  "dependencies": {
+    "tabris": "^1.9.0"
+  }
+}

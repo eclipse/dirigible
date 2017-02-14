@@ -53,3 +53,4 @@ exports.WORKER_CATEGORY_DATA_STRUCTURES = "DataStructures";
 exports.WORKER_CATEGORY_SCRIPTING_SERVICES = "ScriptingServices";
 exports.WORKER_CATEGORY_WEB_CONTENT = "WebContent";
 exports.WORKER_CATEGORY_WEB_CONTENT_FOR_ENTITY = "WebContentForEntity";
+exports.WORKER_CATEGORY_MOBILE_APP_FOR_ENTITY = "MobileAppForEntity";

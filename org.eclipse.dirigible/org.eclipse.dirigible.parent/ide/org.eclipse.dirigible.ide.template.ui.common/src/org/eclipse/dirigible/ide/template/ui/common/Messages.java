@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.ide.template.ui.common;
@@ -37,6 +36,8 @@ public class Messages extends NLS {
 	public static String TemplateTypeWizardPage_EXTENSION_POINT_0_COULD_NOT_BE_FOUND;
 	public static String TemplateTypeWizardPage_SELECT_TEMPLATE_TYPE_FORM_THE_LIST;
 	public static String TemplateWizard_GENERATION_FAILED;
+	public static String WizardForEntityTemplateModel_TARGET_LOCATION_IS_NOT_ALLOWED;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

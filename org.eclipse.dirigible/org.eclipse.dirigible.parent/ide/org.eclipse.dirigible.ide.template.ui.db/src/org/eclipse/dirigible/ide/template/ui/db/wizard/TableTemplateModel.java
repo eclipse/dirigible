@@ -55,20 +55,6 @@ public class TableTemplateModel extends GenerationModel {
 	}
 
 	@Override
-	public IValidationStatus validate() {
-		IValidationStatus locationStatus = validateLocation();
-		if (locationStatus.hasErrors()) {
-			return locationStatus;
-		}
-		IValidationStatus templateStatus = validateTemplate();
-		if (locationStatus.hasErrors()) {
-			return locationStatus;
-		}
-
-		return ValidationStatus.getValidationStatus(locationStatus, templateStatus);
-	}
-
-	@Override
 	public IValidationStatus validateLocation() {
 		IValidationStatus status;
 		try {
@@ -95,6 +81,16 @@ public class TableTemplateModel extends GenerationModel {
 			return ValidationStatus.createError(""); //$NON-NLS-1$
 		}
 		return status;
+	}
+
+	@Override
+	protected String getArtifactType() {
+		return ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES;
+	}
+
+	@Override
+	protected String getTargetLocationErrorMessage() {
+		return TARGET_LOCATION_IS_NOT_ALLOWED;
 	}
 
 	private boolean isTableExists(String tableName) {

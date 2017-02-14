@@ -12,7 +12,6 @@ package org.eclipse.dirigible.ide.template.ui.mobile.wizard;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTargetLocationPage;
-import org.eclipse.dirigible.ide.ui.common.validation.IValidationStatus;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 
@@ -31,7 +30,11 @@ public class MobileTemplateTargetLocationPage extends TemplateTargetLocationPage
 	private MobileTemplateModel model;
 
 	protected MobileTemplateTargetLocationPage(MobileTemplateModel model) {
-		super(PAGE_NAME);
+		this(model, PAGE_NAME);
+	}
+
+	protected MobileTemplateTargetLocationPage(MobileTemplateModel model, String pageName) {
+		super(pageName);
 		this.model = model;
 		setTitle(TARGET_LOCATION);
 		setDescription(SELECT_THE_TARGET_LOCATION_AND_THE_TARGET_FILE_NAME);
@@ -47,7 +50,8 @@ public class MobileTemplateTargetLocationPage extends TemplateTargetLocationPage
 		if ((getModel().getFileName() == null) || "".equals(getModel().getFileName())) { //$NON-NLS-1$
 			return DEFAULT_FILE_NAME;
 		}
-		return (preset == null) ? getModel().getFileName() : CommonUtils.getFileNameNoExtension(preset) + FILE_EXTENSION;
+		return (preset == null) ? getModel().getFileName()
+				: CommonUtils.getFileNameNoExtension(preset) + FILE_EXTENSION;
 
 	}
 

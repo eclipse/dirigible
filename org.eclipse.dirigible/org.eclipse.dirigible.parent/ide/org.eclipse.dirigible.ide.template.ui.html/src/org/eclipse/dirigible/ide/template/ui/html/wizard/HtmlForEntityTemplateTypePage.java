@@ -12,6 +12,7 @@ package org.eclipse.dirigible.ide.template.ui.html.wizard;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeWizardPage;
+import org.eclipse.dirigible.ide.template.ui.common.table.ContentForEntityModel;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 public class HtmlForEntityTemplateTypePage extends TemplateTypeWizardPage {
@@ -36,9 +37,9 @@ public class HtmlForEntityTemplateTypePage extends TemplateTypeWizardPage {
 
 	private static final String PAGE_NAME = "org.eclipse.dirigible.ide.template.ui.html.wizard.HtmlForEntityTemplateTypePage"; //$NON-NLS-1$
 
-	private HtmlForEntityTemplateModel model;
+	private ContentForEntityModel model;
 
-	public HtmlForEntityTemplateTypePage(HtmlForEntityTemplateModel model) {
+	public HtmlForEntityTemplateTypePage(ContentForEntityModel model) {
 		super(PAGE_NAME);
 		this.model = model;
 		setTitle(SELECTION_OF_TEMPLATE_TYPE);

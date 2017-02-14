@@ -10,20 +10,22 @@
 
 package org.eclipse.dirigible.ide.template.ui.js.service;
 
+import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeDiscriminator;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 /**
  * Class holding the discrimination parameters for the Scripting Services templates
  */
-public class ScriptingServiceTemplateTypeDiscriminator {
+public class ScriptingServiceTemplateTypeDiscriminator implements TemplateTypeDiscriminator {
 
 	/**
 	 * Category of the template
 	 *
 	 * @return the category
 	 */
-	public static String getCategory() {
+	@Override
+	public String getCategory() {
 		return ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
 	}
 
@@ -32,7 +34,8 @@ public class ScriptingServiceTemplateTypeDiscriminator {
 	 *
 	 * @return the templates path
 	 */
-	public static String getTemplatesPath() {
+	@Override
+	public String getTemplatesPath() {
 		return IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_SCRIPTING_SERVICES;
 	}
 

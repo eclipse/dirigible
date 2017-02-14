@@ -10,20 +10,22 @@
 
 package org.eclipse.dirigible.ide.template.ui.db.service;
 
+import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeDiscriminator;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 
 /**
  * Class holding the discrimination parameters for the Data Structure templates
  */
-public class DataStructureTemplateTypeDiscriminator {
+public class DataStructureTemplateTypeDiscriminator implements TemplateTypeDiscriminator {
 
 	/**
 	 * Category of the template
 	 *
 	 * @return the category
 	 */
-	public static String getCategory() {
+	@Override
+	public String getCategory() {
 		return ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES;
 	}
 
@@ -32,7 +34,8 @@ public class DataStructureTemplateTypeDiscriminator {
 	 *
 	 * @return the templates path
 	 */
-	public static String getTemplatesPath() {
+	@Override
+	public String getTemplatesPath() {
 		return IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES_DATA_STRUCTURES;
 	}
 

@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.ide.template.ui.db.wizard;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
+import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeDiscriminator;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateTypeWizardPage;
 import org.eclipse.dirigible.ide.template.ui.db.service.DataStructureTemplateTypeDiscriminator;
 
@@ -27,6 +28,8 @@ public class DataStructureTemplateTypePage extends TemplateTypeWizardPage {
 
 	private TableTemplateModel model;
 
+	private static final TemplateTypeDiscriminator typeDiscriminator = new DataStructureTemplateTypeDiscriminator();
+
 	protected DataStructureTemplateTypePage(TableTemplateModel model) {
 		super(PAGE_NAME);
 		this.model = model;
@@ -41,12 +44,12 @@ public class DataStructureTemplateTypePage extends TemplateTypeWizardPage {
 
 	@Override
 	protected String getCategory() {
-		return DataStructureTemplateTypeDiscriminator.getCategory();
+		return typeDiscriminator.getCategory();
 	}
 
 	@Override
 	protected String getTemplatesPath() {
-		return DataStructureTemplateTypeDiscriminator.getTemplatesPath();
+		return typeDiscriminator.getTemplatesPath();
 	}
 
 }

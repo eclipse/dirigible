@@ -68,6 +68,7 @@ public interface ICommonConstants {
 		public final static String WIKI_CONTENT = "WikiContent"; //$NON-NLS-1$
 		public final static String MOBILE_APPLICATIONS = "MobileApplications"; //$NON-NLS-1$
 		public final static String EXTENSION_DEFINITIONS = "ExtensionDefinitions"; //$NON-NLS-1$
+		public static final String MOBILE_APPLICATION_FOR_ENTITY = "MobileAppForEntity";
 	}
 
 	public interface ENGINE_TYPE {

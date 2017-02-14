@@ -15,6 +15,8 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.ide.template.ui.common.table.ContentForEntityModel;
+import org.eclipse.dirigible.ide.template.ui.common.table.TableColumn;
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -37,14 +39,14 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 	private static final String PARAMETER_ENTITY_NAME = "entityName"; //$NON-NLS-1$
 	private static final String PARAMETER_PRIMARY_KEY = "primaryKey"; //$NON-NLS-1$
 
-	private HtmlForEntityTemplateModel model;
+	private ContentForEntityModel model;
 
 	/**
 	 * Constructor
 	 *
 	 * @param model
 	 */
-	public HtmlForEntityTemplateGenerator(HtmlForEntityTemplateModel model) {
+	public HtmlForEntityTemplateGenerator(ContentForEntityModel model) {
 		this.model = model;
 	}
 

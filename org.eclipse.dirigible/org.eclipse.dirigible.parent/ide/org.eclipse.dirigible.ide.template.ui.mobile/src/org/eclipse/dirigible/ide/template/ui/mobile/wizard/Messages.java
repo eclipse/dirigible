@@ -24,6 +24,11 @@ public class Messages extends NLS {
 	public static String MobileTemplateTypePage_SELECT_THE_TYPE_OF_THE_TEMPLATE_WHICH_WILL_BE_USED_DURING_GENERATION;
 	public static String MobileTemplateTypePage_SELECTION_OF_TEMPLATE_TYPE;
 	public static String MobileTemplateWizard_CREATE_MOBILE_APP;
+	
+	public static String MobileForEntityTemplateTitlePage_INPUT_THE_PAGE_TITLE;
+	public static String MobileForEntityTemplateWizard_CREATE_USER_MOBILE_FOR_RES_TFUL_PERSISTENCE_SERVICE;
+	public static String MobileForEntityTemplateTitlePage_SET_THE_APP_TITLE_WHICH_WILL_BE_USED_DURING_THE_GENERATION;
+
 
 	static {
 		// initialize resource bundle

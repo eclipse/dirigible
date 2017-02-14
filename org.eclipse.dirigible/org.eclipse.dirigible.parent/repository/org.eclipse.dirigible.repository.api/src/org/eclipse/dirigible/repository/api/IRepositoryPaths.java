@@ -63,6 +63,9 @@ public interface IRepositoryPaths {
 	/** The Mobile Applications templates root folder of the Repository structure */
 	public static final String DB_DIRIGIBLE_TEMPLATES_MOBILE_APPLICATIONS = DB_DIRIGIBLE_TEMPLATES + "MobileApplications/";
 
+	/** The Mobile Application for entity templates root folder of the Repository structure */
+	public static final String DB_DIRIGIBLE_TEMPLATES_MOBILE_APP_FOR_ENTITY = DB_DIRIGIBLE_TEMPLATES + "MobileAppForEntity/";
+
 	/** The Integration Services templates root folder of the Repository structure */
 	public static final String DB_DIRIGIBLE_TEMPLATES_INTEGRATION_SERVICES = DB_DIRIGIBLE_TEMPLATES + "IntegrationServices/";
 
