@@ -1,19 +1,26 @@
 {  
-    "name": "Launchpad Item",
-    "description": "Launchpad Item",
-    "image": "launchpad-item.png",
-    "preview": "launchpad-item-preview.png",
+    "name":"Launchpad Item",
+    "description":"Launchpad Item",
+    "image":"launchpad-item.png",
+    "preview":"launchpad-item-preview.png",
     "sources": [{
-        "name": "WebContent/items/index.html",
-        "action": "generate"
+        "name":"WebContent/items/index.html",
+        "rootFolder":"WebContent",
+        "packagePath":"items",
+        "action":"generate",
+        "rename":"%s"
     }, {
-        "name": "ScriptingServices/extension/item.js",
-        "rename": "%s",
-        "action": "generate"
+        "name":"ScriptingServices/extension/item.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"extension",
+        "action":"generate",
+        "rename":"%s"
     }, {
-        "name": "ExtensionDefinitions/extensions/item.extension",
-        "rename": "launchpad_%s",
-        "action": "generate"
+        "name":"ExtensionDefinitions/extensions/item.extension",
+        "rootFolder":"ExtensionDefinitions",
+        "packagePath":"extensions",
+        "action":"generate",
+        "rename":"launchpad_%s"
     }],
     "parameters": [{
         "name":"templateType",

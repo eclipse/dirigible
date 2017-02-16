@@ -1,17 +1,36 @@
-{"name":"New or Edit Entity",
- "description":"New or edit entity page based on Bootstrap and AngularJS",
- "image":"ui-for-new-entity.png",
- "sources":[
-   {"name":"ui-for-new-or-edit-entity.html", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"templateType", "required":"true"},
-   {"name":"fileName", "required":"true"},
-   {"name":"projectName", "required":"true"},
-   {"name":"packageName", "required":"true"},
-   {"name":"pageTitle", "required":"true"},
-   {"name":"tableName", "required":"true"},
-   {"name":"columns", "required":"true"},
-   {"name":"serviceEndpoint", "required":"true"}
-   ]
+{
+    "name":"New or Edit Entity",
+    "description":"New or edit entity page based on Bootstrap and AngularJS",
+    "image":"ui-for-new-entity.png",
+    "sources":[{
+        "name":"ui-for-new-or-edit-entity.html",
+        "rootFolder":"WebContent",
+        "action":"generate",
+        "rename":"%s"
+    }],
+    "parameters":[{
+        "name":"templateType",
+        "required":"true"
+    }, {
+        "name":"fileName",
+        "required":"true"
+    }, {
+        "name":"projectName",
+        "required":"true"
+    }, {
+        "name":"packageName",
+        "required":"true"
+    }, {
+        "name":"pageTitle",
+        "required":"true"
+    }, {
+        "name":"tableName",
+        "required":"true"
+    }, {
+        "name":"columns",
+        "required":"true"
+    }, {
+        "name":"serviceEndpoint",
+        "required":"true"
+    }]
 }

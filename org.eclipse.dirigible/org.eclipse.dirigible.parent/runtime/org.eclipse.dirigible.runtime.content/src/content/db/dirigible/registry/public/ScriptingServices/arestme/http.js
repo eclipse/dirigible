@@ -100,7 +100,7 @@ var HttpController = exports.HttpController = function(oConfiguration){
 			isConsumeMatched = true;
 		} else  {
 			var matchedConsumesMIME;
-			if(consumesMediaTypes && consumesMediaTypes.length){
+			if(contentTypeMediaTypes && consumesMediaTypes && consumesMediaTypes.length){
 				matchedConsumesMIME = contentTypeMediaTypes.filter(function(contentTypeMediaType) {
 				    return consumesMediaTypes.indexOf(contentTypeMediaType) > -1;
 				});
@@ -272,4 +272,8 @@ HttpController.prototype.closeResponse = function(){
 	var response = require("net/http/response");
 	response.flush();
 	response.close();
+};
+
+exports.get = function(oConfiguration){
+	return new HttpController(oConfiguration);
 };

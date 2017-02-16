@@ -3,16 +3,16 @@
   "query":"SELECT a.${packageName.toUpperCase()}B_ID,
 	  a.${packageName.toUpperCase()}B_SHORT_TEXT,
 	  a.${packageName.toUpperCase()}B_DESCRIPTION,
-	  u.USRU_UNAME,
-	  u.USRU_PIC,
+	  u.USER_USERNAME,
 	  a.${packageName.toUpperCase()}B_PUBLISH_TIME,
 	  a.${packageName.toUpperCase()}B_LASTMODIFIED_TIME,
 	  a.${packageName.toUpperCase()}B_STATUS,
 	  a.${packageName.toUpperCase()}B_VISITS,
 	  a.${packageName.toUpperCase()}B_LOCKED,
 	  b.LATEST_UPDATE_TIME,
-	  b.REPLIES,
-	  b.PARTICIPANTS,
+	  b.REPLIES_COUNT,
+	  b.COMMENTS_COUNT,	  
+	  b.PARTICIPANTS_COUNT,
 	  c.TOTAL_VOTES,
 	  c.UPVOTES,
 	  c.DOWNVOTES,
@@ -20,11 +20,11 @@
 FROM ${packageName.toUpperCase()}_BOARD AS a 
 LEFT JOIN ${packageName.toUpperCase()}_DISCUSSION_STATS AS b ON b.${packageName.toUpperCase()}B_ID = a.${packageName.toUpperCase()}B_ID
 LEFT JOIN ${packageName.toUpperCase()}_BOARD_RATING AS c ON c.${packageName.toUpperCase()}B_ID = a.${packageName.toUpperCase()}B_ID
-LEFT JOIN USR_USER AS u ON u.USRU_UNAME = a.${packageName.toUpperCase()}B_USER
-ORDER BY b.LATEST_UPDATE_TIME, c.RATING, a.${packageName.toUpperCase()}B_VISITS, c.TOTAL_VOTES, b.REPLIES, b.PARTICIPANTS DESC",
+LEFT JOIN IAM_USERS AS u ON u.USER_USERNAME = a.${packageName.toUpperCase()}B_USER
+ORDER BY b.LATEST_UPDATE_TIME, c.RATING, a.${packageName.toUpperCase()}B_VISITS, c.TOTAL_VOTES, b.REPLIES_COUNT, b.PARTICIPANTS_COUNT, b.COMMENTS_COUNT DESC",
     "dependencies": [
         {"name": "${packageName.toUpperCase()}_DISCUSSION_STATS", "type": "VIEW"},
         {"name": "${packageName.toUpperCase()}_BOARD_RATING", "type": "VIEW"},
-        {"name": "USR_USER", "type": "TABLE"}
+        {"name": "IAM_USERS", "type": "TABLE"}
         ]
 }

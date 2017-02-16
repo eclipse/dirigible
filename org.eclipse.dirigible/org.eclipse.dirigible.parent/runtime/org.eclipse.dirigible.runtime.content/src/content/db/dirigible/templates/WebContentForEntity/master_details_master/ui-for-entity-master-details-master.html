@@ -47,8 +47,8 @@
 				<thead>
 					<tr>
 #foreach ($tableColumn in $tableColumns)
-#if($tableColumn.isVisible())
-						<th>${tableColumn.getLabel()}</th>
+#if($tableColumn.visible)
+						<th>${tableColumn.label}</th>
 #end
 #end
 					</tr>
@@ -57,11 +57,11 @@
 					<tr class="selected-{{entry._selected_}}" ng-repeat="entry in data"
 						ng-click="showInfoForEntry(entry)">
 #foreach ($tableColumn in $tableColumns)
-#if($tableColumn.isVisible())
-#if ($tableColumn.getWidgetType() == "date")
-						<td>{{entry.${tableColumn.getName()} | date:format}}</td>
+#if($tableColumn.visible)
+#if ($tableColumn.widgetType == "date")
+						<td>{{entry.${tableColumn.name} | date:format}}</td>
 #else
-						<td>{{entry.${tableColumn.getName()}}}</td>
+						<td>{{entry.${tableColumn.name}}}</td>
 #end
 #end
 #end
@@ -102,70 +102,70 @@
 						<div>
 				  
 #foreach ($tableColumn in $tableColumns)
-#if($tableColumn.isVisible())
-#if ($tableColumn.isKey())
+#if($tableColumn.visible)
+#if ($tableColumn.key)
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.getLabel()}</label>
+							<label>${tableColumn.label}</label>
 							<input type="text" class="form-control" 
-								ng-model="selectedEntry.${tableColumn.getName()}" readonly>
+								ng-model="selectedEntry.${tableColumn.name}" readonly>
 #else
-#if ($tableColumn.getWidgetType() == "date")
+#if ($tableColumn.widgetType == "date")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.getLabel()}</label>
+							<label>${tableColumn.label}</label>
 							<p class="input-group">
-				            	<input type="text" ng-model="selectedEntry.${tableColumn.getName()}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
-				               		uib-datepicker-popup="" is-open="${tableColumn.getName()}Status.opened" 
+				            	<input type="text" ng-model="selectedEntry.${tableColumn.name}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
+				               		uib-datepicker-popup="" is-open="${tableColumn.name}Status.opened" 
 				               		datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" 
 				               		required="required" style="" ng-readonly="operation == 'show'">
 						        <span class="input-group-btn">
-						        	<button type="button" class="btn btn-default" ng-click="${tableColumn.getName()}Open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+						        	<button type="button" class="btn btn-default" ng-click="${tableColumn.name}Open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
 						        </span>
 				           	</p>
-#elseif ($tableColumn.getWidgetType() == "textarea")
+#elseif ($tableColumn.widgetType == "textarea")
 						  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<label>${tableColumn.getLabel()}</label>
+							<label>${tableColumn.label}</label>
 							<textarea class="form-control" 
-								ng-model="selectedEntry.${tableColumn.getName()}" cols="50" rows="5" 
+								ng-model="selectedEntry.${tableColumn.name}" cols="50" rows="5" 
 								ng-readonly="operation == 'show'" required="required"></textarea>
-#elseif ($tableColumn.getWidgetType() == "dropdown")
+#elseif ($tableColumn.widgetType == "dropdown")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.getLabel()}</label>
+							<label>${tableColumn.label}</label>
 							<input type="hidden" class="form-control" 
-								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
 							<div>
-								<select class="form-control" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
+								<select class="form-control" ng-model="selectedEntry.${tableColumn.name}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
 							</div>
-#elseif ($tableColumn.getWidgetType() == "list")
+#elseif ($tableColumn.widgetType == "list")
 						  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<label>${tableColumn.getLabel()}</label>
+							<label>${tableColumn.label}</label>
 							<input type="hidden" class="form-control" 
-								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
 							<div>
-								<select class="form-control" multiple="true" ng-model="selectedEntry.${tableColumn.getName()}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
+								<select class="form-control" multiple="true" ng-model="selectedEntry.${tableColumn.name}" ng-options="option.ref_id as option.ref_name for option in refs" ng-disabled="operation == 'show'" required="required"></select>	
 							</div>
-#elseif ($tableColumn.getWidgetType() == "integer")
+#elseif ($tableColumn.widgetType == "integer")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.getLabel()}</label>
+							<label>${tableColumn.label}</label>
 							<input type="number" class="form-control text-right" pattern="\d*" step="1"
-								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
-#elseif ($tableColumn.getWidgetType() == "float")
+#elseif ($tableColumn.widgetType == "float")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.getLabel()}</label>
+							<label>${tableColumn.label}</label>
 							<input type="number" class="form-control text-right" pattern="[0-9]+([\.,][0-9]+)?" step="0.01"
-								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
 #else
-#if ($tableColumn.getSize() < 40)
+#if ($tableColumn.size < 40)
 				  		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 #else
 				 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 #end
-							<label>${tableColumn.getLabel()}</label>
+							<label>${tableColumn.label}</label>
 							<input type="text" class="form-control" 
-								ng-model="selectedEntry.${tableColumn.getName()}"
+								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
 #end
 #end
@@ -238,8 +238,8 @@
 						$scope.showEntry = true;
 						$scope.selectedEntry = entry;
 #foreach ($tableColumn in $tableColumns)
-#if ($tableColumn.isKey())
-						$scope.urlItems = urlItems + '?${tableColumn.getName()}=' + entry.${tableColumn.getName()};
+#if ($tableColumn.key)
+						$scope.urlItems = urlItems + '?${tableColumn.name}=' + entry.${tableColumn.name};
 #end
 #end
 					}
@@ -341,8 +341,8 @@
 			function deleteEntry(entry){
 				var primaryKey;
 #foreach ($tableColumn in $tableColumns) 
-#if ($tableColumn.isKey())
-				primaryKey = "${tableColumn.getName()}";
+#if ($tableColumn.key)
+				primaryKey = "${tableColumn.name}";
 #end 
 #end
 				var deleteUrl = url+"/"+entry[primaryKey];
@@ -377,11 +377,11 @@
   			$scope.format = $scope.formats[0];
 
 #foreach ($tableColumn in $tableColumns) 
-#if ($tableColumn.getWidgetType() == "date")
-			$scope.${tableColumn.getName()}Open = function($event) {
-				$scope.${tableColumn.getName()}Status.opened = true;
+#if ($tableColumn.widgetType == "date")
+			$scope.${tableColumn.name}Open = function($event) {
+				$scope.${tableColumn.name}Status.opened = true;
 			};
-			$scope.${tableColumn.getName()}Status = {
+			$scope.${tableColumn.name}Status = {
 				opened: false
 			};
 #end

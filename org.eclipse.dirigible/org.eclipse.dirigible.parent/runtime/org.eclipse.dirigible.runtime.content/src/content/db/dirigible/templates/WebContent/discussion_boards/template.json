@@ -1,117 +1,240 @@
 {  
-    "name": "Discussion Boards",
-    "description": "Discussion Boards Application",
-    "image": "dboards-icon.png",
-    "preview": "dboards-preview.png",
+    "name":"Discussion Boards",
+    "description":"Discussion Boards Application",
+    "image":"dboards-icon.png",
+    "preview":"dboards-preview.png",
     "sources": [{
-        "name": "WebContent/index.html",
-        "action": "generate"
+        "name":"WebContent/index.html",
+        "rootFolder":"WebContent",
+        "action":"generate",
+        "rename":"%s"
     }, {
-        "name": "WebContent/css/default.css",
-        "action": "copy"
+        "name":"WebContent/css/default.css",
+        "rootFolder":"WebContent",
+        "packagePath":"css",
+        "action":"copy"
     }, {
-        "name": "WebContent/css/angular-timeline.css",
-        "action": "copy"
+        "name":"WebContent/css/angular-timeline.css",
+        "rootFolder":"WebContent",
+        "packagePath":"css",
+        "action":"copy"
     }, {
-        "name": "WebContent/css/angular-timeline-bootstrap.css",
-        "action": "copy"
+        "name":"WebContent/css/angular-timeline-bootstrap.css",
+        "rootFolder":"WebContent",
+        "packagePath":"css",
+        "action":"copy"
     }, {
-        "name": "WebContent/css/angular-timeline-animations.css",
-        "action": "copy"
+        "name":"WebContent/css/angular-timeline-animations.css",
+        "rootFolder":"WebContent",
+        "packagePath":"css",
+        "action":"copy"
     }, {
-        "name": "WebContent/js/app.js",
-        "action": "copy"
+        "name":"WebContent/i18n/resourceBundle.json",
+        "rootFolder":"WebContent",
+        "packagePath":"i18n",
+        "action":"copy"
     }, {
-        "name": "WebContent/js/http-resources.js",
-        "action": "generate"
+        "name":"WebContent/i18n/resourceBundle_bg.json",
+        "rootFolder":"WebContent",
+        "packagePath":"i18n",
+        "action":"copy"
     }, {
-        "name": "WebContent/js/app-services.js",
-        "action": "copy"
+        "name":"WebContent/js/app.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"copy"
     }, {
-        "name": "WebContent/js/app-directives.js",
-        "action": "copy"
+        "name":"WebContent/js/http-resources.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"generate"
     }, {
-        "name": "WebContent/js/angular-timeline.js",
-        "action": "copy"
+        "name":"WebContent/js/http-resources-sec.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"generate"
     }, {
-        "name": "WebContent/js/angular-scroll-animate.js",
-        "action": "copy"
+        "name":"WebContent/js/app-services.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"copy"
     }, {
-        "name": "WebContent/views/master.html",
-        "action": "copy"
+        "name":"WebContent/js/app-directives.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"copy"
     }, {
-        "name": "WebContent/views/detail.html",
-        "action": "copy"
+        "name":"WebContent/js/angular-timeline.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"copy"
     }, {
-        "name": "WebContent/views/toolbar.html",
-        "action": "copy"
+        "name":"WebContent/js/angular-scroll-animate.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"copy"
     }, {
-        "name": "WebContent/views/discussion.html",
-        "action": "copy"
+        "name":"WebContent/js/i18n.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"copy"
     }, {
-        "name": "WebContent/views/discussion-timeline.html",
-        "action": "copy"
+        "name":"WebContent/js/ng-i18n.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"copy"
     }, {
-        "name": "WebContent/views/settings.html",
-        "action": "copy"
+        "name":"WebContent/js/ng-i18n.min.js",
+        "rootFolder":"WebContent",
+        "packagePath":"js",
+        "action":"copy"
     }, {
-        "name": "WebContent/views/board.form.html",
-        "action": "copy"
+        "name":"WebContent/login/login.html",
+        "rootFolder":"WebContent",
+        "packagePath":"login",
+        "action":"generate"
     }, {
-        "name": "ScriptingServices/logging/lib/logger.js",
-        "action": "copy"
+        "name":"WebContent/views/board.html",
+        "rootFolder":"WebContent",
+        "packagePath":"views",
+        "action":"copy"
     }, {
-        "name": "ScriptingServices/lib/board_dao.js",
-        "action": "generate"
+        "name":"WebContent/views/board.form.html",
+        "rootFolder":"WebContent",
+        "packagePath":"views",
+        "action":"copy"
     }, {
-        "name": "ScriptingServices/lib/board_tags.js",
-        "action": "generate"
+        "name":"WebContent/views/boards.list.html",
+        "rootFolder":"WebContent",
+        "packagePath":"views",
+        "action":"copy"
     }, {
-        "name": "ScriptingServices/lib/board_votes.js",
-        "action": "generate"
+        "name":"WebContent/views/discussion.thread.html",
+        "rootFolder":"WebContent",
+        "packagePath":"views",
+        "action":"copy"
     }, {
-        "name": "ScriptingServices/lib/comment_dao.js",
-        "action": "generate"
+        "name":"WebContent/views/discussion.timeline.html",
+        "rootFolder":"WebContent",
+        "packagePath":"views",
+        "action":"copy"
     }, {
-        "name": "ScriptingServices/svc/board.js",
-        "action": "generate"
+        "name":"WebContent/views/login.html",
+        "rootFolder":"WebContent",
+        "packagePath":"views",
+        "action":"copy"
     }, {
-        "name": "ScriptingServices/svc/comment.js",
-        "action": "generate"
+        "name":"WebContent/views/settings.html",
+        "rootFolder":"WebContent",
+        "packagePath":"views",
+        "action":"copy"
     }, {
-        "name": "DataStructures/dis_board.table",
-        "action": "generate",
-        "rename": "%s_board"
+        "name":"WebContent/views/toolbar.html",
+        "rootFolder":"WebContent",
+        "packagePath":"views",
+        "action":"copy"
     }, {
-        "name": "DataStructures/dis_comment.table",
-        "action": "generate",
-        "rename": "%s_comment"
+        "name":"ScriptingServices/lib/board_dao.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"lib",
+        "action":"generate"
     }, {
-        "name": "DataStructures/dis_board_vote.table",
-        "action": "generate",
-        "rename": "%s_board_vote"
+        "name":"ScriptingServices/lib/board_stats_dao.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"lib",
+        "action":"generate"
     }, {
-        "name": "DataStructures/dis_discussion_stats.view",
-        "action": "generate",
-        "rename": "%s_discussion_stats"
+        "name":"ScriptingServices/lib/board_stats_service_lib.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"lib",
+        "action":"generate"
     }, {
-        "name": "DataStructures/dis_board_rating.view",
-        "action": "generate",
-        "rename": "%s_board_rating"
+        "name":"ScriptingServices/lib/board_tags_dao.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"lib",
+        "action":"generate"
     }, {
-        "name": "DataStructures/dis_board_stats.view",
-        "action": "generate",
-        "rename": "%s_board_stats"
+        "name":"ScriptingServices/lib/board_votes_dao.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"lib",
+        "action":"generate"
     }, {
-        "name": "DataStructures/dis_board_tag.table",
-        "action": "generate",
-        "rename": "%s_board_tag"
+        "name":"ScriptingServices/lib/boards_service_lib.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"lib",
+        "action":"generate"
     }, {
-        "name": "SecurityConstraints/main.access",
-        "action": "generate"
+        "name":"ScriptingServices/lib/comment_dao.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"lib",
+        "action":"generate"
     }, {
-        "name": "project.json",
-        "action": "generate"
+        "name":"ScriptingServices/lib/comments_service_lib.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"lib",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/svc/board.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"svc",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/svc/comment.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"svc",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/svc/user/board.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"svc/user",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/svc/user/comment.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"svc/user",
+        "action":"generate"
+    }, {
+        "name":"DataStructures/dis_board.table",
+        "rootFolder":"DataStructures",
+        "action":"generate",
+        "rename":"%s_board"
+    }, {
+        "name":"DataStructures/dis_comment.table",
+        "rootFolder":"DataStructures",
+        "action":"generate",
+        "rename":"%s_comment"
+    }, {
+        "name":"DataStructures/dis_board_vote.table",
+        "rootFolder":"DataStructures",
+        "action":"generate",
+        "rename":"%s_board_vote"
+    }, {
+        "name":"DataStructures/dis_discussion_stats.view",
+        "rootFolder":"DataStructures",
+        "action":"generate",
+        "rename":"%s_discussion_stats"
+    }, {
+        "name":"DataStructures/dis_board_rating.view",
+        "rootFolder":"DataStructures",
+        "action":"generate",
+        "rename":"%s_board_rating"
+    }, {
+        "name":"DataStructures/dis_board_stats.view",
+        "rootFolder":"DataStructures",
+        "action":"generate",
+        "rename":"%s_board_stats"
+    }, {
+        "name":"DataStructures/dis_board_tag.table",
+        "rootFolder":"DataStructures",
+        "action":"generate",
+        "rename":"%s_board_tag"
+    }, {
+        "name":"SecurityConstraints/main.access",
+        "rootFolder":"SecurityConstraints",
+        "action":"generate"
+    }, {
+        "name":"project.json",
+        "action":"generate"
     }],
     "parameters": [{
         "name":"templateType",

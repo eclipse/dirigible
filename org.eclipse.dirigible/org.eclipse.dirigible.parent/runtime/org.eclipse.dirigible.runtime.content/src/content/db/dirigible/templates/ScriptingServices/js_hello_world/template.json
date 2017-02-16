@@ -6,7 +6,9 @@
     "sources":[
         {
             "name":"javascript-service.js",
-            "action":"generate"
+            "rootFolder":"ScriptingServices",
+            "action":"generate",
+            "rename":"%s"
         }
     ],
     "parameters":[

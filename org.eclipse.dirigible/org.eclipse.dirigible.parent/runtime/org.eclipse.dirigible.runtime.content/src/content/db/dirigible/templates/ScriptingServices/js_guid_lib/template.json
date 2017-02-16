@@ -6,7 +6,9 @@
     "sources":[
         {
             "name":"guid-generator.js",
-            "action":"generate"
+            "rootFolder":"ScriptingServices",
+            "action":"generate",
+            "rename":"%s"
         }
     ],
     "parameters":[

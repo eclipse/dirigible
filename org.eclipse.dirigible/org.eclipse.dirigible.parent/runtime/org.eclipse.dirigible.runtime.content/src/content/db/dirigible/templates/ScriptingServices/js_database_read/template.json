@@ -6,17 +6,25 @@
     "sources":[
         {
             "name":"database-read.js",
-            "action":"generate"
+            "rootFolder":"ScriptingServices",
+            "action":"generate",
+            "rename":"%s"
         }, {
             "name":"ScriptingServices/dao/database-read-dao.js",
+            "rootFolder":"ScriptingServices",
+            "packagePath":"dao",
             "action":"generate",
             "rename":"%sDao"
         }, {
             "name":"ScriptingServices/entity/database-read.entity",
+            "rootFolder":"ScriptingServices",
+            "packagePath":"entity",
             "action":"generate",
             "rename":"%s"
         }, {
             "name":"ScriptingServices/swagger/database-read.swagger",
+            "rootFolder":"ScriptingServices",
+            "packagePath":"swagger",
             "action":"generate",
             "rename":"%s"
         }

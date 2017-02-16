@@ -28,7 +28,7 @@
                         "type": "boolean"
                     },
                     {
-                        "name": "${primaryKey.getName().toLowerCase()}",
+                        "name": "${primaryKey.name.toLowerCase()}",
                         "in": "query",
                         "description": "Identifier of the '${entityName}' object",
                         "required": false,
@@ -151,7 +151,7 @@
                 "description": "Deletes '${entityName}' objects.\n",
                 "parameters": [
                     {
-                        "name": "${primaryKey.getName().toLowerCase()}",
+                        "name": "${primaryKey.name.toLowerCase()}",
                         "in": "query",
                         "description": "Identifier of the '${entityName}' object",
                         "required": true,
@@ -178,29 +178,29 @@
 #if ($velocityCount > 1)
 				,
 #end
-        		"${tableColumn.getName().toLowerCase()}": {
+        		"${tableColumn.name.toLowerCase()}": {
 	            	"type": 
-#if ($tableColumn.getType() == $INTEGER)
+#if ($tableColumn.type == $INTEGER)
         "integer"
-#elseif ($tableColumn.getType() == $VARCHAR)
+#elseif ($tableColumn.type == $VARCHAR)
         "string"
-#elseif ($tableColumn.getType() == $CHAR)
+#elseif ($tableColumn.type == $CHAR)
         "string"
-#elseif ($tableColumn.getType() == $BIGINT)
+#elseif ($tableColumn.type == $BIGINT)
         "integer"
-#elseif ($tableColumn.getType() == $SMALLINT)
+#elseif ($tableColumn.type == $SMALLINT)
         "integer"
-#elseif ($tableColumn.getType() == $FLOAT)
+#elseif ($tableColumn.type == $FLOAT)
         "number"
-#elseif ($tableColumn.getType() == $DOUBLE)
+#elseif ($tableColumn.type == $DOUBLE)
         "number"
-#elseif ($tableColumn.getType() == $DATE)
+#elseif ($tableColumn.type == $DATE)
         "number"
-#elseif ($tableColumn.getType() == $TIME)
+#elseif ($tableColumn.type == $TIME)
         "number"
-#elseif ($tableColumn.getType() == $TIMESTAMP)
+#elseif ($tableColumn.type == $TIMESTAMP)
         "number"
-#elseif ($tableColumn.getType() == $BOOLEAN)
+#elseif ($tableColumn.type == $BOOLEAN)
         "boolean"
 #else
     // not supported type -> set to string

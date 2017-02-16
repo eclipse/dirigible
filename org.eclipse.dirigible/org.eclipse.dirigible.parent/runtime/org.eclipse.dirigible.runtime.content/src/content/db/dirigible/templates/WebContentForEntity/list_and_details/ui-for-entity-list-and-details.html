@@ -31,8 +31,8 @@
 				<thead>
 					<tr>
 #foreach ($tableColumn in $tableColumns) 
-#if ($tableColumn.isVisible())
-						<th>${tableColumn.getLabel()}</th> 
+#if ($tableColumn.visible)
+						<th>${tableColumn.label}</th> 
 #end 
 #end
 					</tr>
@@ -40,11 +40,11 @@
 				<tbody>
 					<tr class="selected-{{entry._selected_}}" ng-repeat="entry in data" ng-click="showInfoForEntry(entry)">
 #foreach ($tableColumn in $tableColumns)
-#if ($tableColumn.isVisible())
-#if ($tableColumn.getWidgetType() == "date")
-						<td>{{entry.${tableColumn.getName()} | date:format}}</td>
+#if ($tableColumn.visible)
+#if ($tableColumn.widgetType == "date")
+						<td>{{entry.${tableColumn.name} | date:format}}</td>
 #else
-						<td>{{entry.${tableColumn.getName()}}}</td>
+						<td>{{entry.${tableColumn.name}}}</td>
 #end
 #end
 #end
@@ -63,14 +63,14 @@
 				</thead>
 				<tbody ng-model="selectedEntry">
 #foreach ($tableColumn in $tableColumns)
-#if ($tableColumn.isVisible())
+#if ($tableColumn.visible)
 					<tr>
-						<td width="50%" class="text-right text-muted">${tableColumn.getLabel()}</td>
+						<td width="50%" class="text-right text-muted">${tableColumn.label}</td>
 						
-#if ($tableColumn.getWidgetType() == "date")
-						<td width="50%">{{selectedEntry.${tableColumn.getName()}  | date:format}}</td>
+#if ($tableColumn.widgetType == "date")
+						<td width="50%">{{selectedEntry.${tableColumn.name}  | date:format}}</td>
 #else
-						<td width="50%">{{selectedEntry.${tableColumn.getName()}}}</td>
+						<td width="50%">{{selectedEntry.${tableColumn.name}}}</td>
 #end
 #end
 #end

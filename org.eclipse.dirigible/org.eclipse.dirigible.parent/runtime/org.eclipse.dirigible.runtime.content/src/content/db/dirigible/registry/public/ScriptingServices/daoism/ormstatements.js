@@ -74,12 +74,23 @@ ORMStatements.prototype.count = function(){
 };
 ORMStatements.prototype.list= function(settings){
 	settings = settings || {};
-	var limit = settings.limit;
-	var offset = settings.offset;
-	var sort = settings.sort;	
-	var order = settings.order;
+	var limit = settings.$limit || settings.limit;
+	var offset = settings.$offset || settings.offset;
+	var sort = settings.$sort || settings.sort;
+	var order = settings.$order || settings.order;
+	var selectedFields = settings.$select || settings.select;
 	
 	var stmnt = this.builder(this.dialect).select().from(this.orm.dbName);
+
+	//add selected fields if any
+	if(selectedFields){
+		for(var i=0; i<selectedFields.length; i++){
+			var property = this.orm.getProperty(selectedFields[i]);
+			if(!property)
+				throw Error('Unknown field name ['+ selectedFields[i] + ']')
+			stmnt = stmnt.field(property.dbName);
+		}
+	}
 
     //add where clause for any fields
     var propertyDefinitions = this.orm.properties.filter(function(property){
@@ -100,9 +111,7 @@ ORMStatements.prototype.list= function(settings){
     }
 
     if (sort !== undefined) {
-        if(sort.constructor !== Array)
-        	sort = [sort];
-        for(var i in sort){
+        for(var i=0; i<sort.length; i++){
         	var _order = true;//ASC
         	//TODO: change to be able order per sort property
 	        if (order !== undefined) {
@@ -110,7 +119,7 @@ ORMStatements.prototype.list= function(settings){
 	            	_order = order.toLowerCase() === 'desc' ? false : true;
 	            }
 	        }
-	      	stmnt.order(sort[i], _order);
+	      	stmnt.order(this.orm.getProperty(sort[i]).dbName, _order);
     	}
     }
     if (limit !== undefined && offset !== undefined) {

@@ -21,6 +21,20 @@
 		            }, 
 		            isArray: false
 			    },
+			    query : {
+					method: 'GET',
+			        interceptor: {
+						response: function(res) {
+		                	var _count= res.headers('X-dservice-list-count');
+		                	if(_count!==undefined){
+		                		_count = parseInt(_count, 10);
+		                		res.resource.${D}count = _count;
+	                		}
+	                        return res.resource;
+		                }
+		            }, 
+		            isArray: true
+			    },
 			    update: {
 			        method: 'PUT'
 			    }
@@ -48,9 +62,9 @@
 	  			});
 	}])	
 	.service('BoardComments', ['${D}resource', function(${D}resource) {
-	  	return ${D}resource('../../js/${packageName}/svc/board.js/:boardId/comments/:listMode', {}, 
+	  	return ${D}resource('../../js/${packageName}/svc/comment.js', {}, 
 	  			{get: {method:'GET', params:{}, isArray:true, ignoreLoadingBar: true}});
-	}])	
+	}])		
 	.service('${D}Comment', ['${D}resource', '${D}log', function(${D}resource, ${D}log) {
 	 	return ${D}resource('../../js/${packageName}/svc/comment.js/:commentId', { commentId:'@id' }, {
 			    save: {
@@ -60,11 +74,11 @@
 		                	var location = res.headers('Location');
 		                	if(location){
 		                		var id = location.substring(location.lastIndexOf('/')+1);
-		                		angular.extend(res, { "id": id });
+		                		angular.extend(res.resource, { "id": id });
 	                		} else {
 	                			${D}log.error('Cannot infer id after save operation. HTTP Response Header "Location" is missing: ' + location);
 	            			}
-	                        return res;
+	                        return res.resource;
 		                }
 		            }, 
 		            isArray: false
@@ -74,27 +88,8 @@
 			    }
 			});
 	}])
-	.service('${D}LoggedUser', ['${D}resource', '${D}log', function(${D}resource) {
-		var UserSvc =  ${D}resource('../../js/usr/svc/user.js/${D}current', {}, 
-	  					{get: {method:'GET', params:{}, isArray:false, ignoreLoadingBar: true}});
-	  	var get = function(){
-		  	return UserSvc.get().${D}promise;
-	  	};
-	  	return {
-	  		get: get
-	  	};
-	}])
-	.service('${D}UserImg', ['${D}resource', function(${D}resource) {
-		var UserSvc = ${D}resource('../../js/usr/svc/user.js/${D}pics/:userName', {}, 
-	  					{get: {method:'GET', params:{}, isArray:false, cache: true, ignoreLoadingBar: true}});
-		var get = function(userName){
-		  	return UserSvc.get({"userName":userName}).${D}promise
-		  	.then(function(userData){
-		  		return userData;
-		  	});
-	  	};	  					
-	  	return {
-	  		get: get
-	  	};	  					
+	.service('${D}Tags', ['${D}resource', function(${D}resource) {
+	  	return ${D}resource('../../js/annotations/svc/tags.js', {}, 
+	  					{get: {method:'GET', params:{}, isArray:true, ignoreLoadingBar: true}});
 	}]);
 })(angular);

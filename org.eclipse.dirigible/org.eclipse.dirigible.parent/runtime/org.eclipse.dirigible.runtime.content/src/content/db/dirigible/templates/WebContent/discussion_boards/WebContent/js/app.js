@@ -1,10 +1,12 @@
 (function(angular){
 "use strict";
 
-//angular'ized extenral dependencies
+//angular'ized external dependencies
 angular.module('$moment', [])
 .factory('$moment', ['$window', function($window) {
-  return $window.moment;
+	var locale = $window.navigator.userLanguage || $window.navigator.language;
+	$window.moment && $window.moment.locale(locale);
+  	return $window.moment;
 }]);
 
 angular.module('$ckeditor', [])
@@ -12,9 +14,22 @@ angular.module('$ckeditor', [])
   return $window.CKEDITOR;
 }]);
 
-
-angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAnimate', 'ngResource', 'ui.router', 'ui.bootstrap', 'angular-loading-bar', 'angularFileUpload','angular-timeline','angular-scroll-animate', 'ngTagsInput'])
-.config(['$stateProvider', '$urlRouterProvider', 'cfpLoadingBarProvider', function($stateProvider, $urlRouterProvider, cfpLoadingBarProvider) {
+angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAnimate', 'ngResource', 'ui.router', 'ui.bootstrap', 'angular-loading-bar', 'angularFileUpload','angular-timeline','angular-scroll-animate', 'ngTagsInput', 'i18n'])
+.constant('CONFIG', {
+	"LOGIN_URL" : "login/login.html",
+	"features" : {
+		"list": {
+			"pageLimit": 25
+		},
+		"votes": {
+			"enabled": true
+		},
+		"tags": {
+			"enabled": false
+		}
+	}
+})
+.config(['$stateProvider', '$urlRouterProvider', 'cfpLoadingBarProvider', 'CONFIG', function($stateProvider, $urlRouterProvider, cfpLoadingBarProvider, CONFIG) {
 
 		$urlRouterProvider.otherwise("/");
 		
@@ -29,46 +44,53 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 						})
 						.catch(function(err){
 							$log.error(err);
-							if(err.status && err.status===404)
+							if(err.status && [404, 401, 403].indexOf(err.status)>-1)
 								$log.info('No user to authenticate. Sign in first.');
 							return;
 						});	
-				}]				
-			},			  
+				}],
+				i18n: ['i18n', function(i18n){
+					return i18n;
+				}]
+			},
 		  views: {
 		  	"@": {
-		          templateUrl: 'views/master.html',
-		          controller: ['$Boards', '$log', 'FilterList', 'loggedUser', function($Boards, $log, FilterList){
-		          
+		          templateUrl: 'views/boards.list.html',
+		          controller: ['$Boards', '$log', 'FilterList', 'i18n', 'CONFIG', function($Boards, $log, FilterList, i18n, CONFIG){
+		          	this.CONFIG = CONFIG;
+		          	this.i18n = i18n;
 		          	this.list = [];
 		          	this.filterList = FilterList;
-		          	var self = this;
+		          	this.limit = CONFIG.features.list.pageLimit;
+		          	this.offset = 0;
+		          	this.hasMore = false;
+		          	var next = this.next = function(_offset, _limit){
+						if(_offset!==undefined && _offset===0)
+							this.list = [];
+			          	$Boards.list({
+			          		$limit: _limit || this.limit,
+			          		$offset: _offset || this.offset
+			          	})
+						.then(function(data){
+							this.list = this.list.concat(data.entities);
+							this.hasMore = data.count > this.list.length;
+							this.offset+=this.limit;
+						}.bind(this))
+			          	.catch(function(err){
+			          		$log.error(err);
+			          		throw err;
+			          	});
+		          	}.bind(this);
 		          	
-					$Boards.list()
-					.then(function(data){
-						self.list = data;
-						self.list = self.list.map(function(board){
-							$Boards.getTags(board)
-							.then(function(tags){
-								board.tags = tags;
-							})
-							.catch(function(err){
-								$log.warn('Could not get board['+board.boardId+'] tags');
-							});
-							return board;
-						});
-					})
-		          	.catch(function(err){
-		          		$log.error(err);
-		          		throw err;
-		          	});
-
+		          	next();
+		          	
 		          }],
-		          controllerAs: 'masterVm'
+		          controllerAs: 'boardsVm'
 		  	},
 		  	"toolbar@": {
 		          templateUrl: 'views/toolbar.html',
-		          controller: ['FilterList', 'loggedUser', function(FilterList, loggedUser){
+		          controller: ['FilterList', 'loggedUser','i18n', function(FilterList, loggedUser, i18n){
+		          	this.i18n = i18n;
 		          	this.filterList = FilterList;
 		          	this.loggedUser = loggedUser;
 		          }],
@@ -76,6 +98,31 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 		  	}
 		  }
 		})
+		.state('logout', {
+			views: {
+				"@": {
+			    	template: '',
+			        controller: ['$state', '$LoggedUserProfile', function($state, $LoggedUserProfile){
+			        	$LoggedUserProfile.logout()
+			        	.finally(function(){
+			        		$state.go('list');
+			        	});
+					}]
+				}
+			}
+		})			
+		.state('list.login', {
+			url: "login",
+			views: {
+				"@": {
+			    	template: '',
+			        controller: ['$window', function($window){
+			        	$window.location.href = CONFIG.LOGIN_URL;
+					}],
+			        controllerAs: 'loginVm'
+				}
+			}
+		})		
 		.state('list.entity', {
 			url: "{boardId}",
 			params: {
@@ -84,14 +131,18 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 			},
 			resolve: {
 				board: ['$state', '$stateParams', '$Boards', '$log', function($state, $stateParams, $Boards, $log){
+					//The settings deep link url resolve true from the pattern for dboard detail so we need to explicitly check if it is setting that have been requested or a board details
+					if($stateParams.boardId === 'settings'){
+						return;
+					}
 					var boardId;
 					if($stateParams.boardId !==undefined &&  $stateParams.boardId!==''){
 						boardId = $stateParams.boardId;
 					}
 					if(boardId){
-						if($stateParams.board)
+						if($stateParams.board){
 							return $stateParams.board;
-						else
+						} else
 							return $Boards.get(boardId)
 							.catch(function(err){
 								$log.error('Could not resolve board entity with id['+$stateParams.boardId+']');
@@ -100,48 +151,59 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 					} else {
 						return;
 					}
-				}],
-				tags: ['$Boards', 'board', '$log', function($Boards, board, $log){
-					if(board){
-						return $Boards.getTags(board)
-							.catch(function(err){
-								$log.warn('Could not get board['+board.boardId+'] tags');
-							});
-					} else {
-						return;
-					}
 				}]
 			},
 			views: {
 				"@": {
-					templateUrl: "views/detail.html",				
-					controller: ['$state', '$stateParams', '$log', '$Boards', '$DBoardVisits', 'board', 'tags', 'loggedUser', function($state, $stateParams, $log, $Boards, $DBoardVisits, board, tags, loggedUser){
+					templateUrl: "views/board.html",
+					controller: ['$state', '$stateParams', '$log', '$Boards', '$Tags', 'board', 'loggedUser', '$rootScope', 'CONFIG', 'i18n', function($state, $stateParams, $log, $Boards, $Tags, board, loggedUser, $rootScope, CONFIG, i18n){
+						//The settings deep link url resolve true from the pattern for dboard detail so we need to explicitly check if it is setting that have been requested or a board details
+						if($stateParams.boardId === 'settings'){
+							$state.go('list.settings');
+							return;
+						}
+						this.CONFIG = CONFIG;
+						this.i18n = i18n,
 						this.board = board;
-						this.tags = tags && tags.map(function(tag){
-							return {
-								"text": tag.defaultLabel,
-							};
-						});
+						this.commentsCount = board.commentsCount;
 						this.loggedUser = loggedUser;
 						var self = this;
 						
-						try{
-							$DBoardVisits.visit(this.board.id)
-							.then(function(res){
-								if(res!==false)
-									self.board.visits++;
-							});
-						} catch(err){$log.error(err);}
+						$rootScope.$on('dboards.comments.save', 
+										function(evt){
+											self.commentsCount++;
+											evt.preventDefault();
+										});
+						$rootScope.$on('dboards.comments.remove', 
+										function(evt, comment){
+											self.commentsCount--;
+											if(comment.replies)
+												self.commentsCount = self.commentsCount - comment.replies.length;
+											evt.preventDefault();
+										});						
+						$Boards.visit(this.board);
 						
 						if($stateParams.timeline){
-							$state.go('list.entity.discussion-timeline', {boardId: self.board.id, board:self.board, timeline:true}); 
+							$state.go('list.entity.discussion.timeline', {boardId: self.board.id, board:self.board, timeline:true}); 
 						} else {
-							$state.go('list.entity.discussion', {boardId: self.board.id, board:self.board, timeline:false});  	
+							$state.go('list.entity.discussion.thread', {boardId: self.board.id, board:self.board, timeline:false});  	
 						}
-						
-						this.canVote = function(){
-							return self.loggedUser!==undefined && !self.isAuthor() && !self.board.locked;
-						};
+
+					  	this.hasPrivilege = function(privilege){
+					  		if(this.loggedUser!==undefined){
+					  			return $Boards.hasPrivilege(this.loggedUser.username, privilege, this.board);
+					  		}
+					  		return false;
+					  	};
+					  	
+					  	this.hasMode = function(){
+					  		var args = [].slice.call(arguments);
+					  		if(args.indexOf('readonly') > -1 && self.loggedUser!==undefined && self.board.locked)
+					  			return true;
+					  		if(args.indexOf('edit') > -1 && self.loggedUser!==undefined && !self.board.locked && self.descriptionEdit)
+					  			return true;
+					  		return false;
+					  	};					  	
 						
 						this.saveVote = function(vote){
 							$Boards.saveVote(self.board, vote)
@@ -150,21 +212,6 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 								self.board = data; 
 							});
 						};
-						
-						this.getVote = function(){
-							$Boards.getVote(self.board)
-							.then(function(vote){
-								self.currentUserVote = vote;
-							});
-						};
-						
-						this.isAuthor = function(){
-							return this.loggedUser!==undefined && this.loggedUser.uname === this.board.user;
-						};
-						
-						this.canPost = function(){
-							return this.loggedUser!==undefined;
-						}
 						
 						this.openBoardForEdit = function(){
 							self.descriptionEdit = self.board.description;
@@ -200,136 +247,70 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 						};
 						
 						this.tagAdded = function($tag){
-							var tags = self.tags.map(function(tag){
-								return tag.text;
+							var tags = self.board.tags.map(function(tag){
+								return tag.defaultLabel;
 							});
 							$Boards.setTags(self.board, tags);
 						};
 						
 						this.tagRemoved = function($tag){
-							var tags = self.tags.map(function(tag){
-								return tag.text;
+							var tags = self.board.tags.map(function(tag){
+								return tag.defaultLabel;
 							});
 							$Boards.setTags(self.board, tags);
 						};
+						
+						this.loadTags = function(query){
+							return $Tags.query({"defaultLabel":query, "$filter":"defaultLabel"}).$promise
+							.then(function(tags){
+								return tags;
+							});
+						};
 
 					}],
-					controllerAs: 'detailsVm'				
+					controllerAs: 'boardVm'				
 				}
 			}
 		})
-		.state('list.entity.discussion-timeline', {
+		.state('list.entity.discussion', {
+			abstract: true
+		})
+		.state('list.entity.discussion.thread', {
+			url: "/thread",
 			resolve: {
 				comments: ['$Comments', 'board', function($Comments, board){
 					return 	$Comments
-							.list(board.id, 'timeline')
+							.list(board.id, 'thread')
 							.then(function(comments){
 								return comments;
 							});
 				}]
-			},
+			},		
 			views: {
 				"@list.entity": {
-					templateUrl: "views/discussion-timeline.html",				
-					controller: ['$state', '$log', '$Boards', '$Comment','$UserImg', 'board', 'comments', 'loggedUser', function($state, $log, $Boards, $Comment, $UserImg, board, comments, loggedUser){
-						
+					templateUrl: "views/discussion.thread.html",				
+					controller: ['$log', '$Comments', 'board', 'comments', 'loggedUser', 'i18n', function($log, $Comments, board, comments, loggedUser, i18n){
+						this.i18n = i18n,
 						this.comment = {};
-						this.board = board;
-						this.loggedUser = loggedUser;
 						this.comments = comments;
-						var self = this;
-					  	
-					  	this.canPost = function(){
-					  		return self.loggedUser!==undefined && !self.board.locked;
-					  	};
-					  	
-					  	this.openCommentForEdit = function(comment){
-					  		self.comment = comment;
-					  		self.commentEdit = true;
-					  	};
-					  	
-					  	this.cancelCommentEdit = function(){
-					  		self.comment = {};
-					  		self.commentEdit = false;
-					  	};
-					  	
-						this.postComment = function(){
-							self.comment.boardId = this.board.id;
-							var operation = self.comment.id!==undefined?'update':'save';
-							$Comment[operation](self.comment).$promise
-							.then(function(commentData){
-								//TODO: mixin into the resource the id from Location header upon response
-								$log.info('Comment with id['+commentData.id+'] saved');
-								$Boards.get(board.id)
-								.then(function(board){
-									$state.go('list.entity', {board: board, timeline: true});
-									//$state.go('list.entity.discussion-timeline', {board: board});
-								});
-							})
-							.catch(function(err){
-								$log.error(err);
-								throw err;
-							})
-							.finally(function(){
-								self.cancelCommentEdit();
-							});
-						};
-						
-						this.pix = {};
-						
-						for(var i=0; i<this.comments.length; i++){
-							if(this.pix[this.comments[i].user] === undefined)
-								this.pix[this.comments[i].user]= '';
-						}
-						
-						for(var user in this.pix){
-							getUserPicture(user)
-							.then(function(pic){
-								if(pic){
-									self.pix[user] = "/services/js/usr/svc/user.js/$pics/"+user;
-								}
-							});
-						}
-						
-						function getUserPicture(username){
-							return $UserImg.get(username)
-							.then(function(data){
-								return data;
-							});
-						}
-						
-						this.remove = function(comment){
-							$Comment['delete']({commentId:comment.id}).$promise
-							.then(function(){
-								$Boards.get(board.id)
-								.then(function(board){
-									$state.go('list.entity', {board: board}, {reload:true});
-								});
-							})
-							.catch(function(err){
-								throw err;
-							});
-						};						
-
-
-					}],
-					controllerAs: 'vm'				
-				}
-			}
-		})		
-		.state('list.entity.discussion', {
-			views: {
-				"@list.entity": {
-					templateUrl: "views/discussion.html",				
-					controller: ['$state', '$log', '$Boards', '$Comment', 'board', 'loggedUser', function($state, $log, $Boards, $Comment, board, loggedUser){
-						
-						this.comment = {};
 						this.board = board;
 						this.loggedUser = loggedUser;
 						var self = this;
 					  	
-					  	this.canPost = function(){
-					  		return self.loggedUser!==undefined && !self.board.locked;
+					  	this.hasPrivilege = function(comment, privilege){
+					  		if(this.loggedUser!==undefined){
+					  			return $Comments.hasPrivilege(this.loggedUser.username, privilege, comment, this.board);
+					  		}
+					  		return false;
+					  	};
+					  	
+					  	this.hasMode = function(){
+					  		var args = [].slice.call(arguments);
+					  		if(args.indexOf('readonly') > -1 && self.loggedUser!==undefined && self.board.locked)
+					  			return true;
+					  		if(args.indexOf('edit') > -1 && self.loggedUser!==undefined && !self.board.locked && (self.commentEdit || self.replyEdit))
+					  			return true;
+					  		return false;
 					  	};
 					  	
 					  	this.openCommentForEdit = function(comment){
@@ -345,23 +326,31 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 					  	};
 					  	
 						this.postComment = function(){
-							self.comment.boardId = this.board.id;
-							var operation = self.comment.id!==undefined?'update':'save';
-							$Comment[operation](self.comment).$promise
+							var operation = self.comment.id!==undefined ? 'update' : 'save';
+							if(operation==='save'){
+								self.comment.boardId = this.board.id;
+								self.comments.push(self.comment);
+							}
+							var comment = self.comment;
+							self.cancelCommentEdit();self.commentEdit = true;
+							$Comments[operation](comment)
 							.then(function(commentData){
-								//TODO: mixin into the resource the id from Location header upon response
-								$log.info('Comment with id['+commentData.id+'] saved');
-								$Boards.get(board.id)
-								.then(function(board){
-									$state.go('list.entity', {board: board}, {reload:true});
-								});
+								$log.info('Comment['+commentData.id+'] ' + operation + 'd');
+								$Comments.list(self.board.id, 'thread')
+								.then(function(comments){
+									self.comments = comments;
+								})
+								.finally(function(){
+									self.commentEdit = false;
+								});								
 							})
 							.catch(function(err){
 								$log.error(err);
+								self.comments.filter(function(com){
+									return com.id === comment;
+								});
+								self.commentEdit = false;
 								throw err;
-							})
-							.finally(function(){
-								self.cancelCommentEdit();
 							});
 						};
 						
@@ -382,31 +371,47 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 						};
 
 						this.replyPost = function(){
-							var upsertOperation = self.reply.id===undefined?'save':'update';
-							$Comment[upsertOperation](self.reply).$promise
-							.then(function(){
-								$log.info('reply saved');
-								$Boards.get(board.id)
-								.then(function(board){
-									$state.go('list.entity', {board: board}, {reload:true});
+							var operation = self.reply.id===undefined?'save':'update';
+							if(operation === 'save'){
+								self.reply.replyToCommentId = self.comment.id;							
+								self.comment.replies.push(self.reply);
+							}
+							var reply = self.reply;
+							this.replyCancel();self.replyEdit = true;self.commentEdit = true;
+							$Comments[operation](reply)
+							.then(function(replyData){
+								$log.info('Reply['+replyData.id+'] to comment['+self.comment.id+'] ' + operation + 'd');
+								$Comments.list(self.board.id, 'thread')
+								.then(function(comments){
+									self.comments = comments;
+								})
+								.finally(function(){
+									self.replyEdit = false;
+									self.commentEdit = false;
 								});
 							})
 							.catch(function(err){
+								self.replyEdit = false;
+								self.commentEdit = false;
 								throw err;
-							})
-							.finally(function(){
-								self.replyCancel();
 							});
 						};
 						
 						this.remove = function(comment){
-							$Comment['delete']({commentId:comment.id}).$promise
-							.then(function(){
-								$Boards.get(board.id)
-								.then(function(board){
-									$state.go('list.entity', {board: board}, {reload:true});
-								});
-							})
+							this.comments = this.comments.filter(function(com, idx){
+								if(com.id === comment.id){
+									return false;
+								} else {
+									self.comments[idx].replies = self.comments[idx].replies.filter(function(_com){
+										if(_com.id === comment.id){
+											return false;
+										}
+										return true;
+									});
+									return true;
+								}
+							});							
+							$Comments.remove(comment)
 							.catch(function(err){
 								throw err;
 							});
@@ -417,14 +422,105 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 				}
 			}
 		})		
-		.state('list.new', {    
+		.state('list.entity.discussion.timeline', {
+			url: "/timeline",
+			resolve: {
+				comments: ['$Comments', 'board', function($Comments, board){
+					return 	$Comments
+							.list(board.id, 'timeline')
+							.then(function(comments){
+								return comments;
+							});
+				}]
+			},
+			views: {
+				"@list.entity": {
+					templateUrl: "views/discussion.timeline.html",				
+					controller: ['$Comments', '$log', 'board', 'comments', 'loggedUser', 'CONFIG', 'i18n', function($Comments, $log, board, comments, loggedUser, CONFIG, i18n){
+						this.i18n = i18n;
+						this.CONFIG = CONFIG;
+						this.comment = {};
+						this.board = board;
+						this.comments = comments;						
+						this.loggedUser = loggedUser;
+						var self = this;
+					  	
+					  	this.hasPrivilege = function(comment, privilege){
+					  		if(this.loggedUser!==undefined){
+					  			return $Comments.hasPrivilege(this.loggedUser.username, privilege, comment, this.board);
+					  		}
+					  		return false;
+					  	};
+					  	
+					  	this.hasMode = function(){
+					  		var args = [].slice.call(arguments);
+					  		if(args.indexOf('readonly') > -1 && self.loggedUser!==undefined && self.board.locked)
+					  			return true;
+					  		if(args.indexOf('edit') > -1 && self.loggedUser!==undefined && !self.board.locked && self.commentEdit)
+					  			return true;
+					  		return false;
+					  	};
+					  	
+					  	this.openCommentForEdit = function(comment){
+					  		self.comment = comment;
+					  		self.commentEdit = true;
+					  	};
+					  	
+					  	this.cancelCommentEdit = function(){
+					  		self.comment = {};
+					  		self.commentEdit = false;
+					  	};
+					  	
+						this.postComment = function(){
+							self.comment.boardId = this.board.id;
+							var operation = self.comment.id!==undefined?'update':'save';
+							if(operation==='save')
+								self.comments.push(self.comment);
+							$Comments[operation](self.comment)
+							.then(function(commentData){
+								$log.info('Comment['+commentData.id+'] ' + operation + 'd');
+								$Comments.list(self.board.id, 'thread')
+								.then(function(comments){
+									self.comments = comments;
+								});
+							})							
+							.catch(function(err){
+								$log.error(err);
+								throw err;
+							})
+							.finally(function(){
+								self.cancelCommentEdit();
+							});
+						};
+
+						this.remove = function(comment){
+							this.comments = this.comments.filter(function(com){
+								if(com.id === comment.id)
+									return false;
+								return true;
+							});							
+							$Comments.remove(comment)
+							.catch(function(err){
+								throw err;
+							});
+						};
+
+					}],
+					controllerAs: 'vm'				
+				}
+			}
+		})		
+		.state('list.new', { 		
 			views: {
 				"@": {
 					templateUrl: "views/board.form.html",
-					controller: ['$state', '$log', 'Board',  function($state, $log, Board){
+					controller: ['$state', '$log', 'SecureBoard', 'loggedUser', 'i18n',  function($state, $log, SecureBoard, loggedUser, i18n){
+							this.i18n = i18n;
+							if(!loggedUser)
+								$state.go('list.login');
 							this.board = {};
 					  		this.submit = function(){
-					  			Board.save(this.board).$promise
+					  			SecureBoard.save(this.board).$promise
 					  			.then(function(data){
 					  				$log.info('board with id['+data.id+'] saved');
 		              				$state.go('list');
@@ -435,24 +531,26 @@ angular.module('discussion-boards', ['$moment', '$ckeditor', 'ngSanitize', 'ngAn
 					  			});
 					  		};
 						}],
-					controllerAs: 'detailsVm'								
+					controllerAs: 'boardVm'								
 				}
 			}
 		})
 		.state('list.settings', {  
+			url: '/settings',
 			views: {
 				"@": {
 					templateUrl: "views/settings.html",	
-					controller: ['$state', 'FileUploader', 'loggedUser', function($state, FileUploader, loggedUser){
-						
+					controller: ['$state', 'FileUploader', 'loggedUser', 'i18n', function($state, FileUploader, loggedUser, i18n){
+						this.i18n = i18n;
 						this.user = loggedUser;
+						this.rootPath = '../../js-secured/profile/avatar.js';
 						var self  = this;
 						
 						var uploader = this.uploader = new FileUploader({
-							url: this.user && this.user.avatarUrl
+							url: this.user && this.rootPath
 						});
 					    this.uploader.onBeforeUploadItem = function(/*item*/) {
-							//item.url = zipUploadPath + "?path=" + this.folder.path;
+							
 					    };
 					    this.uploader.onCompleteItem = function(/*fileItem, response, status, headers*/) {
 							$state.reload();

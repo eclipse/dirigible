@@ -128,8 +128,22 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}	
 	};
 		
-	var validateQueryInputs = function(context, io){
-		var offset = context.queryParams.offset;
+	var validateQueryInputs = function(context, io){	
+
+		var limit = context.queryParams.$limit || context.queryParams.limit;
+		if (limit === undefined || limit === null) {
+			context.queryParams.limit = 10000;//default constraint
+		}  else if(isNaN(parseIntStrict(limit)) || limit < 0) {
+			self.logger.error("Invallid limit parameter: " + limit + ". Must be a positive integer.");
+			_oHttpController.sendError(io.response.BAD_REQUEST, "Invallid limit parameter: " + limit + ". Must be a positive integer.");
+			context.err = {
+				httpCode: io.response.BAD_REQUEST, 
+				errCode: 1, 
+				message: "Invallid limit parameter: " + limit + ". Must be a positive integer."
+			};
+		}
+		
+		var offset = context.queryParams.$offset || context.queryParams.offset;
 		if (offset === undefined || offset === null) {
 			context.queryParams.offset = 0;
 		} else if(isNaN(parseIntStrict(offset)) || offset < 0) {
@@ -140,31 +154,29 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 				errCode: 1, 
 				message: "Invallid offset parameter: " + offset + ". Must be a positive integer."
 			};
+		}		
+
+		var sort = context.queryParams.$sort || context.queryParams.sort || null;
+		if(sort !== undefined && sort !== null){
+			sort = String(new java.lang.String(""+sort));
+			var sortPropertyNames = sort.split(',').map(function(srt){
+				return srt.trim();
+			});
+			for(var i=0; i<sortPropertyNames.length;i++){
+				var prop = self.dao.orm.getProperty(sortPropertyNames[i]);
+				if(!prop){
+					_oHttpController.sendError(io.response.BAD_REQUEST, "Invalid sort by property name: " + sortPropertyNames[i]);
+					context.err = {
+						httpCode: io.response.BAD_REQUEST, 
+						errCode: 1, 
+						message: "Invalid sort by property name: " + sortPropertyNames[i]
+					};				
+				}
+			}
+			context.queryParams.$sort = sortPropertyNames;			
 		}
 		
-		var limit = context.queryParams.limit;
-		if (limit === undefined || limit === null) {
-			context.queryParams.limit = 10;
-		}  else if(isNaN(parseIntStrict(limit)) || limit < 0) {
-			self.logger.error("Invallid limit parameter: " + limit + ". Must be a positive integer.");
-			_oHttpController.sendError(io.response.BAD_REQUEST, "Invallid limit parameter: " + limit + ". Must be a positive integer.");
-			context.err = {
-				httpCode: io.response.BAD_REQUEST, 
-				errCode: 1, 
-				message: "Invallid offset parameter: " + offset + ". Must be a positive integer."
-			};
-		}
-
-		var sort = context.queryParams.sort || null;			
-		if( sort !== null && self.validSortPropertyNames && self.validSortPropertyNames.indexOf(sort)<0){
-			_oHttpController.sendError(io.response.BAD_REQUEST, "Invalid sort by property name: " + sort);
-			context.err = {
-				httpCode: io.response.BAD_REQUEST, 
-				errCode: 1, 
-				message: "Invalid sort by property name: " + sort
-			};
-		}
-		var order = context.queryParams.order || null;
+		var order = context.queryParams.order || context.queryParams.$order || null;
 		if(order!==null){
 			if(sort === null){
 				_oHttpController.sendError(io.response.BAD_REQUEST, "Parameter order is invalid without paramter sort to order by.");
@@ -184,38 +196,43 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		} else if(sort !== null){
 			context.queryParams.order = 'asc';
 		}
-	};
-	
-	var query = function(context, io){
 		
-		validateQueryInputs(context, io);
-		if(context.err)
-			return;
-	
 		var $expand = context.queryParams['$expand'];
-		if($expand){
-			if($expand===true || ($expand.toLowerCase() === '$all' && dao.orm.associationSets)) {
-				$expand = Object.keys(dao.orm.associationSets).join(',');
+		if($expand!==undefined && self.dao.orm.associationSets) {
+			var associationNames = Object.keys(self.dao.orm.associationSets);
+			if($expand===true || $expand.toLowerCase() === '$all') {
+				$expand = associationNames.join(',');
 			} else {
 				$expand = String(new java.lang.String(""+$expand));
 				$expand = $expand.split(',').map(function(sel){
 					return sel.trim();
 				});
+				for(var i=0;i<$expand.length; i++){
+					if(associationNames.indexOf($expand[i])<0)
+						throw Error('Invalid expand association name - ' + $expand[i]);
+				}
+				context.queryParams['$expand'] = $expand;				
 			}
 		}
-		context.queryParams.$expand = $expand;
-		var $select = context.queryParams['$select'];
-		if($select){
-			if($select===true || ($select.toLowerCase() === '$all' && dao.orm.associationSets)) {
-				$select = Object.keys(dao.orm.associationSets).join(',');
-			} else {
-				$select = String(new java.lang.String(""+$select));
-				$select = $select.split(',').map(function(sel){
-					return sel.trim();
-				});
+		
+		var select = context.queryParams['$select'];
+		if(select!==undefined){
+			select = String(new java.lang.String(""+select));
+			var selectedFieldNames = select.split(',').map(function(sel){
+				return sel.trim();
+			});
+			for(var i=0;i<selectedFieldNames.length; i++){
+				if(self.dao.orm.getProperty(selectedFieldNames[i])<0)
+					throw Error('Invalid select property name - ' + selectedFieldNames[i]);
 			}
+			context.queryParams['$select'] = selectedFieldNames;
 		}
-		context.queryParams.$select = $select;
+	};
+	
+	var query = function(context, io){		
+		validateQueryInputs(context, io);
+		if(context.err)
+			return;	
 		var args = [context.queryParams];
 	    try{
 			var entities = dao.list.apply(dao, args) || [];
@@ -223,6 +240,8 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 			if(_entities===undefined){
 				_entities = entities;
 			}
+			var $count = dao.count.apply(dao) || 0;
+			io.response.addHeader('X-dservice-list-count', $count);
 	        var jsonResponse = JSON.stringify(_entities, null, 2);
 	    	io.response.println(jsonResponse);
 		} catch(e) {

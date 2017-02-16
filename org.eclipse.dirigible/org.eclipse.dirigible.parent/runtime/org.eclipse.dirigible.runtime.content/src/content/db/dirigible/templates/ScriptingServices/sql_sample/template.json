@@ -5,7 +5,9 @@
     "sources":[
         {
             "name":"sql-service.sql",
-            "action":"generate"
+            "rootFolder":"ScriptingServices",
+            "action":"generate",
+            "rename":"%s"
         }
     ],
     "parameters":[

@@ -5,7 +5,9 @@
     "sources":[
         {
             "name":"terminal-command.command",
-            "action":"generate"
+            "rootFolder":"ScriptingServices",
+            "action":"generate",
+            "rename":"%s"
         }
     ],
     "parameters":[

@@ -45,42 +45,42 @@
                 </div>
                 <div>
 #foreach ($tableColumn in $tableColumns)
-#if($tableColumn.isVisible())
-					<label>${tableColumn.getLabel()}</label> 
-#if ($tableColumn.isKey())
-                    <input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}" readonly>
+#if($tableColumn.visible)
+					<label>${tableColumn.label}</label> 
+#if ($tableColumn.key)
+                    <input type="text" class="form-control" ng-model="entity.${tableColumn.name}" readonly>
 #else
-#if ($tableColumn.getWidgetType() == "date")
+#if ($tableColumn.widgetType == "date")
 					<p class="input-group">
-		            	<input type="text" ng-model="entity.${tableColumn.getName()}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
-		               		uib-datepicker-popup="" is-open="${tableColumn.getName()}Status.opened" 
+		            	<input type="text" ng-model="entity.${tableColumn.name}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
+		               		uib-datepicker-popup="" is-open="${tableColumn.name}Status.opened" 
 		               		datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" 
 		               		required="required" style="">
 				        <span class="input-group-btn">
-				        	<button type="button" class="btn btn-default" ng-click="${tableColumn.getName()}Open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+				        	<button type="button" class="btn btn-default" ng-click="${tableColumn.name}Open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
 				        </span>
 		           	</p>
-#elseif ($tableColumn.getWidgetType() == "textarea")
+#elseif ($tableColumn.widgetType == "textarea")
 					<textarea class="form-control" 
-						ng-model="entity.${tableColumn.getName()}" cols="50" rows="5" required="required"></textarea>
-#elseif ($tableColumn.getWidgetType() == "dropdown")
-					<input type="hidden" class="form-control" ng-model="entry.${tableColumn.getName()}" required="required">
+						ng-model="entity.${tableColumn.name}" cols="50" rows="5" required="required"></textarea>
+#elseif ($tableColumn.widgetType == "dropdown")
+					<input type="hidden" class="form-control" ng-model="entry.${tableColumn.name}" required="required">
 					<div>
-						<select class="form-control" ng-model="entry.${tableColumn.getName()}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
+						<select class="form-control" ng-model="entry.${tableColumn.name}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
 					</div>
-#elseif ($tableColumn.getWidgetType() == "list")
-					<input type="hidden" class="form-control" ng-model="entry.${tableColumn.getName()}" ng-readonly="operation == 'show'" required="required">
+#elseif ($tableColumn.widgetType == "list")
+					<input type="hidden" class="form-control" ng-model="entry.${tableColumn.name}" ng-readonly="operation == 'show'" required="required">
 					<div>
-						<select class="form-control" multiple="true" ng-model="entry.${tableColumn.getName()}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
+						<select class="form-control" multiple="true" ng-model="entry.${tableColumn.name}" ng-options="option.item_id as option.item_name for option in items" ng-disabled="operation == 'show'" required="required"></select>	
 					</div>
-#elseif ($tableColumn.getWidgetType() == "integer")
+#elseif ($tableColumn.widgetType == "integer")
 					<input type="number" class="form-control text-right" pattern="\d*" step="1"
-						ng-model="entity.${tableColumn.getName()}" required="required">
-#elseif ($tableColumn.getWidgetType() == "float")
+						ng-model="entity.${tableColumn.name}" required="required">
+#elseif ($tableColumn.widgetType == "float")
 					<input type="number" class="form-control text-right" pattern="[0-9]+([\.,][0-9]+)?" step="0.01"
-						ng-model="entity.${tableColumn.getName()}" required="required">
+						ng-model="entity.${tableColumn.name}" required="required">
 #else
-					<input type="text" class="form-control" ng-model="entity.${tableColumn.getName()}" required="required">
+					<input type="text" class="form-control" ng-model="entity.${tableColumn.name}" required="required">
 #end
 #end
 					<br>
@@ -113,8 +113,8 @@
 		angular.module('page').controller('NewOrEditController', function ($scope, $http) {
 			var url = '${serviceFileName}';
 #foreach ($tableColumn in $tableColumns)
-#if ($tableColumn.isKey())
-	  		$scope.primaryKey = '${tableColumn.getName()}';
+#if ($tableColumn.key)
+	  		$scope.primaryKey = '${tableColumn.name}';
 #end
 #end
 			$scope.urlParameter = getURLParameter($scope.primaryKey);
@@ -189,11 +189,11 @@
   			$scope.format = $scope.formats[0];
 	        
 #foreach ($tableColumn in $tableColumns) 
-#if ($tableColumn.getWidgetType() == "date")
-			$scope.${tableColumn.getName()}Open = function($event) {
-				$scope.${tableColumn.getName()}Status.opened = true;
+#if ($tableColumn.widgetType == "date")
+			$scope.${tableColumn.name}Open = function($event) {
+				$scope.${tableColumn.name}Status.opened = true;
 			};
-			$scope.${tableColumn.getName()}Status = {
+			$scope.${tableColumn.name}Status = {
 				opened: false
 			};
 #end

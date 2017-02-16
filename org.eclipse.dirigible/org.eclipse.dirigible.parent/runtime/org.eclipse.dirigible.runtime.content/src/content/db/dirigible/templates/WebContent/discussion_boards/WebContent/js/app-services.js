@@ -1,20 +1,6 @@
 (function(angular){
 "use strict";
 	angular.module('discussion-boards')
-	.service('$DBoardVisits', ['BoardVisits', '$q', function(BoardVisits, $q) {
-		var visited = [];
-		var put = function(boardId){
-			if(visited.indexOf(boardId)<0){
-				visited.push(boardId);
-				return BoardVisits.update({"boardId": boardId}, {}).$promise;
-			} else {
-				return $q.when(false);
-			}
-		};
-	  	return {
-	  		visit: put
-	  	};
-	}])
 	.service('$TimeFormat', ['$moment', function($moment){
 		function asElapsedTimeString(time){
 			if(time)
@@ -28,7 +14,7 @@
 			asFormattedTimeString: asFormattedTimeString
 		};
 	}])
-	.service('$Comments', ['BoardComments', '$TimeFormat', '$moment', function(BoardComments, $TimeFormat, $moment){
+	.service('$Comments', ['BoardComments', '$SecureComment', '$TimeFormat', '$moment', '$rootScope', function(BoardComments, $SecureComment, $TimeFormat, $moment, $rootScope){
 	
 		var formatComment = function(comment){
 			comment.timeSincePublish = $TimeFormat.asElapsedTimeString(comment.publishTime);
@@ -41,10 +27,16 @@
 		};
 	
 		var list = function(boardId, mode){
-			if(mode && mode!=='timeline')
+			if(mode && ['timeline', 'thread'].indexOf(mode)<0)
 				throw Error('Unknown list mode for requesting board comments: ' + mode);
+			var params = {};
+			params['boardId']=boardId;
+			if(mode === 'thread'){
+				params['$expand']='replies';
+				params['thread']=true;
+			}
 			return BoardComments
-					.get({boardId: boardId, listMode: mode}).$promise.
+					.query(params).$promise.
 					then(function(commentsData){
 						var comments = commentsData.map(function(comment){
 							return formatComment(comment);
@@ -52,13 +44,43 @@
 						return comments;
 					});
 		};
+		
+		var save = function(comment){
+			$rootScope.$broadcast('dboards.comments.save', comment);
+			return $SecureComment.save(comment).$promise;		
+		};
+		
+		var update = function(comment){
+			return $SecureComment.update(comment).$promise;		
+		};
+		
+		var remove = function(comment){
+			$rootScope.$broadcast('dboards.comments.remove', comment);
+			return $SecureComment['delete']({"commentId": comment.id}).$promise;		
+		};
+
+	  	var hasPrivilege = function(username, privilege, comment, board){
+  			if(privilege === 'edit' && comment.user === username)
+  				return true;
+  			if(privilege === 'delete' && [board.user, comment.user].indexOf(username) > -1)
+  				return true;
+			if(privilege === 'comment' && username!==undefined)
+  				return true;
+			if(privilege === 'reply' && username!==undefined)
+  				return true;
+	  		return false;
+	  	};
 	
 		return {
 			list: list,
-			formatComment: formatComment
+			formatComment: formatComment,
+			save: save,
+			update: update,
+			remove: remove,
+			hasPrivilege: hasPrivilege
 		};
 	}])	
-	.service('$Boards', ['Board', 'BoardVote', 'BoardTags', '$Comments', '$UserImg', '$moment', function(Board, BoardVote, BoardTags, $Comments, $UserImg, $moment) {
+	.service('$Boards', ['Board', 'SecureBoard', 'BoardVisits', 'BoardVote', 'SecureBoardVote', 'BoardTags', 'SecureBoardTags', '$Comments', '$moment', '$log', function(Board, SecureBoard, BoardVisits, BoardVote, SecureBoardVote, BoardTags, SecureBoardTags, $Comments, $moment, $log) {
 		
 		function asElapsedTimeString(time){
 			if(time)
@@ -114,51 +136,56 @@
 			board.ratingShort = formatNumberShort(board.rating);
   			return board;
 		}
-		
-		var list = function(){
-			return Board.query({expanded:true}).$promise
+
+		var visits = [];
+		var visit = function(board){
+			if(visits.indexOf(board.id)<0){
+				visits.push(board.id);
+				board.visitsShort = formatNumberShort(++board.visits);
+				BoardVisits.update({"boardId": board.id}, {}).$promise
+				.catch(function(err){
+					board.visitsShort = formatNumberShort(--board.visits);
+					$log.error(err.message)
+				});
+			}
+		};
+		var list = function(params){
+			params = params || {};
+			params['$expand'] = 'votes,tags';
+			return Board.query(params).$promise
           	.then(function(data){
-          		return data.map(function(boardData){
-          			var board = formatEntity(boardData);
-          			board.userDetails = {
-						avatar: "/services/js/usr/svc/user.js/$pics/"+board.user 
-					};
-					$UserImg.get(board.user)
-					.then(function(image){
-						if(!image){
-							board.userDetails.avatar = undefined;
-						}
-					});
-          			return board;
+          		var _entities = (data.entities || data).map(function(boardData){
+          			return formatEntity(boardData);
           		});
+          		var res = _entities;
+          		if(params.$limit!==undefined){
+          			res = {
+	          			entities: _entities,
+	          			count: data.$count
+	          		};
+          		}
+          		return res;
           	});          	
 		};
 		var get = function(boardId){
-			return Board.get({"boardId": boardId, "expanded":true}).$promise
+			return Board.get({"boardId": boardId, "$expand":"votes,tags,comments"}).$promise
 			.then(function(board){
-	      		board = formatEntity(board);
-	      		board.userDetails = {
-					avatar: "/services/js/usr/svc/user.js/$pics/"+board.user 
-				};
-				$UserImg.get(board.user)
-				.then(function(image){
-					if(!image)
-						board.userDetails.avatar= undefined;
-				});
-				return board;
+	      		return formatEntity(board);
 			});
 		};
 		var update = function(board){
-			return Board.update(board).$promise
+			return SecureBoard.update(board).$promise
 			.then(function(board){
 	      		return formatEntity(board);
 			});
 		};	
 		var remove = function(board){
-			return Board.remove({boardId: board.id, cascaded:true}).$promise;
-		};		
+			if(visits.indexOf(board.id)>-1)
+				visits.splice(visits.indexOf(board.id), 1);
+			return SecureBoard.remove({boardId: board.id, cascaded:true}).$promise;
+		};
 		var saveVote = function(board, v){
-			return BoardVote.save({"boardId": board.id}, {"vote":v}).$promise
+			return SecureBoardVote.save({"boardId": board.id}, {"vote":v}).$promise
 			.then(function(){
 	      		return get(board.id);
 			});
@@ -176,19 +203,28 @@
 			});
 		};
 		var setTags = function(board, tags){
-			return BoardTags.save({"boardId": board.id}, tags).$promise;
+			return SecureBoardTags.save({"boardId": board.id}, tags).$promise;
 		};
 		var untag = function(board, tags){
-			return BoardTags.remove({"boardId": board.id}, tags).$promise;
+			return SecureBoardTags.remove({"boardId": board.id}, tags).$promise;
 		};
 		var lock = function(board){
 			board.locked = true;
-			return Board.update({"boardId": board.id}, board).$promise;
+			return SecureBoard.update({"boardId": board.id}, board).$promise;
 		};		
 		var unlock = function(board){
 			board.locked = false;
-			return Board.update({"boardId": board.id}, board).$promise;
-		};		
+			return SecureBoard.update({"boardId": board.id}, board).$promise;
+		};
+		
+	  	var hasPrivilege = function(username, privilege, board){
+			if(['lock', 'tag', 'delete', 'edit'].indexOf(privilege)>-1 && board.user === username)
+  				return true;
+			if(privilege === 'vote' && board.user !== username)
+  				return true;
+	  		return false;
+	  	};		
+
 	 	return {
 	 		list: list,
 	 		get :get,
@@ -200,7 +236,9 @@
 	 		setTags: setTags,
 	 		untag: untag,
 	 		lock: lock,
-	 		unlock:unlock
+	 		unlock:unlock,
+	 		visit: visit,
+	 		hasPrivilege: hasPrivilege
 	 	};
 	}])	
 	.service('FilterList', [function() {

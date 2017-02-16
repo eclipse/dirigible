@@ -10,10 +10,15 @@
             "type": "git",
             "url": "https://github.com/dirigiblelabs/arestme.git",
             "branch":"master"
+    	},{
+            "guid":"daoism",
+            "type":"git",
+            "url":"https://github.com/dirigiblelabs/daoism.git",
+            "branch":"master"
     	}, {
-    	    "guid":"core_users",
+    	    "guid":"iam",
 	        "type":"git",
-	        "url":"https://github.com/dirigiblelabs/core_users.git",
+	        "url":"https://github.com/dirigiblelabs/core_iam.git",
 	        "branch":"master"
     	}, {
     	    "guid":"tags",

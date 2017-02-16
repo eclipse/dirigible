@@ -1,6 +1,18 @@
 [
   {
-    "location":"/${packageName}/",
+    "location":"/${packageName}/svc/user",
+    "roles":
+      [
+        {"role":"Everyone"}
+      ]
+  },{
+    "location":"/${packageName}/login",
+    "roles":
+      [
+        {"role":"Everyone"}
+      ]
+  },{
+    "location":"/${packageName}/index.html#/login",
     "roles":
       [
         {"role":"Everyone"}

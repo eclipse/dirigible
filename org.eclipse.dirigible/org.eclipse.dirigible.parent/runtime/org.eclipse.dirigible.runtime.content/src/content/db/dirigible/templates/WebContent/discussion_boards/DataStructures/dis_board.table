@@ -4,7 +4,7 @@
     [
       {
         "name":"${packageName.toUpperCase()}B_ID",
-        "type":"INTEGER",
+        "type":"BIGINT",
         "length":"0",
         "notNull":"true",
         "primaryKey":"true",
@@ -60,7 +60,7 @@
       },
       {
         "name":"${packageName.toUpperCase()}B_VISITS",
-        "type":"INTEGER",
+        "type":"BIGINT",
         "length":"0",
         "notNull":"false",
         "primaryKey":"false",

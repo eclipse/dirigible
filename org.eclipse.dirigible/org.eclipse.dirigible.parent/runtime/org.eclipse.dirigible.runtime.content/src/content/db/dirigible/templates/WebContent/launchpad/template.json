@@ -1,41 +1,62 @@
 {  
-    "name": "Launchpad",
-    "description": "Launchpad application",
-    "image": "launchpad.png",
-    "preview": "launchpad-preview.png",
+    "name":"Launchpad",
+    "description":"Launchpad application",
+    "image":"launchpad.png",
+    "preview":"launchpad-preview.png",
     "sources": [{
-        "name": "index.html",
-        "action": "generate"
+        "name":"index.html",
+        "rootFolder":"WebContent",
+        "action":"generate",
+        "rename":"%s"
     }, {
-        "name": "WebContent/styles/custom.css",
-        "action": "copy"
+        "name":"WebContent/styles/custom.css",
+        "rootFolder":"WebContent",
+        "packagePath":"styles",
+        "action":"copy"
     }, {
-        "name": "WebContent/styles/main.css",
-        "action": "copy"
+        "name":"WebContent/styles/main.css",
+        "rootFolder":"WebContent",
+        "packagePath":"styles",
+        "action":"copy"
     }, {
-        "name": "WebContent/templates/home.html",
-        "action": "copy"
+        "name":"WebContent/templates/home.html",
+        "rootFolder":"WebContent",
+        "packagePath":"templates",
+        "action":"copy"
     }, {
-        "name": "WebContent/templates/view.html",
-        "action": "copy"
+        "name":"WebContent/templates/view.html",
+        "rootFolder":"WebContent",
+        "packagePath":"templates",
+        "action":"copy"
     }, {
-        "name": "ExtensionDefinitions/extension_point/launchpad.extensionpoint",
-        "action": "generate"
+        "name":"ExtensionDefinitions/extension_point/launchpad.extensionpoint",
+        "rootFolder":"ExtensionDefinitions",
+        "packagePath":"extension_point",
+        "action":"generate"
     }, {
-        "name": "ScriptingServices/api/home.js",
-        "action": "generate"
+        "name":"ScriptingServices/api/home.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"api",
+        "action":"generate"
     }, {
-        "name": "ScriptingServices/api/menu.js",
-        "action": "generate"
+        "name":"ScriptingServices/api/menu.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"api",
+        "action":"generate"
     }, {
-        "name": "ScriptingServices/extension/launchpadExtensionUtils.js",
-        "action": "generate"
+        "name":"ScriptingServices/extension/launchpadExtensionUtils.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"extension",
+        "action":"generate"
     }, {
-        "name": "ScriptingServices/templates/appTemplate.js",
-        "action": "generate"
+        "name":"ScriptingServices/templates/appTemplate.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"templates",
+        "action":"generate"
     }, {
-        "name": "ScriptingServices/app.js",
-        "action": "generate"
+        "name":"ScriptingServices/app.js",
+        "rootFolder":"ScriptingServices",
+        "action":"generate"
     }],
     "parameters": [{
         "name":"templateType",

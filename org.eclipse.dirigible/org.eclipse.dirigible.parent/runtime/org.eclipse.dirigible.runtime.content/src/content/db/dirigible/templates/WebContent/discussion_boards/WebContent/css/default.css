@@ -8,7 +8,18 @@ html, body {
 body{
 	background-color: #f9f9f9;
 }
- 	
+
+/* Fixes bootstrap dropdown when it's on the right -side page border */
+.pull-right .dropdown-menu:after {
+    left: auto;
+    right: 13px;
+}
+.pull-right .dropdown-menu {
+    left: auto;
+    right: 0;
+}
+/* Fixes bootstrap dropdown when it's on the right -side page border end*/ 	
+
 .container-fluid {
 	position: absolute;
 	top: 0;
@@ -179,6 +190,17 @@ body{
 
 .vote-tool{
 	font-size: 1.6em;
+	display: flex;
+	align-items: center;
+	width: 100%;	
+}
+
+.vote-tool .ctrl{
+	flex: 1 0 auto;
+}
+.vote-tool .num{
+	font-size:1.6rem;
+	color:#767676
 }
 
 .vote-tool .active { 
@@ -196,6 +218,26 @@ body{
     text-decoration: none;
     font-size: 0.875em;
     margin-right:10px
+}
+
+tags-input .tags {
+	box-shadow: none;
+}
+
+tags-input .tags .tag-item {
+	background: #f1f1f1
+}
+
+.tags .tag-item {
+	margin: 2px; 
+	padding: 0 5px; 
+	display: inline-block; 
+	float: left; 
+	height: 26px; 
+	line-height: 25px; 
+	border: 1px solid #acacac; 
+	border-radius: 3px;  
+	background: #f1f1f1
 }
 
 .discussion-header {

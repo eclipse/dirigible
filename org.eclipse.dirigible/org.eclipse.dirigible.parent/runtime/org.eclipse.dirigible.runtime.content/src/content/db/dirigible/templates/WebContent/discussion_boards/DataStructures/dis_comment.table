@@ -4,7 +4,7 @@
     [
       {
         "name":"${packageName.toUpperCase()}C_ID",
-        "type":"INTEGER",
+        "type":"BIGINT",
         "length":"0",
         "notNull":"true",
         "primaryKey":"true",
@@ -13,7 +13,7 @@
       ,
       {
         "name":"${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID",
-        "type":"INTEGER",
+        "type":"BIGINT",
         "length":"0",
         "notNull":"true",
         "primaryKey":"false",
@@ -22,7 +22,7 @@
       ,
       {
         "name":"${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID",
-        "type":"INTEGER",
+        "type":"BIGINT",
         "length":"0",
         "notNull":"false",
         "primaryKey":"false",

@@ -58,7 +58,7 @@ function handleGetRequest(httpRequest, httpResponse, xss) {
 			if (entity !== null) {
 				sendResponse(httpResponse, httpResponse.OK, 'application/json', JSON.stringify(entity, null, 2));
 			} else {
-				sendResponse(httpResponse, httpResponse.NOT_FOUND, 'text/plain', 'No entity found with \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName().toLowerCase()}#end#end\'=' + id);
+				sendResponse(httpResponse, httpResponse.NOT_FOUND, 'text/plain', 'No entity found with \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name.toLowerCase()}#end#end\'=' + id);
 			}
 		} else if (count !== null) {
 			var ${fileNameNoExtension}Count = ${fileNameNoExtension}Dao.count();
@@ -82,16 +82,16 @@ function handlePostRequest(httpRequest, httpResponse) {
 function handlePutRequest(httpRequest, httpResponse) {
 	var entity = getRequestBody(httpRequest);
 	var id = getIdParameter(httpRequest, xss);
-	id = id !== null ? id : entity.#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName().toLowerCase()}#end#end;
+	id = id !== null ? id : entity.#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name.toLowerCase()}#end#end;
 	if (id !== null) {
 		if (${fileNameNoExtension}Dao.get(id) !== null) {
 			${fileNameNoExtension}Dao.update(entity);
 			sendResponse(httpResponse, httpResponse.NO_CONTENT);
 		} else {
-			sendResponse(httpResponse, httpResponse.NOT_FOUND, 'text/plain', 'No entity found with \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName().toLowerCase()}#end#end\'=' + id);
+			sendResponse(httpResponse, httpResponse.NOT_FOUND, 'text/plain', 'No entity found with \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name.toLowerCase()}#end#end\'=' + id);
 		}
 	} else {
-		sendResponse(httpResponse, httpResponse.PRECONDITION_FAILED, 'text/plain', 'Expected \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName().toLowerCase()}#end#end\' parameter is missing!');
+		sendResponse(httpResponse, httpResponse.PRECONDITION_FAILED, 'text/plain', 'Expected \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name.toLowerCase()}#end#end\' parameter is missing!');
 	}
 
 }
@@ -104,10 +104,10 @@ function handleDeleteRequest(httpRequest, httpResponse, xss) {
 			${fileNameNoExtension}Dao.delete(entity);
 			sendResponse(httpResponse, httpResponse.NO_CONTENT);
 		} else {
-			sendResponse(httpResponse, httpResponse.NOT_FOUND, 'text/plain', 'No entity found with \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName().toLowerCase()}#end#end\'=' + id);
+			sendResponse(httpResponse, httpResponse.NOT_FOUND, 'text/plain', 'No entity found with \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name.toLowerCase()}#end#end\'=' + id);
 		}
 	} else {
-		sendResponse(httpResponse, httpResponse.PRECONDITION_FAILED, 'text/plain', 'Expected \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName().toLowerCase()}#end#end\' parameter is missing!');
+		sendResponse(httpResponse, httpResponse.PRECONDITION_FAILED, 'text/plain', 'Expected \'#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name.toLowerCase()}#end#end\' parameter is missing!');
 	}
 }
 
@@ -118,7 +118,7 @@ function handleNotAllowedRequest(httpResponse) {
 // Retrieve the Id parameter
 function getIdParameter(httpRequest, xss) {
 	var id = xss.escapeSql(httpRequest.getAttribute('path'));
-	id = id !== null ? id : xss.escapeSql(httpRequest.getParameter('#foreach ($tableColumn in $tableColumns)#if ($tableColumn.isKey())${tableColumn.getName().toLowerCase()}#end#end'));
+	id = id !== null ? id : xss.escapeSql(httpRequest.getParameter('#foreach ($tableColumn in $tableColumns)#if ($tableColumn.key)${tableColumn.name.toLowerCase()}#end#end'));
 	return id;
 }
 

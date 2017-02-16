@@ -43,8 +43,8 @@
 			            '<div id="bodyContent"><p>' +
 			            
 #foreach ($tableColumn in $tableColumns)
-#if($tableColumn.isVisible())
-			            '${tableColumn.getLabel()}: <b>' + entity.${tableColumn.getName()} + '</b><br>' +
+#if($tableColumn.visible)
+			            '${tableColumn.label}: <b>' + entity.${tableColumn.name} + '</b><br>' +
 #end
 #end			            
 			            '</p></div>';

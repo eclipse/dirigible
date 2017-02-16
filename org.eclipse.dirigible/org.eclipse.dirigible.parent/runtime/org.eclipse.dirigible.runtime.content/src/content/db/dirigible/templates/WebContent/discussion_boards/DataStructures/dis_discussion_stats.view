@@ -2,13 +2,14 @@
   "viewName":"${packageName.toUpperCase()}_DISCUSSION_STATS",
   "query":"SELECT
 	MAX(${packageName.toUpperCase()}C_LASTMODIFIED_TIME) AS LATEST_UPDATE_TIME,
-	COUNT(${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID) AS REPLIES,
-	COUNT(DISTINCT ${packageName.toUpperCase()}C_USER) AS PARTICIPANTS,
+	COUNT(${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID) AS REPLIES_COUNT,
+	COUNT(${packageName.toUpperCase()}C_ID) AS COMMENTS_COUNT,	
+	COUNT(DISTINCT ${packageName.toUpperCase()}C_USER) AS PARTICIPANTS_COUNT,
 	${packageName.toUpperCase()}B_ID	
 FROM ${packageName.toUpperCase()}_COMMENT, ${packageName.toUpperCase()}_BOARD
 WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID = ${packageName.toUpperCase()}B_ID
 GROUP BY ${packageName.toUpperCase()}B_ID
-ORDER BY LATEST_UPDATE_TIME, REPLIES, PARTICIPANTS DESC",
+ORDER BY LATEST_UPDATE_TIME, REPLIES_COUNT, PARTICIPANTS_COUNT, COMMENTS_COUNT DESC",
     "dependencies": [
         {"name": "${packageName.toUpperCase()}_COMMENT", "type": "TABLE"},
         {"name": "${packageName.toUpperCase()}_BOARD", "type": "TABLE"}

@@ -469,6 +469,16 @@ DAO.prototype.count = function() {
     return count;
 };
 
+/*
+ * list parameters:
+ * - $expand
+ * - $filter
+ * - $select
+ * - $sort
+ * - $order 
+ * - $limit
+ * - $offset
+ */
 DAO.prototype.list = function(settings) {
 	var expand = settings.$expand || settings.expand;
 	if(expand!==undefined){
@@ -488,9 +498,9 @@ DAO.prototype.list = function(settings) {
 
 	var listArgs = [];
 	for(var key in settings){
-		if(settings[key] && settings[key].constructor === Array)
+		if(settings[key] && settings[key].constructor === Array){
 			listArgs.push(' ' + key + settings[key]);
-		else
+		} else
 			listArgs.push(' ' + key + '[' + settings[key] + ']');
 	}
 	
@@ -516,9 +526,7 @@ DAO.prototype.list = function(settings) {
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
     var connection = this.datasource.getConnection();
     try {
-        var entities = [];
-        settings.expand = expand;
-       
+        var entities = [];       
 		var resultSet = this.ormstatements.execute(parametericStatement, connection, settings);
         
         while (resultSet.next()) {
