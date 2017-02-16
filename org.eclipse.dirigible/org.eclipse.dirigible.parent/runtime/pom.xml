@@ -60,7 +60,7 @@
 		<module>org.eclipse.dirigible.runtime.javascript.rhino</module>
 		<module>org.eclipse.dirigible.runtime.javascript.rhino.debugger</module>
 		<module>org.eclipse.dirigible.runtime.javascript.nashorn</module>
-		<module>org.eclipse.dirigible.runtime.javascript.v8</module>
+		
 		<module>org.eclipse.dirigible.runtime.javascript.test</module>
 		<module>org.eclipse.dirigible.runtime.mobile</module>
 		<module>org.eclipse.dirigible.runtime.command</module>
