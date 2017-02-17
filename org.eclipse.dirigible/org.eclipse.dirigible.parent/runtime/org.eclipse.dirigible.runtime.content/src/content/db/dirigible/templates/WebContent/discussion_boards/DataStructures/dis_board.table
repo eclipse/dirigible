@@ -1,9 +1,9 @@
 {
-  "tableName":"${packageName.toUpperCase()}_BOARD",
+  "tableName":"${fileNameNoExtension.toUpperCase()}_BOARD",
   "columns":
     [
       {
-        "name":"${packageName.toUpperCase()}B_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}B_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
@@ -11,7 +11,7 @@
         "defaultValue":""
       },
       {
-        "name":"${packageName.toUpperCase()}B_SHORT_TEXT",
+        "name":"${fileNameNoExtension.toUpperCase()}B_SHORT_TEXT",
         "type":"VARCHAR",
         "length":"255",
         "notNull":"false",
@@ -19,7 +19,7 @@
         "defaultValue":""
       },
       {
-        "name":"${packageName.toUpperCase()}B_DESCRIPTION",
+        "name":"${fileNameNoExtension.toUpperCase()}B_DESCRIPTION",
         "type":"VARCHAR",
         "length":"10000",
         "notNull":"false",
@@ -27,7 +27,7 @@
         "defaultValue":""
       },
       {
-        "name":"${packageName.toUpperCase()}B_USER",
+        "name":"${fileNameNoExtension.toUpperCase()}B_USER",
         "type":"VARCHAR",
         "length":"100",
         "notNull":"false",
@@ -35,7 +35,7 @@
         "defaultValue":""
       },
       {
-        "name":"${packageName.toUpperCase()}B_PUBLISH_TIME",
+        "name":"${fileNameNoExtension.toUpperCase()}B_PUBLISH_TIME",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
@@ -43,7 +43,7 @@
         "defaultValue":""
       },
       {
-        "name":"${packageName.toUpperCase()}B_LASTMODIFIED_TIME",
+        "name":"${fileNameNoExtension.toUpperCase()}B_LASTMODIFIED_TIME",
         "type":"BIGINT",
         "length":"100",
         "notNull":"false",
@@ -51,7 +51,7 @@
         "defaultValue":""
       },
       {
-        "name":"${packageName.toUpperCase()}B_STATUS",
+        "name":"${fileNameNoExtension.toUpperCase()}B_STATUS",
         "type":"VARCHAR",
         "length":"100",
         "notNull":"false",
@@ -59,7 +59,7 @@
         "defaultValue":""
       },
       {
-        "name":"${packageName.toUpperCase()}B_VISITS",
+        "name":"${fileNameNoExtension.toUpperCase()}B_VISITS",
         "type":"BIGINT",
         "length":"0",
         "notNull":"false",
@@ -67,7 +67,7 @@
         "defaultValue":"0"
       },
       {
-        "name":"${packageName.toUpperCase()}B_LOCKED",
+        "name":"${fileNameNoExtension.toUpperCase()}B_LOCKED",
         "type":"SMALLINT",
         "length":"0",        
         "notNull":"false",

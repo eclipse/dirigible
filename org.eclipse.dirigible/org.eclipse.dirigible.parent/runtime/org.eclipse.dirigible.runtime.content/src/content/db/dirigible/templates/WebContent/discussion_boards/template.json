@@ -8,7 +8,12 @@
         "rootFolder":"WebContent",
         "action":"generate",
         "rename":"%s"
-    }, {
+    },{
+        "name":"WebContent/index.html",
+        "rootFolder":"WebContent",
+        "action":"generate"
+    }
+    , {
         "name":"WebContent/css/default.css",
         "rootFolder":"WebContent",
         "packagePath":"css",

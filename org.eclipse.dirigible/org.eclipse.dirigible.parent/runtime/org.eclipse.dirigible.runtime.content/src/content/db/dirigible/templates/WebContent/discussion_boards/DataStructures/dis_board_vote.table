@@ -1,9 +1,9 @@
 {
-  "tableName":"${packageName.toUpperCase()}_BOARD_VOTE",
+  "tableName":"${fileNameNoExtension.toUpperCase()}_BOARD_VOTE",
   "columns":
     [
       {
-        "name":"${packageName.toUpperCase()}V_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}V_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
@@ -12,7 +12,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}V_${packageName.toUpperCase()}B_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}V_${fileNameNoExtension.toUpperCase()}B_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
@@ -21,7 +21,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}V_USER",
+        "name":"${fileNameNoExtension.toUpperCase()}V_USER",
         "type":"VARCHAR",
         "length":"100",
         "notNull":"true",
@@ -30,7 +30,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}V_VOTE",
+        "name":"${fileNameNoExtension.toUpperCase()}V_VOTE",
         "type":"SMALLINT",
         "length":"0",
         "notNull":"true",

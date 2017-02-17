@@ -5,22 +5,22 @@
 "use strict";
 
 var BoardTagORM = {
-	dbName: '${packageName.toUpperCase()}_BOARD_TAG',
+	dbName: '${fileNameNoExtension.toUpperCase()}_BOARD_TAG',
 	properties: [{
 			name: "id",
-			dbName: "${packageName.toUpperCase()}BT_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}BT_ID",
 			id: true,
 			required: true,
 			type: "Long"
 		},{
 			name: "boardId",
-			dbName: "${packageName.toUpperCase()}BT_${packageName.toUpperCase()}B_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}BT_${fileNameNoExtension.toUpperCase()}B_ID",
 			id: true,
 			required: true,
 			type: "Long"
 		},{
 			name: "tagId",
-			dbName: "${packageName.toUpperCase()}BT_ANN_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}BT_ANN_ID",
 			id: true,
 			required: true,
 			type: "Long"

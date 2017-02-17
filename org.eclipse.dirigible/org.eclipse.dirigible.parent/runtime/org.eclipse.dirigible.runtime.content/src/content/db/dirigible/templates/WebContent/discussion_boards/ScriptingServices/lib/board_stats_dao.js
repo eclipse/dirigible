@@ -4,7 +4,7 @@
 "use strict";
 
 var boardStatsDAOorm = {
-	dbName: "${packageName.toUpperCase()}_BOARD_STATS",
+	dbName: "${fileNameNoExtension.toUpperCase()}_BOARD_STATS",
 	properties: [{
 			name: "user",
 			dbName: "USER_USERNAME",
@@ -12,7 +12,7 @@ var boardStatsDAOorm = {
 			size: 100
 		},{
 			name: "visits",
-			dbName: "${packageName.toUpperCase()}B_VISITS",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_VISITS",
 			type: "Int"
 		},{
 			name: "latestDiscussionUpdateTime",

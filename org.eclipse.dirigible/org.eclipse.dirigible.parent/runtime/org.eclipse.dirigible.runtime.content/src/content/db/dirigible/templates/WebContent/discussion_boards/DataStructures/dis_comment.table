@@ -1,9 +1,9 @@
 {
-  "tableName":"${packageName.toUpperCase()}_COMMENT",
+  "tableName":"${fileNameNoExtension.toUpperCase()}_COMMENT",
   "columns":
     [
       {
-        "name":"${packageName.toUpperCase()}C_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}C_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
@@ -12,7 +12,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}C_${fileNameNoExtension.toUpperCase()}B_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
@@ -21,7 +21,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}C_REPLY_TO_${fileNameNoExtension.toUpperCase()}C_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"false",
@@ -30,7 +30,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}C_COMMENT_TEXT",
+        "name":"${fileNameNoExtension.toUpperCase()}C_COMMENT_TEXT",
         "type":"VARCHAR",
         "length":"255",
         "notNull":"false",
@@ -39,7 +39,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}C_PUBLISH_TIME",
+        "name":"${fileNameNoExtension.toUpperCase()}C_PUBLISH_TIME",
         "type":"BIGINT",
         "length":"",
         "notNull":"true",
@@ -48,7 +48,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}C_LASTMODIFIED_TIME",
+        "name":"${fileNameNoExtension.toUpperCase()}C_LASTMODIFIED_TIME",
         "type":"BIGINT",
         "length":"",
         "notNull":"false",
@@ -57,7 +57,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}C_USER",
+        "name":"${fileNameNoExtension.toUpperCase()}C_USER",
         "type":"VARCHAR",
         "length":"100",
         "notNull":"false",

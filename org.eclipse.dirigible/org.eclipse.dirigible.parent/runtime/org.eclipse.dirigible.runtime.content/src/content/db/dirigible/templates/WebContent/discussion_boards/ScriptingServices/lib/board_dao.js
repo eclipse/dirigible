@@ -5,27 +5,27 @@
 "use strict";
 
 var BoardsORM = {
-	dbName: "${packageName.toUpperCase()}_BOARD",
+	dbName: "${fileNameNoExtension.toUpperCase()}_BOARD",
 	properties: [
 		{
 			name: "id",
-			dbName: "${packageName.toUpperCase()}B_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_ID",
 			id: true,
 			required: true,
 			type: "Long"
 		},{
 			name: "shortText",
-			dbName: "${packageName.toUpperCase()}B_SHORT_TEXT",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_SHORT_TEXT",
 			type: "String",
 			size: 500
 		},{
 			name: "description",
-			dbName: "${packageName.toUpperCase()}B_DESCRIPTION",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_DESCRIPTION",
 			type: "String",
 			size: 10000
 		},{
 			name: "publishTime",
-			dbName: "${packageName.toUpperCase()}B_PUBLISH_TIME",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_PUBLISH_TIME",
 			required: true,
 			type: "Long",
 			dbValue: function(entity){
@@ -37,7 +37,7 @@ var BoardsORM = {
 			allowedOps: ['insert']
 		},{
 			name: "lastModifiedTime",
-			dbName: "${packageName.toUpperCase()}B_LASTMODIFIED_TIME",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_LASTMODIFIED_TIME",
 			type: "Long",
 			dbValue: function(entity){
 				return entity.lastModifiedTime !== undefined ? new Date(entity.lastModifiedTime).getTime() : null;
@@ -47,16 +47,16 @@ var BoardsORM = {
 			}
 		},{
 			name: "status",
-			dbName: "${packageName.toUpperCase()}B_STATUS",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_STATUS",
 			type: "String",
 			size:255
 		},{
 			name: "visits",
-			dbName: "${packageName.toUpperCase()}B_VISITS",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_VISITS",
 			type: "Long"
 		},{
 			name: "locked",
-			dbName: "${packageName.toUpperCase()}B_LOCKED",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_LOCKED",
 			type: "Short",
 			dbValue: function(entity){
 				return entity.locked ? 1 : 0;
@@ -66,7 +66,7 @@ var BoardsORM = {
 			}
 		},{
 			name: "user",
-			dbName: "${packageName.toUpperCase()}B_USER",
+			dbName: "${fileNameNoExtension.toUpperCase()}B_USER",
 			type: "String",
 			size: 255
 		}	
