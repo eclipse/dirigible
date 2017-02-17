@@ -287,10 +287,43 @@
 
 	<!-- Security -->
 	
-	<!-- Basic -->
+	<!-- Basic
 	<login-config>
 		<auth-method>BASIC</auth-method>
 	</login-config>
+	-->
+	
+	<login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+         	<form-login-page>/loginform.html</form-login-page>
+            <form-error-page>/loginerror.html</form-error-page>
+    	</form-login-config>
+    </login-config>
+
+	<!-- Error Pages -->     
+    <error-page>
+	    <error-code>403</error-code>
+	    <location>/403.html</location>
+	</error-page>
+	<error-page>
+	    <error-code>404</error-code>
+	    <location>/404.html</location>
+	</error-page>
+	<error-page>
+	    <location>/error.html</location>
+	</error-page>
+
+	<!-- Landing Page -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Landing Page</web-resource-name>
+			<url-pattern>/index.html</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Everyone</role-name>
+		</auth-constraint>
+	</security-constraint>
 	
 	<!-- IDE Services -->
 	<security-constraint>
