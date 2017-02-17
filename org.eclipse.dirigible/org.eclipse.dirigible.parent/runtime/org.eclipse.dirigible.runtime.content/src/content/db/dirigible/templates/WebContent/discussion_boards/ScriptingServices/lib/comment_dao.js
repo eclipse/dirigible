@@ -5,22 +5,22 @@
 "use strict";
 
 var CommentsORM = {
-	dbName: "${packageName.toUpperCase()}_COMMENT",
+	dbName: "${fileNameNoExtension.toUpperCase()}_COMMENT",
 	properties: [
 		{
 			name: "id",
-			dbName: "${packageName.toUpperCase()}C_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}C_ID",
 			id: true,
 			required: true,
 			type: "Long"
 		},{
 			name: "boardId",
-			dbName: "${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}C_${fileNameNoExtension.toUpperCase()}B_ID",
 			required: true,
 			type: "Long"
 		},{
 			name: "replyToCommentId",
-			dbName: "${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}C_REPLY_TO_${fileNameNoExtension.toUpperCase()}C_ID",
 			type: "Long",
 			dbValue: function(entity){
 				return entity.replyToCommentId !==undefined ? entity.replyToCommentId : null;//TODO: Fixme as soon as all -1 entries are updated to null. Will work with null isntead of -1
@@ -30,12 +30,12 @@ var CommentsORM = {
 			},
 		},{
 			name: "text",
-			dbName: "${packageName.toUpperCase()}C_COMMENT_TEXT",
+			dbName: "${fileNameNoExtension.toUpperCase()}C_COMMENT_TEXT",
 			type: "String",
 			size: 10000
 		},{
 			name: "publishTime",
-			dbName: "${packageName.toUpperCase()}C_PUBLISH_TIME",
+			dbName: "${fileNameNoExtension.toUpperCase()}C_PUBLISH_TIME",
 			required: true,
 			type: "Long",
 			dbValue: function(entity){
@@ -47,7 +47,7 @@ var CommentsORM = {
 			allowedOps: ['insert']
 		},{
 			name: "lastModifiedTime",
-			dbName: "${packageName.toUpperCase()}C_LASTMODIFIED_TIME",
+			dbName: "${fileNameNoExtension.toUpperCase()}C_LASTMODIFIED_TIME",
 			type: "Long",
 			dbValue: function(entity){
 				return entity.lastModifiedTime !== undefined ? new Date(entity.lastModifiedTime).getTime() : null;
@@ -57,7 +57,7 @@ var CommentsORM = {
 			}
 		},{
 			name: "user",
-			dbName: "${packageName.toUpperCase()}C_USER",
+			dbName: "${fileNameNoExtension.toUpperCase()}C_USER",
 			type: "String",
 			size: 100,
 			dbValue: function(entity){

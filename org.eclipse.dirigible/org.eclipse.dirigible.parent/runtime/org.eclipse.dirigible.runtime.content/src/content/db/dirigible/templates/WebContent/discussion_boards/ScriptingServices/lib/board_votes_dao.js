@@ -5,28 +5,28 @@
 "use strict";
 
 var BoardVotesORM = {
-	dbName: "${packageName.toUpperCase()}_BOARD_VOTE",
+	dbName: "${fileNameNoExtension.toUpperCase()}_BOARD_VOTE",
 	properties: [
 		{
 			name: "id",
-			dbName: "${packageName.toUpperCase()}V_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}V_ID",
 			id: true,
 			required: true,
 			type: "Long"
 		},{
 			name: "boardId",
-			dbName: "${packageName.toUpperCase()}V_${packageName.toUpperCase()}B_ID",
+			dbName: "${fileNameNoExtension.toUpperCase()}V_${fileNameNoExtension.toUpperCase()}B_ID",
 			required: true,
 			type: "Long"
 		},{
 			name: "user",
-			dbName: "${packageName.toUpperCase()}V_USER",
+			dbName: "${fileNameNoExtension.toUpperCase()}V_USER",
 			required: true,
 			type: "String",
 			size: 100
 		},{
 			name: "vote",
-			dbName: "${packageName.toUpperCase()}V_VOTE",
+			dbName: "${fileNameNoExtension.toUpperCase()}V_VOTE",
 			required: true,
 			type: "Short"
 		}
@@ -68,7 +68,7 @@ BoardVotesDAO.prototype.vote = function(boardId, user, vote){
 						})[0];
 	if(previousVote === undefined || previousVote === null || previousVote === 0){
 		//Operations is INSERT
-		this.${D}log.info("Inserting "+this.orm.dbName+" relation between ${packageName.toUpperCase()}_BOARD["+boardId+"] and IAM_USER["+user+"]");
+		this.${D}log.info("Inserting "+this.orm.dbName+" relation between ${fileNameNoExtension.toUpperCase()}_BOARD["+boardId+"] and IAM_USER["+user+"]");
 		this.insert({
 			vote: vote,
 			boardId: boardId,

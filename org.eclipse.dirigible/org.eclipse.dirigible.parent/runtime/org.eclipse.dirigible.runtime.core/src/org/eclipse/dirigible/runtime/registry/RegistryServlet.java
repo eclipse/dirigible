@@ -99,7 +99,7 @@ public class RegistryServlet extends AbstractRegistryServlet {
 		if (requestPath == null) {
 			deep = true;
 		}
-		final OutputStream out = response.getOutputStream();
+
 		try {
 			repositoryPath = extractRepositoryPath(request);
 			final IEntity entity = getEntity(repositoryPath, request);
@@ -141,9 +141,15 @@ public class RegistryServlet extends AbstractRegistryServlet {
 							String.format("Resource at [%s] does not exist", requestPath));
 					return;
 				}
-				// artifact root folder doesn't exist at the public registry - no published artifacts at all
-				sendData(out, new byte[] {});
-				return;
+				final OutputStream out = response.getOutputStream();
+				try {
+					// artifact root folder doesn't exist at the public registry - no published artifacts at all
+					sendData(out, new byte[] {});
+					return;
+				} finally {
+					out.flush();
+					out.close();
+				}
 			}
 
 			if (entity instanceof IResource) {
@@ -172,17 +178,20 @@ public class RegistryServlet extends AbstractRegistryServlet {
 					response.setHeader(CONTENT_LANGUAGE, contentLang);
 				}
 			}
-			sendData(out, data);
-			setContentLengthHeader(entity, data.length, request, response);
+			final OutputStream out = response.getOutputStream();
+			try {
+				sendData(out, data);
+				setContentLengthHeader(entity, data.length, request, response);
+			} finally {
+				out.flush();
+				out.close();
+			}
 		} catch (final IllegalArgumentException ex) {
 			exceptionHandler(response, repositoryPath, HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		} catch (final MissingResourceException ex) {
 			exceptionHandler(response, repositoryPath, HttpServletResponse.SC_NO_CONTENT, ex.getMessage());
 		} catch (final RuntimeException ex) {
 			exceptionHandler(response, repositoryPath, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
-		} finally {
-			out.flush();
-			out.close();
 		}
 	}
 

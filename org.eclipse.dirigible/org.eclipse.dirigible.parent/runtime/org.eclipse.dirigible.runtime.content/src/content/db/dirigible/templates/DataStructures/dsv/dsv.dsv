@@ -1,3 +1,0 @@
-#foreach ($dsvSample in $dsvSamples)
-${dsvSample.toString()}
-#end

@@ -1,17 +1,17 @@
 {
-  "viewName":"${packageName.toUpperCase()}_DISCUSSION_STATS",
+  "viewName":"${fileNameNoExtension.toUpperCase()}_DISCUSSION_STATS",
   "query":"SELECT
-	MAX(${packageName.toUpperCase()}C_LASTMODIFIED_TIME) AS LATEST_UPDATE_TIME,
-	COUNT(${packageName.toUpperCase()}C_REPLY_TO_${packageName.toUpperCase()}C_ID) AS REPLIES_COUNT,
-	COUNT(${packageName.toUpperCase()}C_ID) AS COMMENTS_COUNT,	
-	COUNT(DISTINCT ${packageName.toUpperCase()}C_USER) AS PARTICIPANTS_COUNT,
-	${packageName.toUpperCase()}B_ID	
-FROM ${packageName.toUpperCase()}_COMMENT, ${packageName.toUpperCase()}_BOARD
-WHERE ${packageName.toUpperCase()}C_${packageName.toUpperCase()}B_ID = ${packageName.toUpperCase()}B_ID
-GROUP BY ${packageName.toUpperCase()}B_ID
+	MAX(${fileNameNoExtension.toUpperCase()}C_LASTMODIFIED_TIME) AS LATEST_UPDATE_TIME,
+	COUNT(${fileNameNoExtension.toUpperCase()}C_REPLY_TO_${fileNameNoExtension.toUpperCase()}C_ID) AS REPLIES_COUNT,
+	COUNT(${fileNameNoExtension.toUpperCase()}C_ID) AS COMMENTS_COUNT,	
+	COUNT(DISTINCT ${fileNameNoExtension.toUpperCase()}C_USER) AS PARTICIPANTS_COUNT,
+	${fileNameNoExtension.toUpperCase()}B_ID	
+FROM ${fileNameNoExtension.toUpperCase()}_COMMENT, ${fileNameNoExtension.toUpperCase()}_BOARD
+WHERE ${fileNameNoExtension.toUpperCase()}C_${fileNameNoExtension.toUpperCase()}B_ID = ${fileNameNoExtension.toUpperCase()}B_ID
+GROUP BY ${fileNameNoExtension.toUpperCase()}B_ID
 ORDER BY LATEST_UPDATE_TIME, REPLIES_COUNT, PARTICIPANTS_COUNT, COMMENTS_COUNT DESC",
     "dependencies": [
-        {"name": "${packageName.toUpperCase()}_COMMENT", "type": "TABLE"},
-        {"name": "${packageName.toUpperCase()}_BOARD", "type": "TABLE"}
+        {"name": "${fileNameNoExtension.toUpperCase()}_COMMENT", "type": "TABLE"},
+        {"name": "${fileNameNoExtension.toUpperCase()}_BOARD", "type": "TABLE"}
         ]
 }

@@ -1,9 +1,9 @@
 {
-  "tableName":"${packageName.toUpperCase()}_BOARD_TAG",
+  "tableName":"${fileNameNoExtension.toUpperCase()}_BOARD_TAG",
   "columns":
     [
       {
-        "name":"${packageName.toUpperCase()}BT_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}BT_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
@@ -12,7 +12,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}BT_${packageName.toUpperCase()}B_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}BT_${fileNameNoExtension.toUpperCase()}B_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
@@ -21,7 +21,7 @@
       }
       ,
       {
-        "name":"${packageName.toUpperCase()}BT_ANN_ID",
+        "name":"${fileNameNoExtension.toUpperCase()}BT_ANN_ID",
         "type":"BIGINT",
         "length":"0",
         "notNull":"true",
