@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dirigible.ide.common.status.LogProgressMonitor;
 import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.ide.workspace.ui.viewer.WorkspaceViewerUtils;
-import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.repository.velocity.VelocityGenerator;
@@ -74,34 +73,40 @@ public abstract class TemplateGenerator {
 	 */
 	public void generate(HttpServletRequest request) throws Exception {
 		TemplateSourceMetadata[] sources = getModel().getTemplate().getTemplateMetadata().getSources();
-		for (int i = 0; i < sources.length; i++) {
-			String targetLocation = getModel().getTargetLocation();
-			String name = sources[i].getName();
-			// alternative location check for surrounding template target
-			targetLocation = calcTargetLocation(targetLocation, name);
-			if ((name != null) && (name.indexOf(IRepository.SEPARATOR) > 1)) {
-				name = name.substring(name.lastIndexOf(IRepository.SEPARATOR));
-			}
-			String renaming = sources[i].getRename();
-			if ((renaming != null) && !"".equals(renaming)) {
-				// rename the surrounding template target
-				String baseFilename = FilenameUtils.getBaseName(getModel().getFileName());
-				String originalExtension = FilenameUtils.getExtension(name);
-				name = String.format(renaming, baseFilename) + FilenameUtils.EXTENSION_SEPARATOR + originalExtension;
-			}
-
-			if (sources[i].isGenerate()) {
-				if (i == 0) {
-					// leading template
-					generateFile(sources[i].getLocation(), targetLocation, getModel().getFileName(), request);
-				} else {
-					// surrounding templates
-					generateFile(sources[i].getLocation(), targetLocation, name, request);
-				}
+		for (TemplateSourceMetadata next : sources) {
+			String templateLocation = next.getLocation();
+			String targetLocation = getTargetLocation(next);
+			String fileName = getFileName(next);
+			if (next.isGenerate()) {
+				generateFile(templateLocation, targetLocation, fileName, request);
 			} else {
-				copyFile(name, targetLocation, sources[i].getLocation(), request);
+				copyFile(templateLocation, targetLocation, fileName, request);
 			}
 		}
+	}
+
+	private String getFileName(TemplateSourceMetadata source) {
+		String fileName = FilenameUtils.getBaseName(source.getName());
+		String extension = FilenameUtils.getExtension(source.getName());
+		if (source.isRenaming()) {
+			fileName = String.format(source.getRename(), FilenameUtils.getBaseName(getModel().getFileName()));
+		}
+		return fileName + FilenameUtils.EXTENSION_SEPARATOR + extension;
+	}
+
+	private String getTargetLocation(TemplateSourceMetadata next) {
+		StringBuilder targetLocation = new StringBuilder() //
+				.append(getModel().getProjectName()) //
+				.append(IRepository.SEPARATOR) //
+				.append(next.getRootFolder()) //
+				.append(IRepository.SEPARATOR) //
+				.append(getModel().getProjectPackageName());
+		if (next.getPackagePath() != null) {
+			targetLocation //
+					.append(IRepository.SEPARATOR) //
+					.append(next.getPackagePath());
+		}
+		return targetLocation.toString();
 	}
 
 	/**
@@ -132,50 +137,6 @@ public abstract class TemplateGenerator {
 	// default implementation - do nothing
 	protected byte[] afterGeneration(byte[] bytes) {
 		return bytes;
-	}
-
-	private String calcTargetLocation(String targetLocation, String name) {
-		if ((name != null) && (name.indexOf(IRepository.SEPARATOR) > 1)) {
-			String alternativeTarget = null;
-			if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES;
-			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
-			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES;
-			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
-			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.SECURITY_CONSTRAINTS)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.SECURITY_CONSTRAINTS;
-			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.TEST_CASES)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
-			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
-			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
-			} else if (name.startsWith(ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS)) {
-				alternativeTarget = ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
-			}
-			if (alternativeTarget != null) {
-				IPath location = new Path(targetLocation);
-				IPath target = new Path(IRepository.SEPARATOR);
-				String[] segments = location.segments();
-				int i = 1;
-				for (String segment : segments) {
-					if (i != 2) {
-						target = target.append(segment);
-					} else {
-						target = target.append(alternativeTarget);
-					}
-					i++;
-				}
-				String relativePath = name.substring(alternativeTarget.length());
-				relativePath = relativePath.substring(0, relativePath.lastIndexOf(IRepository.SEPARATOR));
-				target = target.append(relativePath);
-				return target.toString();
-			}
-		}
-		return targetLocation;
 	}
 
 	private void generateFile(String templateLocation, String targetLocation, String fileName, HttpServletRequest request) throws Exception {
@@ -227,9 +188,8 @@ public abstract class TemplateGenerator {
 		}
 	}
 
-	private void copyFile(String targetFileName, String targetLocation, String templateLocation, HttpServletRequest request)
-			throws IOException, Exception {
-		IPath location = new Path(targetLocation).append(targetFileName);
+	private void copyFile(String templateLocation, String targetLocation, String fileName, HttpServletRequest request) throws IOException, Exception {
+		IPath location = new Path(targetLocation).append(fileName);
 		InputStream in = GenerationModel.getInputStreamByTemplateLocation(templateLocation, request);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		IOUtils.copy(in, out);
