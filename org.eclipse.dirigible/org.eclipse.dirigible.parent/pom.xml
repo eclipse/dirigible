@@ -433,6 +433,7 @@
 
 	<modules>
 		<module>p2.external</module> <!-- Update Site for External Bundles -->
+        <module>p2.osgi</module> <!-- Update Site for OSGi Related External Bundles -->
 		<module>platform</module> <!-- Target Platform Definition -->
 		<module>repository</module> <!-- Artifact Repository Projects -->
 		<module>p2.repository</module> <!-- Update Site for Repository Bundles -->

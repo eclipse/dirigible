@@ -97,18 +97,18 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 					String engine = request.getParameter(IJavaScriptEngineExecutor.JS_ENGINE_TYPE);
 					String userAgent = request.getHeader("User-Agent");
 					if (IJavaScriptEngineExecutor.JS_TYPE_NASHORN.equalsIgnoreCase(engine)) {
-						javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_NASHORN, this);
+						javascriptEngineExecutor = createExecutor(IJavaScriptEngineExecutor.JS_TYPE_NASHORN);
 					} else
 						// if(userAgent.contains("Chrome")) {
 						if (IJavaScriptEngineExecutor.JS_TYPE_V8.equalsIgnoreCase(engine)) {
-						javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_V8, this);
+						javascriptEngineExecutor = createExecutor(IJavaScriptEngineExecutor.JS_TYPE_V8);
 					} else {
 						// Hard-coded defaults to Rhino until Nashorn incompatibilities get solved
-						javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_RHINO, this);
+						javascriptEngineExecutor = createExecutor(IJavaScriptEngineExecutor.JS_TYPE_RHINO);
 					}
 				} else {
 					// TODO: Jobs and Listeners only with Rhino for now - to be defined non-request configuration
-					javascriptEngineExecutor = JavaScriptActivator.createExecutor(IJavaScriptEngineExecutor.JS_TYPE_RHINO, this);
+					javascriptEngineExecutor = createExecutor(IJavaScriptEngineExecutor.JS_TYPE_RHINO);
 				}
 			} catch (Throwable t) {
 				logger.error(t.getMessage());
@@ -117,6 +117,10 @@ public class JavaScriptExecutor extends AbstractScriptExecutor implements IJavaS
 		}
 		return javascriptEngineExecutor.executeServiceModule(request, response, input, module, executionContext);
 
+	}
+
+	protected IJavaScriptEngineExecutor createExecutor(String type) throws IOException {
+		return JavaScriptExecutorFactory.createExecutor(type, this);
 	}
 
 	@Override

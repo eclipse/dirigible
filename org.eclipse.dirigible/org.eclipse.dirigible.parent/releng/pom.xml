@@ -197,6 +197,7 @@
 	<modules>
 		<module>runtime.tomcat</module>
 		<module>all.tomcat</module>
+        <module>air.tomcat</module>
 	</modules>
 
 </project>

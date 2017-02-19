@@ -42,7 +42,7 @@ public class DataSourceFacade {
 
 	private static final String EMPTY = "";
 
-	private static final String EMBEDDED_DATA_SOURCE_IS_USED = Messages.DataSourceFacade_EMBEDDED_DATA_SOURCE_IS_USED;
+	private static final String EMBEDDED_DATA_SOURCE_IS_USED = "Embedded DataSource is used! In case you intentionally use local datasource, ignore this error."; //$NON-NLS-1$
 
 	private static final String LOCAL_DB_ACTION = "create"; //$NON-NLS-1$
 	private static final String LOCAL_DB_NAME = "derby"; //$NON-NLS-1$

@@ -1,13 +1,8 @@
 package org.eclipse.dirigible.repository.datasource;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 
 public class DataSourcesActivator implements BundleActivator {
 
@@ -15,32 +10,13 @@ public class DataSourcesActivator implements BundleActivator {
 
 	private static BundleContext context;
 
+	public static BundleContext getContext() {
+		return context;
+	}
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		DataSourcesActivator.context = context;
-	}
-
-	public static <T> Collection<T> getServices(Class<T> clazz) {
-
-		if (DataSourcesActivator.context == null) {
-			// non-osgi env - e.g. unit tests
-			return null;
-		}
-
-		Collection<T> services = null;
-		Collection<ServiceReference<T>> serviceReferences;
-		try {
-			serviceReferences = DataSourcesActivator.context.getServiceReferences(clazz, null);
-			services = new ArrayList<T>();
-			for (ServiceReference<T> serviceReference : serviceReferences) {
-				services.add(DataSourcesActivator.context.getService(serviceReference));
-			}
-
-		} catch (InvalidSyntaxException e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
-		}
-		return services;
 	}
 
 	@Override
