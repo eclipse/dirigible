@@ -166,7 +166,12 @@ public interface ICommonConstants {
 	public static final String INIT_PARAM_JDBC_WAIT_TIMEOUT = "jdbcWaitTimeout";
 	public static final String INIT_PARAM_JDBC_WAIT_COUNT = "jdbcWaitCount";
 	public static final String INIT_PARAM_REPOSITORY_PROVIDER = "repositoryProvider"; //$NON-NLS-1$
+	public static final String INIT_PARAM_REPOSITORY_PROVIDER_LOCAL = "local"; //$NON-NLS-1$
+	public static final String INIT_PARAM_REPOSITORY_PROVIDER_DB = "db"; //$NON-NLS-1$
 	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER = "repositoryProviderMaster"; //$NON-NLS-1$
+	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER_DB = "db"; //$NON-NLS-1$
+	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER_FILESYSTEM = "filesystem"; //$NON-NLS-1$
+	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER_GIT = "git"; //$NON-NLS-1$
 	public static final String INIT_PARAM_DEFAULT_DATASOURCE_TYPE = "defaultDataSourceType"; //$NON-NLS-1$
 	public static final String INIT_PARAM_DEFAULT_DATASOURCE_TYPE_JNDI = "jndi"; //$NON-NLS-1$
 	public static final String INIT_PARAM_DEFAULT_DATASOURCE_TYPE_LOCAL = "local"; //$NON-NLS-1$

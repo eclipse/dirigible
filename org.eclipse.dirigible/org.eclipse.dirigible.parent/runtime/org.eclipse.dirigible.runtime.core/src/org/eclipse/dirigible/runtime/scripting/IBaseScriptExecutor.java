@@ -16,6 +16,8 @@ public interface IBaseScriptExecutor {
 	void registerDefaultVariables(HttpServletRequest request, HttpServletResponse response, Object input, Map<Object, Object> executionContext,
 			IRepository repository, Object scope);
 
+	void registerDefaultVariableInContextAndScope(Map<Object, Object> executionContext, Object scope, String name, Object value);
+
 	byte[] readResourceData(IRepository repository, String repositoryPath) throws IOException;
 
 	Module retrieveModule(IRepository repository, String module, String extension, String... rootPaths) throws IOException;

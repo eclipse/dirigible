@@ -13,7 +13,6 @@ package org.eclipse.dirigible.runtime.scripting;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +43,8 @@ import org.eclipse.dirigible.repository.ext.extensions.ExtensionManager;
 import org.eclipse.dirigible.repository.ext.generation.IGenerationService;
 import org.eclipse.dirigible.repository.ext.messaging.MessageHub;
 import org.eclipse.dirigible.repository.ext.template.TemplatingEngine;
+import org.eclipse.dirigible.repository.ext.utils.OSGiUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.eclipse.dirigible.runtime.RuntimeActivator;
 import org.eclipse.dirigible.runtime.mail.MailServiceFactory;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
@@ -63,9 +62,6 @@ import org.eclipse.dirigible.runtime.scripting.utils.StorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.URLUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.WorkspacesServiceUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.XMLUtils;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 
 public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseScriptExecutor {
 
@@ -93,7 +89,8 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 
 	protected abstract void registerDefaultVariable(Object scope, String name, Object value);
 
-	private void registerDefaultVariableInContextAndScope(Map<Object, Object> executionContext, Object scope, String name, Object value) {
+	@Override
+	public void registerDefaultVariableInContextAndScope(Map<Object, Object> executionContext, Object scope, String name, Object value) {
 		if (executionContext.get(name) == null) {
 			registerDefaultVariable(scope, name, value);
 			executionContext.put(name, value);
@@ -263,23 +260,9 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DATASOURCES_UTILS, namedDataSourcesUtils);
 		apiBuilder.setNamedDataSourcesUtils(namedDataSourcesUtils);
 
-		// register objects via extension
-		try {
-			BundleContext context = RuntimeActivator.getContext();
-			if (context != null) {
-				Collection<ServiceReference<IContextService>> serviceReferences = context.getServiceReferences(IContextService.class, null);
-				for (ServiceReference<IContextService> serviceReference : serviceReferences) {
-					try {
-						IContextService contextService = context.getService(serviceReference);
-						registerDefaultVariableInContextAndScope(executionContext, scope, contextService.getName(), contextService.getInstance());
-						apiBuilder.set(contextService.getName(), contextService.getInstance());
-					} catch (Throwable t) {
-						logger.error(t.getMessage(), t);
-					}
-				}
-			}
-		} catch (InvalidSyntaxException e) {
-			logger.error(e.getMessage(), e);
+		if (OSGiUtils.isOSGiEnvironment()) {
+			// register objects via extension - only in OSGi environment
+			CustomInjectedObjectsFactory.registerCustomObjects(this, executionContext, scope, apiBuilder);
 		}
 
 		InjectedAPIWrapper api = new InjectedAPIWrapper(apiBuilder);
@@ -308,7 +291,7 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 
 	protected void registerGenerationService(Map<Object, Object> executionContext, Object scope, InjectedAPIBuilder apiBuilder) {
 		try {
-			IGenerationService generationService = new GenerationService();
+			IGenerationService generationService = new GenerationServiceFactory();
 			registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.GENERATION_SERVICE, generationService);
 			apiBuilder.setGenerationService(generationService);
 		} catch (Throwable t) {

@@ -37,6 +37,17 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>osgi</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/${deployment.name}/WEB-INF/</outputDirectory>
+							<includeArtifactIds>org.eclipse.dirigible.osgi.p2</includeArtifactIds>
+						</configuration>
+					</execution>
+					<execution>
 						<id>repository</id>
 						<phase>compile</phase>
 						<goals>
@@ -122,6 +133,12 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible.p2.external</groupId>
 			<artifactId>org.eclipse.dirigible.external.p2</artifactId>
+			<version>${project.version}</version>
+			<type>eclipse-repository</type>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible.p2.osgi</groupId>
+			<artifactId>org.eclipse.dirigible.osgi.p2</artifactId>
 			<version>${project.version}</version>
 			<type>eclipse-repository</type>
 		</dependency>

@@ -1,9 +1,6 @@
 package org.eclipse.dirigible.repository.datasource.db.dialect;
 
 import java.sql.DatabaseMetaData;
-import java.util.Collection;
-
-import org.eclipse.dirigible.repository.datasource.DataSourcesActivator;
 
 /**
  * Factory class for IDialectInstances.
@@ -27,16 +24,19 @@ public class DialectFactory {
 	 *         was found.
 	 */
 	public static IDialectSpecifier getInstance(String productName) {
-		Collection<IDialectSpecifier> dialects = DataSourcesActivator.getServices(IDialectSpecifier.class);
-		if (dialects != null) {
-			for (IDialectSpecifier dialect : dialects) {
-				if (dialect.isDialectForName(productName)) {
-					return dialect;
-				}
-
-			}
+		if (isOSGiEnvironment()) {
+			return DialectFactoryOSGi.getInstance(productName);
 		}
-		return null;
+		return DialectFactoryNonOSGi.getInstance(productName);
+	}
+
+	public static boolean isOSGiEnvironment() {
+		try {
+			Class.forName("org.osgi.framework.ServiceReference").newInstance();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }
