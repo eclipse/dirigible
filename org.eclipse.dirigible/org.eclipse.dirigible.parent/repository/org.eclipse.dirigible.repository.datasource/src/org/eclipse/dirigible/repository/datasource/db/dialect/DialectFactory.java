@@ -2,6 +2,8 @@ package org.eclipse.dirigible.repository.datasource.db.dialect;
 
 import java.sql.DatabaseMetaData;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
+
 /**
  * Factory class for IDialectInstances.
  */
@@ -31,12 +33,7 @@ public class DialectFactory {
 	}
 
 	public static boolean isOSGiEnvironment() {
-		try {
-			Class.forName("org.osgi.framework.ServiceReference").newInstance();
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+		return Boolean.parseBoolean(System.getProperty(ICommonConstants.INIT_PARAM_RUN_ON_OSGI));
 	}
 
 }
