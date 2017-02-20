@@ -10,13 +10,16 @@
 
 package org.eclipse.dirigible.runtime.wiki;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
+import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.filter.SandboxFilter;
 import org.eclipse.dirigible.runtime.registry.PathUtils;
@@ -31,6 +34,11 @@ public class WikiRegistryServlet extends WebRegistryServlet {
 	private static final String WIKI_CONTENT = IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
 
 	private static final long serialVersionUID = -1484072696377972535L;
+
+	private static final String PARAMETER_NO_HEADER_AND_FOOTER = "nohf"; //$NON-NLS-1$
+	protected static final String HEADER_HTML = "header.html"; //$NON-NLS-1$
+	protected static final String FOOTER_HTML = "footer.html"; //$NON-NLS-1$
+	protected static final String HTML_EXTENSION = ".html"; //$NON-NLS-1$
 
 	@Override
 	protected String extractRepositoryPath(HttpServletRequest request) throws IllegalArgumentException {
@@ -70,9 +78,42 @@ public class WikiRegistryServlet extends WebRegistryServlet {
 
 	@Override
 	public IScriptExecutor createExecutor(HttpServletRequest request) throws IOException {
-		WikiExecutor executor = new WikiExecutor(getRepository(request), getWebRegistryPath(request), IRepositoryPaths.REGISTRY_DEPLOY_PATH
-				+ WIKI_CONTENT);
+		WikiExecutor executor = new WikiExecutor(getRepository(request), getWebRegistryPath(request),
+				IRepositoryPaths.REGISTRY_DEPLOY_PATH + WIKI_CONTENT);
 		return executor;
+	}
+
+	@Override
+	protected byte[] buildResourceData(IEntity entity, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		byte[] rawContent = super.buildResourceData(entity, request, response);
+		boolean nohf = (request.getParameter(PARAMETER_NO_HEADER_AND_FOOTER) != null);
+		boolean list = (request.getParameter(PARAMETER_LIST) != null);
+
+		if (list) {
+			// list parameter is present - return JSON formatted content
+			return super.buildResourceData(entity, request, response);
+		}
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		// lookup for header.html
+		IResource header = entity.getParent().getResource(HEADER_HTML);
+		if (!nohf && header.exists()) {
+			// start with header
+			outputStream.write(header.getContent());
+		}
+
+		// put the content
+		outputStream.write(preprocessContent(rawContent, entity));
+
+		// lookup for footer.html
+		IResource footer = entity.getParent().getResource(FOOTER_HTML);
+		if (!nohf && footer.exists()) {
+			// end with footer
+			outputStream.write(footer.getContent());
+		}
+		outputStream.flush();
+		return outputStream.toByteArray();
 	}
 
 }

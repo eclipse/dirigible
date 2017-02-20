@@ -10,10 +10,10 @@ public class GenerationServiceFactory implements IGenerationService {
 
 	@Override
 	public IGenerationWorker getGenerationWorker(String type, HttpServletRequest request) {
-		// if (OSGiUtils.isOSGiEnvironment()) {
-		return new GenerationServiceFactoryOSGi().getGenerationWorker(type, request);
-		// }
-		// return new GenerationServiceFactoryNonOSGi().getGenerationWorker(type, request);
+		if (OSGiUtils.isOSGiEnvironment()) {
+			return new GenerationServiceFactoryOSGi().getGenerationWorker(type, request);
+		}
+		return new GenerationServiceFactoryNonOSGi().getGenerationWorker(type, request);
 	}
 
 	@Override

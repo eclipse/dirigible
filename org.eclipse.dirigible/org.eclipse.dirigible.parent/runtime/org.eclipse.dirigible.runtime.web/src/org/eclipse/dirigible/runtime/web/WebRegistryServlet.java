@@ -31,7 +31,7 @@ public class WebRegistryServlet extends RegistryServlet {
 
 	private static final String WEB_CONTENT = IRepositoryPaths.SEPARATOR + ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
 	// private static final String PARAMETER_NO_HEADER_AND_FOOTER = "nohf"; //$NON-NLS-1$
-	private static final String PARAMETER_LIST = "list"; //$NON-NLS-1$
+	protected static final String PARAMETER_LIST = "list"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = -1484072696377972535L;
 
