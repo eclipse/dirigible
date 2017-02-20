@@ -63,7 +63,7 @@
 <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
 <unit id="org.mozilla.javascript" version="0.0.0"/>
 <unit id="org.quartz" version="0.0.0"/>
-<unit id="org.json" version="0.0.0"/>
+<!-- unit id="org.json" version="0.0.0"/ -->
 <unit id="org.apache.velocity" version="0.0.0"/>
 <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
 <unit id="com.google.guava" version="0.0.0"/>

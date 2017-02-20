@@ -43,7 +43,6 @@ import org.eclipse.dirigible.repository.ext.extensions.ExtensionManager;
 import org.eclipse.dirigible.repository.ext.generation.IGenerationService;
 import org.eclipse.dirigible.repository.ext.messaging.MessageHub;
 import org.eclipse.dirigible.repository.ext.template.TemplatingEngine;
-import org.eclipse.dirigible.repository.ext.utils.OSGiUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.mail.MailServiceFactory;
 import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
@@ -260,10 +259,8 @@ public abstract class AbstractScriptExecutor implements IScriptExecutor, IBaseSc
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.DATASOURCES_UTILS, namedDataSourcesUtils);
 		apiBuilder.setNamedDataSourcesUtils(namedDataSourcesUtils);
 
-		if (OSGiUtils.isOSGiEnvironment()) {
-			// register objects via extension - only in OSGi environment
-			CustomInjectedObjectsFactory.registerCustomObjects(this, executionContext, scope, apiBuilder);
-		}
+		// register objects via extension - only in OSGi environment
+		CustomInjectedObjectsFactory.registerCustomObjects(this, executionContext, scope, apiBuilder);
 
 		InjectedAPIWrapper api = new InjectedAPIWrapper(apiBuilder);
 		registerDefaultVariableInContextAndScope(executionContext, scope, IInjectedAPIAliases.API, api);
