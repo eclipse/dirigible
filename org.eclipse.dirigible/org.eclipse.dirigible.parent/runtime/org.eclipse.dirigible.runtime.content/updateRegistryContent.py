@@ -11,6 +11,7 @@ class RegistryContent:
         self.updateContent('content/templates/ScriptingServices.json')
         self.updateContent('content/templates/WebContent.json')
         self.updateContent('content/templates/WebContentForEntity.json')
+        self.updateContent('content/templates/WikiContent.json')
 
     def updateContent(self, fileName):
 		with open(fileName) as data_file:
