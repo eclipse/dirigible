@@ -193,6 +193,12 @@
 			<param-value>false</param-value>
 		</init-param>
 
+		<!-- Run on OSGi environment -->
+ 		<init-param>
+ 			<param-name>osgi</param-name>
+ 			<param-value>true</param-value>
+ 		</init-param>
+
 		<load-on-startup>2</load-on-startup>
 
 	</servlet>
