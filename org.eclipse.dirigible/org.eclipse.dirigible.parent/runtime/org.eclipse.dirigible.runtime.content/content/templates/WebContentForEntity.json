@@ -1,0 +1,43 @@
+[{
+	"path": "target/template_web_list_and_manage",
+	"repository": "https://github.com/dirigiblelabs/template_web_list_and_manage.git",
+	"content": [{
+		"source": "target/template_web_list_and_manage/template_web_list_and_manage/WebContentForEntity",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_web_new_or_edit",
+	"repository": "https://github.com/dirigiblelabs/template_web_new_or_edit.git",
+	"content": [{
+		"source": "target/template_web_new_or_edit/template_web_new_or_edit/WebContentForEntity",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_web_list_and_details",
+	"repository": "https://github.com/dirigiblelabs/template_web_list_and_details.git",
+	"content": [{
+		"source": "target/template_web_list_and_details/template_web_list_and_details/WebContentForEntity",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_web_master_details_master",
+	"repository": "https://github.com/dirigiblelabs/template_web_master_details_master.git",
+	"content": [{
+		"source": "target/template_web_master_details_master/template_web_master_details_master/WebContentForEntity",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_web_master_details_details",
+	"repository": "https://github.com/dirigiblelabs/template_web_master_details_details.git",
+	"content": [{
+		"source": "target/template_web_master_details_details/template_web_master_details_details/WebContentForEntity",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_web_markers_on_map",
+	"repository": "https://github.com/dirigiblelabs/template_web_markers_on_map.git",
+	"content": [{
+		"source": "target/template_web_markers_on_map/template_web_markers_on_map/WebContentForEntity",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}]

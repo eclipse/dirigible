@@ -1,0 +1,9 @@
+
+[{
+	"path": "target/core_api",
+	"repository": "https://github.com/dirigiblelabs/core_api.git",
+	"content": [{
+		"source": "target/registry/registry/ScriptingServices",
+		"target": "src/content/db/dirigible/registry/public"
+	}]
+}]

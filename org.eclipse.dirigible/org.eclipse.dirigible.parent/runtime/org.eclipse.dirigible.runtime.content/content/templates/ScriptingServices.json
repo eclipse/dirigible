@@ -1,0 +1,64 @@
+[{
+	"path": "target/template_js_hello_world",
+	"repository": "https://github.com/dirigiblelabs/template_js_hello_world.git",
+	"content": [{
+		"source": "target/template_js_hello_world/template_js_hello_world/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_js_database_access",
+	"repository": "https://github.com/dirigiblelabs/template_js_database_access.git",
+	"content": [{
+		"source": "target/template_js_database_access/template_js_database_access/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_js_database_read",
+	"repository": "https://github.com/dirigiblelabs/template_js_database_read.git",
+	"content": [{
+		"source": "target/template_js_database_read/template_js_database_read/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_js_database_crud",
+	"repository": "https://github.com/dirigiblelabs/template_js_database_crud.git",
+	"content": [{
+		"source": "target/template_js_database_crud/template_js_database_crud/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_js_database_crud_extended",
+	"repository": "https://github.com/dirigiblelabs/template_js_database_crud_extended.git",
+	"content": [{
+		"source": "target/template_js_database_crud_extended/template_js_database_crud_extended/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_js_database_crud_dependent",
+	"repository": "https://github.com/dirigiblelabs/template_js_database_crud_dependent.git",
+	"content": [{
+		"source": "target/template_js_database_crud_dependent/template_js_database_crud_dependent/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_js_guid_lib",
+	"repository": "https://github.com/dirigiblelabs/template_js_guid_lib.git",
+	"content": [{
+		"source": "target/template_js_guid_lib/template_js_guid_lib/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_sql_sample",
+	"repository": "https://github.com/dirigiblelabs/template_sql_sample.git",
+	"content": [{
+		"source": "target/template_sql_sample/template_sql_sample/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_terminal_uname",
+	"repository": "https://github.com/dirigiblelabs/template_terminal_uname.git",
+	"content": [{
+		"source": "target/template_terminal_uname/template_terminal_uname/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}]
