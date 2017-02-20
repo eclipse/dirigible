@@ -185,7 +185,6 @@ public interface ICommonConstants {
 	public static final String INIT_PARAM_ENABLE_SANDBOX = "enableSandbox"; //$NON-NLS-1$
 	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER = "localRepositoryRootFolder"; //$NON-NLS-1$
 	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "localRepositoryRootFolderIsAbsolute"; //$NON-NLS-1$
-	public static final String INIT_PARAM_RUN_ON_OSGI = "osgi"; //$NON-NLS-1$ // true/false
 	// ---
 
 	public static final Charset UTF8 = Charset.forName("UTF-8");

@@ -7,50 +7,27 @@ public class Console {
 	private static Logger logger = Logger.getLogger(Console.class);
 
 	public void error(String message, Object... args) {
-		if (args.length > 0) {
-			logger.error(String.format(message, args));
-		} else {
-			logger.error(message);
-		}
+		logger.error(String.format(message, args));
 	}
 
 	public void info(String message, Object... args) {
-		if (args.length > 0) {
-			logger.info(String.format(message, args));
-		} else {
-			logger.info(message);
-		}
+		logger.info(String.format(message, args));
 	}
 
 	public void log(String message, Object... args) {
-		logger.info(message);
-		for (Object arg : args) {
-			logger.info(arg != null ? arg.toString() : null);
-		}
+		logger.info(String.format(message, args));
 	}
 
 	public void warn(String message, Object... args) {
-		if (args.length > 0) {
-			logger.warn(String.format(message, args));
-		} else {
-			logger.warn(message);
-		}
+		logger.warn(String.format(message, args));
 	}
 
 	public void debug(String message, Object... args) {
-		if (args.length > 0) {
-			logger.debug(String.format(message, args));
-		} else {
-			logger.debug(message);
-		}
+		logger.debug(String.format(message, args));
 	}
 
 	public void trace(String message, Object... args) {
-		if (args.length > 0) {
-			logger.error(String.format(message, args));
-		} else {
-			logger.error(message);
-		}
+		logger.error(String.format(message, args));
 		StringBuilder buff = new StringBuilder();
 		for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
 			buff.append(element.toString()).append(System.getProperty("line.separator"));

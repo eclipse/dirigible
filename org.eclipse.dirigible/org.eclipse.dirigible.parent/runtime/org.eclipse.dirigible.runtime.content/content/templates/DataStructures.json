@@ -1,0 +1,22 @@
+[{
+	"path": "target/template_data_table",
+	"repository": "https://github.com/dirigiblelabs/template_data_table.git",
+	"content": [{
+		"source": "target/template_data_table/template_data_table/DataStructures",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_data_view",
+	"repository": "https://github.com/dirigiblelabs/template_data_view.git",
+	"content": [{
+		"source": "target/template_data_view/template_data_view/DataStructures",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_data_dsv",
+	"repository": "https://github.com/dirigiblelabs/template_data_dsv.git",
+	"content": [{
+		"source": "target/template_data_dsv/template_data_dsv/DataStructures",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}]

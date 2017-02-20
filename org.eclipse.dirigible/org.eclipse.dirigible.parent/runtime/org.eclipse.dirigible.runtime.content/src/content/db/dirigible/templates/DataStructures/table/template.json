@@ -1,14 +1,31 @@
-{"name":"Relational Database Table",
- "description":"Relational database table template",
- "image":"table.png",
- "sources":[
-   {"name":"table.table", "action":"generate"}
+{
+    "name":"Relational Database Table",
+    "description":"Relational database table template",
+    "image":"table.png",
+    "sources":[
+        {
+            "name":"table.table",
+            "rootFolder":"DataStructures",
+            "action":"generate",
+            "rename":"%s"
+        }
    ],
- "parameters":[
-   {"name":"templateType", "required":"true"},
-   {"name":"fileName", "required":"true"},
-   {"name":"projectName", "required":"true"},
-   {"name":"packageName", "required":"true"},
-   {"name":"columns", "required":"true"}
+   "parameters":[
+       {
+           "name":"templateType",
+           "required":"true"
+       }, {
+           "name":"fileName",
+           "required":"true"
+       }, {
+           "name":"projectName",
+           "required":"true"
+       }, {
+           "name":"packageName",
+           "required":"true"
+       }, {
+           "name":"columns",
+           "required":"true"
+       }
    ]
 }

@@ -43,7 +43,12 @@ public class RepositoryFactory {
 	}
 
 	public static boolean isOSGiEnvironment() {
-		return Boolean.parseBoolean(System.getProperty(ICommonConstants.INIT_PARAM_RUN_ON_OSGI));
+		try {
+			Class.forName("org.osgi.framework.ServiceReference").newInstance();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

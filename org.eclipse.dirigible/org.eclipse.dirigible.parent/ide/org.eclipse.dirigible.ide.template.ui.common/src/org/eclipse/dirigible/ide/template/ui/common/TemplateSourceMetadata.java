@@ -7,9 +7,9 @@ public class TemplateSourceMetadata {
 	public static final String ACTION_COPY = "copy";
 
 	private String name;
-
+	private String rootFolder;
+	private String packagePath;
 	private String action;
-
 	private String rename;
 
 	private String location;
@@ -20,6 +20,22 @@ public class TemplateSourceMetadata {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getRootFolder() {
+		return rootFolder;
+	}
+
+	public void setRootFolder(String rootFolder) {
+		this.rootFolder = rootFolder;
+	}
+
+	public String getPackagePath() {
+		return packagePath;
+	}
+
+	public void setPackagePath(String packagePath) {
+		this.packagePath = packagePath;
 	}
 
 	public String getAction() {

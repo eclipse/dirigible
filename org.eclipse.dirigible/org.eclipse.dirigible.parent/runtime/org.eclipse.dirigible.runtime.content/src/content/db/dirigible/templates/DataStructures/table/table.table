@@ -7,12 +7,12 @@
       ,
 #end
       {
-        "name":"${columnDefinition.getName()}",
-        "type":"${columnDefinition.getType()}",
-        "length":"${columnDefinition.getLength()}",
-        "notNull":"${columnDefinition.isNotNull()}",
-        "primaryKey":"${columnDefinition.isPrimaryKey()}",
-        "defaultValue":"${columnDefinition.getDefaultValue()}"
+        "name":"${columnDefinition.name}",
+        "type":"${columnDefinition.type}",
+        "length":"${columnDefinition.length}",
+        "notNull":"${columnDefinition.notNull}",
+        "primaryKey":"${columnDefinition.primaryKey}",
+        "defaultValue":"${columnDefinition.defaultValue}"
       }
 #end
     ]

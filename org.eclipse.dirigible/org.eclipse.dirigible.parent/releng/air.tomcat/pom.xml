@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Releng - Air</name>
-	<artifactId>air</artifactId>
+	<artifactId>air.tomcat</artifactId>
 	<packaging>war</packaging>
 
 	<build>

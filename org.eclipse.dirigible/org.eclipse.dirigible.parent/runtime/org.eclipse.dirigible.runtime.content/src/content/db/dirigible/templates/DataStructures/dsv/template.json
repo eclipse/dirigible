@@ -1,9 +1,9 @@
 {
-    "name":"Relational Database View",
-    "description":"Relational database view template",
-    "image":"view.png",
+    "name":"Delimiter Separated Values Sample Data",
+    "description":"Delimiter separated values for import in a relational table template",
+    "image":"dsv.png",
     "sources":[{
-        "name":"view.view",
+        "name":"dsv.dsv",
         "rootFolder":"DataStructures",
         "action":"generate",
         "rename":"%s"
@@ -21,7 +21,7 @@
         "name":"packageName",
         "required":"true"
     }, {
-        "name":"query",
+        "name":"rows",
         "required":"true"
     }]
 }
