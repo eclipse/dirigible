@@ -13,8 +13,9 @@ public class CustomInjectedObjectsFactory {
 			InjectedAPIBuilder apiBuilder) {
 		if (OSGiUtils.isOSGiEnvironment()) {
 			CustomInjectedObjectsFactoryOSGi.registerCustomObjects(executor, executionContext, scope, apiBuilder);
+		} else {
+			CustomInjectedObjectsFactoryNonOSGi.registerCustomObjects(executor, executionContext, scope, apiBuilder);
 		}
-		CustomInjectedObjectsFactoryNonOSGi.registerCustomObjects(executor, executionContext, scope, apiBuilder);
 	}
 
 }
