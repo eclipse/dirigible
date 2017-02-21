@@ -19,4 +19,25 @@
 		"source": "target/template_data_dsv/template_data_dsv/DataStructures",
 		"target": "src/content/db/dirigible/templates"
 	}]
+}, {
+	"path": "target/template_data_append",
+	"repository": "https://github.com/dirigiblelabs/template_data_append.git",
+	"content": [{
+		"source": "target/template_data_append/template_data_append/DataStructures",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_data_delete",
+	"repository": "https://github.com/dirigiblelabs/template_data_delete.git",
+	"content": [{
+		"source": "target/template_data_delete/template_data_delete/DataStructures",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_data_replace",
+	"repository": "https://github.com/dirigiblelabs/template_data_replace.git",
+	"content": [{
+		"source": "target/template_data_replace/template_data_replace/DataStructures",
+		"target": "src/content/db/dirigible/templates"
+	}]
 }]

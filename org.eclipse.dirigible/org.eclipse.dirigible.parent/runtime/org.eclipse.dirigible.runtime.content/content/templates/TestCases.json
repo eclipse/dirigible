@@ -1,0 +1,8 @@
+[{
+	"path": "target/template_test_rest_call",
+	"repository": "https://github.com/dirigiblelabs/template_test_rest_call.git",
+	"content": [{
+		"source": "target/template_test_rest_call/template_test_rest_call/TestCases",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}]

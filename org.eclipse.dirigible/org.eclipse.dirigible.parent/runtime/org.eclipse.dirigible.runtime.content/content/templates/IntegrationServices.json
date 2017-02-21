@@ -1,0 +1,29 @@
+[{
+	"path": "target/template_integration_message_listener",
+	"repository": "https://github.com/dirigiblelabs/template_integration_message_listener.git",
+	"content": [{
+		"source": "target/template_integration_message_listener/template_integration_message_listener/IntegrationServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_integration_routing",
+	"repository": "https://github.com/dirigiblelabs/template_integration_routing.git",
+	"content": [{
+		"source": "target/template_integration_routing/template_integration_routing/IntegrationServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_integration_scheduling",
+	"repository": "https://github.com/dirigiblelabs/template_integration_scheduling.git",
+	"content": [{
+		"source": "target/template_integration_scheduling/template_integration_scheduling/IntegrationServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_integration_shielding",
+	"repository": "https://github.com/dirigiblelabs/template_integration_shielding.git",
+	"content": [{
+		"source": "target/template_integration_shielding/template_integration_shielding/IntegrationServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}]
