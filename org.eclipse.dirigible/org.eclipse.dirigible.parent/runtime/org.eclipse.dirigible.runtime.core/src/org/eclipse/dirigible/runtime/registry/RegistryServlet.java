@@ -219,6 +219,11 @@ public class RegistryServlet extends AbstractRegistryServlet {
 
 	protected byte[] buildResourceData(final IEntity entity, final HttpServletRequest request, final HttpServletResponse response)
 			throws IOException {
+		return retrieveResourceData(entity, request, response);
+	}
+
+	protected byte[] retrieveResourceData(final IEntity entity, final HttpServletRequest request, final HttpServletResponse response)
+			throws IOException {
 		byte[] data = new byte[] {};
 		if (!setCacheHeaders(entity, request, response)) {
 			data = readResourceData((IResource) entity);

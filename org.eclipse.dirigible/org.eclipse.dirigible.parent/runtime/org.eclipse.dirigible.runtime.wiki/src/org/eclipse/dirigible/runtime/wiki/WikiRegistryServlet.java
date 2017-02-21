@@ -50,21 +50,14 @@ public class WikiRegistryServlet extends WebRegistryServlet {
 		return IRepositoryPaths.REGISTRY_DEPLOY_PATH + WIKI_CONTENT + requestPath;
 	}
 
-	// @Override
-	// protected boolean checkExtensions(IEntity entity) {
-	// return entity.getName().endsWith(WikiProcessor.DEFAULT_WIKI_EXTENSION) ||
-	// entity.getName().endsWith(WikiProcessor.CONFLUENCE_EXTENSION)
-	// || entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION) ||
-	// entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION2)
-	// || entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION3) ||
-	// entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION4)
-	// || entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION5) ||
-	// entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION6)
-	// || entity.getName().endsWith(WikiProcessor.TEXTILE_EXTENSION) ||
-	// entity.getName().endsWith(WikiProcessor.TRACWIKI_EXTENSION)
-	// || entity.getName().endsWith(WikiProcessor.TWIKI_EXTENSION) ||
-	// entity.getName().endsWith(WikiProcessor.BATCH_EXTENSION);
-	// }
+	protected boolean isWikiExtensions(IEntity entity) {
+		return entity.getName().endsWith(WikiProcessor.DEFAULT_WIKI_EXTENSION) || entity.getName().endsWith(WikiProcessor.CONFLUENCE_EXTENSION)
+				|| entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION) || entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION2)
+				|| entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION3) || entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION4)
+				|| entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION5) || entity.getName().endsWith(WikiProcessor.MARKDOWN_EXTENSION6)
+				|| entity.getName().endsWith(WikiProcessor.TEXTILE_EXTENSION) || entity.getName().endsWith(WikiProcessor.TRACWIKI_EXTENSION)
+				|| entity.getName().endsWith(WikiProcessor.TWIKI_EXTENSION) || entity.getName().endsWith(WikiProcessor.BATCH_EXTENSION);
+	}
 
 	@Override
 	protected byte[] preprocessContent(byte[] rawContent, IEntity entity) throws IOException {
@@ -85,7 +78,7 @@ public class WikiRegistryServlet extends WebRegistryServlet {
 
 	@Override
 	protected byte[] buildResourceData(IEntity entity, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		byte[] rawContent = super.buildResourceData(entity, request, response);
+		byte[] rawContent = retrieveResourceData(entity, request, response);
 		boolean nohf = (request.getParameter(PARAMETER_NO_HEADER_AND_FOOTER) != null);
 		boolean list = (request.getParameter(PARAMETER_LIST) != null);
 
@@ -104,7 +97,11 @@ public class WikiRegistryServlet extends WebRegistryServlet {
 		}
 
 		// put the content
-		outputStream.write(preprocessContent(rawContent, entity));
+		if (isWikiExtensions(entity)) {
+			outputStream.write(preprocessContent(rawContent, entity));
+		} else {
+			outputStream.write(rawContent);
+		}
 
 		// lookup for footer.html
 		IResource footer = entity.getParent().getResource(FOOTER_HTML);

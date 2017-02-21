@@ -7,13 +7,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.dirigible.runtime.web.WebRegistryServlet;
+import org.eclipse.dirigible.runtime.wiki.WikiRegistryServlet;
 
 /**
- * Wrapper for WebServlet
+ * Wrapper for WikiServlet
  */
-@WebServlet({ "/services/web/*", "/services/web-secured/*" })
-public class WebContentServlet extends WebRegistryServlet {
+@WebServlet({ "/services/wiki/*", "/services/wiki-secured/*" })
+public class WikiContentServlet extends WikiRegistryServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override

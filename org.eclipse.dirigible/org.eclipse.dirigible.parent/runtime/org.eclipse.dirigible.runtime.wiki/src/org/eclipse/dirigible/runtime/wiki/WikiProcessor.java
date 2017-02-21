@@ -73,7 +73,7 @@ public class WikiProcessor {
 		} else if (name.endsWith(BATCH_EXTENSION)) {
 			return batchToHtml(rawContent, entity);
 		}
-		return null;
+		return rawContent;
 	}
 
 	private static byte[] wikiToHtml(byte[] rawContent, IEntity entity, String format) throws IOException {

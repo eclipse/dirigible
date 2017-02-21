@@ -3,7 +3,7 @@ package org.eclipse.dirigible.server;
 import javax.servlet.annotation.WebServlet;
 
 /**
- * Servlet implementation class JavaScriptServlet
+ * Wrapper for JavaScriptServlet
  */
 @WebServlet({ "/services/js/*", "/services/js-secured/*" })
 public class JavaScriptServlet extends org.eclipse.dirigible.runtime.js.JavaScriptServlet {
