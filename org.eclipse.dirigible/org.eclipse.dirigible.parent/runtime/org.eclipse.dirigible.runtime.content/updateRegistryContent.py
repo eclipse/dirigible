@@ -14,7 +14,7 @@ class RegistryContent:
         self.updateContent('content/templates/MobileApplicationsForEntity.json')
         self.updateContent('content/templates/Projects.json')
         self.updateContent('content/templates/ScriptingServices.json')
-        self.updateContent('content/templates/SecurityConstaints.json')
+        self.updateContent('content/templates/SecurityConstraints.json')
         self.updateContent('content/templates/TestCases.json')
         self.updateContent('content/templates/WebContent.json')
         self.updateContent('content/templates/WebContentForEntity.json')

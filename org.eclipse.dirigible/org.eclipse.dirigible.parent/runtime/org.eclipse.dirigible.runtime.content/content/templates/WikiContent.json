@@ -1,5 +1,5 @@
 [{
-	"path": "target/template_data_table",
+	"path": "target/template_wiki_confluence",
 	"repository": "https://github.com/dirigiblelabs/template_wiki_confluence.git",
 	"content": [{
 		"source": "target/template_wiki_confluence/template_wiki_confluence/WikiContent",
@@ -16,7 +16,7 @@
 	"path": "target/template_wiki_textile",
 	"repository": "https://github.com/dirigiblelabs/template_wiki_textile.git",
 	"content": [{
-		"source": "target/template_wiki_textile/template_wiki_markdown/WikiContent",
+		"source": "target/template_wiki_textile/template_wiki_textile/WikiContent",
 		"target": "src/content/db/dirigible/templates"
 	}]
 }, {

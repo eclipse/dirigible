@@ -1,6 +1,6 @@
 [{
 	"path": "target/template_project_blank",
-	"repository": "https://github.com/dirigiblelabs/template_test_rest_call.git",
+	"repository": "https://github.com/dirigiblelabs/template_project_blank.git",
 	"content": [{
 		"source": "target/template_project_blank/template_project_blank/Projects",
 		"target": "src/content/db/dirigible/templates"

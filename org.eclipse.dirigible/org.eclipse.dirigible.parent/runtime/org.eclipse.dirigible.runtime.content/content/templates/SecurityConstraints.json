@@ -2,7 +2,7 @@
 	"path": "target/template_security_main",
 	"repository": "https://github.com/dirigiblelabs/template_security_main.git",
 	"content": [{
-		"source": "target/template_security_main/template_security_main/SecurityConstaints",
+		"source": "target/template_security_main/template_security_main/SecurityConstraints",
 		"target": "src/content/db/dirigible/templates"
 	}]
 }]
