@@ -1,4 +1,11 @@
 [{
+	"path": "target/template_web_blank_page",
+	"repository": "https://github.com/dirigiblelabs/template_web_blank_page.git",
+	"content": [{
+		"source": "target/template_web_blank_page/template_web_blank_page/WebContent",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
 	"path": "target/template_web_index_page",
 	"repository": "https://github.com/dirigiblelabs/template_web_index_page.git",
 	"content": [{

@@ -1,4 +1,18 @@
 [{
+	"path": "target/template_web_display_single_entity",
+	"repository": "https://github.com/dirigiblelabs/template_web_display_single_entity.git",
+	"content": [{
+		"source": "target/template_web_display_single_entity/template_web_display_single_entity/WebContentForEntity",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_web_list",
+	"repository": "https://github.com/dirigiblelabs/template_web_list.git",
+	"content": [{
+		"source": "target/template_web_list/template_web_list/WebContentForEntity",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
 	"path": "target/template_web_list_and_manage",
 	"repository": "https://github.com/dirigiblelabs/template_web_list_and_manage.git",
 	"content": [{
