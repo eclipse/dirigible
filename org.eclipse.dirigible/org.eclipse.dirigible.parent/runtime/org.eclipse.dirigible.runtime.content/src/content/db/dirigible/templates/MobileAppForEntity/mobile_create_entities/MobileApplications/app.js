@@ -5,7 +5,12 @@ var service = "${serviceFileName}";
 #set( $items = [])
 #foreach ( $tableColumn in $tableColumns )
 	#if ( $tableColumn.isVisible())
-		#set( $item = ${tableColumn.toJson()})
+		#set( $item = {
+			"name": tableColumn.name,
+			"key": tableColumn.key,
+			"label": tableColumn.label,
+			"visible": tableColumn.visible
+		})
 		#set( $dummy = $items.add($item))
 	#end
 #end
