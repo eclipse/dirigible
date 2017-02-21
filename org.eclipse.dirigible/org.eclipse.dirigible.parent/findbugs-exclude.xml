@@ -58,5 +58,10 @@
           <Bug code="IJU" />
       </Not>
      </Match>
+     
+     <Match>
+    	<Package name="~org\.json.*"/>
+  	</Match>
+     
 
 </FindBugsFilter>
