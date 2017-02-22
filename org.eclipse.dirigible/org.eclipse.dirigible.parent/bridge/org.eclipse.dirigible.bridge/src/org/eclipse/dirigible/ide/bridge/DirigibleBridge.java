@@ -35,7 +35,9 @@ public class DirigibleBridge extends BridgeServlet {
 
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleBridge.class.getCanonicalName());
 
-	static Properties ENV_PROPERTIES = new Properties();
+	public static Properties ENV_PROPERTIES = new Properties();
+
+	public static Properties ENV_VARS = new Properties();
 
 	static Class<IInjector>[] INJECTOR_CLASSES;
 
@@ -51,9 +53,13 @@ public class DirigibleBridge extends BridgeServlet {
 	public void init() throws ServletException {
 
 		ENV_PROPERTIES.putAll(System.getProperties());
-
 		for (Object property : ENV_PROPERTIES.keySet()) {
 			logger.info("SYSTEM_" + property + ": " + ENV_PROPERTIES.getProperty(property.toString()));
+		}
+
+		ENV_VARS.putAll(System.getenv());
+		for (Object property : ENV_VARS.keySet()) {
+			logger.info("ENV_" + property + ": " + ENV_VARS.getProperty(property.toString()));
 		}
 
 		ServletConfig servletConfig = getServletConfig();

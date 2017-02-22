@@ -89,11 +89,13 @@ public class WikiRegistryServlet extends WebRegistryServlet {
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		// lookup for header.html
-		IResource header = entity.getParent().getResource(HEADER_HTML);
-		if (!nohf && header.exists()) {
-			// start with header
-			outputStream.write(header.getContent());
+		if (isWikiExtensions(entity)) {
+			// lookup for header.html
+			IResource header = entity.getParent().getResource(HEADER_HTML);
+			if (!nohf && header.exists()) {
+				// start with header
+				outputStream.write(header.getContent());
+			}
 		}
 
 		// put the content
@@ -103,11 +105,13 @@ public class WikiRegistryServlet extends WebRegistryServlet {
 			outputStream.write(rawContent);
 		}
 
-		// lookup for footer.html
-		IResource footer = entity.getParent().getResource(FOOTER_HTML);
-		if (!nohf && footer.exists()) {
-			// end with footer
-			outputStream.write(footer.getContent());
+		if (isWikiExtensions(entity)) {
+			// lookup for footer.html
+			IResource footer = entity.getParent().getResource(FOOTER_HTML);
+			if (!nohf && footer.exists()) {
+				// end with footer
+				outputStream.write(footer.getContent());
+			}
 		}
 		outputStream.flush();
 		return outputStream.toByteArray();

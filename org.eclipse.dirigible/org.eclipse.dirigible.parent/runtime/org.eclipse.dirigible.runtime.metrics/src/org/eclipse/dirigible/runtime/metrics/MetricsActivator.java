@@ -48,6 +48,8 @@ public class MetricsActivator implements BundleActivator {
 		TaskManagerLong.getInstance().registerRunnableTask(memoryLogCleanupTask);
 
 		setupLogChannel();
+
+		setSystemProperties();
 	}
 
 	@Override
@@ -70,6 +72,20 @@ public class MetricsActivator implements BundleActivator {
 
 		logger.debug("Log channel internal has been set.");
 
+	}
+
+	private void setSystemProperties() {
+		logger.debug("Setting system properties internal ...");
+
+		System.getProperties().putAll(DirigibleBridge.ENV_VARS);
+		logger.debug("System Environment Variables:");
+		logger.debug(DirigibleBridge.ENV_VARS.toString());
+
+		System.getProperties().putAll(DirigibleBridge.ENV_PROPERTIES);
+		logger.debug("System Properties:");
+		logger.debug(DirigibleBridge.ENV_PROPERTIES.toString());
+
+		logger.debug("System properties internal has been set.");
 	}
 
 }
