@@ -34,7 +34,7 @@ DAO.prototype.createSQLEntity = function(entity) {
 	var mandatories = this.orm.getMandatoryProperties();
 	for(var i=0; i<mandatories.length; i++){
 		if(mandatories[i].dbValue){
-			persistentItem[mandatories[i].name] = mandatories[i].dbValue.apply(this, [entity, this.orm.properties, mandatories[i]]);
+			persistentItem[mandatories[i].name] = mandatories[i].dbValue.apply(this, [entity[mandatories[i].name], entity]);
 		} else {
 			persistentItem[mandatories[i].name] = entity[mandatories[i].name];
 		}
@@ -42,7 +42,7 @@ DAO.prototype.createSQLEntity = function(entity) {
 	var optionals = this.orm.getOptionalProperties();
 	for(var i=0; i<optionals.length; i++){
 		if(optionals[i].dbValue !== undefined){
-			persistentItem[optionals[i].name] = optionals[i].dbValue.apply(this, [entity, this.orm.properties, optionals[i]]);
+			persistentItem[optionals[i].name] = optionals[i].dbValue.apply(this, [entity[optionals[i].name], entity]);
 		} else {
 			persistentItem[optionals[i].name] = entity[optionals[i].name] === undefined ? null : entity[optionals[i].name];
 		} 
@@ -224,7 +224,13 @@ DAO.prototype.remove = function(id) {
 					this.$log.info('Inspecting '+this.orm.dbName+'[' + id + '] entity\'s dependency \''+ associationName + '\' for entities to delete.');
 					var associationDAO = (this.orm.associationSets[associationName].dao && this.orm.associationSets[associationName].dao.apply(this)) || this;
 					var settings = {};
-					settings[this.orm.associationSets[associationName].joinKey] = id;
+					var joinId = id;
+					//check if we are joining on field, other than pk
+					if(this.orm.associationSets[associationName].key!==undefined){
+						var ctxEntity = this.find(id);
+						joinId = ctxEntity[this.orm.associationSets[associationName].key];
+					}
+					settings[this.orm.associationSets[associationName].joinKey] = joinId;
 					var associatedEntities;
 					//associatedEntities = this.expand(associationName, id);
 					associatedEntities = associationDAO.list(settings);
@@ -303,8 +309,9 @@ DAO.prototype.expand = function(expansionPath, context){
 		var settings = {};
 		if(this.orm.associationSets[associationName].defaults)
 			settings = this.orm.associationSets[associationName].defaults;
-		var joinId = contextEntity[this.orm.getPrimaryKey().name];
-		var joinKey = this.orm.associationSets[associationName].joinKey;			
+		var joinKey = this.orm.associationSets[associationName].joinKey;
+		var key = this.orm.associationSets[associationName].key || this.orm.getPrimaryKey().name;
+		var joinId = contextEntity[key];
 		settings[joinKey] = joinId;
 		
 		//var daoMany = this.orm.associationSets[associationName].dao? this.orm.associationSets[associationName].dao() : this;
@@ -321,11 +328,14 @@ DAO.prototype.expand = function(expansionPath, context){
 		var joinTableDAO = (this.orm.associationSets[associationName].daoJoin && this.orm.associationSets[associationName].daoJoin());
 		if(!joinTableDAO)
 			throw Error('No join table DAO instance available for association '+associationName);
-		var associationSetNDAO = (this.orm.associationSets[associationName].daoN && this.orm.associationSets[associationName].daoN());
+		if(!joinTableDAO.listJoins)
+			throw Error('No listJoins funciton in join table DAO instance available for association '+associationName);
+		var associationSetNDAO = (this.orm.associationSets[associationName].daoN && this.orm.associationSets[associationName].daoN()) || this;
 		if(!associationSetNDAO)
 			throw Error('No N assocaiton DAO instance available for association '+associationName);
 		var settings = {};
-		var joinId = contextEntity[this.orm.getPrimaryKey().name];		
+		var key = this.orm.associationSets[associationName].key || this.orm.getPrimaryKey().name;
+		var joinId = contextEntity[key];
 		settings[this.orm.associationSets[associationName].joinKey] = joinId;
 		associationSetEntities = associationSetEntities.concat(joinTableDAO.listJoins.apply(joinTableDAO, [settings, {"m": associationSetMDAO, "join":joinTableDAO, "n":associationSetNDAO}]));
 		if(expansionPath.length<1){

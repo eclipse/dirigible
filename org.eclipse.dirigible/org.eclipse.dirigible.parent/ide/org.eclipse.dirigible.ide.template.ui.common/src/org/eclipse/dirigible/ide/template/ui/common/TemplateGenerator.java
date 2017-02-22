@@ -98,7 +98,7 @@ public abstract class TemplateGenerator {
 		StringBuilder targetLocation = new StringBuilder() //
 				.append(getModel().getProjectName()) //
 				.append(IRepository.SEPARATOR) //
-				.append(next.getRootFolder()) //
+				.append((next.getRootFolder() == null) ? getDefaultRootFolder() : next.getRootFolder()) //
 				.append(IRepository.SEPARATOR) //
 				.append(getModel().getProjectPackageName());
 		if (next.getPackagePath() != null) {
@@ -199,4 +199,6 @@ public abstract class TemplateGenerator {
 	private String constructPackageName() {
 		return getModel().constructPackageName();
 	}
+
+	protected abstract String getDefaultRootFolder();
 }

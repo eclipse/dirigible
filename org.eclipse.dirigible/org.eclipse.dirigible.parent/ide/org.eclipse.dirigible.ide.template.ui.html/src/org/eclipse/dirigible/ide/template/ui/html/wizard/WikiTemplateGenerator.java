@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 /**
  * Wiki Template Generator
@@ -51,4 +52,10 @@ public class WikiTemplateGenerator extends TemplateGenerator {
 	protected String getLogTag() {
 		return LOG_TAG;
 	}
+
+	@Override
+	protected String getDefaultRootFolder() {
+		return ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
+	}
+
 }

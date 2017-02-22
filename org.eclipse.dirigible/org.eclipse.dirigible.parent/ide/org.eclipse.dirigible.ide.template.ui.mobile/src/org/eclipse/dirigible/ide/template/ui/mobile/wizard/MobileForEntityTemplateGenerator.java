@@ -91,5 +91,10 @@ public class MobileForEntityTemplateGenerator extends TemplateGenerator {
 	protected String getLogTag() {
 		return LOG_TAG;
 	}
+	
+	@Override
+	protected String getDefaultRootFolder() {
+		return ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
+	}
 
 }

@@ -12,6 +12,7 @@ package org.eclipse.dirigible.ide.template.ui.tc.wizard;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 /**
  * TestCase Template Generator
@@ -24,7 +25,7 @@ public class TestCaseTemplateGenerator extends TemplateGenerator {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param model
 	 */
 	public TestCaseTemplateGenerator(TestCaseTemplateModel model) {
@@ -45,4 +46,10 @@ public class TestCaseTemplateGenerator extends TemplateGenerator {
 	protected byte[] afterGeneration(byte[] bytes) {
 		return model.normalizeEscapes(bytes);
 	}
+
+	@Override
+	protected String getDefaultRootFolder() {
+		return ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
+	}
+
 }

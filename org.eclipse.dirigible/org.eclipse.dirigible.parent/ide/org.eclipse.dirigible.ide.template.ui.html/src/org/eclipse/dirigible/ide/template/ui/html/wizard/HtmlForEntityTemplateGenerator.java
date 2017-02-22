@@ -118,4 +118,9 @@ public class HtmlForEntityTemplateGenerator extends TemplateGenerator {
 	protected byte[] afterGeneration(byte[] bytes) {
 		return model.normalizeEscapes(bytes);
 	}
+
+	@Override
+	protected String getDefaultRootFolder() {
+		return ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
+	}
 }

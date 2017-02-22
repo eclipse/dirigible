@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 /**
  * Mobile template generator
@@ -55,4 +56,10 @@ public class MobileTemplateGenerator extends TemplateGenerator {
 	protected byte[] afterGeneration(byte[] bytes) {
 		return model.normalizeEscapes(bytes);
 	}
+	
+	@Override
+	protected String getDefaultRootFolder() {
+		return ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
+	}
+	
 }

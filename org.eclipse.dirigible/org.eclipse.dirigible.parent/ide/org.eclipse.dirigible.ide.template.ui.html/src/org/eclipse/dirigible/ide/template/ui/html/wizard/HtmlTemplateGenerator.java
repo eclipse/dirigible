@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 /**
  * HTML Template Generator
@@ -55,5 +56,10 @@ public class HtmlTemplateGenerator extends TemplateGenerator {
 	@Override
 	protected byte[] afterGeneration(byte[] bytes) {
 		return model.normalizeEscapes(bytes);
+	}
+
+	@Override
+	protected String getDefaultRootFolder() {
+		return ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
 	}
 }

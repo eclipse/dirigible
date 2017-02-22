@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 /**
  * DataStructure Template Generator
@@ -53,6 +54,11 @@ public class DataStructureTemplateGenerator extends TemplateGenerator {
 	@Override
 	protected String getLogTag() {
 		return LOG_TAG;
+	}
+
+	@Override
+	protected String getDefaultRootFolder() {
+		return ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES;
 	}
 
 }

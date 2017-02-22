@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.ide.template.ui.common.GenerationModel;
 import org.eclipse.dirigible.ide.template.ui.common.TemplateGenerator;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.utils.CommonUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -136,4 +137,10 @@ public class JavascriptServiceTemplateGenerator extends TemplateGenerator {
 	protected byte[] afterGeneration(byte[] bytes) {
 		return model.normalizeEscapes(bytes);
 	}
+
+	@Override
+	protected String getDefaultRootFolder() {
+		return ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
+	}
+
 }
