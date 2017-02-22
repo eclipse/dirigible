@@ -1,17 +1,36 @@
-{"name":"List Entities",
- "description":"List of entities page based on Bootstrap and AngularJS",
- "image":"ui-for-entity-list.png",
- "sources":[
-   {"name":"ui-for-entity-list.html", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"templateType", "required":"true"},
-   {"name":"fileName", "required":"true"},
-   {"name":"projectName", "required":"true"},
-   {"name":"packageName", "required":"true"},
-   {"name":"pageTitle", "required":"true"},
-   {"name":"tableName", "required":"true"},
-   {"name":"columns", "required":"true"},
-   {"name":"serviceEndpoint", "required":"true"}
-   ]
+{
+    "name":"List Entities",
+    "description":"List of entities page based on Bootstrap and AngularJS",
+    "image":"ui-for-entity-list.png",
+    "sources":[{
+        "name":"ui-for-entity-list.html",
+        "action":"generate",
+        "rootFolder":"WebContent",
+        "rename":"%s"
+    }],
+    "parameters":[{
+        "name":"templateType",
+        "required":"true"
+    }, {
+        "name":"fileName",
+        "required":"true"
+    }, {
+        "name":"projectName",
+        "required":"true"
+    }, {
+        "name":"packageName",
+        "required":"true"
+    }, {
+        "name":"pageTitle",
+        "required":"true"
+    }, {
+        "name":"tableName",
+        "required":"true"
+    }, {
+        "name":"columns",
+        "required":"true"
+    }, {
+        "name":"serviceEndpoint",
+        "required":"true"
+    }]
 }

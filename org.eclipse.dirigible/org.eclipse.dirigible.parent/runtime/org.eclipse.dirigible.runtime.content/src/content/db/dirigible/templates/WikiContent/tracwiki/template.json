@@ -1,11 +1,15 @@
-{"name":"Tracwiki Notation Guide",
- "description":"Tracwiki notation guide template",
- "image":"wiki-notation-guide.png",
- "sources":[
-   {"name":"tracwiki-notation-guide.tracwiki", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"name",
-   "required":"true"}
-   ]
+{
+    "name":"Tracwiki Notation Guide",
+    "description":"Tracwiki notation guide template",
+    "image":"wiki-notation-guide.png",
+    "sources":[{
+        "name":"tracwiki-notation-guide.tracwiki",
+        "action":"generate",
+        "rootFolder":"WikiContent",
+        "rename":"%s"
+    }],
+    "parameters":[{
+        "name":"name",
+        "required":"true"
+    }]
 }

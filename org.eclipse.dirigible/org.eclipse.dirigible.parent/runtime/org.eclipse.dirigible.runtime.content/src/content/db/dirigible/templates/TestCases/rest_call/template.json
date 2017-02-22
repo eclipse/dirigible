@@ -1,11 +1,15 @@
-{"name":"REST Call Test",
- "description":"Test calling a RESTful service",
- "image":"rest_call.png",
- "sources":[
-   {"name":"rest_call.js", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"name",
-   "required":"true"}
-   ]
+{
+    "name":"REST Call Test",
+    "description":"Test calling a RESTful service",
+    "image":"rest_call.png",
+    "sources":[{
+        "name":"rest_call.js",
+        "action":"generate",
+        "rootFolder":"TestCases",
+        "rename":"%s"
+    }],
+    "parameters":[{
+        "name":"name",
+        "required":"true"
+    }]
 }

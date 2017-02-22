@@ -1,0 +1,55 @@
+{
+    "name":"Mobile Create Entities",
+    "description":"Create entities based on TabrisJS",
+    "image":"ui-for-new-entity.png",
+    "sources":[{
+        "name":"MobileApplications/app.js",
+        "action":"generate",
+        "rootFolder":"MobileApplications"
+    }, {
+        "name":"MobileApplications/package.json",
+        "action":"generate",
+        "rootFolder":"MobileApplications"
+    }, {
+        "name":"MobileApplications/node_modules/polyfill.min.js",
+        "action":"copy",
+        "rootFolder":"MobileApplications",
+        "packagePath":"node_modules"
+    }, {
+        "name":"MobileApplications/node_modules/tabris/package.json",
+        "action":"copy",
+        "rootFolder":"MobileApplications",
+        "packagePath":"node_modules/tabris"
+    }, {
+        "name":"MobileApplications/node_modules/tabris/tabris.min.js",
+        "action":"copy",
+        "rootFolder":"MobileApplications",
+        "packagePath":"node_modules/tabris"
+    }],
+    "parameters":[{
+        "name":"templateType",
+        "required":"true"
+    }, {
+        "name":"fileName",
+        "required":"true"
+    }, {
+        "name":"projectName",
+        "required":"true"
+    }, {
+        "name":"packageName",
+        "required":"true"
+    }, {
+        "name":"pageTitle",
+        "required":"true"
+    }, {
+        "name":"tableName",
+        "required":"true"
+    }, {
+        "name":"columns",
+        "required":"true"
+    }, {
+        "name":"serviceEndpoint",
+        "required":"true"
+    }
+   ]
+}

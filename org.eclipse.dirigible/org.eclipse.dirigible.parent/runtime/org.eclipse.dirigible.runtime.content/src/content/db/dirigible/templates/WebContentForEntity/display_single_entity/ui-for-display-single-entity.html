@@ -26,12 +26,12 @@
             <div ng-show="urlParameter">
                 <div ng-show="exist">
 #foreach ($tableColumn in $tableColumns)
-#if($tableColumn.isVisible())
-                    <label>${tableColumn.getLabel()}</label>
-#if ($tableColumn.getWidgetType() == "date")
-					<div>{{entity.${tableColumn.getName()} | date:format}}</div>
+#if($tableColumn.visible)
+                    <label>${tableColumn.label}</label>
+#if ($tableColumn.widgetType == "date")
+					<div>{{entity.${tableColumn.name} | date:format}}</div>
 #else
-					<div>{{entity.${tableColumn.getName()}}}</div>
+					<div>{{entity.${tableColumn.name}}}</div>
 #end
                     <br>
 #end
@@ -43,8 +43,8 @@
                         <strong>Warning!</strong>
                         Entity with 
 #foreach ($tableColumn in $tableColumns) 
-#if ($tableColumn.isKey())
-						${tableColumn.getName()}
+#if ($tableColumn.key)
+						${tableColumn.name}
 #end
 #end
                         = '{{urlParameter}}' does not exists!
@@ -77,8 +77,8 @@
 		angular.module('page').controller('DisplayController', function ($scope, $http) {
 			var url = '${serviceFileName}';
 #foreach ($tableColumn in $tableColumns) 
-#if ($tableColumn.isKey())
-			$scope.primaryKey = '${tableColumn.getName()}';
+#if ($tableColumn.key)
+			$scope.primaryKey = '${tableColumn.name}';
 #end 
 #end                    
 			$scope.urlParameter = getURLParameter($scope.primaryKey);

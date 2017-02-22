@@ -1,11 +1,15 @@
-{"name":"Extension",
- "description":"Extension template",
- "image":"extension.png",
- "sources":[
-   {"name":"extension.extension", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"name",
-   "required":"true"}
-   ]
+{
+    "name":"Extension",
+    "description":"Extension template",
+    "image":"extension.png",
+    "sources":[{
+        "name":"extension.extension",
+        "action":"generate",
+        "rootFolder":"ExtensionDefinitions",
+        "rename":"%s"
+    }],
+    "parameters":[{
+        "name":"name",
+        "required":"true"
+    }]
 }

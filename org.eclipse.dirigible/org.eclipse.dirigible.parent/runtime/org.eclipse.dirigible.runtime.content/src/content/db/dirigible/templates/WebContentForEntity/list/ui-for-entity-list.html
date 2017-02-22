@@ -26,8 +26,8 @@
 				<thead>
 					<tr>
 #foreach ($tableColumn in $tableColumns) 
-#if($tableColumn.isVisible())
-						<th>${tableColumn.getLabel()}</th>
+#if($tableColumn.visible)
+						<th>${tableColumn.label}</th>
 #end
 #end
 					</tr>
@@ -35,11 +35,11 @@
 				<tbody>
 					<tr ng-repeat="entry in data">
 #foreach ($tableColumn in $tableColumns) 
-#if($tableColumn.isVisible())
-#if ($tableColumn.getWidgetType() == "date")
-						<td>{{entry.${tableColumn.getName()} | date:format}}</td>
+#if($tableColumn.visible)
+#if ($tableColumn.widgetType == "date")
+						<td>{{entry.${tableColumn.name} | date:format}}</td>
 #else
-						<td>{{entry.${tableColumn.getName()}}}</td>
+						<td>{{entry.${tableColumn.name}}}</td>
 #end
 #end
 #end

@@ -1,11 +1,15 @@
-{"name":"Extension Point",
- "description":"Extension point template",
- "image":"extension-point.png",
- "sources":[
-   {"name":"extensionpoint.extensionpoint", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"name",
-   "required":"true"}
-   ]
+{
+    "name":"Extension Point",
+    "description":"Extension point template",
+    "image":"extension-point.png",
+    "sources":[{
+        "name":"extensionpoint.extensionpoint",
+        "action":"generate",
+        "rootFolder":"ExtensionDefinitions",
+        "rename":"%s"
+    }],
+    "parameters":[{
+        "name":"name",
+        "required":"true"
+    }]
 }

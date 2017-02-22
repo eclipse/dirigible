@@ -1,11 +1,15 @@
-{"name":"Confluence Notation Guide",
- "description":"Confluence notation guide template",
- "image":"wiki-notation-guide.png",
- "sources":[
-   {"name":"confluence-notation-guide.confluence", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"name",
-   "required":"true"}
-   ]
+{
+    "name":"Confluence Notation Guide",
+    "description":"Confluence notation guide template",
+    "image":"wiki-notation-guide.png",
+    "sources":[{
+        "name":"confluence-notation-guide.confluence",
+        "action":"generate",
+        "rootFolder":"WikiContent",
+        "rename":"%s"
+    }],
+    "parameters":[{
+        "name":"name",
+        "required":"true"
+    }]
 }

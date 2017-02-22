@@ -1,14 +1,27 @@
-{"name":"Delete Data from a Table",
- "description":"Delete the data from a relational table",
- "image":"dsv.png",
- "sources":[
-   {"name":"dsv.delete", "action":"generate"}
-   ],
- "parameters":[
-   {"name":"templateType", "required":"true"},
-   {"name":"fileName", "required":"true"},
-   {"name":"projectName", "required":"true"},
-   {"name":"packageName", "required":"true"},
-   {"name":"rows", "required":"true"}
-   ]
+{
+    "name":"Delete Data from a Table",
+    "description":"Delete the data from a relational table",
+    "image":"dsv.png",
+    "sources":[{
+        "name":"dsv.delete",
+        "action":"generate",
+        "rootFolder":"DataStructures",
+        "rename":"%s"
+    }],
+    "parameters":[{
+        "name":"templateType",
+        "required":"true"
+    }, {
+        "name":"fileName",
+        "required":"true"
+    }, {
+        "name":"projectName",
+        "required":"true"
+    }, {
+        "name":"packageName",
+        "required":"true"
+    }, {
+        "name":"rows",
+        "required":"true"
+    }]
 }

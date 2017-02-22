@@ -1,18 +1,13 @@
-[
-  {
-    "location":"/${projectName}/secured",
-    "roles":
-      [
-        {"role":"User"},
-        {"role":"PowerUser"}
-      ]
-  },
-  {
-    "location":"/${projectName}/confidential",
-    "roles":
-      [
-        {"role":"Administrator"}
-      ]
-  }
-]
-
+[{
+	"location":"/${projectName}/secured",
+	"roles":[{
+		"role":"User"
+	}, {
+		"role":"PowerUser"
+	}]
+}, {
+	"location":"/${projectName}/confidential",
+	"roles":[{
+		"role":"Administrator"
+	}]
+}]
