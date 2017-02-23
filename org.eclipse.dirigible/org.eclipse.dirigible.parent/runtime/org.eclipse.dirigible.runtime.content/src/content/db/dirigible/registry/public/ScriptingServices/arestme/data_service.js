@@ -36,9 +36,14 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 	    var entity = JSON.parse(input);
 	    notify.call(self, 'onEntityInsert', entity);
 	    try{
-			entity[dao.orm.getPrimaryKey()] = dao.insert(entity, context.queryParams.cascaded);
-			io.response.setStatus(io.response.OK);
-			io.response.setHeader('Location', $.getRequest().getRequestURL().toString() + '/' + entity[dao.orm.getPrimaryKey()]);
+			var ids = dao.insert(entity, context.queryParams.$cascaded || true);
+			if(ids && ids.constructor!== Array)	{
+				io.response.setHeader('Location', $.getRequest().getRequestURL().toString() + '/' + ids);
+				io.response.setStatus(io.response.NO_CONTENT);
+			} else {
+				io.response.println(JSON.stringify(ids, null, 2));
+				io.response.setStatus(io.response.OK);
+			}
 		} catch(e) {
     	    var errorCode = io.response.INTERNAL_SERVER_ERROR;
     	    self.logger.error(e.message, e);

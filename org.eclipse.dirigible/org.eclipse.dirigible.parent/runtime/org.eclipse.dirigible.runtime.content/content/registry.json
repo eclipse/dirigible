@@ -88,4 +88,11 @@
 		"source": "target/swagger_ui/swagger_ui/WebContent",
 		"target": "src/content/db/dirigible/registry/public"
 	}]
+}, {
+	"path": "target/resources",
+	"repository": "https://github.com/dirigiblelabs/resources.git",
+	"content": [{
+		"source": "target/resources/resources/WebContent",
+		"target": "src/content/db/dirigible/registry/public"
+	}]
 }]

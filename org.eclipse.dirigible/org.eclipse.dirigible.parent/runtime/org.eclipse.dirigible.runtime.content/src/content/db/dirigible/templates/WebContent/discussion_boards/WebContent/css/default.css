@@ -5,10 +5,6 @@ html, body {
 	overflow: hidden;
 }
 	
-body{
-	background-color: #f9f9f9;
-}
-
 /* Fixes bootstrap dropdown when it's on the right -side page border */
 .pull-right .dropdown-menu:after {
     left: auto;

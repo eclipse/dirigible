@@ -47,6 +47,7 @@ DAO.prototype.createSQLEntity = function(entity) {
 			persistentItem[optionals[i].name] = entity[optionals[i].name] === undefined ? null : entity[optionals[i].name];
 		} 
 	}
+		
 	var msgIdSegment = persistentItem[this.orm.getPrimaryKey().name]?"["+persistentItem[this.orm.getPrimaryKey().name]+"]":"";
 	this.$log.info("Transformation to " + this.orm.dbName + msgIdSegment + " DB JSON object finished");
 	return persistentItem;
@@ -105,61 +106,82 @@ DAO.prototype.validateEntity = function(entity, skip){
 	}
 };
 
-DAO.prototype.insert = function(entity){
-	this.$log.info('Inserting '+this.orm.dbName+' entity');
-	this.validateEntity(entity, [this.orm.getPrimaryKey().name]);
+DAO.prototype.insert = function(_entity){
 
-    var dbEntity = this.createSQLEntity(entity);
+	var entities = _entity;
+	if(_entity.constructor !== Array){
+		entities = [_entity];
+	}
 
-    var connection = this.datasource.getConnection();
-    try {
-        var parametericStatement = this.ormstatements.insert.apply(this.ormstatements);
-
-        var id = this.datasource.getSequence(this.orm.dbName+'_'+this.orm.getPrimaryKey.name.toUpperCase()).next();
-        dbEntity[this.orm.getPrimaryKey().name] = id;
-		var updatedRecordCount = this.ormstatements.execute(parametericStatement, connection, dbEntity);
-		this.notify('afterInsert', dbEntity);
-		this.notify('beforeInsertAssociationSets', dbEntity);
-		if(this.orm.associationSets && Object.keys(this.orm.associationSets).length){
-			//Insert dependencies if any are provided inline with this entity
-			this.$log.info('Inserting association sets for '+this.orm.dbName + '['+dbEntity[this.orm.getPrimaryKey().name]+']');
-			for(var idx in Object.keys(this.orm.associationSets)){
-				var associationName = Object.keys(this.orm.associationSets)[idx];
-				if(['many-to-many', 'many-to-one'].indexOf(this.orm.associationSets[associationName].associationType)>-1){
-					if(dbEntity[associationName] && dbEntity[associationName].length>0){
-						var associationDAO = this.orm.associationSets[associationName].dao.apply(this);
-						this.notify('beforeInsertAssociationSet', dbEntity[associationName], dbEntity);
-						for(var j=0; j<dbEntity[associationName].length; j++){
-			        		var associatedEntity = dbEntity[associationName][j];
-			        		var associatedEntityJoinKey = this.orm.associationSets[associationName].joinKey;
-			        		associatedEntity[associatedEntityJoinKey] = dbEntity[this.orm.getPrimaryKey().name];
-			        		this.notify('beforeInsertAssociationSetEntity', dbEntity[associationName], dbEntity);
-							associationDAO.insert(associatedEntity);
-			    		}
-			    		this.notify('afterInsertAssociationSet', dbEntity[associationName], dbEntity);
-					}				
-				}
-			}		
-		}
+	this.$log.info('Inserting '+this.orm.dbName+' ' + (entities.length===1?'entity':'entities'));
+	
+	for(var i=0; i<entities.length; i++) {
+	
+		var entity = entities[i];
 		
-        this.$log.info(updatedRecordCount>0 ? this.orm.dbName+'[' +  dbEntity[this.orm.getPrimaryKey().name] + '] entity inserted' : 'No changes incurred in '+this.orm.dbName);
-
-        return dbEntity[this.orm.getPrimaryKey().name];
-
-    } catch(e) {
-    	this.$log.error(e.message, e);
-    	this.$log.info('Rolling back changes after failed '+this.orm.dbName+'[' +  dbEntity[this.orm.getPrimaryKey().name] + '] insert. ');
-		if(dbEntity[this.orm.getPrimaryKey().name]){
-			try{
-				this.remove(dbEntity[this.orm.getPrimaryKey().name]);
-			} catch(err) {
-				this.$log.error('Could not rollback changes after failed '+this.orm.dbName+'[' +  dbEntity[this.orm.getPrimaryKey().name] + '] insert. ', err);
+		this.validateEntity(entity, [this.orm.getPrimaryKey().name]);
+	
+	    var dbEntity = this.createSQLEntity(entity);
+	
+	    var connection = this.datasource.getConnection();
+	    var ids = [];
+	    try {
+	        var parametericStatement = this.ormstatements.insert.apply(this.ormstatements);
+	
+	        var id = this.datasource.getSequence(this.orm.dbName+'_'+this.orm.getPrimaryKey.name.toUpperCase()).next();
+	        dbEntity[this.orm.getPrimaryKey().name] = id;
+			var updatedRecordCount = this.ormstatements.execute(parametericStatement, connection, dbEntity);
+			this.notify('afterInsert', dbEntity);
+			this.notify('beforeInsertAssociationSets', dbEntity);
+			if(this.orm.associationSets && Object.keys(this.orm.associationSets).length){
+				//Insert dependencies if any are provided inline with this entity
+				this.$log.info('Inserting association sets for '+this.orm.dbName + '['+dbEntity[this.orm.getPrimaryKey().name]+']');
+				for(var idx in Object.keys(this.orm.associationSets)){
+					var associationName = Object.keys(this.orm.associationSets)[idx];
+					if(['many-to-many', 'many-to-one'].indexOf(this.orm.associationSets[associationName].associationType)<0){
+						if(entity[associationName] && entity[associationName].length>0){
+							var associationDAO = this.orm.associationSets[associationName].dao.apply(this);
+							this.notify('beforeInsertAssociationSet', entity[associationName], entity);
+							this.$log.info('Inserting '+entity[associationName].length+' inline entities into association set ' + associationName);
+							for(var j=0; j<entity[associationName].length; j++){
+				        		var associatedEntity = entity[associationName][j];
+				        		var associatedEntityJoinKey = this.orm.associationSets[associationName].joinKey;
+				        		var key = this.orm.associationSets[associationName].key || this.orm.getPrimaryKey().name;
+				        		associatedEntity[associatedEntityJoinKey] = entity[key];
+				        		this.notify('beforeInsertAssociationSetEntity', entity[associationName], dbEntity);
+								associationDAO.insert(associatedEntity);
+				    		}
+				    		this.$log.info('Inserting '+entity[associationName].length+' inline entities into association set ' + associationName + ' finsihed');
+				    		this.notify('afterInsertAssociationSet', entity[associationName], dbEntity);
+						}				
+					}
+				}		
 			}
-		}
-		throw e;
-    } finally {
-        connection.close();
+			
+	        this.$log.info(updatedRecordCount>0 ? this.orm.dbName+'[' +  dbEntity[this.orm.getPrimaryKey().name] + '] entity inserted' : 'No changes incurred in '+this.orm.dbName);
+
+        	ids.push(dbEntity[this.orm.getPrimaryKey().name]);
+
+	    } catch(e) {
+	    	this.$log.error(e.message, e);
+	    	this.$log.info('Rolling back changes after failed '+this.orm.dbName+'[' +  dbEntity[this.orm.getPrimaryKey().name] + '] insert. ');
+			if(dbEntity[this.orm.getPrimaryKey().name]){
+				try{
+					this.remove(dbEntity[this.orm.getPrimaryKey().name]);
+				} catch(err) {
+					this.$log.error('Could not rollback changes after failed '+this.orm.dbName+'[' +  dbEntity[this.orm.getPrimaryKey().name] + '] insert. ', err);
+				}
+			}
+			throw e;
+	    } finally {
+	        connection.close();
+	    }
     }
+    
+    if(_entity.constructor!== Array)
+    	return ids[0];
+	else
+		return ids;
 };
 
 // update entity from a JSON object. Returns the id of the updated entity.
