@@ -1,0 +1,85 @@
+{  
+    "name":"Cockpit",
+    "description":"Cockpit application",
+    "image":"cockpit.png",
+    "preview":"cockpit-preview.png",
+    "sources": [{
+        "name":"index.html",
+        "rootFolder":"WebContent",
+        "action":"generate",
+        "rename":"%s"
+    }, {
+        "name":"WebContent/styles/custom.css",
+        "rootFolder":"WebContent",
+        "packagePath":"styles",
+        "action":"copy"
+    }, {
+        "name":"WebContent/styles/main.css",
+        "rootFolder":"WebContent",
+        "packagePath":"styles",
+        "action":"copy"
+    }, {
+        "name":"WebContent/styles/cockpit.css",
+        "rootFolder":"WebContent",
+        "packagePath":"styles",
+        "action":"copy"
+    }, {
+        "name":"WebContent/templates/home.html",
+        "rootFolder":"WebContent",
+        "packagePath":"templates",
+        "action":"copy"
+    }, {
+        "name":"WebContent/templates/view.html",
+        "rootFolder":"WebContent",
+        "packagePath":"templates",
+        "action":"copy"
+    }, {
+        "name":"ExtensionDefinitions/extension_point/cockpit.extensionpoint",
+        "rootFolder":"ExtensionDefinitions",
+        "packagePath":"extension_point",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/api/sidebar.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"api",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/api/menu.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"api",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/extension/cockpitExtensionUtils.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"extension",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/templates/appTemplate.js",
+        "rootFolder":"ScriptingServices",
+        "packagePath":"templates",
+        "action":"generate"
+    }, {
+        "name":"ScriptingServices/app.js",
+        "rootFolder":"ScriptingServices",
+        "action":"generate"
+    }],
+    "parameters": [{
+        "name":"templateType",
+        "required":"true"
+    }, {
+        "name":"fileName",
+        "required":"true"
+    }, {
+        "name":"projectName",
+        "required":"true"
+    }, {
+        "name":"packageName",
+        "required":"true"
+    }, {  
+        "name":"tableName",
+        "required":"true"
+    }, {  
+        "name":"columns",
+        "required":"true"
+    }]
+}

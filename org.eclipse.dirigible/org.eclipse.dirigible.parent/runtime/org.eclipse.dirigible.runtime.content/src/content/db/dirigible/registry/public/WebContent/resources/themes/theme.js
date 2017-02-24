@@ -11,7 +11,9 @@
 	    "journal" : "/services/web/resources/themes/journal/bootstrap.min.css",
 	    "readable" : "/services/web/resources/themes/readable/bootstrap.min.css",
 	    "simplex" : "/services/web/resources/themes/simplex/bootstrap.min.css",
-	    "yeti" : "/services/web/resources/themes/yeti/bootstrap.min.css"
+	    "yeti" : "/services/web/resources/themes/yeti/bootstrap.min.css",
+	    "solar" : "/services/web/resources/themes/solar/bootstrap.min.css",
+	    "superhero" : "/services/web/resources/themes/superhero/bootstrap.min.css"
 	};
 
 	$(function() {

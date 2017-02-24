@@ -51,6 +51,12 @@
 						</ul>
 					</li>
 				</ul>
+				<ul class="nav navbar-nav navbar-right">
+				  <li class="dropdown" ng-include="'/services/web/resources/themes/themes.html'"></li>
+		          <li class="hidden-xs">
+		            <a href=""><span class="fa fa-user"></span> <span ng-include="'/services/js/user/name.js'"></span>&nbsp;</a>
+		          </li>
+		        </ul>
 			</div>
 		</nav>
 	<div ng-view></div>

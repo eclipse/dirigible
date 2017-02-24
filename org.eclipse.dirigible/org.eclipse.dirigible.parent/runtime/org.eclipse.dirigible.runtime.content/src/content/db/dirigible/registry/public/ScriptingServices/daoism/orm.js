@@ -58,6 +58,19 @@ ORM.prototype.getOptionalProperties = function(){
 	return this.optionalProperties;
 };
 
+ORM.prototype.getUniqueProperties = function(){
+	if(!this.uniqueProperties){
+		if(!this.properties || !this.properties.length)
+			throw Error('Invalid orm configuration - no properties are defined');
+		var uniques = this.properties.filter(function(property){
+			return property.unique;
+		});
+		this.uniqueProperties = uniques;
+	}
+	return this.uniqueProperties;
+};
+
+
 ORM.prototype.associationKeys = function(){
 	var keys = [];
 	if(this.associationSets && Object.keys(this.associationSets).length>0){

@@ -40,4 +40,18 @@
 		"source": "target/template_web_discussions/template_web_discussions/WebContent",
 		"target": "src/content/db/dirigible/templates"
 	}]
+}, {
+	"path": "target/template_web_cockpit",
+	"repository": "https://github.com/dirigiblelabs/template_web_cockpit.git",
+	"content": [{
+		"source": "target/template_web_cockpit/template_web_cockpit/WebContent",
+		"target": "src/content/db/dirigible/templates"
+	}]
+}, {
+	"path": "target/template_web_cockpit_item",
+	"repository": "https://github.com/dirigiblelabs/template_web_cockpit_item.git",
+	"content": [{
+		"source": "target/template_web_cockpit_item/template_web_cockpit_item/WebContent",
+		"target": "src/content/db/dirigible/templates"
+	}]
 }]

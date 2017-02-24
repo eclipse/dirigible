@@ -7,7 +7,7 @@ var DAO = exports.DAO = function(orm, logCtxName, ds){
 	if(orm === undefined)
 		throw Error('Illegal argument: orm['+ orm + ']');
 	this.$log = require('log/loggers').get(logCtxName || 'DAO');
-	this.datasource = ds || database.getDatasource();
+	this.datasource = ds || database.getDatasource();		
 	this.orm = require("daoism/orm").get(orm);	
 	this.ormstatements = require('daoism/ormstatements').forDatasource(this.orm, this.datasource);
 };
@@ -93,7 +93,7 @@ DAO.prototype.validateEntity = function(entity, skip){
 		for(var j=0; j<skip.length; j++){
 			skip[j];
 		}
-	}	
+	}
 	var mandatories = this.orm.getMandatoryProperties();
 	for(var i = 0; i< mandatories.length; i++){
 		var propName = mandatories[i].name;
@@ -120,10 +120,33 @@ DAO.prototype.insert = function(_entity){
 		var entity = entities[i];
 		
 		this.validateEntity(entity, [this.orm.getPrimaryKey().name]);
+		
+		var connection;
+	
+		//check for unique constraint violations
+		var uniques = this.orm.getUniqueProperties();
+		for(var _i = 0; _i< uniques.length; _i++){
+			var prop = uniques[_i];
+			var st = this.ormstatements.builder(this.ormstatements.dialect)
+						.select(prop.dbName)
+						.from(this.orm.dbName)
+						.where(prop.dbName+'=?', [prop]);
+			try{
+				connection = this.datasource.getConnection();						
+				var params = {};
+				params[prop.name] = entity[prop.name];
+				var rs = this.ormstatements.execute(st, connection, params);
+				if(rs.next()){
+					throw Error('Unique constraint violation for ' + prop.name + '['+entity[prop.name]+']');
+				}
+			} finally {
+				connection.close();
+			}
+		}
 	
 	    var dbEntity = this.createSQLEntity(entity);
 	
-	    var connection = this.datasource.getConnection();
+	    connection = this.datasource.getConnection();
 	    var ids = [];
 	    try {
 	        var parametericStatement = this.ormstatements.insert.apply(this.ormstatements);
@@ -222,70 +245,91 @@ DAO.prototype.update = function(entity) {
     }
 };
 
-// delete entity by id. Returns the id of the deleted entity.
-DAO.prototype.remove = function(id) {
+// delete entity by id, or array of ids, or delete all (if not argument is provided).
+DAO.prototype.remove = function() {
 
-	this.$log.info('Deleting '+this.orm.dbName+'[' + id + '] entity');
-
-	if(id === undefined || id === null){
-		throw new Error('Illegal argument for id parameter:' + id);
+	var ids = [];
+	if(arguments.length===0){
+		ids = this.list({
+			"$select": [this.orm.getPrimaryKey().name]
+		}).map(function(ent){
+			return ent[this.orm.getPrimaryKey().name];
+		}.bind(this));
+	} else {
+		if(arguments[0].constructor !== Array){
+			ids = [arguments[0]];
+		} else {
+			ids = arguments[0];
+		}
 	}
 
-    var connection = this.datasource.getConnection();
-    try {
-    
-    	var parametericStatement = this.ormstatements["delete"].apply(this.ormstatements);
-    	this.notify('beforeRemoveEntity', id);
-    	
-		//first we attempt to remove depndents if any
-		if(this.orm.associationSets && Object.keys(this.orm.associationSets).length){
-			//Remove associated dependencies
-			for(var idx in Object.keys(this.orm.associationSets)){
-				var associationName = Object.keys(this.orm.associationSets)[idx];
-				if(['many-to-many', 'many-to-one'].indexOf(this.orm.associationSets[associationName].associationType)<0){
-					this.$log.info('Inspecting '+this.orm.dbName+'[' + id + '] entity\'s dependency \''+ associationName + '\' for entities to delete.');
-					var associationDAO = (this.orm.associationSets[associationName].dao && this.orm.associationSets[associationName].dao.apply(this)) || this;
-					var settings = {};
-					var joinId = id;
-					//check if we are joining on field, other than pk
-					if(this.orm.associationSets[associationName].key!==undefined){
-						var ctxEntity = this.find(id);
-						joinId = ctxEntity[this.orm.associationSets[associationName].key];
-					}
-					settings[this.orm.associationSets[associationName].joinKey] = joinId;
-					var associatedEntities;
-					//associatedEntities = this.expand(associationName, id);
-					associatedEntities = associationDAO.list(settings);
-					if(associatedEntities && associatedEntities.length > 0){
-						this.$log.info('Deleting '+this.orm.dbName+'['+id+'] entity\'s '+associatedEntities.length+' dependent ' + associationName);
-						
-						this.notify('beforeRemoveAssociationSet', associatedEntities, id);
-						
-						for(var j=0; j<associatedEntities.length; j++){
-							var associatedEntity = associatedEntities[j];
-							
-							this.notify('beforeRemoveAssociationSetEntity', associatedEntity, associatedEntities, id);
-							
-							associationDAO.remove(associatedEntity[associationDAO.orm.getPrimaryKey().name]);
+	this.$log.info('Deleting '+this.orm.dbName+' ' + ((ids!==undefined && ids.length===1)?'entity': ids.length+' entities'));
+	
+	for(var i=0; i<ids.length; i++) {
+	
+		var id = ids[i];
+
+		this.$log.info('Deleting '+this.orm.dbName+'[' + id + '] entity');
+	
+		if(id === undefined || id === null){
+			throw new Error('Illegal argument for id parameter:' + id);
+		}
+	
+	    var connection = this.datasource.getConnection();
+	    try {
+	    
+	    	this.notify('beforeRemoveEntity', id);
+	    	
+			//first we attempt to remove depndents if any
+			if(this.orm.associationSets && Object.keys(this.orm.associationSets).length){
+				//Remove associated dependencies
+				for(var idx in Object.keys(this.orm.associationSets)){
+					var associationName = Object.keys(this.orm.associationSets)[idx];
+					if(['many-to-many', 'many-to-one'].indexOf(this.orm.associationSets[associationName].associationType)<0){
+						this.$log.info('Inspecting '+this.orm.dbName+'[' + id + '] entity\'s dependency \''+ associationName + '\' for entities to delete.');
+						var associationDAO = (this.orm.associationSets[associationName].dao && this.orm.associationSets[associationName].dao.apply(this)) || this;
+						var settings = {};
+						var joinId = id;
+						//check if we are joining on field, other than pk
+						if(this.orm.associationSets[associationName].key!==undefined){
+							var ctxEntity = this.find(id);
+							joinId = ctxEntity[this.orm.associationSets[associationName].key];
 						}
-						this.$log.info(this.orm.dbName+'['+id+'] entity\'s '+associatedEntities.length+' dependent ' + associationName + ' '+ associatedEntities.length>1?'entities':'entity' +' deleted.');
+						settings[this.orm.associationSets[associationName].joinKey] = joinId;
+						var associatedEntities;
+						//associatedEntities = this.expand(associationName, id);
+						associatedEntities = associationDAO.list(settings);
+						if(associatedEntities && associatedEntities.length > 0){
+							this.$log.info('Deleting '+this.orm.dbName+'['+id+'] entity\'s '+associatedEntities.length+' dependent ' + associationName);
+							
+							this.notify('beforeRemoveAssociationSet', associatedEntities, id);
+							
+							for(var j=0; j<associatedEntities.length; j++){
+								var associatedEntity = associatedEntities[j];
+								
+								this.notify('beforeRemoveAssociationSetEntity', associatedEntity, associatedEntities, id);
+								
+								associationDAO.remove(associatedEntity[associationDAO.orm.getPrimaryKey().name]);
+							}
+							this.$log.info(this.orm.dbName+'['+id+'] entity\'s '+associatedEntities.length+' dependent ' + associationName + ' '+ associatedEntities.length>1?'entities':'entity' +' deleted.');
+						}
 					}
-				}
-			} 
-        }
-    	
-		var params = {};
-       	params[this.orm.getPrimaryKey().name] = id;
-		var updatedRecordsCount = this.ormstatements.execute(parametericStatement, connection, params);
-   		this.$log.info(updatedRecordsCount>0?this.orm.dbName+'[' + id + '] entity deleted':'No changes incurred in '+this.orm.dbName);
+				} 
+	        }
+	    	
+	    	var parametericStatement = this.ormstatements["delete"].apply(this.ormstatements, [id]);
+			var params = {};
+	       	params[this.orm.getPrimaryKey().name] = id;
+			var updatedRecordsCount = this.ormstatements.execute(parametericStatement, connection, params);
+	   		this.$log.info(updatedRecordsCount>0?this.orm.dbName+'[' + id + '] entity deleted':'No changes incurred in '+this.orm.dbName);
 
-        return this;
-
-    } catch(e) {
-		this.$log.error(e.message, e);
-		throw e;
-    } finally {
-        connection.close();
+	    } catch(e) {
+			this.$log.error(e.message, e);
+			throw e;
+	    } finally {
+	        connection.close();
+	    }
+	    
     }
     
 };

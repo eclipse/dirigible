@@ -151,11 +151,11 @@ var HttpController = exports.HttpController = function(oConfiguration){
 		var matches = matchRequestUrl(requestPath, method, self._oConfiguration);
 		var resourceHandler;
 		if(matches && matches[0]){
-			var verbHandler = self._oConfiguration[matches[0].d][method];//todo -> make array (one handler per media type)
-			if(verbHandler){
-				var isMatchingIOMMediaTypes = matchMediaType(request, verbHandler.produces, verbHandler.consumes);
-				if(isMatchingIOMMediaTypes)
-					resourceHandler = verbHandler;
+			var verbHandlers = self._oConfiguration[matches[0].d][method];
+			if(verbHandlers){
+				resourceHandler = verbHandlers.filter(function(handlerDef){
+					return matchMediaType(request, handlerDef.produces, handlerDef.consumes);
+				})[0];
 			}
 		}
 		
@@ -178,13 +178,13 @@ var HttpController = exports.HttpController = function(oConfiguration){
 				ctx.pathParams = matches[0].pathParams;
 			}
 			ctx.queryParams = queryParams;
-			if(verbHandler.beforeHandle){
-			 	if(verbHandler.beforeHandle.constructor !== Function)
+			if(resourceHandler.beforeHandle){
+			 	if(resourceHandler.beforeHandle.constructor !== Function)
 			 		throw Error('Invalid configuration exception: verbHandler.beforeHandle is not a function');
-				verbHandler.beforeHandle.apply(self, [ctx, io]);
+				resourceHandler.beforeHandle.apply(self, [ctx, io]);
 			}
 			if(!ctx.err){
-				verbHandler.handler.apply(self, [ctx, io]);
+				resourceHandler.handler.apply(self, [ctx, io]);
 				HttpController.prototype.closeResponse.call(this);
 				self.logger.info('Serving request for resource [' + resourcePath + '], Verb['+method.toUpperCase()+'], Content-Type'+contentTypeHeader+', Accept'+acceptsHeader+' finished');
 			}
@@ -204,9 +204,17 @@ HttpController.prototype.addResourceHandlers = function(handlersMap){
 		throw Error('Illegal argument exception: handlersMap[' + handlersMap + ']');
 	var aResourcePaths = Object.keys(handlersMap);	
 	for(var i=0; i<aResourcePaths.length; i++){
-		var verbNames = Object.keys(handlersMap[aResourcePaths[i]]);
-		for(var j=0; j<verbNames.length;j++){
-			HttpController.prototype.addResourceHandler.call(this, aResourcePaths[i], verbNames[j], handlersMap[aResourcePaths[i]][verbNames[j]]['handler'], handlersMap[aResourcePaths[i]][verbNames[j]]['consumes'], handlersMap[aResourcePaths[i]][verbNames[j]]['produces'], handlersMap[aResourcePaths[i]][verbNames[j]]['beforeHandler']);
+		var verbHandlerNames = Object.keys(handlersMap[aResourcePaths[i]]);
+		for(var j=0; j<verbHandlerNames.length;j++){
+			var verbHandlerDefs = handlersMap[aResourcePaths[i]][verbHandlerNames[j]];
+			if(verbHandlerDefs.constructor !== Array){//Accept objects for backwards compatibility
+				this.logger.warn('Verb handler value must be an array of objects. Objects will not be supported in near future');
+				verbHandlerDefs = [verbHandlerDefs]
+			}
+			for(var k = 0; k<verbHandlerDefs.length; k++){
+				var verbHandlerDef = verbHandlerDefs[k];
+				HttpController.prototype.addResourceHandler.call(this, aResourcePaths[i], verbHandlerNames[j], verbHandlerDef['handler'], verbHandlerDef['consumes'], verbHandlerDef['produces'], verbHandlerDef['beforeHandler']);
+			}
 		}
 	}
 	return this;
@@ -216,8 +224,10 @@ HttpController.prototype.addResourceHandler = function(sPath, sMethod, fHandler,
 	//validate mandatory input
 	if(sPath===undefined || sPath===null)
 		throw Error('Illegal argument exception: sPath['+sPath+']');
-	if(sMethod===undefined || sMethod===null)
-		throw Error('Illegal argument exception: sMethod['+sMethod+']');//TODO: validate method against a the standard HTTP set or allow non standard too?
+	if(sMethod===undefined || sMethod===null){
+		throw Error('Illegal argument exception: sMethod['+sMethod+']');//TODO: validate method against the standard HTTP set or allow non standard too?
+	}
+	sMethod = sMethod.toLowerCase();
 	if(fHandler===undefined || fHandler===null || fHandler.constructor !== Function)
 		throw Error('Illegal argument exception: fHandler['+fHandler+']');
 	//validate optionals
@@ -228,19 +238,28 @@ HttpController.prototype.addResourceHandler = function(sPath, sMethod, fHandler,
 	if(aProducesMediaTypes!==undefined && aProducesMediaTypes!==null && aProducesMediaTypes.constructor === String)//TODO: validate for conformance with mime type spec
 		aProducesMediaTypes = [aProducesMediaTypes];
 	//construct
-	var verb = {};
-	verb['handler'] = fHandler;
+	if(!this._oConfiguration[sMethod.toLowerCase()]){
+		this._oConfiguration[sMethod.toLowerCase()] = [];
+	}
+	var handlerDef = {};
+	handlerDef['handler'] = fHandler;
 	if(fBeforeHandler)
-		verb['beforeHandler'] = fBeforeHandler;		
+		handlerDef['beforeHandler'] = fBeforeHandler;		
 	if(aConsumesMediaTypes)
-		verb['consumes'] = aConsumesMediaTypes;
+		handlerDef['consumes'] = aConsumesMediaTypes;
 	if(aProducesMediaTypes)
-		verb['produces'] = aProducesMediaTypes;
+		handlerDef['produces'] = aProducesMediaTypes;
 
 	if(this._oConfiguration[sPath] === undefined){
 		this._oConfiguration[sPath] = {};
 	}
-	this._oConfiguration[sPath][sMethod] = verb;
+	var verbHandlers = this._oConfiguration[sPath][sMethod];
+	if(verbHandlers === undefined){
+		this._oConfiguration[sPath][sMethod] = [];
+	}
+	//TODO: shoud we check for overlapping resourceHandler definitions by consumes/produces media types?
+	
+	this._oConfiguration[sPath][sMethod].push(handlerDef);
 	return this;
 };
 

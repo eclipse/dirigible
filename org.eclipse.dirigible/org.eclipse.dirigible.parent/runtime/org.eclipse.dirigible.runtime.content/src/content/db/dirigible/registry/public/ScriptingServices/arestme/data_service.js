@@ -53,10 +53,9 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 	};
 	
 	var remove = function(context, io){
-		var id = context.pathParams.id;
-		var cascaded = context.queryParams.cascaded;			
+		var id = context.pathParams.id;		
 	 	try{
-			dao.remove(id, cascaded);
+			dao.remove(id);
 			notify.call(self, 'onAfterRemove', id);
 			io.response.setStatus(io.response.NO_CONTENT);
 		} catch(e) {
@@ -398,63 +397,63 @@ var DataService = exports.DataService = function(dao, loggerName){
 	if(this.handlers['query'])
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"": {
-				"get": {
+				"get": [{
 					produces: ['application/json'],
 					handler: this.handlers.query
-				}
+				}]
 			}
 		});
 	if(this.handlers['create'])
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"": {
-				"post": {
+				"post": [{
 					consumes: ['application/json'],
 					handler: this.handlers.create
-				}
+				}]
 			}
 		});	
 	if(this.handlers['get'])
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"{id}": {
-				"get": {
+				"get": [{
 					produces: ['application/json'],
 					handler: this.handlers.get
-				}
+				}]
 			}
 		});	
 	if(this.handlers['update'])
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"{id}": {
-				"put": {
+				"put": [{
 					consumes: ['application/json'],
 					handler: this.handlers.update
-				}
+				}]
 			}
 		});				
 	if(this.handlers['remove'])
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"{id}": {
-				"delete": {
+				"delete": [{
 					handler: this.handlers.remove
-				}
+				}]
 			}
 		});	
 	if(this.handlers['count'])
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"count": {
-				"get": {
+				"get": [{
 					produces: ['application/json'],
 					handler: this.handlers.count
-				}
+				}]
 			}
 		});
 	if(this.handlers['metadata'])
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"metadata": {
-				"get": {
+				"get": [{
 					produces: ['application/json'],
 					handler: this.handlers.metadata
-				}
+				}]
 			}
 		});
   	
@@ -462,20 +461,20 @@ var DataService = exports.DataService = function(dao, loggerName){
 	if(this.handlers['associationList']){
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"{id}/{associationName}": {
-				"get": {
+				"get": [{
 					produces: ["application/json"],
 					handler: this.handlers['associationList']
-				}
+				}]
 			}
 		});
 	}
 	if(this.handlers['associationCreate']){
 		HttpController.prototype.addResourceHandlers.call(this, {
 			"{id}/{associationName}": {
-				"post": {
+				"post": [{
 					consumes: ["application/json"],
 					handler: this.handlers['associationCreate']
-				}
+				}]
 			}
 		});
 	}

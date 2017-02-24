@@ -51,8 +51,11 @@ ORMStatements.prototype.update = function(entity){
 	return stmnt;
 };
 ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
-	return this.builder(this.dialect).remove().from(this.orm.dbName)
-			.where(this.orm.getPrimaryKey().dbName + "=?", [this.orm.getPrimaryKey()]);
+	var stmnt = this.builder(this.dialect).remove().from(this.orm.dbName);
+	if(arguments[0]!==undefined){
+		stmnt.where(this.orm.getPrimaryKey().dbName + "=?", [this.orm.getPrimaryKey()]);
+	}
+	return stmnt;
 };
 ORMStatements.prototype.find = function(params){
 	var stmnt = this.builder(this.dialect).select();

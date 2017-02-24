@@ -61,4 +61,11 @@
 		"source": "target/template_terminal_uname/template_terminal_uname/ScriptingServices",
 		"target": "src/content/db/dirigible/templates"
 	}]
+}, {
+	"path": "target/template_js_database_crud_da",
+	"repository": "https://github.com/dirigiblelabs/template_js_database_crud_da.git",
+	"content": [{
+		"source": "target/template_js_database_crud/template_js_database_crud_da/ScriptingServices",
+		"target": "src/content/db/dirigible/templates"
+	}]
 }]
