@@ -1,0 +1,214 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.0",
+        "title": "${entityName} Entity Service",
+        "description":"This is a RESTful web service for listing, viewing and managing entities of the type '${entityName}'"
+    },
+    "basePath":"/services",
+    "tags":[
+      {
+         "name":"${entityName}",
+         "description":"View and manage ${entityName} objects"
+      }
+    ],
+    "paths": {
+        "/js/${packageName}/${fileName}": {
+            "get": {
+            	"tags":[
+               		"${entityName}"
+            	],
+                "description": "Gets '${entityName}' objects.\n",
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "Count of all the records",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "${primaryKey.name.toLowerCase()}",
+                        "in": "query",
+                        "description": "Identifier of the '${entityName}' object",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "metadata",
+                        "in": "query",
+                        "description": "Metadata of the '${entityName}' object",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Offset of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort parameter",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Descending order",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/${entityName}"
+                        }
+                    }
+                }
+            },
+            "post": {
+            	"tags":[
+               		"${entityName}"
+            	],
+                "description": "Creates a new '${entityName}' object.\n",
+                "consumes":[
+	               "application/json"
+	            ],
+	            "produces":[
+	               "plain/text"
+	            ],
+	            "parameters":[
+	               {
+	                  "in":"body",
+	                  "name":"body",
+	                  "description":"${entityName} object that needs to be added",
+	                  "required":true,
+	                  "schema":{
+	                     "$ref":"#/definitions/${entityName}"
+	                  }
+	               }
+	            ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/${entityName}"
+                        }
+                    }
+                }
+            },
+            "put": {
+            	"tags":[
+               		"${entityName}"
+            	],
+                "description": "Updates an existing '${entityName}' object.\n",
+                "consumes":[
+	               "application/json"
+	            ],
+	            "produces":[
+	               "plain/text"
+	            ],
+	            "parameters":[
+	               {
+	                  "in":"body",
+	                  "name":"body",
+	                  "description":"${entityName} object that needs to be added",
+	                  "required":true,
+	                  "schema":{
+	                     "$ref":"#/definitions/${entityName}"
+	                  }
+	               }
+	            ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/${entityName}"
+                        }
+                    }
+                }
+            },
+            "delete": {
+            	"tags":[
+               		"${entityName}"
+            	],
+                "description": "Deletes '${entityName}' objects.\n",
+                "parameters": [
+                    {
+                        "name": "${primaryKey.name.toLowerCase()}",
+                        "in": "query",
+                        "description": "Identifier of the '${entityName}' object",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/${entityName}"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions":{
+        "${entityName}": {
+	        "type":"object",
+	        "properties": {
+#foreach ($tableColumn in $tableColumns)
+#if ($velocityCount > 1)
+				,
+#end
+        		"${tableColumn.name.toLowerCase()}": {
+	            	"type": 
+#if ($tableColumn.type == $INTEGER)
+        "integer"
+#elseif ($tableColumn.type == $VARCHAR)
+        "string"
+#elseif ($tableColumn.type == $CHAR)
+        "string"
+#elseif ($tableColumn.type == $BIGINT)
+        "integer"
+#elseif ($tableColumn.type == $SMALLINT)
+        "integer"
+#elseif ($tableColumn.type == $FLOAT)
+        "number"
+#elseif ($tableColumn.type == $DOUBLE)
+        "number"
+#elseif ($tableColumn.type == $DATE)
+        "number"
+#elseif ($tableColumn.type == $TIME)
+        "number"
+#elseif ($tableColumn.type == $TIMESTAMP)
+        "number"
+#elseif ($tableColumn.type == $BOOLEAN)
+        "boolean"
+#else
+    // not supported type -> set to string
+    	"string" 
+#end	            	
+	    		}
+#end	        
+	        }
+        }
+	}
+}
