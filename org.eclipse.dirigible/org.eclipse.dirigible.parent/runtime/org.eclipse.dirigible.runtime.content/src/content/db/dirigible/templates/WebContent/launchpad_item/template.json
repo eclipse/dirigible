@@ -10,9 +10,9 @@
         "action":"generate",
         "rename":"%s"
     }, {
-        "name":"ScriptingServices/extension/item.js",
+        "name":"ScriptingServices/extensions/item.js",
         "rootFolder":"ScriptingServices",
-        "packagePath":"extension",
+        "packagePath":"extensions",
         "action":"generate",
         "rename":"%s"
     }, {

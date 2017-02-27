@@ -99,6 +99,7 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException
 	 */
 	public FileSystemRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
+
 		String root;
 		if (absolute) {
 			if (rootFolder != null) {
@@ -116,7 +117,9 @@ public class FileSystemRepository implements IRepository {
 		this.user = user;
 		this.repositoryDAO = new LocalRepositoryDAO(this);
 
+		logger.info(String.format("Creating File-based Repository at: %s ...", root));
 		initializeRepository(root);
+		logger.info(String.format("File-based Repository at: %s, has been created and initialized.", root));
 	}
 
 	public String getRepositoryPath() {

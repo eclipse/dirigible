@@ -36,6 +36,8 @@ public class RepositoryFacade {
 	private static final String PARAM_GIT_USER = "masterRepositoryGitUser"; //$NON-NLS-1$
 	private static final String PARAM_GIT_PASSWORD = "masterRepositoryGitPassword"; //$NON-NLS-1$
 	private static final String PARAM_GIT_BRANCH = "masterRepositoryGitBranch"; //$NON-NLS-1$
+	private static final String PARAM_LOCAL_ROOT = "localRepositoryRootFolder"; //$NON-NLS-1$
+	private static final String PARAM_LOCAL_ABSOLUTE = "localRepositoryRootFolderIsAbsolute"; //$NON-NLS-1$
 
 	private static final Logger logger = Logger.getLogger(RepositoryFacade.class);
 
@@ -87,6 +89,8 @@ public class RepositoryFacade {
 			parameters.put(PARAM_GIT_USER, System.getProperty(PARAM_GIT_USER));
 			parameters.put(PARAM_GIT_PASSWORD, System.getProperty(PARAM_GIT_PASSWORD));
 			parameters.put(PARAM_GIT_BRANCH, System.getProperty(PARAM_GIT_BRANCH));
+			parameters.put(PARAM_LOCAL_ROOT, System.getProperty(PARAM_LOCAL_ROOT));
+			parameters.put(PARAM_LOCAL_ABSOLUTE, System.getProperty(PARAM_LOCAL_ABSOLUTE));
 			repository = RepositoryFactory.createRepository(parameters);
 			saveRepositoryInstance(request, repository);
 		} catch (Exception e) {

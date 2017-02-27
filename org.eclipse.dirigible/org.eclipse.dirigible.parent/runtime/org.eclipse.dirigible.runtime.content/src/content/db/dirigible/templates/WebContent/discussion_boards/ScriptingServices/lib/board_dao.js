@@ -28,7 +28,7 @@ var BoardsORM = {
 			dbName: "${fileNameNoExtension.toUpperCase()}B_PUBLISH_TIME",
 			required: true,
 			type: "Long",
-			dbValue: function(entity){
+			dbValue: function(name, entity){
 				return entity.publishTime !== undefined ? new Date(entity.publishTime).getTime() : null;
 			},
 			value: function(dbValue){
@@ -39,7 +39,7 @@ var BoardsORM = {
 			name: "lastModifiedTime",
 			dbName: "${fileNameNoExtension.toUpperCase()}B_LASTMODIFIED_TIME",
 			type: "Long",
-			dbValue: function(entity){
+			dbValue: function(name, entity){
 				return entity.lastModifiedTime !== undefined ? new Date(entity.lastModifiedTime).getTime() : null;
 			},
 			value: function(dbValue){
@@ -58,7 +58,7 @@ var BoardsORM = {
 			name: "locked",
 			dbName: "${fileNameNoExtension.toUpperCase()}B_LOCKED",
 			type: "Short",
-			dbValue: function(entity){
+			dbValue: function(name, entity){
 				return entity.locked ? 1 : 0;
 			},
 			value: function(dbValue){

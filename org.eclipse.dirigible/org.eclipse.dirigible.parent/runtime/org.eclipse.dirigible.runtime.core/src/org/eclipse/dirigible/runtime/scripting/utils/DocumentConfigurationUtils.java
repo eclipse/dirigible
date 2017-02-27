@@ -10,13 +10,20 @@ import org.eclipse.dirigible.runtime.scripting.IDocumentService;
 
 public class DocumentConfigurationUtils implements IDocumentService {
 
+	private static final String CMIS = "cmis";
+	private static final String CMIS_LOCAL_ROOT = "localCmisRootFolder";
+
 	@Override
 	public Object getSession() {
 		Object injectedCmisSession = System.getProperties().get(ICommonConstants.CMIS_CONFIGURATION);
 		if (injectedCmisSession != null) {
 			return injectedCmisSession;
 		}
-		IRepository repository = new LocalRepository("cmis", "cmis");
+		String localCmisRoot = (String) System.getProperties().get(CMIS_LOCAL_ROOT);
+		if (localCmisRoot == null) {
+			localCmisRoot = CMIS;
+		}
+		IRepository repository = new LocalRepository(CMIS, localCmisRoot);
 		CmisRepository cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
 		CmisSession cmisSession = cmisRepository.getSession();
 		return cmisSession;

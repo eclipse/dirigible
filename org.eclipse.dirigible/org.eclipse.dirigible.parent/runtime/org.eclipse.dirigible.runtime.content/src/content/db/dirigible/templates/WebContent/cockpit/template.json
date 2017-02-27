@@ -34,9 +34,9 @@
         "packagePath":"templates",
         "action":"copy"
     }, {
-        "name":"ExtensionDefinitions/extension_point/cockpit.extensionpoint",
+        "name":"ExtensionDefinitions/extension_points/cockpit.extensionpoint",
         "rootFolder":"ExtensionDefinitions",
-        "packagePath":"extension_point",
+        "packagePath":"extension_points",
         "action":"generate"
     }, {
         "name":"ScriptingServices/api/sidebar.js",

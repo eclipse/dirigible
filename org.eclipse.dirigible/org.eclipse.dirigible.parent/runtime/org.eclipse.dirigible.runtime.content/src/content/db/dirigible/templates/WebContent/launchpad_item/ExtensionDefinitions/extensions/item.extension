@@ -1,5 +1,5 @@
 {
-  "extension":"/${packageName}/extension/${fileNameNoExtension}",
-  "extension-point":"/${packageName}/extension_point/launchpad",
+  "extension":"/${packageName}/extensions/${fileNameNoExtension}",
+  "extension-point":"/${packageName}/extension_points/launchpad",
   "description":"Develop extension for the Launchpad extension point"
 }

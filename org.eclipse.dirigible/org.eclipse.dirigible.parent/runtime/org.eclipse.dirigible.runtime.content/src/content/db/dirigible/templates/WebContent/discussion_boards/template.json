@@ -237,9 +237,6 @@
         "name":"SecurityConstraints/main.access",
         "rootFolder":"SecurityConstraints",
         "action":"generate"
-    }, {
-        "name":"project.json",
-        "action":"generate"
     }],
     "parameters": [{
         "name":"templateType",

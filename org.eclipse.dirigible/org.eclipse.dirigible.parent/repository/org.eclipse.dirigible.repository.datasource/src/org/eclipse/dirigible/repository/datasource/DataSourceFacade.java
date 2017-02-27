@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.repository.datasource;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,6 +48,7 @@ public class DataSourceFacade {
 
 	private static final String LOCAL_DB_ACTION = "create"; //$NON-NLS-1$
 	private static final String LOCAL_DB_NAME = "derby"; //$NON-NLS-1$
+	private static final String LOCAL_DB_ROOT = "localDatabaseRootFolder"; //$NON-NLS-1$
 
 	private static final String DATASOURCE_DEFAULT = "DEFAULT_DATASOURCE"; //$NON-NLS-1$
 	private static final String DEFAULT_DATASOURCE_TYPE = ICommonConstants.INIT_PARAM_DEFAULT_DATASOURCE_TYPE;
@@ -109,12 +112,15 @@ public class DataSourceFacade {
 			}
 
 			if (dataSource == null) {
-				dataSource = createLocal();
-				logger.warn("Created Local DataSource!");
+				try {
+					dataSource = createLocal();
+					logger.warn("Created Local DataSource!");
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
 			} else {
 				logger.debug("Lookup done.");
 			}
-			// populateMetaData(dataSource);
 		}
 		return dataSource;
 	}
@@ -128,9 +134,9 @@ public class DataSourceFacade {
 			WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource);
 			logger.debug("Datasource retrieved from the Request");
 			return wrappedDataSource;
-		} else {
-			logger.debug("Datasource NOT available in the Request");
 		}
+		logger.debug("Datasource NOT available in the Request");
+
 		return null;
 	}
 
@@ -143,9 +149,8 @@ public class DataSourceFacade {
 			WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource);
 			logger.debug("Datasource retrieved from System Properties");
 			return wrappedDataSource;
-		} else {
-			logger.debug("Datasource NOT available in System Properties");
 		}
+		logger.debug("Datasource NOT available in System Properties");
 		return null;
 	}
 
@@ -195,46 +200,33 @@ public class DataSourceFacade {
 		return null;
 	}
 
-	private WrappedDataSource createLocal() {
+	private WrappedDataSource createLocal() throws IOException {
 
 		logger.debug("Try to create embedded datasource");
 
 		localDataSource = (DataSource) System.getProperties().get(LOCAL_DB_NAME);
+
 		if (localDataSource == null) {
 			localDataSource = new EmbeddedDataSource();
-			((EmbeddedDataSource) localDataSource).setDatabaseName(LOCAL_DB_NAME);
+			String derbyRoot = (String) System.getProperties().get(LOCAL_DB_ROOT);
+			if (derbyRoot == null) {
+				derbyRoot = LOCAL_DB_NAME;
+			}
+			File rootFile = new File(derbyRoot);
+			File parentFile = rootFile.getCanonicalFile().getParentFile();
+			if (!parentFile.exists()) {
+				parentFile.mkdirs();
+			}
+			((EmbeddedDataSource) localDataSource).setDatabaseName(derbyRoot);
 			((EmbeddedDataSource) localDataSource).setCreateDatabase(LOCAL_DB_ACTION);
 			System.getProperties().put(LOCAL_DB_NAME, localDataSource);
+			logger.warn(String.format("Embedded Derby at: %s", derbyRoot));
 		}
 		logger.warn(EMBEDDED_DATA_SOURCE_IS_USED);
 
 		WrappedDataSource wrappedDataSource = new WrappedDataSource(localDataSource);
 		return wrappedDataSource;
 	}
-
-	// private void populateMetaData(DataSource dataSource) {
-	// Connection connection = null;
-	// try {
-	// try {
-	// connection = dataSource.getConnection();
-	// DatabaseMetaData metaData = connection.getMetaData();
-	// System.setProperty(DATABASE_PRODUCT_NAME, metaData.getDatabaseProductName());
-	// System.setProperty(DATABASE_PRODUCT_VERSION, metaData.getDatabaseProductVersion());
-	// System.setProperty(DATABASE_MINOR_VERSION, metaData.getDatabaseMinorVersion() + EMPTY);
-	// System.setProperty(DATABASE_MAJOR_VERSION, metaData.getDatabaseMajorVersion() + EMPTY);
-	// System.setProperty(DATABASE_DRIVER_NAME, metaData.getDriverName());
-	// System.setProperty(DATABASE_DRIVER_MINOR_VERSION, metaData.getDriverMinorVersion() + EMPTY);
-	// System.setProperty(DATABASE_DRIVER_MAJOR_VERSION, metaData.getDriverMajorVersion() + EMPTY);
-	// System.setProperty(DATABASE_CONNECTION_CLASS_NAME, connection.getClass().getCanonicalName());
-	// } finally {
-	// if (connection != null) {
-	// connection.close();
-	// }
-	// }
-	// } catch (SQLException e) {
-	// logger.error(e.getMessage(), e);
-	// }
-	// }
 
 	/**
 	 * Register a named data-source's meta-data by name in the list of known named data sources

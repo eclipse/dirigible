@@ -1,5 +1,5 @@
 {
-  "extension":"/${packageName}/extension/${fileNameNoExtension}",
-  "extension-point":"/${packageName}/extension_point/cockpit",
+  "extension":"/${packageName}/extensions/${fileNameNoExtension}",
+  "extension-point":"/${packageName}/extension_points/cockpit",
   "description":"Develop extension for the Cockpit extension point"
 }

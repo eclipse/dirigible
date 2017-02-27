@@ -29,9 +29,9 @@
         "packagePath":"templates",
         "action":"copy"
     }, {
-        "name":"ExtensionDefinitions/extension_point/launchpad.extensionpoint",
+        "name":"ExtensionDefinitions/extension_points/launchpad.extensionpoint",
         "rootFolder":"ExtensionDefinitions",
-        "packagePath":"extension_point",
+        "packagePath":"extension_points",
         "action":"generate"
     }, {
         "name":"ScriptingServices/api/home.js",

@@ -22,7 +22,7 @@ var CommentsORM = {
 			name: "replyToCommentId",
 			dbName: "${fileNameNoExtension.toUpperCase()}C_REPLY_TO_${fileNameNoExtension.toUpperCase()}C_ID",
 			type: "Long",
-			dbValue: function(entity){
+			dbValue: function(name, entity){
 				return entity.replyToCommentId !==undefined ? entity.replyToCommentId : null;//TODO: Fixme as soon as all -1 entries are updated to null. Will work with null isntead of -1
 			},
 			value: function(dbValue){
@@ -38,7 +38,7 @@ var CommentsORM = {
 			dbName: "${fileNameNoExtension.toUpperCase()}C_PUBLISH_TIME",
 			required: true,
 			type: "Long",
-			dbValue: function(entity){
+			dbValue: function(name, entity){
 				return entity.publishTime !== undefined ? new Date(entity.publishTime).getTime() : null;
 			},
 			value: function(dbValue){
@@ -49,7 +49,7 @@ var CommentsORM = {
 			name: "lastModifiedTime",
 			dbName: "${fileNameNoExtension.toUpperCase()}C_LASTMODIFIED_TIME",
 			type: "Long",
-			dbValue: function(entity){
+			dbValue: function(name, entity){
 				return entity.lastModifiedTime !== undefined ? new Date(entity.lastModifiedTime).getTime() : null;
 			},
 			value: function(dbValue){
@@ -60,7 +60,7 @@ var CommentsORM = {
 			dbName: "${fileNameNoExtension.toUpperCase()}C_USER",
 			type: "String",
 			size: 100,
-			dbValue: function(entity){
+			dbValue: function(name, entity){
 				return require("net/http/user").getName();
 			}
 		}	

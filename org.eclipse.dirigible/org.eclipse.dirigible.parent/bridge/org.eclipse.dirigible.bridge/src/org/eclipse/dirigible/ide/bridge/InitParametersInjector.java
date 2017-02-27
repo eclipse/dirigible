@@ -23,6 +23,18 @@ import org.slf4j.LoggerFactory;
 
 public class InitParametersInjector implements IInjector {
 
+	private static final String INITIAL_PARAMETER_PER_REQUEST_RETREIVED_FROM_THE_SERVLET_CONFIGURATION_NAME_S_VALUE_S = "Initial Parameter per Request retreived from the Servlet Configuration: name=%s value=%s";
+
+	private static final String INITIAL_PARAMETER_PER_REQUEST_RETREIVED_FROM_THE_SYSTEM_ENVIRONMENT_NAME_S_VALUE_S = "Initial Parameter per Request retreived from the System Environment: name=%s value=%s";
+
+	private static final String INITIAL_PARAMETER_PER_REQUEST_RETREIVED_FROM_THE_SYSTEM_PROPERTIES_NAME_S_VALUE_S = "Initial Parameter per Request retreived from the System Properties: name=%s value=%s";
+
+	private static final String INITIAL_PARAMETER_SET_TO_THE_ENVIRONMENT_NAME_S_VALUE_S = "Initial Parameter set to the Environment: name=%s value=%s";
+
+	private static final String INITIAL_PARAMETER_EXISTS_IN_THE_SYSTEM_ENVIRONMENT_NAME_S_VALUE_S = "Initial Parameter exists in the System Environment: name=%s value=%s";
+
+	private static final String INITIAL_PARAMETER_EXISTS_IN_THE_SYSTEM_PROPERTIES_NAME_S_VALUE_S = "Initial Parameter exists in the System Properties: name=%s value=%s";
+
 	private static final Logger logger = LoggerFactory.getLogger(InitParametersInjector.class.getCanonicalName());
 
 	// Initi Parameters Names
@@ -65,6 +77,8 @@ public class InitParametersInjector implements IInjector {
 	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER = "localRepositoryRootFolder"; //$NON-NLS-1$
 	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "localRepositoryRootFolderIsAbsolute"; //$NON-NLS-1$
 	public static final String INIT_PARAM_RUN_ON_OSGI = "osgi"; //$NON-NLS-1$ // true/false
+	public static final String INIT_PARAM_LOCAL_DATABASE_ROOT_FOLDER = "localDatabaseRootFolder"; //$NON-NLS-1$
+	public static final String INIT_PARAM_LOCAL_CMIS_ROOT_FOLDER = "localCmisRootFolder"; //$NON-NLS-1$
 
 	// ---
 
@@ -76,12 +90,16 @@ public class InitParametersInjector implements IInjector {
 			String parameterName = parameterNames.nextElement();
 			String parameterValue = null;
 			if (System.getProperties().containsKey(parameterName)) {
-				parameterValue = get(parameterName);
-				logger.debug(String.format("Initial Parameter per Request retreived from the Environment: name=%s value=%s", parameterName,
+				parameterValue = System.getProperty(parameterName);
+				logger.debug(String.format(INITIAL_PARAMETER_PER_REQUEST_RETREIVED_FROM_THE_SYSTEM_PROPERTIES_NAME_S_VALUE_S, parameterName,
+						parameterValue));
+			} else if (System.getenv().containsKey(parameterName)) {
+				parameterValue = System.getenv().get(parameterName);
+				logger.debug(String.format(INITIAL_PARAMETER_PER_REQUEST_RETREIVED_FROM_THE_SYSTEM_ENVIRONMENT_NAME_S_VALUE_S, parameterName,
 						parameterValue));
 			} else {
 				parameterValue = servletConfig.getInitParameter(parameterName);
-				logger.debug(String.format("Initial Parameter per Request retreived from the Servlet Configuration: name=%s value=%s", parameterName,
+				logger.debug(String.format(INITIAL_PARAMETER_PER_REQUEST_RETREIVED_FROM_THE_SERVLET_CONFIGURATION_NAME_S_VALUE_S, parameterName,
 						parameterValue));
 			}
 			req.setAttribute(parameterName, parameterValue);
@@ -96,20 +114,29 @@ public class InitParametersInjector implements IInjector {
 			String parameterName = parameterNames.nextElement();
 			String parameterValue = null;
 			if (System.getProperties().containsKey(parameterName)) {
-				parameterValue = get(parameterName);
-				logger.info(String.format("Initial Parameter exists in the Environment: name=%s value=%s", parameterName, parameterValue));
-				System.out.println(String.format("Initial Parameter exists in the Environment: name=%s value=%s", parameterName, parameterValue));
+				parameterValue = System.getProperty(parameterName);
+				logger.info(String.format(INITIAL_PARAMETER_EXISTS_IN_THE_SYSTEM_PROPERTIES_NAME_S_VALUE_S, parameterName, parameterValue));
+				System.out.println(String.format(INITIAL_PARAMETER_EXISTS_IN_THE_SYSTEM_PROPERTIES_NAME_S_VALUE_S, parameterName, parameterValue));
+			}
+			if (System.getenv().containsKey(parameterName)) {
+				parameterValue = System.getenv().get(parameterName);
+				logger.debug(String.format(INITIAL_PARAMETER_EXISTS_IN_THE_SYSTEM_ENVIRONMENT_NAME_S_VALUE_S, parameterName, parameterValue));
+				System.out.println(String.format(INITIAL_PARAMETER_EXISTS_IN_THE_SYSTEM_ENVIRONMENT_NAME_S_VALUE_S, parameterName, parameterValue));
 			} else {
 				parameterValue = servletConfig.getInitParameter(parameterName);
 				System.getProperties().put(parameterName, parameterValue);
-				logger.info(String.format("Initial Parameter set to the Environment: name=%s value=%s", parameterName, parameterValue));
-				System.out.println(String.format("Initial Parameter set to the Environment: name=%s value=%s", parameterName, parameterValue));
+				logger.info(String.format(INITIAL_PARAMETER_SET_TO_THE_ENVIRONMENT_NAME_S_VALUE_S, parameterName, parameterValue));
+				System.out.println(String.format(INITIAL_PARAMETER_SET_TO_THE_ENVIRONMENT_NAME_S_VALUE_S, parameterName, parameterValue));
 			}
 		}
 	}
 
 	public static String get(String key) {
-		return System.getProperty(key);
+		String value = System.getProperty(key);
+		if (value != null) {
+			return value;
+		}
+		return System.getenv().get(key);
 	}
 
 }
