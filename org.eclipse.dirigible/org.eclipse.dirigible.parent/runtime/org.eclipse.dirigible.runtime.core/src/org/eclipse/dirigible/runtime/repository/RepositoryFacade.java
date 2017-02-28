@@ -67,6 +67,10 @@ public class RepositoryFacade {
 		}
 		return instance;
 	}
+	
+	public IRepository getRepository() throws RepositoryException {
+		return getRepository(null);
+	}
 
 	public IRepository getRepository(HttpServletRequest request) throws RepositoryException {
 

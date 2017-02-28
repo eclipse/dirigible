@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.dirigible.repository.datasource,
  org.eclipse.rap.jface;resolution:=optional,
  org.eclipse.dirigible.repository.ext,
  org.eclipse.dirigible.repository.logging,
- org.eclipse.dirigible.ide.common
+ org.eclipse.dirigible.ide.common,
+ org.eclipse.dirigible.runtime.core
 Import-Package: javax.servlet,
  javax.servlet.annotation,
  javax.servlet.descriptor,

@@ -10,9 +10,6 @@
 
 package org.eclipse.dirigible.ide.repository;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -20,9 +17,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryException;
-import org.eclipse.dirigible.repository.api.RepositoryFactory;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
-import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 
 public class RepositoryFacade {
 
@@ -30,9 +25,17 @@ public class RepositoryFacade {
 
 	private static RepositoryFacade instance;
 
+	private org.eclipse.dirigible.runtime.repository.RepositoryFacade runtimeFacade;
+
+	private RepositoryFacade(org.eclipse.dirigible.runtime.repository.RepositoryFacade runtimeFacade) {
+		this.runtimeFacade = runtimeFacade;
+	}
+
 	public static RepositoryFacade getInstance() {
 		if (instance == null) {
-			instance = new RepositoryFacade();
+			org.eclipse.dirigible.runtime.repository.RepositoryFacade runtimeFacade = org.eclipse.dirigible.runtime.repository.RepositoryFacade
+					.getInstance();
+			instance = new RepositoryFacade(runtimeFacade);
 		}
 		return instance;
 	}
@@ -43,58 +46,11 @@ public class RepositoryFacade {
 	}
 
 	public IRepository getRepository(HttpServletRequest request) throws RepositoryException {
-		if (request == null) {
-			request = CommonIDEParameters.getRequest();
-		}
-
-		IRepository repository = getRepositoryInstance(request);
-
-		if (repository != null) {
-			return repository;
-		}
-
-		try {
-			DataSource dataSource = lookupDataSource(request);
-			String user = getUser(request);
-			// repository = new DBRepository(dataSource, user, false);
-			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("datasource", dataSource);
-			parameters.put("user", user);
-			parameters.put("recreate", Boolean.FALSE);
-			repository = RepositoryFactory.createRepository(parameters);
-			saveRepositoryInstance(request, repository);
-		} catch (Exception e) {
-			throw new RepositoryException(e);
-		}
-
-		return repository;
+		return runtimeFacade.getRepository(request);
 	}
 
 	public DataSource lookupDataSource(HttpServletRequest request) throws NamingException {
 		return DataSourceFacade.getInstance().getDataSource(request);
-	}
-
-	public String getUser(HttpServletRequest request) {
-		String user = CommonIDEParameters.getUserName(request); // shared one
-		try {
-			if (request != null) {
-				user = RequestUtils.getUser(request);
-			}
-		} catch (Exception e) {
-			// TODO - do nothing
-		}
-		return user;
-	}
-
-	private IRepository getRepositoryInstance(HttpServletRequest request) {
-		return (IRepository) CommonIDEParameters.getObject(REPOSITORY, request);
-	}
-
-	public void saveRepositoryInstance(HttpServletRequest request, IRepository repository) {
-		if (request == null) {
-			return;
-		}
-		CommonIDEParameters.setObject(REPOSITORY, repository);
 	}
 
 }
