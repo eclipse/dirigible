@@ -153,7 +153,7 @@ public class SecurityManager {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-			if (!isSecuredLocationInternal(connection, location, roleName)) {
+			if (!isSecuredLocationInternalExact(connection, location, roleName)) {
 				insertLocation(connection, location, roleName, request);
 			}
 		} catch (Exception e) {
@@ -195,7 +195,7 @@ public class SecurityManager {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-			if (isSecuredLocationInternal(connection, location, roleName)) {
+			if (isSecuredLocationInternalExact(connection, location, roleName)) {
 				removeLocationWithRole(connection, location, roleName);
 			} else {
 				throw new SecurityException(String.format(LOCATION_S_AND_S_DOES_NOT_EXIST, location, roleName));
@@ -304,12 +304,12 @@ public class SecurityManager {
 		}
 	}
 
-	public boolean isSecuredLocationInternal(Connection connection, String location, String roleName) throws SQLException, IOException {
+	public boolean isSecuredLocationInternalExact(Connection connection, String location, String roleName) throws SQLException, IOException {
 		PreparedStatement statement = null;
 		try {
 			String script = getDBUtils().readScript(connection, GET_ROLES_BY_LOCATION_AND_ROLE, this.getClass());
 			statement = connection.prepareStatement(script);
-			statement.setString(1, location + "%"); //$NON-NLS-1$
+			statement.setString(1, location);
 			statement.setString(2, roleName);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
@@ -321,6 +321,10 @@ public class SecurityManager {
 			}
 		}
 		return false;
+	}
+
+	public boolean isSecuredLocationInternal(Connection connection, String location, String roleName) throws SQLException, IOException {
+		return isSecuredLocationInternalExact(connection, location + "%", roleName);
 	}
 
 	public List<String> getRolesForLocation(String location) throws SQLException, IOException {
