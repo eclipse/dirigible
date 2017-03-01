@@ -53,7 +53,15 @@ ORMStatements.prototype.update = function(entity){
 ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
 	var stmnt = this.builder(this.dialect).remove().from(this.orm.dbName);
 	if(arguments[0]!==undefined){
-		stmnt.where(this.orm.getPrimaryKey().dbName + "=?", [this.orm.getPrimaryKey()]);
+		var filterFieldNames = arguments[0];
+		if(filterFieldNames.constructor!==Array)
+			filterFieldNames= [filterFieldNames];
+		for(var i=0; i<filterFieldNames.length; i++){
+			var property = this.orm.getProperty(filterFieldNames[i]);
+			if(!property)
+				throw Error('Unknown property name: ' + filterFieldNames[i]);
+			stmnt.where(property.dbName + "=?", [property]);
+		}
 	}
 	return stmnt;
 };

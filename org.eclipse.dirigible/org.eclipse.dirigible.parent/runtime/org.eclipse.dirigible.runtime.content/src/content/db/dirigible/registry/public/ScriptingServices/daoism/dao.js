@@ -8,7 +8,7 @@ var DAO = exports.DAO = function(orm, logCtxName, ds){
 		throw Error('Illegal argument: orm['+ orm + ']');
 	this.$log = require('log/loggers').get(logCtxName || 'DAO');
 	this.datasource = ds || database.getDatasource();		
-	this.orm = require("daoism/orm").get(orm);	
+	this.orm = require("daoism/orm").get(orm);
 	this.ormstatements = require('daoism/ormstatements').forDatasource(this.orm, this.datasource);
 };
 
@@ -153,26 +153,34 @@ DAO.prototype.insert = function(_entity){
 	
 	        var id = this.datasource.getSequence(this.orm.dbName+'_'+this.orm.getPrimaryKey.name.toUpperCase()).next();
 	        dbEntity[this.orm.getPrimaryKey().name] = id;
+	        
 			var updatedRecordCount = this.ormstatements.execute(parametericStatement, connection, dbEntity);
+			
 			this.notify('afterInsert', dbEntity);
 			this.notify('beforeInsertAssociationSets', dbEntity);
-			if(this.orm.associationSets && Object.keys(this.orm.associationSets).length){
+			if(this.orm.associations && Object.keys(this.orm.associations).length){
 				//Insert dependencies if any are provided inline with this entity
 				this.$log.info('Inserting association sets for '+this.orm.dbName + '['+dbEntity[this.orm.getPrimaryKey().name]+']');
-				for(var idx in Object.keys(this.orm.associationSets)){
-					var associationName = Object.keys(this.orm.associationSets)[idx];
-					if(['many-to-many', 'many-to-one'].indexOf(this.orm.associationSets[associationName].associationType)<0){
+				for(var idx in Object.keys(this.orm.associations)){
+					var association = this.orm.associations[idx];
+					var associationName = association['name'];
+					if([this.orm.ASSOCIATION_TYPES['MANY-TO-MANY'], this.orm.ASSOCIATION_TYPES['MANY-TO-ONE']].indexOf(association.type)<0){
 						if(entity[associationName] && entity[associationName].length>0){
-							var associationDAO = this.orm.associationSets[associationName].dao.apply(this);
+							var associationDaoFactoryFunc = association.targetDao || this;
+							if(associationDaoFactoryFunc.constructor !== Function)
+								throw Error('Invalid ORM: Association ' + associationName + ' dao property is expected to be function. Instead, it is: ' + (typeof associationDaoFactoryFunc))
+							var associationDAO = associationDaoFactoryFunc.apply(this);
 							this.notify('beforeInsertAssociationSet', entity[associationName], entity);
 							this.$log.info('Inserting '+entity[associationName].length+' inline entities into association set ' + associationName);
 							for(var j=0; j<entity[associationName].length; j++){
 				        		var associatedEntity = entity[associationName][j];
-				        		var associatedEntityJoinKey = this.orm.associationSets[associationName].joinKey;
-				        		var key = this.orm.associationSets[associationName].key || this.orm.getPrimaryKey().name;
+				        		var associatedEntityJoinKey = association.joinKey;
+				        		var key = association.key || this.orm.getPrimaryKey().name;
 				        		associatedEntity[associatedEntityJoinKey] = entity[key];
 				        		this.notify('beforeInsertAssociationSetEntity', entity[associationName], dbEntity);
-								associationDAO.insert(associatedEntity);
+				        		
+								associationDAO.insert.apply(associationDAO, [associatedEntity]);
+								
 				    		}
 				    		this.$log.info('Inserting '+entity[associationName].length+' inline entities into association set ' + associationName + ' finsihed');
 				    		this.notify('afterInsertAssociationSet', entity[associationName], dbEntity);
@@ -263,13 +271,14 @@ DAO.prototype.remove = function() {
 		}
 	}
 
-	this.$log.info('Deleting '+this.orm.dbName+' ' + ((ids!==undefined && ids.length===1)?'entity': ids.length+' entities'));
+	this.$log.info('Deleting '+this.orm.dbName+((ids!==undefined && ids.length===1)?'['+ids[0]+'] entity': ids.length+' entities'));
 	
 	for(var i=0; i<ids.length; i++) {
 	
 		var id = ids[i];
 
-		this.$log.info('Deleting '+this.orm.dbName+'[' + id + '] entity');
+		if(ids.length>1)
+			this.$log.info('Deleting '+this.orm.dbName+'[' + id + '] entity');
 	
 		if(id === undefined || id === null){
 			throw new Error('Illegal argument for id parameter:' + id);
@@ -281,46 +290,47 @@ DAO.prototype.remove = function() {
 	    	this.notify('beforeRemoveEntity', id);
 	    	
 			//first we attempt to remove depndents if any
-			if(this.orm.associationSets && Object.keys(this.orm.associationSets).length){
+			if(this.orm.associations){
 				//Remove associated dependencies
-				for(var idx in Object.keys(this.orm.associationSets)){
-					var associationName = Object.keys(this.orm.associationSets)[idx];
-					if(['many-to-many', 'many-to-one'].indexOf(this.orm.associationSets[associationName].associationType)<0){
+				for(var idx in Object.keys(this.orm.associations)){
+					var association = this.orm.associations[idx];
+					var associationName = association['name'];
+					if([this.orm.ASSOCIATION_TYPES['MANY-TO-MANY'], this.orm.ASSOCIATION_TYPES['MANY-TO-ONE']].indexOf(association.type)<0){
 						this.$log.info('Inspecting '+this.orm.dbName+'[' + id + '] entity\'s dependency \''+ associationName + '\' for entities to delete.');
-						var associationDAO = (this.orm.associationSets[associationName].dao && this.orm.associationSets[associationName].dao.apply(this)) || this;
+						var associationDAO = association.targetDao ? association.targetDao() : this;
 						var settings = {};
 						var joinId = id;
 						//check if we are joining on field, other than pk
-						if(this.orm.associationSets[associationName].key!==undefined){
+						if(association.key!==undefined){
 							var ctxEntity = this.find(id);
-							joinId = ctxEntity[this.orm.associationSets[associationName].key];
+							joinId = ctxEntity[association.key];
 						}
-						settings[this.orm.associationSets[associationName].joinKey] = joinId;
+						settings[association.joinKey] = joinId;
 						var associatedEntities;
 						//associatedEntities = this.expand(associationName, id);
 						associatedEntities = associationDAO.list(settings);
 						if(associatedEntities && associatedEntities.length > 0){
 							this.$log.info('Deleting '+this.orm.dbName+'['+id+'] entity\'s '+associatedEntities.length+' dependent ' + associationName);
-							
 							this.notify('beforeRemoveAssociationSet', associatedEntities, id);
-							
 							for(var j=0; j<associatedEntities.length; j++){
 								var associatedEntity = associatedEntities[j];
-								
 								this.notify('beforeRemoveAssociationSetEntity', associatedEntity, associatedEntities, id);
 								
-								associationDAO.remove(associatedEntity[associationDAO.orm.getPrimaryKey().name]);
+								associationDAO.remove.apply(associationDAO, [associatedEntity[associationDAO.orm.getPrimaryKey().name]]);
+								
 							}
 							this.$log.info(this.orm.dbName+'['+id+'] entity\'s '+associatedEntities.length+' dependent ' + associationName + ' '+ associatedEntities.length>1?'entities':'entity' +' deleted.');
 						}
 					}
 				} 
 	        }
-	    	
-	    	var parametericStatement = this.ormstatements["delete"].apply(this.ormstatements, [id]);
+	    	//Delete by primary key value
+	    	var parametericStatement = this.ormstatements["delete"].apply(this.ormstatements, [this.orm.getPrimaryKey().name]);
 			var params = {};
 	       	params[this.orm.getPrimaryKey().name] = id;
+	       	
 			var updatedRecordsCount = this.ormstatements.execute(parametericStatement, connection, params);
+			
 	   		this.$log.info(updatedRecordsCount>0?this.orm.dbName+'[' + id + '] entity deleted':'No changes incurred in '+this.orm.dbName);
 
 	    } catch(e) {
@@ -337,16 +347,17 @@ DAO.prototype.remove = function() {
 DAO.prototype.expand = function(expansionPath, context){
 	this.$log.info('Expanding for association path ' + expansionPath + ' and context entity ' + (typeof arguments[1] !== 'object' ? 'id ': '') + arguments[1]);
 	if(!expansionPath || !expansionPath.length){
-		throw Error('Illegal argument: expansionPath['+expansionPath+']');
+		throw new Error('Illegal argument: expansionPath['+expansionPath+']');
 	}
 	if(!context){
-		throw Error('Illegal argument: context['+context+']');
+		throw new Error('Illegal argument: context['+context+']');
 	}
 	var associationName = expansionPath.splice?expansionPath.splice(0,1):expansionPath;
-	
-	if(!associationName || !this.orm.associationSets[associationName])
-		throw Error('Unknown association name for this DAO: ' + associationName);
-	
+	var association = this.orm.getAssociation(associationName);
+	if(!associationName || !association)
+		throw new Error('Illegal argument: Unknown association for this DAO [' + associationName + ']');
+	var joinKey = association.joinKey;
+		
 	var contextEntity;
 	if(context[this.orm.getPrimaryKey().name] !== undefined){
 		contextEntity = context;
@@ -358,61 +369,58 @@ DAO.prototype.expand = function(expansionPath, context){
 		throw Error('No record found for context entity ['+context+']');
 	}
 
-	var associationSetEntities = [];
-	var associationSetDAO = (this.orm.associationSets[associationName].dao && this.orm.associationSets[associationName].dao()) || this;
+	var associationTargetDAO = association.targetDao? association.targetDao.apply(this) : this;
+	if(!associationTargetDAO)
+		throw Error('No target association DAO instance available for association '+associationName);
 
-	if(this.orm.associationSets[associationName].associationType==='one-to-one' || this.orm.associationSets[associationName].associationType==='many-to-one'){
-		var joinKey = this.orm.associationSets[associationName].joinKey;
+	var expansion;
+	var associationEntities= [];
+
+	if(association.type===this.orm.ASSOCIATION_TYPES['ONE-TO-ONE'] || association.type===this.orm.ASSOCIATION_TYPES['MANY-TO-ONE']){
 		var joinId = contextEntity[joinKey];
-		//var daoOne = this.orm.associationSets[associationName].dao ? this.orm.associationSets[associationName].dao() : this;
-		var expandedEntity = associationSetDAO.find.apply(associationSetDAO, [joinId]);
-		if(expansionPath.length<1){
-			return expandedEntity;
-		} else {
-			this.expand(expansionPath, expandedEntity);
-		}
-	} else if(this.orm.associationSets[associationName].associationType==='one-to-many'){
-		var settings = {};
-		if(this.orm.associationSets[associationName].defaults)
-			settings = this.orm.associationSets[associationName].defaults;
-		var joinKey = this.orm.associationSets[associationName].joinKey;
-		var key = this.orm.associationSets[associationName].key || this.orm.getPrimaryKey().name;
-		var joinId = contextEntity[key];
-		settings[joinKey] = joinId;
+		this.$log.info('Expanding association type ' + association.type + ' on '+joinKey+'['+joinId+']');
+		expansion = associationTargetDAO.find.apply(associationTargetDAO, [joinId]);
 		
-		//var daoMany = this.orm.associationSets[associationName].dao? this.orm.associationSets[associationName].dao() : this;
-		associationSetEntities = associationSetEntities.concat(associationSetDAO.list.apply(associationSetDAO, [settings]));
-		if(expansionPath.length<1){
-			return associationSetEntities;
-		} else {
-			for(var i=0; i<associationSetEntities.length; i++){
-				this.expand(expansionPath, associationSetEntities[i]);	
-			}
+		if(expansionPath.length>0){
+			this.expand(expansionPath, expansion);
 		}
-	} else if(this.orm.associationSets[associationName].associationType==='many-to-many'){
-		var associationSetMDAO = this;
-		var joinTableDAO = (this.orm.associationSets[associationName].daoJoin && this.orm.associationSets[associationName].daoJoin());
-		if(!joinTableDAO)
-			throw Error('No join table DAO instance available for association '+associationName);
-		if(!joinTableDAO.listJoins)
-			throw Error('No listJoins funciton in join table DAO instance available for association '+associationName);
-		var associationSetNDAO = (this.orm.associationSets[associationName].daoN && this.orm.associationSets[associationName].daoN()) || this;
-		if(!associationSetNDAO)
-			throw Error('No N assocaiton DAO instance available for association '+associationName);
+	} else if(association.type===this.orm.ASSOCIATION_TYPES['ONE-TO-MANY']){
 		var settings = {};
-		var key = this.orm.associationSets[associationName].key || this.orm.getPrimaryKey().name;
+		if(association.defaults)
+			settings = association.defaults;
+		var key = association.key || this.orm.getPrimaryKey().name;
 		var joinId = contextEntity[key];
-		settings[this.orm.associationSets[associationName].joinKey] = joinId;
-		associationSetEntities = associationSetEntities.concat(joinTableDAO.listJoins.apply(joinTableDAO, [settings, {"m": associationSetMDAO, "join":joinTableDAO, "n":associationSetNDAO}]));
-		if(expansionPath.length<1){
-			return associationSetEntities;
-		} else {
-			for(var i=0; i<associationSetEntities.length; i++){
-				this.expand(expansionPath, associationSetEntities[i]);	
+		this.$log.info('Expanding association type ' + association.type + ' on '+joinKey+'['+joinId+']');
+		settings[joinKey] = joinId;
+		associationEntities = associationEntities.concat(associationTargetDAO.list.apply(associationTargetDAO, [settings]));
+		
+		if(expansionPath.length>0){
+			for(var i=0; i<associationEntities.length; i++){
+				this.expand(expansionPath, associationEntities[i]);	
 			}
+		} else {
+			expansion = associationEntities;
+		}
+	} else if(association.type===this.orm.ASSOCIATION_TYPES['MANY-TO-MANY']){
+		var joinDAO = association.joinDao();
+		if(!joinDAO)
+			throw Error('No join DAO instance available for association ' + associationName);
+		if(!joinDAO.listJoins)
+			throw Error('No listJoins funciton in join DAO instance available for association '+associationName);
+		var settings = {};
+		var key = association.key || this.orm.getPrimaryKey().name;
+		var joinId = contextEntity[key];
+		settings[association.joinKey] = joinId;
+		associationEntities = associationEntities.concat(joinDAO.listJoins.apply(joinDAO, [settings, {"sourceDao": this, "joinDao":joinDAO, "targetDao":associationTargetDAO}]));
+		if(expansionPath.length>0){
+			for(var i=0; i<associationEntities.length; i++){
+				this.expand(expansionPath, associationEntities[i]);	
+			}
+		} else {
+			expansion = associationEntities;
 		}
 	}
-	return;
+	return expansion;
 };
 
 /* 
@@ -467,7 +475,7 @@ DAO.prototype.find = function(id, expand, select) {
 				}
 			}
 			for(var i in expand){
-				var association = this.orm.associationSets[expand[i]];
+				var association = this.orm.associations[expand[i]];
 				if(association && select.indexOf(association.joinKey)<1){ 
 					select.push(association.joinKey);
 				}
@@ -499,8 +507,9 @@ DAO.prototype.find = function(id, expand, select) {
 							throw Error('Illegal argument: expand is expected to be string or array of strings but was ' + (typeof expand));
 						}
 					}
-					for(var idx in Object.keys(this.orm.associationSets)){
-						var associationName = Object.keys(this.orm.associationSets)[idx];
+					var associationNames = this.orm.getAssociationNames();
+					for(var idx in associationNames){
+						var associationName = associationNames[idx];
 						if(expand.indexOf(associationName)>-1){
 							entity[associationName] = this.expand([associationName], entity);
 						}
@@ -602,14 +611,15 @@ DAO.prototype.list = function(settings) {
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
     var connection = this.datasource.getConnection();
     try {
-        var entities = [];       
+        var entities = [];
 		var resultSet = this.ormstatements.execute(parametericStatement, connection, settings);
         
         while (resultSet.next()) {
         	var entity = this.createEntity(resultSet, settings.$select);
-        	if(expand && this.orm.associationSets){
-				for(var idx in Object.keys(this.orm.associationSets)){
-					var associationName = Object.keys(this.orm.associationSets)[idx];
+        	if(expand){
+        		var associationNames = this.orm.getAssociationNames();
+				for(var idx in associationNames){
+					var associationName = associationNames[idx];
 					if(expand.indexOf(associationName)>-1){
 						entity[associationName] = this.expand([associationName], entity);
 					}

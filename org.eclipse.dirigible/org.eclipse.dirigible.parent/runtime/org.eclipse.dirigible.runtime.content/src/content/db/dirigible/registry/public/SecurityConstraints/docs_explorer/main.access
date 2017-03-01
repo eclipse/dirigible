@@ -3,28 +3,32 @@
     "location":"/docs_explorer/manage",
     "roles":
       [
-        {"role":"Administrator"}
+        {"role":"Administrator"},
+        {"role":"Operator"}
       ]
   },
   {
     "location":"/docs_explorer/read/folder",
     "roles":
       [
-        {"role":"ReadOnly"}
+        {"role":"ReadOnly"},
+        {"role":"Operator"}
       ]
   },
   {
     "location":"/docs_explorer/read/document",
     "roles":
       [
-        {"role":"ReadOnly"}
+        {"role":"ReadOnly"},
+        {"role":"Operator"}
       ]
   },
   {
     "location":"/docs_explorer/web",
     "roles":
       [
-        {"role":"ReadOnly"}
+        {"role":"ReadOnly"},
+        {"role":"Operator"}
       ]
   }
 ]

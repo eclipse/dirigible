@@ -92,8 +92,8 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}
 		var $expand = context.queryParams['$expand'];
 		if($expand){
-			if($expand===true || ($expand.toLowerCase() === '$all' && dao.orm.associationSets)) {
-				$expand = Object.keys(dao.orm.associationSets).join(',');
+			if($expand===true || $expand.toLowerCase() === '$all') {
+				$expand = dao.orm.getAssociationNames().join(',');
 			} else {
 				$expand = String(new java.lang.String(""+$expand));
 				$expand = $expand.split(',').map(function(exp){
@@ -103,8 +103,8 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}
 		var $select = context.queryParams['$select'];
 		if($select){
-			if($select===true || ($select.toLowerCase() === '$all' && dao.orm.associationSets)) {
-				$select = Object.keys(dao.orm.associationSets).join(',');
+			if($select===true || $select.toLowerCase() === '$all') {
+				$select = dao.orm.getAssociationNames().join(',');
 			} else {
 				$select = String(new java.lang.String(""+$select));
 				$select = $select.split(',').map(function(sel){
@@ -202,8 +202,8 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}
 		
 		var $expand = context.queryParams['$expand'];
-		if($expand!==undefined && self.dao.orm.associationSets) {
-			var associationNames = Object.keys(self.dao.orm.associationSets);
+		if($expand!==undefined) {
+			var associationNames = self.dao.orm.getAssociationNames();
 			if($expand===true || $expand.toLowerCase() === '$all') {
 				$expand = associationNames.join(',');
 			} else {
@@ -215,8 +215,8 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 					if(associationNames.indexOf($expand[i])<0)
 						throw Error('Invalid expand association name - ' + $expand[i]);
 				}
-				context.queryParams['$expand'] = $expand;				
 			}
+			context.queryParams['$expand'] = $expand;
 		}
 		
 		var select = context.queryParams['$select'];
@@ -289,7 +289,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 	var associationListGetHandler = function(context, io){
 	    try{
 	    	var associationName = context.pathParams.associationName;
-	    	if(!dao.orm.associationSets[associationName]){
+	    	if(!dao.orm.getAssociation(associationName)){
 		    	var errorCode = io.response.BAD_REQUEST;
 			    self.logger.error('Invalid association  set name requested: ' + associationName);
 		    	_oHttpController.sendError(errorCode, 'Invalid association set name requested: ' + associationName);
@@ -312,27 +312,29 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 	var associationListCreateHandler = function(context, io){
 	    try{
 	    	var associationName = context.pathParams.associationName;
-	    	if(!dao.orm.associationSets[associationName]){
+	    	var associationDef = dao.orm.getAssociation(associationName);
+	    	if(!associationDef){
 		    	var errorCode = io.response.BAD_REQUEST;
 			    self.logger.error('Invalid association set name requested: ' + associationName);
 		    	_oHttpController.sendError(errorCode, 'Invalid association set name requested: ' + associationName);
 				return;
 	    	}
-	    	var associationType = dao.orm.associationSets[associationName].associationType;
-	    	if('one-to-many'!==associationType){
+	    	var associationType = associationDef.type;
+	    	//create works only for one-to-many
+	    	if(dao.orm.ASSOCIATION_TYPES['ONE-TO-MANY']!==associationType){
 		    	var errorCode = io.response.BAD_REQUEST;
 			    self.logger.error('Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
 		    	_oHttpController.sendError(errorCode, 'Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
 	    	}
 	    	
-	    	var joinKey = dao.orm.associationSets[associationName].joinKey;
+	    	var joinKey = associationDef.joinKey;
 	    	if(joinKey === undefined){
 		    	var errorCode = io.response.INTERNAL_SERVER_ERROR;
 			    self.logger.error('Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
 		    	_oHttpController.sendError(errorCode, 'Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
 	    	}
 		    	
-	    	var dependendDao = dao.orm.associationSets[associationName].dao;
+	    	var dependendDao = associationDef.targetDao;
 	    	if(dependendDao === undefined){
 		    	var errorCode = io.response.INTERNAL_SERVER_ERROR;
 			    self.logger.error('Invalid configuration: missing dao factory in configuraiton for association \'' + associationName + '\'.');

@@ -88,6 +88,7 @@ var HttpController = exports.HttpController = function(oConfiguration){
 			var matchedProducesMIME;
 			if(producesMediaTypes && producesMediaTypes.length){
 				matchedProducesMIME = acceptsMediaTypes.filter(function(acceptsMediaType) {
+					//TODO: improve with wildcard media types assessment instead of completematch with equals.
 				    return producesMediaTypes.indexOf(acceptsMediaType) > -1;
 				});
 				isProduceMatched = matchedProducesMIME && matchedProducesMIME.length>0;
@@ -102,6 +103,7 @@ var HttpController = exports.HttpController = function(oConfiguration){
 			var matchedConsumesMIME;
 			if(contentTypeMediaTypes && consumesMediaTypes && consumesMediaTypes.length){
 				matchedConsumesMIME = contentTypeMediaTypes.filter(function(contentTypeMediaType) {
+					//TODO: improve with wildcard media types assessment instead of completematch with equals.
 				    return consumesMediaTypes.indexOf(contentTypeMediaType) > -1;
 				});
 				isConsumeMatched = matchedConsumesMIME && matchedConsumesMIME.length>0;
@@ -238,9 +240,6 @@ HttpController.prototype.addResourceHandler = function(sPath, sMethod, fHandler,
 	if(aProducesMediaTypes!==undefined && aProducesMediaTypes!==null && aProducesMediaTypes.constructor === String)//TODO: validate for conformance with mime type spec
 		aProducesMediaTypes = [aProducesMediaTypes];
 	//construct
-	if(!this._oConfiguration[sMethod.toLowerCase()]){
-		this._oConfiguration[sMethod.toLowerCase()] = [];
-	}
 	var handlerDef = {};
 	handlerDef['handler'] = fHandler;
 	if(fBeforeHandler)
@@ -258,7 +257,6 @@ HttpController.prototype.addResourceHandler = function(sPath, sMethod, fHandler,
 		this._oConfiguration[sPath][sMethod] = [];
 	}
 	//TODO: shoud we check for overlapping resourceHandler definitions by consumes/produces media types?
-	
 	this._oConfiguration[sPath][sMethod].push(handlerDef);
 	return this;
 };
