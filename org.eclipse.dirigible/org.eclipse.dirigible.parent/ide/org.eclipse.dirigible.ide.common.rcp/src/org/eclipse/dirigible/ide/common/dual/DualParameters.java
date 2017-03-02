@@ -134,6 +134,14 @@ public class DualParameters {
 		// }
 	}
 
+	public static boolean isUserInRole(String role, HttpServletRequest request) {
+		// if (isRolesEnabled()) {
+		// return RWT.getRequest().isUserInRole(role);
+		// } else {
+		return true;
+		// }
+	}
+
 	public static String getSessionId() {
 		// String sessionId = RWT.getRequest().getSession(true).getId();
 		// return sessionId;

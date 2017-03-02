@@ -117,9 +117,9 @@ public class FileSystemRepository implements IRepository {
 		this.user = user;
 		this.repositoryDAO = new LocalRepositoryDAO(this);
 
-		logger.info(String.format("Creating File-based Repository at: %s ...", root));
+		logger.debug(String.format("Creating File-based Repository Client for: %s ...", root));
 		initializeRepository(root);
-		logger.info(String.format("File-based Repository at: %s, has been created and initialized.", root));
+		logger.debug(String.format("File-based Repository Client for: %s, has been created.", root));
 	}
 
 	public String getRepositoryPath() {

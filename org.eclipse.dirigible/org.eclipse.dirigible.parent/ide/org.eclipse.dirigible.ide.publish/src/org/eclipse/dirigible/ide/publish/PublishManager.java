@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
 import org.eclipse.dirigible.ide.common.ExtensionPointUtils;
+import org.eclipse.dirigible.ide.workspace.dual.WorkspaceLocator;
 import org.eclipse.dirigible.repository.ext.security.IRoles;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -148,24 +149,37 @@ public final class PublishManager {
 
 	public static void activateProject(IProject project, HttpServletRequest request) throws PublishException {
 		publish(project, ACTION_ACTIVATE, request);
+		logger.info(String.format("Project %s has been activated successfully", project.getName()));
 	}
 
 	public static void publishProject(IProject project, HttpServletRequest request) throws PublishException {
-		if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
-			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION, CommonIDEParameters.getUserName());
-			MessageDialog.openError(null, PUBLISH_ERROR, message);
+		if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR, request)) {
+			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION,
+					CommonIDEParameters.getUserName(request));
+			try {
+				MessageDialog.openError(null, PUBLISH_ERROR, message);
+			} catch (Throwable t) {
+				logger.error(message, t);
+			}
 			return;
 		}
 		publish(project, ACTION_PUBLISH, request);
+		logger.info(String.format("Project %s has been published successfully", project.getName()));
 	}
 
 	public static void publishTemplate(IProject project, HttpServletRequest request) throws PublishException {
-		if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR)) {
-			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION, CommonIDEParameters.getUserName());
-			MessageDialog.openError(null, PUBLISH_ERROR, message);
+		if (!CommonIDEParameters.isUserInRole(IRoles.ROLE_OPERATOR, request)) {
+			String message = String.format(THE_USER_S_DOES_NOT_HAVE_OPERATOR_ROLE_TO_PERFORM_PUBLISH_OPERATION,
+					CommonIDEParameters.getUserName(request));
+			try {
+				MessageDialog.openError(null, PUBLISH_ERROR, message);
+			} catch (Throwable t) {
+				logger.error(message, t);
+			}
 			return;
 		}
 		publish(project, ACTION_TEMPLATE, request);
+		logger.info(String.format("Project %s has been activated successfully as a template", project.getName()));
 	}
 
 	private static void publish(IProject project, int action, HttpServletRequest request) throws PublishException {
@@ -219,4 +233,33 @@ public final class PublishManager {
 		super();
 	}
 
+	public static void activateAll(HttpServletRequest request) throws PublishException {
+		IProject[] projects = WorkspaceLocator.getWorkspace(request).getRoot().getProjects();
+		for (IProject project : projects) {
+			StringBuffer buff = new StringBuffer();
+			try {
+				activateProject(project, request);
+			} catch (PublishException e) {
+				buff.append(String.format("Project %s has thrown an error during activation: %s \n", project.getName(), e.getMessage()));
+			}
+			if (buff.length() > 0) {
+				throw new PublishException(buff.toString());
+			}
+		}
+	}
+
+	public static void publishAll(HttpServletRequest request) throws PublishException {
+		IProject[] projects = WorkspaceLocator.getWorkspace(request).getRoot().getProjects();
+		for (IProject project : projects) {
+			StringBuffer buff = new StringBuffer();
+			try {
+				publishProject(project, request);
+			} catch (PublishException e) {
+				buff.append(String.format("Project %s has thrown an error during publish: %s \n", project.getName(), e.getMessage()));
+			}
+			if (buff.length() > 0) {
+				throw new PublishException(buff.toString());
+			}
+		}
+	}
 }

@@ -30,18 +30,12 @@ public class LifecycleService implements ILifecycleService {
 
 	@Override
 	public void activateAll(HttpServletRequest request) throws PublishException {
-		IProject[] projects = WorkspaceLocator.getWorkspace(request).getRoot().getProjects();
-		for (IProject project : projects) {
-			PublishManager.activateProject(project, request);
-		}
+		PublishManager.activateAll(request);
 	}
 
 	@Override
 	public void publishAll(HttpServletRequest request) throws PublishException {
-		IProject[] projects = WorkspaceLocator.getWorkspace(request).getRoot().getProjects();
-		for (IProject project : projects) {
-			PublishManager.publishProject(project, request);
-		}
+		PublishManager.publishAll(request);
 	}
 
 }

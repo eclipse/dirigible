@@ -179,6 +179,10 @@ public class CommonIDEParameters {
 		return DualParameters.isUserInRole(role);
 	}
 
+	public static boolean isUserInRole(String role, HttpServletRequest request) {
+		return DualParameters.isUserInRole(role, request);
+	}
+
 	public static String getSessionId() {
 		return DualParameters.getSessionId();
 	}
