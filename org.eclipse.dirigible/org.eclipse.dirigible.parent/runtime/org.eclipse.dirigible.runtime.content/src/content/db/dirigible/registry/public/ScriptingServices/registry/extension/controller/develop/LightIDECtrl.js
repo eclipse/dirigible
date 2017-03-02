@@ -137,6 +137,15 @@ controllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSearch', '$
     	});
     };
     
+    $scope.publishAllCalled = function() {
+    	
+    		$http.post("/services/js-secured/registry/api/develop/publish.js").success(function(response) {
+        		onSuccess("Publish of all the projects passed successfully");
+    		}).error(function(response) {
+    			onError("Error publishing all the projects: \n" + response);
+    		});
+    };
+    
     $scope.newFile = function() {
     	var fileName = prompt("Please enter the full path of the new file", $scope.selected.path);
 

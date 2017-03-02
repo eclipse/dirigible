@@ -16,13 +16,13 @@
 	"path": "target/registry_develop",
 	"repository": "https://github.com/dirigiblelabs/registry_develop.git",
 	"content": [{
-		"source": "target/registry/registry/ScriptingServices",
+		"source": "target/registry_develop/registry_develop/ScriptingServices",
 		"target": "src/content/db/dirigible/registry/public"
 	}, {
-		"source": "target/registry/registry/WebContent",
+		"source": "target/registry_develop/registry_develop/WebContent",
 		"target": "src/content/db/dirigible/registry/public"
 	}, {
-		"source": "target/registry/registry/ExtensionDefinitions",
+		"source": "target/registry_develop/registry_develop/ExtensionDefinitions",
 		"target": "src/content/db/dirigible/registry/public"
 	}]
 }, {
