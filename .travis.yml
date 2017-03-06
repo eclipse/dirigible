@@ -1,24 +1,21 @@
 sudo: required
-
 services:
-    - docker
-
+  - docker
 language: java
 jdk:
   - oraclejdk8
 install: mvn install -f org.eclipse.dirigible/org.eclipse.dirigible.parent/pom.xml -DskipTests=true
-script: mvn test -f org.eclipse.dirigible/org.eclipse.dirigible.parent/pom.xml
-
-env:
-  global:
-  - secure: cYmPdMBFlAKPQ7lfBKBIF/sVKOjTHw1gsJOezQ8gscbni0iocG2VgShXi5T6jnJR/IPf+h46vfDlm7u3ejG2FLgW2zaZxJt/5EZY0zb5dSRJgn8BZbU4Opgp3a8qpNVP1TbJONlfsgSj9fXbYP34iI4boKWNP+8pQ2K+RQQFTtYs+VvpOv4wnOk0LQl0vysg7s9zTZJQIUnIFd++tYeZZbyB1cq3n9R+41K86evJHcWueR3odZ6d9g4Eqd+QzBBTtL1wTP0RnS8Gpq49UZOgBEeAIPUQud5U7casTg1AlZWiGTdfsULvu8/dintGK9u4YH7fxC5fy2yjmhXTOkJKfycNh3x4/xsR0MlMRtza8CJ4575FgIaJE6/T3WlCNjJSHnv9u+95UZ8tkYDAYWavL1MBQjqalxfBiqTKLIItoIg5bxiY375iUWLXZvJOIA6KXK6XallQsUSpVP716k9AKSZnMnWDwGzRPnILMx8RQMVff4o93JotT9JfhIInpo+2XNFCDOhoHBbAj6Tu5I4cX3UwyQyL7Do5mtxOAX78DqOAPlqW0cB6UIXfd69w5sk96oJ5FVVALgnLhNArGf9b4nAzbw/KOLdLf7bM9cORfRWCBi5MYrLxHrGi+N9gRfELPs000YxARolPhwsxQeKep0TISKGpHE4RDjuDJFNCvpQ=
-  - secure: KDj66yUjn0j5LNmSoTHDNMz4dY0CcRPfW/UeQ9y1XaWgOUYIRb29GpJCr7iaNsqnxS/0ILEFd78ng+lK6Svx5CF0sNJ+Jn25h/i9ogOrf5c9ARWIWd18girOKGwUqgufg4avv9irDTBT5lkFtzhCKtNRAvfhUiOvDfBo4SQkW885Kjo8LXdAE4ULlOHr1pXegBt4T6ZYNSM8FO2eiupzXw3ejWbqkjyO0WxYOX3Dk2dOH2IMchqX6XwwywtjoDFv4WB3fwyq+f6+M66uXQ9LuXTM96vWxa9mWvA3esWHX6AQAeVZW7zd0VuMYHzwb1rz8fF54iuhseyU4s081Q1nPle7aQpmL3vrvqx8kyPNuxLZywUt117WSiLy7IM+NBOe98BJAjKSR6U9O/k4x/AZwZm36NTB1PU5HEUwDHp54sj2uDD7MMv8ZbmBmWl4n0BUFK5/v94ngrmClsg563hInDjeovYpFLP46Mfvua8SygmJErScoGoFtholKCIUVag2x/j0l9o/A6r4sc/G8UK/UYmWpHhEkvnM8/2Bpo3bRXnw2rF1uFbN6kYcbdLjWk5m3ZaEnImb2ZPju6Sgi1+M6H9g83n4j1955HXZ8eHuHUXvaUHHraso2qdlhfyJbQFsL4My9P7H0hYgdO3dq8yLJzEpmc+fhnriJuivABv+NGM=
-  - COMMIT=${TRAVIS_COMMIT::8}
-
-after_success:
+before_script:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - export REPO=dirigiblelabs/dirigible-tomcat
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+script:
+  - mvn test -f org.eclipse.dirigible/org.eclipse.dirigible.parent/pom.xml
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
   - docker build -f org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/Dockerfile-tomcat -t $REPO:$COMMIT org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/
   - docker tag $REPO:$COMMIT $REPO:$TAG
   - docker push $REPO:$TAG
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+    - REPO=dirigiblelabs/dirigible-tomcat
+    - secure: "NucLZg3isAoRh1VTQWU1RXmmDggFYBXyTpZDpiPiLQRGRwE2QngKoVk6603ykZUMx3eIXqxB8aYPU2J1O2nnMfsg5MUlnSsR6UT3MIdcw0QQHfsQo8g2gKMzScmpinHXuzfkq567DAeEQNRqcSMsJjqmKAZh+njVMOnuNXceZ92qeVGFdj9IbblixVKPwk2itn+QlwWS1mk6v8JHqefGRnBKnR6Dk/V7Ejivjx50DucAkZLwafXNsOa6LWmKzayiROe2d2px73rRLOLOdNtgWsnZJeuxUHTj1pHIy4zBzGmPag1wFHOEFM7EMlKh6I2UyiEQCEnp66oBd9NyFTae+0dPCV4q21LJ6PZrZqQNe/EN/olTLYWM3ZeznGpKC9OXBjNLuWcXbyiBZ2R5PsqgadlcYDuE5tGhLZHBBfk41NsuxcXcOTivb8spf0rytZsG6cDXkbx6ok9ICASVEse4T+dK0QMsiTnfGW6bdQxWAQL6Zng+MnJ0RHVcBZ6IOrlb3GLbeWWSejX2StKf9kVljt6XrwyQy88IhAoMDOit6pKoRC6VhDBCdlDb0JWnBavwy6Zp1dK9PWKfoHSwI8zxv849JJKfCEGupdAEu/TzLX3O4k+BIUUE9+5vgcFcXDERPHcefYu7XWRbTGRf8uaPTvMHv1VZPgGejnPeunspfQw="
+    - secure: "DDiE+Nv/KwpPfth5KKN69JNDXA7TIiQ4kfZjsx2mxaRUAiRj1xKBjvJZa1NJ+wNlgFLAlRQkxPwLY35uRnjEO2xFbw6cGdCTO1jxlccax6vbkV2Ywv8ZvTKWAOkBvCfHsLOiN9b2SH+0H/R/b1B3LrfNqJEJtsPP+xNC0sguwYP0Furvg01lAEpcWpnhkH6vod+8MaR/DN9ia5pi+MaGH14q7L/LRvkLOt3VrX1LJaTDFx4sWBz/GXf94KYp8D92cJrIGTEHpwhSroyNwkCzT3iBaidsZF8P2aNHQQQ3yx7iFZge67EUdEv1nYTPlUcG3vLKYdKe5boQXkY4Lz0h7hPvo0GhZEUsoZUfiiitnrY3yzgN7XM8tBmIISrDxpmalm7quPJle8CnON1jB2oAqDxRgCHJeuJbyE0kxKAMDJad8dMSe3L3GLQ6OJmT+sJ3vCN/EoB3oVgC4CPnN+O20gcDrQHJzMGKEdZqN27r2yWA1z5TYnvn0ROlnagMjkzsAw7qfXta30R3taSz53ySEoBR+d972fYHpP2VENhbnkw6ahSI5w6L1K3kSvWQ9iyWnDYN2lDinp09jnXZVEv4houxv5VUx8AtfgNZXOR+o7+aa+OnXfpZjnOKoZFo4aQpTf3Wpm9wZcTmq///qlgeoNBRDbLaptQizzP4HJFHArg="
