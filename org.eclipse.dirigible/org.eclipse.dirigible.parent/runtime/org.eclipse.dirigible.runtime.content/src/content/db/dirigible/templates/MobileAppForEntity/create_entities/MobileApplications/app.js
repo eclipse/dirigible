@@ -4,14 +4,11 @@ var service = "${serviceFileName}";
 #set( $dummy = {})
 #set( $items = [])
 #foreach ( $tableColumn in $tableColumns )
-	#if ( $tableColumn.visible)
-		#set( $item = {
-			"name": tableColumn.name,
-			"key": tableColumn.key,
-			"label": tableColumn.label,
-			"visible": tableColumn.visible
-		})
-		#set( $dummy = $items.add($item))
+	#if ( $tableColumn.isVisible())
+		#if ( !$tableColumn.isKey())
+			#set( $item = ${tableColumn.toJson()})
+			#set( $dummy = $items.add($item))
+		#end
 	#end
 #end
 var entities = $items;

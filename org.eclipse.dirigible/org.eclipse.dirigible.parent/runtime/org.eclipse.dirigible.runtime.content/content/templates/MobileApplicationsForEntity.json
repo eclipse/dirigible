@@ -2,14 +2,14 @@
 	"path": "target/template_mobile_list_and_manage",
 	"repository": "https://github.com/dirigiblelabs/template_mobile_list_and_manage.git",
 	"content": [{
-		"source": "target/template_mobile_list_and_manage/template_mobile_list_and_manage/MobileApplicationsForEntity",
+		"source": "target/template_mobile_list_and_manage/template_mobile_list_and_manage/MobileAppForEntity",
 		"target": "src/content/db/dirigible/templates"
 	}]
 }, {
 	"path": "target/template_mobile_create_entities",
 	"repository": "https://github.com/dirigiblelabs/template_mobile_create_entities.git",
 	"content": [{
-		"source": "target/template_mobile_create_entities/template_mobile_create_entities/MobileApplicationsForEntity",
+		"source": "target/template_mobile_create_entities/template_mobile_create_entities/MobileAppForEntity",
 		"target": "src/content/db/dirigible/templates"
 	}]
 }]
