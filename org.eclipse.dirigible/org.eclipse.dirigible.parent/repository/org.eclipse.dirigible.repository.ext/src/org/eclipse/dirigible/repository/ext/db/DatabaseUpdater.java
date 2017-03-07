@@ -360,13 +360,14 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 					// sql.append("PRIMARY KEY ");
 					throw new SQLException(INCOMPATIBLE_CHANGE_OF_TABLE + tableName + AND_COLUMN + name + ADDING_PRIMARY_KEY_COLUMN);
 				}
-				if ((defaultValue != null) && !"".equals(defaultValue)) { //$NON-NLS-1$
-					sql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
-				}
 
 				String alterAddCloseEach = dialectSpecifier.getAlterAddCloseEach();
 				if (alterAddCloseEach != null) {
 					addSql.append(alterAddCloseEach);
+				}
+
+				if ((defaultValue != null) && !"".equals(defaultValue)) { //$NON-NLS-1$
+					addSql.append(DEFAULT + defaultValue + " "); //$NON-NLS-1$
 				}
 
 				i++;
