@@ -17,7 +17,8 @@ function makeRequest(url, method, callback, body){
 	var request = new tabris.XMLHttpRequest();
 	request.onreadystatechange = function(){
 		if(request.readyState === request.DONE){
-			callback(JSON.parse(request.responseText));
+// 			callback(JSON.parse(request.responseText)); old way
+			callback(); // aRESTme compatible
 		}
 	}
 	request.open(method, url);

@@ -25,18 +25,17 @@ var BoardTagORM = {
 			required: true,
 			type: "Long"
 		}],
-	associationSets: {
-		board: {
-			dao: require("${packageName}/lib/board_dao").get,
-			associationType: 'many-to-one',
+	associations: [{
+			name: 'board',
+			targetDao: require("${packageName}/lib/board_dao").get,
+			type: 'many-to-one',
 			joinKey: "boardId"
-		},
-		tag: {
-			dao: require("annotations/lib/tags_dao").get,
-			associationType: 'many-to-one',
+		}, {
+			name: 'tag',
+			targetDao: require("annotations/lib/tags_dao").get,
+			type: 'many-to-one',
 			joinKey: "tagId"
-		}
-	}	
+		}]
 };
 
 var DAO = require('daoism/dao').DAO;
@@ -56,7 +55,7 @@ BoardTagDAO.prototype.listJoins = function(settings, daos){
 		boardId = settings.boardId;
 	}
 
-	this.${D}log.info('Finding '+daos.n.orm.dbName+' entities related to '+daos.m.orm.dbName+'['+boardId+']');
+	this.${D}log.info('Finding '+daos.targetDao.orm.dbName+' entities related to '+daos.sourceDao.orm.dbName+'['+boardId+']');
 
 	if(boardId === undefined || boardId === null){
 		throw new Error('Illegal argument for id parameter:' + boardId);
@@ -64,7 +63,7 @@ BoardTagDAO.prototype.listJoins = function(settings, daos){
 
     var connection = this.datasource.getConnection();
     try {
-        var sql = "SELECT * FROM "+daos.n.orm.dbName+" LEFT JOIN "+daos.join.orm.dbName+" ON "+daos.join.orm.getProperty('tagId').dbName+"="+daos.n.orm.getPrimaryKey().dbName+" WHERE "+daos.join.orm.getProperty('boardId').dbName+"=?";
+        var sql = "SELECT * FROM "+daos.targetDao.orm.dbName+" LEFT JOIN "+daos.joinDao.orm.dbName+" ON "+daos.joinDao.orm.getProperty('tagId').dbName+"="+daos.targetDao.orm.getPrimaryKey().dbName+" WHERE "+daos.joinDao.orm.getProperty('boardId').dbName+"=?";
      
         var statement = connection.prepareStatement(sql);
         statement.setLong(1, boardId);
@@ -73,13 +72,13 @@ BoardTagDAO.prototype.listJoins = function(settings, daos){
         var tagEntities = [];
         while (resultSet.next()) {
         	var tagEntity = {
-        		id: resultSet['get'+daos.n.orm.getPrimaryKey().type](daos.n.orm.getPrimaryKey().dbName),
-        		defaultLabel: resultSet['get'+daos.n.orm.getProperty('defaultLabel').type](daos.n.orm.getProperty('defaultLabel').dbName),
-			    uri: resultSet['get'+daos.n.orm.getProperty('uri').type](daos.n.orm.getProperty('uri').dbName)
+        		id: resultSet['get'+daos.targetDao.orm.getPrimaryKey().type](daos.targetDao.orm.getPrimaryKey().dbName),
+        		defaultLabel: resultSet['get'+daos.targetDao.orm.getProperty('defaultLabel').type](daos.targetDao.orm.getProperty('defaultLabel').dbName),
+			    uri: resultSet['get'+daos.targetDao.orm.getProperty('uri').type](daos.targetDao.orm.getProperty('uri').dbName)
         	};
         	tagEntities.push(tagEntity);
         } 
-        this.${D}log.info(tagEntities.length+' '+daos.n.orm.dbName+' entities related to '+daos.m.orm.dbName+'[' + boardId+ '] found');
+        this.${D}log.info(tagEntities.length+' '+daos.targetDao.orm.dbName+' entities related to '+daos.sourceDao.orm.dbName+'[' + boardId+ '] found');
         return tagEntities;
     } finally {
         connection.close();

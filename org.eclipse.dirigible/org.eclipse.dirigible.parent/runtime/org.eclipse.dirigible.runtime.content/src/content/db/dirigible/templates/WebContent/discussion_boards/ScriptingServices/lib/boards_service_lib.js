@@ -11,8 +11,6 @@ var BoardsDataService = function(){
 	var boardDAO = require("${packageName}/lib/board_dao").get();
 	DataService.call(this, boardDAO, 'Board Data Service');
 	var self = this;	
-	this.boardVotes = require("${packageName}/lib/board_votes_dao").get();
-	this.boardTags = require("${packageName}/lib/board_tags_dao").get();
 	
 	this.handlersProvider.onEntityInsert = function(entity){
 	    entity.user = require("net/http/user").getName();
@@ -30,16 +28,16 @@ var BoardsDataService = function(){
 	//weave in resource handlers from BoardStats service into Board service 	
 	var handlers = this.getResourceHandlersMap();
 	var boardStatsHandlers = boardStatsDataService.getResourceHandlersMap();
-	handlers[""].get.handler = function(context, io){
-		boardStatsHandlers[""].get.handler.apply(boardStatsDataService, [context, io]);
+	handlers[""].get[0].handler = function(context, io){
+		boardStatsHandlers[""].get[0].handler.apply(boardStatsDataService, [context, io]);
 	};
-	handlers["{id}"].get.handler = function(context, io){
-		boardStatsHandlers["{id}"].get.handler.apply(boardStatsDataService, [context, io]);
+	handlers["{id}"].get[0].handler = function(context, io){
+		boardStatsHandlers["{id}"].get[0].handler.apply(boardStatsDataService, [context, io]);
 	};
 
 	this.addResourceHandlers({
 		"{id}/visit": {
-			"put" : {
+			"put" : [{
 				consumes: ["application/json"],	
 				handler: function(context, io){
 					//TODO: this is a PoC only. A much more elaborated solution should be in place (that would not easily allow overflow of integer unlike this one)
@@ -53,12 +51,12 @@ var BoardsDataService = function(){
 			        	throw e;
 					}		
 				}
-			}
+			}]
 		}
 	})
 	.addResourceHandlers({
 		"{id}/vote": {
-			"post": {
+			"post": [{
 				consumes: ["application/json"],
 				handler: function(context, io){
 					var input = io.request.readInputText();
@@ -74,12 +72,12 @@ var BoardsDataService = function(){
 			        	throw e;
 					}		
 				}
-			}
+			}]
 		}
 	})
 	.addResourceHandlers({
 		"{id}/tags": {
-			"post": {
+			"post": [{
 				consumes: ["application/json"],
 				handler: function(context, io){
 					var input = io.request.readInputText();
@@ -98,7 +96,7 @@ var BoardsDataService = function(){
 			        	throw e;
 					}		
 				}
-			}
+			}]
 		}
 	});
 };

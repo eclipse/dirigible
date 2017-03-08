@@ -9,17 +9,15 @@ var DataService = require('arestme/data_service').DataService;
 
 var BoardStatsDataService = function(){
 	var boardStatsDAO = require("${packageName}/lib/board_stats_dao").get();
+	var boardVotesDAO = require("${packageName}/lib/board_votes_dao").get();
 	DataService.call(this, boardStatsDAO, 'BoardStats Data Service');
 	
-	this.boardVotes = require("${packageName}/lib/board_votes_dao").get();
-	this.boardTags = require("${packageName}/lib/board_tags_dao").get();
-	var self = this;
 	this.handlersProvider.dao.afterFound = function(entity){
 		var requestingUserName = userLib.getName();
 		entity.editable = entity.user === requestingUserName;
 		if(requestingUserName){
 			var idDef = this.orm.getPrimaryKey();
-			var userVote = self.boardVotes.getVote(entity[idDef.name], requestingUserName);
+			var userVote = boardVotesDAO.getVote(entity[idDef.name], requestingUserName);
 			entity.currentUserVote = userVote;
 		}
 	};
