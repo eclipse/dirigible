@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.scheduler;
@@ -62,7 +61,7 @@ public class SchedulerServlet extends HttpServlet {
 
 					jobsSynchronizerScheduler = Executors.newSingleThreadScheduledExecutor();
 					jobsSynchronizerScheduler.scheduleAtFixedRate(new JobsSynchronizer(), 1, 1, TimeUnit.MINUTES);
-					
+
 					messagingSynchronizerScheduler = Executors.newSingleThreadScheduledExecutor();
 					messagingSynchronizerScheduler.scheduleAtFixedRate(new MessagingSynchronizer(), 1, 1, TimeUnit.MINUTES);
 
@@ -93,7 +92,7 @@ public class SchedulerServlet extends HttpServlet {
 		super.destroy();
 	}
 
-	void stopSchedulers() {
+	public void stopSchedulers() {
 		if (started) {
 			synchronized (LOCK) {
 				if (started) {
@@ -118,26 +117,26 @@ public class SchedulerServlet extends HttpServlet {
 		logger.debug("entering: " + this.getClass().getCanonicalName() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
 				+ "registerRunnableTasks"); //$NON-NLS-1$
 
-//		// short
-//		AccessLogLocationsSynchronizer accessLogLocationsSynchronizer = new AccessLogLocationsSynchronizer();
-//		TaskManagerShort.getInstance().registerRunnableTask(accessLogLocationsSynchronizer);
-//
-//		// medium
-//		MemoryLogTask memoryLogTask = new MemoryLogTask();
-//		TaskManagerMedium.getInstance().registerRunnableTask(memoryLogTask);
+		// // short
+		// AccessLogLocationsSynchronizer accessLogLocationsSynchronizer = new AccessLogLocationsSynchronizer();
+		// TaskManagerShort.getInstance().registerRunnableTask(accessLogLocationsSynchronizer);
+		//
+		// // medium
+		// MemoryLogTask memoryLogTask = new MemoryLogTask();
+		// TaskManagerMedium.getInstance().registerRunnableTask(memoryLogTask);
 
 		UpdateSearchIndexTask updateSearchIndexTask = new UpdateSearchIndexTask();
 		TaskManagerLong.getInstance().registerRunnableTask(updateSearchIndexTask);
 
-//		// long
-//		AccessLogCleanupTask accessLogCleanupTask = new AccessLogCleanupTask();
-//		TaskManagerLong.getInstance().registerRunnableTask(accessLogCleanupTask);
+		// // long
+		// AccessLogCleanupTask accessLogCleanupTask = new AccessLogCleanupTask();
+		// TaskManagerLong.getInstance().registerRunnableTask(accessLogCleanupTask);
 
 		RepositoryHistoryCleanupTask historyCleanupTask = new RepositoryHistoryCleanupTask();
 		TaskManagerLong.getInstance().registerRunnableTask(historyCleanupTask);
 
-//		MemoryLogCleanupTask memoryLogCleanupTask = new MemoryLogCleanupTask();
-//		TaskManagerLong.getInstance().registerRunnableTask(memoryLogCleanupTask);
+		// MemoryLogCleanupTask memoryLogCleanupTask = new MemoryLogCleanupTask();
+		// TaskManagerLong.getInstance().registerRunnableTask(memoryLogCleanupTask);
 
 		RebuildSearchIndexTask rebuildSearchIndexTask = new RebuildSearchIndexTask();
 		TaskManagerLong.getInstance().registerRunnableTask(rebuildSearchIndexTask);
@@ -153,7 +152,7 @@ public class SchedulerServlet extends HttpServlet {
 	public ScheduledExecutorService getJobsSynchronizerScheduler() {
 		return jobsSynchronizerScheduler;
 	}
-	
+
 	public ScheduledExecutorService getMessagingSynchronizerScheduler() {
 		return messagingSynchronizerScheduler;
 	}
