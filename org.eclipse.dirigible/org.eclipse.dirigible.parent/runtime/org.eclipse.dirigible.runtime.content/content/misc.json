@@ -1,15 +1,5 @@
 
 [{
-	"path": "target/core_test_runner",
-	"repository": "https://github.com/dirigiblelabs/core_test_runner.git",
-	"content": [{
-		"source": "target/core_test_runner/core_test_runner/ScriptingServices",
-		"target": "src/content/db/dirigible/registry/public"
-	}, {
-		"source": "target/core_test_runner/core_test_runner/WebContent",
-		"target": "src/content/db/dirigible/registry/public"
-	}]
-}, {
 	"path": "target/qunit",
 	"repository": "https://github.com/dirigiblelabs/qunit.git",
 	"content": [{
@@ -68,19 +58,10 @@
 		"target": "src/content/db/dirigible/registry/public"
 	}]
 }, {
-	"path": "target/core_iam",
-	"repository": "https://github.com/dirigiblelabs/core_iam.git",
+	"path": "target/swagger_ui",
+	"repository": "https://github.com/dirigiblelabs/swagger_ui.git",
 	"content": [{
-		"source": "target/core_iam/core_iam/DataStructures",
-		"target": "src/content/db/dirigible/registry/public"
-	}, {
-		"source": "target/core_iam/core_iam/ScriptingServices",
-		"target": "src/content/db/dirigible/registry/public"
-	}, {
-		"source": "target/core_iam/core_iam/SecurityConstraints",
-		"target": "src/content/db/dirigible/registry/public"
-	}, {
-		"source": "target/core_iam/core_iam/WebContent",
+		"source": "target/swagger_ui/swagger_ui/WebContent",
 		"target": "src/content/db/dirigible/registry/public"
 	}]
 }]

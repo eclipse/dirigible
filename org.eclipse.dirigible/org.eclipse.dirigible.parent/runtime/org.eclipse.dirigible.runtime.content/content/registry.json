@@ -81,18 +81,4 @@
 		"source": "target/registry_ext_swagger_ui/ext_registry_swagger_ui/ExtensionDefinitions",
 		"target": "src/content/db/dirigible/registry/public"
 	}]
-}, {
-	"path": "target/swagger_ui",
-	"repository": "https://github.com/dirigiblelabs/swagger_ui.git",
-	"content": [{
-		"source": "target/swagger_ui/swagger_ui/WebContent",
-		"target": "src/content/db/dirigible/registry/public"
-	}]
-}, {
-	"path": "target/resources",
-	"repository": "https://github.com/dirigiblelabs/resources.git",
-	"content": [{
-		"source": "target/resources/resources/WebContent",
-		"target": "src/content/db/dirigible/registry/public"
-	}]
 }]
