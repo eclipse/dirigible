@@ -33,7 +33,7 @@ controllers.controller('WorkspaceListCtrl', ['$scope', '$sce', 'FilesSearch', '$
 
     var codeEdit = null;
     require.config({waitSeconds: 0});
-    require(["templates/develop/orion/code_edit/built-codeEdit.min", "templates/develop/orion/keyBinding"], function(widget, mKeyBinding) {
+    require(["orion/code_edit/built-codeEdit.min", "orion/orion/keyBinding"], function(widget, mKeyBinding) {
         codeEdit = new widget();
     });
 

@@ -27,7 +27,7 @@ exports.service = function(settings) {
 		
 		var requestUrl = URI($.getRequest().getRequestURL()).normalizePath().path();
 		console.info('[Test Runner SVC] redirecting to /services/web/test/tests_dashboard.html with URL query string rewrite to url='+requestUrl);
-		response.addHeader('Location', '/services/web/test/tests_dashboard.html?url='+requestUrl);
+		response.addHeader('Location', '/services/web/tests/tests_dashboard.html?url='+requestUrl);
 		response.setStatus(response.FOUND);
 		
 	} else if (findInAcceptHeader(httpReqHeaderAccept, 'application/xml') || findInAcceptHeader(httpReqHeaderAccept, 'text/xml') || findInAcceptHeader(httpReqHeaderAccept, '*/xml')){
