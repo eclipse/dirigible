@@ -1,7 +1,6 @@
 package org.eclipse.dirigible.runtime.chrome.debugger.utils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 public class RequestUtils {
 
@@ -18,19 +17,23 @@ public class RequestUtils {
 	}
 
 	public static Integer getMessageId(final String message) {
-		try {
-			return new JSONObject(message).getInt("id");
-		} catch (JSONException e) {
-			return null;
-		}
+		// TODO to be migrated to Gson properly
+//		try {
+//			return new JsonObject(message).getInt("id");
+//		} catch (JSONException e) {
+//			return null;
+//		}
+		return null;
 	}
 
 	public static String getMessageMethod(final String message) {
-		try {
-			return new JSONObject(message).getString("method");
-		} catch (JSONException e) {
-			return null;
-		}
+		// TODO to be migrated to Gson properly
+//		try {
+//			return new JSONObject(message).getString("method");
+//		} catch (JSONException e) {
+//			return null;
+//		}
+		return null;
 	}
 
 	public static boolean isGetResourceTree(final String message) {

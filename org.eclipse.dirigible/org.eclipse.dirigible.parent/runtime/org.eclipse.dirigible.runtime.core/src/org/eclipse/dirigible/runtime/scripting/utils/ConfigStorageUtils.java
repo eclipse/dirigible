@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.naming.NamingException;
@@ -31,10 +32,11 @@ import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.scripting.AbstractStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.EStorageException;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class ConfigStorageUtils extends AbstractStorageUtils {
 
@@ -261,33 +263,35 @@ public class ConfigStorageUtils extends AbstractStorageUtils {
 	public void putJson(String path, String json) throws EStorageException {
 		try {
 			Properties properties = new Properties();
-			JSONObject jsonData = new JSONObject(json);
-			Iterator keys = jsonData.keys();
-			while (keys.hasNext()) {
-				String key = new String(keys.next().toString());
-				String value = new String(jsonData.get(key).toString());
+			JsonElement jsonElement = new JsonParser().parse(json);
+			JsonObject jsonData = jsonElement.getAsJsonObject();
+			Iterator<Entry<String, JsonElement>> entries = jsonData.entrySet().iterator();
+			while (entries.hasNext()) {
+				Entry<String, JsonElement> entry = entries.next();
+				String key = new String(entry.getKey());
+				String value = new String(entry.getValue().getAsString());
 				properties.setProperty(key, value);
 			}
 			putProperties(path, properties);
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			throw new EStorageException(e);
 		}
 	}
 
 	public String getJson(String path) throws EStorageException {
 		try {
-			JSONObject jsonObject = new JSONObject();
+			JsonObject jsonObject = new JsonObject();
 			Properties properties = getProperties(path);
 			if (properties != null) {
 				Enumeration keys = properties.keys();
 				while (keys.hasMoreElements()) {
 					String key = keys.nextElement().toString();
 					String value = properties.getProperty(key);
-					jsonObject.put(key, value);
+					jsonObject.addProperty(key, value);
 				}
 				return jsonObject.toString();
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			throw new EStorageException(e);
 		}
 		return null;

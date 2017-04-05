@@ -2,6 +2,7 @@ package org.eclipse.dirigible.runtime.chrome.debugger.handlers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +12,10 @@ import org.eclipse.dirigible.runtime.chrome.debugger.communication.MessageReques
 import org.eclipse.dirigible.runtime.chrome.debugger.models.Variable;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.MessageDispatcher;
 import org.eclipse.dirigible.runtime.chrome.debugger.utils.RequestUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class GetPropertiesHandler implements MessageHandler {
 
@@ -33,13 +34,19 @@ public class GetPropertiesHandler implements MessageHandler {
 //		final ScriptRepository repository = ScriptRepository.getInstance();
 		final List<Variable> variables = new ArrayList<Variable>();// repo.getVariablesForObject(objectId);
 		final Integer id = RequestUtils.getMessageId(message);
-		final JSONObject result = new JSONObject();
+		final JsonObject result = new JsonObject();
 		try {
-			result.put("result", variables);
-			final JSONObject response = new JSONObject();
-			response.put("id", id);
-			response.put("result", result);
-		} catch (JSONException e) {
+			// TODO to be migrated/checked to Gson properly
+			JsonArray array = new JsonArray();
+			for (Iterator iterator = variables.iterator(); iterator.hasNext();) {
+				Variable variable = (Variable) iterator.next();
+				array.add(variable.toJson());
+			}
+			result.add("result", array);
+			final JsonObject response = new JsonObject();
+			response.addProperty("id", id);
+			response.add("result", result);
+		} catch (Exception e) {
 			new OnExceptionHandler().handle(e.getMessage(), session);
 		}
 

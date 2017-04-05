@@ -11,10 +11,9 @@ import org.eclipse.dirigible.runtime.chrome.debugger.models.Variable.Value;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.MessageDispatcher;
 import org.eclipse.dirigible.runtime.chrome.debugger.processing.ScriptRepository;
 import org.eclipse.dirigible.runtime.chrome.debugger.utils.RequestUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 /**
  * Handler for evaluating an expression a call frame.
@@ -30,14 +29,15 @@ public class EvaluateOnCallFrameHandler implements MessageHandler {
 		final Map<String, Object> params = request.getParams();
 		final String variableName = (String) params.get("expression");
 		final Value variableValue = repository.getVariableValueByName(variableName);
-		final JSONObject response = new JSONObject();
+		final JsonObject response = new JsonObject();
 		try {
-			response.put("id", RequestUtils.getMessageId(message));
-			final Map<String, Object> result = new HashMap<String, Object>();
-			result.put("result", variableValue);
-			result.put("wasThrown", false);
-			response.put("result", result);
-		} catch (JSONException e) {
+			// TODO to be migrated/checked to Gson properly
+			response.addProperty("id", RequestUtils.getMessageId(message));
+			final JsonObject result = new JsonObject();
+			result.add("result", variableValue.toJson());
+			result.addProperty("wasThrown", false);
+			response.add("result", result);
+		} catch (Exception e) {
 			new OnExceptionHandler().handle(e.getMessage(), session);
 		}
 

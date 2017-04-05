@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: JSON v20160810
-Bundle-SymbolicName: org.json
-Bundle-Version: 2.7.170225
-Bundle-Vendor: https://github.com/stleary/JSON-java
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.json

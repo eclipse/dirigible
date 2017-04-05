@@ -2,6 +2,9 @@ package org.eclipse.dirigible.runtime.chrome.debugger.models;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 public class Variable {
 
 	private Boolean configurable = true;
@@ -114,6 +117,13 @@ public class Variable {
 		public void setType(final String type) {
 			this.type = type;
 		}
+
+		public JsonElement toJson() {
+			Gson gson = new Gson();
+			return gson.toJsonTree(this);
+		}
+		
+		
 	}
 
 	public static class Preview {
@@ -201,5 +211,10 @@ public class Variable {
 		public void setValue(final String value) {
 			this.value = value;
 		}
+	}
+	
+	public JsonElement toJson() {
+		Gson gson = new Gson();
+		return gson.toJsonTree(this);
 	}
 }

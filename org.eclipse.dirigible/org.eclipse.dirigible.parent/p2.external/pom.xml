@@ -100,7 +100,6 @@
 	</build>
 
 	<modules>
-        <module>org.json</module>
 		<module>external.feature</module>
 		<module>external.p2</module>
 	</modules>

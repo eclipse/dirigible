@@ -21,11 +21,14 @@ import java.util.Properties;
 import org.eclipse.dirigible.runtime.scripting.AbstractStorageUtils;
 import org.eclipse.dirigible.runtime.scripting.utils.ConfigStorageUtils;
 import org.eclipse.dirigible.runtime.utils.DataSourceUtils;
-import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class ConfigStorageUtilsTest {
 
@@ -137,8 +140,9 @@ public class ConfigStorageUtilsTest {
 		String json = "{\"key1\":\"value1\",\"key2\":\"value2\"}";
 		configStorage.putJson(PATH2, json);
 		System.out.println(configStorage.getJson(PATH2));
-		JSONObject jsonData = new JSONObject(configStorage.getJson(PATH2));
-		assertEquals("value1", jsonData.get("key1"));
-		assertEquals("value2", jsonData.get("key2"));
+		JsonElement jsonElement = new JsonParser().parse(configStorage.getJson(PATH2));
+		JsonObject jsonData = jsonElement.getAsJsonObject();
+		assertEquals("value1", jsonData.get("key1").getAsString().replace("\"", ""));
+		assertEquals("value2", jsonData.get("key2").getAsString().replace("\"", ""));
 	}
 }
