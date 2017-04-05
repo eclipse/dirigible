@@ -20,7 +20,6 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.runtime.core,
  org.eclipse.dirigible.runtime.security,
  org.eclipse.dirigible.repository.logging,
- org.json,
  org.mozilla.javascript,
  org.eclipse.dirigible.runtime.javascript.rhino;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

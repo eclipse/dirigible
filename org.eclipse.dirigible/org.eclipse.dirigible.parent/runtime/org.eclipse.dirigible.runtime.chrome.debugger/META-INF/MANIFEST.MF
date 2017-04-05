@@ -16,7 +16,6 @@ Import-Package: com.google.gson,
  org.eclipse.core.runtime.jobs,
  org.eclipse.dirigible.repository.ext.debug,
  org.eclipse.dirigible.repository.logging,
- org.json,
  org.mozilla.javascript,
  org.mozilla.javascript.debug,
  org.slf4j
