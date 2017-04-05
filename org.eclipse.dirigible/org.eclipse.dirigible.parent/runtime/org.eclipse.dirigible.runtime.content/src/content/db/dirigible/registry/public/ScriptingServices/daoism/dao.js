@@ -69,11 +69,15 @@ DAO.prototype.createEntity = function(resultSet, entityPropertyNames) {
     		entity[prop.name] = prop.value(entity[prop.name]);
     	}
     }
-    
-    for(var key in Object.keys(entity)){
-		if(entity[key] === null)
-			entity[key] = undefined;
+
+	var entityProperties = Object.keys(entity);
+    for(var key in entityProperties){
+
+		if(entity[entityProperties[key]] === null){	
+			entity[entityProperties[key]] = undefined;
+		}
 	}
+
 	var entitySegment = "";
 	if(entity[this.orm.getPrimaryKey().name]){
 		entitySegment= "["+entity[this.orm.getPrimaryKey().name]+"]";

@@ -15,7 +15,8 @@
 	    "solar" : "/services/web/resources/themes/solar/bootstrap.min.css",
 	    "superhero" : "/services/web/resources/themes/superhero/bootstrap.min.css",
 	    "wendy" : "/services/web/resources/themes/wendy/bootstrap.min.css",
-	    "baroness" : "/services/web/resources/themes/baroness/bootstrap.min.css"
+	    "baroness" : "/services/web/resources/themes/baroness/bootstrap.min.css",
+	    "fleur" : "/services/web/resources/themes/fleur/bootstrap.min.css"
 	};
 
 	$(function() {

@@ -1,5 +1,6 @@
 .textview {
 	background-color: white;
+	color: black;
 	font-family: "Consolas", "Monaco", "Vera Mono", monospace;
 	font-size: 12px;
 	min-width: 50px;
@@ -2448,3 +2449,9 @@ a.breadcrumb.currentLocation {
 	border-radius: 0; 
 	color: #FFF;
 }
+
+
+
+
+
+
