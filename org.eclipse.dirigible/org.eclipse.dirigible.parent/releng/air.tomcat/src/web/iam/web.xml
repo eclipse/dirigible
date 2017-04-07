@@ -325,7 +325,7 @@
 			<url-pattern>/services/groovy-secured/*</url-pattern>
 			<url-pattern>/services/wiki-secured/*</url-pattern>
 			<url-pattern>/services/web/wiki-secured/*</url-pattern>
-			<url-pattern>/services/web/registry/index.html</url-pattern>
+			<url-pattern>/services/web/registry/*</url-pattern>
 			<url-pattern>/services/js-sandbox/*</url-pattern>
 			<url-pattern>/services/groovy-sandbox/*</url-pattern>
 			<url-pattern>/services/web-sandbox/*</url-pattern>
