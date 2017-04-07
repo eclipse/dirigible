@@ -113,8 +113,9 @@ public class DatabaseUpdater extends AbstractDataUpdater {
 		}
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String productName = connection.getMetaData().getDatabaseProductName();
 				IDialectSpecifier dialectSpecifier = DBUtils.getDialectSpecifier(productName);
 

@@ -214,5 +214,9 @@
   	</resource-ref>
 	
 	-->
+	
+	<listener>
+		<listener-class>org.eclipse.dirigible.init.InitializationListener</listener-class>
+	</listener>
 
 </web-app>

@@ -33,15 +33,15 @@ import org.eclipse.dirigible.runtime.scripting.utils.ExecutionService;
 
 public class TestExecutionUpdater extends AbstractDataUpdater {
 
-	private static final String TEST_EXECUTION_S_COMPLETED = Messages.TestExecutionUpdater_TEST_EXECUTION_S_COMPLETED;
+	private static final String TEST_EXECUTION_S_COMPLETED = "****** Test execution of: [%s] completed in %d ms. ******";
 
-	private static final String TEST_EXECUTION_RESULT_FOR_S_S = Messages.TestExecutionUpdater_TEST_EXECUTION_RESULT_FOR_S_S;
+	private static final String TEST_EXECUTION_RESULT_FOR_S_S = "****** Test execution result for: [%s] -> [%s] ******";
 
-	private static final String TEST_EXECUTION_STARTED_FOR_S = Messages.TestExecutionUpdater_TEST_EXECUTION_STARTED_FOR_S;
+	private static final String TEST_EXECUTION_STARTED_FOR_S = "****** Test execution started for: [%s] ******";
 
-	private static final String TESTS_EXECUTION_STARTED_FOR_D = Messages.TestExecutionUpdater_TESTS_EXECUTION_STARTED_FOR_D;
+	private static final String TESTS_EXECUTION_STARTED_FOR_D = "****** Tests execution started for %d test cases ******";
 
-	private static final String TESTS_EXECUTION_COMPLETED = Messages.TestExecutionUpdater_TESTS_EXECUTION_COMPLETED;
+	private static final String TESTS_EXECUTION_COMPLETED = "****** Tests execution completed in %d ms. ******";
 
 	private static final String URL_HTTP_LOCAL = "http://local/"; //$NON-NLS-1$
 

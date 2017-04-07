@@ -25,7 +25,7 @@ import org.eclipse.dirigible.runtime.repository.RepositoryFacade;
 
 public class SecuritySynchronizer implements Runnable {
 
-	private static final String REFRESHING_OF_SECURED_LOCATIONS_FAILED = Messages.SecuritySynchronizer_REFRESHING_OF_SECURED_LOCATIONS_FAILED;
+	private static final String REFRESHING_OF_SECURED_LOCATIONS_FAILED = "Refreshing of secured locations failed";
 
 	private static final Logger logger = Logger.getLogger(SecuritySynchronizer.class);
 

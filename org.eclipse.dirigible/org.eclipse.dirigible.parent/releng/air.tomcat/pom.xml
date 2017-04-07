@@ -25,6 +25,7 @@
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
+				
 					<execution>
 						<id>external</id>
 						<phase>compile</phase>
@@ -34,8 +35,43 @@
 						<configuration>
 							<outputDirectory>${project.build.directory}/lib</outputDirectory>
 							<includeArtifactIds>org.eclipse.dirigible.external.p2</includeArtifactIds>
+							<excludes>
+								**/*icu*.jar,
+								**/*felix*.jar,
+								**/*archive*.jar,
+								**/*mongo*.jar,
+								**/*hamcrest*.jar,
+								**/*mockito*.jar,
+								**/*objenesis*.jar,
+								**/*slf*.jar
+							</excludes>
 						</configuration>
 					</execution>
+					
+					<execution>
+						<id>lib</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<includeArtifactIds>org.eclipse.dirigible.lib.p2</includeArtifactIds>
+							<excludes>
+								**/*activation*.jar,
+								**/*servlet*.jar,
+								**/*bridge_*.jar,
+								**/*equinox*.jar,
+								**/*osgi*.jar,
+								**/*hamcrest*.jar,
+								**/*mockito*.jar,
+								**/*objenesis*.jar,
+								**/*jsoup*.jar
+								**/*slf*.jar
+							</excludes>
+						</configuration>
+					</execution>
+					
 					<execution>
 						<id>repository</id>
 						<phase>compile</phase>
@@ -60,17 +96,6 @@
 						</configuration>
 					</execution>
 
-					<execution>
-						<id>lib</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<includeArtifactIds>org.eclipse.dirigible.lib.p2</includeArtifactIds>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
 
@@ -126,6 +151,12 @@
 			<type>eclipse-repository</type>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.dirigible.p2.lib</groupId>
+			<artifactId>org.eclipse.dirigible.lib.p2</artifactId>
+			<version>${project.version}</version>
+			<type>eclipse-repository</type>
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.dirigible.p2.repository</groupId>
 			<artifactId>org.eclipse.dirigible.repository.p2</artifactId>
 			<version>${project.version}</version>
@@ -134,12 +165,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible.p2.runtime</groupId>
 			<artifactId>org.eclipse.dirigible.runtime.p2</artifactId>
-			<version>${project.version}</version>
-			<type>eclipse-repository</type>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible.p2.lib</groupId>
-			<artifactId>org.eclipse.dirigible.lib.p2</artifactId>
 			<version>${project.version}</version>
 			<type>eclipse-repository</type>
 		</dependency>
@@ -155,28 +180,28 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.2</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.2</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.7.2</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.directory.studio</groupId>
 			<artifactId>org.apache.commons.lang</artifactId>
 			<version>2.6</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -186,7 +211,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -195,7 +220,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -204,14 +229,14 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
 			<artifactId>org.eclipse.dirigible.repository.db</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -220,7 +245,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -229,7 +254,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -238,7 +263,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -247,7 +272,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -256,7 +281,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -265,7 +290,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.repository</groupId>
@@ -274,7 +299,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -282,14 +307,14 @@
 				org.eclipse.dirigible.runtime.content
 			</artifactId>
 			<version>2.7.170225</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
 			<artifactId>org.eclipse.dirigible.runtime.cmis</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -298,28 +323,28 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
 			<artifactId>org.eclipse.dirigible.runtime.core</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
 			<artifactId>org.eclipse.dirigible.runtime.flow</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
 			<artifactId>org.eclipse.dirigible.runtime.init</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -328,7 +353,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -337,7 +362,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -346,7 +371,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -355,7 +380,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -364,7 +389,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -373,7 +398,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -382,7 +407,7 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
@@ -391,38 +416,37 @@
 			</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
 			<artifactId>org.eclipse.dirigible.runtime.sql</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
 			<artifactId>org.eclipse.dirigible.runtime.web</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
 			<artifactId>org.eclipse.dirigible.runtime.wiki</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible.runtime</groupId>
-			<artifactId>
-				org.eclipse.dirigible.runtime.workspace
-			</artifactId>
+			<artifactId>org.eclipse.dirigible.runtime.workspace</artifactId>
 			<version>2.7.170225</version>
 			<type>eclipse-plugin</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
+		
 	</dependencies>
 
 </project>
