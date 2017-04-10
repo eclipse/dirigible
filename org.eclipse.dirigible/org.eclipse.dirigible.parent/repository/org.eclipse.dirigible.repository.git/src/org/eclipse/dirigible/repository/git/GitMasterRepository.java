@@ -59,6 +59,7 @@ public class GitMasterRepository extends FileSystemMasterRepository implements I
 			JGitConnector.cloneRepository(rootFolder.getParentFile(), getGitLocation(), getGitUser(), getGitPassword(), getGitBranch());
 		}
 		JGitConnector gitConnector = new JGitConnector(JGitConnector.getRepository(getRepositoryPath()));
+		gitConnector.pull();
 		gitConnector.hardReset();
 	}
 
