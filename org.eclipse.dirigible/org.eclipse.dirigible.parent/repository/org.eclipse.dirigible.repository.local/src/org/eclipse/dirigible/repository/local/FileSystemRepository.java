@@ -64,10 +64,11 @@ public class FileSystemRepository implements IRepository {
 	private String infoPath = IRepository.SEPARATOR;
 
 	private LocalRepositoryDAO repositoryDAO;
-	// private LocalZipImporter importer;
-	// private LocalZipExporter exporter;
 
 	private String user;
+
+	protected FileSystemRepository() throws LocalBaseException {
+	}
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -76,7 +77,7 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException
 	 */
 	public FileSystemRepository(String user) throws LocalBaseException {
-		this(user, null, false);
+		createRepository(user, null, false);
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException
 	 */
 	public FileSystemRepository(String user, String rootFolder) throws LocalBaseException {
-		this(user, rootFolder, false);
+		createRepository(user, rootFolder, false);
 	}
 
 	/**
@@ -99,7 +100,10 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException
 	 */
 	public FileSystemRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
+		createRepository(user, rootFolder, absolute);
+	}
 
+	protected void createRepository(String user, String rootFolder, boolean absolute) {
 		String root;
 		if (absolute) {
 			if (rootFolder != null) {
