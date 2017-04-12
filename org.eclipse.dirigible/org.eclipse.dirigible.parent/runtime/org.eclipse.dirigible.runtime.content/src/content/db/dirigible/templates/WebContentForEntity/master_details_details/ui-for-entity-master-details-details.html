@@ -76,19 +76,19 @@
 					<br><br>
 					<div>
 						<!-- input form -->
-						<div>
+						<form>
 				  
 #foreach ($tableColumn in $tableColumns)
 #if($tableColumn.visible)
 #if ($tableColumn.key)
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.label}</label>
+							<label class="control-label">${tableColumn.label}</label>
 							<input type="text" class="form-control" 
 								ng-model="selectedEntry.${tableColumn.name}" readonly>
 #else
 #if ($tableColumn.widgetType == "date")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.label}</label>
+							<label class="control-label">${tableColumn.label}</label>
 							<p class="input-group">
 				            	<input type="text" ng-model="selectedEntry.${tableColumn.name}" class="form-control ng-pristine ng-valid ng-isolate-scope ng-valid-required ng-touched" 
 				               		uib-datepicker-popup="" is-open="${tableColumn.name}Status.opened" 
@@ -100,13 +100,13 @@
 				           	</p>
 #elseif ($tableColumn.widgetType == "textarea")
 						  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<label>${tableColumn.label}</label>
+							<label class="control-label">${tableColumn.label}</label>
 							<textarea class="form-control" 
 								ng-model="selectedEntry.${tableColumn.name}" cols="50" rows="5" 
 								ng-readonly="operation == 'show'" required="required"></textarea>
 #elseif ($tableColumn.widgetType == "dropdown")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.label}</label>
+							<label class="control-label">${tableColumn.label}</label>
 							<input type="hidden" class="form-control" 
 								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
@@ -115,7 +115,7 @@
 							</div>
 #elseif ($tableColumn.widgetType == "list")
 						  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<label>${tableColumn.label}</label>
+							<label class="control-label">${tableColumn.label}</label>
 							<input type="hidden" class="form-control" 
 								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
@@ -124,13 +124,13 @@
 							</div>
 #elseif ($tableColumn.widgetType == "integer")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.label}</label>
+							<label class="control-label">${tableColumn.label}</label>
 							<input type="number" class="form-control text-right" pattern="\d*" step="1"
 								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
 #elseif ($tableColumn.widgetType == "float")
 						  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<label>${tableColumn.label}</label>
+							<label class="control-label">${tableColumn.label}</label>
 							<input type="number" class="form-control text-right" pattern="[0-9]+([\.,][0-9]+)?" step="0.01"
 								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
@@ -140,7 +140,7 @@
 #else
 				 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 #end
-							<label>${tableColumn.label}</label>
+							<label class="control-label">${tableColumn.label}</label>
 							<input type="text" class="form-control" 
 								ng-model="selectedEntry.${tableColumn.name}"
 								ng-readonly="operation == 'show'" required="required">
@@ -149,17 +149,17 @@
 						</div>
 #end
 #end
-						</div>
-				
-						<!-- save and cancel buttons -->
-						<div class="btn-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<br>
-							<input class="btn btn-primary" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
-								ng-click="confirmAction()"> 
-							<input class="btn btn-default" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
-								ng-click="cancelAction()">
-						</div>
+					</form>
+			
+					<!-- save and cancel buttons -->
+					<div class="btn-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<br>
+						<input class="btn btn-primary" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
+							ng-click="confirmAction()"> 
+						<input class="btn btn-default" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
+							ng-click="cancelAction()">
 					</div>
+				</div>
 	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>

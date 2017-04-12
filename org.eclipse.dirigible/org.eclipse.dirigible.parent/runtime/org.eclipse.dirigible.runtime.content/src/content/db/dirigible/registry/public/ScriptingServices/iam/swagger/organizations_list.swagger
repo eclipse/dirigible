@@ -1,0 +1,113 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.0",
+        "title": "Iam_organizations_view Entity Service",
+        "description":"This is a RESTful web service for listing, viewing and managing entities of the type 'Iam_organizations_view'"
+    },
+    "basePath":"/services",
+    "tags":[
+      {
+         "name":"Iam_organizations_view",
+         "description":"View Iam_organizations_view objects"
+      }
+    ],
+    "paths": {
+        "/js/iam/organizations_list.js": {
+            "get": {
+            	"tags":[
+               		"Iam_organizations_view"
+            	],
+                "description": "Gets 'Iam_organizations_view' objects.\n",
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "Count of all the records",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "${primaryKey.name.toLowerCase()}",
+                        "in": "query",
+                        "description": "Identifier of the 'Iam_organizations_view' object",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "metadata",
+                        "in": "query",
+                        "description": "Metadata of the 'Iam_organizations_view' object",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Offset of the objects list",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort parameter",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "description": "Descending order",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema":{
+		                     "$ref":"#/definitions/Iam_organizations_view"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions":{
+        "Iam_organizations_view": {
+	        "type":"object",
+	        "properties": {
+        		"id": {
+	            	"type": 
+        "integer"
+	    		}
+				,
+        		"name": {
+	            	"type": 
+        "string"
+	    		}
+				,
+        		"description": {
+	            	"type": 
+        "string"
+	    		}
+				,
+        		"master_name": {
+	            	"type": 
+        "string"
+	    		}
+	        }
+        }
+	}
+}

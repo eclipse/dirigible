@@ -2031,3 +2031,24 @@ a.thumbnail {
 	background-color: #eff4f9;
 }
 
+form .control-label.required-label:before,
+.form-inline .control-label.required-label:before,
+.form-horizontal .control-label.required-label:before{
+                content: '*';
+                margin-right: 2px;
+color: red;
+}
+form .control-label:after,
+.form-inline .control-label:after,
+.form-horizontal .control-label:after{
+                content: ':';
+}
+label.control-label {
+                color: #666666;
+    font-weight: normal;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: text;
+}

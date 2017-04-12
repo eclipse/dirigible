@@ -159,6 +159,8 @@ StatementBuilder.prototype.fieldDef = function(fieldDef){
 StatementBuilder.prototype.toString = function(){
 	if(this.operation===undefined)
 		throw Error('Missing operation. Forgot to invoke insert/delete/update/select on the statement builder?');
+	if(this.dialect===undefined)
+		throw Error('No dialect available for the toString operation. The StatementBuilder object must have been initialized with a valid dialect ot invoke this operation on it.');
 	return this.dialect.builders[this.operation.toLowerCase()].apply(this);
 };
 StatementBuilder.prototype.toParams = function(){

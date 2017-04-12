@@ -1,0 +1,14 @@
+{
+  "tableName":"IAM_ORGANIZATIONS_VIEW",
+  "tableType":"VIEW",
+  "serviceName":"organizations_list.js",
+  "libraryName":"organizations_list_lib.js",
+  "specification":"organizations_list.swagger",
+  "getEnabled":"true",
+  "postEnabled":"false",
+  "putEnabled":"false",
+  "deleteEnabled":"false",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
+}

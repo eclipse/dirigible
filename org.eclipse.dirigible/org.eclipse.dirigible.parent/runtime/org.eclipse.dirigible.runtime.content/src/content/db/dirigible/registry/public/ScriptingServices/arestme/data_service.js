@@ -31,7 +31,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		return func.apply(this, args.slice(1));
 	};
 	
-	var create = function(context, io){
+	var create = this.create = function(context, io){
 		var input = io.request.readInputText();
 	    var entity = JSON.parse(input);
 	    notify.call(self, 'onEntityInsert', entity);
@@ -52,8 +52,9 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}		
 	};
 	
-	var remove = function(context, io){
-		var id = context.pathParams.id;		
+	var remove = this.remove = function(context, io){
+		var id = context.pathParams.id;	
+		notify.call(self, 'onBeforeRemove', id);
 	 	try{
 			dao.remove(id);
 			notify.call(self, 'onAfterRemove', id);
@@ -66,24 +67,27 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}
 	};
 		
-	var update = function(context, io){
+	var update = this.update = function(context, io){
 		var id = context.pathParams.id;
 		var input = io.request.readInputText();
 	    var entity = JSON.parse(input);
 	    //check for potential mismatch in path id and id in input
-	    notify.call(self, 'onEntityUpdate', entity);
-	    try{
-			entity[dao.orm.getPrimaryKey()] = dao.update(entity);
-			io.response.setStatus(io.response.NO_CONTENT);
-		} catch(e) {
-    	    var errorCode = io.response.INTERNAL_SERVER_ERROR ;
-    	    self.logger.error(e.message, e);
-        	_oHttpController.sendError(errorCode, e.message);
-        	throw e;
-		}
+	    var ctx = {};
+	    notify.call(self, 'onEntityUpdate', entity, id, ctx);
+	    if(!ctx.err){
+	    	try{
+				entity[dao.orm.getPrimaryKey()] = dao.update(entity);
+				io.response.setStatus(io.response.NO_CONTENT);
+			} catch(e) {
+	    	    var errorCode = io.response.INTERNAL_SERVER_ERROR ;
+	    	    self.logger.error(e.message, e);
+	        	_oHttpController.sendError(errorCode, e.message);
+	        	throw e;
+			}
+	    }//TODO
 	};
 	
-	var get = function(context, io){
+	var get = this.get = function(context, io){
 		var id = context.pathParams.id;
 		//id is mandatory parameter and an integer
 		if(id === undefined || isNaN(parseIntStrict(id))) {
@@ -115,7 +119,10 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		
 	    try{
 			var entity = dao.find.apply(dao, [id, $expand, $select]);
-			notify.call(self, 'onAfterFind', entity);
+			notify.call(self, 'onAfterFind', entity, context);
+			if(context.err){
+				return;//TODO?
+			}
 			if(!entity){
 				self.logger.error("Record with id: " + id + " does not exist.");
         		_oHttpController.sendError(io.response.NOT_FOUND, "Record with id: " + id + " does not exist.");
@@ -132,7 +139,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}	
 	};
 		
-	var validateQueryInputs = function(context, io){	
+	var validateQueryInputs = this.validateQueryInputs = function(context, io){	
 
 		var limit = context.queryParams.$limit || context.queryParams.limit;
 		if (limit === undefined || limit === null) {
@@ -233,7 +240,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}
 	};
 	
-	var query = function(context, io){		
+	var query = this.query = function(context, io){		
 		validateQueryInputs(context, io);
 		if(context.err)
 			return;	
@@ -256,7 +263,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}		
 	};	
 		
-	var count = function(context, io){
+	var count = this.count = function(context, io){
 	    try{
 			var entitiesCount = dao.count() || 0;
 			io.response.setHeader("Content-Type", "application/json");
@@ -272,7 +279,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}
 	};
 		
-	var metadata = function(context, io){
+	var metadata = this.metadata = function(context, io){
  		try{
 			var entityMetadata = dao.metadata();
 			io.response.setHeader("Content-Type", "application/json");
@@ -286,7 +293,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 	};
 
 	//Associations handlers
-	var associationListGetHandler = function(context, io){
+	var associationListGetHandler = this.associationListGetHandler = function(context, io){
 	    try{
 	    	var associationName = context.pathParams.associationName;
 	    	if(!dao.orm.getAssociation(associationName)){
@@ -309,7 +316,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		}
 	};
 		
-	var associationListCreateHandler = function(context, io){
+	var associationListCreateHandler = this.associationListCreateHandler = function(context, io){
 	    try{
 	    	var associationName = context.pathParams.associationName;
 	    	var associationDef = dao.orm.getAssociation(associationName);

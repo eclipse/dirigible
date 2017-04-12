@@ -1,0 +1,15 @@
+{
+  "entityName":"Iam_positions",
+  "tableName":"IAM_POSITIONS",
+  "tableType":"TABLE",
+  "serviceName":"positions.js",
+  "libraryName":"positions_lib.js",
+  "specification":"positions.swagger",
+  "getEnabled":"true",
+  "postEnabled":"true",
+  "putEnabled":"true",
+  "deleteEnabled":"true",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
+}

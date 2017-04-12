@@ -129,12 +129,14 @@ var HttpController = exports.HttpController = function(oConfiguration){
 		if(!queryString)
 			return;
 		queryString = decodeURI(queryString);
+		//Note: Rhino has strange ways of handling ampersand replace/splits
 		queryString = xss.unescapeHtml(queryString).replace(/&amp;/g, '&');
 		var queryStringSegments = queryString.split('&');
 		var queryParams = {};
 		if(queryStringSegments.length>0){
 			for(var i=0; i< queryStringSegments.length; i++){
 				var seg = queryStringSegments[i];
+				seg = seg.replace('amp;','');
 				var kv = seg.split('=');
 				var key = kv[0].trim();
 				var value = kv[1]===undefined ? true : kv[1].trim();

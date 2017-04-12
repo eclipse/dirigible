@@ -30,7 +30,7 @@
                 <div ng-show="exist">
 #foreach ($tableColumn in $tableColumns)
 #if($tableColumn.visible)
-                    <label>${tableColumn.label}</label>
+                    <label class="control-label">${tableColumn.label}</label>
 #if ($tableColumn.widgetType == "date")
 					<div>{{entity.${tableColumn.name} | date:format}}</div>
 #else

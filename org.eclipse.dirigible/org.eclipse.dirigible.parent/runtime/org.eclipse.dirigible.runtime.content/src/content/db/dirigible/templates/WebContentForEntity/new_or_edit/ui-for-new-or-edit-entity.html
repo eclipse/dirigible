@@ -16,8 +16,7 @@
 	<link rel="stylesheet" href="/services/web/resources/css/forms.css">
 	<script src="/services/web/resources/themes/theme.js"></script>
 </head>
-<body style="margin-left: 20px">
-<div ng-include="'header.html'"></div>
+<body>
 
 	<div id="wrap" ng-controller="NewOrEditController">
 		<div class="row">
@@ -33,10 +32,10 @@
                 <div class="alert alert-success" ng-show="successfullyUpdated">
                     <strong>Well done!</strong> Entity successfully updated!
                 </div>
-                <div>
+                <form>
 #foreach ($tableColumn in $tableColumns)
 #if($tableColumn.visible)
-					<label>${tableColumn.label}</label> 
+					<label class="control-label">${tableColumn.label}</label> 
 #if ($tableColumn.key)
                     <input type="text" class="form-control" ng-model="entity.${tableColumn.name}" readonly>
 #else
@@ -81,7 +80,7 @@
                         <button type="button" class="btn btn-primary btn-sm" ng-click="updateEntity()" ng-show="exist">Update</button>
                         <button type="button" class="btn btn-default btn-sm" ng-click="cancelUpdate()">Cancel</button>
                     </div>
-                </div>
+                </form>
 
         </div>
     </div>

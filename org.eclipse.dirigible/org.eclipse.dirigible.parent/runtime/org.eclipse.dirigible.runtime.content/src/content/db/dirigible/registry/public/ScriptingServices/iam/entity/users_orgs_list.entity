@@ -1,0 +1,14 @@
+{
+  "tableName":"IAM_USERS_ORGS_VIEW",
+  "tableType":"VIEW",
+  "serviceName":"users_orgs_list.js",
+  "libraryName":"users_orgs_list_lib.js",
+  "specification":"users_orgs_list.swagger",
+  "getEnabled":"true",
+  "postEnabled":"false",
+  "putEnabled":"false",
+  "deleteEnabled":"false",
+  "countEnabled":"true",
+  "offsetAndLimitEnabled":"true",
+  "metadataEnabled":"true"
+}

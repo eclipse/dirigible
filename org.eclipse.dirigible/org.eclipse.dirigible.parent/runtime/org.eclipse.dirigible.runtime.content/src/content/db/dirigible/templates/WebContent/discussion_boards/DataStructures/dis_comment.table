@@ -32,7 +32,7 @@
       {
         "name":"${fileNameNoExtension.toUpperCase()}C_COMMENT_TEXT",
         "type":"VARCHAR",
-        "length":"255",
+        "length":"4000",
         "notNull":"false",
         "primaryKey":"false",
         "defaultValue":""

@@ -60,5 +60,6 @@ exports.get = function(configKey){
 	//TODO: move this to a one-time config phase
 	dialects.register("Default", "daoism/dialects/defaults");
 	dialects.register("Derby", "daoism/dialects/derby");
+	dialects.register("HDB", "daoism/dialects/hdb");
 	return dialects;
 };
