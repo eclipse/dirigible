@@ -109,6 +109,11 @@ class RepositoryFactoryOSGi {
 				}
 			}
 		}
+
+		if ((defaultMasterRepositoryProvider != null) && (masterRepositoryProvider == null)) {
+			logger.error(String.format("Registering Master Repository Provider failed! Requested provider type: %s, does not exist",
+					defaultMasterRepositoryProvider));
+		}
 	}
 
 	/**

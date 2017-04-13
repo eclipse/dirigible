@@ -17,6 +17,6 @@ Require-Bundle: org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.repository.db.init,
  org.eclipse.dirigible.repository.zip
 Import-Package: org.eclipse.dirigible.repository.logging
-Service-Component: OSGi-INF/repository-local.xml, OSGi-INF/master-repository-fs.xml
+Service-Component: OSGi-INF/repository-local.xml, OSGi-INF/master-repository-fs.xml, OSGi-INF/master-repository-zip.xml
 Bundle-Activator: org.eclipse.dirigible.repository.local.LocalRepositoryActivator
 Bundle-ClassPath: .
