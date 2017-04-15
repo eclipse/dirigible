@@ -395,6 +395,12 @@
 			<url-pattern>/services/registry-test</url-pattern>
 			<url-pattern>/services/registry-listener</url-pattern>
 			<url-pattern>/service/*</url-pattern>
+			<url-pattern>/services/flow-secured/*</url-pattern>
+			<url-pattern>/services/flow-sandbox/*</url-pattern>
+			<url-pattern>/services/job-secured/*</url-pattern>
+			<url-pattern>/services/job-sandbox/*</url-pattern>
+			<url-pattern>/services/command-secured/*</url-pattern>
+			<url-pattern>/services/command-sandbox/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Everyone</role-name>

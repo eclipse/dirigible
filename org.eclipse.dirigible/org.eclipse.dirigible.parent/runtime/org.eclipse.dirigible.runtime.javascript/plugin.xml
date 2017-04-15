@@ -91,7 +91,7 @@
      <extension
            point="org.eclipse.equinox.http.registry.filters">
         <filter
-              alias="/js-debug"
+              alias="/js-sandbox"
               class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
         </filter>
      </extension>
@@ -104,6 +104,15 @@
         </filter>
      </extension>
      
+      <extension
+           id="JavaScriptSourceRegistryServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/js-src"
+              class="org.eclipse.dirigible.runtime.js.debug.JavaScriptSourceRegistryServlet"
+              load-on-startup="false">
+        </servlet>
+     </extension>
      
      
      
@@ -159,27 +168,11 @@
      <extension
            point="org.eclipse.equinox.http.registry.filters">
         <filter
-              alias="/js-sandbox"
-              class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
-        </filter>
-     </extension>
-     
-     <extension
-           point="org.eclipse.equinox.http.registry.filters">
-        <filter
               alias="/test-sandbox"
               class="org.eclipse.dirigible.runtime.filter.RegistrySecureRolesFilter">
         </filter>
      </extension>
      
-     <extension
-           id="JavaScriptSourceRegistryServlet"
-           point="org.eclipse.equinox.http.registry.servlets">
-        <servlet
-              alias="/js-src"
-              class="org.eclipse.dirigible.runtime.js.debug.JavaScriptSourceRegistryServlet"
-              load-on-startup="false">
-        </servlet>
-     </extension>
+    
 
 </plugin>
