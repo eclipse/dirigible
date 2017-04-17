@@ -190,7 +190,7 @@
 				<deployment.type>iam</deployment.type>
 				<deployment.name>ROOT</deployment.name>
 				<deployment.context></deployment.context>
-				<deployment.executable>dont-use</deployment.executable>
+				<deployment.executable>dirigible</deployment.executable>
 			</properties>
 		</profile>
 	</profiles>

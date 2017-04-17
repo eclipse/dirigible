@@ -130,6 +130,14 @@
 										<include name="*.war" />
 									</fileset>
 								</copy>
+								
+								<!-- Copy executable jar, if relevant -->
+								<copy todir="../../../../dist/${deployment.type}/${artifactId}/">
+									<fileset dir="${project.build.directory}">
+										<include name="*.jar" />
+										<exclude name="dont-use.jar" />
+									</fileset>
+								</copy>
 
 							</tasks>
 						</configuration>
