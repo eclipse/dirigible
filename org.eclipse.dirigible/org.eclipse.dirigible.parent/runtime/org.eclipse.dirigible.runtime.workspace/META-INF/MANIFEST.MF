@@ -41,16 +41,8 @@ Import-Package: javax.mail,
  javax.websocket,
  javax.websocket.server,
  org.slf4j
-Export-Package: org.eclipse.dirigible.runtime,
- org.eclipse.dirigible.runtime.filter,
- org.eclipse.dirigible.runtime.logging,
- org.eclipse.dirigible.runtime.mail,
- org.eclipse.dirigible.runtime.mock,
- org.eclipse.dirigible.runtime.registry,
- org.eclipse.dirigible.runtime.repository,
- org.eclipse.dirigible.runtime.scripting,
- org.eclipse.dirigible.runtime.scripting.utils,
- org.eclipse.dirigible.runtime.search,
- org.eclipse.dirigible.runtime.task
+Export-Package: org.eclipse.dirigible.runtime.registry,
+ org.eclipse.dirigible.runtime.search
 Bundle-ActivationPolicy: lazy
+Service-Component: OSGi-INF/runtime-workspace.xml, OSGi-INF/runtime-publish.xml, OSGi-INF/runtime-searchw.xml
 Bundle-ClassPath: .

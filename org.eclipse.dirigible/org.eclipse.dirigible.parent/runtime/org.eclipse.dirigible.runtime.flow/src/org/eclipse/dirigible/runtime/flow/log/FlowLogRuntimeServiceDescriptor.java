@@ -17,10 +17,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class FlowLogRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private static final String name = "Flow Log"; //$NON-NLS-1$
-	private static final String description = "Flow Log Service gives the full log of the processed flows, their steps and context parameters.";
-	private static final String endpoint = "/flow-log"; //$NON-NLS-1$
-	private static final String documentation = "http://www.dirigible.io/help/service_flow_log.html"; //$NON-NLS-1$
+	private final String name = "Flow Log"; //$NON-NLS-1$
+	private final String description = "Flow Log Service gives the full log of the processed flows, their steps and context parameters.";
+	private final String endpoint = "/flow-log"; //$NON-NLS-1$
+	private final String documentation = "http://www.dirigible.io/help/service_flow_log.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

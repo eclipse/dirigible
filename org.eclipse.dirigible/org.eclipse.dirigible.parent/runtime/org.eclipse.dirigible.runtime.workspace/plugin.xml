@@ -2,6 +2,17 @@
 <?eclipse version="3.4"?>
 <plugin>
 
+	<!-- Single Workspace - Deprecated -->
+	<extension
+           id="WorkspaceServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/workspace"
+              class="org.eclipse.dirigible.runtime.registry.WorkspaceServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+     
      <extension
            id="WorkspaceSearchServlet"
            point="org.eclipse.equinox.http.registry.servlets">
@@ -13,20 +24,41 @@
      </extension>
 	 
      <extension
-           id="WorkspaceServlet"
+           id="WorkspacePublishServlet"
            point="org.eclipse.equinox.http.registry.servlets">
         <servlet
-              alias="/workspace"
-              class="org.eclipse.dirigible.runtime.registry.WorkspaceServlet"
+              alias="/publish"
+              class="org.eclipse.dirigible.runtime.registry.WorkspacePublishServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+     
+	 <!-- Deafult Workspace -->     
+     <extension
+           id="WorkspaceDefaultServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/workspaces/default/content"
+              class="org.eclipse.dirigible.runtime.registry.WorkspaceDefaultServlet"
               load-on-startup="true">
         </servlet>
      </extension>
      
      <extension
+           id="WorkspaceSearchDefaultServlet"
+           point="org.eclipse.equinox.http.registry.servlets">
+        <servlet
+              alias="/workspaces/default/search"
+              class="org.eclipse.dirigible.runtime.search.WorkspaceSearchDefaultServlet"
+              load-on-startup="true">
+        </servlet>
+     </extension>
+	 
+     <extension
            id="WorkspacePublishServlet"
            point="org.eclipse.equinox.http.registry.servlets">
         <servlet
-              alias="/publish"
+              alias="/workspaces/default/publish"
               class="org.eclipse.dirigible.runtime.registry.WorkspacePublishServlet"
               load-on-startup="true">
         </servlet>

@@ -5,10 +5,10 @@ package org.eclipse.dirigible.runtime.registry;
  */
 public class RegistryRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private static final String name = "Registry"; //$NON-NLS-1$
-	private static final String description = "Registry Service gives read-only access to the Dirigible public Registry content.";
-	private static final String endpoint = "/registry"; //$NON-NLS-1$
-	private static final String documentation = "http://www.dirigible.io/help/service_registry.html"; //$NON-NLS-1$
+	private final String name = "Registry"; //$NON-NLS-1$
+	private final String description = "Registry Service gives read-only access to the Dirigible public Registry content.";
+	private final String endpoint = "/registry"; //$NON-NLS-1$
+	private final String documentation = "http://www.dirigible.io/help/service_registry.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

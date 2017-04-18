@@ -17,10 +17,10 @@ import org.eclipse.dirigible.runtime.registry.IRuntimeServiceDescriptor;
  */
 public class ListenerLogRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private static final String name = "Job Log"; //$NON-NLS-1$
-	private static final String description = "Job Log Service gives the full log of the processed Jobs";
-	private static final String endpoint = "/job-log"; //$NON-NLS-1$
-	private static final String documentation = "http://www.dirigible.io/help/service_job_log.html"; //$NON-NLS-1$
+	private final String name = "Job Log"; //$NON-NLS-1$
+	private final String description = "Job Log Service gives the full log of the processed Jobs";
+	private final String endpoint = "/job-log"; //$NON-NLS-1$
+	private final String documentation = "http://www.dirigible.io/help/service_job_log.html"; //$NON-NLS-1$
 
 	@Override
 	public String getName() {

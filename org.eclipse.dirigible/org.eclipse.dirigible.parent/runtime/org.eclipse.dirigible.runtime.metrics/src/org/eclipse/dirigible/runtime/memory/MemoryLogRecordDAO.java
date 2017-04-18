@@ -107,9 +107,8 @@ public class MemoryLogRecordDAO {
 			try {
 				stmt.executeQuery(sqlCount);
 			} catch (Exception e) {
-				logger.error("DGB_MEMORY_LOG does not exist?" + e.getMessage(), e);
+				logger.warn("DGB_MEMORY_LOG does not exist?" + e.getMessage());
 				// Create Memory Log Table
-
 				stmt.executeUpdate(sqlCreate);
 			}
 		} finally {

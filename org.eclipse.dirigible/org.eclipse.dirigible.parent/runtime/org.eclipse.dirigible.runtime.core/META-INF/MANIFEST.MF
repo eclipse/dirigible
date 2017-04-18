@@ -52,5 +52,5 @@ Export-Package: org.eclipse.dirigible.runtime,
  org.eclipse.dirigible.runtime.task
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.dirigible.runtime.RuntimeActivator
-Service-Component: OSGi-INF/runtime-registry.xml, OSGi-INF/runtime-repository.xml, OSGi-INF/runtime-operational.xml, OSGi-INF/runtime-workspace.xml, OSGi-INF/runtime-publish.xml, OSGi-INF/runtime-search.xml, OSGi-INF/runtime-searchw.xml
+Service-Component: OSGi-INF/runtime-registry.xml, OSGi-INF/runtime-repository.xml, OSGi-INF/runtime-operational.xml, OSGi-INF/runtime-search.xml
 Bundle-ClassPath: .

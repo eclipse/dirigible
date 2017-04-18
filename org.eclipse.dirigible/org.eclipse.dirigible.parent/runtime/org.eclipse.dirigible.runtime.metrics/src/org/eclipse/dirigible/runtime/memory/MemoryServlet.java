@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.memory;
@@ -26,30 +25,29 @@ import org.eclipse.dirigible.repository.logging.Logger;
  * Servlet implementation class MemoryServlet
  */
 public class MemoryServlet extends HttpServlet {
-	
+
 	private static final long serialVersionUID = 5645919875259516138L;
-	
+
 	private static final Logger logger = Logger.getLogger(MemoryServlet.class);
-	
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public MemoryServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		PrintWriter writer = response.getWriter();
-		
+
 		String paramLog = request.getParameter("log");
-		
+
 		try {
 			if (paramLog != null) {
 				response.setContentType("application/json");

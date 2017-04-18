@@ -159,7 +159,7 @@ public class AccessLogLocationsDAO {
 			try {
 				stmt.executeQuery(sqlCount);
 			} catch (Exception e) {
-				logger.error("DGB_ACCESS_LOG does not exist?" + e.getMessage(), e);
+				logger.warn("DGB_ACCESS_LOG does not exist?" + e.getMessage());
 				// Create Access Log Table
 				String sqlCreate = dbUtils.readScript(connection, SQL_MAP_CREATE_TABLE_LOG_LOCATIONS, AccessLogLocationsDAO.class);
 				stmt.executeUpdate(sqlCreate);

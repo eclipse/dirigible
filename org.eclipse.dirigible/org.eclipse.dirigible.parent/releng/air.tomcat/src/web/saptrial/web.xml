@@ -14,7 +14,7 @@
 		<description>Logging Servlet</description>
 		<display-name>Logging Servlet</display-name>
 		<servlet-name>LoggingServlet</servlet-name>
-		<servlet-class>org.eclipse.dirigible.runtime.logging.LoggingServlet</servlet-class>
+		<servlet-class>org.eclipse.dirigible.air.utils.LoggingServlet</servlet-class>
 		<init-param>
 			<param-name>initLoggingDirectory</param-name>
 			<param-value>/ljs/log</param-value>
@@ -30,7 +30,7 @@
 	<!-- Expires Filter - fix for blinking images in Chrome -->
 	<filter>
 	 <filter-name>ExpiresFilter</filter-name>
-	 <filter-class>org.eclipse.dirigible.ide.bridge.ext.ExpiresFilter</filter-class>
+	 <filter-class>org.eclipse.dirigible.air.utils.ExpiresFilter</filter-class>
 	</filter>
 	
 	<filter-mapping>
@@ -41,7 +41,7 @@
 	<!-- XSS Filter - against XSS attacks -->
 	<filter>
 		<filter-name>XSSFilter</filter-name>
-		<filter-class>org.eclipse.dirigible.ide.bridge.ext.XSSFilter</filter-class>
+		<filter-class>org.eclipse.dirigible.air.utils.XSSFilter</filter-class>
 	</filter>
 	
 	<filter-mapping>

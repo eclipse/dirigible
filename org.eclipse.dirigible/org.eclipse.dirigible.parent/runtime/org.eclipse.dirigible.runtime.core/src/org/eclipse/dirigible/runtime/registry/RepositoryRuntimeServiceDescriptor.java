@@ -5,10 +5,10 @@ package org.eclipse.dirigible.runtime.registry;
  */
 public class RepositoryRuntimeServiceDescriptor implements IRuntimeServiceDescriptor {
 
-	private static final String name = "Repository";
-	private static final String description = "Repository Service gives full access to the Dirigible Repository API.";
-	private static final String endpoint = "/repository";
-	private static final String documentation = "http://www.dirigible.io/help/service_repository.html";
+	private final String name = "Repository";
+	private final String description = "Repository Service gives full access to the Dirigible Repository API.";
+	private final String endpoint = "/repository";
+	private final String documentation = "http://www.dirigible.io/help/service_repository.html";
 
 	@Override
 	public String getName() {

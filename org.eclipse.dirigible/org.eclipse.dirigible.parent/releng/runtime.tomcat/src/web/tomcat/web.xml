@@ -332,14 +332,8 @@
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Registry Services</web-resource-name>
-			<url-pattern>/services/registry/DataStructures/*</url-pattern>
-			<url-pattern>/services/registry/IntegrationServices/*</url-pattern>
-			<url-pattern>/services/registry/ScriptingServices/*</url-pattern>
-			<url-pattern>/services/registry/WebContent/*</url-pattern>
-			<url-pattern>/services/content/DataStructures/*</url-pattern>
-			<url-pattern>/services/content/IntegrationServices/*</url-pattern>
-			<url-pattern>/services/content/ScriptingServices/*</url-pattern>
-			<url-pattern>/services/content/WebContent/*</url-pattern>
+			<url-pattern>/services/registry/*</url-pattern>
+			<url-pattern>/services/content/*</url-pattern>
 			<url-pattern>/services/web-secured/*</url-pattern>
 			<url-pattern>/services/web/content-secured/*</url-pattern>
 			<url-pattern>/services/js-secured/*</url-pattern>
@@ -402,6 +396,7 @@
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>Repository</role-name>
+			<role-name>Operator</role-name>
 		</auth-constraint>
 	</security-constraint>
 	
