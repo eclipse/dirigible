@@ -79,6 +79,7 @@ public class InitParametersInjector implements IInjector {
 	public static final String INIT_PARAM_RUN_ON_OSGI = "osgi"; //$NON-NLS-1$ // true/false
 	public static final String INIT_PARAM_LOCAL_DATABASE_ROOT_FOLDER = "localDatabaseRootFolder"; //$NON-NLS-1$
 	public static final String INIT_PARAM_LOCAL_CMIS_ROOT_FOLDER = "localCmisRootFolder"; //$NON-NLS-1$
+	public static final String INIT_PARAM_DEFAULT_THEME = "defaultTheme"; //$NON-NLS-1$
 
 	// ---
 
