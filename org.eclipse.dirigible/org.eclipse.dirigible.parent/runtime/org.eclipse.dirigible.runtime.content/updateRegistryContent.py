@@ -5,6 +5,7 @@ class RegistryContent:
     def update(self):
         # TODO Traverse recursivly the 'content' folder
         self.updateContent('content/api.json')
+        self.updateContent('content/core.json')
         self.updateContent('content/registry.json')
         self.updateContent('content/misc.json')
         self.updateContent('content/templates/DataStructures.json')

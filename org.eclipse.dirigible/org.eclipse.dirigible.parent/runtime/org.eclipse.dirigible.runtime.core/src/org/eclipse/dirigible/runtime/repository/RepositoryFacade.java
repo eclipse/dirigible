@@ -23,6 +23,7 @@ import org.eclipse.dirigible.repository.api.RepositoryFactory;
 import org.eclipse.dirigible.repository.datasource.DataSourceFacade;
 // import org.eclipse.dirigible.repository.db.DBRepository;
 import org.eclipse.dirigible.repository.datasource.WrappedDataSource;
+import org.eclipse.dirigible.repository.ext.utils.EnvUtils;
 import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
@@ -67,7 +68,7 @@ public class RepositoryFacade {
 		}
 		return instance;
 	}
-	
+
 	public IRepository getRepository() throws RepositoryException {
 		return getRepository(null);
 	}
@@ -88,13 +89,13 @@ public class RepositoryFacade {
 			parameters.put(PARAM_DATASOURCE, defaultDataSource);
 			parameters.put(PARAM_USER, user);
 			parameters.put(PARAM_RECREATE, Boolean.FALSE);
-			parameters.put(PARAM_GIT_TARGET_FOLDER, System.getProperty(PARAM_GIT_TARGET_FOLDER));
-			parameters.put(PARAM_GIT_LOCATION, System.getProperty(PARAM_GIT_LOCATION));
-			parameters.put(PARAM_GIT_USER, System.getProperty(PARAM_GIT_USER));
-			parameters.put(PARAM_GIT_PASSWORD, System.getProperty(PARAM_GIT_PASSWORD));
-			parameters.put(PARAM_GIT_BRANCH, System.getProperty(PARAM_GIT_BRANCH));
-			parameters.put(PARAM_LOCAL_ROOT, System.getProperty(PARAM_LOCAL_ROOT));
-			parameters.put(PARAM_LOCAL_ABSOLUTE, System.getProperty(PARAM_LOCAL_ABSOLUTE));
+			parameters.put(PARAM_GIT_TARGET_FOLDER, EnvUtils.getEnv(PARAM_GIT_TARGET_FOLDER));
+			parameters.put(PARAM_GIT_LOCATION, EnvUtils.getEnv(PARAM_GIT_LOCATION));
+			parameters.put(PARAM_GIT_USER, EnvUtils.getEnv(PARAM_GIT_USER));
+			parameters.put(PARAM_GIT_PASSWORD, EnvUtils.getEnv(PARAM_GIT_PASSWORD));
+			parameters.put(PARAM_GIT_BRANCH, EnvUtils.getEnv(PARAM_GIT_BRANCH));
+			parameters.put(PARAM_LOCAL_ROOT, EnvUtils.getEnv(PARAM_LOCAL_ROOT));
+			parameters.put(PARAM_LOCAL_ABSOLUTE, EnvUtils.getEnv(PARAM_LOCAL_ABSOLUTE));
 			repository = RepositoryFactory.createRepository(parameters);
 			saveRepositoryInstance(request, repository);
 		} catch (Exception e) {

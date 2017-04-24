@@ -1,4 +1,3 @@
-
 [{
 	"path": "target/qunit",
 	"repository": "https://github.com/dirigiblelabs/qunit.git",

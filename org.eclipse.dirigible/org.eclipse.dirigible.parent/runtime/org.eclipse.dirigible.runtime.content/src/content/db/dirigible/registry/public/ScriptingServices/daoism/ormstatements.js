@@ -116,8 +116,16 @@ ORMStatements.prototype.list= function(settings){
         	var def = propertyDefinitions[i];
 	    	if(settings.$filter && settings.$filter.indexOf(def.name)>-1)
 	    		stmnt.where(def.dbName + ' LIKE ?', [def]);
-	   		else
-	   			stmnt.where(def.dbName + '=?', [def]);
+	   		else{
+	   			var val = settings[def.name];
+		   			if(val.indexOf && val.indexOf('>')>-1){
+		   				stmnt.where(def.dbName + ' > ?', [def]);
+		   			} else if(val.indexOf && val.indexOf('<')>-1){
+		   				stmnt.where(def.dbName + ' < ?', [def]);
+		   			} else{
+		   				stmnt.where(def.dbName + '=?', [def]);
+	   				}
+   			}
         }
     }
 
@@ -138,6 +146,8 @@ ORMStatements.prototype.list= function(settings){
     }
     return stmnt;
 };
+
+exports.ORMStatements = ORMStatements;
 
 exports.forDatasource = function(orm, ds){
 	var conn, databaseName;

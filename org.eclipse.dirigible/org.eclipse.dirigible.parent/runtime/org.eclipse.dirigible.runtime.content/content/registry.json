@@ -1,4 +1,3 @@
-
 [{
 	"path": "target/registry",
 	"repository": "https://github.com/dirigiblelabs/registry.git",

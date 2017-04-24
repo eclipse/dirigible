@@ -82,7 +82,7 @@
 	<!-- Security -->
 	
 	<listener>
-		<listener-class>org.eclipse.dirigible.init.InitializationListener</listener-class>
+		<listener-class>org.eclipse.dirigible.air.init.InitializationListener</listener-class>
 	</listener>
 
 	<login-config>

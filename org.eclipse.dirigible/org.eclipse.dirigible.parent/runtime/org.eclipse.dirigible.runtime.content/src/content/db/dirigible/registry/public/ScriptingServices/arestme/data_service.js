@@ -37,6 +37,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 	    notify.call(self, 'onEntityInsert', entity);
 	    try{
 			var ids = dao.insert(entity, context.queryParams.$cascaded || true);
+			notify.call(self, 'onAfterEntityInsert', entity, ids);
 			if(ids && ids.constructor!== Array)	{
 				io.response.setHeader('Location', $.getRequest().getRequestURL().toString() + '/' + ids);
 				io.response.setStatus(io.response.NO_CONTENT);

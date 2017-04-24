@@ -37,6 +37,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.eclipse.dirigible.ide.common.CommonIDEParameters;
+import org.eclipse.dirigible.repository.ext.utils.EnvUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class ProxyUtils {
@@ -93,8 +94,8 @@ public class ProxyUtils {
 			httpClient = new DefaultHttpClient();
 		}
 
-		String httpProxyHost = System.getProperty(HTTP_PROXY_HOST);
-		String httpProxyPort = System.getProperty(HTTP_PROXY_PORT);
+		String httpProxyHost = EnvUtils.getEnv(HTTP_PROXY_HOST);
+		String httpProxyPort = EnvUtils.getEnv(HTTP_PROXY_PORT);
 
 		if ((httpProxyHost != null) && (httpProxyPort != null)) {
 			HttpHost httpProxy = new HttpHost(httpProxyHost, Integer.parseInt(httpProxyPort));

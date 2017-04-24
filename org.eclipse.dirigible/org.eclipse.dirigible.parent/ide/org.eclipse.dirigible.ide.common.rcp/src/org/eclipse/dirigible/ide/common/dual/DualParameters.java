@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.ext.utils.EnvUtils;
 
 /**
  * This class is supposed to be used in RCP environment only
@@ -39,17 +40,17 @@ public class DualParameters {
 	private static final Map<String, Object> SESSION_MOCK = Collections.synchronizedMap(new HashMap<String, Object>());
 
 	public static void initSystemParameters() {
-		String parameterHC_HOST = System.getProperty(HC_HOST);
+		String parameterHC_HOST = EnvUtils.getEnv(HC_HOST);
 		SESSION_MOCK.put(HC_HOST, parameterHC_HOST);
-		String parameterHC_REGION = System.getProperty(HC_REGION);
+		String parameterHC_REGION = EnvUtils.getEnv(HC_REGION);
 		SESSION_MOCK.put(HC_REGION, parameterHC_REGION);
-		String parameterHC_ACCOUNT = System.getProperty(HC_ACCOUNT);
+		String parameterHC_ACCOUNT = EnvUtils.getEnv(HC_ACCOUNT);
 		SESSION_MOCK.put(HC_ACCOUNT, parameterHC_ACCOUNT);
-		String parameterHC_APPLICATION = System.getProperty(HC_APPLICATION);
+		String parameterHC_APPLICATION = EnvUtils.getEnv(HC_APPLICATION);
 		SESSION_MOCK.put(HC_APPLICATION, parameterHC_APPLICATION);
-		String parameterHC_APPLICATION_URL = System.getProperty(HC_APPLICATION_URL);
+		String parameterHC_APPLICATION_URL = EnvUtils.getEnv(HC_APPLICATION_URL);
 		SESSION_MOCK.put(HC_APPLICATION_URL, parameterHC_APPLICATION_URL);
-		String parameterHC_LOCAL_HTTP_PORT = System.getProperty(HC_LOCAL_HTTP_PORT);
+		String parameterHC_LOCAL_HTTP_PORT = EnvUtils.getEnv(HC_LOCAL_HTTP_PORT);
 		SESSION_MOCK.put(HC_LOCAL_HTTP_PORT, parameterHC_LOCAL_HTTP_PORT);
 	}
 

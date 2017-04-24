@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui;resolution:=optional,
  org.eclipse.dirigible.repository.api,
  org.eclipse.dirigible.ide.common.rap;resolution:=optional,
  org.eclipse.dirigible.ide.common.rcp;resolution:=optional,
- org.eclipse.dirigible.repository.datasource
+ org.eclipse.dirigible.repository.datasource,
+ org.eclipse.dirigible.repository.ext
 Import-Package: javax.servlet,
  javax.servlet.http,
  org.eclipse.core.runtime,

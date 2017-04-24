@@ -25,6 +25,7 @@ import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.ext.db.AbstractDataUpdater;
+import org.eclipse.dirigible.repository.ext.utils.EnvUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.runtime.mock.LocalHttpServletRequest;
 import org.eclipse.dirigible.runtime.mock.LocalHttpServletResponse;
@@ -64,7 +65,7 @@ public class TestExecutionUpdater extends AbstractDataUpdater {
 	@Override
 	public void executeUpdate(List<String> knownFiles, HttpServletRequest request, List<String> errors) throws Exception {
 
-		String param = System.getProperty(ICommonConstants.INIT_PARAM_RUN_TESTS_ON_INIT);
+		String param = EnvUtils.getEnv(ICommonConstants.INIT_PARAM_RUN_TESTS_ON_INIT);
 		if (param != null) {
 			if (!Boolean.parseBoolean(param)) {
 				// param is present, but set to false -> do not start tests execution

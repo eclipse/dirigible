@@ -618,8 +618,15 @@ DAO.prototype.list = function(settings) {
 			return true;
 		});
 	}
-	
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
+	
+	//cleanup filtering value expressions if any
+	for(var key in settings){
+		var s = settings[key];
+		if(new java.lang.String(''+s).startsWith('>') || new java.lang.String(''+s).startsWith('<'))
+			settings[key] = s.substring(1,s.length).trim();
+	}
+	
     var connection = this.datasource.getConnection();
     try {
         var entities = [];

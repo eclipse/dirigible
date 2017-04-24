@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.repository.ext.utils.EnvUtils;
+
 public class LoggingServlet extends HttpServlet {
 
 	private static final String B_CLOSE = "</b>";
@@ -63,7 +65,7 @@ public class LoggingServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String initLoggingDirectory = System.getProperty(INIT_LOGGING_DIRECTORY);
+		String initLoggingDirectory = EnvUtils.getEnv(INIT_LOGGING_DIRECTORY);
 		if (initLoggingDirectory == null) {
 			initLoggingDirectory = getInitParameter(INIT_LOGGING_DIRECTORY);
 		}

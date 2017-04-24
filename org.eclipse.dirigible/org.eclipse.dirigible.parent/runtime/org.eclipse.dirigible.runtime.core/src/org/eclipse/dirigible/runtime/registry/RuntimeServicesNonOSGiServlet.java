@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.repository.logging.Logger;
-import org.osgi.framework.InvalidSyntaxException;
 
 import com.google.gson.Gson;
 
@@ -33,7 +32,7 @@ public class RuntimeServicesNonOSGiServlet extends HttpServlet {
 			synchronized (RuntimeServicesNonOSGiServlet.class) {
 				try {
 					registerRuntimeServices();
-				} catch (InvalidSyntaxException e) {
+				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 				}
@@ -51,7 +50,7 @@ public class RuntimeServicesNonOSGiServlet extends HttpServlet {
 		resp.getWriter().close();
 	}
 
-	private void registerRuntimeServices() throws InvalidSyntaxException {
+	private void registerRuntimeServices() throws Exception {
 
 		for (String serviceDescriptors : SERVICE_DESCRIPTORS) {
 			IRuntimeServiceDescriptor runtimeServiceDescriptor;

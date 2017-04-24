@@ -53,17 +53,17 @@ public class DualParameters {
 
 	public static void initSystemParameters() {
 		HttpServletRequest req = RWT.getRequest();
-		String parameterHC_HOST = System.getProperty(HC_HOST);
+		String parameterHC_HOST = EnvUtils.getEnv(HC_HOST);
 		req.getSession().setAttribute(HC_HOST, parameterHC_HOST);
-		String parameterHC_REGION = System.getProperty(HC_REGION);
+		String parameterHC_REGION = EnvUtils.getEnv(HC_REGION);
 		req.getSession().setAttribute(HC_REGION, parameterHC_REGION);
-		String parameterHC_ACCOUNT = System.getProperty(HC_ACCOUNT);
+		String parameterHC_ACCOUNT = EnvUtils.getEnv(HC_ACCOUNT);
 		req.getSession().setAttribute(HC_ACCOUNT, parameterHC_ACCOUNT);
-		String parameterHC_APPLICATION = System.getProperty(HC_APPLICATION);
+		String parameterHC_APPLICATION = EnvUtils.getEnv(HC_APPLICATION);
 		req.getSession().setAttribute(HC_APPLICATION, parameterHC_APPLICATION);
-		String parameterHC_APPLICATION_URL = System.getProperty(HC_APPLICATION_URL);
+		String parameterHC_APPLICATION_URL = EnvUtils.getEnv(HC_APPLICATION_URL);
 		req.getSession().setAttribute(HC_APPLICATION_URL, parameterHC_APPLICATION_URL);
-		String parameterHC_LOCAL_HTTP_PORT = System.getProperty(HC_LOCAL_HTTP_PORT);
+		String parameterHC_LOCAL_HTTP_PORT = EnvUtils.getEnv(HC_LOCAL_HTTP_PORT);
 		req.getSession().setAttribute(HC_LOCAL_HTTP_PORT, parameterHC_LOCAL_HTTP_PORT);
 	}
 

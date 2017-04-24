@@ -10,7 +10,8 @@ Require-Bundle: org.apache.httpcomponents.httpclient,
  org.apache.httpcomponents.httpcore,
  org.eclipse.dirigible.repository.logging,
  org.eclipse.dirigible.repository.api,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.dirigible.repository.ext
 Import-Package: javax.servlet,
  javax.servlet.http,
  org.eclipse.core.runtime,

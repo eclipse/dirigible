@@ -84,7 +84,7 @@
 						ng-model="selectedEntry.username"
 						ng-readonly="operation == 'show'" required="required">
 					<div>
-						<select class="form-control" ng-model="selectedEntry.username" ng-options="option.user_username as option.user_username for option in users" ng-disabled="operation == 'show'" required="required"></select>	
+						<select class="form-control" ng-model="selectedEntry.username" ng-options="option.username as option.username for option in users" ng-disabled="operation == 'show'" required="required"></select>	
 					</div>
 				  </div>
 				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
@@ -93,7 +93,7 @@
 						ng-model="selectedEntry.rolename"
 						ng-readonly="operation == 'show'" required="required">
 					<div>
-						<select class="form-control" ng-model="selectedEntry.rolename" ng-options="option.role_rolename as option.role_rolename for option in roles" ng-disabled="operation == 'show'" required="required"></select>	
+						<select class="form-control" ng-model="selectedEntry.rolename" ng-options="option.rolename as option.rolename for option in roles" ng-disabled="operation == 'show'" required="required"></select>	
 					</div>
 				  </div>
 				  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">

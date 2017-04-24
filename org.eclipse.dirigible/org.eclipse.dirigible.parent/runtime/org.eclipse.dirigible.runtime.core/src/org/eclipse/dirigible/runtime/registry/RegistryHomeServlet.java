@@ -23,6 +23,7 @@ import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.ext.utils.EnvUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
@@ -57,7 +58,7 @@ public class RegistryHomeServlet extends AbstractRegistryServlet {
 				logger.error(e.getMessage(), e);
 			}
 
-			String homeUrl = System.getProperty(PARAM_HOME_URL);
+			String homeUrl = EnvUtils.getEnv(PARAM_HOME_URL);
 			if ((homeUrl != null) && !ICommonConstants.EMPTY_STRING.equals(homeUrl.trim())) {
 				sendData(out, homeUrl.getBytes(StandardCharsets.UTF_8));
 				return;

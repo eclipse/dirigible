@@ -20,6 +20,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
@@ -33,16 +34,11 @@ import org.eclipse.dirigible.repository.logging.Logger;
  */
 public class DataSourceFacade {
 
-	// public static final String DATABASE_PRODUCT_NAME = "DATABASE_PRODUCT_NAME"; //$NON-NLS-1$
-	// public static final String DATABASE_PRODUCT_VERSION = "DATABASE_PRODUCT_VERSION"; //$NON-NLS-1$
-	// public static final String DATABASE_MINOR_VERSION = "DATABASE_MINOR_VERSION"; //$NON-NLS-1$
-	// public static final String DATABASE_MAJOR_VERSION = "DATABASE_MAJOR_VERSION"; //$NON-NLS-1$
-	// public static final String DATABASE_DRIVER_NAME = "DATABASE_DRIVER_NAME"; //$NON-NLS-1$
-	// public static final String DATABASE_DRIVER_MINOR_VERSION = "DATABASE_DRIVER_MINOR_VERSION"; //$NON-NLS-1$
-	// public static final String DATABASE_DRIVER_MAJOR_VERSION = "DATABASE_DRIVER_MAJOR_VERSION"; //$NON-NLS-1$
-	// public static final String DATABASE_CONNECTION_CLASS_NAME = "DATABASE_CONNECTION_CLASS_NAME"; //$NON-NLS-1$
+	private static final Logger logger = Logger.getLogger(DataSourceFacade.class.getCanonicalName());
 
-	private static final String EMPTY = "";
+	private static final int DEFAULT_MAX_WAIT = 10000;
+	private static final int DEFAULT_MAX_IDLE = 30;
+	private static final int DEFAULT_MAX_ACTIVE = 100;
 
 	private static final String EMBEDDED_DATA_SOURCE_IS_USED = "Embedded DataSource is used! In case you intentionally use local datasource, ignore this error."; //$NON-NLS-1$
 
@@ -73,7 +69,14 @@ public class DataSourceFacade {
 	public static final String PARAM_DB_TYPE_JNDI = "jndi";
 	public static final String PARAM_DB_TYPE_DIRECT = "direct";
 
-	public static final Logger logger = Logger.getLogger(DataSourceFacade.class.getCanonicalName());
+	private static final String DEFAULT_DATASOURCE_URL = "dataSourceDefaultUrl";
+	private static final String DEFAULT_DATASOURCE_DRIVER = "dataSourceDefaultDriver";
+	private static final String DEFAULT_DATASOURCE_USER = "dataSourceDefaultUser";
+	private static final String DEFAULT_DATASOURCE_PASSWORD = "dataSourceDefaultPassword";
+	private static final String DEFAULT_DATASOURCE_AUTO_COMMIT = "dataSourceDefaultAutoCommit";
+	private static final String DEFAULT_DATASOURCE_MAX_ACTIVE = "dataSourceDefaultMaxActive";
+	private static final String DEFAULT_DATASOURCE_MAX_IDLE = "dataSourceDefaultMaxIdle";
+	private static final String DEFAULT_DATASOURCE_MAX_WAIT = "dataSourceDefaultMaxWait";
 
 	private static DataSource localDataSource;
 
@@ -96,7 +99,7 @@ public class DataSourceFacade {
 
 	public DataSource getDataSource(HttpServletRequest request) {
 		if (dataSource == null) {
-			logger.debug("Lookup Datasource...");
+			logger.debug("Lookup or create a Datasource...");
 			if (request == null) {
 				logger.debug("No request - try from Env...");
 				dataSource = getFromEnv();
@@ -107,19 +110,62 @@ public class DataSourceFacade {
 
 			if (dataSource == null) {
 				logger.debug("Try from Context...");
-				String jndiName = System.getProperty(JNDI_DEFAULT_DATASOURCE);
+				String jndiName = getEnv(JNDI_DEFAULT_DATASOURCE);
 				dataSource = (WrappedDataSource) getFromContext(jndiName, true);
+				if (dataSource != null) {
+					logger.info("Datasource lookup from the context done.");
+				}
+			}
+
+			if (dataSource == null) {
+				logger.debug("Try Custom via Env...");
+				dataSource = createFromEnv();
+				if (dataSource != null) {
+					logger.info("Datasource creation from the env vars done.");
+				}
 			}
 
 			if (dataSource == null) {
 				try {
 					dataSource = createLocal();
-					logger.warn("Created Local DataSource!");
+					logger.warn("Local DataSource creation done.");
 				} catch (IOException e) {
 					logger.error(e.getMessage(), e);
 				}
-			} else {
-				logger.debug("Lookup done.");
+			}
+		}
+		return dataSource;
+	}
+
+	protected WrappedDataSource createFromEnv() {
+		String url = getEnv(DEFAULT_DATASOURCE_URL);
+		String driver = getEnv(DEFAULT_DATASOURCE_DRIVER);
+		String user = getEnv(DEFAULT_DATASOURCE_USER);
+		String password = getEnv(DEFAULT_DATASOURCE_PASSWORD);
+		String defaultAutoCommit = getEnv(DEFAULT_DATASOURCE_AUTO_COMMIT);
+		String maxActive = getEnv(DEFAULT_DATASOURCE_MAX_ACTIVE);
+		String maxIdle = getEnv(DEFAULT_DATASOURCE_MAX_IDLE);
+		String maxWait = getEnv(DEFAULT_DATASOURCE_MAX_WAIT);
+		if ((url != null) && (driver != null)) {
+			dataSource = createCustomDataSource(url, driver, user, password, defaultAutoCommit, maxActive, maxIdle, maxWait);
+		} else {
+			return null;
+		}
+
+		InitialContext context = (InitialContext) System.getProperties().get(ICommonConstants.INITIAL_CONTEXT);
+		if (context == null) {
+			try {
+				context = new InitialContext();
+			} catch (NamingException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		if (context != null) {
+			String defaultDataSourceName = getEnv(ICommonConstants.INIT_PARAM_JNDI_DEFAULT_DATASOURCE);
+			try {
+				context.bind(defaultDataSourceName, dataSource);
+			} catch (NamingException e) {
+				logger.error(e.getMessage(), e);
 			}
 		}
 		return dataSource;
@@ -156,9 +202,9 @@ public class DataSourceFacade {
 
 	private DataSource getFromContext(String jndiName, boolean wrap) {
 
-		String defaultDataSourceType = System.getProperty(DEFAULT_DATASOURCE_TYPE);
+		String defaultDataSourceType = getEnv(DEFAULT_DATASOURCE_TYPE);
 		if (!DEFAULT_DATASOURCE_TYPE_JNDI.equalsIgnoreCase(defaultDataSourceType)) {
-			logger.warn("Default DataSource Type Parameter is not 'jndi', hence the local type will be used");
+			logger.warn("Default DataSource Type Parameter is not 'jndi', hence the custom or local type will be used");
 			return null;
 		}
 
@@ -295,18 +341,24 @@ public class DataSourceFacade {
 		String maxIdle = properties.getProperty(DataSourceFacade.PARAM_DB_AUTO_MAX_IDLE);
 		String maxWait = properties.getProperty(DataSourceFacade.PARAM_DB_AUTO_MAX_WAIT);
 
+		dataSource = createCustomDataSource(url, driver, user, password, defaultAutoCommit, maxActive, maxIdle, maxWait);
+
+		return dataSource;
+
+	}
+
+	protected WrappedDataSource createCustomDataSource(String url, String driver, String user, String password, String defaultAutoCommit,
+			String maxActive, String maxIdle, String maxWait) {
 		BasicDataSource basicDataSource = new BasicDataSource();
 		basicDataSource.setDriverClassName(driver);
 		basicDataSource.setUrl(url);
 		basicDataSource.setUsername(user);
 		basicDataSource.setPassword(password);
 		basicDataSource.setDefaultAutoCommit(Boolean.parseBoolean(defaultAutoCommit));
-		basicDataSource.setMaxActive(maxActive != null ? Integer.parseInt(maxActive) : 100);
-		basicDataSource.setMaxIdle(maxIdle != null ? Integer.parseInt(maxIdle) : 30);
-		basicDataSource.setMaxWait(maxWait != null ? Integer.parseInt(maxWait) : 10000);
-
-		return basicDataSource;
-
+		basicDataSource.setMaxActive(maxActive != null ? Integer.parseInt(maxActive) : DEFAULT_MAX_ACTIVE);
+		basicDataSource.setMaxIdle(maxIdle != null ? Integer.parseInt(maxIdle) : DEFAULT_MAX_IDLE);
+		basicDataSource.setMaxWait(maxWait != null ? Integer.parseInt(maxWait) : DEFAULT_MAX_WAIT);
+		return new WrappedDataSource(basicDataSource);
 	}
 
 	/**
@@ -336,6 +388,14 @@ public class DataSourceFacade {
 
 	public Properties getNamedDataSourceConfig(String dsName) {
 		return DataSourceFacade.namedDataSources.get(dsName);
+	}
+
+	public static String getEnv(String name) {
+		String var = System.getProperty(name);
+		if (var == null) {
+			var = System.getenv(name);
+		}
+		return var;
 	}
 
 }
