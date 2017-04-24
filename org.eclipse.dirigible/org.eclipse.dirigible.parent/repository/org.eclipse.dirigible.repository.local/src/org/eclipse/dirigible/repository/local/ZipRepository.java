@@ -11,17 +11,18 @@
 package org.eclipse.dirigible.repository.local;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Enumeration;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 
 public class ZipRepository extends FileSystemRepository {
 
@@ -33,9 +34,9 @@ public class ZipRepository extends FileSystemRepository {
 		if (zipFile.exists()) {
 			try {
 				Path rootFolder = Files.createTempDirectory("zip_repository");
-				unpackZip(zip, rootFolder.toString());
+				unpackZip(new FileInputStream(zip), rootFolder.toString());
 				String zipFileName = zipFile.getName();
-				zipRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf("."));
+				zipRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf(ICommonConstants.DOT));
 				createRepository(user, rootFolder.toString(), true);
 			} catch (IOException e) {
 				throw new LocalBaseException(e);
@@ -45,37 +46,39 @@ public class ZipRepository extends FileSystemRepository {
 		}
 	}
 
-	private void unpackZip(String zip, String folder) throws IOException {
-		ZipFile zipFile = new ZipFile(zip);
+	protected void unpackZip(InputStream zip, String folder) throws IOException {
+		ZipInputStream zipInputStream = new ZipInputStream(zip);
 		try {
-			Enumeration<? extends ZipEntry> entries = zipFile.entries();
-			while (entries.hasMoreElements()) {
-				ZipEntry entry = entries.nextElement();
+			ZipEntry entry;
+			while ((entry = zipInputStream.getNextEntry()) != null) {
 				File entryDestination = new File(folder, entry.getName());
 				if (entry.isDirectory()) {
 					entryDestination.mkdirs();
 				} else {
 					entryDestination.getParentFile().mkdirs();
-					InputStream in = zipFile.getInputStream(entry);
 					OutputStream out = new FileOutputStream(entryDestination);
-					IOUtils.copy(in, out);
-					IOUtils.closeQuietly(in);
+					IOUtils.copy(zipInputStream, out);
 					out.close();
 				}
 			}
 		} finally {
-			zipFile.close();
+			zipInputStream.close();
 		}
 	}
 
 	// disable usage
-	private ZipRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
+	protected ZipRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
 		super(user, rootFolder, absolute);
 	}
 
 	// disable usage
-	private ZipRepository(String user) throws LocalBaseException {
+	protected ZipRepository(String user) throws LocalBaseException {
 		super(user);
+	}
+
+	// disable usage
+	protected ZipRepository() throws LocalBaseException {
+		super();
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -44,7 +45,7 @@ import org.eclipse.dirigible.repository.zip.ZipImporter;
  */
 public class FileSystemRepository implements IRepository {
 
-	private static final String CURRENT_DIR = ".";
+	private static final String CURRENT_DIR = ICommonConstants.DOT;
 	private static final String DIRIGIBLE_LOCAL = "dirigible_local";
 	public static final String PATH_SEGMENT_ROOT = "root";
 	public static final String PATH_SEGMENT_VERSIONS = "versions";

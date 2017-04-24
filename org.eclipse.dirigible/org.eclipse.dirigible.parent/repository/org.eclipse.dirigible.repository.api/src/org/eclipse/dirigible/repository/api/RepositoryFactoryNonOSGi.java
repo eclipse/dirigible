@@ -36,6 +36,7 @@ class RepositoryFactoryNonOSGi {
 	static String filesystemMasterRepositoryProviderClass = "org.eclipse.dirigible.repository.local.FileSystemMasterRepositoryProvider";
 	static String gitMasterRepositoryProviderClass = "org.eclipse.dirigible.repository.git.GitMasterRepositoryProvider";
 	static String zipMasterRepositoryProviderClass = "org.eclipse.dirigible.repository.local.ZipMasterRepositoryProvider";
+	static String jarMasterRepositoryProviderClass = "org.eclipse.dirigible.repository.local.JarMasterRepositoryProvider";
 
 	static {
 		repositoryProviders.add(createRepositoryProvider(localRepositoryProviderClass));
@@ -45,6 +46,7 @@ class RepositoryFactoryNonOSGi {
 		masterRepositoryProviders.add(createMasterRepositoryProvider(filesystemMasterRepositoryProviderClass));
 		masterRepositoryProviders.add(createMasterRepositoryProvider(gitMasterRepositoryProviderClass));
 		masterRepositoryProviders.add(createMasterRepositoryProvider(zipMasterRepositoryProviderClass));
+		masterRepositoryProviders.add(createMasterRepositoryProvider(jarMasterRepositoryProviderClass));
 	}
 
 	/**
