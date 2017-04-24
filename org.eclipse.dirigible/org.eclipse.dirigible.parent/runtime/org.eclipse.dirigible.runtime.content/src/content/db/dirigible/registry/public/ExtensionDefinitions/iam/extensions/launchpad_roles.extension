@@ -1,0 +1,5 @@
+{
+  "extension":"/iam/extension/roles",
+  "extension-point":"/iam/extension_point/launchpad",
+  "description":"Roles extension for the Launchpad extension point"
+}

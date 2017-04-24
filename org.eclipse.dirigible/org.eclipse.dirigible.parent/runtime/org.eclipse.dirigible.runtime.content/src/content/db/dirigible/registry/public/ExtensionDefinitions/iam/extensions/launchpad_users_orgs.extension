@@ -1,0 +1,5 @@
+{
+  "extension":"/iam/extension/users_orgs",
+  "extension-point":"/iam/extension_point/launchpad",
+  "description":"Users extension for the Launchpad extension point"
+}
