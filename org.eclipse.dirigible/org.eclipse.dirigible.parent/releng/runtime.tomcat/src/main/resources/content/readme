@@ -1,0 +1,2 @@
+In the OSGi environment put the zip file with the content under this path - '/content' when using the JarMasterRepository.
+In the non-OSGi environment it should work under any package.
