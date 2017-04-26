@@ -14,7 +14,7 @@ zip -r ../../../content.zip *
 
 ### zip minimal content
 rm ../../../content-min.zip
-zip -r ../../../content-min.zip dirigible/registry/public
+zip -r ../../../content-min.zip dirigible/registry/public dirigible/registry/conf
 
 ####### Copy content.zip files
 
