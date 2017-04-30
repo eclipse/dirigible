@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.ext.fs.FileSystemUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class WikiProcessor {
@@ -113,7 +114,8 @@ public class WikiProcessor {
 			while ((line = reader.readLine()) != null) {
 				IResource wikiResource = entity.getRepository().getResource(entity.getParent().getPath() + IRepository.SEPARATOR + line);
 				if (wikiResource.exists()) {
-					outputStream.write(wikiToHtml(wikiResource.getContent(), wikiResource, WikiUtils.WIKI_FORMAT_CONFLUENCE));
+					outputStream.write(wikiToHtml(wikiResource.getContent(), wikiResource,
+							WikiUtils.getLanguageByExtension(FileSystemUtils.getExtension(line))));
 				} else {
 					logger.error(String.format("Error while render batch of wiki pages. Resource %s does not exist", wikiResource.getPath())); //$NON-NLS-1$
 				}
