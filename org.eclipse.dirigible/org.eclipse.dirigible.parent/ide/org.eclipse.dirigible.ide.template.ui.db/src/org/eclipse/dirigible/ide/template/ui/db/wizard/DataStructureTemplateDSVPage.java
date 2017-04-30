@@ -75,20 +75,6 @@ public class DataStructureTemplateDSVPage extends WizardPage {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				// int selectionIndex = typeViewer.getTable().getSelectionIndex();
-				// TableName[] tables = (TableName[]) typeViewer.getInput();
-				// if (selectionIndex >= 0) {
-				//
-				// final String selectedTable = tables[selectionIndex].getName();
-				// model.setTableName(selectedTable);
-				//
-				// DataFinder dataFinder = new DataFinder();
-				// dataFinder.setTableName(selectedTable);
-				// dataFinder.getTableData();
-				//
-				// model.setDsvSampleRows(generateDsvSamplesRows(dataFinder.getTableColumns()));
-				// }
-				//
 
 				if ((typeViewer.getTable().getSelection() != null) && (typeViewer.getTable().getSelection().length > 0)) {
 					TableName selectedTableName = (TableName) typeViewer.getTable().getSelection()[0].getData();

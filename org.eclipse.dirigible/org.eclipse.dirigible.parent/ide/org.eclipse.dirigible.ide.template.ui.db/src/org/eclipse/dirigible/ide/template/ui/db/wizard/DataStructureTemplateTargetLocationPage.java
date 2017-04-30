@@ -46,15 +46,17 @@ public class DataStructureTemplateTargetLocationPage extends TemplateTargetLocat
 	@Override
 	protected String getDefaultFileName(String preset) {
 		String templateExt = model.getTemplateExtension();
-		String defaultName = null;
+		String defaultName = "noname.txt";
 		if (templateExt.equals(DataStructureTemplateWizard.EXT_TABLE)) {
 			defaultName = (preset == null) ? TABLE_NAME_TABLE
 					: CommonUtils.getFileNameNoExtension(preset) + "." + DataStructureTemplateWizard.EXT_TABLE;
 		} else if (templateExt.equals(DataStructureTemplateWizard.EXT_VIEW)) {
 			defaultName = (preset == null) ? VIEW_NAME_VIEW : CommonUtils.getFileNameNoExtension(preset) + "." + DataStructureTemplateWizard.EXT_VIEW;
-		} else if (templateExt.equals(DataStructureTemplateWizard.EXT_DSV)) {
+		} else if (templateExt.equals(DataStructureTemplateWizard.EXT_DSV) || templateExt.equals(DataStructureTemplateWizard.EXT_APPEND)
+				|| templateExt.equals(DataStructureTemplateWizard.EXT_DELETE) || templateExt.equals(DataStructureTemplateWizard.EXT_REPLACE)
+				|| templateExt.equals(DataStructureTemplateWizard.EXT_UPDATE)) {
 			String tableName = ((DataStructureTemplateModel) model).getTableName();
-			defaultName = tableName + "." + DataStructureTemplateWizard.EXT_DSV;
+			defaultName = tableName + "." + templateExt;
 		}
 		return defaultName;
 	}

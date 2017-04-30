@@ -20,6 +20,7 @@ public interface ICommonConstants {
 	public static final String SEPARATOR = "/"; //$NON-NLS-1$
 	public static final String DEBUG_SEPARATOR = ":"; //$NON-NLS-1$
 	public static final String DOT = "."; //$NON-NLS-1$
+	public static final String DATA_DELIMETER = "|";
 
 	public static final String SANDBOX = "sandbox"; //$NON-NLS-1$
 	public static final String REGISTRY = "registry"; //$NON-NLS-1$

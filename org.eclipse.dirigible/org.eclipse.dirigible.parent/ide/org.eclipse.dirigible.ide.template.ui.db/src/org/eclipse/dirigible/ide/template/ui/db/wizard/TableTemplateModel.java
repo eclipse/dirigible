@@ -69,8 +69,9 @@ public class TableTemplateModel extends GenerationModel {
 			}
 
 			// check the file name against the existing table names
-			if ((isTableExists(getFileNameNoExtension().toLowerCase()) && !(getFileName().endsWith(".dsv")))
-					|| (isTableExists(getFileNameNoExtension().toUpperCase()) && !(getFileName().endsWith(".dsv")))) {
+			if ((isTableExists(getFileNameNoExtension().toLowerCase()) && (getFileName().endsWith(".table") || getFileName().endsWith(".view")))
+					|| (isTableExists(getFileNameNoExtension().toUpperCase())
+							&& (getFileName().endsWith(".table") || getFileName().endsWith(".view")))) {
 				return ValidationStatus.createError(TABLE_OR_VIEW_WITH_THE_SAME_NAME_ALREADY_EXISTS);
 			}
 

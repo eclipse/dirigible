@@ -48,7 +48,9 @@ public class DBSequenceUtils {
 		Connection connection = dataSource.getConnection();
 		try {
 			checkSequenceTable(connection);
-			insertSequence(connection, sequenceName, start);
+			if (!existSequence(sequenceName)) {
+				insertSequence(connection, sequenceName, start);
+			}
 			return 0;
 		} finally {
 			if (connection != null) {
@@ -205,7 +207,7 @@ public class DBSequenceUtils {
 			ResultSet resultSet = null;
 			try {
 				resultSet = preparedStatement.executeQuery();
-				while (resultSet.next()) {
+				if (resultSet.next()) {
 					return true;
 				}
 			} finally {

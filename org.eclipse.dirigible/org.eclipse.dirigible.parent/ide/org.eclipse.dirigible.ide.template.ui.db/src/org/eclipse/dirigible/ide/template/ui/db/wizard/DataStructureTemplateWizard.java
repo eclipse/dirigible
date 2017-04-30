@@ -20,6 +20,10 @@ import org.eclipse.jface.wizard.IWizardPage;
 public class DataStructureTemplateWizard extends TemplateWizard {
 
 	public static final String EXT_DSV = "dsv";
+	public static final String EXT_APPEND = "append";
+	public static final String EXT_DELETE = "delete";
+	public static final String EXT_REPLACE = "replace";
+	public static final String EXT_UPDATE = "update";
 	public static final String EXT_VIEW = "view";
 	public static final String EXT_TABLE = "table";
 
@@ -70,7 +74,9 @@ public class DataStructureTemplateWizard extends TemplateWizard {
 				nextPage = structurePage;
 			} else if (EXT_VIEW.equals(model.getTemplate().getExtension())) {
 				nextPage = queryPage;
-			} else if (EXT_DSV.equals(model.getTemplate().getExtension())) {
+			} else if (EXT_DSV.equals(model.getTemplate().getExtension()) || EXT_APPEND.equals(model.getTemplate().getExtension())
+					|| EXT_DELETE.equals(model.getTemplate().getExtension()) || EXT_REPLACE.equals(model.getTemplate().getExtension())
+					|| EXT_UPDATE.equals(model.getTemplate().getExtension())) {
 				nextPage = dsvPage;
 			}
 		} else if ((page instanceof DataStructureTemplateStructurePage) || (page instanceof DataStructureTemplateQueryPage)

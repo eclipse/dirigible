@@ -50,7 +50,7 @@ public class DataExportDialog extends TitleAreaDialog {
 	private static final String EXPORT_DATA = "Export Data";
 	private static final String TABLE_TYPE = "TABLE_TYPE";
 	private static final String TABLE_NAME = "TABLE_NAME";
-	private static final String EXPORT_AS_DSV_FILE = "Export as DSV File";
+	private static final String EXPORT_AS_DSV_FILE = "Export as Delimiter Separated File";
 	private static final String SELECT_AVAILABLE_TABLE_FORM_THE_LIST = "Select Available Table From The List";
 	private static final String AVAILABLE_TABLES_AND_VIEWS = Messages.DataExportDialog_AVAILABLE_TABLES_AND_VIEWS;
 	private static final String ERROR_ON_LOADING_TABLES_FROM_DATABASE_FOR_GENERATION = Messages.DataExportServiceHandler_ERROR_WHILE_EXPORTING_DSV;

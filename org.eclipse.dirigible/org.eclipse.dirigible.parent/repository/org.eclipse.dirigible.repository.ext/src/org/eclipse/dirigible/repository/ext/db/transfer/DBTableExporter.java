@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.ext.db.transfer;
@@ -20,12 +19,12 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.ext.db.DBUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class DBTableExporter {
 
-	private static final String DELIMETER = "|";
 	private static final String DATA_TYPE = "DATA_TYPE";
 	private static final String COLUMN_NAME = "COLUMN_NAME";
 	private static final String SELECT_FROM = "SELECT * FROM ";
@@ -37,8 +36,7 @@ public class DBTableExporter {
 	private String tableType;
 	private TableColumn[] tableColumns;
 
-	private static final Logger logger = Logger
-			.getLogger(DBTableExporter.class);
+	private static final Logger logger = Logger.getLogger(DBTableExporter.class);
 
 	private DataSource dataSource;
 
@@ -65,33 +63,28 @@ public class DBTableExporter {
 
 				List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
 
-				ResultSet primaryKeys = DBUtils.getPrimaryKeys(connection,
-						getTableName());
+				ResultSet primaryKeys = DBUtils.getPrimaryKeys(connection, getTableName());
 
 				while (primaryKeys.next()) {
 					// pk columns
 					String columnName = primaryKeys.getString(COLUMN_NAME);
-					TableColumn tableColumn = new TableColumn(columnName, 0,
-							true, true);
+					TableColumn tableColumn = new TableColumn(columnName, 0, true, true);
 					availableTableColumns.add(tableColumn);
 				}
 
-				ResultSet columns = DBUtils.getColumns(connection,
-						getTableName());
+				ResultSet columns = DBUtils.getColumns(connection, getTableName());
 				while (columns.next()) {
 					// columns
 					String columnName = columns.getString(COLUMN_NAME);
 					int columnType = columns.getInt(DATA_TYPE);
 
-					TableColumn tableColumn = new TableColumn(columnName,
-							columnType, false, true);
+					TableColumn tableColumn = new TableColumn(columnName, columnType, false, true);
 					if (!exists(availableTableColumns, tableColumn)) {
 						availableTableColumns.add(tableColumn);
 					}
 				}
 
-				setTableColumns(availableTableColumns
-						.toArray(new TableColumn[] {}));
+				setTableColumns(availableTableColumns.toArray(new TableColumn[] {}));
 				data = getDataForTable();
 
 			} finally {
@@ -100,8 +93,7 @@ public class DBTableExporter {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE
-					+ getTableName(), e);
+			logger.error(ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE + getTableName(), e);
 		}
 		return data;
 	}
@@ -126,9 +118,9 @@ public class DBTableExporter {
 			while (resultSet.next()) {
 				for (TableColumn column : columns) {
 					sb.append(resultSet.getString(column.getName()));
-					sb.append(DELIMETER);
+					sb.append(ICommonConstants.DATA_DELIMETER);
 				}
-				sb.deleteCharAt(sb.lastIndexOf(DELIMETER));
+				sb.deleteCharAt(sb.length() - 1);
 				sb.append("\n");
 			}
 			resultSet.close();
@@ -157,8 +149,7 @@ public class DBTableExporter {
 		}
 	}
 
-	private boolean exists(List<TableColumn> availableTableColumns,
-			TableColumn tableColumn) {
+	private boolean exists(List<TableColumn> availableTableColumns, TableColumn tableColumn) {
 		if (getTableName() == null) {
 			return false;
 		}
