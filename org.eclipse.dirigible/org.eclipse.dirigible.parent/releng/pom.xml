@@ -125,7 +125,7 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.0</version>
+				<version>2.1</version>
 				<executions>
 					<execution>
 						<id>tomcat-run</id>
@@ -138,12 +138,55 @@
 							<enableNaming>false</enableNaming>
 							<finalName>${deployment.executable}.jar</finalName>
 							<charset>utf-8</charset>
+							
+							<!-- 
+							<serverXml>src/main/tomcatconf/server.xml</serverXml>
+							-->
+							
+							<!-- 
+							<warRunDependencies>
+							  <warRunDependency>
+							    <dependency>
+							      <groupId>a groupId</groupId>
+							      <artifactId>and artifactId</artifactId>
+							      <version>version</version>
+							      <type>war</type>
+							    </dependency>
+							    <contextPath>/</contextPath>
+							  </warRunDependency>
+							</warRunDependencies>
+							 -->
+							
+							<!-- extra dependencies to add jdbc driver, mail jars, etc. -->
+							<extraDependencies>
+							  <extraDependency>
+							    <groupId>org.apache.derby</groupId>
+							    <artifactId>derby</artifactId>
+							    <version>10.11.1.1</version>
+							  </extraDependency>
+							  <extraDependency>
+							    <groupId>javax.mail</groupId>
+							    <artifactId>mail</artifactId>
+							    <version>1.4.7</version>
+							  </extraDependency>
+							  <extraDependency>
+							  	<groupId>javax.websocket</groupId>
+								<artifactId>javax.websocket-api</artifactId>
+								<version>1.1</version>
+							  </extraDependency>
+							  <extraDependency>
+							    <groupId>org.apache.tomcat</groupId>
+							    <artifactId>tomcat7-websocket</artifactId>
+							    <version>7.0.77</version>
+							  </extraDependency>
+							</extraDependencies>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
+	
 	<profiles>
 		<profile>
 			<id>default</id>

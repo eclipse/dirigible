@@ -37,6 +37,7 @@
 							<includeArtifactIds>org.eclipse.dirigible.external.p2</includeArtifactIds>
 							<excludes>
 								**/*icu*.jar,
+								**/*derby*.jar,
 								**/*felix*.jar,
 								**/*archive*.jar,
 								**/*mongo*.jar,
@@ -455,6 +456,7 @@
 			<scope>provided</scope>
 		</dependency>
 		
+		<!--
 		<dependency>
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
@@ -462,6 +464,7 @@
 		    <type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		-->
 		
 	</dependencies>
 

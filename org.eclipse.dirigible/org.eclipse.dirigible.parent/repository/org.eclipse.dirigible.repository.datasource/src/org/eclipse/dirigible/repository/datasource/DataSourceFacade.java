@@ -78,6 +78,8 @@ public class DataSourceFacade {
 	private static final String DEFAULT_DATASOURCE_MAX_IDLE = "dataSourceDefaultMaxIdle";
 	private static final String DEFAULT_DATASOURCE_MAX_WAIT = "dataSourceDefaultMaxWait";
 
+	private static final String DEFAULT_JNDI_NAME = "java:comp/env/jdbc/DefaultDB";
+
 	private static DataSource localDataSource;
 
 	private static DataSourceFacade instance;
@@ -111,6 +113,9 @@ public class DataSourceFacade {
 			if (dataSource == null) {
 				logger.debug("Try from Context...");
 				String jndiName = getEnv(JNDI_DEFAULT_DATASOURCE);
+				if (jndiName == null) {
+					jndiName = DEFAULT_JNDI_NAME;
+				}
 				dataSource = (WrappedDataSource) getFromContext(jndiName, true);
 				if (dataSource != null) {
 					logger.info("Datasource lookup from the context done.");
@@ -203,7 +208,7 @@ public class DataSourceFacade {
 	private DataSource getFromContext(String jndiName, boolean wrap) {
 
 		String defaultDataSourceType = getEnv(DEFAULT_DATASOURCE_TYPE);
-		if (!DEFAULT_DATASOURCE_TYPE_JNDI.equalsIgnoreCase(defaultDataSourceType)) {
+		if ((defaultDataSourceType != null) && (!DEFAULT_DATASOURCE_TYPE_JNDI.equalsIgnoreCase(defaultDataSourceType))) {
 			logger.warn("Default DataSource Type Parameter is not 'jndi', hence the custom or local type will be used");
 			return null;
 		}
@@ -213,7 +218,7 @@ public class DataSourceFacade {
 		try {
 			InitialContext context = (InitialContext) System.getProperties().get(ICommonConstants.INITIAL_CONTEXT);
 			if ((context == null) || (jndiName == null)) {
-				return null;
+				context = new InitialContext(); // non-OSGi case
 			}
 			DataSource datasource = (DataSource) context.lookup(jndiName);
 			if (datasource == null) {
