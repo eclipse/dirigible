@@ -445,6 +445,7 @@
 		<module>runtime</module> <!-- Runtime Projects -->
 		<module>p2.runtime</module> <!-- Update Site for Runtime Bundles -->
 		<module>p2.rcp</module> <!-- Update Site for Runtime Bundles -->
+        <module>air</module> <!-- AIR Projects -->
 		<module>releng</module>
 	</modules>
 
