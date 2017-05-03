@@ -238,9 +238,10 @@
 		</profile>
 	</profiles>
 	<modules>
-		<module>runtime.tomcat</module>
 		<module>all.tomcat</module>
+		<module>runtime.tomcat</module>
         <module>air.tomcat</module>
+        <module>mini.tomcat</module>
 	</modules>
 
 </project>
