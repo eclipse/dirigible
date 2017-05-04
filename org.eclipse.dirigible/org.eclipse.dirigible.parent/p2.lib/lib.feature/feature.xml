@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dirigible.lib.feature"
       label="Dirigible WAR Lib Bundles Feature"
-      version="2.7.170225"
+      version="2.7.170504"
       provider-name="Eclipse.org - Dirigible">
 
    <description url="http://www.dirigible.io/">

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.help
 Bundle-SymbolicName: org.eclipse.dirigible.ide.help;singleton:=true
-Bundle-Version: 2.7.170225
+Bundle-Version: 2.7.170504
 Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.ui;resolution:=optional,
