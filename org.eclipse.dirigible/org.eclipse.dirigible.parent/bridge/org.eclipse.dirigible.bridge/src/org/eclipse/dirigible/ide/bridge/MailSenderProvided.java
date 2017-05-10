@@ -34,13 +34,13 @@ public class MailSenderProvided {
 
 	private static final Logger logger = LoggerFactory.getLogger(MailSenderProvided.class.getCanonicalName());
 
-	public String sendMail(String from, String to, String subject, String content) {
+	public String sendMail(String from, String to, String subject, String content, String subType) {
 		try {
 
 			Transport transport = this.session.getTransport();
 			transport.connect();
 
-			MimeMessage mimeMessage = createMimeMessage(this.session, from, to, subject, content);
+			MimeMessage mimeMessage = createMimeMessage(this.session, from, to, subject, content, subType);
 			transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
 			transport.close();
 		} catch (Exception e) {
@@ -52,7 +52,7 @@ public class MailSenderProvided {
 		return ""; //$NON-NLS-1$
 	}
 
-	private static MimeMessage createMimeMessage(Session smtpSession, String from, String to, String subjectText, String mailText)
+	private static MimeMessage createMimeMessage(Session smtpSession, String from, String to, String subjectText, String mailText, String subType)
 			throws MessagingException {
 
 		MimeMessage mimeMessage = new MimeMessage(smtpSession);
@@ -64,11 +64,14 @@ public class MailSenderProvided {
 
 		MimeMultipart multiPart = new MimeMultipart("alternative"); //$NON-NLS-1$
 		MimeBodyPart part = new MimeBodyPart();
-		part.setText(mailText, "utf-8", "plain"); //$NON-NLS-1$ //$NON-NLS-2$
+		part.setText(mailText, "utf-8", getSubType(subType)); //$NON-NLS-1$
 		multiPart.addBodyPart(part);
 		mimeMessage.setContent(multiPart);
 
 		return mimeMessage;
 	}
 
+	private static String getSubType(String subType) {
+		return subType != null ? subType : "plain";
+	}
 }
