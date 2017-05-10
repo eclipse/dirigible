@@ -1,25 +1,4 @@
 [{
-	"path": "target/qunit",
-	"repository": "https://github.com/dirigiblelabs/qunit.git",
-	"content": [{
-		"source": "target/qunit/qunit/ScriptingServices",
-		"target": "src/content/db/dirigible/registry/public"
-	}]
-}, {
-	"path": "target/jasmine",
-	"repository": "https://github.com/dirigiblelabs/jasmine.git",
-	"content": [{
-		"source": "target/jasmine/jasmine/ScriptingServices",
-		"target": "src/content/db/dirigible/registry/public"
-	}]
-}, {
-	"path": "target/jsmockito",
-	"repository": "https://github.com/dirigiblelabs/jsmockito.git",
-	"content": [{
-		"source": "target/jsmockito/jsmockito/ScriptingServices",
-		"target": "src/content/db/dirigible/registry/public"
-	}]
-}, {
 	"path": "target/arestme",
 	"repository": "https://github.com/dirigiblelabs/arestme.git",
 	"content": [{
@@ -31,16 +10,6 @@
 	"repository": "https://github.com/dirigiblelabs/daoism.git",
 	"content": [{
 		"source": "target/daoism/daoism/ScriptingServices",
-		"target": "src/content/db/dirigible/registry/public"
-	}]
-}, {
-	"path": "target/tags",
-	"repository": "https://github.com/dirigiblelabs/tags.git",
-	"content": [{
-		"source": "target/tags/tags/DataStructures",
-		"target": "src/content/db/dirigible/registry/public"
-	}, {
-		"source": "target/tags/tags/ScriptingServices",
 		"target": "src/content/db/dirigible/registry/public"
 	}]
 }, {

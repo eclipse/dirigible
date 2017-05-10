@@ -34,13 +34,6 @@
 		"target": "src/content/db/dirigible/templates"
 	}]
 }, {
-	"path": "target/template_web_discussions",
-	"repository": "https://github.com/dirigiblelabs/template_web_discussions.git",
-	"content": [{
-		"source": "target/template_web_discussions/template_web_discussions/WebContent",
-		"target": "src/content/db/dirigible/templates"
-	}]
-}, {
 	"path": "target/template_web_cockpit",
 	"repository": "https://github.com/dirigiblelabs/template_web_cockpit.git",
 	"content": [{
