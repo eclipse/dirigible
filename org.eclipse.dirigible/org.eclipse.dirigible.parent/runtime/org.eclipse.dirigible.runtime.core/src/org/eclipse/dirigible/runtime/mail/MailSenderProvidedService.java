@@ -31,7 +31,7 @@ public class MailSenderProvidedService implements IMailService {
 	private static final Logger logger = Logger.getLogger(MailSenderProvidedService.class.getCanonicalName());
 
 	@Override
-	public String sendMail(String from, String to, String subject, String content) {
+	public String sendMail(String from, String to, String subject, String content, String subType) {
 		try {
 			Object providedMailSender = System.getProperties().get(ICommonConstants.MAIL_SESSION_PROVIDED);
 			if ((providedMailSender == null) && (this.request != null)) {
@@ -41,8 +41,8 @@ public class MailSenderProvidedService implements IMailService {
 				throw new Exception(MAIL_SERVICE_IS_NOT_AVAILABLE);
 			}
 
-			Method method = providedMailSender.getClass().getMethod("sendMail", String.class, String.class, String.class, String.class);
-			return (String) method.invoke(providedMailSender, from, to, subject, content);
+			Method method = providedMailSender.getClass().getMethod("sendMail", String.class, String.class, String.class, String.class, String.class);
+			return (String) method.invoke(providedMailSender, from, to, subject, content, subType);
 
 		} catch (Exception e) {
 			logger.error(this.getClass().getCanonicalName() + "#sendMail()", e); //$NON-NLS-1$

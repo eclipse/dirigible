@@ -37,7 +37,7 @@ public class MailSenderService implements IMailService {
 	private static final Logger logger = Logger.getLogger(MailSenderService.class.getCanonicalName());
 
 	@Override
-	public String sendMail(String from, String to, String subject, String content) {
+	public String sendMail(String from, String to, String subject, String content, String subType) {
 		try {
 			Session smtpSession = (Session) System.getProperties().get(ICommonConstants.MAIL_SESSION);
 			if ((smtpSession == null) && (this.request != null)) {
@@ -49,7 +49,7 @@ public class MailSenderService implements IMailService {
 			Transport transport = smtpSession.getTransport();
 			transport.connect();
 
-			MimeMessage mimeMessage = createMimeMessage(smtpSession, from, to, subject, content);
+			MimeMessage mimeMessage = createMimeMessage(smtpSession, from, to, subject, content, subType);
 			transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
 			transport.close();
 		} catch (Exception e) {
@@ -59,7 +59,7 @@ public class MailSenderService implements IMailService {
 		return ""; //$NON-NLS-1$
 	}
 
-	private static MimeMessage createMimeMessage(Session smtpSession, String from, String to, String subjectText, String mailText)
+	private static MimeMessage createMimeMessage(Session smtpSession, String from, String to, String subjectText, String mailText, String subType)
 			throws MessagingException {
 
 		MimeMessage mimeMessage = new MimeMessage(smtpSession);
@@ -71,11 +71,14 @@ public class MailSenderService implements IMailService {
 
 		MimeMultipart multiPart = new MimeMultipart("alternative"); //$NON-NLS-1$
 		MimeBodyPart part = new MimeBodyPart();
-		part.setText(mailText, "utf-8", "plain"); //$NON-NLS-1$ //$NON-NLS-2$
+		part.setText(mailText, "utf-8", getSubType(subType)); //$NON-NLS-1$
 		multiPart.addBodyPart(part);
 		mimeMessage.setContent(multiPart);
 
 		return mimeMessage;
 	}
 
+	private static String getSubType(String subType) {
+		return subType != null ? subType : "plain";
+	}
 }
