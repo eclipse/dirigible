@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature id="org.eclipse.dirigible.rcp.feature" version="0.0.0">
-      <category name="dirigible-rcp"/>
-   </feature>
-   <category-def name="dirigible-rcp" label="Dirigible RCP Bundles"/>
-</site>

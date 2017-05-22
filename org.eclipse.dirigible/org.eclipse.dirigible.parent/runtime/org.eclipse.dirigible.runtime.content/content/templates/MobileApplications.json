@@ -1,8 +1,0 @@
-[{
-	"path": "target/template_mobile_hello_world",
-	"repository": "https://github.com/dirigiblelabs/template_mobile_hello_world.git",
-	"content": [{
-		"source": "target/template_mobile_hello_world/template_mobile_hello_world/MobileApplications",
-		"target": "src/content/db/dirigible/templates"
-	}]
-}]

@@ -1,4 +1,0 @@
-{
-  "extension-point": "/registry/extension_point/launchpad",
-  "description": "Registry extension point. Defined functions: getMenuItem(): Object| getHomeItem(): Object| getController(): String| getRoute(): Object| getType(): String| getRole(): String | getOrder(): Integer"
-}

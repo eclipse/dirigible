@@ -1,5 +1,0 @@
-{
-  "extension":"/iam/extension/assign",
-  "extension-point":"/iam/extension_point/launchpad",
-  "description":"Assignments extension for the Launchpad extension point"
-}

@@ -1,5 +1,0 @@
-{
-  "extension":"/iam/extension/profile",
-  "extension-point":"/iam/extension_point/launchpad",
-  "description":"Profile extension for the Launchpad extension point"
-}

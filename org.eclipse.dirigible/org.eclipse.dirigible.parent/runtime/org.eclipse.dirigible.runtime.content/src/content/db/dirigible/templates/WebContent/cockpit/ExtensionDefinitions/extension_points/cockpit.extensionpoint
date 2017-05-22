@@ -1,4 +1,0 @@
-{
-  "extension-point": "/${packageName}/extension_points/cockpit",
-  "description": "Cockpit extension point. Defined functions: getMenuItem(): JSON Object | getSidebarItem(): JSON Object|"
-}

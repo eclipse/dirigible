@@ -1,5 +1,0 @@
-{
-  "extension":"/${projectName}/${fileNameNoExtension}",
-  "extension-point":"target extension point",
-  "description":"description for the extension ${fileNameNoExtension}"
-}

@@ -1,7 +1,0 @@
-{
-  "name":"MyJob",
-  "description":"MyJob Description",
-  "expression":"0/5 * * * * ?",
-  "type":"javascript",
-  "module":"/project1/service1.js"
-}

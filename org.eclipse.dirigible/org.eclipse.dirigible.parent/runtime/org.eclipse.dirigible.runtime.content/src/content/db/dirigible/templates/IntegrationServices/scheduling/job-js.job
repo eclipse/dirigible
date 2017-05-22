@@ -1,7 +1,0 @@
-{
-  "name":"${id}",
-  "description":"${id} Description",
-  "expression":"0/5 * * * * ?",
-  "type":"javascript",
-  "module":"/${packageName}/${fileNameNoExtension}.js"
-}

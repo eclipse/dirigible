@@ -1,5 +1,0 @@
-{
-  "extension":"/${packageName}/extensions/${fileNameNoExtension}",
-  "extension-point":"/${packageName}/extension_points/cockpit",
-  "description":"Develop extension for the Cockpit extension point"
-}

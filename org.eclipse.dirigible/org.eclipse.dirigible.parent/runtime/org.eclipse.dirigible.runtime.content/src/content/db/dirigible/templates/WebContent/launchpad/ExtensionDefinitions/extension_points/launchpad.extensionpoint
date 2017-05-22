@@ -1,4 +1,0 @@
-{
-  "extension-point": "/${packageName}/extension_points/launchpad",
-  "description": "Launchpad extension point. Defined functions: getMenuItem(): JSON Object | getHomeItem(): JSON Object|"
-}
