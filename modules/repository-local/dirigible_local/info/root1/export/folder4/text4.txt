@@ -1,6 +1,0 @@
-#
-#Mon May 22 18:31:07 EEST 2017
-modifiedAt=1495467067803
-createdBy=test
-createdAt=1495466458859
-modifiedBy=test

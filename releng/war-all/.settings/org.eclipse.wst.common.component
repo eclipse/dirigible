@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="dirigible-war-all">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <dependent-module archiveName="dirigible-repository-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-api/dirigible-repository-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-repository-zip-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-zip/dirigible-repository-zip">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-repository-local-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-local/dirigible-repository-local">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-repository-master-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-master/dirigible-repository-master">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-runtime-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-core/dirigible-runtime-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-commons-logging-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-logging/dirigible-commons-logging">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="dirigible-war-all"/>
+        <property name="java-output-path" value="/dirigible-war-all/target/classes"/>
+    </wb-module>
+</project-modules>

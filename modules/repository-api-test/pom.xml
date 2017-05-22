@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>3.0</version>
+            <version>${dirigible.version}</version>
         </dependency>
     </dependencies>
 
