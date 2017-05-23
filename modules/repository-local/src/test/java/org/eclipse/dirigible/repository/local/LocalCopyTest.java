@@ -35,8 +35,8 @@ public class LocalCopyTest {
 	@Before
 	public void setUp() {
 		try {
-			repositorySrc = new LocalRepository("testSrc", "testSrc");
-			repositoryDst = new LocalRepository("testDst", "testDst");
+			repositorySrc = new LocalRepository("testSrc", "target/testSrc");
+			repositoryDst = new LocalRepository("testDst", "target/testDst");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
