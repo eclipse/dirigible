@@ -30,14 +30,24 @@ public class Logger {
 	private static final String DISABLE_LOGGING = "disableLogging";
 	private static final boolean LOGGING_DISABLED = isLoggingDisabled();
 
-	private static final List<ILogListener> logListeners = Collections.synchronizedList(new ArrayList<ILogListener>());
+	private static final List<ILogListener> LOG_LISTENERS = Collections.synchronizedList(new ArrayList<ILogListener>());
 
+	/**
+	 * Adds Log Listener
+	 *
+	 * @param logListener
+	 */
 	public static void addListener(ILogListener logListener) {
-		logListeners.add(logListener);
+		LOG_LISTENERS.add(logListener);
 	}
 
+	/**
+	 * Removes Log Listener
+	 *
+	 * @param logListener
+	 */
 	public static void removeListener(ILogListener logListener) {
-		logListeners.remove(logListener);
+		LOG_LISTENERS.remove(logListener);
 	}
 
 	private static boolean isLoggingDisabled() {
@@ -55,6 +65,9 @@ public class Logger {
 	 * <p>
 	 * Usually the <code>name</code> parameter should represent the name of the
 	 * class that operates on the instance.
+	 *
+	 * @param name
+	 * @return logger
 	 */
 	public static Logger getLogger(String name) {
 		return new Logger(LoggerFactory.getLogger(name), java.util.logging.Logger.getLogger(name));
@@ -62,6 +75,9 @@ public class Logger {
 
 	/**
 	 * Shorthand for getLogger(clazz.getName()).
+	 *
+	 * @param clazz
+	 * @return logger
 	 */
 	public static Logger getLogger(Class<?> clazz) {
 		return new Logger(LoggerFactory.getLogger(clazz), java.util.logging.Logger.getLogger(clazz.getCanonicalName()));
@@ -70,7 +86,7 @@ public class Logger {
 	private final org.slf4j.Logger logger1;
 	private final java.util.logging.Logger logger2;
 
-	public Logger(org.slf4j.Logger logger1, java.util.logging.Logger logger2) {
+	private Logger(org.slf4j.Logger logger1, java.util.logging.Logger logger2) {
 		this.logger1 = logger1;
 		this.logger2 = logger2;
 	}
@@ -78,6 +94,8 @@ public class Logger {
 	/**
 	 * Log an error that might still allow the application to continue to
 	 * operate.
+	 *
+	 * @param message
 	 */
 	public void error(String message) {
 		error(message, null);
@@ -86,6 +104,9 @@ public class Logger {
 	/**
 	 * Same as {@link #error(String)} with the ability to specify an exception
 	 * that caused the logging.
+	 *
+	 * @param message
+	 * @param t
 	 */
 	public void error(String message, Throwable t) {
 		notifyListeners("error", message);
@@ -96,16 +117,10 @@ public class Logger {
 		logInSystemOutput(message, t);
 	}
 
-	private void notifyListeners(String level, String message) {
-		for (ILogListener logListener : logListeners) {
-			logListener.log(level, message);
-
-		}
-
-	}
-
 	/**
 	 * Log a potentially harmful situation.
+	 *
+	 * @param message
 	 */
 	public void warn(String message) {
 		warn(message, null);
@@ -114,6 +129,9 @@ public class Logger {
 	/**
 	 * Same as {@link #warn(String)} with the ability to specify an exception
 	 * that caused the logging.
+	 *
+	 * @param message
+	 * @param t
 	 */
 	public void warn(String message, Throwable t) {
 		notifyListeners("warning", message);
@@ -126,6 +144,8 @@ public class Logger {
 
 	/**
 	 * Log an event in the application or progress.
+	 *
+	 * @param message
 	 */
 	public void info(String message) {
 		info(message, null);
@@ -134,6 +154,9 @@ public class Logger {
 	/**
 	 * Same as {@link #info(String)} with the ability to specify an exception
 	 * that caused the logging.
+	 *
+	 * @param message
+	 * @param t
 	 */
 	public void info(String message, Throwable t) {
 		notifyListeners("info", message);
@@ -146,6 +169,8 @@ public class Logger {
 
 	/**
 	 * Log fine-grained information events.
+	 *
+	 * @param message
 	 */
 	public void debug(String message) {
 		debug(message, null);
@@ -154,6 +179,9 @@ public class Logger {
 	/**
 	 * Same as {@link #debug(String)} with the ability to specify an exception
 	 * that caused the logging.
+	 *
+	 * @param message
+	 * @param t
 	 */
 	public void debug(String message, Throwable t) {
 		// notifyListeners("debug", message);
@@ -166,6 +194,8 @@ public class Logger {
 
 	/**
 	 * Log the most fine-grained events.
+	 *
+	 * @param message
 	 */
 	public void trace(String message) {
 		trace(message, null);
@@ -174,6 +204,9 @@ public class Logger {
 	/**
 	 * Same as {@link #trace(String)} with the ability to specify an exception
 	 * that caused the logging.
+	 * 
+	 * @param message
+	 * @param t
 	 */
 	public void trace(String message, Throwable t) {
 		// notifyListeners("trace", message);
@@ -232,6 +265,12 @@ public class Logger {
 	 */
 	public boolean isTraceEnabled() {
 		return (!LOGGING_DISABLED) && (logger1.isTraceEnabled() || logger2.isLoggable(Level.FINE));
+	}
+
+	private void notifyListeners(String level, String message) {
+		for (ILogListener logListener : LOG_LISTENERS) {
+			logListener.log(level, message);
+		}
 	}
 
 	private void logInSystemOutput(String message, Throwable t) {
