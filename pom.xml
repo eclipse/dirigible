@@ -148,6 +148,7 @@
 
 	<modules>
         <module>modules/commons-logging</module>
+        <module>modules/commons-config</module>
 		<module>modules/repository-api</module>
 		<module>modules/repository-api-test</module>
         <module>modules/repository-zip</module>
