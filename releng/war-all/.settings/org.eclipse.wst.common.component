@@ -21,10 +21,10 @@
         <dependent-module archiveName="dirigible-runtime-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-core/dirigible-runtime-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-web-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-web/dirigible-engine-web">
+        <dependent-module archiveName="dirigible-repository-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository/dirigible-repository">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-config/dirigible-commons-config">
+        <dependent-module archiveName="dirigible-engine-web-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-web/dirigible-engine-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="dirigible-war-all"/>
