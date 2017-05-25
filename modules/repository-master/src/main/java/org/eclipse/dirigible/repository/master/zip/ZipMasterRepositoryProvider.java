@@ -10,11 +10,10 @@
 
 package org.eclipse.dirigible.repository.master.zip;
 
-import java.util.Map;
-
-import org.eclipse.dirigible.repository.api.IMasterRepository;
-import org.eclipse.dirigible.repository.api.IMasterRepositoryProvider;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.repository.master.IMasterRepository;
+import org.eclipse.dirigible.repository.master.IMasterRepositoryProvider;
 
 /**
  * The Provider for Master Zip based Repository
@@ -23,30 +22,26 @@ public class ZipMasterRepositoryProvider implements IMasterRepositoryProvider {
 
 	private static final Logger logger = Logger.getLogger(ZipMasterRepositoryProvider.class);
 
-	private static final String PARAM_USER = "user";
-	private static final String PARAM_ZIP = "masterRepositoryZipLocation";
 	public static final String TYPE = "zip";
+	
+	@Override
+	public String getType() {
+		return TYPE;
+	}
 
 	@Override
-	public IMasterRepository createRepository(Map<String, Object> parameters) {
+	public IMasterRepository createMasterRepository() {
 
 		logger.debug("creating Zip Master Repository...");
 
-		String user = (String) parameters.get(PARAM_USER);
-		String zip = (String) parameters.get(PARAM_ZIP);
-		if (zip == null) {
-			zip = System.getProperty(PARAM_ZIP);
-		}
-		ZipMasterRepository zipMasterRepository = new ZipMasterRepository(user, zip);
+		String zip = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION);
+		ZipMasterRepository zipMasterRepository = new ZipMasterRepository(zip);
 
 		logger.debug("Zip Mater Repository created.");
 
 		return zipMasterRepository;
 	}
 
-	@Override
-	public String getType() {
-		return TYPE;
-	}
+	
 
 }

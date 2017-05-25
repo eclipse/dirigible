@@ -10,30 +10,36 @@
 
 package org.eclipse.dirigible.repository.local;
 
-import java.util.Map;
-
-import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryProvider;
 
+/**
+ * Local Repository Provider for simple File System based Repository instance
+ *
+ */
 public class LocalRepositoryProvider implements IRepositoryProvider {
 
-	private static final String PARAM_USER = "user";
 	public static final String TYPE = "local";
-
-	@Override
-	public IRepository createRepository(Map<String, Object> parameters) {
-
-		String user = (String) parameters.get(PARAM_USER);
-		String rootFolder = (String) parameters.get(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER);
-		boolean absolute = Boolean.parseBoolean((String) parameters.get(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE));
-
-		return new LocalRepository(user, rootFolder, absolute);
-	}
-
+	
+	/**
+	 * Getter for the type of the repository
+	 */
 	@Override
 	public String getType() {
 		return TYPE;
+	}
+	
+	/**
+	 * Creates the Repository instance of this type
+	 */
+	@Override
+	public IRepository createRepository() {
+		
+		String rootFolder = Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER);
+		boolean absolute = Boolean.parseBoolean(Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE));
+
+		return new LocalRepository(rootFolder, absolute);
 	}
 
 }

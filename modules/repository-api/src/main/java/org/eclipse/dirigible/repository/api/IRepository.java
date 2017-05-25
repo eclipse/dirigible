@@ -21,7 +21,10 @@ import java.util.zip.ZipInputStream;
  */
 public interface IRepository extends IReadOnlyRepository {
 
-	public static final String SEPARATOR = ICommonConstants.SEPARATOR;
+	public static final String SEPARATOR = IRepositoryConstants.SEPARATOR;
+	
+	public static final String DIRIGIBLE_REPOSITORY_PROVIDER = "DIRIGIBLE_REPOSITORY_PROVIDER"; //$NON-NLS-1$
+	public static final String DIRIGIBLE_REPOSITORY_PROVIDER_LOCAL = "local"; //$NON-NLS-1$
 
 	/**
 	 * This method creates a new empty collection at the specified path.

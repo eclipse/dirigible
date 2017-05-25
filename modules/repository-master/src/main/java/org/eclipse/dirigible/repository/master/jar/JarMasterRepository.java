@@ -10,13 +10,13 @@
 
 package org.eclipse.dirigible.repository.master.jar;
 
-import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.local.LocalBaseException;
+import org.eclipse.dirigible.repository.master.IMasterRepository;
 
 public class JarMasterRepository extends JarRepository implements IMasterRepository {
 
-	public JarMasterRepository(String user, String zip) throws LocalBaseException {
-		super(user, zip);
+	public JarMasterRepository(String zip) throws LocalBaseException {
+		super(zip);
 	}
 
 }

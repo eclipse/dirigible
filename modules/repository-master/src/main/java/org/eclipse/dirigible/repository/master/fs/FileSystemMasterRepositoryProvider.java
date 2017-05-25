@@ -10,30 +10,37 @@
 
 package org.eclipse.dirigible.repository.master.fs;
 
-import java.util.Map;
-
-import org.eclipse.dirigible.repository.api.IMasterRepository;
-import org.eclipse.dirigible.repository.api.IMasterRepositoryProvider;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.repository.logging.Logger;
+import org.eclipse.dirigible.repository.master.IMasterRepository;
+import org.eclipse.dirigible.repository.master.IMasterRepositoryProvider;
 
 /**
  * The Provider for Master File System based Repository
  */
 public class FileSystemMasterRepositoryProvider implements IMasterRepositoryProvider {
+	
+	private static final Logger logger = Logger.getLogger(FileSystemMasterRepositoryProvider.class);
 
-	private static final String PARAM_USER = "user";
-	private static final String PARAM_FOLDER = "folder";
 	public static final String TYPE = "filesystem";
-
-	@Override
-	public IMasterRepository createRepository(Map<String, Object> parameters) {
-		String user = (String) parameters.get(PARAM_USER);
-		String folder = (String) parameters.get(PARAM_FOLDER);
-		return new FileSystemMasterRepository(user, folder);
-	}
-
+	
 	@Override
 	public String getType() {
 		return TYPE;
 	}
+
+	@Override
+	public IMasterRepository createMasterRepository() {
+		logger.debug("creating FileSystem Master Repository...");
+		
+		String rootFolder = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER);
+		FileSystemMasterRepository fileSystemMasterRepository = new FileSystemMasterRepository(rootFolder);
+		
+		logger.debug("FileSystem Mater Repository created.");
+		
+		return fileSystemMasterRepository;
+	}
+
+	
 
 }

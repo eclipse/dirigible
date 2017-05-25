@@ -23,12 +23,12 @@ import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
-import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.logging.Logger;
 
-public class LocalRepositoryDAO {
+public class LocalRepositoryDao {
 
 	private static final String LAST = "last";
 
@@ -40,7 +40,7 @@ public class LocalRepositoryDAO {
 
 	private static final String CREATED_BY = "createdBy";
 
-	private static final Logger logger = Logger.getLogger(LocalRepositoryDAO.class);
+	private static final Logger logger = Logger.getLogger(LocalRepositoryDao.class);
 
 	static final int OBJECT_TYPE_FOLDER = 0;
 	static final int OBJECT_TYPE_DOCUMENT = 1;
@@ -48,7 +48,7 @@ public class LocalRepositoryDAO {
 
 	private FileSystemRepository repository;
 
-	LocalRepositoryDAO(FileSystemRepository repository) {
+	LocalRepositoryDao(FileSystemRepository repository) {
 		this.repository = repository;
 	}
 
@@ -76,9 +76,9 @@ public class LocalRepositoryDAO {
 			if (bytes != null) {
 				Integer index;
 				try {
-					index = Integer.parseInt(new String(bytes, ICommonConstants.UTF8));
+					index = Integer.parseInt(new String(bytes, IRepositoryConstants.UTF8));
 					FileSystemUtils.saveFile(versionsPath + File.separator + (++index), content);
-					FileSystemUtils.saveFile(versionsLastPath, index.toString().getBytes(ICommonConstants.UTF8));
+					FileSystemUtils.saveFile(versionsLastPath, index.toString().getBytes(IRepositoryConstants.UTF8));
 				} catch (NumberFormatException e) {
 					logger.error(String.format("Invalid versions file: %s", versionsLastPath));
 					createInitialVersion(content, versionsPath);
@@ -91,7 +91,7 @@ public class LocalRepositoryDAO {
 
 	private void createInitialVersion(byte[] content, String versionsPath) throws FileNotFoundException, IOException {
 		FileSystemUtils.saveFile(versionsPath + File.separator + "1", content);
-		FileSystemUtils.saveFile(versionsPath + File.separator + LAST, "1".getBytes(ICommonConstants.UTF8));
+		FileSystemUtils.saveFile(versionsPath + File.separator + LAST, "1".getBytes(IRepositoryConstants.UTF8));
 	}
 
 	private void createInfo(String workspacePath) throws FileNotFoundException, IOException {
@@ -101,7 +101,7 @@ public class LocalRepositoryDAO {
 			if (bytes != null) {
 				Properties info = new Properties();
 				info.load(new ByteArrayInputStream(bytes));
-				info.setProperty(MODIFIED_BY, getRepository().getUser());
+				info.setProperty(MODIFIED_BY, getUser());
 				info.setProperty(MODIFIED_AT, new Date().getTime() + "");
 
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -116,9 +116,9 @@ public class LocalRepositoryDAO {
 
 	private void createInitialInfo(String infoPath) throws IOException {
 		Properties info = new Properties();
-		info.setProperty(CREATED_BY, getRepository().getUser());
+		info.setProperty(CREATED_BY, getUser());
 		info.setProperty(CREATED_AT, new Date().getTime() + "");
-		info.setProperty(MODIFIED_BY, getRepository().getUser());
+		info.setProperty(MODIFIED_BY, getUser());
 		info.setProperty(MODIFIED_AT, new Date().getTime() + "");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -345,6 +345,11 @@ public class LocalRepositoryDAO {
 		}
 
 		return null;
+	}
+	
+	private String getUser() {
+		// TODO Use Injected User once available
+		return "nobody";
 	}
 
 }

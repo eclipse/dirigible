@@ -10,13 +10,13 @@
 
 package org.eclipse.dirigible.repository.master.zip;
 
-import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.local.LocalBaseException;
+import org.eclipse.dirigible.repository.master.IMasterRepository;
 
 public class ZipMasterRepository extends ZipRepository implements IMasterRepository {
 
-	public ZipMasterRepository(String user, String zip) throws LocalBaseException {
-		super(user, zip);
+	public ZipMasterRepository(String zip) throws LocalBaseException {
+		super(zip);
 	}
 
 }

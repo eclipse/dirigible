@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.local.LocalBaseException;
 import org.eclipse.dirigible.repository.master.zip.ZipRepository;
 
@@ -23,7 +23,7 @@ public class JarRepository extends ZipRepository {
 
 	private String jarRepositoryRootFolder;
 
-	public JarRepository(String user, String zip) throws LocalBaseException {
+	public JarRepository(String zip) throws LocalBaseException {
 
 		InputStream in = JarRepository.class.getClassLoader().getSystemResourceAsStream(zip);
 		if (in == null) {
@@ -36,9 +36,9 @@ public class JarRepository extends ZipRepository {
 			try {
 				Path rootFolder = Files.createTempDirectory("jar_repository");
 				unpackZip(in, rootFolder.toString());
-				String zipFileName = zip.substring(zip.lastIndexOf(ICommonConstants.SEPARATOR) + 1);
-				jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf(ICommonConstants.DOT));
-				createRepository(user, rootFolder.toString(), true);
+				String zipFileName = zip.substring(zip.lastIndexOf(IRepositoryConstants.SEPARATOR) + 1);
+				jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf(IRepositoryConstants.DOT));
+				createRepository(rootFolder.toString(), true);
 			} catch (IOException e) {
 				throw new LocalBaseException(e);
 			}
@@ -48,13 +48,8 @@ public class JarRepository extends ZipRepository {
 	}
 
 	// disable usage
-	protected JarRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
-		super(user, rootFolder, absolute);
-	}
-
-	// disable usage
-	protected JarRepository(String user) throws LocalBaseException {
-		super(user);
+	protected JarRepository(String rootFolder, boolean absolute) throws LocalBaseException {
+		super(rootFolder, absolute);
 	}
 
 	// disable usage

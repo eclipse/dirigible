@@ -10,12 +10,14 @@
 
 package org.eclipse.dirigible.repository.api;
 
-import java.util.Map;
-
+/**
+ * Repository Provider has discriminatory type and ability to create a Repository instance 
+ *
+ */
 public interface IRepositoryProvider {
 
 	public String getType();
 
-	public IRepository createRepository(Map<String, Object> parameters);
+	public IRepository createRepository();
 
 }

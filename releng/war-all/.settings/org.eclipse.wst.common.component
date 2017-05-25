@@ -9,6 +9,9 @@
         <dependent-module archiveName="dirigible-repository-zip-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-zip/dirigible-repository-zip">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-commons-logging-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-logging/dirigible-commons-logging">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-repository-local-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-local/dirigible-repository-local">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -21,7 +24,7 @@
         <dependent-module archiveName="dirigible-engine-web-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-web/dirigible-engine-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-logging-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-logging/dirigible-commons-logging">
+        <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-config/dirigible-commons-config">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="dirigible-war-all"/>

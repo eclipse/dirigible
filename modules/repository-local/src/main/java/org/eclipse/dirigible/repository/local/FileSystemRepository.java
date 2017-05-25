@@ -30,7 +30,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.ICommonConstants;
+import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -43,11 +43,11 @@ import org.eclipse.dirigible.repository.zip.ZipImporter;
 /**
  * The File System based implementation of {@link IRepository}
  */
-public class FileSystemRepository implements IRepository {
+public abstract class FileSystemRepository implements IRepository {
 	
 	private static Logger logger = Logger.getLogger(FileSystemRepository.class);
 
-	private static final String CURRENT_DIR = ICommonConstants.DOT;
+	private static final String CURRENT_DIR = IRepositoryConstants.DOT;
 	private static final String DIRIGIBLE_LOCAL = "dirigible_local";
 	public static final String PATH_SEGMENT_ROOT = "root";
 	public static final String PATH_SEGMENT_VERSIONS = "versions";
@@ -61,12 +61,7 @@ public class FileSystemRepository implements IRepository {
 	private String versionsPath = IRepository.SEPARATOR;
 	private String infoPath = IRepository.SEPARATOR;
 
-	private LocalRepositoryDAO repositoryDAO;
-
-	private String user;
-
-	protected FileSystemRepository() throws LocalBaseException {
-	}
+	private LocalRepositoryDao repositoryDao;
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -74,8 +69,8 @@ public class FileSystemRepository implements IRepository {
 	 * @param user
 	 * @throws LocalBaseException
 	 */
-	public FileSystemRepository(String user) throws LocalBaseException {
-		createRepository(user, null, false);
+	public FileSystemRepository() throws LocalBaseException {
+		createRepository(null, false);
 	}
 
 	/**
@@ -85,8 +80,8 @@ public class FileSystemRepository implements IRepository {
 	 * @param rootFolder
 	 * @throws LocalBaseException
 	 */
-	public FileSystemRepository(String user, String rootFolder) throws LocalBaseException {
-		createRepository(user, rootFolder, false);
+	public FileSystemRepository(String rootFolder) throws LocalBaseException {
+		createRepository(rootFolder, false);
 	}
 
 	/**
@@ -97,11 +92,11 @@ public class FileSystemRepository implements IRepository {
 	 * @param absolute
 	 * @throws LocalBaseException
 	 */
-	public FileSystemRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
-		createRepository(user, rootFolder, absolute);
+	public FileSystemRepository(String rootFolder, boolean absolute) throws LocalBaseException {
+		createRepository(rootFolder, absolute);
 	}
-
-	protected void createRepository(String user, String rootFolder, boolean absolute) {
+	
+	protected void createRepository(String rootFolder, boolean absolute) {
 		String root;
 		if (absolute) {
 			if (rootFolder != null) {
@@ -116,8 +111,7 @@ public class FileSystemRepository implements IRepository {
 				root += rootFolder;
 			}
 		}
-		this.user = user;
-		this.repositoryDAO = new LocalRepositoryDAO(this);
+		this.repositoryDao = new LocalRepositoryDao(this);
 
 		logger.debug(String.format("Creating File-based Repository Client for: %s ...", root));
 		initializeRepository(root);
@@ -267,8 +261,8 @@ public class FileSystemRepository implements IRepository {
 		// repositoryDAO.dispose();
 	}
 
-	public LocalRepositoryDAO getRepositoryDAO() {
-		return repositoryDAO;
+	public LocalRepositoryDao getRepositoryDAO() {
+		return repositoryDao;
 	}
 
 	@Override
@@ -287,8 +281,6 @@ public class FileSystemRepository implements IRepository {
 			logger.error(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 			throw new IOException(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
 		}
-		// TODO make use of override and excludeRootFolderName arguments?
-		// importer.unzip(relativeRoot, zipInputStream, null);
 		ZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
 	}
 
@@ -309,32 +301,8 @@ public class FileSystemRepository implements IRepository {
 			logger.error(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 			throw new IOException(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
 		}
-		// TODO make use of override and excludeRootFolderName arguments?
-		// importer.unzip(relativeRoot, new ZipInputStream(new ByteArrayInputStream(data)), filter);
 		ZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
 	}
-
-	// @Override
-	// public byte[] exportZip(List<String> relativeRoots) throws IOException {
-	// ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	// ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
-	// exporter.zip(relativeRoots, zipOutputStream);
-	// return baos.toByteArray();
-	// }
-	//
-	// @Override
-	// public byte[] exportZip(String path, boolean inclusive) throws IOException {
-	// ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	// ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
-	// try {
-	// exporter.zip(path, zipOutputStream, inclusive);
-	// } finally {
-	// zipOutputStream.flush();
-	// zipOutputStream.close();
-	// }
-	//
-	// return baos.toByteArray();
-	// }
 
 	@Override
 	public byte[] exportZip(List<String> relativeRoots) throws IOException {
@@ -401,7 +369,7 @@ public class FileSystemRepository implements IRepository {
 
 	@Override
 	public List<IResourceVersion> getResourceVersions(String path) throws IOException {
-		return repositoryDAO.getResourceVersionsByPath(path);
+		return repositoryDao.getResourceVersionsByPath(path);
 	}
 
 	@Override
@@ -434,11 +402,6 @@ public class FileSystemRepository implements IRepository {
 			File toBeDeleted = filesToBeDeleted.next();
 			toBeDeleted.delete();
 		}
-	}
-
-	@Override
-	public String getUser() {
-		return user;
 	}
 
 }

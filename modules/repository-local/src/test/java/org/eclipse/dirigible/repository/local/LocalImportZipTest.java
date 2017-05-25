@@ -21,7 +21,7 @@ public class LocalImportZipTest extends GenericImportZipTest {
 	@Before
 	public void setUp() {
 		try {
-			repository = new LocalRepository("test");
+			repository = new LocalRepository("target/test");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

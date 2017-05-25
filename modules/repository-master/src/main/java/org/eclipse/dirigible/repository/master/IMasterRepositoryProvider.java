@@ -8,14 +8,12 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.api;
-
-import java.util.Map;
+package org.eclipse.dirigible.repository.master;
 
 public interface IMasterRepositoryProvider {
 
 	public String getType();
 
-	public IMasterRepository createRepository(Map<String, Object> parameters);
+	public IMasterRepository createMasterRepository();
 
 }

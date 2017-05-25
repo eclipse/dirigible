@@ -68,8 +68,6 @@ public abstract class GenericMultiThreadTest {
 			return;
 		}
 
-		System.out.println(this.toString() + " by " + repository.getUser());
-
 		IResource resource = null;
 		try {
 			String content = "test1";

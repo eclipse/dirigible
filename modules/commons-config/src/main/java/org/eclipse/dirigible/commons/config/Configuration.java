@@ -19,40 +19,30 @@ import org.slf4j.LoggerFactory;
  * and also merge with a provided properties object with add() methods
  * 
  */
-public class ConfigurationFacade {
+public class Configuration {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ConfigurationFacade.class);
-	
-	private static ConfigurationFacade INSTANCE;
+	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	
 	private Properties properties = new Properties();
 	
-	private ConfigurationFacade() {
-		//
+	public static Configuration INSTANCE;
+	
+	public static void create() {
+		INSTANCE = new Configuration();
+		Configuration.update();
 	}
 	
-	/**
-	 * Getter for the static instance of this class
-	 * @return the static instance
-	 */
-	public static final ConfigurationFacade getInstance() {
-		synchronized (ConfigurationFacade.class) {
-			if (INSTANCE == null) {
-				INSTANCE = new ConfigurationFacade();
-				INSTANCE.init();
-				INSTANCE.update();
-			}
-		}
-		
-		return INSTANCE;
+	private Configuration() {
+		init();
 	}
-
+	
 	/**
 	 * Initializes with the default properties from dirigible.properties
 	 */
 	private void init() {
 		try {
-			this.properties.load(ConfigurationFacade.class.getResourceAsStream("/dirigible.properties"));
+			this.properties.load(Configuration.class.getResourceAsStream("/dirigible.properties"));
+			logger.debug("Configuration initialized with dirigible.properties");
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -60,13 +50,14 @@ public class ConfigurationFacade {
 	
 	/**
 	 * Loads a custom properties file from the class loader
-	 * @param name
+	 * @param path
 	 */
-	public void load(String name) {
+	public static void load(String path) {
 		try {
 			Properties custom = new Properties();
-			custom.load(ConfigurationFacade.class.getResourceAsStream(name));
-			this.properties.putAll(custom);
+			custom.load(Configuration.class.getResourceAsStream(path));
+			INSTANCE.properties.putAll(custom);
+			logger.debug("Configuration loaded: " + path);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -76,8 +67,8 @@ public class ConfigurationFacade {
 	 * Merge the provided properties object
 	 * @param custom
 	 */
-	public void add(Properties custom) {
-		this.properties.putAll(custom);
+	public static void add(Properties custom) {
+		INSTANCE.properties.putAll(custom);
 	}
 	
 	/**
@@ -85,8 +76,8 @@ public class ConfigurationFacade {
 	 * @param key
 	 * @return
 	 */
-	public String get(String key) {
-		return this.properties.getProperty(key);
+	public static String get(String key) {
+		return INSTANCE.properties.getProperty(key);
 	}
 	
 	/**
@@ -94,8 +85,8 @@ public class ConfigurationFacade {
 	 * @param key
 	 * @param value
 	 */
-	public void set(String key, String value) {
-		this.properties.setProperty(key, value);
+	public static void set(String key, String value) {
+		INSTANCE.properties.setProperty(key, value);
 	}
 	
 	/**
@@ -104,24 +95,24 @@ public class ConfigurationFacade {
 	 * @param value
 	 * @return
 	 */
-	public String[] getKeys(String key, String value) {
-		return this.properties.stringPropertyNames().toArray(new String[]{});
+	public static String[] getKeys(String key, String value) {
+		return INSTANCE.properties.stringPropertyNames().toArray(new String[]{});
 	}
 	
 	/**
 	 * Update the properties values from the System's properties and from the Environment if any
 	 */
-	public void update() {
-		Set<String> keys = this.properties.stringPropertyNames();
+	public static void update() {
+		Set<String> keys = INSTANCE.properties.stringPropertyNames();
 		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
 			String key = iterator.next();
 			String asSystemProperty = System.getProperty(key);
 			if (asSystemProperty != null) {
-				this.properties.setProperty(key, asSystemProperty);
+				INSTANCE.properties.setProperty(key, asSystemProperty);
 			} else {
 				String asEnvVar = System.getenv(key);
 				if (asEnvVar != null) {
-					this.properties.setProperty(key, asEnvVar);
+					INSTANCE.properties.setProperty(key, asEnvVar);
 				}
 			}
 		}

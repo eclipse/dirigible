@@ -17,6 +17,13 @@ import java.util.List;
  * This interface represents a READ ONLY Repository. It allows for navigating through collections and resources.
  */
 public interface IReadOnlyRepository {
+	
+	/**
+	 * Performs initialization tasks
+	 * 
+	 * @throws IOException
+	 */
+	public void initialize() throws RepositoryInitializationException;
 
 	/**
 	 * Returns an instance of <code>ICollection</code> which represents the root
@@ -100,12 +107,5 @@ public interface IReadOnlyRepository {
 	 * @throws IOException
 	 */
 	public IResourceVersion getResourceVersion(String path, int version) throws IOException;
-
-	/**
-	 * Getter for the user has created this instance of a repository object
-	 *
-	 * @return the user name
-	 */
-	public String getUser();
 
 }

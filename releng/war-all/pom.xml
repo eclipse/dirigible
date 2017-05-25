@@ -32,7 +32,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<failOnMissingWebXml>true</failOnMissingWebXml>
-					<webXml>main/webapp/WEB-INF/web.xml</webXml>
+					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
 					<warName>ROOT</warName>
 				</configuration>
 			</plugin>
@@ -98,7 +98,7 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-commons-logging</artifactId>
+		 	<artifactId>dirigible-commons-config</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		

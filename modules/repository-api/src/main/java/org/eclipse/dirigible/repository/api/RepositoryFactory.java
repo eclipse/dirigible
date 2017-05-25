@@ -10,32 +10,17 @@
 
 package org.eclipse.dirigible.repository.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.ServiceLoader;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RepositoryFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryFactory.class.getCanonicalName());
-
-	private static IRepositoryProvider localRepositoryProvider;
-
-	private static List<IRepositoryProvider> repositoryProviders = new ArrayList<IRepositoryProvider>();
-
-	private static final String LOCAL_REPOSITORY_PROVIDER = "org.eclipse.dirigible.repository.local.LocalRepositoryProvider";
-//	private static final String DB_REPOSITORY_PROVIDER = "org.eclipse.dirigible.repository.db.DBRepositoryProvider";
-
-	static {
-		repositoryProviders.add(createRepositoryProvider(LOCAL_REPOSITORY_PROVIDER));
-//		repositoryProviders.add(createRepositoryProvider(DB_REPOSITORY_PROVIDER));
-	}
-
-	private RepositoryFactory () {
-		//
-	}
+	
+	private static ServiceLoader<IRepositoryProvider> repositoryProviders = ServiceLoader.load(IRepositoryProvider.class);
 
 	/**
 	 * Create a Repository instance used for local operations
@@ -44,29 +29,23 @@ public class RepositoryFactory {
 	 * @return local repository
 	 * @throws RepositoryCreationException
 	 */
-	public static IRepository createRepository(Map<String, Object> parameters) throws RepositoryCreationException {
-		String defaultRepositoryProvider = System.getProperty(ICommonConstants.INIT_PARAM_REPOSITORY_PROVIDER);
+	public IRepository createRepository() throws RepositoryException {
+		
+		String defaultRepositoryProvider = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER);
 		if (defaultRepositoryProvider == null) {
-			defaultRepositoryProvider = ICommonConstants.INIT_PARAM_REPOSITORY_PROVIDER_LOCAL;
+			defaultRepositoryProvider = IRepository.DIRIGIBLE_REPOSITORY_PROVIDER_LOCAL;
 		}
-
+		
 		for (IRepositoryProvider repositoryProvider : repositoryProviders) {
 			if (repositoryProvider.getType().equals(defaultRepositoryProvider)) {
 				logger.info(String.format("Repository Provider used is: %s", repositoryProvider.getType()));
-				localRepositoryProvider = repositoryProvider;
+				IRepository repository = repositoryProvider.createRepository();
+				repository.initialize();
+				return repository;
 			}
-		}
+	    }
 
-		return localRepositoryProvider.createRepository(parameters);
-	}
-
-	private static IRepositoryProvider createRepositoryProvider(String className) {
-		try {
-			return (IRepositoryProvider) Class.forName(className).newInstance();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			throw new RuntimeException(e); 
-		}
+		throw new RepositoryCreationException(String.format("Repository Provider not found: %s", defaultRepositoryProvider));
 	}
 
 }

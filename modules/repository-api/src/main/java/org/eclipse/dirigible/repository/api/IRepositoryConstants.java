@@ -12,9 +12,9 @@ package org.eclipse.dirigible.repository.api;
 
 import java.nio.charset.Charset;
 
-public interface ICommonConstants {
+public interface IRepositoryConstants {
 
-	public static final String DIRIGIBLE_PRODUCT_NAME = "Eclipse Dirigible"; //$NON-NLS-1$
+	
 
 	public static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	public static final String SEPARATOR = "/"; //$NON-NLS-1$
@@ -103,31 +103,31 @@ public interface ICommonConstants {
 	}
 
 	public static final String DATA_CONTENT_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.DATA_STRUCTURES;
+			+ IRepositoryConstants.ARTIFACT_TYPE.DATA_STRUCTURES;
 
 	public static final String WEB_CONTENT_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.WEB_CONTENT;
+			+ IRepositoryConstants.ARTIFACT_TYPE.WEB_CONTENT;
 
 	public static final String WIKI_CONTENT_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.WIKI_CONTENT;
+			+ IRepositoryConstants.ARTIFACT_TYPE.WIKI_CONTENT;
 
 	public static final String MOBILE_APPLICATIONS_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
+			+ IRepositoryConstants.ARTIFACT_TYPE.MOBILE_APPLICATIONS;
 
 	public static final String SCRIPTING_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
+			+ IRepositoryConstants.ARTIFACT_TYPE.SCRIPTING_SERVICES;
 
 	public static final String INTEGRATION_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES;
+			+ IRepositoryConstants.ARTIFACT_TYPE.INTEGRATION_SERVICES;
 
 	public static final String SECURITY_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.SECURITY_CONSTRAINTS;
+			+ IRepositoryConstants.ARTIFACT_TYPE.SECURITY_CONSTRAINTS;
 
 	public static final String TESTS_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.TEST_CASES;
+			+ IRepositoryConstants.ARTIFACT_TYPE.TEST_CASES;
 
 	public static final String EXTENSION_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_REGISTRY_PUBLIC
-			+ ICommonConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
+			+ IRepositoryConstants.ARTIFACT_TYPE.EXTENSION_DEFINITIONS;
 
 	public static final String TEMPLATE_DEFINITIONS_REGISTRY_PUBLISH_LOCATION = IRepositoryPaths.DB_DIRIGIBLE_TEMPLATES;
 
@@ -154,22 +154,9 @@ public interface ICommonConstants {
 
 	public static final String WORKSPACES_SERVICE = "WorkspacesService"; //$NON-NLS-1$
 
-	// Initi Parameters Names
-	public static final String INIT_PARAM_RUNTIME_URL = "runtimeUrl"; //$NON-NLS-1$
-	public static final String INIT_PARAM_SERVICES_URL = "servicesUrl"; //$NON-NLS-1$
-	public static final String INIT_PARAM_ENABLE_ROLES = "enableRoles"; //$NON-NLS-1$
-	public static final String INIT_PARAM_LOG_IN_SYSTEM_OUTPUT = "logInSystemOutput"; //$NON-NLS-1$
-	public static final String INIT_PARAM_JNDI_DEFAULT_DATASOURCE = "jndiDefaultDataSource"; //$NON-NLS-1$
-	public static final String INIT_PARAM_JNDI_CONNECTIVITY_CONFIGURATION = "jndiConnectivityService"; //$NON-NLS-1$
-	public static final String INIT_PARAM_JNDI_MAIL_SESSION = "jndiMailService"; //$NON-NLS-1$
-	public static final String INIT_PARAM_JDBC_SET_AUTO_COMMIT = "jdbcAutoCommit"; //$NON-NLS-1$
-	public static final String INIT_PARAM_JDBC_MAX_CONNECTIONS_COUNT = "jdbcMaxConnectionsCount";
-	public static final String INIT_PARAM_JDBC_WAIT_TIMEOUT = "jdbcWaitTimeout";
-	public static final String INIT_PARAM_JDBC_WAIT_COUNT = "jdbcWaitCount";
-	public static final String INIT_PARAM_REPOSITORY_PROVIDER = "repositoryProvider"; //$NON-NLS-1$
-	public static final String INIT_PARAM_REPOSITORY_PROVIDER_LOCAL = "local"; //$NON-NLS-1$
+	
 	public static final String INIT_PARAM_REPOSITORY_PROVIDER_DB = "db"; //$NON-NLS-1$
-	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER = "repositoryProviderMaster"; //$NON-NLS-1$
+	
 	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER_DB = "db"; //$NON-NLS-1$
 	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER_FILESYSTEM = "filesystem"; //$NON-NLS-1$
 	public static final String INIT_PARAM_REPOSITORY_PROVIDER_MASTER_GIT = "git"; //$NON-NLS-1$
@@ -184,9 +171,6 @@ public interface ICommonConstants {
 	public static final String INIT_PARAM_AUTO_ACTIVATE_ENABLED = "autoActivateEnabled"; //$NON-NLS-1$
 	public static final String INIT_PARAM_AUTO_PUBLISH_ENABLED = "autoPublishEnabled"; //$NON-NLS-1$
 	public static final String INIT_PARAM_ENABLE_SANDBOX = "enableSandbox"; //$NON-NLS-1$
-	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER = "localRepositoryRootFolder"; //$NON-NLS-1$
-	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "localRepositoryRootFolderIsAbsolute"; //$NON-NLS-1$
-	public static final String INIT_PARAM_RUN_ON_OSGI = "osgi"; //$NON-NLS-1$ // true/false
 	// ---
 
 	public static final Charset UTF8 = Charset.forName("UTF-8");

@@ -16,7 +16,7 @@ package org.eclipse.dirigible.repository.api;
 public interface IRepositoryPaths {
 
 	/** The default separator char */
-	public static final String SEPARATOR = ICommonConstants.SEPARATOR;
+	public static final String SEPARATOR = IRepositoryConstants.SEPARATOR;
 
 	/** The base folder of the Repository structure */
 	public static final String DB_DIRIGIBLE_BASE = "/db/"; //$NON-NLS-1$

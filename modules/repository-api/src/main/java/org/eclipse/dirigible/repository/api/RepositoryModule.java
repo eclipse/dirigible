@@ -1,15 +1,13 @@
-package org.eclipse.dirigible.repository.module;
+package org.eclipse.dirigible.repository.api;
 
-import java.util.HashMap;
-
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.RepositoryCreationException;
-import org.eclipse.dirigible.repository.api.RepositoryFactory;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 
+@Singleton
 public class RepositoryModule extends AbstractModule {
 
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryModule.class);
@@ -18,7 +16,8 @@ public class RepositoryModule extends AbstractModule {
 	protected void configure() {
 		IRepository repository;
 		try {
-			repository = RepositoryFactory.createRepository(new HashMap<String, Object>());
+			Configuration.load("/dirigible-repository.properties");
+			repository = new RepositoryFactory().createRepository();
 			bind(IRepository.class).toInstance(repository);
 		} catch (RepositoryCreationException e) {
 			logger.error(e.getMessage(), e);

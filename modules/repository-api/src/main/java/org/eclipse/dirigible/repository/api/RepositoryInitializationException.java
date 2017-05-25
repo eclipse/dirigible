@@ -11,23 +11,23 @@
 
 package org.eclipse.dirigible.repository.api;
 
-public class RepositoryCreationException extends RepositoryException {
+public class RepositoryInitializationException extends RepositoryException {
 
 	private static final long serialVersionUID = -163847774919514248L;
 
-	public RepositoryCreationException() {
+	public RepositoryInitializationException() {
 		super();
 	}
 
-	public RepositoryCreationException(String message, Throwable cause) {
+	public RepositoryInitializationException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public RepositoryCreationException(String message) {
+	public RepositoryInitializationException(String message) {
 		super(message);
 	}
 
-	public RepositoryCreationException(Throwable cause) {
+	public RepositoryInitializationException(Throwable cause) {
 		super(cause);
 	}
 

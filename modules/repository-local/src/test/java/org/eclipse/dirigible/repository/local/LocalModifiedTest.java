@@ -21,9 +21,9 @@ public class LocalModifiedTest extends GenericModifiedTest {
 	@Before
 	public void setUp() {
 		try {
-			repository1 = new LocalRepository("guest1");
-			repository2 = new LocalRepository("guest2");
-			repository3 = new LocalRepository("guest3");
+			repository1 = new LocalRepository("target/test");
+			repository2 = new LocalRepository("target/test");
+			repository3 = new LocalRepository("target/test");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
