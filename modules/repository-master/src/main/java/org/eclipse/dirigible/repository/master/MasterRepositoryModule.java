@@ -12,13 +12,12 @@ import com.google.inject.Singleton;
 public class MasterRepositoryModule extends AbstractModule {
 
 	private static final Logger logger = LoggerFactory.getLogger(MasterRepositoryModule.class);
-	
+
 	@Override
 	protected void configure() {
-		IMasterRepository masterRepository;
 		try {
 			Configuration.load("/dirigible-repository-master.properties");
-			masterRepository = new MasterRepositoryFactory().createMasterRepository();
+			IMasterRepository masterRepository = new MasterRepositoryFactory().createMasterRepository();
 			if (masterRepository != null) {
 				bind(IMasterRepository.class).toInstance(masterRepository);
 				logger.debug(this.getClass().getCanonicalName() + " module initialized.");

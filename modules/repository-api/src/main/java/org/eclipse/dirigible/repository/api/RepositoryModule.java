@@ -11,13 +11,12 @@ import com.google.inject.Singleton;
 public class RepositoryModule extends AbstractModule {
 
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryModule.class);
-	
+
 	@Override
 	protected void configure() {
-		IRepository repository;
 		try {
 			Configuration.load("/dirigible-repository.properties");
-			repository = new RepositoryFactory().createRepository();
+			IRepository repository = new RepositoryFactory().createRepository();
 			bind(IRepository.class).toInstance(repository);
 		} catch (RepositoryCreationException e) {
 			logger.error(e.getMessage(), e);
