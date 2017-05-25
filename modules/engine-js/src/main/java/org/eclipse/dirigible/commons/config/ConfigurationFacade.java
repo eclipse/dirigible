@@ -24,7 +24,6 @@ public class ConfigurationFacade {
 	private static final Logger logger = LoggerFactory.getLogger(ConfigurationFacade.class);
 	
 	private static ConfigurationFacade INSTANCE;
-	
 	private Properties properties = new Properties();
 	
 	private ConfigurationFacade() {

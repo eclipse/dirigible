@@ -6,6 +6,8 @@ import java.util.HashSet;
 import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
+import org.eclipse.dirigible.engine.web.service.WebEngineService;
+import org.eclipse.dirigible.repository.module.RepositoryModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +37,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	protected Injector getInjector() {
 		logger.debug(DEBUG_INITIALIZING_GUICE_INJECTOR_MESSAGE);
 
-		//injector = Guice.createInjector(new ActivitiModule());
+		injector = Guice.createInjector(new RepositoryModule());
 
 		setStaticInjector(injector);
 		return injector;
@@ -51,6 +53,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.debug(DEBUG_REGISTERING_API_SERVICES_MESSAGE);
 
 		getServices().add(new SecureAnnotationsInterceptor());
+		getServices().add(injector.getInstance(WebEngineService.class));
 
 		logger.debug(DEBUG_API_SERVICES_REGISTED_MESSAGE, Arrays.asList(getServices().toArray()));
 	}

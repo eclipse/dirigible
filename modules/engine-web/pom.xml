@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Runtime - Core</name>
-	<artifactId>dirigible-runtime-core</artifactId>
+	<name>Engine - Web</name>
+	<artifactId>dirigible-engine-web</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -30,15 +30,10 @@
     
     <dependencies>
     	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-repository-api</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-web</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-api</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
