@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-parent</artifactId>
+		<version>${dirigible.version}</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<name>Content - Core - API</name>
+	<artifactId>content-core-api</artifactId>
+    <packaging>jar</packaging>
+	
+	<scm>
+		<connection>scm:git:git://github.com/dirigiblelabs/core_api.git</connection>
+		<developerConnection>scm:git:https://github.com/dirigiblelabs/core_api.git</developerConnection>
+		<url>https://github.com/dirigiblelabs/core_api</url>
+	</scm>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>${maven.scm.plugin.version}</version>
+				<configuration>
+					<goals>checkout</goals>
+					<checkoutDirectory>src/main/resources</checkoutDirectory>
+					<server>github</server>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generated-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>checkout</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+		</plugins>
+	</build>
+</project>

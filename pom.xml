@@ -161,6 +161,9 @@
          
         <module>modules/engine-web</module>
         <module>modules/runtime-core</module>
+        
+        <module>modules/content-core-api</module>
+        
         <module>releng/war-all</module>
 	</modules>
     
@@ -270,6 +273,8 @@
     </dependencies>
     
     <properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     	<dirigible.version>3.0</dirigible.version>
         <java.version>1.8</java.version>
         <cxf.version>3.0.3</cxf.version>
@@ -288,6 +293,7 @@
         <slf4j.simple.version>1.7.12</slf4j.simple.version>
         <activiti.version>5.22.0</activiti.version>
         <com.h2database.version>1.4.193</com.h2database.version>
+		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
     </properties>
 
 </project>
