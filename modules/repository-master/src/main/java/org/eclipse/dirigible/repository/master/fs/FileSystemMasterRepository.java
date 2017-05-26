@@ -10,14 +10,15 @@
 
 package org.eclipse.dirigible.repository.master.fs;
 
-import java.io.IOException;
-
 import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
 import org.eclipse.dirigible.repository.local.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalBaseException;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
 
 public class FileSystemMasterRepository extends FileSystemRepository implements IMasterRepository {
+
+	public static final String TYPE = "filesystem";
+	public static final String DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER";
 
 	private static final String DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT = "dirigible_master";
 
@@ -37,7 +38,7 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 	@Override
 	public void initialize() throws RepositoryInitializationException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

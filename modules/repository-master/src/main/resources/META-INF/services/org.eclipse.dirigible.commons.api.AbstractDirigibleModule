@@ -1,0 +1,3 @@
+org.eclipse.dirigible.repository.master.fs.FileSystemMasterRepositoryModule	# File System Master Repository Module
+org.eclipse.dirigible.repository.master.zip.ZipMasterRepositoryModule	# ZIP Master Repository Module
+org.eclipse.dirigible.repository.master.jar.JarMasterRepositoryModule	# JAR Master Repository Module

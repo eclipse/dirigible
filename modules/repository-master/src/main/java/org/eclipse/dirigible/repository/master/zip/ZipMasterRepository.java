@@ -15,6 +15,9 @@ import org.eclipse.dirigible.repository.master.IMasterRepository;
 
 public class ZipMasterRepository extends ZipRepository implements IMasterRepository {
 
+	public static final String TYPE = "zip";
+	public static final String DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION = "DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION";
+
 	public ZipMasterRepository(String zip) throws LocalBaseException {
 		super(zip);
 	}

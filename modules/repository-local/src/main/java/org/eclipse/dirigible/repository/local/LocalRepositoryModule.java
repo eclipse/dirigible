@@ -29,7 +29,7 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 		}
 	}
 
-	private LocalRepository createInstance() {
+	private IRepository createInstance() {
 		String rootFolder = Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER);
 		boolean absolute = Boolean.parseBoolean(Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE));
 		return new LocalRepository(rootFolder, absolute);

@@ -15,6 +15,9 @@ import org.eclipse.dirigible.repository.master.IMasterRepository;
 
 public class JarMasterRepository extends JarRepository implements IMasterRepository {
 
+	public static final String TYPE = "jar";
+	public static final String DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH = "DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH";
+
 	public JarMasterRepository(String zip) throws LocalBaseException {
 		super(zip);
 	}
