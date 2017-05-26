@@ -162,7 +162,7 @@
         <module>modules/engine-web</module>
         <module>modules/runtime-core</module>
         
-        <module>modules/content-core-api</module>
+        <module>content/core-api</module>
         
         <module>releng/war-all</module>
 	</modules>
