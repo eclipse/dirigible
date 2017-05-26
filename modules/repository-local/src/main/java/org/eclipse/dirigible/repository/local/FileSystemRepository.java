@@ -30,22 +30,23 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.repository.zip.ZipExporter;
 import org.eclipse.dirigible.repository.zip.ZipImporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The File System based implementation of {@link IRepository}
  */
 public abstract class FileSystemRepository implements IRepository {
 	
-	private static Logger logger = Logger.getLogger(FileSystemRepository.class);
+	private static Logger logger = LoggerFactory.getLogger(FileSystemRepository.class);
 
 	private static final String CURRENT_DIR = IRepositoryConstants.DOT;
 	private static final String DIRIGIBLE_LOCAL = "dirigible_local";

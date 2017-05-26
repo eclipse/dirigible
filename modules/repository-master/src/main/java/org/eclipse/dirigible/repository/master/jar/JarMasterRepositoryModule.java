@@ -3,15 +3,16 @@ package org.eclipse.dirigible.repository.master.jar;
 import org.eclipse.dirigible.commons.api.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Module for managing JAR Repository instantiation and binding
  */
 public class JarMasterRepositoryModule extends AbstractDirigibleModule {
 
-	private static final Logger logger = Logger.getLogger(JarMasterRepositoryModule.class);
+	private static final Logger logger = LoggerFactory.getLogger(JarMasterRepositoryModule.class);
 
 	@Override
 	protected void configure() {

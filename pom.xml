@@ -148,7 +148,6 @@
 
 	<modules>
 		<module>modules/commons-api</module>
-        <module>modules/commons-logging</module>
         <module>modules/commons-config</module>
 
 		<module>modules/repository-api</module>
@@ -161,9 +160,7 @@
          -->
          
         <module>modules/engine-web</module>
-        
         <module>modules/runtime-core</module>
-        
         <module>releng/war-all</module>
 	</modules>
     
@@ -186,6 +183,16 @@
         <dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-servlet</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-persist</artifactId>
 			<version>${guice.version}</version>
 		</dependency>
 		<dependency>
@@ -212,25 +219,20 @@
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-servlet</artifactId>
-			<version>${guice.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-persist</artifactId>
-			<version>${guice.version}</version>
-		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>javax.persistence</artifactId>
 			<version>${javax.persistence.version}</version>
-		</dependency>
-		<dependency>
+		</dependency> -->
+		<!-- <dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>eclipselink</artifactId>
 			<version>${eclipselink.version}</version>
+		</dependency> -->
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.2</version>
 		</dependency>
         
         <!-- Test Dependencies  -->

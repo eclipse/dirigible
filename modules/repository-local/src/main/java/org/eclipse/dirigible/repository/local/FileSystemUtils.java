@@ -22,11 +22,12 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
-import org.eclipse.dirigible.repository.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileSystemUtils {
 
-	private static final Logger logger = Logger.getLogger(FileSystemUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileSystemUtils.class);
 
 	public static void saveFile(String workspacePath, byte[] content) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(workspacePath);

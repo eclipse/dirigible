@@ -26,9 +26,12 @@ import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.repository.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LocalRepositoryDao {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LocalRepositoryDao.class);
 
 	private static final String LAST = "last";
 
@@ -40,7 +43,7 @@ public class LocalRepositoryDao {
 
 	private static final String CREATED_BY = "createdBy";
 
-	private static final Logger logger = Logger.getLogger(LocalRepositoryDao.class);
+	
 
 	static final int OBJECT_TYPE_FOLDER = 0;
 	static final int OBJECT_TYPE_DOCUMENT = 1;

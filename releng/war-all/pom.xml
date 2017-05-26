@@ -64,13 +64,7 @@
 		</plugins>
 	</build>
 
-
-
-	<!-- profile for running tests -->
-	<!-- TODO -->
-
 	<dependencies>
-	
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-api</artifactId>
@@ -121,7 +115,6 @@
 			<artifactId>h2</artifactId>
 			<version>${com.h2database.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<!-- default properties -->

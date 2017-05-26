@@ -18,16 +18,17 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IEntityInformation;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.repository.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The DB implementation of {@link IEntity}
+ * The FileSystem implementation of {@link IEntity}
  */
 public abstract class LocalEntity implements IEntity {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LocalEntity.class);
 
 	private static final String THERE_IS_NO_ENTITY_AT_PATH_0 = "There is no entity at path ''{0}''."; //$NON-NLS-1$
-
-	private static final Logger logger = Logger.getLogger(LocalEntity.class);
 
 	private final FileSystemRepository repository;
 

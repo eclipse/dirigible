@@ -3,15 +3,16 @@ package org.eclipse.dirigible.repository.master.zip;
 import org.eclipse.dirigible.commons.api.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.logging.Logger;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Module for managing ZIP Repository instantiation and binding
  */
 public class ZipMasterRepositoryModule extends AbstractDirigibleModule {
 
-	private static final Logger logger = Logger.getLogger(ZipMasterRepositoryModule.class);
+	private static final Logger logger = LoggerFactory.getLogger(ZipMasterRepositoryModule.class);
 
 	@Override
 	protected void configure() {

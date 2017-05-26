@@ -18,12 +18,15 @@ import java.util.List;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.repository.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The DB implementation of {@link IResource}
  */
 public class LocalResource extends LocalEntity implements IResource {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LocalResource.class);
 	
 	private static final String THERE_IS_NO_RESOURCE_AT_PATH_0 = "There is no resource at path ''{0}''."; //$NON-NLS-1$
 	private static final String COULD_NOT_UPDATE_DOCUMENT = "Could not update document."; //$NON-NLS-1$
@@ -31,8 +34,6 @@ public class LocalResource extends LocalEntity implements IResource {
 	private static final String NOT_IMPLEMENTED = "Not implemented"; //$NON-NLS-1$
 	private static final String COULD_NOT_DELETE_RESOURCE = "Could not delete resource: "; //$NON-NLS-1$
 	private static final String COULD_NOT_RENAME_RESOURCE = "Could not rename resource: "; //$NON-NLS-1$
-
-	private static final Logger logger = Logger.getLogger(LocalResource.class);
 
 	private boolean binary = false;
 

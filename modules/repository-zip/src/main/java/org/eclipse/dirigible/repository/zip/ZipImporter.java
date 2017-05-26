@@ -19,14 +19,15 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class which imports all the content from a given zip
  */
 public class ZipImporter {
 
-	private static final Logger logger = Logger.getLogger(ZipImporter.class);
+	private static final Logger logger = LoggerFactory.getLogger(ZipImporter.class);
 
 	/**
 	 * Import all the content from a given zip to the target repository instance
