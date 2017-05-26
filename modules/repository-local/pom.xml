@@ -29,6 +29,16 @@
     </build>
     
     <dependencies>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-api</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-logging</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
@@ -39,11 +49,6 @@
             <artifactId>dirigible-repository-api-test</artifactId>
             <version>${dirigible.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-logging</artifactId>
-            <version>${dirigible.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>

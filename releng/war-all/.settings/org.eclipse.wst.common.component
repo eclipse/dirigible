@@ -15,16 +15,19 @@
         <dependent-module archiveName="dirigible-repository-local-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-local/dirigible-repository-local">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-commons-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-api/dirigible-commons-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-repository-master-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-master/dirigible-repository-master">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-core/dirigible-runtime-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository/dirigible-repository">
+        <dependent-module archiveName="dirigible-engine-web-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-web/dirigible-engine-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-web-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-web/dirigible-engine-web">
+        <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-config/dirigible-commons-config">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="dirigible-war-all"/>

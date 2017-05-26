@@ -1,15 +1,15 @@
 package org.eclipse.dirigible.repository.master;
 
+import org.eclipse.dirigible.commons.api.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.RepositoryCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
 @Singleton
-public class MasterRepositoryModule extends AbstractModule {
+public class MasterRepositoryModule extends AbstractDirigibleModule {
 
 	private static final Logger logger = LoggerFactory.getLogger(MasterRepositoryModule.class);
 

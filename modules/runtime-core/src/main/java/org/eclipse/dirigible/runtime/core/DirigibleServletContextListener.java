@@ -6,9 +6,9 @@ import java.util.HashSet;
 import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
+import org.eclipse.dirigible.commons.api.DirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.web.service.WebEngineService;
-import org.eclipse.dirigible.repository.RepositoryModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 		Configuration.create();
 
-		injector = Guice.createInjector(new RepositoryModule());
+		injector = Guice.createInjector(new DirigibleModule());
 
 		setStaticInjector(injector);
 		return injector;

@@ -1,28 +1,24 @@
 package org.eclipse.dirigible.repository.local;
 
+import org.eclipse.dirigible.commons.api.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.RepositoryCreationException;
-import org.eclipse.dirigible.repository.api.RepositoryFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.google.inject.AbstractModule;
-
-public class LocalRepositoryModule extends AbstractModule {
-
-	private static final Logger logger = LoggerFactory.getLogger(LocalRepositoryModule.class);
+public class LocalRepositoryModule extends AbstractDirigibleModule {
 
 	@Override
 	protected void configure() {
-		try {
-			Configuration.load("/dirigible-repository-local.properties");
-			// TODO Move the logic from the RepositoryFactory -> here
-			IRepository repository = new RepositoryFactory().createRepository();
-			bind(IRepository.class).toInstance(repository);
-		} catch (RepositoryCreationException e) {
-			logger.error(e.getMessage(), e);
+		Configuration.load("/dirigible-repository-local.properties");
+		String repositoryProvider = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, IRepository.DIRIGIBLE_REPOSITORY_PROVIDER_LOCAL);
+
+		if (LocalRepository.TYPE.equals(repositoryProvider)) {
+			bind(IRepository.class).toInstance(createInstance());
 		}
 	}
 
+	private LocalRepository createInstance() {
+		String rootFolder = Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER);
+		boolean absolute = Boolean.parseBoolean(Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE));
+		return new LocalRepository(rootFolder, absolute);
+	}
 }

@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Repository</name>
-	<artifactId>dirigible-repository</artifactId>
+	<name>Commons - Configurations</name>
+	<artifactId>dirigible-commons-api</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -28,16 +28,4 @@
         </plugins>
     </build>
 
-	<dependencies>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-local</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-master</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-     </dependencies>
 </project>

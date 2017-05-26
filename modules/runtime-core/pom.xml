@@ -31,12 +31,12 @@
     <dependencies>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-config</artifactId>
+			<artifactId>dirigible-commons-api</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-repository</artifactId>
+			<artifactId>dirigible-commons-config</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
     	<dependency>

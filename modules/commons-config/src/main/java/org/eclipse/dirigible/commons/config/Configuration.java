@@ -77,9 +77,19 @@ public class Configuration {
 	 * @return
 	 */
 	public static String get(String key) {
-		return INSTANCE.properties.getProperty(key);
+		return get(key, null);
 	}
-	
+
+	/**
+	 * Getter for the value of the property by its key
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public static String get(String key, String defaultValue) {
+		return INSTANCE.properties.getProperty(key, defaultValue);
+	}
+
 	/**
 	 * Setter for the property's key and value
 	 * @param key

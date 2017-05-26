@@ -19,12 +19,13 @@ import org.slf4j.LoggerFactory;
  * The File System based Local Repository implementation of {@link IRepository}
  */
 public class LocalRepository extends FileSystemRepository {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepository.class);
-	
+
+	public static final String TYPE = "local";
 	public static final String DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
-	
+
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
 	 *
@@ -57,7 +58,8 @@ public class LocalRepository extends FileSystemRepository {
 	public LocalRepository(String rootFolder, boolean absolute) throws LocalBaseException {
 		super(rootFolder, absolute);
 	}
-	
+
+	@Override
 	public void initialize() {
 		Configuration.load("/dirigible-repository-local.properties");
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
