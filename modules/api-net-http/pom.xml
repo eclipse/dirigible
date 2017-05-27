@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Engine - Web</name>
-	<artifactId>dirigible-engine-web</artifactId>
+	<name>API - net/http</name>
+	<artifactId>dirigible-api-net-http</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -27,18 +27,5 @@
             </plugin>
         </plugins>
     </build>
-    
-    <dependencies>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-net-http</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-    </dependencies>
 
 </project>

@@ -65,6 +65,18 @@
 	</build>
 
 	<dependencies>
+	
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-net-http</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-utils</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-api</artifactId>
@@ -99,11 +111,7 @@
 		
 		
 
-		<dependency>
-			<groupId>com.squareup.retrofit</groupId>
-			<artifactId>retrofit</artifactId>
-			<version>${retrofit.version}</version>
-		</dependency>
+		
 
 		<dependency>
 		 	<groupId>org.activiti</groupId>
