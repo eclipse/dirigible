@@ -2,13 +2,14 @@ package org.eclipse.dirigible.runtime.core;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.ServiceLoader;
 
 import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
 import org.eclipse.dirigible.commons.api.DirigibleModule;
+import org.eclipse.dirigible.commons.api.DirigibleService;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.engine.web.service.WebEngineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,9 +57,15 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.debug(DEBUG_REGISTERING_API_SERVICES_MESSAGE);
 
 		getServices().add(new SecureAnnotationsInterceptor());
-		getServices().add(injector.getInstance(WebEngineService.class));
+		addDirigibleServices();
 
 		logger.debug(DEBUG_API_SERVICES_REGISTED_MESSAGE, Arrays.asList(getServices().toArray()));
+	}
+
+	private void addDirigibleServices() {
+		for (DirigibleService next : ServiceLoader.load(DirigibleService.class)) {
+			getServices().add(injector.getInstance(next.getServiceType()));
+		}
 	}
 
 	/**

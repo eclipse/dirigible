@@ -9,7 +9,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Commons - Configurations</name>
+	<name>Commons - API</name>
 	<artifactId>dirigible-commons-api</artifactId>
     <packaging>jar</packaging>
     
