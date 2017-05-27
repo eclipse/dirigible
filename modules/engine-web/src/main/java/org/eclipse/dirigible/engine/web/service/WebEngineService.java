@@ -6,13 +6,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
+import org.eclipse.dirigible.commons.api.DirigibleService;
 import org.eclipse.dirigible.engine.web.processor.WebEngineProcessor;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class WebEngineService {
+public class WebEngineService implements DirigibleService {
 	
 	@Inject
 	private WebEngineProcessor processor;
@@ -28,4 +29,8 @@ public class WebEngineService {
 		return processor.getResource(path);
 	}
 
+	@Override
+	public Class<? extends DirigibleService> getServiceType() {
+		return WebEngineService.class;
+	}
 }
