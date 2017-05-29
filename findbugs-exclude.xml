@@ -1,0 +1,24 @@
+<FindBugsFilter>
+
+	
+  	<Match>
+    	<Package name="~org\.eclipse\.ui\.ide.*"/>
+    	<Bug pattern="SE_BAD_FIELD"/>
+    	<Bug pattern="DM_DEFAULT_ENCODING" />
+  	</Match>
+  	
+  
+     <!-- All bugs in test classes, except for JUnit-specific bugs -->
+     <Match>
+      <Class name="~.*\.*Test" />
+      <Not>
+          <Bug code="IJU" />
+      </Not>
+     </Match>
+     
+     <Match>
+    	<Package name="~org\.json.*"/>
+  	</Match>
+     
+
+</FindBugsFilter>
