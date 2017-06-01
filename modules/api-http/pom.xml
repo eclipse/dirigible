@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>API - net/http</name>
-	<artifactId>dirigible-api-net-http</artifactId>
+	<name>API - http</name>
+	<artifactId>dirigible-api-http</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -27,5 +27,13 @@
             </plugin>
         </plugins>
     </build>
+    
+    <dependencies>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-api</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

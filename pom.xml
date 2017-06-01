@@ -162,7 +162,7 @@
         <module>modules/engine-web</module>
         <module>modules/runtime-core</module>
         
-        <module>modules/api-net-http</module>
+        <module>modules/api-http</module>
         <module>modules/api-utils</module>
         
         <module>content/core-api</module>

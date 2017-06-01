@@ -3,18 +3,28 @@ package org.eclipse.dirigible.engine.web.service;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
-import org.eclipse.dirigible.api.v3.net.http.APIv3Request;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingContextException;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingContextFacade;
 import org.eclipse.dirigible.commons.api.service.RestService;
 import org.eclipse.dirigible.engine.web.processor.WebEngineProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-
+/**
+ * Front facing REST service serving the raw web content
+ *
+ */
 @Singleton
 public class WebEngineRestService implements RestService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(WebEngineRestService.class.getCanonicalName());
 	
 	@Inject
 	private WebEngineProcessor processor;
@@ -26,18 +36,25 @@ public class WebEngineRestService implements RestService {
 	 */
 	@GET
 	@Path("/web/{path:.*}")
-	public String getResource(@PathParam("path") String path, @Context HttpServletRequest request) {
-		APIv3Request.set(request);
+	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
-			String result = processor.getResource(path);
-			return result;
-		} finally {
-			APIv3Request.set(null);
+			ScriptingContextFacade.setUp();
+			ScriptingContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
+			ScriptingContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
+			try {
+				String result = processor.getResource(path);
+				return Response.ok(result).build();
+			} finally {
+				ScriptingContextFacade.tearDown();
+			}
+		} catch(ScriptingContextException e) {
+			logger.error(e.getMessage(), e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 
 	@Override
-	public Class<? extends RestService> getServiceType() {
+	public Class<? extends RestService> getType() {
 		return WebEngineRestService.class;
 	}
 }

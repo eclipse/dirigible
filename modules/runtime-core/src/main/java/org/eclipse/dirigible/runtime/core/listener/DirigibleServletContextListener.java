@@ -65,11 +65,11 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	private void addRestServices() {
 		for (RestService next : ServiceLoader.load(RestService.class)) {
-			logger.debug("Registering REST service {} ...", next.getServiceType());
+			logger.debug("Registering REST service {} ...", next.getType());
 			
-			getServices().add(injector.getInstance(next.getServiceType()));
+			getServices().add(injector.getInstance(next.getType()));
 			
-			logger.debug("REST service {} registered.", next.getServiceType());
+			logger.debug("REST service {} registered.", next.getType());
 		}
 	}
 
