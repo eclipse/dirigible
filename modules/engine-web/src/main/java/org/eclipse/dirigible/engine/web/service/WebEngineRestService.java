@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.engine.web.service;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -7,14 +9,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
 import org.eclipse.dirigible.api.v3.net.http.APIv3Request;
-import org.eclipse.dirigible.commons.api.DirigibleService;
+import org.eclipse.dirigible.commons.api.service.RestService;
 import org.eclipse.dirigible.engine.web.processor.WebEngineProcessor;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
-public class WebEngineService implements DirigibleService {
+public class WebEngineRestService implements RestService {
 	
 	@Inject
 	private WebEngineProcessor processor;
@@ -25,7 +25,7 @@ public class WebEngineService implements DirigibleService {
 	 * @return resource content
 	 */
 	@GET
-	@Path("/services/web/{path:.*}")
+	@Path("/web/{path:.*}")
 	public String getResource(@PathParam("path") String path, @Context HttpServletRequest request) {
 		APIv3Request.set(request);
 		try {
@@ -37,7 +37,7 @@ public class WebEngineService implements DirigibleService {
 	}
 
 	@Override
-	public Class<? extends DirigibleService> getServiceType() {
-		return WebEngineService.class;
+	public Class<? extends RestService> getServiceType() {
+		return WebEngineRestService.class;
 	}
 }

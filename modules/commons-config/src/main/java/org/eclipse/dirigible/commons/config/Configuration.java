@@ -1,7 +1,10 @@
 package org.eclipse.dirigible.commons.config;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -23,7 +26,7 @@ public class Configuration {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	
-	private Properties properties = new Properties();
+	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<String, String>());
 	
 	public static Configuration INSTANCE;
 	
@@ -39,9 +42,12 @@ public class Configuration {
 	/**
 	 * Initializes with the default properties from dirigible.properties
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void init() {
 		try {
-			this.properties.load(Configuration.class.getResourceAsStream("/dirigible.properties"));
+			Properties properties = new Properties();
+			properties.load(Configuration.class.getResourceAsStream("/dirigible.properties"));
+			this.parameters.putAll((Map) properties);
 			logger.debug("Configuration initialized with dirigible.properties");
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
@@ -52,11 +58,12 @@ public class Configuration {
 	 * Loads a custom properties file from the class loader
 	 * @param path
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void load(String path) {
 		try {
 			Properties custom = new Properties();
 			custom.load(Configuration.class.getResourceAsStream(path));
-			INSTANCE.properties.putAll(custom);
+			INSTANCE.parameters.putAll((Map) custom);
 			logger.debug("Configuration loaded: " + path);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
@@ -67,8 +74,9 @@ public class Configuration {
 	 * Merge the provided properties object
 	 * @param custom
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void add(Properties custom) {
-		INSTANCE.properties.putAll(custom);
+		INSTANCE.parameters.putAll((Map) custom);
 	}
 	
 	/**
@@ -87,7 +95,8 @@ public class Configuration {
 	 * @return
 	 */
 	public static String get(String key, String defaultValue) {
-		return INSTANCE.properties.getProperty(key, defaultValue);
+		String value = INSTANCE.parameters.get(key);
+		return (value != null) ? value: defaultValue;
 	}
 
 	/**
@@ -96,7 +105,7 @@ public class Configuration {
 	 * @param value
 	 */
 	public static void set(String key, String value) {
-		INSTANCE.properties.setProperty(key, value);
+		INSTANCE.parameters.put(key, value);
 	}
 	
 	/**
@@ -106,23 +115,23 @@ public class Configuration {
 	 * @return
 	 */
 	public static String[] getKeys(String key, String value) {
-		return INSTANCE.properties.stringPropertyNames().toArray(new String[]{});
+		return INSTANCE.parameters.keySet().toArray(new String[]{});
 	}
 	
 	/**
 	 * Update the properties values from the System's properties and from the Environment if any
 	 */
 	public static void update() {
-		Set<String> keys = INSTANCE.properties.stringPropertyNames();
+		Set<String> keys = INSTANCE.parameters.keySet();
 		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
 			String key = iterator.next();
 			String asSystemProperty = System.getProperty(key);
 			if (asSystemProperty != null) {
-				INSTANCE.properties.setProperty(key, asSystemProperty);
+				INSTANCE.parameters.put(key, asSystemProperty);
 			} else {
 				String asEnvVar = System.getenv(key);
 				if (asEnvVar != null) {
-					INSTANCE.properties.setProperty(key, asEnvVar);
+					INSTANCE.parameters.put(key, asEnvVar);
 				}
 			}
 		}

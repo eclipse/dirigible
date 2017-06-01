@@ -1,6 +1,6 @@
 package org.eclipse.dirigible.repository.master.zip;
 
-import org.eclipse.dirigible.commons.api.AbstractDirigibleModule;
+import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.master.IMasterRepository;

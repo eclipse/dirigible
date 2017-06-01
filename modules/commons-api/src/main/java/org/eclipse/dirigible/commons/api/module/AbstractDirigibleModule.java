@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.commons.api;
+package org.eclipse.dirigible.commons.api.module;
 
 import com.google.inject.AbstractModule;
 

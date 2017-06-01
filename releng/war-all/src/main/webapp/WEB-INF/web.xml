@@ -4,14 +4,14 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 	<listener>
-		<listener-class>org.eclipse.dirigible.runtime.core.DirigibleServletContextListener</listener-class>
+		<listener-class>org.eclipse.dirigible.runtime.core.listener.DirigibleServletContextListener</listener-class>
 	</listener>
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>
 		<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>org.eclipse.dirigible.runtime.core.DirigibleApplication</param-value>
+			<param-value>org.eclipse.dirigible.runtime.core.app.DirigibleApplication</param-value>
 		</init-param>
 		<init-param>
 			<param-name>jaxrs.inInterceptors</param-name>
@@ -25,7 +25,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
-		<url-pattern>/api/v3/*</url-pattern>
+		<url-pattern>/services/v3/*</url-pattern>
 	</servlet-mapping>
 
 	<filter>

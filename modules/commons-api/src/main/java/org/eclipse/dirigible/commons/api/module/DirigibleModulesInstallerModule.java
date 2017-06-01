@@ -1,10 +1,10 @@
-package org.eclipse.dirigible.commons.api;
+package org.eclipse.dirigible.commons.api.module;
 
 import java.util.ServiceLoader;
 
 import com.google.inject.AbstractModule;
 
-public class DirigibleModule extends AbstractModule {
+public class DirigibleModulesInstallerModule extends AbstractModule {
 
 	private static final ServiceLoader<AbstractDirigibleModule> DIRIGIBLE_MODULES = ServiceLoader.load(AbstractDirigibleModule.class);
 

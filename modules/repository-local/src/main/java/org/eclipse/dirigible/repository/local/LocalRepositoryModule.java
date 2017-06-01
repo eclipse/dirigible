@@ -10,7 +10,7 @@
 
 package org.eclipse.dirigible.repository.local;
 
-import org.eclipse.dirigible.commons.api.AbstractDirigibleModule;
+import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
 

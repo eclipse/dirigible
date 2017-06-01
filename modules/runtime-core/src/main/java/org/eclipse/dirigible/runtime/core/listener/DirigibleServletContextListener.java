@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.core;
+package org.eclipse.dirigible.runtime.core.listener;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -7,8 +7,8 @@ import java.util.ServiceLoader;
 import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
-import org.eclipse.dirigible.commons.api.DirigibleModule;
-import org.eclipse.dirigible.commons.api.DirigibleService;
+import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
+import org.eclipse.dirigible.commons.api.service.RestService;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +25,6 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleServletContextListener.class);
 
-	private static final String DEBUG_INITIALIZING_GUICE_INJECTOR_MESSAGE = "Initializing Guice Injector with modules for dependency injection";
-	private static final String DEBUG_REGISTERING_API_SERVICES_MESSAGE = "Registering API services";
-	private static final String DEBUG_API_SERVICES_REGISTED_MESSAGE = "API services registed: [{}]";
-
 	private static final HashSet<Object> services = new HashSet<Object>();
 
 	private static Injector staticInjector;
@@ -37,34 +33,43 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	@Override
 	protected Injector getInjector() {
-		logger.debug(DEBUG_INITIALIZING_GUICE_INJECTOR_MESSAGE);
+		logger.debug("Initializing Guice Injector with modules for dependency injection...");
 
 		Configuration.create();
-
-		injector = Guice.createInjector(new DirigibleModule());
-
+		injector = Guice.createInjector(new DirigibleModulesInstallerModule());
 		setStaticInjector(injector);
+		
+		logger.debug("Guice Injector with modules for dependency injection initialized.");
+		
 		return injector;
 	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
-		registerApiServicesForCxf();
+		logger.debug("Initializing servlet context...");
+		
+		registerRestServicesForCxf();
+		
+		logger.debug("Servlet context initialized.");
 	}
 
-	private void registerApiServicesForCxf() {
-		logger.debug(DEBUG_REGISTERING_API_SERVICES_MESSAGE);
+	private void registerRestServicesForCxf() {
+		logger.debug("Registering REST services...");
 
 		getServices().add(new SecureAnnotationsInterceptor());
-		addDirigibleServices();
+		addRestServices();
 
-		logger.debug(DEBUG_API_SERVICES_REGISTED_MESSAGE, Arrays.asList(getServices().toArray()));
+		logger.debug("REST services registed: [{}]", Arrays.asList(getServices().toArray()));
 	}
 
-	private void addDirigibleServices() {
-		for (DirigibleService next : ServiceLoader.load(DirigibleService.class)) {
+	private void addRestServices() {
+		for (RestService next : ServiceLoader.load(RestService.class)) {
+			logger.debug("Registering REST service {} ...", next.getServiceType());
+			
 			getServices().add(injector.getInstance(next.getServiceType()));
+			
+			logger.debug("REST service {} registered.", next.getServiceType());
 		}
 	}
 
