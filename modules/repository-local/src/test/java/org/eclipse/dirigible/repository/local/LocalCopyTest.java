@@ -84,7 +84,7 @@ public class LocalCopyTest {
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}

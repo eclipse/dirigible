@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * This interface represents a READ ONLY Repository. It allows for navigating through collections and resources.
  */
-public interface IReadOnlyRepository {
+public interface IRepositoryReader {
 	
 	/**
 	 * Performs initialization tasks
@@ -62,50 +62,5 @@ public interface IReadOnlyRepository {
 	 * repository.
 	 */
 	public boolean hasResource(String path) throws IOException;
-
-	/**
-	 * Export all the content under the given path(s) with the target repository
-	 * instance Include the last segment of the relative roots during the
-	 * archiving
-	 *
-	 * @param relativeRoot
-	 * @return
-	 * @throws IOException
-	 */
-	public byte[] exportZip(List<String> relativeRoots) throws IOException;
-
-	/**
-	 * Export all the content under the given path with the target repository
-	 * instance Include or NOT the last segment of the relative root during the
-	 * archiving
-	 *
-	 * @param relativeRoot
-	 *            single root
-	 * @param inclusive
-	 *            whether to include the last segment of the root or to pack its
-	 *            content directly in the archive
-	 * @return
-	 * @throws IOException
-	 */
-	public byte[] exportZip(String relativeRoot, boolean inclusive) throws IOException;
-
-	/**
-	 * Retrieve all the kept versions of a given resource
-	 *
-	 * @param path
-	 * @return
-	 * @throws IOException
-	 */
-	public List<IResourceVersion> getResourceVersions(String path) throws IOException;
-
-	/**
-	 * Retrieve a particular version of a given resource
-	 *
-	 * @param path
-	 * @param version
-	 * @return
-	 * @throws IOException
-	 */
-	public IResourceVersion getResourceVersion(String path, int version) throws IOException;
 
 }

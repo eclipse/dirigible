@@ -13,6 +13,7 @@ package org.eclipse.dirigible.repository.local;
 import java.util.List;
 
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
 /**
  * Internal representation of a Folder/Collection kind of object
@@ -23,24 +24,24 @@ public class LocalFolder extends LocalObject {
 		super(repository);
 	}
 
-	public void deleteTree() throws LocalBaseException {
+	public void deleteTree() throws LocalRepositoryException {
 		getRepository().getRepositoryDAO().removeFolderByPath(getPath());
 	}
 
-	public List<LocalObject> getChildren() throws LocalBaseException {
+	public List<LocalObject> getChildren() throws LocalRepositoryException {
 		List<LocalObject> result = getRepository().getRepositoryDAO().getChildrenByFolder(getPath());
 		return result;
 	}
 
-	public void createFolder(String name) throws LocalBaseException {
+	public void createFolder(String name) throws LocalRepositoryException {
 		getRepository().getRepositoryDAO().createFolder(RepositoryPath.normalizePath(getPath(), name));
 	}
 
-	public void createFile(String name, byte[] content, boolean isBinary, String contentType) throws LocalBaseException {
+	public void createFile(String name, byte[] content, boolean isBinary, String contentType) throws LocalRepositoryException {
 		getRepository().getRepositoryDAO().createFile(RepositoryPath.normalizePath(getPath(), name), content, isBinary, contentType);
 	}
 
-	public void renameFolder(String newPath) throws LocalBaseException {
+	public void renameFolder(String newPath) throws LocalRepositoryException {
 		getRepository().getRepositoryDAO().renameFolder(getPath(), newPath);
 	}
 

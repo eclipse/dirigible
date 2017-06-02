@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -57,7 +56,7 @@ public class GenericBigTextTest {
 
 			assertEquals(base64, base64back);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
@@ -68,7 +67,7 @@ public class GenericBigTextTest {
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}
@@ -101,7 +100,7 @@ public class GenericBigTextTest {
 			assertEquals(bytes.length, bytesBack.length);
 			assertTrue(Arrays.equals(bytes, bytesBack));
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
@@ -112,7 +111,7 @@ public class GenericBigTextTest {
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}

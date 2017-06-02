@@ -15,7 +15,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -38,7 +37,7 @@ public class GenericBinaryTest {
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertTrue(resource.isBinary());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -58,7 +57,7 @@ public class GenericBinaryTest {
 			assertTrue(resource.exists());
 			assertTrue(resource.isBinary());
 			assertTrue(Arrays.equals(resource.getContent(), new byte[] { 0, 1, 1, 0 }));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -77,7 +76,7 @@ public class GenericBinaryTest {
 			IResource resource = repository.getResource("/testCollection/toBeRemoved.bin"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertFalse(resource.exists());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}

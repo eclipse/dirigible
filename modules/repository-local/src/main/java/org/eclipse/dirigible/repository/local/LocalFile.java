@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.repository.local;
 
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+
 /**
  * Internal representation of a File/Resource kind of object
  */
@@ -25,19 +27,19 @@ public class LocalFile extends LocalObject {
 		this.contentType = contentType;
 	}
 
-	public void delete() throws LocalBaseException {
+	public void delete() throws LocalRepositoryException {
 		getRepository().getRepositoryDAO().removeFileByPath(getPath());
 	}
 
-	public void rename(String newPath) throws LocalBaseException {
+	public void rename(String newPath) throws LocalRepositoryException {
 		getRepository().getRepositoryDAO().renameFile(getPath(), newPath);
 	}
 
-	public byte[] getData() throws LocalBaseException {
+	public byte[] getData() throws LocalRepositoryException {
 		return getRepository().getRepositoryDAO().getFileContent(this);
 	}
 
-	public void setData(byte[] content) throws LocalBaseException {
+	public void setData(byte[] content) throws LocalRepositoryException {
 		// byte[] old = getData();
 		// if (old != null) {
 		// if (Arrays.equals(old, content)) {

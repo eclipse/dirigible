@@ -11,8 +11,6 @@
 
 package org.eclipse.dirigible.repository.api;
 
-import java.io.IOException;
-
 /**
  * The {@link IEntity} interface is a base interface for {@link ICollection} and
  * {@link IResource}. <br>
@@ -38,8 +36,8 @@ public interface IEntity {
 	 * <p>
 	 * The result may not be <code>null</code>.
 	 * <p>
-	 * Example: /db/users/test.txt <br>
-	 * Example: /db/articles
+	 * Example: /repository/users/test.txt <br>
+	 * Example: /repository/articles
 	 */
 	public String getPath();
 
@@ -59,11 +57,11 @@ public interface IEntity {
 	 * the returned {@link IEntityInformation} may return <code>null</code>
 	 * indicating that a given information is not available.
 	 * 
-	 * @throws IOException
+	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
 	 */
-	public IEntityInformation getInformation() throws IOException;
+	public IEntityInformation getInformation() throws RepositoryReadException;
 
 	/**
 	 * Forces this entity to be created at its current path.
@@ -71,28 +69,28 @@ public interface IEntity {
 	 * Whether the entity will be created as a resource or a collection depends
 	 * on whether it is an instance of {@link IResource} or {@link ICollection}.
 	 * 
-	 * @throws IOException
+	 * @throws RepositoryWriteException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved, or if an entity with this path already exists on
 	 *             the backend.
 	 */
-	public void create() throws IOException;
+	public void create() throws RepositoryWriteException;
 
 	/**
 	 * Removes this entity from the repository.
 	 * <p>
 	 * If no such resource exists, this method does nothing.
 	 * 
-	 * @throws IOException
+	 * @throws RepositoryWriteException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
 	 */
-	public void delete() throws IOException;
+	public void delete() throws RepositoryWriteException;
 
 	/**
 	 * Changes the name of this entity to the specified value.
 	 */
-	public void renameTo(String name) throws IOException;
+	public void renameTo(String name) throws RepositoryWriteException;
 
 	/**
 	 * Moves this entity to a collection at the specified <code>path</code>.
@@ -100,7 +98,7 @@ public interface IEntity {
 	 * If this entity is of type {@link ICollection}, then all child entities
 	 * are copied too.
 	 */
-	public void moveTo(String path) throws IOException;
+	public void moveTo(String path) throws RepositoryWriteException;
 
 	/**
 	 * Copies this entity to a collection at the specified <code>path</code>.
@@ -108,16 +106,16 @@ public interface IEntity {
 	 * If this entity is of type {@link ICollection}, then all child entities
 	 * are copied too.
 	 */
-	public void copyTo(String path) throws IOException;
+	public void copyTo(String path) throws RepositoryWriteException;
 
 	/**
 	 * Returns whether this entity is valid and exists on the backend.
 	 * 
-	 * @throws IOException
+	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
 	 */
-	public boolean exists() throws IOException;
+	public boolean exists() throws RepositoryReadException;
 
 	/**
 	 * Returns whether this entity is empty.
@@ -130,9 +128,9 @@ public interface IEntity {
 	 * <i><strong>Note:</strong> Calling this method on a resource can be
 	 * slow.</i>
 	 * 
-	 * @throws IOException
+	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
 	 */
-	public boolean isEmpty() throws IOException;
+	public boolean isEmpty() throws RepositoryReadException;
 }

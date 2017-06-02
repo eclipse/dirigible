@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.repository.local;
 
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+
 /**
  * Internal representation of a File/Resource kind of object
  */
@@ -26,7 +28,7 @@ public class LocalFileVersion extends LocalFile {
 	}
 
 	@Override
-	public byte[] getData() throws LocalBaseException {
+	public byte[] getData() throws LocalRepositoryException {
 		byte[] data = this.bytes;
 		return data;
 	}

@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.local;
+package org.eclipse.dirigible.repository.fs;
 
 import static org.apache.commons.io.IOCase.INSENSITIVE;
 import static org.apache.commons.io.IOCase.SENSITIVE;
@@ -35,7 +35,16 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
+import org.eclipse.dirigible.repository.api.RepositoryExportException;
+import org.eclipse.dirigible.repository.api.RepositoryImportException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositorySearchException;
+import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.local.LocalCollection;
+import org.eclipse.dirigible.repository.local.LocalRepositoryDao;
+import org.eclipse.dirigible.repository.local.LocalRepositoryException;
+import org.eclipse.dirigible.repository.local.LocalResource;
+import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 import org.eclipse.dirigible.repository.zip.ZipExporter;
 import org.eclipse.dirigible.repository.zip.ZipImporter;
 import org.slf4j.Logger;
@@ -50,12 +59,9 @@ public abstract class FileSystemRepository implements IRepository {
 
 	private static final String CURRENT_DIR = IRepositoryConstants.DOT;
 	private static final String DIRIGIBLE_LOCAL = "dirigible_local";
-	public static final String PATH_SEGMENT_ROOT = "root";
-	public static final String PATH_SEGMENT_VERSIONS = "versions";
-	public static final String PATH_SEGMENT_INFO = "info";
-
-	private static final String PROVIDED_ZIP_DATA_CANNOT_BE_NULL = "Provided Zip Data cannot be null"; //$NON-NLS-1$
-	private static final String PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL = "Provided Zip Input Stream cannot be null"; //$NON-NLS-1$
+	private static final String PATH_SEGMENT_ROOT = "root";
+	private static final String PATH_SEGMENT_VERSIONS = "versions";
+	private static final String PATH_SEGMENT_INFO = "info";
 
 	public static final String PATH_DELIMITER = IRepository.SEPARATOR;
 	private String repositoryPath = IRepository.SEPARATOR;
@@ -68,9 +74,9 @@ public abstract class FileSystemRepository implements IRepository {
 	 * Constructor with default root folder - user.dir and without database initialization
 	 *
 	 * @param user
-	 * @throws LocalBaseException
+	 * @throws LocalRepositoryException
 	 */
-	public FileSystemRepository() throws LocalBaseException {
+	public FileSystemRepository() throws LocalRepositoryException {
 		createRepository(null, false);
 	}
 
@@ -79,9 +85,9 @@ public abstract class FileSystemRepository implements IRepository {
 	 *
 	 * @param user
 	 * @param rootFolder
-	 * @throws LocalBaseException
+	 * @throws LocalRepositoryException
 	 */
-	public FileSystemRepository(String rootFolder) throws LocalBaseException {
+	public FileSystemRepository(String rootFolder) throws LocalRepositoryException {
 		createRepository(rootFolder, false);
 	}
 
@@ -91,9 +97,9 @@ public abstract class FileSystemRepository implements IRepository {
 	 * @param user
 	 * @param rootFolder
 	 * @param absolute
-	 * @throws LocalBaseException
+	 * @throws LocalRepositoryException
 	 */
-	public FileSystemRepository(String rootFolder, boolean absolute) throws LocalBaseException {
+	public FileSystemRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		createRepository(rootFolder, absolute);
 	}
 	
@@ -103,7 +109,7 @@ public abstract class FileSystemRepository implements IRepository {
 			if (rootFolder != null) {
 				root = rootFolder;
 			} else {
-				throw new LocalBaseException("Creating a FileSystemRepository with absolute path flag, but the path itself is null");
+				throw new LocalRepositoryException("Creating a FileSystemRepository with absolute path flag, but the path itself is null");
 			}
 		} else {
 			root = System.getProperty("user.dir");
@@ -154,7 +160,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public ICollection createCollection(String path) throws IOException {
+	public ICollection createCollection(String path) throws RepositoryWriteException {
 		logger.debug("entering createCollection"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final LocalCollection collection = new LocalCollection(this, wrapperPath);
@@ -173,7 +179,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public void removeCollection(String path) throws IOException {
+	public void removeCollection(String path) throws RepositoryWriteException {
 		logger.debug("entering removeCollection"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final ICollection collection = new LocalCollection(this, wrapperPath);
@@ -192,7 +198,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public IResource createResource(String path) throws IOException {
+	public IResource createResource(String path) throws RepositoryWriteException {
 		logger.debug("entering createResource"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new LocalResource(this, wrapperPath);
@@ -202,7 +208,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public IResource createResource(String path, byte[] content) throws IOException {
+	public IResource createResource(String path, byte[] content) throws RepositoryWriteException {
 		logger.debug("entering createResource with Content"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new LocalResource(this, wrapperPath);
@@ -212,17 +218,17 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType) throws IOException {
+	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
 		return createResource(path, content, isBinary, contentType, false);
 	}
 
 	@Override
-	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override) throws IOException {
+	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override) throws RepositoryWriteException {
 		logger.debug("entering createResource with Content"); //$NON-NLS-1$
 		try {
 			getRepositoryDAO().createFile(path, content, isBinary, contentType);
-		} catch (LocalBaseException e) {
-			throw new IOException(e);
+		} catch (LocalRepositoryException e) {
+			throw new RepositoryWriteException(e);
 		}
 		final IResource resource = getResource(path);
 		logger.debug("exiting createResource with Content"); //$NON-NLS-1$
@@ -239,7 +245,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public void removeResource(String path) throws IOException {
+	public void removeResource(String path) throws RepositoryWriteException {
 		logger.debug("entering removeResource"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new LocalResource(this, wrapperPath);
@@ -267,114 +273,122 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public void importZip(ZipInputStream zipInputStream, String path) throws IOException {
+	public void importZip(ZipInputStream zipInputStream, String path) throws RepositoryImportException {
 		importZip(zipInputStream, path, false);
 	}
 
 	@Override
-	public void importZip(ZipInputStream zipInputStream, String path, boolean override) throws IOException {
+	public void importZip(ZipInputStream zipInputStream, String path, boolean override) throws RepositoryImportException {
 		importZip(zipInputStream, path, override, false);
 	}
 
 	@Override
-	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName) throws IOException {
+	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName) throws RepositoryImportException {
 		if (zipInputStream == null) {
-			logger.error(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
-			throw new IOException(PROVIDED_ZIP_INPUT_STREAM_CANNOT_BE_NULL);
+			logger.error("Provided Zip Input Stream cannot be null");
+			throw new RepositoryImportException("Provided Zip Input Stream cannot be null");
 		}
 		ZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
 	}
 
 	@Override
-	public void importZip(byte[] data, String path) throws IOException {
+	public void importZip(byte[] data, String path) throws RepositoryImportException {
 		importZip(data, path, false);
 	}
 
 	@Override
-	public void importZip(byte[] data, String path, boolean override) throws IOException {
+	public void importZip(byte[] data, String path, boolean override) throws RepositoryImportException {
 		importZip(data, path, override, false, null);
 	}
 
 	@Override
 	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
-			throws IOException {
+			throws RepositoryImportException {
 		if (data == null) {
-			logger.error(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
-			throw new IOException(PROVIDED_ZIP_DATA_CANNOT_BE_NULL);
+			logger.error("Provided Zip Data cannot be null");
+			throw new RepositoryImportException("Provided Zip Data cannot be null");
 		}
 		ZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
 	}
 
 	@Override
-	public byte[] exportZip(List<String> relativeRoots) throws IOException {
+	public byte[] exportZip(List<String> relativeRoots) throws RepositoryExportException {
 		return ZipExporter.exportZip(this, relativeRoots);
 	}
 
 	@Override
-	public byte[] exportZip(String relativeRoot, boolean inclusive) throws IOException {
+	public byte[] exportZip(String relativeRoot, boolean inclusive) throws RepositoryExportException {
 		return ZipExporter.exportZip(this, relativeRoot, inclusive);
 	}
 
 	@Override
-	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws IOException {
+	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		// return repositoryDAO.searchName(parameter, caseInsensitive);
 		return null;
 	}
 
 	@Override
-	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws IOException {
+	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws RepositorySearchException {
 
-		String workspacePath = LocalWorkspaceMapper.getMappedName(this, root);
+		try {
+			String workspacePath = LocalWorkspaceMapper.getMappedName(this, root);
 
-		List<IEntity> entities = new ArrayList<IEntity>();
+			List<IEntity> entities = new ArrayList<IEntity>();
 
-		if ((parameter == null) || "".equals(parameter)) {
+			if ((parameter == null) || "".equals(parameter)) {
+				return entities;
+			}
+
+			File dir = new File(workspacePath);
+
+			Iterator<File> foundFiles = FileUtils.iterateFiles(dir,
+					new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
+			while (foundFiles.hasNext()) {
+				File foundFile = foundFiles.next();
+				String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
+				RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
+				entities.add(new LocalResource(this, localRepositoryPath));
+			}
+
 			return entities;
+		} catch (RepositoryWriteException | IOException e) {
+			throw new RepositorySearchException(e);
 		}
-
-		File dir = new File(workspacePath);
-
-		Iterator<File> foundFiles = FileUtils.iterateFiles(dir,
-				new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
-		while (foundFiles.hasNext()) {
-			File foundFile = foundFiles.next();
-			String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
-			RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
-			entities.add(new LocalResource(this, localRepositoryPath));
-		}
-
-		return entities;
 	}
 
 	@Override
-	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws IOException {
-		String rootRepositoryPath = getRepositoryPath();
-		List<IEntity> entities = new ArrayList<IEntity>();
-		Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath),
-				new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
-		while (foundFiles.hasNext()) {
-			File foundFile = foundFiles.next();
-			String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
-			RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
-			entities.add(new LocalResource(this, localRepositoryPath));
-		}
+	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws RepositorySearchException {
+		try {
+			String rootRepositoryPath = getRepositoryPath();
+			List<IEntity> entities = new ArrayList<IEntity>();
+			Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath),
+					new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
+			while (foundFiles.hasNext()) {
+				File foundFile = foundFiles.next();
+				String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
+				RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
+				entities.add(new LocalResource(this, localRepositoryPath));
+			}
 
-		return entities;
+			return entities;
+		} catch (IOException e) {
+			throw new RepositorySearchException(e);
+		}
 	}
 
 	@Override
-	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws IOException {
+	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		// return repositoryDAO.searchText(parameter, caseInsensitive);
 		return null;
 	}
 
 	@Override
-	public List<IResourceVersion> getResourceVersions(String path) throws IOException {
+	public List<IResourceVersion> getResourceVersions(String path) throws RepositorySearchException {
 		return repositoryDao.getResourceVersionsByPath(path);
 	}
 
 	@Override
-	public IResourceVersion getResourceVersion(String path, int version) throws IOException {
+	public IResourceVersion getResourceVersion(String path, int version) throws RepositorySearchException {
 		List<IResourceVersion> allVersions = getResourceVersions(path);
 		for (IResourceVersion resourceVersion : allVersions) {
 			if (resourceVersion.getVersion() == version) {

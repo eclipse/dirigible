@@ -16,14 +16,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.eclipse.dirigible.repository.api.IRepositoryConstants;
-import org.eclipse.dirigible.repository.local.LocalBaseException;
+import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.zip.ZipRepository;
 
 public class JarRepository extends ZipRepository {
 
 	private String jarRepositoryRootFolder;
 
-	public JarRepository(String zip) throws LocalBaseException {
+	public JarRepository(String zip) throws LocalRepositoryException {
 
 		InputStream in = JarRepository.class.getClassLoader().getSystemResourceAsStream(zip);
 		if (in == null) {
@@ -40,20 +40,20 @@ public class JarRepository extends ZipRepository {
 				jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf(IRepositoryConstants.DOT));
 				createRepository(rootFolder.toString(), true);
 			} catch (IOException e) {
-				throw new LocalBaseException(e);
+				throw new LocalRepositoryException(e);
 			}
 		} else {
-			throw new LocalBaseException(String.format("Zip file containing Repository content does not exist at path: %s", zip));
+			throw new LocalRepositoryException(String.format("Zip file containing Repository content does not exist at path: %s", zip));
 		}
 	}
 
 	// disable usage
-	protected JarRepository(String rootFolder, boolean absolute) throws LocalBaseException {
+	protected JarRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		super(rootFolder, absolute);
 	}
 
 	// disable usage
-	protected JarRepository() throws LocalBaseException {
+	protected JarRepository() throws LocalRepositoryException {
 		super();
 	}
 

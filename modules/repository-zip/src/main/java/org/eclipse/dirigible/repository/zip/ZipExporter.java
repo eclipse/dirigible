@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.repository.zip;
 
+import static java.text.MessageFormat.format;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,13 +23,13 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryExportException;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
 
 /**
  * Utility class which exports all the content under a given path
  */
 public class ZipExporter {
-
-	private static final String RELATIVE_ROOT_S_DOESN_T_EXIST = "Relative Root: %s doesn't exist"; //$NON-NLS-1$
 
 	/**
 	 * Export all the content under the given path(s) with the target repository
@@ -35,43 +37,46 @@ public class ZipExporter {
 	 * archiving
 	 *
 	 * @param repository
-	 * @param relativeRoot
+	 * @param relativeRoots
 	 * @return
-	 * @throws IOException
+	 * @throws RepositoryExportException
 	 */
-	public static byte[] exportZip(IRepository repository, List<String> relativeRoots) throws IOException {
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ZipOutputStream zipOutputStream = null;
+	public static byte[] exportZip(IRepository repository, List<String> relativeRoots) throws RepositoryExportException {
 		try {
-			zipOutputStream = new ZipOutputStream(baos);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ZipOutputStream zipOutputStream = null;
+			try {
+				zipOutputStream = new ZipOutputStream(baos);
 
-			for (String relativeRoot : relativeRoots) {
-				ICollection collection = repository.getCollection(relativeRoot);
-				if (collection.exists()) {
-					traverseCollection(zipOutputStream, collection, relativeRoot.length() - collection.getName().length());
-				} else {
-					IResource iResource = repository.getResource(relativeRoot);
-					if (iResource.exists()) {
-						ZipEntry zipEntry = new ZipEntry(iResource.getPath().substring(relativeRoot.length() - iResource.getName().length()));
-						zipOutputStream.putNextEntry(zipEntry);
-						zipOutputStream.write((iResource.getContent() == null ? new byte[] {} : iResource.getContent()));
-						zipOutputStream.closeEntry();
+				for (String relativeRoot : relativeRoots) {
+					ICollection collection = repository.getCollection(relativeRoot);
+					if (collection.exists()) {
+						traverseCollection(zipOutputStream, collection, relativeRoot.length() - collection.getName().length());
 					} else {
-						throw new IOException(String.format(RELATIVE_ROOT_S_DOESN_T_EXIST, relativeRoot));
+						IResource iResource = repository.getResource(relativeRoot);
+						if (iResource.exists()) {
+							ZipEntry zipEntry = new ZipEntry(iResource.getPath().substring(relativeRoot.length() - iResource.getName().length()));
+							zipOutputStream.putNextEntry(zipEntry);
+							zipOutputStream.write((iResource.getContent() == null ? new byte[] {} : iResource.getContent()));
+							zipOutputStream.closeEntry();
+						} else {
+							throw new IOException(format("Relative Root: {} doesn't exist", relativeRoot));
+						}
 					}
 				}
+			} finally {
+				if (zipOutputStream != null) {
+					zipOutputStream.finish();
+					zipOutputStream.flush();
+					zipOutputStream.close();
+				}
 			}
-		} finally {
-			if (zipOutputStream != null) {
-				zipOutputStream.finish();
-				zipOutputStream.flush();
-				zipOutputStream.close();
-			}
-		}
 
-		byte[] result = baos.toByteArray();
-		return result;
+			byte[] result = baos.toByteArray();
+			return result;
+		} catch (RepositoryReadException | IOException e) {
+			throw new RepositoryExportException(e);
+		}
 	}
 
 	/**
@@ -86,9 +91,9 @@ public class ZipExporter {
 	 *            whether to include the last segment of the root or to pack its
 	 *            content directly in the archive
 	 * @return
-	 * @throws IOException
+	 * @throws RepositoryExportException
 	 */
-	public static byte[] exportZip(IRepository repository, String relativeRoot, boolean inclusive) throws IOException {
+	public static byte[] exportZip(IRepository repository, String relativeRoot, boolean inclusive) throws RepositoryExportException {
 
 		List<String> relativeRoots = new ArrayList<String>();
 
@@ -110,7 +115,7 @@ public class ZipExporter {
 			relativeRoots.add(resource.getPath());
 			return exportZip(repository, relativeRoots);
 		}
-		throw new IOException(String.format(RELATIVE_ROOT_S_DOESN_T_EXIST, relativeRoot));
+		throw new RepositoryExportException(format("Relative Root: {} doesn't exist", relativeRoot));
 	}
 
 	/**
@@ -119,28 +124,31 @@ public class ZipExporter {
 	 * @param zipOutputStream
 	 * @param collection
 	 * @param substring
-	 * @throws IOException
+	 * @throws RepositoryExportException
 	 */
-	private static void traverseCollection(ZipOutputStream zipOutputStream, ICollection collection, int substring) throws IOException {
+	private static void traverseCollection(ZipOutputStream zipOutputStream, ICollection collection, int substring) throws RepositoryExportException {
+		try {
+			ZipEntry zipEntry = null;
+			if (collection.getPath().length() >= substring) {
+				zipEntry = new ZipEntry(collection.getPath().substring(substring) + IRepository.SEPARATOR);
+				zipOutputStream.putNextEntry(zipEntry);
+				zipOutputStream.closeEntry();
+			}
 
-		ZipEntry zipEntry = null;
-		if (collection.getPath().length() >= substring) {
-			zipEntry = new ZipEntry(collection.getPath().substring(substring) + IRepository.SEPARATOR);
-			zipOutputStream.putNextEntry(zipEntry);
-			zipOutputStream.closeEntry();
-		}
+			List<ICollection> collections = collection.getCollections();
+			for (ICollection iCollection : collections) {
+				traverseCollection(zipOutputStream, iCollection, substring);
+			}
 
-		List<ICollection> collections = collection.getCollections();
-		for (ICollection iCollection : collections) {
-			traverseCollection(zipOutputStream, iCollection, substring);
-		}
-
-		List<IResource> resources = collection.getResources();
-		for (IResource iResource : resources) {
-			zipEntry = new ZipEntry(iResource.getPath().substring(substring));
-			zipOutputStream.putNextEntry(zipEntry);
-			zipOutputStream.write((iResource.getContent() == null ? new byte[] {} : iResource.getContent()));
-			zipOutputStream.closeEntry();
+			List<IResource> resources = collection.getResources();
+			for (IResource iResource : resources) {
+				zipEntry = new ZipEntry(iResource.getPath().substring(substring));
+				zipOutputStream.putNextEntry(zipEntry);
+				zipOutputStream.write((iResource.getContent() == null ? new byte[] {} : iResource.getContent()));
+				zipOutputStream.closeEntry();
+			}
+		} catch (RepositoryReadException | IOException e) {
+			throw new RepositoryExportException(e);
 		}
 	}
 

@@ -12,6 +12,7 @@ package org.eclipse.dirigible.repository.local;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +31,9 @@ public class LocalRepository extends FileSystemRepository {
 	 * Constructor with default root folder - user.dir and without database initialization
 	 *
 	 * @param user
-	 * @throws LocalBaseException
+	 * @throws LocalRepositoryException
 	 */
-	public LocalRepository() throws LocalBaseException {
+	public LocalRepository() throws LocalRepositoryException {
 		this(null);
 	}
 
@@ -41,9 +42,9 @@ public class LocalRepository extends FileSystemRepository {
 	 *
 	 * @param user
 	 * @param rootFolder
-	 * @throws LocalBaseException
+	 * @throws LocalRepositoryException
 	 */
-	public LocalRepository(String rootFolder) throws LocalBaseException {
+	public LocalRepository(String rootFolder) throws LocalRepositoryException {
 		super(rootFolder);
 	}
 
@@ -53,9 +54,9 @@ public class LocalRepository extends FileSystemRepository {
 	 * @param user
 	 * @param rootFolder
 	 * @param absolute
-	 * @throws LocalBaseException
+	 * @throws LocalRepositoryException
 	 */
-	public LocalRepository(String rootFolder, boolean absolute) throws LocalBaseException {
+	public LocalRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		super(rootFolder, absolute);
 	}
 

@@ -24,13 +24,13 @@ public interface ICollection extends IEntity {
 	/**
 	 * Returns a list of all the child collections held by this collection.
 	 */
-	public List<ICollection> getCollections() throws IOException;
+	public List<ICollection> getCollections() throws RepositoryReadException;
 
 	/**
 	 * Returns a list containing the names of all the child collections directly
 	 * contained within this collection.
 	 */
-	public List<String> getCollectionsNames() throws IOException;
+	public List<String> getCollectionsNames() throws RepositoryReadException;
 
 	/**
 	 * Creates a new collection with the specified name in this collection.
@@ -39,7 +39,7 @@ public interface ICollection extends IEntity {
 	 * <p>
 	 * The change is persisted to the backend.
 	 */
-	public ICollection createCollection(String name) throws IOException;
+	public ICollection createCollection(String name) throws RepositoryReadException;
 
 	/**
 	 * Returns the collection with the specified name contained in this
@@ -50,7 +50,7 @@ public interface ICollection extends IEntity {
 	 * 
 	 * @return an {@link ICollection} instance.
 	 */
-	public ICollection getCollection(String name);
+	public ICollection getCollection(String name) throws RepositoryReadException;
 
 	/**
 	 * Removes the collection with the specified name contained in this
@@ -60,23 +60,23 @@ public interface ICollection extends IEntity {
 	 * <p>
 	 * The change is persisted to the backend.
 	 */
-	public void removeCollection(String name) throws IOException;
+	public void removeCollection(String name) throws RepositoryWriteException;
 
 	/**
 	 * Removes the child collection represented by the parameter.
 	 */
-	public void removeCollection(ICollection collection) throws IOException;
+	public void removeCollection(ICollection collection) throws RepositoryWriteException;
 
 	/**
 	 * Returns a list of all the resources held by this collection.
 	 */
-	public List<IResource> getResources() throws IOException;
+	public List<IResource> getResources() throws RepositoryReadException;
 
 	/**
 	 * Returns a list containing the names of all the resources directly
 	 * contained in this collection.
 	 */
-	public List<String> getResourcesNames() throws IOException;
+	public List<String> getResourcesNames() throws RepositoryReadException;
 
 	/**
 	 * Returns the resource with the specified name contained in this
@@ -85,37 +85,21 @@ public interface ICollection extends IEntity {
 	 * The returned resource is just a representation. It may not exist on the
 	 * backend.
 	 */
-	public IResource getResource(String name) throws IOException;
-
-//	/**
-//	 * Creates a new empty resource with the specified name in this collection.
-//	 * <p>
-//	 * Changes are persisted to the backend.
-//	 */
-//	public IResource createResource(String name) throws IOException;
-//
-//	/**
-//	 * Creates a new resource in this collection with the specified name and
-//	 * content.
-//	 * <p>
-//	 * Changes are persisted to the backend.
-//	 */
-//	public IResource createResource(String name, byte[] content)
-//			throws IOException;
+	public IResource getResource(String name) throws RepositoryReadException;
 
 	/**
 	 * Removes the resource with the specified name from this collection.
 	 * <p>
 	 * Changes are persisted to the backend.
 	 */
-	public void removeResource(String name) throws IOException;
+	public void removeResource(String name) throws RepositoryWriteException;
 
 	/**
 	 * Removes the child resource represented by the parameter.
 	 * <p>
 	 * Changes are persisted to the backend.
 	 */
-	public void removeResource(IResource resource) throws IOException;
+	public void removeResource(IResource resource) throws RepositoryWriteException;
 
 	/**
 	 * List the children of this collection
@@ -123,7 +107,7 @@ public interface ICollection extends IEntity {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<IEntity> getChildren() throws IOException;
+	public List<IEntity> getChildren() throws RepositoryReadException;
 
 	/**
 	 * Create resource under this collection by specifying the binary flag
@@ -136,6 +120,6 @@ public interface ICollection extends IEntity {
 	 * @throws IOException
 	 */
 	public IResource createResource(String name, byte[] content,
-			boolean isBinary, String contentType) throws IOException;
+			boolean isBinary, String contentType) throws RepositoryWriteException;
 
 }

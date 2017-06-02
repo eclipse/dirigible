@@ -11,12 +11,14 @@
 package org.eclipse.dirigible.repository.local;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 
 public class LocalWorkspaceMapper {
 
@@ -26,7 +28,7 @@ public class LocalWorkspaceMapper {
 
 	private static String workspaceRoot = "/";
 
-	public static String getMappedName(FileSystemRepository repository, String repositoryName) throws IOException {
+	public static String getMappedName(FileSystemRepository repository, String repositoryName) throws RepositoryWriteException {
 		String workspaceName = null;
 
 		if ((repositoryName != null) && !"".equals(repositoryName)) {
@@ -36,16 +38,17 @@ public class LocalWorkspaceMapper {
 			}
 		}
 
-		if (workspaceName == null) {
+		if (repositoryName != null) {
 			if (repositoryName.startsWith(repository.getRepositoryPath())) {
 				workspaceName = repositoryName;
 			} else {
 				workspaceName = repository.getRepositoryPath() + repositoryName;
 			}
-			// throw new IOException("No workspace mapping for file: " + repositoryName);
 		}
-
-		workspaceName = workspaceName.replace(IRepository.SEPARATOR, File.separator);
+		
+		if (workspaceName != null) {
+			workspaceName = workspaceName.replace(IRepository.SEPARATOR, File.separator);
+		}
 
 		return workspaceName;
 	}
@@ -61,36 +64,5 @@ public class LocalWorkspaceMapper {
 		workspaceName = workspaceName.replace(File.separator, IRepository.SEPARATOR);
 		return workspaceName;
 	}
-
-	// private static void check() throws IOException {
-	// if (prefixMap.isEmpty()) {
-	//
-	// IWorkspace workspace = ResourcesPlugin.getWorkspace();
-	// File workspaceDirectory = workspace.getRoot().getLocation().toFile();
-	// workspaceRoot = workspaceDirectory.getCanonicalPath();
-	//
-	// prefixMap.put("/db/dirigible/users/local/workspace", workspaceRoot);
-	// prefixMap.put(workspaceRoot + "/db/dirigible/users/local/workspace", workspaceRoot);
-	//
-	// String db_dirigible_root = workspaceRoot + File.separator + "db" + File.separator + "dirigible" + File.separator;
-	//
-	// prefixMap.put("/db/dirigible/registry", db_dirigible_root + "registry");
-	// prefixMap.put("/db/dirigible/sandbox", db_dirigible_root + "sandbox");
-	// prefixMap.put("/db/dirigible/templates", db_dirigible_root + "templates");
-	//
-	// prefixMapEquals.put("/", workspaceRoot);
-	// prefixMapEquals.put("/db", workspaceRoot + File.separator + "db");
-	// prefixMapEquals.put("/db/dirigible", workspaceRoot + File.separator + "db" + File.separator + "dirigible");
-	// prefixMapEquals.put("/db/dirigible/users", db_dirigible_root + "users");
-	// prefixMapEquals.put("/db/dirigible/users/local", db_dirigible_root + "users" + File.separator + "local");
-	//
-	// prefixMapEquals.put("/db/dirigible/registry", db_dirigible_root + "registry");
-	// prefixMapEquals.put("/db/dirigible/sandbox", db_dirigible_root + "sandbox");
-	// prefixMapEquals.put("/db/dirigible/templates", db_dirigible_root + "templates");
-	// prefixMapEquals.put("/db/dirigible/default.content", db_dirigible_root + "default.content");
-	//
-	// }
-	//
-	// }
 
 }

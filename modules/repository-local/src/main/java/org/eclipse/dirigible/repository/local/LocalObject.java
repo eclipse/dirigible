@@ -12,6 +12,8 @@ package org.eclipse.dirigible.repository.local;
 
 import java.util.Date;
 
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+
 /**
  * The base of domain objects in the DB Repository implementation
  */

@@ -9,32 +9,26 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.local;
+package org.eclipse.dirigible.repository.api;
 
-import org.eclipse.dirigible.repository.api.RepositoryException;
+public class RepositoryWriteException extends RepositoryException {
 
-/**
- * Main exception for the DB repository implementation
- * 
- */
-public class LocalBaseException extends RepositoryException {
+	private static final long serialVersionUID = -163847774919514248L;
 
-	private static final long serialVersionUID = 116149128529374300L;
-
-	public LocalBaseException() {
+	public RepositoryWriteException() {
 		super();
 	}
 
-	public LocalBaseException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
+	public RepositoryWriteException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	public LocalBaseException(String arg0) {
-		super(arg0);
+	public RepositoryWriteException(String message) {
+		super(message);
 	}
 
-	public LocalBaseException(Throwable arg0) {
-		super(arg0);
+	public RepositoryWriteException(Throwable cause) {
+		super(cause);
 	}
 
 }

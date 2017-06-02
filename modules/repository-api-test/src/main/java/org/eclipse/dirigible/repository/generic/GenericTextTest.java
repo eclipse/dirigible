@@ -16,8 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
@@ -50,7 +48,7 @@ public class GenericTextTest {
 			IResource resource2 = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
 			resource2.setContent("test2".getBytes());
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
@@ -61,7 +59,7 @@ public class GenericTextTest {
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}

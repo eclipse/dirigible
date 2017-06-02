@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -50,7 +49,7 @@ public class GenericPathTest {
 
 			assertEquals(PATH, path);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
@@ -61,7 +60,7 @@ public class GenericPathTest {
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}
@@ -92,7 +91,7 @@ public class GenericPathTest {
 
 			assertEquals(PATH, path);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
@@ -103,7 +102,7 @@ public class GenericPathTest {
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}
@@ -137,7 +136,7 @@ public class GenericPathTest {
 				}
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
@@ -148,7 +147,7 @@ public class GenericPathTest {
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}

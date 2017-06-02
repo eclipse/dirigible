@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.dirigible.repository.api.IEntity;
@@ -52,7 +51,7 @@ public class GenericSearchTest {
 			repository.removeResource("/testCollectionSearch/param2.txt"); //$NON-NLS-1$
 			repository.removeResource("/testCollectionSearch/param12.txt"); //$NON-NLS-1$
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -85,7 +84,7 @@ public class GenericSearchTest {
 			repository.removeResource("/dddd/file2.txt"); //$NON-NLS-1$
 			repository.removeResource("/dddd/file3.txt"); //$NON-NLS-1$
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -127,7 +126,7 @@ public class GenericSearchTest {
 			repository.removeResource("/testCollectionSearch/param2.txt"); //$NON-NLS-1$
 			repository.removeResource("/testCollectionSearch/param12.txt"); //$NON-NLS-1$
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -174,7 +173,7 @@ public class GenericSearchTest {
 			repository.removeResource("/testCollectionSearch/abc3.txt"); //$NON-NLS-1$
 			repository.removeResource("/testCollectionSearch/xxx4.txt"); //$NON-NLS-1$
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}

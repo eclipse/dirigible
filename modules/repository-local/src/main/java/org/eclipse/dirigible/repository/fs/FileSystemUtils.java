@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.local;
+package org.eclipse.dirigible.repository.fs;
 
 import java.io.File;
 import java.io.FileNotFoundException;

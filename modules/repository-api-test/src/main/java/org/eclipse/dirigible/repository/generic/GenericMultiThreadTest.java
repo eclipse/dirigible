@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -86,7 +85,7 @@ public abstract class GenericMultiThreadTest {
 			IResource resource2 = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
 			resource2.setContent("test2".getBytes());
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
@@ -97,7 +96,7 @@ public abstract class GenericMultiThreadTest {
 					assertNotNull(resource);
 					assertFalse(resource.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}

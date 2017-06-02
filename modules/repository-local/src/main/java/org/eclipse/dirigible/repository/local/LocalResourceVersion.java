@@ -10,12 +10,13 @@
 
 package org.eclipse.dirigible.repository.local;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
 public class LocalResourceVersion implements IResourceVersion {
 
@@ -27,7 +28,7 @@ public class LocalResourceVersion implements IResourceVersion {
 
 	private LocalFileVersion fileVersion;
 
-	public LocalResourceVersion(FileSystemRepository repository, RepositoryPath path, int version) throws FileNotFoundException, IOException {
+	public LocalResourceVersion(FileSystemRepository repository, RepositoryPath path, int version) throws RepositoryWriteException {
 		super();
 		this.repository = repository;
 		this.path = path;

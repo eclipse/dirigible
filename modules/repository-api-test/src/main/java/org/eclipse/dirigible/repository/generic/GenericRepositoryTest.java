@@ -48,7 +48,7 @@ public class GenericRepositoryTest {
 			ICollection collection = repository.createCollection("/testCollection"); //$NON-NLS-1$
 			assertNotNull(collection);
 			assertTrue(collection.exists());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -65,7 +65,7 @@ public class GenericRepositoryTest {
 			ICollection collection = repository.getCollection("/testCollection"); //$NON-NLS-1$
 			assertNotNull(collection);
 			assertTrue(collection.exists());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -84,7 +84,7 @@ public class GenericRepositoryTest {
 			collection = repository.getCollection("/toBeRemoved"); //$NON-NLS-1$
 			assertNotNull(collection);
 			assertFalse(collection.exists());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -99,7 +99,7 @@ public class GenericRepositoryTest {
 		try {
 			repository.createCollection("/testCollection"); //$NON-NLS-1$
 			assertTrue(repository.hasCollection("/testCollection")); //$NON-NLS-1$
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -116,7 +116,7 @@ public class GenericRepositoryTest {
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertTrue(resource.getContent().length == 0);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -136,7 +136,7 @@ public class GenericRepositoryTest {
 			assertFalse(resource.getContent().length == 0);
 			assertFalse(resource.isBinary());
 			assertTrue(Arrays.equals(resource.getContent(), "test content".getBytes(Charset.defaultCharset()))); //$NON-NLS-1$
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -153,7 +153,7 @@ public class GenericRepositoryTest {
 			IResource resource = repository.getResource("/testCollection/testResourceEmpty.txt"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -172,7 +172,7 @@ public class GenericRepositoryTest {
 			resource = repository.getResource("/testCollection/toBeRemoved.txt"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertFalse(resource.exists());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}

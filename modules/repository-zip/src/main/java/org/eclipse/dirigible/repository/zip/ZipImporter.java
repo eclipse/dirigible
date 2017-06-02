@@ -17,8 +17,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.repository.api.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.RepositoryImportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class ZipImporter {
 	 * @param relativeRoot
 	 * @throws IOException
 	 */
-	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot) throws IOException {
+	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot) throws RepositoryImportException {
 		importZip(repository, zipInputStream, relativeRoot, false);
 	}
 
@@ -52,7 +53,7 @@ public class ZipImporter {
 	 * @param override
 	 * @throws IOException
 	 */
-	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override) throws IOException {
+	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override) throws RepositoryImportException {
 		importZip(repository, zipInputStream, relativeRoot, override, false);
 	}
 
@@ -68,7 +69,7 @@ public class ZipImporter {
 	 * @throws IOException
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
-			boolean excludeRootFolderName) throws IOException {
+			boolean excludeRootFolderName) throws RepositoryImportException {
 		importZip(repository, zipInputStream, relativeRoot, override, excludeRootFolderName, null);
 	}
 
@@ -86,71 +87,74 @@ public class ZipImporter {
 	 * @throws IOException
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
-			boolean excludeRootFolderName, Map<String, String> filter) throws IOException {
+			boolean excludeRootFolderName, Map<String, String> filter) throws RepositoryImportException {
 
 		logger.debug("importZip started...");
 
 		try {
-			ZipEntry entry;
-			String parentFolder = null;
-			while ((entry = zipInputStream.getNextEntry()) != null) {
-
-				if (excludeRootFolderName && (parentFolder == null)) {
-					parentFolder = entry.getName();
-					logger.debug("importZip parentFolder: " + parentFolder);
-					continue;
-				}
-
-				String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
-				logger.debug("importZip entryName: " + entryName);
-				String outpath = relativeRoot + ((relativeRoot.endsWith(IRepository.SEPARATOR)) ? "" : IRepository.SEPARATOR) + entryName;
-				logger.debug("importZip outpath: " + outpath);
-
-				if (filter != null) {
-					for (Map.Entry<String, String> forReplacement : filter.entrySet()) {
-						outpath = outpath.replace(forReplacement.getKey(), forReplacement.getValue());
+			try {
+				ZipEntry entry;
+				String parentFolder = null;
+				while ((entry = zipInputStream.getNextEntry()) != null) {
+	
+					if (excludeRootFolderName && (parentFolder == null)) {
+						parentFolder = entry.getName();
+						logger.debug("importZip parentFolder: " + parentFolder);
+						continue;
 					}
-				}
-				logger.debug("importZip outpath replaced: " + outpath);
-
-				ByteArrayOutputStream output = new ByteArrayOutputStream();
-				try {
-					IOUtils.copy(zipInputStream, output);
-					try {
-						if (output.toByteArray().length > 0) {
-							// TODO filter for binary extensions
-
-							String extension = ContentTypeHelper.getExtension(entry.getName());
-							String mimeType = ContentTypeHelper.getContentType(extension);
-							boolean isBinary = ContentTypeHelper.isBinary(mimeType);
-							if (mimeType != null) {
-								logger.debug("importZip creating resource: " + outpath);
-								logger.debug("importZip creating resource is binary?: " + isBinary);
-								repository.createResource(outpath, output.toByteArray(), isBinary, mimeType, override);
-
-							} else {
-								logger.debug("importZip creating resource: " + outpath);
-								repository.createResource(outpath, output.toByteArray(), true, ContentTypeHelper.APPLICATION_OCTET_STREAM, override);
-							}
-						} else {
-							if (outpath.endsWith(IRepository.SEPARATOR)) {
-								logger.debug("importZip creating collection: " + outpath);
-								repository.createCollection(outpath);
-							}
+	
+					String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
+					logger.debug("importZip entryName: " + entryName);
+					String outpath = relativeRoot + ((relativeRoot.endsWith(IRepository.SEPARATOR)) ? "" : IRepository.SEPARATOR) + entryName;
+					logger.debug("importZip outpath: " + outpath);
+	
+					if (filter != null) {
+						for (Map.Entry<String, String> forReplacement : filter.entrySet()) {
+							outpath = outpath.replace(forReplacement.getKey(), forReplacement.getValue());
 						}
-					} catch (Exception e) {
-						logger.error(String.format("Error importing %s", outpath), e);
 					}
-				} finally {
-					output.close();
+					logger.debug("importZip outpath replaced: " + outpath);
+	
+					ByteArrayOutputStream output = new ByteArrayOutputStream();
+					try {
+						IOUtils.copy(zipInputStream, output);
+						try {
+							if (output.toByteArray().length > 0) {
+								// TODO filter for binary extensions
+	
+								String extension = ContentTypeHelper.getExtension(entry.getName());
+								String mimeType = ContentTypeHelper.getContentType(extension);
+								boolean isBinary = ContentTypeHelper.isBinary(mimeType);
+								if (mimeType != null) {
+									logger.debug("importZip creating resource: " + outpath);
+									logger.debug("importZip creating resource is binary?: " + isBinary);
+									repository.createResource(outpath, output.toByteArray(), isBinary, mimeType, override);
+	
+								} else {
+									logger.debug("importZip creating resource: " + outpath);
+									repository.createResource(outpath, output.toByteArray(), true, ContentTypeHelper.APPLICATION_OCTET_STREAM, override);
+								}
+							} else {
+								if (outpath.endsWith(IRepository.SEPARATOR)) {
+									logger.debug("importZip creating collection: " + outpath);
+									repository.createCollection(outpath);
+								}
+							}
+						} catch (Exception e) {
+							logger.error(String.format("Error importing %s", outpath), e);
+						}
+					} finally {
+						output.close();
+					}
 				}
+			} finally {
+				zipInputStream.close();
 			}
-		} finally {
-			zipInputStream.close();
+		} catch(IOException e) {
+			throw new RepositoryImportException(e);
 		}
-
+		
 		logger.debug("importZip ended.");
-
 	}
 
 	private static String getEntryName(ZipEntry entry, String parentFolder, boolean excludeParentFolder) {

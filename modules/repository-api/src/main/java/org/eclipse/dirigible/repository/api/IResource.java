@@ -26,14 +26,14 @@ public interface IResource extends IEntity {
 	/**
 	 * Returns the content of the resource as a byte array.
 	 */
-	public byte[] getContent() throws IOException;
+	public byte[] getContent() throws RepositoryReadException;
 
 	/**
 	 * Sets this resource's content.
 	 * 
 	 * @param content
 	 */
-	public void setContent(byte[] content) throws IOException;
+	public void setContent(byte[] content) throws RepositoryWriteException;
 
 	/**
 	 * Sets this resource's content.
@@ -44,7 +44,7 @@ public interface IResource extends IEntity {
 	 * @throws IOException
 	 */
 	public void setContent(byte[] content, boolean isBinary, String contentType)
-			throws IOException;
+			throws RepositoryWriteException;
 
 	/**
 	 * Getter for binary flag
@@ -66,7 +66,7 @@ public interface IResource extends IEntity {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<IResourceVersion> getResourceVersions() throws IOException;
+	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException;
 
 	/**
 	 * Retrieve a particular version of a given resource
@@ -75,6 +75,6 @@ public interface IResource extends IEntity {
 	 * @return
 	 * @throws IOException
 	 */
-	public IResourceVersion getResourceVersion(int version) throws IOException;
+	public IResourceVersion getResourceVersion(int version) throws RepositoryVersioningException;
 
 }

@@ -10,7 +10,7 @@
 
 package org.eclipse.dirigible.repository.master.zip;
 
-import org.eclipse.dirigible.repository.local.LocalBaseException;
+import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
 
 public class ZipMasterRepository extends ZipRepository implements IMasterRepository {
@@ -18,7 +18,7 @@ public class ZipMasterRepository extends ZipRepository implements IMasterReposit
 	public static final String TYPE = "zip";
 	public static final String DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION = "DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION";
 
-	public ZipMasterRepository(String zip) throws LocalBaseException {
+	public ZipMasterRepository(String zip) throws LocalRepositoryException {
 		super(zip);
 	}
 

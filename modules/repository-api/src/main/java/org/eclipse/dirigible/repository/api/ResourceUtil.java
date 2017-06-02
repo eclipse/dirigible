@@ -11,10 +11,8 @@
 
 package org.eclipse.dirigible.repository.api;
 
-import javax.annotation.Resource;
-
 /**
- * Utility class for handling {@link Resource} objects.
+ * Utility class for handling Resource objects.
  * 
  */
 public final class ResourceUtil {

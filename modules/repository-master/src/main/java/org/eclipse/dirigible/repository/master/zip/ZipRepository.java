@@ -24,14 +24,14 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
-import org.eclipse.dirigible.repository.local.FileSystemRepository;
-import org.eclipse.dirigible.repository.local.LocalBaseException;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 
 public class ZipRepository extends FileSystemRepository {
 
 	private String zipRepositoryRootFolder;
 
-	public ZipRepository(String zip) throws LocalBaseException {
+	public ZipRepository(String zip) throws LocalRepositoryException {
 
 		File zipFile = new File(zip);
 		if (zipFile.exists()) {
@@ -42,10 +42,10 @@ public class ZipRepository extends FileSystemRepository {
 				zipRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf(IRepositoryConstants.DOT));
 				createRepository(rootFolder.toString(), true);
 			} catch (IOException e) {
-				throw new LocalBaseException(e);
+				throw new LocalRepositoryException(e);
 			}
 		} else {
-			throw new LocalBaseException(String.format("Zip file containing Repository content does not exist at path: %s", zip));
+			throw new LocalRepositoryException(String.format("Zip file containing Repository content does not exist at path: %s", zip));
 		}
 	}
 
@@ -70,12 +70,12 @@ public class ZipRepository extends FileSystemRepository {
 	}
 
 	// disable usage
-	protected ZipRepository(String rootFolder, boolean absolute) throws LocalBaseException {
+	protected ZipRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		super(rootFolder, absolute);
 	}
 
 	// disable usage
-	protected ZipRepository() throws LocalBaseException {
+	protected ZipRepository() throws LocalRepositoryException {
 		super();
 	}
 

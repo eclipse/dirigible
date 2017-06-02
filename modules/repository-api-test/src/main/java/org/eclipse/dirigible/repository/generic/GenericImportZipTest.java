@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -50,7 +49,7 @@ public class GenericImportZipTest {
 			assertTrue(resource.isBinary());
 			assertEquals("image/png", resource.getContentType()); //$NON-NLS-1$
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}

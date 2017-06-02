@@ -8,11 +8,12 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.local;
+package org.eclipse.dirigible.repository.local.module;
 
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.local.LocalRepository;
 
 /**
  * Module for managing Local Repository instantiation and binding

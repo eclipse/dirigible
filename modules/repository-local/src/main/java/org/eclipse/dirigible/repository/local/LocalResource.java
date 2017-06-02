@@ -12,12 +12,16 @@ package org.eclipse.dirigible.repository.local;
 
 import static java.text.MessageFormat.format;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
+import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
+import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +32,6 @@ public class LocalResource extends LocalEntity implements IResource {
 	
 	private static final Logger logger = LoggerFactory.getLogger(LocalResource.class);
 	
-	private static final String THERE_IS_NO_RESOURCE_AT_PATH_0 = "There is no resource at path ''{0}''."; //$NON-NLS-1$
-	private static final String COULD_NOT_UPDATE_DOCUMENT = "Could not update document."; //$NON-NLS-1$
-	private static final String COULD_NOT_READ_RESOURCE_CONTENT = "Could not read resource content."; //$NON-NLS-1$
-	private static final String NOT_IMPLEMENTED = "Not implemented"; //$NON-NLS-1$
-	private static final String COULD_NOT_DELETE_RESOURCE = "Could not delete resource: "; //$NON-NLS-1$
-	private static final String COULD_NOT_RENAME_RESOURCE = "Could not rename resource: "; //$NON-NLS-1$
-
 	private boolean binary = false;
 
 	private String contentType;
@@ -48,78 +45,77 @@ public class LocalResource extends LocalEntity implements IResource {
 				this.contentType = localFile.getContentType();
 
 			}
-		} catch (IOException e) {
+		} catch (RepositoryReadException e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public void create() throws IOException {
+	public void create() throws RepositoryWriteException {
 		getParent().createResource(getName(), null, false, CONTENT_TYPE_DEFAULT);
 	}
 
 	@Override
-	public void delete() throws IOException {
+	public void delete() throws RepositoryWriteException {
 		final LocalFile document = getDocumentSafe();
 		try {
 			document.delete();
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_DELETE_RESOURCE + this.getName(), ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not delete resource {} ", this.getName()), ex);
 		}
 	}
 
 	@Override
-	public void renameTo(String name) throws IOException {
+	public void renameTo(String name) throws RepositoryWriteException {
 		final LocalFile document = getDocumentSafe();
 		try {
 			document.rename(RepositoryPath.normalizePath(getParent().getPath(), name));
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_RENAME_RESOURCE + this.getName(), ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not rename resource {}", this.getName()), ex);
 		}
 	}
 
 	@Override
-	public void moveTo(String path) throws IOException {
+	public void moveTo(String path) throws RepositoryWriteException {
 		final LocalFile document = getDocumentSafe();
 		try {
 			document.rename(path);
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_RENAME_RESOURCE + this.getName(), ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not move resource {}", this.getName()), ex);
 		}
 	}
 
 	@Override
-	public void copyTo(String path) throws IOException {
+	public void copyTo(String path) throws RepositoryWriteException {
 		// TODO Auto-generated method stub
-		throw new IOException(NOT_IMPLEMENTED);
+		throw new RepositoryWriteException("Not implemented");
 	}
 
 	@Override
-	public boolean exists() throws IOException {
+	public boolean exists() throws RepositoryReadException {
 		String repositoryPath = getRepositoryPath().toString();
 		String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
 		return (FileSystemUtils.fileExists(localPath));
-		// return (getDocument() != null);
 	}
 
 	@Override
-	public boolean isEmpty() throws IOException {
+	public boolean isEmpty() throws RepositoryReadException {
 		return (getContent().length == 0);
 	}
 
 	@Override
-	public byte[] getContent() throws IOException {
+	public byte[] getContent() throws RepositoryReadException {
 		final LocalFile document = getDocumentSafe();
 		try {
 			byte[] bytes = document.getData();
 			return bytes;
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_READ_RESOURCE_CONTENT, ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryReadException("Could not read resource content.", ex);
 		}
 	}
 
 	@Override
-	public void setContent(byte[] content) throws IOException {
+	public void setContent(byte[] content) throws RepositoryWriteException {
 
 		if ((this.contentType == null) || "".equals(this.contentType)) { //$NON-NLS-1$
 			this.contentType = IResource.CONTENT_TYPE_DEFAULT;
@@ -129,8 +125,8 @@ public class LocalResource extends LocalEntity implements IResource {
 			final LocalFile document = getDocumentSafe();
 			try {
 				document.setData(content);
-			} catch (LocalBaseException ex) {
-				throw new IOException(COULD_NOT_UPDATE_DOCUMENT, ex);
+			} catch (LocalRepositoryException ex) {
+				throw new RepositoryWriteException("Could not update document.", ex);
 			}
 		} else {
 			getParent().createResource(getName(), content, this.binary, this.contentType);
@@ -161,7 +157,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
 	 * there is no such object, then <code>null</code> is returned.
 	 */
-	protected LocalFile getDocument() throws IOException {
+	protected LocalFile getDocument() throws RepositoryReadException {
 		final LocalObject object = getLocalObject();
 		if (object == null) {
 			return null;
@@ -174,12 +170,12 @@ public class LocalResource extends LocalEntity implements IResource {
 
 	/**
 	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
-	 * there is no such object, then an {@link IOException} is thrown.
+	 * there is no such object, then an {@link RepositoryReadException} is thrown.
 	 */
-	protected LocalFile getDocumentSafe() throws IOException {
+	protected LocalFile getDocumentSafe() throws RepositoryReadException {
 		final LocalFile document = getDocument();
 		if (document == null) {
-			throw new IOException(format(THERE_IS_NO_RESOURCE_AT_PATH_0, getPath()));
+			throw new RepositoryReadException(format("There is no resource at path ''{0}''.", getPath()));
 		}
 		return document;
 	}
@@ -195,7 +191,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	}
 
 	@Override
-	public void setContent(byte[] content, boolean isBinary, String contentType) throws IOException {
+	public void setContent(byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
 
 		this.binary = isBinary;
 		this.contentType = contentType;
@@ -208,8 +204,8 @@ public class LocalResource extends LocalEntity implements IResource {
 			final LocalFile document = getDocumentSafe();
 			try {
 				document.setData(content);
-			} catch (LocalBaseException ex) {
-				throw new IOException(COULD_NOT_UPDATE_DOCUMENT, ex);
+			} catch (LocalRepositoryException ex) {
+				throw new RepositoryWriteException("Could not update document.", ex);
 			}
 		} else {
 			getParent().createResource(getName(), content, binary, contentType);
@@ -218,17 +214,17 @@ public class LocalResource extends LocalEntity implements IResource {
 	}
 
 	@Override
-	public List<IResourceVersion> getResourceVersions() throws IOException {
+	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException {
 		try {
 			return getRepository().getRepositoryDAO().getResourceVersionsByPath(getPath());
-		} catch (LocalBaseException ex) {
+		} catch (LocalRepositoryException ex) {
 			logger.error(ex.getMessage(), ex);
 		}
 		return null;
 	}
 
 	@Override
-	public IResourceVersion getResourceVersion(int version) throws IOException {
+	public IResourceVersion getResourceVersion(int version) throws RepositoryVersioningException {
 		// return new DBResourceVersion(getRepository(), new RepositoryPath(
 		// getPath()), version);
 		return null;

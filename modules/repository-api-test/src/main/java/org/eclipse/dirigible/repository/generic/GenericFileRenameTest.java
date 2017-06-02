@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.util.Random;
 
 import javax.xml.bind.DatatypeConverter;
@@ -71,13 +70,13 @@ public class GenericFileRenameTest {
 
 			assertEquals(base64, base64back);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			try {
 				repository.removeCollection("/a");
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}
@@ -122,13 +121,13 @@ public class GenericFileRenameTest {
 
 			assertEquals(base64, base64back);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			try {
 				repository.removeCollection("/a");
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}

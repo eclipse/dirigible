@@ -12,12 +12,13 @@ package org.eclipse.dirigible.repository.local;
 
 import static java.text.MessageFormat.format;
 
-import java.io.IOException;
-
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IEntityInformation;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
+import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +28,6 @@ import org.slf4j.LoggerFactory;
 public abstract class LocalEntity implements IEntity {
 	
 	private static final Logger logger = LoggerFactory.getLogger(LocalEntity.class);
-
-	private static final String THERE_IS_NO_ENTITY_AT_PATH_0 = "There is no entity at path ''{0}''."; //$NON-NLS-1$
 
 	private final FileSystemRepository repository;
 
@@ -73,7 +72,7 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	@Override
-	public IEntityInformation getInformation() throws IOException {
+	public IEntityInformation getInformation() throws RepositoryReadException {
 		return new LocalEntityInformation(this.path, getLocalObjectSafe());
 	}
 
@@ -82,10 +81,10 @@ public abstract class LocalEntity implements IEntity {
 	 * no such object in the real repository, then <code>null</code> is
 	 * returned.
 	 */
-	protected LocalObject getLocalObject() throws IOException {
+	protected LocalObject getLocalObject() throws RepositoryReadException {
 		try {
 			return this.repository.getRepositoryDAO().getObjectByPath(getPath());
-		} catch (LocalBaseException ex) {
+		} catch (LocalRepositoryException ex) {
 			logger.error(ex.getMessage(), ex);
 			return null;
 		}
@@ -96,10 +95,10 @@ public abstract class LocalEntity implements IEntity {
 	 * no such object in the real repository, then an {@link IOException} is
 	 * thrown.
 	 */
-	protected LocalObject getLocalObjectSafe() throws IOException {
+	protected LocalObject getLocalObjectSafe() throws RepositoryReadException {
 		final LocalObject result = getLocalObject();
 		if (result == null) {
-			throw new IOException(format(THERE_IS_NO_ENTITY_AT_PATH_0, this.path.toString()));
+			throw new RepositoryReadException(format("There is no entity at path ''{0}''.", this.path.toString()));
 		}
 		return result;
 	}
@@ -108,7 +107,7 @@ public abstract class LocalEntity implements IEntity {
 	 * Creates all ancestors of the given {@link CMISEntity} inside the
 	 * repository if they don't already exist.
 	 */
-	protected void createAncestorsIfMissing() throws IOException {
+	protected void createAncestorsIfMissing() throws RepositoryWriteException {
 		final ICollection parent = getParent();
 		if ((parent != null) && (!parent.exists())) {
 			parent.create();
@@ -119,7 +118,7 @@ public abstract class LocalEntity implements IEntity {
 	 * Creates all ancestors of the given {@link CMISEntity} and itself too if
 	 * they don't already exist.
 	 */
-	protected void createAncestorsAndSelfIfMissing() throws IOException {
+	protected void createAncestorsAndSelfIfMissing() throws RepositoryWriteException {
 		createAncestorsIfMissing();
 		if (!exists()) {
 			create();

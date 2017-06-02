@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.repository.api;
+package org.eclipse.dirigible.commons.api.helpers;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -22,10 +22,15 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
-import org.eclipse.dirigible.repository.api.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
+import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
+import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +56,7 @@ public class LocalRepositoryDao {
 
 	private FileSystemRepository repository;
 
-	LocalRepositoryDao(FileSystemRepository repository) {
+	public LocalRepositoryDao(FileSystemRepository repository) {
 		this.repository = repository;
 	}
 
@@ -59,14 +64,14 @@ public class LocalRepositoryDao {
 		return this.repository;
 	}
 
-	public void createFile(String path, byte[] content, boolean isBinary, String contentType) throws LocalBaseException {
+	public void createFile(String path, byte[] content, boolean isBinary, String contentType) throws LocalRepositoryException {
 		try {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			FileSystemUtils.saveFile(workspacePath, content);
 			createVersion(workspacePath, content);
 			createInfo(workspacePath);
 		} catch (IOException e) {
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 
 	}
@@ -155,7 +160,7 @@ public class LocalRepositoryDao {
 			createVersion(workspacePath, content);
 			createInfo(workspacePath);
 		} catch (IOException e) {
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 	}
 
@@ -164,7 +169,7 @@ public class LocalRepositoryDao {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), localFile.getPath());
 			return FileSystemUtils.loadFile(workspacePath);
 		} catch (IOException e) {
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 	}
 
@@ -182,7 +187,7 @@ public class LocalRepositoryDao {
 				removeInfo(workspacePathOld);
 			}
 		} catch (IOException e) {
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 	}
 
@@ -193,7 +198,7 @@ public class LocalRepositoryDao {
 			removeVersions(workspacePath);
 			removeInfo(workspacePath);
 		} catch (IOException e) {
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 	}
 
@@ -204,7 +209,7 @@ public class LocalRepositoryDao {
 			removeVersions(workspacePath);
 			removeInfo(workspacePath);
 		} catch (IOException e) {
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 	}
 
@@ -212,8 +217,8 @@ public class LocalRepositoryDao {
 		try {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), normalizePath);
 			FileSystemUtils.createFolder(workspacePath);
-		} catch (IOException e) {
-			throw new LocalBaseException(e);
+		} catch (RepositoryWriteException e) {
+			throw new LocalRepositoryException(e);
 		}
 	}
 
@@ -227,7 +232,7 @@ public class LocalRepositoryDao {
 			removeInfo(workspacePathNew);
 			// TODO recursion for the files initial version!
 		} catch (IOException e) {
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 
 	}
@@ -279,7 +284,7 @@ public class LocalRepositoryDao {
 		IOException e)
 
 		{
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 		return localObject;
 
@@ -299,12 +304,12 @@ public class LocalRepositoryDao {
 				}
 			}
 		} catch (IOException e) {
-			throw new LocalBaseException(e);
+			throw new LocalRepositoryException(e);
 		}
 		return localObjects;
 	}
 
-	public List<IResourceVersion> getResourceVersionsByPath(String path) throws IOException {
+	public List<IResourceVersion> getResourceVersionsByPath(String path) throws RepositoryVersioningException {
 		List<IResourceVersion> versions = new ArrayList<IResourceVersion>();
 		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
@@ -326,25 +331,29 @@ public class LocalRepositoryDao {
 		return versions;
 	}
 
-	public LocalFileVersion getFileVersionByPath(String path, int version) throws FileNotFoundException, IOException {
+	public LocalFileVersion getFileVersionByPath(String path, int version) throws RepositoryVersioningException {
 		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 		return getLocalFileVersionByPath(version, workspacePath);
 	}
 
-	private LocalFileVersion getLocalFileVersionByPath(int version, String workspacePath) throws FileNotFoundException, IOException {
+	private LocalFileVersion getLocalFileVersionByPath(int version, String workspacePath) throws RepositoryVersioningException {
 		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
 		String versionPath = versionsPath + File.separator + version;
-		if (FileSystemUtils.fileExists(versionPath)) {
-			byte[] bytes = FileSystemUtils.loadFile(versionPath);
-			if (bytes != null) {
-				String ext = FilenameUtils.getExtension(workspacePath);
-				String contentType = ContentTypeHelper.getContentType(ext);
-				boolean isBinary = ContentTypeHelper.isBinary(contentType);
-				LocalFileVersion localFileVersion = new LocalFileVersion(getRepository(), isBinary, contentType, version, bytes);
-				localFileVersion.setCreatedBy(FileSystemUtils.getOwner(workspacePath));
-				localFileVersion.setCreatedAt(FileSystemUtils.getModifiedAt(workspacePath));
-				return localFileVersion;
+		try {
+			if (FileSystemUtils.fileExists(versionPath)) {
+				byte[] bytes = FileSystemUtils.loadFile(versionPath);
+				if (bytes != null) {
+					String ext = FilenameUtils.getExtension(workspacePath);
+					String contentType = ContentTypeHelper.getContentType(ext);
+					boolean isBinary = ContentTypeHelper.isBinary(contentType);
+					LocalFileVersion localFileVersion = new LocalFileVersion(getRepository(), isBinary, contentType, version, bytes);
+					localFileVersion.setCreatedBy(FileSystemUtils.getOwner(workspacePath));
+					localFileVersion.setCreatedAt(FileSystemUtils.getModifiedAt(workspacePath));
+					return localFileVersion;
+				}
 			}
+		} catch (IOException e) {
+			throw new RepositoryVersioningException(e);
 		}
 
 		return null;

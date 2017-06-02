@@ -21,73 +21,66 @@ import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
+import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 
 /**
- * The DB implementation of {@link ICollection}
+ * The Local File System implementation of {@link ICollection}
  */
 public class LocalCollection extends LocalEntity implements ICollection {
 	
-	private static final String THERE_IS_NO_COLLECTION_AT_PATH_0 = "There is no collection at path ''{0}''."; //$NON-NLS-1$
-	private static final String COULD_NOT_CREATE_CHILD_DOCUMENT = "Could not create child document: "; //$NON-NLS-1$
-	private static final String COULD_NOT_GET_CHILD_RESOURCE_NAMES = "Could not get child resource names: "; //$NON-NLS-1$
-	private static final String COULD_NOT_CREATE_CHILD_COLLECTION = "Could not create child collection: "; //$NON-NLS-1$
-	private static final String COULD_NOT_GET_CHILD_COLLECTION_NAMES = "Could not get child collection names: "; //$NON-NLS-1$
-	private static final String NOT_IMPLEMENTED = "Not implemented"; //$NON-NLS-1$
-	private static final String COULD_NOT_DELETE_COLLECTION = "Could not delete collection: "; //$NON-NLS-1$
-	private static final String COULD_NOT_RENAME_COLLECTION = "Could not rename collection: "; //$NON-NLS-1$
-	private static final String CANNOT_CREATE_ROOT_COLLECTION = "Cannot create root collection."; //$NON-NLS-1$
-
 	public LocalCollection(FileSystemRepository repository, RepositoryPath path) {
 		super(repository, path);
 	}
 
 	@Override
-	public void create() throws IOException {
+	public void create() throws RepositoryWriteException {
 		final ICollection parent = getParent();
 		if (parent == null) {
-			throw new LocalBaseException(CANNOT_CREATE_ROOT_COLLECTION);
+			throw new LocalRepositoryException("Cannot create root collection.");
 		}
 		parent.createCollection(getName());
 	}
 
 	@Override
-	public void delete() throws IOException {
+	public void delete() throws RepositoryWriteException {
 		final LocalFolder folder = getFolderSafe();
 		try {
 			folder.deleteTree();
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_DELETE_COLLECTION + this.getName(), ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not delete collection {} ", this.getName()), ex);
 		}
 	}
 
 	@Override
-	public void renameTo(String name) throws IOException {
+	public void renameTo(String name) throws RepositoryWriteException {
 		final LocalFolder folder = getFolderSafe();
 		try {
 			folder.renameFolder(RepositoryPath.normalizePath(getParent().getPath(), name));
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(), ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not rename collection {}", this.getName()), ex);
 		}
 	}
 
 	@Override
-	public void moveTo(String path) throws IOException {
+	public void moveTo(String path) throws RepositoryWriteException {
 		final LocalFolder folder = getFolderSafe();
 		try {
 			folder.renameFolder(path);
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(), ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not move collection {}", this.getName()), ex);
 		}
 	}
 
 	@Override
-	public void copyTo(String path) throws IOException {
-		// TODO Auto-generated method stub
-		throw new IOException(NOT_IMPLEMENTED);
+	public void copyTo(String path) throws RepositoryWriteException {
+		throw new RepositoryWriteException("Not implemented");
 	}
 
 	@Override
-	public boolean exists() throws IOException {
+	public boolean exists() throws RepositoryWriteException {
 		String repositoryPath = getRepositoryPath().toString();
 		if (IRepository.SEPARATOR.equals(repositoryPath)) {
 			return true;
@@ -97,12 +90,12 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	}
 
 	@Override
-	public boolean isEmpty() throws IOException {
+	public boolean isEmpty() throws RepositoryReadException {
 		return getResources().isEmpty() && getCollections().isEmpty();
 	}
 
 	@Override
-	public List<ICollection> getCollections() throws IOException {
+	public List<ICollection> getCollections() throws RepositoryReadException {
 		// return new ArrayList<ICollection>(collections.values());
 		final List<String> collectionNames = getCollectionsNames();
 		final List<ICollection> result = new ArrayList<ICollection>(collectionNames.size());
@@ -113,7 +106,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	}
 
 	@Override
-	public List<String> getCollectionsNames() throws IOException {
+	public List<String> getCollectionsNames() throws RepositoryReadException {
 		final List<String> result = new ArrayList<String>();
 		final LocalFolder folder = getFolderSafe();
 		try {
@@ -122,20 +115,20 @@ public class LocalCollection extends LocalEntity implements ICollection {
 					result.add(child.getName());
 				}
 			}
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_GET_CHILD_COLLECTION_NAMES + this.getName(), ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryReadException(format("Could not get child collection names {} ", this.getName()), ex);
 		}
 		return result;
 	}
 
 	@Override
-	public ICollection createCollection(String name) throws IOException {
+	public ICollection createCollection(String name) throws RepositoryWriteException {
 		createAncestorsAndSelfIfMissing();
 		final LocalFolder folder = getFolderSafe();
 		try {
 			folder.createFolder(name);
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_CREATE_CHILD_COLLECTION + name, ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not create child collection {}", name), ex);
 		}
 		return getCollection(name);
 	}
@@ -147,18 +140,18 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	}
 
 	@Override
-	public void removeCollection(String name) throws IOException {
+	public void removeCollection(String name) throws RepositoryWriteException {
 		final ICollection collection = getCollection(name);
 		collection.delete();
 	}
 
 	@Override
-	public void removeCollection(ICollection childCollection) throws IOException {
+	public void removeCollection(ICollection childCollection) throws RepositoryWriteException {
 		removeCollection(childCollection.getName());
 	}
 
 	@Override
-	public List<IResource> getResources() throws IOException {
+	public List<IResource> getResources() throws RepositoryReadException {
 		final List<String> resourceNames = getResourcesNames();
 		final List<IResource> result = new ArrayList<IResource>(resourceNames.size());
 		for (String resourceName : resourceNames) {
@@ -168,7 +161,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	}
 
 	@Override
-	public List<String> getResourcesNames() throws IOException {
+	public List<String> getResourcesNames() throws RepositoryReadException {
 		final List<String> result = new ArrayList<String>();
 		final LocalFolder folder = getFolderSafe();
 		try {
@@ -177,66 +170,43 @@ public class LocalCollection extends LocalEntity implements ICollection {
 					result.add(child.getName());
 				}
 			}
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_GET_CHILD_RESOURCE_NAMES + this.getName(), ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryReadException(format("Could not get child resource names {}", this.getName()), ex);
 		}
 		return result;
 	}
 
 	@Override
-	public IResource getResource(String name) throws IOException {
-		// if (name != null
-		// && name.indexOf(IRepository.SEPARATOR) > -1) {
-		// name = name.substring(name.indexOf(IRepository.SEPARATOR) + 1);
-		// }
+	public IResource getResource(String name) throws RepositoryReadException {
 		final RepositoryPath path = getRepositoryPath().append(name);
 		return new LocalResource(getRepository(), path);
 	}
 
-	// @Override
-	// public IResource createResource(String name) throws IOException {
-	// return createResource(name, null);
-	// }
-	//
-	// @Override
-	// public IResource createResource(String name, byte[] content)
-	// throws IOException {
-	// createAncestorsAndSelfIfMissing();
-	// final DBFolder folder = getFolderSafe();
-	// try {
-	// folder.createFile(name, content, false,
-	// IResource.CONTENT_TYPE_DEFAULT);
-	// } catch (DBBaseException ex) {
-	// throw new IOException(COULD_NOT_CREATE_CHILD_DOCUMENT + name, ex);
-	// }
-	// return getResource(name);
-	// }
-
 	@Override
-	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws IOException {
+	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
 		createAncestorsAndSelfIfMissing();
 		final LocalFolder folder = getFolderSafe();
 		try {
 			folder.createFile(name, content, isBinary, contentType);
-		} catch (LocalBaseException ex) {
-			throw new IOException(COULD_NOT_CREATE_CHILD_DOCUMENT + name, ex);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not create child document {}", name), ex);
 		}
 		return getResource(name);
 	}
 
 	@Override
-	public void removeResource(String name) throws IOException {
+	public void removeResource(String name) throws RepositoryWriteException {
 		final IResource resource = getResource(name);
 		resource.delete();
 	}
 
 	@Override
-	public void removeResource(IResource resource) throws IOException {
+	public void removeResource(IResource resource) throws RepositoryWriteException {
 		removeResource(resource.getName());
 	}
 
 	@Override
-	public List<IEntity> getChildren() throws IOException {
+	public List<IEntity> getChildren() throws RepositoryReadException {
 		final List<IEntity> result = new ArrayList<IEntity>();
 		result.addAll(getCollections());
 		result.addAll(getResources());
@@ -267,7 +237,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	 * Returns the {@link Folder} object matching this {@link CMISContainer}. If
 	 * there is no such object, then <code>null</code> is returned.
 	 */
-	protected LocalFolder getFolder() throws IOException {
+	protected LocalFolder getFolder() throws RepositoryReadException {
 		final LocalObject object = getLocalObject();
 		if (object == null) {
 			return null;
@@ -282,10 +252,10 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	 * Returns the {@link LocalFolder} object matching this {@link DBCollection}.
 	 * If there is no such object, then an {@link IOException} is thrown.
 	 */
-	protected LocalFolder getFolderSafe() throws IOException {
+	protected LocalFolder getFolderSafe() throws RepositoryReadException {
 		final LocalFolder folder = getFolder();
 		if (folder == null) {
-			throw new IOException(format(THERE_IS_NO_COLLECTION_AT_PATH_0, getPath()));
+			throw new RepositoryReadException(format("There is no collection at path ''{0}''.", getPath()));
 		}
 		return folder;
 	}

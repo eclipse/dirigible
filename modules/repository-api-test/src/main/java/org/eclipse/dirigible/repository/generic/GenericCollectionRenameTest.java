@@ -16,8 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.junit.Test;
@@ -39,7 +37,7 @@ public class GenericCollectionRenameTest {
 			assertTrue(collection.exists());
 			assertEquals(0, collection.getChildren().size());
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
@@ -50,7 +48,7 @@ public class GenericCollectionRenameTest {
 					assertNotNull(collection);
 					assertFalse(collection.exists());
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}
@@ -96,14 +94,14 @@ public class GenericCollectionRenameTest {
 			assertNotNull(collection);
 			assertFalse(collection.exists());
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} finally {
 			try {
 				repository.removeCollection("/a");
 				repository.removeCollection("/c");
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}
