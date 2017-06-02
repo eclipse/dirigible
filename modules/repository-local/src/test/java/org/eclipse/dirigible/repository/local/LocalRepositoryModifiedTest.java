@@ -12,31 +12,22 @@ package org.eclipse.dirigible.repository.local;
 
 import static org.junit.Assert.fail;
 
-import org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest;
+import org.eclipse.dirigible.repository.generic.RepositoryGenericModifiedTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
-public class LocalSearchTest extends RepositoryGenericSearchTest {
+public class LocalRepositoryModifiedTest extends RepositoryGenericModifiedTest {
 
 	@Before
 	public void setUp() {
 		try {
-			repository = new LocalRepository("target/test");
+			repository1 = new LocalRepository("target/test");
+			repository2 = new LocalRepository("target/test");
+			repository3 = new LocalRepository("target/test");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-	}
-
-	@Override
-	public void testSearchPath() {
-		super.testSearchPath();
-	}
-
-	@Override
-	public void testSearchText() {
-		// TODO to be implemented
-		// super.testSearchText();
 	}
 
 }

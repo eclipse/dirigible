@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Repository - API - Test</name>
-	<artifactId>dirigible-repository-api-test</artifactId>
+	<name>API - http</name>
+	<artifactId>dirigible-api-auth</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -36,12 +36,12 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
+            <artifactId>dirigible-commons-config</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-auth</artifactId>
+            <artifactId>dirigible-api-http</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
     </dependencies>

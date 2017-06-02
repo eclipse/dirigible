@@ -12,11 +12,11 @@ package org.eclipse.dirigible.repository.local;
 
 import static org.junit.Assert.fail;
 
-import org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest;
+import org.eclipse.dirigible.repository.generic.RepositoryGenericBigTextTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
-public class LocalSearchTest extends RepositoryGenericSearchTest {
+public class LocalRepositoryBigTextTest extends RepositoryGenericBigTextTest {
 
 	@Before
 	public void setUp() {
@@ -26,17 +26,6 @@ public class LocalSearchTest extends RepositoryGenericSearchTest {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-	}
-
-	@Override
-	public void testSearchPath() {
-		super.testSearchPath();
-	}
-
-	@Override
-	public void testSearchText() {
-		// TODO to be implemented
-		// super.testSearchText();
 	}
 
 }

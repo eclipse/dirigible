@@ -12,11 +12,11 @@ package org.eclipse.dirigible.repository.local;
 
 import static org.junit.Assert.fail;
 
-import org.eclipse.dirigible.repository.generic.GenericRepositoryTest;
+import org.eclipse.dirigible.repository.generic.RepositoryGenericRepositoryTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
-public class LocalRepositoryTest extends GenericRepositoryTest {
+public class LocalRepositoryTest extends RepositoryGenericRepositoryTest {
 
 	@Before
 	public void setUp() {

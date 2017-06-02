@@ -12,8 +12,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingContextException;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingContextFacade;
 import org.eclipse.dirigible.commons.api.service.RestService;
 import org.eclipse.dirigible.engine.web.processor.WebEngineProcessor;
 import org.slf4j.Logger;
@@ -41,14 +41,14 @@ public class WebEngineRestService implements RestService {
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
-			ScriptingContextFacade.setUp();
-			ScriptingContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
-			ScriptingContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
+			ThreadContextFacade.setUp();
+			ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
+			ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
 			try {
 				String result = processor.getResource(path);
 				return Response.ok(result).build();
 			} finally {
-				ScriptingContextFacade.tearDown();
+				ThreadContextFacade.tearDown();
 			}
 		} catch(ScriptingContextException e) {
 			logger.error(e.getMessage(), e);

@@ -35,7 +35,6 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	protected Injector getInjector() {
 		logger.debug("Initializing Guice Injector with modules for dependency injection...");
 
-		Configuration.create();
 		injector = Guice.createInjector(new DirigibleModulesInstallerModule());
 		setStaticInjector(injector);
 		

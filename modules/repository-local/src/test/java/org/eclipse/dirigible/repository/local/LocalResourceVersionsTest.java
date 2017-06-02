@@ -12,11 +12,11 @@ package org.eclipse.dirigible.repository.local;
 
 import static org.junit.Assert.fail;
 
-import org.eclipse.dirigible.repository.generic.GenericResourceVersionsTest;
+import org.eclipse.dirigible.repository.generic.RepositoryGenericResourceVersionsTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
-public class LocalResourceVersionsTest extends GenericResourceVersionsTest {
+public class LocalResourceVersionsTest extends RepositoryGenericResourceVersionsTest {
 
 	@Before
 	public void setUp() {

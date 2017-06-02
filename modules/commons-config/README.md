@@ -14,4 +14,6 @@
 
   > Note: The JAR path is absolute inside the class path
 
+### Tests
+- `DIRIGIBLE_TEST_MODE_ENABLED`: (true | false)
  

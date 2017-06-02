@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
+import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
@@ -360,8 +361,7 @@ public class LocalRepositoryDao {
 	}
 	
 	private String getUser() {
-		// TODO Use Injected User once available
-		return "nobody";
+		return UserFacade.getName();
 	}
 
 }

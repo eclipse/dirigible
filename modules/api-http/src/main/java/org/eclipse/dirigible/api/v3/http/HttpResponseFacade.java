@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingContextException;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +15,11 @@ public class HttpResponseFacade implements ScriptingFacade {
 	private static final Logger logger = LoggerFactory.getLogger(HttpResponseFacade.class);
 	
 	private static final HttpServletResponse getResponse() {
+		if (!ThreadContextFacade.isValid()) {
+			return null;
+		}
 		try {
-			return (HttpServletResponse) ScriptingContextFacade.get(HttpServletResponse.class.getCanonicalName());
+			return (HttpServletResponse) ThreadContextFacade.get(HttpServletResponse.class.getCanonicalName());
 		} catch(ScriptingContextException e) {
 			logger.error(e.getMessage(), e);
 		}

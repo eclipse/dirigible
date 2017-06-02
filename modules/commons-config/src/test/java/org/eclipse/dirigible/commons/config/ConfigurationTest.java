@@ -2,15 +2,9 @@ package org.eclipse.dirigible.commons.config;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class ConfigurationTest {
-	
-	@Before
-	public void setUp() {
-		Configuration.create();
-	}
 	
 	@Test
 	public void initTest() {

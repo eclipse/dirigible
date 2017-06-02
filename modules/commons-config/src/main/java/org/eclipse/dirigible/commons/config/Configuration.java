@@ -26,13 +26,24 @@ public class Configuration {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	
+	public static final String DIRIGIBLE_TEST_MODE_ENABLED = "DIRIGIBLE_TEST_MODE_ENABLED";
+	
 	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<String, String>());
 	
-	public static Configuration INSTANCE;
+	private static Configuration INSTANCE;
 	
-	public static void create() {
-		INSTANCE = new Configuration();
-		Configuration.update();
+	private static void create() {
+		synchronized(Configuration.class) {
+			INSTANCE = new Configuration();
+			Configuration.update();
+		}
+	}
+	
+	private static Configuration getInstance() {
+		if (INSTANCE == null) {
+			create();
+		}
+		return INSTANCE;
 	}
 	
 	private Configuration() {
@@ -63,7 +74,7 @@ public class Configuration {
 		try {
 			Properties custom = new Properties();
 			custom.load(Configuration.class.getResourceAsStream(path));
-			INSTANCE.parameters.putAll((Map) custom);
+			add(custom);
 			logger.debug("Configuration loaded: " + path);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
@@ -76,7 +87,14 @@ public class Configuration {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void add(Properties custom) {
-		INSTANCE.parameters.putAll((Map) custom);
+		try {
+			if (custom.containsKey(DIRIGIBLE_TEST_MODE_ENABLED)) {
+				throw new TestModeException("Setting the test mode programmatically as a parameter is forbidden.");
+			}
+			getInstance().parameters.putAll((Map) custom);
+		} catch (TestModeException e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 	
 	/**
@@ -95,7 +113,7 @@ public class Configuration {
 	 * @return
 	 */
 	public static String get(String key, String defaultValue) {
-		String value = INSTANCE.parameters.get(key);
+		String value = getInstance().parameters.get(key);
 		return (value != null) ? value: defaultValue;
 	}
 
@@ -105,7 +123,14 @@ public class Configuration {
 	 * @param value
 	 */
 	public static void set(String key, String value) {
-		INSTANCE.parameters.put(key, value);
+		try {
+			if (DIRIGIBLE_TEST_MODE_ENABLED.equals(key)) {
+				throw new TestModeException("Setting the test mode programmatically as a parameter is forbidden.");
+			}
+			getInstance().parameters.put(key, value);
+		} catch (TestModeException e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 	
 	/**
@@ -115,26 +140,42 @@ public class Configuration {
 	 * @return
 	 */
 	public static String[] getKeys(String key, String value) {
-		return INSTANCE.parameters.keySet().toArray(new String[]{});
+		return getInstance().parameters.keySet().toArray(new String[]{});
 	}
 	
 	/**
 	 * Update the properties values from the System's properties and from the Environment if any
 	 */
 	public static void update() {
-		Set<String> keys = INSTANCE.parameters.keySet();
+		Set<String> keys = getInstance().parameters.keySet();
 		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
 			String key = iterator.next();
 			String asSystemProperty = System.getProperty(key);
 			if (asSystemProperty != null) {
-				INSTANCE.parameters.put(key, asSystemProperty);
+				getInstance().parameters.put(key, asSystemProperty);
 			} else {
 				String asEnvVar = System.getenv(key);
 				if (asEnvVar != null) {
-					INSTANCE.parameters.put(key, asEnvVar);
+					getInstance().parameters.put(key, asEnvVar);
 				}
 			}
 		}
+	}
+	
+	public static boolean isTestModeEnabled() {
+		String testMode = Configuration.get(DIRIGIBLE_TEST_MODE_ENABLED);
+		if (testMode != null || Boolean.parseBoolean(testMode)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static void enableTestMode() {
+		getInstance().parameters.put(DIRIGIBLE_TEST_MODE_ENABLED, "true");
+	}
+	
+	public static void disableTestMode() {
+		getInstance().parameters.put(DIRIGIBLE_TEST_MODE_ENABLED, "false");
 	}
 
 }

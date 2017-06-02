@@ -23,6 +23,9 @@
         <dependent-module archiveName="dirigible-repository-local-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-local/dirigible-repository-local">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-api-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-auth/dirigible-api-auth">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-repository-master-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-master/dirigible-repository-master">
             <dependency-type>uses</dependency-type>
         </dependent-module>

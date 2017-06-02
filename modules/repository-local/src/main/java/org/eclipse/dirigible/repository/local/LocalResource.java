@@ -61,7 +61,7 @@ public class LocalResource extends LocalEntity implements IResource {
 		try {
 			document.delete();
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not delete resource {} ", this.getName()), ex);
+			throw new RepositoryWriteException(format("Could not delete resource {0} ", this.getName()), ex);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class LocalResource extends LocalEntity implements IResource {
 		try {
 			document.rename(RepositoryPath.normalizePath(getParent().getPath(), name));
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not rename resource {}", this.getName()), ex);
+			throw new RepositoryWriteException(format("Could not rename resource {0}", this.getName()), ex);
 		}
 	}
 
@@ -81,7 +81,7 @@ public class LocalResource extends LocalEntity implements IResource {
 		try {
 			document.rename(path);
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not move resource {}", this.getName()), ex);
+			throw new RepositoryWriteException(format("Could not move resource {0}", this.getName()), ex);
 		}
 	}
 

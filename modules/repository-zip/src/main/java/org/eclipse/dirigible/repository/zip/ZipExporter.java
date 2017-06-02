@@ -60,7 +60,7 @@ public class ZipExporter {
 							zipOutputStream.write((iResource.getContent() == null ? new byte[] {} : iResource.getContent()));
 							zipOutputStream.closeEntry();
 						} else {
-							throw new IOException(format("Relative Root: {} doesn't exist", relativeRoot));
+							throw new IOException(format("Relative Root: {0} doesn't exist", relativeRoot));
 						}
 					}
 				}
@@ -115,7 +115,7 @@ public class ZipExporter {
 			relativeRoots.add(resource.getPath());
 			return exportZip(repository, relativeRoots);
 		}
-		throw new RepositoryExportException(format("Relative Root: {} doesn't exist", relativeRoot));
+		throw new RepositoryExportException(format("Relative Root: {0} doesn't exist", relativeRoot));
 	}
 
 	/**

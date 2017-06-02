@@ -50,7 +50,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		try {
 			folder.deleteTree();
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not delete collection {} ", this.getName()), ex);
+			throw new RepositoryWriteException(format("Could not delete collection {0} ", this.getName()), ex);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		try {
 			folder.renameFolder(RepositoryPath.normalizePath(getParent().getPath(), name));
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not rename collection {}", this.getName()), ex);
+			throw new RepositoryWriteException(format("Could not rename collection {0}", this.getName()), ex);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		try {
 			folder.renameFolder(path);
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not move collection {}", this.getName()), ex);
+			throw new RepositoryWriteException(format("Could not move collection {0}", this.getName()), ex);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 				}
 			}
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryReadException(format("Could not get child collection names {} ", this.getName()), ex);
+			throw new RepositoryReadException(format("Could not get child collection names {0} ", this.getName()), ex);
 		}
 		return result;
 	}
@@ -128,7 +128,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		try {
 			folder.createFolder(name);
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not create child collection {}", name), ex);
+			throw new RepositoryWriteException(format("Could not create child collection {0}", name), ex);
 		}
 		return getCollection(name);
 	}
@@ -171,7 +171,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 				}
 			}
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryReadException(format("Could not get child resource names {}", this.getName()), ex);
+			throw new RepositoryReadException(format("Could not get child resource names {0}", this.getName()), ex);
 		}
 		return result;
 	}
@@ -189,7 +189,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		try {
 			folder.createFile(name, content, isBinary, contentType);
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not create child document {}", name), ex);
+			throw new RepositoryWriteException(format("Could not create child document {0}", name), ex);
 		}
 		return getResource(name);
 	}
