@@ -66,6 +66,14 @@
 
 	<dependencies>
 	
+		<!-- Commons -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-commons-config</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+	
+		<!-- API Facades -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-http</artifactId>
@@ -77,6 +85,7 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
+		<!-- Repository -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-api</artifactId>
@@ -97,23 +106,38 @@
 		 	<artifactId>dirigible-repository-master</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		
+		<!-- Runtime -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-core</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		
+		<!-- Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-commons-config</artifactId>
+		 	<artifactId>dirigible-engine-web</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-js</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-js-rhino</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
 		
 		
+		
 
 		
 
-		<dependency>
+		<!-- <dependency>
 		 	<groupId>org.activiti</groupId>
 		 	<artifactId>activiti-engine</artifactId>
 		 	<version>${activiti.version}</version>
@@ -122,7 +146,8 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>${com.h2database.version}</version>
-		</dependency>
+		</dependency> -->
+		
 	</dependencies>
 
 	<!-- default properties -->

@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,12 +161,12 @@ public class FileSystemUtils {
 
 	private static String convertToWorkspacePath(String path) {
 		String workspacePath = null;
-		if (path.startsWith(IRepositoryPaths.SEPARATOR)) {
-			workspacePath = path.substring(IRepositoryPaths.SEPARATOR.length());
+		if (path.startsWith(IRepository.SEPARATOR)) {
+			workspacePath = path.substring(IRepository.SEPARATOR.length());
 		} else {
 			workspacePath = path;
 		}
-		workspacePath = workspacePath.replace(IRepositoryPaths.SEPARATOR, File.separator);
+		workspacePath = workspacePath.replace(IRepository.SEPARATOR, File.separator);
 		return workspacePath;
 	}
 

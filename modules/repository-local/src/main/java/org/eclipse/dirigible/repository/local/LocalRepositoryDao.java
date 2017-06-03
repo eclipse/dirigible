@@ -24,10 +24,9 @@ import java.util.Properties;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
-import org.eclipse.dirigible.repository.api.IRepositoryConstants;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -85,9 +84,9 @@ public class LocalRepositoryDao {
 			if (bytes != null) {
 				Integer index;
 				try {
-					index = Integer.parseInt(new String(bytes, IRepositoryConstants.UTF8));
+					index = Integer.parseInt(new String(bytes, IRepository.UTF8));
 					FileSystemUtils.saveFile(versionsPath + File.separator + (++index), content);
-					FileSystemUtils.saveFile(versionsLastPath, index.toString().getBytes(IRepositoryConstants.UTF8));
+					FileSystemUtils.saveFile(versionsLastPath, index.toString().getBytes(IRepository.UTF8));
 				} catch (NumberFormatException e) {
 					logger.error(String.format("Invalid versions file: %s", versionsLastPath));
 					createInitialVersion(content, versionsPath);
@@ -100,7 +99,7 @@ public class LocalRepositoryDao {
 
 	private void createInitialVersion(byte[] content, String versionsPath) throws FileNotFoundException, IOException {
 		FileSystemUtils.saveFile(versionsPath + File.separator + "1", content);
-		FileSystemUtils.saveFile(versionsPath + File.separator + LAST, "1".getBytes(IRepositoryConstants.UTF8));
+		FileSystemUtils.saveFile(versionsPath + File.separator + LAST, "1".getBytes(IRepository.UTF8));
 	}
 
 	private void createInfo(String workspacePath) throws FileNotFoundException, IOException {

@@ -22,7 +22,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
@@ -39,7 +38,7 @@ public class ZipRepository extends FileSystemRepository {
 				Path rootFolder = Files.createTempDirectory("zip_repository");
 				unpackZip(new FileInputStream(zip), rootFolder.toString());
 				String zipFileName = zipFile.getName();
-				zipRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf(IRepositoryConstants.DOT));
+				zipRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf("."));
 				createRepository(rootFolder.toString(), true);
 			} catch (IOException e) {
 				throw new LocalRepositoryException(e);

@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.eclipse.dirigible.repository.api.IRepositoryConstants;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.zip.ZipRepository;
 
@@ -36,8 +36,8 @@ public class JarRepository extends ZipRepository {
 			try {
 				Path rootFolder = Files.createTempDirectory("jar_repository");
 				unpackZip(in, rootFolder.toString());
-				String zipFileName = zip.substring(zip.lastIndexOf(IRepositoryConstants.SEPARATOR) + 1);
-				jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf(IRepositoryConstants.DOT));
+				String zipFileName = zip.substring(zip.lastIndexOf(IRepository.SEPARATOR) + 1);
+				jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf("."));
 				createRepository(rootFolder.toString(), true);
 			} catch (IOException e) {
 				throw new LocalRepositoryException(e);

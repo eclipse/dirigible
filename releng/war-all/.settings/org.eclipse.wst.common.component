@@ -5,6 +5,9 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-config/dirigible-commons-config">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-api-http-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-http/dirigible-api-http">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -35,7 +38,10 @@
         <dependent-module archiveName="dirigible-engine-web-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-web/dirigible-engine-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-config/dirigible-commons-config">
+        <dependent-module archiveName="dirigible-engine-js-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js/dirigible-engine-js">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-engine-js-rhino-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js-rhino/dirigible-engine-js-rhino">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>

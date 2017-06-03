@@ -3,13 +3,13 @@ package org.eclipse.dirigible.api.v3.auth;
 import static java.text.MessageFormat.format;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingFacade;
+import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.TestModeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UserFacade implements ScriptingFacade {
+public class UserFacade implements IScriptingFacade {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 	

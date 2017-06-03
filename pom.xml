@@ -146,32 +146,6 @@
 		<url>http://bugs.dirigible.io</url>
 	</issueManagement>
 
-	<modules>
-		<module>modules/commons-api</module>
-        <module>modules/commons-config</module>
-
-		<module>modules/repository-api</module>
-		<module>modules/repository-api-test</module>
-        <module>modules/repository-zip</module>
-		<module>modules/repository-local</module>
-		<module>modules/repository-master</module>
-        <!--
-        <module>modules/repository-rest</module>
-         -->
-         
-        <module>modules/engine-web</module>
-        <module>modules/runtime-core</module>
-        
-        <module>modules/api-utils</module>
-        <module>modules/api-http</module>
-        <module>modules/api-auth</module>
-        
-        
-        <module>content/core-api</module>
-        
-        <module>releng/war-all</module>
-	</modules>
-    
     <dependencies>
     	<dependency>
 		    <groupId>javax.servlet</groupId>
@@ -284,7 +258,7 @@
         <java.version>1.8</java.version>
         <commons.io>2.5</commons.io>
         <commons.codec>1.10</commons.codec>
-        <cxf.version>3.0.3</cxf.version>
+        <cxf.version>3.1.11</cxf.version>
         <gson.version>2.2.4</gson.version>
         <guice.version>3.0</guice.version>
         <javax.persistence.version>2.1.0</javax.persistence.version>
@@ -302,5 +276,36 @@
         <com.h2database.version>1.4.193</com.h2database.version>
 		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
     </properties>
+    
+    <modules>
+		<module>modules/commons-api</module>
+        <module>modules/commons-config</module>
+
+		<module>modules/repository-api</module>
+		<module>modules/repository-api-test</module>
+        <module>modules/repository-zip</module>
+		<module>modules/repository-local</module>
+		<module>modules/repository-master</module>
+        <!--
+        <module>modules/repository-rest</module>
+         -->
+         
+        
+        <module>modules/runtime-core</module>
+        
+        <module>modules/engine-api</module>
+        <module>modules/engine-web</module>
+        <module>modules/engine-js</module>
+        <module>modules/engine-js-rhino</module>
+        
+        <module>modules/api-utils</module>
+        <module>modules/api-http</module>
+        <module>modules/api-auth</module>
+        
+        
+        <module>content/core-api</module>
+        
+        <module>releng/war-all</module>
+	</modules>
 
 </project>

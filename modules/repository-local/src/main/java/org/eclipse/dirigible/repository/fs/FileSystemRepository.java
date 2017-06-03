@@ -57,7 +57,7 @@ public abstract class FileSystemRepository implements IRepository {
 	
 	private static Logger logger = LoggerFactory.getLogger(FileSystemRepository.class);
 
-	private static final String CURRENT_DIR = IRepositoryConstants.DOT;
+	private static final String CURRENT_DIR = ".";
 	private static final String DIRIGIBLE_LOCAL = "dirigible_local";
 	private static final String PATH_SEGMENT_ROOT = "root";
 	private static final String PATH_SEGMENT_VERSIONS = "versions";

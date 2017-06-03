@@ -18,10 +18,9 @@ public class WebEngineProcessor {
 	public String getResource(String path) {
 		try {
 			return new String(repository.getResource(path).getContent());
-//			return HttpRequestFacade.getMethod();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			throw new NotFoundException(e.getMessage());
+			throw new NotFoundException(e);
 		}
 		
 	}

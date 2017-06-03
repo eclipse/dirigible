@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.repository.api;
 
+import java.nio.charset.Charset;
+
 /**
  * This interface represents a Repository. It allows for querying, modifying and
  * navigating through collections and resources.
@@ -17,7 +19,9 @@ package org.eclipse.dirigible.repository.api;
 public interface IRepository extends IRepositoryReader, IRepositoryWriter, IRepositoryImporter, IRepositoryExporter,
 			IRepositorySearch, IRepositoryVersioning {
 
-	public static final String SEPARATOR = IRepositoryConstants.SEPARATOR;
+	public static final String SEPARATOR = IRepositoryStructure.SEPARATOR;
+	
+	public static final Charset UTF8 = Charset.forName("UTF-8");
 	
 	public static final String DIRIGIBLE_REPOSITORY_PROVIDER = "DIRIGIBLE_REPOSITORY_PROVIDER"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_REPOSITORY_PROVIDER_LOCAL = "local"; //$NON-NLS-1$

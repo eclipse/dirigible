@@ -4,11 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingContextException;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingFacade;
+import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HttpRequestFacade implements ScriptingFacade {
+public class HttpRequestFacade implements IScriptingFacade {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HttpRequestFacade.class);
 	
@@ -32,6 +32,11 @@ public class HttpRequestFacade implements ScriptingFacade {
 	public static final String getRemoteUser() {
 		HttpServletRequest request = getRequest();
 		return (request != null) ? request.getRemoteUser() : null;
+	}
+	
+	public static final String getPathInfo() {
+		HttpServletRequest request = getRequest();
+		return (request != null) ? request.getPathInfo() : null;
 	}
 	
 }

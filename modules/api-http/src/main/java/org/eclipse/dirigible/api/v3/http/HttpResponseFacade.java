@@ -6,11 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingContextException;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingFacade;
+import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HttpResponseFacade implements ScriptingFacade {
+public class HttpResponseFacade implements IScriptingFacade {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HttpResponseFacade.class);
 	
@@ -26,18 +26,22 @@ public class HttpResponseFacade implements ScriptingFacade {
 		return null;
 	}
 	
-	public static final boolean println(String text) {
+	public static final void println(String text) {
 		HttpServletResponse response = getResponse();
 		if (response == null) {
-			return false;
+			logger.error("Trying to print in an invalid response instance");
+			return;
 		}
 		try {
-			response.getWriter().println(text);
-			return true;
+			response.getOutputStream().println(text);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
-		return false;
+	}
+
+	public static boolean isCommitted() {
+		HttpServletResponse response = getResponse();
+		return (response != null) ? response.isCommitted() : false;
 	}
     
 }
