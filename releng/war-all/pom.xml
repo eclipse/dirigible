@@ -110,12 +110,12 @@
 		<!-- Datasource -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-datasource-api</artifactId>
+		 	<artifactId>dirigible-database-api</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-datasource-local</artifactId>
+		 	<artifactId>dirigible-database-derby</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		

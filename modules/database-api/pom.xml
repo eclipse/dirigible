@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Engine - Javascript</name>
-	<artifactId>dirigible-engine-js</artifactId>
+	<name>Datasource - API</name>
+	<artifactId>dirigible-database-api</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -29,36 +29,16 @@
     </build>
     
     <dependencies>
-    	<dependency>
+        <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
+            <artifactId>dirigible-commons-config</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-database-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-http</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-		    <groupId>org.mozilla</groupId>
-		    <artifactId>rhino</artifactId>
-		    <version>1.7.7.1</version>
-		</dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-api</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
     </dependencies>
 
 </project>

@@ -8,7 +8,7 @@ import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
-import org.eclipse.dirigible.commons.api.service.RestService;
+import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	}
 
 	private void addRestServices() {
-		for (RestService next : ServiceLoader.load(RestService.class)) {
+		for (IRestService next : ServiceLoader.load(IRestService.class)) {
 			logger.debug("Registering REST service {} ...", next.getType());
 			
 			getServices().add(injector.getInstance(next.getType()));

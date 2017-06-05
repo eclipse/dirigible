@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
-import org.eclipse.dirigible.commons.api.service.RestService;
+import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.engine.js.rhino.processor.RhinoJavascriptEngineProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @Singleton
-public class RhinoJavascriptEngineRestService implements RestService {
+public class RhinoJavascriptEngineRestService implements IRestService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineRestService.class.getCanonicalName());
 	
@@ -60,7 +60,7 @@ public class RhinoJavascriptEngineRestService implements RestService {
 	}
 
 	@Override
-	public Class<? extends RestService> getType() {
+	public Class<? extends IRestService> getType() {
 		return RhinoJavascriptEngineRestService.class;
 	}
 }

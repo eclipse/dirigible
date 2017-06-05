@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Engine - Javascript</name>
-	<artifactId>dirigible-engine-js</artifactId>
+	<name>Datasource - Local</name>
+	<artifactId>dirigible-database-derby</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -30,34 +30,19 @@
     
     <dependencies>
     	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-api</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-api</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-http</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-		    <groupId>org.mozilla</groupId>
-		    <artifactId>rhino</artifactId>
-		    <version>1.7.7.1</version>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derby</artifactId>
+		    <version>${derby.version}</version>
 		</dependency>
     </dependencies>
 

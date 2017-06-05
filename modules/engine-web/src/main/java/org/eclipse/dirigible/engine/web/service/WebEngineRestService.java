@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingContextException;
-import org.eclipse.dirigible.commons.api.service.RestService;
+import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.engine.web.processor.WebEngineProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @Singleton
-public class WebEngineRestService implements RestService {
+public class WebEngineRestService implements IRestService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WebEngineRestService.class.getCanonicalName());
 	
@@ -57,7 +57,7 @@ public class WebEngineRestService implements RestService {
 	}
 
 	@Override
-	public Class<? extends RestService> getType() {
+	public Class<? extends IRestService> getType() {
 		return WebEngineRestService.class;
 	}
 }

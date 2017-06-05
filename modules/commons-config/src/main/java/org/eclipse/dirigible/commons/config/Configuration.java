@@ -1,6 +1,9 @@
 package org.eclipse.dirigible.commons.config;
 
+import static java.text.MessageFormat.format;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -69,11 +72,14 @@ public class Configuration {
 	 * Loads a custom properties file from the class loader
 	 * @param path
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void load(String path) {
 		try {
 			Properties custom = new Properties();
-			custom.load(Configuration.class.getResourceAsStream(path));
+			InputStream in = Configuration.class.getResourceAsStream(path);
+			if (in == null) {
+				throw new IOException(format("Configuration file {0} does not exist", path));
+			}
+			custom.load(in);
 			add(custom);
 			logger.debug("Configuration loaded: " + path);
 		} catch (IOException e) {
