@@ -2,8 +2,6 @@
 dist/
 .settings/
 target/
-derby/
-dirigible_local/
 
 # files
 .DS_Store
