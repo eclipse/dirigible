@@ -22,7 +22,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

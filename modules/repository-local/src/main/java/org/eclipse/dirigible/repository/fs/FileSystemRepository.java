@@ -32,12 +32,12 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryConstants;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryExportException;
 import org.eclipse.dirigible.repository.api.RepositoryImportException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositorySearchException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.local.LocalCollection;
@@ -73,8 +73,7 @@ public abstract class FileSystemRepository implements IRepository {
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
 	 *
-	 * @param user
-	 * @throws LocalRepositoryException
+	 * @throws LocalRepositoryException in case the repository cannot be created
 	 */
 	public FileSystemRepository() throws LocalRepositoryException {
 		createRepository(null, false);
@@ -83,9 +82,8 @@ public abstract class FileSystemRepository implements IRepository {
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param user
-	 * @param rootFolder
-	 * @throws LocalRepositoryException
+	 * @param rootFolder the root folder
+	 * @throws LocalRepositoryException in case the repository cannot be created
 	 */
 	public FileSystemRepository(String rootFolder) throws LocalRepositoryException {
 		createRepository(rootFolder, false);
@@ -94,10 +92,9 @@ public abstract class FileSystemRepository implements IRepository {
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param user
-	 * @param rootFolder
-	 * @param absolute
-	 * @throws LocalRepositoryException
+	 * @param rootFolder the root folder
+	 * @param absolute whether the root folder is absolute
+	 * @throws LocalRepositoryException in case the repository cannot be created
 	 */
 	public FileSystemRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		createRepository(rootFolder, absolute);
@@ -188,7 +185,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public boolean hasCollection(String path) throws IOException {
+	public boolean hasCollection(String path) throws RepositoryReadException {
 		logger.debug("entering hasCollection"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final ICollection collection = new LocalCollection(this, wrapperPath);
@@ -254,7 +251,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public boolean hasResource(String path) throws IOException {
+	public boolean hasResource(String path) throws RepositoryReadException {
 		logger.debug("entering hasResource"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
 		final IResource resource = new LocalResource(this, wrapperPath);
@@ -399,7 +396,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	@Override
-	public void cleanupOldVersions() throws IOException {
+	public void cleanupOldVersions() throws RepositoryWriteException {
 		String versionsRoot = getVersionsPath();
 		synchronized (this.getClass()) {
 			GregorianCalendar last = new GregorianCalendar();

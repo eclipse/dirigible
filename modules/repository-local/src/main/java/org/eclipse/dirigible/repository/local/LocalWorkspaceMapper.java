@@ -22,7 +22,6 @@ import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 
 public class LocalWorkspaceMapper {
 
-	private static final String DB_DIRIGIBLE_USERS_LOCAL_WORKSPACE = "/db/dirigible/users/local/workspace/";
 	private static Map<String, String> prefixMap = Collections.synchronizedMap(new HashMap<String, String>());
 	private static Map<String, String> prefixMapEquals = Collections.synchronizedMap(new HashMap<String, String>());
 
@@ -50,18 +49,6 @@ public class LocalWorkspaceMapper {
 			workspaceName = workspaceName.replace(IRepository.SEPARATOR, File.separator);
 		}
 
-		return workspaceName;
-	}
-
-	public static String getReverseMappedName(String workspaceName) {
-		if ((workspaceName == null) || "".endsWith(workspaceName)) {
-			return workspaceName;
-		}
-		if (workspaceName.startsWith(DB_DIRIGIBLE_USERS_LOCAL_WORKSPACE)) {
-			return workspaceName;
-		}
-		workspaceName = workspaceName.substring(workspaceRoot.length());
-		workspaceName = workspaceName.replace(File.separator, IRepository.SEPARATOR);
 		return workspaceName;
 	}
 

@@ -10,9 +10,6 @@
 
 package org.eclipse.dirigible.repository.api;
 
-import java.io.IOException;
-import java.util.List;
-
 /**
  * This interface represents a READ ONLY Repository. It allows for navigating through collections and resources.
  */
@@ -21,7 +18,7 @@ public interface IRepositoryReader {
 	/**
 	 * Performs initialization tasks
 	 * 
-	 * @throws IOException
+	 * @throws RepositoryInitializationException in case of an error
 	 */
 	public void initialize() throws RepositoryInitializationException;
 
@@ -30,8 +27,8 @@ public interface IRepositoryReader {
 	 * collection of the repository.
 	 * <p>
 	 * This method does not throw any exceptions for convenience but is not
-	 * guaranteed to return a valid collection. One should check this by using
-	 * the {@link ICollection#isValid()} method.
+	 * guaranteed to return a valid collection.
+	 * @return an {@link ICollection} instance
 	 */
 	public ICollection getRoot();
 
@@ -40,27 +37,37 @@ public interface IRepositoryReader {
 	 * the specified path.
 	 * <p>
 	 * The collection may not exist at the specified path.
+	 * @param path the {@link ICollection} location
+	 * @return an {@link ICollection} instance
 	 */
 	public ICollection getCollection(String path);
 
 	/**
 	 * Returns whether a collection with the specified path exists in the
 	 * repository.
+	 * @param path the {@link ICollection} location
+	 * @return whether the {@link ICollection} exists
+	 * @throws RepositoryReadException in case the check cannot be performed
 	 */
-	public boolean hasCollection(String path) throws IOException;
+	public boolean hasCollection(String path) throws RepositoryReadException;
 
 	/**
 	 * Returns an instance of <code>IResource</code> which represents the
 	 * resource located at the specified path.
 	 * <p>
 	 * The resource may not exist at the specified path.
+	 * @param path the location of the {@link IResource}
+	 * @return an {@link IResource} instance
 	 */
 	public IResource getResource(String path);
 
 	/**
 	 * Returns whether a resource with the specified path exists in the
 	 * repository.
+	 * @param path the {@link IResource} location
+	 * @return whether the {@link IResource} exists
+	 * @throws RepositoryReadException in case the check cannot be performed
 	 */
-	public boolean hasResource(String path) throws IOException;
+	public boolean hasResource(String path) throws RepositoryReadException;
 
 }

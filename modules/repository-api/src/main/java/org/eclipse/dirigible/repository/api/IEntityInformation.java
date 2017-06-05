@@ -93,6 +93,7 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 * @return the name of the {@link IEntity}
 	 */
 	public String getName();
 
@@ -102,6 +103,7 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 * @return the path of the {@link IEntity}
 	 */
 	public String getPath();
 
@@ -111,6 +113,7 @@ public interface IEntityInformation {
 	 * <p>
 	 * If the implementation cannot find the requested information, then a value
 	 * of {@link #PERMISSION_UNKNOWN} is returned.
+	 * @return the permission mask
 	 * 
 	 * @see #PERMISSION_OWNER_READ
 	 * @see #PERMISSION_OWNER_WRITE
@@ -130,27 +133,28 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 * @return the size prperty of the {@link IEntity}
 	 */
 	public Long getSize();
 
 	/**
 	 * The creator of the entity
 	 * 
-	 * @return
+	 * @return the created by property of the {@link IEntity}
 	 */
 	public String getCreatedBy();
 
 	/**
 	 * Timestamp of the creation of the entity
 	 * 
-	 * @return
+	 * @return the created at property of the {@link IEntity}
 	 */
 	public Date getCreatedAt();
 
 	/**
 	 * The last modifier of the entity
 	 * 
-	 * @return
+	 * @return the modified by property of the {@link IEntity}
 	 */
 
 	public String getModifiedBy();
@@ -158,7 +162,7 @@ public interface IEntityInformation {
 	/**
 	 * Timestamp of the last modification of the entity
 	 * 
-	 * @return
+	 * @return the modified at property of the {@link IEntity}
 	 */
 	public Date getModifiedAt();
 

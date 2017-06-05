@@ -40,12 +40,6 @@ public class LocalFile extends LocalObject {
 	}
 
 	public void setData(byte[] content) throws LocalRepositoryException {
-		// byte[] old = getData();
-		// if (old != null) {
-		// if (Arrays.equals(old, content)) {
-		// return;
-		// }
-		// }
 		getRepository().getRepositoryDAO().setFileContent(this, content);
 	}
 

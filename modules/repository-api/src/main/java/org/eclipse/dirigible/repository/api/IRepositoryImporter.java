@@ -1,18 +1,21 @@
 package org.eclipse.dirigible.repository.api;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
 
+/**
+ * The interface with the import methods for the repository 
+ *
+ */
 public interface IRepositoryImporter {
 	
 	/**
 	 * Imports content from zip file to the repository, based on the relative
 	 * root
 	 *
-	 * @param zipInputStream
-	 * @param relativeRoot
-	 * @throws RepositoryWriteException
+	 * @param zipInputStream the input stream
+	 * @param relativeRoot the relative root
+	 * @throws RepositoryImportException in case the zip cannot be imported
 	 */
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot) throws RepositoryImportException;
 
@@ -20,10 +23,10 @@ public interface IRepositoryImporter {
 	 * Imports content from zip file to the repository, based on the relative
 	 * root. Overrides the previous content depending on the override parameter.
 	 *
-	 * @param zipInputStream
-	 * @param relativeRoot
-	 * @param override
-	 * @throws IOException
+	 * @param zipInputStream the input stream
+	 * @param relativeRoot the relative root
+	 * @param override whether to override existing
+	 * @throws RepositoryImportException  in case the zip cannot be imported
 	 */
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override) throws RepositoryImportException;
 
@@ -32,11 +35,11 @@ public interface IRepositoryImporter {
 	 * root. Overrides the previous content depending on the override parameter.
 	 * Excludes the name of the root folder, during the import, based on the excludeRootFolderName parameter.
 	 *
-	 * @param zipInputStream
-	 * @param relativeRoot
-	 * @param override
-	 * @param excludeRootFolderName
-	 * @throws IOException
+	 * @param zipInputStream the input stream
+	 * @param relativeRoot the relative root
+	 * @param override whether to override existing
+	 * @param excludeRootFolderName whether to exclude the root folder name
+	 * @throws RepositoryImportException in case the zip cannot be imported
 	 */
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName) throws RepositoryImportException;
 
@@ -45,9 +48,9 @@ public interface IRepositoryImporter {
 	 * root
 	 *
 	 * @param data
-	 *            the Zip file as byte array
-	 * @param relativeRoot
-	 * @throws IOException
+	 *            the zip file as byte array
+	 * @param relativeRoot the relative root
+	 * @throws RepositoryImportException in case the zip cannot be imported
 	 */
 	public void importZip(byte[] data, String relativeRoot) throws RepositoryImportException;
 
@@ -56,10 +59,10 @@ public interface IRepositoryImporter {
 	 * root. Overrides the previous content depending on the override parameter.
 	 *
 	 * @param data
-	 *            the Zip file as byte array
-	 * @param relativeRoot
-	 * @param override
-	 * @throws IOException
+	 *            the zip file as byte array
+	 * @param relativeRoot the relative root
+	 * @param override whether to override existing
+	 * @throws RepositoryImportException in case the zip cannot be imported
 	 */
 	public void importZip(byte[] data, String relativeRoot, boolean override) throws RepositoryImportException;
 
@@ -69,12 +72,12 @@ public interface IRepositoryImporter {
 	 * Excludes the name of the root folder, during the import, based on the excludeRootFolderName parameter.
 	 *
 	 * @param data
-	 *            the Zip file as byte array
-	 * @param relativeRoot
-	 * @param override
-	 * @param filter
+	 *            the zip file as byte array
+	 * @param relativeRoot the relative root
+	 * @param override whether to override existing
+	 * @param filter a filter
 	 * @param excludeRootFolderName
-	 * @throws IOException
+	 * @throws RepositoryImportException in case the zip cannot be imported
 	 */
 	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
 			throws RepositoryImportException;

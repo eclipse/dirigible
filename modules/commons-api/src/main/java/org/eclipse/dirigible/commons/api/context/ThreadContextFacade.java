@@ -20,6 +20,7 @@ public class ThreadContextFacade {
 
     /**
      * Initializes the context. This has to be called at the very first (as possible) place at the service entry point
+     * @throws ScriptingContextException in case of an error
      */
     public static final void setUp() throws ScriptingContextException {
     	CONTEXT.set(new HashMap<String, Object>());
@@ -28,6 +29,7 @@ public class ThreadContextFacade {
     
     /**
      * IMPORTANT! This have to be added at the finally block to clean up objects after the execution of the service
+     * @throws ScriptingContextException in case of an error
      */
     public static final void tearDown() throws ScriptingContextException {
     	CONTEXT.set(null);
@@ -37,9 +39,9 @@ public class ThreadContextFacade {
     /**
      * Get an context scripting object
      * 
-     * @param key
-     * @return
-     * @throws ScriptingContextException
+     * @param key the key
+     * @return the value by this key
+     * @throws ScriptingContextException in case of an error
      */
     public static final Object get(String key) throws ScriptingContextException {
     	checkContext();
@@ -49,9 +51,9 @@ public class ThreadContextFacade {
     /**
      * Set an context scripting object
      * 
-     * @param key
-     * @param value
-     * @throws ScriptingContextException
+     * @param key the key
+     * @param value the value
+     * @throws ScriptingContextException in case of an error
      */
     public static final void set(String key, Object value) throws ScriptingContextException {
     	checkContext();
@@ -65,6 +67,10 @@ public class ThreadContextFacade {
     	}
 	}
     
+    /**
+     * Check whether the facade is valid
+     * @return yes, if it is valid
+     */
     public static boolean isValid() {
 		return (CONTEXT.get() != null);
 	}

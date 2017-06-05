@@ -21,6 +21,7 @@ public interface IEntity {
 
 	/**
 	 * Returns the repository that holds this resource.
+	 * @return an {@link IRepository} instance
 	 */
 	public IRepository getRepository();
 
@@ -28,6 +29,7 @@ public interface IEntity {
 	 * Returns the name of this entity.
 	 * <p>
 	 * This is equal to the content of the path after the last slash in it.
+	 * @return the name of the entity
 	 */
 	public String getName();
 
@@ -38,6 +40,7 @@ public interface IEntity {
 	 * <p>
 	 * Example: /repository/users/test.txt <br>
 	 * Example: /repository/articles
+	 * @return the location
 	 */
 	public String getPath();
 
@@ -46,6 +49,7 @@ public interface IEntity {
 	 * <p>
 	 * The result could be <code>null</code> should there be no parent (i.e.
 	 * this is the root).
+	 * @return an parent {@link ICollection}
 	 */
 	public ICollection getParent();
 
@@ -56,6 +60,7 @@ public interface IEntity {
 	 * This method may not return <code>null</code>, however, the contents of
 	 * the returned {@link IEntityInformation} may return <code>null</code>
 	 * indicating that a given information is not available.
+	 * @return an {@link IEntityInformation} instance with the meta-data of the entity
 	 * 
 	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be
@@ -89,6 +94,8 @@ public interface IEntity {
 
 	/**
 	 * Changes the name of this entity to the specified value.
+	 * @param name the new name
+	 * @throws RepositoryWriteException if for some reason a connection to the backend could not be achieved
 	 */
 	public void renameTo(String name) throws RepositoryWriteException;
 
@@ -97,6 +104,8 @@ public interface IEntity {
 	 * <p>
 	 * If this entity is of type {@link ICollection}, then all child entities
 	 * are copied too.
+	 * @param path the new location
+	 * @throws RepositoryWriteException if for some reason a connection to the backend could not be achieved
 	 */
 	public void moveTo(String path) throws RepositoryWriteException;
 
@@ -105,11 +114,14 @@ public interface IEntity {
 	 * <p>
 	 * If this entity is of type {@link ICollection}, then all child entities
 	 * are copied too.
+	 * @param path the location ot be copied to
+	 * @throws RepositoryWriteException if for some reason a connection to the backend could not be achieved
 	 */
 	public void copyTo(String path) throws RepositoryWriteException;
 
 	/**
 	 * Returns whether this entity is valid and exists on the backend.
+	 * @return whether this entity is already materialized
 	 * 
 	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be
@@ -127,6 +139,7 @@ public interface IEntity {
 	 * has any content. <br>
 	 * <i><strong>Note:</strong> Calling this method on a resource can be
 	 * slow.</i>
+	 * @return whether this entity is empty
 	 * 
 	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be

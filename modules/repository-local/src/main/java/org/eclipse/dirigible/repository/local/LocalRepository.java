@@ -30,8 +30,7 @@ public class LocalRepository extends FileSystemRepository {
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
 	 *
-	 * @param user
-	 * @throws LocalRepositoryException
+	 * @throws LocalRepositoryException in case the repository cannot be created
 	 */
 	public LocalRepository() throws LocalRepositoryException {
 		this(null);
@@ -40,9 +39,8 @@ public class LocalRepository extends FileSystemRepository {
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param user
-	 * @param rootFolder
-	 * @throws LocalRepositoryException
+	 * @param rootFolder the root folder
+	 * @throws LocalRepositoryException in case the repository cannot be created
 	 */
 	public LocalRepository(String rootFolder) throws LocalRepositoryException {
 		super(rootFolder);
@@ -51,10 +49,9 @@ public class LocalRepository extends FileSystemRepository {
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param user
-	 * @param rootFolder
-	 * @param absolute
-	 * @throws LocalRepositoryException
+	 * @param rootFolder the reoot folder
+	 * @param absolute whether the root folder is absolute
+	 * @throws LocalRepositoryException in case the repository cannot be created
 	 */
 	public LocalRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		super(rootFolder, absolute);

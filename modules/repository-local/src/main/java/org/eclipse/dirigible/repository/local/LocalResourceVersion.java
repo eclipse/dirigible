@@ -15,9 +15,13 @@ import java.util.Date;
 
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
+/**
+ * The file system based implementation of {@link IResourceVersion} 
+ */
 public class LocalResourceVersion implements IResourceVersion {
 
 	private final FileSystemRepository repository;
@@ -45,17 +49,13 @@ public class LocalResourceVersion implements IResourceVersion {
 		return this.path.toString();
 	}
 
-	protected LocalObject getDBObject() throws IOException {
-		return this.fileVersion;
-	}
-
 	@Override
 	public int getVersion() {
 		return this.version;
 	}
 
 	@Override
-	public byte[] getContent() throws IOException {
+	public byte[] getContent() throws RepositoryReadException {
 		return this.fileVersion.getData();
 	}
 

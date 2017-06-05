@@ -191,7 +191,7 @@ public class RepositoryGenericRepositoryTest {
 			IResource resource = repository.createResource("/testCollection/checkExists.txt"); //$NON-NLS-1$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
@@ -210,7 +210,7 @@ public class RepositoryGenericRepositoryTest {
 			ICollection collection = repository.getCollection("/testCollection"); //$NON-NLS-1$
 			assertNotNull(collection);
 			assertFalse(collection.exists());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}

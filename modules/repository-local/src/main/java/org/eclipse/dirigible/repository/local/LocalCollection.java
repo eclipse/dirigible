@@ -27,7 +27,7 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 
 /**
- * The Local File System implementation of {@link ICollection}
+ * The file system based implementation of {@link ICollection}
  */
 public class LocalCollection extends LocalEntity implements ICollection {
 	
@@ -233,10 +233,6 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return getPath().hashCode();
 	}
 
-	/**
-	 * Returns the {@link Folder} object matching this {@link CMISContainer}. If
-	 * there is no such object, then <code>null</code> is returned.
-	 */
 	protected LocalFolder getFolder() throws RepositoryReadException {
 		final LocalObject object = getLocalObject();
 		if (object == null) {
@@ -248,10 +244,6 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return (LocalFolder) object;
 	}
 
-	/**
-	 * Returns the {@link LocalFolder} object matching this {@link DBCollection}.
-	 * If there is no such object, then an {@link IOException} is thrown.
-	 */
 	protected LocalFolder getFolderSafe() throws RepositoryReadException {
 		final LocalFolder folder = getFolder();
 		if (folder == null) {

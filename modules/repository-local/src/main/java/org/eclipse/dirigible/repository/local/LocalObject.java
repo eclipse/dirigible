@@ -15,7 +15,7 @@ import java.util.Date;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
 /**
- * The base of domain objects in the DB Repository implementation
+ * The base of domain objects in the file system based implementation
  */
 public abstract class LocalObject {
 

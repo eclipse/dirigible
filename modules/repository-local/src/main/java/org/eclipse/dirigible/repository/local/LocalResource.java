@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The DB implementation of {@link IResource}
+ * The file system based implementation of {@link IResource}
  */
 public class LocalResource extends LocalEntity implements IResource {
 	

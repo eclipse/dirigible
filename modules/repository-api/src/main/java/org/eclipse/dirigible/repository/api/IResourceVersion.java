@@ -13,6 +13,10 @@ package org.eclipse.dirigible.repository.api;
 import java.io.IOException;
 import java.util.Date;
 
+/**
+ * The interface representing a version instance of an {@link IResource}
+ *
+ */
 public interface IResourceVersion extends Comparable<IResourceVersion> {
 
 	/**
@@ -22,46 +26,49 @@ public interface IResourceVersion extends Comparable<IResourceVersion> {
 	 * <p>
 	 * Example: /db/users/test.txt <br>
 	 * Example: /db/articles
+	 * @return the location of the {@link IResource}
 	 */
 	public String getPath();
 
 	/**
 	 * Returns the version number
 	 *
-	 * @return
+	 * @return the version
 	 */
 	public int getVersion();
 
 	/**
 	 * Returns the content of the resource version as a byte array.
+	 * @return the raw content
+	 * @throws RepositoryReadException 
 	 */
-	public byte[] getContent() throws IOException;
+	public byte[] getContent() throws RepositoryReadException;
 
 	/**
 	 * Getter for binary flag
 	 *
-	 * @return
+	 * @return whether it is binary
 	 */
 	public boolean isBinary();
 
 	/**
 	 * Getter for the content type
 	 *
-	 * @return
+	 * @return the type of the content
 	 */
 	public String getContentType();
 
 	/**
 	 * The creator of the entity
 	 *
-	 * @return
+	 * @return the user created this version
 	 */
 	public String getCreatedBy();
 
 	/**
 	 * Timestamp of the creation of the entity
 	 *
-	 * @return
+	 * @return the time this version has been created
 	 */
 	public Date getCreatedAt();
 

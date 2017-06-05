@@ -34,10 +34,10 @@ public class ZipImporter {
 	 * Import all the content from a given zip to the target repository instance
 	 * within the given path
 	 *
-	 * @param repository
-	 * @param zipInputStream
-	 * @param relativeRoot
-	 * @throws IOException
+	 * @param repository the target {@link IRepository} instance
+	 * @param zipInputStream the content input stream
+	 * @param relativeRoot the relative root
+	 * @throws RepositoryImportException in case the content cannot be imported
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot) throws RepositoryImportException {
 		importZip(repository, zipInputStream, relativeRoot, false);
@@ -47,11 +47,11 @@ public class ZipImporter {
 	 * Import all the content from a given zip to the target repository instance
 	 * within the given path, overrides files during the pass
 	 *
-	 * @param repository
-	 * @param zipInputStream
-	 * @param relativeRoot
-	 * @param override
-	 * @throws IOException
+	 * @param repository the target {@link IRepository} instance
+	 * @param zipInputStream the content input stream
+	 * @param relativeRoot the relative root
+	 * @param override whether to override existing
+	 * @throws RepositoryImportException in case the content cannot be imported
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override) throws RepositoryImportException {
 		importZip(repository, zipInputStream, relativeRoot, override, false);
@@ -61,12 +61,12 @@ public class ZipImporter {
 	 * Import all the content from a given zip to the target repository instance
 	 * within the given path, overrides files during the pass and removes the root folder name
 	 *
-	 * @param repository
-	 * @param zipInputStream
-	 * @param relativeRoot
-	 * @param override
+	 * @param repository the target {@link IRepository} instance
+	 * @param zipInputStream the content input stream
+	 * @param relativeRoot the relative root
+	 * @param override whether to override existing
 	 * @param excludeRootFolderName
-	 * @throws IOException
+	 * @throws RepositoryImportException in case the content cannot be imported
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
 			boolean excludeRootFolderName) throws RepositoryImportException {
@@ -77,14 +77,14 @@ public class ZipImporter {
 	 * Import all the content from a given zip to the target repository instance
 	 * within the given path, overrides files during the pass and removes the root folder name
 	 *
-	 * @param repository
-	 * @param zipInputStream
-	 * @param relativeRoot
-	 * @param override
+	 * @param repository the target {@link IRepository} instance
+	 * @param zipInputStream the content input stream
+	 * @param relativeRoot the relative root
+	 * @param override whether to override existing
 	 * @param excludeRootFolderName
 	 * @param filter
 	 *            map of old/new string for replacement in paths
-	 * @throws IOException
+	 * @throws RepositoryImportException in case the content cannot be imported
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
 			boolean excludeRootFolderName, Map<String, String> filter) throws RepositoryImportException {

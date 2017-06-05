@@ -15,6 +15,7 @@ import static java.text.MessageFormat.format;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IEntityInformation;
+import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
@@ -23,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The FileSystem implementation of {@link IEntity}
+ * The file system based implementation of {@link IEntity}
  */
 public abstract class LocalEntity implements IEntity {
 	
@@ -45,8 +46,9 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Returns the path of this {@link Entity} represented by an instance of
+	 * Returns the path of this {@link IEntity} represented by an instance of
 	 * {@link RepositoryPath}.
+	 * @return the repository path location 
 	 */
 	protected RepositoryPath getRepositoryPath() {
 		return this.path;
@@ -92,8 +94,10 @@ public abstract class LocalEntity implements IEntity {
 
 	/**
 	 * Returns the {@link LocalObject} that matches this entity's path. If there is
-	 * no such object in the real repository, then an {@link IOException} is
+	 * no such object in the real repository, then an {@link RepositoryReadException} is
 	 * thrown.
+	 * @return the {@link LocalObject} that matches this entity's path
+	 * @throws RepositoryReadException If there is no such object in the real repository
 	 */
 	protected LocalObject getLocalObjectSafe() throws RepositoryReadException {
 		final LocalObject result = getLocalObject();
@@ -104,7 +108,7 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link CMISEntity} inside the
+	 * Creates all ancestors of the given {@link IEntity} inside the
 	 * repository if they don't already exist.
 	 */
 	protected void createAncestorsIfMissing() throws RepositoryWriteException {
@@ -115,7 +119,7 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link CMISEntity} and itself too if
+	 * Creates all ancestors of the given {@link IEntity} and itself too if
 	 * they don't already exist.
 	 */
 	protected void createAncestorsAndSelfIfMissing() throws RepositoryWriteException {

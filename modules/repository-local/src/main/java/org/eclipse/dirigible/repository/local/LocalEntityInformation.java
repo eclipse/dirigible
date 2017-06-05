@@ -13,10 +13,11 @@ package org.eclipse.dirigible.repository.local;
 import java.util.Date;
 
 import org.eclipse.dirigible.repository.api.IEntityInformation;
+import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 
 /**
- * The DB implementation of {@link IEntityInformation}
+ * The file system based implementation of {@link IEntityInformation}
  */
 public class LocalEntityInformation implements IEntityInformation {
 

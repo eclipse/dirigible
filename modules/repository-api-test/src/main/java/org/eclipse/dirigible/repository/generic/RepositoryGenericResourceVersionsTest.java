@@ -68,7 +68,7 @@ public class RepositoryGenericResourceVersionsTest {
 			versions = repository.getResourceVersions("/testCollection/versionedFile.txt"); //$NON-NLS-1$
 			assertEquals(versions.size(), 0);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
