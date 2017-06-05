@@ -335,6 +335,7 @@
 		<activiti.version>5.22.0</activiti.version>
 		<com.h2database.version>1.4.193</com.h2database.version>
 		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
+		<derby.version>10.12.1.1</derby.version>
 	</properties>
 
 	<modules>
@@ -348,6 +349,8 @@
 		<module>modules/repository-master</module>
 		<!-- <module>modules/repository-rest</module> -->
 
+		<module>modules/datasource-api</module>
+		<module>modules/datasource-local</module>
 
 		<module>modules/runtime-core</module>
 
@@ -363,6 +366,8 @@
 
 
 		<module>content/core-api</module>
+		
+		
 
 		<module>releng/war-all</module>
 	</modules>

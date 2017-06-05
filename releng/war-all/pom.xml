@@ -107,6 +107,18 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
+		<!-- Datasource -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-datasource-api</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-datasource-local</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
 		<!-- Runtime -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>

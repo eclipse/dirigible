@@ -16,4 +16,11 @@
 
 ### Tests
 - `DIRIGIBLE_TEST_MODE_ENABLED`: (true | false)
+
+### Datasource
+- `DIRIGIBLE_DATASOURCE_PROVIDER`: (local : managed : unmanaged)
+- `DIRIGIBLE_DATASOURCE_SET_AUTO_COMMIT`: (true : false);
+- `DIRIGIBLE_DATASOURCE_MAX_CONNECTIONS_COUNT`: (default: 8)
+- `DIRIGIBLE_DATASOURCE_WAIT_TIMEOUT`: (default: 500)
+- `DIRIGIBLE_DATASOURCE_WAIT_COUNT`: (default: 5)
  
