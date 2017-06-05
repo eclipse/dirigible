@@ -37,6 +37,7 @@ public class ConfigurationStore implements IConfigurationStore {
 	 * The constructor
 	 *
 	 * @param repository
+	 *            the repository
 	 */
 	public ConfigurationStore(IRepository repository) {
 		this.repository = repository;
@@ -214,10 +215,14 @@ public class ConfigurationStore implements IConfigurationStore {
 	 * Checks whether the setting with this path and name exists in the root's space
 	 *
 	 * @param root
+	 *            the root
 	 * @param path
+	 *            the path
 	 * @param name
+	 *            the name
 	 * @return true if exists and false otherwise
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public boolean existsSettingsByRoot(String root, String path, String name) throws IOException {
 		String normalizedPath = normalizePath(path);

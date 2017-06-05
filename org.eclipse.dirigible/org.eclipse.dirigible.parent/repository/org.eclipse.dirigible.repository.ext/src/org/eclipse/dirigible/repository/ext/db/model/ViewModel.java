@@ -39,7 +39,9 @@ public class ViewModel extends DataStructureModel {
 	 * The constructor from a raw content string
 	 *
 	 * @param content
+	 *            the content
 	 * @throws EDataStructureModelFormatException
+	 *             Model Format Exception
 	 */
 	public ViewModel(String content) throws EDataStructureModelFormatException {
 		this.setType(VIEW);
@@ -78,6 +80,7 @@ public class ViewModel extends DataStructureModel {
 	 * Setter for the query field
 	 *
 	 * @param query
+	 *            the SQL query
 	 */
 	public void setQuery(String query) {
 		this.query = query;

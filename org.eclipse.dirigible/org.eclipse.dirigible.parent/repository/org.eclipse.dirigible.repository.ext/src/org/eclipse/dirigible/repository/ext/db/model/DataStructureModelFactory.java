@@ -19,8 +19,10 @@ public class DataStructureModelFactory {
 	 * Creates a table model from the raw content
 	 *
 	 * @param content
+	 *            the content
 	 * @return the table model instance
 	 * @throws EDataStructureModelFormatException
+	 *             Format Exception
 	 */
 	public static TableModel createTableModel(String content) throws EDataStructureModelFormatException {
 		TableModel tableModel = new TableModel(content);
@@ -31,8 +33,10 @@ public class DataStructureModelFactory {
 	 * Creates a view model from the raw content
 	 *
 	 * @param content
+	 *            the content
 	 * @return the view model instance
 	 * @throws EDataStructureModelFormatException
+	 *             Format Exception
 	 */
 	public static ViewModel createViewModel(String content) throws EDataStructureModelFormatException {
 		ViewModel viewModel = new ViewModel(content);

@@ -18,9 +18,13 @@ public class EDataStructureModelFormatException extends Exception {
 	 * Overloaded constructor
 	 *
 	 * @param message
+	 *            the message
 	 * @param cause
+	 *            the cause
 	 * @param enableSuppression
+	 *            whether to enable suppression
 	 * @param writableStackTrace
+	 *            whether to enable writable stack trace
 	 */
 	public EDataStructureModelFormatException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
@@ -30,7 +34,9 @@ public class EDataStructureModelFormatException extends Exception {
 	 * Overloaded constructor
 	 *
 	 * @param message
+	 *            the message
 	 * @param cause
+	 *            the cause
 	 */
 	public EDataStructureModelFormatException(String message, Throwable cause) {
 		super(message, cause);
@@ -40,6 +46,7 @@ public class EDataStructureModelFormatException extends Exception {
 	 * Overloaded constructor
 	 *
 	 * @param message
+	 *            the message
 	 */
 	public EDataStructureModelFormatException(String message) {
 		super(message);
@@ -47,8 +54,9 @@ public class EDataStructureModelFormatException extends Exception {
 
 	/**
 	 * Overloaded constructor
-	 * 
+	 *
 	 * @param cause
+	 *            the cause
 	 */
 	public EDataStructureModelFormatException(Throwable cause) {
 		super(cause);

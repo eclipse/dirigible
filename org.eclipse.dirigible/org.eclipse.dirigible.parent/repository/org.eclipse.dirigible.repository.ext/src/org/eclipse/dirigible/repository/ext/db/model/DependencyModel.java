@@ -23,7 +23,9 @@ public class DependencyModel {
 	 * The constructor from fields
 	 *
 	 * @param name
+	 *            the name
 	 * @param type
+	 *            the type
 	 */
 	public DependencyModel(String name, String type) {
 		super();
@@ -33,7 +35,7 @@ public class DependencyModel {
 
 	/**
 	 * Getter for the name
-	 * 
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -44,6 +46,7 @@ public class DependencyModel {
 	 * Setter for the name
 	 *
 	 * @param name
+	 *            the name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -51,7 +54,7 @@ public class DependencyModel {
 
 	/**
 	 * Getter for the type
-	 * 
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -62,6 +65,7 @@ public class DependencyModel {
 	 * Setter for the type
 	 *
 	 * @param type
+	 *            the type
 	 */
 	public void setType(String type) {
 		this.type = type;

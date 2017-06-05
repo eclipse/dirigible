@@ -16,26 +16,27 @@ package org.eclipse.dirigible.repository.ext.db.model;
 public class TableColumnModel {
 
 	private String name;
-
 	private String type;
-
 	private String length;
-
 	private boolean notNull;
-
 	private boolean primaryKey;
-
 	private String defaultValue;
 
 	/**
 	 * The constructor from the fields
 	 *
 	 * @param name
+	 *            the name
 	 * @param type
+	 *            the type
 	 * @param length
+	 *            the length
 	 * @param notNull
+	 *            whether null values are allowed
 	 * @param primaryKey
+	 *            whether it is a primary key
 	 * @param defaultValue
+	 *            the default value
 	 */
 	public TableColumnModel(String name, String type, String length, boolean notNull, boolean primaryKey, String defaultValue) {
 		super();
@@ -60,6 +61,7 @@ public class TableColumnModel {
 	 * Setter for the name
 	 *
 	 * @param name
+	 *            the name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -78,6 +80,7 @@ public class TableColumnModel {
 	 * Setter for the type
 	 *
 	 * @param type
+	 *            the type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -96,6 +99,7 @@ public class TableColumnModel {
 	 * Setter for the length
 	 *
 	 * @param length
+	 *            the length
 	 */
 	public void setLength(String length) {
 		this.length = length;
@@ -114,6 +118,7 @@ public class TableColumnModel {
 	 * Setter for the notNull
 	 *
 	 * @param notNull
+	 *            whether null values are allowed
 	 */
 	public void setNotNull(boolean notNull) {
 		this.notNull = notNull;
@@ -132,6 +137,7 @@ public class TableColumnModel {
 	 * Setter for the primary key
 	 *
 	 * @param primaryKey
+	 *            whether it is a primary key
 	 */
 	public void setPrimaryKey(boolean primaryKey) {
 		this.primaryKey = primaryKey;
@@ -139,7 +145,7 @@ public class TableColumnModel {
 
 	/**
 	 * Getter for the default value
-	 * 
+	 *
 	 * @return the default value
 	 */
 	public String getDefaultValue() {
@@ -148,8 +154,9 @@ public class TableColumnModel {
 
 	/**
 	 * Setter for the default value
-	 * 
+	 *
 	 * @param defaultValue
+	 *            the default value
 	 */
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
