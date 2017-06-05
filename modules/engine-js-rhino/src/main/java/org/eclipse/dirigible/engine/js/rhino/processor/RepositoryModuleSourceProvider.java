@@ -47,26 +47,27 @@ public class RepositoryModuleSourceProvider extends ModuleSourceProviderBase {
 			throw new IOException("Module location cannot be null");
 		}
 
-		byte[] sourceCode = null;
 		ModuleSource moduleSource = null;
-		if (module.endsWith(JS_EXTENSION)) {
-			sourceCode = executor.retrieveModule(module, "", rootPath).getContent();
-			moduleSource = new ModuleSource(new InputStreamReader(new ByteArrayInputStream(sourceCode), StandardCharsets.UTF_8), null,
-					new URI(module), null, null);
-		} else if (module.endsWith(RHINO_EXTENSION)) {
-			sourceCode = executor.retrieveModule(module, RHINO_EXTENSION, rootPath).getContent();
-			moduleSource = new ModuleSource(new InputStreamReader(new ByteArrayInputStream(sourceCode)), null, new URI(module + RHINO_EXTENSION),
-					null, null);
-		} else {
-			throw new IOException(format("Unknown module {0} for {1}", module, this.getClass().getName()));
+		if (!module.endsWith(JS_EXTENSION)) {
+			module += JS_EXTENSION;
 		}
+		moduleSource = createModule(module);
+		
+		return moduleSource;
+	}
 
+	private ModuleSource createModule(String module) throws URISyntaxException {
+		byte[] sourceCode;
+		ModuleSource moduleSource;
+		sourceCode = executor.retrieveModule(module, "", rootPath).getContent();
+		moduleSource = new ModuleSource(new InputStreamReader(new ByteArrayInputStream(sourceCode), StandardCharsets.UTF_8), null,
+				new URI(module), null, null);
 		return moduleSource;
 	}
 
 	@Override
 	protected ModuleSource loadFromUri(URI uri, URI base, Object validator) throws IOException, URISyntaxException {
-		// TODO Auto-generated method stub
+		// not used
 		return null;
 	}
 
