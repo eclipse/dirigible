@@ -240,15 +240,20 @@ public class DataSources {
 	 * and on error. The method does not iterate on the result set and its pointer is in its initial position.
 	 * It is up to the callback to do something with it.
 	 *
+	 * @param connection
+	 *            the connection
 	 * @param sql
+	 *            the SQL expression
 	 * @param isQuery
+	 *            whether it is a query or update
 	 * @param callback
+	 *            the callback
 	 */
-	public static void executeSingleStatement(Connection conn, String sql, boolean isQuery, RequestExecutionCallback callback) {
+	public static void executeSingleStatement(Connection connection, String sql, boolean isQuery, RequestExecutionCallback callback) {
 		ResultSet resultSet = null;
 		PreparedStatement preparedStatement = null;
 		try {
-			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			if (isQuery) {
 				resultSet = preparedStatement.executeQuery();
 				callback.queryDone(resultSet);
@@ -270,7 +275,8 @@ public class DataSources {
 	}
 
 	/**
-	 * Callback interface for the {@link DataSources#executeSingleStatement(String, boolean, RequestIteratorCallback)}
+	 * Callback interface for the {@link DataSources#executeSingleStatement(Connection connection, String, boolean,
+	 * RequestIteratorCallback)}
 	 * method.
 	 */
 	public interface ResultSetIteratorCallback {
@@ -282,7 +288,7 @@ public class DataSources {
 	}
 
 	/**
-	 * Unlike {@link #executeSingleStatement(String, boolean, RequestIteratorCallback)}, this method
+	 * Unlike executeSingleStatement(String, boolean, RequestIteratorCallback), this method
 	 * iterates on the ResultSet and produces a table data structure in the form of a list of ordered key-value tuples.
 	 * Schematically it looks like this:
 	 *
@@ -294,26 +300,30 @@ public class DataSources {
 	 *
 	 * The callbacks are on completing the whole data structure, on error, and on each row construction.
 	 *
+	 * @param connection
+	 *            the connection
 	 * @param sql
+	 *            the SQL expression
 	 * @param callback
+	 *            the callback
 	 */
-	public static void executeQueryStatement(Connection conn, String sql, ResultSetIteratorCallback callback) {
+	public static void executeQueryStatement(Connection connection, String sql, ResultSetIteratorCallback callback) {
 		ResultSet resultSet = null;
 		PreparedStatement preparedStatement = null;
 		try {
-			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			resultSet = preparedStatement.executeQuery();
 			int columnsCount = resultSet.getMetaData().getColumnCount();
 			List<NavigableMap<String, Object>> table = new ArrayList<NavigableMap<String, Object>>();
 			NavigableMap<String, Object> row = new TreeMap<String, Object>();
 			for (int i = 1; i <= columnsCount; i++) {
 				row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
-				callback.onRowConstruction(conn, row);
+				callback.onRowConstruction(connection, row);
 				table.add(row);
 			}
-			callback.onQueryDone(conn, table);
+			callback.onQueryDone(connection, table);
 		} catch (Exception e) {
-			callback.onError(conn, e);
+			callback.onError(connection, e);
 		} finally {
 			try {
 				if (resultSet != null) {

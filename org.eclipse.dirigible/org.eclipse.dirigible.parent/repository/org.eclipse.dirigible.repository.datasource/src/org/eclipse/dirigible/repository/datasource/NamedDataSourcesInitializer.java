@@ -27,8 +27,11 @@ public class NamedDataSourcesInitializer {
 	/**
 	 * Enumerate and register all the configured DataSources
 	 *
+	 * @param request
+	 *            the current request
 	 * @param repository
-	 * @return
+	 *            the {@link IRepository} instance
+	 * @return whether it is successful
 	 */
 	public boolean initializeAvailableDataSources(HttpServletRequest request, IRepository repository) {
 		DataSourceFacade.getInstance().unregisterAllDataSources();

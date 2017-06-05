@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.api;
@@ -17,12 +16,13 @@ import java.io.IOException;
  * The {@link IEntity} interface is a base interface for {@link ICollection} and
  * {@link IResource}. <br>
  * It provides methods that are common for both interfaces.
- * 
  */
 public interface IEntity {
 
 	/**
 	 * Returns the repository that holds this resource.
+	 *
+	 * @return the {@link IRepository} instance
 	 */
 	public IRepository getRepository();
 
@@ -30,6 +30,8 @@ public interface IEntity {
 	 * Returns the name of this entity.
 	 * <p>
 	 * This is equal to the content of the path after the last slash in it.
+	 *
+	 * @return the name of the {@link IEntity}
 	 */
 	public String getName();
 
@@ -40,6 +42,8 @@ public interface IEntity {
 	 * <p>
 	 * Example: /db/users/test.txt <br>
 	 * Example: /db/articles
+	 *
+	 * @return the path of the {@link IEntity}
 	 */
 	public String getPath();
 
@@ -48,6 +52,8 @@ public interface IEntity {
 	 * <p>
 	 * The result could be <code>null</code> should there be no parent (i.e.
 	 * this is the root).
+	 *
+	 * @return the parent {@link ICollection}
 	 */
 	public ICollection getParent();
 
@@ -58,7 +64,8 @@ public interface IEntity {
 	 * This method may not return <code>null</code>, however, the contents of
 	 * the returned {@link IEntityInformation} may return <code>null</code>
 	 * indicating that a given information is not available.
-	 * 
+	 *
+	 * @return the the {@link IEntityInformation} of this {@link IEntity}
 	 * @throws IOException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
@@ -70,7 +77,7 @@ public interface IEntity {
 	 * <p>
 	 * Whether the entity will be created as a resource or a collection depends
 	 * on whether it is an instance of {@link IResource} or {@link ICollection}.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved, or if an entity with this path already exists on
@@ -82,7 +89,7 @@ public interface IEntity {
 	 * Removes this entity from the repository.
 	 * <p>
 	 * If no such resource exists, this method does nothing.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
@@ -91,6 +98,10 @@ public interface IEntity {
 
 	/**
 	 * Changes the name of this entity to the specified value.
+	 *
+	 * @param name
+	 *            the new name
+	 * @throws IOException
 	 */
 	public void renameTo(String name) throws IOException;
 
@@ -99,6 +110,10 @@ public interface IEntity {
 	 * <p>
 	 * If this entity is of type {@link ICollection}, then all child entities
 	 * are copied too.
+	 *
+	 * @param path
+	 *            move to path
+	 * @throws IOException
 	 */
 	public void moveTo(String path) throws IOException;
 
@@ -107,12 +122,17 @@ public interface IEntity {
 	 * <p>
 	 * If this entity is of type {@link ICollection}, then all child entities
 	 * are copied too.
+	 *
+	 * @param path
+	 *            copy to path
+	 * @throws IOException
 	 */
 	public void copyTo(String path) throws IOException;
 
 	/**
 	 * Returns whether this entity is valid and exists on the backend.
-	 * 
+	 *
+	 * @return true if the {@link IEntity} exists
 	 * @throws IOException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
@@ -129,7 +149,8 @@ public interface IEntity {
 	 * has any content. <br>
 	 * <i><strong>Note:</strong> Calling this method on a resource can be
 	 * slow.</i>
-	 * 
+	 *
+	 * @return true if the {@link IEntity} is empty
 	 * @throws IOException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
