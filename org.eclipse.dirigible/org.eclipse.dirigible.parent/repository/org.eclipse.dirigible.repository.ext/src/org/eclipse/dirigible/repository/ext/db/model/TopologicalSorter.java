@@ -16,8 +16,11 @@ public class TopologicalSorter {
 	 * Sorts the data models
 	 *
 	 * @param input
+	 *            the models that will be sorted
 	 * @param output
+	 *            the output of the sorting
 	 * @param external
+	 *            the external dependencies
 	 * @throws EDataStructureModelFormatException
 	 */
 	public static void sort(Map<String, DataStructureModel> input, List<String> output, List<String> external)

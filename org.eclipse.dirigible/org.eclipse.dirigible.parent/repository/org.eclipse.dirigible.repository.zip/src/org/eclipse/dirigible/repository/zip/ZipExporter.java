@@ -35,9 +35,12 @@ public class ZipExporter {
 	 * archiving
 	 *
 	 * @param repository
-	 * @param relativeRoot
-	 * @return
+	 *            the repository
+	 * @param relativeRoots
+	 *            the relative roots
+	 * @return the binary ZIP content
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public static byte[] exportZip(IRepository repository, List<String> relativeRoots) throws IOException {
 
@@ -80,13 +83,15 @@ public class ZipExporter {
 	 * archiving
 	 *
 	 * @param repository
+	 *            the repository
 	 * @param relativeRoot
 	 *            single root
 	 * @param inclusive
 	 *            whether to include the last segment of the root or to pack its
 	 *            content directly in the archive
-	 * @return
+	 * @return the binary ZIP content
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public static byte[] exportZip(IRepository repository, String relativeRoot, boolean inclusive) throws IOException {
 
@@ -117,9 +122,13 @@ public class ZipExporter {
 	 * Iterate recursively a given collection and put its content to the zip
 	 *
 	 * @param zipOutputStream
+	 *            the ZIP Output Stream
 	 * @param collection
+	 *            the collection
 	 * @param substring
+	 *            the substring
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	private static void traverseCollection(ZipOutputStream zipOutputStream, ICollection collection, int substring) throws IOException {
 

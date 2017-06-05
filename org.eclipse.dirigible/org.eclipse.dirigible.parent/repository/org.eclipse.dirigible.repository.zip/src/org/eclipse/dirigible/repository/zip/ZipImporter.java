@@ -33,9 +33,13 @@ public class ZipImporter {
 	 * within the given path
 	 *
 	 * @param repository
+	 *            the repository
 	 * @param zipInputStream
+	 *            the ZIP Input Stream
 	 * @param relativeRoot
+	 *            the relative root
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot) throws IOException {
 		importZip(repository, zipInputStream, relativeRoot, false);
@@ -46,10 +50,15 @@ public class ZipImporter {
 	 * within the given path, overrides files during the pass
 	 *
 	 * @param repository
+	 *            the repository
 	 * @param zipInputStream
+	 *            the ZIP Input Stream
 	 * @param relativeRoot
+	 *            relative root
 	 * @param override
+	 *            whether to override
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override) throws IOException {
 		importZip(repository, zipInputStream, relativeRoot, override, false);
@@ -60,11 +69,17 @@ public class ZipImporter {
 	 * within the given path, overrides files during the pass and removes the root folder name
 	 *
 	 * @param repository
+	 *            the repository
 	 * @param zipInputStream
+	 *            the ZIP Input Stream
 	 * @param relativeRoot
+	 *            the relative root
 	 * @param override
+	 *            whether to override
 	 * @param excludeRootFolderName
+	 *            whether to exclude the root folder name
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
 			boolean excludeRootFolderName) throws IOException {
@@ -76,13 +91,19 @@ public class ZipImporter {
 	 * within the given path, overrides files during the pass and removes the root folder name
 	 *
 	 * @param repository
+	 *            the repository
 	 * @param zipInputStream
+	 *            the ZIP Input Stream
 	 * @param relativeRoot
+	 *            the relative root
 	 * @param override
+	 *            whether to override
 	 * @param excludeRootFolderName
+	 *            whether to exclude the root folder name
 	 * @param filter
 	 *            map of old/new string for replacement in paths
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
 			boolean excludeRootFolderName, Map<String, String> filter) throws IOException {

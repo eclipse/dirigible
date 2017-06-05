@@ -275,8 +275,7 @@ public class DataSources {
 	}
 
 	/**
-	 * Callback interface for the {@link DataSources#executeSingleStatement(Connection connection, String, boolean,
-	 * RequestIteratorCallback)}
+	 * Callback interface for the {@link DataSources#executeQueryStatement(Connection, String, ResultSetIteratorCallback)}
 	 * method.
 	 */
 	public interface ResultSetIteratorCallback {

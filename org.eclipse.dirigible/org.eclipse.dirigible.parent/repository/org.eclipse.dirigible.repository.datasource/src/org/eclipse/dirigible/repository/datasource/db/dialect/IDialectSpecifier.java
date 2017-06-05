@@ -188,18 +188,18 @@ public interface IDialectSpecifier {
 	 * Implements a database specific JDBC code to get an InputStream from a binary type column (such as
 	 * <CODE>BLOB</CODE>).
 	 *
-	 * @param resultSet
-	 * @param columnName
+	 * @param resultSet the resultSet
+	 * @param columnName the name of the column
 	 * @return a stream to read the contents of the column identified by the <CODE>columnName</CODE> parameter in the
 	 *         supplied <CODE>resultSet</CODE>
-	 * @throws SQLException
+	 * @throws SQLException SQL Exception
 	 */
 	InputStream getBinaryStream(ResultSet resultSet, String columnName) throws SQLException;
 
 	/**
 	 * Does this database support catalogs synonymous to schemas.
 	 *
-	 * @return
+	 * @return whether it is a catalog for schema
 	 */
 	boolean isCatalogForSchema();
 
@@ -231,9 +231,9 @@ public interface IDialectSpecifier {
 	 * for MongoDB a generic query to all documents in a collection (which roughly maps to a RDB Table) is a command to
 	 * findAll documents in a collection with no arguments (or empty document) and the script is <CODE>"{}"</CODE>.
 	 *
-	 * @param catalogName
-	 * @param schemaName
-	 * @param tableName
+	 * @param catalogName the catalog name
+	 * @param schemaName the schema name
+	 * @param tableName the table name
 	 * @return an SQL statement that retrieves table contents
 	 */
 	String getContentQueryScript(String catalogName, String schemaName, String tableName);

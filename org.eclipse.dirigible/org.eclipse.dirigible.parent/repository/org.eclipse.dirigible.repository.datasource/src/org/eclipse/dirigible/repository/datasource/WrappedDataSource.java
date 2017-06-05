@@ -49,7 +49,7 @@ public class WrappedDataSource implements DataSource {
 	 * Wrapper of the default datasource provided by the underlying platform
 	 * It has some fault tolerance features, which are not available by default in the popular JDBC drivers
 	 *
-	 * @param originalDataSource
+	 * @param originalDataSource the original data source
 	 */
 	public WrappedDataSource(DataSource originalDataSource) {
 		super();

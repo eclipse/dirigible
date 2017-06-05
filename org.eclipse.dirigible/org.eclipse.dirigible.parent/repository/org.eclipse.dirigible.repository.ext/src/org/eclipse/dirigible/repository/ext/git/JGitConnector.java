@@ -70,6 +70,7 @@ public class JGitConnector {
 	 *            the path to an existing Git Repository
 	 * @return {@link org.eclipse.jgit.lib.Repository} object
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public static Repository getRepository(String repositoryPath) throws IOException {
 		RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
@@ -129,8 +130,11 @@ public class JGitConnector {
 	 * @param branch
 	 *            the branch where sources will be cloned from
 	 * @throws InvalidRemoteException
+	 *             Invalid Remote Exception
 	 * @throws TransportException
+	 *             Transport Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public static void cloneRepository(File gitDirectory, String repositoryURI, String username, String password, String branch)
 			throws InvalidRemoteException, TransportException, GitAPIException {
@@ -164,8 +168,11 @@ public class JGitConnector {
 	 *            "dir/subdir/" is directory then "dir/subdir" all files from
 	 *            the directory recursively
 	 * @throws IOException
+	 *             IO Exception
 	 * @throws NoFilepatternException
+	 *             No File Pattern Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public void add(String filePattern) throws IOException, NoFilepatternException, GitAPIException {
 		AddCommand addCommand = git.add();
@@ -188,12 +195,19 @@ public class JGitConnector {
 	 *            repository are not affected. This corresponds to the parameter
 	 *            -a on the command line.
 	 * @throws NoHeadException
+	 *             No Head Exception
 	 * @throws NoMessageException
+	 *             No Message Exception
 	 * @throws UnmergedPathsException
+	 *             Unmerged Path Exception
 	 * @throws ConcurrentRefUpdateException
+	 *             Concurrent Ref Update Exception
 	 * @throws WrongRepositoryStateException
+	 *             Wrong Repository State Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public void commit(String message, String name, String email, boolean all) throws NoHeadException, NoMessageException, UnmergedPathsException,
 			ConcurrentRefUpdateException, WrongRepositoryStateException, GitAPIException, IOException {
@@ -214,9 +228,13 @@ public class JGitConnector {
 	 *            valid tree-ish object example: "5c15e8", "master", "HEAD",
 	 *            "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
 	 * @throws RefAlreadyExistsException
+	 *             Already Exists Exception
 	 * @throws RefNotFoundException
+	 *             Ref Not Found Exception
 	 * @throws InvalidRefNameException
+	 *             Invalid Ref Name Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public void createBranch(String name, String startPoint)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException {
@@ -236,10 +254,15 @@ public class JGitConnector {
 	 *            the tree-ish object
 	 * @return {@link org.eclipse.jgit.lib.Ref} object
 	 * @throws RefAlreadyExistsException
+	 *             Ref Already Exists Exception
 	 * @throws RefNotFoundException
+	 *             Ref Not Found Exception
 	 * @throws InvalidRefNameException
+	 *             Invalid Ref Name Exception
 	 * @throws CheckoutConflictException
+	 *             Checkout Conflict Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public Ref checkout(String name)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
@@ -253,7 +276,9 @@ public class JGitConnector {
 	 * content to exactly match the Git repository.
 	 *
 	 * @throws CheckoutConflictException
+	 *             Checkout Conflict Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public void hardReset() throws CheckoutConflictException, GitAPIException {
 		ResetCommand resetCommand = git.reset();
@@ -266,14 +291,23 @@ public class JGitConnector {
 	 * branch.
 	 *
 	 * @throws WrongRepositoryStateException
+	 *             Wrong Repository State Exception
 	 * @throws InvalidConfigurationException
+	 *             Invalid Configuration Exception
 	 * @throws DetachedHeadException
+	 *             Detached Head Exception
 	 * @throws InvalidRemoteException
+	 *             Invalid Remote Exception
 	 * @throws CanceledException
+	 *             Canceled Exception
 	 * @throws RefNotFoundException
+	 *             Ref Not Found Exception
 	 * @throws NoHeadException
+	 *             No Head Exception
 	 * @throws TransportException
+	 *             Transport Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public void pull() throws WrongRepositoryStateException, InvalidConfigurationException, DetachedHeadException, InvalidRemoteException,
 			CanceledException, RefNotFoundException, NoHeadException, TransportException, GitAPIException {
@@ -289,8 +323,11 @@ public class JGitConnector {
 	 * @param password
 	 *            for the remote repository
 	 * @throws InvalidRemoteException
+	 *             Invalid Remote Exception
 	 * @throws TransportException
+	 *             Transport Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public void push(String username, String password) throws InvalidRemoteException, TransportException, GitAPIException {
 		PushCommand pushCommand = git.push();
@@ -304,8 +341,11 @@ public class JGitConnector {
 	 * @param name
 	 *            the branch to rebase
 	 * @throws NoHeadException
+	 *             No Head Exception
 	 * @throws WrongRepositoryStateException
+	 *             Wrong Repository State Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public void rebase(String name) throws NoHeadException, WrongRepositoryStateException, GitAPIException {
 		RebaseCommand rebaseCommand = git.rebase();
@@ -319,7 +359,9 @@ public class JGitConnector {
 	 *
 	 * @return {@link org.eclipse.jgit.api.Status} object
 	 * @throws NoWorkTreeException
+	 *             No Work Tree Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public Status status() throws NoWorkTreeException, GitAPIException {
 		return git.status().call();
@@ -332,10 +374,15 @@ public class JGitConnector {
 	 *            the name of the specified branch
 	 * @return SHA example: "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
 	 * @throws RefAlreadyExistsException
+	 *             Ref Already Exists Exception
 	 * @throws RefNotFoundException
+	 *             Ref Not Found Exception
 	 * @throws InvalidRefNameException
+	 *             Invalid Ref Name Exception
 	 * @throws CheckoutConflictException
+	 *             Checkout Conflict Exception
 	 * @throws GitAPIException
+	 *             Git API Exception
 	 */
 	public String getLastSHAForBranch(String branch)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
