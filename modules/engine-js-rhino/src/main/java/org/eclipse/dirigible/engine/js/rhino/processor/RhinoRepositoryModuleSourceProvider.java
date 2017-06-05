@@ -10,8 +10,6 @@
 
 package org.eclipse.dirigible.engine.js.rhino.processor;
 
-import static java.text.MessageFormat.format;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,18 +22,17 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSource;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase;
 
-public class RepositoryModuleSourceProvider extends ModuleSourceProviderBase {
+public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBase {
 
 	private static final long serialVersionUID = -5527033249080497877L;
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
-	private static final String RHINO_EXTENSION = ".rhino"; //$NON-NLS-1$
 
 	private IBaseScriptExecutor executor;
 	
 	private String rootPath;
 	
-	public RepositoryModuleSourceProvider(IBaseScriptExecutor executor, String rootPath) {
+	public RhinoRepositoryModuleSourceProvider(IBaseScriptExecutor executor, String rootPath) {
 		this.executor = executor;
 		this.rootPath = rootPath;
 	}

@@ -74,9 +74,9 @@ public class RhinoJavascriptEngineExecutor extends AbstractScriptExecutor implem
 		logger.debug("exiting: executeServiceModule()");
 	}
 	
-	private RepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
-		RepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
-		repositoryModuleSourceProvider = new RepositoryModuleSourceProvider(this, IRepositoryStructure.REGISTRY_PUBLIC);
+	private RhinoRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
+		RhinoRepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
+		repositoryModuleSourceProvider = new RhinoRepositoryModuleSourceProvider(this, IRepositoryStructure.REGISTRY_PUBLIC);
 		return repositoryModuleSourceProvider;
 	}
 

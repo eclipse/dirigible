@@ -130,6 +130,11 @@
 		 	<artifactId>dirigible-engine-js-rhino</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-js-nashorn</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		
 		

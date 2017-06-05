@@ -297,6 +297,7 @@
         <module>modules/engine-web</module>
         <module>modules/engine-js</module>
         <module>modules/engine-js-rhino</module>
+        <module>modules/engine-js-nashorn</module>
         
         <module>modules/api-utils</module>
         <module>modules/api-http</module>

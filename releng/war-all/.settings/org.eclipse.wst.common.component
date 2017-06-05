@@ -44,6 +44,9 @@
         <dependent-module archiveName="dirigible-engine-js-rhino-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js-rhino/dirigible-engine-js-rhino">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-engine-js-nashorn-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js-nashorn/dirigible-engine-js-nashorn">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>
         <property name="context-root" value="ROOT"/>
     </wb-module>
