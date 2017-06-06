@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.internal.resources.Folder;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -261,7 +260,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	}
 
 	/**
-	 * Returns the {@link LocalFolder} object matching this {@link DBCollection}.
+	 * Returns the {@link LocalFolder} object matching this {@link ICollection}.
 	 * If there is no such object, then an {@link IOException} is thrown.
 	 * 
 	 * @return Local Folder
