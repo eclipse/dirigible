@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.db;
@@ -24,7 +23,6 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
  * The DB implementation of {@link IEntity}
- * 
  */
 public abstract class DBEntity implements IEntity {
 
@@ -48,7 +46,7 @@ public abstract class DBEntity implements IEntity {
 	}
 
 	/**
-	 * Returns the path of this {@link Entity} represented by an instance of
+	 * Returns the path of this {@link IEntity} represented by an instance of
 	 * {@link RepositoryPath}.
 	 */
 	protected RepositoryPath getRepositoryPath() {
@@ -84,10 +82,9 @@ public abstract class DBEntity implements IEntity {
 	 * no such object in the real repository, then <code>null</code> is
 	 * returned.
 	 */
-	protected DBObject getDBObject() throws IOException {
+	protected DBObject getDBObject() {
 		try {
-			return this.repository.getRepositoryDAO()
-					.getObjectByPath(getPath());
+			return this.repository.getRepositoryDAO().getObjectByPath(getPath());
 		} catch (DBBaseException ex) {
 			logger.error(ex.getMessage(), ex);
 			return null;
@@ -102,14 +99,13 @@ public abstract class DBEntity implements IEntity {
 	protected DBObject getDBObjectSafe() throws IOException {
 		final DBObject result = getDBObject();
 		if (result == null) {
-			throw new IOException(format(THERE_IS_NO_ENTITY_AT_PATH_0,
-					this.path.toString()));
+			throw new IOException(format(THERE_IS_NO_ENTITY_AT_PATH_0, this.path.toString()));
 		}
 		return result;
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link CMISEntity} inside the
+	 * Creates all ancestors of the given {@link IEntity} inside the
 	 * repository if they don't already exist.
 	 */
 	protected void createAncestorsIfMissing() throws IOException {
@@ -120,7 +116,7 @@ public abstract class DBEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link CMISEntity} and itself too if
+	 * Creates all ancestors of the given {@link IEntity} and itself too if
 	 * they don't already exist.
 	 */
 	protected void createAncestorsAndSelfIfMissing() throws IOException {

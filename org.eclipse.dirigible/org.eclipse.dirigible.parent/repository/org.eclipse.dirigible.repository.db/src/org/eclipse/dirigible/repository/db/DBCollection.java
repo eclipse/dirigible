@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.db;
@@ -17,18 +16,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.db.dao.DBFile;
 import org.eclipse.dirigible.repository.db.dao.DBFolder;
 import org.eclipse.dirigible.repository.db.dao.DBObject;
 
 /**
  * The DB implementation of {@link ICollection}
- * 
  */
 public class DBCollection extends DBEntity implements ICollection {
 
@@ -61,8 +59,7 @@ public class DBCollection extends DBEntity implements ICollection {
 		try {
 			folder.deleteTree();
 		} catch (DBBaseException ex) {
-			throw new IOException(COULD_NOT_DELETE_COLLECTION + this.getName(),
-					ex);
+			throw new IOException(COULD_NOT_DELETE_COLLECTION + this.getName(), ex);
 		}
 	}
 
@@ -72,8 +69,7 @@ public class DBCollection extends DBEntity implements ICollection {
 		try {
 			folder.renameFolder(RepositoryPath.normalizePath(getParent().getPath(), name));
 		} catch (DBBaseException ex) {
-			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(),
-					ex);
+			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(), ex);
 		}
 	}
 
@@ -83,8 +79,7 @@ public class DBCollection extends DBEntity implements ICollection {
 		try {
 			folder.renameFolder(path);
 		} catch (DBBaseException ex) {
-			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(),
-					ex);
+			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(), ex);
 		}
 	}
 
@@ -111,8 +106,7 @@ public class DBCollection extends DBEntity implements ICollection {
 	public List<ICollection> getCollections() throws IOException {
 		// return new ArrayList<ICollection>(collections.values());
 		final List<String> collectionNames = getCollectionsNames();
-		final List<ICollection> result = new ArrayList<ICollection>(
-				collectionNames.size());
+		final List<ICollection> result = new ArrayList<ICollection>(collectionNames.size());
 		for (String collectionName : collectionNames) {
 			result.add(getCollection(collectionName));
 		}
@@ -130,8 +124,7 @@ public class DBCollection extends DBEntity implements ICollection {
 				}
 			}
 		} catch (DBBaseException ex) {
-			throw new IOException(COULD_NOT_GET_CHILD_COLLECTION_NAMES
-					+ this.getName(), ex);
+			throw new IOException(COULD_NOT_GET_CHILD_COLLECTION_NAMES + this.getName(), ex);
 		}
 		return result;
 	}
@@ -161,16 +154,14 @@ public class DBCollection extends DBEntity implements ICollection {
 	}
 
 	@Override
-	public void removeCollection(ICollection childCollection)
-			throws IOException {
+	public void removeCollection(ICollection childCollection) throws IOException {
 		removeCollection(childCollection.getName());
 	}
 
 	@Override
 	public List<IResource> getResources() throws IOException {
 		final List<String> resourceNames = getResourcesNames();
-		final List<IResource> result = new ArrayList<IResource>(
-				resourceNames.size());
+		final List<IResource> result = new ArrayList<IResource>(resourceNames.size());
 		for (String resourceName : resourceNames) {
 			result.add(getResource(resourceName));
 		}
@@ -188,8 +179,7 @@ public class DBCollection extends DBEntity implements ICollection {
 				}
 			}
 		} catch (DBBaseException ex) {
-			throw new IOException(COULD_NOT_GET_CHILD_RESOURCE_NAMES
-					+ this.getName(), ex);
+			throw new IOException(COULD_NOT_GET_CHILD_RESOURCE_NAMES + this.getName(), ex);
 		}
 		return result;
 	}
@@ -200,28 +190,8 @@ public class DBCollection extends DBEntity implements ICollection {
 		return new DBResource(getRepository(), path);
 	}
 
-//	@Override
-//	public IResource createResource(String name) throws IOException {
-//		return createResource(name, null);
-//	}
-//
-//	@Override
-//	public IResource createResource(String name, byte[] content)
-//			throws IOException {
-//		createAncestorsAndSelfIfMissing();
-//		final DBFolder folder = getFolderSafe();
-//		try {
-//			folder.createFile(name, content, false,
-//					IResource.CONTENT_TYPE_DEFAULT);
-//		} catch (DBBaseException ex) {
-//			throw new IOException(COULD_NOT_CREATE_CHILD_DOCUMENT + name, ex);
-//		}
-//		return getResource(name);
-//	}
-
 	@Override
-	public IResource createResource(String name, byte[] content,
-			boolean isBinary, String contentType) throws IOException {
+	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws IOException {
 		createAncestorsAndSelfIfMissing();
 		final DBFolder folder = getFolderSafe();
 		try {
@@ -272,7 +242,7 @@ public class DBCollection extends DBEntity implements ICollection {
 	}
 
 	/**
-	 * Returns the {@link Folder} object matching this {@link CMISContainer}. If
+	 * Returns the {@link DBFolder} object matching this container. If
 	 * there is no such object, then <code>null</code> is returned.
 	 */
 	protected DBFolder getFolder() throws IOException {
@@ -293,8 +263,7 @@ public class DBCollection extends DBEntity implements ICollection {
 	protected DBFolder getFolderSafe() throws IOException {
 		final DBFolder folder = getFolder();
 		if (folder == null) {
-			throw new IOException(format(THERE_IS_NO_COLLECTION_AT_PATH_0,
-					getPath()));
+			throw new IOException(format(THERE_IS_NO_COLLECTION_AT_PATH_0, getPath()));
 		}
 		return folder;
 	}

@@ -57,8 +57,10 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Return the database file object
 	 *
 	 * @param path
-	 * @return
+	 *            the path
+	 * @return a DB File
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	public DBFile getFileByPath(String path) throws DBBaseException {
 		logger.debug("entering getFileByPath"); //$NON-NLS-1$
@@ -79,12 +81,19 @@ public class DBFileDAO extends DBObjectDAO {
 	 * located at the given path, content type, etc.
 	 *
 	 * @param name
+	 *            the name
 	 * @param path
+	 *            the path
 	 * @param contentType
+	 *            the content type
 	 * @param createdBy
+	 *            the author of the file
 	 * @param modifiedBy
+	 *            the last user that modified the file
 	 * @param type
+	 *            the type
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	void insertFile(String name, String path, String contentType, String createdBy, String modifiedBy, int type) throws DBBaseException {
 		insertFile(name, path, contentType, createdBy, modifiedBy, type, false);
@@ -95,13 +104,21 @@ public class DBFileDAO extends DBObjectDAO {
 	 * located at the given path, content type, etc.
 	 *
 	 * @param name
+	 *            the name
 	 * @param path
+	 *            the path
 	 * @param contentType
+	 *            the content type
 	 * @param createdBy
+	 *            the author of the file
 	 * @param modifiedBy
+	 *            the last user that modified the file
 	 * @param type
+	 *            the type
 	 * @param override
+	 *            whether to override the content if the file already exists
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	void insertFile(String name, String path, String contentType, String createdBy, String modifiedBy, int type, boolean override)
 			throws DBBaseException {
@@ -146,12 +163,19 @@ public class DBFileDAO extends DBObjectDAO {
 	 * located at the given path, content type, etc.
 	 *
 	 * @param name
+	 *            the name
 	 * @param path
+	 *            the path
 	 * @param contentType
+	 *            the content type
 	 * @param createdBy
+	 *            the author of the file
 	 * @param modifiedBy
+	 *            the last user that modified the file
 	 * @param type
+	 *            the type
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	void updateFile(String name, String path, String contentType, String createdBy, String modifiedBy, int type) throws DBBaseException {
 		logger.debug("entering updateFile"); //$NON-NLS-1$
@@ -189,7 +213,9 @@ public class DBFileDAO extends DBObjectDAO {
 	 * path
 	 *
 	 * @param path
+	 *            the path
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	void removeDocsCascade(String path) throws DBBaseException {
 
@@ -217,11 +243,16 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Create the file (text or binary) at the given path
 	 *
 	 * @param path
+	 *            the path
 	 * @param bytes
+	 *            the content as bytes
 	 * @param isBinary
+	 *            whether it is a binary content
 	 * @param contentType
-	 * @return
+	 *            the content type
+	 * @return DB File
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	public DBFile createFile(String path, byte[] bytes, boolean isBinary, String contentType) throws DBBaseException {
 		return createFile(path, bytes, isBinary, contentType, false);
@@ -231,12 +262,18 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Create the file (text or binary) at the given path
 	 *
 	 * @param path
+	 *            the path
 	 * @param bytes
+	 *            the content as bytes
 	 * @param isBinary
+	 *            whether it is a binary content
 	 * @param contentType
+	 *            the content type
 	 * @param override
-	 * @return
+	 *            whether to overrider if the file exists
+	 * @return DB File
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	public DBFile createFile(String path, byte[] bytes, boolean isBinary, String contentType, boolean override) throws DBBaseException {
 
@@ -281,8 +318,11 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Create chunks of content for a given text file
 	 *
 	 * @param resource
+	 *            the file
 	 * @param bytes
+	 *            the content as bytes
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	private void insertDocument(DBFile resource, byte[] bytes) throws DBBaseException {
 
@@ -312,8 +352,10 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Utility method for splitting byte array by chunks
 	 *
 	 * @param source
+	 *            the source
 	 * @param chuncksize
-	 * @return
+	 *            the chunk size
+	 * @return array of chunks
 	 */
 	private byte[][] divideArray(byte[] source, int chuncksize) {
 
@@ -338,9 +380,13 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Create single chunk of content for a given text file
 	 *
 	 * @param resource
+	 *            the file
 	 * @param bytes
+	 *            the content
 	 * @param order
+	 *            the order
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	private void insertDocumentSingle(DBFile resource, byte[] bytes, int order) throws DBBaseException {
 
@@ -390,8 +436,11 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Create the document (content chunks)
 	 *
 	 * @param resource
+	 *            the file
 	 * @param bytes
+	 *            the content
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	void setDocument(DBFile resource, byte[] bytes) throws DBBaseException {
 
@@ -439,8 +488,10 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Retrieve the document content - combine the chunks
 	 *
 	 * @param resource
-	 * @return
+	 *            the file
+	 * @return the content
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	byte[] getDocument(DBFile resource) throws DBBaseException {
 
@@ -481,7 +532,9 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Delete database file by given path
 	 *
 	 * @param path
+	 *            the path
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	void removeFileByPath(String path) throws DBBaseException {
 
@@ -514,7 +567,9 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Delete the content (all the chunks) for a given file
 	 *
 	 * @param resource
+	 *            the file
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	private void removeDocument(DBFile resource) throws DBBaseException {
 
@@ -542,8 +597,10 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Retrieve the binary content of a file
 	 *
 	 * @param resource
-	 * @return
+	 *            the file
+	 * @return the binary content of the file
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	public byte[] getBinary(DBFile resource) throws DBBaseException {
 
@@ -585,9 +642,13 @@ public class DBFileDAO extends DBObjectDAO {
 	 * content if any
 	 *
 	 * @param resource
+	 *            the file
 	 * @param bytes
+	 *            the content
 	 * @param contentType
+	 *            the content type
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	public void setBinary(DBFile resource, byte[] bytes, String contentType) throws DBBaseException {
 
@@ -603,8 +664,11 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Create the binary content of for a given file
 	 *
 	 * @param resource
+	 *            the file
 	 * @param bytes
+	 *            the content
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	private void insertBinary(DBFile resource, byte[] bytes) throws DBBaseException {
 
@@ -642,7 +706,9 @@ public class DBFileDAO extends DBObjectDAO {
 	 * Delete the binary content of for a given file
 	 *
 	 * @param resource
+	 *            the file
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	private void removeBinary(DBFile resource) throws DBBaseException {
 

@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.db.dao;
@@ -38,8 +37,8 @@ public class DBFileVersionDAO {
 
 	/**
 	 * Getter for DBRepositoryDAO object
-	 * 
-	 * @return
+	 *
+	 * @return DB Repository DAO
 	 */
 	public DBRepositoryDAO getDbRepositoryDAO() {
 		return dbRepositoryDAO;
@@ -47,8 +46,8 @@ public class DBFileVersionDAO {
 
 	/**
 	 * Getter for the Repository instance
-	 * 
-	 * @return
+	 *
+	 * @return DB Repository
 	 */
 	protected DBRepository getRepository() {
 		return this.dbRepositoryDAO.getRepository();
@@ -56,8 +55,6 @@ public class DBFileVersionDAO {
 
 	/**
 	 * Check whether the database schema is initialized
-	 * 
-	 * @return
 	 */
 	protected void checkInitialized() {
 		this.dbRepositoryDAO.checkInitialized();
@@ -66,18 +63,21 @@ public class DBFileVersionDAO {
 	/**
 	 * Query the database and retrieve the database object based on the provided
 	 * path
-	 * 
+	 *
 	 * @param path
-	 * @return
+	 *            the path
+	 * @param version
+	 *            the version
+	 * @return the DB File Version
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
-	public DBFileVersion getFileVersionByPath(String path, int version)
-			throws DBBaseException {
+	public DBFileVersion getFileVersionByPath(String path, int version) throws DBBaseException {
 		logger.debug("entering getFileVersionByPath"); //$NON-NLS-1$
 
 		checkInitialized();
 
-		if (path == null || "".equals(path.trim())) { //$NON-NLS-1$
+		if ((path == null) || "".equals(path.trim())) { //$NON-NLS-1$
 			return null;
 		}
 
@@ -87,11 +87,8 @@ public class DBFileVersionDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_GET_FILE_VERSION_BY_PATH,
-					this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_FILE_VERSION_BY_PATH, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 			preparedStatement.setString(1, path);
 			preparedStatement.setInt(2, version);
 			ResultSet resultSet = null;
@@ -99,8 +96,7 @@ public class DBFileVersionDAO {
 				resultSet = preparedStatement.executeQuery();
 
 				if (resultSet.next()) {
-					dbFileVersion = DBMapper.dbToFileVersion(connection, getRepository(),
-							resultSet);
+					dbFileVersion = DBMapper.dbToFileVersion(connection, getRepository(), resultSet);
 				}
 			} finally {
 				if (resultSet != null) {
@@ -118,9 +114,7 @@ public class DBFileVersionDAO {
 		return dbFileVersion;
 	}
 
-	private int insertFileVersion(String path, byte[] bytes,
-			String contentType, String createdBy, int type)
-			throws DBBaseException {
+	private int insertFileVersion(String path, byte[] bytes, String contentType, String createdBy, int type) throws DBBaseException {
 		logger.debug("entering insertFileVersion"); //$NON-NLS-1$
 
 		checkInitialized();
@@ -134,16 +128,13 @@ public class DBFileVersionDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_INSERT_FILE_VERSION, this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_INSERT_FILE_VERSION, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 
 			int i = 0;
 			preparedStatement.setString(++i, path);
 			preparedStatement.setInt(++i, version);
-			preparedStatement.setBinaryStream(++i, new ByteArrayInputStream(
-					bytes), bytes.length);
+			preparedStatement.setBinaryStream(++i, new ByteArrayInputStream(bytes), bytes.length);
 			preparedStatement.setInt(++i, type);
 			preparedStatement.setString(++i, contentType);
 			preparedStatement.setString(++i, createdBy);
@@ -165,7 +156,7 @@ public class DBFileVersionDAO {
 
 		checkInitialized();
 
-		if (path == null || "".equals(path.trim())) { //$NON-NLS-1$
+		if ((path == null) || "".equals(path.trim())) { //$NON-NLS-1$
 			return 0;
 		}
 
@@ -175,11 +166,8 @@ public class DBFileVersionDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_GET_NEXT_FILE_VERSION_BY_PATH,
-					this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_NEXT_FILE_VERSION_BY_PATH, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 			preparedStatement.setString(1, path);
 			ResultSet resultSet = null;
 			try {
@@ -207,20 +195,24 @@ public class DBFileVersionDAO {
 
 	/**
 	 * Create the file version (text or binary) at the given path
-	 * 
+	 *
 	 * @param path
+	 *            the path
 	 * @param bytes
+	 *            the content
 	 * @param isBinary
+	 *            whether it is a binary content
 	 * @param contentType
-	 * @return
+	 *            the content type
+	 * @return the DB File Version
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
-	public DBFileVersion createFileVersion(String path, byte[] bytes,
-			boolean isBinary, String contentType) throws DBBaseException {
+	public DBFileVersion createFileVersion(String path, byte[] bytes, boolean isBinary, String contentType) throws DBBaseException {
 
 		checkInitialized();
 
-		if (path == null || "".equals(path.trim())) { //$NON-NLS-1$
+		if ((path == null) || "".equals(path.trim())) { //$NON-NLS-1$
 			return null;
 		}
 
@@ -231,14 +223,11 @@ public class DBFileVersionDAO {
 		String createdBy = getRepository().getUser();
 
 		DBFileVersion fileVersion = null;
-		String collectionPath = path.substring(0,
-				path.lastIndexOf(DBRepository.PATH_DELIMITER));
-		DBFolder parent = getDbRepositoryDAO().getDbFolderDAO().createFolder(
-				collectionPath);
+		String collectionPath = path.substring(0, path.lastIndexOf(DBRepository.PATH_DELIMITER));
+		DBFolder parent = getDbRepositoryDAO().getDbFolderDAO().createFolder(collectionPath);
 		if (parent != null) {
-			int version = insertFileVersion(path, bytes, contentType,
-					createdBy, isBinary ? DBMapper.OBJECT_TYPE_BINARY
-							: DBMapper.OBJECT_TYPE_DOCUMENT);
+			int version = insertFileVersion(path, bytes, contentType, createdBy,
+					isBinary ? DBMapper.OBJECT_TYPE_BINARY : DBMapper.OBJECT_TYPE_DOCUMENT);
 			fileVersion = getFileVersionByPath(path, version);
 		}
 		return fileVersion;
@@ -249,7 +238,7 @@ public class DBFileVersionDAO {
 
 		checkInitialized();
 
-		if (path == null || "".equals(path.trim())) { //$NON-NLS-1$
+		if ((path == null) || "".equals(path.trim())) { //$NON-NLS-1$
 			return null;
 		}
 
@@ -259,19 +248,15 @@ public class DBFileVersionDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_GET_FILE_VERSIONS_BY_PATH,
-					this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_GET_FILE_VERSIONS_BY_PATH, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 			preparedStatement.setString(1, path);
 			ResultSet resultSet = null;
 			try {
 				resultSet = preparedStatement.executeQuery();
 
 				while (resultSet.next()) {
-					DBFileVersion dbFileVersion = DBMapper.dbToFileVersion(
-							connection, getRepository(), resultSet);
+					DBFileVersion dbFileVersion = DBMapper.dbToFileVersion(connection, getRepository(), resultSet);
 					dbFileVersions.add(dbFileVersion);
 				}
 			} finally {
@@ -299,11 +284,8 @@ public class DBFileVersionDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_REMOVE_ALL_FILE_VERSIONS,
-					this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_REMOVE_ALL_FILE_VERSIONS, this.getClass());
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 
 			int i = 0;
 			preparedStatement.setString(++i, path);
@@ -318,7 +300,7 @@ public class DBFileVersionDAO {
 		}
 		logger.debug("exiting removeAllFileVersions"); //$NON-NLS-1$
 	}
-	
+
 	public void removeAllFileVersionsBeforeDate(Date date) throws DBBaseException {
 		logger.debug("entering removeAllFileVersionsBeforeDate"); //$NON-NLS-1$
 
@@ -328,11 +310,9 @@ public class DBFileVersionDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = getRepository().getDbUtils().getConnection();
-			String script = getRepository().getDbUtils().readScript(connection,
-					DBScriptsMap.SCRIPT_REMOVE_ALL_FILE_VERSIONS_BEFORE_DATE,
+			String script = getRepository().getDbUtils().readScript(connection, DBScriptsMap.SCRIPT_REMOVE_ALL_FILE_VERSIONS_BEFORE_DATE,
 					this.getClass());
-			preparedStatement = getRepository().getDbUtils()
-					.getPreparedStatement(connection, script);
+			preparedStatement = getRepository().getDbUtils().getPreparedStatement(connection, script);
 
 			int i = 0;
 			preparedStatement.setDate(++i, new java.sql.Date(date.getTime()));
@@ -347,7 +327,5 @@ public class DBFileVersionDAO {
 		}
 		logger.debug("exiting removeAllFileVersionsBeforeDate"); //$NON-NLS-1$
 	}
-	
-	
 
 }
