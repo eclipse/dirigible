@@ -67,7 +67,7 @@ public class CmisSession {
 	/**
 	 * Returns a CMIS Object by path
 	 *
-	 * @param the path
+	 * @param path the path
 	 * 
 	 * @return CMIS Object
 	 * @throws IOException IO Exception
