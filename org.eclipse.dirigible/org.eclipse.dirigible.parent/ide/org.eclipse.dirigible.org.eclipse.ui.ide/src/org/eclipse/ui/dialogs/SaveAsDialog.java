@@ -4,13 +4,12 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *    IBM Corporation - initial API and implementation 
- *    Bob Foster <bob@objfac.com>
- *     - Fix for bug 23025 - SaveAsDialog should not assume what is being saved is an IFile
- *    Benjamin Muskalla <b.muskalla@gmx.net>
- *     - Fix for bug 82541 - [Dialogs] SaveAsDialog should better handle closed projects
+ * IBM Corporation - initial API and implementation
+ * Bob Foster <bob@objfac.com>
+ * - Fix for bug 23025 - SaveAsDialog should not assume what is being saved is an IFile
+ * Benjamin Muskalla <b.muskalla@gmx.net>
+ * - Fix for bug 82541 - [Dialogs] SaveAsDialog should better handle closed projects
  *******************************************************************************/
 package org.eclipse.ui.dialogs;
 
@@ -20,6 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,8 +42,6 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 import org.eclipse.ui.internal.ide.misc.ResourceAndContainerGroup;
 
-import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
-
 /**
  * A standard "Save As" dialog which solicits a path from the user. The
  * <code>getResult</code> method returns the path. Note that the folder at the
@@ -51,14 +49,11 @@ import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * 
- * @see org.eclipse.ui.dialogs.ContainerGenerator
- * @noextend This class is not intended to be subclassed by clients.
  */
 public class SaveAsDialog extends TitleAreaDialog {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -7374646817555995704L;
 
@@ -82,7 +77,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/**
 	 * Creates a new Save As dialog for no specific file.
-	 * 
+	 *
 	 * @param parentShell
 	 *            the parent shell
 	 */
@@ -93,16 +88,17 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/*
 	 * (non-Javadoc) Method declared in Window.
 	 */
+	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		shell.setText(IDEWorkbenchMessages.SaveAsDialog_text);
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(shell, IIDEHelpContextIds.SAVE_AS_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IIDEHelpContextIds.SAVE_AS_DIALOG);
 	}
 
 	/*
 	 * (non-Javadoc) Method declared in Window.
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
 
 		Control contents = super.createContents(parent);
@@ -111,8 +107,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 		validatePage();
 		resourceGroup.setFocus();
 		setTitle(IDEWorkbenchMessages.SaveAsDialog_title);
-		dlgTitleImage = IDEInternalWorkbenchImages.getImageDescriptor(
-				IDEInternalWorkbenchImages.IMG_DLGBAN_SAVEAS_DLG).createImage();
+		dlgTitleImage = IDEInternalWorkbenchImages.getImageDescriptor(IDEInternalWorkbenchImages.IMG_DLGBAN_SAVEAS_DLG).createImage();
 		setTitleImage(dlgTitleImage);
 		setMessage(IDEWorkbenchMessages.SaveAsDialog_message);
 
@@ -123,6 +118,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 * The <code>SaveAsDialog</code> implementation of this <code>Window</code>
 	 * method disposes of the banner image when the dialog is closed.
 	 */
+	@Override
 	public boolean close() {
 		if (dlgTitleImage != null) {
 			dlgTitleImage.dispose();
@@ -133,16 +129,16 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/*
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		okButton = createButton(parent, IDialogConstants.OK_ID,
-				IDialogConstants.get().OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.get().CANCEL_LABEL, false);
+		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.get().OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.get().CANCEL_LABEL, false);
 	}
 
 	/*
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		// top level composite
 		Composite parentComposite = (Composite) super.createDialogArea(parent);
@@ -160,17 +156,17 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 		Listener listener = new Listener() {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = -7200838228253756504L;
 
+			@Override
 			public void handleEvent(Event event) {
 				setDialogComplete(validatePage());
 			}
 		};
 
-		resourceGroup = new ResourceAndContainerGroup(composite, listener,
-				IDEWorkbenchMessages.SaveAsDialog_fileLabel,
+		resourceGroup = new ResourceAndContainerGroup(composite, listener, IDEWorkbenchMessages.SaveAsDialog_fileLabel,
 				IDEWorkbenchMessages.SaveAsDialog_file);
 		resourceGroup.setAllowExistingResources(true);
 
@@ -184,7 +180,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 * created. See the <code>IFile.create</code> method and the
 	 * <code>ContainerGenerator</code> class.
 	 * </p>
-	 * 
+	 *
 	 * @return the path, or <code>null</code> if Cancel was pressed
 	 */
 	public IPath getResult() {
@@ -196,8 +192,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 */
 	private void initializeControls() {
 		if (originalFile != null) {
-			resourceGroup.setContainerFullPath(originalFile.getParent()
-					.getFullPath());
+			resourceGroup.setContainerFullPath(originalFile.getParent().getFullPath());
 			resourceGroup.setResource(originalFile.getName());
 		} else if (originalName != null) {
 			resourceGroup.setResource(originalName);
@@ -208,48 +203,42 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/*
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
+	@Override
 	protected void okPressed() {
 		// Get new path.
-		IPath path = resourceGroup.getContainerFullPath().append(
-				resourceGroup.getResource());
+		IPath path = resourceGroup.getContainerFullPath().append(resourceGroup.getResource());
 
 		// If the user does not supply a file extension and if the save
 		// as dialog was provided a default file name append the extension
 		// of the default filename to the new name
 		if (path.getFileExtension() == null) {
-			if (originalFile != null && originalFile.getFileExtension() != null) {
+			if ((originalFile != null) && (originalFile.getFileExtension() != null)) {
 				path = path.addFileExtension(originalFile.getFileExtension());
 			} else if (originalName != null) {
 				int pos = originalName.lastIndexOf('.');
-				if (++pos > 0 && pos < originalName.length()) {
+				if ((++pos > 0) && (pos < originalName.length())) {
 					path = path.addFileExtension(originalName.substring(pos));
 				}
 			}
 		}
 
 		// If the path already exists then confirm overwrite.
-		IFile file = RemoteResourcesPlugin.getWorkspace().getRoot()
-				.getFile(path);
+		IFile file = RemoteResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		if (file.exists()) {
-			String[] buttons = new String[] { IDialogConstants.get().YES_LABEL,
-					IDialogConstants.get().NO_LABEL,
+			String[] buttons = new String[] { IDialogConstants.get().YES_LABEL, IDialogConstants.get().NO_LABEL,
 					IDialogConstants.get().CANCEL_LABEL };
-			String question = NLS.bind(
-					IDEWorkbenchMessages.SaveAsDialog_overwriteQuestion,
-					path.toString());
-			MessageDialog d = new MessageDialog(getShell(),
-					IDEWorkbenchMessages.Question, null, question,
-					MessageDialog.QUESTION, buttons, 0);
+			String question = NLS.bind(IDEWorkbenchMessages.SaveAsDialog_overwriteQuestion, path.toString());
+			MessageDialog d = new MessageDialog(getShell(), IDEWorkbenchMessages.Question, null, question, MessageDialog.QUESTION, buttons, 0);
 			int overwrite = d.open();
 			switch (overwrite) {
-			case 0: // Yes
-				break;
-			case 1: // No
-				return;
-			case 2: // Cancel
-			default:
-				cancelPressed();
-				return;
+				case 0: // Yes
+					break;
+				case 1: // No
+					return;
+				case 2: // Cancel
+				default:
+					cancelPressed();
+					return;
 			}
 		}
 
@@ -261,7 +250,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/**
 	 * Sets the completion state of this dialog and adjusts the enable state of
 	 * the Ok button accordingly.
-	 * 
+	 *
 	 * @param value
 	 *            <code>true</code> if this dialog is compelete, and
 	 *            <code>false</code> otherwise
@@ -272,7 +261,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/**
 	 * Sets the original file to use.
-	 * 
+	 *
 	 * @param originalFile
 	 *            the original file
 	 */
@@ -284,7 +273,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 * Set the original file name to use. Used instead of
 	 * <code>setOriginalFile</code> when the original resource is not an IFile.
 	 * Must be called before <code>create</code>.
-	 * 
+	 *
 	 * @param originalName
 	 *            default file name
 	 */
@@ -294,7 +283,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/**
 	 * Returns whether this page's visual components all contain valid values.
-	 * 
+	 *
 	 * @return <code>true</code> if valid, and <code>false</code> otherwise
 	 */
 	private boolean validatePage() {
@@ -314,8 +303,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 		IPath fullPath = resourceGroup.getContainerFullPath();
 		if (fullPath != null) {
 			String projectName = fullPath.segment(0);
-			IStatus isValidProjectName = workspace.validateName(projectName,
-					IResource.PROJECT);
+			IStatus isValidProjectName = workspace.validateName(projectName, IResource.PROJECT);
 			if (isValidProjectName.isOK()) {
 				IProject project = workspace.getRoot().getProject(projectName);
 				if (!project.isOpen()) {
@@ -337,14 +325,12 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.window.Dialog#getDialogBoundsSettings()
-	 * 
 	 * @since 3.2
 	 */
+	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
-		IDialogSettings settings = IDEWorkbenchPlugin.getDefault()
-				.getDialogSettings();
+		IDialogSettings settings = IDEWorkbenchPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = settings.getSection(DIALOG_SETTINGS_SECTION);
 		if (section == null) {
 			section = settings.addNewSection(DIALOG_SETTINGS_SECTION);
@@ -354,9 +340,9 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#isResizable()
 	 */
+	@Override
 	protected boolean isResizable() {
 		return true;
 	}

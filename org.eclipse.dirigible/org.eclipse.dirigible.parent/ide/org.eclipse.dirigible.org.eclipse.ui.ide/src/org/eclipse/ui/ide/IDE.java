@@ -84,7 +84,6 @@ public final class IDE {
 	/**
 	 * The persistent property key used on IFile resources to contain the
 	 * preferred editor ID to use.
-	 * <p>
 	 * Example of retrieving the persisted editor id:
 	 *
 	 * <pre>
@@ -101,8 +100,7 @@ public final class IDE {
 	 *  }
 	 * </code>
 	 * </pre>
-	 * </p>
-	 * <p>
+	 *
 	 * Example of persisting the editor id:
 	 *
 	 * <pre>
@@ -115,7 +113,6 @@ public final class IDE {
 	 *  }
 	 * </code>
 	 * </pre>
-	 * </p>
 	 */
 	public static final QualifiedName EDITOR_KEY = new QualifiedName("org.eclipse.ui.internal.registry.ResourceEditorRegistry", "EditorProperty");//$NON-NLS-2$//$NON-NLS-1$
 
@@ -140,9 +137,7 @@ public final class IDE {
 	 * Standard shared images defined by the IDE. These are over and above the
 	 * standard workbench images declared in
 	 * {@link org.eclipse.ui.ISharedImages ISharedImages}.
-	 * <p>
 	 * This interface is not intended to be implemented by clients.
-	 * </p>
 	 *
 	 * @see org.eclipse.ui.ISharedImages
 	 */
@@ -175,21 +170,17 @@ public final class IDE {
 
 	/**
 	 * Preferences defined by the IDE workbench.
-	 * <p>
 	 * This interface is not intended to be implemented by clients.
-	 * </p>
 	 */
 	public interface Preferences {
 
 		/**
 		 * A named preference for how a new perspective should be opened when a
 		 * new project is created.
-		 * <p>
 		 * Value is of type <code>String</code>. The possible values are defined
 		 * by the constants
 		 * <code>OPEN_PERSPECTIVE_WINDOW, OPEN_PERSPECTIVE_PAGE,
 		 * OPEN_PERSPECTIVE_REPLACE, and NO_NEW_PERSPECTIVE</code>.
-		 * </p>
 		 *
 		 * @see org.eclipse.ui.IWorkbenchPreferenceConstants#OPEN_PERSPECTIVE_WINDOW
 		 * @see org.eclipse.ui.IWorkbenchPreferenceConstants#OPEN_PERSPECTIVE_PAGE
@@ -199,42 +190,32 @@ public final class IDE {
 		public static final String PROJECT_OPEN_NEW_PERSPECTIVE = "PROJECT_OPEN_NEW_PERSPECTIVE"; //$NON-NLS-1$
 
 		/**
-		 * <p>
 		 * Specifies whether or not the workspace selection dialog should be
 		 * shown on startup.
-		 * </p>
-		 * <p>
 		 * The default value for this preference is <code>true</code>.
-		 * </p>
 		 *
 		 * @since 3.1
 		 */
 		public static final String SHOW_WORKSPACE_SELECTION_DIALOG = "SHOW_WORKSPACE_SELECTION_DIALOG"; //$NON-NLS-1$
 
 		/**
-		 * <p>
 		 * Stores the maximum number of workspaces that should be displayed in
 		 * the ChooseWorkspaceDialog.
-		 * </p>
 		 *
 		 * @since 3.1
 		 */
 		public static final String MAX_RECENT_WORKSPACES = "MAX_RECENT_WORKSPACES"; //$NON-NLS-1$
 
 		/**
-		 * <p>
 		 * Stores a comma separated list of the recently used workspace paths.
-		 * </p>
 		 *
 		 * @since 3.1
 		 */
 		public static final String RECENT_WORKSPACES = "RECENT_WORKSPACES"; //$NON-NLS-1$
 
 		/**
-		 * <p>
 		 * Stores the version of the protocol used to decode/encode the list of
 		 * recent workspaces.
-		 * </p>
 		 *
 		 * @since 3.1
 		 */
@@ -405,10 +386,8 @@ public final class IDE {
 
 	/**
 	 * Opens an editor on the given object.
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened.
-	 * <p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -434,14 +413,10 @@ public final class IDE {
 
 	/**
 	 * Opens an editor on the given IFileStore object.
-	 * <p>
 	 * Unlike the other <code>openEditor</code> methods, this one can be used to
 	 * open files that reside outside the workspace resource set.
-	 * </p>
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened.
-	 * </p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -542,11 +517,9 @@ public final class IDE {
 
 	/**
 	 * Opens an editor on the given object.
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened. If
 	 * <code>activate == true</code> the editor will be activated.
-	 * <p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -577,11 +550,9 @@ public final class IDE {
 	 * Opens an editor on the given file resource. This method will attempt to
 	 * resolve the editor based on content-type bindings as well as traditional
 	 * name/extension bindings.
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened. If
 	 * <code>activate == true</code> the editor will be activated.
-	 * <p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -605,11 +576,9 @@ public final class IDE {
 	 * resolve the editor based on content-type bindings as well as traditional
 	 * name/extension bindings if <code>determineContentType</code> is
 	 * <code>true</code>.
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened. If
 	 * <code>activate == true</code> the editor will be activated.
-	 * <p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -642,10 +611,8 @@ public final class IDE {
 	 * Opens an editor on the given file resource. This method will attempt to
 	 * resolve the editor based on content-type bindings as well as traditional
 	 * name/extension bindings.
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened.
-	 * <p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -670,10 +637,8 @@ public final class IDE {
 
 	/**
 	 * Opens an editor on the given file resource.
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened.
-	 * <p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -699,11 +664,9 @@ public final class IDE {
 
 	/**
 	 * Opens an editor on the given file resource.
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened. If
 	 * <code>activate == true</code> the editor will be activated.
-	 * <p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -733,11 +696,9 @@ public final class IDE {
 	/**
 	 * Returns an editor descriptor appropriate for opening the given file
 	 * resource.
-	 * <p>
 	 * The editor descriptor is determined using a multi-step process. This
 	 * method will attempt to resolve the editor based on content-type bindings
 	 * as well as traditional name/extension bindings.
-	 * </p>
 	 * <ol>
 	 * <li>The file is consulted for a persistent property named
 	 * <code>IDE.EDITOR_KEY</code> containing the preferred editor id to be
@@ -751,7 +712,6 @@ public final class IDE {
 	 * <li>The operating system is consulted to determine if an external editor
 	 * is available.</li>
 	 * </ol>
-	 * </p>
 	 *
 	 * @param file
 	 *            the file
@@ -766,12 +726,10 @@ public final class IDE {
 	/**
 	 * Returns an editor descriptor appropriate for opening the given file
 	 * resource.
-	 * <p>
 	 * The editor descriptor is determined using a multi-step process. This
 	 * method will attempt to resolve the editor based on content-type bindings
 	 * as well as traditional name/extension bindings if
 	 * <code>determineContentType</code>is <code>true</code>.
-	 * </p>
 	 * <ol>
 	 * <li>The file is consulted for a persistent property named
 	 * <code>IDE.EDITOR_KEY</code> containing the preferred editor id to be
@@ -785,7 +743,6 @@ public final class IDE {
 	 * <li>The operating system is consulted to determine if an external editor
 	 * is available.</li>
 	 * </ol>
-	 * </p>
 	 *
 	 * @param file
 	 *            the file
@@ -807,11 +764,9 @@ public final class IDE {
 
 	/**
 	 * Returns an editor id appropriate for opening the given file store.
-	 * <p>
 	 * The editor descriptor is determined using a multi-step process. This
 	 * method will attempt to resolve the editor based on content-type bindings
 	 * as well as traditional name/extension bindings.
-	 * </p>
 	 * <ol>
 	 * <li>The workbench editor registry is consulted to determine if an editor
 	 * extension has been registered for the file type. If so, an instance of
@@ -822,7 +777,6 @@ public final class IDE {
 	 * <li>The operating system is consulted to determine if an external editor
 	 * is available.</li>
 	 * </ol>
-	 * </p>
 	 *
 	 * @param fileStore
 	 *            the file store
@@ -861,10 +815,8 @@ public final class IDE {
 	/**
 	 * Returns an editor descriptor appropriate for opening a file resource with
 	 * the given name.
-	 * <p>
 	 * The editor descriptor is determined using a multi-step process. This
 	 * method will attempt to infer content type from the file name.
-	 * </p>
 	 * <ol>
 	 * <li>The file is consulted for a persistent property named
 	 * <code>IDE.EDITOR_KEY</code> containing the preferred editor id to be
@@ -878,7 +830,6 @@ public final class IDE {
 	 * <li>The operating system is consulted to determine if an external editor
 	 * is available.</li>
 	 * </ol>
-	 * </p>
 	 *
 	 * @param name
 	 *            the file name
@@ -894,11 +845,9 @@ public final class IDE {
 	/**
 	 * Returns an editor descriptor appropriate for opening a file resource with
 	 * the given name.
-	 * <p>
 	 * The editor descriptor is determined using a multi-step process. This
 	 * method will attempt to infer the content type of the file if
 	 * <code>inferContentType</code> is <code>true</code>.
-	 * </p>
 	 * <ol>
 	 * <li>The file is consulted for a persistent property named
 	 * <code>IDE.EDITOR_KEY</code> containing the preferred editor id to be
@@ -912,7 +861,6 @@ public final class IDE {
 	 * <li>The operating system is consulted to determine if an external editor
 	 * is available.</li>
 	 * </ol>
-	 * </p>
 	 *
 	 * @param name
 	 *            the file name
@@ -987,17 +935,13 @@ public final class IDE {
 
 	/**
 	 * Opens an editor on the file resource of the given marker.
-	 * <p>
 	 * If this page already has an editor open on the marker resource file that
 	 * editor is brought to front; otherwise, a new editor is opened.The cursor
 	 * and selection state of the editor are then updated from information
 	 * recorded in the marker.
-	 * </p>
-	 * <p>
 	 * If the marker contains an <code>EDITOR_ID_ATTR</code> attribute the
 	 * attribute value will be used to determine the editor type to be opened.
 	 * If not, the registered editor for the marker resource file will be used.
-	 * </p>
 	 *
 	 * @param page
 	 *            the workbench page to open the editor in
@@ -1015,18 +959,14 @@ public final class IDE {
 
 	/**
 	 * Opens an editor on the file resource of the given marker.
-	 * <p>
 	 * If this page already has an editor open on the marker resource file that
 	 * editor is brought to front; otherwise, a new editor is opened. If
 	 * <code>activate == true</code> the editor will be activated. The cursor
 	 * and selection state of the editor are then updated from information
 	 * recorded in the marker.
-	 * </p>
-	 * <p>
 	 * If the marker contains an <code>EDITOR_ID_ATTR</code> attribute the
 	 * attribute value will be used to determine the editor type to be opened.
 	 * If not, the registered editor for the marker resource file will be used.
-	 * </p>
 	 *
 	 * @param page
 	 *            the workbench page to open the editor in
@@ -1081,14 +1021,10 @@ public final class IDE {
 
 	/**
 	 * Opens an editor on the given IFileStore object.
-	 * <p>
 	 * Unlike the other <code>openEditor</code> methods, this one can be used to
 	 * open files that reside outside the workspace resource set.
-	 * </p>
-	 * <p>
 	 * If the page already has an editor open on the target object then that
 	 * editor is brought to front; otherwise, a new editor is opened.
-	 * </p>
 	 *
 	 * @param page
 	 *            the page in which the editor will be opened
@@ -1184,13 +1120,11 @@ public final class IDE {
 	 * Returns the default editor for a given file. This method will attempt to
 	 * resolve the editor based on content-type bindings as well as traditional
 	 * name/extension bindings.
-	 * <p>
 	 * A default editor id may be registered for a specific file using
 	 * <code>setDefaultEditor</code>. If the given file has a registered default
 	 * editor id the default editor will derived from it. If not, the default
 	 * editor is determined by taking the file name for the file and obtaining
 	 * the default editor for that name.
-	 * </p>
 	 *
 	 * @param file
 	 *            the file
@@ -1206,13 +1140,11 @@ public final class IDE {
 	 * resolve the editor based on content-type bindings as well as traditional
 	 * name/extension bindings if <code>determineContentType</code> is
 	 * <code>true</code>.
-	 * <p>
 	 * A default editor id may be registered for a specific file using
 	 * <code>setDefaultEditor</code>. If the given file has a registered default
 	 * editor id the default editor will derived from it. If not, the default
 	 * editor is determined by taking the file name for the file and obtaining
 	 * the default editor for that name.
-	 * </p>
 	 *
 	 * @param file
 	 *            the file

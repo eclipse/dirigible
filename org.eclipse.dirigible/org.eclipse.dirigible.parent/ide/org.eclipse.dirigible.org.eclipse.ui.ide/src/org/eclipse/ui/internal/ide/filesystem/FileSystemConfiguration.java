@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  ******************************************************************************/
 
 package org.eclipse.ui.internal.ide.filesystem;
@@ -16,9 +15,8 @@ import org.eclipse.ui.ide.fileSystem.FileSystemContributor;
 /**
  * FileSystemContribution is the representation of the configuration element
  * defined by
- * 
+ *
  * @since 3.2
- * 
  */
 public class FileSystemConfiguration {
 
@@ -31,21 +29,23 @@ public class FileSystemConfiguration {
 	/**
 	 * Create a new FileSystemConfiguration with the defined contributor and
 	 * userLabel for the supplied scheme.
-	 * 
+	 *
 	 * @param name
+	 *            the name
 	 * @param declaredContributor
+	 *            the declared contributor
 	 * @param fileSystem
+	 *            the file system
 	 */
-	public FileSystemConfiguration(String name,
-			FileSystemContributor declaredContributor, String fileSystem) {
+	public FileSystemConfiguration(String name, FileSystemContributor declaredContributor, String fileSystem) {
 		label = name;
 		contributor = declaredContributor;
 		scheme = fileSystem;
 	}
 
 	/**
-	 * Return the huuman readable label for the receiver.
-	 * 
+	 * Return the human readable label for the receiver.
+	 *
 	 * @return String
 	 */
 	public String getLabel() {
@@ -54,7 +54,7 @@ public class FileSystemConfiguration {
 
 	/**
 	 * Return the contributor for the receiver.
-	 * 
+	 *
 	 * @return FileSystemContributor
 	 */
 	public FileSystemContributor getContributor() {
@@ -63,7 +63,7 @@ public class FileSystemConfiguration {
 
 	/**
 	 * Return the filesystem scheme for the receiver.
-	 * 
+	 *
 	 * @return Returns the scheme.
 	 */
 	public String getScheme() {

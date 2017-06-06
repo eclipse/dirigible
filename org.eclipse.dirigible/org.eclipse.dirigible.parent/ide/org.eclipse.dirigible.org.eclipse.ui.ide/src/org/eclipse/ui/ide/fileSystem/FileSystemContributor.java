@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  ******************************************************************************/
 
 package org.eclipse.ui.ide.fileSystem;
@@ -21,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
  * provides the infrastructure for defining a contributor and fulfills the
  * contract specified by the <code>org.eclipse.ui.ide.filesystemSupport</code>
  * extension point.
- * 
+ *
  * @since 3.2
  * @see org.eclipse.core.filesystem.IFileSystem
  */
@@ -29,7 +28,7 @@ public abstract class FileSystemContributor {
 
 	/**
 	 * Browse the file system for a URI to display to the user.
-	 * 
+	 *
 	 * @param initialPath
 	 *            The path to initialize the selection with.
 	 * @param shell
@@ -41,8 +40,9 @@ public abstract class FileSystemContributor {
 
 	/**
 	 * Return a URI for the supplied String from the user.
-	 * 
+	 *
 	 * @param string
+	 *            the URI
 	 * @return URI or <code>null</code> if the string is invalid.
 	 */
 	public URI getURI(String string) {

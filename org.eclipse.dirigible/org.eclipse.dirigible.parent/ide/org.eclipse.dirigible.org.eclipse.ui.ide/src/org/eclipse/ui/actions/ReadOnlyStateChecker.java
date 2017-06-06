@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.actions;
 
@@ -48,7 +47,7 @@ public class ReadOnlyStateChecker {
 	/**
 	 * Create a new checker that parents the dialog off of parent using the
 	 * supplied title and message.
-	 * 
+	 *
 	 * @param parent
 	 *            the shell used for dialogs
 	 * @param title
@@ -69,8 +68,7 @@ public class ReadOnlyStateChecker {
 	 * need to be checked too. Return true if all items are selected and false
 	 * if any are skipped.
 	 */
-	private boolean checkAcceptedResource(IResource resourceToCheck,
-			List<IResource> selectedChildren) throws CoreException {
+	private boolean checkAcceptedResource(IResource resourceToCheck, List<IResource> selectedChildren) throws CoreException {
 
 		if (resourceToCheck.getType() == IResource.FILE) {
 			selectedChildren.add(resourceToCheck);
@@ -82,8 +80,7 @@ public class ReadOnlyStateChecker {
 			// it's children. bug 99858
 			if (container.isAccessible()) {
 				// Now check below
-				int childCheck = checkReadOnlyResources(container.members(),
-						selectedChildren);
+				int childCheck = checkReadOnlyResources(container.members(), selectedChildren);
 				// Add in the resource only if nothing was left out
 				if (childCheck == IDialogConstants.YES_TO_ALL_ID) {
 					selectedChildren.add(resourceToCheck);
@@ -103,8 +100,9 @@ public class ReadOnlyStateChecker {
 	 * Check the supplied resources to see if they are read only. If so then
 	 * prompt the user to see if they can be deleted.Return those that were
 	 * accepted.
-	 * 
+	 *
 	 * @param itemsToCheck
+	 *            items to check
 	 * @return the resulting selected resources
 	 */
 	public IResource[] checkReadOnlyResources(IResource[] itemsToCheck) {
@@ -115,9 +113,9 @@ public class ReadOnlyStateChecker {
 			result = checkReadOnlyResources(itemsToCheck, selections);
 		} catch (final CoreException exception) {
 			shell.getDisplay().syncExec(new Runnable() {
+				@Override
 				public void run() {
-					ErrorDialog.openError(shell, READ_ONLY_EXCEPTION_MESSAGE,
-							null, exception.getStatus());
+					ErrorDialog.openError(shell, READ_ONLY_EXCEPTION_MESSAGE, null, exception.getStatus());
 				}
 			});
 		}
@@ -138,7 +136,7 @@ public class ReadOnlyStateChecker {
 
 	/**
 	 * Check the children of the container to see if they are read only.
-	 * 
+	 *
 	 * @return int one of YES_TO_ALL_ID - all elements were selected NO_ID - No
 	 *         was hit at some point CANCEL_ID - cancel was hit
 	 * @param itemsToCheck
@@ -146,8 +144,7 @@ public class ReadOnlyStateChecker {
 	 * @param allSelected
 	 *            the List of currently selected resources to add to.
 	 */
-	private int checkReadOnlyResources(IResource[] itemsToCheck,
-			List<IResource> allSelected) throws CoreException {
+	private int checkReadOnlyResources(IResource[] itemsToCheck, List<IResource> allSelected) throws CoreException {
 
 		// Shortcut. If the user has already selected yes to all then just
 		// return it
@@ -158,16 +155,12 @@ public class ReadOnlyStateChecker {
 		boolean noneSkipped = true;
 		List<IResource> selectedChildren = new ArrayList<IResource>();
 
-		for (int i = 0; i < itemsToCheck.length; i++) {
-			IResource resourceToCheck = itemsToCheck[i];
-			ResourceAttributes checkAttributes = resourceToCheck
-					.getResourceAttributes();
-			if (!yesToAllSelected && shouldCheck(resourceToCheck)
-					&& checkAttributes != null && checkAttributes.isReadOnly()) {
+		for (IResource resourceToCheck : itemsToCheck) {
+			ResourceAttributes checkAttributes = resourceToCheck.getResourceAttributes();
+			if (!yesToAllSelected && shouldCheck(resourceToCheck) && (checkAttributes != null) && checkAttributes.isReadOnly()) {
 				int action = queryYesToAllNoCancel(resourceToCheck);
 				if (action == IDialogConstants.YES_ID) {
-					boolean childResult = checkAcceptedResource(
-							resourceToCheck, selectedChildren);
+					boolean childResult = checkAcceptedResource(resourceToCheck, selectedChildren);
 					if (!childResult) {
 						noneSkipped = false;
 					}
@@ -184,8 +177,7 @@ public class ReadOnlyStateChecker {
 					selectedChildren.add(resourceToCheck);
 				}
 			} else {
-				boolean childResult = checkAcceptedResource(resourceToCheck,
-						selectedChildren);
+				boolean childResult = checkAcceptedResource(resourceToCheck, selectedChildren);
 				if (cancelSelected) {
 					return IDialogConstants.CANCEL_ID;
 				}
@@ -206,7 +198,7 @@ public class ReadOnlyStateChecker {
 
 	/**
 	 * Returns whether the given resource should be checked for read-only state.
-	 * 
+	 *
 	 * @param resourceToCheck
 	 *            the resource to check
 	 * @return <code>true</code> to check it, <code>false</code> to skip it
@@ -223,23 +215,20 @@ public class ReadOnlyStateChecker {
 	/**
 	 * Open a message dialog with Yes No, Yes To All and Cancel buttons. Return
 	 * the code that indicates the selection.
-	 * 
+	 *
 	 * @return int one of YES_TO_ALL_ID YES_ID NO_ID CANCEL_ID
-	 * 
 	 * @param resource
 	 *            - the resource being queried.
 	 */
 	private int queryYesToAllNoCancel(IResource resource) {
 
-		final MessageDialog dialog = new MessageDialog(this.shell,
-				this.titleMessage, null, MessageFormat.format(this.mainMessage,
-						new Object[] { resource.getName() }),
-				MessageDialog.QUESTION, new String[] {
-						IDialogConstants.get().YES_LABEL,
-						IDialogConstants.get().YES_TO_ALL_LABEL,
-						IDialogConstants.get().NO_LABEL,
-						IDialogConstants.get().CANCEL_LABEL }, 0);
+		final MessageDialog dialog = new MessageDialog(this.shell, this.titleMessage, null,
+				MessageFormat.format(this.mainMessage, new Object[] { resource.getName() }), MessageDialog.QUESTION,
+				new String[] { IDialogConstants.get().YES_LABEL, IDialogConstants.get().YES_TO_ALL_LABEL, IDialogConstants.get().NO_LABEL,
+						IDialogConstants.get().CANCEL_LABEL },
+				0);
 		shell.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				dialog.open();
 			}
@@ -259,7 +248,7 @@ public class ReadOnlyStateChecker {
 
 	/**
 	 * Returns whether to ignore linked resources.
-	 * 
+	 *
 	 * @return <code>true</code> to ignore linked resources, <code>false</code>
 	 *         to consider them
 	 * @since 3.1
@@ -271,7 +260,7 @@ public class ReadOnlyStateChecker {
 	/**
 	 * Sets whether to ignore linked resources. The default is
 	 * <code>false</code>.
-	 * 
+	 *
 	 * @param ignore
 	 *            <code>true</code> to ignore linked resources,
 	 *            <code>false</code> to consider them

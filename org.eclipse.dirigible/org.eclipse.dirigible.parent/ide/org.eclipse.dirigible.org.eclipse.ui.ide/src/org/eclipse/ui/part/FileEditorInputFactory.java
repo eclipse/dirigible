@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.part;
 
@@ -14,10 +13,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
-
-import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
 
 /**
  * Factory for saving and restoring a <code>FileEditorInput</code>. The stored
@@ -27,9 +25,6 @@ import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
  * The workbench will automatically create instances of this class as required.
  * It is not intended to be instantiated or subclassed by the client.
  * </p>
- * 
- * @noinstantiate This class is not intended to be instantiated by clients.
- * @noextend This class is not intended to be subclassed by clients.
  */
 public class FileEditorInputFactory implements IElementFactory {
 	/**
@@ -52,6 +47,7 @@ public class FileEditorInputFactory implements IElementFactory {
 	/*
 	 * (non-Javadoc) Method declared on IElementFactory.
 	 */
+	@Override
 	public IAdaptable createElement(IMemento memento) {
 		// Get the file name.
 		String fileName = memento.getString(TAG_PATH);
@@ -72,7 +68,7 @@ public class FileEditorInputFactory implements IElementFactory {
 
 	/**
 	 * Returns the element factory id for this class.
-	 * 
+	 *
 	 * @return the element factory id
 	 */
 	public static String getFactoryId() {
@@ -81,7 +77,7 @@ public class FileEditorInputFactory implements IElementFactory {
 
 	/**
 	 * Saves the state of the given file editor input into the given memento.
-	 * 
+	 *
 	 * @param memento
 	 *            the storage area for element state
 	 * @param input

@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.internal.ide.registry;
 
@@ -25,10 +24,8 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
  * Template implementation of a registry reader that creates objects
  * representing registry contents. Typically, an extension contains one element,
  * but this reader handles multiple elements per extension.
- * 
  * To start reading the extensions from the registry for an extension point,
  * call the method <code>readRegistry</code>.
- * 
  * To read children of an IConfigurationElement, call the method
  * <code>readElementChildren</code> from your implementation of the method
  * <code>readElement</code>, as it will not be done by default.
@@ -47,11 +44,12 @@ public abstract class IDERegistryReader {
 	protected static Hashtable<String, IExtension[]> extensionPoints = new Hashtable<String, IExtension[]>();
 
 	private static final Comparator<IExtension> comparer = new Comparator<IExtension>() {
+		@Override
 		@SuppressWarnings("deprecation")
 		public int compare(IExtension arg0, IExtension arg1) {
-			IExtension i1 = (IExtension) arg0;
+			IExtension i1 = arg0;
 			String s1 = i1.getNamespace();
-			IExtension i2 = (IExtension) arg1;
+			IExtension i2 = arg1;
 			String s2 = i2.getNamespace();
 			return s1.compareToIgnoreCase(s2);
 		}
@@ -65,7 +63,9 @@ public abstract class IDERegistryReader {
 
 	/**
 	 * This method extracts description as a subelement of the given element.
-	 * 
+	 *
+	 * @param config
+	 *            the config
 	 * @return description string if defined, or empty string if not.
 	 */
 	protected String getDescription(IConfigurationElement config) {
@@ -79,47 +79,62 @@ public abstract class IDERegistryReader {
 	/**
 	 * Logs the error in the workbench log using the provided text and the
 	 * information in the configuration element.
+	 *
+	 * @param element
+	 *            the element
+	 * @param text
+	 *            the text
 	 */
 	@SuppressWarnings("deprecation")
 	protected void logError(IConfigurationElement element, String text) {
 		IExtension extension = element.getDeclaringExtension();
 		String pluginId = extension.getNamespace();
 		StringBuffer buf = new StringBuffer();
-		buf.append(String.format(PLUGIN_S_EXTENSION_S, pluginId,
-				extension.getExtensionPointUniqueIdentifier()));
+		buf.append(String.format(PLUGIN_S_EXTENSION_S, pluginId, extension.getExtensionPointUniqueIdentifier()));
 		buf.append("\n" + text);//$NON-NLS-1$
 		IDEWorkbenchPlugin.log(buf.toString());
 	}
 
 	/**
 	 * Logs a very common registry error when a required attribute is missing.
+	 *
+	 * @param element
+	 *            the element
+	 * @param attributeName
+	 *            the attribute name
 	 */
-	protected void logMissingAttribute(IConfigurationElement element,
-			String attributeName) {
-		logError(element,
-				String.format(REQUIRED_ATTRIBUTE_S_NOT_DEFINED, attributeName));//$NON-NLS-2$//$NON-NLS-1$
+	protected void logMissingAttribute(IConfigurationElement element, String attributeName) {
+		logError(element, String.format(REQUIRED_ATTRIBUTE_S_NOT_DEFINED, attributeName));
 	}
 
 	/**
 	 * Logs a very common registry error when a required child is missing.
+	 *
+	 * @param element
+	 *            the element
+	 * @param elementName
+	 *            the name of the element
 	 */
-	protected void logMissingElement(IConfigurationElement element,
-			String elementName) {
-		logError(element,
-				String.format(REQUIRED_SUB_ELEMENT_S_NOT_DEFINED, elementName));//$NON-NLS-2$//$NON-NLS-1$
+	protected void logMissingElement(IConfigurationElement element, String elementName) {
+		logError(element, String.format(REQUIRED_SUB_ELEMENT_S_NOT_DEFINED, elementName));
 	}
 
 	/**
 	 * Logs a registry error when the configuration element is unknown.
+	 *
+	 * @param element
+	 *            the element
 	 */
 	protected void logUnknownElement(IConfigurationElement element) {
-		logError(element,
-				String.format(UNKNOWN_EXTENSION_TAG_FOUND_S, element.getName()));//$NON-NLS-1$
+		logError(element, String.format(UNKNOWN_EXTENSION_TAG_FOUND_S, element.getName()));
 	}
 
 	/**
 	 * Apply a reproducable order to the list of extensions provided, such that
 	 * the order will not change as extensions are added or removed.
+	 *
+	 * @param extensions
+	 *            the extensions
 	 */
 	protected IExtension[] orderExtensions(IExtension[] extensions) {
 		// By default, the order is based on plugin id sorted
@@ -137,7 +152,9 @@ public abstract class IDERegistryReader {
 	 * also be read, then implementor is responsible for calling
 	 * <code>readElementChildren</code>. Implementor is also responsible for
 	 * logging missing attributes.
-	 * 
+	 *
+	 * @param element
+	 *            the element
 	 * @return true if element was recognized, false if not.
 	 */
 	protected abstract boolean readElement(IConfigurationElement element);
@@ -145,6 +162,9 @@ public abstract class IDERegistryReader {
 	/**
 	 * Read the element's children. This is called by the subclass' readElement
 	 * method when it wants to read the children of the element.
+	 *
+	 * @param element
+	 *            the element
 	 */
 	protected void readElementChildren(IConfigurationElement element) {
 		readElements(element.getChildren());
@@ -153,8 +173,10 @@ public abstract class IDERegistryReader {
 	/**
 	 * Read each element one at a time by calling the subclass implementation of
 	 * <code>readElement</code>.
-	 * 
 	 * Logs an error if the element was not recognized.
+	 *
+	 * @param elements
+	 *            the elements
 	 */
 	protected void readElements(IConfigurationElement[] elements) {
 		for (int i = 0; i < elements.length; i++) {
@@ -166,6 +188,9 @@ public abstract class IDERegistryReader {
 
 	/**
 	 * Read one extension by looping through its configuration elements.
+	 *
+	 * @param extension
+	 *            the extension
 	 */
 	protected void readExtension(IExtension extension) {
 		readElements(extension.getConfigurationElements());
@@ -174,14 +199,19 @@ public abstract class IDERegistryReader {
 	/**
 	 * Start the registry reading process using the supplied plugin ID and
 	 * extension point.
+	 *
+	 * @param registry
+	 *            the registry
+	 * @param pluginId
+	 *            the plugin Id
+	 * @param extensionPoint
+	 *            the extension point
 	 */
-	protected void readRegistry(IExtensionRegistry registry, String pluginId,
-			String extensionPoint) {
+	protected void readRegistry(IExtensionRegistry registry, String pluginId, String extensionPoint) {
 		String pointId = pluginId + "-" + extensionPoint; //$NON-NLS-1$
-		IExtension[] extensions = (IExtension[]) extensionPoints.get(pointId);
+		IExtension[] extensions = extensionPoints.get(pointId);
 		if (extensions == null) {
-			IExtensionPoint point = registry.getExtensionPoint(pluginId,
-					extensionPoint);
+			IExtensionPoint point = registry.getExtensionPoint(pluginId, extensionPoint);
 			if (point == null) {
 				return;
 			}
@@ -189,8 +219,8 @@ public abstract class IDERegistryReader {
 			extensions = orderExtensions(extensions);
 			extensionPoints.put(pointId, extensions);
 		}
-		for (int i = 0; i < extensions.length; i++) {
-			readExtension(extensions[i]);
+		for (IExtension extension : extensions) {
+			readExtension(extension);
 		}
 	}
 }

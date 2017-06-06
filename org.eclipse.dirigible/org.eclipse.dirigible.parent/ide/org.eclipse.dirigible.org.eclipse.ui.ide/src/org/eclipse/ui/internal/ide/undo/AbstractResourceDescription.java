@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.ui.internal.ide.undo;
@@ -18,18 +17,15 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.ui.ide.undo.ResourceDescription;
-
 import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
+import org.eclipse.ui.ide.undo.ResourceDescription;
 
 /**
  * Base implementation of ResourceDescription that describes the common
  * attributes of a resource to be created.
- * 
  * This class is not intended to be instantiated or used by clients.
- * 
+ *
  * @since 3.3
- * 
  */
 abstract class AbstractResourceDescription extends ResourceDescription {
 	IContainer parent;
@@ -51,7 +47,7 @@ abstract class AbstractResourceDescription extends ResourceDescription {
 
 	/**
 	 * Create a resource description from the specified resource.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to be described
 	 */
@@ -63,8 +59,7 @@ abstract class AbstractResourceDescription extends ResourceDescription {
 			localTimeStamp = resource.getLocalTimeStamp();
 			resourceAttributes = resource.getResourceAttributes();
 			try {
-				IMarker[] markers = resource.findMarkers(null, true,
-						IResource.DEPTH_INFINITE);
+				IMarker[] markers = resource.findMarkers(null, true, IResource.DEPTH_INFINITE);
 				markerDescriptions = new MarkerDescription[markers.length];
 				for (int i = 0; i < markers.length; i++) {
 					markerDescriptions[i] = new MarkerDescription(markers[i]);
@@ -80,13 +75,12 @@ abstract class AbstractResourceDescription extends ResourceDescription {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.eclipse.ui.ide.undo.ResourceDescription#createResource(org.eclipse
 	 * .core.runtime.IProgressMonitor)
 	 */
-	public IResource createResource(IProgressMonitor monitor)
-			throws CoreException {
+	@Override
+	public IResource createResource(IProgressMonitor monitor) throws CoreException {
 		IResource resource = createResourceHandle();
 		createExistentResourceFromHandle(resource, monitor);
 		restoreResourceAttributes(resource);
@@ -95,24 +89,24 @@ abstract class AbstractResourceDescription extends ResourceDescription {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.ide.undo.ResourceDescription#isValid()
 	 */
+	@Override
 	public boolean isValid() {
-		return parent == null || parent.exists();
+		return (parent == null) || parent.exists();
 	}
 
 	/**
 	 * Restore any saved attributed of the specified resource. This method is
 	 * called after the existent resource represented by the receiver has been
 	 * created.
-	 * 
+	 *
 	 * @param resource
 	 *            the newly created resource
 	 * @throws CoreException
+	 *             Core Exception
 	 */
-	protected void restoreResourceAttributes(IResource resource)
-			throws CoreException {
+	protected void restoreResourceAttributes(IResource resource) throws CoreException {
 		if (modificationStamp != IResource.NULL_STAMP) {
 			resource.revertModificationStamp(modificationStamp);
 		}
@@ -123,9 +117,10 @@ abstract class AbstractResourceDescription extends ResourceDescription {
 			resource.setResourceAttributes(resourceAttributes);
 		}
 		if (markerDescriptions != null) {
-			for (int i = 0; i < markerDescriptions.length; i++) {
-				if (markerDescriptions[i].resource.exists())
-					markerDescriptions[i].createMarker();
+			for (MarkerDescription markerDescription : markerDescriptions) {
+				if (markerDescription.resource.exists()) {
+					markerDescription.createMarker();
+				}
 			}
 		}
 	}
@@ -139,9 +134,9 @@ abstract class AbstractResourceDescription extends ResourceDescription {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.ide.undo.ResourceDescription#verifyExistence(boolean)
 	 */
+	@Override
 	public boolean verifyExistence(boolean checkMembers) {
 		IContainer p = parent;
 		if (p == null) {
