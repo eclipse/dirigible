@@ -41,8 +41,8 @@ public class Document extends CmisObject {
 	/**
 	 * Returns the ContentStream representing the contents of this Document
 	 *
-	 * @return
-	 * @throws IOException
+	 * @return Content Stream
+	 * @throws IOException IO Exception
 	 */
 	public ContentStream getContentStream() throws IOException {
 		byte[] content = this.internalResource.getContent();

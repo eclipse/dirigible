@@ -18,7 +18,7 @@ public class CmisSession {
 	/**
 	 * Returns the information about the CMIS repository
 	 *
-	 * @return
+	 * @return Repository Info
 	 */
 	public RepositoryInfo getRepositoryInfo() {
 		return new RepositoryInfo(this);
@@ -27,7 +27,7 @@ public class CmisSession {
 	/**
 	 * Returns the ObjectFactory utility
 	 *
-	 * @return
+	 * @return Object Factory
 	 */
 	public ObjectFactory getObjectFactory() {
 		return new ObjectFactory(this);
@@ -36,8 +36,8 @@ public class CmisSession {
 	/**
 	 * Returns the root folder of this repository
 	 *
-	 * @return
-	 * @throws IOException
+	 * @return Folder
+	 * @throws IOException IO Exception
 	 */
 	public Folder getRootFolder() throws IOException {
 		return new Folder(this);
@@ -46,8 +46,10 @@ public class CmisSession {
 	/**
 	 * Returns a CMIS Object by name
 	 *
-	 * @return
-	 * @throws IOException
+	 * @param id the Id
+	 * 
+	 * @return CMIS Object
+	 * @throws IOException IO Exception
 	 */
 	public CmisObject getObject(String id) throws IOException {
 		CmisObject cmisObject = new CmisObject(this, id);
@@ -65,8 +67,10 @@ public class CmisSession {
 	/**
 	 * Returns a CMIS Object by path
 	 *
-	 * @return
-	 * @throws IOException
+	 * @param the path
+	 * 
+	 * @return CMIS Object
+	 * @throws IOException IO Exception
 	 */
 	public CmisObject getObjectByPath(String path) throws IOException {
 		return getObject(path);

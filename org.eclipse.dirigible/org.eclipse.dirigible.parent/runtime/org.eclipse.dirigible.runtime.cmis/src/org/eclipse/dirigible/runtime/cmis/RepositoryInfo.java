@@ -12,7 +12,7 @@ public class RepositoryInfo {
 	/**
 	 * Returns the ID of the CMIS repository
 	 *
-	 * @return
+	 * @return the Id
 	 */
 	public String getId() {
 		return this.session.getCmisRepository().getInternalObject().getClass().getCanonicalName();
@@ -21,7 +21,7 @@ public class RepositoryInfo {
 	/**
 	 * Returns the Name of the CMIS repository
 	 *
-	 * @return
+	 * @return the Name
 	 */
 	public String getName() {
 		return this.session.getCmisRepository().getInternalObject().getClass().getCanonicalName();
