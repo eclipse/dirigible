@@ -6,7 +6,7 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.runtime.repository.processor.RepositoryJsonHelper;
+import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 
 /**
  * Processing the Registry Service incoming requests 

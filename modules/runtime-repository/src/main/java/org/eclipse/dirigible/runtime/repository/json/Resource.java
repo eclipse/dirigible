@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.repository.processor;
+package org.eclipse.dirigible.runtime.repository.json;
 
 public class Resource {
 	

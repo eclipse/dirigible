@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.repository.processor;
+package org.eclipse.dirigible.runtime.repository.json;
 
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
