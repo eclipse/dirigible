@@ -45,8 +45,10 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Returns the path of this {@link Entity} represented by an instance of
+	 * Returns the path of this {@link IEntity} represented by an instance of
 	 * {@link RepositoryPath}.
+	 * 
+	 * @return Repository Path
 	 */
 	protected RepositoryPath getRepositoryPath() {
 		return this.path;
@@ -80,6 +82,9 @@ public abstract class LocalEntity implements IEntity {
 	 * Returns the {@link LocalObject} that matches this entity's path. If there is
 	 * no such object in the real repository, then <code>null</code> is
 	 * returned.
+	 * 
+	 * @return Local Object
+	 * @throws IOException IO Exception
 	 */
 	protected LocalObject getLocalObject() throws IOException {
 		try {
@@ -94,6 +99,9 @@ public abstract class LocalEntity implements IEntity {
 	 * Returns the {@link LocalObject} that matches this entity's path. If there is
 	 * no such object in the real repository, then an {@link IOException} is
 	 * thrown.
+	 * 
+	 * @return Local Object
+	 * @throws IOException IO Exception 
 	 */
 	protected LocalObject getLocalObjectSafe() throws IOException {
 		final LocalObject result = getLocalObject();
@@ -104,8 +112,10 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link CMISEntity} inside the
+	 * Creates all ancestors of the given {@link IEntity} inside the
 	 * repository if they don't already exist.
+	 * 
+	 * @throws IOException IO Exception
 	 */
 	protected void createAncestorsIfMissing() throws IOException {
 		final ICollection parent = getParent();
@@ -115,8 +125,10 @@ public abstract class LocalEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link CMISEntity} and itself too if
+	 * Creates all ancestors of the given {@link IEntity} and itself too if
 	 * they don't already exist.
+	 * 
+	 * @throws IOException IO Exception
 	 */
 	protected void createAncestorsAndSelfIfMissing() throws IOException {
 		createAncestorsIfMissing();

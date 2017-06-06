@@ -187,32 +187,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
 
 	@Override
 	public IResource getResource(String name) throws IOException {
-		// if (name != null
-		// && name.indexOf(IRepository.SEPARATOR) > -1) {
-		// name = name.substring(name.indexOf(IRepository.SEPARATOR) + 1);
-		// }
 		final RepositoryPath path = getRepositoryPath().append(name);
 		return new LocalResource(getRepository(), path);
 	}
-
-	// @Override
-	// public IResource createResource(String name) throws IOException {
-	// return createResource(name, null);
-	// }
-	//
-	// @Override
-	// public IResource createResource(String name, byte[] content)
-	// throws IOException {
-	// createAncestorsAndSelfIfMissing();
-	// final DBFolder folder = getFolderSafe();
-	// try {
-	// folder.createFile(name, content, false,
-	// IResource.CONTENT_TYPE_DEFAULT);
-	// } catch (DBBaseException ex) {
-	// throw new IOException(COULD_NOT_CREATE_CHILD_DOCUMENT + name, ex);
-	// }
-	// return getResource(name);
-	// }
 
 	@Override
 	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws IOException {
@@ -266,8 +243,11 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	}
 
 	/**
-	 * Returns the {@link Folder} object matching this {@link CMISContainer}. If
+	 * Returns the {@link LocalFolder} object matching this container. If
 	 * there is no such object, then <code>null</code> is returned.
+	 * 
+	 * @return Local Folder
+	 * @throws IOException IO Exception
 	 */
 	protected LocalFolder getFolder() throws IOException {
 		final LocalObject object = getLocalObject();
@@ -283,6 +263,9 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	/**
 	 * Returns the {@link LocalFolder} object matching this {@link DBCollection}.
 	 * If there is no such object, then an {@link IOException} is thrown.
+	 * 
+	 * @return Local Folder
+	 * @throws IOException IO Exception
 	 */
 	protected LocalFolder getFolderSafe() throws IOException {
 		final LocalFolder folder = getFolder();
