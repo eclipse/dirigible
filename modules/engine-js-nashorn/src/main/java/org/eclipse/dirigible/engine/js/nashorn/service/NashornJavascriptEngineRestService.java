@@ -42,10 +42,12 @@ public class NashornJavascriptEngineRestService implements IRestService {
 	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
 			ThreadContextFacade.setUp();
-			ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
-			ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
 			try {
+				ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
+				ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
+				
 				processor.executeService(path);
+				
 				return Response.ok().build();
 			} finally {
 				ThreadContextFacade.tearDown();

@@ -223,7 +223,8 @@ public abstract class FileSystemRepository implements IRepository {
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override) throws RepositoryWriteException {
 		logger.debug("entering createResource with Content"); //$NON-NLS-1$
 		try {
-			getRepositoryDAO().createFile(path, content, isBinary, contentType);
+			final RepositoryPath wrapperPath = new RepositoryPath(path);
+			getRepositoryDAO().createFile(wrapperPath.toString(), content, isBinary, contentType);
 		} catch (LocalRepositoryException e) {
 			throw new RepositoryWriteException(e);
 		}

@@ -110,6 +110,7 @@ public class DerbyDatabase implements IDatabase {
 
 	private String prepareRootFolder(String name) throws IOException {
 		// TODO validate name parameter
+		// TODO get by name form Configuration
 		
 		String rootFolder = (IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? 
 				DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT :

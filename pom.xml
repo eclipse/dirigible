@@ -353,6 +353,9 @@
 		<module>modules/database-derby</module>
 
 		<module>modules/runtime-core</module>
+		<module>modules/runtime-repository</module>
+		<module>modules/runtime-registry</module>
+		<module>modules/runtime-workspaces</module>
 
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>

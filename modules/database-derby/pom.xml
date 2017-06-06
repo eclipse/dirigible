@@ -9,7 +9,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Datasource - Local</name>
+	<name>Database - Derby</name>
 	<artifactId>dirigible-database-derby</artifactId>
     <packaging>jar</packaging>
     

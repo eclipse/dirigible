@@ -32,7 +32,6 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		Configuration.load("/dirigible-database.properties");
 		
 		String databaseProvider = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, IDatabase.DIRIGIBLE_DATABASE_PROVIDER_LOCAL);
-		System.out.println(">>>>>>>>> " + databaseProvider);
 		for (IDatabase database : DATABASES) {
 			if (database.getType().equals(databaseProvider)) {
 				bind(IDatabase.class).toInstance(database);

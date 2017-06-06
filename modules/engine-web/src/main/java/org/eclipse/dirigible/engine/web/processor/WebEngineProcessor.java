@@ -1,28 +1,31 @@
 package org.eclipse.dirigible.engine.web.processor;
 
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
 
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.repository.api.IResource;
 
-
+/**
+ * Processing the incoming requests for the raw web content.
+ * It supports only GET requests
+ *
+ */
 public class WebEngineProcessor {
-	
-	private static final Logger logger = LoggerFactory.getLogger(WebEngineProcessor.class.getCanonicalName());
 	
 	@Inject
 	private IRepository repository;
 	
-	public String getResource(String path) {
-		try {
-			return new String(repository.getResource(path).getContent());
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new NotFoundException(e);
-		}
-		
+	/**
+	 * 
+	 * @param path the requested resource location
+	 * @return the {@link IResource} instance
+	 */
+	public IResource getResource(String path) {
+		StringBuilder registryPath = new StringBuilder(IRepositoryStructure.REGISTRY_PUBLIC)
+				.append(IRepositoryStructure.SEPARATOR)
+				.append(path);
+		return repository.getResource(registryPath.toString());
 	}
 
 }
