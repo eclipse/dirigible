@@ -112,8 +112,11 @@ public abstract class RCPEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link CMISEntity} inside the
+	 * Creates all ancestors of the given {@link IEntity} inside the
 	 * repository if they don't already exist.
+	 *
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	protected void createAncestorsIfMissing() throws IOException {
 		final ICollection parent = getParent();
@@ -125,6 +128,9 @@ public abstract class RCPEntity implements IEntity {
 	/**
 	 * Creates all ancestors of the given {@link IEntity} and itself too if
 	 * they don't already exist.
+	 *
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	protected void createAncestorsAndSelfIfMissing() throws IOException {
 		createAncestorsIfMissing();

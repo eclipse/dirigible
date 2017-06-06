@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
  * The DB implementation of {@link IResource}
@@ -31,8 +30,6 @@ public class RCPResource extends RCPEntity implements IResource {
 	private static final String NOT_IMPLEMENTED = Messages.getString("DBResource.NOT_IMPLEMENTED"); //$NON-NLS-1$
 	private static final String COULD_NOT_DELETE_RESOURCE = Messages.getString("DBResource.COULD_NOT_DELETE_RESOURCE"); //$NON-NLS-1$
 	private static final String COULD_NOT_RENAME_RESOURCE = Messages.getString("DBResource.COULD_NOT_RENAME_RESOURCE"); //$NON-NLS-1$
-
-	private static final Logger logger = Logger.getLogger(RCPResource.class);
 
 	private boolean binary = false;
 
@@ -168,6 +165,10 @@ public class RCPResource extends RCPEntity implements IResource {
 	/**
 	 * Returns the {@link RCPFile} object matching this {@link RCPResource}. If
 	 * there is no such object, then an {@link IOException} is thrown.
+	 *
+	 * @return RCP File
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	protected RCPFile getDocumentSafe() throws IOException {
 		final RCPFile document = getDocument();
