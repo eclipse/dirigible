@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.rcp;
@@ -23,7 +22,6 @@ import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
  * The DB implementation of {@link IEntity}
- * 
  */
 public abstract class RCPEntity implements IEntity {
 
@@ -47,8 +45,10 @@ public abstract class RCPEntity implements IEntity {
 	}
 
 	/**
-	 * Returns the path of this {@link Entity} represented by an instance of
+	 * Returns the path of this {@link IEntity} represented by an instance of
 	 * {@link RepositoryPath}.
+	 *
+	 * @return Repository Path
 	 */
 	protected RepositoryPath getRepositoryPath() {
 		return this.path;
@@ -82,11 +82,12 @@ public abstract class RCPEntity implements IEntity {
 	 * Returns the {@link RCPObject} that matches this entity's path. If there is
 	 * no such object in the real repository, then <code>null</code> is
 	 * returned.
+	 *
+	 * @return RCP Object
 	 */
-	protected RCPObject getRCPObject() throws IOException {
+	protected RCPObject getRCPObject() {
 		try {
-			return this.repository.getRepositoryDAO()
-					.getObjectByPath(getPath());
+			return this.repository.getRepositoryDAO().getObjectByPath(getPath());
 		} catch (RCPBaseException ex) {
 			logger.error(ex.getMessage(), ex);
 			return null;
@@ -97,12 +98,15 @@ public abstract class RCPEntity implements IEntity {
 	 * Returns the {@link RCPObject} that matches this entity's path. If there is
 	 * no such object in the real repository, then an {@link IOException} is
 	 * thrown.
+	 *
+	 * @return RCP Object
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	protected RCPObject getRCPObjectSafe() throws IOException {
 		final RCPObject result = getRCPObject();
 		if (result == null) {
-			throw new IOException(format(THERE_IS_NO_ENTITY_AT_PATH_0,
-					this.path.toString()));
+			throw new IOException(format(THERE_IS_NO_ENTITY_AT_PATH_0, this.path.toString()));
 		}
 		return result;
 	}
@@ -119,7 +123,7 @@ public abstract class RCPEntity implements IEntity {
 	}
 
 	/**
-	 * Creates all ancestors of the given {@link CMISEntity} and itself too if
+	 * Creates all ancestors of the given {@link IEntity} and itself too if
 	 * they don't already exist.
 	 */
 	protected void createAncestorsAndSelfIfMissing() throws IOException {

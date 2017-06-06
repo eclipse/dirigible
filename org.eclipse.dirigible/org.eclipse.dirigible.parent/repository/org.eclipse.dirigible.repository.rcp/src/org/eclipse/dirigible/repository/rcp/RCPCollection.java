@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.rcp;
@@ -25,7 +24,6 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 
 /**
  * The DB implementation of {@link ICollection}
- * 
  */
 public class RCPCollection extends RCPEntity implements ICollection {
 
@@ -58,8 +56,7 @@ public class RCPCollection extends RCPEntity implements ICollection {
 		try {
 			folder.deleteTree();
 		} catch (RCPBaseException ex) {
-			throw new IOException(COULD_NOT_DELETE_COLLECTION + this.getName(),
-					ex);
+			throw new IOException(COULD_NOT_DELETE_COLLECTION + this.getName(), ex);
 		}
 	}
 
@@ -69,8 +66,7 @@ public class RCPCollection extends RCPEntity implements ICollection {
 		try {
 			folder.renameFolder(RepositoryPath.normalizePath(getParent().getPath(), name));
 		} catch (RCPBaseException ex) {
-			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(),
-					ex);
+			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(), ex);
 		}
 	}
 
@@ -80,8 +76,7 @@ public class RCPCollection extends RCPEntity implements ICollection {
 		try {
 			folder.renameFolder(path);
 		} catch (RCPBaseException ex) {
-			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(),
-					ex);
+			throw new IOException(COULD_NOT_RENAME_COLLECTION + this.getName(), ex);
 		}
 	}
 
@@ -106,10 +101,8 @@ public class RCPCollection extends RCPEntity implements ICollection {
 
 	@Override
 	public List<ICollection> getCollections() throws IOException {
-		// return new ArrayList<ICollection>(collections.values());
 		final List<String> collectionNames = getCollectionsNames();
-		final List<ICollection> result = new ArrayList<ICollection>(
-				collectionNames.size());
+		final List<ICollection> result = new ArrayList<ICollection>(collectionNames.size());
 		for (String collectionName : collectionNames) {
 			result.add(getCollection(collectionName));
 		}
@@ -127,8 +120,7 @@ public class RCPCollection extends RCPEntity implements ICollection {
 				}
 			}
 		} catch (RCPBaseException ex) {
-			throw new IOException(COULD_NOT_GET_CHILD_COLLECTION_NAMES
-					+ this.getName(), ex);
+			throw new IOException(COULD_NOT_GET_CHILD_COLLECTION_NAMES + this.getName(), ex);
 		}
 		return result;
 	}
@@ -158,16 +150,14 @@ public class RCPCollection extends RCPEntity implements ICollection {
 	}
 
 	@Override
-	public void removeCollection(ICollection childCollection)
-			throws IOException {
+	public void removeCollection(ICollection childCollection) throws IOException {
 		removeCollection(childCollection.getName());
 	}
 
 	@Override
 	public List<IResource> getResources() throws IOException {
 		final List<String> resourceNames = getResourcesNames();
-		final List<IResource> result = new ArrayList<IResource>(
-				resourceNames.size());
+		final List<IResource> result = new ArrayList<IResource>(resourceNames.size());
 		for (String resourceName : resourceNames) {
 			result.add(getResource(resourceName));
 		}
@@ -185,44 +175,19 @@ public class RCPCollection extends RCPEntity implements ICollection {
 				}
 			}
 		} catch (RCPBaseException ex) {
-			throw new IOException(COULD_NOT_GET_CHILD_RESOURCE_NAMES
-					+ this.getName(), ex);
+			throw new IOException(COULD_NOT_GET_CHILD_RESOURCE_NAMES + this.getName(), ex);
 		}
 		return result;
 	}
 
 	@Override
 	public IResource getResource(String name) throws IOException {
-//		if (name != null
-//				&& name.indexOf(IRepository.SEPARATOR) > -1) {
-//			name = name.substring(name.indexOf(IRepository.SEPARATOR) + 1);
-//		}
 		final RepositoryPath path = getRepositoryPath().append(name);
 		return new RCPResource(getRepository(), path);
 	}
 
-//	@Override
-//	public IResource createResource(String name) throws IOException {
-//		return createResource(name, null);
-//	}
-//
-//	@Override
-//	public IResource createResource(String name, byte[] content)
-//			throws IOException {
-//		createAncestorsAndSelfIfMissing();
-//		final DBFolder folder = getFolderSafe();
-//		try {
-//			folder.createFile(name, content, false,
-//					IResource.CONTENT_TYPE_DEFAULT);
-//		} catch (DBBaseException ex) {
-//			throw new IOException(COULD_NOT_CREATE_CHILD_DOCUMENT + name, ex);
-//		}
-//		return getResource(name);
-//	}
-
 	@Override
-	public IResource createResource(String name, byte[] content,
-			boolean isBinary, String contentType) throws IOException {
+	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws IOException {
 		createAncestorsAndSelfIfMissing();
 		final RCPFolder folder = getFolderSafe();
 		try {
@@ -273,8 +238,12 @@ public class RCPCollection extends RCPEntity implements ICollection {
 	}
 
 	/**
-	 * Returns the {@link Folder} object matching this {@link CMISContainer}. If
+	 * Returns the {@link RCPFolder} object matching this container. If
 	 * there is no such object, then <code>null</code> is returned.
+	 *
+	 * @return RCP Folder
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	protected RCPFolder getFolder() throws IOException {
 		final RCPObject object = getRCPObject();
@@ -288,14 +257,17 @@ public class RCPCollection extends RCPEntity implements ICollection {
 	}
 
 	/**
-	 * Returns the {@link RCPFolder} object matching this {@link DBCollection}.
+	 * Returns the {@link RCPFolder} object matching this {@link ICollection}.
 	 * If there is no such object, then an {@link IOException} is thrown.
+	 *
+	 * @return RCP Folder
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	protected RCPFolder getFolderSafe() throws IOException {
 		final RCPFolder folder = getFolder();
 		if (folder == null) {
-			throw new IOException(format(THERE_IS_NO_COLLECTION_AT_PATH_0,
-					getPath()));
+			throw new IOException(format(THERE_IS_NO_COLLECTION_AT_PATH_0, getPath()));
 		}
 		return folder;
 	}
