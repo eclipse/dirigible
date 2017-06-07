@@ -9,14 +9,14 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Content - Core - API</name>
-	<artifactId>content-core-api</artifactId>
+	<name>Content - API - HTTP</name>
+	<artifactId>content-api-http</artifactId>
     <packaging>jar</packaging>
 	
 	<scm>
-		<connection>scm:git:git://github.com/dirigiblelabs/core_api.git</connection>
-		<developerConnection>scm:git:https://github.com/dirigiblelabs/core_api.git</developerConnection>
-		<url>https://github.com/dirigiblelabs/core_api</url>
+		<connection>scm:git:git://github.com/dirigiblelabs/http.git</connection>
+		<developerConnection>scm:git:https://github.com/dirigiblelabs/http.git</developerConnection>
+		<url>https://github.com/dirigiblelabs/http</url>
 	</scm>
 
 	<build>

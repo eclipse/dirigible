@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.engine.api;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
@@ -50,12 +53,25 @@ public abstract class AbstractScriptExecutor implements IBaseScriptExecutor {
 	@Override
 	public Module retrieveModule(String module, String extension, String rootPath) throws RepositoryException {
 
+		// try from the registry
 		String resourcePath = createResourcePath(rootPath, module, extension);
 		final IResource resource = repository.getResource(resourcePath);
 		if (resource.exists()) {
 			return new Module(getModuleName(resource.getPath()), resource.getPath(), readResourceData(resourcePath));
 		}
+		
+		// try from the classloader
+		try {
+			String location = IRepository.SEPARATOR + module;
+			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(location);
+			if (bundled != null) {
+				return new Module(getModuleName(location), location, IOUtils.toByteArray(bundled));
+			}
+		} catch (IOException e) {
+			throw new RepositoryException(e);
+		}
 
+		// not found
 		final String logMsg = String.format("There is no resource [%s] at the specified Service path: %s", (module + extension), rootPath);
 		logger.error(logMsg);
 		throw new RepositoryException(logMsg);

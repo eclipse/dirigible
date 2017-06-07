@@ -15,7 +15,7 @@ import static java.text.MessageFormat.format;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IEntityInformation;
-import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
@@ -94,15 +94,15 @@ public abstract class LocalEntity implements IEntity {
 
 	/**
 	 * Returns the {@link LocalObject} that matches this entity's path. If there is
-	 * no such object in the real repository, then an {@link RepositoryReadException} is
+	 * no such object in the real repository, then an {@link RepositoryNotFoundException} is
 	 * thrown.
 	 * @return the {@link LocalObject} that matches this entity's path
-	 * @throws RepositoryReadException If there is no such object in the real repository
+	 * @throws RepositoryNotFoundException If there is no such object in the real repository
 	 */
-	protected LocalObject getLocalObjectSafe() throws RepositoryReadException {
+	protected LocalObject getLocalObjectSafe() throws RepositoryNotFoundException {
 		final LocalObject result = getLocalObject();
 		if (result == null) {
-			throw new RepositoryReadException(format("There is no entity at path ''{0}''.", this.path.toString()));
+			throw new RepositoryNotFoundException(format("There is no entity at path ''{0}''.", this.path.toString()));
 		}
 		return result;
 	}

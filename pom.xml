@@ -362,13 +362,14 @@
 		<module>modules/engine-js</module>
 		<module>modules/engine-js-rhino</module>
 		<module>modules/engine-js-nashorn</module>
+		<module>modules/engine-js-v8</module>
 
 		<module>modules/api-utils</module>
 		<module>modules/api-http</module>
 		<module>modules/api-auth</module>
 
 
-		<module>content/core-api</module>
+		<module>content/api-http</module>
 		
 		
 

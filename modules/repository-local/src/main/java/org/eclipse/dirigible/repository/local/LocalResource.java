@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
@@ -170,12 +171,12 @@ public class LocalResource extends LocalEntity implements IResource {
 
 	/**
 	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
-	 * there is no such object, then an {@link RepositoryReadException} is thrown.
+	 * there is no such object, then an {@link RepositoryNotFoundException} is thrown.
 	 */
-	protected LocalFile getDocumentSafe() throws RepositoryReadException {
+	protected LocalFile getDocumentSafe() throws RepositoryNotFoundException {
 		final LocalFile document = getDocument();
 		if (document == null) {
-			throw new RepositoryReadException(format("There is no resource at path ''{0}''.", getPath()));
+			throw new RepositoryNotFoundException(format("There is no resource at path ''{0}''.", getPath()));
 		}
 		return document;
 	}

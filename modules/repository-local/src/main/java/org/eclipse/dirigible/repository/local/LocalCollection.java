@@ -12,7 +12,6 @@ package org.eclipse.dirigible.repository.local;
 
 import static java.text.MessageFormat.format;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
@@ -244,10 +244,10 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return (LocalFolder) object;
 	}
 
-	protected LocalFolder getFolderSafe() throws RepositoryReadException {
+	protected LocalFolder getFolderSafe() throws RepositoryNotFoundException {
 		final LocalFolder folder = getFolder();
 		if (folder == null) {
-			throw new RepositoryReadException(format("There is no collection at path ''{0}''.", getPath()));
+			throw new RepositoryNotFoundException(format("There is no collection at path ''{0}''.", getPath()));
 		}
 		return folder;
 	}

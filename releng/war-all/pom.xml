@@ -162,8 +162,18 @@
 		 	<artifactId>dirigible-engine-js-nashorn</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-js-v8</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
-		
+		<!-- Content -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>content-api-http</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		
 

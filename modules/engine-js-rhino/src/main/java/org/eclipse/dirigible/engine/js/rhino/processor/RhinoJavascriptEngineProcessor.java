@@ -13,20 +13,13 @@ import org.slf4j.LoggerFactory;
 
 public class RhinoJavascriptEngineProcessor {
 	
-	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineProcessor.class.getCanonicalName());
-	
 	@Inject
 	private RhinoJavascriptEngineExecutor rhinoJavascriptEngineExecutor;
 	
 	public void executeService(String module) throws ScriptingException {
-		try {
-			IJavascriptEngineExecutor executor = rhinoJavascriptEngineExecutor;
-			Map<Object, Object> executionContext = new HashMap<Object, Object>();
-			executor.executeServiceModule(module, executionContext);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			throw e;
-		}
+		IJavascriptEngineExecutor executor = rhinoJavascriptEngineExecutor;
+		Map<Object, Object> executionContext = new HashMap<Object, Object>();
+		executor.executeServiceModule(module, executionContext);
 	}
 
 }
