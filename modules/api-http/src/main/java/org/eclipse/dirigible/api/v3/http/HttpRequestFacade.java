@@ -38,5 +38,9 @@ public class HttpRequestFacade implements IScriptingFacade {
 		HttpServletRequest request = getRequest();
 		return (request != null) ? request.getPathInfo() : null;
 	}
-	
+
+	public static final String getHeader(String name) {
+		HttpServletRequest request = getRequest();
+		return (request != null) ? request.getHeader(name) : null;
+	}
 }

@@ -18,14 +18,15 @@ import org.eclipse.dirigible.engine.api.IBaseScriptExecutor;
 
 public interface IJavascriptEngineExecutor extends IBaseScriptExecutor {
 
+	public static final String DIRIGIBLE_JS_ENGINE_TYPE_DEFAULT = "DIRIGIBLE_JS_ENGINE_TYPE_DEFAULT";
+	public static final String DIRIGIBLE_JS_ENGINE_TYPE_HEADER = "dirigible-js-engine";
 	public static final String JS_ENGINE_TYPE = "engine";
-
 	public static final String JS_TYPE_RHINO = "rhino";
-
 	public static final String JS_TYPE_NASHORN = "nashorn";
-
 	public static final String JS_TYPE_V8 = "v8";
 
 	public void executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException;
+
+	public String getType(); 
 
 }

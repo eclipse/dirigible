@@ -6,20 +6,18 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
 
-public class RhinoJavascriptEngineProcessor {
+public class RhinoJavascriptEngineProcessor implements IJavascriptEngineProcessor {
 	
 	@Inject
-	private RhinoJavascriptEngineExecutor rhinoJavascriptEngineExecutor;
-	
+	private RhinoJavascriptEngineExecutor engineExecutor;
+
+	@Override
 	public void executeService(String module) throws ScriptingException {
-		IJavascriptEngineExecutor executor = rhinoJavascriptEngineExecutor;
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();
-		executor.executeServiceModule(module, executionContext);
+		engineExecutor.executeServiceModule(module, executionContext);
 	}
 
 }

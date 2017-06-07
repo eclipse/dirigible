@@ -3,15 +3,14 @@ package org.eclipse.dirigible.engine.js.v8.processor;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.api.AbstractScriptExecutor;
-import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
+import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.eclipsesource.v8.V8;
 
-public class V8JavascriptEngineExecutor extends AbstractScriptExecutor implements IJavascriptEngineExecutor {
+public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(V8JavascriptEngineExecutor.class);
 	
@@ -44,4 +43,8 @@ public class V8JavascriptEngineExecutor extends AbstractScriptExecutor implement
 		return repositoryModuleSourceProvider;
 	}
 
+	@Override
+	public String getType() {
+		return JS_TYPE_V8;
+	}
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.api.AbstractScriptExecutor;
+import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.mozilla.javascript.Context;
@@ -21,7 +21,7 @@ import org.mozilla.javascript.commonjs.module.provider.SoftCachingModuleScriptPr
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RhinoJavascriptEngineExecutor extends AbstractScriptExecutor implements IJavascriptEngineExecutor {
+public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineExecutor.class);
 	
@@ -80,4 +80,8 @@ public class RhinoJavascriptEngineExecutor extends AbstractScriptExecutor implem
 		return repositoryModuleSourceProvider;
 	}
 
+	@Override
+	public String getType() {
+		return JS_TYPE_RHINO;
+	}
 }

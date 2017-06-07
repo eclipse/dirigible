@@ -14,11 +14,17 @@ import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Module for managing Local Repository instantiation and binding
  */
 public class LocalRepositoryModule extends AbstractDirigibleModule {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LocalRepositoryModule.class);
+	
+	private static final String MODULE_NAME = "Local Repository Module";
 
 	@Override
 	protected void configure() {
@@ -27,12 +33,21 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 
 		if (LocalRepository.TYPE.equals(repositoryProvider)) {
 			bind(IRepository.class).toInstance(createInstance());
+			logger.info("Bound Local Repository as the Repository for this instance.");
 		}
 	}
 
 	private IRepository createInstance() {
+		logger.debug("creating Local Repository...");
 		String rootFolder = Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER);
 		boolean absolute = Boolean.parseBoolean(Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE));
-		return new LocalRepository(rootFolder, absolute);
+		LocalRepository localRepository = new LocalRepository(rootFolder, absolute);
+		logger.debug("Local Repository created.");
+		return localRepository;
+	}
+	
+	@Override
+	public String getName() {
+		return MODULE_NAME;
 	}
 }

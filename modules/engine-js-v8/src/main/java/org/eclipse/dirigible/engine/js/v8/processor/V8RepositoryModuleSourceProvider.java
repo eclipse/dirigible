@@ -10,21 +10,12 @@
 
 package org.eclipse.dirigible.engine.js.v8.processor;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 
 import org.eclipse.dirigible.engine.api.IBaseScriptExecutor;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.commonjs.module.provider.ModuleSource;
-import org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase;
 
-public class V8RepositoryModuleSourceProvider extends ModuleSourceProviderBase {
-
-	private static final long serialVersionUID = -5527033249080497877L;
+public class V8RepositoryModuleSourceProvider {
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
@@ -37,35 +28,20 @@ public class V8RepositoryModuleSourceProvider extends ModuleSourceProviderBase {
 		this.rootPath = rootPath;
 	}
 	
-	@Override
-	public ModuleSource loadSource(String module, Scriptable paths, Object validator) throws IOException, URISyntaxException {
+	public String loadSource(String module) throws IOException, URISyntaxException {
 
 		if (module == null) {
 			throw new IOException("Module location cannot be null");
 		}
 
-		ModuleSource moduleSource = null;
-		if (!module.endsWith(JS_EXTENSION)) {
-			module += JS_EXTENSION;
+		byte[] sourceCode = null;
+		if (module.endsWith(JS_EXTENSION)) {
+			sourceCode = executor.retrieveModule(module, "", rootPath).getContent();
+		} else {
+			sourceCode = executor.retrieveModule(module, JS_EXTENSION, rootPath).getContent();
 		}
-		moduleSource = createModule(module);
-		
-		return moduleSource;
-	}
 
-	private ModuleSource createModule(String module) throws URISyntaxException {
-		byte[] sourceCode;
-		ModuleSource moduleSource;
-		sourceCode = executor.retrieveModule(module, "", rootPath).getContent();
-		moduleSource = new ModuleSource(new InputStreamReader(new ByteArrayInputStream(sourceCode), StandardCharsets.UTF_8), null,
-				new URI(module), null, null);
-		return moduleSource;
-	}
-
-	@Override
-	protected ModuleSource loadFromUri(URI uri, URI base, Object validator) throws IOException, URISyntaxException {
-		// not used
-		return null;
+		return new String(sourceCode);
 	}
 
 }

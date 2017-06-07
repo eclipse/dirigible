@@ -1,42 +1,39 @@
 package org.eclipse.dirigible.engine.js.processor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ServiceLoader;
+
 import javax.inject.Inject;
-import javax.sql.DataSource;
-import javax.ws.rs.InternalServerErrorException;
 
-import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.cxf.common.util.StringUtils;
+import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
+import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
+public class JavascriptEngineProcessor implements IJavascriptEngineProcessor {
 
-public class JavascriptEngineProcessor {
-	
-	private static final Logger logger = LoggerFactory.getLogger(JavascriptEngineProcessor.class.getCanonicalName());
-	
+	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
+
 	@Inject
-	private IRepository repository;
-	
-	@Inject 
-	private IDatabase database;
-	
-	@Inject 
-	private DataSource dataSource;
-	
-	public String executeScript(String path) {
-		try {
-//			return new String(repository.getResource(path).getContent());
-			// TODO get the default engine by parameter or file extension and execute the script
-			// DIRIGIBLE_JAVASCRIPT_ENGINE_DEFAULT
-//			return HttpRequestFacade.getMethod();
-			
-			return database.getClass().getName();
-			
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new InternalServerErrorException(e);
-		}
-		
+	private IJavascriptEngineExecutor engineExecutor;
+
+	@Override
+	public void executeService(String module) throws ScriptingException {
+		Map<Object, Object> executionContext = new HashMap<Object, Object>();
+		getEngineExecutor().executeServiceModule(module, executionContext);
 	}
 
+	private IJavascriptEngineExecutor getEngineExecutor() {
+		String headerEngineType = HttpRequestFacade.getHeader(IJavascriptEngineExecutor.DIRIGIBLE_JS_ENGINE_TYPE_HEADER);
+		if (!StringUtils.isEmpty(headerEngineType)) {
+			for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
+				if (next.getType().equals(headerEngineType)) {
+					return next;
+				}
+			}
+		}
+		return engineExecutor;
+	}
 }

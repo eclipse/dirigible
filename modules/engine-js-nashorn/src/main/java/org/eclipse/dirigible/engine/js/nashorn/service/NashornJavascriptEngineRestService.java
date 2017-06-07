@@ -12,19 +12,19 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.engine.js.nashorn.processor.NashornJavascriptEngineProcessor;
+import org.eclipse.dirigible.engine.js.service.AbstractJavascriptEngineRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Front facing REST service serving the Mozilla Rhino based Javascript backend services
+ * Front facing REST service serving the Nashorn based Javascript backend services
  *
  */
 @Singleton
-public class NashornJavascriptEngineRestService implements IRestService {
+public class NashornJavascriptEngineRestService extends AbstractJavascriptEngineRestService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(NashornJavascriptEngineRestService.class.getCanonicalName());
 	
@@ -41,17 +41,8 @@ public class NashornJavascriptEngineRestService implements IRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
-			ThreadContextFacade.setUp();
-			try {
-				ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
-				ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
-				
-				processor.executeService(path);
-				
-				return Response.ok().build();
-			} finally {
-				ThreadContextFacade.tearDown();
-			}
+			executeService(processor, path, request, response);
+			return Response.ok().build();
 		} catch(ScriptingDependencyException e) {
 			logger.error(e.getMessage(), e);
 			return Response.status(Response.Status.ACCEPTED).entity(e.getMessage()).build();

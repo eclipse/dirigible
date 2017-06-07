@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 public class FileSystemMasterRepositoryModule extends AbstractDirigibleModule {
 
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemMasterRepositoryModule.class);
+	
+	private static final String MODULE_NAME = "File System Master Repository Module";
 
 	@Override
 	protected void configure() {
@@ -20,16 +22,22 @@ public class FileSystemMasterRepositoryModule extends AbstractDirigibleModule {
 		String repositoryProvider = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
 
 		if (FileSystemMasterRepository.TYPE.equals(repositoryProvider)) {
-			bind(IRepository.class).toInstance(createInstance());
+			bind(IMasterRepository.class).toInstance(createInstance());
+			logger.info("Bound File System Repository as the Master Repository for this instance.");
 		}
 	}
 
-	private IRepository createInstance() {
+	private IMasterRepository createInstance() {
 		logger.debug("creating FileSystem Master Repository...");
 		String rootFolder = Configuration.get(FileSystemMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER);
 		FileSystemMasterRepository fileSystemMasterRepository = new FileSystemMasterRepository(rootFolder);
 		logger.debug("FileSystem Mater Repository created.");
 		return fileSystemMasterRepository;
+	}
+	
+	@Override
+	public String getName() {
+		return MODULE_NAME;
 	}
 
 }

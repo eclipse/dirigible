@@ -9,7 +9,7 @@ import javax.script.ScriptException;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.api.AbstractScriptExecutor;
+import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 
-public class NashornJavascriptEngineExecutor extends AbstractScriptExecutor implements IJavascriptEngineExecutor {
+public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(NashornJavascriptEngineExecutor.class);
 	
@@ -70,4 +70,8 @@ public class NashornJavascriptEngineExecutor extends AbstractScriptExecutor impl
 		return repositoryModuleSourceProvider;
 	}
 
+	@Override
+	public String getType() {
+		return JS_TYPE_NASHORN;
+	}
 }
