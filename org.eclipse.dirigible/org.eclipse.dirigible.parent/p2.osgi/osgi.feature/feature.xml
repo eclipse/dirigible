@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dirigible.osgi.feature"
       label="Dirigible OSGi Bundles Feature"
-      version="2.7.170504"
+      version="2.7.170608"
       provider-name="Eclipse.org - Dirigible"
       os="linux,macosx,win32"
       ws="cocoa,gtk,win32"
