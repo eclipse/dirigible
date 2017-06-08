@@ -233,9 +233,10 @@ public class LocalRepositoryDAO {
 	public LocalObject getObjectByPath(String path) {
 
 		LocalObject localObject = null;
-
+		logger.debug("getObjectByPath -> path: " + path);
 		try {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
+			logger.debug("getObjectByPath -> workspacePath: " + path);
 			File objectFile = new File(workspacePath);
 			if (!objectFile.exists()) {
 				// This is folder, that was not created
@@ -272,11 +273,7 @@ public class LocalRepositoryDAO {
 				}
 			}
 
-		} catch (
-
-		IOException e)
-
-		{
+		} catch (IOException e) {
 			throw new LocalBaseException(e);
 		}
 		return localObject;
