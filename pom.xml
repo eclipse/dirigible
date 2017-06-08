@@ -350,7 +350,9 @@
 		<!-- <module>modules/repository-rest</module> -->
 
 		<module>modules/database-api</module>
+		<module>modules/database-squle</module>
 		<module>modules/database-derby</module>
+		
 
 		<module>modules/runtime-core</module>
 		<module>modules/runtime-repository</module>
