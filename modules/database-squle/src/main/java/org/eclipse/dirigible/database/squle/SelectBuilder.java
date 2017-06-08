@@ -213,7 +213,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		return sql.toString();
 	}
 
-	private void generateUnion(StringBuilder sql) {
+	protected void generateUnion(StringBuilder sql) {
 		if (!unions.isEmpty()) {
 			sql.append(SPACE)
 				.append(KEYWORD_UNION)
@@ -222,7 +222,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	private void generateOffset(StringBuilder sql) {
+	protected void generateOffset(StringBuilder sql) {
 		if (offset > -1) {
 			sql.append(SPACE)
 				.append(KEYWORD_OFFSET)
@@ -231,7 +231,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	private void generateLimit(StringBuilder sql) {
+	protected void generateLimit(StringBuilder sql) {
 		if (limit > -1) {
 			sql.append(SPACE)
 				.append(KEYWORD_LIMIT)
@@ -240,7 +240,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	private void orderBy(StringBuilder sql) {
+	protected void orderBy(StringBuilder sql) {
 		if (!orders.isEmpty()) {
 			sql.append(SPACE)
 				.append(KEYWORD_ORDER_BY)
@@ -249,7 +249,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	private void generateHaving(StringBuilder sql) {
+	protected void generateHaving(StringBuilder sql) {
 		if (having != null) {
 			sql.append(SPACE)
 			.append(KEYWORD_HAVING)
@@ -258,7 +258,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	private void generateGroupBy(StringBuilder sql) {
+	protected void generateGroupBy(StringBuilder sql) {
 		if (!groups.isEmpty()) {
 			sql.append(SPACE)
 				.append(KEYWORD_GROUP_BY)
@@ -267,7 +267,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	private void generateWhere(StringBuilder sql) {
+	protected void generateWhere(StringBuilder sql) {
 		if (!wheres.isEmpty()) {
 			sql.append(SPACE)
 				.append(KEYWORD_WHERE)
@@ -276,41 +276,36 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	private void generateJoins(StringBuilder sql) {
+	protected void generateJoins(StringBuilder sql) {
 		if (!joins.isEmpty()) {
 			sql.append(SPACE)
 				.append(traverseJoins());
 		}
 	}
 
-	private void generateTables(StringBuilder sql) {
+	protected void generateTables(StringBuilder sql) {
 		sql.append(SPACE)
 			.append(KEYWORD_FROM)
 			.append(SPACE)
 			.append(traverseTables());
 	}
 
-	private void generateColumns(StringBuilder sql) {
+	protected void generateColumns(StringBuilder sql) {
 		sql.append(SPACE)
 			.append(traverseColumns());
 	}
 
-	private void generateDistinct(StringBuilder sql) {
+	protected void generateDistinct(StringBuilder sql) {
 		if (distinct) {
 			sql.append(SPACE)
 			.append(KEYWORD_DISTINCT);
 		}
 	}
 
-	private void generateSelect(StringBuilder sql) {
+	protected void generateSelect(StringBuilder sql) {
 		sql.append(KEYWORD_SELECT);
 	}
 	
-	@Override
-	public String toString() {
-		return generate();
-	}
-
 	protected String traverseColumns() {
 		StringBuilder snippet = new StringBuilder();
 		for (String column : this.columns) {

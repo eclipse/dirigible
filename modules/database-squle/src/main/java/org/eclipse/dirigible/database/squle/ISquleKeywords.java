@@ -25,9 +25,14 @@ public interface ISquleKeywords {
 	public static final String KEYWORD_LIMIT = "LIMIT";
 	public static final String KEYWORD_OFFSET = "OFFSET";
 	
+	public static final String KEYWORD_INSERT = "INSERT";
+	public static final String KEYWORD_INTO = "INTO";
+	public static final String KEYWORD_VALUES = "VALUES";
+	
 	public static final String COMMA = ",";
 	public static final String SPACE = " ";
 	public static final String OPEN = "(";
 	public static final String CLOSE = ")";
+	public static final String QUESTION = "?";
 	
 }
