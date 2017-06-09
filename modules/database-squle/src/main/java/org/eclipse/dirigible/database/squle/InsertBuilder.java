@@ -1,9 +1,6 @@
 package org.eclipse.dirigible.database.squle;
 
-import static org.eclipse.dirigible.database.squle.ISquleKeywords.*;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class InsertBuilder extends AbstractSquleBuilder {
@@ -54,10 +51,6 @@ public class InsertBuilder extends AbstractSquleBuilder {
 		generateSelect(sql);
 		
 		return sql.toString();
-	}
-	
-	protected void generateInsert(StringBuilder sql) {
-		sql.append(KEYWORD_INSERT);
 	}
 	
 	protected void generateTable(StringBuilder sql) {

@@ -1,6 +1,5 @@
 package org.eclipse.dirigible.database.squle;
 
-import static org.eclipse.dirigible.database.squle.ISquleKeywords.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,16 +27,9 @@ public class ExpressionBuilder extends AbstractSquleBuilder {
 	
 	@Override
 	public String generate() {
-		StringBuilder sql = new StringBuilder();
-		sql.append(generateExpressions());
-		return sql.toString();
+		return generateExpressions();
 	}
 	
-	@Override
-	public String toString() {
-		return generate();
-	}
-
 	protected String generateExpressions() {
 		StringBuilder snippet = new StringBuilder();
 		for (String expression : this.expressions) {

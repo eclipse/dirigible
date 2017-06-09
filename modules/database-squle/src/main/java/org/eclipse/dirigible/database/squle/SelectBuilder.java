@@ -1,6 +1,5 @@
 package org.eclipse.dirigible.database.squle;
 
-import static org.eclipse.dirigible.database.squle.ISquleKeywords.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +23,13 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		return this;
 	}
 	
-	public SelectBuilder column(String name) {
-		this.columns.add(name);
+	public SelectBuilder column(String column) {
+		this.columns.add(column);
 		return this;
 	}
 	
-	public SelectBuilder from(String name) {
-		from(name, null);
-		return this;
+	public SelectBuilder from(String table) {
+		return from(table, null);
 	}
 	
 	public SelectBuilder from(String table, String alias) {
@@ -48,66 +46,54 @@ public class SelectBuilder extends AbstractSquleBuilder {
 	}
 	
 	public SelectBuilder join(String table, String on) {
-		join(table, on, null);
-		return this;
+		return join(table, on, null);
 	}
 	
 	public SelectBuilder join(String table, String on, String alias) {
-		genericJoin(KEYWORD_INNER, table, on, alias);
-		return this;
+		return genericJoin(KEYWORD_INNER, table, on, alias);
 	}
 	
 	public SelectBuilder innerJoin(String table, String on) {
-		innerJoin(table, on, null);
-		return this;
+		return innerJoin(table, on, null);
 	}
 	
 	public SelectBuilder innerJoin(String table, String on, String alias) {
-		genericJoin(KEYWORD_INNER, table, on, alias);
-		return this;
+		return genericJoin(KEYWORD_INNER, table, on, alias);
 	}
 	
 	public SelectBuilder outerJoin(String table, String on) {
-		outerJoin(table, on, null);
-		return this;
+		return outerJoin(table, on, null);
 	}
 	
 	public SelectBuilder outerJoin(String table, String on, String alias) {
-		genericJoin(KEYWORD_OUTER, table, on, alias);
-		return this;
+		return genericJoin(KEYWORD_OUTER, table, on, alias);
 	}
 	
 	public SelectBuilder leftJoin(String table, String on) {
-		leftJoin(table, on, null);
-		return this;
+		return leftJoin(table, on, null);
 	}
 	
 	public SelectBuilder leftJoin(String table, String on, String alias) {
-		genericJoin(KEYWORD_LEFT, table, on, alias);
-		return this;
+		return genericJoin(KEYWORD_LEFT, table, on, alias);
 	}
 	
 	public SelectBuilder rightJoin(String table, String on) {
-		rightJoin(table, on, null);
-		return this;
+		return rightJoin(table, on, null);
 	}
 	
 	public SelectBuilder rightJoin(String table, String on, String alias) {
-		genericJoin(KEYWORD_RIGHT, table, on, alias);
-		return this;
+		return genericJoin(KEYWORD_RIGHT, table, on, alias);
 	}
 	
 	public SelectBuilder fullJoin(String table, String on) {
-		fullJoin(table, on, null);
-		return this;
+		return fullJoin(table, on, null);
 	}
 	
 	public SelectBuilder fullJoin(String table, String on, String alias) {
-		genericJoin(KEYWORD_FULL, table, on, alias);
-		return this;
+		return genericJoin(KEYWORD_FULL, table, on, alias);
 	}
 	
-	public void genericJoin(String type, String table, String on, String alias) {
+	public SelectBuilder genericJoin(String type, String table, String on, String alias) {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(type)
 			.append(SPACE)
@@ -123,6 +109,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 			snippet.append(SPACE).append(alias);
 		}
 		this.joins.add(snippet.toString());
+		return this;
 	}
 	
 	public SelectBuilder where(String condition) {
@@ -131,8 +118,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 	}
 	
 	public SelectBuilder order(String column) {
-		order(column, true);
-		return this;
+		return order(column, true);
 	}
 	
 	public SelectBuilder order(String column, boolean asc) {
@@ -190,7 +176,7 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		generateJoins(sql);
 		
 		// WHERE
-		generateWhere(sql);
+		generateWhere(sql, wheres);
 		
 		// GROUP BY
 		generateGroupBy(sql);
@@ -199,10 +185,10 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		generateHaving(sql);
 		
 		// ORDER BY
-		orderBy(sql);
+		generateOrderBy(sql, orders);
 		
 		// LIMIT
-		generateLimit(sql);
+		generateLimit(sql, limit);
 		
 		// OFFSET
 		generateOffset(sql);
@@ -231,24 +217,6 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	protected void generateLimit(StringBuilder sql) {
-		if (limit > -1) {
-			sql.append(SPACE)
-				.append(KEYWORD_LIMIT)
-				.append(SPACE)
-				.append(limit);
-		}
-	}
-
-	protected void orderBy(StringBuilder sql) {
-		if (!orders.isEmpty()) {
-			sql.append(SPACE)
-				.append(KEYWORD_ORDER_BY)
-				.append(SPACE)
-				.append(traverseOrders());
-		}
-	}
-
 	protected void generateHaving(StringBuilder sql) {
 		if (having != null) {
 			sql.append(SPACE)
@@ -264,15 +232,6 @@ public class SelectBuilder extends AbstractSquleBuilder {
 				.append(KEYWORD_GROUP_BY)
 				.append(SPACE)
 				.append(traverseGroups());
-		}
-	}
-
-	protected void generateWhere(StringBuilder sql) {
-		if (!wheres.isEmpty()) {
-			sql.append(SPACE)
-				.append(KEYWORD_WHERE)
-				.append(SPACE)
-				.append(traverseWheres());
 		}
 	}
 
@@ -302,10 +261,6 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		}
 	}
 
-	protected void generateSelect(StringBuilder sql) {
-		sql.append(KEYWORD_SELECT);
-	}
-	
 	protected String traverseColumns() {
 		StringBuilder snippet = new StringBuilder();
 		for (String column : this.columns) {
@@ -331,27 +286,6 @@ public class SelectBuilder extends AbstractSquleBuilder {
 		for (String join : this.joins) {
 			snippet
 				.append(join)
-				.append(COMMA)
-				.append(SPACE);
-		}
-		return snippet.toString().substring(0, snippet.length() - 2);
-	}
-	
-	protected String traverseWheres() {
-		StringBuilder snippet = new StringBuilder();
-		for (String where : this.wheres) {
-			snippet.append(where)
-				.append(SPACE)
-				.append(KEYWORD_AND)
-				.append(SPACE);
-		}
-		return snippet.toString().substring(0, snippet.length() - 5);
-	}
-	
-	protected String traverseOrders() {
-		StringBuilder snippet = new StringBuilder();
-		for (String order : this.orders) {
-			snippet.append(order)
 				.append(COMMA)
 				.append(SPACE);
 		}

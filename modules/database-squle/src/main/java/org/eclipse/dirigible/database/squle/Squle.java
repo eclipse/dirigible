@@ -10,6 +10,10 @@ public class Squle {
 		return new InsertBuilder();
 	}
 	
+	public static UpdateBuilder update() {
+		return new UpdateBuilder();
+	}
+
 	public static ExpressionBuilder expr() {
 		return new ExpressionBuilder();
 	}
