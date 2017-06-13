@@ -20,7 +20,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
@@ -153,22 +152,25 @@ public class DataSourceFacade {
 			return null;
 		}
 
-		InitialContext context = (InitialContext) System.getProperties().get(ICommonConstants.INITIAL_CONTEXT);
-		if (context == null) {
-			try {
-				context = new InitialContext();
-			} catch (NamingException e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		if (context != null) {
-			String defaultDataSourceName = getEnv(ICommonConstants.INIT_PARAM_JNDI_DEFAULT_DATASOURCE);
-			try {
-				context.bind(defaultDataSourceName, dataSource);
-			} catch (NamingException e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
+		// InitialContext context = (InitialContext) System.getProperties().get(ICommonConstants.INITIAL_CONTEXT);
+		// if (context == null) {
+		// try {
+		// context = new InitialContext();
+		// } catch (NamingException e) {
+		// logger.error(e.getMessage(), e);
+		// }
+		// }
+		// if (context != null) {
+		// String defaultDataSourceName = getEnv(ICommonConstants.INIT_PARAM_JNDI_DEFAULT_DATASOURCE);
+		// try {
+		// context.bind(defaultDataSourceName, dataSource);
+		// } catch (NamingException e) {
+		// logger.error(e.getMessage(), e);
+		// }
+		// }
+
+		System.getProperties().put(DATASOURCE_DEFAULT, dataSource);
+
 		return dataSource;
 	}
 
