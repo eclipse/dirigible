@@ -1,19 +1,17 @@
-package org.eclipse.dirigible.database.squle;
+package org.eclipse.dirigible.database.squle.builders;
 
 import java.util.List;
 
-public abstract class AbstractSquleBuilder implements ISquleBuilder {
+import org.eclipse.dirigible.database.squle.ISquleDialect;
 
-	protected void generateSelect(StringBuilder sql) {
-		sql.append(KEYWORD_SELECT);
+public abstract class AbstractQuerySquleBuilder extends AbstractSquleBuilder {
+
+	protected AbstractQuerySquleBuilder(ISquleDialect dialect) {
+		super(dialect);
 	}
 
-	protected void generateInsert(StringBuilder sql) {
-		sql.append(KEYWORD_INSERT);
-	}
-
-	protected void generateUpdate(StringBuilder sql) {
-		sql.append(KEYWORD_UPDATE);
+	protected void generateCreate(StringBuilder sql) {
+		sql.append(KEYWORD_CREATE);
 	}
 
 	protected void generateWhere(StringBuilder sql, List<String> wheres) {

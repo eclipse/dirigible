@@ -1,0 +1,30 @@
+{
+	"name": "CUSTOMERS",
+	"type": "TABLE",
+	"columns":
+		[
+			{
+				"name":"id",
+				"type":"INTEGER",
+				"length":"0",
+				"notNull":"true",
+				"primaryKey":"true",
+				"defaultValue":""
+			},
+			{
+				"name":"CUSTOMER_FIRST_NAME",
+				"type":"VARCHAR",
+				"length":"32",
+				"notNull":"false",
+				"primaryKey":"false",
+				"defaultValue":""
+			},
+		],
+	"dependencies":
+		[
+			{
+				"name":"ADDRESSES",
+				"type":"TABLE"
+			}
+		]
+}

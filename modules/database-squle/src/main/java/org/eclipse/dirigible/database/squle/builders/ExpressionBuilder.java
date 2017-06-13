@@ -1,11 +1,17 @@
-package org.eclipse.dirigible.database.squle;
+package org.eclipse.dirigible.database.squle.builders;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.database.squle.ISquleDialect;
+
 public class ExpressionBuilder extends AbstractSquleBuilder {
 	
 	private List<String> expressions = new ArrayList<String>();
+	
+	public ExpressionBuilder(ISquleDialect dialect) {
+		super(dialect);
+	}
 	
 	public ExpressionBuilder and(String name) {
 		if (this.expressions.isEmpty()) {

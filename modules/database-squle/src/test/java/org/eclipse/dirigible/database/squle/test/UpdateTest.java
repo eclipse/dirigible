@@ -10,7 +10,8 @@ public class UpdateTest {
 	
 	@Test
 	public void updateSimple() {
-		String sql = Squle.update()
+		String sql = Squle.getDefault()
+			.update()
 			.table("CUSTOMERS")
 			.set("FIRST_NAME", "'John'")
 			.toString();
@@ -21,7 +22,8 @@ public class UpdateTest {
 
 	@Test
 	public void updateValues() {
-		String sql = Squle.update()
+		String sql = Squle.getDefault()
+				.update()
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
 				.set("LAST_NAME", "'Smith'")
@@ -33,7 +35,8 @@ public class UpdateTest {
 	
 	@Test
 	public void updateWhere() {
-		String sql = Squle.update()
+		String sql = Squle.getDefault()
+				.update()
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
 				.set("LAST_NAME", "'Smith'")
@@ -47,10 +50,11 @@ public class UpdateTest {
 
 	@Test
 	public void updateWhereSelect() {
-		String sql = Squle.update()
+		String sql = Squle.getDefault()
+				.update()
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
-				.set("SALARY", Squle.select().column("MAX(SALARY)").from("BENEFITS").toString())
+				.set("SALARY", Squle.getDefault().select().column("MAX(SALARY)").from("BENEFITS").toString())
 				.where("COMPANY = 'SAP'")
 				.toString();
 			
@@ -60,11 +64,12 @@ public class UpdateTest {
 
 	@Test
 	public void updateWhereExpr() {
-		String sql = Squle.update()
+		String sql = Squle.getDefault()
+				.update()
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
 				.set("LAST_NAME", "'Smith'")
-				.where(Squle.expr().and("PRICE > ?").or("AMOUNT < ?").and("COMPANY = 'SAP'").toString())
+				.where(Squle.getDefault().expr().and("PRICE > ?").or("AMOUNT < ?").and("COMPANY = 'SAP'").toString())
 				.toString();
 			
 			assertNotNull(sql);
@@ -73,7 +78,8 @@ public class UpdateTest {
 	
 	@Test
 	public void updateWhereOrderLimit() {
-		String sql = Squle.update()
+		String sql = Squle.getDefault()
+				.update()
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
 				.set("LAST_NAME", "'Smith'")

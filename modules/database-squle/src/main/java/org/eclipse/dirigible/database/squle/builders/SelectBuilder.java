@@ -1,9 +1,11 @@
-package org.eclipse.dirigible.database.squle;
+package org.eclipse.dirigible.database.squle.builders;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectBuilder extends AbstractSquleBuilder {
+import org.eclipse.dirigible.database.squle.ISquleDialect;
+
+public class SelectBuilder extends AbstractQuerySquleBuilder {
 	
 	private List<String> columns = new ArrayList<String>();
 	private List<String> tables = new ArrayList<String>();
@@ -17,6 +19,9 @@ public class SelectBuilder extends AbstractSquleBuilder {
 	private int limit = -1;
 	private int offset = -1;
 	
+	public SelectBuilder(ISquleDialect dialect) {
+		super(dialect);
+	}
 	
 	public SelectBuilder distinct() {
 		this.distinct = true;
@@ -309,5 +314,9 @@ public class SelectBuilder extends AbstractSquleBuilder {
 				.append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 1);
+	}
+	
+	protected void generateSelect(StringBuilder sql) {
+		sql.append(KEYWORD_SELECT);
 	}
 }

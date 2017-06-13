@@ -10,7 +10,8 @@ public class InsertTest {
 	
 	@Test
 	public void insertSimple() {
-		String sql = Squle.insert()
+		String sql = Squle.getDefault()
+			.insert()
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
@@ -22,7 +23,8 @@ public class InsertTest {
 	
 	@Test
 	public void insertValues() {
-		String sql = Squle.insert()
+		String sql = Squle.getDefault()
+			.insert()
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
@@ -36,11 +38,12 @@ public class InsertTest {
 	
 	@Test
 	public void insertSelect() {
-		String sql = Squle.insert()
+		String sql = Squle.getDefault()
+			.insert()
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
-			.select(Squle.select().column("*").from("SUPPLIERS").toString())
+			.select(Squle.getDefault().select().column("*").from("SUPPLIERS").toString())
 			.toString();
 
 		assertNotNull(sql);

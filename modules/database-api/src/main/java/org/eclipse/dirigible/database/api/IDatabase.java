@@ -10,7 +10,6 @@
 
 package org.eclipse.dirigible.database.api;
 
-import java.nio.charset.Charset;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -21,9 +20,6 @@ import javax.sql.DataSource;
  */
 public interface IDatabase {
 
-	
-	public static final Charset UTF8 = Charset.forName("UTF-8");
-	
 	public static final String DIRIGIBLE_DATABASE_PROVIDER = "DIRIGIBLE_DATABASE_PROVIDER"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_DATABASE_PROVIDER_LOCAL = "derby"; //$NON-NLS-1$
 	
@@ -33,7 +29,6 @@ public interface IDatabase {
 	public static final String DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT = "DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT";
 	
 	public static final String DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT = "DefaultDB"; //$NON-NLS-1$
-
 
 	public void initialize();
 	

@@ -31,6 +31,13 @@ public interface ISquleKeywords {
 	
 	public static final String KEYWORD_UPDATE = "UPDATE";
 	public static final String KEYWORD_SET = "SET";
+	
+	public static final String KEYWORD_CREATE = "CREATE";
+	public static final String KEYWORD_TABLE = "TABLE";
+	public static final String KEYWORD_PRIMARY = "PRIMARY";
+	public static final String KEYWORD_KEY = "KEY";
+	
+	public static final String KEYWORD_DROP = "DROP";
 
 	public static final String COMMA = ",";
 	public static final String SPACE = " ";

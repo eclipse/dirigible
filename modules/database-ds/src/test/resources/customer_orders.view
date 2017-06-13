@@ -1,0 +1,17 @@
+{
+	"name":"CUSTOMER_ORDERS",
+	"type":"VIEW",
+	"query":"SELECT * FROM CUSTOMERS, ORDERS WHERE ORDER_CUSTOMER_ID=CUSTOMER_ID",
+ 	"dependencies":
+		[
+			{
+				"name":"CUSTOMERS",
+				"type":"TABLE"
+			}
+			,
+			{
+				"name":"ORDERS",
+				"type":"TABLE"
+			}
+		]
+}

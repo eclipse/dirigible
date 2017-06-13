@@ -10,7 +10,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectStar() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("*")
 			.from("CUSTOMERS")
 			.toString();
@@ -21,7 +22,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTable() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -33,7 +35,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableAliases() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("c.FIRST_NAME")
 			.column("c.LAST_NAME")
 			.from("CUSTOMERS", "c")
@@ -45,7 +48,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableJoin() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -58,7 +62,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableInnerJoin() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -71,7 +76,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableOuterJoin() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -84,7 +90,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableLeftJoin() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -97,7 +104,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableRightJoin() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -110,7 +118,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableFullJoin() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -123,7 +132,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectDistinctColumnsFromTable() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.distinct()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
@@ -136,7 +146,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableOrderByAndDesc() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -150,7 +161,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectColumnsFromTableGroupBy() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
 			.from("CUSTOMERS")
@@ -163,7 +175,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectWhereSimple() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("*")
 			.from("CUSTOMERS")
 			.where("PRICE > ?")
@@ -175,7 +188,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectWhereAnd() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("*")
 			.from("CUSTOMERS")
 			.where("PRICE > ?")
@@ -188,7 +202,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectWhereOr() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("*")
 			.from("CUSTOMERS")
 			.where("PRICE > ? OR AMOUNT < ?")
@@ -200,10 +215,11 @@ public class SelectTest {
 	
 	@Test
 	public void selectWhereExpr() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("*")
 			.from("CUSTOMERS")
-			.where(Squle.expr().and("PRICE > ?").or("AMOUNT < ?").toString())
+			.where(Squle.getDefault().expr().and("PRICE > ?").or("AMOUNT < ?").toString())
 			.toString();
 		
 		assertNotNull(sql);
@@ -212,7 +228,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectLimit() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("*")
 			.from("CUSTOMERS")
 			.limit(10)
@@ -224,7 +241,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectLimitOffset() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("*")
 			.from("CUSTOMERS")
 			.limit(10)
@@ -237,7 +255,8 @@ public class SelectTest {
 	
 	@Test
 	public void selectHaving() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("COUNT(FIRST_NAME)")
 			.column("COUNTRY")
 			.from("CUSTOMERS")
@@ -251,10 +270,11 @@ public class SelectTest {
 	
 	@Test
 	public void selectUnion() {
-		String sql = Squle.select()
+		String sql = Squle.getDefault()
+			.select()
 			.column("COUNTRY")
 			.from("CUSTOMERS")
-			.union(Squle.select().column("COUNTRY").from("SUPPLIERS").toString())
+			.union(Squle.getDefault().select().column("COUNTRY").from("SUPPLIERS").toString())
 			.toString();
 		
 		assertNotNull(sql);

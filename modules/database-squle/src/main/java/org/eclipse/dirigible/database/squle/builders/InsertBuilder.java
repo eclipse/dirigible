@@ -1,7 +1,9 @@
-package org.eclipse.dirigible.database.squle;
+package org.eclipse.dirigible.database.squle.builders;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.dirigible.database.squle.ISquleDialect;
 
 public class InsertBuilder extends AbstractSquleBuilder {
 	
@@ -9,6 +11,10 @@ public class InsertBuilder extends AbstractSquleBuilder {
 	private List<String> columns = new ArrayList<String>();
 	private List<String> values = new ArrayList<String>();
 	private String select = null;
+	
+	public InsertBuilder(ISquleDialect dialect) {
+		super(dialect);
+	}
 
 	public InsertBuilder into(String table) {
 		this.table = table;
@@ -122,6 +128,10 @@ public class InsertBuilder extends AbstractSquleBuilder {
 				.append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
+	}
+	
+	protected void generateInsert(StringBuilder sql) {
+		sql.append(KEYWORD_INSERT);
 	}
 
 }

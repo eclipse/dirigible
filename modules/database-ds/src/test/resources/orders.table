@@ -1,0 +1,25 @@
+{
+	"name": "ORDERS",
+	"type": "TABLE",
+	"columns":
+		[
+			{
+				"name":"id",
+				"type":"INTEGER",
+				"length":"0",
+				"notNull":"true",
+				"primaryKey":"true",
+				"defaultValue":""
+			},
+			{
+				"name":"amount",
+				"type":"FLOAT",
+				"length":"0",
+				"notNull":"false",
+				"primaryKey":"false",
+				"defaultValue":"",
+				"precision": "5",
+				"scale": "2"
+			},
+		]
+}

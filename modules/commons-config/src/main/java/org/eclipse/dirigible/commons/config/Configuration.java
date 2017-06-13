@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +29,8 @@ import org.slf4j.LoggerFactory;
 public class Configuration {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
+	
+	public static final Charset UTF8 = Charset.forName("UTF-8");
 	
 	public static final String DIRIGIBLE_TEST_MODE_ENABLED = "DIRIGIBLE_TEST_MODE_ENABLED";
 	

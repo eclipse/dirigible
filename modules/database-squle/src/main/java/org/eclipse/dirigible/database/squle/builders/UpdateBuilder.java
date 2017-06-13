@@ -1,12 +1,15 @@
-package org.eclipse.dirigible.database.squle;
+package org.eclipse.dirigible.database.squle.builders;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.eclipse.dirigible.database.squle.ISquleDialect;
+
 import java.util.TreeMap;
 
-public class UpdateBuilder extends AbstractSquleBuilder {
+public class UpdateBuilder extends AbstractQuerySquleBuilder {
 
 	private String table;
 	private Map<String, String> values = new TreeMap<String, String>();
@@ -14,6 +17,10 @@ public class UpdateBuilder extends AbstractSquleBuilder {
 	private List<String> orders = new ArrayList<String>();
 	private int limit = -1;
 
+	public UpdateBuilder(ISquleDialect dialect) {
+		super(dialect);
+	}
+	
 	public UpdateBuilder table(String table) {
 		this.table = table;
 		return this;
@@ -90,5 +97,9 @@ public class UpdateBuilder extends AbstractSquleBuilder {
 				.append(COMMA);
 		}
 		sql.delete(sql.length() - 1, sql.length());
+	}
+	
+	protected void generateUpdate(StringBuilder sql) {
+		sql.append(KEYWORD_UPDATE);
 	}
 }
