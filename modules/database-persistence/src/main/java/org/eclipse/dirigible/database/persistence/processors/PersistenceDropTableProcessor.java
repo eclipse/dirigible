@@ -21,43 +21,17 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 		return sql;
 	}
 	
-	public Object drop(Connection connection, PersistenceTableModel tableModel, Object pojo) throws PersistenceException {
+	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = generateScript(connection, tableModel);
-			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		} finally {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				throw new PersistenceException(e);
-			}
-		}
-		return result;
-	}
-
-	
-
-	public Object drop(Connection connection, PersistenceTableModel tableModel, String json)
-			throws PersistenceException {
-		int result = 0;
-		PreparedStatement preparedStatement = null;
-		try {
-			String sql = generateScript(connection, tableModel);
-			preparedStatement = connection.prepareStatement(sql);
-			result = preparedStatement.executeUpdate();
-		} catch (Exception e) {
-			throw new PersistenceException(e);
-		} finally {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				throw new PersistenceException(e);
-			}
+			closePreparedStatement(preparedStatement);
 		}
 		return result;
 	}

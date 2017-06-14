@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -15,7 +16,7 @@ import java.sql.Timestamp;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
-import org.eclipse.dirigible.database.squle.DataType;
+import org.eclipse.dirigible.database.squle.DataTypeUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -31,57 +32,19 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
 		int i=1;
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			
 			Field field = pojo.getClass().getDeclaredField(columnModel.getField());
-			if (DataType.VARCHAR.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setString(i++, (String) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.CHAR.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setString(i++, (String) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.DATE.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setDate(i++, (Date) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.TIME.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setTime(i++, (Time) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.TIMESTAMP.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setTimestamp(i++, (Timestamp) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.INTEGER.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setInt(i++, (int) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.BIGINT.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setLong(i++, (long) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.REAL.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setFloat(i++, (float) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.DOUBLE.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setDouble(i++, (double) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.BOOLEAN.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				preparedStatement.setBoolean(i++, (boolean) field.get(pojo));
-				resetAccesible(field, oldAccessible);
-			} else if (DataType.BLOB.toString().equals(columnModel.getType())) {
-				boolean oldAccessible = setAccessible(field);
-				byte[] bytes = (byte[]) field.get(pojo);
-				preparedStatement.setBinaryStream(i++, new ByteArrayInputStream(bytes), bytes.length);
+			String dataType = columnModel.getType();
+			Object valueObject = null;
+			boolean oldAccessible = setAccessible(field);
+			try {
+				valueObject = field.get(pojo);
+			} finally {
 				resetAccesible(field, oldAccessible);
 			}
-			
-			else {
-				throw new PersistenceException(format("Database type [{0}] not supported (Class: [{1}])", columnModel.getType(), pojo.getClass()));
+			try {
+				setValue(preparedStatement, i++, dataType, valueObject);
+			} catch (PersistenceException e) {
+				throw new PersistenceException(format("Database type [{0}] not supported (Class: [{1}])", dataType, pojo.getClass()));
 			}
 		}
 	}
@@ -96,52 +59,131 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		return oldAccessible;
 	}
 	
-	protected void setValuesFromJson(PersistenceTableModel tableModel, String json, PreparedStatement preparedStatement)
-			throws SQLException, NoSuchFieldException, IllegalAccessException, PersistenceException {
-		int i=1;
-		JsonElement jsonElement = new JsonParser().parse(json);
-		if (!(jsonElement instanceof JsonObject)) {
-			throw new PersistenceException(format("Invalid json object [{0}]", json));
-		}
-		JsonObject jsonObject = (JsonObject) jsonElement;
+//	protected void setValuesFromJson(PersistenceTableModel tableModel, String json, PreparedStatement preparedStatement)
+//			throws SQLException, NoSuchFieldException, IllegalAccessException, PersistenceException {
+//		int i=1;
+//		JsonElement jsonElement = new JsonParser().parse(json);
+//		if (!(jsonElement instanceof JsonObject)) {
+//			throw new PersistenceException(format("Invalid json object [{0}]", json));
+//		}
+//		JsonObject jsonObject = (JsonObject) jsonElement;
+//		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+//			String dataType = columnModel.getType();
+//			String fieldName = columnModel.getField();
+//			i = setValueFromJson(json, preparedStatement, i, jsonObject, dataType, fieldName);
+//		}
+//	}
+//
+//	private int setValueFromJson(String json, PreparedStatement preparedStatement, int i, JsonObject jsonObject, String dataType, String fieldName) throws SQLException {
+//		
+//		if (DataTypeUtils.isVarchar(dataType)) {
+//			preparedStatement.setString(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsString());
+//		} else if (DataTypeUtils.isChar(dataType)) {
+//			preparedStatement.setString(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsString());
+//		} else if (DataTypeUtils.isDate(dataType)) {
+//			preparedStatement.setDate(i++, new Date(jsonObject.getAsJsonPrimitive(fieldName).getAsLong()));
+//		} else if (DataTypeUtils.isTime(dataType)) {
+//			preparedStatement.setTime(i++, new Time(jsonObject.getAsJsonPrimitive(fieldName).getAsLong()));
+//		} else if (DataTypeUtils.isTimestamp(dataType)) {
+//			preparedStatement.setTimestamp(i++, new Timestamp(jsonObject.getAsJsonPrimitive(fieldName).getAsLong()));
+//		} else if (DataTypeUtils.isInteger(dataType)) {
+//			preparedStatement.setInt(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsInt());
+//		} else if (DataTypeUtils.isBigint(dataType)) {
+//			preparedStatement.setLong(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsLong());
+//		} else if (DataTypeUtils.isReal(dataType)) {
+//			preparedStatement.setFloat(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsFloat());
+//		} else if (DataTypeUtils.isDouble(dataType)) {
+//			preparedStatement.setDouble(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsDouble());
+//		} else if (DataTypeUtils.isBoolean(dataType)) {
+//			preparedStatement.setBoolean(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsBoolean());
+//		} else if (DataTypeUtils.isBlob(dataType)) {
+//			JsonArray jsonArray = jsonObject.getAsJsonPrimitive(fieldName).getAsJsonArray();
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//			for (JsonElement element : jsonArray) {
+//				if (!(element instanceof JsonPrimitive)) {
+//					throw new PersistenceException(format("Invalid element in the array of integers provided [{0}] not supported (Json: [{1}])", dataType, json));
+//				}
+//				JsonPrimitive primitive = (JsonPrimitive) element;
+//				baos.write(primitive.getAsInt());
+//			}
+//			byte[] bytes = baos.toByteArray();
+//			preparedStatement.setBinaryStream(i++, new ByteArrayInputStream(bytes), bytes.length);
+//		}
+//
+//		else {
+//			throw new PersistenceException(format("Database type [{0}] not supported (Json: [{1}])", dataType, json));
+//		}
+//		return i;
+//	}
+	
+	
+	
+	
+	
+	protected void setValuePrimaryKey(PersistenceTableModel tableModel, Object id, PreparedStatement preparedStatement)
+			throws SQLException, NoSuchFieldException, IllegalAccessException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			if (DataType.VARCHAR.toString().equals(columnModel.getType())) {
-				preparedStatement.setString(i++, jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsString());
-			} else if (DataType.CHAR.toString().equals(columnModel.getType())) {
-				preparedStatement.setString(i++, jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsString());
-			} else if (DataType.DATE.toString().equals(columnModel.getType())) {
-				preparedStatement.setDate(i++, new Date(jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsLong()));
-			} else if (DataType.TIME.toString().equals(columnModel.getType())) {
-				preparedStatement.setTime(i++, new Time(jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsLong()));
-			} else if (DataType.TIMESTAMP.toString().equals(columnModel.getType())) {
-				preparedStatement.setTimestamp(i++, new Timestamp(jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsLong()));
-			} else if (DataType.INTEGER.toString().equals(columnModel.getType())) {
-				preparedStatement.setInt(i++, jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsInt());
-			} else if (DataType.BIGINT.toString().equals(columnModel.getType())) {
-				preparedStatement.setLong(i++, jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsLong());
-			} else if (DataType.REAL.toString().equals(columnModel.getType())) {
-				preparedStatement.setFloat(i++, jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsFloat());
-			} else if (DataType.DOUBLE.toString().equals(columnModel.getType())) {
-				preparedStatement.setDouble(i++, jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsDouble());
-			} else if (DataType.BOOLEAN.toString().equals(columnModel.getType())) {
-				preparedStatement.setBoolean(i++, jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsBoolean());
-			} else if (DataType.BLOB.toString().equals(columnModel.getType())) {
-				JsonArray jsonArray = jsonObject.getAsJsonPrimitive(columnModel.getField()).getAsJsonArray();
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				for (JsonElement element : jsonArray) {
-					if (!(element instanceof JsonPrimitive)) {
-						throw new PersistenceException(format("Invalid element in the array of integers provided [{0}] not supported (Json: [{1}])", columnModel.getType(), json));
-					}
-					JsonPrimitive primitive = (JsonPrimitive) element;
-					baos.write(primitive.getAsInt());
-				}
-				byte[] bytes = baos.toByteArray();
-				preparedStatement.setBinaryStream(i++, new ByteArrayInputStream(bytes), bytes.length);
-			}
-
-			else {
-				throw new PersistenceException(format("Database type [{0}] not supported (Json: [{1}])", columnModel.getType(), json));
+			if (columnModel.isPrimaryKey()) {
+				String dataType = columnModel.getType();
+				setValue(preparedStatement, 1, dataType, id);
+				break;
 			}
 		}
 	}
+	
+	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value) throws SQLException {
+		
+		if (DataTypeUtils.isVarchar(dataType)) {
+			preparedStatement.setString(i, (String) value);
+		} else if (DataTypeUtils.isChar(dataType)) {
+			preparedStatement.setString(i, (String) value);
+		} else if (DataTypeUtils.isDate(dataType)) {
+			preparedStatement.setDate(i, (Date) value);
+		} else if (DataTypeUtils.isTime(dataType)) {
+			preparedStatement.setTime(i, (Time) value);
+		} else if (DataTypeUtils.isTimestamp(dataType)) {
+			preparedStatement.setTimestamp(i, (Timestamp) value);
+		} else if (DataTypeUtils.isInteger(dataType)) {
+			preparedStatement.setInt(i, (Integer) value);
+		} else if (DataTypeUtils.isBigint(dataType)) {
+			preparedStatement.setLong(i, (Long) value);
+		} else if (DataTypeUtils.isReal(dataType)) {
+			preparedStatement.setFloat(i, (Float) value);
+		} else if (DataTypeUtils.isDouble(dataType)) {
+			preparedStatement.setDouble(i, (Double) value);
+		} else if (DataTypeUtils.isBoolean(dataType)) {
+			preparedStatement.setBoolean(i, (Boolean) value);
+		} else if (DataTypeUtils.isBlob(dataType)) {
+			byte[] bytes = (byte[]) value;
+			preparedStatement.setBinaryStream(i, new ByteArrayInputStream(bytes), bytes.length);
+		}
+
+		else {
+			throw new PersistenceException(format("Database type [{0}] not supported", dataType));
+		}
+	}
+	
+	protected void setValueToPojo(Object pojo, ResultSet resultSet, PersistenceTableColumnModel columnModel)
+			throws NoSuchFieldException, SQLException, IllegalAccessException {
+		Field field = pojo.getClass().getDeclaredField(columnModel.getField());
+		Object value = resultSet.getObject(columnModel.getName());
+		boolean oldAccessible = setAccessible(field);
+		field.set(pojo, value);
+		resetAccesible(field, oldAccessible);
+	}
+	
+	protected PreparedStatement openPreparedStatement(Connection connection, String sql) throws SQLException {
+		return connection.prepareStatement(sql);
+	}
+	
+	protected void closePreparedStatement(PreparedStatement preparedStatement) {
+		try {
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		}
+	}
+	
 }

@@ -1,13 +1,16 @@
 package org.eclipse.dirigible.database.persistence;
 
 import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.PersistenceCreateTableProcessor;
 import org.eclipse.dirigible.database.persistence.processors.PersistenceDropTableProcessor;
 import org.eclipse.dirigible.database.persistence.processors.PersistenceInsertProcessor;
+import org.eclipse.dirigible.database.persistence.processors.PersistenceQueryProcessor;
 
-public class PersistenceManager {
+public class PersistenceManager<T> {
 	
 	
 	public Object insert(Connection connection, Object pojo) {
@@ -16,34 +19,34 @@ public class PersistenceManager {
 		return insertProcessor.insert(connection, tableModel, pojo);
 	}
 	
-	public Object insert(Connection connection, String modelJson, String objectJson) {
-		PersistenceTableModel tableModel = PersistenceFactory.createModel(modelJson);
-		PersistenceInsertProcessor insertProcessor = new PersistenceInsertProcessor();
-		return insertProcessor.insert(connection, tableModel, objectJson);
-	}
-	
-	public Object createTable(Connection connection, Class<? extends Object> clazz) {
+	public int createTable(Connection connection, Class<T> clazz) {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		PersistenceCreateTableProcessor createTableProcessor = new PersistenceCreateTableProcessor();
-		return createTableProcessor.create(connection, tableModel, null);
+		return createTableProcessor.create(connection, tableModel);
 	}
 	
-	public Object createTable(Connection connection, String modelJson) {
-		PersistenceTableModel tableModel = PersistenceFactory.createModel(modelJson);
-		PersistenceCreateTableProcessor createTableProcessor = new PersistenceCreateTableProcessor();
-		return createTableProcessor.create(connection, tableModel, null);
-	}
-	
-	public Object dropTable(Connection connection, Class<? extends Object> clazz) {
+	public int dropTable(Connection connection, Class<T> clazz) {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		PersistenceDropTableProcessor dropTableProcessor = new PersistenceDropTableProcessor();
-		return dropTableProcessor.drop(connection, tableModel, null);
+		return dropTableProcessor.drop(connection, tableModel);
 	}
 	
-	public Object dropTable(Connection connection, String modelJson) {
-		PersistenceTableModel tableModel = PersistenceFactory.createModel(modelJson);
-		PersistenceDropTableProcessor dropTableProcessor = new PersistenceDropTableProcessor();
-		return dropTableProcessor.drop(connection, tableModel, null);
+	public T find(Connection connection, Class<T> clazz, Object id) {
+		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
+		return queryProcessor.find(connection, tableModel, clazz, id);
+	}
+	
+	public List<T> findAll(Connection connection, Class<T> clazz) {
+		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
+		return queryProcessor.findAll(connection, tableModel, clazz);
+	}
+	
+	public List<T> query(Connection connection, Class<T> clazz, String sql, List<Object> values) {
+		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
+		return queryProcessor.query(connection, tableModel, clazz, sql, values);
 	}
 
 }

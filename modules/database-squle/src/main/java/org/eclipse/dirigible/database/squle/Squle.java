@@ -24,6 +24,10 @@ public class Squle {
 		return new Squle(dialect);
 	}
 	
+	public static Squle getNative(Connection connection) {
+		return new Squle(deriveDialect(connection));
+	}
+	
 	private Squle() {
 		this(new DefaultSquleDialect());
 	}

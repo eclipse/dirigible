@@ -29,40 +29,13 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = generateScript(connection, tableModel);
-			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = openPreparedStatement(connection, sql);
 			setValuesFromPojo(tableModel, pojo, preparedStatement);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		} finally {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				throw new PersistenceException(e);
-			}
-		}
-		return result;
-	}
-
-	
-
-	public Object insert(Connection connection, PersistenceTableModel tableModel, String json)
-			throws PersistenceException {
-		int result = 0;
-		PreparedStatement preparedStatement = null;
-		try {
-			String sql = generateScript(connection, tableModel);
-			preparedStatement = connection.prepareStatement(sql);
-			setValuesFromJson(tableModel, json, preparedStatement);
-			result = preparedStatement.executeUpdate();
-		} catch (Exception e) {
-			throw new PersistenceException(e);
-		} finally {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				throw new PersistenceException(e);
-			}
+			closePreparedStatement(preparedStatement);
 		}
 		return result;
 	}

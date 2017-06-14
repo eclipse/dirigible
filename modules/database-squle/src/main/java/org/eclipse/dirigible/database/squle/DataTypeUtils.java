@@ -98,4 +98,48 @@ public class DataTypeUtils {
 		return getDatabaseTypeName(type);
 	}
 	
+	public static boolean isBlob(String dataType) {
+		return DataType.BLOB.toString().equals(dataType);
+	}
+
+	public static boolean isBoolean(String dataType) {
+		return DataType.BOOLEAN.toString().equals(dataType);
+	}
+
+	public static boolean isDouble(String dataType) {
+		return DataType.DOUBLE.toString().equals(dataType);
+	}
+
+	public static boolean isReal(String dataType) {
+		return DataType.REAL.toString().equals(dataType);
+	}
+
+	public static boolean isBigint(String dataType) {
+		return DataType.BIGINT.toString().equals(dataType);
+	}
+
+	public static boolean isInteger(String dataType) {
+		return DataType.INTEGER.toString().equals(dataType);
+	}
+
+	public static boolean isTimestamp(String dataType) {
+		return DataType.TIMESTAMP.toString().equals(dataType);
+	}
+
+	public static boolean isTime(String dataType) {
+		return DataType.TIME.toString().equals(dataType);
+	}
+
+	public static boolean isDate(String dataType) {
+		return DataType.DATE.toString().equals(dataType);
+	}
+
+	public static boolean isChar(String dataType) {
+		return DataType.CHAR.toString().equals(dataType);
+	}
+
+	public static boolean isVarchar(String dataType) {
+		return DataType.VARCHAR.toString().equals(dataType);
+	}
+	
 }

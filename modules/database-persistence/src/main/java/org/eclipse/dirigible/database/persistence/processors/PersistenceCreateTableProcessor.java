@@ -8,7 +8,6 @@ import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.squle.DataType;
-import org.eclipse.dirigible.database.squle.ISquleKeywords;
 import org.eclipse.dirigible.database.squle.Squle;
 import org.eclipse.dirigible.database.squle.builders.CreateTableBuilder;
 
@@ -39,45 +38,21 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 		return sql;
 	}
 	
-	public Object create(Connection connection, PersistenceTableModel tableModel, Object pojo) throws PersistenceException {
+	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = generateScript(connection, tableModel);
-			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		} finally {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				throw new PersistenceException(e);
-			}
+			closePreparedStatement(preparedStatement);
 		}
 		return result;
 	}
 
 	
-
-	public Object create(Connection connection, PersistenceTableModel tableModel, String json)
-			throws PersistenceException {
-		int result = 0;
-		PreparedStatement preparedStatement = null;
-		try {
-			String sql = generateScript(connection, tableModel);
-			preparedStatement = connection.prepareStatement(sql);
-			result = preparedStatement.executeUpdate();
-		} catch (Exception e) {
-			throw new PersistenceException(e);
-		} finally {
-			try {
-				preparedStatement.close();
-			} catch (SQLException e) {
-				throw new PersistenceException(e);
-			}
-		}
-		return result;
-	}
 
 }
