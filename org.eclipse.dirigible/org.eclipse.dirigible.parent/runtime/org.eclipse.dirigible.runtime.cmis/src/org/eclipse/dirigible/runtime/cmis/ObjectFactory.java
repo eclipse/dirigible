@@ -11,9 +11,6 @@ public class ObjectFactory {
 		this.session = session;
 	}
 
-	/**
-	 * Returns a newly created ContentStream object
-	 */
 	public ContentStream createContentStream(String filename, long length, String mimetype, InputStream inputStream) {
 		return new ContentStream(this.session, filename, length, mimetype, inputStream);
 	}

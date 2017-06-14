@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.actions;
 
@@ -23,11 +22,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * 
- * @noextend This class is not intended to be subclassed by clients.
  */
-public class WorkspaceModifyDelegatingOperation extends
-		WorkspaceModifyOperation {
+public class WorkspaceModifyDelegatingOperation extends WorkspaceModifyOperation {
 
 	/**
 	 * The runnable to delegate work to at execution time.
@@ -37,14 +33,13 @@ public class WorkspaceModifyDelegatingOperation extends
 	/**
 	 * Creates a new operation which will delegate its work to the given
 	 * runnable using the provided scheduling rule.
-	 * 
+	 *
 	 * @param content
 	 *            the runnable to delegate to when this operation is executed
 	 * @param rule
 	 *            The ISchedulingRule to use or <code>null</code>.
 	 */
-	public WorkspaceModifyDelegatingOperation(IRunnableWithProgress content,
-			ISchedulingRule rule) {
+	public WorkspaceModifyDelegatingOperation(IRunnableWithProgress content, ISchedulingRule rule) {
 		super(rule);
 		this.content = content;
 	}
@@ -52,7 +47,7 @@ public class WorkspaceModifyDelegatingOperation extends
 	/**
 	 * Creates a new operation which will delegate its work to the given
 	 * runnable. Schedule using the supplied s
-	 * 
+	 *
 	 * @param content
 	 *            the runnable to delegate to when this operation is executed
 	 */
@@ -61,11 +56,8 @@ public class WorkspaceModifyDelegatingOperation extends
 		this.content = content;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on WorkbenchModifyOperation.
-	 */
-	protected void execute(IProgressMonitor monitor) throws CoreException,
-			InterruptedException {
+	@Override
+	protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
 		try {
 			content.run(monitor);
 		} catch (InvocationTargetException e) {

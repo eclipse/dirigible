@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.views.navigator;
 
@@ -31,13 +30,13 @@ import org.eclipse.jface.viewers.ViewerComparator;
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * 
+ *
  * @since 3.3
  */
 public class ResourceComparator extends ViewerComparator {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7368226562336924481L;
 
@@ -55,7 +54,7 @@ public class ResourceComparator extends ViewerComparator {
 
 	/**
 	 * Creates a resource sorter that will use the given sort criteria.
-	 * 
+	 *
 	 * @param criteria
 	 *            the sort criterion to use: one of <code>NAME</code> or
 	 *            <code>TYPE</code>
@@ -68,14 +67,12 @@ public class ResourceComparator extends ViewerComparator {
 	/**
 	 * Returns an integer value representing the relative sort priority of the
 	 * given element based on its class.
-	 * <p>
 	 * <ul>
 	 * <li>resources (<code>IResource</code>) - 2</li>
 	 * <li>project references (<code>ProjectReference</code>) - 1</li>
 	 * <li>everything else - 0</li>
 	 * </ul>
-	 * </p>
-	 * 
+	 *
 	 * @param element
 	 *            the element
 	 * @return the sort priority (larger numbers means more important)
@@ -90,17 +87,18 @@ public class ResourceComparator extends ViewerComparator {
 	/*
 	 * (non-Javadoc) Method declared on ViewerComparator.
 	 */
+	@Override
 	public int compare(Viewer viewer, Object o1, Object o2) {
 		// have to deal with non-resources in navigator
 		// if one or both objects are not resources, returned a comparison
 		// based on class.
-		if (!(o1 instanceof IResource && o2 instanceof IResource)) {
+		if (!((o1 instanceof IResource) && (o2 instanceof IResource))) {
 			return compareClass(o1, o2);
 		}
 		IResource r1 = (IResource) o1;
 		IResource r2 = (IResource) o2;
 
-		if (r1 instanceof IContainer && r2 instanceof IContainer) {
+		if ((r1 instanceof IContainer) && (r2 instanceof IContainer)) {
 			return compareNames(r1, r2);
 		} else if (r1 instanceof IContainer) {
 			return -1;
@@ -118,7 +116,7 @@ public class ResourceComparator extends ViewerComparator {
 	/**
 	 * Returns a number reflecting the collation order of the given elements
 	 * based on their class.
-	 * 
+	 *
 	 * @param element1
 	 *            the first element to be ordered
 	 * @param element2
@@ -135,7 +133,7 @@ public class ResourceComparator extends ViewerComparator {
 	/**
 	 * Returns a number reflecting the collation order of the given resources
 	 * based on their resource names.
-	 * 
+	 *
 	 * @param resource1
 	 *            the first resource element to be ordered
 	 * @param resource2
@@ -147,15 +145,14 @@ public class ResourceComparator extends ViewerComparator {
 	 */
 	@SuppressWarnings("unchecked")
 	protected int compareNames(IResource resource1, IResource resource2) {
-		return getComparator()
-				.compare(resource1.getName(), resource2.getName());
+		return getComparator().compare(resource1.getName(), resource2.getName());
 	}
 
 	/**
 	 * Returns a number reflecting the collation order of the given resources
 	 * based on their respective file extensions. Resources with the same file
 	 * extension will be collated based on their names.
-	 * 
+	 *
 	 * @param resource1
 	 *            the first resource element to be ordered
 	 * @param resource2
@@ -184,7 +181,7 @@ public class ResourceComparator extends ViewerComparator {
 
 	/**
 	 * Returns the sort criteria of this sorter.
-	 * 
+	 *
 	 * @return the sort criterion: one of <code>NAME</code> or <code>TYPE</code>
 	 */
 	public int getCriteria() {
@@ -193,7 +190,7 @@ public class ResourceComparator extends ViewerComparator {
 
 	/**
 	 * Returns the extension portion of the given resource.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource
 	 * @return the file extension, possibily the empty string
@@ -205,7 +202,7 @@ public class ResourceComparator extends ViewerComparator {
 
 	/**
 	 * Sets the sort criteria of this sorter.
-	 * 
+	 *
 	 * @param criteria
 	 *            the sort criterion: one of <code>ResourceSorter.NAME</code> or
 	 *            <code>ResourceSorter.TYPE</code>

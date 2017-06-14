@@ -6,7 +6,7 @@ Bundle-Name: org.eclipse.dirigible.repository.db
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: SAP AG
 Build-Jdk: 1.6.0_33
-Bundle-Version: 2.7.170504
+Bundle-Version: 2.7.170608
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.dirigible.repository.db;singleton:=true
 Require-Bundle: org.eclipse.dirigible.repository.api,

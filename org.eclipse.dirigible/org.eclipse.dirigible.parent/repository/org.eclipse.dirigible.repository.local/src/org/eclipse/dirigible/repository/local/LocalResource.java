@@ -99,7 +99,6 @@ public class LocalResource extends LocalEntity implements IResource {
 		String repositoryPath = getRepositoryPath().toString();
 		String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
 		return (FileSystemUtils.fileExists(localPath));
-		// return (getDocument() != null);
 	}
 
 	@Override
@@ -160,6 +159,9 @@ public class LocalResource extends LocalEntity implements IResource {
 	/**
 	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
 	 * there is no such object, then <code>null</code> is returned.
+	 * 
+	 * @return Local File
+	 * @throws IOException IO Exception
 	 */
 	protected LocalFile getDocument() throws IOException {
 		final LocalObject object = getLocalObject();
@@ -175,6 +177,9 @@ public class LocalResource extends LocalEntity implements IResource {
 	/**
 	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
 	 * there is no such object, then an {@link IOException} is thrown.
+	 * 
+	 * @return Local File
+	 * @throws IOException IO Exception
 	 */
 	protected LocalFile getDocumentSafe() throws IOException {
 		final LocalFile document = getDocument();
@@ -229,8 +234,6 @@ public class LocalResource extends LocalEntity implements IResource {
 
 	@Override
 	public IResourceVersion getResourceVersion(int version) throws IOException {
-		// return new DBResourceVersion(getRepository(), new RepositoryPath(
-		// getPath()), version);
 		return null;
 	}
 

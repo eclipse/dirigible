@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.rcp;
@@ -19,11 +18,9 @@ import java.util.List;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.repository.logging.Logger;
 
 /**
  * The DB implementation of {@link IResource}
- * 
  */
 public class RCPResource extends RCPEntity implements IResource {
 
@@ -34,23 +31,16 @@ public class RCPResource extends RCPEntity implements IResource {
 	private static final String COULD_NOT_DELETE_RESOURCE = Messages.getString("DBResource.COULD_NOT_DELETE_RESOURCE"); //$NON-NLS-1$
 	private static final String COULD_NOT_RENAME_RESOURCE = Messages.getString("DBResource.COULD_NOT_RENAME_RESOURCE"); //$NON-NLS-1$
 
-	private static final Logger logger = Logger.getLogger(RCPResource.class);
-
 	private boolean binary = false;
 
 	private String contentType;
 
 	public RCPResource(RCPRepository repository, RepositoryPath path) {
 		super(repository, path);
-		try {
-			RCPFile rcpFile = getDocument();
-			if (rcpFile != null) {
-				this.binary = rcpFile.isBinary();
-				this.contentType = rcpFile.getContentType();
-
-			}
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+		RCPFile rcpFile = getDocument();
+		if (rcpFile != null) {
+			this.binary = rcpFile.isBinary();
+			this.contentType = rcpFile.getContentType();
 		}
 	}
 
@@ -71,24 +61,22 @@ public class RCPResource extends RCPEntity implements IResource {
 
 	@Override
 	public void renameTo(String name) throws IOException {
-		 final RCPFile document = getDocumentSafe();
-		 try {
-			 document.rename(RepositoryPath.normalizePath(getParent().getPath(), name));
-		 } catch (RCPBaseException ex) {
-			 throw new IOException(COULD_NOT_RENAME_RESOURCE + this.getName(),
-						ex);
-		 }
+		final RCPFile document = getDocumentSafe();
+		try {
+			document.rename(RepositoryPath.normalizePath(getParent().getPath(), name));
+		} catch (RCPBaseException ex) {
+			throw new IOException(COULD_NOT_RENAME_RESOURCE + this.getName(), ex);
+		}
 	}
 
 	@Override
 	public void moveTo(String path) throws IOException {
 		final RCPFile document = getDocumentSafe();
-		 try {
-			 document.rename(path);
-		 } catch (RCPBaseException ex) {
-			 throw new IOException(COULD_NOT_RENAME_RESOURCE + this.getName(),
-						ex);
-		 }
+		try {
+			document.rename(path);
+		} catch (RCPBaseException ex) {
+			throw new IOException(COULD_NOT_RENAME_RESOURCE + this.getName(), ex);
+		}
 	}
 
 	@Override
@@ -121,7 +109,7 @@ public class RCPResource extends RCPEntity implements IResource {
 	@Override
 	public void setContent(byte[] content) throws IOException {
 
-		if (this.contentType == null || "".equals(this.contentType)) { //$NON-NLS-1$
+		if ((this.contentType == null) || "".equals(this.contentType)) { //$NON-NLS-1$
 			this.contentType = IResource.CONTENT_TYPE_DEFAULT;
 		}
 
@@ -160,8 +148,10 @@ public class RCPResource extends RCPEntity implements IResource {
 	/**
 	 * Returns the {@link RCPFile} object matching this {@link RCPResource}. If
 	 * there is no such object, then <code>null</code> is returned.
+	 *
+	 * @return RCP File
 	 */
-	protected RCPFile getDocument() throws IOException {
+	protected RCPFile getDocument() {
 		final RCPObject object = getRCPObject();
 		if (object == null) {
 			return null;
@@ -175,12 +165,15 @@ public class RCPResource extends RCPEntity implements IResource {
 	/**
 	 * Returns the {@link RCPFile} object matching this {@link RCPResource}. If
 	 * there is no such object, then an {@link IOException} is thrown.
+	 *
+	 * @return RCP File
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	protected RCPFile getDocumentSafe() throws IOException {
 		final RCPFile document = getDocument();
 		if (document == null) {
-			throw new IOException(format(THERE_IS_NO_RESOURCE_AT_PATH_0,
-					getPath()));
+			throw new IOException(format(THERE_IS_NO_RESOURCE_AT_PATH_0, getPath()));
 		}
 		return document;
 	}
@@ -196,8 +189,7 @@ public class RCPResource extends RCPEntity implements IResource {
 	}
 
 	@Override
-	public void setContent(byte[] content, boolean isBinary, String contentType)
-			throws IOException {
+	public void setContent(byte[] content, boolean isBinary, String contentType) throws IOException {
 
 		this.binary = isBinary;
 		this.contentType = contentType;
@@ -221,19 +213,11 @@ public class RCPResource extends RCPEntity implements IResource {
 
 	@Override
 	public List<IResourceVersion> getResourceVersions() throws IOException {
-//		try {
-//			return getRepository().getRepositoryDAO()
-//					.getResourceVersionsByPath(getPath());
-//		} catch (RCPBaseException ex) {
-//			logger.error(ex.getMessage(), ex);
-			return null;
-//		}
+		return null;
 	}
 
 	@Override
 	public IResourceVersion getResourceVersion(int version) throws IOException {
-//		return new DBResourceVersion(getRepository(), new RepositoryPath(
-//				getPath()), version);
 		return null;
 	}
 

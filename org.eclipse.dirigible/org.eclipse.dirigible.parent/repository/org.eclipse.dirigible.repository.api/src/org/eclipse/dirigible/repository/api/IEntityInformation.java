@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.api;
@@ -19,7 +18,6 @@ import java.util.Date;
  * <p>
  * Help methods are available in the <code>
  * PermissionsHelper</code> class.
- * 
  */
 public interface IEntityInformation {
 
@@ -93,6 +91,8 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 * 
+	 * @return the name
 	 */
 	public String getName();
 
@@ -102,6 +102,8 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 * 
+	 * @return the path
 	 */
 	public String getPath();
 
@@ -111,7 +113,8 @@ public interface IEntityInformation {
 	 * <p>
 	 * If the implementation cannot find the requested information, then a value
 	 * of {@link #PERMISSION_UNKNOWN} is returned.
-	 * 
+	 *
+	 * @return the permissions mask
 	 * @see #PERMISSION_OWNER_READ
 	 * @see #PERMISSION_OWNER_WRITE
 	 * @see #PERMISSION_OWNER_UPDATE
@@ -130,35 +133,37 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 *
+	 * @return the size property
 	 */
 	public Long getSize();
 
 	/**
 	 * The creator of the entity
-	 * 
-	 * @return
+	 *
+	 * @return the created by property
 	 */
 	public String getCreatedBy();
 
 	/**
 	 * Timestamp of the creation of the entity
-	 * 
-	 * @return
+	 *
+	 * @return the created at property
 	 */
 	public Date getCreatedAt();
 
 	/**
 	 * The last modifier of the entity
-	 * 
-	 * @return
+	 *
+	 * @return the modified by property
 	 */
 
 	public String getModifiedBy();
 
 	/**
 	 * Timestamp of the last modification of the entity
-	 * 
-	 * @return
+	 *
+	 * @return the modified at
 	 */
 	public Date getModifiedAt();
 

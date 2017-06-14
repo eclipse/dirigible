@@ -68,6 +68,7 @@ public class DBUtils {
 	 * The constructor
 	 *
 	 * @param dataSource
+	 *            the data source
 	 */
 	public DBUtils(DataSource dataSource) {
 		this.dataSource = dataSource;
@@ -78,10 +79,14 @@ public class DBUtils {
 	 * statements separated with ';'
 	 *
 	 * @param conn
+	 *            the connection
 	 * @param path
+	 *            the path
 	 * @param clazz
+	 *            the class
 	 * @return the SQL script as a String
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public String readScript(Connection conn, String path, Class<?> clazz) throws IOException {
 		logger.debug("entering readScript"); //$NON-NLS-1$
@@ -137,8 +142,10 @@ public class DBUtils {
 	 * Execute a SQL script containing multiple statements separated with ';'
 	 *
 	 * @param connection
+	 *            the connection
 	 * @param script
-	 * @return
+	 *            the SQL script
+	 * @return whether the update was executed successfully
 	 */
 	public boolean executeUpdate(Connection connection, String script) {
 		logger.debug("entering executeUpdate"); //$NON-NLS-1$
@@ -176,9 +183,12 @@ public class DBUtils {
 	 * Getting a PreparedStatement
 	 *
 	 * @param connection
+	 *            the connection
 	 * @param sql
+	 *            the SQL
 	 * @return the prepared statement
 	 * @throws SQLException
+	 *             SQL Exception
 	 */
 	public PreparedStatement getPreparedStatement(Connection connection, String sql) throws SQLException {
 		logger.debug("entering getPreparedStatement"); //$NON-NLS-1$
@@ -190,8 +200,9 @@ public class DBUtils {
 	/**
 	 * Getting a Connection from the DataSource
 	 *
-	 * @return the connection
+	 * @return the connection the connection
 	 * @throws SQLException
+	 *             SQL Exception
 	 */
 	public Connection getConnection() throws SQLException {
 		logger.debug("entering getConnection"); //$NON-NLS-1$
@@ -204,6 +215,7 @@ public class DBUtils {
 	 * Safely closing a Connection
 	 *
 	 * @param connection
+	 *            the connection
 	 */
 	public void closeConnection(Connection connection) {
 		logger.debug("entering closeConnection"); //$NON-NLS-1$
@@ -221,6 +233,7 @@ public class DBUtils {
 	 * Safely closing a Statement
 	 *
 	 * @param statement
+	 *            the statement
 	 */
 	public void closeStatement(Statement statement) {
 		logger.debug("entering closeStatement"); //$NON-NLS-1$
@@ -238,6 +251,7 @@ public class DBUtils {
 	 * Safely closing a ResultSet
 	 *
 	 * @param resultSet
+	 *            the result set
 	 */
 	public void closeResultSet(ResultSet resultSet) {
 		logger.debug("entering closeResultSet"); //$NON-NLS-1$
@@ -273,8 +287,10 @@ public class DBUtils {
 	 * ResultSet current row to Content transformation
 	 *
 	 * @param resultSet
+	 *            the result set
 	 * @return the array of bytes
 	 * @throws SQLException
+	 *             SQL Exception
 	 */
 	public static byte[] dbToData(ResultSet resultSet) throws SQLException {
 		String data = resultSet.getString("DOC_CONTENT"); //$NON-NLS-1$
@@ -284,11 +300,17 @@ public class DBUtils {
 	/**
 	 * ResultSet current row to Binary Content transformation
 	 *
-	 * @param repository
+	 * @param connection
+	 *            the connection
 	 * @param resultSet
-	 * @return
+	 *            the result set
+	 * @param columnName
+	 *            the name of the column
+	 * @return binary content
 	 * @throws SQLException
+	 *             SQL Exception
 	 * @throws IOException
+	 *             IO Exception
 	 */
 	public static byte[] dbToDataBinary(Connection connection, ResultSet resultSet, String columnName) throws SQLException, IOException {
 		String productName = connection.getMetaData().getDatabaseProductName();

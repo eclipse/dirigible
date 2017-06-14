@@ -38,8 +38,10 @@ public class DBFolderDAO extends DBObjectDAO {
 	 * Return the database folder object
 	 *
 	 * @param path
-	 * @return
+	 *            the path
+	 * @return DB Folder
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	DBFolder getFolderByPath(String path) throws DBBaseException {
 		logger.debug("entering getFolderByPath"); //$NON-NLS-1$
@@ -60,8 +62,10 @@ public class DBFolderDAO extends DBObjectDAO {
 	 * at the given path - cascading
 	 *
 	 * @param path
-	 * @return
+	 *            the path
+	 * @return DB Folder
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	DBFolder createFolder(String path) throws DBBaseException {
 		logger.debug("entering createFolder"); //$NON-NLS-1$
@@ -97,8 +101,12 @@ public class DBFolderDAO extends DBObjectDAO {
 	 * at the given path - single entity only
 	 *
 	 * @param path
-	 * @return
+	 *            the path
+	 * @param parent
+	 *            the parent
+	 * @return DB Folder
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	DBFolder createSingleFolder(String path, DBFolder parent) throws DBBaseException {
 		logger.debug(" entering createSingleFolder"); //$NON-NLS-1$
@@ -121,7 +129,9 @@ public class DBFolderDAO extends DBObjectDAO {
 	 * Delete the database folder object based on the given path
 	 *
 	 * @param path
+	 *            the path
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	void removeFolderByPath(String path) throws DBBaseException {
 
@@ -156,7 +166,9 @@ public class DBFolderDAO extends DBObjectDAO {
 	 * Cascading - delete folder and its content
 	 *
 	 * @param path
+	 *            the path
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	private void removeFolderCascade(String path) throws DBBaseException {
 
@@ -188,8 +200,10 @@ public class DBFolderDAO extends DBObjectDAO {
 	 * Check whether the folder is empty
 	 *
 	 * @param path
-	 * @return
+	 *            the path
+	 * @return whethet the folder is empty
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	private boolean isFolderEmpty(String path) throws DBBaseException {
 
@@ -225,8 +239,10 @@ public class DBFolderDAO extends DBObjectDAO {
 	 * Iterate the sub-folders and files of a given folder
 	 *
 	 * @param path
-	 * @return
+	 *            the path
+	 * @return list of DB Objects
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
 	public List<DBObject> getChildrenByFolder(String path) throws DBBaseException {
 

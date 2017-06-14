@@ -5,7 +5,7 @@ Bundle-Name: org.eclipse.dirigible.repository.logging
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: SAP AG
 Build-Jdk: 1.6.0_33
-Bundle-Version: 2.7.170504
+Bundle-Version: 2.7.170608
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.dirigible.repository.logging;singleton:=true
 Import-Package: org.slf4j

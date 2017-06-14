@@ -26,7 +26,7 @@ public class ContentStream {
 	/**
 	 * Returns the InputStream of this ContentStream object
 	 *
-	 * @return
+	 * @return Input Stream
 	 */
 	public InputStream getStream() {
 		return this.inputStream;

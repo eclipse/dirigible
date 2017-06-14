@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.internal.ide;
 
@@ -49,6 +48,9 @@ public final class AboutInfo {
 	/**
 	 * The information contained in this info will apply to only the argument
 	 * product.
+	 *
+	 * @param product
+	 *            the product
 	 */
 	public AboutInfo(IProduct product) {
 		this.productProperties = new ProductProperties(product);
@@ -56,6 +58,9 @@ public final class AboutInfo {
 
 	/**
 	 * This info object will apply to the argument bundle group.
+	 * 
+	 * @param bundleGroup
+	 *            the bundle group
 	 */
 	public AboutInfo(IBundleGroup bundleGroup) {
 		this.bundleGroupProperties = new BundleGroupProperties(bundleGroup);
@@ -63,7 +68,7 @@ public final class AboutInfo {
 
 	/**
 	 * Returns the configuration information for the feature with the given id.
-	 * 
+	 *
 	 * @param featureId
 	 *            the feature id
 	 * @param versionId
@@ -76,8 +81,7 @@ public final class AboutInfo {
 
 		// first see if the id matches the product
 		IProduct product = Platform.getProduct();
-		if (product != null
-				&& featureId.equals(ProductProperties.getProductId(product))) {
+		if ((product != null) && featureId.equals(ProductProperties.getProductId(product))) {
 			return new AboutInfo(product);
 		}
 
@@ -91,17 +95,16 @@ public final class AboutInfo {
 	}
 
 	private static IBundleGroup getBundleGroup(String id, String versionId) {
-		if (id == null || versionId == null) {
+		if ((id == null) || (versionId == null)) {
 			return null;
 		}
 
 		IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
-		for (int p = 0; p < providers.length; ++p) {
-			IBundleGroup[] groups = providers[p].getBundleGroups();
-			for (int g = 0; g < groups.length; ++g) {
-				if (id.equals(groups[g].getIdentifier())
-						&& versionId.equals(groups[g].getVersion())) {
-					return groups[g];
+		for (IBundleGroupProvider provider : providers) {
+			IBundleGroup[] groups = provider.getBundleGroups();
+			for (IBundleGroup group : groups) {
+				if (id.equals(group.getIdentifier()) && versionId.equals(group.getVersion())) {
+					return group;
 				}
 			}
 		}
@@ -113,29 +116,27 @@ public final class AboutInfo {
 	 * Returns the descriptor for an image which can be shown in an "about"
 	 * dialog for this product. Products designed to run "headless" typically
 	 * would not have such an image.
-	 * 
+	 *
 	 * @return the descriptor for an about image, or <code>null</code> if none
 	 */
 	public ImageDescriptor getAboutImage() {
-		return productProperties == null ? null : productProperties
-				.getAboutImage();
+		return productProperties == null ? null : productProperties.getAboutImage();
 	}
 
 	/**
 	 * Returns the descriptor for an image which can be shown in an
 	 * "about features" dialog. Products designed to run "headless" typically
 	 * would not have such an image.
-	 * 
+	 *
 	 * @return the descriptor for a feature image, or <code>null</code> if none
 	 */
 	public ImageDescriptor getFeatureImage() {
-		return bundleGroupProperties == null ? null : bundleGroupProperties
-				.getFeatureImage();
+		return bundleGroupProperties == null ? null : bundleGroupProperties.getFeatureImage();
 	}
 
 	/**
 	 * Returns the simple name of the feature image file.
-	 * 
+	 *
 	 * @return the simple name of the feature image file, or <code>null</code>
 	 *         if none
 	 */
@@ -150,7 +151,7 @@ public final class AboutInfo {
 
 	/**
 	 * Returns the CRC of the feature image as supplied in the properties file.
-	 * 
+	 *
 	 * @return the CRC of the feature image, or <code>null</code> if none
 	 */
 	public Long getFeatureImageCRC() {
@@ -159,8 +160,7 @@ public final class AboutInfo {
 		}
 
 		if (!calculatedImageCRC) {
-			featureImageCRC = calculateImageCRC(bundleGroupProperties
-					.getFeatureImageUrl());
+			featureImageCRC = calculateImageCRC(bundleGroupProperties.getFeatureImageUrl());
 			calculatedImageCRC = featureImageCRC != null;
 		}
 
@@ -204,6 +204,8 @@ public final class AboutInfo {
 
 	/**
 	 * Returns a label for the feature plugn, or <code>null</code>.
+	 *
+	 * @return label
 	 */
 	public String getFeatureLabel() {
 		if (productProperties != null) {
@@ -217,7 +219,7 @@ public final class AboutInfo {
 
 	/**
 	 * Returns the id for this feature.
-	 * 
+	 *
 	 * @return the feature id
 	 */
 	public String getFeatureId() {
@@ -227,18 +229,17 @@ public final class AboutInfo {
 		} else if (bundleGroupProperties != null) {
 			id = bundleGroupProperties.getFeatureId();
 		}
-		return id != null ? id : EMPTY_STRING; //$NON-NLS-1$ 
+		return id != null ? id : EMPTY_STRING;
 	}
 
 	/**
 	 * Returns the text to show in an "about" dialog for this product. Products
 	 * designed to run "headless" typically would not have such text.
-	 * 
+	 *
 	 * @return the about text, or <code>null</code> if none
 	 */
 	public String getAboutText() {
-		return productProperties == null ? null : productProperties
-				.getAboutText();
+		return productProperties == null ? null : productProperties.getAboutText();
 	}
 
 	/**
@@ -248,9 +249,8 @@ public final class AboutInfo {
 	 * On Motif, for example, this can be used to set the name used for resource
 	 * lookup.
 	 * </p>
-	 * 
+	 *
 	 * @return the application name, or <code>null</code>
-	 * 
 	 * @see org.eclipse.swt.widgets.Display#setAppName
 	 */
 	public String getAppName() {
@@ -262,38 +262,35 @@ public final class AboutInfo {
 	/**
 	 * Returns the product name or <code>null</code>. This is shown in the
 	 * window title and the About action.
-	 * 
+	 *
 	 * @return the product name, or <code>null</code>
 	 */
 	public String getProductName() {
-		return productProperties == null ? null : productProperties
-				.getProductName();
+		return productProperties == null ? null : productProperties.getProductName();
 	}
 
 	/**
 	 * Returns the provider name or <code>null</code>.
-	 * 
+	 *
 	 * @return the provider name, or <code>null</code>
 	 */
 	public String getProviderName() {
-		return bundleGroupProperties == null ? null : bundleGroupProperties
-				.getProviderName();
+		return bundleGroupProperties == null ? null : bundleGroupProperties.getProviderName();
 	}
 
 	/**
 	 * Returns the feature version id.
-	 * 
+	 *
 	 * @return the version id of the feature
 	 */
 	public String getVersionId() {
-		return bundleGroupProperties == null ? EMPTY_STRING
-				: bundleGroupProperties.getFeatureVersion(); //$NON-NLS-1$
+		return bundleGroupProperties == null ? EMPTY_STRING : bundleGroupProperties.getFeatureVersion();
 	}
 
 	/**
 	 * Returns a <code>URL</code> for the welcome page. Products designed to run
 	 * "headless" typically would not have such an page.
-	 * 
+	 *
 	 * @return the welcome page, or <code>null</code> if none
 	 */
 	public URL getWelcomePageURL() {
@@ -309,22 +306,20 @@ public final class AboutInfo {
 	/**
 	 * Returns the ID of a perspective in which to show the welcome page. May be
 	 * <code>null</code>.
-	 * 
+	 *
 	 * @return the welcome page perspective id, or <code>null</code> if none
 	 */
 	public String getWelcomePerspectiveId() {
-		return bundleGroupProperties == null ? null : bundleGroupProperties
-				.getWelcomePerspective();
+		return bundleGroupProperties == null ? null : bundleGroupProperties.getWelcomePerspective();
 	}
 
 	/**
 	 * Returns a <code>String</code> for the tips and trick href.
-	 * 
+	 *
 	 * @return the tips and tricks href, or <code>null</code> if none
 	 */
 	public String getTipsAndTricksHref() {
-		return bundleGroupProperties == null ? null : bundleGroupProperties
-				.getTipsAndTricksHref();
+		return bundleGroupProperties == null ? null : bundleGroupProperties.getTipsAndTricksHref();
 	}
 
 	/**
@@ -332,7 +327,7 @@ public final class AboutInfo {
 	 * this product. The expectations is that the elements will be the same
 	 * image rendered at different sizes. Products designed to run "headless"
 	 * typically would not have such images.
-	 * 
+	 *
 	 * @return an array of the image descriptors for the window images, or
 	 *         <code>null</code> if none
 	 * @since 3.0

@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.api;
@@ -17,18 +16,25 @@ import java.util.List;
 /**
  * The <code>ICollection</code> interface represents a collection in the
  * repository.
- * 
  */
 public interface ICollection extends IEntity {
 
 	/**
 	 * Returns a list of all the child collections held by this collection.
+	 *
+	 * @return the list of {@link ICollection} instances
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<ICollection> getCollections() throws IOException;
 
 	/**
 	 * Returns a list containing the names of all the child collections directly
 	 * contained within this collection.
+	 *
+	 * @return the list of the collections names
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<String> getCollectionsNames() throws IOException;
 
@@ -38,6 +44,12 @@ public interface ICollection extends IEntity {
 	 * The name should not contain any slashes.
 	 * <p>
 	 * The change is persisted to the backend.
+	 *
+	 * @param name
+	 *            the name of the {@link ICollection}
+	 * @return an {@link ICollection} instance
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public ICollection createCollection(String name) throws IOException;
 
@@ -47,7 +59,9 @@ public interface ICollection extends IEntity {
 	 * <p>
 	 * The returned collection is just a representation. It may not exist on the
 	 * backend.
-	 * 
+	 *
+	 * @param name
+	 *            the name of the {@link ICollection}
 	 * @return an {@link ICollection} instance.
 	 */
 	public ICollection getCollection(String name);
@@ -59,22 +73,40 @@ public interface ICollection extends IEntity {
 	 * The name should not contain any slashes.
 	 * <p>
 	 * The change is persisted to the backend.
+	 *
+	 * @param name
+	 *            the name of the {@link ICollection}
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void removeCollection(String name) throws IOException;
 
 	/**
 	 * Removes the child collection represented by the parameter.
+	 *
+	 * @param collection
+	 *            the {@link ICollection}
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void removeCollection(ICollection collection) throws IOException;
 
 	/**
 	 * Returns a list of all the resources held by this collection.
+	 *
+	 * @return the list of {@link IResource} instances
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<IResource> getResources() throws IOException;
 
 	/**
 	 * Returns a list containing the names of all the resources directly
 	 * contained in this collection.
+	 *
+	 * @return the list of {@link IResource} instances names
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<String> getResourcesNames() throws IOException;
 
@@ -84,29 +116,24 @@ public interface ICollection extends IEntity {
 	 * <p>
 	 * The returned resource is just a representation. It may not exist on the
 	 * backend.
+	 *
+	 * @param name
+	 *            the name of the {@link IResource}
+	 * @return an {@link IResource} instance
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public IResource getResource(String name) throws IOException;
-
-//	/**
-//	 * Creates a new empty resource with the specified name in this collection.
-//	 * <p>
-//	 * Changes are persisted to the backend.
-//	 */
-//	public IResource createResource(String name) throws IOException;
-//
-//	/**
-//	 * Creates a new resource in this collection with the specified name and
-//	 * content.
-//	 * <p>
-//	 * Changes are persisted to the backend.
-//	 */
-//	public IResource createResource(String name, byte[] content)
-//			throws IOException;
 
 	/**
 	 * Removes the resource with the specified name from this collection.
 	 * <p>
 	 * Changes are persisted to the backend.
+	 *
+	 * @param name
+	 *            the name of the {@link IResource}
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void removeResource(String name) throws IOException;
 
@@ -114,28 +141,38 @@ public interface ICollection extends IEntity {
 	 * Removes the child resource represented by the parameter.
 	 * <p>
 	 * Changes are persisted to the backend.
+	 *
+	 * @param resource
+	 *            the {@link IResource}
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void removeResource(IResource resource) throws IOException;
 
 	/**
 	 * List the children of this collection
-	 * 
-	 * @return
+	 *
+	 * @return the list of {@link IEntity} instance
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<IEntity> getChildren() throws IOException;
 
 	/**
 	 * Create resource under this collection by specifying the binary flag
-	 * 
+	 *
 	 * @param name
+	 *            the name of the {@link IResource}
 	 * @param content
+	 *            the content
 	 * @param isBinary
+	 *            whether it is binary
 	 * @param contentType
-	 * @return
+	 *            the content type
+	 * @return an {@link IResource} instance
 	 * @throws IOException
+	 *             in case of an error
 	 */
-	public IResource createResource(String name, byte[] content,
-			boolean isBinary, String contentType) throws IOException;
+	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws IOException;
 
 }

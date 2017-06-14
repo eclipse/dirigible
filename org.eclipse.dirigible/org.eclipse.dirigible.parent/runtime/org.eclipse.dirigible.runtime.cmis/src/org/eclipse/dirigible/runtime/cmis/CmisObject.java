@@ -38,7 +38,7 @@ public class CmisObject {
 	/**
 	 * Returns the ID of this CmisObject
 	 *
-	 * @return
+	 * @return the Id
 	 */
 	public String getId() {
 		return this.getInternalEntity().getPath();
@@ -47,7 +47,7 @@ public class CmisObject {
 	/**
 	 * Returns the Name of this CmisObject
 	 *
-	 * @return
+	 * @return the name
 	 */
 	public String getName() {
 		if ("".equals(this.getInternalEntity().getName())) {
@@ -59,7 +59,7 @@ public class CmisObject {
 	/**
 	 * Returns the Type of this CmisObject
 	 *
-	 * @return
+	 * @return the object type
 	 */
 	public ObjectType getType() {
 		return this.isCollection() ? ObjectType.FOLDER : ObjectType.DOCUMENT;
@@ -72,8 +72,7 @@ public class CmisObject {
 	/**
 	 * Delete this CmisObject
 	 *
-	 * @return
-	 * @throws IOException
+	 * @throws IOException IO Exception
 	 */
 	public void delete() throws IOException {
 		this.getInternalEntity().delete();
@@ -82,8 +81,9 @@ public class CmisObject {
 	/**
 	 * Delete this CmisObject
 	 *
-	 * @return
-	 * @throws IOException
+	 * @param allVersions whether to delete all versions
+	 * 
+	 * @throws IOException IO Exception
 	 */
 	public void delete(boolean allVersions) throws IOException {
 		delete();
@@ -91,8 +91,10 @@ public class CmisObject {
 
 	/**
 	 * Rename this CmisObject
+	 * 
+	 * @param newName the new name
 	 *
-	 * @throws IOException
+	 * @throws IOException IO Exception
 	 */
 	public void rename(String newName) throws IOException {
 		this.getInternalEntity().renameTo(newName);

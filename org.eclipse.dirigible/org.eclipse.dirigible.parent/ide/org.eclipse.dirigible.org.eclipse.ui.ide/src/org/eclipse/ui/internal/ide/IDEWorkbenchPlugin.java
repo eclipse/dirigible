@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.ui.internal.ide;
@@ -22,6 +21,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -35,20 +35,18 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 
 import com.ibm.icu.text.MessageFormat;
-import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
 
 /**
  * This internal class represents the top of the IDE workbench.
- * 
  * This class is responsible for tracking various registries font, preference,
  * graphics, dialog store.
- * 
  * This class is explicitly referenced by the IDE workbench plug-in's
  * "plugin.xml"
- * 
+ *
  * @since 3.0
  */
 public class IDEWorkbenchPlugin extends AbstractUIPlugin {
+
 	private static final String EXCEPTION_IN_0_1_2 = "Exception in {0}.{1}: {2}";
 
 	// Default instance of the receiver
@@ -72,15 +70,10 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 
 	// IDE workbench extension point names
 	public static final String PL_MARKER_IMAGE_PROVIDER = "markerImageProviders"; //$NON-NLS-1$
-
 	public static final String PL_MARKER_HELP = "markerHelp"; //$NON-NLS-1$
-
 	public static final String PL_MARKER_RESOLUTION = "markerResolution"; //$NON-NLS-1$
-
 	public static final String PL_CAPABILITIES = "capabilities"; //$NON-NLS-1$
-
 	public static final String PL_PROJECT_NATURE_IMAGES = "projectNatureImages"; //$NON-NLS-1$
-
 	private final static String ICONS_PATH = "$nl$/icons/full/";//$NON-NLS-1$
 
 	/**
@@ -106,16 +99,16 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 	/**
 	 * Creates an extension. If the extension plugin has not been loaded a busy
 	 * cursor will be activated during the duration of the load.
-	 * 
+	 *
 	 * @param element
 	 *            the config element defining the extension
 	 * @param classAttribute
 	 *            the name of the attribute carrying the class
 	 * @return Object the extension object
 	 * @throws CoreException
+	 *             Core Exception
 	 */
-	public static Object createExtension(final IConfigurationElement element,
-			final String classAttribute) throws CoreException {
+	public static Object createExtension(final IConfigurationElement element, final String classAttribute) throws CoreException {
 		// If plugin has been loaded create extension.
 		// Otherwise, show busy cursor then create extension.
 		@SuppressWarnings("deprecation")
@@ -126,10 +119,10 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 			final Object[] ret = new Object[1];
 			final CoreException[] exc = new CoreException[1];
 			BusyIndicator.showWhile(null, new Runnable() {
+				@Override
 				public void run() {
 					try {
-						ret[0] = element
-								.createExecutableExtension(classAttribute);
+						ret[0] = element.createExecutableExtension(classAttribute);
 					} catch (CoreException e) {
 						exc[0] = e;
 					}
@@ -146,7 +139,6 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 	/*
 	 * Return the default instance of the receiver. This represents the runtime
 	 * plugin.
-	 * 
 	 * @see AbstractPlugin for the typical implementation pattern for plugin
 	 * classes.
 	 */
@@ -156,9 +148,10 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Return the workspace used by the workbench
-	 * 
 	 * This method is internal to the workbench and must not be called by any
 	 * plugins.
+	 *
+	 * @return Workspace
 	 */
 	public static IWorkspace getPluginWorkspace() {
 		return RemoteResourcesPlugin.getWorkspace();
@@ -166,30 +159,24 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Logs the given message to the platform log.
-	 * 
 	 * If you have an exception in hand, call log(String, Throwable) instead.
-	 * 
 	 * If you have a status object in hand call log(String, IStatus) instead.
-	 * 
 	 * This convenience method is for internal use by the IDE Workbench only and
 	 * must not be called outside the IDE Workbench.
-	 * 
+	 *
 	 * @param message
 	 *            A high level UI message describing when the problem happened.
 	 */
 	public static void log(String message) {
-		getDefault().getLog().log(
-				StatusUtil.newStatus(IStatus.ERROR, message, null));
+		getDefault().getLog().log(StatusUtil.newStatus(IStatus.ERROR, message, null));
 	}
 
 	/**
 	 * Logs the given message and throwable to the platform log.
-	 * 
 	 * If you have a status object in hand call log(String, IStatus) instead.
-	 * 
 	 * This convenience method is for internal use by the IDE Workbench only and
 	 * must not be called outside the IDE Workbench.
-	 * 
+	 *
 	 * @param message
 	 *            A high level UI message describing when the problem happened.
 	 * @param t
@@ -204,10 +191,9 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 	 * Logs the given throwable to the platform log, indicating the class and
 	 * method from where it is being logged (this is not necessarily where it
 	 * occurred).
-	 * 
 	 * This convenience method is for internal use by the IDE Workbench only and
 	 * must not be called outside the IDE Workbench.
-	 * 
+	 *
 	 * @param clazz
 	 *            The calling class.
 	 * @param methodName
@@ -216,17 +202,15 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 	 *            The throwable from where the problem actually occurred.
 	 */
 	public static void log(Class<?> clazz, String methodName, Throwable t) {
-		String msg = MessageFormat.format(EXCEPTION_IN_0_1_2, //$NON-NLS-1$
-				new Object[] { clazz.getName(), methodName, t });
+		String msg = MessageFormat.format(EXCEPTION_IN_0_1_2, new Object[] { clazz.getName(), methodName, t });
 		log(msg, t);
 	}
 
 	/**
 	 * Logs the given message and status to the platform log.
-	 * 
 	 * This convenience method is for internal use by the IDE Workbench only and
 	 * must not be called outside the IDE Workbench.
-	 * 
+	 *
 	 * @param message
 	 *            A high level UI message describing when the problem happened.
 	 *            May be <code>null</code>.
@@ -238,8 +222,7 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 		// 1FTUHE0: ITPCORE:ALL - API - Status & logging - loss of semantic info
 
 		if (message != null) {
-			getDefault().getLog().log(
-					StatusUtil.newStatus(IStatus.ERROR, message, null));
+			getDefault().getLog().log(StatusUtil.newStatus(IStatus.ERROR, message, null));
 		}
 
 		getDefault().getLog().log(status);
@@ -248,12 +231,15 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 	/*
 	 * (non-javadoc) Method declared on AbstractUIPlugin
 	 */
+	@Override
 	protected void refreshPluginActions() {
 		// do nothing
 	}
 
 	/**
 	 * Return the manager that maps project nature ids to images.
+	 *
+	 * @return Project Image Registry
 	 */
 	public ProjectImageRegistry getProjectImageRegistry() {
 		if (projectImageRegistry == null) {
@@ -265,7 +251,7 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the marker image provider registry for the workbench.
-	 * 
+	 *
 	 * @return the marker image provider registry
 	 */
 	public MarkerImageProviderRegistry getMarkerImageProviderRegistry() {
@@ -278,7 +264,7 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the about information of all known features, omitting any
 	 * features which are missing this information.
-	 * 
+	 *
 	 * @return a possibly empty list of about infos
 	 */
 	public AboutInfo[] getFeatureInfos() {
@@ -288,20 +274,20 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 		// add an entry for each bundle group
 		IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
 		if (providers != null) {
-			for (int i = 0; i < providers.length; ++i) {
-				IBundleGroup[] bundleGroups = providers[i].getBundleGroups();
-				for (int j = 0; j < bundleGroups.length; ++j) {
-					infos.add(new AboutInfo(bundleGroups[j]));
+			for (IBundleGroupProvider provider : providers) {
+				IBundleGroup[] bundleGroups = provider.getBundleGroups();
+				for (IBundleGroup bundleGroup : bundleGroups) {
+					infos.add(new AboutInfo(bundleGroup));
 				}
 			}
 		}
 
-		return (AboutInfo[]) infos.toArray(new AboutInfo[infos.size()]);
+		return infos.toArray(new AboutInfo[infos.size()]);
 	}
 
 	/**
 	 * Returns the about information of the primary feature.
-	 * 
+	 *
 	 * @return info about the primary feature, or <code>null</code> if there is
 	 *         no primary feature or if this information is unavailable
 	 */
@@ -312,48 +298,48 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Get the workbench image with the given path relative to ICON_PATH.
-	 * 
+	 *
 	 * @param relativePath
-	 * @return ImageDescriptor
+	 *            the relative path
+	 * @return Image Descriptor
 	 */
 	public static ImageDescriptor getIDEImageDescriptor(String relativePath) {
-		return imageDescriptorFromPlugin(IDE_WORKBENCH, ICONS_PATH
-				+ relativePath);
+		return imageDescriptorFromPlugin(IDE_WORKBENCH, ICONS_PATH + relativePath);
 	}
 
 	/**
 	 * Return the resourceManager used by this plug-in.
-	 * 
-	 * @return
+	 *
+	 * @return Resource Manager
 	 */
 	public ResourceManager getResourceManager() {
 		if (resourceManager == null) {
-			resourceManager = new LocalResourceManager(
-					JFaceResources.getResources());
+			resourceManager = new LocalResourceManager(JFaceResources.getResources());
 		}
 		return resourceManager;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
 	 * )
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		if (resourceManager != null)
+		if (resourceManager != null) {
 			resourceManager.dispose();
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
 	 * )
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
@@ -361,8 +347,7 @@ public class IDEWorkbenchPlugin extends AbstractUIPlugin {
 		// Code that depends on Platform.getBundleGroupProviders() during
 		// workbench startup must have org.eclipse.update.configurator
 		// available.
-		Bundle bundleGroupBundle = Platform
-				.getBundle("org.eclipse.update.configurator"); //$NON-NLS-1$
+		Bundle bundleGroupBundle = Platform.getBundle("org.eclipse.update.configurator"); //$NON-NLS-1$
 		if (bundleGroupBundle != null) {
 			try {
 				bundleGroupBundle.start(Bundle.START_TRANSIENT);

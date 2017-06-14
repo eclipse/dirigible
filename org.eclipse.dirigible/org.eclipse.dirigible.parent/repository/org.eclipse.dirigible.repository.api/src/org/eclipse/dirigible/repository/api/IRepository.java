@@ -28,12 +28,22 @@ public interface IRepository extends IReadOnlyRepository {
 	 * <p>
 	 * The returned value is an instance of <code>ICollection</code> which
 	 * represents the newly created collection.
+	 *
+	 * @param path
+	 *            the location
+	 * @return the created {@link ICollection} instance
+	 * @throws IOException
 	 */
 	public ICollection createCollection(String path) throws IOException;
 
 	/**
 	 * This method removes the collection with the specified path from the
 	 * repository.
+	 *
+	 * @param path
+	 *            the location
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void removeCollection(String path) throws IOException;
 
@@ -42,6 +52,11 @@ public interface IRepository extends IReadOnlyRepository {
 	 * <p>
 	 * The returned value is an instance of <code>IResource</code> that
 	 * represents the newly created resource.
+	 *
+	 * @param path
+	 *            the location
+	 * @return the created {@link IResource} instance
+	 * @throws IOException
 	 */
 	public IResource createResource(String path) throws IOException;
 
@@ -51,6 +66,14 @@ public interface IRepository extends IReadOnlyRepository {
 	 * <p>
 	 * The returned value is an instance of <code>IResource</code> that
 	 * represents the newly created resource.
+	 *
+	 * @param path
+	 *            the location
+	 * @param content
+	 *            the raw content
+	 * @return the created {@link IResource}
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public IResource createResource(String path, byte[] content) throws IOException;
 
@@ -59,6 +82,18 @@ public interface IRepository extends IReadOnlyRepository {
 	 * <p>
 	 * The returned value is an instance of <code>IResource</code> that
 	 * represents the newly created resource.
+	 *
+	 * @param path
+	 *            the location
+	 * @param content
+	 *            the raw content
+	 * @param isBinary
+	 *            whether is binary
+	 * @param contentType
+	 *            type of the content
+	 * @return the created {@link IResource}
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType) throws IOException;
 
@@ -67,6 +102,20 @@ public interface IRepository extends IReadOnlyRepository {
 	 * <p>
 	 * The returned value is an instance of <code>IResource</code> that
 	 * represents the newly created resource.
+	 *
+	 * @param path
+	 *            the location
+	 * @param content
+	 *            the raw content
+	 * @param isBinary
+	 *            whether is binary
+	 * @param contentType
+	 *            type of the content
+	 * @param override
+	 *            whether to override existing if any
+	 * @return the created {@link IResource}
+	 * @throws IOException
+	 *             in case of an error
 	 */
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override) throws IOException;
 
@@ -91,8 +140,11 @@ public interface IRepository extends IReadOnlyRepository {
 	 * root
 	 *
 	 * @param zipInputStream
+	 *            the input stream
 	 * @param relativeRoot
+	 *            the relative root
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot) throws IOException;
 
@@ -101,9 +153,13 @@ public interface IRepository extends IReadOnlyRepository {
 	 * root. Overrides the previous content depending on the override parameter.
 	 *
 	 * @param zipInputStream
+	 *            the input stream
 	 * @param relativeRoot
+	 *            the relative root
 	 * @param override
+	 *            whether to override existing if any
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override) throws IOException;
 
@@ -113,10 +169,15 @@ public interface IRepository extends IReadOnlyRepository {
 	 * Excludes the name of the root folder, during the import, based on the excludeRootFolderName parameter.
 	 *
 	 * @param zipInputStream
+	 *            the input stream
 	 * @param relativeRoot
+	 *            the relative root
 	 * @param override
+	 *            whether to override existing if any
 	 * @param excludeRootFolderName
+	 *            whether to exclude the root folder
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName) throws IOException;
 
@@ -127,7 +188,9 @@ public interface IRepository extends IReadOnlyRepository {
 	 * @param data
 	 *            the Zip file as byte array
 	 * @param relativeRoot
+	 *            the relative root
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void importZip(byte[] data, String relativeRoot) throws IOException;
 
@@ -138,8 +201,11 @@ public interface IRepository extends IReadOnlyRepository {
 	 * @param data
 	 *            the Zip file as byte array
 	 * @param relativeRoot
+	 *            the relative root
 	 * @param override
+	 *            whether to override existing if any
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void importZip(byte[] data, String relativeRoot, boolean override) throws IOException;
 
@@ -151,10 +217,15 @@ public interface IRepository extends IReadOnlyRepository {
 	 * @param data
 	 *            the Zip file as byte array
 	 * @param relativeRoot
+	 *            the relative root
 	 * @param override
+	 *            whether to override existing if any
 	 * @param filter
+	 *            the filter
 	 * @param excludeRootFolderName
+	 *            whether to exclude the root folder
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
 			throws IOException;
@@ -164,9 +235,12 @@ public interface IRepository extends IReadOnlyRepository {
 	 * *parameter)
 	 *
 	 * @param parameter
+	 *            the expression
 	 * @param caseInsensitive
-	 * @return
+	 *            whether to be case insensitive
+	 * @return the list of matching {@link IEntity} instances
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws IOException;
 
@@ -175,10 +249,14 @@ public interface IRepository extends IReadOnlyRepository {
 	 * *parameter) under specified root folder (means *root)
 	 *
 	 * @param root
+	 *            the beginning of the search
 	 * @param parameter
+	 *            the expression
 	 * @param caseInsensitive
-	 * @return
+	 *            whether to be case insensitive
+	 * @return the list of matching {@link IEntity} instances
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws IOException;
 
@@ -187,9 +265,12 @@ public interface IRepository extends IReadOnlyRepository {
 	 * (means *parameter*)
 	 *
 	 * @param parameter
+	 *            the expression
 	 * @param caseInsensitive
-	 * @return
+	 *            whether to be case insensitive
+	 * @return the list of matching {@link IEntity} instances
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws IOException;
 
@@ -197,10 +278,13 @@ public interface IRepository extends IReadOnlyRepository {
 	 * Search the given given parameter in the names of the files and folders as
 	 * well as in the content of the text files
 	 *
-	 * @param parameters
+	 * @param parameter
+	 *            the expression
 	 * @param caseInsensitive
-	 * @return
+	 *            whether to be case insensitive
+	 * @return he list of matching {@link IEntity} instances
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws IOException;
 
@@ -209,6 +293,7 @@ public interface IRepository extends IReadOnlyRepository {
 	 * system, use external e.g. Git
 	 *
 	 * @throws IOException
+	 *             in case of an error
 	 */
 	public void cleanupOldVersions() throws IOException;
 

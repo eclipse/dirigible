@@ -15,39 +15,35 @@ import org.eclipse.dirigible.runtime.PermissionsUtils;
 /**
  * Imports cloned content from another instance.
  * Can be used for backups as well.
- * @parameter reset - if present, removes all the non-default content prior import
- *
  */
 public class CloneImporterServlet extends ContentImporterServlet {
 
 	private static final long serialVersionUID = -7275411031828315889L;
-	
+
 	private static final Logger logger = Logger.getLogger(CloneImporterServlet.class);
-	
-	private static final String CLONE_PATH_FOR_IMPORT = 
-			IRepositoryPaths.DB_DIRIGIBLE_BASE.substring(0, IRepositoryPaths.DB_DIRIGIBLE_BASE.length()-1);
-	
+
+	private static final String CLONE_PATH_FOR_IMPORT = IRepositoryPaths.DB_DIRIGIBLE_BASE.substring(0,
+			IRepositoryPaths.DB_DIRIGIBLE_BASE.length() - 1);
+
 	private static final String PARAMETER_RESET = "reset";
 
 	private static final String HEADER_RESET = "reset";
-	
 
+	@Override
 	protected String getDefaultPathForImport() {
 		return CLONE_PATH_FOR_IMPORT;
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
 			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Import Cloned Content");
 			logger.error(err);
 			throw new ServletException(err);
 		}
-		
-		boolean reset = Boolean.parseBoolean(
-				request.getParameter(PARAMETER_RESET)) || Boolean.parseBoolean(request.getHeader(HEADER_RESET));
+
+		boolean reset = Boolean.parseBoolean(request.getParameter(PARAMETER_RESET)) || Boolean.parseBoolean(request.getHeader(HEADER_RESET));
 		if (reset) {
 			IRepository repository = getRepository(request);
 			ContentResetMaker resetMaker = new ContentResetMaker();

@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.internal.ide.registry;
 
@@ -26,9 +25,13 @@ public class ProjectImageRegistry {
 	/**
 	 * Returns the image for the given nature id or <code>null</code> if no
 	 * image is registered for the given id
+	 *
+	 * @param natureId
+	 *            the nature id
+	 * @return Image Descriptor
 	 */
 	public ImageDescriptor getNatureImage(String natureId) {
-		return (ImageDescriptor) map.get(natureId);
+		return map.get(natureId);
 	}
 
 	/**
@@ -41,6 +44,11 @@ public class ProjectImageRegistry {
 
 	/**
 	 * Sets the image for the given nature id
+	 * 
+	 * @param natureId
+	 *            the nature Id
+	 * @param image
+	 *            the image
 	 */
 	public void setNatureImage(String natureId, ImageDescriptor image) {
 		map.put(natureId, image);

@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.internal.ide.dialogs;
 
@@ -30,7 +29,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 /**
  * Selection dialog to select files and/or folders on the file system. Use
  * setInput to set input to an IFileStore that points to a folder.
- * 
+ *
  * @since 2.1
  */
 public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
@@ -42,22 +41,20 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 	 */
 	private static class FileLabelProvider extends LabelProvider {
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = -4516447133235673266L;
 
-		private static final Image IMG_FOLDER = PlatformUI.getWorkbench()
-				.getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+		private static final Image IMG_FOLDER = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 
-		private static final Image IMG_FILE = PlatformUI.getWorkbench()
-				.getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+		private static final Image IMG_FILE = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see
 		 * org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
 		 */
+		@Override
 		public Image getImage(Object element) {
 			if (element instanceof IFileStore) {
 				IFileStore curr = (IFileStore) element;
@@ -71,10 +68,10 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see
 		 * org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
 		 */
+		@Override
 		public String getText(Object element) {
 			if (element instanceof IFileStore) {
 				return ((IFileStore) element).getName();
@@ -88,7 +85,7 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 	 */
 	private static class FileContentProvider implements ITreeContentProvider {
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = -8644302951345710230L;
 
@@ -98,7 +95,7 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 
 		/**
 		 * Creates a new instance of the receiver.
-		 * 
+		 *
 		 * @param showFiles
 		 *            <code>true</code> files and folders are returned by the
 		 *            receiver. <code>false</code> only folders are returned.
@@ -108,13 +105,13 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 
 				/*
 				 * (non-Javadoc)
-				 * 
 				 * @see
 				 * org.eclipse.ui.internal.ide.dialogs.IFileStoreFilter#accept
 				 * (org.eclipse.core.filesystem.IFileStore)
 				 */
+				@Override
 				public boolean accept(IFileStore file) {
-					if (!file.fetchInfo().isDirectory() && showFiles == false) {
+					if (!file.fetchInfo().isDirectory() && (showFiles == false)) {
 						return false;
 					}
 					return true;
@@ -122,11 +119,10 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 			};
 		}
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof IFileStore) {
-				IFileStore[] children = IDEResourceInfoUtils.listFileStores(
-						(IFileStore) parentElement, fileFilter,
-						new NullProgressMonitor());
+				IFileStore[] children = IDEResourceInfoUtils.listFileStores((IFileStore) parentElement, fileFilter, new NullProgressMonitor());
 				if (children != null) {
 					return children;
 				}
@@ -136,11 +132,11 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see
 		 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang
 		 * .Object)
 		 */
+		@Override
 		public Object getParent(Object element) {
 			if (element instanceof IFileStore) {
 				return ((IFileStore) element).getParent();
@@ -148,18 +144,22 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			return getChildren(element).length > 0;
 		}
 
+		@Override
 		public Object[] getElements(Object element) {
 			return getChildren(element);
 		}
 
+		@Override
 		public void dispose() {
 			//
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			//
 		}
@@ -170,19 +170,18 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 	 */
 	private static class FileViewerSorter extends ViewerComparator {
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = -2487248717780318069L;
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see
 		 * org.eclipse.jface.viewers.ViewerSorter#category(java.lang.Object)
 		 */
+		@Override
 		public int category(Object element) {
-			if (element instanceof IFileStore
-					&& !((IFileStore) element).fetchInfo().isDirectory()) {
+			if ((element instanceof IFileStore) && !((IFileStore) element).fetchInfo().isDirectory()) {
 				return 1;
 			}
 			return 0;
@@ -192,15 +191,14 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 	/**
 	 * Validates the selection based on the multi select and folder setting.
 	 */
-	private static class FileSelectionValidator implements
-			ISelectionStatusValidator {
+	private static class FileSelectionValidator implements ISelectionStatusValidator {
 		private boolean multiSelect;
 
 		private boolean acceptFolders;
 
 		/**
 		 * Creates a new instance of the receiver.
-		 * 
+		 *
 		 * @param multiSelect
 		 *            <code>true</code> if multi selection is allowed.
 		 *            <code>false</code> if only single selection is allowed.
@@ -215,28 +213,23 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 
 		/*
 		 * (non-Javadoc)
-		 * 
 		 * @see
 		 * org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang
 		 * .Object[])
 		 */
+		@Override
 		public IStatus validate(Object[] selection) {
 			int nSelected = selection.length;
 			String pluginId = IDEWorkbenchPlugin.IDE_WORKBENCH;
 
-			if (nSelected == 0 || (nSelected > 1 && multiSelect == false)) {
-				return new Status(IStatus.ERROR, pluginId, IStatus.ERROR,
-						IDEResourceInfoUtils.EMPTY_STRING, null);
+			if ((nSelected == 0) || ((nSelected > 1) && (multiSelect == false))) {
+				return new Status(IStatus.ERROR, pluginId, IStatus.ERROR, IDEResourceInfoUtils.EMPTY_STRING, null);
 			}
-			for (int i = 0; i < selection.length; i++) {
-				Object curr = selection[i];
+			for (Object curr : selection) {
 				if (curr instanceof IFileStore) {
 					IFileStore file = (IFileStore) curr;
-					if (acceptFolders == false
-							&& file.fetchInfo().isDirectory()) {
-						return new Status(IStatus.ERROR, pluginId,
-								IStatus.ERROR,
-								IDEResourceInfoUtils.EMPTY_STRING, null);
+					if ((acceptFolders == false) && file.fetchInfo().isDirectory()) {
+						return new Status(IStatus.ERROR, pluginId, IStatus.ERROR, IDEResourceInfoUtils.EMPTY_STRING, null);
 					}
 
 				}
@@ -247,8 +240,9 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 
 	/**
 	 * Creates a new instance of the receiver.
-	 * 
+	 *
 	 * @param parent
+	 *            the parent
 	 * @param multiSelect
 	 *            <code>true</code> if multi selection is allowed.
 	 *            <code>false</code> if only single selection is allowed.
@@ -261,10 +255,8 @@ public class FileFolderSelectionDialog extends ElementTreeSelectionDialog {
 	 *            selected in addition to files.
 	 */
 	public FileFolderSelectionDialog(Shell parent, boolean multiSelect, int type) {
-		super(parent, new FileLabelProvider(), new FileContentProvider(
-				(type & IResource.FILE) != 0));
+		super(parent, new FileLabelProvider(), new FileContentProvider((type & IResource.FILE) != 0));
 		setComparator(new FileViewerSorter());
-		setValidator(new FileSelectionValidator(multiSelect,
-				(type & IResource.FOLDER) != 0));
+		setValidator(new FileSelectionValidator(multiSelect, (type & IResource.FOLDER) != 0));
 	}
 }

@@ -62,7 +62,7 @@ public class Folder extends CmisObject {
 	/**
 	 * Returns the Path of this Folder
 	 *
-	 * @return
+	 * @return the path
 	 */
 	public String getPath() {
 		return this.getInternalEntity().getPath();
@@ -71,9 +71,9 @@ public class Folder extends CmisObject {
 	/**
 	 * Creates a new folder under this Folder
 	 *
-	 * @param properties
-	 * @return
-	 * @throws IOException
+	 * @param properties the properties
+	 * @return Folder
+	 * @throws IOException IO Exception
 	 */
 	public Folder createFolder(Map<String, String> properties) throws IOException {
 		String name = properties.get(CmisConstants.NAME);
@@ -83,9 +83,11 @@ public class Folder extends CmisObject {
 	/**
 	 * Creates a new document under this Folder
 	 *
-	 * @param properties
-	 * @return
-	 * @throws IOException
+	 * @param properties the properties
+	 * @param contentStream the content stream
+	 * @param versioningState the version state
+	 * @return Document
+	 * @throws IOException IO Exception
 	 */
 	public Document createDocument(Map<String, String> properties, ContentStream contentStream, String versioningState) throws IOException {
 		String name = properties.get(CmisConstants.NAME);
@@ -110,7 +112,7 @@ public class Folder extends CmisObject {
 	/**
 	 * Returns true if this Folder is a root folder and false otherwise
 	 *
-	 * @return
+	 * @return whether it is a root folder
 	 */
 	public boolean isRootFolder() {
 		return rootFolder;
@@ -119,9 +121,8 @@ public class Folder extends CmisObject {
 	/**
 	 * Returns the parent Folder of this Folder
 	 *
-	 * @param properties
-	 * @return
-	 * @throws IOException
+	 * @return Folder
+	 * @throws IOException IO Exception
 	 */
 	public Folder getFolderParent() throws IOException {
 		if (this.internalFolder.getParent() != null) {

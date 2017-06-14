@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.runtime.content;
@@ -33,14 +32,13 @@ import org.eclipse.dirigible.runtime.PermissionsUtils;
 
 /**
  * Imports the provided content into the Registry
- *
  */
 public class ContentImporterServlet extends ContentBaseServlet {
 
 	private static final long serialVersionUID = 5844468087553458293L;
 
 	private static final Logger logger = Logger.getLogger(ContentImporterServlet.class);
-	
+
 	private static final String DEFAULT_PATH_FOR_IMPORT = IRepositoryPaths.REGISTRY_IMPORT_PATH;
 	private static final String PARAMETER_OVERRIDE = "override";
 	private static final String HEADER_OVERRIDE = "override";
@@ -49,9 +47,9 @@ public class ContentImporterServlet extends ContentBaseServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		if (!PermissionsUtils.isUserInRole(request, IRoles.ROLE_OPERATOR)) {
 			String err = String.format(PermissionsUtils.PERMISSION_ERR, "Import");
 			logger.error(err);
@@ -98,12 +96,17 @@ public class ContentImporterServlet extends ContentBaseServlet {
 
 	/**
 	 * Import ZIP and execute DB updates. Don't override previous content.
-	 * 
+	 *
 	 * @param content
+	 *            the content
+	 * @param pathForImport
+	 *            the path for import
 	 * @param request
-	 * @param override
-	 * @throws Exception 
-	 * @throws IOException 
+	 *            the request
+	 * @throws Exception
+	 *             Exception
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	public void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request) throws IOException, Exception {
 		importZipAndUpdate(content, pathForImport, request, false);
@@ -111,40 +114,49 @@ public class ContentImporterServlet extends ContentBaseServlet {
 
 	/**
 	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter.
-	 * 
+	 *
 	 * @param content
+	 *            the content
 	 * @param request
+	 *            the request
 	 * @param override
-	 * @throws Exception 
-	 * @throws IOException 
+	 *            whether to override
+	 * @throws Exception
+	 *             Exception
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	public void importZipAndUpdate(InputStream content, HttpServletRequest request, boolean override) throws IOException, Exception {
 		importZipAndUpdate(content, getDefaultPathForImport(), request, override);
 	}
 
 	/**
-	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter. 
-	 * 
+	 * Import ZIP and execute DB updates. Override previous content depending on the override parameter.
+	 *
 	 * @param content
+	 *            the content
 	 * @param pathForImport
+	 *            the path for import
 	 * @param request
+	 *            the request
 	 * @param override
-	 * @throws Exception 
-	 * @throws IOException 
+	 *            whether to override
+	 * @throws Exception
+	 *             Exception
+	 * @throws IOException
+	 *             IO Exception
 	 */
-	public void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request, boolean override) throws IOException, Exception {
+	public void importZipAndUpdate(InputStream content, String pathForImport, HttpServletRequest request, boolean override)
+			throws IOException, Exception {
 		// 1. Import content.zip into repository
 		getRepository(request).importZip(new ZipInputStream(content), pathForImport, override);
 		postImport(request);
 	}
 
-	public void postImport(HttpServletRequest request) throws IOException,
-			Exception {
+	public void postImport(HttpServletRequest request) throws IOException, Exception {
 		// 2. Post import actions
-		ContentPostImportUpdater contentPostImportUpdater = new ContentPostImportUpdater(
-				getRepository(request));
+		ContentPostImportUpdater contentPostImportUpdater = new ContentPostImportUpdater(getRepository(request));
 		contentPostImportUpdater.update(request);
 	}
-
 
 }

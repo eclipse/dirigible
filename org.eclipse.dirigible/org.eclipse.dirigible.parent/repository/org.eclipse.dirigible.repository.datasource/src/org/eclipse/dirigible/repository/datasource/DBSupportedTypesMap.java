@@ -42,7 +42,7 @@ public class DBSupportedTypesMap {
 	 * Gives the meaningful subset of all the existing types in JDBC
 	 * specification which are supported in this framework
 	 *
-	 * @return
+	 * @return the flat array of the supported data types
 	 */
 	public static String[] getSupportedTypes() {
 		return new String[] { DataTypes.VARCHAR.toString(), DataTypes.CHAR.toString(), DataTypes.INTEGER.toString(), DataTypes.BIGINT.toString(),
@@ -132,6 +132,7 @@ public class DBSupportedTypesMap {
 	 * Retrieve the JDBC type number by a given type name
 	 *
 	 * @param name
+	 *            the name of the type
 	 * @return the JDBC type number
 	 */
 	public static int getTypeNumber(String name) {

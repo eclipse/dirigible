@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.ui.internal.ide;
 
@@ -16,7 +15,6 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * Policy is the class for the debug arguments in the ide.
- * 
  */
 public class Policy {
 
@@ -54,19 +52,20 @@ public class Policy {
 	}
 
 	private static boolean getDebugOption(String option) {
-		return Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption(IDEWorkbenchPlugin.IDE_WORKBENCH + option)); //$NON-NLS-1$
+		return Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption(IDEWorkbenchPlugin.IDE_WORKBENCH + option));
 	}
 
 	/**
 	 * Handle the core exception.
-	 * 
+	 *
 	 * @param exception
+	 *            the exception
 	 */
 	public static void handle(CoreException exception) {
 		// Only log if in debug mode
-		if (DEBUG_CORE_EXCEPTIONS)
-			StatusManager.getManager().handle(exception,
-					IDEWorkbenchPlugin.IDE_WORKBENCH);
+		if (DEBUG_CORE_EXCEPTIONS) {
+			StatusManager.getManager().handle(exception, IDEWorkbenchPlugin.IDE_WORKBENCH);
+		}
 
 	}
 }

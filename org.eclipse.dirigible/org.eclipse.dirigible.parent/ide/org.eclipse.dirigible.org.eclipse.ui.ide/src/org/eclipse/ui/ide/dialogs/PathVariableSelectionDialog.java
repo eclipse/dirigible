@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.ui.ide.dialogs;
@@ -40,26 +39,20 @@ import org.eclipse.ui.internal.ide.dialogs.PathVariablesGroup;
  * A selection dialog which shows the path variables defined in the workspace.
  * The <code>getResult</code> method returns the name(s) of the selected path
  * variable(s).
- * <p>
  * This class may be instantiated; it is not intended to be subclassed.
- * </p>
- * <p>
  * Example:
- * 
+ *
  * <pre>
- * PathVariableSelectionDialog dialog = new PathVariableSelectionDialog(
- * 		getShell(), IResource.FOLDER);
+ * PathVariableSelectionDialog dialog = new PathVariableSelectionDialog(getShell(), IResource.FOLDER);
  * dialog.open();
  * String[] result = (String[]) dialog.getResult();
  * </pre>
- * 
- * </p>
- * 
+ *
  * @since 3.1
  */
 public final class PathVariableSelectionDialog extends SelectionDialog {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -876325090901428145L;
 
@@ -71,7 +64,7 @@ public final class PathVariableSelectionDialog extends SelectionDialog {
 
 	/**
 	 * Creates a path variable selection dialog.
-	 * 
+	 *
 	 * @param parentShell
 	 *            the parent shell
 	 * @param variableType
@@ -83,41 +76,36 @@ public final class PathVariableSelectionDialog extends SelectionDialog {
 		super(parentShell);
 		setTitle(IDEWorkbenchMessages.PathVariableSelectionDialog_title);
 		this.variableType = variableType;
-		pathVariablesGroup = new PathVariablesGroup(false, variableType,
-				new Listener() {
-					/**
-					 * 
-					 */
-					private static final long serialVersionUID = -1769981136518953196L;
+		pathVariablesGroup = new PathVariablesGroup(false, variableType, new Listener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1769981136518953196L;
 
-					/*
-					 * (non-Javadoc)
-					 * 
-					 * @see
-					 * org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse
-					 * .swt.widgets.Event)
-					 */
-					public void handleEvent(Event event) {
-						updateExtendButtonState();
-					}
-				});
+			/*
+			 * (non-Javadoc)
+			 * @see
+			 * org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse
+			 * .swt.widgets.Event)
+			 */
+			@Override
+			public void handleEvent(Event event) {
+				updateExtendButtonState();
+			}
+		});
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
 	 */
+	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == EXTEND_ID) {
-			FileFolderSelectionDialog dialog = new FileFolderSelectionDialog(
-					getShell(), false, variableType);
-			PathVariablesGroup.PathVariableElement selection = pathVariablesGroup
-					.getSelection()[0];
+			FileFolderSelectionDialog dialog = new FileFolderSelectionDialog(getShell(), false, variableType);
+			PathVariablesGroup.PathVariableElement selection = pathVariablesGroup.getSelection()[0];
 			dialog.setTitle(IDEWorkbenchMessages.PathVariableSelectionDialog_ExtensionDialog_title);
-			dialog.setMessage(NLS
-					.bind(IDEWorkbenchMessages.PathVariableSelectionDialog_ExtensionDialog_description,
-							selection.name));
+			dialog.setMessage(NLS.bind(IDEWorkbenchMessages.PathVariableSelectionDialog_ExtensionDialog_description, selection.name));
 			// XXX This only works for variables that refer to local file system
 			// locations
 			try {
@@ -125,9 +113,8 @@ public final class PathVariableSelectionDialog extends SelectionDialog {
 			} catch (CoreException e) {
 				ErrorDialog.openError(getShell(), null, null, e.getStatus());
 			}
-			if (dialog.open() == Window.OK && pathVariablesGroup.performOk()) {
-				setExtensionResult(selection,
-						(IFileStore) dialog.getResult()[0]);
+			if ((dialog.open() == Window.OK) && pathVariablesGroup.performOk()) {
+				setExtensionResult(selection, (IFileStore) dialog.getResult()[0]);
 				super.okPressed();
 			}
 		} else {
@@ -137,45 +124,37 @@ public final class PathVariableSelectionDialog extends SelectionDialog {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets
 	 * .Shell)
 	 */
+	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(shell,
-						IIDEHelpContextIds.PATH_VARIABLE_SELECTION_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IIDEHelpContextIds.PATH_VARIABLE_SELECTION_DIALOG);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID,
-				IDialogConstants.get().OK_LABEL, true);
-		createButton(parent, EXTEND_ID,
-				IDEWorkbenchMessages.PathVariableSelectionDialog_extendButton,
-				false);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.get().CANCEL_LABEL, false);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.get().OK_LABEL, true);
+		createButton(parent, EXTEND_ID, IDEWorkbenchMessages.PathVariableSelectionDialog_extendButton, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.get().CANCEL_LABEL, false);
 		updateExtendButtonState();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		// create composite
 		Composite dialogArea = (Composite) super.createDialogArea(parent);
@@ -186,9 +165,9 @@ public final class PathVariableSelectionDialog extends SelectionDialog {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.window.Window#close()
 	 */
+	@Override
 	public boolean close() {
 		pathVariablesGroup.dispose();
 		return super.close();
@@ -196,14 +175,13 @@ public final class PathVariableSelectionDialog extends SelectionDialog {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
+	@Override
 	protected void okPressed() {
 		// Sets the dialog result to the selected path variable name(s).
 		if (pathVariablesGroup.performOk()) {
-			PathVariablesGroup.PathVariableElement[] selection = pathVariablesGroup
-					.getSelection();
+			PathVariablesGroup.PathVariableElement[] selection = pathVariablesGroup.getSelection();
 			String[] variableNames = new String[selection.length];
 
 			for (int i = 0; i < selection.length; i++) {
@@ -218,16 +196,14 @@ public final class PathVariableSelectionDialog extends SelectionDialog {
 
 	/**
 	 * Sets the dialog result to the concatenated variable name and extension.
-	 * 
+	 *
 	 * @param variable
 	 *            variable selected in the variables list and extended by
 	 *            <code>extensionFile</code>
 	 * @param extensionFile
 	 *            file selected to extend the variable.
 	 */
-	private void setExtensionResult(
-			PathVariablesGroup.PathVariableElement variable,
-			IFileStore extensionFile) {
+	private void setExtensionResult(PathVariablesGroup.PathVariableElement variable, IFileStore extensionFile) {
 		IPath extensionPath = new Path(extensionFile.toString());
 		int matchCount = extensionPath.matchingFirstSegments(variable.path);
 		IPath resultPath = new Path(variable.name);
@@ -242,16 +218,14 @@ public final class PathVariableSelectionDialog extends SelectionDialog {
 	 * variable selection.
 	 */
 	private void updateExtendButtonState() {
-		PathVariablesGroup.PathVariableElement[] selection = pathVariablesGroup
-				.getSelection();
+		PathVariablesGroup.PathVariableElement[] selection = pathVariablesGroup.getSelection();
 		Button extendButton = getButton(EXTEND_ID);
 
 		if (extendButton == null) {
 			return;
 		}
 		if (selection.length == 1) {
-			IFileInfo info = IDEResourceInfoUtils
-					.getFileInfo(selection[0].path);
+			IFileInfo info = IDEResourceInfoUtils.getFileInfo(selection[0].path);
 			if (info.exists() && info.isDirectory()) {
 				extendButton.setEnabled(true);
 			} else {

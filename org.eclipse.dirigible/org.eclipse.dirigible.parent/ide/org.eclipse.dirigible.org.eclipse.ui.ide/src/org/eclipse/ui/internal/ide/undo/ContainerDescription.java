@@ -4,9 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ * IBM Corporation - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.ui.internal.ide.undo;
@@ -24,18 +23,15 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.ui.ide.undo.ResourceDescription;
-
 import org.eclipse.dirigible.ide.workspace.RemoteResourcesPlugin;
+import org.eclipse.ui.ide.undo.ResourceDescription;
 
 /**
  * ContainerDescription is a lightweight description that describes a container
  * to be created.
- * 
  * This class is not intended to be instantiated or used by clients.
- * 
+ *
  * @since 3.3
- * 
  */
 public abstract class ContainerDescription extends AbstractResourceDescription {
 
@@ -52,7 +48,7 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 	 * can be used to create the container. The returned ContainerDescription
 	 * should represent any non-existing parents in addition to the specified
 	 * container.
-	 * 
+	 *
 	 * @param container
 	 *            the handle of the container to be described
 	 * @return a container description describing the container and any
@@ -69,8 +65,7 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 		IWorkspaceRoot root = RemoteResourcesPlugin.getWorkspace().getRoot();
 		IContainer currentContainer = (IContainer) root.findMember(fullPath);
 		if (currentContainer != null) {
-			return (ContainerDescription) ResourceDescription
-					.fromResource(container);
+			return (ContainerDescription) ResourceDescription.fromResource(container);
 		}
 
 		// Create container descriptions for any uncreated parents in the given
@@ -85,14 +80,11 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 			} else {
 				if (i == 0) {
 					// parent does not exist and it is a project
-					firstCreatedParent = new ProjectDescription(
-							root.getProject(currentSegment));
+					firstCreatedParent = new ProjectDescription(root.getProject(currentSegment));
 					currentContainerDescription = firstCreatedParent;
 				} else {
-					IFolder folderHandle = currentContainer.getFolder(new Path(
-							currentSegment));
-					ContainerDescription currentFolder = new FolderDescription(
-							folderHandle);
+					IFolder folderHandle = currentContainer.getFolder(new Path(currentSegment));
+					ContainerDescription currentFolder = new FolderDescription(folderHandle);
 					currentContainer = folderHandle;
 					if (currentContainerDescription != null) {
 						currentContainerDescription.addMember(currentFolder);
@@ -119,7 +111,7 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 	 * Typically used when the container handle represents a resource that
 	 * actually exists, although it will not fail if the resource is
 	 * non-existent.
-	 * 
+	 *
 	 * @param container
 	 *            the container to be described
 	 */
@@ -135,8 +127,7 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 				IResource[] resourceMembers = container.members();
 				members = new AbstractResourceDescription[resourceMembers.length];
 				for (int i = 0; i < resourceMembers.length; i++) {
-					members[i] = (AbstractResourceDescription) ResourceDescription
-							.fromResource(resourceMembers[i]);
+					members[i] = (AbstractResourceDescription) ResourceDescription.fromResource(resourceMembers[i]);
 				}
 			}
 		} catch (CoreException e) {
@@ -149,7 +140,7 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 
 	/**
 	 * Create any child resources known by this container description.
-	 * 
+	 *
 	 * @param parentHandle
 	 *            the handle of the created parent
 	 * @param monitor
@@ -157,50 +148,39 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 	 * @param ticks
 	 *            the number of ticks allocated for creating children
 	 * @throws CoreException
+	 *             Core Exception
 	 */
-	protected void createChildResources(IContainer parentHandle,
-			IProgressMonitor monitor, int ticks) throws CoreException {
+	protected void createChildResources(IContainer parentHandle, IProgressMonitor monitor, int ticks) throws CoreException {
 
 		// restore any children
-		if (members != null && members.length > 0) {
+		if ((members != null) && (members.length > 0)) {
 			for (int i = 0; i < members.length; i++) {
 				members[i].parent = parentHandle;
-				members[i].createResource(new SubProgressMonitor(monitor, ticks
-						/ members.length));
+				members[i].createResource(new SubProgressMonitor(monitor, ticks / members.length));
 			}
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.eclipse.ui.internal.ide.undo.ResourceDescription#recordStateFromHistory
 	 * (org.eclipse.core.resources.IResource,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void recordStateFromHistory(IResource resource,
-			IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask(
-				UndoMessages.FolderDescription_SavingUndoInfoProgress, 100);
+	@Override
+	public void recordStateFromHistory(IResource resource, IProgressMonitor monitor) throws CoreException {
+		monitor.beginTask(UndoMessages.FolderDescription_SavingUndoInfoProgress, 100);
 		if (members != null) {
-			for (int i = 0; i < members.length; i++) {
-				if (members[i] instanceof FileDescription) {
-					IPath path = resource.getFullPath().append(
-							((FileDescription) members[i]).name);
-					IFile fileHandle = resource.getWorkspace().getRoot()
-							.getFile(path);
-					members[i].recordStateFromHistory(fileHandle,
-							new SubProgressMonitor(monitor,
-									100 / members.length));
-				} else if (members[i] instanceof FolderDescription) {
-					IPath path = resource.getFullPath().append(
-							((FolderDescription) members[i]).name);
-					IFolder folderHandle = resource.getWorkspace().getRoot()
-							.getFolder(path);
-					members[i].recordStateFromHistory(folderHandle,
-							new SubProgressMonitor(monitor,
-									100 / members.length));
+			for (AbstractResourceDescription member : members) {
+				if (member instanceof FileDescription) {
+					IPath path = resource.getFullPath().append(((FileDescription) member).name);
+					IFile fileHandle = resource.getWorkspace().getRoot().getFile(path);
+					member.recordStateFromHistory(fileHandle, new SubProgressMonitor(monitor, 100 / members.length));
+				} else if (member instanceof FolderDescription) {
+					IPath path = resource.getFullPath().append(((FolderDescription) member).name);
+					IFolder folderHandle = resource.getWorkspace().getRoot().getFolder(path);
+					member.recordStateFromHistory(folderHandle, new SubProgressMonitor(monitor, 100 / members.length));
 				}
 			}
 		}
@@ -209,28 +189,29 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 
 	/**
 	 * Return the name of the container described by this ContainerDescription.
-	 * 
+	 *
 	 * @return the name of the container.
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
 	/**
 	 * Return the first folder found that has no child folders.
-	 * 
+	 *
 	 * @return the container description for the first child in the receiver
 	 *         that is a leaf, or this container if there are no children.
 	 */
 	public ContainerDescription getFirstLeafFolder() {
 		// If there are no members, this is a leaf
-		if (members == null || members.length == 0) {
+		if ((members == null) || (members.length == 0)) {
 			return this;
 		}
 		// Traverse the members and find the first potential leaf
-		for (int i = 0; i < members.length; i++) {
-			if (members[i] instanceof ContainerDescription) {
-				return ((ContainerDescription) members[i]).getFirstLeafFolder();
+		for (AbstractResourceDescription member : members) {
+			if (member instanceof ContainerDescription) {
+				return ((ContainerDescription) member).getFirstLeafFolder();
 			}
 		}
 		// No child folders were found, this is a leaf
@@ -240,7 +221,7 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 	/**
 	 * Add the specified resource description as a member of this resource
 	 * description
-	 * 
+	 *
 	 * @param member
 	 *            the resource description considered a member of this
 	 *            container.
@@ -258,12 +239,11 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.internal.ide.undo.ResourceDescription#
 	 * restoreResourceAttributes(org.eclipse.core.resources.IResource)
 	 */
-	protected void restoreResourceAttributes(IResource resource)
-			throws CoreException {
+	@Override
+	protected void restoreResourceAttributes(IResource resource) throws CoreException {
 		super.restoreResourceAttributes(resource);
 		Assert.isLegal(resource instanceof IContainer);
 		IContainer container = (IContainer) resource;
@@ -274,7 +254,7 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 
 	/**
 	 * Set the location to which this container is linked.
-	 * 
+	 *
 	 * @param location
 	 *            the location URI, or <code>null</code> if there is no link
 	 */
@@ -284,17 +264,17 @@ public abstract class ContainerDescription extends AbstractResourceDescription {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see
 	 * org.eclipse.ui.internal.ide.undo.ResourceDescription#verifyExistence(
 	 * boolean)
 	 */
+	@Override
 	public boolean verifyExistence(boolean checkMembers) {
 		boolean existence = super.verifyExistence(checkMembers);
 		if (existence) {
 			if (checkMembers) {
 				// restore any children
-				if (members != null && members.length > 0) {
+				if ((members != null) && (members.length > 0)) {
 					for (int i = 0; i < members.length; i++) {
 						if (!members[i].verifyExistence(checkMembers)) {
 							return false;

@@ -74,8 +74,8 @@ public class FileSystemRepository implements IRepository {
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
 	 *
-	 * @param user
-	 * @throws LocalBaseException
+	 * @param user the user
+	 * @throws LocalBaseException Local Repository Exception
 	 */
 	public FileSystemRepository(String user) throws LocalBaseException {
 		createRepository(user, null, false);
@@ -84,9 +84,9 @@ public class FileSystemRepository implements IRepository {
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param user
-	 * @param rootFolder
-	 * @throws LocalBaseException
+	 * @param user the user
+	 * @param rootFolder the root folder
+	 * @throws LocalBaseException Local Repository Exception
 	 */
 	public FileSystemRepository(String user, String rootFolder) throws LocalBaseException {
 		createRepository(user, rootFolder, false);
@@ -95,10 +95,10 @@ public class FileSystemRepository implements IRepository {
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param user
-	 * @param rootFolder
-	 * @param absolute
-	 * @throws LocalBaseException
+	 * @param user the user
+	 * @param rootFolder the root folder
+	 * @param absolute whether it is an absoulute path
+	 * @throws LocalBaseException Local Repository Exception
 	 */
 	public FileSystemRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
 		createRepository(user, rootFolder, absolute);
@@ -316,28 +316,6 @@ public class FileSystemRepository implements IRepository {
 		// importer.unzip(relativeRoot, new ZipInputStream(new ByteArrayInputStream(data)), filter);
 		ZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
 	}
-
-	// @Override
-	// public byte[] exportZip(List<String> relativeRoots) throws IOException {
-	// ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	// ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
-	// exporter.zip(relativeRoots, zipOutputStream);
-	// return baos.toByteArray();
-	// }
-	//
-	// @Override
-	// public byte[] exportZip(String path, boolean inclusive) throws IOException {
-	// ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	// ZipOutputStream zipOutputStream = new ZipOutputStream(baos);
-	// try {
-	// exporter.zip(path, zipOutputStream, inclusive);
-	// } finally {
-	// zipOutputStream.flush();
-	// zipOutputStream.close();
-	// }
-	//
-	// return baos.toByteArray();
-	// }
 
 	@Override
 	public byte[] exportZip(List<String> relativeRoots) throws IOException {

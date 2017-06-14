@@ -31,7 +31,6 @@ public class LocalWorkspaceMapper {
 		String workspaceName = null;
 
 		if ((repositoryName != null) && !"".equals(repositoryName)) {
-
 			if (FileSystemUtils.exists(repositoryName) && !IRepository.SEPARATOR.equals(repositoryName)) {
 				return repositoryName;
 			}

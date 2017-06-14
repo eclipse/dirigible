@@ -1,12 +1,11 @@
-/******************************************************************************* 
+/*******************************************************************************
  * Copyright (c) 2015 SAP and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0 
- * which accompanies this distribution, and is available at 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.dirigible.repository.db.dao;
@@ -24,7 +23,6 @@ import org.eclipse.dirigible.repository.ext.db.DBUtils;
 /**
  * Utility class for transformation between JDBC related objects to DB
  * Repository objects and vice-versa
- * 
  */
 public class DBMapper {
 
@@ -42,26 +40,27 @@ public class DBMapper {
 
 	/**
 	 * ResultSet current row to DB Repository transformation
-	 * 
+	 *
 	 * @param repository
+	 *            the repository
 	 * @param resultSet
-	 * @return
+	 *            the result set
+	 * @return DB Object
 	 * @throws SQLException
+	 *             SQL Exception
 	 * @throws DBBaseException
+	 *             DB Exception
 	 */
-	static DBObject dbToObject(DBRepository repository, ResultSet resultSet)
-			throws SQLException, DBBaseException {
+	static DBObject dbToObject(DBRepository repository, ResultSet resultSet) throws SQLException, DBBaseException {
 
 		String name = resultSet.getString(FILE_NAME);
 		String path = resultSet.getString(FILE_PATH);
 		int type = resultSet.getInt(FILE_TYPE);
 		String content = resultSet.getString(FILE_CONTENT_TYPE);
 		String createdBy = resultSet.getString(FILE_CREATED_BY);
-		Date createdAt = new Date(resultSet.getTimestamp(FILE_CREATED_AT)
-				.getTime());
+		Date createdAt = new Date(resultSet.getTimestamp(FILE_CREATED_AT).getTime());
 		String modifiedBy = resultSet.getString(FILE_MODIFIED_BY);
-		Date modifiedAt = new Date(resultSet.getTimestamp(FILE_MODIFIED_AT)
-				.getTime());
+		Date modifiedAt = new Date(resultSet.getTimestamp(FILE_MODIFIED_AT).getTime());
 
 		DBObject dbObject = null;
 		if (type == OBJECT_TYPE_FOLDER) {
@@ -86,33 +85,37 @@ public class DBMapper {
 
 	/**
 	 * ResultSet current row to Content transformation
-	 * 
+	 *
 	 * @param resultSet
-	 * @return
+	 *            the result set
+	 * @return the content
 	 * @throws SQLException
+	 *             SQL Exception
 	 */
-	static byte[] dbToData(ResultSet resultSet)
-			throws SQLException {
+	static byte[] dbToData(ResultSet resultSet) throws SQLException {
 		return DBUtils.dbToData(resultSet);
 	}
 
 	/**
 	 * ResultSet current row to Binary Content transformation
 	 * 
-	 * @param repository
+	 * @param connection
 	 * @param resultSet
-	 * @return
+	 *            the result set
+	 * @param columnName
+	 *            the name of the column
+	 * @return the content
 	 * @throws SQLException
+	 *             SQL Exception
 	 * @throws IOException
+	 *             IO Exception
 	 */
-	public static byte[] dbToDataBinary(Connection connection, ResultSet resultSet,
-			String columnName) throws SQLException, IOException {
+	public static byte[] dbToDataBinary(Connection connection, ResultSet resultSet, String columnName) throws SQLException, IOException {
 		return DBUtils.dbToDataBinary(connection, resultSet, columnName);
 	}
 
-	public static DBFileVersion dbToFileVersion(Connection connection, DBRepository repository,
-			ResultSet resultSet) throws SQLException, DBBaseException,
-			IOException {
+	public static DBFileVersion dbToFileVersion(Connection connection, DBRepository repository, ResultSet resultSet)
+			throws SQLException, DBBaseException, IOException {
 
 		String path = resultSet.getString("FV_FILE_PATH"); //$NON-NLS-1$
 		int version = resultSet.getInt("FV_VERSION"); //$NON-NLS-1$
@@ -123,8 +126,7 @@ public class DBMapper {
 		Date createdAt = new Date(resultSet.getTimestamp("FV_CREATED_AT") //$NON-NLS-1$
 				.getTime());
 
-		DBFileVersion dbFileVersion = new DBFileVersion(repository,
-				(type == OBJECT_TYPE_BINARY), content, version, bytes);
+		DBFileVersion dbFileVersion = new DBFileVersion(repository, (type == OBJECT_TYPE_BINARY), content, version, bytes);
 
 		dbFileVersion.setPath(path);
 		dbFileVersion.setCreatedBy(createdBy);
