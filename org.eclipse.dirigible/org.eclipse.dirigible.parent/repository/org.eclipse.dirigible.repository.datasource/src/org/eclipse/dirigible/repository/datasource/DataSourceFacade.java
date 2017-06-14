@@ -20,7 +20,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
@@ -95,10 +94,6 @@ public class DataSourceFacade {
 		return instance;
 	}
 
-	// public DataSource getDataSource() {
-	// return getDataSource(null);
-	// }
-
 	public DataSource getDataSource(HttpServletRequest request) {
 		if (dataSource == null) {
 			logger.debug("Lookup or create a Datasource...");
@@ -157,22 +152,8 @@ public class DataSourceFacade {
 			return null;
 		}
 
-		InitialContext context = (InitialContext) System.getProperties().get(ICommonConstants.INITIAL_CONTEXT);
-		if (context == null) {
-			try {
-				context = new InitialContext();
-			} catch (NamingException e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		if (context != null) {
-			String defaultDataSourceName = getEnv(ICommonConstants.INIT_PARAM_JNDI_DEFAULT_DATASOURCE);
-			try {
-				context.bind(defaultDataSourceName, dataSource);
-			} catch (NamingException e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
+		System.getProperties().put(DATASOURCE_DEFAULT, dataSource);
+
 		return dataSource;
 	}
 
@@ -283,7 +264,9 @@ public class DataSourceFacade {
 	 * Register a named data-source's meta-data by name in the list of known named data sources
 	 *
 	 * @param name
+	 *            the name
 	 * @param namedDataSource
+	 *            the parameters
 	 */
 	public void registerDataSource(String name, Properties namedDataSource) {
 		this.namedDataSources.put(name, namedDataSource);
@@ -293,8 +276,11 @@ public class DataSourceFacade {
 	/**
 	 * Gives the named data source from the list, if any
 	 *
+	 * @param request
+	 *            the current request
 	 * @param name
-	 * @return
+	 *            the name
+	 * @return the {@link DataSource} instance
 	 */
 	public DataSource getNamedDataSource(HttpServletRequest request, String name) {
 		Properties properties = this.namedDataSources.get(name);
@@ -369,7 +355,7 @@ public class DataSourceFacade {
 	/**
 	 * List the registered DataSources names
 	 *
-	 * @return
+	 * @return names of the data sources
 	 */
 	public Set<String> getNamedDataSourcesNames() {
 		return this.namedDataSources.keySet();
@@ -379,6 +365,7 @@ public class DataSourceFacade {
 	 * Un-register an already registered DataSource
 	 *
 	 * @param name
+	 *            the name of the data source
 	 */
 	public void unregisterDataSource(String name) {
 		this.namedDataSources.remove(name);
