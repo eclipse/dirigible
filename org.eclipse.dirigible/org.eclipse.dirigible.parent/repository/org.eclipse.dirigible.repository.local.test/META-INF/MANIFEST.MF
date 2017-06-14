@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ActivationPolicy: lazy
+Bundle-Name: Dirigible Repository Local Test Suite
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: SAP
+Build-Jdk: 1.6.0_33
+Bundle-Version: 2.7.170608
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.dirigible.repository.local.test;singleton:=true
+Fragment-Host: org.eclipse.dirigible.repository.local
+Require-Bundle: org.eclipse.dirigible.repository.api,
+ org.eclipse.dirigible.repository.test,
+ org.mockito,
+ org.objenesis,
+ org.eclipse.dirigible.repository.git,
+ org.eclipse.jgit,
+ org.eclipse.jgit.http.apache,
+ com.jcraft.jsch
+Import-Package: org.hamcrest,
+ org.hamcrest.core,
+ org.hamcrest.internal,
+ org.junit,
+ org.junit.runner,
+ org.junit.runners,
+ org.slf4j
+
+

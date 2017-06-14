@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.dirigible.repository.velocity
+Bundle-SymbolicName: org.eclipse.dirigible.repository.velocity;singleton:=true
+Bundle-Version: 2.7.170608
+Bundle-Vendor: SAP AG
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.dirigible.repository.velocity
+Require-Bundle: org.apache.velocity,
+ org.eclipse.dirigible.repository.api
+Bundle-ClassPath: .

@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.dirigible.ide.generic
+Bundle-SymbolicName: org.eclipse.dirigible.ide.generic;singleton:=true
+Bundle-Version: 2.7.170608
+Bundle-Vendor: SAP AG
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.ui;resolution:=optional,
+ org.eclipse.rap.ui;resolution:=optional,
+ org.eclipse.dirigible.ide.ui.widget.extbrowser,
+ org.eclipse.dirigible.ide.common,
+ org.eclipse.dirigible.ide.repository,
+ org.eclipse.dirigible.repository.api,
+ org.eclipse.dirigible.repository.logging,
+ org.eclipse.dirigible.repository.ext,
+ org.eclipse.core.runtime;resolution:=optional
+Export-Package: org.eclipse.dirigible.ide.generic.ui
+Import-Package: javax.servlet,
+ javax.servlet.http
+Bundle-ClassPath: .

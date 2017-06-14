@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.dirigible.runtime.security
+Bundle-SymbolicName: org.eclipse.dirigible.runtime.security;singleton:=true
+Bundle-Version: 2.7.170608
+Bundle-Vendor: SAP AG
+Require-Bundle: org.eclipse.dirigible.repository.api,
+ org.eclipse.dirigible.repository.ext,
+ org.eclipse.equinox.http.registry,
+ org.eclipse.equinox.http.servlet,
+ org.eclipse.core.runtime,
+ org.eclipse.dirigible.runtime.core,
+ com.google.gson,
+ org.eclipse.dirigible.repository.logging,
+ org.eclipse.dirigible.repository.datasource,
+ org.apache.commons.lang
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: javax.servlet,
+ javax.servlet.annotation,
+ javax.servlet.descriptor,
+ javax.servlet.http,
+ org.slf4j
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.dirigible.runtime.filter,
+ org.eclipse.dirigible.runtime.security
+Bundle-ClassPath: .
