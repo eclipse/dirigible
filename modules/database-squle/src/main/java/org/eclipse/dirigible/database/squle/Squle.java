@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.eclipse.dirigible.database.squle.builders.CreateBranchingBuilder;
+import org.eclipse.dirigible.database.squle.builders.DeleteBuilder;
 import org.eclipse.dirigible.database.squle.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.squle.builders.ExpressionBuilder;
 import org.eclipse.dirigible.database.squle.builders.InsertBuilder;
@@ -46,6 +47,10 @@ public class Squle {
 	
 	public UpdateBuilder update() {
 		return new UpdateBuilder(dialect);
+	}
+	
+	public DeleteBuilder delete() {
+		return new DeleteBuilder(dialect);
 	}
 
 	public ExpressionBuilder expr() {

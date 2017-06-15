@@ -35,6 +35,9 @@
         <dependent-module archiveName="dirigible-database-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-api/dirigible-database-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-database-squle-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-squle/dirigible-database-squle">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-database-derby-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-derby/dirigible-database-derby">
             <dependency-type>uses</dependency-type>
         </dependent-module>

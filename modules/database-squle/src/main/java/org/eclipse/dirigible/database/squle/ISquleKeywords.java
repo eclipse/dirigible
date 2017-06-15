@@ -24,20 +24,17 @@ public interface ISquleKeywords {
 	public static final String KEYWORD_ON = "ON";
 	public static final String KEYWORD_LIMIT = "LIMIT";
 	public static final String KEYWORD_OFFSET = "OFFSET";
-	
 	public static final String KEYWORD_INSERT = "INSERT";
 	public static final String KEYWORD_INTO = "INTO";
 	public static final String KEYWORD_VALUES = "VALUES";
-	
 	public static final String KEYWORD_UPDATE = "UPDATE";
 	public static final String KEYWORD_SET = "SET";
-	
 	public static final String KEYWORD_CREATE = "CREATE";
 	public static final String KEYWORD_TABLE = "TABLE";
 	public static final String KEYWORD_PRIMARY = "PRIMARY";
 	public static final String KEYWORD_KEY = "KEY";
-	
 	public static final String KEYWORD_DROP = "DROP";
+	public static final String KEYWORD_DELETE = "DELETE";
 
 	public static final String COMMA = ",";
 	public static final String SPACE = " ";
