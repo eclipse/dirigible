@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.dirigible.ide.template.publish
 Bundle-SymbolicName: org.eclipse.dirigible.ide.template.publish;singleton:=true
-Bundle-Version: 2.7.170608
+Bundle-Version: 2.7.170615
 Bundle-Vendor: SAP AG
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.dirigible.ide.repository,
