@@ -1,0 +1,162 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+
+	<name>Eclipse Dirigible - AllInOne - WAR</name>
+	<description>
+		Eclipse Dirigible is a Cloud Development Platform providing development tools and runtime environment.
+		It supports full development life-cycle of on-demand applications by leveraging in-system programming models
+		and rapid application development techniques.
+  </description>
+	<groupId>org.eclipse.dirigible.releng.nexus</groupId>
+	<artifactId>allinone</artifactId>
+	<version>2.7.170608</version>
+	<packaging>war</packaging>
+
+	<inceptionYear>2010</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Eclipse Public License - v 1.0</name>
+			<url>https://www.eclipse.org/legal/epl-v10.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<url>http://www.dirigible.io</url>
+	<organization>
+		<name>Eclipse Foundation</name>
+		<url>http://www.eclipse.org</url>
+	</organization>
+	<scm>
+		<url>https://github.com/eclipse/dirigible</url>
+	</scm>
+	<developers>
+     <developer>
+       <id>eclipse-dirigible-team</id>
+       <name>The Eclipse Dirigible Team</name>
+       <email>dirigible-dev@eclipse.org</email>
+     </developer>
+   </developers>
+
+	<issueManagement>
+		<url>http://bugs.dirigible.io</url>
+	</issueManagement>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>orbit</id>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>mvnrepository</id>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<debug>true</debug>
+					<debuglevel>lines,vars,source</debuglevel>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
+
+		</plugins>
+
+	</build>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.dirigible.releng</groupId>
+			<artifactId>allinone</artifactId>
+			<type>war</type>
+			<version>2.7.170615</version>
+		</dependency>
+	</dependencies>
+
+</project>
