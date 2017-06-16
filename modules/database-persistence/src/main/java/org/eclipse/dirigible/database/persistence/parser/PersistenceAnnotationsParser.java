@@ -5,6 +5,9 @@ import static java.text.MessageFormat.format;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.Types;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -17,35 +20,47 @@ import org.eclipse.dirigible.database.squle.DataTypeUtils;
 
 public class PersistenceAnnotationsParser {
 	
+	private static final Map<Class, PersistenceTableModel> MODELS_CACHE = Collections.synchronizedMap(new HashMap<Class, PersistenceTableModel>());
+	
 	public PersistenceTableModel parsePojo(Object pojo) throws PersistenceException {
 		Class<? extends Object> clazz = pojo.getClass();
 		PersistenceTableModel persistenceTableModel = parseTable(clazz);
-		parseColumns(clazz, persistenceTableModel);
 		return persistenceTableModel;
 	}
 	
 	public PersistenceTableModel parsePojo(Class<? extends Object> clazz) throws PersistenceException {
 		PersistenceTableModel persistenceTableModel = parseTable(clazz);
-		parseColumns(clazz, persistenceTableModel);
 		return persistenceTableModel;
 	}
 
 	private PersistenceTableModel parseTable(Class<? extends Object> clazz) {
+		
+		PersistenceTableModel persistenceTableModel = MODELS_CACHE.get(clazz);
+		
+		if (persistenceTableModel != null) {
+			return persistenceTableModel;
+		}
+		
 		Annotation annotation = clazz.getAnnotation(Table.class);
 		if (annotation == null) {
 			throw new PersistenceException(format("No Table annotation found in Class {0}", clazz));
 		}
 		Table table = (Table) annotation;
-		PersistenceTableModel persistenceModel = new PersistenceTableModel();
-		persistenceModel.setClassName(clazz.getCanonicalName());
+		persistenceTableModel = new PersistenceTableModel();
+		persistenceTableModel.setClassName(clazz.getCanonicalName());
 		if (table.schema() == null) {
 			throw new PersistenceException(format("Table Name is mandatory, but it is not present in Class [{0}]", clazz.getCanonicalName()));
 		}
-		persistenceModel.setTableName(table.name());
+		persistenceTableModel.setTableName(table.name());
 		if (table.schema() != null) {
-			persistenceModel.setSchemaName(table.schema());
+			persistenceTableModel.setSchemaName(table.schema());
 		}
-		return persistenceModel;
+		
+		parseColumns(clazz, persistenceTableModel);
+		
+		MODELS_CACHE.put(clazz, persistenceTableModel);
+		
+		return persistenceTableModel;
 	}
 
 	private void parseColumns(Class<? extends Object> clazz, PersistenceTableModel persistenceModel) {

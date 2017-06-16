@@ -53,9 +53,10 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	public T find(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
 		T result = null;
 		PreparedStatement preparedStatement = null;
+		String sql = null;
 		try {
 			result = clazz.newInstance();
-			String sql = generateScriptFind(connection, tableModel);
+			sql = generateScriptFind(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			setValuePrimaryKey(tableModel, id, preparedStatement);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -65,7 +66,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 				}
 			}
 		} catch (Exception e) {
-			throw new PersistenceException(e);
+			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
 		}
@@ -74,9 +75,10 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	
 	public List<T> findAll(Connection connection, PersistenceTableModel tableModel, Class<T> clazz) throws PersistenceException {
 		List<T> result = new ArrayList<T>();
+		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
-			String sql = generateScriptFindAll(connection, tableModel);
+			sql = generateScriptFindAll(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -87,7 +89,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 				result.add(pojo);
 			}
 		} catch (Exception e) {
-			throw new PersistenceException(e);
+			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
 		}

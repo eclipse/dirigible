@@ -2,7 +2,6 @@ package org.eclipse.dirigible.repository.master.fs;
 
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

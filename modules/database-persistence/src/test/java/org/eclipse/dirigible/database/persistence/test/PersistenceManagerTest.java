@@ -39,14 +39,23 @@ public class PersistenceManagerTest {
 		PersistenceManager<Customer> persistenceManager = new PersistenceManager<Customer>();
 		Connection connection = this.dataSrouce.getConnection();
 		try {
+			// create table
 			createTableForPojo(connection, persistenceManager);
+			// check whether it is created successfully
+			assertTrue(existsTable(connection, persistenceManager));
+			// insert a record in the table for a pojo
 			insertPojo(connection, persistenceManager);
+			// retreive the record by the primary key
 			findPojo(connection, persistenceManager);
+			// get the list of all the records
 			findAllPojo(connection, persistenceManager);
+			// make a simple custom query
 			queryAll(connection, persistenceManager);
+			// make a bit more complicated query
 			queryByName(connection, persistenceManager);
-			
+			// delete all the records
 //			deletePojo();
+			// drop the table
 			dropTableForPojo(connection, persistenceManager);
 		} finally {
 			connection.close();
@@ -55,6 +64,10 @@ public class PersistenceManagerTest {
 	
 	public void createTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 		persistenceManager.createTable(connection, Customer.class);
+	}
+	
+	public boolean existsTable(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+		return persistenceManager.existsTable(connection, Customer.class);
 	}
 	
 	public void insertPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {

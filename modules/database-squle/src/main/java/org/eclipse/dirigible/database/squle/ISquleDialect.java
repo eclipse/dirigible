@@ -1,5 +1,8 @@
 package org.eclipse.dirigible.database.squle;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public interface ISquleDialect extends ISquleKeywords {
 	
 	/**
@@ -14,4 +17,12 @@ public interface ISquleDialect extends ISquleKeywords {
 	 */
 	public String getPrimaryKeyArgument();
 
+	/**
+	 * Check existence of a table
+	 * 
+	 * @param connection the current connection
+	 * @param table the table name
+	 * @return true if the table exists and false otherwise
+	 */
+	public boolean exists(Connection connection, String table) throws SQLException;
 }

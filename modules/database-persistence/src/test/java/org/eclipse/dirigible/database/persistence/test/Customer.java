@@ -1,6 +1,8 @@
 package org.eclipse.dirigible.database.persistence.test;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Table(name="CUSTOMERS", schema="FACTORY")
 public class Customer {

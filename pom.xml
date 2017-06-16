@@ -299,13 +299,11 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>${mockito.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 			<version>${hamcrest.all.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<!-- End Test Dependencies -->
 
@@ -341,7 +339,8 @@
 	<modules>
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
-
+		<module>modules/commons-test</module>
+		
 		<module>modules/repository-api</module>
 		<module>modules/repository-api-test</module>
 		<module>modules/repository-zip</module>
@@ -349,16 +348,18 @@
 		<module>modules/repository-master</module>
 		<!-- <module>modules/repository-rest</module> -->
 
+		<module>modules/core-extensions</module>
+
 		<module>modules/database-api</module>
 		<module>modules/database-squle</module>
 		<module>modules/database-derby</module>
+		<module>modules/database-persistence</module>
 		
-
 		<module>modules/runtime-core</module>
 		<module>modules/runtime-repository</module>
 		<module>modules/runtime-registry</module>
 		<module>modules/runtime-workspaces</module>
-
+		
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>
 		<module>modules/engine-js</module>
@@ -370,10 +371,7 @@
 		<module>modules/api-http</module>
 		<module>modules/api-auth</module>
 
-
 		<module>content/api-http</module>
-		
-		
 
 		<module>releng/war-all</module>
 	</modules>

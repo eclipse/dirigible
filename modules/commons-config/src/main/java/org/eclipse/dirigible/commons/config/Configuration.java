@@ -70,7 +70,7 @@ public class Configuration {
 			logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * Loads a custom properties file from the class loader
 	 * @param path
@@ -100,7 +100,7 @@ public class Configuration {
 			if (custom.containsKey(DIRIGIBLE_TEST_MODE_ENABLED)) {
 				throw new TestModeException("Setting the test mode programmatically as a parameter is forbidden.");
 			}
-			getInstance().parameters.putAll((Map) custom);
+			getInstance().putAll(custom);
 		} catch (TestModeException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -171,6 +171,11 @@ public class Configuration {
 		}
 	}
 	
+	private void putAll(Properties properties) {
+		this.parameters.putAll((Map) properties);
+		update();
+	}
+	
 	public static boolean isTestModeEnabled() {
 		String testMode = Configuration.get(DIRIGIBLE_TEST_MODE_ENABLED);
 		if (testMode != null || Boolean.parseBoolean(testMode)) {
@@ -185,6 +190,15 @@ public class Configuration {
 	
 	public static void disableTestMode() {
 		getInstance().parameters.put(DIRIGIBLE_TEST_MODE_ENABLED, "false");
+	}
+	
+	/**
+	 * Setter as a System's property
+	 * @param key
+	 * @param value
+	 */
+	public static void setSystemProperty(String key, String value) {
+		System.setProperty(key, value);
 	}
 
 }

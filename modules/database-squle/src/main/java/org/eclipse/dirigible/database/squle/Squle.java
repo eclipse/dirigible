@@ -73,5 +73,14 @@ public class Squle {
 		}
 		
 	}
+	
+	public boolean exists(Connection connection, String table) {
+		try {
+			return dialect.exists(connection, table);
+		} catch (SQLException e) {
+			throw new SquleException("Error on checking existence of a table from the connection", e);
+		}
+		
+	}
 
 }

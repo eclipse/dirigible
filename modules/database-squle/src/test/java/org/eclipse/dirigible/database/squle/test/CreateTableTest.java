@@ -20,7 +20,7 @@ public class CreateTableTest {
 			.toString();
 		
 		assertNotNull(sql);
-		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER PRIMARY KEY , FIRST_NAME VARCHAR  (20) , LAST_NAME VARCHAR  (30) )", sql);
+		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER PRIMARY KEY , FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )", sql);
 	}
 	
 	@Test
@@ -34,7 +34,7 @@ public class CreateTableTest {
 			.toString();
 		
 		assertNotNull(sql);
-		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER PRIMARY KEY , FIRST_NAME VARCHAR  (20) , LAST_NAME VARCHAR  (30) )", sql);
+		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER PRIMARY KEY , FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )", sql);
 	}
 
 }

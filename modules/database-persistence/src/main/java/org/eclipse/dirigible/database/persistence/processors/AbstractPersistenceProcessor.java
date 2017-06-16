@@ -3,7 +3,6 @@ package org.eclipse.dirigible.database.persistence.processors;
 import static java.text.MessageFormat.format;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.Date;
@@ -17,12 +16,6 @@ import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.squle.DataTypeUtils;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 public abstract class AbstractPersistenceProcessor implements IPersistenceProcessor {
 	
@@ -58,68 +51,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		field.setAccessible(true);
 		return oldAccessible;
 	}
-	
-//	protected void setValuesFromJson(PersistenceTableModel tableModel, String json, PreparedStatement preparedStatement)
-//			throws SQLException, NoSuchFieldException, IllegalAccessException, PersistenceException {
-//		int i=1;
-//		JsonElement jsonElement = new JsonParser().parse(json);
-//		if (!(jsonElement instanceof JsonObject)) {
-//			throw new PersistenceException(format("Invalid json object [{0}]", json));
-//		}
-//		JsonObject jsonObject = (JsonObject) jsonElement;
-//		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-//			String dataType = columnModel.getType();
-//			String fieldName = columnModel.getField();
-//			i = setValueFromJson(json, preparedStatement, i, jsonObject, dataType, fieldName);
-//		}
-//	}
-//
-//	private int setValueFromJson(String json, PreparedStatement preparedStatement, int i, JsonObject jsonObject, String dataType, String fieldName) throws SQLException {
-//		
-//		if (DataTypeUtils.isVarchar(dataType)) {
-//			preparedStatement.setString(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsString());
-//		} else if (DataTypeUtils.isChar(dataType)) {
-//			preparedStatement.setString(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsString());
-//		} else if (DataTypeUtils.isDate(dataType)) {
-//			preparedStatement.setDate(i++, new Date(jsonObject.getAsJsonPrimitive(fieldName).getAsLong()));
-//		} else if (DataTypeUtils.isTime(dataType)) {
-//			preparedStatement.setTime(i++, new Time(jsonObject.getAsJsonPrimitive(fieldName).getAsLong()));
-//		} else if (DataTypeUtils.isTimestamp(dataType)) {
-//			preparedStatement.setTimestamp(i++, new Timestamp(jsonObject.getAsJsonPrimitive(fieldName).getAsLong()));
-//		} else if (DataTypeUtils.isInteger(dataType)) {
-//			preparedStatement.setInt(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsInt());
-//		} else if (DataTypeUtils.isBigint(dataType)) {
-//			preparedStatement.setLong(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsLong());
-//		} else if (DataTypeUtils.isReal(dataType)) {
-//			preparedStatement.setFloat(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsFloat());
-//		} else if (DataTypeUtils.isDouble(dataType)) {
-//			preparedStatement.setDouble(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsDouble());
-//		} else if (DataTypeUtils.isBoolean(dataType)) {
-//			preparedStatement.setBoolean(i++, jsonObject.getAsJsonPrimitive(fieldName).getAsBoolean());
-//		} else if (DataTypeUtils.isBlob(dataType)) {
-//			JsonArray jsonArray = jsonObject.getAsJsonPrimitive(fieldName).getAsJsonArray();
-//			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//			for (JsonElement element : jsonArray) {
-//				if (!(element instanceof JsonPrimitive)) {
-//					throw new PersistenceException(format("Invalid element in the array of integers provided [{0}] not supported (Json: [{1}])", dataType, json));
-//				}
-//				JsonPrimitive primitive = (JsonPrimitive) element;
-//				baos.write(primitive.getAsInt());
-//			}
-//			byte[] bytes = baos.toByteArray();
-//			preparedStatement.setBinaryStream(i++, new ByteArrayInputStream(bytes), bytes.length);
-//		}
-//
-//		else {
-//			throw new PersistenceException(format("Database type [{0}] not supported (Json: [{1}])", dataType, json));
-//		}
-//		return i;
-//	}
-	
-	
-	
-	
-	
+
 	protected void setValuePrimaryKey(PersistenceTableModel tableModel, Object id, PreparedStatement preparedStatement)
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {

@@ -2,7 +2,6 @@ package org.eclipse.dirigible.database.persistence.processors;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
@@ -23,13 +22,14 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 	
 	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
+		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
-			String sql = generateScript(connection, tableModel);
+			sql = generateScript(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			throw new PersistenceException(e);
+			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
 		}

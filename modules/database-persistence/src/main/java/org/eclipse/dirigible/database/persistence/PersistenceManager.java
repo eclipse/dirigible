@@ -2,13 +2,13 @@ package org.eclipse.dirigible.database.persistence;
 
 import java.sql.Connection;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.PersistenceCreateTableProcessor;
 import org.eclipse.dirigible.database.persistence.processors.PersistenceDropTableProcessor;
 import org.eclipse.dirigible.database.persistence.processors.PersistenceInsertProcessor;
 import org.eclipse.dirigible.database.persistence.processors.PersistenceQueryProcessor;
+import org.eclipse.dirigible.database.squle.Squle;
 
 public class PersistenceManager<T> {
 	
@@ -48,5 +48,17 @@ public class PersistenceManager<T> {
 		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
 		return queryProcessor.query(connection, tableModel, clazz, sql, values);
 	}
+	
+	public boolean existsTable(Connection connection, Class<T> clazz) {
+		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
+		try {
+			return Squle.getNative(connection)
+				.exists(connection, tableModel.getTableName());
+		} catch (Exception e) {
+			throw new PersistenceException(e);
+		}
+	}
+	
+	
 
 }

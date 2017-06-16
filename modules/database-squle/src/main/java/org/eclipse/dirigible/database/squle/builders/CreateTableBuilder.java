@@ -18,9 +18,14 @@ public class CreateTableBuilder extends AbstractCreateSquleBuilder {
 	}
 
 	public CreateTableBuilder column(String name, DataType type, boolean isPrimaryKey, String...args) {
-		String[] definition = new String[]{name, getDialect().getDataTypeName(type), isPrimaryKey ? getDialect().getPrimaryKeyArgument() : ""};
-		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
-		this.columns.add(coulmn);
+		String[] definition = new String[]{name, getDialect().getDataTypeName(type)};
+		String[] column = null;
+		if (isPrimaryKey) {
+			column = Stream.of(definition, args, new String[]{getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
+		} else {
+			column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+		}
+		this.columns.add(column);
 		return this;
 	}
 	

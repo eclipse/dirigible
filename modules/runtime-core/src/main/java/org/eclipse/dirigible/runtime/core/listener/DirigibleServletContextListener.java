@@ -8,8 +8,8 @@ import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
+import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +27,6 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	private static final HashSet<Object> services = new HashSet<Object>();
 
-	private static Injector staticInjector;
-
 	private Injector injector;
 
 	@Override
@@ -36,7 +34,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.debug("Initializing Guice Injector with modules for dependency injection...");
 
 		injector = Guice.createInjector(new DirigibleModulesInstallerModule());
-		setStaticInjector(injector);
+		StaticInjector.setInjector(injector);
 		
 		logger.debug("Guice Injector with modules for dependency injection initialized.");
 		
@@ -79,24 +77,6 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	 */
 	public static HashSet<Object> getServices() {
 		return services;
-	}
-
-	/**
-	 * Gets the injector
-	 *
-	 * @return returns injector
-	 */
-	public static Injector getStaticInjector() {
-		return staticInjector;
-	}
-
-	/**
-	 * Sets the injector
-	 *
-	 * @param staticInjector
-	 */
-	public static void setStaticInjector(Injector staticInjector) {
-		DirigibleServletContextListener.staticInjector = staticInjector;
 	}
 
 }
