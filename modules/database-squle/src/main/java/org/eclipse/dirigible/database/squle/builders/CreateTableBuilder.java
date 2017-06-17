@@ -17,64 +17,68 @@ public class CreateTableBuilder extends AbstractCreateSquleBuilder {
 		this.table = table;
 	}
 
-	public CreateTableBuilder column(String name, DataType type, boolean isPrimaryKey, String...args) {
+	public CreateTableBuilder column(String name, DataType type, boolean isPrimaryKey, boolean isNullable, String...args) {
 		String[] definition = new String[]{name, getDialect().getDataTypeName(type)};
 		String[] column = null;
-		if (isPrimaryKey) {
-			column = Stream.of(definition, args, new String[]{getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
+		if (!isNullable) {
+			column = Stream.of(definition, args, new String[]{getDialect().getNotNullArgument()}).flatMap(Stream::of).toArray(String[]::new);
 		} else {
 			column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
 		}
+		if (isPrimaryKey) {
+			column = Stream.of(column, new String[]{getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
+		}
+		
 		this.columns.add(column);
 		return this;
 	}
 	
-	public CreateTableBuilder columnVarchar(String name, int length, boolean isPrimaryKey, String...args) {
+	public CreateTableBuilder columnVarchar(String name, int length, boolean isPrimaryKey, boolean isNullable, String...args) {
 		String[] definition = new String[]{OPEN + length + CLOSE};
 		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
-		return this.column(name, DataType.VARCHAR, isPrimaryKey, coulmn);
+		return this.column(name, DataType.VARCHAR, isPrimaryKey, isNullable, coulmn);
 	}
 	
-	public CreateTableBuilder columnChar(String name, int length, boolean isPrimaryKey, String...args) {
+	public CreateTableBuilder columnChar(String name, int length, boolean isPrimaryKey, boolean isNullable, String...args) {
 		String[] definition = new String[]{OPEN + length + CLOSE};
 		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
-		return this.column(name, DataType.CHAR, isPrimaryKey, coulmn);
+		return this.column(name, DataType.CHAR, isPrimaryKey, isNullable, coulmn);
 	}
 	
-	public CreateTableBuilder columnDate(String name, boolean isPrimaryKey, String...args) {
-		return this.column(name, DataType.DATE, isPrimaryKey, args);
+	public CreateTableBuilder columnDate(String name, boolean isPrimaryKey, boolean isNullable, String...args) {
+		return this.column(name, DataType.DATE, isPrimaryKey, isNullable, args);
 	}
 	
-	public CreateTableBuilder columnTime(String name, boolean isPrimaryKey, String...args) {
-		return this.column(name, DataType.TIME, isPrimaryKey, args);
+	public CreateTableBuilder columnTime(String name, boolean isPrimaryKey, boolean isNullable, String...args) {
+		return this.column(name, DataType.TIME, isPrimaryKey, isNullable, args);
 	}
 	
-	public CreateTableBuilder columnTimestamp(String name, boolean isPrimaryKey, String...args) {
-		return this.column(name, DataType.TIMESTAMP, isPrimaryKey, args);
+	public CreateTableBuilder columnTimestamp(String name, boolean isPrimaryKey, boolean isNullable, String...args) {
+		return this.column(name, DataType.TIMESTAMP, isPrimaryKey, isNullable, args);
 	}
 	
-	public CreateTableBuilder columnInteger(String name, boolean isPrimaryKey, String...args) {
-		return this.column(name, DataType.INTEGER, isPrimaryKey, args);
+	public CreateTableBuilder columnInteger(String name, boolean isPrimaryKey, boolean isNullable, String...args) {
+		return this.column(name, DataType.INTEGER, isPrimaryKey, isNullable, args);
 	}
 	
-	public CreateTableBuilder columnBigint(String name, boolean isPrimaryKey, String...args) {
-		return this.column(name, DataType.BIGINT, isPrimaryKey, args);
+	public CreateTableBuilder columnBigint(String name, boolean isPrimaryKey, boolean isNullable, String...args) {
+		return this.column(name, DataType.BIGINT, isPrimaryKey, isNullable, args);
 	}
 	
-	public CreateTableBuilder columnReal(String name, boolean isPrimaryKey, String...args) {
-		return this.column(name, DataType.REAL, isPrimaryKey, args);
+	public CreateTableBuilder columnReal(String name, boolean isPrimaryKey, boolean isNullable, String...args) {
+		return this.column(name, DataType.REAL, isPrimaryKey, isNullable, args);
 	}
 	
-	public CreateTableBuilder columnDouble(String name, boolean isPrimaryKey, String...args) {
-		return this.column(name, DataType.DOUBLE, isPrimaryKey, args);
+	public CreateTableBuilder columnDouble(String name, boolean isPrimaryKey, boolean isNullable, String...args) {
+		return this.column(name, DataType.DOUBLE, isPrimaryKey, isNullable, args);
 	}
 	
-	public CreateTableBuilder columnBoolean(String name, boolean isPrimaryKey, String...args) {
-		return this.column(name, DataType.BOOLEAN, isPrimaryKey, args);
+	public CreateTableBuilder columnBoolean(String name, boolean isPrimaryKey, boolean isNullable, String...args) {
+		return this.column(name, DataType.BOOLEAN, isPrimaryKey, isNullable, args);
 	}
 	
-	public CreateTableBuilder columnBlob(String name, String...args) {
-		return this.column(name, DataType.BLOB, false, args);
+	public CreateTableBuilder columnBlob(String name, boolean isNullable, String...args) {
+		return this.column(name, DataType.BLOB, false, isNullable, args);
 	}
 	
 	@Override

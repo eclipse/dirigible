@@ -35,6 +35,10 @@ public interface ISquleKeywords {
 	public static final String KEYWORD_KEY = "KEY"; //$NON-NLS-1$
 	public static final String KEYWORD_DROP = "DROP"; //$NON-NLS-1$
 	public static final String KEYWORD_DELETE = "DELETE"; //$NON-NLS-1$
+	public static final String KEYWORD_NOT = "NOT"; //$NON-NLS-1$
+	public static final String KEYWORD_NULL = "NULL"; //$NON-NLS-1$
+	
+	
 
 	public static final String COMMA = ","; //$NON-NLS-1$
 	public static final String SPACE = " "; //$NON-NLS-1$

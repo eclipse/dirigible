@@ -20,6 +20,11 @@ public class DefaultSquleDialect implements ISquleDialect {
 	public String getPrimaryKeyArgument() {
 		return KEYWORD_PRIMARY + SPACE + KEYWORD_KEY;
 	}
+	
+	@Override
+	public String getNotNullArgument() {
+		return KEYWORD_NOT + SPACE + KEYWORD_NULL;
+	}
 
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {
