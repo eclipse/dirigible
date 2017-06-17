@@ -64,6 +64,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 				for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 					setValueToPojo(result, resultSet, columnModel);
 				}
+			} else {
+				return null;
 			}
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
@@ -104,7 +106,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 			if (values != null) {
 				int i=1;
 				for (Object value : values) {
-					setValue(preparedStatement, i++, DataTypeUtils.getDatabaseTypeNameByJavaType(value.getClass()), value);
+					setValue(preparedStatement, i++, value);
 				}
 			}
 			ResultSet resultSet = preparedStatement.executeQuery();

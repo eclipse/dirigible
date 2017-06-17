@@ -16,6 +16,7 @@ import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.squle.DataTypeUtils;
+import org.eclipse.dirigible.database.squle.ISquleKeywords;
 
 public abstract class AbstractPersistenceProcessor implements IPersistenceProcessor {
 	
@@ -61,6 +62,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				break;
 			}
 		}
+	}
+	
+	protected void setValue(PreparedStatement preparedStatement, int i, Object value) throws SQLException {
+		setValue(preparedStatement, i, DataTypeUtils.getDatabaseTypeNameByJavaType(value.getClass()), value);
 	}
 	
 	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value) throws SQLException {
@@ -116,6 +121,15 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		} catch (SQLException e) {
 			throw new PersistenceException(e);
 		}
+	}
+	
+	protected String getPrimaryKey(PersistenceTableModel tableModel) {
+		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+			if (columnModel.isPrimaryKey()) {
+				return columnModel.getName();
+			}
+		}
+		return null;
 	}
 	
 }

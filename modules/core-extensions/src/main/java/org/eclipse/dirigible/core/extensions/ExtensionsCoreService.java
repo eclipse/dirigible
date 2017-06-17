@@ -3,6 +3,7 @@ package org.eclipse.dirigible.core.extensions;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,9 +13,11 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
+import org.eclipse.dirigible.database.squle.Squle;
+import org.eclipse.dirigible.database.squle.builders.SelectBuilder;
 
 @Singleton
-public class ExtensionsCoreService implements ICoreService {
+public class ExtensionsCoreService implements IExtensionsCoreService {
 	
 	@Inject
 	private DataSource dataSource;
@@ -23,9 +26,13 @@ public class ExtensionsCoreService implements ICoreService {
 	private PersistenceManager<ExtensionPointDefinition> extensionPointPersistenceManager;
 	
 	@Inject
-	private PersistenceManager<ExtensionPointDefinition> extensionPersistenceManager;
+	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager;
 	
 	boolean extensionPointsTableExists = false;
+	
+	boolean extensionsTableExists = false;
+	
+	// Extension Points
 	
 	public void createExtensionPoint(String extensionPoint, String description) throws ExtensionsException {
 		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
@@ -39,6 +46,56 @@ public class ExtensionsCoreService implements ICoreService {
 			try {
 				checkExtensionPointTable(connection);
 				extensionPointPersistenceManager.insert(connection, extensionPointDefinition);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	public ExtensionPointDefinition getExtensionPoint(String extensionPoint) throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionPointTable(connection);
+				return extensionPointPersistenceManager.find(connection, ExtensionPointDefinition.class, extensionPoint);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	public void removeExtensionPoint(String extensionPoint) throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionPointTable(connection);
+				extensionPointPersistenceManager.delete(connection, ExtensionPointDefinition.class, extensionPoint);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	public void updateExtensionPoint(String extensionPoint, String description) throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionPointTable(connection);
+				ExtensionPointDefinition extensionPointDefinition = getExtensionPoint(extensionPoint);
+				extensionPointDefinition.setDescription(description);
+				extensionPointPersistenceManager.update(connection, extensionPointDefinition, extensionPoint);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -64,6 +121,8 @@ public class ExtensionsCoreService implements ICoreService {
 			throw new ExtensionsException(e);
 		}
 	}
+	
+	
 
 	private void checkExtensionPointTable(Connection connection) {
 		if (!extensionPointsTableExists) {
@@ -71,6 +130,130 @@ public class ExtensionsCoreService implements ICoreService {
 				extensionPointPersistenceManager.createTable(connection, ExtensionPointDefinition.class);				
 			}
 			extensionPointsTableExists = true;
+		}
+	}
+	
+	
+	// Extensions Points
+	
+	public void createExtension(String extension, String extensionPoint, String description) throws ExtensionsException {
+		ExtensionDefinition extensionDefinition = new ExtensionDefinition();
+		extensionDefinition.setLocation(extension);
+		extensionDefinition.setExtensionPoint(extensionPoint);
+		extensionDefinition.setDescription(description);
+		extensionDefinition.setCreatedBy(UserFacade.getName());
+		extensionDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+		
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionTable(connection);
+				extensionPersistenceManager.insert(connection, extensionDefinition);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	public ExtensionDefinition getExtension(String extension) throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionTable(connection);
+				return extensionPersistenceManager.find(connection, ExtensionDefinition.class, extension);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	public void removeExtension(String extension) throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionTable(connection);
+				extensionPersistenceManager.delete(connection, ExtensionDefinition.class, extension);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	public void updateExtension(String extension, String extensionPoint, String description) throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionTable(connection);
+				ExtensionDefinition extensionDefinition = getExtension(extension);
+				extensionDefinition.setExtensionPoint(extensionPoint);
+				extensionDefinition.setDescription(description);
+				extensionPersistenceManager.update(connection, extensionDefinition, extension);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	public List<ExtensionDefinition> getExtensions() throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionTable(connection);
+				return extensionPersistenceManager.findAll(connection, ExtensionDefinition.class);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	public List<ExtensionDefinition> getExtensionsByExtensionPoint(String extensionPoint) throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkExtensionTable(connection);
+				String sql = Squle.getNative(connection)
+						.select()
+						.column("*")
+						.from("DIRIGIBLE_EXTENSIONS")
+						.where("EXTENSION_EXTENSIONPOINT_LOCATION = ?").toString();
+				return extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql, Arrays.asList(extensionPoint));
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+
+	private void checkExtensionTable(Connection connection) {
+		if (!extensionsTableExists) {
+			if (!extensionPersistenceManager.existsTable(connection, ExtensionDefinition.class)) {
+				extensionPersistenceManager.createTable(connection, ExtensionDefinition.class);				
+			}
+			extensionsTableExists = true;
 		}
 	}
 

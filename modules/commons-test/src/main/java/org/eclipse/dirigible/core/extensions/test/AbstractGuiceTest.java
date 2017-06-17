@@ -2,6 +2,10 @@ package org.eclipse.dirigible.core.extensions.test;
 
 import static org.mockito.Mockito.mock;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -28,17 +32,19 @@ public abstract class AbstractGuiceTest {
 
 	/**
 	 * Dependency injection before execution of every test method
+	 * @throws IOException 
 	 */
 	@Before
-	public void beforeEveryMethod() {
+	public void beforeEveryMethod() throws IOException {
 		getInjector();
 		Injector mockedInjector = mock(Injector.class);
 		StaticInjector.setInjector(mockedInjector);
 	}
 
-	protected Injector getInjector() {
-		Configuration.setSystemProperty("DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT", "./target/derbytest");
+	protected Injector getInjector() throws IOException {
 		if (injector == null) {
+			FileUtils.deleteDirectory(new File("./target/derby_test_database"));
+			Configuration.setSystemProperty("DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT", "./target/derby_test_database");
 			injector = Guice.createInjector(
 					new DirigibleModulesInstallerModule(),
 					new Module() {

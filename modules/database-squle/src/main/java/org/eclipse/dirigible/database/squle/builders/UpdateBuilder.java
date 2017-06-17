@@ -1,17 +1,17 @@
 package org.eclipse.dirigible.database.squle.builders;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import org.eclipse.dirigible.database.squle.ISquleDialect;
 
 public class UpdateBuilder extends AbstractQuerySquleBuilder {
 
 	private String table;
-	private Map<String, String> values = new TreeMap<String, String>();
+	private Map<String, String> values = new LinkedHashMap<String, String>();
 	private List<String> wheres = new ArrayList<String>();
 	private List<String> orders = new ArrayList<String>();
 	private int limit = -1;

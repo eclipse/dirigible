@@ -1,18 +1,29 @@
 package org.eclipse.dirigible.core.extensions;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Table(name="DIRIGIBLE_EXTENSIONS")
 public class ExtensionDefinition {
 	
+	@Id
+	@Column(name="EXTENSION_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String location;
 	
+	@Column(name="EXTENSION_EXTENSIONPOINT_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String extensionPoint;
 	
+	@Column(name="EXTENSION_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)
 	private String description;
 	
+	@Column(name="EXTENSION_CREATED_BY", columnDefinition="VARCHAR", nullable=false, length=32)
 	private String createdBy;
 	
-	private Date createdAt;
+	@Column(name="EXTENSION_CREATED_AT", columnDefinition="TIMESTAMP", nullable=false)
+	private Timestamp createdAt;
 
 	public String getLocation() {
 		return location;
@@ -46,11 +57,11 @@ public class ExtensionDefinition {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedAt() {
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
 	

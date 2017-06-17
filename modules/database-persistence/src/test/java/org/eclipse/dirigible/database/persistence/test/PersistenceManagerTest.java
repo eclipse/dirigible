@@ -53,8 +53,10 @@ public class PersistenceManagerTest {
 			queryAll(connection, persistenceManager);
 			// make a bit more complicated query
 			queryByName(connection, persistenceManager);
-			// delete all the records
-//			deletePojo();
+			// update one record
+			updatePojo(connection, persistenceManager);
+			// delete one record
+			deletePojo(connection, persistenceManager);
 			// drop the table
 			dropTableForPojo(connection, persistenceManager);
 		} finally {
@@ -173,6 +175,40 @@ public class PersistenceManagerTest {
 		Customer customer = (Customer) pojo;
 		assertEquals("Jane", customer.getFirstName());
 		
+	}
+	
+	public void updatePojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+		Object pojo = persistenceManager.find(connection, Customer.class, 1);
+		
+		assertTrue(pojo instanceof Customer);
+		Customer customer = (Customer) pojo;
+		assertEquals("John", customer.getFirstName());
+		assertEquals("Smith", customer.getLastName());
+		
+		customer.setLastName("Wayne");
+		
+		int result = persistenceManager.update(connection, customer, 1);
+		
+		assertEquals(1, result);
+		
+		pojo = persistenceManager.find(connection, Customer.class, 1);
+		
+		assertTrue(pojo instanceof Customer);
+		customer = (Customer) pojo;
+		assertEquals("John", customer.getFirstName());
+		assertEquals("Wayne", customer.getLastName());
+	}
+	
+	public void deletePojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+		Object pojo = persistenceManager.find(connection, Customer.class, 1);
+		
+		assertTrue(pojo instanceof Customer);
+		Customer customer = (Customer) pojo;
+		assertEquals("John", customer.getFirstName());
+		
+		int result = persistenceManager.delete(connection, Customer.class, 1);
+		
+		assertEquals(1, result);
 	}
 	
 	public void dropTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
