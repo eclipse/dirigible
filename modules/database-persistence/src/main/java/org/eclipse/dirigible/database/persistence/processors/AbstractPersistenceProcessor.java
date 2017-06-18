@@ -102,8 +102,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	
 	protected void setValueToPojo(Object pojo, ResultSet resultSet, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
-		Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 		Object value = resultSet.getObject(columnModel.getName());
+		setValueToPojo(pojo, value, columnModel);
+	}
+	
+	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
+			throws NoSuchFieldException, SQLException, IllegalAccessException {
+		Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
 		field.set(pojo, value);
 		resetAccesible(field, oldAccessible);

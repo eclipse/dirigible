@@ -2,6 +2,8 @@ package org.eclipse.dirigible.database.squle.builders;
 
 import org.eclipse.dirigible.database.squle.ISquleDialect;
 import org.eclipse.dirigible.database.squle.SquleException;
+import org.eclipse.dirigible.database.squle.builders.sequence.CreateSequenceBuilder;
+import org.eclipse.dirigible.database.squle.builders.table.CreateTableBuilder;
 
 public class CreateBranchingBuilder extends AbstractSquleBuilder {
 	
@@ -11,6 +13,10 @@ public class CreateBranchingBuilder extends AbstractSquleBuilder {
 
 	public CreateTableBuilder table(String table) {
 		return new CreateTableBuilder(getDialect(), table);
+	}
+	
+	public CreateSequenceBuilder sequence(String sequence) {
+		return new CreateSequenceBuilder(getDialect(), sequence);
 	}
 
 	@Override

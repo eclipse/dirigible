@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.database.squle.ISquleDialect;
+import org.eclipse.dirigible.database.squle.dialects.derby.DerbySquleDialect;
 
 public class SquleDialectFactory {
 	

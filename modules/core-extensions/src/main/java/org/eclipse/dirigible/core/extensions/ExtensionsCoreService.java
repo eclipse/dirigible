@@ -11,10 +11,8 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
-import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.squle.Squle;
-import org.eclipse.dirigible.database.squle.builders.SelectBuilder;
 
 @Singleton
 public class ExtensionsCoreService implements IExtensionsCoreService {
@@ -28,9 +26,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Inject
 	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager;
 	
-	boolean extensionPointsTableExists = false;
-	
-	boolean extensionsTableExists = false;
 	
 	// Extension Points
 	
@@ -44,7 +39,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionPointTable(connection);
 				extensionPointPersistenceManager.insert(connection, extensionPointDefinition);
 			} finally {
 				if (connection != null) {
@@ -60,7 +54,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionPointTable(connection);
 				return extensionPointPersistenceManager.find(connection, ExtensionPointDefinition.class, extensionPoint);
 			} finally {
 				if (connection != null) {
@@ -76,7 +69,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionPointTable(connection);
 				extensionPointPersistenceManager.delete(connection, ExtensionPointDefinition.class, extensionPoint);
 			} finally {
 				if (connection != null) {
@@ -92,7 +84,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionPointTable(connection);
 				ExtensionPointDefinition extensionPointDefinition = getExtensionPoint(extensionPoint);
 				extensionPointDefinition.setDescription(description);
 				extensionPointPersistenceManager.update(connection, extensionPointDefinition, extensionPoint);
@@ -110,7 +101,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionPointTable(connection);
 				return extensionPointPersistenceManager.findAll(connection, ExtensionPointDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -121,20 +111,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
-	
 
-	private void checkExtensionPointTable(Connection connection) {
-		if (!extensionPointsTableExists) {
-			if (!extensionPointPersistenceManager.existsTable(connection, ExtensionPointDefinition.class)) {
-				extensionPointPersistenceManager.createTable(connection, ExtensionPointDefinition.class);				
-			}
-			extensionPointsTableExists = true;
-		}
-	}
 	
 	
-	// Extensions Points
+	// Extensions
 	
 	public void createExtension(String extension, String extensionPoint, String description) throws ExtensionsException {
 		ExtensionDefinition extensionDefinition = new ExtensionDefinition();
@@ -147,7 +127,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionTable(connection);
 				extensionPersistenceManager.insert(connection, extensionDefinition);
 			} finally {
 				if (connection != null) {
@@ -163,7 +142,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionTable(connection);
 				return extensionPersistenceManager.find(connection, ExtensionDefinition.class, extension);
 			} finally {
 				if (connection != null) {
@@ -179,7 +157,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionTable(connection);
 				extensionPersistenceManager.delete(connection, ExtensionDefinition.class, extension);
 			} finally {
 				if (connection != null) {
@@ -195,7 +172,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionTable(connection);
 				ExtensionDefinition extensionDefinition = getExtension(extension);
 				extensionDefinition.setExtensionPoint(extensionPoint);
 				extensionDefinition.setDescription(description);
@@ -214,7 +190,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionTable(connection);
 				return extensionPersistenceManager.findAll(connection, ExtensionDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -230,7 +205,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkExtensionTable(connection);
 				String sql = Squle.getNative(connection)
 						.select()
 						.column("*")
@@ -247,14 +221,4 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
-
-	private void checkExtensionTable(Connection connection) {
-		if (!extensionsTableExists) {
-			if (!extensionPersistenceManager.existsTable(connection, ExtensionDefinition.class)) {
-				extensionPersistenceManager.createTable(connection, ExtensionDefinition.class);				
-			}
-			extensionsTableExists = true;
-		}
-	}
-
 }

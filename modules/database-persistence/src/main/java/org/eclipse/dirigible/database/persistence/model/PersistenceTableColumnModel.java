@@ -23,6 +23,7 @@ public class PersistenceTableColumnModel {
 	private boolean primaryKey;
 	private int precision;
 	private int scale;
+	private boolean generated;
 
 	/**
 	 * The constructor from the fields
@@ -44,7 +45,8 @@ public class PersistenceTableColumnModel {
 	 * @param scale
 	 *            the scale for floating point values
 	 */
-	public PersistenceTableColumnModel(String field, String name, String type, int length, boolean nullable, boolean primaryKey, int precision, int scale) {
+	public PersistenceTableColumnModel(String field, String name, String type, int length, 
+			boolean nullable, boolean primaryKey, int precision, int scale, boolean generated) {
 		this.field = field;
 		this.name = name;
 		this.type = type;
@@ -53,6 +55,7 @@ public class PersistenceTableColumnModel {
 		this.primaryKey = primaryKey;
 		this.precision = precision;
 		this.scale = scale;
+		this.generated = generated;
 	}
 
 
@@ -209,6 +212,23 @@ public class PersistenceTableColumnModel {
 	}
 	
 
-	
+	/**
+	 * Check whether it is a generated value
+	 *
+	 * @return true if generated
+	 */
+	public boolean isGenerated() {
+		return generated;
+	}
+
+	/**
+	 * Setter for the generated
+	 *
+	 * @param generrated
+	 *            whether it is a generated
+	 */
+	public void setGenerated(boolean generated) {
+		this.generated = generated;
+	}
 
 }

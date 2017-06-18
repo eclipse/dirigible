@@ -44,5 +44,9 @@ public class ExpressionBuilder extends AbstractSquleBuilder {
 		}
 		return snippet.toString().substring(0, snippet.length() - 1);
 	}
+	
+	public List<String> getExpressions() {
+		return expressions;
+	}
 
 }

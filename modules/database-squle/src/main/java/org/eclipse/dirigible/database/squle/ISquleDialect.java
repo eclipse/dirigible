@@ -3,7 +3,16 @@ package org.eclipse.dirigible.database.squle;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface ISquleDialect extends ISquleKeywords {
+import org.eclipse.dirigible.database.squle.builders.CreateBranchingBuilder;
+import org.eclipse.dirigible.database.squle.builders.DropBranchingBuilder;
+import org.eclipse.dirigible.database.squle.builders.ExpressionBuilder;
+import org.eclipse.dirigible.database.squle.builders.records.DeleteBuilder;
+import org.eclipse.dirigible.database.squle.builders.records.InsertBuilder;
+import org.eclipse.dirigible.database.squle.builders.records.SelectBuilder;
+import org.eclipse.dirigible.database.squle.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.squle.builders.sequence.NextValueSequenceBuilder;
+
+public interface ISquleDialect extends ISqule, ISquleKeywords {
 	
 	/**
 	 * Default implementation returns the direct toString() conversion.

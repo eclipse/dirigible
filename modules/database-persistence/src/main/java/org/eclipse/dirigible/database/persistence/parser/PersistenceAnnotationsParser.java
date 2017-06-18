@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -65,16 +66,21 @@ public class PersistenceAnnotationsParser {
 
 	private void parseColumns(Class<? extends Object> clazz, PersistenceTableModel persistenceModel) {
 		for (Field field : clazz.getDeclaredFields()) {
-			Annotation annotation = field.getAnnotation(Column.class);
-			if (annotation == null) {
+			// @Column
+			Annotation annotationColumn = field.getAnnotation(Column.class);
+			if (annotationColumn == null) {
 				throw new PersistenceException(format("No Column annotation found in Class {0} and Field {1}", clazz, field.getName()));
 			}
-			Column column = (Column) annotation;
+			Column column = (Column) annotationColumn;
 			if (column.name() == null) {
 				throw new PersistenceException(format("Column Name is mandatory, but it is not present in Class [{0}] and Field [{1}]", clazz.getCanonicalName(), field.getName()));
 			}
-			annotation = field.getAnnotation(Id.class);
-			boolean primaryKey = annotation != null;
+			// @Id
+			Annotation annotationId = field.getAnnotation(Id.class);
+			boolean primaryKey = annotationId != null;
+			// @GeneratedValue
+			Annotation annotationGeneratedValue = field.getAnnotation(GeneratedValue.class);
+			boolean generated = annotationGeneratedValue != null;
 			String type = column.columnDefinition();
 			if (type == null) {
 				type = DataTypeUtils.getDatabaseTypeNameByJavaType(field.getType().getClass());
@@ -92,7 +98,8 @@ public class PersistenceAnnotationsParser {
 							column.nullable(),
 							primaryKey,
 							column.precision(),
-							column.scale());
+							column.scale(),
+							generated);
 			persistenceModel.getColumns().add(persistenceTableColumnModel);
 		}
 		

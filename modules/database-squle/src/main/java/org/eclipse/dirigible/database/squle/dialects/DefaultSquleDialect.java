@@ -8,9 +8,51 @@ import java.sql.SQLException;
 import org.eclipse.dirigible.database.squle.DataType;
 import org.eclipse.dirigible.database.squle.ISquleDialect;
 import org.eclipse.dirigible.database.squle.ISquleKeywords;
+import org.eclipse.dirigible.database.squle.builders.CreateBranchingBuilder;
+import org.eclipse.dirigible.database.squle.builders.DropBranchingBuilder;
+import org.eclipse.dirigible.database.squle.builders.ExpressionBuilder;
+import org.eclipse.dirigible.database.squle.builders.records.DeleteBuilder;
+import org.eclipse.dirigible.database.squle.builders.records.InsertBuilder;
+import org.eclipse.dirigible.database.squle.builders.records.SelectBuilder;
+import org.eclipse.dirigible.database.squle.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.squle.builders.sequence.NextValueSequenceBuilder;
 
 public class DefaultSquleDialect implements ISquleDialect {
+	
+	public SelectBuilder select() {
+		return new SelectBuilder(this);
+	}
+	
+	public InsertBuilder insert() {
+		return new InsertBuilder(this);
+	}
+	
+	public UpdateBuilder update() {
+		return new UpdateBuilder(this);
+	}
+	
+	public DeleteBuilder delete() {
+		return new DeleteBuilder(this);
+	}
 
+	public ExpressionBuilder expr() {
+		return new ExpressionBuilder(this);
+	}
+	
+	public CreateBranchingBuilder create() {
+		return new CreateBranchingBuilder(this);
+	}
+	
+	public DropBranchingBuilder drop() {
+		return new DropBranchingBuilder(this);
+	}
+	
+	public NextValueSequenceBuilder nextval(String sequence) {
+		return new NextValueSequenceBuilder(this, sequence);
+	}
+	
+	
+	
 	@Override
 	public String getDataTypeName(DataType dataType) {
 		return dataType.toString();

@@ -19,25 +19,12 @@ import org.eclipse.dirigible.database.squle.Squle;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PersistenceManagerTest {
-	
-	DataSource dataSrouce = null;
-	
-	@Before
-	public void setUp() {
-		try {
-			DerbyDatabase derbyDatabase = new DerbyDatabase();
-			this.dataSrouce = derbyDatabase.getDataSource("target/persitence_tests");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 	
 	@Test
 	public void orderedCrudTests() throws SQLException {
 		PersistenceManager<Customer> persistenceManager = new PersistenceManager<Customer>();
-		Connection connection = this.dataSrouce.getConnection();
+		Connection connection = getDataSrouce().getConnection();
 		try {
 			// create table
 			createTableForPojo(connection, persistenceManager);
@@ -65,11 +52,11 @@ public class PersistenceManagerTest {
 	}
 	
 	public void createTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
-		persistenceManager.createTable(connection, Customer.class);
+		persistenceManager.tableCreate(connection, Customer.class);
 	}
 	
 	public boolean existsTable(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
-		return persistenceManager.existsTable(connection, Customer.class);
+		return persistenceManager.tableExists(connection, Customer.class);
 	}
 	
 	public void insertPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
@@ -212,7 +199,7 @@ public class PersistenceManagerTest {
 	}
 	
 	public void dropTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
-		persistenceManager.dropTable(connection, Customer.class);
+		persistenceManager.tableDrop(connection, Customer.class);
 	}
 
 }

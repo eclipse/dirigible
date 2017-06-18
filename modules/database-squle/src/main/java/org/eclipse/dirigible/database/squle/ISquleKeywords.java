@@ -37,6 +37,10 @@ public interface ISquleKeywords {
 	public static final String KEYWORD_DELETE = "DELETE"; //$NON-NLS-1$
 	public static final String KEYWORD_NOT = "NOT"; //$NON-NLS-1$
 	public static final String KEYWORD_NULL = "NULL"; //$NON-NLS-1$
+	public static final String KEYWORD_SEQUENCE = "SEQUENCE"; //$NON-NLS-1$
+	public static final String KEYWORD_NEXT_VALUE_FOR = "NEXT VALUE FOR"; //$NON-NLS-1$
+	
+	
 	
 	
 
@@ -46,6 +50,7 @@ public interface ISquleKeywords {
 	public static final String CLOSE = ")"; //$NON-NLS-1$
 	public static final String QUESTION = "?"; //$NON-NLS-1$
 	public static final String EQUALS = "="; //$NON-NLS-1$
+	public static final String UNDERSCROE = "_"; //$NON-NLS-1$
 	
 	public static final String METADATA_SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
 	public static final String METADATA_LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
