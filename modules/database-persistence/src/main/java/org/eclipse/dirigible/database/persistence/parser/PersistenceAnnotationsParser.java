@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.sql.Types;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,6 +67,10 @@ public class PersistenceAnnotationsParser {
 
 	private void parseColumns(Class<? extends Object> clazz, PersistenceTableModel persistenceModel) {
 		for (Field field : clazz.getDeclaredFields()) {
+			boolean isTransient = Modifier.isTransient(field.getModifiers());
+			if (isTransient) {
+				continue;
+			}
 			// @Column
 			Annotation annotationColumn = field.getAnnotation(Column.class);
 			if (annotationColumn == null) {

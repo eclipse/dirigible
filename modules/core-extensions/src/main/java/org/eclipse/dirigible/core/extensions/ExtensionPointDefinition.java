@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+
 @Table(name="DIRIGIBLE_EXTENSION_POINTS")
 public class ExtensionPointDefinition {
 	
@@ -21,7 +23,7 @@ public class ExtensionPointDefinition {
 	
 	@Column(name="EXTENSIONPOINT_CREATED_AT", columnDefinition="TIMESTAMP", nullable=false)
 	private Timestamp createdAt;
-
+	
 	public String getLocation() {
 		return location;
 	}
@@ -54,5 +56,17 @@ public class ExtensionPointDefinition {
 		this.createdAt = createdAt;
 	}
 
+	public static ExtensionPointDefinition fromJson(String json) {
+		return GsonHelper.GSON.fromJson(json, ExtensionPointDefinition.class);
+	}
+	
+	public String toJson() {
+		return GsonHelper.GSON.toJson(this, ExtensionPointDefinition.class);
+	}
+	
+	@Override
+	public String toString() {
+		return toJson();
+	}
 
 }

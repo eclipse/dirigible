@@ -31,6 +31,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 		List<ExtensionPointDefinition> list = extensionsCoreService.getExtensionPoints();
 		assertEquals(1, list.size());
 		ExtensionPointDefinition extensionPointDefinition = list.get(0);
+		System.out.println(extensionPointDefinition.toString());
 		assertEquals("test_extpoint1", extensionPointDefinition.getLocation());
 		assertEquals("Test", extensionPointDefinition.getDescription());
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");

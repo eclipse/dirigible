@@ -26,7 +26,6 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Inject
 	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager;
 	
-	
 	// Extension Points
 	
 	public void createExtensionPoint(String extensionPoint, String description) throws ExtensionsException {

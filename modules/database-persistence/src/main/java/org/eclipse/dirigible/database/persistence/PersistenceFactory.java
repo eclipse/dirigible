@@ -19,8 +19,8 @@ public class PersistenceFactory {
 	}
 	
 	public static PersistenceTableModel createModel(String json) throws PersistenceException {
-		PersistenceJsonParser parser = new PersistenceJsonParser();
-		PersistenceTableModel persistenceModel = parser.parseJson(json);
+		PersistenceJsonParser<?> parser = new PersistenceJsonParser<>();
+		PersistenceTableModel persistenceModel = parser.parseModel(json);
 		return persistenceModel;
 	}
 
