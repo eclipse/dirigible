@@ -339,6 +339,7 @@
 	<modules>
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
+		<module>modules/commons-process</module>
 		<module>modules/commons-test</module>
 		
 		<module>modules/repository-api</module>
@@ -359,6 +360,7 @@
 		<module>modules/runtime-repository</module>
 		<module>modules/runtime-registry</module>
 		<module>modules/runtime-workspaces</module>
+		<module>modules/runtime-terminal</module>
 		
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>
