@@ -17,7 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.dirigible.engine.api.IBaseScriptExecutor;
+import org.eclipse.dirigible.engine.api.IScriptExecutor;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSource;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase;
@@ -28,13 +28,13 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
-	private IBaseScriptExecutor executor;
+	private IScriptExecutor executor;
 	
-	private String rootPath;
+	private String root;
 	
-	public RhinoRepositoryModuleSourceProvider(IBaseScriptExecutor executor, String rootPath) {
+	public RhinoRepositoryModuleSourceProvider(IScriptExecutor executor, String root) {
 		this.executor = executor;
-		this.rootPath = rootPath;
+		this.root = root;
 	}
 	
 	@Override
@@ -56,7 +56,7 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 	private ModuleSource createModule(String module) throws URISyntaxException {
 		byte[] sourceCode;
 		ModuleSource moduleSource;
-		sourceCode = executor.retrieveModule(module, "", rootPath).getContent();
+		sourceCode = executor.retrieveModule(root, module).getContent();
 		moduleSource = new ModuleSource(new InputStreamReader(new ByteArrayInputStream(sourceCode), StandardCharsets.UTF_8), null,
 				new URI(module), null, null);
 		return moduleSource;

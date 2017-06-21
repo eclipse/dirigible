@@ -2,9 +2,11 @@ package org.eclipse.dirigible.runtime.workspaces.service;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -24,8 +26,12 @@ public class WorkspaceRestService implements IRestService {
 	private WorkspaceProcessor processor;
 	
 	@GET
-	@Path("/workspace/{user}/{workspace}/{path:.*}")
-	public Response getResource(@PathParam("user") String user, @PathParam("workspace") String workspace, @PathParam("path") String path) {
+	@Path("/ide/workspace/{workspace}/{path:.*}")
+	public Response getResource(@PathParam("workspace") String workspace, @PathParam("path") String path, @Context HttpServletRequest request) {
+		String user = request.getRemoteUser();
+		if (user == null) {
+			Response.status(Status.FORBIDDEN).build();
+		}
 		IResource resource = processor.getResource(user, workspace, path);
 		if (!resource.exists()) {
 			ICollection collection = processor.getCollection(user, workspace, path);

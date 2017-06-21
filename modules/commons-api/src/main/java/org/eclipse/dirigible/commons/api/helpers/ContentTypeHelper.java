@@ -13,6 +13,8 @@ package org.eclipse.dirigible.commons.api.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
+
 public class ContentTypeHelper {
 
 	public static final String TEXT_X_VCARD = "text/x-vcard";
@@ -401,14 +403,6 @@ public class ContentTypeHelper {
 	}
 
 	public static String getExtension(String filename) {
-		if (filename == null) {
-			return ""; //$NON-NLS-1$
-		}
-		int dotIndex = filename.lastIndexOf("."); //$NON-NLS-1$
-		if (dotIndex != -1) {
-			return filename.substring(dotIndex + 1);
-		} else {
-			return ""; //$NON-NLS-1$
-		}
+		return FilenameUtils.getExtension(filename);
 	}
 }

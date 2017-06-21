@@ -14,9 +14,9 @@ package org.eclipse.dirigible.engine.js.api;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.api.IBaseScriptExecutor;
+import org.eclipse.dirigible.engine.api.IScriptExecutor;
 
-public interface IJavascriptEngineExecutor extends IBaseScriptExecutor {
+public interface IJavascriptEngineExecutor extends IScriptExecutor {
 
 	public static final String DIRIGIBLE_JS_ENGINE_TYPE_DEFAULT = "DIRIGIBLE_JS_ENGINE_TYPE_DEFAULT";
 	public static final String DIRIGIBLE_JS_ENGINE_TYPE_HEADER = "dirigible-js-engine";

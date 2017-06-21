@@ -2,7 +2,6 @@ package org.eclipse.dirigible.engine.web.processor;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 
@@ -14,7 +13,16 @@ import org.eclipse.dirigible.repository.api.IResource;
 public class WebEngineProcessor {
 	
 	@Inject
-	private IRepository repository;
+	private WebEngineExecutor webEngineExecutor;
+	
+	/**
+	 * 
+	 * @param path the requested resource location
+	 * @return if the {@link IResource} 
+	 */
+	public boolean existResource(String path) {
+		return webEngineExecutor.existResource(IRepositoryStructure.REGISTRY_PUBLIC, path);
+	}
 	
 	/**
 	 * 
@@ -22,10 +30,17 @@ public class WebEngineProcessor {
 	 * @return the {@link IResource} instance
 	 */
 	public IResource getResource(String path) {
-		StringBuilder registryPath = new StringBuilder(IRepositoryStructure.REGISTRY_PUBLIC)
-				.append(IRepositoryStructure.SEPARATOR)
-				.append(path);
-		return repository.getResource(registryPath.toString());
+		return webEngineExecutor.getResource(IRepositoryStructure.REGISTRY_PUBLIC, path);
 	}
+	 
+	/**
+	 * 
+	 * @param path the requested resource location
+	 * @return the {@link IResource} content as a byte array
+	 */
+	public byte[] getResourceContent(String path) {
+		return webEngineExecutor.getResourceContent(IRepositoryStructure.REGISTRY_PUBLIC, path);
+	}
+
 
 }

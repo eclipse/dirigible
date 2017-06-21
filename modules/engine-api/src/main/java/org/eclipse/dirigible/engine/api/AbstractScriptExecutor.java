@@ -29,63 +29,44 @@ import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractScriptExecutor implements IBaseScriptExecutor {
+public abstract class AbstractScriptExecutor extends AbstractResourceExecutor implements IScriptExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractScriptExecutor.class);
 
 	protected abstract void executeServiceModule(String module,
 			Map<Object, Object> executionContext) throws ScriptingException;
 
-	@Inject
-	private IRepository repository;
 
 	@Override
-	public byte[] readResourceData(String repositoryPath) throws RepositoryException {
-		final IResource resource = repository.getResource(repositoryPath);
-		if (!resource.exists()) {
-			final String logMsg = String.format("There is no resource [%s] at the specified Service path: %s", resource.getName(), repositoryPath);
-			logger.error(logMsg);
-			throw new RepositoryException(logMsg);
-		}
-		return resource.getContent();
+	public Module retrieveModule(String root, String module) throws RepositoryException {
+		return retrieveModule(root, module, null);
 	}
-
+	
 	@Override
-	public Module retrieveModule(String module, String extension, String rootPath) throws RepositoryException {
+	public Module retrieveModule(String root, String module, String extension) throws RepositoryException {
 
 		// try from the registry
-		String resourcePath = createResourcePath(rootPath, module, extension);
-		final IResource resource = repository.getResource(resourcePath);
+		String resourcePath = createResourcePath(root, module, extension);
+		final IResource resource = getRepository().getResource(resourcePath);
 		if (resource.exists()) {
-			return new Module(getModuleName(resource.getPath()), resource.getPath(), readResourceData(resourcePath));
+			return new Module(getModuleName(resource.getPath()), resource.getPath(), getResourceContent(root, resourcePath));
 		}
 		
-		// try from the classloader
-		try {
-			String location = IRepository.SEPARATOR + module;
-			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(location);
-			if (bundled != null) {
-				return new Module(getModuleName(location), location, IOUtils.toByteArray(bundled));
-			}
-		} catch (IOException e) {
-			throw new RepositoryException(e);
-		}
-
 		// not found
-		final String logMsg = String.format("There is no resource [%s] at the specified Service path: %s", (module + extension), rootPath);
+		final String logMsg = String.format("There is no resource [%s] at the specified Service path: %s", (module + extension), root);
 		logger.error(logMsg);
 		throw new RepositoryException(logMsg);
 	}
 
 	@Override
-	public List<Module> retrieveModulesByExtension(String extension, String rootPath) throws RepositoryException {
+	public List<Module> retrieveModulesByExtension(String root, String extension) throws RepositoryException {
 		Map<String, Module> modules = new HashMap<String, Module>();
-		List<IEntity> entities = repository.searchName(rootPath, "%" + extension, false);
+		List<IEntity> entities = getRepository().searchName(root, "%" + extension, false);
 		for (IEntity entity : entities) {
 			if (entity.exists()) {
 				String path = entity.getPath();
 				String moduleName = getModuleName(path);
-				Module module = new Module(moduleName, path, readResourceData(path), entity.getInformation());
+				Module module = new Module(moduleName, path, getResourceContent(root, path), entity.getInformation());
 				modules.put(moduleName, module);
 			}
 		}
@@ -112,34 +93,4 @@ public abstract class AbstractScriptExecutor implements IBaseScriptExecutor {
 		return path;
 	}
 
-	private String createResourcePath(String root, String module, String extension) {
-		StringBuilder buff = new StringBuilder().append(root).append(IRepository.SEPARATOR).append(module);
-		if (extension != null) {
-			buff.append(extension);
-		}
-		String resourcePath = buff.toString();
-		return resourcePath;
-	}
-
-	@Override
-	public ICollection getCollection(String repositoryPath) throws RepositoryException {
-		final ICollection collection = repository.getCollection(repositoryPath);
-		if (!collection.exists()) {
-			final String logMsg = String.format("There is no collection [%s] at the specified Service path: %s", collection.getName(), repositoryPath);
-			logger.error(logMsg);
-			throw new RepositoryException(logMsg);
-		}
-		return collection;
-	}
-
-	@Override
-	public IResource getResource(String repositoryPath) throws RepositoryException {
-		final IResource resource = repository.getResource(repositoryPath);
-		if (!resource.exists()) {
-			final String logMsg = String.format("There is no collection [%s] at the specified Service path: %s", resource.getName(), repositoryPath);
-			logger.error(logMsg);
-			throw new RepositoryException(logMsg);
-		}
-		return resource;
-	}
 }

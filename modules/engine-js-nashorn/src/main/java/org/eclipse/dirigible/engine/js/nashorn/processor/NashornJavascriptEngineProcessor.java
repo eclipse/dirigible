@@ -12,13 +12,12 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 public class NashornJavascriptEngineProcessor implements IJavascriptEngineProcessor{
 	
 	@Inject
-	private NashornJavascriptEngineExecutor engineExecutor;
+	private NashornJavascriptEngineExecutor nashornEngineExecutor;
 
 	@Override
 	public void executeService(String module) throws ScriptingException {
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();
-		engineExecutor.executeServiceModule(module, executionContext);
-		
+		nashornEngineExecutor.executeServiceModule(module, executionContext);
 	}
 
 }

@@ -13,19 +13,19 @@ package org.eclipse.dirigible.engine.js.v8.processor;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.eclipse.dirigible.engine.api.IBaseScriptExecutor;
+import org.eclipse.dirigible.engine.api.IScriptExecutor;
 
 public class V8RepositoryModuleSourceProvider {
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
-	private IBaseScriptExecutor executor;
+	private IScriptExecutor executor;
 	
-	private String rootPath;
+	private String root;
 	
-	public V8RepositoryModuleSourceProvider(IBaseScriptExecutor executor, String rootPath) {
+	public V8RepositoryModuleSourceProvider(IScriptExecutor executor, String root) {
 		this.executor = executor;
-		this.rootPath = rootPath;
+		this.root = root;
 	}
 	
 	public String loadSource(String module) throws IOException, URISyntaxException {
@@ -36,9 +36,9 @@ public class V8RepositoryModuleSourceProvider {
 
 		byte[] sourceCode = null;
 		if (module.endsWith(JS_EXTENSION)) {
-			sourceCode = executor.retrieveModule(module, "", rootPath).getContent();
+			sourceCode = executor.retrieveModule(root, module).getContent();
 		} else {
-			sourceCode = executor.retrieveModule(module, JS_EXTENSION, rootPath).getContent();
+			sourceCode = executor.retrieveModule(root, module, JS_EXTENSION).getContent();
 		}
 
 		return new String(sourceCode);

@@ -359,8 +359,9 @@
 		<module>modules/runtime-core</module>
 		<module>modules/runtime-repository</module>
 		<module>modules/runtime-registry</module>
-		<module>modules/runtime-workspaces</module>
-		<module>modules/runtime-terminal</module>
+		
+		<module>modules/runtime-ide-workspaces</module>
+		<module>modules/runtime-ide-terminal</module>
 		
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>
@@ -373,7 +374,11 @@
 		<module>modules/api-http</module>
 		<module>modules/api-auth</module>
 
+		<!-- Content API -->
 		<module>content/api-http</module>
+		
+		<!-- Content IDE -->
+		<module>content/ide-terminal</module>
 
 		<module>releng/war-all</module>
 	</modules>

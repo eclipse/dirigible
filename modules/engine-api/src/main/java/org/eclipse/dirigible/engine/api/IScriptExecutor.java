@@ -13,20 +13,14 @@ package org.eclipse.dirigible.engine.api;
 
 import java.util.List;
 
-import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 
-public interface IBaseScriptExecutor {
+public interface IScriptExecutor {
 
-	byte[] readResourceData(String repositoryPath) throws RepositoryException;
+	public Module retrieveModule(String root, String module) throws RepositoryException;
+	
+	public Module retrieveModule(String root, String module, String extension) throws RepositoryException;
 
-	Module retrieveModule(String module, String extension, String rootPath) throws RepositoryException;
-
-	List<Module> retrieveModulesByExtension(String extension, String rootPath) throws RepositoryException;
-
-	ICollection getCollection(String repositoryPath) throws RepositoryException;
-
-	IResource getResource( String repositoryPath) throws RepositoryException;
+	public List<Module> retrieveModulesByExtension(String root, String extension) throws RepositoryException;
 
 }

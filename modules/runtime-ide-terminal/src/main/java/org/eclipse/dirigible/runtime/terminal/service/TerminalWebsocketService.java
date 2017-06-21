@@ -24,7 +24,7 @@ import org.eclipse.dirigible.commons.process.ProcessUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ServerEndpoint("/websockets/v3/workspace")
+@ServerEndpoint("/websockets/v3/ide/terminal")
 public class TerminalWebsocketService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TerminalWebsocketService.class);

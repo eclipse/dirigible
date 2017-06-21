@@ -124,7 +124,7 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		<!-- Runtime -->
+		<!-- Runtime Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-core</artifactId>
@@ -140,13 +140,20 @@
 		 	<artifactId>dirigible-runtime-registry</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		
+		<!-- Runtime IDE Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-workspaces</artifactId>
+		 	<artifactId>dirigible-runtime-ide-workspaces</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-terminal</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		<!-- Services -->
+		<!-- Engines Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-api</artifactId>
@@ -178,10 +185,17 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		<!-- Content -->
+		<!-- Content API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>content-api-http</artifactId>
+		 	<artifactId>dirigible-content-api-http</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- Content IDE -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-content-ide-terminal</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		

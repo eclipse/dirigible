@@ -12,12 +12,12 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 public class RhinoJavascriptEngineProcessor implements IJavascriptEngineProcessor {
 	
 	@Inject
-	private RhinoJavascriptEngineExecutor engineExecutor;
+	private RhinoJavascriptEngineExecutor rhinoEngineExecutor;
 
 	@Override
 	public void executeService(String module) throws ScriptingException {
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();
-		engineExecutor.executeServiceModule(module, executionContext);
+		rhinoEngineExecutor.executeServiceModule(module, executionContext);
 	}
 
 }

@@ -9,13 +9,13 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Content - API - HTTP</name>
-	<artifactId>dirigible-content-api-http</artifactId>
+	<name>Content - IDE - Terminal</name>
+	<artifactId>dirigible-content-ide-terminal</artifactId>
     <packaging>jar</packaging>
 	
 	<scm>
-		<connection>scm:git:git://github.com/dirigiblelabs/http.git</connection>
-		<developerConnection>scm:git:https://github.com/dirigiblelabs/http.git</developerConnection>
+		<connection>scm:git:git://github.com/dirigiblelabs/ide-terminal.git</connection>
+		<developerConnection>scm:git:https://github.com/dirigiblelabs/ide-terminal.git</developerConnection>
 		<url>https://github.com/dirigiblelabs/http</url>
 	</scm>
 

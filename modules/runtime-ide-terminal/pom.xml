@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Runtime - Workspaces</name>
-	<artifactId>dirigible-runtime-workspaces</artifactId>
+	<name>Runtime - IDE-Terminal</name>
+	<artifactId>dirigible-runtime-ide-terminal</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -34,16 +34,19 @@
             <artifactId>dirigible-commons-api</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-repository</artifactId>
+            <artifactId>dirigible-commons-process</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
+		<dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		    <version>1.1</version>
+		    <scope>provided</scope>
+		</dependency>
+		
+		        
     </dependencies>
 
 </project>
