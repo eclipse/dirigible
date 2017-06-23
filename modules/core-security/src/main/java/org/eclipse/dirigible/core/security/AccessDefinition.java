@@ -10,6 +10,8 @@ import javax.persistence.Table;
 @Table(name="DIRIGIBLE_SECURITY_ACCESS")
 public class AccessDefinition {
 	
+	public static final transient String METHOD_ANY = "*";
+
 	@Id
 	@GeneratedValue
 	@Column(name="ACCESS_ID", columnDefinition="BIGINT", nullable=false)
@@ -19,7 +21,7 @@ public class AccessDefinition {
 	private String location;
 	
 	@Column(name="ACCESS_METHOD", columnDefinition="VARCHAR", nullable=false, length=20)
-	private String method;
+	private String method = METHOD_ANY;
 	
 	@Column(name="ACCESS_ROLE", columnDefinition="VARCHAR", nullable=false, length=64)
 	private String role;

@@ -306,8 +306,10 @@ public class SecurityCoreService implements ISecurityCoreService {
 						.column("*")
 						.from("DIRIGIBLE_SECURITY_ACCESS")
 						.where("ACCESS_LOCATION = ?")
-						.where("ACCESS_METHOD = ?").toString();
-				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(location, method));
+						.where(Squle.getNative(connection)
+								.expr().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
+						.toString();
+				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(location, method, AccessDefinition.METHOD_ANY));
 			} finally {
 				if (connection != null) {
 					connection.close();
