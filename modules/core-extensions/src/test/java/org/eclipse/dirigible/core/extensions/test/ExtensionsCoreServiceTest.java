@@ -11,13 +11,15 @@ import org.eclipse.dirigible.core.extensions.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.ExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.ExtensionsException;
+import org.eclipse.dirigible.core.extensions.IExtensionsCoreService;
+import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	
 	@Inject
-	private ExtensionsCoreService extensionsCoreService;
+	private IExtensionsCoreService extensionsCoreService;
 	
 	@Before
 	public void setUp() throws Exception {

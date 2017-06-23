@@ -18,6 +18,9 @@ public class AccessDefinition {
 	@Column(name="ACCESS_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String location;
 	
+	@Column(name="ACCESS_METHOD", columnDefinition="VARCHAR", nullable=false, length=20)
+	private String method;
+	
 	@Column(name="ACCESS_ROLE", columnDefinition="VARCHAR", nullable=false, length=64)
 	private String role;
 	
@@ -29,6 +32,10 @@ public class AccessDefinition {
 	
 	@Column(name="ACCESS_CREATED_AT", columnDefinition="TIMESTAMP", nullable=false)
 	private Timestamp createdAt;
+	
+	public long getId() {
+		return id;
+	}
 
 	public String getLocation() {
 		return location;
@@ -38,8 +45,16 @@ public class AccessDefinition {
 		this.location = location;
 	}
 	
+	public String getMethod() {
+		return method;
+	}
+	
+	public void setMethod(String method) {
+		this.method = method;
+	}
+	
 	public String getRole() {
-		return location;
+		return role;
 	}
 
 	public void setRole(String role) {

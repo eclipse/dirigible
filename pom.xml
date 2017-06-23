@@ -349,6 +349,7 @@
 		<module>modules/repository-master</module>
 
 		<module>modules/core-extensions</module>
+		<module>modules/core-security</module>
 		<module>modules/core-git</module>
 
 		<module>modules/database-api</module>

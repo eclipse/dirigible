@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.extensions.test;
+package org.eclipse.dirigible.core.test;
 
 import static org.mockito.Mockito.mock;
 

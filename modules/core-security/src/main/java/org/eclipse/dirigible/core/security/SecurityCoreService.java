@@ -15,7 +15,7 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.squle.Squle;
 
 @Singleton
-public class AccessCoreService implements ISecurityCoreService {
+public class SecurityCoreService implements ISecurityCoreService {
 	
 	@Inject
 	private DataSource dataSource;
@@ -32,7 +32,11 @@ public class AccessCoreService implements ISecurityCoreService {
 	
 	// Roles
 	
-	public void createRole(String name, String description) throws AccessException {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#createRole(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public RoleDefinition createRole(String name, String description) throws AccessException {
 		RoleDefinition roleDefinition = new RoleDefinition();
 		roleDefinition.setName(name);
 		roleDefinition.setDescription(description);
@@ -44,6 +48,7 @@ public class AccessCoreService implements ISecurityCoreService {
 			try {
 				checkRolesTable(connection);
 				rolesPersistenceManager.insert(connection, roleDefinition);
+				return roleDefinition;
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -54,6 +59,10 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getRole(java.lang.String)
+	 */
+	@Override
 	public RoleDefinition getRole(String name) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -70,6 +79,10 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#removeRole(java.lang.String)
+	 */
+	@Override
 	public void removeRole(String name) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -86,6 +99,10 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#updateRole(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void updateRole(String name, String description) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -104,6 +121,10 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getRoles()
+	 */
+	@Override
 	public List<RoleDefinition> getRoles() throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -132,9 +153,14 @@ public class AccessCoreService implements ISecurityCoreService {
 	
 	// Access
 	
-	public void createAccess(String location, String role, String description) throws AccessException {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#createAccessDefinition(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public AccessDefinition createAccessDefinition(String location, String method, String role, String description) throws AccessException {
 		AccessDefinition accessDefinition = new AccessDefinition();
 		accessDefinition.setLocation(location);
+		accessDefinition.setMethod(method);
 		accessDefinition.setRole(role);
 		accessDefinition.setDescription(description);
 		accessDefinition.setCreatedBy(UserFacade.getName());
@@ -145,6 +171,7 @@ public class AccessCoreService implements ISecurityCoreService {
 			try {
 				checkAccessTable(connection);
 				accessPersistenceManager.insert(connection, accessDefinition);
+				return accessDefinition;
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -155,7 +182,11 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	public AccessDefinition getAccess(String id) throws AccessException {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getAccessDefinition(long)
+	 */
+	@Override
+	public AccessDefinition getAccessDefinition(long id) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -171,7 +202,11 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	public void removeAccess(String id) throws AccessException {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#removeAccessDefinition(long)
+	 */
+	@Override
+	public void removeAccessDefinition(long id) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -187,13 +222,18 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	public void updateAccess(String id, String location, String role, String description) throws AccessException {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#updateAccessDefinition(long, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void updateAccessDefinition(long id, String location, String method, String role, String description) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
 				checkAccessTable(connection);
-				AccessDefinition accessDefinition = getAccess(id);
+				AccessDefinition accessDefinition = getAccessDefinition(id);
 				accessDefinition.setLocation(location);
+				accessDefinition.setMethod(method);
 				accessDefinition.setRole(role);
 				accessDefinition.setDescription(description);
 				accessPersistenceManager.update(connection, accessDefinition, id);
@@ -207,6 +247,10 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getAccessDefinitions()
+	 */
+	@Override
 	public List<AccessDefinition> getAccessDefinitions() throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -223,7 +267,11 @@ public class AccessCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	public List<AccessDefinition> getAccessByLocation(String location) throws AccessException {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getAccessDefinitionsByLocation(java.lang.String)
+	 */
+	@Override
+	public List<AccessDefinition> getAccessDefinitionsByLocation(String location) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -234,6 +282,32 @@ public class AccessCoreService implements ISecurityCoreService {
 						.from("DIRIGIBLE_SECURITY_ACCESS")
 						.where("ACCESS_LOCATION = ?").toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(location));
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new AccessException(e);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getAccessDefinitionsByLocation(java.lang.String)
+	 */
+	@Override
+	public List<AccessDefinition> getAccessDefinitionsByLocationAndMethod(String location, String method) throws AccessException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				checkAccessTable(connection);
+				String sql = Squle.getNative(connection)
+						.select()
+						.column("*")
+						.from("DIRIGIBLE_SECURITY_ACCESS")
+						.where("ACCESS_LOCATION = ?")
+						.where("ACCESS_METHOD = ?").toString();
+				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(location, method));
 			} finally {
 				if (connection != null) {
 					connection.close();

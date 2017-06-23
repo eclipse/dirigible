@@ -28,7 +28,11 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	
 	// Extension Points
 	
-	public void createExtensionPoint(String extensionPoint, String description) throws ExtensionsException {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#createExtensionPoint(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ExtensionPointDefinition createExtensionPoint(String extensionPoint, String description) throws ExtensionsException {
 		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
 		extensionPointDefinition.setLocation(extensionPoint);
 		extensionPointDefinition.setDescription(description);
@@ -39,6 +43,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			Connection connection = dataSource.getConnection();
 			try {
 				extensionPointPersistenceManager.insert(connection, extensionPointDefinition);
+				return extensionPointDefinition;
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -49,6 +54,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#getExtensionPoint(java.lang.String)
+	 */
+	@Override
 	public ExtensionPointDefinition getExtensionPoint(String extensionPoint) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -64,6 +73,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#removeExtensionPoint(java.lang.String)
+	 */
+	@Override
 	public void removeExtensionPoint(String extensionPoint) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -79,6 +92,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#updateExtensionPoint(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void updateExtensionPoint(String extensionPoint, String description) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -96,6 +113,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#getExtensionPoints()
+	 */
+	@Override
 	public List<ExtensionPointDefinition> getExtensionPoints() throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -115,7 +136,11 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	
 	// Extensions
 	
-	public void createExtension(String extension, String extensionPoint, String description) throws ExtensionsException {
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#createExtension(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ExtensionDefinition createExtension(String extension, String extensionPoint, String description) throws ExtensionsException {
 		ExtensionDefinition extensionDefinition = new ExtensionDefinition();
 		extensionDefinition.setLocation(extension);
 		extensionDefinition.setExtensionPoint(extensionPoint);
@@ -127,6 +152,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			Connection connection = dataSource.getConnection();
 			try {
 				extensionPersistenceManager.insert(connection, extensionDefinition);
+				return extensionDefinition;
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -137,6 +163,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#getExtension(java.lang.String)
+	 */
+	@Override
 	public ExtensionDefinition getExtension(String extension) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -152,6 +182,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#removeExtension(java.lang.String)
+	 */
+	@Override
 	public void removeExtension(String extension) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -167,6 +201,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#updateExtension(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void updateExtension(String extension, String extensionPoint, String description) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -185,6 +223,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#getExtensions()
+	 */
+	@Override
 	public List<ExtensionDefinition> getExtensions() throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -200,6 +242,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.extensions.IExtensionsCoreService#getExtensionsByExtensionPoint(java.lang.String)
+	 */
+	@Override
 	public List<ExtensionDefinition> getExtensionsByExtensionPoint(String extensionPoint) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
