@@ -30,31 +30,10 @@
     
     <dependencies>
     	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-api</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
-		    <groupId>javax.persistence</groupId>
-		    <artifactId>persistence-api</artifactId>
-		    <version>1.0</version>
+		    <groupId>org.eclipse.jgit</groupId>
+		    <artifactId>org.eclipse.jgit</artifactId>
+		    <version>4.8.0.201706111038-r</version>
 		</dependency>
-		<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-persistence</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-auth</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-test</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
     </dependencies>
 
 </project>
