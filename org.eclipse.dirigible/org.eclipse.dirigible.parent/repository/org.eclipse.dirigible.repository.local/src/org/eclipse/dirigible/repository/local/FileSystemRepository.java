@@ -46,7 +46,6 @@ import org.eclipse.dirigible.repository.zip.ZipImporter;
 public class FileSystemRepository implements IRepository {
 
 	private static final String CURRENT_DIR = ICommonConstants.DOT;
-	private static final String DIRIGIBLE_LOCAL = "dirigible_local";
 	public static final String PATH_SEGMENT_ROOT = "root";
 	public static final String PATH_SEGMENT_VERSIONS = "versions";
 	public static final String PATH_SEGMENT_INFO = "info";
@@ -63,10 +62,10 @@ public class FileSystemRepository implements IRepository {
 	private String repositoryPath = IRepository.SEPARATOR;
 	private String versionsPath = IRepository.SEPARATOR;
 	private String infoPath = IRepository.SEPARATOR;
-
-	private LocalRepositoryDAO repositoryDAO;
-
+	
 	private String user;
+	private String repositoryRootFolderName;
+	private LocalRepositoryDAO repositoryDAO;
 
 	protected FileSystemRepository() throws LocalBaseException {
 	}
@@ -78,7 +77,7 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException Local Repository Exception
 	 */
 	public FileSystemRepository(String user) throws LocalBaseException {
-		createRepository(user, null, false);
+		this(user, null, false);
 	}
 
 	/**
@@ -89,7 +88,7 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException Local Repository Exception
 	 */
 	public FileSystemRepository(String user, String rootFolder) throws LocalBaseException {
-		createRepository(user, rootFolder, false);
+		this(user, rootFolder, false);
 	}
 
 	/**
@@ -101,10 +100,25 @@ public class FileSystemRepository implements IRepository {
 	 * @throws LocalBaseException Local Repository Exception
 	 */
 	public FileSystemRepository(String user, String rootFolder, boolean absolute) throws LocalBaseException {
+		this(user, rootFolder, null, absolute);
+	}
+	
+	public FileSystemRepository(String user, String rootFolder, String repositoryRootFolderName, boolean absolute) throws LocalBaseException {
+		this.user = user;
+		this.repositoryRootFolderName = repositoryRootFolderName != null ? repositoryRootFolderName : ICommonConstants.DEFAULT_LOCAL_REPOSITORY_ROOT_FOLDER_NAME; 
+		this.repositoryDAO = new LocalRepositoryDAO(this);
 		createRepository(user, rootFolder, absolute);
 	}
 
 	protected void createRepository(String user, String rootFolder, boolean absolute) {
+		String root = getRootFolder(rootFolder, absolute);
+
+		logger.debug(String.format("Creating File-based Repository Client for: %s ...", root));
+		initializeRepository(root);
+		logger.debug(String.format("File-based Repository Client for: %s, has been created.", root));
+	}
+
+	private String getRootFolder(String rootFolder, boolean absolute) {
 		String root;
 		if (absolute) {
 			if (rootFolder != null) {
@@ -119,12 +133,7 @@ public class FileSystemRepository implements IRepository {
 				root += rootFolder;
 			}
 		}
-		this.user = user;
-		this.repositoryDAO = new LocalRepositoryDAO(this);
-
-		logger.debug(String.format("Creating File-based Repository Client for: %s ...", root));
-		initializeRepository(root);
-		logger.debug(String.format("File-based Repository Client for: %s, has been created.", root));
+		return root;
 	}
 
 	public String getRepositoryPath() {
@@ -140,7 +149,7 @@ public class FileSystemRepository implements IRepository {
 	}
 
 	protected String getRepositoryRootFolder() {
-		return DIRIGIBLE_LOCAL;
+		return repositoryRootFolderName;
 	}
 
 	private void initializeRepository(String rootFolder) {

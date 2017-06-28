@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.repository.api.ICommonConstants;
 import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryException;
@@ -28,17 +29,6 @@ import org.eclipse.dirigible.repository.ext.utils.RequestUtils;
 import org.eclipse.dirigible.repository.logging.Logger;
 
 public class RepositoryFacade {
-
-	private static final String PARAM_RECREATE = "recreate"; //$NON-NLS-1$
-	private static final String PARAM_USER = "user"; //$NON-NLS-1$
-	private static final String PARAM_DATASOURCE = "datasource"; //$NON-NLS-1$
-	private static final String PARAM_GIT_TARGET_FOLDER = "masterRepositoryGitTarget"; //$NON-NLS-1$
-	private static final String PARAM_GIT_LOCATION = "masterRepositoryGitLocation"; //$NON-NLS-1$
-	private static final String PARAM_GIT_USER = "masterRepositoryGitUser"; //$NON-NLS-1$
-	private static final String PARAM_GIT_PASSWORD = "masterRepositoryGitPassword"; //$NON-NLS-1$
-	private static final String PARAM_GIT_BRANCH = "masterRepositoryGitBranch"; //$NON-NLS-1$
-	private static final String PARAM_LOCAL_ROOT = "localRepositoryRootFolder"; //$NON-NLS-1$
-	private static final String PARAM_LOCAL_ABSOLUTE = "localRepositoryRootFolderIsAbsolute"; //$NON-NLS-1$
 
 	private static final Logger logger = Logger.getLogger(RepositoryFacade.class);
 
@@ -86,16 +76,17 @@ public class RepositoryFacade {
 			String user = getUser(request);
 			// repository = new DBRepository(dataSource, user, false);
 			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put(PARAM_DATASOURCE, defaultDataSource);
-			parameters.put(PARAM_USER, user);
-			parameters.put(PARAM_RECREATE, Boolean.FALSE);
-			parameters.put(PARAM_GIT_TARGET_FOLDER, EnvUtils.getEnv(PARAM_GIT_TARGET_FOLDER));
-			parameters.put(PARAM_GIT_LOCATION, EnvUtils.getEnv(PARAM_GIT_LOCATION));
-			parameters.put(PARAM_GIT_USER, EnvUtils.getEnv(PARAM_GIT_USER));
-			parameters.put(PARAM_GIT_PASSWORD, EnvUtils.getEnv(PARAM_GIT_PASSWORD));
-			parameters.put(PARAM_GIT_BRANCH, EnvUtils.getEnv(PARAM_GIT_BRANCH));
-			parameters.put(PARAM_LOCAL_ROOT, EnvUtils.getEnv(PARAM_LOCAL_ROOT));
-			parameters.put(PARAM_LOCAL_ABSOLUTE, EnvUtils.getEnv(PARAM_LOCAL_ABSOLUTE));
+			parameters.put(ICommonConstants.INIT_PARAM_DATASOURCE, defaultDataSource);
+			parameters.put(ICommonConstants.INIT_PARAM_USER, user);
+			parameters.put(ICommonConstants.INIT_PARAM_RECREATE, Boolean.FALSE);
+			parameters.put(ICommonConstants.INIT_PARAM_GIT_TARGET_FOLDER, EnvUtils.getEnv(ICommonConstants.INIT_PARAM_GIT_TARGET_FOLDER));
+			parameters.put(ICommonConstants.INIT_PARAM_GIT_LOCATION, EnvUtils.getEnv(ICommonConstants.INIT_PARAM_GIT_LOCATION));
+			parameters.put(ICommonConstants.INIT_PARAM_GIT_USER, EnvUtils.getEnv(ICommonConstants.INIT_PARAM_GIT_USER));
+			parameters.put(ICommonConstants.INIT_PARAM_GIT_PASSWORD, EnvUtils.getEnv(ICommonConstants.INIT_PARAM_GIT_PASSWORD));
+			parameters.put(ICommonConstants.INIT_PARAM_GIT_BRANCH, EnvUtils.getEnv(ICommonConstants.INIT_PARAM_GIT_BRANCH));
+			parameters.put(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER, EnvUtils.getEnv(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER));
+			parameters.put(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE, EnvUtils.getEnv(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE));
+			parameters.put(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_NAME, EnvUtils.getEnv(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_NAME, ICommonConstants.DEFAULT_LOCAL_REPOSITORY_ROOT_FOLDER_NAME));
 			repository = RepositoryFactory.createRepository(parameters);
 			saveRepositoryInstance(request, repository);
 		} catch (Exception e) {
@@ -119,9 +110,9 @@ public class RepositoryFacade {
 			String user = getUser(request);
 			// repository = new DBRepository(dataSource, user, false);
 			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put(PARAM_DATASOURCE, defaultDataSource);
-			parameters.put(PARAM_USER, user);
-			parameters.put(PARAM_RECREATE, Boolean.FALSE);
+			parameters.put(ICommonConstants.INIT_PARAM_DATASOURCE, defaultDataSource);
+			parameters.put(ICommonConstants.INIT_PARAM_USER, user);
+			parameters.put(ICommonConstants.INIT_PARAM_RECREATE, Boolean.FALSE);
 
 			repository = RepositoryFactory.createMasterRepository(parameters);
 			if (repository == null) {

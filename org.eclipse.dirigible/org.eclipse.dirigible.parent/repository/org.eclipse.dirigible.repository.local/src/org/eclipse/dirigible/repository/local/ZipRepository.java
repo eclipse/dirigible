@@ -29,7 +29,7 @@ public class ZipRepository extends FileSystemRepository {
 	private String zipRepositoryRootFolder;
 
 	public ZipRepository(String user, String zip) throws LocalBaseException {
-
+		super(user);
 		File zipFile = new File(zip);
 		if (zipFile.exists()) {
 			try {

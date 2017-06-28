@@ -27,8 +27,10 @@ public class LocalRepositoryProvider implements IRepositoryProvider {
 		String user = (String) parameters.get(PARAM_USER);
 		String rootFolder = (String) parameters.get(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER);
 		boolean absolute = Boolean.parseBoolean((String) parameters.get(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE));
+		String repositoryRootFolderName = (String) parameters.get(ICommonConstants.INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_NAME);
 
-		return new LocalRepository(user, rootFolder, absolute);
+		LocalRepository repository = new LocalRepository(user, rootFolder, repositoryRootFolderName, absolute);
+		return repository;
 	}
 
 	@Override

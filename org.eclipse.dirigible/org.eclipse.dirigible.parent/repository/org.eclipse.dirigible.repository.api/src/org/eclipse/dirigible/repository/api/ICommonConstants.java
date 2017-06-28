@@ -184,8 +184,21 @@ public interface ICommonConstants {
 	public static final String INIT_PARAM_AUTO_ACTIVATE_ENABLED = "autoActivateEnabled"; //$NON-NLS-1$
 	public static final String INIT_PARAM_AUTO_PUBLISH_ENABLED = "autoPublishEnabled"; //$NON-NLS-1$
 	public static final String INIT_PARAM_ENABLE_SANDBOX = "enableSandbox"; //$NON-NLS-1$
+
+	public static final String INIT_PARAM_RECREATE = "recreate"; //$NON-NLS-1$
+	public static final String INIT_PARAM_USER = "user"; //$NON-NLS-1$
+	public static final String INIT_PARAM_DATASOURCE = "datasource"; //$NON-NLS-1$
+	public static final String INIT_PARAM_GIT_TARGET_FOLDER = "masterRepositoryGitTarget"; //$NON-NLS-1$
+	public static final String INIT_PARAM_GIT_LOCATION = "masterRepositoryGitLocation"; //$NON-NLS-1$
+	public static final String INIT_PARAM_GIT_USER = "masterRepositoryGitUser"; //$NON-NLS-1$
+	public static final String INIT_PARAM_GIT_PASSWORD = "masterRepositoryGitPassword"; //$NON-NLS-1$
+	public static final String INIT_PARAM_GIT_BRANCH = "masterRepositoryGitBranch"; //$NON-NLS-1$
 	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER = "localRepositoryRootFolder"; //$NON-NLS-1$
+	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_NAME = "localRepositoryRootFolderName"; //$NON-NLS-1$
 	public static final String INIT_PARAM_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "localRepositoryRootFolderIsAbsolute"; //$NON-NLS-1$
+
+	public static final String DEFAULT_LOCAL_REPOSITORY_ROOT_FOLDER_NAME = "dirigible_local"; //$NON-NLS-1$
+
 	public static final String INIT_PARAM_RUN_ON_OSGI = "osgi"; //$NON-NLS-1$ // true/false
 	// ---
 
