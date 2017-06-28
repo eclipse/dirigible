@@ -24,7 +24,7 @@ public class LocalRepository extends FileSystemRepository {
 	 * @throws LocalBaseException Local Repository Exception
 	 */
 	public LocalRepository(String user) throws LocalBaseException {
-		this(user, null);
+		super(user);
 	}
 
 	/**
@@ -50,4 +50,8 @@ public class LocalRepository extends FileSystemRepository {
 		super(user, rootFolder, absolute);
 	}
 
+	public LocalRepository(String user, String rootFolder, String repositoryRootFolderName, boolean absolute) throws LocalBaseException {
+		super(user, rootFolder, repositoryRootFolderName, absolute);
+	}
+	
 }
