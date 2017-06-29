@@ -15,7 +15,7 @@ public class AbstractPersistenceManagerTest {
 	public void setUp() {
 		try {
 			DerbyDatabase derbyDatabase = new DerbyDatabase();
-			this.dataSrouce = derbyDatabase.getDataSource("target/persitence_tests");
+			this.dataSrouce = derbyDatabase.getDataSource("target/tests/derby");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

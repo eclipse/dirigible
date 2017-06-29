@@ -107,7 +107,7 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		<!-- Datasource -->
+		<!-- Database -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-api</artifactId>
@@ -120,7 +120,23 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-persistence</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-data-structures</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-derby</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-managed</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
@@ -150,6 +166,11 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-ide-terminal</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-databases</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		

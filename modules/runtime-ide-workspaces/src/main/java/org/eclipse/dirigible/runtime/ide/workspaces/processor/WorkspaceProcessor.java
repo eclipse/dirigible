@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.workspaces.processor;
+package org.eclipse.dirigible.runtime.ide.workspaces.processor;
 
 import java.net.URI;
 import java.net.URISyntaxException;

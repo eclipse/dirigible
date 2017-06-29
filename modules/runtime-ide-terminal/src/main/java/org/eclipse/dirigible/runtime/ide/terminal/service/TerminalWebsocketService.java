@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.terminal.service;
+package org.eclipse.dirigible.runtime.ide.terminal.service;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

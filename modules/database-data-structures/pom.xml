@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Database - Data Structures</name>
-	<artifactId>dirigible-database-ds</artifactId>
+	<artifactId>dirigible-database-data-structures</artifactId>
     <packaging>jar</packaging>
     
     <build>

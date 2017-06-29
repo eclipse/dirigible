@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.workspaces.service;
+package org.eclipse.dirigible.runtime.ide.workspaces.service;
 
 import static java.text.MessageFormat.format;
 
@@ -23,7 +23,7 @@ import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.runtime.workspaces.processor.WorkspaceProcessor;
+import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
 
 /**
  * Front facing REST service serving the raw repository content

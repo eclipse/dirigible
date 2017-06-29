@@ -1,1 +1,1 @@
-org.eclipse.dirigible.runtime.workspaces.service.WorkspaceRestService	# Workspaces Service
+org.eclipse.dirigible.runtime.ide.workspaces.service.WorkspaceRestService	# Workspaces Service
