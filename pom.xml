@@ -385,6 +385,7 @@
 		
 		<!-- Content IDE -->
 		<module>content/ide-terminal</module>
+		<module>content/ide-workspace</module>
 
 		<module>releng/war-all</module>
 	</modules>

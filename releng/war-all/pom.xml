@@ -219,7 +219,11 @@
 		 	<artifactId>dirigible-content-ide-terminal</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
-		
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-content-ide-workspace</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		<dependency>
 		  <groupId>javax.annotation</groupId>
