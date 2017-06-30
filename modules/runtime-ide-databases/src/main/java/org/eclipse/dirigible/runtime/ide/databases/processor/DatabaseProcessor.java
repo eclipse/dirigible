@@ -14,7 +14,9 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.runtime.ide.databases.processor.DatabaseQueryHelper.RequestExecutionCallback;
+import org.eclipse.dirigible.runtime.ide.databases.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.runtime.ide.databases.helpers.DatabaseQueryHelper;
+import org.eclipse.dirigible.runtime.ide.databases.helpers.DatabaseQueryHelper.RequestExecutionCallback;
 import org.eclipse.dirigible.runtime.ide.databases.processor.format.ResultSetStringWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,10 +94,10 @@ public class DatabaseProcessor {
 				continue;
 			}
 
-			Connection conn = null;
+			Connection connection = null;
 			try {
-				conn = dataSource.getConnection();
-				DatabaseQueryHelper.executeSingleStatement(conn, line, isQuery, new RequestExecutionCallback() {
+				connection = dataSource.getConnection();
+				DatabaseQueryHelper.executeSingleStatement(connection, line, isQuery, new RequestExecutionCallback() {
 					@Override
 					public void updateDone(int recordsCount) {
 						results.add(recordsCount + "");
@@ -121,9 +123,9 @@ public class DatabaseProcessor {
 				logger.warn(e.getMessage(), e);
 				errors.add(e.getMessage());
 			} finally {
-				if (conn != null) {
+				if (connection != null) {
 					try {
-						conn.close();
+						connection.close();
 					} catch (SQLException e) {
 						logger.warn(e.getMessage(), e);
 					}
@@ -141,6 +143,23 @@ public class DatabaseProcessor {
 		writer.setLimited(limited);
 		String tableString = writer.writeTable(resultSet);
 		return tableString;
+	}
+
+	public String getMetadataAsJson(String type, String name) throws SQLException {
+		DataSource dataSource = getDataSource(type, name);
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			return DatabaseMetadataHelper.getAsJson(connection, null, null, null);
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
 	}
 	
 }

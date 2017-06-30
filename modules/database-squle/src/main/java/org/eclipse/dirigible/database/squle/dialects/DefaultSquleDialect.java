@@ -78,4 +78,20 @@ public class DefaultSquleDialect implements ISquleDialect {
 		return false;
 	}
 
+	@Override
+	public boolean isSchemaFilterSupported() {
+		return false;
+	}
+
+	@Override
+	public String getSchemaFilterScript() {
+		return null;
+	}
+
+	@Override
+	public boolean isCatalogForSchema() {
+		return false;
+	}
+
+	
 }

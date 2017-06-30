@@ -1,7 +1,6 @@
 package org.eclipse.dirigible.database.squle.dialects.derby;
 
 import org.eclipse.dirigible.database.squle.builders.DropBranchingBuilder;
-import org.eclipse.dirigible.database.squle.builders.sequence.DropSequenceBuilder;
 import org.eclipse.dirigible.database.squle.builders.sequence.NextValueSequenceBuilder;
 import org.eclipse.dirigible.database.squle.dialects.DefaultSquleDialect;
 

@@ -3,15 +3,6 @@ package org.eclipse.dirigible.database.squle;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.eclipse.dirigible.database.squle.builders.CreateBranchingBuilder;
-import org.eclipse.dirigible.database.squle.builders.DropBranchingBuilder;
-import org.eclipse.dirigible.database.squle.builders.ExpressionBuilder;
-import org.eclipse.dirigible.database.squle.builders.records.DeleteBuilder;
-import org.eclipse.dirigible.database.squle.builders.records.InsertBuilder;
-import org.eclipse.dirigible.database.squle.builders.records.SelectBuilder;
-import org.eclipse.dirigible.database.squle.builders.records.UpdateBuilder;
-import org.eclipse.dirigible.database.squle.builders.sequence.NextValueSequenceBuilder;
-
 public interface ISquleDialect extends ISqule, ISquleKeywords {
 	
 	/**
@@ -40,4 +31,30 @@ public interface ISquleDialect extends ISqule, ISquleKeywords {
 	 * @return true if the table exists and false otherwise
 	 */
 	public boolean exists(Connection connection, String table) throws SQLException;
+	
+	/**
+	 * Checks if the database is capable of schema-level filtering statements (e.g. to reduce the provisioned schemas
+	 * down to those that the current user is entitled to see).
+	 *
+	 * @see IDialectSpecifier#getSchemaFilterScript()
+	 * @return true if the feature is supported , false otherwise
+	 */
+	public boolean isSchemaFilterSupported();
+
+	/**
+	 * If the database supports schema filtering SQL statements (see {@link #isSchemaFilterSupported()}), this method
+	 * provides the
+	 * corresponding SQL statement.
+	 *
+	 * @return a filtering SQL statement
+	 */
+	public String getSchemaFilterScript();
+	
+	/**
+	 * Does this database support catalogs synonymous to schemas.
+	 *
+	 * @return whether it is a catalog for schema
+	 */
+	boolean isCatalogForSchema();
+	
 }

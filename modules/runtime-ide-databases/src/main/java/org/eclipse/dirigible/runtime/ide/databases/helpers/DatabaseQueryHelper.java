@@ -1,7 +1,6 @@
-package org.eclipse.dirigible.runtime.ide.databases.processor;
+package org.eclipse.dirigible.runtime.ide.databases.helpers;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,25 +21,6 @@ public class DatabaseQueryHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseQueryHelper.class);
 
-	private static final String COLUMN_NAME = "COLUMN_NAME"; //$NON-NLS-1$
-	private static final String TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
-	private static final String COLUMN_SIZE = "COLUMN_SIZE"; //$NON-NLS-1$
-	private static final String EMPTY = ""; //$NON-NLS-1$
-	private static final String PK = "PK"; //$NON-NLS-1$
-	private static final String IS_NULLABLE = "IS_NULLABLE"; //$NON-NLS-1$
-
-	private static final String INDEX_NAME = "INDEX_NAME"; //$NON-NLS-1$
-	private static final String TYPE_INDEX = "TYPE"; //$NON-NLS-1$
-	private static final String NON_UNIQUE = "NON_UNIQUE"; //$NON-NLS-1$
-	private static final String INDEX_QUALIFIER = "INDEX_QUALIFIER"; //$NON-NLS-1$
-	private static final String ORDINAL_POSITION = "ORDINAL_POSITION"; //$NON-NLS-1$
-	private static final String ASC_OR_DESC = "ASC_OR_DESC"; //$NON-NLS-1$
-	private static final String CARDINALITY = "CARDINALITY"; //$NON-NLS-1$
-	private static final String PAGES_INDEX = "PAGES"; //$NON-NLS-1$
-	private static final String FILTER_CONDITION = "FILTER_CONDITION"; //$NON-NLS-1$
-
-	static final String DEFAULT_DATASOURCE_NAME = "Default";
-
 	public enum Config {
 		ShowTableContentScript, SchemaFilterScript;
 	}
@@ -51,63 +31,6 @@ public class DatabaseQueryHelper {
 
 	public interface Filter<T> {
 		boolean accepts(T t);
-	}
-
-	public interface ColumnsIteratorCallback {
-		void onColumn(String name, String type, String size, String isNullable, String isKey);
-	}
-
-	public interface IndicesIteratorCallback {
-		void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier, String ordinalPosition,
-				String sortOrder, String cardinality, String pagesIndex, String filterCondition);
-	}
-
-	public static void iterateTableDefinition(Connection conn, String tableName, String catalogName, String schemaName,
-			ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback) throws SQLException {
-
-		DatabaseMetaData dmd = conn.getMetaData();
-
-		ResultSet columns = dmd.getColumns(catalogName, schemaName, tableName, null);
-		if (columns == null) {
-			throw new SQLException("DatabaseMetaData.getColumns returns null");
-		}
-		ResultSet pks = dmd.getPrimaryKeys(catalogName, schemaName, tableName);
-		if (pks == null) {
-			throw new SQLException("DatabaseMetaData.getPrimaryKeys returns null");
-		}
-		ResultSet indexes = dmd.getIndexInfo(catalogName, schemaName, tableName, false, false);
-		if (indexes == null) {
-			throw new SQLException("DatabaseMetaData.getIndexInfo returns null");
-		}
-
-		try {
-
-			List<String> pkList = new ArrayList<String>();
-			while (pks.next()) {
-				String pkName = pks.getString(COLUMN_NAME);
-				pkList.add(pkName);
-			}
-
-			while (columns.next()) {
-				if (columnsIteratorCallback != null) {
-					String cname = columns.getString(COLUMN_NAME);
-					columnsIteratorCallback.onColumn(cname, columns.getString(TYPE_NAME), columns.getInt(COLUMN_SIZE) + EMPTY,
-							columns.getString(IS_NULLABLE), pkList.contains(cname) ? PK : EMPTY);
-				}
-			}
-			while (indexes.next()) {
-				if (indicesIteratorCallback != null) {
-					indicesIteratorCallback.onIndex(indexes.getString(INDEX_NAME), indexes.getString(TYPE_INDEX), indexes.getString(COLUMN_NAME),
-							indexes.getString(NON_UNIQUE), indexes.getString(INDEX_QUALIFIER), indexes.getShort(ORDINAL_POSITION) + EMPTY,
-							indexes.getString(ASC_OR_DESC), indexes.getInt(CARDINALITY) + EMPTY, indexes.getInt(PAGES_INDEX) + EMPTY,
-							indexes.getString(FILTER_CONDITION));
-				}
-			}
-		} finally {
-			columns.close();
-			indexes.close();
-			pks.close();
-		}
 	}
 
 	public interface RequestExecutionCallback {

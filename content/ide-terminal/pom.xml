@@ -16,7 +16,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/dirigiblelabs/ide-terminal.git</connection>
 		<developerConnection>scm:git:https://github.com/dirigiblelabs/ide-terminal.git</developerConnection>
-		<url>https://github.com/dirigiblelabs/http</url>
+		<url>https://github.com/dirigiblelabs/ide-terminal</url>
 	</scm>
 
 	<build>

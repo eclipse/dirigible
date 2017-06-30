@@ -2,6 +2,7 @@ package org.eclipse.dirigible.runtime.ide.databases.service;
 
 import static java.text.MessageFormat.format;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ public class DatabaseRestService implements IRestService {
 	@Produces("application/json")
 	public Response listDatabaseTypes(@Context HttpServletRequest request) {
 		List<String> databaseTypes = processor.getDatabaseTypes();
-		return Response.ok().entity(GsonHelper.GSON.toJson(databaseTypes)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(GsonHelper.GSON.toJson(databaseTypes)).build();
 	}
 
 	
@@ -60,22 +61,21 @@ public class DatabaseRestService implements IRestService {
 			String error = format("Database Type {0} not known.", type);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		return Response.ok().entity(GsonHelper.GSON.toJson(list)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(GsonHelper.GSON.toJson(list)).build();
 		
 	}
 
 	@GET
-	@Path("{type}")
+	@Path("{type}/{name}")
 	@Produces("application/json")
-	public Response listArtefacts(@PathParam("type") String type, @PathParam("name") String name, @Context HttpServletRequest request) {
+	public Response listArtefacts(@PathParam("type") String type, @PathParam("name") String name, @Context HttpServletRequest request) throws SQLException {
 		DataSource dataSource = processor.getDataSource(type, name);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Type {1} not known.", name, type);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		// TODO
-		List<String> list = null;//processor.getTableNames();
-		return Response.ok().entity(GsonHelper.GSON.toJson(list)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		String metadata = processor.getMetadataAsJson(type, name);
+		return Response.ok().entity(metadata).build();
 		
 	}
 	
