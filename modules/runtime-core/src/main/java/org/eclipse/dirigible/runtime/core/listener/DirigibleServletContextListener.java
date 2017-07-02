@@ -9,6 +9,7 @@ import javax.servlet.ServletContextEvent;
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 		getServices().add(new SecureAnnotationsInterceptor());
 		addRestServices();
+		addExceptionHandlers();
 
 		logger.debug("REST services registed: [{}]", Arrays.asList(getServices().toArray()));
 	}
@@ -70,6 +72,16 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		}
 	}
 
+	private void addExceptionHandlers() {
+		for (AbstractExceptionHandler<?> next : ServiceLoader.load(AbstractExceptionHandler.class)) {
+			logger.debug("Registering Exception Handler {} ...", next.getType());
+			
+			getServices().add(injector.getInstance(next.getType()));
+			
+			logger.debug("Exception Handler {} registered.", next.getType());
+		}
+	}
+	
 	/**
 	 * Get singleton services registred to this application.
 	 *
