@@ -332,7 +332,9 @@
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
 		<activiti.version>5.22.0</activiti.version>
 		<com.h2database.version>1.4.193</com.h2database.version>
+		<maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
 		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
+		<maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
 		<derby.version>10.12.1.1</derby.version>
 	</properties>
 
@@ -341,7 +343,7 @@
 		<module>modules/commons-config</module>
 		<module>modules/commons-process</module>
 		<module>modules/commons-test</module>
-		
+
 		<module>modules/repository-api</module>
 		<module>modules/repository-api-test</module>
 		<module>modules/repository-zip</module>
@@ -356,19 +358,18 @@
 		<module>modules/database-squle</module>
 		<module>modules/database-persistence</module>
 		<module>modules/database-data-structures</module>
-		
+
 		<module>modules/database-derby</module>
 		<module>modules/database-managed</module>
-		
-		
+
 		<module>modules/runtime-core</module>
 		<module>modules/runtime-repository</module>
 		<module>modules/runtime-registry</module>
-		
+
 		<module>modules/runtime-ide-workspaces</module>
 		<module>modules/runtime-ide-terminal</module>
 		<module>modules/runtime-ide-databases</module>
-		
+
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>
 		<module>modules/engine-js</module>
@@ -380,12 +381,8 @@
 		<module>modules/api-http</module>
 		<module>modules/api-auth</module>
 
-		<!-- Content API -->
-		<module>content/api-http</module>
-		
-		<!-- Content IDE -->
-		<module>content/ide-terminal</module>
-		<module>content/ide-workspace</module>
+		<!-- Content -->
+		<module>content</module>
 
 		<module>releng/war-all</module>
 	</modules>

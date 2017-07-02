@@ -4,52 +4,27 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-content</artifactId>
 		<version>${dirigible.version}</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<name>Content - IDE - Workspace</name>
 	<artifactId>dirigible-content-ide-workspace</artifactId>
     <packaging>jar</packaging>
-	
-	<scm>
-		<connection>scm:git:git://github.com/dirigiblelabs/ide-workspace.git</connection>
-		<developerConnection>scm:git:https://github.com/dirigiblelabs/ide-workspace.git</developerConnection>
-		<url>https://github.com/dirigiblelabs/ide-workspace</url>
-	</scm>
 
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>${maven.scm.plugin.version}</version>
-				<configuration>
-					<goals>checkout</goals>
-					<checkoutDirectory>src/main/resources</checkoutDirectory>
-					<server>github</server>
-				</configuration>
-				<executions>
-					<execution>
-						<id>generated-sources</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>checkout</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-		</plugins>
-	</build>
+	<scm>
+		<url>${content.scm.url}</url>
+		<connection>${content.scm.connection}</connection>
+		<developerConnection>${content.scm.developerConnection}</developerConnection>
+	</scm>
+	
+	<properties>
+		<content.name>ide-workspace</content.name>
+
+		<content.scm.url>https://github.com/dirigiblelabs/${content.name}</content.scm.url>
+		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.name}.git</content.scm.connection>
+		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.name}</content.scm.developerConnection>
+	</properties>
+
 </project>

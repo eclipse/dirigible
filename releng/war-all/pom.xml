@@ -206,14 +206,14 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		<!-- Content API -->
+		<!-- Content - API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-content-api-http</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		<!-- Content IDE -->
+		<!-- Content - IDE -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-content-ide-terminal</artifactId>
@@ -224,13 +224,12 @@
 		 	<artifactId>dirigible-content-ide-workspace</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
-		
+
 		<dependency>
 		  <groupId>javax.annotation</groupId>
 		  <artifactId>jsr250-api</artifactId>
 		  <version>1.0</version>
 		</dependency>
-		
 
 		<!-- <dependency>
 		 	<groupId>org.activiti</groupId>
@@ -242,7 +241,7 @@
 			<artifactId>h2</artifactId>
 			<version>${com.h2database.version}</version>
 		</dependency> -->
-		
+
 	</dependencies>
 
 	<!-- default properties -->
