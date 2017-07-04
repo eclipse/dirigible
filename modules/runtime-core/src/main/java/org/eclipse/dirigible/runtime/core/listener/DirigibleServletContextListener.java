@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.runtime.core.listener;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.ServiceLoader;
@@ -7,6 +8,7 @@ import java.util.ServiceLoader;
 import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
+import org.eclipse.dirigible.commons.api.content.ClasspathContentLoader;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
@@ -32,12 +34,12 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	@Override
 	protected Injector getInjector() {
-		logger.debug("Initializing Guice Injector with modules for dependency injection...");
+		logger.info("Initializing Guice Injector with modules for dependency injection...");
 
 		injector = Guice.createInjector(new DirigibleModulesInstallerModule());
 		StaticInjector.setInjector(injector);
 		
-		logger.debug("Guice Injector with modules for dependency injection initialized.");
+		logger.info("Guice Injector with modules for dependency injection initialized.");
 		
 		return injector;
 	}
@@ -45,40 +47,52 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
-		logger.debug("Initializing servlet context...");
+		logger.info("Initializing servlet context...");
+		
+		loadPredeliveredContent();
 		
 		registerRestServicesForCxf();
 		
-		logger.debug("Servlet context initialized.");
+		logger.info("Done initializing servlet context");
+	}
+
+	private void loadPredeliveredContent() {
+		logger.info("Loading the predelivered content...");
+		try {
+			ClasspathContentLoader.load();
+		} catch (IOException e) {
+			logger.error("Failed loading the predelivered content", e);
+		}
+		logger.info("Done loading predelivered content.");
 	}
 
 	private void registerRestServicesForCxf() {
-		logger.debug("Registering REST services...");
+		logger.info("Registering REST services...");
 
 		getServices().add(new SecureAnnotationsInterceptor());
 		addRestServices();
 		addExceptionHandlers();
 
-		logger.debug("REST services registed: [{}]", Arrays.asList(getServices().toArray()));
+		logger.info("Done registering REST services: [{}].", Arrays.asList(getServices().toArray()));
 	}
 
 	private void addRestServices() {
 		for (IRestService next : ServiceLoader.load(IRestService.class)) {
-			logger.debug("Registering REST service {} ...", next.getType());
+			logger.info("Registering REST service {} ...", next.getType());
 			
 			getServices().add(injector.getInstance(next.getType()));
 			
-			logger.debug("REST service {} registered.", next.getType());
+			logger.info("Done registering REST service {}.", next.getType());
 		}
 	}
 
 	private void addExceptionHandlers() {
 		for (AbstractExceptionHandler<?> next : ServiceLoader.load(AbstractExceptionHandler.class)) {
-			logger.debug("Registering Exception Handler {} ...", next.getType());
+			logger.info("Registering Exception Handler {} ...", next.getType());
 			
 			getServices().add(injector.getInstance(next.getType()));
 			
-			logger.debug("Exception Handler {} registered.", next.getType());
+			logger.info("Done registering Exception Handler {}.", next.getType());
 		}
 	}
 	
