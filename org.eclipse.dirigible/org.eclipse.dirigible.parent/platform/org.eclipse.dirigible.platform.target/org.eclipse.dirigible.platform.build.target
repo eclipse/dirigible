@@ -80,7 +80,7 @@
 
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.mylyn.wikitext_feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/mylyn/releases/oxygen"/>
+<repository location="http://download.eclipse.org/mylyn/releases/neon"/>
 </location>
 
 </locations>
