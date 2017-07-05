@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.security;
+package org.eclipse.dirigible.core.security.service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,6 +11,9 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.core.security.AccessException;
+import org.eclipse.dirigible.core.security.definition.AccessDefinition;
+import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.squle.Squle;
 
@@ -32,9 +35,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 	
 	// Roles
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#createRole(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public RoleDefinition createRole(String name, String description) throws AccessException {
 		RoleDefinition roleDefinition = new RoleDefinition();
@@ -59,9 +59,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getRole(java.lang.String)
-	 */
 	@Override
 	public RoleDefinition getRole(String name) throws AccessException {
 		try {
@@ -79,9 +76,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#removeRole(java.lang.String)
-	 */
 	@Override
 	public void removeRole(String name) throws AccessException {
 		try {
@@ -99,9 +93,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#updateRole(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void updateRole(String name, String description) throws AccessException {
 		try {
@@ -121,9 +112,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getRoles()
-	 */
 	@Override
 	public List<RoleDefinition> getRoles() throws AccessException {
 		try {
@@ -153,9 +141,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 	
 	// Access
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#createAccessDefinition(java.lang.String, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public AccessDefinition createAccessDefinition(String location, String method, String role, String description) throws AccessException {
 		AccessDefinition accessDefinition = new AccessDefinition();
@@ -182,9 +167,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getAccessDefinition(long)
-	 */
 	@Override
 	public AccessDefinition getAccessDefinition(long id) throws AccessException {
 		try {
@@ -202,9 +184,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#removeAccessDefinition(long)
-	 */
 	@Override
 	public void removeAccessDefinition(long id) throws AccessException {
 		try {
@@ -222,9 +201,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#updateAccessDefinition(long, java.lang.String, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void updateAccessDefinition(long id, String location, String method, String role, String description) throws AccessException {
 		try {
@@ -247,9 +223,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getAccessDefinitions()
-	 */
 	@Override
 	public List<AccessDefinition> getAccessDefinitions() throws AccessException {
 		try {
@@ -267,9 +240,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getAccessDefinitionsByLocation(java.lang.String)
-	 */
 	@Override
 	public List<AccessDefinition> getAccessDefinitionsByLocation(String location) throws AccessException {
 		try {
@@ -292,9 +262,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.security.ISecurityCoreService#getAccessDefinitionsByLocation(java.lang.String)
-	 */
 	@Override
 	public List<AccessDefinition> getAccessDefinitionsByLocationAndMethod(String location, String method) throws AccessException {
 		try {

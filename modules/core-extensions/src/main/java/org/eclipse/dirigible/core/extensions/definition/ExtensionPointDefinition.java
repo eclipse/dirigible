@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.extensions;
+package org.eclipse.dirigible.core.extensions.definition;
 
 import java.sql.Timestamp;
 

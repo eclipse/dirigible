@@ -1,8 +1,11 @@
-package org.eclipse.dirigible.core.security;
+package org.eclipse.dirigible.core.security.service;
 
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
+import org.eclipse.dirigible.core.security.AccessException;
+import org.eclipse.dirigible.core.security.definition.AccessDefinition;
+import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 
 public interface ISecurityCoreService extends ICoreService {
 

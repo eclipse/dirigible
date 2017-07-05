@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.security;
+package org.eclipse.dirigible.core.security.definition;
 
 import java.sql.Timestamp;
 

@@ -7,11 +7,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.core.security.AccessDefinition;
 import org.eclipse.dirigible.core.security.AccessException;
-import org.eclipse.dirigible.core.security.ISecurityCoreService;
-import org.eclipse.dirigible.core.security.RoleDefinition;
-import org.eclipse.dirigible.core.security.SecurityCoreService;
+import org.eclipse.dirigible.core.security.definition.AccessDefinition;
+import org.eclipse.dirigible.core.security.definition.RoleDefinition;
+import org.eclipse.dirigible.core.security.service.ISecurityCoreService;
+import org.eclipse.dirigible.core.security.service.SecurityCoreService;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;

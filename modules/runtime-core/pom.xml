@@ -41,7 +41,7 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-web</artifactId>
+			<artifactId>dirigible-core-scheduler</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
     </dependencies>

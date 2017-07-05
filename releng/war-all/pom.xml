@@ -140,6 +140,23 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
+		<!-- Core Services -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-core-extensions</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-core-git</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-core-security</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
 		<!-- Runtime Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>

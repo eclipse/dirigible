@@ -350,10 +350,6 @@
 		<module>modules/repository-local</module>
 		<module>modules/repository-master</module>
 
-		<module>modules/core-extensions</module>
-		<module>modules/core-security</module>
-		<module>modules/core-git</module>
-
 		<module>modules/database-api</module>
 		<module>modules/database-squle</module>
 		<module>modules/database-persistence</module>
@@ -361,6 +357,11 @@
 
 		<module>modules/database-derby</module>
 		<module>modules/database-managed</module>
+		
+		<module>modules/core-extensions</module>
+		<module>modules/core-security</module>
+		<module>modules/core-git</module>
+		<module>modules/core-scheduler</module>
 
 		<module>modules/runtime-core</module>
 		<module>modules/runtime-repository</module>

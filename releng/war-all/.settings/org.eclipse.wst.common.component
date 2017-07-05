@@ -47,7 +47,13 @@
         <dependent-module archiveName="dirigible-database-derby-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-derby/dirigible-database-derby">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-commons-test-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-test/dirigible-commons-test">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-runtime-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-core/dirigible-runtime-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-core-scheduler-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-scheduler/dirigible-core-scheduler">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-repository-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-repository/dirigible-runtime-repository">
@@ -84,6 +90,15 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-engine-js-v8-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js-v8/dirigible-engine-js-v8">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-content-api-http-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-api-http/dirigible-content-api-http">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-content-ide-terminal-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-terminal/dirigible-content-ide-terminal">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-content-ide-workspace-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-workspace/dirigible-content-ide-workspace">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>

@@ -1,8 +1,11 @@
-package org.eclipse.dirigible.core.extensions;
+package org.eclipse.dirigible.core.extensions.service;
 
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
+import org.eclipse.dirigible.core.extensions.ExtensionsException;
+import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
+import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 
 public interface IExtensionsCoreService extends ICoreService {
 	

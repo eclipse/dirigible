@@ -3,13 +3,12 @@ package org.eclipse.dirigible.commons.api.content;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.ServiceLoader;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.eclipse.dirigible.commons.api.logging.LoggingHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +16,15 @@ public class ClasspathContentLoader {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ClasspathContentLoader.class);
 	
-	private static List<String> RESOURCES = null;
+	private static Boolean LOADED = false;
 	
-	public static final void load() throws IOException {
+	public static final void load(LoggingHelper loggingHelper) throws IOException {
 		synchronized (ClasspathContentLoader.class) {
-			if (RESOURCES == null) {
-				List<String> resources = new ArrayList<String>();
+			if (!LOADED) {
+				ServiceLoader<IClasspathContentHandler> contentHandlers = ServiceLoader.load(IClasspathContentHandler.class);
+				for (IClasspathContentHandler contentHandler : contentHandlers) {
+					loggingHelper.info("Registering Content Handler: " + contentHandler.getClass().getCanonicalName());
+				}
 				Enumeration<URL> urls = ClasspathContentLoader.class.getClassLoader().getResources("META-INF");
 				while (urls.hasMoreElements()) {
 					URL url = urls.nextElement();
@@ -30,30 +32,17 @@ public class ClasspathContentLoader {
 			        try (JarFile jar = urlConnection.getJarFile();) {
 			            Enumeration<JarEntry> entries = jar.entries();
 			            while (entries.hasMoreElements()) {
-			                String entry = entries.nextElement().getName();
-			                if (entry.endsWith(".class") 
-			                		|| entry.endsWith(".java") 
-			                		|| entry.endsWith("/")
-			                		|| entry.endsWith("MANIFEST.MF")
-			                		|| entry.endsWith("pom.xml")
-			                		|| entry.endsWith("pom.properties")) {
-			                	continue;
-			                }
-			                resources.add(entry);
+			            	String entry = entries.nextElement().getName();
+			            	for (IClasspathContentHandler contentHandler : contentHandlers) {
+			            		contentHandler.accept(entry);
+			            	}
 			                logger.debug("resource found: " + entry);
 			            }
 			        }
 				}
-				RESOURCES = Collections.unmodifiableList(resources);
+				LOADED = true;
 			}
 		}
-	}
-	
-	public static List<String> getResources() throws IOException {
-		if (RESOURCES == null) {
-			load();
-		}
-		return RESOURCES;
 	}
 
 }

@@ -7,11 +7,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.core.extensions.ExtensionDefinition;
-import org.eclipse.dirigible.core.extensions.ExtensionPointDefinition;
-import org.eclipse.dirigible.core.extensions.ExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.ExtensionsException;
-import org.eclipse.dirigible.core.extensions.IExtensionsCoreService;
+import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
+import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
+import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
+import org.eclipse.dirigible.core.extensions.service.IExtensionsCoreService;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
