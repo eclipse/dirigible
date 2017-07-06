@@ -173,6 +173,11 @@
 		 	<artifactId>dirigible-runtime-registry</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-extensions</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		<!-- Runtime IDE Services -->
 		<dependency>

@@ -68,6 +68,9 @@
         <dependent-module archiveName="dirigible-runtime-registry-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-registry/dirigible-runtime-registry">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-runtime-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-extensions/dirigible-runtime-extensions">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-runtime-ide-workspaces-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-workspaces/dirigible-runtime-ide-workspaces">
             <dependency-type>uses</dependency-type>
         </dependent-module>

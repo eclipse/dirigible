@@ -21,8 +21,6 @@ import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
-import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

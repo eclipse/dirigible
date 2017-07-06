@@ -29,9 +29,11 @@ public class SystemJob implements Job {
 			jobs.add(new JobKey(SYSTEM_JOB_NAME, SYSTEM_GROUP));
 			List<JobDefinition> jobDefinitions = schedulerCoreService.getJobs();
 			for (JobDefinition jobDefinition : jobDefinitions) {
-				SchedulerManager.scheduleJob(jobDefinition);
-				JobKey jobKey = new JobKey(jobDefinition.getName(), jobDefinition.getGroup());
-				jobs.add(jobKey);
+				if (jobDefinition.isEnabled()) {
+					SchedulerManager.scheduleJob(jobDefinition);
+					JobKey jobKey = new JobKey(jobDefinition.getName(), jobDefinition.getGroup());
+					jobs.add(jobKey);
+				}
 			}
 			// remove all the already scheduled, but removed from the database
 			Set<TriggerKey> triggers = SchedulerManager.listJobs();
@@ -53,7 +55,7 @@ public class SystemJob implements Job {
 		jobDefinition.setGroup(SYSTEM_GROUP);
 		jobDefinition.setClazz(SystemJob.class.getCanonicalName());
 		jobDefinition.setDescription("System Job");
-		jobDefinition.setExpression("0/20 * * * * ?");
+		jobDefinition.setExpression("0/30 * * * * ?");
 		jobDefinition.setSingleton(false);
 		return jobDefinition;
 	}

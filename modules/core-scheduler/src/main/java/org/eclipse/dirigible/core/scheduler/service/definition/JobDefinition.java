@@ -28,7 +28,10 @@ public class JobDefinition {
 	private String expression;
 	
 	@Column(name="JOB_SINGLETON", columnDefinition="BOOLEAN", nullable=false)
-	private boolean singleton;
+	private boolean singleton = false;
+	
+	@Column(name="JOB_ENABLED", columnDefinition="BOOLEAN", nullable=false)
+	private boolean enabled = true;
 	
 	@Column(name="JOB_CREATED_BY", columnDefinition="VARCHAR", nullable=false, length=32)
 	private String createdBy;
@@ -82,6 +85,14 @@ public class JobDefinition {
 	
 	public void setSingleton(boolean singleton) {
 		this.singleton = singleton;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	
 	public String getCreatedBy() {
