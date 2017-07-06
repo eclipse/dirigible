@@ -19,15 +19,16 @@ import org.eclipse.dirigible.core.extensions.api.IExtensionsConstants;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
+import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class ExtensionsSynchronizer implements IExtensionsConstants {
+public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExtensionsConstants {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
 	
@@ -44,9 +45,6 @@ public class ExtensionsSynchronizer implements IExtensionsConstants {
 	@Inject
 	private ExtensionsCoreService extensionsCoreService;
 	
-	@Inject
-	private IRepository repository;
-	
 	public void registerPredeliveredExtensionPoint(String extensionPointPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPointPath);
 		String json = IOUtils.toString(in, Configuration.UTF8);
@@ -61,7 +59,8 @@ public class ExtensionsSynchronizer implements IExtensionsConstants {
 		EXTENSIONS_PREDELIVERED.put(extensionPath, extensionDefinition);
 	}
 	
-	public void synchronizeAll() {
+	@Override
+	public void synchronize() {
 		loggingHelper.beginGroup("Synchronizing Extension Points and Extensions...");
 		try {
 			EXTENSION_POINTS_SYNCHRONIZED.clear();
@@ -69,13 +68,14 @@ public class ExtensionsSynchronizer implements IExtensionsConstants {
 			synchronizePredelivered();
 			synchronizeRegistry();
 			cleanup();
-		} catch (ExtensionsException e) {
+		} catch (Exception e) {
 			logger.error("Synchronizing process for Extension Points and Extensions failed.", e);
 		}
 		loggingHelper.endGroup("Done synchronizing Extension Points and Extensions.");
 	}
 
-	private void synchronizePredelivered() throws ExtensionsException {
+	@Override
+	public void synchronizePredelivered() throws SynchronizationException {
 		loggingHelper.debug("Synchronizing predelivered Extension Points and Extensions...");
 		// Extension Points
 		for (ExtensionPointDefinition extensionPointDefinition : EXTENSION_POINTS_PREDELIVERED.values()) {
@@ -88,72 +88,75 @@ public class ExtensionsSynchronizer implements IExtensionsConstants {
 		loggingHelper.debug("Done synchronizing predelivered Extension Points and Extensions.");
 	}
 
-	
-
-	private void synchronizeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) throws ExtensionsException {
-		if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
-			extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getDescription());
-			loggingHelper.info("Synchronized Extension Point [{}]", extensionPointDefinition.getLocation());
+	private void synchronizeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) throws SynchronizationException {
+		try {
+			if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
+				extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getDescription());
+				loggingHelper.info("Synchronized Extension Point [{}]", extensionPointDefinition.getLocation());
+			}
+			EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getLocation());
+		} catch (ExtensionsException e) {
+			throw new SynchronizationException(e);
 		}
-		EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getLocation());
 	}
 	
-	private void synchronizeExtension(ExtensionDefinition extensionDefinition) throws ExtensionsException {
-		if (!extensionsCoreService.existsExtension(extensionDefinition.getLocation())) {
-			extensionsCoreService.createExtension(extensionDefinition.getLocation(), extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
-			loggingHelper.info("Synchronized Extension [{}] for Extension Point [{}]", extensionDefinition.getLocation(), extensionDefinition.getExtensionPoint());
+	private void synchronizeExtension(ExtensionDefinition extensionDefinition) throws SynchronizationException {
+		try {
+			if (!extensionsCoreService.existsExtension(extensionDefinition.getLocation())) {
+				extensionsCoreService.createExtension(extensionDefinition.getLocation(), extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
+				loggingHelper.info("Synchronized Extension [{}] for Extension Point [{}]", extensionDefinition.getLocation(), extensionDefinition.getExtensionPoint());
+			}
+			EXTENSIONS_SYNCHRONIZED.add(extensionDefinition.getLocation());
+		} catch (ExtensionsException e) {
+			throw new SynchronizationException(e);
 		}
-		EXTENSIONS_SYNCHRONIZED.add(extensionDefinition.getLocation());
 	}
 	
-	private void synchronizeRegistry() throws ExtensionsException {
+	@Override
+	public void synchronizeRegistry() throws SynchronizationException {
 		loggingHelper.debug("Synchronizing Extension Points and Extensions from Registry...");
 		
-		ICollection collection = repository.getCollection(IRepositoryStructure.REGISTRY_PUBLIC);
-		if (collection.exists()) {
-			synchronizeCollection(collection);
-		}
+		super.synchronizeRegistry();
 	
 		loggingHelper.debug("Done synchronizing Extension Points and Extensions from Registry.");
 	}
 
-	private void synchronizeCollection(ICollection collection) throws ExtensionsException {
-		List<IResource> resources = collection.getResources();
-		for (IResource resource : resources) {
-			String resourceName = resource.getName();
-			if (resourceName.endsWith(FILE_EXTENSION_EXTENSIONPOINT)) {
-				ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(resource.getContent());
-				synchronizeExtensionPoint(extensionPointDefinition);
-			}
-			
-			if (resourceName.endsWith(FILE_EXTENSION_EXTENSION)) {
-				ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(resource.getContent());
-				synchronizeExtension(extensionDefinition);
-			}
+	@Override
+	protected void synchronizeResource(IResource resource) throws SynchronizationException {
+		String resourceName = resource.getName();
+		if (resourceName.endsWith(FILE_EXTENSION_EXTENSIONPOINT)) {
+			ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(resource.getContent());
+			synchronizeExtensionPoint(extensionPointDefinition);
 		}
-		List<ICollection> collections = collection.getCollections();
-		for (ICollection childCollection : collections) {
-			synchronizeCollection(childCollection);
+		
+		if (resourceName.endsWith(FILE_EXTENSION_EXTENSION)) {
+			ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(resource.getContent());
+			synchronizeExtension(extensionDefinition);
 		}
 	}
 	
-	private void cleanup() throws ExtensionsException {
+	@Override
+	public void cleanup() throws SynchronizationException {
 		loggingHelper.debug("Cleaning up Extension Points and Extensions...");
 		
-		List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
-		for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
-			if (!EXTENSION_POINTS_SYNCHRONIZED.contains(extensionPointDefinition.getLocation())) {
-				extensionsCoreService.removeExtensionPoint(extensionPointDefinition.getLocation());
-				loggingHelper.warn("Cleaned up Extension Point [{}]", extensionPointDefinition.getLocation());
+		try {
+			List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
+			for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
+				if (!EXTENSION_POINTS_SYNCHRONIZED.contains(extensionPointDefinition.getLocation())) {
+					extensionsCoreService.removeExtensionPoint(extensionPointDefinition.getLocation());
+					loggingHelper.warn("Cleaned up Extension Point [{}]", extensionPointDefinition.getLocation());
+				}
 			}
-		}
-		
-		List<ExtensionDefinition> extensionDefinitions = extensionsCoreService.getExtensions();
-		for (ExtensionDefinition extensionDefinition : extensionDefinitions) {
-			if (!EXTENSIONS_SYNCHRONIZED.contains(extensionDefinition.getLocation())) {
-				extensionsCoreService.removeExtension(extensionDefinition.getLocation());
-				loggingHelper.warn("Cleaned up Extension [{}]", extensionDefinition.getLocation());
+			
+			List<ExtensionDefinition> extensionDefinitions = extensionsCoreService.getExtensions();
+			for (ExtensionDefinition extensionDefinition : extensionDefinitions) {
+				if (!EXTENSIONS_SYNCHRONIZED.contains(extensionDefinition.getLocation())) {
+					extensionsCoreService.removeExtension(extensionDefinition.getLocation());
+					loggingHelper.warn("Cleaned up Extension [{}]", extensionDefinition.getLocation());
+				}
 			}
+		} catch (ExtensionsException e) {
+			throw new SynchronizationException(e);
 		}
 		
 		loggingHelper.debug("Done cleaning up Extension Points and Extensionsy.");

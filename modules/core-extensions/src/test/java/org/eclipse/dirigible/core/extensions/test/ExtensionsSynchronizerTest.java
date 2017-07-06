@@ -52,7 +52,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinitionCustom);
 		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint", json.getBytes());
 		
-		extensionsPublisher.synchronizeAll();
+		extensionsPublisher.synchronize();
 		
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control");
 		assertNotNull(extensionPointDefinition);
@@ -75,7 +75,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinitionCustom);
 		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint", json.getBytes());
 		
-		extensionsPublisher.synchronizeAll();
+		extensionsPublisher.synchronize();
 		
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control");
 		assertNotNull(extensionPointDefinition);
@@ -84,7 +84,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		
 		repository.removeResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint");
 		
-		extensionsPublisher.synchronizeAll();
+		extensionsPublisher.synchronize();
 		
 		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom");
 		assertNull(extensionPointDefinition);
