@@ -13,8 +13,8 @@ import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.core.scheduler.SchedulerException;
-import org.eclipse.dirigible.core.scheduler.SchedulerInitializer;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
+import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +99,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	private void startupScheduler() {
 		loggingHelper.beginGroup("Starting Scheduler...");
 		try {
-			SchedulerInitializer.initialize(loggingHelper);
+			injector.getInstance(SchedulerInitializer.class).initialize(loggingHelper);
 		} catch (SchedulerException e) {
 			logger.error("Failed starting Scheduler", e);
 		}
@@ -111,9 +111,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		try {
 			SchedulerInitializer.shutdown(loggingHelper);
 		} catch (SchedulerException e) {
-			logger.error("Failed initializing Scheduler", e);
+			logger.error("Failed shutting down Scheduler", e);
 		}
-		loggingHelper.endGroup("Done initializing Scheduler.");
+		loggingHelper.endGroup("Done shutting down Scheduler.");
 	}
 	
 	/**

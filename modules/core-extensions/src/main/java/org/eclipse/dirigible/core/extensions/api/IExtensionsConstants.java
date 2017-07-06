@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.extensions;
+package org.eclipse.dirigible.core.extensions.api;
 
 public interface IExtensionsConstants {
 	

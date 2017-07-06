@@ -22,7 +22,6 @@ import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 import org.eclipse.dirigible.runtime.repository.processor.RepositoryProcessor;
 
 /**

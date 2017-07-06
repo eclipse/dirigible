@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.core.scheduler.SchedulerException;
-import org.eclipse.dirigible.core.scheduler.service.ISchedulerCoreService;
+import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;

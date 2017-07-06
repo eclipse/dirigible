@@ -11,7 +11,8 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
-import org.eclipse.dirigible.core.security.AccessException;
+import org.eclipse.dirigible.core.security.api.AccessException;
+import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;

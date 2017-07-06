@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoggingHelper {
 	
@@ -16,6 +17,10 @@ public class LoggingHelper {
 	private Logger logger;
 	
 	private volatile int indent = 0;
+	
+	public LoggingHelper() {
+		this.logger = LoggerFactory.getLogger(LoggingHelper.class);
+	}
 	
 	public LoggingHelper(Logger logger) {
 		this.logger = logger;
@@ -44,9 +49,9 @@ public class LoggingHelper {
 	
 	public void endGroup(String section) {
 		indent--;
-//		logger.info(addIndent() + GROUP);
-//		logger.info(addIndent() + section);
-//		logger.info(addIndent() + GROUP);
+		logger.info(addIndent() + GROUP);
+		logger.info(addIndent() + section);
+		logger.info(addIndent() + GROUP);
 	}
 	
 	private String addIndent() {

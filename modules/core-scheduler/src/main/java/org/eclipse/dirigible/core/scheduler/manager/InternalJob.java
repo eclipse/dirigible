@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.scheduler;
+package org.eclipse.dirigible.core.scheduler.manager;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

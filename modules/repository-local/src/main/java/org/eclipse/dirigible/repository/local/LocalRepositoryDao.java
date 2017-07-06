@@ -247,7 +247,7 @@ public class LocalRepositoryDao {
 			if (!objectFile.exists()) {
 				// This is folder, that was not created
 				if (ContentTypeHelper.getExtension(workspacePath).isEmpty() && !workspacePath.endsWith(".")) {
-					// FileSystemUtils.createFolder(workspacePath);
+//					FileSystemUtils.createFolder(workspacePath);
 					return null;
 				}
 			}
@@ -279,11 +279,7 @@ public class LocalRepositoryDao {
 				}
 			}
 
-		} catch (
-
-		IOException e)
-
-		{
+		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
 		}
 		return localObject;

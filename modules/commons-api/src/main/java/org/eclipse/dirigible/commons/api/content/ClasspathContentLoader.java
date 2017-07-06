@@ -16,14 +16,21 @@ public class ClasspathContentLoader {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ClasspathContentLoader.class);
 	
+	private static final String ROOT = "/";
+	
 	private static Boolean LOADED = false;
+	
+	public static final void load() throws IOException {
+		load(null);
+	}
 	
 	public static final void load(LoggingHelper loggingHelper) throws IOException {
 		synchronized (ClasspathContentLoader.class) {
 			if (!LOADED) {
 				ServiceLoader<IClasspathContentHandler> contentHandlers = ServiceLoader.load(IClasspathContentHandler.class);
 				for (IClasspathContentHandler contentHandler : contentHandlers) {
-					loggingHelper.info("Registering Content Handler: " + contentHandler.getClass().getCanonicalName());
+					String message = "Registering Content Handler: " + contentHandler.getClass().getCanonicalName();
+					log(loggingHelper, message);
 				}
 				Enumeration<URL> urls = ClasspathContentLoader.class.getClassLoader().getResources("META-INF");
 				while (urls.hasMoreElements()) {
@@ -34,7 +41,7 @@ public class ClasspathContentLoader {
 			            while (entries.hasMoreElements()) {
 			            	String entry = entries.nextElement().getName();
 			            	for (IClasspathContentHandler contentHandler : contentHandlers) {
-			            		contentHandler.accept(entry);
+			            		contentHandler.accept(ROOT + entry);
 			            	}
 			                logger.debug("resource found: " + entry);
 			            }
@@ -42,6 +49,14 @@ public class ClasspathContentLoader {
 				}
 				LOADED = true;
 			}
+		}
+	}
+
+	private static void log(LoggingHelper loggingHelper, String message) {
+		if (loggingHelper != null) {
+			loggingHelper.info(message);
+		} else {
+			logger.info(message);
 		}
 	}
 

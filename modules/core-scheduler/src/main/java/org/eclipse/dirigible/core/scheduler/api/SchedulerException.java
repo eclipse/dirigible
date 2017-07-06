@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.scheduler;
+package org.eclipse.dirigible.core.scheduler.api;
 
 public class SchedulerException extends Exception {
 

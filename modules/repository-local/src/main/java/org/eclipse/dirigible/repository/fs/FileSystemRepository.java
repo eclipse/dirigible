@@ -144,6 +144,9 @@ public abstract class FileSystemRepository implements IRepository {
 		versionsPath = versionsPath.replace(IRepository.SEPARATOR, File.separator);
 		infoPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_INFO; // $NON-NLS-1$
 		infoPath = infoPath.replace(IRepository.SEPARATOR, File.separator);
+		FileSystemUtils.createFolder(repositoryPath);
+		FileSystemUtils.createFolder(versionsPath);
+		FileSystemUtils.createFolder(infoPath);
 	}
 
 	@Override

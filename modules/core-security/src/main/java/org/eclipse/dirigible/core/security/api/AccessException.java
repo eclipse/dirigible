@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.security;
+package org.eclipse.dirigible.core.security.api;
 
 public class AccessException extends Exception {
 

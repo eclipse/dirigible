@@ -46,6 +46,16 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-core-scheduler</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-api</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-auth</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
@@ -55,6 +65,12 @@
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-local</artifactId>
+            <version>${dirigible.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

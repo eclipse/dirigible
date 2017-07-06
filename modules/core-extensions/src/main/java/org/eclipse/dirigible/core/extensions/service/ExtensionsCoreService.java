@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.core.extensions.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -11,7 +13,9 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
-import org.eclipse.dirigible.core.extensions.ExtensionsException;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -234,6 +238,46 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		} catch (SQLException e) {
 			throw new ExtensionsException(e);
 		}
+	}
+	
+	@Override
+	public boolean existsExtensionPoint(String extensionPoint) throws ExtensionsException {
+		return getExtensionPoint(extensionPoint) != null;
+	}
+	
+	@Override
+	public boolean existsExtension(String extension) throws ExtensionsException {
+		return getExtension(extension) != null;
+	}
+	
+	@Override
+	public ExtensionPointDefinition parseExtensionPoint(String json) {
+		return GsonHelper.GSON.fromJson(json, ExtensionPointDefinition.class);
+	}
+	
+	@Override
+	public ExtensionDefinition parseExtension(String json) {
+		return GsonHelper.GSON.fromJson(json, ExtensionDefinition.class);
+	}
+	
+	@Override
+	public ExtensionPointDefinition parseExtensionPoint(byte[] json) {
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), ExtensionPointDefinition.class);
+	}
+	
+	@Override
+	public ExtensionDefinition parseExtension(byte[] json) {
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), ExtensionDefinition.class);
+	}
+	
+	@Override
+	public String serializeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) {
+		return GsonHelper.GSON.toJson(extensionPointDefinition);
+	}
+	
+	@Override
+	public String serializeExtension(ExtensionDefinition extensionDefinition) {
+		return GsonHelper.GSON.toJson(extensionDefinition);
 	}
 	
 }

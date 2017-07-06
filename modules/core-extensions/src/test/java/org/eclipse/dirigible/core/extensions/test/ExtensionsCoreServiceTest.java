@@ -3,15 +3,17 @@ package org.eclipse.dirigible.core.extensions.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.core.extensions.ExtensionsException;
+import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
-import org.eclipse.dirigible.core.extensions.service.IExtensionsCoreService;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,6 +75,19 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
 		assertNull(extensionPointDefinition);
+	}
+	
+	@Test
+	public void parseExtensionPoint() throws ExtensionsException {
+		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
+		extensionPointDefinition.setLocation("test_extpoint1");
+		extensionPointDefinition.setDescription("Test");
+		extensionPointDefinition.setCreatedAt(new Timestamp(new Date().getTime()));
+		extensionPointDefinition.setCreatedBy("test_user");
+		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinition);
+		System.out.println(json);
+		ExtensionPointDefinition extensionPointDefinition2 = extensionsCoreService.parseExtensionPoint(json);
+		assertEquals(extensionPointDefinition.getLocation(), extensionPointDefinition2.getLocation());
 	}
 	
 	
@@ -189,6 +204,20 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 		assertNull(extensionDefinition);
 		
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
+	}
+	
+	@Test
+	public void parseExtension() throws ExtensionsException {
+		ExtensionDefinition extensionDefinition = new ExtensionDefinition();
+		extensionDefinition.setLocation("test_ext1");
+		extensionDefinition.setExtensionPoint("test_extpoint1");
+		extensionDefinition.setDescription("Test");
+		extensionDefinition.setCreatedAt(new Timestamp(new Date().getTime()));
+		extensionDefinition.setCreatedBy("test_user");
+		String json = extensionsCoreService.serializeExtension(extensionDefinition);
+		System.out.println(json);
+		ExtensionDefinition extensionDefinition2 = extensionsCoreService.parseExtension(json);
+		assertEquals(extensionDefinition.getLocation(), extensionDefinition2.getLocation());
 	}
 
 }

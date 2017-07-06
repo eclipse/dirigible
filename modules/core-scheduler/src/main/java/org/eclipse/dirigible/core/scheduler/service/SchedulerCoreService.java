@@ -10,7 +10,8 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
-import org.eclipse.dirigible.core.scheduler.SchedulerException;
+import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 
@@ -37,6 +38,17 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		jobDefinition.setCreatedBy(UserFacade.getName());
 		jobDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 		
+		return createJob(jobDefinition);
+	}
+
+	@Override
+	public JobDefinition createJob(JobDefinition jobDefinition) throws SchedulerException {
+		if (jobDefinition.getCreatedAt() == null) {
+			jobDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+		}
+		if (jobDefinition.getCreatedBy() == null) {
+			jobDefinition.setCreatedBy(UserFacade.getName());
+		}
 		try {
 			Connection connection = dataSource.getConnection();
 			try {

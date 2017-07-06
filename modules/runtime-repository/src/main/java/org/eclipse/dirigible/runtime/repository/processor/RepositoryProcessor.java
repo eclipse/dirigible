@@ -7,8 +7,6 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 
-import com.google.gson.Gson;
-
 
 public class RepositoryProcessor {
 	
