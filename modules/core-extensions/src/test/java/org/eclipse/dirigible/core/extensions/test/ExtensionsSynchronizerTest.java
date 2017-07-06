@@ -12,21 +12,21 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
-import org.eclipse.dirigible.core.extensions.publisher.ExtensionsPublisher;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
+import org.eclipse.dirigible.core.extensions.synchronizer.ExtensionsSynchronizer;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ExtensionsPublisherTest extends AbstractGuiceTest {
+public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 	
 	@Inject
 	private IExtensionsCoreService extensionsCoreService;
 	
 	@Inject
-	private ExtensionsPublisher extensionsPublisher;
+	private ExtensionsSynchronizer extensionsPublisher;
 	
 	@Inject
 	private IRepository repository;
@@ -34,7 +34,7 @@ public class ExtensionsPublisherTest extends AbstractGuiceTest {
 	@Before
 	public void setUp() throws Exception {
 		this.extensionsCoreService = getInjector().getInstance(ExtensionsCoreService.class);
-		this.extensionsPublisher = getInjector().getInstance(ExtensionsPublisher.class);
+		this.extensionsPublisher = getInjector().getInstance(ExtensionsSynchronizer.class);
 		this.repository = getInjector().getInstance(IRepository.class);
 	}
 	
@@ -52,7 +52,7 @@ public class ExtensionsPublisherTest extends AbstractGuiceTest {
 		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinitionCustom);
 		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint", json.getBytes());
 		
-		extensionsPublisher.publishAll();
+		extensionsPublisher.synchronizeAll();
 		
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control");
 		assertNotNull(extensionPointDefinition);
@@ -75,7 +75,7 @@ public class ExtensionsPublisherTest extends AbstractGuiceTest {
 		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinitionCustom);
 		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint", json.getBytes());
 		
-		extensionsPublisher.publishAll();
+		extensionsPublisher.synchronizeAll();
 		
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control");
 		assertNotNull(extensionPointDefinition);
@@ -84,7 +84,7 @@ public class ExtensionsPublisherTest extends AbstractGuiceTest {
 		
 		repository.removeResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint");
 		
-		extensionsPublisher.publishAll();
+		extensionsPublisher.synchronizeAll();
 		
 		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom");
 		assertNull(extensionPointDefinition);

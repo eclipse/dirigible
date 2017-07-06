@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.extensions.publisher;
+package org.eclipse.dirigible.core.extensions.synchronizer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,17 +27,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class ExtensionsPublisher implements IExtensionsConstants {
+public class ExtensionsSynchronizer implements IExtensionsConstants {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ExtensionsPublisher.class);
+	private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
 	
 	private static final Map<String, ExtensionPointDefinition> EXTENSION_POINTS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, ExtensionPointDefinition>());
 	
 	private static final Map<String, ExtensionDefinition> EXTENSIONS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, ExtensionDefinition>());
 	
-	private static final List<String> EXTENSION_POINTS_PUBLISHED = Collections.synchronizedList(new ArrayList<String>());
+	private static final List<String> EXTENSION_POINTS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 	
-	private static final List<String> EXTENSIONS_PUBLISHED = Collections.synchronizedList(new ArrayList<String>());
+	private static final List<String> EXTENSIONS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 	
 	private static LoggingHelper loggingHelper = new LoggingHelper(logger);
 	
@@ -48,92 +48,92 @@ public class ExtensionsPublisher implements IExtensionsConstants {
 	private IRepository repository;
 	
 	public void registerPredeliveredExtensionPoint(String extensionPointPath) throws IOException {
-		InputStream in = ExtensionsPublisher.class.getResourceAsStream(extensionPointPath);
+		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPointPath);
 		String json = IOUtils.toString(in, Configuration.UTF8);
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(json);
 		EXTENSION_POINTS_PREDELIVERED.put(extensionPointPath, extensionPointDefinition);
 	}
 	
 	public void registerPredeliveredExtension(String extensionPath) throws IOException {
-		InputStream in = ExtensionsPublisher.class.getResourceAsStream(extensionPath);
+		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPath);
 		String json = IOUtils.toString(in, Configuration.UTF8);
 		ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(json);
 		EXTENSIONS_PREDELIVERED.put(extensionPath, extensionDefinition);
 	}
 	
-	public void publishAll() {
-		loggingHelper.beginGroup("Publishing Extension Points and Extensions...");
+	public void synchronizeAll() {
+		loggingHelper.beginGroup("Synchronizing Extension Points and Extensions...");
 		try {
-			EXTENSION_POINTS_PUBLISHED.clear();
-			EXTENSIONS_PUBLISHED.clear();
-			publishPredelivered();
-			publishRegistry();
+			EXTENSION_POINTS_SYNCHRONIZED.clear();
+			EXTENSIONS_SYNCHRONIZED.clear();
+			synchronizePredelivered();
+			synchronizeRegistry();
 			cleanup();
 		} catch (ExtensionsException e) {
-			logger.error("Publishing process for Extension Points and Extensions failed.", e);
+			logger.error("Synchronizing process for Extension Points and Extensions failed.", e);
 		}
-		loggingHelper.endGroup("Done publishing Extension Points and Extensions.");
+		loggingHelper.endGroup("Done synchronizing Extension Points and Extensions.");
 	}
 
-	private void publishPredelivered() throws ExtensionsException {
-		loggingHelper.debug("Publishing predelivered Extension Points and Extensions...");
+	private void synchronizePredelivered() throws ExtensionsException {
+		loggingHelper.debug("Synchronizing predelivered Extension Points and Extensions...");
 		// Extension Points
 		for (ExtensionPointDefinition extensionPointDefinition : EXTENSION_POINTS_PREDELIVERED.values()) {
-			publishExtensionPoint(extensionPointDefinition);
+			synchronizeExtensionPoint(extensionPointDefinition);
 		}
 		// Extensions
 		for (ExtensionDefinition extensionDefinition : EXTENSIONS_PREDELIVERED.values()) {
-			publishExtension(extensionDefinition);
+			synchronizeExtension(extensionDefinition);
 		}
-		loggingHelper.debug("Done publishing predelivered Extension Points and Extensions.");
+		loggingHelper.debug("Done synchronizing predelivered Extension Points and Extensions.");
 	}
 
 	
 
-	private void publishExtensionPoint(ExtensionPointDefinition extensionPointDefinition) throws ExtensionsException {
+	private void synchronizeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) throws ExtensionsException {
 		if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
 			extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getDescription());
-			loggingHelper.info("Published Extension Point [{}]", extensionPointDefinition.getLocation());
+			loggingHelper.info("Synchronized Extension Point [{}]", extensionPointDefinition.getLocation());
 		}
-		EXTENSION_POINTS_PUBLISHED.add(extensionPointDefinition.getLocation());
+		EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getLocation());
 	}
 	
-	private void publishExtension(ExtensionDefinition extensionDefinition) throws ExtensionsException {
+	private void synchronizeExtension(ExtensionDefinition extensionDefinition) throws ExtensionsException {
 		if (!extensionsCoreService.existsExtension(extensionDefinition.getLocation())) {
 			extensionsCoreService.createExtension(extensionDefinition.getLocation(), extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
-			loggingHelper.info("Published Extension [{}] for Extension Point [{}]", extensionDefinition.getLocation(), extensionDefinition.getExtensionPoint());
+			loggingHelper.info("Synchronized Extension [{}] for Extension Point [{}]", extensionDefinition.getLocation(), extensionDefinition.getExtensionPoint());
 		}
-		EXTENSIONS_PUBLISHED.add(extensionDefinition.getLocation());
+		EXTENSIONS_SYNCHRONIZED.add(extensionDefinition.getLocation());
 	}
 	
-	private void publishRegistry() throws ExtensionsException {
-		loggingHelper.debug("Publishing Extension Points and Extensions from Registry...");
+	private void synchronizeRegistry() throws ExtensionsException {
+		loggingHelper.debug("Synchronizing Extension Points and Extensions from Registry...");
 		
 		ICollection collection = repository.getCollection(IRepositoryStructure.REGISTRY_PUBLIC);
 		if (collection.exists()) {
-			publishCollection(collection);
+			synchronizeCollection(collection);
 		}
 	
-		loggingHelper.debug("Done publishing Extension Points and Extensions from Registry.");
+		loggingHelper.debug("Done synchronizing Extension Points and Extensions from Registry.");
 	}
 
-	private void publishCollection(ICollection collection) throws ExtensionsException {
+	private void synchronizeCollection(ICollection collection) throws ExtensionsException {
 		List<IResource> resources = collection.getResources();
 		for (IResource resource : resources) {
 			String resourceName = resource.getName();
 			if (resourceName.endsWith(FILE_EXTENSION_EXTENSIONPOINT)) {
 				ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(resource.getContent());
-				publishExtensionPoint(extensionPointDefinition);
+				synchronizeExtensionPoint(extensionPointDefinition);
 			}
 			
 			if (resourceName.endsWith(FILE_EXTENSION_EXTENSION)) {
 				ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(resource.getContent());
-				publishExtension(extensionDefinition);
+				synchronizeExtension(extensionDefinition);
 			}
 		}
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			publishCollection(childCollection);
+			synchronizeCollection(childCollection);
 		}
 	}
 	
@@ -142,7 +142,7 @@ public class ExtensionsPublisher implements IExtensionsConstants {
 		
 		List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
 		for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
-			if (!EXTENSION_POINTS_PUBLISHED.contains(extensionPointDefinition.getLocation())) {
+			if (!EXTENSION_POINTS_SYNCHRONIZED.contains(extensionPointDefinition.getLocation())) {
 				extensionsCoreService.removeExtensionPoint(extensionPointDefinition.getLocation());
 				loggingHelper.warn("Cleaned up Extension Point [{}]", extensionPointDefinition.getLocation());
 			}
@@ -150,7 +150,7 @@ public class ExtensionsPublisher implements IExtensionsConstants {
 		
 		List<ExtensionDefinition> extensionDefinitions = extensionsCoreService.getExtensions();
 		for (ExtensionDefinition extensionDefinition : extensionDefinitions) {
-			if (!EXTENSIONS_PUBLISHED.contains(extensionDefinition.getLocation())) {
+			if (!EXTENSIONS_SYNCHRONIZED.contains(extensionDefinition.getLocation())) {
 				extensionsCoreService.removeExtension(extensionDefinition.getLocation());
 				loggingHelper.warn("Cleaned up Extension [{}]", extensionDefinition.getLocation());
 			}

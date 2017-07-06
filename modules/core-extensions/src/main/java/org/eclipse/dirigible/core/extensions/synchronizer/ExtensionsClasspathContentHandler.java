@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.core.extensions.publisher;
+package org.eclipse.dirigible.core.extensions.synchronizer;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ public class ExtensionsClasspathContentHandler extends AbstractClasspathContentH
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsClasspathContentHandler.class);
 	
-	private ExtensionsPublisher extensionsPublisher = StaticInjector.getInjector().getInstance(ExtensionsPublisher.class);
+	private ExtensionsSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(ExtensionsSynchronizer.class);
 	
 	@Override
 	protected boolean isValid(String path) {
@@ -21,12 +21,12 @@ public class ExtensionsClasspathContentHandler extends AbstractClasspathContentH
 		try {
 			if (path.endsWith(FILE_EXTENSION_EXTENSIONPOINT)) {
 				isValid = true;
-				extensionsPublisher.registerPredeliveredExtensionPoint(path);
+				extensionsSynchronizer.registerPredeliveredExtensionPoint(path);
 			}
 			
 			if (path.endsWith(FILE_EXTENSION_EXTENSION)) {
 				isValid = true;
-				extensionsPublisher.registerPredeliveredExtension(path);
+				extensionsSynchronizer.registerPredeliveredExtension(path);
 			}
 		} catch (IOException e) {
 			logger.error("Predelivered Extension Point or Extension is not valid", e);
