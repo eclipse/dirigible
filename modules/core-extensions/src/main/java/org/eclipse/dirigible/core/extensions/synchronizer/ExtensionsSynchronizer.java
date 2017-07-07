@@ -59,20 +59,24 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExt
 	
 	@Override
 	public void synchronize() {
-		loggingHelper.beginGroup("Synchronizing Extension Points and Extensions...");
+		loggingHelper.beginGroupDebug("Synchronizing Extension Points and Extensions...");
 		try {
-			EXTENSION_POINTS_SYNCHRONIZED.clear();
-			EXTENSIONS_SYNCHRONIZED.clear();
+			clearCache();
 			synchronizePredelivered();
 			synchronizeRegistry();
 			cleanup();
+			clearCache();
 		} catch (Exception e) {
 			logger.error("Synchronizing process for Extension Points and Extensions failed.", e);
 		}
-		loggingHelper.endGroup("Done synchronizing Extension Points and Extensions.");
+		loggingHelper.endGroupDebug("Done synchronizing Extension Points and Extensions.");
 	}
 
-	@Override
+	private void clearCache() {
+		EXTENSION_POINTS_SYNCHRONIZED.clear();
+		EXTENSIONS_SYNCHRONIZED.clear();
+	}
+
 	public void synchronizePredelivered() throws SynchronizationException {
 		loggingHelper.debug("Synchronizing predelivered Extension Points and Extensions...");
 		// Extension Points

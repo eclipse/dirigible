@@ -362,6 +362,7 @@
 		<module>modules/core-security</module>
 		<module>modules/core-git</module>
 		<module>modules/core-scheduler</module>
+		<module>modules/core-publisher</module>
 
 		<module>modules/runtime-core</module>
 		<module>modules/runtime-repository</module>

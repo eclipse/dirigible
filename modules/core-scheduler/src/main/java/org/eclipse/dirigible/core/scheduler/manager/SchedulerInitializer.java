@@ -47,9 +47,9 @@ public class SchedulerInitializer {
 					scheduleJob(jobDefinition);
 				}
 			} catch (Throwable e) {
-				loggingHelper.error(format("Failed installing Dirigible Module [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()), e);
+				loggingHelper.error(format("Failed installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()), e);
 			}
-			loggingHelper.endGroup(format("Done installing Dirigible Module [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()));
+			loggingHelper.endGroup(format("Done installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()));
 		}
 		loggingHelper.endSection("Done initializing the Internal Jobs.");
 		

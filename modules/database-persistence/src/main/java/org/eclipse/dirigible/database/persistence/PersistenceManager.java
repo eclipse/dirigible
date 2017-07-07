@@ -2,6 +2,7 @@ package org.eclipse.dirigible.database.persistence;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -169,6 +170,19 @@ public class PersistenceManager<T> {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
 		return queryProcessor.query(connection, tableModel, clazz, sql, values);
+	}
+	
+	/**
+	 * Custom query for narrow the search
+	 * 
+	 * @param connection the database connection
+	 * @param clazz the POJO's Class
+	 * @param sql the custom SQL script
+	 * @param values ordered parameters values
+	 * @return a list with the POJO instances
+	 */
+	public List<T> query(Connection connection, Class<T> clazz, String sql, Object...values) {
+		return query(connection, clazz, sql, Arrays.asList(values));
 	}
 	
 	

@@ -50,13 +50,19 @@
         <dependent-module archiveName="dirigible-core-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-extensions/dirigible-core-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-scheduler-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-scheduler/dirigible-core-scheduler">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="dirigible-commons-test-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-test/dirigible-commons-test">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-core-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-git/dirigible-core-git">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-core-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-security/dirigible-core-security">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-core-scheduler-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-scheduler/dirigible-core-scheduler">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-core-publisher-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-publisher/dirigible-core-publisher">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-core/dirigible-runtime-core">

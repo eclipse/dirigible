@@ -29,7 +29,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void createExtensionPoint() throws ExtensionsException {
+	public void createExtensionPointTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		List<ExtensionPointDefinition> list = extensionsCoreService.getExtensionPoints();
@@ -42,7 +42,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void getExtensionPoint() throws ExtensionsException {
+	public void getExtensionPointTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
@@ -52,7 +52,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void updatetExtensionPoint() throws ExtensionsException {
+	public void updatetExtensionPointTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
@@ -66,7 +66,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void removeExtensionPoint() throws ExtensionsException {
+	public void removeExtensionPointTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
@@ -78,7 +78,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void parseExtensionPoint() throws ExtensionsException {
+	public void parseExtensionPointTest() throws ExtensionsException {
 		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
 		extensionPointDefinition.setLocation("test_extpoint1");
 		extensionPointDefinition.setDescription("Test");
@@ -92,13 +92,8 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	
 	
 	
-	
-	
-	
-	
-	
 	@Test
-	public void createExtension() throws ExtensionsException {
+	public void createExtensionTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		
@@ -115,7 +110,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void getExtension() throws ExtensionsException {
+	public void getExtensionTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 
@@ -132,7 +127,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void getExtensions() throws ExtensionsException {
+	public void getExtensionsTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		extensionsCoreService.removeExtensionPoint("test_extpoint2");
@@ -171,7 +166,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void updatetExtension() throws ExtensionsException {
+	public void updatetExtensionTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		
@@ -192,7 +187,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void removeExtension() throws ExtensionsException {
+	public void removeExtensionTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		
@@ -207,7 +202,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void parseExtension() throws ExtensionsException {
+	public void parseExtensionTest() throws ExtensionsException {
 		ExtensionDefinition extensionDefinition = new ExtensionDefinition();
 		extensionDefinition.setLocation("test_ext1");
 		extensionDefinition.setExtensionPoint("test_extpoint1");

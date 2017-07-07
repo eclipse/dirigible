@@ -54,6 +54,20 @@ public class LoggingHelper {
 		logger.info(addIndent() + GROUP);
 	}
 	
+	public void beginGroupDebug(String section) {
+		logger.debug(addIndent() + GROUP);
+		logger.debug(addIndent() + section);
+		logger.debug(addIndent() + GROUP);
+		indent++;
+	}
+	
+	public void endGroupDebug(String section) {
+		indent--;
+		logger.debug(addIndent() + GROUP);
+		logger.debug(addIndent() + section);
+		logger.debug(addIndent() + GROUP);
+	}
+	
 	private String addIndent() {
 		return Arrays.asList(new Object[indent])
 	            .stream()

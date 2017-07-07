@@ -27,6 +27,7 @@ public class SystemJob implements Job {
 			// take all the jobs from the database and schedule them
 			List<JobKey> jobs = new ArrayList<JobKey>();
 			jobs.add(new JobKey(SYSTEM_JOB_NAME, SYSTEM_GROUP));
+			
 			List<JobDefinition> jobDefinitions = schedulerCoreService.getJobs();
 			for (JobDefinition jobDefinition : jobDefinitions) {
 				if (jobDefinition.isEnabled()) {

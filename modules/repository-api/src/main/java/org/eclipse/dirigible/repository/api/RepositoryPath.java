@@ -35,11 +35,11 @@ public class RepositoryPath {
 		this(repositoryPath.segments);
 	}
 
-	public RepositoryPath(String[] segments) {
+	public RepositoryPath(String...segments) {
 		this.segments = Arrays.copyOf(segments, segments.length);
 		this.path = toString();
 	}
-
+	
 	/**
 	 * Getter for the last segment
 	 *

@@ -119,7 +119,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 				.from("CUSTOMERS")
 				.toString();
 		
-		List<Customer> list = persistenceManager.query(connection, Customer.class, sql, null);
+		List<Customer> list = persistenceManager.query(connection, Customer.class, sql);
 		
 		assertNotNull(list);
 		assertFalse(list.isEmpty());

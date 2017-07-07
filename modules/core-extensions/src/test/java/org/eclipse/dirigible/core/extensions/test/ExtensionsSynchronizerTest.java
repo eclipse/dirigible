@@ -39,7 +39,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void createExtensionPoint() throws ExtensionsException, IOException {
+	public void createExtensionPointTest() throws ExtensionsException, IOException {
 		extensionsPublisher.registerPredeliveredExtensionPoint("/control/control.extensionpoint");
 		extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
 		
@@ -62,31 +62,14 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 	}
 	
 	@Test
-	public void cleanupExtensionPoint() throws ExtensionsException, IOException {
-		extensionsPublisher.registerPredeliveredExtensionPoint("/control/control.extensionpoint");
-		extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
-		
-		ExtensionPointDefinition extensionPointDefinitionCustom = new ExtensionPointDefinition();
-		extensionPointDefinitionCustom.setLocation("/custom/custom");
-		extensionPointDefinitionCustom.setDescription("Test");
-		extensionPointDefinitionCustom.setCreatedAt(new Timestamp(new Date().getTime()));
-		extensionPointDefinitionCustom.setCreatedBy("test_user");
-		
-		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinitionCustom);
-		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint", json.getBytes());
-		
-		extensionsPublisher.synchronize();
-		
-		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control");
-		assertNotNull(extensionPointDefinition);
-		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom");
-		assertNotNull(extensionPointDefinition);
+	public void cleanupExtensionPointTest() throws ExtensionsException, IOException {
+		createExtensionPointTest();
 		
 		repository.removeResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint");
 		
 		extensionsPublisher.synchronize();
 		
-		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom");
+		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom");
 		assertNull(extensionPointDefinition);
 		
 	}

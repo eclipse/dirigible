@@ -47,7 +47,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkRolesTable(connection);
 				rolesPersistenceManager.insert(connection, roleDefinition);
 				return roleDefinition;
 			} finally {
@@ -65,7 +64,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkRolesTable(connection);
 				return rolesPersistenceManager.find(connection, RoleDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -82,7 +80,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkRolesTable(connection);
 				rolesPersistenceManager.delete(connection, RoleDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -99,7 +96,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkRolesTable(connection);
 				RoleDefinition roleDefinition = getRole(name);
 				roleDefinition.setDescription(description);
 				rolesPersistenceManager.update(connection, roleDefinition, name);
@@ -118,7 +114,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkRolesTable(connection);
 				return rolesPersistenceManager.findAll(connection, RoleDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -129,16 +124,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
-	private void checkRolesTable(Connection connection) {
-		if (!rolesTableExists) {
-			if (!rolesPersistenceManager.tableExists(connection, RoleDefinition.class)) {
-				rolesPersistenceManager.tableCreate(connection, RoleDefinition.class);				
-			}
-			rolesTableExists = true;
-		}
-	}
-	
 	
 	// Access
 	
@@ -155,7 +140,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkAccessTable(connection);
 				accessPersistenceManager.insert(connection, accessDefinition);
 				return accessDefinition;
 			} finally {
@@ -173,7 +157,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkAccessTable(connection);
 				return accessPersistenceManager.find(connection, AccessDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -190,7 +173,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkAccessTable(connection);
 				accessPersistenceManager.delete(connection, AccessDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -207,7 +189,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkAccessTable(connection);
 				AccessDefinition accessDefinition = getAccessDefinition(id);
 				accessDefinition.setLocation(location);
 				accessDefinition.setMethod(method);
@@ -229,7 +210,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkAccessTable(connection);
 				return accessPersistenceManager.findAll(connection, AccessDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -246,7 +226,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkAccessTable(connection);
 				String sql = Squle.getNative(connection)
 						.select()
 						.column("*")
@@ -268,7 +247,6 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				checkAccessTable(connection);
 				String sql = Squle.getNative(connection)
 						.select()
 						.column("*")
@@ -277,7 +255,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 						.where(Squle.getNative(connection)
 								.expr().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
 						.toString();
-				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(location, method, AccessDefinition.METHOD_ANY));
+				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, location, method, AccessDefinition.METHOD_ANY);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -288,14 +266,4 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
-
-	private void checkAccessTable(Connection connection) {
-		if (!accessTableExists) {
-			if (!accessPersistenceManager.tableExists(connection, AccessDefinition.class)) {
-				accessPersistenceManager.tableCreate(connection, AccessDefinition.class);				
-			}
-			accessTableExists = true;
-		}
-	}
-
 }
