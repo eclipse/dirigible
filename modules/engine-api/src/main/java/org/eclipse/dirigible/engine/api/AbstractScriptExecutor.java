@@ -33,7 +33,7 @@ public abstract class AbstractScriptExecutor extends AbstractResourceExecutor im
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractScriptExecutor.class);
 
-	protected abstract void executeServiceModule(String module,
+	protected abstract Object executeServiceModule(String module,
 			Map<Object, Object> executionContext) throws ScriptingException;
 
 
@@ -49,7 +49,7 @@ public abstract class AbstractScriptExecutor extends AbstractResourceExecutor im
 		String resourcePath = createResourcePath(root, module, extension);
 		final IResource resource = getRepository().getResource(resourcePath);
 		if (resource.exists()) {
-			return new Module(getModuleName(resource.getPath()), resource.getPath(), getResourceContent(root, resourcePath));
+			return new Module(getModuleName(resource.getPath()), resource.getPath(), getResourceContent(root, module));
 		}
 		
 		// not found
@@ -58,20 +58,20 @@ public abstract class AbstractScriptExecutor extends AbstractResourceExecutor im
 		throw new RepositoryException(logMsg);
 	}
 
-	@Override
-	public List<Module> retrieveModulesByExtension(String root, String extension) throws RepositoryException {
-		Map<String, Module> modules = new HashMap<String, Module>();
-		List<IEntity> entities = getRepository().searchName(root, "%" + extension, false);
-		for (IEntity entity : entities) {
-			if (entity.exists()) {
-				String path = entity.getPath();
-				String moduleName = getModuleName(path);
-				Module module = new Module(moduleName, path, getResourceContent(root, path), entity.getInformation());
-				modules.put(moduleName, module);
-			}
-		}
-		return Arrays.asList(modules.values().toArray(new Module[] {}));
-	}
+//	@Override
+//	public List<Module> retrieveModulesByExtension(String root, String extension) throws RepositoryException {
+//		Map<String, Module> modules = new HashMap<String, Module>();
+//		List<IEntity> entities = getRepository().searchName(root, "%" + extension, false);
+//		for (IEntity entity : entities) {
+//			if (entity.exists()) {
+//				String path = entity.getPath();
+//				String moduleName = getModuleName(path);
+//				Module module = new Module(moduleName, path, getResourceContent(root, path), entity.getInformation());
+//				modules.put(moduleName, module);
+//			}
+//		}
+//		return Arrays.asList(modules.values().toArray(new Module[] {}));
+//	}
 
 	private String getModuleName(String path) {
 //		path = FilenameUtils.separatorsToUnix(path);

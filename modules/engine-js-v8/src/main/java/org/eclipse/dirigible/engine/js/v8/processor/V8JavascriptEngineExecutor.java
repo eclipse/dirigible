@@ -15,7 +15,7 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(V8JavascriptEngineExecutor.class);
 	
 	@Override
-	public void executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 
 		logger.debug("entering: executeServiceModule()"); //$NON-NLS-1$
 		logger.debug("module=" + module); //$NON-NLS-1$
@@ -23,6 +23,8 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		if (module == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
+		
+		Object result = null;
 
 //		ModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 
@@ -35,6 +37,8 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		}
 
 		logger.debug("exiting: executeServiceModule()");
+		
+		return result;
 	}
 	
 	private V8RepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {

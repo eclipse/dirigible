@@ -24,7 +24,7 @@ public class ExtensionsProcessor {
 		List<ExtensionPointBundle> bundles = new ArrayList<ExtensionPointBundle>();
 		List<ExtensionPointDefinition> extensionPoints = extensionsCoreService.getExtensionPoints();
 		for (ExtensionPointDefinition extensionPointDefinition : extensionPoints) {
-			List<ExtensionDefinition> extensions = extensionsCoreService.getExtensionsByExtensionPoint(extensionPointDefinition.getLocation());
+			List<ExtensionDefinition> extensions = extensionsCoreService.getExtensionsByExtensionPoint(extensionPointDefinition.getName());
 			ExtensionPointBundle bundle = new ExtensionPointBundle(extensionPointDefinition, extensions);
 			bundles.add(bundle);
 		}

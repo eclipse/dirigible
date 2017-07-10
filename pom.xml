@@ -380,6 +380,7 @@
 		<module>modules/engine-js-nashorn</module>
 		<module>modules/engine-js-v8</module>
 
+		<module>modules/api-core</module>
 		<module>modules/api-utils</module>
 		<module>modules/api-http</module>
 		<module>modules/api-auth</module>

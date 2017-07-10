@@ -38,7 +38,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public ExtensionPointDefinition createExtensionPoint(String extensionPoint, String description) throws ExtensionsException {
 		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
-		extensionPointDefinition.setLocation(extensionPoint);
+		extensionPointDefinition.setName(extensionPoint);
 		extensionPointDefinition.setDescription(description);
 		extensionPointDefinition.setCreatedBy(UserFacade.getName());
 		extensionPointDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
@@ -228,7 +228,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_EXTENSIONS")
-						.where("EXTENSION_EXTENSIONPOINT_LOCATION = ?").toString();
+						.where("EXTENSION_EXTENSIONPOINT_NAME = ?").toString();
 				return extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql, Arrays.asList(extensionPoint));
 			} finally {
 				if (connection != null) {

@@ -22,7 +22,7 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	private static final Logger logger = LoggerFactory.getLogger(NashornJavascriptEngineExecutor.class);
 	
 	@Override
-	public void executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 
 		logger.debug("entering: executeServiceModule()"); //$NON-NLS-1$
 		logger.debug("module=" + module); //$NON-NLS-1$
@@ -61,6 +61,8 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		}
 
 		logger.debug("exiting: executeServiceModule()");
+		
+		return result;
 
 	}
 	

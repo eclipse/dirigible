@@ -44,7 +44,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
 		
 		ExtensionPointDefinition extensionPointDefinitionCustom = new ExtensionPointDefinition();
-		extensionPointDefinitionCustom.setLocation("/custom/custom");
+		extensionPointDefinitionCustom.setName("/custom/custom");
 		extensionPointDefinitionCustom.setDescription("Test");
 		extensionPointDefinitionCustom.setCreatedAt(new Timestamp(new Date().getTime()));
 		extensionPointDefinitionCustom.setCreatedBy("test_user");

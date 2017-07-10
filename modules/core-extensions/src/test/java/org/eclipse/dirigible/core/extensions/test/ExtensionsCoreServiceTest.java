@@ -32,11 +32,8 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	public void createExtensionPointTest() throws ExtensionsException {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
-		List<ExtensionPointDefinition> list = extensionsCoreService.getExtensionPoints();
-		assertEquals(1, list.size());
-		ExtensionPointDefinition extensionPointDefinition = list.get(0);
-		System.out.println(extensionPointDefinition.toString());
-		assertEquals("test_extpoint1", extensionPointDefinition.getLocation());
+		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
+		assertEquals("test_extpoint1", extensionPointDefinition.getName());
 		assertEquals("Test", extensionPointDefinition.getDescription());
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 	}
@@ -46,7 +43,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
-		assertEquals("test_extpoint1", extensionPointDefinition.getLocation());
+		assertEquals("test_extpoint1", extensionPointDefinition.getName());
 		assertEquals("Test", extensionPointDefinition.getDescription());
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 	}
@@ -56,11 +53,11 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
-		assertEquals("test_extpoint1", extensionPointDefinition.getLocation());
+		assertEquals("test_extpoint1", extensionPointDefinition.getName());
 		assertEquals("Test", extensionPointDefinition.getDescription());
 		extensionsCoreService.updateExtensionPoint("test_extpoint1", "Test 2");
 		extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
-		assertEquals("test_extpoint1", extensionPointDefinition.getLocation());
+		assertEquals("test_extpoint1", extensionPointDefinition.getName());
 		assertEquals("Test 2", extensionPointDefinition.getDescription());
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 	}
@@ -70,7 +67,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionsCoreService.createExtensionPoint("test_extpoint1", "Test");
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
-		assertEquals("test_extpoint1", extensionPointDefinition.getLocation());
+		assertEquals("test_extpoint1", extensionPointDefinition.getName());
 		assertEquals("Test", extensionPointDefinition.getDescription());
 		extensionsCoreService.removeExtensionPoint("test_extpoint1");
 		extensionPointDefinition = extensionsCoreService.getExtensionPoint("test_extpoint1");
@@ -80,14 +77,14 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void parseExtensionPointTest() throws ExtensionsException {
 		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
-		extensionPointDefinition.setLocation("test_extpoint1");
+		extensionPointDefinition.setName("test_extpoint1");
 		extensionPointDefinition.setDescription("Test");
 		extensionPointDefinition.setCreatedAt(new Timestamp(new Date().getTime()));
 		extensionPointDefinition.setCreatedBy("test_user");
 		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinition);
 		System.out.println(json);
 		ExtensionPointDefinition extensionPointDefinition2 = extensionsCoreService.parseExtensionPoint(json);
-		assertEquals(extensionPointDefinition.getLocation(), extensionPointDefinition2.getLocation());
+		assertEquals(extensionPointDefinition.getName(), extensionPointDefinition2.getName());
 	}
 	
 	
@@ -99,7 +96,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 		
 		extensionsCoreService.removeExtension("test_ext1");
 		extensionsCoreService.createExtension("test_ext1", "test_extpoint1", "Test");
-		List<ExtensionDefinition> list = extensionsCoreService.getExtensions();
+		List<ExtensionDefinition> list = extensionsCoreService.getExtensionsByExtensionPoint("test_extpoint1");
 		assertEquals(1, list.size());
 		ExtensionDefinition extensionDefinition = list.get(0);
 		assertEquals("test_ext1", extensionDefinition.getLocation());
@@ -142,17 +139,11 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 		extensionsCoreService.removeExtension("test_ext22");
 		extensionsCoreService.createExtension("test_ext22", "test_extpoint2", "Test Ext 22");
 		
-		List<ExtensionDefinition> list = extensionsCoreService.getExtensions();
-		assertEquals(4, list.size());
-		ExtensionDefinition extensionDefinition = list.get(0);
-		assertEquals("test_extpoint1", extensionDefinition.getExtensionPoint());
-		assertEquals("Test Ext 1", extensionDefinition.getDescription());
-		
-		list = extensionsCoreService.getExtensionsByExtensionPoint("test_extpoint1");
+		List<ExtensionDefinition> list = extensionsCoreService.getExtensionsByExtensionPoint("test_extpoint1");
 		assertEquals(2, list.size());
 		list = extensionsCoreService.getExtensionsByExtensionPoint("test_extpoint2");
 		assertEquals(2, list.size());
-		extensionDefinition = list.get(0);
+		ExtensionDefinition extensionDefinition = list.get(0);
 		assertEquals("test_extpoint2", extensionDefinition.getExtensionPoint());
 		assertEquals("Test Ext 2", extensionDefinition.getDescription());
 		

@@ -26,7 +26,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineExecutor.class);
 	
 	@Override
-	public void executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 
 		logger.debug("entering: executeServiceModule()"); //$NON-NLS-1$
 		logger.debug("module=" + module); //$NON-NLS-1$
@@ -34,6 +34,8 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		if (module == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
+		
+		Object result = null;
 
 		ModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 		ModuleScriptProvider scriptProvider = new SoftCachingModuleScriptProvider(sourceProvider);
@@ -55,7 +57,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 			try {
 				ModuleSource moduleSource = sourceProvider.loadSource(module, null, null);
 				try {
-					context.evaluateReader(topLevelScope, moduleSource.getReader(), module, 0, null);
+					result = context.evaluateReader(topLevelScope, moduleSource.getReader(), module, 0, null);
 				} catch (EcmaError e) {
 					logger.error(e.getMessage());
 					if ((e.getMessage() != null) && e.getMessage().contains("\"exports\" is not defined")) {
@@ -72,6 +74,8 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		}
 
 		logger.debug("exiting: executeServiceModule()");
+		
+		return result;
 	}
 	
 	private RhinoRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {

@@ -15,7 +15,7 @@ public class ExtensionDefinition {
 	@Column(name="EXTENSION_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String location;
 	
-	@Column(name="EXTENSION_EXTENSIONPOINT_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
+	@Column(name="EXTENSION_EXTENSIONPOINT_NAME", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String extensionPoint;
 	
 	@Column(name="EXTENSION_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)

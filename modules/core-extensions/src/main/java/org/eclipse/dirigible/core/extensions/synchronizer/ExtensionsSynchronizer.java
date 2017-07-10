@@ -92,11 +92,11 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExt
 
 	private void synchronizeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) throws SynchronizationException {
 		try {
-			if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
-				extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getDescription());
-				loggingHelper.info("Synchronized Extension Point [{}]", extensionPointDefinition.getLocation());
+			if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getName())) {
+				extensionsCoreService.createExtensionPoint(extensionPointDefinition.getName(), extensionPointDefinition.getDescription());
+				loggingHelper.info("Synchronized Extension Point [{}]", extensionPointDefinition.getName());
 			}
-			EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getLocation());
+			EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getName());
 		} catch (ExtensionsException e) {
 			throw new SynchronizationException(e);
 		}
@@ -144,9 +144,9 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExt
 		try {
 			List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
 			for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
-				if (!EXTENSION_POINTS_SYNCHRONIZED.contains(extensionPointDefinition.getLocation())) {
-					extensionsCoreService.removeExtensionPoint(extensionPointDefinition.getLocation());
-					loggingHelper.warn("Cleaned up Extension Point [{}]", extensionPointDefinition.getLocation());
+				if (!EXTENSION_POINTS_SYNCHRONIZED.contains(extensionPointDefinition.getName())) {
+					extensionsCoreService.removeExtensionPoint(extensionPointDefinition.getName());
+					loggingHelper.warn("Cleaned up Extension Point [{}]", extensionPointDefinition.getName());
 				}
 			}
 			

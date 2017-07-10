@@ -21,6 +21,6 @@ public interface IScriptExecutor {
 	
 	public Module retrieveModule(String root, String module, String extension) throws RepositoryException;
 
-	public List<Module> retrieveModulesByExtension(String root, String extension) throws RepositoryException;
+//	public List<Module> retrieveModulesByExtension(String root, String extension) throws RepositoryException;
 
 }

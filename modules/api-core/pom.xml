@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Engine - Javascript - Rhino</name>
-	<artifactId>dirigible-engine-js-rhino</artifactId>
+	<name>API - core</name>
+	<artifactId>dirigible-api-core</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -34,37 +34,10 @@
             <artifactId>dirigible-commons-api</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-http</artifactId>
+            <artifactId>dirigible-core-extensions</artifactId>
             <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-js</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-		    <groupId>org.mozilla</groupId>
-		    <artifactId>rhino</artifactId>
-		    <version>1.7.7.1</version>
-		</dependency>
-		
-		<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-test</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-local</artifactId>
-            <version>${dirigible.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
