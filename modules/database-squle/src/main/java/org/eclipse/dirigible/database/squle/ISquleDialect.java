@@ -12,16 +12,22 @@ public interface ISquleDialect extends ISqule, ISquleKeywords {
 	public String getDataTypeName(DataType dataType);
 	
 	/**
-	 * Primary Key argument for a column for the create table script
+	 * PRIMARY KEY argument for a column for the create table script
 	 * Default is "PRIMARY KEY"
 	 */
 	public String getPrimaryKeyArgument();
 	
 	/**
-	 * Not Null argument for a column for the create table script
+	 * NOT NULL argument for a column for the create table script
 	 * Default is "NOT NULL"
 	 */
 	public String getNotNullArgument();
+	
+	/**
+	 * UNIQUE argument for a column for the create table script
+	 * Default is "UNIQUE"
+	 */
+	public String getUniqueArgument();
 
 	/**
 	 * Check existence of a table

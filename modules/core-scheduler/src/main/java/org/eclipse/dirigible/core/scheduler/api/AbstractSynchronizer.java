@@ -14,11 +14,11 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	@Inject
 	private IRepository repository;
 	
-	public IRepository getRepository() {
+	protected IRepository getRepository() {
 		return repository;
 	}
 	
-	public void synchronizeRegistry() throws SynchronizationException {
+	protected void synchronizeRegistry() throws SynchronizationException {
 		ICollection collection = getRepository().getCollection(IRepositoryStructure.REGISTRY_PUBLIC);
 		if (collection.exists()) {
 			synchronizeCollection(collection);
@@ -37,5 +37,7 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	}
 
 	protected abstract void synchronizeResource(IResource resource) throws SynchronizationException;
+	
+	protected abstract void cleanup() throws SynchronizationException;
 
 }

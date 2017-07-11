@@ -14,13 +14,13 @@ public class CreateTableTest {
 		String sql = Squle.getDefault()
 			.create()
 			.table("CUSTOMERS")
-			.column("ID", DataType.INTEGER, true, false)
-			.column("FIRST_NAME", DataType.VARCHAR, false, false, "(20)")
-			.column("LAST_NAME", DataType.VARCHAR, false, true, "(30)")
+			.column("ID", DataType.INTEGER, true, false, false)
+			.column("FIRST_NAME", DataType.VARCHAR, false, false, true, "(20)")
+			.column("LAST_NAME", DataType.VARCHAR, false, true, false, "(30)")
 			.toString();
 		
 		assertNotNull(sql);
-		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL , LAST_NAME VARCHAR (30) )", sql);
+		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
 	}
 	
 	@Test
@@ -28,13 +28,13 @@ public class CreateTableTest {
 		String sql = Squle.getDefault()
 			.create()
 			.table("CUSTOMERS")
-			.columnInteger("ID", true, false)
-			.columnVarchar("FIRST_NAME", 20, false, true)
-			.columnVarchar("LAST_NAME", 30, false, true)
+			.columnInteger("ID", true, false, false)
+			.columnVarchar("FIRST_NAME", 20, false, true, true)
+			.columnVarchar("LAST_NAME", 30, false, true, false)
 			.toString();
 		
 		assertNotNull(sql);
-		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )", sql);
+		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )", sql);
 	}
 
 }

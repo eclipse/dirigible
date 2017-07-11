@@ -44,6 +44,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
 		
 		ExtensionPointDefinition extensionPointDefinitionCustom = new ExtensionPointDefinition();
+		extensionPointDefinitionCustom.setLocation("/custom/custom.extensionpoint");
 		extensionPointDefinitionCustom.setName("/custom/custom");
 		extensionPointDefinitionCustom.setDescription("Test");
 		extensionPointDefinitionCustom.setCreatedAt(new Timestamp(new Date().getTime()));
@@ -54,9 +55,9 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		
 		extensionsPublisher.synchronize();
 		
-		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control");
+		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control.extensionpoint");
 		assertNotNull(extensionPointDefinition);
-		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom");
+		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/registry/public/custom/custom.extensionpoint");
 		assertNotNull(extensionPointDefinition);
 		
 	}
@@ -69,7 +70,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		
 		extensionsPublisher.synchronize();
 		
-		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom");
+		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/registry/public/custom/custom.extensionpoint");
 		assertNull(extensionPointDefinition);
 		
 	}

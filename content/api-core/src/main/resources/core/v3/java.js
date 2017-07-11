@@ -10,14 +10,12 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
-
-exports.getExtensions = function(extensionPoint) {
-	var extensions = java.call('org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade', 'getExtensions', [extensionPoint]);
-	return extensions;
-};
-
-exports.getExtensionPoints = function() {
-	var extensionPoints = java.call('org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade', 'getExtensionPoints', []);
-	return extensionPoints;
+exports.call = function(className, methodName, params) {
+	var result = null;
+	if (engine === "rhino") {
+		result = org.eclipse.dirigible.api.v3.core.JavaFacade.call(className, methodName, params);
+	} else if (engine === "nashorn") {
+		result = Packages.org.eclipse.dirigible.api.v3.core.JavaFacade.call(className, methodName, params);
+	}
+	return result;
 };

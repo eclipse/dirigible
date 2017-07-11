@@ -14,26 +14,20 @@ package org.eclipse.dirigible.engine.api;
 import org.eclipse.dirigible.repository.api.IEntityInformation;
 
 public class Module {
-	private String name;
 	private String path;
 	private byte[] content;
 	private IEntityInformation entityInformation;
 
-	public Module(String name, String path,  byte[] content) {
-		this(name, path, content, null);
+	public Module(String path,  byte[] content) {
+		this(path, content, null);
 	}
 
-	public Module(String name, String path, byte[] content, IEntityInformation entityInformation) {
-		this.name = name;
+	public Module(String path, byte[] content, IEntityInformation entityInformation) {
 		this.path = path;
 		this.content = content;
 		this.entityInformation = entityInformation;
 	}
 
-	public String getName() {
-		return name;
-	}
-	
 	public String getPath() {
 		return path;
 	}

@@ -8,11 +8,17 @@ public interface IResourceExecutor {
 	
 	public byte[] getResourceContent(String root, String module) throws RepositoryException;
 	
+	public byte[] getResourceContent(String root, String module, String extension) throws RepositoryException;
+	
 	public ICollection getCollection(String root, String module) throws RepositoryException;
 
 	public IResource getResource(String root, String module) throws RepositoryException;
 	
+	public IResource getResource(String root, String module, String extension) throws RepositoryException;
+	
 	public boolean existResource(String root, String module) throws RepositoryException;
+	
+	public boolean existResource(String root, String module, String extension) throws RepositoryException;
 	
 	public String createResourcePath(String root, String module);
 	

@@ -10,14 +10,11 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
-
-exports.getExtensions = function(extensionPoint) {
-	var extensions = java.call('org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade', 'getExtensions', [extensionPoint]);
-	return extensions;
-};
-
-exports.getExtensionPoints = function() {
-	var extensionPoints = java.call('org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade', 'getExtensionPoints', []);
-	return extensionPoints;
-};
+exports.getMenu = function() {
+	var menu = {
+			"name":"File",
+			"link":"#",
+			"onClick":"alert('File has been clicked')"
+		};
+	return menu;
+}

@@ -8,42 +8,46 @@ import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition
 
 public interface IExtensionsCoreService extends ICoreService {
 	
-	public ExtensionPointDefinition createExtensionPoint(String extensionPoint, String description) throws ExtensionsException;
-
-	public ExtensionPointDefinition getExtensionPoint(String extensionPoint) throws ExtensionsException;
+	// Extension Points
 	
-	public boolean existsExtensionPoint(String extensionPoint) throws ExtensionsException;
+	public ExtensionPointDefinition createExtensionPoint(String location, String name, String description) throws ExtensionsException;
 
-	public void removeExtensionPoint(String extensionPoint) throws ExtensionsException;
+	public ExtensionPointDefinition getExtensionPoint(String location) throws ExtensionsException;
+	
+	public boolean existsExtensionPoint(String location) throws ExtensionsException;
 
-	public void updateExtensionPoint(String extensionPoint, String description) throws ExtensionsException;
+	public void removeExtensionPoint(String location) throws ExtensionsException;
+
+	public void updateExtensionPoint(String location, String name, String description) throws ExtensionsException;
 
 	public List<ExtensionPointDefinition> getExtensionPoints() throws ExtensionsException;
+	
+	public ExtensionPointDefinition parseExtensionPoint(String json);
+	
+	public ExtensionPointDefinition parseExtensionPoint(byte[] json);
+	
+	public String serializeExtensionPoint(ExtensionPointDefinition extensionPointDefinition);
+	
+	// Extensions
 
-	public ExtensionDefinition createExtension(String extension, String extensionPoint, String description)
+	public ExtensionDefinition createExtension(String location, String module, String extensionPoint, String description)
 			throws ExtensionsException;
 
-	public ExtensionDefinition getExtension(String extension) throws ExtensionsException;
+	public ExtensionDefinition getExtension(String location) throws ExtensionsException;
 	
-	public boolean existsExtension(String extension) throws ExtensionsException;
+	public boolean existsExtension(String location) throws ExtensionsException;
 
-	public void removeExtension(String extension) throws ExtensionsException;
+	public void removeExtension(String location) throws ExtensionsException;
 
-	public void updateExtension(String extension, String extensionPoint, String description) throws ExtensionsException;
+	public void updateExtension(String location, String module, String extensionPoint, String description) throws ExtensionsException;
 
 	public List<ExtensionDefinition> getExtensions() throws ExtensionsException;
 
 	public List<ExtensionDefinition> getExtensionsByExtensionPoint(String extensionPoint) throws ExtensionsException;
 	
-	public ExtensionPointDefinition parseExtensionPoint(String json);
-	
 	public ExtensionDefinition parseExtension(String json);
 	
-	public ExtensionPointDefinition parseExtensionPoint(byte[] json);
-	
 	public ExtensionDefinition parseExtension(byte[] json);
-	
-	public String serializeExtensionPoint(ExtensionPointDefinition extensionPointDefinition);
 	
 	public String serializeExtension(ExtensionDefinition extensionDefinition);
 

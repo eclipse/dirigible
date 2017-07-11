@@ -18,6 +18,9 @@ public class ExtensionDefinition {
 	@Column(name="EXTENSION_EXTENSIONPOINT_NAME", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String extensionPoint;
 	
+	@Column(name="EXTENSION_MODULE", columnDefinition="VARCHAR", nullable=false, length=255)
+	private String module;
+	
 	@Column(name="EXTENSION_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)
 	private String description;
 	
@@ -41,6 +44,14 @@ public class ExtensionDefinition {
 
 	public void setExtensionPoint(String extensionPoint) {
 		this.extensionPoint = extensionPoint;
+	}
+	
+	public String getModule() {
+		return module;
+	}
+	
+	public void setModule(String module) {
+		this.module = module;
 	}
 
 	public String getDescription() {

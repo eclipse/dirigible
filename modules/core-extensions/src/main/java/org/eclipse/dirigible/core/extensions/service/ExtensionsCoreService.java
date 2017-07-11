@@ -36,9 +36,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	// Extension Points
 	
 	@Override
-	public ExtensionPointDefinition createExtensionPoint(String extensionPoint, String description) throws ExtensionsException {
+	public ExtensionPointDefinition createExtensionPoint(String location, String name, String description) throws ExtensionsException {
 		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
-		extensionPointDefinition.setName(extensionPoint);
+		extensionPointDefinition.setLocation(location);
+		extensionPointDefinition.setName(name);
 		extensionPointDefinition.setDescription(description);
 		extensionPointDefinition.setCreatedBy(UserFacade.getName());
 		extensionPointDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
@@ -59,11 +60,11 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 	
 	@Override
-	public ExtensionPointDefinition getExtensionPoint(String extensionPoint) throws ExtensionsException {
+	public ExtensionPointDefinition getExtensionPoint(String location) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				return extensionPointPersistenceManager.find(connection, ExtensionPointDefinition.class, extensionPoint);
+				return extensionPointPersistenceManager.find(connection, ExtensionPointDefinition.class, location);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -75,11 +76,11 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 	
 	@Override
-	public void removeExtensionPoint(String extensionPoint) throws ExtensionsException {
+	public void removeExtensionPoint(String location) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				extensionPointPersistenceManager.delete(connection, ExtensionPointDefinition.class, extensionPoint);
+				extensionPointPersistenceManager.delete(connection, ExtensionPointDefinition.class, location);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -91,13 +92,14 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 	
 	@Override
-	public void updateExtensionPoint(String extensionPoint, String description) throws ExtensionsException {
+	public void updateExtensionPoint(String location, String name, String description) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				ExtensionPointDefinition extensionPointDefinition = getExtensionPoint(extensionPoint);
+				ExtensionPointDefinition extensionPointDefinition = getExtensionPoint(location);
+				extensionPointDefinition.setName(name);
 				extensionPointDefinition.setDescription(description);
-				extensionPointPersistenceManager.update(connection, extensionPointDefinition, extensionPoint);
+				extensionPointPersistenceManager.update(connection, extensionPointDefinition, location);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -129,9 +131,10 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	// Extensions
 	
 	@Override
-	public ExtensionDefinition createExtension(String extension, String extensionPoint, String description) throws ExtensionsException {
+	public ExtensionDefinition createExtension(String location, String module, String extensionPoint, String description) throws ExtensionsException {
 		ExtensionDefinition extensionDefinition = new ExtensionDefinition();
-		extensionDefinition.setLocation(extension);
+		extensionDefinition.setLocation(location);
+		extensionDefinition.setModule(module);
 		extensionDefinition.setExtensionPoint(extensionPoint);
 		extensionDefinition.setDescription(description);
 		extensionDefinition.setCreatedBy(UserFacade.getName());
@@ -153,11 +156,11 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 	
 	@Override
-	public ExtensionDefinition getExtension(String extension) throws ExtensionsException {
+	public ExtensionDefinition getExtension(String location) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				return extensionPersistenceManager.find(connection, ExtensionDefinition.class, extension);
+				return extensionPersistenceManager.find(connection, ExtensionDefinition.class, location);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -169,11 +172,11 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 	
 	@Override
-	public void removeExtension(String extension) throws ExtensionsException {
+	public void removeExtension(String location) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				extensionPersistenceManager.delete(connection, ExtensionDefinition.class, extension);
+				extensionPersistenceManager.delete(connection, ExtensionDefinition.class, location);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -185,14 +188,15 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 	
 	@Override
-	public void updateExtension(String extension, String extensionPoint, String description) throws ExtensionsException {
+	public void updateExtension(String location, String module, String extensionPoint, String description) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				ExtensionDefinition extensionDefinition = getExtension(extension);
+				ExtensionDefinition extensionDefinition = getExtension(location);
+				extensionDefinition.setModule(module);
 				extensionDefinition.setExtensionPoint(extensionPoint);
 				extensionDefinition.setDescription(description);
-				extensionPersistenceManager.update(connection, extensionDefinition, extension);
+				extensionPersistenceManager.update(connection, extensionDefinition, location);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -241,13 +245,13 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 	
 	@Override
-	public boolean existsExtensionPoint(String extensionPoint) throws ExtensionsException {
-		return getExtensionPoint(extensionPoint) != null;
+	public boolean existsExtensionPoint(String location) throws ExtensionsException {
+		return getExtensionPoint(location) != null;
 	}
 	
 	@Override
-	public boolean existsExtension(String extension) throws ExtensionsException {
-		return getExtension(extension) != null;
+	public boolean existsExtension(String location) throws ExtensionsException {
+		return getExtension(location) != null;
 	}
 	
 	@Override

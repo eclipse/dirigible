@@ -94,6 +94,7 @@ public class PersistenceAnnotationsParser {
 			if (length == 0 && DataTypeUtils.getDatabaseTypeByJavaType(field.getType().getClass()) == Types.VARCHAR) {
 				length = DataTypeUtils.VARCHAR_DEFAULT_LENGTH;
 			}
+			boolean unique = column.unique();
 			PersistenceTableColumnModel persistenceTableColumnModel = 
 					new PersistenceTableColumnModel(
 							field.getName(),
@@ -104,7 +105,8 @@ public class PersistenceAnnotationsParser {
 							primaryKey,
 							column.precision(),
 							column.scale(),
-							generated);
+							generated,
+							unique);
 			persistenceModel.getColumns().add(persistenceTableColumnModel);
 		}
 		

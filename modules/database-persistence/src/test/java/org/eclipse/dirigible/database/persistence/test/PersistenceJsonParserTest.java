@@ -15,11 +15,7 @@ public class PersistenceJsonParserTest {
 	@Test
 	public void modelFromJson() throws JsonSyntaxException, ClassNotFoundException {
 		PersistenceJsonParser<Order> parser = new PersistenceJsonParser<Order>();
-		PersistenceTableModel persistenceModel = parser.parseModel("{\"className\":\"org.eclipse.dirigible.database.persistence.test.Customer\",\"tableName\":\"CUSTOMERS\",\"schemaName\":\"FACTORY\","
-				+ "\"columns\":[{\"field\":\"id\",\"name\":\"CUSTOMER_ID\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":true,\"precision\":0,\"scale\":0,\"generated\":false},"
-				+ "{\"field\":\"firstName\",\"name\":\"CUSTOMER_FIRST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false},"
-				+ "{\"field\":\"lastName\",\"name\":\"CUSTOMER_LAST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false},"
-				+ "{\"field\":\"age\",\"name\":\"CUSTOMER_AGE\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false}]}");
+		PersistenceTableModel persistenceModel = parser.parseModel("{\"className\":\"org.eclipse.dirigible.database.persistence.test.Customer\",\"tableName\":\"CUSTOMERS\",\"schemaName\":\"FACTORY\",\"columns\":[{\"field\":\"id\",\"name\":\"CUSTOMER_ID\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":true,\"precision\":0,\"scale\":0,\"generated\":false,\"unique\":false},{\"field\":\"firstName\",\"name\":\"CUSTOMER_FIRST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false,\"unique\":false},{\"field\":\"lastName\",\"name\":\"CUSTOMER_LAST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false,\"unique\":false},{\"field\":\"age\",\"name\":\"CUSTOMER_AGE\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false,\"unique\":false}]}");
 		assertEquals("Subject 1", persistenceModel.getTableName(), "CUSTOMERS");
 	}
 	
@@ -29,11 +25,7 @@ public class PersistenceJsonParserTest {
 		PersistenceTableModel persistenceModel = PersistenceFactory.createModel(customer);
 		PersistenceJsonParser<?> parser = new PersistenceJsonParser<>();
 		String json = parser.serializeModel(persistenceModel);
-		assertEquals("{\"className\":\"org.eclipse.dirigible.database.persistence.test.Customer\",\"tableName\":\"CUSTOMERS\",\"schemaName\":\"FACTORY\","
-				+ "\"columns\":[{\"field\":\"id\",\"name\":\"CUSTOMER_ID\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":true,\"precision\":0,\"scale\":0,\"generated\":false},"
-					+ "{\"field\":\"firstName\",\"name\":\"CUSTOMER_FIRST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false},"
-					+ "{\"field\":\"lastName\",\"name\":\"CUSTOMER_LAST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false},"
-					+ "{\"field\":\"age\",\"name\":\"CUSTOMER_AGE\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false}]}", json);
+		assertEquals("{\"className\":\"org.eclipse.dirigible.database.persistence.test.Customer\",\"tableName\":\"CUSTOMERS\",\"schemaName\":\"FACTORY\",\"columns\":[{\"field\":\"id\",\"name\":\"CUSTOMER_ID\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":true,\"precision\":0,\"scale\":0,\"generated\":false,\"unique\":false},{\"field\":\"firstName\",\"name\":\"CUSTOMER_FIRST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false,\"unique\":false},{\"field\":\"lastName\",\"name\":\"CUSTOMER_LAST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false,\"unique\":false},{\"field\":\"age\",\"name\":\"CUSTOMER_AGE\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"generated\":false,\"unique\":false}]}", json);
 	}
 
 }

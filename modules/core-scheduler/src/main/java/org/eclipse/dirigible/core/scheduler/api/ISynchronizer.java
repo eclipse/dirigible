@@ -4,6 +4,4 @@ public interface ISynchronizer {
 	
 	public void synchronize();
 	
-	public void cleanup() throws SynchronizationException;
-
 }

@@ -24,6 +24,7 @@ public class PersistenceTableColumnModel {
 	private int precision;
 	private int scale;
 	private boolean generated;
+	private boolean unique;
 
 	/**
 	 * The constructor from the fields
@@ -44,9 +45,13 @@ public class PersistenceTableColumnModel {
 	 *            the precision for floating point values
 	 * @param scale
 	 *            the scale for floating point values
+	 * @param generated
+	 *            whether it is a generated value
+	 * @param unique
+	 *            whether it is unique
 	 */
 	public PersistenceTableColumnModel(String field, String name, String type, int length, 
-			boolean nullable, boolean primaryKey, int precision, int scale, boolean generated) {
+			boolean nullable, boolean primaryKey, int precision, int scale, boolean generated, boolean unique) {
 		this.field = field;
 		this.name = name;
 		this.type = type;
@@ -56,6 +61,7 @@ public class PersistenceTableColumnModel {
 		this.precision = precision;
 		this.scale = scale;
 		this.generated = generated;
+		this.unique = unique;
 	}
 
 
@@ -213,7 +219,7 @@ public class PersistenceTableColumnModel {
 	
 
 	/**
-	 * Check whether it is a generated value
+	 * Check whether it is generated value
 	 *
 	 * @return true if generated
 	 */
@@ -224,11 +230,30 @@ public class PersistenceTableColumnModel {
 	/**
 	 * Setter for the generated
 	 *
-	 * @param generrated
-	 *            whether it is a generated
+	 * @param generated
+	 *            whether it is generated
 	 */
 	public void setGenerated(boolean generated) {
 		this.generated = generated;
+	}
+	
+	/**
+	 * Check whether it is unique value
+	 *
+	 * @return true if unique
+	 */
+	public boolean isUnique() {
+		return unique;
+	}
+
+	/**
+	 * Setter for the unique
+	 *
+	 * @param unique
+	 *            whether it is unique
+	 */
+	public void setUnique(boolean unique) {
+		this.unique = unique;
 	}
 
 }

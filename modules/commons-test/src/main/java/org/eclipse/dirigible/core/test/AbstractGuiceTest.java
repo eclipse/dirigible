@@ -1,7 +1,5 @@
 package org.eclipse.dirigible.core.test;
 
-import static org.mockito.Mockito.mock;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -26,8 +24,6 @@ import com.google.inject.persist.UnitOfWork;
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractGuiceTest {
 
-	private Injector injector;
-
 	protected UnitOfWork unitOfWorkMock;
 
 	/**
@@ -36,16 +32,13 @@ public abstract class AbstractGuiceTest {
 	 */
 	@Before
 	public void beforeEveryMethod() throws IOException {
-		getInjector();
-		Injector mockedInjector = mock(Injector.class);
-		StaticInjector.setInjector(mockedInjector);
+		StaticInjector.setInjector(getInjector());
 	}
 
 	protected Injector getInjector() throws IOException {
-		if (injector == null) {
 			FileUtils.deleteDirectory(new File("./target/derby_test_database"));
 			Configuration.setSystemProperty("DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT", "./target/derby_test_database");
-			injector = Guice.createInjector(
+			return Guice.createInjector(
 					new DirigibleModulesInstallerModule(),
 					new Module() {
 		
@@ -56,8 +49,6 @@ public abstract class AbstractGuiceTest {
 		
 					}
 			);
-		}
-		return injector;
 	}
 
 	protected void bind(Binder binder) {

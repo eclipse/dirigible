@@ -67,6 +67,11 @@ public class DefaultSquleDialect implements ISquleDialect {
 	public String getNotNullArgument() {
 		return KEYWORD_NOT + SPACE + KEYWORD_NULL;
 	}
+	
+	@Override
+	public String getUniqueArgument() {
+		return KEYWORD_UNIQUE;
+	}
 
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {

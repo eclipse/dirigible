@@ -12,7 +12,10 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 public class ExtensionPointDefinition {
 	
 	@Id
-	@Column(name="EXTENSIONPOINT_NAME", columnDefinition="VARCHAR", nullable=false, length=255)
+	@Column(name="EXTENSIONPOINT_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
+	private String location;
+	
+	@Column(name="EXTENSIONPOINT_NAME", columnDefinition="VARCHAR", nullable=false, length=255, unique=true)
 	private String name;
 	
 	@Column(name="EXTENSIONPOINT_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)
@@ -23,6 +26,14 @@ public class ExtensionPointDefinition {
 	
 	@Column(name="EXTENSIONPOINT_CREATED_AT", columnDefinition="TIMESTAMP", nullable=false)
 	private Timestamp createdAt;
+	
+	public String getLocation() {
+		return location;
+	}
+	
+	public void setLocation(String location) {
+		this.location = location;
+	}
 	
 	public String getName() {
 		return name;

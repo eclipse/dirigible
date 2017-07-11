@@ -12,12 +12,6 @@
 
 var java = require('core/v3/java');
 
-exports.getExtensions = function(extensionPoint) {
-	var extensions = java.call('org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade', 'getExtensions', [extensionPoint]);
-	return extensions;
-};
-
-exports.getExtensionPoints = function() {
-	var extensionPoints = java.call('org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade', 'getExtensionPoints', []);
-	return extensionPoints;
+exports.println = function(text) {
+	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'println', [text]);
 };

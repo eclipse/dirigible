@@ -276,6 +276,12 @@
 			<artifactId>commons-io</artifactId>
 			<version>${commons.io}</version>
 		</dependency>
+		
+		<dependency>
+		  <groupId>javax.annotation</groupId>
+		  <artifactId>jsr250-api</artifactId>
+		  <version>${jsr250-api.version}</version>
+		</dependency>
 
 		<!-- Test Dependencies -->
 		<dependency>
@@ -336,6 +342,7 @@
 		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
 		<maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
 		<derby.version>10.12.1.1</derby.version>
+		<jsr250-api.version>1.0</jsr250-api.version>
 	</properties>
 
 	<modules>

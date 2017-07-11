@@ -39,8 +39,7 @@ public interface ISquleKeywords {
 	public static final String KEYWORD_NULL = "NULL"; //$NON-NLS-1$
 	public static final String KEYWORD_SEQUENCE = "SEQUENCE"; //$NON-NLS-1$
 	public static final String KEYWORD_NEXT_VALUE_FOR = "NEXT VALUE FOR"; //$NON-NLS-1$
-	
-	
+	public static final String KEYWORD_UNIQUE = "UNIQUE"; //$NON-NLS-1$
 	
 	
 

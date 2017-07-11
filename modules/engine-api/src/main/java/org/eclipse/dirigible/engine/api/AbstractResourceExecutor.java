@@ -26,7 +26,12 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 
 	@Override
 	public byte[] getResourceContent(String root, String module) throws RepositoryException {
-		String repositoryPath = createResourcePath(root, module);
+		return getResourceContent(root, module, null);
+	}
+	
+	@Override
+	public byte[] getResourceContent(String root, String module, String extension) throws RepositoryException {
+		String repositoryPath = createResourcePath(root, module, extension);
 		final IResource resource = repository.getResource(repositoryPath);
 		if (resource.exists()) {
 			return resource.getContent();
@@ -34,7 +39,7 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 		
 		// try from the classloader
 		try {
-			String location = IRepository.SEPARATOR + module;
+			String location = IRepository.SEPARATOR + module + (extension != null ? extension : "");
 			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(location);
 			if (bundled != null) {
 				return IOUtils.toByteArray(bundled);
@@ -43,7 +48,7 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 			throw new RepositoryException(e);
 		}
 				
-		final String logMsg = String.format("There is no resource [%s] at the specified path: %s", resource.getName(), repositoryPath);
+		final String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
 		logger.error(logMsg);
 		throw new RepositoryException(logMsg);
 	}
@@ -63,7 +68,12 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 
 	@Override
 	public IResource getResource(String root, String module) throws RepositoryException {
-		String repositoryPath = createResourcePath(root, module);
+		return getResource(root, module, null);
+	}
+	
+	@Override
+	public IResource getResource(String root, String module, String extension) throws RepositoryException {
+		String repositoryPath = createResourcePath(root, module, extension);
 		final IResource resource = repository.getResource(repositoryPath);
 		if (resource.exists()) {
 			return resource;
@@ -77,7 +87,12 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 	
 	@Override
 	public boolean existResource(String root, String module) throws RepositoryException {
-		String repositoryPath = createResourcePath(root, module);
+		return existResource(root, module, null);
+	}
+	
+	@Override
+	public boolean existResource(String root, String module, String extension) throws RepositoryException {
+		String repositoryPath = createResourcePath(root, module, extension);
 		final IResource resource = repository.getResource(repositoryPath);
 		return resource.exists();
 	}

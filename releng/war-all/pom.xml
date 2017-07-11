@@ -76,6 +76,11 @@
 		<!-- API Facades -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-core</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-http</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
@@ -242,11 +247,21 @@
 		<!-- Content - API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-content-api-core</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-content-api-http</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
 		<!-- Content - IDE -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-content-ide-core</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-content-ide-terminal</artifactId>
@@ -261,9 +276,9 @@
 		<dependency>
 		  <groupId>javax.annotation</groupId>
 		  <artifactId>jsr250-api</artifactId>
-		  <version>1.0</version>
+		  <version>${jsr250-api.version}</version>
 		</dependency>
-
+		
 		<!-- <dependency>
 		 	<groupId>org.activiti</groupId>
 		 	<artifactId>activiti-engine</artifactId>
