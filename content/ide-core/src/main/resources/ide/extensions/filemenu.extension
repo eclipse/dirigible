@@ -1,1 +1,1 @@
-{"module":"ide/services/filemenu","extensionPoint":"/ide/extensions/mainmenu","description":"File Menu","createdBy":"system","createdAt":"Jul 6, 2017 3:24:12 PM"}
+{"module":"ide/services/filemenu","extensionPoint":"ide-mainmenu","description":"File Menu"}

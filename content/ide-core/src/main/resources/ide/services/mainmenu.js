@@ -13,20 +13,12 @@
 var extensions = require('core/v3/extensions');
 var response = require('http/v3/response');
 
-function getMainMenu() {
-    var mainmenu = [];
-    // response.println('getting extensions...');
-	var menuExtensions = extensions.getExtensions('/ide/extensions/mainmenu');
-	// response.println('got extensions: ' + menuExtensions.length);
-	for (var i=0; i<menuExtensions.length; i++) {
-		var module = menuExtensions[i];
-		// response.println('processing extension module: ' + module);
-		menuExtension = require(module);
-		var menu = menuExtension.getMenu();
-		// response.println('menu to add: ' + JSON.stringify(menu));
-		mainmenu.push(menu);
-	}
-	response.println(JSON.stringify(mainmenu));
+var mainmenu = [];
+var menuExtensions = extensions.getExtensions('ide-mainmenu');
+for (var i=0; i<menuExtensions.length; i++) {
+    var module = menuExtensions[i];
+    menuExtension = require(module);
+    var menu = menuExtension.getMenu();
+    mainmenu.push(menu);
 }
-
-getMainMenu();
+response.println(JSON.stringify(mainmenu));
