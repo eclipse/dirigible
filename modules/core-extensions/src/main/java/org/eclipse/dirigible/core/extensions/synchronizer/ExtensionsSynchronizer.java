@@ -167,6 +167,6 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExt
 			throw new SynchronizationException(e);
 		}
 		
-		loggingHelper.debug("Done cleaning up Extension Points and Extensionsy.");
+		loggingHelper.debug("Done cleaning up Extension Points and Extensions.");
 	}
 }

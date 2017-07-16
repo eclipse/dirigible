@@ -43,7 +43,7 @@ public class ClasspathContentLoader {
 			            	for (IClasspathContentHandler contentHandler : contentHandlers) {
 			            		contentHandler.accept(ROOT + entry);
 			            	}
-			                logger.debug("resource found: " + entry);
+			                logger.trace("resource found: " + entry);
 			            }
 			        }
 				}

@@ -42,6 +42,7 @@
 		<!-- Content - IDE -->
 		<module>ide-core</module>
 		<module>ide-terminal</module>
+		<module>ide-console</module>
 		<module>ide-workspace</module>
 
 	</modules>

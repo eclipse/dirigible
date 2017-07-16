@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Runtime - IDE - Terminal</name>
-	<artifactId>dirigible-runtime-ide-terminal</artifactId>
+	<name>Runtime - IDE - Console</name>
+	<artifactId>dirigible-runtime-ide-console</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -32,11 +32,6 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-process</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
 		<dependency>

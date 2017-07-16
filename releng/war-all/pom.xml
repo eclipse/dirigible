@@ -208,6 +208,11 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-console</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-ide-databases</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
@@ -265,6 +270,11 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-content-ide-terminal</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-content-ide-console</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>

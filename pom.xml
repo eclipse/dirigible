@@ -218,16 +218,30 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.simple.version}</version>
 		</dependency>
+		-->
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-core</artifactId>
+		    <version>${logback.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>${logback.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
@@ -336,6 +350,7 @@
 		<okhttp.version>2.7.5</okhttp.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
+		<logback.version>1.2.3</logback.version>
 		<activiti.version>5.22.0</activiti.version>
 		<com.h2database.version>1.4.193</com.h2database.version>
 		<maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
@@ -379,6 +394,7 @@
 		<module>modules/runtime-ide-workspaces</module>
 		<module>modules/runtime-ide-terminal</module>
 		<module>modules/runtime-ide-databases</module>
+		<module>modules/runtime-ide-console</module>
 
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>

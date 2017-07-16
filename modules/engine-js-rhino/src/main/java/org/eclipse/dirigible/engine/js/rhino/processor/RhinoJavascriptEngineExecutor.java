@@ -28,7 +28,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 
-		logger.debug("entering: executeServiceModule()"); //$NON-NLS-1$
+		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
 		logger.debug("module=" + module); //$NON-NLS-1$
 
 		if (module == null) {
@@ -73,7 +73,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 			Context.exit();
 		}
 
-		logger.debug("exiting: executeServiceModule()");
+		logger.trace("exiting: executeServiceModule()");
 		
 		return result;
 	}

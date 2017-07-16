@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.inject.Singleton;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -24,6 +25,7 @@ import org.eclipse.dirigible.commons.process.ProcessUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Singleton
 @ServerEndpoint("/websockets/v3/ide/terminal")
 public class TerminalWebsocketService {
 	
@@ -31,28 +33,28 @@ public class TerminalWebsocketService {
 	
 	private static final String Ctrl_C = "^C";
 	
-	private static Map<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
-	private static Map<String, ProcessRunnable> session2process = new ConcurrentHashMap<String, ProcessRunnable>();
+	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
+	private static Map<String, ProcessRunnable> SESSION_TO_PROCESS = new ConcurrentHashMap<String, ProcessRunnable>();
 	
 	@OnOpen
     public void onOpen(Session session) {
-        openSessions.put(session.getId(), session);
-		logger.debug("[ws:terminal] onOpen: " + session.getId());
+        OPEN_SESSIONS.put(session.getId(), session);
+		logger.trace("[ws:terminal] onOpen: " + session.getId());
 		startProcessRunnable(session);
     }
  
     @OnMessage
     public void onMessage(String message, Session session) {
-    	logger.debug("[ws:terminal] onMessage: " + message);
+    	logger.trace("[ws:terminal] onMessage: " + message);
 
-		ProcessRunnable processRunnable = session2process.get(session.getId());
+		ProcessRunnable processRunnable = SESSION_TO_PROCESS.get(session.getId());
 		Process process = processRunnable.getProcess();
 		if (process != null) {
 			try {
 				if (Ctrl_C.equalsIgnoreCase(message.trim())) {
-					logger.debug("[ws:terminal] onMessage: exit command received");
+					logger.trace("[ws:terminal] onMessage: exit command received");
 					process.destroy();
-					session2process.remove(session.getId());
+					SESSION_TO_PROCESS.remove(session.getId());
 					// startProcessRunnable(session);
 					session.close();
 				} else {
@@ -74,8 +76,8 @@ public class TerminalWebsocketService {
     
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
-        logger.info(String.format("[ws:terminal] Session %s closed because of %s", session.getId(), closeReason));
-        openSessions.remove(session.getId());
+        logger.trace(String.format("[ws:terminal] Session %s closed because of %s", session.getId(), closeReason));
+        OPEN_SESSIONS.remove(session.getId());
     }
     
     protected void startProcessRunnable(Session session) {
@@ -83,7 +85,7 @@ public class TerminalWebsocketService {
 			ProcessRunnable processRunnable = new ProcessRunnable(session);
 			new Thread(processRunnable).start();
 			logger.debug("[ws:terminal] process started");
-			session2process.put(session.getId(), processRunnable);
+			SESSION_TO_PROCESS.put(session.getId(), processRunnable);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -133,7 +135,7 @@ public class TerminalWebsocketService {
 										new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 								String line = null;
 								while ((line = reader.readLine()) != null) {
-									logger.debug("sending process data: " + line);
+									logger.trace("sending process data: " + line);
 									if (session.isOpen()) {
 										session.getBasicRemote().sendText(line);
 									}
@@ -171,7 +173,7 @@ public class TerminalWebsocketService {
 
 	private Process startProcess(final String message, final Session session) throws IOException {
 
-		logger.debug("entering startProcess: " + message + " | " + session.getId());
+		logger.trace("entering startProcess: " + message + " | " + session.getId());
 
 		String[] args = ProcessUtils.translateCommandline(message);
 
@@ -183,13 +185,13 @@ public class TerminalWebsocketService {
 
 		Process process = ProcessUtils.startProcess(args, processBuilder);
 
-		logger.debug("exiting startProcess: " + message + " | " + session.getId());
+		logger.trace("exiting startProcess: " + message + " | " + session.getId());
 
 		return process;
 	}
 
 	protected void removeProcess(Process process) {
-		Iterator<Entry<String, ProcessRunnable>> iter = session2process.entrySet().iterator();
+		Iterator<Entry<String, ProcessRunnable>> iter = SESSION_TO_PROCESS.entrySet().iterator();
 		while (iter.hasNext()) {
 			Entry<String, ProcessRunnable> entry = iter.next();
 			if (entry.getValue().getProcess().equals(process)) {

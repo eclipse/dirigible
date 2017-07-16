@@ -53,6 +53,9 @@
         <dependent-module archiveName="dirigible-database-derby-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-derby/dirigible-database-derby">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-database-managed-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-managed/dirigible-database-managed">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-core-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-extensions/dirigible-core-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -87,6 +90,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-commons-process-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-process/dirigible-commons-process">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-runtime-ide-console-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-console/dirigible-runtime-ide-console">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-ide-databases-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-databases/dirigible-runtime-ide-databases">

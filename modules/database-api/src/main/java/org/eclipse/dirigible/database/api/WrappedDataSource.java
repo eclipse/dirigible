@@ -87,25 +87,25 @@ public class WrappedDataSource implements DataSource {
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		logger.debug("entring - getConnection()");
+		logger.trace("entering - getConnection()");
 		checkConnections();
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(), this);
 		addConnection(wrappedConnection);
 		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);
 		logger.debug("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
-		logger.debug("exiting - getConnection()");
+		logger.trace("exiting - getConnection()");
 		return wrappedConnection;
 	}
 
 	@Override
 	public Connection getConnection(String username, String password) throws SQLException {
-		logger.debug("entring - getConnection(String username, String password)");
+		logger.trace("entering - getConnection(String username, String password)");
 		checkConnections();
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(username, password), this);
 		addConnection(wrappedConnection);
 		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);
 		logger.debug("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
-		logger.debug("exiting - getConnection(String username, String password)");
+		logger.trace("exiting - getConnection(String username, String password)");
 		return wrappedConnection;
 	}
 
@@ -130,14 +130,14 @@ public class WrappedDataSource implements DataSource {
 	}
 
 	private void forceRelaseConnection() throws SQLException {
-		logger.debug("entring - forceRelaseConnection()");
+		logger.trace("entering - forceRelaseConnection()");
 		WrappedConnection oldestConnection = getOldestConnection();
 		if (oldestConnection != null) {
 			logger.error("Potential connection leak; victim connection is: " + oldestConnection.hashCode() + ", used (ms): "
 					+ oldestConnection.getTimeUsed());
 			oldestConnection.close();
 		}
-		logger.debug("exiting - forceRelaseConnection()");
+		logger.trace("exiting - forceRelaseConnection()");
 	}
 
 	protected WrappedConnection getOldestConnection() {
@@ -154,23 +154,23 @@ public class WrappedDataSource implements DataSource {
 	}
 
 	private void addConnection(WrappedConnection connection) {
-		logger.debug("entring - addConnection()");
+		logger.trace("entering - addConnection()");
 		connections.add(connection);
-		logger.debug("exiting - addConnection()");
+		logger.trace("exiting - addConnection()");
 	}
 
 	private void removeConnection(WrappedConnection connection) {
-		logger.debug("entring - removeConnection()");
+		logger.trace("entering - removeConnection()");
 		connections.remove(connection);
-		logger.debug("exiting - removeConnection()");
+		logger.trace("exiting - removeConnection()");
 	}
 
 	public void closedConnection(WrappedConnection wrappedConnection) {
-		logger.debug("entring - closeConnection()");
+		logger.trace("entering - closeConnection()");
 		removeConnection(wrappedConnection);
 		logger.debug("Connection released: " + wrappedConnection.hashCode() + " count: " + connections.size() + " time used: "
 				+ wrappedConnection.getTimeUsed() + "ms");
-		logger.debug("exiting - closeConnection()");
+		logger.trace("exiting - closeConnection()");
 	}
 
 	@Override

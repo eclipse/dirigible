@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 
 public class LoggingHelper {
 	
-	private static final String SECTION = "=========================================";
+//	private static final String SECTION = "=========================================";
 	
-	private static final String GROUP = "-----------------------------------------";
+//	private static final String GROUP = "-----------------------------------------";
 
 	private static final String POINTER = "-> ";
 
@@ -27,51 +27,51 @@ public class LoggingHelper {
 	}
 	
 	public void beginSection(String section) {
-		logger.info(addIndent() + SECTION);
+//		logger.info(addIndent() + SECTION);
 		logger.info(addIndent() + section);
-		logger.info(addIndent() + SECTION);
+//		logger.info(addIndent() + SECTION);
 		indent++;
 	}
 	
 	public void endSection(String section) {
 		indent--;
-		logger.info(addIndent() + SECTION);
+//		logger.info(addIndent() + SECTION);
 		logger.info(addIndent() + section);
-		logger.info(addIndent() + SECTION);
+//		logger.info(addIndent() + SECTION);
 	}
 	
 	public void beginGroup(String section) {
-		logger.info(addIndent() + GROUP);
+//		logger.info(addIndent() + GROUP);
 		logger.info(addIndent() + section);
-		logger.info(addIndent() + GROUP);
+//		logger.info(addIndent() + GROUP);
 		indent++;
 	}
 	
 	public void endGroup(String section) {
 		indent--;
-		logger.info(addIndent() + GROUP);
+//		logger.info(addIndent() + GROUP);
 		logger.info(addIndent() + section);
-		logger.info(addIndent() + GROUP);
+//		logger.info(addIndent() + GROUP);
 	}
 	
-	public void beginGroupDebug(String section) {
-		logger.debug(addIndent() + GROUP);
-		logger.debug(addIndent() + section);
-		logger.debug(addIndent() + GROUP);
+	public void beginGroupDebug(String group) {
+//		logger.debug(addIndent() + GROUP);
+		logger.debug(addIndent() + group);
+//		logger.debug(addIndent() + GROUP);
 		indent++;
 	}
 	
-	public void endGroupDebug(String section) {
+	public void endGroupDebug(String group) {
 		indent--;
-		logger.debug(addIndent() + GROUP);
-		logger.debug(addIndent() + section);
-		logger.debug(addIndent() + GROUP);
+//		logger.debug(addIndent() + GROUP);
+		logger.debug(addIndent() + group);
+//		logger.debug(addIndent() + GROUP);
 	}
 	
 	private String addIndent() {
 		return Arrays.asList(new Object[indent])
 	            .stream()
-	            .map(s -> "    ")
+	            .map(s -> "--")
 	            .collect(Collectors.joining());
 	}
 	
