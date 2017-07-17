@@ -50,6 +50,8 @@
 	    <web-resource-collection>
 	        <web-resource-name>IDE Services</web-resource-name>
 	        <url-pattern>/services/v3/ide/*</url-pattern>
+	        <url-pattern>/services/v3/web/ide-terminal/*</url-pattern>
+	        <url-pattern>/services/v3/web/ide-console/*</url-pattern>
 	        <url-pattern>/websockets/v3/ide/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>

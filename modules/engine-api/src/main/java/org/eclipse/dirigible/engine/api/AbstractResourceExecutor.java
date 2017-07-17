@@ -8,8 +8,10 @@ import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryException;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,12 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 	
 	@Override
 	public byte[] getResourceContent(String root, String module, String extension) throws RepositoryException {
+		if (module == null || "".equals(module.trim())) {
+			throw new RepositoryException("Module name cannot be empty or null.");
+		}
+		if (module.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
+			throw new RepositoryException("Module name cannot point to a collection.");
+		}
 		String repositoryPath = createResourcePath(root, module, extension);
 		final IResource resource = repository.getResource(repositoryPath);
 		if (resource.exists()) {
@@ -50,7 +58,7 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 				
 		final String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
 		logger.error(logMsg);
-		throw new RepositoryException(logMsg);
+		throw new RepositoryNotFoundException(logMsg);
 	}
 	
 	@Override

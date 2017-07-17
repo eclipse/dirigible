@@ -1,14 +1,6 @@
 package org.eclipse.dirigible.runtime.ide.console.service;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Singleton;
@@ -41,8 +33,6 @@ public class ConsoleWebsocketService {
     @OnMessage
     public void onMessage(String message, Session session) {
     	logger.trace("[ws:console] onMessage: " + message);
-    	
-		
     }
  
     @OnError
@@ -59,7 +49,9 @@ public class ConsoleWebsocketService {
     
     public static void distribute(ConsoleLogRecord record) {
     	for (Session session : OPEN_SESSIONS.values()) {
-    		session.getAsyncRemote().sendText(GsonHelper.GSON.toJson(record));
+    		synchronized (session.getAsyncRemote()) {
+    			session.getAsyncRemote().sendText(GsonHelper.GSON.toJson(record));
+    		}
     	}
     }
 

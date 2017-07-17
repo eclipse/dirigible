@@ -71,7 +71,7 @@ public class LoggingHelper {
 	private String addIndent() {
 		return Arrays.asList(new Object[indent])
 	            .stream()
-	            .map(s -> "--")
+	            .map(s -> "- ")
 	            .collect(Collectors.joining());
 	}
 	

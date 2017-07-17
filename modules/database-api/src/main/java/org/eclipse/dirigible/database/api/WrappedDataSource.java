@@ -92,7 +92,7 @@ public class WrappedDataSource implements DataSource {
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(), this);
 		addConnection(wrappedConnection);
 		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);
-		logger.debug("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
+		logger.trace("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
 		logger.trace("exiting - getConnection()");
 		return wrappedConnection;
 	}
@@ -104,7 +104,7 @@ public class WrappedDataSource implements DataSource {
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(username, password), this);
 		addConnection(wrappedConnection);
 		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);
-		logger.debug("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
+		logger.trace("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
 		logger.trace("exiting - getConnection(String username, String password)");
 		return wrappedConnection;
 	}
@@ -168,7 +168,7 @@ public class WrappedDataSource implements DataSource {
 	public void closedConnection(WrappedConnection wrappedConnection) {
 		logger.trace("entering - closeConnection()");
 		removeConnection(wrappedConnection);
-		logger.debug("Connection released: " + wrappedConnection.hashCode() + " count: " + connections.size() + " time used: "
+		logger.trace("Connection released: " + wrappedConnection.hashCode() + " count: " + connections.size() + " time used: "
 				+ wrappedConnection.getTimeUsed() + "ms");
 		logger.trace("exiting - closeConnection()");
 	}

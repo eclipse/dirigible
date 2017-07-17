@@ -3,15 +3,8 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Eclipse Dirigible Log Console</title>
-		<style>
-			body {
-			    background-color: black;
-			    color: #44EE44;
-			    font-family: monospace;
-			}
-		</style>
 	</head>
-	<body onload="connectToLog()">
+	<body style="background-color: black; color: #44EE44; font-family: monospace;" onload="connectToLog()">
 		<script>
 		var connectToLog = function() {
 			try {
@@ -33,7 +26,8 @@
 				var date = new Date(record.timestamp);
 				var id = record.timestamp;
 				document.writeln("<div id='" + id + "' style='background-color: black; font-family: monospace; color: " + color + "'>[" + date.toISOString() + "]" + " [" + record.level + "] " + record.message + "</div>");
-				window.location.hash = "#" + id;				
+				window.location.hash = "#" + id;
+				document.body.style.backgroundColor = "black";
 			};
 			
 			setInterval(clear, 6000000);
@@ -41,6 +35,7 @@
 		var clear = function() {
 			document.body.innerHTML = '';
 			document.writeln("<div style='background-color: black; font-family: monospace; color: gray'>[" + new Date().toISOString() + "][cleared]...</div>");
+			document.body.style.backgroundColor = "black";
 		}
 		</script>
 	</body>
