@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="copyright" content="Copyright (c) IBM Corporation and others 2010, 2014." >
+        <meta http-equiv="Content-Language" content="en-us">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Pluggable Editor Demo</title>
+        <link rel="stylesheet" type="text/css" href="code_edit/built-codeEdit.css"/>
+        <style>
+        body {
+            overflow: hidden;
+            height: 100%
+        }
+        #embeddedEditor {
+            margin: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+		</style>
+		
+		<style type="text/css">
+			.lineHighlight{
+				outline: 1px dotted silver;
+				background: #fff8f8; 
+			}
+			.lineHighlightGutter{
+				background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AcdDDk7fFZ/igAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAArklEQVQ4y+WSIQ6DQBBF3zatwdEQFAfoKdZwAtQehVOs6z3WcwUEAouhXVNESUXXVGxNIWkbkk1w7TcjZv7Pn5kvvPeswYaV+AGB7VLj1rb+UlU4awFIpCQrChHkYCLv4pgoywBotMYa44MEJvJjHGcH+zSl0TpsBWct0asC3PsegJNz4Uf8JF+HIfwLiZSc6/qNfOw6cqW+ZsVSlK0xvtF6tp0rxaEsRbDAH0X5CQSgUeIYHhECAAAAAElFTkSuQmCC');
+			}
+			.demoTitle{
+				border: none;
+				vertical-align: middle;
+				overflow: hidden;
+				text-align: left;
+				margin-left: 15%;
+				margin-right: 15%;
+				padding-bottom: 5px;
+				position: relative;
+			}
+			
+			.annotationLine.currentLine {
+				outline: 1px dotted gray;
+			}
+			
+		</style>
+		
+		
+        <script src="requirejs/require.min.js"></script>
+        <script>
+			// this needs to be in the global scope
+			editor = null;
+			viewer = null;
+			breakpointsEnabled = false;
+			
+			function createEditor(content, contentType, readOnlyStatus, breakpointsEnabledStatus, row, filename) {
+				setBreakpointsEnabled(breakpointsEnabledStatus);
+				require.config({waitSeconds: 0});
+			    require(["code_edit/built-codeEdit.min", "orion/keyBinding"], function(widget, mKeyBinding) {
+			        var codeEdit = new widget();
+			        codeEdit.create({parent: "embeddedEditor", contentType: contentType, contents: content})
+			            .then(function(editorViewer) {
+			            	viewer = editorViewer;
+			                editor = editorViewer.editor;		                
+			                editor.setAnnotationRulerVisible(getBreakpointsEnabled());
+			                var savedText = content;
+			                var isDirty = false;
+			                editor.getTextView().setKeyBinding(new mKeyBinding.KeyBinding("s", true), "save");
+			                editor.addEventListener("DirtyChanged", function(evt) {
+			                    var newText = editor.getText();
+			                    if (savedText !== newText && !isDirty) {
+			                        isDirty = true;
+			                        dirtyChanged(true);
+			                    } else if (savedText === newText && isDirty) {
+			                        isDirty = false;
+			                        dirtyChanged(false);
+			                    }
+			                });
+			                editorViewer.editor.getTextView().setAction("save", function(){ //$NON-NLS-0$
+			                    savedText = editor.getText();
+			                    isDirty = false;
+			                    saveCalled();
+			                    return true;
+			                });
+			                /* var lineNumberRuler = editor._lineNumberRuler;
+			                var oldDblClickLineNumberRuler = lineNumberRuler.onDblClick;
+			                lineNumberRuler.onDblClick = function(lineIndex, e) {
+			                	handleAddRemoveBreakpoint(lineIndex);
+			                	oldDblClickLineNumberRuler.apply(lineNumberRuler, [lineIndex, e]);
+			                };
+			                var annotationRuler = editor._annotationRuler;
+			                var oldDblClickAnnotationRuler = annotationRuler.onDblClick;
+			                annotationRuler.onDblClick = function(lineIndex, e) {
+			                	handleAddRemoveBreakpoint(lineIndex);
+			                	oldDblClickAnnotationRuler.apply(annotationRuler, [lineIndex, e]);
+			                }; */
+			                if(getBreakpointsEnabled()) {
+				                editor.setCaretOffset(editor.getLineStart(0));
+			                }
+			                
+			                // explicitly set the read only mode for empty files
+			                editor.getTextView()._readonly = false;
+			                
+			                document.getElementById("progressMessageDiv").textContent = "Plugins loaded!";
+			            	setupOnce(editorViewer, filename);
+			            });
+			    });
+			}
+
+
+
+			function setupOnce(editorViewer, filename) {
+				editorViewer.editor.addEventListener("InputChanged", function(){ //$NON-NLS-0$
+		 			/*
+		 			 * Things you only need to do once per editor
+		 			 */
+		 			var editor = editorViewer.editor;
+		 		 	//Get the line styler inside the editor
+				 	var annoStyler = editor.getAnnotationStyler();
+		 		 	//Add your annotation type to the editor 
+		 		 	annoStyler.addAnnotationType("my.customize.linehighlight");
+		 		 	//Add the same annotation type ot the annotation ruler(gutter)
+		 		 	editor.getAnnotationRuler().addAnnotationType("my.customize.linehighlight");
+		 		 	editor.getAnnotationRuler().onDblClick = function(lineIndex, e) {
+						setEditorBreakpoint(editorViewer, lineIndex);
+		 		 		handleAddRemoveBreakpoint(filename, lineIndex);
+		 		 	};
+		 		 	if (sessionStorage.breakpoints) {
+			    		breakpointsArray = JSON.parse(sessionStorage.breakpoints);
+			    		breakpointsArray.forEach(function(b) {
+			    			if (b.fileName === filename) {
+			    				setEditorBreakpoint(editorViewer, b.lineIndex);
+			    				setBreakpoint(b.lineIndex);
+			    			}
+			    		});
+		 		 	}
+			 	});
+			}
+			
+			function setEditorBreakpoint(editorViewer, lineIndex) {
+				if (lineIndex === undefined) { return; }
+				if (lineIndex === -1) { return; }
+				var view = editor.getTextView();
+				var viewModel = view.getModel();
+				var annotationModel = editor.getAnnotationModel();
+				var lineStart = editor.mapOffset(viewModel.getLineStart(lineIndex));
+				var lineEnd = editor.mapOffset(viewModel.getLineEnd(lineIndex));
+				var annotations = annotationModel.getAnnotations(lineStart, lineEnd);
+				var gutter = null;
+				while (annotations.hasNext()) {
+					var annotation = annotations.next();
+					if (annotation.type === "my.customize.linehighlight") {
+						gutter = annotation;
+						break;
+					}
+				}
+ 		 		setCursorAndGotoLine(editorViewer, lineIndex, gutter);
+			}
+			
+			function setCursorAndGotoLine(editorViewer, lineNumber/*zero based*/, gutter) {
+		 		editorViewer.editor.onGotoLine(lineNumber, 0, 0, function() {
+		 			var editor = editorViewer.editor;
+		 		 	//annotationModel is the handler you add or remove you annotation models
+		 		 	var annotationModel = editor.getAnnotationModel();
+		  		 	if(!annotationModel){
+				 		return;
+		 		 	}
+		 		 	//As the annotation model is a range that is based on the charater offset of the {star, end}, you have to use the textModel to calculate that)
+		 		 	var textModel = editor.getTextView().getModel();
+		 		 	var startIndex = textModel.getLineStart(lineNumber);
+		 		 	var endIndex = textModel.getLineEnd(lineNumber);
+		 		 	
+		  		 	//Add and/or remove your annotation models
+		 		 	//The first param is an array of the annotations you want to remove
+		 		 	//The second param is an array of the annotations you want to add
+		 		 	var firstParam = [], secondParam = [],
+		 		 	param = [{
+			 		 	start: startIndex,
+			 		 	end: endIndex,
+			 		 	title: "",
+			 		 	type: "my.customize.linehighlight",
+			 		 	html: "",
+			 		 	style: {styleClass: "lineHighlightGutter"}, //Gutter style at the line		 		 		 		 
+			 		 	lineStyle: {styleClass: "lineHighlight"} //The line style in the editor
+		 		 	}];
+		 		 	if(gutter) {
+		 		 		firstParam = [gutter];
+		 		 	} else {
+		 		 		secondParam = param;
+		 		 	}
+		 		 	annotationModel.replaceAnnotations(firstParam, secondParam);
+		 		});
+			}
+
+
+
+			function getText() {
+			    return editor.getText();
+			}
+			
+			function setText(text, mode, readOnlyStatus, breakpointsEnabledStatus, row, filename) {
+			    createEditor(text, mode, readOnlyStatus, breakpointsEnabledStatus, row, filename);
+			}
+			
+			function setReadOnly(status) {
+				editor.getTextView()._readonly = status;
+			}
+			
+			function getBreakpointsEnabled() {
+			    return breakpointsEnabled;
+			}
+			
+			function setBreakpointsEnabled(status) {
+				breakpointsEnabled = status;
+			}
+			
+			function loadBreakpoint(breakpoint) {
+				/* if (sessionStorage.breakpoints) {
+		    		breakpointsArray = JSON.parse(sessionStorage.breakpoints);
+		    	} else {
+		    		breakpointsArray = [];
+		    	}
+				breakpointsArray.push(breakpoint);
+			    sessionStorage.breakpoints = JSON.stringify(breakpointsArray); */
+			}
+			
+			
+			function setDebugRow(row) {
+				editor.setCaretOffset(editor.getLineStart(row));
+			}
+			
+			function handleAddRemoveBreakpoint(fileName, lineIndex) {
+				if(typeof(Storage) === "undefined") {
+			    	alert("Session storage is not available!")
+			    } else if (getBreakpointsEnabled()) {
+			    	breakpoint = {};
+	    			breakpoint.fileName = fileName;
+	    			breakpoint.lineIndex = lineIndex;
+					var breakpointsArray;
+			    	if (sessionStorage.breakpoints !== undefined && sessionStorage.breakpoints !== null) {
+			    		breakpointsArray = JSON.parse(sessionStorage.breakpoints);
+			    		var index, i = -1;
+			    		breakpointsArray.forEach(function(b) {
+			    			i++;
+			    			if ((b.fileName === breakpoint.fileName) && (b.lineIndex === breakpoint.lineIndex)) {
+			    				index = i;
+			    			}
+			    		});
+			    		if (index > -1) {
+			    			breakpointsArray.splice(index, 1);
+			    		    clearBreakpoint(lineIndex);
+			    		} else {
+			    			breakpointsArray.push(breakpoint);
+			    			setBreakpoint(lineIndex);
+			    		}
+			    	} else {
+			    		breakpointsArray = [];
+			    		breakpointsArray.push(breakpoint);
+			    	    setBreakpoint(lineIndex);
+			    	}
+				    sessionStorage.breakpoints = JSON.stringify(breakpointsArray);
+			    }
+			}
+		
+			function dirtyChanged(dirty) {
+				console.log('changed: ' + dirty);
+			}
+		
+			function saveCalled() {
+				var url = new URL(window.location);
+				var file = url.searchParams.get('file');
+				if (file) {
+					var xhr = new XMLHttpRequest();
+					xhr.open('PUT', '/services/v3/ide/workspace' + file);
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState == 4) {
+							setDirty(false);
+						}
+					}
+					var data = getText();
+					xhr.setRequestHeader("Content-Length", data.length);
+					xhr.send(data);
+				} else {
+					console.error('file parameter is not present in the URL');
+				}
+			}
+		
+			function getMode(fileName) {
+				if (fileName.endsWith('.js')) {
+					return 'application/javascript';
+				} else if (fileName.endsWith('.html')) {
+					return 'text/html';
+				} else if (fileName.endsWith('.css')) {
+					return 'text/css';
+				} else if (fileName.endsWith('.json')) {
+					return 'application/json';
+				}
+				return 'plain/text';
+			}
+		
+			function loadFile() {
+				var url = new URL(window.location);
+				var file = url.searchParams.get('file');
+				if (file) {
+					var xhr = new XMLHttpRequest();
+					xhr.open('GET', '/services/v3/ide/workspace' + file);
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState == 4) {
+							setText(xhr.responseText, getMode(file), false, false, 0, file);
+						}
+					}
+					xhr.send();
+					
+				} else {
+					console.error('file parameter is not present in the URL');
+				}
+				
+			}
+			
+		</script>
+    </head>
+    <body id="orion-browser" spellcheck="false" class="orionPage" onload='loadFile()'>
+    	<div class="demoTitle">
+		<span id = "progressMessageDiv" style="color: green">Loading language tooling plugins...</span>
+	</div>
+        <div class="demoBody" id="embeddedEditor"></div>
+    </body>
+</html>

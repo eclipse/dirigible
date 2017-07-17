@@ -279,6 +279,11 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-content-ide-editor-orion</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-content-ide-workspace</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>

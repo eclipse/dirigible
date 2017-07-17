@@ -10,6 +10,8 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Processing the Registry Service incoming requests 
@@ -18,6 +20,8 @@ import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 public class WorkspaceProcessor {
 	
 	private static final String WORKSPACE = "/workspace";
+	
+	private Logger logger = LoggerFactory.getLogger(WorkspaceProcessor.class);
 	
 	@Inject
 	private IRepository repository;
@@ -34,6 +38,7 @@ public class WorkspaceProcessor {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
 		ICollection collection = repository.getCollection(workspacePath.toString());
 		collection.create();
+		logger.info("Workspace created [{}]", collection.getPath());
 		return collection;
 	}
 	
@@ -41,6 +46,7 @@ public class WorkspaceProcessor {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
 		ICollection collection = repository.getCollection(workspacePath.toString());
 		collection.delete();
+		logger.info("Workspace deleted [{}]", collection.getPath());
 	}
 	
 	public boolean existsWorkspace(String user, String workspace) {
@@ -61,6 +67,7 @@ public class WorkspaceProcessor {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, project, null);
 		ICollection collection = repository.getCollection(workspacePath.toString());
 		collection.create();
+		logger.info("Project created [{}]", collection.getPath());
 		return collection;
 	}
 	
@@ -68,6 +75,7 @@ public class WorkspaceProcessor {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, project, null);
 		ICollection collection = repository.getCollection(workspacePath.toString());
 		collection.delete();
+		logger.info("Project deleted [{}]", collection.getPath());
 	}
 	
 	public boolean existsProject(String user, String workspace, String project) {
@@ -87,12 +95,14 @@ public class WorkspaceProcessor {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, project, path);
 		ICollection collection = repository.getCollection(workspacePath.toString());
 		collection.create();
+		logger.info("Collection created [{}]", collection.getPath());
 		return collection;
 	}
 	
 	public void deleteCollection(String user, String workspace, String project, String path) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, project, path);
 		repository.removeCollection(workspacePath.toString());
+		logger.info("Collection deleted [{}]", workspacePath.toString());
 	}
 	
 	// Resource
@@ -104,19 +114,23 @@ public class WorkspaceProcessor {
 	
 	public IResource createResource(String user, String workspace, String project, String path, byte[] content, String contentType) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, project, path);
-		return repository.createResource(workspacePath.toString(), content, false, contentType);
+		IResource resource = repository.createResource(workspacePath.toString(), content, false, contentType);
+		logger.info("Resource created [{}]", resource.getPath());
+		return resource;
 	}
 	
 	public IResource updateResource(String user, String workspace, String project, String path, byte[] content) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, project, path);
 		IResource resource = repository.getResource(workspacePath.toString());
 		resource.setContent(content);
+		logger.info("Resource updated [{}]", resource.getPath());
 		return resource;
 	}
 	
 	public void deleteResource(String user, String workspace, String project, String path) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, project, path);
 		repository.removeResource(workspacePath.toString());
+		logger.info("Resource removed [{}]", workspacePath.toString());
 	}
 	
 	

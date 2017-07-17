@@ -137,7 +137,9 @@ public class TerminalWebsocketService {
 								while ((line = reader.readLine()) != null) {
 									logger.trace("sending process data: " + line);
 									if (session.isOpen()) {
-										session.getBasicRemote().sendText(line);
+										synchronized(session.getAsyncRemote()) {
+											session.getAsyncRemote().sendText(line);
+										}
 									}
 								}
 								out.reset();
@@ -158,9 +160,9 @@ public class TerminalWebsocketService {
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
-				synchronized (session) {
+				synchronized (session.getAsyncRemote()) {
 					if (session.isOpen()) {
-						session.getBasicRemote().sendText(new String(out.toByteArray(), StandardCharsets.UTF_8));
+						session.getAsyncRemote().sendText(new String(out.toByteArray(), StandardCharsets.UTF_8));
 					}
 				}
 
