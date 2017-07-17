@@ -12,7 +12,7 @@ public class PublisherSynchronizerJobDefinitionProvider implements IJobDefinitio
 		jobDefinition.setGroup("dirigible-internal");
 		jobDefinition.setClazz(PublisherSynchronizerJob.class.getCanonicalName());
 		jobDefinition.setDescription("Publisher Synchronizer Job");
-		jobDefinition.setExpression("0/20 * * * * ?");
+		jobDefinition.setExpression("0/10 * * * * ?");
 		jobDefinition.setSingleton(true);
 		return jobDefinition;
 	}

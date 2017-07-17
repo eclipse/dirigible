@@ -40,21 +40,31 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	
 	@Override
 	public void synchronize() {
-		loggingHelper.beginGroupDebug("Publishing...");
-		try {
-			List<PublishRequestDefinition> publishRequestDefinitions = getPendingPublishedRequests();
-			
-			enumerateResourcesForPublish(publishRequestDefinitions);
-			
-			synchronizeRegistry();
-			
-			cleanup();
-		} catch (Exception e) {
-			logger.error("Publishing failed.", e);
+		synchronized(PublisherSynchronizer.class) {
+			loggingHelper.beginGroupDebug("Publishing...");
+			try {
+				List<PublishRequestDefinition> publishRequestDefinitions = getPendingPublishedRequests();
+				
+				if (publishRequestDefinitions.isEmpty()) {
+					logger.debug("Nothing to publish.");
+					return;
+				}
+				
+				enumerateResourcesForPublish(publishRequestDefinitions);
+				
+				synchronizeRegistry();
+				
+				removeProcessedRequests(publishRequestDefinitions);
+				
+				cleanup();
+			} catch (Exception e) {
+				logger.error("Publishing failed.", e);
+			}
+			loggingHelper.endGroupDebug("Done publishing.");
 		}
-		loggingHelper.endGroupDebug("Done publishing.");
 	}
 
+	
 	private void enumerateResourcesForPublish(List<PublishRequestDefinition> publishRequestDefinitions)
 			throws SynchronizationException {
 		resourceLocations.clear();
@@ -123,6 +133,12 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 			publishCoreService.createPublishLog(sourceLocation, targetLocation);
 		} catch (PublisherException e) {
 			throw new SynchronizationException(e);
+		}
+	}
+	
+	private void removeProcessedRequests(List<PublishRequestDefinition> publishRequestDefinitions) throws PublisherException {
+		for (PublishRequestDefinition publishRequestDefinition : publishRequestDefinitions) {
+			publishCoreService.removePublishRequest(publishRequestDefinition.getId());
 		}
 	}
 

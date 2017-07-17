@@ -395,6 +395,7 @@
 		<module>modules/runtime-ide-terminal</module>
 		<module>modules/runtime-ide-databases</module>
 		<module>modules/runtime-ide-console</module>
+		<module>modules/runtime-ide-publisher</module>
 
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>
