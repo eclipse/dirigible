@@ -130,7 +130,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 			getRepository().createResource(targetLocation, sourceResource.getContent());
 		}
 		try {
-			publishCoreService.createPublishLog(sourceLocation, targetLocation);
+			publishCoreService.createPublishLog(sourceResource.getPath(), targetResource.getPath());
 		} catch (PublisherException e) {
 			throw new SynchronizationException(e);
 		}

@@ -1,8 +1,11 @@
 package org.eclipse.dirigible.runtime.ide.publisher.processor;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
+import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.core.publisher.service.PublishCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -36,6 +39,18 @@ public class PublisherProcessor {
 	public PublishRequestDefinition getPublishingRequest(long id) throws PublisherException {
 		PublishRequestDefinition publishRequestDefinition = publishCoreService.getPublishRequest(id);
 		return publishRequestDefinition;
+	}
+	
+	public List<PublishLogDefinition> listPublishingLog() throws PublisherException {
+		List<PublishLogDefinition> publishLogDefinitions = publishCoreService.getPublishLogs();
+		return publishLogDefinitions;
+	}
+	
+	public void clearPublishingLog() throws PublisherException {
+		List<PublishLogDefinition> publishLogDefinitions = publishCoreService.getPublishLogs();
+		for (PublishLogDefinition publishLogDefinition : publishLogDefinitions) {
+			publishCoreService.removePublishLog(publishLogDefinition.getId());
+		}
 	}
 	
 	public boolean existsWorkspace(String user, String workspace) {
