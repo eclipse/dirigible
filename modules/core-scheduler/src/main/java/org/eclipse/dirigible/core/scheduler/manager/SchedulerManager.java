@@ -6,7 +6,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.util.Set;
 
-import org.eclipse.dirigible.commons.api.logging.LoggingHelper;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.quartz.CronTrigger;
@@ -33,18 +32,16 @@ public class SchedulerManager {
 		return scheduler;
 	}
 	
-	public static void createScheduler() throws SchedulerException {
-		createScheduler(null);
-	}
 	
-	public static void createScheduler(LoggingHelper loggingHelper) throws SchedulerException {
+	
+	public static void createScheduler() throws SchedulerException {
 		try {
 			synchronized (SchedulerInitializer.class) {
 				if (scheduler == null) {
 					schedulerFactory = new StdSchedulerFactory();
 					scheduler = schedulerFactory.getScheduler();
 					String message = "Scheduler has been created.";
-					log(loggingHelper, message);
+					logger.info(message);
 				}
 			}
 		} catch (org.quartz.SchedulerException e) {
@@ -53,10 +50,10 @@ public class SchedulerManager {
 	}
 	
 	public static void removeScheduler() throws SchedulerException {
-		shutdownScheduler(null);
+		shutdownScheduler();
 	}
 	
-	public static void shutdownScheduler(LoggingHelper loggingHelper) throws SchedulerException {
+	public static void shutdownScheduler() throws SchedulerException {
 		synchronized (SchedulerInitializer.class) {
 			if (scheduler == null) {
 				throw new SchedulerException("Scheduler has not been initialized and strated.");
@@ -64,7 +61,7 @@ public class SchedulerManager {
 			try {
 				scheduler.shutdown(true);
 				String message = "Scheduler has been shutted down.";
-				log(loggingHelper, message);
+				logger.info(message);
 				scheduler = null;
 			} catch (org.quartz.SchedulerException e) {
 				throw new SchedulerException(e);
@@ -73,13 +70,9 @@ public class SchedulerManager {
 	}
 	
 	public static void startScheduler() throws SchedulerException {
-		startScheduler(null);
-	}
-	
-	public static void startScheduler(LoggingHelper loggingHelper) throws SchedulerException {
 		try {
 			SchedulerManager.getScheduler().start();
-			loggingHelper.info("Scheduler has been started.");
+			logger.info("Scheduler has been started.");
 		} catch (org.quartz.SchedulerException e) {
 			throw new SchedulerException(e);
 		}
@@ -136,14 +129,6 @@ public class SchedulerManager {
 			return triggerKeys;
 		} catch (org.quartz.SchedulerException e) {
 			throw new SchedulerException(e);
-		}
-	}
-	
-	private static void log(LoggingHelper loggingHelper, String message) {
-		if (loggingHelper != null) {
-			loggingHelper.info(message);
-		} else {
-			logger.info(message);
 		}
 	}
 	

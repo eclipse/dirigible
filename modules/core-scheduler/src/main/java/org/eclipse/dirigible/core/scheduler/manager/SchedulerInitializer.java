@@ -6,40 +6,43 @@ import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.commons.api.logging.LoggingHelper;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SchedulerInitializer {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SchedulerInitializer.class);
 	
 	@Inject
 	private SchedulerCoreService schedulerCoreService;
 	
-	public void initialize(LoggingHelper loggingHelper) throws SchedulerException {
+	public void initialize() throws SchedulerException {
 		
-		loggingHelper.beginSection("Initializing Job Scheduler Service...");
+		logger.trace("Initializing Job Scheduler Service...");
 		
-		initializeScheduler(loggingHelper);
+		initializeScheduler();
 		
 		// schedule the System Job
-		scheduleSystemJob(loggingHelper);
+		scheduleSystemJob();
 		
 		// enumerate the Internal Jobs
-		scheduleInternalJobs(loggingHelper);
+		scheduleInternalJobs();
 		
-		startScheduler(loggingHelper);
+		startScheduler();
 		
-		loggingHelper.endSection("Done initializing Job Scheduler Service.");
+		logger.trace("Done initializing Job Scheduler Service.");
 	}
 
-	private void scheduleInternalJobs(LoggingHelper loggingHelper) {
-		loggingHelper.beginSection("Initializing the Internal Jobs...");
+	private void scheduleInternalJobs() {
+		logger.trace("Initializing the Internal Jobs...");
 		ServiceLoader<IJobDefinitionProvider> jobDefinitionProviders = ServiceLoader.load(IJobDefinitionProvider.class);
 		for (IJobDefinitionProvider next : jobDefinitionProviders) {
 			JobDefinition jobDefinition = next.getJobDefinition();
-			loggingHelper.beginGroup(format("Initializing the Internal Job [{0}] in group [{1}]...", jobDefinition.getName(), jobDefinition.getGroup()));
+			logger.trace(format("Initializing the Internal Job [{0}] in group [{1}]...", jobDefinition.getName(), jobDefinition.getGroup()));
 			try {
 				JobDefinition found = schedulerCoreService.getJob(jobDefinition.getName());
 				if (found == null) {
@@ -47,35 +50,35 @@ public class SchedulerInitializer {
 					scheduleJob(jobDefinition);
 				}
 			} catch (Throwable e) {
-				loggingHelper.error(format("Failed installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()), e);
+				logger.error(format("Failed installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()), e);
 			}
-			loggingHelper.endGroup(format("Done installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()));
+			logger.trace(format("Done installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()));
 		}
-		loggingHelper.endSection("Done initializing the Internal Jobs.");
+		logger.trace("Done initializing the Internal Jobs.");
 		
 	}
 
-	private void scheduleSystemJob(LoggingHelper loggingHelper) throws SchedulerException {
-		loggingHelper.beginGroup(format("Initializing the System Job ..."));
+	private void scheduleSystemJob() throws SchedulerException {
+		logger.info(format("Initializing the System Job ..."));
 		JobDefinition systemJobDefinition = SystemJob.getSystemJobDefinition();
 		scheduleJob(systemJobDefinition);
-		loggingHelper.endGroup(format("Done initializing the System Job."));
+		logger.info(format("Done initializing the System Job."));
 	}
 
 	private void scheduleJob(JobDefinition jobDefinition) throws SchedulerException {
 		SchedulerManager.scheduleJob(jobDefinition);
 	}
 
-	private void startScheduler(LoggingHelper loggingHelper) throws SchedulerException {
-		SchedulerManager.startScheduler(loggingHelper);
+	private void startScheduler() throws SchedulerException {
+		SchedulerManager.startScheduler();
 	}
 
-	private void initializeScheduler(LoggingHelper loggingHelper) throws SchedulerException {
-		SchedulerManager.createScheduler(loggingHelper);
+	private void initializeScheduler() throws SchedulerException {
+		SchedulerManager.createScheduler();
 	}
 
-	public static void shutdown(LoggingHelper loggingHelper) throws SchedulerException {
-		SchedulerManager.shutdownScheduler(loggingHelper);
+	public static void shutdown() throws SchedulerException {
+		SchedulerManager.shutdownScheduler();
 	}
 	
 	

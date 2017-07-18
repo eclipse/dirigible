@@ -8,7 +8,6 @@ import java.util.ServiceLoader;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.eclipse.dirigible.commons.api.logging.LoggingHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,16 +20,12 @@ public class ClasspathContentLoader {
 	private static Boolean LOADED = false;
 	
 	public static final void load() throws IOException {
-		load(null);
-	}
-	
-	public static final void load(LoggingHelper loggingHelper) throws IOException {
 		synchronized (ClasspathContentLoader.class) {
 			if (!LOADED) {
 				ServiceLoader<IClasspathContentHandler> contentHandlers = ServiceLoader.load(IClasspathContentHandler.class);
 				for (IClasspathContentHandler contentHandler : contentHandlers) {
 					String message = "Registering Content Handler: " + contentHandler.getClass().getCanonicalName();
-					log(loggingHelper, message);
+					logger.info(message);
 				}
 				Enumeration<URL> urls = ClasspathContentLoader.class.getClassLoader().getResources("META-INF");
 				while (urls.hasMoreElements()) {
@@ -49,14 +44,6 @@ public class ClasspathContentLoader {
 				}
 				LOADED = true;
 			}
-		}
-	}
-
-	private static void log(LoggingHelper loggingHelper, String message) {
-		if (loggingHelper != null) {
-			loggingHelper.info(message);
-		} else {
-			logger.info(message);
 		}
 	}
 

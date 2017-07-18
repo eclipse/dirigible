@@ -8,7 +8,6 @@ import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
 import org.eclipse.dirigible.commons.api.content.ClasspathContentLoader;
-import org.eclipse.dirigible.commons.api.logging.LoggingHelper;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
@@ -34,23 +33,22 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	private Injector injector;
 	
-	private final LoggingHelper loggingHelper = new LoggingHelper(logger);
 
 	@Override
 	protected Injector getInjector() {
-		loggingHelper.beginGroup("Initializing Guice Injector with modules for dependency injection...");
+		logger.trace("Initializing Guice Injector with modules for dependency injection...");
 
-		injector = Guice.createInjector(new DirigibleModulesInstallerModule(loggingHelper));
+		injector = Guice.createInjector(new DirigibleModulesInstallerModule());
 		StaticInjector.setInjector(injector);
 		
-		loggingHelper.endGroup("Guice Injector with modules for dependency injection initialized.");
+		logger.trace("Guice Injector with modules for dependency injection initialized.");
 		
 		return injector;
 	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		loggingHelper.beginSection("Initializing Eclipse Dirigible Platform...");
+		logger.info("---------- Initializing Eclipse Dirigible Platform... ----------");
 		super.contextInitialized(servletContextEvent);
 		
 		loadPredeliveredContent();
@@ -59,61 +57,61 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		
 		startupScheduler();
 		
-		loggingHelper.endSection("Eclipse Dirigible Platform initialized.");
+		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
 	}
 
 	private void loadPredeliveredContent() {
-		loggingHelper.beginGroup("Loading the predelivered content...");
+		logger.trace("Loading the predelivered content...");
 		try {
-			ClasspathContentLoader.load(loggingHelper);
+			ClasspathContentLoader.load();
 		} catch (IOException e) {
 			logger.error("Failed loading the predelivered content", e);
 		}
-		loggingHelper.endGroup("Done loading predelivered content.");
+		logger.trace("Done loading predelivered content.");
 	}
 
 	private void registerRestServicesForCxf() {
-		loggingHelper.beginGroup("Registering REST services...");
+		logger.trace("Registering REST services...");
 
 		getServices().add(new SecureAnnotationsInterceptor());
 		addRestServices();
 		addExceptionHandlers();
 
-		loggingHelper.endGroup("Done registering REST services.");
+		logger.trace("Done registering REST services.");
 	}
 
 	private void addRestServices() {
 		for (IRestService next : ServiceLoader.load(IRestService.class)) {
 			getServices().add(injector.getInstance(next.getType()));
-			loggingHelper.info("REST service registered {}.", next.getType());
+			logger.info("REST service registered {}.", next.getType());
 		}
 	}
 
 	private void addExceptionHandlers() {
 		for (AbstractExceptionHandler<?> next : ServiceLoader.load(AbstractExceptionHandler.class)) {
 			getServices().add(injector.getInstance(next.getType()));
-			loggingHelper.info("Exception Handler registered {}.", next.getType());
+			logger.info("Exception Handler registered {}.", next.getType());
 		}
 	}
 	
 	private void startupScheduler() {
-		loggingHelper.beginGroup("Starting Scheduler...");
+		logger.info("Starting Scheduler...");
 		try {
-			injector.getInstance(SchedulerInitializer.class).initialize(loggingHelper);
+			injector.getInstance(SchedulerInitializer.class).initialize();
 		} catch (SchedulerException e) {
 			logger.error("Failed starting Scheduler", e);
 		}
-		loggingHelper.endGroup("Done starting Scheduler.");
+		logger.info("Done starting Scheduler.");
 	}
 	
 	private void shutdownScheduler() {
-		loggingHelper.beginGroup("Shutting down Scheduler...");
+		logger.trace("Shutting down Scheduler...");
 		try {
-			SchedulerInitializer.shutdown(loggingHelper);
+			SchedulerInitializer.shutdown();
 		} catch (SchedulerException e) {
 			logger.error("Failed shutting down Scheduler", e);
 		}
-		loggingHelper.endGroup("Done shutting down Scheduler.");
+		logger.trace("Done shutting down Scheduler.");
 	}
 	
 	/**
@@ -127,13 +125,13 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		loggingHelper.beginSection("Shutting down Eclipse Dirigible Platform...");
+		logger.info("Shutting down Eclipse Dirigible Platform...");
 		
 		shutdownScheduler();
 		
 		super.contextDestroyed(servletContextEvent);
 		
-		loggingHelper.endSection("Eclipse Dirigible Platform shutted down.");
+		logger.info("Eclipse Dirigible Platform shutted down.");
 	}
 
 }

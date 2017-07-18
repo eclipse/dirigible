@@ -1,6 +1,5 @@
 package org.eclipse.dirigible.core.publisher.synchronizer;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.eclipse.dirigible.commons.api.logging.LoggingHelper;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.core.publisher.service.PublishCoreService;
@@ -27,8 +25,6 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(PublisherSynchronizer.class);
 	
-	private static LoggingHelper loggingHelper = new LoggingHelper(logger);
-	
 	@Inject
 	private PublishCoreService publishCoreService;
 	
@@ -41,12 +37,12 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	@Override
 	public void synchronize() {
 		synchronized(PublisherSynchronizer.class) {
-			loggingHelper.beginGroupDebug("Publishing...");
+			logger.trace("Publishing...");
 			try {
 				List<PublishRequestDefinition> publishRequestDefinitions = getPendingPublishedRequests();
 				
 				if (publishRequestDefinitions.isEmpty()) {
-					logger.debug("Nothing to publish.");
+					logger.trace("Nothing to publish.");
 					return;
 				}
 				
@@ -60,7 +56,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 			} catch (Exception e) {
 				logger.error("Publishing failed.", e);
 			}
-			loggingHelper.endGroupDebug("Done publishing.");
+			logger.trace("Done publishing.");
 		}
 	}
 
@@ -95,16 +91,17 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 
 	@Override
 	public void synchronizeRegistry() throws SynchronizationException {
-		loggingHelper.debug("Synchronizing published artefacts in Registry...");
+		logger.trace("Synchronizing published artefacts in Registry...");
 		
 		publishResources();
 	
-		loggingHelper.debug("Done synchronizing published artefacts in Registry.");
+		logger.trace("Done synchronizing published artefacts in Registry.");
 	}
 
 	private void publishResources() throws SynchronizationException {
 		for (Map.Entry<String, String> entry : resourceLocations.entrySet()) {
-			// pre publish
+			
+			// pre publish handlers
 			
 			
 			// publish
@@ -112,7 +109,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 			
 			
 			
-			// post publish
+			// post publish handlers
 		}
 	}
 
