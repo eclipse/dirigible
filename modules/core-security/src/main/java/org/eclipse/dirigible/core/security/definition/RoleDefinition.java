@@ -13,6 +13,9 @@ public class RoleDefinition {
 	@Column(name="ROLE_NAME", columnDefinition="VARCHAR", nullable=false, length=64)
 	private String name;
 	
+	@Column(name="ROLE_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
+	private String location;
+	
 	@Column(name="ROLE_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)
 	private String description;
 	
@@ -28,6 +31,14 @@ public class RoleDefinition {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
+	
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	public String getDescription() {
@@ -54,5 +65,41 @@ public class RoleDefinition {
 		this.createdAt = createdAt;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RoleDefinition other = (RoleDefinition) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 
 }

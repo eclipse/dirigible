@@ -20,6 +20,9 @@ public class AccessDefinition {
 	@Column(name="ACCESS_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String location;
 	
+	@Column(name="ACCESS_URI", columnDefinition="VARCHAR", nullable=false, length=255)
+	private String uri;
+	
 	@Column(name="ACCESS_METHOD", columnDefinition="VARCHAR", nullable=false, length=20)
 	private String method = METHOD_ANY;
 	
@@ -45,6 +48,14 @@ public class AccessDefinition {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	
+	public String getUri() {
+		return uri;
+	}
+	
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 	
 	public String getMethod() {
@@ -87,5 +98,53 @@ public class AccessDefinition {
 		this.createdAt = createdAt;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((method == null) ? 0 : method.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AccessDefinition other = (AccessDefinition) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (method == null) {
+			if (other.method != null)
+				return false;
+		} else if (!method.equals(other.method))
+			return false;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
+		if (uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!uri.equals(other.uri))
+			return false;
+		return true;
+	}
 
 }

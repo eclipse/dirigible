@@ -8,6 +8,11 @@ import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition
 
 public interface IExtensionsCoreService extends ICoreService {
 	
+	public static final String FILE_EXTENSION_EXTENSIONPOINT = ".extensionpoint";
+	
+	public static final String FILE_EXTENSION_EXTENSION = ".extension";
+	
+	
 	// Extension Points
 	
 	public ExtensionPointDefinition createExtensionPoint(String location, String name, String description) throws ExtensionsException;

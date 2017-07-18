@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
-import org.eclipse.dirigible.core.extensions.api.IExtensionsConstants;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExtensionsConstants {
+public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
 	
@@ -96,6 +96,12 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExt
 			if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
 				extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(), extensionPointDefinition.getDescription());
 				logger.info("Synchronized a new Extension Point [{}] from location: {}", extensionPointDefinition.getName(), extensionPointDefinition.getLocation());
+			} else {
+				ExtensionPointDefinition existing = extensionsCoreService.getExtensionPoint(extensionPointDefinition.getLocation());
+				if (!extensionPointDefinition.equals(existing)) {
+					extensionsCoreService.updateExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(), extensionPointDefinition.getDescription());
+					logger.info("Synchronized a modified Extension Point [{}] from location: {}", extensionPointDefinition.getName(), extensionPointDefinition.getLocation());
+				}
 			}
 			EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getLocation());
 		} catch (ExtensionsException e) {
@@ -108,6 +114,12 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExt
 			if (!extensionsCoreService.existsExtension(extensionDefinition.getLocation())) {
 				extensionsCoreService.createExtension(extensionDefinition.getLocation(), extensionDefinition.getModule(), extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
 				logger.info("Synchronized a new Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(), extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
+			} else {
+				ExtensionDefinition existing = extensionsCoreService.getExtension(extensionDefinition.getLocation());
+				if (!extensionDefinition.equals(existing)) {
+					extensionsCoreService.updateExtension(extensionDefinition.getLocation(), extensionDefinition.getModule(), extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
+					logger.info("Synchronized a modified Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(), extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
+				}
 			}
 			EXTENSIONS_SYNCHRONIZED.add(extensionDefinition.getLocation());
 		} catch (ExtensionsException e) {
@@ -127,13 +139,13 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer implements IExt
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		String resourceName = resource.getName();
-		if (resourceName.endsWith(FILE_EXTENSION_EXTENSIONPOINT)) {
+		if (resourceName.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
 			ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(resource.getContent());
 			extensionPointDefinition.setLocation(resource.getPath());
 			synchronizeExtensionPoint(extensionPointDefinition);
 		}
 		
-		if (resourceName.endsWith(FILE_EXTENSION_EXTENSION)) {
+		if (resourceName.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSION)) {
 			ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(resource.getContent());
 			extensionDefinition.setLocation(resource.getPath());
 			synchronizeExtension(extensionDefinition);

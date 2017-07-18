@@ -7,29 +7,59 @@ import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 
 public interface ISecurityCoreService extends ICoreService {
+	
+	public static final String FILE_EXTENSION_ACCESS = ".access";
+	
+	public static final String FILE_EXTENSION_ROLES = ".roles";
+	
 
-	public RoleDefinition createRole(String name, String description) throws AccessException;
+	// Roles
+	
+	public RoleDefinition createRole(String name, String location, String description) throws AccessException;
 
 	public RoleDefinition getRole(String name) throws AccessException;
+	
+	public boolean existsRole(String name) throws AccessException;
 
 	public void removeRole(String name) throws AccessException;
 
-	public void updateRole(String name, String description) throws AccessException;
+	public void updateRole(String name, String location, String description) throws AccessException;
 
 	public List<RoleDefinition> getRoles() throws AccessException;
+	
+	public RoleDefinition[] parseRoles(String json);
+	
+	public RoleDefinition[] parseRoles(byte[] json);
+	
+	public String serializeRoles(RoleDefinition[] roles);
 
-	public AccessDefinition createAccessDefinition(String location, String method, String role, String description) throws AccessException;
+	
+	// Access
+	
+	public AccessDefinition createAccessDefinition(String location, String uri, String method, String role, String description) throws AccessException;
 
 	public AccessDefinition getAccessDefinition(long id) throws AccessException;
+	
+	public AccessDefinition getAccessDefinition(String uri, String method, String role) throws AccessException;
+	
+	public boolean existsAccessDefinition(String uri, String method, String role) throws AccessException;
 
 	public void removeAccessDefinition(long id) throws AccessException;
 
-	public void updateAccessDefinition(long id, String location, String method, String role, String description) throws AccessException;
+	public void updateAccessDefinition(long id, String location, String uri, String method, String role, String description) throws AccessException;
 
 	public List<AccessDefinition> getAccessDefinitions() throws AccessException;
 
-	public List<AccessDefinition> getAccessDefinitionsByLocation(String location) throws AccessException;
+	public List<AccessDefinition> getAccessDefinitionsByUri(String uri) throws AccessException;
 	
-	public List<AccessDefinition> getAccessDefinitionsByLocationAndMethod(String location, String method) throws AccessException;
+	public List<AccessDefinition> getAccessDefinitionsByUriAndMethod(String uri, String method) throws AccessException;
+	
+	public boolean isAccessAllowed(String uri, String method, String role) throws AccessException;
+	
+	public AccessDefinition[] parseAccessDefinitions(String json);
+	
+	public AccessDefinition[] parseAccessDefinitions(byte[] json);
+	
+	public String serializeAccessDefinitions(AccessDefinition[] accessDefinitions);
 	
 }

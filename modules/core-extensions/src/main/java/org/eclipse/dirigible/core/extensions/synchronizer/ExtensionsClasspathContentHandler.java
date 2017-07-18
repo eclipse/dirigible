@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
-import org.eclipse.dirigible.core.extensions.api.IExtensionsConstants;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExtensionsClasspathContentHandler extends AbstractClasspathContentHandler implements IExtensionsConstants {
+public class ExtensionsClasspathContentHandler extends AbstractClasspathContentHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsClasspathContentHandler.class);
 	
@@ -19,12 +19,12 @@ public class ExtensionsClasspathContentHandler extends AbstractClasspathContentH
 		boolean isValid = false;
 		
 		try {
-			if (path.endsWith(FILE_EXTENSION_EXTENSIONPOINT)) {
+			if (path.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
 				isValid = true;
 				extensionsSynchronizer.registerPredeliveredExtensionPoint(path);
 			}
 			
-			if (path.endsWith(FILE_EXTENSION_EXTENSION)) {
+			if (path.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSION)) {
 				isValid = true;
 				extensionsSynchronizer.registerPredeliveredExtension(path);
 			}

@@ -1,5 +1,9 @@
 package org.eclipse.dirigible.core.security.service;
 
+import static java.text.MessageFormat.format;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -11,6 +15,7 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
@@ -30,16 +35,13 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Inject
 	private PersistenceManager<AccessDefinition> accessPersistenceManager;
 	
-	boolean rolesTableExists = false;
-	
-	boolean accessTableExists = false;
-	
 	// Roles
 	
 	@Override
-	public RoleDefinition createRole(String name, String description) throws AccessException {
+	public RoleDefinition createRole(String name, String location, String description) throws AccessException {
 		RoleDefinition roleDefinition = new RoleDefinition();
 		roleDefinition.setName(name);
+		roleDefinition.setLocation(location);
 		roleDefinition.setDescription(description);
 		roleDefinition.setCreatedBy(UserFacade.getName());
 		roleDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
@@ -76,6 +78,11 @@ public class SecurityCoreService implements ISecurityCoreService {
 	}
 	
 	@Override
+	public boolean existsRole(String name) throws AccessException {
+		return getRole(name) != null;
+	}
+	
+	@Override
 	public void removeRole(String name) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -92,11 +99,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 	}
 	
 	@Override
-	public void updateRole(String name, String description) throws AccessException {
+	public void updateRole(String name, String location, String description) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
 				RoleDefinition roleDefinition = getRole(name);
+				roleDefinition.setLocation(location);
 				roleDefinition.setDescription(description);
 				rolesPersistenceManager.update(connection, roleDefinition, name);
 			} finally {
@@ -125,12 +133,28 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 	
+	@Override
+	public RoleDefinition[] parseRoles(String json) {
+		return GsonHelper.GSON.fromJson(json, RoleDefinition[].class);
+	}
+	
+	@Override
+	public RoleDefinition[] parseRoles(byte[] json) {
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), RoleDefinition[].class);
+	}
+	
+	@Override
+	public String serializeRoles(RoleDefinition[] roles) {
+		return GsonHelper.GSON.toJson(roles);
+	}
+	
 	// Access
 	
 	@Override
-	public AccessDefinition createAccessDefinition(String location, String method, String role, String description) throws AccessException {
+	public AccessDefinition createAccessDefinition(String location, String uri, String method, String role, String description) throws AccessException {
 		AccessDefinition accessDefinition = new AccessDefinition();
 		accessDefinition.setLocation(location);
+		accessDefinition.setUri(uri);
 		accessDefinition.setMethod(method);
 		accessDefinition.setRole(role);
 		accessDefinition.setDescription(description);
@@ -169,6 +193,43 @@ public class SecurityCoreService implements ISecurityCoreService {
 	}
 	
 	@Override
+	public AccessDefinition getAccessDefinition(String uri, String method, String role) throws AccessException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				String sql = Squle.getNative(connection)
+						.select()
+						.column("*")
+						.from("DIRIGIBLE_SECURITY_ACCESS")
+						.where("ACCESS_URI = ?")
+						.where("ACCESS_ROLE = ?")
+						.where("ACCESS_METHOD = ?")
+						.toString();
+				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method);
+				if (access.isEmpty()) {
+					return null;
+				}
+				if (access.size() > 1) {
+					throw new AccessException(format("Security Access duplication for URI [{0}] and Method [{1}] with Role [{2}]", uri, method, role));
+				}
+				return access.get(0);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new AccessException(e);
+		}
+		
+	}
+	
+	@Override
+	public boolean existsAccessDefinition(String uri, String method, String role) throws AccessException {
+		return getAccessDefinition(uri, method, role) != null;
+	}
+	
+	@Override
 	public void removeAccessDefinition(long id) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
@@ -185,12 +246,13 @@ public class SecurityCoreService implements ISecurityCoreService {
 	}
 	
 	@Override
-	public void updateAccessDefinition(long id, String location, String method, String role, String description) throws AccessException {
+	public void updateAccessDefinition(long id, String location, String uri, String method, String role, String description) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
 				AccessDefinition accessDefinition = getAccessDefinition(id);
 				accessDefinition.setLocation(location);
+				accessDefinition.setUri(uri);
 				accessDefinition.setMethod(method);
 				accessDefinition.setRole(role);
 				accessDefinition.setDescription(description);
@@ -222,7 +284,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 	}
 	
 	@Override
-	public List<AccessDefinition> getAccessDefinitionsByLocation(String location) throws AccessException {
+	public List<AccessDefinition> getAccessDefinitionsByUri(String uri) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -230,8 +292,8 @@ public class SecurityCoreService implements ISecurityCoreService {
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_SECURITY_ACCESS")
-						.where("ACCESS_LOCATION = ?").toString();
-				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(location));
+						.where("ACCESS_URI = ?").toString();
+				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(uri));
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -243,7 +305,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 	}
 	
 	@Override
-	public List<AccessDefinition> getAccessDefinitionsByLocationAndMethod(String location, String method) throws AccessException {
+	public List<AccessDefinition> getAccessDefinitionsByUriAndMethod(String uri, String method) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -251,11 +313,11 @@ public class SecurityCoreService implements ISecurityCoreService {
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_SECURITY_ACCESS")
-						.where("ACCESS_LOCATION = ?")
+						.where("ACCESS_URI = ?")
 						.where(Squle.getNative(connection)
 								.expr().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
 						.toString();
-				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, location, method, AccessDefinition.METHOD_ANY);
+				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, method, AccessDefinition.METHOD_ANY);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -264,6 +326,47 @@ public class SecurityCoreService implements ISecurityCoreService {
 		} catch (SQLException e) {
 			throw new AccessException(e);
 		}
+	}
+	
+	@Override
+	public boolean isAccessAllowed(String uri, String method, String role) throws AccessException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				String sql = Squle.getNative(connection)
+						.select()
+						.column("*")
+						.from("DIRIGIBLE_SECURITY_ACCESS")
+						.where("ACCESS_URI = ?")
+						.where("ACCESS_ROLE = ?")
+						.where(Squle.getNative(connection)
+								.expr().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
+						.toString();
+				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method, AccessDefinition.METHOD_ANY);
+				return !access.isEmpty();
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new AccessException(e);
+		}
+	}
+
+	@Override
+	public AccessDefinition[] parseAccessDefinitions(String json) {
+		return GsonHelper.GSON.fromJson(json, AccessDefinition[].class);
+	}
+	
+	@Override
+	public AccessDefinition[] parseAccessDefinitions(byte[] json) {
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), AccessDefinition[].class);
+	}
+	
+	@Override
+	public String serializeAccessDefinitions(AccessDefinition[] accessDefinitions) {
+		return GsonHelper.GSON.toJson(accessDefinitions);
 	}
 	
 }

@@ -91,4 +91,47 @@ public class ExtensionDefinition {
 		return toJson();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((extensionPoint == null) ? 0 : extensionPoint.hashCode());
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((module == null) ? 0 : module.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExtensionDefinition other = (ExtensionDefinition) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (extensionPoint == null) {
+			if (other.extensionPoint != null)
+				return false;
+		} else if (!extensionPoint.equals(other.extensionPoint))
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (module == null) {
+			if (other.module != null)
+				return false;
+		} else if (!module.equals(other.module))
+			return false;
+		return true;
+	}
+
 }
