@@ -7,6 +7,7 @@ import java.util.ServiceLoader;
 import javax.servlet.ServletContextEvent;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
+import org.apache.cxf.jaxrs.swagger.Swagger2Feature;
 import org.eclipse.dirigible.commons.api.content.ClasspathContentLoader;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
@@ -60,6 +61,8 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
 	}
 
+	
+
 	private void loadPredeliveredContent() {
 		logger.trace("Loading the predelivered content...");
 		try {
@@ -76,6 +79,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		getServices().add(new SecureAnnotationsInterceptor());
 		addRestServices();
 		addExceptionHandlers();
+		addSwagger();
 
 		logger.trace("Done registering REST services.");
 	}
@@ -92,6 +96,22 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 			getServices().add(injector.getInstance(next.getType()));
 			logger.info("Exception Handler registered {}.", next.getType());
 		}
+	}
+	
+	private void addSwagger() {
+		Swagger2Feature feature = new Swagger2Feature();
+		 
+	    // customize some of the properties
+//	    feature.setBasePath("/api");
+		feature.setPrettyPrint(true);
+		feature.setDescription("Eclipse Dirigible core and ide services provided by the applicaiton platform");
+		feature.setVersion("3.0");
+		feature.setTitle("Eclipse Dirigible - Services");
+		feature.setContact("dirigible-dev@eclipse.org");
+		feature.setLicense("Eclipse Public License - v 1.0");
+		feature.setLicenseUrl("https://www.eclipse.org/legal/epl-v10.html");
+	         
+	    getServices().add(feature);		
 	}
 	
 	private void startupScheduler() {

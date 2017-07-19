@@ -131,6 +131,12 @@
         <dependent-module archiveName="dirigible-content-ide-terminal-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-terminal/dirigible-content-ide-terminal">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-content-ide-console-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-console/dirigible-content-ide-console">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-content-ide-editor-orion-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-editor-orion/dirigible-content-ide-editor-orion">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-content-ide-workspace-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-workspace/dirigible-content-ide-workspace">
             <dependency-type>uses</dependency-type>
         </dependent-module>

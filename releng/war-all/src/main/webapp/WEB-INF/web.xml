@@ -25,6 +25,11 @@
 		</init-param>
 		 -->
 		 
+		<init-param>
+		    <param-name>jaxrs.features</param-name>
+            <param-value>org.apache.cxf.jaxrs.swagger.Swagger2Feature</param-value>
+        </init-param>
+		 
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
