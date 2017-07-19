@@ -41,25 +41,46 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
-	
-	<resource-ref>
+	<!-- <resource-ref>
 		<res-ref-name>jdbc/DefaultDB</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
 		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
+	</resource-ref> -->
 	
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>Engine Services</web-resource-name>
+	        <url-pattern>/services/v3/web/*</url-pattern>
+	        <url-pattern>/services/v3/js/*</url-pattern>
+	        <url-pattern>/services/v3/nashorn/*</url-pattern>
+	        <url-pattern>/services/v3/rhino/*</url-pattern>
+	        <url-pattern>/services/v3/v8/*</url-pattern>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <role-name>Everyone</role-name>
+	    </auth-constraint>
+	</security-constraint>
 
 	<security-constraint>
 	    <web-resource-collection>
 	        <web-resource-name>IDE Services</web-resource-name>
 	        <url-pattern>/services/v3/ide/*</url-pattern>
-	        <url-pattern>/services/v3/web/ide-terminal/*</url-pattern>
-	        <url-pattern>/services/v3/web/ide-console/*</url-pattern>
 	        <url-pattern>/websockets/v3/ide/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
 	        <role-name>Developer</role-name>
+	    </auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>Core Services</web-resource-name>
+	        <url-pattern>/services/v3/core/*</url-pattern>
+	        <url-pattern>/websockets/v3/core/*</url-pattern>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <role-name>Operator</role-name>
 	    </auth-constraint>
 	</security-constraint>
 	

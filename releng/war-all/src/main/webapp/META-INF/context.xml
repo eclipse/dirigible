@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Context>
-    <Resource
+    <!-- <Resource
         name="jdbc/DefaultDB"
         description="Default Database"
         type="javax.sql.DataSource"
@@ -11,5 +11,5 @@
         password="APP"
         url="jdbc:derby://localhost:1527/derby;create=true"
         validationQuery="values(1)"
-        username="APP"/>
+        username="APP"/> -->
 </Context>

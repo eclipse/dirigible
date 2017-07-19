@@ -193,6 +193,11 @@
 		 	<artifactId>dirigible-runtime-extensions</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-databases</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		
 		<!-- Runtime IDE Services -->
@@ -209,11 +214,6 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-ide-console</artifactId>
-		 	<version>${dirigible.version}</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-ide-databases</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>

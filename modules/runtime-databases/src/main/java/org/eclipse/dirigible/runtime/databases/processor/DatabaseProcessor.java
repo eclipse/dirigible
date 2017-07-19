@@ -1,0 +1,165 @@
+package org.eclipse.dirigible.runtime.databases.processor;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.inject.Inject;
+import javax.sql.DataSource;
+
+import org.eclipse.dirigible.database.api.DatabaseModule;
+import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.runtime.databases.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.runtime.databases.helpers.DatabaseQueryHelper;
+import org.eclipse.dirigible.runtime.databases.helpers.DatabaseQueryHelper.RequestExecutionCallback;
+import org.eclipse.dirigible.runtime.databases.processor.format.ResultSetStringWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Processing the Database SQL Queries Service incoming requests 
+ *
+ */
+public class DatabaseProcessor {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseProcessor.class);
+	
+	private static final String SCRIPT_DELIMITER = ";";
+	private boolean LIMITED = true;
+	
+	@Inject
+	private IDatabase database;
+	
+	public boolean existsDatabase(String type, String name) {
+		DataSource dataSource = getDataSource(type, name);
+		return dataSource != null;
+	}
+
+	public List<String> getDatabaseTypes() {
+		return DatabaseModule.getDatabaseTypes();
+	}
+	
+	public Set<String> getDataSources(String type) {
+		return DatabaseModule.getDataSources(type);
+	}
+
+	public DataSource getDataSource(String type, String name) {
+		DataSource dataSource = null;
+		if (type == null) {
+			if (name == null) {
+				dataSource = database.getDataSource();
+			} else {
+				dataSource = database.getDataSource(name);
+			}
+		} else {
+			dataSource = DatabaseModule.getDataSource(type, name);
+		}
+		return dataSource;
+	}
+	
+	public String executeQuery(String type, String name, String sql) {
+		DataSource dataSource = getDataSource(type, name);
+		if (dataSource != null) {
+			return executeStatement(dataSource, sql, true);
+		}
+		return null;
+	}
+
+	public String executeUpdate(String type, String name, String sql) {
+		DataSource dataSource = getDataSource(type, name);
+		if (dataSource != null) {
+			return executeStatement(dataSource, sql, false);
+		}
+		return null;
+	}
+
+	public String executeStatement(DataSource dataSource, String sql, boolean isQuery) {
+
+		if ((sql == null) || (sql.length() == 0)) {
+			return "";
+		}
+
+		List<String> results = new ArrayList<String>();
+		List<String> errors = new ArrayList<String>();
+		
+		StringTokenizer tokenizer = new StringTokenizer(sql, SCRIPT_DELIMITER);
+		while (tokenizer.hasMoreTokens()) {
+			String line = tokenizer.nextToken();
+			if ("".equals(line.trim())) {
+				continue;
+			}
+
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				DatabaseQueryHelper.executeSingleStatement(connection, line, isQuery, new RequestExecutionCallback() {
+					@Override
+					public void updateDone(int recordsCount) {
+						results.add(recordsCount + "");
+					}
+
+					@Override
+					public void queryDone(ResultSet rs) {
+						try {
+							results.add(printResultSet(rs, LIMITED));
+						} catch (SQLException e) {
+							logger.warn(e.getMessage(), e);
+							errors.add(e.getMessage());
+						}
+					}
+
+					@Override
+					public void error(Throwable t) {
+						logger.warn(t.getMessage(), t);
+						errors.add(t.getMessage());
+					}
+				});
+			} catch (SQLException e) {
+				logger.warn(e.getMessage(), e);
+				errors.add(e.getMessage());
+			} finally {
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						logger.warn(e.getMessage(), e);
+					}
+				}
+			}
+		}
+		if (!errors.isEmpty()) {
+			return String.join("\n", errors);
+		}
+		return String.join("\n", results);
+	}
+	
+	protected String printResultSet(ResultSet resultSet, boolean limited) throws SQLException {
+		ResultSetStringWriter writer = new ResultSetStringWriter();
+		writer.setLimited(limited);
+		String tableString = writer.writeTable(resultSet);
+		return tableString;
+	}
+
+	public String getMetadataAsJson(String type, String name) throws SQLException {
+		DataSource dataSource = getDataSource(type, name);
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			return DatabaseMetadataHelper.getAsJson(connection, null, null, null);
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+}

@@ -13,7 +13,7 @@ package org.eclipse.dirigible.engine.js.nashorn.processor;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.eclipse.dirigible.engine.api.IScriptExecutor;
+import org.eclipse.dirigible.engine.api.script.IScriptExecutor;
 
 public class NashornRepositoryModuleSourceProvider {
 

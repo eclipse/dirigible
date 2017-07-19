@@ -17,7 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.dirigible.engine.api.IScriptExecutor;
+import org.eclipse.dirigible.engine.api.script.IScriptExecutor;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSource;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase;

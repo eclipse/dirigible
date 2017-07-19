@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,6 +37,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	
 	@Inject
 	private PersistenceManager<AccessDefinition> accessPersistenceManager;
+	
+	// used by the access security filter to minimize the performance implications on getting the whole list
+	private static final List<AccessDefinition> CACHE = Collections.synchronizedList(new ArrayList<AccessDefinition>());
 	
 	// Roles
 	
@@ -166,6 +171,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			Connection connection = dataSource.getConnection();
 			try {
 				accessPersistenceManager.insert(connection, accessDefinition);
+				clearCache();
 				return accessDefinition;
 			} finally {
 				if (connection != null) {
@@ -258,6 +264,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 				accessDefinition.setRole(role);
 				accessDefinition.setDescription(description);
 				accessPersistenceManager.update(connection, accessDefinition, id);
+				clearCache();
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -270,10 +277,15 @@ public class SecurityCoreService implements ISecurityCoreService {
 	
 	@Override
 	public List<AccessDefinition> getAccessDefinitions() throws AccessException {
+		if (!CACHE.isEmpty()) {
+			return Collections.unmodifiableList(CACHE);
+		}
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				return accessPersistenceManager.findAll(connection, AccessDefinition.class);
+				List<AccessDefinition> accessDefinitions = accessPersistenceManager.findAll(connection, AccessDefinition.class);
+				CACHE.addAll(accessDefinitions);
+				return Collections.unmodifiableList(accessDefinitions);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -354,7 +366,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-
+	
 	@Override
 	public List<AccessDefinition> parseAccessDefinitions(String json) {
 		AccessArtifact accessArtifact = AccessArtifact.parse(json);
@@ -371,6 +383,10 @@ public class SecurityCoreService implements ISecurityCoreService {
 	public String serializeAccessDefinitions(List<AccessDefinition> accessDefinitions) {
 		AccessArtifact accessArtifact = AccessArtifact.combine(accessDefinitions);
 		return accessArtifact.serialize();
+	}
+
+	public void clearCache() {
+		CACHE.clear();
 	}
 	
 }

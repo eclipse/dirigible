@@ -21,7 +21,7 @@ public class ExtensionsRestService implements IRestService {
 	private ExtensionsProcessor processor;
 	
 	@GET
-	@Path("/extensions")
+	@Path("/core/extensions")
 	public Response list() throws ExtensionsException {
 		return Response.ok().entity(processor.renderTree()).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}

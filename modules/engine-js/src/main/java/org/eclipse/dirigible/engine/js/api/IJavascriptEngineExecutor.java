@@ -14,7 +14,7 @@ package org.eclipse.dirigible.engine.js.api;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.api.IScriptExecutor;
+import org.eclipse.dirigible.engine.api.script.IScriptExecutor;
 
 public interface IJavascriptEngineExecutor extends IScriptExecutor {
 

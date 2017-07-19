@@ -93,7 +93,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	private void clearCache() {
 		ROLES_SYNCHRONIZED.clear();
 		ACCESS_SYNCHRONIZED.clear();
-		
+		securityCoreService.clearCache();
 	}
 
 	private void synchronizePredelivered() throws SynchronizationException {

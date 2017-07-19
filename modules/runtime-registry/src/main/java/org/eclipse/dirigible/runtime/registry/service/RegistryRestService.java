@@ -24,7 +24,7 @@ public class RegistryRestService implements IRestService {
 	private RegistryProcessor processor;
 	
 	@GET
-	@Path("/registry/{path:.*}")
+	@Path("/core/registry/{path:.*}")
 	public Response getResource(@PathParam("path") String path) {
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {

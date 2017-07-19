@@ -77,10 +77,6 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	
 	
 	
-	
-	
-	
-	
 	@Test
 	public void createAccessDefinition() throws AccessException {
 		securityCoreService.removeRole("test_role1");

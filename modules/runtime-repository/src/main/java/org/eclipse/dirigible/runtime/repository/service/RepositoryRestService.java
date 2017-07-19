@@ -34,7 +34,7 @@ public class RepositoryRestService implements IRestService {
 	private RepositoryProcessor processor;
 	
 	@GET
-	@Path("/repository/{path:.*}")
+	@Path("/core/repository/{path:.*}")
 	public Response getResource(@PathParam("path") String path) {
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
