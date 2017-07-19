@@ -83,6 +83,9 @@
         <dependent-module archiveName="dirigible-runtime-databases-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-databases/dirigible-runtime-databases">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-runtime-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-security/dirigible-runtime-security">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-runtime-ide-workspaces-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-workspaces/dirigible-runtime-ide-workspaces">
             <dependency-type>uses</dependency-type>
         </dependent-module>

@@ -391,6 +391,7 @@
 		<module>modules/runtime-registry</module>
 		<module>modules/runtime-extensions</module>
 		<module>modules/runtime-databases</module>
+		<module>modules/runtime-security</module>
 
 		<module>modules/runtime-ide-workspaces</module>
 		<module>modules/runtime-ide-terminal</module>

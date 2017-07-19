@@ -198,6 +198,11 @@
 		 	<artifactId>dirigible-runtime-databases</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-security</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		
 		<!-- Runtime IDE Services -->
