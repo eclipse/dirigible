@@ -29,7 +29,7 @@ public class AccessDefinition {
 	@Column(name="ACCESS_ROLE", columnDefinition="VARCHAR", nullable=false, length=64)
 	private String role;
 	
-	@Column(name="ACCESS_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)
+	@Column(name="ACCESS_DESCRIPTION", columnDefinition="VARCHAR", nullable=true, length=1024)
 	private String description;
 	
 	@Column(name="ACCESS_CREATED_BY", columnDefinition="VARCHAR", nullable=false, length=32)

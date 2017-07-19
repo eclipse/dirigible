@@ -16,7 +16,7 @@ public class RoleDefinition {
 	@Column(name="ROLE_LOCATION", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String location;
 	
-	@Column(name="ROLE_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)
+	@Column(name="ROLE_DESCRIPTION", columnDefinition="VARCHAR", nullable=true, length=1024)
 	private String description;
 	
 	@Column(name="ROLE_CREATED_BY", columnDefinition="VARCHAR", nullable=false, length=32)

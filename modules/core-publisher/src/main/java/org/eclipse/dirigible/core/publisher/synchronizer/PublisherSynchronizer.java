@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.core.publisher.service.PublishCoreService;
@@ -33,6 +34,11 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	private String currentWorkspace = null;
 	private String currentRegistry = null;
 	private Timestamp currentRequestTime = new Timestamp(0);
+	
+	public static final void forceSynchronization() {
+		PublisherSynchronizer publisherSynchronizer = StaticInjector.getInjector().getInstance(PublisherSynchronizer.class);
+		publisherSynchronizer.synchronize();
+	}
 	
 	@Override
 	public void synchronize() {

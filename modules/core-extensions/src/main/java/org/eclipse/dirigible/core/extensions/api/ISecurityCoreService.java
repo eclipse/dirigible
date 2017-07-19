@@ -6,7 +6,7 @@ import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 
-public interface IExtensionsCoreService extends ICoreService {
+public interface ISecurityCoreService extends ICoreService {
 	
 	public static final String FILE_EXTENSION_EXTENSIONPOINT = ".extensionpoint";
 	

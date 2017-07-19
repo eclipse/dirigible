@@ -27,12 +27,6 @@ public interface ISecurityCoreService extends ICoreService {
 
 	public List<RoleDefinition> getRoles() throws AccessException;
 	
-	public RoleDefinition[] parseRoles(String json);
-	
-	public RoleDefinition[] parseRoles(byte[] json);
-	
-	public String serializeRoles(RoleDefinition[] roles);
-
 	
 	// Access
 	
@@ -56,10 +50,19 @@ public interface ISecurityCoreService extends ICoreService {
 	
 	public boolean isAccessAllowed(String uri, String method, String role) throws AccessException;
 	
-	public AccessDefinition[] parseAccessDefinitions(String json);
 	
-	public AccessDefinition[] parseAccessDefinitions(byte[] json);
 	
-	public String serializeAccessDefinitions(AccessDefinition[] accessDefinitions);
+	public RoleDefinition[] parseRoles(String json);
+	
+	public RoleDefinition[] parseRoles(byte[] json);
+	
+	public String serializeRoles(RoleDefinition[] roles);
+	
+	public List<AccessDefinition> parseAccessDefinitions(String json);
+	
+	public List<AccessDefinition> parseAccessDefinitions(byte[] json);
+	
+	public String serializeAccessDefinitions(List<AccessDefinition> accessDefinitions);
+	
 	
 }

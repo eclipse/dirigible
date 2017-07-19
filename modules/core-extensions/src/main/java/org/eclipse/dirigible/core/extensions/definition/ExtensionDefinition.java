@@ -21,7 +21,7 @@ public class ExtensionDefinition {
 	@Column(name="EXTENSION_MODULE", columnDefinition="VARCHAR", nullable=false, length=255)
 	private String module;
 	
-	@Column(name="EXTENSION_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)
+	@Column(name="EXTENSION_DESCRIPTION", columnDefinition="VARCHAR", nullable=true, length=1024)
 	private String description;
 	
 	@Column(name="EXTENSION_CREATED_BY", columnDefinition="VARCHAR", nullable=false, length=32)

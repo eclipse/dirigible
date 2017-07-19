@@ -60,6 +60,12 @@
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-local</artifactId>
+            <version>${dirigible.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

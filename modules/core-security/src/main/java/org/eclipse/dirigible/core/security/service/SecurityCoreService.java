@@ -18,6 +18,7 @@ import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
+import org.eclipse.dirigible.core.security.definition.AccessArtifact;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -355,18 +356,21 @@ public class SecurityCoreService implements ISecurityCoreService {
 	}
 
 	@Override
-	public AccessDefinition[] parseAccessDefinitions(String json) {
-		return GsonHelper.GSON.fromJson(json, AccessDefinition[].class);
+	public List<AccessDefinition> parseAccessDefinitions(String json) {
+		AccessArtifact accessArtifact = AccessArtifact.parse(json);
+		return accessArtifact.divide();
 	}
 	
 	@Override
-	public AccessDefinition[] parseAccessDefinitions(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), AccessDefinition[].class);
+	public List<AccessDefinition> parseAccessDefinitions(byte[] json) {
+		AccessArtifact accessArtifact = AccessArtifact.parse(json);
+		return accessArtifact.divide();
 	}
 	
 	@Override
-	public String serializeAccessDefinitions(AccessDefinition[] accessDefinitions) {
-		return GsonHelper.GSON.toJson(accessDefinitions);
+	public String serializeAccessDefinitions(List<AccessDefinition> accessDefinitions) {
+		AccessArtifact accessArtifact = AccessArtifact.combine(accessDefinitions);
+		return accessArtifact.serialize();
 	}
 	
 }

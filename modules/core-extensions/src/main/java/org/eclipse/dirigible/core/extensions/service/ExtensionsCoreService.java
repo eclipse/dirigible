@@ -15,14 +15,14 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
-import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
+import org.eclipse.dirigible.core.extensions.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.squle.Squle;
 
 @Singleton
-public class ExtensionsCoreService implements IExtensionsCoreService {
+public class ExtensionsCoreService implements ISecurityCoreService {
 	
 	@Inject
 	private DataSource dataSource;

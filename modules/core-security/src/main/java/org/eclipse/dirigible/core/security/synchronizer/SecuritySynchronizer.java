@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -34,7 +35,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	
 	private static final Map<String, RoleDefinition[]> ROLES_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, RoleDefinition[]>());
 	
-	private static final Map<String, AccessDefinition[]> ACCESS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, AccessDefinition[]>());
+	private static final Map<String, List<AccessDefinition>> ACCESS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, List<AccessDefinition>>());
 	
 	
 	private static final Set<String> ROLES_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
@@ -46,6 +47,11 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	@Inject
 	private SecurityCoreService securityCoreService;
 	
+	
+	public static final void forceSynchronization() {
+		SecuritySynchronizer securitySynchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
+		securitySynchronizer.synchronize();
+	}	
 	
 	public void registerPredeliveredRoles(String rolesPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(rolesPath);
@@ -60,7 +66,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	public void registerPredeliveredAccess(String accessPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(accessPath);
 		String json = IOUtils.toString(in, Configuration.UTF8);
-		AccessDefinition[] accessDefinitions = securityCoreService.parseAccessDefinitions(json);
+		List<AccessDefinition> accessDefinitions = securityCoreService.parseAccessDefinitions(json);
 		for (AccessDefinition accessDefinition : accessDefinitions) {
 			accessDefinition.setLocation(accessPath);
 		}
@@ -101,7 +107,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 		
 		// Access
-		for (AccessDefinition[] accessDefinitions : ACCESS_PREDELIVERED.values()) {
+		for (List<AccessDefinition> accessDefinitions : ACCESS_PREDELIVERED.values()) {
 			for (AccessDefinition accessDefinition : accessDefinitions) {
 				synchronizeAccess(accessDefinition);
 			}
@@ -173,7 +179,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			
 		}
 		if (resourceName.endsWith(ISecurityCoreService.FILE_EXTENSION_ACCESS)) {
-			AccessDefinition[] accessDefinitions = securityCoreService.parseAccessDefinitions(resource.getContent());
+			List<AccessDefinition> accessDefinitions = securityCoreService.parseAccessDefinitions(resource.getContent());
 			for (AccessDefinition accessDefinition : accessDefinitions) {
 				accessDefinition.setLocation(resource.getPath());
 				synchronizeAccess(accessDefinition);

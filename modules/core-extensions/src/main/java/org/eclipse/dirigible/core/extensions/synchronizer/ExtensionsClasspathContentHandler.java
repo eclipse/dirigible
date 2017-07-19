@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
-import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
+import org.eclipse.dirigible.core.extensions.api.ISecurityCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +19,12 @@ public class ExtensionsClasspathContentHandler extends AbstractClasspathContentH
 		boolean isValid = false;
 		
 		try {
-			if (path.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
+			if (path.endsWith(ISecurityCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
 				isValid = true;
 				extensionsSynchronizer.registerPredeliveredExtensionPoint(path);
 			}
 			
-			if (path.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSION)) {
+			if (path.endsWith(ISecurityCoreService.FILE_EXTENSION_EXTENSION)) {
 				isValid = true;
 				extensionsSynchronizer.registerPredeliveredExtension(path);
 			}
