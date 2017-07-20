@@ -38,6 +38,7 @@
 		<!-- Content - API -->
 		<module>api-core</module>
 		<module>api-http</module>
+		<module>api-utils</module>
 
 		<!-- Content - IDE -->
 		<module>ide-core</module>
