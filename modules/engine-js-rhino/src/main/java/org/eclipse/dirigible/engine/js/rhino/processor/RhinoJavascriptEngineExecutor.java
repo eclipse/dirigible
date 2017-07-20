@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.eclipse.dirigible.api.v3.core.Console;
+import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
@@ -53,6 +55,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 			require.install(topLevelScope);
 
 			topLevelScope.put(IJavascriptEngineExecutor.JS_ENGINE_TYPE, topLevelScope, IJavascriptEngineExecutor.JS_TYPE_RHINO);
+			topLevelScope.put(IJavascriptEngineExecutor.CONSOLE, topLevelScope, ConsoleFacade.getConsole());
 
 			try {
 				ModuleSource moduleSource = sourceProvider.loadSource(module, null, null);

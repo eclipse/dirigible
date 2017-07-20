@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-http</artifactId>
+            <artifactId>dirigible-api-core</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
         <dependency>

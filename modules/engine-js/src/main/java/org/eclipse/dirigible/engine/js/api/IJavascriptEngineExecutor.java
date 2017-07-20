@@ -24,6 +24,8 @@ public interface IJavascriptEngineExecutor extends IScriptExecutor {
 	public static final String JS_TYPE_RHINO = "rhino";
 	public static final String JS_TYPE_NASHORN = "nashorn";
 	public static final String JS_TYPE_V8 = "v8";
+	
+	public static final String CONSOLE = "console";
 
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException;
 
