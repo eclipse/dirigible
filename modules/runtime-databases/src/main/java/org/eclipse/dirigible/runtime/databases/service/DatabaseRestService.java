@@ -65,7 +65,7 @@ public class DatabaseRestService implements IRestService {
 	@GET
 	@Path("{type}/{name}")
 	@Produces("application/json")
-	public Response listArtefacts(@PathParam("type") String type, @PathParam("name") String name, @Context HttpServletRequest request) throws SQLException {
+	public Response listArtifacts(@PathParam("type") String type, @PathParam("name") String name, @Context HttpServletRequest request) throws SQLException {
 		DataSource dataSource = processor.getDataSource(type, name);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Type {1} not known.", name, type);

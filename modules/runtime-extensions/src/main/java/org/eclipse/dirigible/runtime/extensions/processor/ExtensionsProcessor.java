@@ -20,15 +20,25 @@ public class ExtensionsProcessor {
 	@Inject
 	private ExtensionsCoreService extensionsCoreService;
 	
-	public String renderTree() throws ExtensionsException {
-		List<ExtensionPointBundle> bundles = new ArrayList<ExtensionPointBundle>();
+	public String renderExtensionPoints() throws ExtensionsException {
+		List<ExtensionPoint> bundles = new ArrayList<ExtensionPoint>();
 		List<ExtensionPointDefinition> extensionPoints = extensionsCoreService.getExtensionPoints();
 		for (ExtensionPointDefinition extensionPointDefinition : extensionPoints) {
 			List<ExtensionDefinition> extensions = extensionsCoreService.getExtensionsByExtensionPoint(extensionPointDefinition.getName());
-			ExtensionPointBundle bundle = new ExtensionPointBundle(extensionPointDefinition, extensions);
+			ExtensionPoint bundle = new ExtensionPoint(extensionPointDefinition, extensions);
 			bundles.add(bundle);
 		}
 		return GsonHelper.GSON.toJson(bundles);
+	}
+	
+	public String renderExtensionPoint(String name) throws ExtensionsException {
+		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPointByName(name);
+		if (extensionPointDefinition == null) {
+			return null;
+		}
+		List<ExtensionDefinition> extensions = extensionsCoreService.getExtensionsByExtensionPoint(extensionPointDefinition.getName());
+		ExtensionPoint bundle = new ExtensionPoint(extensionPointDefinition, extensions);
+		return GsonHelper.GSON.toJson(bundle);
 	}
 	
 }

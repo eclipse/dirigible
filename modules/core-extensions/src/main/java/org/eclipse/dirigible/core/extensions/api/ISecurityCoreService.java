@@ -19,6 +19,8 @@ public interface ISecurityCoreService extends ICoreService {
 
 	public ExtensionPointDefinition getExtensionPoint(String location) throws ExtensionsException;
 	
+	public ExtensionPointDefinition getExtensionPointByName(String name) throws ExtensionsException;
+	
 	public boolean existsExtensionPoint(String location) throws ExtensionsException;
 
 	public void removeExtensionPoint(String location) throws ExtensionsException;

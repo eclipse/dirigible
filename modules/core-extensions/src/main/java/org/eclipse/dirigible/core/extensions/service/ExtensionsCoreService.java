@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.core.extensions.service;
 
+import static java.text.MessageFormat.format;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -65,6 +67,34 @@ public class ExtensionsCoreService implements ISecurityCoreService {
 			Connection connection = dataSource.getConnection();
 			try {
 				return extensionPointPersistenceManager.find(connection, ExtensionPointDefinition.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ExtensionsException(e);
+		}
+	}
+	
+	@Override
+	public ExtensionPointDefinition getExtensionPointByName(String name) throws ExtensionsException {
+		try {
+			Connection connection = dataSource.getConnection();
+			try {
+				String sql = Squle.getNative(connection)
+						.select()
+						.column("*")
+						.from("DIRIGIBLE_EXTENSION_POINTS")
+						.where("EXTENSIONPOINT_NAME = ?").toString();
+				List<ExtensionPointDefinition> extensionPointDefinitions = extensionPointPersistenceManager.query(connection, ExtensionPointDefinition.class, sql, Arrays.asList(name));
+				if (extensionPointDefinitions.isEmpty()) {
+					return null;
+				}
+				if (extensionPointDefinitions.size() > 1) {
+					throw new ExtensionsException(format("There are more that one ExtensionPoints with the same name [{0}] at locations: [{1}] and [{2}].", name, extensionPointDefinitions.get(0).getLocation(), extensionPointDefinitions.get(1).getLocation()));
+				}
+				return extensionPointDefinitions.get(0);
 			} finally {
 				if (connection != null) {
 					connection.close();
