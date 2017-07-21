@@ -31,5 +31,30 @@ public class ConsoleFacade {
 	public static Console getConsole() {
 		return console;
 	}
+	
+	
+	public static void error(String message) {
+		console.error(message);
+	}
+
+	public static void info(String message) {
+		console.info(message);
+	}
+
+	public static void log(String message) {
+		console.info(message);
+	}
+
+	public static void warn(String message) {
+		console.warn(message);
+	}
+
+	public static void debug(String message) {
+		console.debug(message);
+	}
+
+	public static void trace(String message) {
+		console.trace(message);
+	}
 
 }

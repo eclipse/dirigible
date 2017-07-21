@@ -40,20 +40,20 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 		V8RepositoryModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 		V8 v8 = V8.createV8Runtime();
-		V8Object console = new V8Object(v8);
-		V8Function logFunction = new V8Function(v8, new JavaCallback() {
-			
-			@Override
-			public Object invoke(V8Object receiver, V8Array parameters) {
-				Object message =  parameters.get(0);
-				ConsoleFacade.log((String)message, 0);
+//		V8Object console = new V8Object(v8);
+//		V8Function logFunction = new V8Function(v8, new JavaCallback() {
+//			
+//			@Override
+//			public Object invoke(V8Object receiver, V8Array parameters) {
+//				Object message =  parameters.get(0);
+//				ConsoleFacade.log((String)message, 0);
 //					message.release();
-				return null;
-			}
-		});
+//				return null;
+//			}
+//		});
 		try {
-			console.add("log", logFunction);
-			v8.add("console", console);
+//			console.add("log", logFunction);
+//			v8.add("console", console);
 			v8.add("engine", IJavascriptEngineExecutor.JS_TYPE_V8);
 			v8.registerJavaMethod(new JavaV8Call(), J2V8CALL_FUNCTION_NAME);
 			v8.registerJavaMethod(new JavaCallback() {
@@ -69,14 +69,15 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 				}
 			}, "_j2v8loadSource");
 			v8.executeScript(Require.CODE);
+			v8.executeScript("var console = require('core/v3/console')");
 			String source = sourceProvider.loadSource(module);
 			result = v8.executeScript(source);
-			System.out.println(result);
+//			System.out.println(result);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new ScriptingException(e);
 		} finally {
-			console.release();
-			logFunction.release();
+//			console.release();
+//			logFunction.release();
 			v8.release();
 			if (result instanceof Releasable) {
 				((Releasable) result).release();
