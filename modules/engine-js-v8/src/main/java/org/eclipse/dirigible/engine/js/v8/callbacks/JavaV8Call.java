@@ -1,6 +1,9 @@
 package org.eclipse.dirigible.engine.js.v8.callbacks;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dirigible.api.v3.core.JavaFacade;
 
@@ -23,7 +26,20 @@ public class JavaV8Call implements JavaCallback {
 			param.release();
 		}
 		try {
-			return JavaFacade.call(className, methodName, params);
+			Object result = JavaFacade.call(className, methodName, params);
+			if (result != null && result.getClass().isArray()) {
+				List<Object> list = new ArrayList<>();
+				for (int j = 0; j < Array.getLength(result); j++) {
+					Object next = Array.get(result, j);
+					if (next instanceof Byte) {
+						list.add(new Integer((byte)next));
+					} else {
+						list.add(next);
+					}
+				}
+				return V8ObjectUtils.toV8Array(receiver.getRuntime(), list);
+			}
+			return result;
 		} catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
 			throw new RuntimeException(e);

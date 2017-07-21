@@ -16,6 +16,8 @@ exports.call = function(className, methodName, params) {
 		result = org.eclipse.dirigible.api.v3.core.JavaFacade.call(className, methodName, params);
 	} else if (engine === "nashorn") {
 		result = Packages.org.eclipse.dirigible.api.v3.core.JavaFacade.call(className, methodName, params);
+	} else if (engine === "v8") {
+		result = j2v8call(className, methodName, params);
 	}
 	return result;
 };

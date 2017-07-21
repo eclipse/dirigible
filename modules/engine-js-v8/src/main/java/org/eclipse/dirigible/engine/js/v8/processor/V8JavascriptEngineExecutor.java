@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
@@ -17,6 +18,7 @@ import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.Releasable;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
+import com.eclipsesource.v8.V8Function;
 import com.eclipsesource.v8.V8Object;
 
 public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
@@ -38,11 +40,24 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 		V8RepositoryModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 		V8 v8 = V8.createV8Runtime();
+		V8Object console = new V8Object(v8);
+		V8Function logFunction = new V8Function(v8, new JavaCallback() {
+			
+			@Override
+			public Object invoke(V8Object receiver, V8Array parameters) {
+				Object message =  parameters.get(0);
+				ConsoleFacade.log((String)message, 0);
+//					message.release();
+				return null;
+			}
+		});
 		try {
+			console.add("log", logFunction);
+			v8.add("console", console);
 			v8.add("engine", IJavascriptEngineExecutor.JS_TYPE_V8);
 			v8.registerJavaMethod(new JavaV8Call(), J2V8CALL_FUNCTION_NAME);
 			v8.registerJavaMethod(new JavaCallback() {
-				
+
 				@Override
 				public Object invoke(V8Object receiver, V8Array parameters) {
 					Object modulename = parameters.get(0);
@@ -60,8 +75,10 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			console.release();
+			logFunction.release();
 			v8.release();
-			if(result instanceof Releasable){
+			if (result instanceof Releasable) {
 				((Releasable) result).release();
 			}
 		}
