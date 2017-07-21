@@ -29,10 +29,16 @@
     </build>
     <dependencies>
     	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-api-core</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
+    	<dependency>
 		    <groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
 		    <version>${commons.codec}</version>
 		</dependency>
+		
     </dependencies>
 
 </project>
