@@ -7,10 +7,10 @@ import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.runtime.extensions.processor.ExtensionPoint;
@@ -40,6 +40,7 @@ public class ExtensionsRestService implements IRestService {
 	
 	@GET
 	@Path("/")
+	@Produces("application/json")
 	@ApiOperation(
 	        value = "List all the Extension Points with their Extensions",
 	        notes = "List all the Extension Points with their Extensions in JSON",
@@ -47,11 +48,12 @@ public class ExtensionsRestService implements IRestService {
 	        responseContainer = "List"
 	    )
 	public Response listExtensionPoints() throws ExtensionsException {
-		return Response.ok().entity(processor.renderExtensionPoints()).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(processor.renderExtensionPoints()).build();
 	}
 	
 	@GET
 	@Path("/{name}")
+	@Produces("application/json")
 	@ApiOperation(
 	        value = "Returns the Extension Point with their Extensions requested by its name",
 	        notes = "Returns the Extension Point with their Extensions requested by its name in JSON",
@@ -63,7 +65,7 @@ public class ExtensionsRestService implements IRestService {
 		if (json == null) {
 			return Response.status(Status.NOT_FOUND).entity(format("ExtensionPoint with name [{0}] does not exist", name)).build();
 		}
-		return Response.ok().entity(json).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(json).build();
 	}
 	
 	

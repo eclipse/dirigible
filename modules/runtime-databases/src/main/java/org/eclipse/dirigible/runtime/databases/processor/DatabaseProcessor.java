@@ -12,9 +12,11 @@ import java.util.StringTokenizer;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.runtime.databases.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
+import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper;
 import org.eclipse.dirigible.runtime.databases.helpers.DatabaseQueryHelper;
 import org.eclipse.dirigible.runtime.databases.helpers.DatabaseQueryHelper.RequestExecutionCallback;
 import org.eclipse.dirigible.runtime.databases.processor.format.ResultSetStringWriter;
@@ -150,7 +152,9 @@ public class DatabaseProcessor {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-			return DatabaseMetadataHelper.getAsJson(connection, null, null, null);
+			DatabaseMetadata database = new DatabaseMetadata(connection, null, null, null);
+			String json = GsonHelper.GSON.toJson(database);
+			return json;
 		} finally {
 			if (connection != null) {
 				try {

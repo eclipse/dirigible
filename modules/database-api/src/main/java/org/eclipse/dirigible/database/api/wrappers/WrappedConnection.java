@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.database.api;
+package org.eclipse.dirigible.database.api.wrappers;
 
 import java.sql.Array;
 import java.sql.Blob;

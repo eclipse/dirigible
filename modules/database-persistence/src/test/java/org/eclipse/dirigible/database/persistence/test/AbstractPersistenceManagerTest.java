@@ -9,13 +9,13 @@ import org.junit.Before;
 
 public class AbstractPersistenceManagerTest {
 	
-	private DataSource dataSrouce = null;
+	private DataSource dataSource = null;
 	
 	@Before
 	public void setUp() {
 		try {
 			DerbyDatabase derbyDatabase = new DerbyDatabase();
-			this.dataSrouce = derbyDatabase.getDataSource("target/tests/derby");
+			this.dataSource = derbyDatabase.getDataSource("target/tests/derby");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -23,7 +23,7 @@ public class AbstractPersistenceManagerTest {
 	}
 	
 	public DataSource getDataSrouce() {
-		return dataSrouce;
+		return dataSource;
 	}
 
 }

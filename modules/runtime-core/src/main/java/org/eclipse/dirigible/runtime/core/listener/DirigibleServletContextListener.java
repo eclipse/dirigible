@@ -104,9 +104,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	    // customize some of the properties
 //	    feature.setBasePath("/api");
 		feature.setPrettyPrint(true);
-		feature.setDescription("Eclipse Dirigible core and ide services provided by the applicaiton platform");
+		feature.setDescription("Eclipse Dirigible API of the core RESTful services provided by the application development platform itself");
 		feature.setVersion("3.0");
-		feature.setTitle("Eclipse Dirigible - Services");
+		feature.setTitle("Eclipse Dirigible - RESTful Services API");
 		feature.setContact("dirigible-dev@eclipse.org");
 		feature.setLicense("Eclipse Public License - v 1.0");
 		feature.setLicenseUrl("https://www.eclipse.org/legal/epl-v10.html");

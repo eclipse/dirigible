@@ -39,6 +39,11 @@
 			<artifactId>dirigible-commons-api</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-squle</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
     </dependencies>
 
 </project>

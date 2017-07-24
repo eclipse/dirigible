@@ -1,19 +1,22 @@
-package org.eclipse.dirigible.runtime.databases.helpers.test;
+package org.eclipse.dirigible.database.api.metadata.test;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper;
+import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.ColumnsIteratorCallback;
+import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.IndicesIteratorCallback;
+import org.eclipse.dirigible.database.api.metadata.SchemaMetadata;
+import org.eclipse.dirigible.database.api.metadata.TableMetadata;
 import org.eclipse.dirigible.database.derby.DerbyDatabase;
-import org.eclipse.dirigible.runtime.databases.helpers.DatabaseMetadataHelper;
-import org.eclipse.dirigible.runtime.databases.helpers.DatabaseMetadataHelper.ColumnsIteratorCallback;
-import org.eclipse.dirigible.runtime.databases.helpers.DatabaseMetadataHelper.IndicesIteratorCallback;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,8 +43,13 @@ public class DatabaseMetadataHelperTest {
 	public void listSchemaNamesTest() throws SQLException {
 		Connection connection = dataSrouce.getConnection();
 		try {
-			List<String> shemaNames = DatabaseMetadataHelper.listSchemaNames(connection, null, null);
-			assertTrue(shemaNames.contains("APP"));
+			List<SchemaMetadata> schemas = DatabaseMetadataHelper.listSchemas(connection, null, null, null);
+			for (SchemaMetadata schema : schemas) {
+				if ("APP".equals(schema.getName())) {
+					return;
+				}
+			}
+			fail("No APP schema present");
 		} finally {
 			if (connection != null) {
 				connection.close();
@@ -53,8 +61,13 @@ public class DatabaseMetadataHelperTest {
 	public void listTableNamesTest() throws SQLException {
 		Connection connection = dataSrouce.getConnection();
 		try {
-			List<String> tableNames = DatabaseMetadataHelper.listTableNames(connection, null, "SYS", null);
-			assertTrue(tableNames.contains("SYSKEYS"));
+			List<TableMetadata> tables = DatabaseMetadataHelper.listTables(connection, null, "SYS", null);
+			for (TableMetadata table : tables) {
+				if ("SYSKEYS".equals(table.getName())) {
+					return;
+				}
+			}
+			fail("No SYSKEYS table present");
 		} finally {
 			if (connection != null) {
 				connection.close();
@@ -85,17 +98,4 @@ public class DatabaseMetadataHelperTest {
 		}
 	}
 	
-	@Test
-	public void getAsJsonTest() throws SQLException {
-		Connection connection = dataSrouce.getConnection();
-		try {
-			String metadata = DatabaseMetadataHelper.getAsJson(connection, null, null, null);
-			assertNotNull(metadata);
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
-		}
-	}
-
 }

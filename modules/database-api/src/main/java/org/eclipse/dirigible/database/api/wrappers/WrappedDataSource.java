@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.database.api;
+package org.eclipse.dirigible.database.api.wrappers;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -21,6 +21,7 @@ import java.util.Collections;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

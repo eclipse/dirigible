@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -22,36 +21,51 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
 import org.eclipse.dirigible.runtime.databases.processor.DatabaseProcessor;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 
 /**
  * Front facing REST service serving the raw repository content
  */
 @Singleton
 @Path("/core/databases")
+@Api(value = "/core/databases", 
+description = "Databases Explorer Service",
+authorizations = {
+		  @Authorization(value="Developer, Operator", scopes = {})
+  	})
 public class DatabaseRestService implements IRestService {
 	
 	@Inject
 	private DatabaseProcessor processor;
 	
-	@Override
-	public Class<? extends IRestService> getType() {
-		return DatabaseRestService.class;
-	}
-	
 	@GET
 	@Path("")
 	@Produces("application/json")
+	@ApiOperation(
+	        value = "List all the databases types",
+	        notes = "List all the databases types in JSON",
+	        response = String.class,
+	        responseContainer = "List"
+	    )
 	public Response listDatabaseTypes(@Context HttpServletRequest request) {
 		List<String> databaseTypes = processor.getDatabaseTypes();
 		return Response.ok().entity(GsonHelper.GSON.toJson(databaseTypes)).build();
 	}
 
-	
-	
 	@GET
 	@Path("{type}")
 	@Produces("application/json")
+	@ApiOperation(
+	        value = "Returns all the available data sources for the given database {type}",
+	        notes = "Returns all the available data sources for the given database {type} in JSON",
+	        response = String.class,
+	        responseContainer = "List"
+	    )
 	public Response listDatabases(@PathParam("type") String type, @Context HttpServletRequest request) {
 		Set<String> list = processor.getDataSources(type);
 		if (list == null) {
@@ -65,6 +79,11 @@ public class DatabaseRestService implements IRestService {
 	@GET
 	@Path("{type}/{name}")
 	@Produces("application/json")
+	@ApiOperation(
+	        value = "Returns the metadata of the given data source with {name} and {type}",
+	        notes = "Returns the metadata of the given data source with {name} and {type} in JSON",
+	        response = DatabaseMetadata.class
+	    )
 	public Response listArtifacts(@PathParam("type") String type, @PathParam("name") String name, @Context HttpServletRequest request) throws SQLException {
 		DataSource dataSource = processor.getDataSource(type, name);
 		if (dataSource == null) {
@@ -79,6 +98,11 @@ public class DatabaseRestService implements IRestService {
 	@POST
 	@Path("{type}/{name}/query")
 	@Produces("text/plain")
+	@ApiOperation(
+	        value = "Executes a query operation on the datasource {name} and {type} and returns the result in a tabular format",
+	        notes = "Executes a query operation on the datasource {name} and {type} and returns the result in a tabular format in a plain text",
+	        response = String.class
+	    )
 	public Response executeQuery(@PathParam("type") String type, @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = request.getRemoteUser();
 		if (user == null) {
@@ -97,6 +121,11 @@ public class DatabaseRestService implements IRestService {
 	@POST
 	@Path("{type}/{name}/update")
 	@Produces("text/plain")
+	@ApiOperation(
+	        value = "Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format",
+	        notes = "Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format in a plain text",
+	        response = String.class
+	    )
 	public Response executeUpdate(@PathParam("type") String type, @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = request.getRemoteUser();
 		if (user == null) {
@@ -112,7 +141,9 @@ public class DatabaseRestService implements IRestService {
 		return Response.ok().entity(result).build();
 	}
 	
-	
-	
+	@Override
+	public Class<? extends IRestService> getType() {
+		return DatabaseRestService.class;
+	}
 	
 }

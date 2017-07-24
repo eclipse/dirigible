@@ -10,8 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dirigible.database.api.DatabaseException;
-
 public class DataTypeUtils {
 	
 	public static final int VARCHAR_DEFAULT_LENGTH = 512;
@@ -74,13 +72,13 @@ public class DataTypeUtils {
 		if (isDatabaseTypeSupported(type)) {
 			return DATABASE_TYPE_TO_DATA_TYPE.get(type).toString();
 		}
-		throw new DatabaseException(format("Type {0} not supported", type));
+		throw new SquleException(format("Type {0} not supported", type));
 	}
 	
 	public static Integer getDatabaseTypeByJavaType(Class clazz) {
 		Integer type = JAVA_TYPE_TO_DATABASE_TYPE.get(clazz);
 		if (type == null) {
-			throw new DatabaseException(format("Class {0} does not have mapping to a data type", clazz));
+			throw new SquleException(format("Class {0} does not have mapping to a data type", clazz));
 		}
 		return type;
 	}
@@ -88,7 +86,7 @@ public class DataTypeUtils {
 	public static Class getJavaTypeByDatabaseType(Integer type) {
 		Class clazz = DATABASE_TYPE_TO_JAVA_TYPE.get(type);
 		if (clazz == null) {
-			throw new DatabaseException(format("Type {0} does not have mapping to a java type", type));
+			throw new SquleException(format("Type {0} does not have mapping to a java type", type));
 		}
 		return clazz;
 	}

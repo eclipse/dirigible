@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.databases.helpers;
+package org.eclipse.dirigible.database.api.metadata;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.Filter;
 import org.eclipse.dirigible.database.squle.ISquleDialect;
 import org.eclipse.dirigible.database.squle.Squle;
 
@@ -52,12 +53,12 @@ public class DatabaseMetadataHelper {
 		return Squle.deriveDialect(connection);
 	}
 	
-	public static List<String> listSchemaNames(Connection connection, String catalogName, Filter<String> schemaNameFilter)
+	public static List<SchemaMetadata> listSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> tableNameFilter)
 			throws SQLException {
 
 		DatabaseMetaData dmd = connection.getMetaData();
 
-		List<String> listOfSchemes = new ArrayList<String>();
+		List<SchemaMetadata> result = new ArrayList<SchemaMetadata>();
 		ResultSet rs = null;
 
 		ISquleDialect squleDialect = getDialect(connection);
@@ -83,12 +84,12 @@ public class DatabaseMetadataHelper {
 			}
 			if (rs != null) {
 				while (rs.next()) {
-					String schemeName = rs.getString(1);
+					String schemeName = rs.getString(1); // TABLE_SCHEM or TABLE_CAT
 					// higher level filtering for schema if low level is not supported
 					if ((schemaNameFilter != null) && !schemaNameFilter.accepts(schemeName)) {
 						continue;
 					}
-					listOfSchemes.add(schemeName);
+					result.add(new SchemaMetadata(schemeName, connection, catalogName, tableNameFilter));
 				}
 			}
 
@@ -98,17 +99,17 @@ public class DatabaseMetadataHelper {
 			}
 		}
 
-		return listOfSchemes;
+		return result;
 	}
 	
-	public static List<String> listTableNames(Connection connection, String catalogName, String schemeName, Filter<String> tableNameFilter)
+	public static List<TableMetadata> listTables(Connection connection, String catalogName, String schemeName, Filter<String> tableNameFilter)
 			throws SQLException {
 
 		DatabaseMetaData dmd = connection.getMetaData();
 
 		ISquleDialect squleDialect = getDialect(connection);
 
-		List<String> listOfTables = new ArrayList<String>();
+		List<TableMetadata> result = new ArrayList<TableMetadata>();
 
 		ResultSet rs = null;
 		if (squleDialect.isCatalogForSchema()) {
@@ -118,17 +119,19 @@ public class DatabaseMetadataHelper {
 		}
 		try {
 			while (rs.next()) {
-				String tableName = rs.getString(3);
+				String tableName = rs.getString("TABLE_NAME");
+				String tableType = rs.getString("TABLE_TYPE");
+				String tableRemarks = rs.getString("REMARKS");
 				if ((tableNameFilter != null) && !tableNameFilter.accepts(tableName)) {
 					continue;
 				}
-				listOfTables.add(tableName);
+				result.add(new TableMetadata(tableName, tableType, tableRemarks, connection, catalogName, schemeName));
 			}
 		} finally {
 			rs.close();
 		}
 
-		return listOfTables;
+		return result;
 	}
 
 	public interface ColumnsIteratorCallback {
@@ -188,52 +191,4 @@ public class DatabaseMetadataHelper {
 		}
 	}
 	
-	public static String getAsJson(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> tableNameFilter) throws SQLException {
-		List<String> shemaNames = DatabaseMetadataHelper.listSchemaNames(connection, catalogName, schemaNameFilter);
-		JsonObject root = new JsonObject();
-		for (String schemaName : shemaNames) {
-			JsonObject schema = new JsonObject();
-			root.add(schemaName, schema);
-			List<String> tableNames = DatabaseMetadataHelper.listTableNames(connection, catalogName, schemaName, tableNameFilter);
-			for (String tableName : tableNames) {
-				JsonObject table = new JsonObject();
-				schema.add(tableName, table);
-				JsonArray columns = new JsonArray();
-				table.add("columns", columns);
-				JsonArray indices = new JsonArray();
-				table.add("indices", indices);
-				DatabaseMetadataHelper.iterateTableDefinition(connection, catalogName, schemaName, tableName, new ColumnsIteratorCallback() {
-					@Override
-					public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
-						JsonObject column = new JsonObject();
-						columns.add(column);
-						column.addProperty("columnName", columnName);
-						column.addProperty("columnType", columnType);
-						column.addProperty("columnSize", columnSize);
-						column.addProperty("isNullable", isNullable);
-						column.addProperty("isKey", isKey);
-					}
-				}, new IndicesIteratorCallback() {
-					@Override
-					public void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier,
-							String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition) {
-						JsonObject index = new JsonObject();
-						indices.add(index);
-						index.addProperty("indexName", indexName);
-						index.addProperty("indexType", indexType);
-						index.addProperty("columnName", columnName);
-						index.addProperty("isNonUnique", isNonUnique);
-						index.addProperty("indexQualifier", indexQualifier);
-						index.addProperty("ordinalPosition", ordinalPosition);
-						index.addProperty("sortOrder", sortOrder);
-						index.addProperty("cardinality", cardinality);
-						index.addProperty("pagesIndex", pagesIndex);
-						index.addProperty("filterCondition", filterCondition);
-					}
-				});
-			}
-		}
-		return root.toString();
-	}
-
 }

@@ -9,7 +9,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>API - http</name>
+	<name>API - Authentication</name>
 	<artifactId>dirigible-api-auth</artifactId>
     <packaging>jar</packaging>
     
