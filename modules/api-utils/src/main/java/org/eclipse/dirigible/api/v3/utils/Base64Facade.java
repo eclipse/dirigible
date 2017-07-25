@@ -1,9 +1,6 @@
 package org.eclipse.dirigible.api.v3.utils;
 
-import java.util.ArrayList;
-
 import org.apache.commons.codec.binary.Base64;
-import org.eclipse.dirigible.api.v3.core.ByteUtils;
 
 public class Base64Facade {
 
@@ -16,11 +13,17 @@ public class Base64Facade {
 		Base64 base64 = new Base64();
 		return base64.decode(input);
 	}
-	
-	// overloaded for J2V8
-	public static final String encode(ArrayList<Integer> input) {
-		byte[] byreArray = ByteUtils.listToArray(input);
-		return encode(byreArray);
-	}
 
+	public static final String encode(String input) {
+		if (input == null || input.length() < 2) {
+			throw new IllegalArgumentException("Invalid byte array");
+		}
+		String inputWithoutBraces = input.substring(1, input.length() - 1);
+		String[] bytesAsString = inputWithoutBraces.split(",");
+		byte[] bytes = new byte[bytesAsString.length];
+		for (int i = 0; i < bytesAsString.length; i++) {
+			bytes[i] = Byte.valueOf(bytesAsString[i]);
+		}
+		return encode(bytes);
+	}
 }

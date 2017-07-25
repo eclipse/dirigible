@@ -14,11 +14,10 @@ public class ByteUtils {
 				throw new IllegalArgumentException(ERROR_BYTE_ONLY_MESSAGE);
 			}
 			Integer intValue = (Integer) val;
-			if (Byte.MIN_VALUE > intValue && Byte.MAX_VALUE < intValue) {
+			if (Byte.MIN_VALUE > intValue || Byte.MAX_VALUE < intValue) {
 				throw new IllegalArgumentException(ERROR_BYTE_ONLY_MESSAGE);
 			}
-			byte b = Byte.valueOf(intValue + "");
-			byreArray[i] = b;
+			byreArray[i] = intValue.byteValue();
 		}
 		return byreArray;
 	}

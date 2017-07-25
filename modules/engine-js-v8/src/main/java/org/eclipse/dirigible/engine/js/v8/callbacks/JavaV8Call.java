@@ -32,7 +32,7 @@ public class JavaV8Call implements JavaCallback {
 				for (int j = 0; j < Array.getLength(result); j++) {
 					Object next = Array.get(result, j);
 					if (next instanceof Byte) {
-						list.add(new Integer((byte)next));
+						list.add(new Integer((byte) next));
 					} else {
 						list.add(next);
 					}
@@ -40,8 +40,8 @@ public class JavaV8Call implements JavaCallback {
 				return V8ObjectUtils.toV8Array(receiver.getRuntime(), list);
 			}
 			return result;
-		} catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
+		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException
+				| NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		} finally {
 			parameters.release();
