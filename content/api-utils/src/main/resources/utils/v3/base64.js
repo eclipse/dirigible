@@ -13,7 +13,7 @@
 var java = require('core/v3/java');
 
 exports.encode = function(var input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [input]);
+	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(input)]);
 	return output;
 };
 
