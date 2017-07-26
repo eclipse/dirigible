@@ -32,7 +32,7 @@ public class JavaV8Call implements JavaCallback {
 				for (int j = 0; j < Array.getLength(result); j++) {
 					Object next = Array.get(result, j);
 					if (next instanceof Byte) {
-						list.add(new Integer((byte) next));
+						list.add(Integer.valueOf((byte) next));
 					} else {
 						list.add(next);
 					}

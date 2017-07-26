@@ -75,7 +75,7 @@ public class ExtensionDefinition {
 	}
 
 	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
+		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 	
 	public static ExtensionDefinition fromJson(String json) {

@@ -12,6 +12,7 @@ package org.eclipse.dirigible.engine.js.v8.processor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.dirigible.engine.api.script.IScriptExecutor;
 
@@ -41,7 +42,7 @@ public class V8RepositoryModuleSourceProvider {
 			sourceCode = executor.retrieveModule(root, module, JS_EXTENSION).getContent();
 		}
 
-		return new String(sourceCode);
+		return new String(sourceCode, StandardCharsets.UTF_8);
 	}
 
 }

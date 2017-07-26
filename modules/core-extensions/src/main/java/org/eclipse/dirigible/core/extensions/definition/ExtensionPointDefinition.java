@@ -64,7 +64,7 @@ public class ExtensionPointDefinition {
 	}
 
 	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
+		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
 	public static ExtensionPointDefinition fromJson(String json) {
