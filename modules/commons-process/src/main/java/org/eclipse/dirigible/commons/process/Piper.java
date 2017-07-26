@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.commons.process;
 
+import java.nio.charset.StandardCharsets;
+
 import org.apache.commons.io.input.BoundedInputStream;
 import org.eclipse.dirigible.commons.config.Configuration;
 
@@ -43,7 +45,7 @@ public class Piper implements java.lang.Runnable {
 				}
 			}
 			if (sum >= (MAX_COMMAND_OUTPUT_LENGTH - 1)) {
-				output.write("\n...".getBytes(Configuration.UTF8));
+				output.write("\n...".getBytes(StandardCharsets.UTF_8));
 			}
 		} catch (Exception e) {
 			// Something happened while reading or writing streams; pipe is broken

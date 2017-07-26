@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,7 +56,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	
 	public void registerPredeliveredRoles(String rolesPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(rolesPath);
-		String json = IOUtils.toString(in, Configuration.UTF8);
+		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 		RoleDefinition[] roleDefinitions = securityCoreService.parseRoles(json);
 		for (RoleDefinition roleDefinition : roleDefinitions) {
 			roleDefinition.setLocation(rolesPath);
@@ -65,7 +66,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	
 	public void registerPredeliveredAccess(String accessPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(accessPath);
-		String json = IOUtils.toString(in, Configuration.UTF8);
+		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 		List<AccessDefinition> accessDefinitions = securityCoreService.parseAccessDefinitions(json);
 		for (AccessDefinition accessDefinition : accessDefinitions) {
 			accessDefinition.setLocation(accessPath);

@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
@@ -296,12 +298,12 @@ public class ExtensionsCoreService implements ISecurityCoreService {
 	
 	@Override
 	public ExtensionPointDefinition parseExtensionPoint(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), ExtensionPointDefinition.class);
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ExtensionPointDefinition.class);
 	}
 	
 	@Override
 	public ExtensionDefinition parseExtension(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), ExtensionDefinition.class);
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ExtensionDefinition.class);
 	}
 	
 	@Override

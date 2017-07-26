@@ -60,7 +60,7 @@ public class ExtensionPointDefinition {
 	}
 
 	public Timestamp getCreatedAt() {
-		return createdAt;
+		return new Timestamp(createdAt.getTime());
 	}
 
 	public void setCreatedAt(Timestamp createdAt) {

@@ -117,7 +117,11 @@ public abstract class FileSystemRepository implements IRepository {
 		this.repositoryDao = new LocalRepositoryDao(this);
 
 		logger.debug(String.format("Creating File-based Repository Client for: %s ...", root));
-		initializeRepository(root);
+		try {
+			initializeRepository(root);
+		} catch (IOException e) {
+			throw new LocalRepositoryException();
+		}
 		logger.debug(String.format("File-based Repository Client for: %s, has been created.", root));
 	}
 
@@ -137,13 +141,16 @@ public abstract class FileSystemRepository implements IRepository {
 		return DIRIGIBLE_LOCAL;
 	}
 
-	private void initializeRepository(String rootFolder) {
+	private void initializeRepository(String rootFolder) throws IOException {
 		repositoryPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_ROOT; // $NON-NLS-1$
 		repositoryPath = repositoryPath.replace(IRepository.SEPARATOR, File.separator);
+		repositoryPath = new File(repositoryPath).getCanonicalPath();
 		versionsPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_VERSIONS; // $NON-NLS-1$
 		versionsPath = versionsPath.replace(IRepository.SEPARATOR, File.separator);
+		versionsPath = new File(versionsPath).getCanonicalPath();
 		infoPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_INFO; // $NON-NLS-1$
 		infoPath = infoPath.replace(IRepository.SEPARATOR, File.separator);
+		infoPath = new File(infoPath).getCanonicalPath();
 		FileSystemUtils.createFolder(repositoryPath);
 		FileSystemUtils.createFolder(versionsPath);
 		FileSystemUtils.createFolder(infoPath);

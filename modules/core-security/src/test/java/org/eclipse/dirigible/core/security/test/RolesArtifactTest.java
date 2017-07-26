@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.inject.Inject;
 
@@ -40,7 +41,7 @@ public class RolesArtifactTest extends AbstractGuiceTest {
 
 	@Test
 	public void parseTest() throws IOException {
-		String json = IOUtils.toString(RolesArtifactTest.class.getResourceAsStream("/access/test.roles"), Configuration.UTF8);
+		String json = IOUtils.toString(RolesArtifactTest.class.getResourceAsStream("/access/test.roles"), StandardCharsets.UTF_8);
 		RoleDefinition[] roles = securityCoreService.parseRoles(json);
 		assertEquals("myrole2", roles[1].getName());
 	}

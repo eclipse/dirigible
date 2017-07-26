@@ -2,6 +2,7 @@ package org.eclipse.dirigible.core.extensions.synchronizer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	
 	public void registerPredeliveredExtensionPoint(String extensionPointPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPointPath);
-		String json = IOUtils.toString(in, Configuration.UTF8);
+		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(json);
 		extensionPointDefinition.setLocation(extensionPointPath);
 		EXTENSION_POINTS_PREDELIVERED.put(extensionPointPath, extensionPointDefinition);
@@ -57,7 +58,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	
 	public void registerPredeliveredExtension(String extensionPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPath);
-		String json = IOUtils.toString(in, Configuration.UTF8);
+		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 		ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(json);
 		extensionDefinition.setLocation(extensionPath);
 		EXTENSIONS_PREDELIVERED.put(extensionPath, extensionDefinition);

@@ -30,8 +30,6 @@ public class Configuration {
 	
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	
-	public static final Charset UTF8 = Charset.forName("UTF-8");
-	
 	public static final String DIRIGIBLE_TEST_MODE_ENABLED = "DIRIGIBLE_TEST_MODE_ENABLED";
 	
 	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<String, String>());
@@ -63,8 +61,13 @@ public class Configuration {
 	private void init() {
 		try {
 			Properties properties = new Properties();
-			properties.load(Configuration.class.getResourceAsStream("/dirigible.properties"));
-			this.parameters.putAll((Map) properties);
+			InputStream in = Configuration.class.getResourceAsStream("/dirigible.properties");
+			try {
+				properties.load(in);
+				this.parameters.putAll((Map) properties);
+			} finally {
+				in.close();
+			}
 			logger.debug("Configuration initialized with dirigible.properties");
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
@@ -82,8 +85,12 @@ public class Configuration {
 			if (in == null) {
 				throw new IOException(format("Configuration file {0} does not exist", path));
 			}
-			custom.load(in);
-			add(custom);
+			try {
+				custom.load(in);
+				add(custom);
+			} finally {
+				in.close();
+			}
 			logger.debug("Configuration loaded: " + path);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
