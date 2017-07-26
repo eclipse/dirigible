@@ -63,4 +63,22 @@ public interface ISquleDialect extends ISqule, ISquleKeywords {
 	 */
 	boolean isCatalogForSchema();
 	
+	/**
+	 * Gives the dialect specific name of the CURRENT_DATE function
+	 * @return the name of the function
+	 */
+	String functionCurrentDate();
+	
+	/**
+	 * Gives the dialect specific name of the CURRENT_TIME function
+	 * @return the name of the function
+	 */
+	String functionCurrentTime();
+	
+	/**
+	 * Gives the dialect specific name of the CURRENT_TIMESTAMP function
+	 * @return the name of the function
+	 */
+	String functionCurrentTimestamp();
+	
 }

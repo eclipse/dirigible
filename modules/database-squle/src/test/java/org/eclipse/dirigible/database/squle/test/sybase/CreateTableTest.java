@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.dirigible.database.squle.DataType;
 import org.eclipse.dirigible.database.squle.Squle;
-import org.eclipse.dirigible.database.squle.dialects.postgres.PostgresSquleDialect;
 import org.eclipse.dirigible.database.squle.dialects.sybase.SybaseSquleDialect;
 import org.junit.Test;
 

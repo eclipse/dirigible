@@ -98,5 +98,20 @@ public class DefaultSquleDialect implements ISquleDialect {
 		return false;
 	}
 
+	@Override
+	public String functionCurrentDate() {
+		return ISquleKeywords.FUNCTION_CURRENT_DATE;
+	}
+
+	@Override
+	public String functionCurrentTime() {
+		return ISquleKeywords.FUNCTION_CURRENT_TIME;
+	}
+
+	@Override
+	public String functionCurrentTimestamp() {
+		return ISquleKeywords.FUNCTION_CURRENT_TIMESTAMP;
+	}
+
 	
 }

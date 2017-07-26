@@ -237,7 +237,7 @@ public class SelectTest {
 			.toString();
 
 		assertNotNull(sql);
-		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10", sql);
+		assertEquals("SELECT * FROM CUSTOMERS ROWS LIMIT 10", sql);
 	}
 	
 	@Test
@@ -251,7 +251,7 @@ public class SelectTest {
 			.toString();
 		
 		assertNotNull(sql);
-		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10 OFFSET 20", sql);
+		assertEquals("SELECT * FROM CUSTOMERS ROWS LIMIT 10 OFFSET 20", sql);
 	}
 	
 	@Test

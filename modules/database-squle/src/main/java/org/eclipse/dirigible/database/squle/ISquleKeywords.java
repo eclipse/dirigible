@@ -41,6 +41,11 @@ public interface ISquleKeywords {
 	public static final String KEYWORD_NEXT_VALUE_FOR = "NEXT VALUE FOR"; //$NON-NLS-1$
 	public static final String KEYWORD_UNIQUE = "UNIQUE"; //$NON-NLS-1$
 	public static final String KEYWORD_COLUMN = "COLUMN"; //$NON-NLS-1$
+	public static final String KEYWORD_ROWS = "ROWS"; //$NON-NLS-1$
+	
+	public static final String FUNCTION_CURRENT_DATE = "CURRENT_DATE"; //$NON-NLS-1$
+	public static final String FUNCTION_CURRENT_TIME = "CURRENT_TIME"; //$NON-NLS-1$
+	public static final String FUNCTION_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP"; //$NON-NLS-1$
 	
 	
 

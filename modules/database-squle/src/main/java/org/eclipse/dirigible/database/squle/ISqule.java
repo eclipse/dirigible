@@ -24,7 +24,7 @@ public interface ISqule {
 
 	public ExpressionBuilder expr();
 	
-	public <T extends CreateBranchingBuilder> T create();
+	public CreateBranchingBuilder create();
 	
 	public DropBranchingBuilder drop();
 	

@@ -1,10 +1,5 @@
 package org.eclipse.dirigible.database.squle.builders.sequence;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import org.eclipse.dirigible.database.squle.DataType;
 import org.eclipse.dirigible.database.squle.ISquleDialect;
 import org.eclipse.dirigible.database.squle.builders.AbstractCreateSquleBuilder;
 
