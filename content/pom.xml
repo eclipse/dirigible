@@ -34,7 +34,6 @@
 	</properties>
 
 	<modules>
-
 		<!-- Content - API -->
 		<module>api-core</module>
 		<module>api-http</module>
@@ -46,62 +45,69 @@
 		<module>ide-console</module>
 		<module>ide-editor-orion</module>
 		<module>ide-workspace</module>
-
 	</modules>
 
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>${maven.scm.plugin.version}</version>
-				<configuration>
-					<goals>checkout</goals>
-					<checkoutDirectory>${content.scm.checkoutDirectory}</checkoutDirectory>
-					<server>${content.scm.server}</server>
-				</configuration>
-				<executions>
-					<execution>
-						<id>generated-sources</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>checkout</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${maven.resource.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>copy-content-resources</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
+	<profiles>
+		<profile>
+			<id>content</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<finalName>${project.artifactId}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<version>${maven.scm.plugin.version}</version>
 						<configuration>
-							<outputDirectory>${content.output.directory}</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${content.source.directory}</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
+							<goals>checkout</goals>
+							<checkoutDirectory>${content.scm.checkoutDirectory}</checkoutDirectory>
+							<server>${content.scm.server}</server>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-		</plugins>
-	</build>
+						<executions>
+							<execution>
+								<id>generated-sources</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>${maven.resource.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>copy-content-resources</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${content.output.directory}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${content.source.directory}</directory>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-compiler-plugin</artifactId>
+		                <version>${maven.compiler.plugin.version}</version>
+		                <configuration>
+		                    <source>${java.version}</source>
+		                    <target>${java.version}</target>
+		                </configuration>
+		            </plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
