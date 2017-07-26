@@ -339,13 +339,16 @@ public abstract class FileSystemRepository implements IRepository {
 				return entities;
 			}
 
+			String rootRepositoryPath = getRepositoryPath();
 			File dir = new File(workspacePath);
-
 			Iterator<File> foundFiles = FileUtils.iterateFiles(dir,
 					new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
 			while (foundFiles.hasNext()) {
 				File foundFile = foundFiles.next();
-				String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
+				if (foundFile.getCanonicalPath().length() <= rootRepositoryPath.length()) {
+					throw new RepositorySearchException(String.format("The found file name [%s] is shorter than the repository root file name [%s]", foundFile.getCanonicalPath(), rootRepositoryPath));
+				}
+				String repositoryName = foundFile.getCanonicalPath().substring(rootRepositoryPath.length());
 				RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
 				entities.add(new LocalResource(this, localRepositoryPath));
 			}
