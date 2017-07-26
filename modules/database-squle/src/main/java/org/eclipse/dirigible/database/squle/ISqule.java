@@ -12,24 +12,24 @@ import org.eclipse.dirigible.database.squle.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.squle.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.squle.builders.sequence.NextValueSequenceBuilder;
 
-public interface ISqule {
-	
-	public SelectBuilder select();
-	
-	public InsertBuilder insert();
-	
-	public UpdateBuilder update();
-	
-	public DeleteBuilder delete();
+public interface ISqule<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder> {
+
+	public SELECT select();
+
+	public INSERT insert();
+
+	public UPDATE update();
+
+	public DELETE delete();
 
 	public ExpressionBuilder expr();
-	
-	public CreateBranchingBuilder create();
-	
-	public DropBranchingBuilder drop();
-	
-	public boolean exists(Connection connection,String table) throws SQLException;
-	
-	public NextValueSequenceBuilder nextval(String sequence);
+
+	public CREATE create();
+
+	public DROP drop();
+
+	public boolean exists(Connection connection, String table) throws SQLException;
+
+	public NEXT nextval(String sequence);
 
 }

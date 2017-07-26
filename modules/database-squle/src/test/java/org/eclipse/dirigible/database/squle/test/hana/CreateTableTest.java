@@ -28,7 +28,7 @@ public class CreateTableTest {
 	public void createTableColumn() {
 		String sql = Squle.getNative(new HanaSquleDialect())
 			.create()
-			.table("CUSTOMERS", true)
+			.columnTable("CUSTOMERS")
 			.column("ID", DataType.INTEGER, true, false, false)
 			.column("FIRST_NAME", DataType.VARCHAR, false, false, true, "(20)")
 			.column("LAST_NAME", DataType.VARCHAR, false, true, false, "(30)")
@@ -42,7 +42,7 @@ public class CreateTableTest {
 	public void createTableColumnTypeSafe() {
 		String sql = Squle.getNative(new HanaSquleDialect())
 			.create()
-			.table("CUSTOMERS", true)
+			.columnTable("CUSTOMERS")
 			.columnInteger("ID", true, false, false)
 			.columnVarchar("FIRST_NAME", 20, false, true, true)
 			.columnVarchar("LAST_NAME", 30, false, true, false)
