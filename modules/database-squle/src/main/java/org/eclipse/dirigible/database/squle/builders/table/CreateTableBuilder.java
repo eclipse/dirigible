@@ -17,6 +17,14 @@ public class CreateTableBuilder extends AbstractCreateSquleBuilder {
 		super(dialect);
 		this.table = table;
 	}
+	
+	protected String getTable() {
+		return table;
+	}
+	
+	protected List<String[]> getColumns() {
+		return columns;
+	}
 
 	public CreateTableBuilder column(String name, DataType type, boolean isPrimaryKey, boolean isNullable, boolean isUnique, String...args) {
 		String[] definition = new String[]{name, getDialect().getDataTypeName(type)};

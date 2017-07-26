@@ -73,7 +73,7 @@ public class Squle implements ISqule {
 	}
 
 	@Override
-	public CreateBranchingBuilder create() {
+	public <T extends CreateBranchingBuilder> T create() {
 		return this.dialect.create();
 	}
 

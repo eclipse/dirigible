@@ -11,7 +11,7 @@ public class CreateBranchingBuilder extends AbstractSquleBuilder {
 		super(dialect);
 	}
 
-	public CreateTableBuilder table(String table) {
+	public CreateTableBuilder table(String table, Object...args) {
 		return new CreateTableBuilder(getDialect(), table);
 	}
 	
