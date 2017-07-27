@@ -29,11 +29,11 @@
     </build>
     
     <dependencies>
-        <dependency>
+        <!-- <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
 			<version>${dirigible.version}</version>
-    	</dependency>
+    	</dependency> -->
     	<!-- <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-api</artifactId>

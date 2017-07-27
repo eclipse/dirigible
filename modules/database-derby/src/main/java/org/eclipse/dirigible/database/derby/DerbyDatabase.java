@@ -122,7 +122,7 @@ public class DerbyDatabase implements IDatabase {
 		File parentFile = rootFile.getCanonicalFile().getParentFile();
 		if (!parentFile.exists()) {
 			if (!parentFile.mkdirs()) {
-				throw new IOException(format("Creation of the root folder [{0}] of the embedded Derby database failed.", rootFolder));
+				throw new IOException(format("Creation of the root folder [{0}] of the embedded Derby database failed.", derbyRoot));
 			}
 		}
 		return derbyRoot;

@@ -64,6 +64,13 @@
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>${dirigible.version}</version>
+			<scope>test</scope>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-derby</artifactId>
+			<version>${dirigible.version}</version>
+			<scope>test</scope>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>

@@ -29,14 +29,9 @@
     </build>
     
     <dependencies>
-        <dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-api</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-api</artifactId>
+			<artifactId>dirigible-database-squle</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
     	<dependency>
@@ -44,16 +39,12 @@
 		    <artifactId>persistence-api</artifactId>
 		    <version>1.0</version>
 		</dependency>
-		<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-squle</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
     	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-derby</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derby</artifactId>
+		    <version>${derby.version}</version>
+		    <scope>test</scope>
+		</dependency>
     </dependencies>
 
 </project>

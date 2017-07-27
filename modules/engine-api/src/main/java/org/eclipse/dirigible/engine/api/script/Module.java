@@ -11,6 +11,8 @@
 
 package org.eclipse.dirigible.engine.api.script;
 
+import java.util.Arrays;
+
 import org.eclipse.dirigible.repository.api.IEntityInformation;
 
 public class Module {
@@ -33,7 +35,7 @@ public class Module {
 	}
 
 	public byte[] getContent() {
-		return content;
+		return Arrays.copyOf(content, content.length);
 	}
 
 	public IEntityInformation getEntityInformation() {

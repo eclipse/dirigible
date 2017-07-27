@@ -28,7 +28,7 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
-	private IScriptExecutor executor;
+	private transient IScriptExecutor executor;
 	
 	private String root;
 	
