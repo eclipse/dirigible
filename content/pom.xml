@@ -44,6 +44,7 @@
 		<module>ide-terminal</module>
 		<module>ide-console</module>
 		<module>ide-editor-orion</module>
+		<module>ide-swagger</module>
 		<module>ide-workspace</module>
 	</modules>
 
