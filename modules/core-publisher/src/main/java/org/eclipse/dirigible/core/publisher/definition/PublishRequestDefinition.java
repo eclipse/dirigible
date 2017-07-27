@@ -67,11 +67,11 @@ public class PublishRequestDefinition {
 	}
 
 	public Timestamp getCreatedAt() {
-		return createdAt;
+		return new Timestamp(createdAt.getTime());
 	}
 
 	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
+		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 	
 	

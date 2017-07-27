@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.database.derby;
 
+import static java.text.MessageFormat.format;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -119,7 +121,9 @@ public class DerbyDatabase implements IDatabase {
 		File rootFile = new File(derbyRoot);
 		File parentFile = rootFile.getCanonicalFile().getParentFile();
 		if (!parentFile.exists()) {
-			parentFile.mkdirs();
+			if (!parentFile.mkdirs()) {
+				throw new IOException(format("Creation of the root folder [{0}] of the embedded Derby database failed.", rootFolder));
+			}
 		}
 		return derbyRoot;
 	}

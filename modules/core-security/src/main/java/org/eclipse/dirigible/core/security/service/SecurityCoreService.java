@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -146,7 +147,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 	
 	@Override
 	public RoleDefinition[] parseRoles(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), RoleDefinition[].class);
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), RoleDefinition[].class);
 	}
 	
 	@Override

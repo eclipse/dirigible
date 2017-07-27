@@ -75,7 +75,7 @@ public class DefaultSquleDialect<SELECT extends SelectBuilder, INSERT extends In
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {
 		DatabaseMetaData metadata = connection.getMetaData();
-		ResultSet resultSet = metadata.getTables(null, null, table, ISquleKeywords.METADATA_TABLE_TYPES);
+		ResultSet resultSet = metadata.getTables(null, null, table, ISquleKeywords.METADATA_TABLE_TYPES.toArray(new String[]{}));
 		if (resultSet.next()) {
 			return true;
 		}

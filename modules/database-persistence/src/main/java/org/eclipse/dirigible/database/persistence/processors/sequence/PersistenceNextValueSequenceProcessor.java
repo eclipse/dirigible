@@ -29,12 +29,18 @@ public class PersistenceNextValueSequenceProcessor extends AbstractPersistencePr
 		try {
 			sql = generateScript(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-				result = resultSet.getLong(1);
-				return result;
+			ResultSet resultSet = null;
+			try {
+				resultSet = preparedStatement.executeQuery();
+				if (resultSet.next()) {
+					result = resultSet.getLong(1);
+					return result;
+				} 
+			} finally {
+				if (resultSet != null) {
+					resultSet.close();
+				}
 			}
-			
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
 		} finally {

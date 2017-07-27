@@ -8,6 +8,11 @@ import java.util.Map;
 
 import org.eclipse.dirigible.database.squle.ISquleDialect;
 import org.eclipse.dirigible.database.squle.dialects.derby.DerbySquleDialect;
+import org.eclipse.dirigible.database.squle.dialects.hana.HanaSquleDialect;
+import org.eclipse.dirigible.database.squle.dialects.postgres.PostgresSquleDialect;
+import org.eclipse.dirigible.database.squle.dialects.sybase.SybaseSquleDialect;
+
+import ch.qos.logback.core.db.dialect.PostgreSQLDialect;
 
 public class SquleDialectFactory {
 	
@@ -21,15 +26,15 @@ public class SquleDialectFactory {
 //	public static final ISquleDialect DATABASE_TYPE_HSQL = "hsql";
 //	public static final ISquleDialect DATABASE_TYPE_MYSQL = "mysql";
 //	public static final ISquleDialect DATABASE_TYPE_ORACLE = "oracle";
-//	public static final ISquleDialect DATABASE_TYPE_POSTGRES = "postgres";
+	public static final ISquleDialect DATABASE_TYPE_POSTGRES = new PostgresSquleDialect();
 //	public static final ISquleDialect DATABASE_TYPE_MSSQL = "mssql";
 //	public static final ISquleDialect DATABASE_TYPE_DB2 = "db2";
-//	public static final ISquleDialect DATABASE_TYPE_HANA = "hana";
-//	public static final ISquleDialect DATABASE_TYPE_SYBASE = "sybase";
+	public static final ISquleDialect DATABASE_TYPE_HANA = new HanaSquleDialect();
+	public static final ISquleDialect DATABASE_TYPE_SYBASE = new SybaseSquleDialect();
 	
 	
 	// Lifted from Activiti
-	protected static Map<String, ISquleDialect> databaseTypeMappings = getDefaultDatabaseTypeMappings();
+	protected static final Map<String, ISquleDialect> databaseTypeMappings = getDefaultDatabaseTypeMappings();
 	
 	protected static Map<String, ISquleDialect> getDefaultDatabaseTypeMappings() {
 		Map<String, ISquleDialect> databaseTypeMappings = Collections.synchronizedMap(new HashMap<String, ISquleDialect>());
@@ -38,7 +43,7 @@ public class SquleDialectFactory {
 //	    databaseTypeMappings.setProperty("HSQL Database Engine", DATABASE_TYPE_HSQL);
 //	    databaseTypeMappings.setProperty("MySQL", DATABASE_TYPE_MYSQL);
 //	    databaseTypeMappings.setProperty("Oracle", DATABASE_TYPE_ORACLE);
-//	    databaseTypeMappings.setProperty("PostgreSQL", DATABASE_TYPE_POSTGRES);
+	    databaseTypeMappings.put("PostgreSQL", DATABASE_TYPE_POSTGRES);
 //	    databaseTypeMappings.setProperty("Microsoft SQL Server", DATABASE_TYPE_MSSQL);
 //	    databaseTypeMappings.setProperty(DATABASE_TYPE_DB2,DATABASE_TYPE_DB2);
 //	    databaseTypeMappings.setProperty("DB2",DATABASE_TYPE_DB2);
@@ -62,8 +67,8 @@ public class SquleDialectFactory {
 //	    databaseTypeMappings.setProperty("DB2/PTX",DATABASE_TYPE_DB2);
 //	    databaseTypeMappings.setProperty("DB2/2",DATABASE_TYPE_DB2);
 //	    databaseTypeMappings.setProperty("DB2 UDB AS400", DATABASE_TYPE_DB2);
-//		databaseTypeMappings.setProperty("HDB", DATABASE_TYPE_HANA);
-//		databaseTypeMappings.setProperty("Adaptive Server Enterprise", DATABASE_TYPE_SYBASE);
+		databaseTypeMappings.put("HDB", DATABASE_TYPE_HANA);
+		databaseTypeMappings.put("Adaptive Server Enterprise", DATABASE_TYPE_SYBASE);
 	    return databaseTypeMappings;
 	  }
 

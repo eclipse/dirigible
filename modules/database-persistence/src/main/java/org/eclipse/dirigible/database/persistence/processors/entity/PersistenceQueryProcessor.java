@@ -60,13 +60,20 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 			sql = generateScriptFind(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			setValuePrimaryKey(tableModel, id, preparedStatement);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-				for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-					setValueToPojo(result, resultSet, columnModel);
+			ResultSet resultSet = null;
+			try {
+				resultSet = preparedStatement.executeQuery();
+				if (resultSet.next()) {
+					for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+						setValueToPojo(result, resultSet, columnModel);
+					}
+				} else {
+					return null;
+				} 
+			} finally {
+				if (resultSet != null) {
+					resultSet.close();
 				}
-			} else {
-				return null;
 			}
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
@@ -83,13 +90,20 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 		try {
 			sql = generateScriptFindAll(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				T pojo = clazz.newInstance();
-				for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-					setValueToPojo(pojo, resultSet, columnModel);
+			ResultSet resultSet = null;
+			try {
+				resultSet = preparedStatement.executeQuery();
+				while (resultSet.next()) {
+					T pojo = clazz.newInstance();
+					for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+						setValueToPojo(pojo, resultSet, columnModel);
+					}
+					result.add(pojo);
+				} 
+			} finally {
+				if (resultSet != null) {
+					resultSet.close();
 				}
-				result.add(pojo);
 			}
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
@@ -110,13 +124,20 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 					setValue(preparedStatement, i++, value);
 				}
 			}
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				T pojo = clazz.newInstance();
-				for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-					setValueToPojo(pojo, resultSet, columnModel);
+			ResultSet resultSet = null;
+			try {
+				resultSet = preparedStatement.executeQuery();
+				while (resultSet.next()) {
+					T pojo = clazz.newInstance();
+					for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+						setValueToPojo(pojo, resultSet, columnModel);
+					}
+					result.add(pojo);
+				} 
+			} finally {
+				if (resultSet != null) {
+					resultSet.close();
 				}
-				result.add(pojo);
 			}
 		} catch (Exception e) {
 			throw new PersistenceException(e);

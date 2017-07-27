@@ -2,6 +2,7 @@ package org.eclipse.dirigible.core.security.definition;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class AccessArtifact {
 	}
 	
 	public static AccessArtifact parse(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json)), AccessArtifact.class);
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), AccessArtifact.class);
 	}
 	
 	public static AccessArtifact combine(List<AccessDefinition> accessDefinitions) {
