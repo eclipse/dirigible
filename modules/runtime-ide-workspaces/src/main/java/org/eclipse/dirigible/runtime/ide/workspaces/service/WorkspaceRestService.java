@@ -222,7 +222,7 @@ public class WorkspaceRestService implements IRestService {
 		if (resource.isBinary()) {
 			return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();
 		}
-		return Response.ok(new String(resource.getContent())).type(resource.getContentType()).build();
+		return Response.ok(new String(resource.getContent())).type(ContentTypeHelper.TEXT_PLAIN).build();
 	}
 	
 	@POST
