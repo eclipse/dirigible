@@ -3,17 +3,9 @@ package org.eclipse.dirigible.runtime.repository.json;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 
-import com.google.gson.Gson;
-
 public class RepositoryJsonHelper {
 	
-	public static String collectionToJsonTree(ICollection collection, String removePathPrefix, String addPathPrefix) {
-		Collection collectionPojo = traverseCollection(collection, removePathPrefix, addPathPrefix);
-		Gson gson = new Gson();
-		return gson.toJson(collectionPojo);
-	}
-	
-	private static Collection traverseCollection(ICollection collection, String removePathPrefix, String addPathPrefix) {
+	public static Collection traverseCollection(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		Collection collectionPojo = new Collection();
 		collectionPojo.setName(collection.getName());
 		collectionPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));

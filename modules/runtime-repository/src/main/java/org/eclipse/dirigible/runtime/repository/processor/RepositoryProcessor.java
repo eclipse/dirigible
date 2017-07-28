@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.runtime.repository.json.Collection;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 
 
@@ -35,8 +36,8 @@ public class RepositoryProcessor {
 		return repository.getCollection(path);
 	}
 	
-	public String renderTree(ICollection collection) {
-		return RepositoryJsonHelper.collectionToJsonTree(collection, "", "");
+	public Collection renderTree(ICollection collection) {
+		return RepositoryJsonHelper.traverseCollection(collection, "", "");
 	}
 
 }

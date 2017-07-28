@@ -15,6 +15,7 @@ import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
+import org.eclipse.dirigible.runtime.core.services.GsonMessageBodyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +78,8 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.trace("Registering REST services...");
 
 		getServices().add(new SecureAnnotationsInterceptor());
+		getServices().add(new GsonMessageBodyHandler<Object>());
+
 		addRestServices();
 		addExceptionHandlers();
 		addSwagger();

@@ -6,6 +6,7 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.runtime.repository.json.Collection;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 
 /**
@@ -15,6 +16,7 @@ import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 public class RegistryProcessor {
 	
 	private static final String REGISTRY = "/registry";
+
 	@Inject
 	private IRepository repository;
 	
@@ -28,8 +30,8 @@ public class RegistryProcessor {
 		return repository.getCollection(registryPath.toString());
 	}
 
-	public String renderTree(ICollection collection) {
-		return RepositoryJsonHelper.collectionToJsonTree(collection, IRepositoryStructure.REGISTRY_PUBLIC, REGISTRY);
+	public Collection renderTree(ICollection collection) {
+		return RepositoryJsonHelper.traverseCollection(collection, IRepositoryStructure.REGISTRY_PUBLIC, REGISTRY);
 	}
 	
 	private StringBuilder generateRegistryPath(String path) {

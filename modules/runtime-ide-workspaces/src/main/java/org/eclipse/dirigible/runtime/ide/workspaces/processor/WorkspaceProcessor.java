@@ -9,6 +9,7 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.runtime.repository.json.Collection;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,8 +162,8 @@ public class WorkspaceProcessor {
 		return new URI(relativePath.toString());
 	}
 
-	public String renderTree(ICollection collection) {
-		return RepositoryJsonHelper.collectionToJsonTree(collection, IRepositoryStructure.USERS, WORKSPACE);
+	public Collection renderTree(ICollection collection) {
+		return RepositoryJsonHelper.traverseCollection(collection, IRepositoryStructure.USERS, WORKSPACE);
 	}
 
 }
