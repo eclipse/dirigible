@@ -3,6 +3,8 @@ package org.eclipse.dirigible.runtime.ide.workspaces.service;
 import static java.text.MessageFormat.format;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -25,11 +27,13 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
 
+import com.google.gson.Gson;
+
 /**
  * Front facing REST service serving the raw repository content
  */
 @Singleton
-@Path("/ide/workspace")
+@Path("/ide/workspaces")
 @RolesAllowed({"Developer"})
 public class WorkspaceRestService implements IRestService {
 	
@@ -42,7 +46,23 @@ public class WorkspaceRestService implements IRestService {
 	}
 	
 	// Workspace
-	
+
+	@GET
+	@Path("/")
+	public Response listWorkspaces(@Context HttpServletRequest request) {
+		String user = request.getRemoteUser();
+		if (user == null) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		ICollection collection = processor.listWorkspaces(user);
+		List<String> workspaces = new ArrayList<String>();
+		for (ICollection next : collection.getCollections()) {
+			workspaces.add(next.getName());
+		}
+		return Response.ok().entity(new Gson().toJson(workspaces)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+
 	@GET
 	@Path("{workspace}")
 	public Response getWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
