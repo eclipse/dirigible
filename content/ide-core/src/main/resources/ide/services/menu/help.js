@@ -10,15 +10,26 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
-
-exports.encode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(input)]);
-	return output;
-};
-
-exports.decode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'decode', [input]);
-	return output;
-};
-
+exports.getMenu = function() {
+	var menu = {
+			"name":"Help",
+			"link":"#",
+			"order":"900",
+			"onClick":"alert('Help has been clicked')",
+			"items":[
+				{
+					"name":"Content",
+					"link":"#",
+					"order":"910",
+					"onClick":"alert('Eclipse Dirigible 3.0 - Help Content')"
+				},
+				{
+					"name":"About",
+					"link":"#",
+					"order":"990",
+					"onClick":"alert('Eclipse Dirigible 3.0')"
+				}
+			]
+		};
+	return menu;
+}

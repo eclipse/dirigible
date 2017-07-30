@@ -125,6 +125,9 @@
         <dependent-module archiveName="dirigible-content-api-http-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-api-http/dirigible-content-api-http">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-content-api-utils-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-api-utils/dirigible-content-api-utils">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-content-ide-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-core/dirigible-content-ide-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -135,6 +138,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-content-ide-editor-orion-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-editor-orion/dirigible-content-ide-editor-orion">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-content-ide-swagger-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-swagger/dirigible-content-ide-swagger">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-content-ide-workspace-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-workspace/dirigible-content-ide-workspace">

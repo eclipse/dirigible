@@ -10,15 +10,15 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
+var extensions = require('core/v3/extensions');
+var response = require('http/v3/response');
 
-exports.encode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(input)]);
-	return output;
-};
-
-exports.decode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'decode', [input]);
-	return output;
-};
-
+var editors = [];
+var editorExtensions = extensions.getExtensions('ide-editor');
+for (var i=0; i<editorExtensions.length; i++) {
+    var module = editorExtensions[i];
+    editorExtension = require(module);
+    var editor = editorExtension.getEditor();
+    editors.push(editor);
+}
+response.println(JSON.stringify(editors));

@@ -410,6 +410,8 @@
 		<module>modules/api-utils</module>
 		<module>modules/api-http</module>
 		<module>modules/api-auth</module>
+		
+		<module>modules/api-tests</module>
 
 		<!-- Content -->
 		<module>content</module>

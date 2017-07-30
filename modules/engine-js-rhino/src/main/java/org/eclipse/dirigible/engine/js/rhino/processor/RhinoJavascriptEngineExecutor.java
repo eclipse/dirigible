@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import org.eclipse.dirigible.api.v3.core.Console;
 import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
@@ -26,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineExecutor.class);
-	
+
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 
@@ -36,7 +35,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		if (module == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
-		
+
 		Object result = null;
 
 		ModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();
@@ -65,9 +64,8 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 					logger.error(e.getMessage());
 					if ((e.getMessage() != null) && e.getMessage().contains("\"exports\" is not defined")) {
 						throw new ScriptingDependencyException("Requested endpoint is not a service, but rather a library.");
-					} else {
-						throw new ScriptingException(e);
 					}
+					throw new ScriptingException(e);
 				}
 			} catch (URISyntaxException | IOException e) {
 				throw new ScriptingException(e);
@@ -77,10 +75,10 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		}
 
 		logger.trace("exiting: executeServiceModule()");
-		
+
 		return result;
 	}
-	
+
 	private RhinoRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
 		RhinoRepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
 		repositoryModuleSourceProvider = new RhinoRepositoryModuleSourceProvider(this, IRepositoryStructure.REGISTRY_PUBLIC);

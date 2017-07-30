@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(NashornJavascriptEngineExecutor.class);
-	
+
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 
@@ -34,7 +34,7 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		Object result = null;
 
 		ScriptEngineManager engineManager = new ScriptEngineManager();
-//		NashornScriptEngine engine = (NashornScriptEngine) engineManager.getEngineByName("nashorn");
+		// NashornScriptEngine engine = (NashornScriptEngine) engineManager.getEngineByName("nashorn");
 		ScriptEngine engine = engineManager.getEngineByName("nashorn");
 
 		try {
@@ -54,20 +54,19 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			} catch (ScriptException e) {
 				if ((e.getMessage() != null) && e.getMessage().contains("\"exports\" is not defined")) {
 					throw new ScriptingDependencyException("Requested endpoint is not a service, but rather a library.");
-				} else {
-					throw new ScriptingException(e);
 				}
+				throw new ScriptingException(e);
 			}
 		} catch (Throwable e) {
 			throw new ScriptingException(e);
 		}
 
 		logger.debug("exiting: executeServiceModule()");
-		
+
 		return result;
 
 	}
-	
+
 	private NashornRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
 		NashornRepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
 		repositoryModuleSourceProvider = new NashornRepositoryModuleSourceProvider(this, IRepositoryStructure.REGISTRY_PUBLIC);

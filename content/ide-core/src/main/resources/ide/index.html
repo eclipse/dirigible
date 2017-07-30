@@ -30,19 +30,19 @@
 		    content: [{
 		        type: 'row',
 		        content:[{
-		            type: 'component',
-		            componentName: 'Workspace',
-		            componentState: { label: 'Workspace' }
-		        },{
-		            type: 'column',
-		            content:[{
-		                type: 'component',
-		                componentName: 'Editor',
-		                componentState: { label: 'Editor' }
-		            },{
-		                type: 'component',
-		                componentName: 'Console',
-		                componentState: { label: 'Console' }
+		            	type: 'component',
+		            	componentName: 'Workspace',
+		            	componentState: { label: 'Workspace' }
+		        	},{
+		            	type: 'column',
+		            	content:[{
+		                	type: 'component',
+		                	componentName: 'Editor',
+		                	componentState: { label: 'Editor' }
+		            	},{
+		                	type: 'component',
+		                	componentName: 'Console',
+		                	componentState: { label: 'Console' }
 		            }]
 		        }]
 		    }]
@@ -66,38 +66,59 @@
 	
 </head>
 
-<body>
+<body ng-app="workbench" ng-controller="WorkbenchController">
 
-	<nav class="navbar navbar-inverse" role="navigation">
-	  <div class="container-fluid">
-	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>                        
-	      </button>
-	      <a class="navbar-brand" href="#"><img src="img/dirigible-logo-small.png"></a>
-	    </div>
-	    <div class="collapse navbar-collapse" id="myNavbar">
-	      <ul class="nav navbar-nav">
-	        <li><a href="#">Home</a></li>
-	        <li class="dropdown">
-	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
-	          <ul class="dropdown-menu">
-	            <li><a href="#">Page 1-1</a></li>
-	            <li><a href="#">Page 1-2</a></li>
-	            <li><a href="#">Page 1-3</a></li>
-	          </ul>
-	        </li>
-	        <li><a href="#">Page 2</a></li>
-	        <li><a href="#">Page 3</a></li>
-	      </ul>
-	      <ul class="nav navbar-nav navbar-right">
-	        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-	      </ul>
-	    </div>
-	  </div>
-	</nav>
+		<nav class="navbar navbar-inverse" role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><img src="img/dirigible-logo-small.png"></a>
+			</div>
+
+			<div class="collapse navbar-collapse" id="navbar-collapse">
+				<ul id="main-menu" class="nav navbar-nav">
+					<li ng-class="{dropdown: !!menu.items}" ng-repeat="menuItem in menu">
+						<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="onClick(menuItem.onClick)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
+						<a ng-show="menuItem.items" href="" class="dropdown-toggle" data-toggle="dropdown">{{ menuItem.name }}</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="item in menuItem.items">
+								<a href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+				  <li class="dropdown" ng-include="'/services/web/resources/themes/themes.html'"></li>
+		          <li class="hidden-xs">
+		            <a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
+		          </li>
+		        </ul>
+			</div>
+		</nav>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
+	
+	<script type="text/javascript">
+		angular.module('workbench', []);
+		angular.module('workbench').controller('WorkbenchController', function ($scope, $http) {
+			
+			var url = '../../js/ide/services/menu.js';
+			$http.get(url)
+				.success(function(data) {
+ 					$scope.menu = data;
+			});
+			
+			$scope.onClick = function(action) {
+				eval(action);
+			};
+			
+		});
+	</script>
 
 </body>
 

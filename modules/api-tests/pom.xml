@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Engine - Javascript - Nashorn</name>
-	<artifactId>dirigible-engine-js-nashorn</artifactId>
+	<name>API - Test Suite</name>
+	<artifactId>dirigible-api-tests</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -34,14 +34,9 @@
             <artifactId>dirigible-commons-api</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-core</artifactId>
+            <artifactId>dirigible-commons-test</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
         <dependency>
@@ -51,21 +46,45 @@
         </dependency>
         
         <dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-test</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-local</artifactId>
+            <artifactId>dirigible-api-auth</artifactId>
             <version>${dirigible.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-tests</artifactId>
+            <artifactId>dirigible-api-core</artifactId>
             <version>${dirigible.version}</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-http</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-utils</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        
+        <!-- <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-content-api-auth</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency> -->
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-content-api-core</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-content-api-http</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-content-api-utils</artifactId>
+            <version>${dirigible.version}</version>
         </dependency>
     </dependencies>
 

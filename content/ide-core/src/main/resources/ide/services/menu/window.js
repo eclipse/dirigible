@@ -10,15 +10,26 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
-
-exports.encode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(input)]);
-	return output;
-};
-
-exports.decode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'decode', [input]);
-	return output;
-};
-
+exports.getMenu = function() {
+	var menu = {
+			"name":"Window",
+			"link":"#",
+			"order":"800",
+			"onClick":"alert('Window has been clicked')",
+			"items":[
+				{
+					"name":"Open Perspective",
+					"link":"#",
+					"order":"810",
+					"onClick":"alert('Open Perspective has been clicked')"
+				},
+				{
+					"name":"Show View",
+					"link":"#",
+					"order":"820",
+					"onClick":"alert('Show View has been clicked')"
+				}
+			]
+		};
+	return menu;
+}

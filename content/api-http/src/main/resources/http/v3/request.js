@@ -27,7 +27,7 @@ exports.getPathInfo = function() {
 	return pathInfo;
 };
 
-exports.getHeader = function(String name) {
+exports.getHeader = function(name) {
 	var header = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeader', [name]);
 	return header;
 };

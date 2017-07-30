@@ -10,15 +10,10 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
+var request = require('http/v3/request');
+var response = require('http/v3/response');
 
-exports.encode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(input)]);
-	return output;
-};
-
-exports.decode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'decode', [input]);
-	return output;
-};
-
+response.setContentType("text/plain");
+response.println(request.getRemoteUser());
+response.flush();
+response.close();

@@ -15,3 +15,15 @@ var java = require('core/v3/java');
 exports.println = function(text) {
 	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'println', [text]);
 };
+
+exports.setContentType = function(contentType) {
+	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setContentType', [contentType]);
+};
+
+exports.flush = function() {
+	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'flush', []);
+};
+
+exports.close = function() {
+	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'close', []);
+};

@@ -10,15 +10,15 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
+var extensions = require('core/v3/extensions');
+var response = require('http/v3/response');
 
-exports.encode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(input)]);
-	return output;
-};
-
-exports.decode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'decode', [input]);
-	return output;
-};
-
+var perspectives = [];
+var perspectiveExtensions = extensions.getExtensions('ide-perspective');
+for (var i=0; i<perspectiveExtensions.length; i++) {
+    var module = perspectiveExtensions[i];
+    perspectiveExtension = require(module);
+    var perspective = perspectiveExtension.getPerspective();
+    perspectives.push(perspective);
+}
+response.println(JSON.stringify(perspectives));

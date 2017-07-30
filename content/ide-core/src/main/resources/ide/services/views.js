@@ -10,15 +10,15 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
+var extensions = require('core/v3/extensions');
+var response = require('http/v3/response');
 
-exports.encode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(input)]);
-	return output;
-};
-
-exports.decode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'decode', [input]);
-	return output;
-};
-
+var views = [];
+var viewExtensions = extensions.getExtensions('ide-view');
+for (var i=0; i<viewExtensions.length; i++) {
+    var module = viewExtensions[i];
+    viewExtension = require(module);
+    var view = viewExtension.getView();
+    views.push(view);
+}
+response.println(JSON.stringify(views));
