@@ -26,6 +26,8 @@ import org.eclipse.dirigible.runtime.databases.processor.DatabaseProcessor;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
@@ -33,25 +35,18 @@ import io.swagger.annotations.Authorization;
  */
 @Singleton
 @Path("/core/databases")
-@Api(value = "/core/databases", 
-description = "Databases Explorer Service",
-authorizations = {
-		  @Authorization(value="Developer, Operator", scopes = {})
-  	})
+@Api(value = "Core - Databases", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 public class DatabaseRestService implements IRestService {
-	
+
 	@Inject
 	private DatabaseProcessor processor;
-	
+
 	@GET
 	@Path("")
 	@Produces("application/json")
-	@ApiOperation(
-	        value = "List all the databases types",
-	        notes = "List all the databases types in JSON",
-	        response = String.class,
-	        responseContainer = "List"
-	    )
+	@ApiOperation(value = "List all the databases types")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of Databases Types", response = String.class, responseContainer = "List"),
+			@ApiResponse(code = 401, message = "Unauthorized") })
 	public Response listDatabaseTypes(@Context HttpServletRequest request) {
 		List<String> databaseTypes = processor.getDatabaseTypes();
 		return Response.ok().entity(GsonHelper.GSON.toJson(databaseTypes)).build();
@@ -60,31 +55,29 @@ public class DatabaseRestService implements IRestService {
 	@GET
 	@Path("{type}")
 	@Produces("application/json")
-	@ApiOperation(
-	        value = "Returns all the available data sources for the given database {type}",
-	        notes = "Returns all the available data sources for the given database {type} in JSON",
-	        response = String.class,
-	        responseContainer = "List"
-	    )
-	public Response listDatabases(@PathParam("type") String type, @Context HttpServletRequest request) {
+	@ApiOperation(value = "Returns all the available data sources for the given database {type}")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of Data Sources", response = String.class, responseContainer = "List"),
+			@ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 404, message = "Data Sources for the requested database {type} does not exist") })
+	public Response listDataSources(@PathParam("type") String type, @Context HttpServletRequest request) {
 		Set<String> list = processor.getDataSources(type);
 		if (list == null) {
 			String error = format("Database Type {0} not known.", type);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 		return Response.ok().entity(GsonHelper.GSON.toJson(list)).build();
-		
+
 	}
 
 	@GET
 	@Path("{type}/{name}")
 	@Produces("application/json")
-	@ApiOperation(
-	        value = "Returns the metadata of the given data source with {name} and {type}",
-	        notes = "Returns the metadata of the given data source with {name} and {type} in JSON",
-	        response = DatabaseMetadata.class
-	    )
-	public Response listArtifacts(@PathParam("type") String type, @PathParam("name") String name, @Context HttpServletRequest request) throws SQLException {
+	@ApiOperation(value = "Returns the metadata of the given data source with {name} and {type}")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Database Metadata", response = DatabaseMetadata.class),
+			@ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 404, message = "Database Metadata for the requested database {type} does not exist") })
+	public Response listArtifacts(@PathParam("type") String type, @PathParam("name") String name, @Context HttpServletRequest request)
+			throws SQLException {
 		DataSource dataSource = processor.getDataSource(type, name);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Type {1} not known.", name, type);
@@ -92,58 +85,56 @@ public class DatabaseRestService implements IRestService {
 		}
 		String metadata = processor.getMetadataAsJson(type, name);
 		return Response.ok().entity(metadata).build();
-		
+
 	}
-	
+
 	@POST
 	@Path("{type}/{name}/query")
 	@Produces("text/plain")
-	@ApiOperation(
-	        value = "Executes a query operation on the datasource {name} and {type} and returns the result in a tabular format",
-	        notes = "Executes a query operation on the datasource {name} and {type} and returns the result in a tabular format in a plain text",
-	        response = String.class
-	    )
+	@ApiOperation(value = "Executes a query operation on the datasource {name} and {type} and returns the result in a tabular format")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
+			@ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
 	public Response executeQuery(@PathParam("type") String type, @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = request.getRemoteUser();
 		if (user == null) {
-			return Response.status(Status.FORBIDDEN).build();
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		
+
 		if (!processor.existsDatabase(type, name)) {
 			String error = format("Datasource {0} does not exist as {1}.", name, type);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
+
 		String result = processor.executeQuery(type, name, new String(sql));
 		return Response.ok().entity(result).build();
 	}
-	
+
 	@POST
 	@Path("{type}/{name}/update")
 	@Produces("text/plain")
-	@ApiOperation(
-	        value = "Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format",
-	        notes = "Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format in a plain text",
-	        response = String.class
-	    )
+	@ApiOperation(value = "Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
+			@ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
 	public Response executeUpdate(@PathParam("type") String type, @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = request.getRemoteUser();
 		if (user == null) {
-			return Response.status(Status.FORBIDDEN).build();
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		
+
 		if (!processor.existsDatabase(type, name)) {
 			String error = format("Datasource {0} does not exist as {1}.", name, type);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
+
 		String result = processor.executeUpdate(type, name, new String(sql));
 		return Response.ok().entity(result).build();
 	}
-	
+
 	@Override
 	public Class<? extends IRestService> getType() {
 		return DatabaseRestService.class;
 	}
-	
+
 }

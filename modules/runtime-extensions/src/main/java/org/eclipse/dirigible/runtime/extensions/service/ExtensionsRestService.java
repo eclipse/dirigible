@@ -28,47 +28,39 @@ import io.swagger.annotations.Authorization;
  */
 @Singleton
 @Path("/core/extensions")
-@Api(value = "/core/extensions", 
-	description = "Extension Points and Extensions Service",
-	authorizations = {
-			  @Authorization(value="Developer, Operator", scopes = {})
-	  	})
+@Api(value = "Core - Extensions", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 public class ExtensionsRestService implements IRestService {
-	
+
 	@Inject
 	private ExtensionsProcessor processor;
-	
+
 	@GET
 	@Path("/")
 	@Produces("application/json")
-	@ApiOperation(
-	        value = "List all the Extension Points with their Extensions",
-	        notes = "List all the Extension Points with their Extensions in JSON",
-	        response = ExtensionPoint.class,
-	        responseContainer = "List"
-	    )
+	@ApiOperation(value = "List all the Extension Points with their Extensions")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "List of Extension Points", response = ExtensionPoint.class, responseContainer = "List"),
+			@ApiResponse(code = 401, message = "Unauthorized"), })
 	public Response listExtensionPoints() throws ExtensionsException {
 		return Response.ok().entity(processor.renderExtensionPoints()).build();
 	}
-	
+
 	@GET
 	@Path("/{name}")
 	@Produces("application/json")
-	@ApiOperation(
-	        value = "Returns the Extension Point with their Extensions requested by its name",
-	        notes = "Returns the Extension Point with their Extensions requested by its name in JSON",
-	        response = ExtensionPoint.class
-	    )
-	@ApiResponses(value = { @ApiResponse(code = 404, message = "ExtensionPoint with the requested name does not exist") })
-	public Response getExtensionPoint(@ApiParam(value = "name of the ExtensionPoint", required = true)  @PathParam("name") String name) throws ExtensionsException {
+	@ApiOperation(value = "Returns the Extension Point with their Extensions requested by its name")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
+			@ApiResponse(code = 401, message = "Unauthorized"),
+			@ApiResponse(code = 404, message = "Extension Point with the requested name does not exist") })
+	public Response getExtensionPoint(@ApiParam(value = "name of the ExtensionPoint", required = true) @PathParam("name") String name)
+			throws ExtensionsException {
 		String json = processor.renderExtensionPoint(name);
 		if (json == null) {
 			return Response.status(Status.NOT_FOUND).entity(format("ExtensionPoint with name [{0}] does not exist", name)).build();
 		}
 		return Response.ok().entity(json).build();
 	}
-	
-	
+
 	@Override
 	public Class<? extends IRestService> getType() {
 		return ExtensionsRestService.class;

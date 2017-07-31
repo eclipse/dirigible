@@ -1,7 +1,9 @@
 package org.eclipse.dirigible.runtime.core.listener;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 import javax.servlet.ServletContextEvent;
@@ -23,6 +25,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import io.swagger.models.auth.BasicAuthDefinition;
+import io.swagger.models.auth.SecuritySchemeDefinition;
+
 /**
  * This class handles the initialization of all Guice modules and all REST API
  * resources.
@@ -34,7 +39,6 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	private static final HashSet<Object> services = new HashSet<Object>();
 
 	private Injector injector;
-	
 
 	@Override
 	protected Injector getInjector() {
@@ -42,9 +46,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 		injector = Guice.createInjector(new DirigibleModulesInstallerModule());
 		StaticInjector.setInjector(injector);
-		
+
 		logger.trace("Guice Injector with modules for dependency injection initialized.");
-		
+
 		return injector;
 	}
 
@@ -52,17 +56,15 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		logger.info("---------- Initializing Eclipse Dirigible Platform... ----------");
 		super.contextInitialized(servletContextEvent);
-		
+
 		loadPredeliveredContent();
-		
+
 		registerRestServicesForCxf();
-		
+
 		startupScheduler();
-		
+
 		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
 	}
-
-	
 
 	private void loadPredeliveredContent() {
 		logger.trace("Loading the predelivered content...");
@@ -100,12 +102,12 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 			logger.info("Exception Handler registered {}.", next.getType());
 		}
 	}
-	
+
 	private void addSwagger() {
 		Swagger2Feature feature = new Swagger2Feature();
-		 
-	    // customize some of the properties
-//	    feature.setBasePath("/api");
+
+		// customize some of the properties
+		feature.setBasePath("/services/v3");
 		feature.setPrettyPrint(true);
 		feature.setDescription("Eclipse Dirigible API of the core RESTful services provided by the application development platform itself");
 		feature.setVersion("3.0");
@@ -113,10 +115,16 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		feature.setContact("dirigible-dev@eclipse.org");
 		feature.setLicense("Eclipse Public License - v 1.0");
 		feature.setLicenseUrl("https://www.eclipse.org/legal/epl-v10.html");
-	         
-	    getServices().add(feature);		
+		Map<String, SecuritySchemeDefinition> securityDefinitions = new HashMap<String, SecuritySchemeDefinition>();
+		BasicAuthDefinition auth = new BasicAuthDefinition();
+		auth.setType("basic");
+		securityDefinitions.put("basicAuth", auth);
+		feature.setSecurityDefinitions(securityDefinitions);
+		feature.setPrettyPrint(true);
+
+		getServices().add(feature);
 	}
-	
+
 	private void startupScheduler() {
 		logger.info("Starting Scheduler...");
 		try {
@@ -126,7 +134,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		}
 		logger.info("Done starting Scheduler.");
 	}
-	
+
 	private void shutdownScheduler() {
 		logger.trace("Shutting down Scheduler...");
 		try {
@@ -136,7 +144,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		}
 		logger.trace("Done shutting down Scheduler.");
 	}
-	
+
 	/**
 	 * Get singleton services registred to this application.
 	 *
@@ -145,15 +153,15 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	public static HashSet<Object> getServices() {
 		return services;
 	}
-	
+
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		logger.info("Shutting down Eclipse Dirigible Platform...");
-		
+
 		shutdownScheduler();
-		
+
 		super.contextDestroyed(servletContextEvent);
-		
+
 		logger.info("Eclipse Dirigible Platform shutted down.");
 	}
 
