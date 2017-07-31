@@ -23,8 +23,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	@Before
 	public void registerModules() {
-		TEST_MODULES.add("utils/v3/base64_encode.js");
-		TEST_MODULES.add("utils/v3/base64_decode.js");
+		TEST_MODULES.add("utils/v3/base64/encode.js");
+		TEST_MODULES.add("utils/v3/base64/decode.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
@@ -32,7 +32,7 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		for (String testModule : TEST_MODULES) {
 			Object result = runTest(executor, repository, testModule);
 			assertNotNull(result);
-			assertTrue("Javascript API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
+			assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
 			System.out.println(String.format("API test [%s] on engine [%s] passed successfully.", testModule, executor.getType()));
 		}
 	}
