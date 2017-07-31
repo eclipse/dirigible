@@ -23,7 +23,7 @@ public class SequenceTest {
 		String sql = Squle.getDefault()
 			.create()
 			.sequence("CUSTOMERS_SEQUENCE")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -34,7 +34,7 @@ public class SequenceTest {
 		String sql = Squle.getDefault()
 			.drop()
 			.sequence("CUSTOMERS_SEQUENCE")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -44,7 +44,7 @@ public class SequenceTest {
 	public void nextvalSequnce() {
 		String sql = Squle.getDefault()
 			.nextval("CUSTOMERS_SEQUENCE")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("SELECT NEXT VALUE FOR CUSTOMERS_SEQUENCE", sql);

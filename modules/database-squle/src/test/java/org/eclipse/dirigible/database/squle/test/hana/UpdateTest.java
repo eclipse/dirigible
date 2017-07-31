@@ -25,7 +25,7 @@ public class UpdateTest {
 			.update()
 			.table("CUSTOMERS")
 			.set("FIRST_NAME", "'John'")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
@@ -38,7 +38,7 @@ public class UpdateTest {
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
 				.set("LAST_NAME", "'Smith'")
-				.toString();
+				.build();
 			
 			assertNotNull(sql);
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith'", sql);
@@ -53,7 +53,7 @@ public class UpdateTest {
 				.set("LAST_NAME", "'Smith'")
 				.where("AGE > ?")
 				.where("COMPANY = 'SAP'")
-				.toString();
+				.build();
 			
 			assertNotNull(sql);
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (AGE > ?) AND (COMPANY = 'SAP')", sql);
@@ -65,9 +65,9 @@ public class UpdateTest {
 				.update()
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
-				.set("SALARY", Squle.getNative(new HanaSquleDialect()).select().column("MAX(SALARY)").from("BENEFITS").toString())
+				.set("SALARY", Squle.getNative(new HanaSquleDialect()).select().column("MAX(SALARY)").from("BENEFITS").build())
 				.where("COMPANY = 'SAP'")
-				.toString();
+				.build();
 			
 			assertNotNull(sql);
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', SALARY = SELECT MAX(SALARY) FROM BENEFITS WHERE (COMPANY = 'SAP')", sql);
@@ -80,8 +80,8 @@ public class UpdateTest {
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
 				.set("LAST_NAME", "'Smith'")
-				.where(Squle.getNative(new HanaSquleDialect()).expr().and("PRICE > ?").or("AMOUNT < ?").and("COMPANY = 'SAP'").toString())
-				.toString();
+				.where(Squle.getNative(new HanaSquleDialect()).expr().and("PRICE > ?").or("AMOUNT < ?").and("COMPANY = 'SAP'").build())
+				.build();
 			
 			assertNotNull(sql);
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (PRICE > ? OR AMOUNT < ? AND COMPANY = 'SAP')", sql);
@@ -97,7 +97,7 @@ public class UpdateTest {
 				.where("COMPANY = 'SAP'")
 				.order("FIRST_NAME", false)
 				.limit(5)
-				.toString();
+				.build();
 			
 			assertNotNull(sql);
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (COMPANY = 'SAP') ORDER BY FIRST_NAME DESC LIMIT 5", sql);

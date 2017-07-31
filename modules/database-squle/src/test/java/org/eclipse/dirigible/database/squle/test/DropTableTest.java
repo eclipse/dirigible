@@ -23,7 +23,7 @@ public class DropTableTest {
 		String sql = Squle.getDefault()
 			.drop()
 			.table("CUSTOMERS")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("DROP TABLE CUSTOMERS", sql);

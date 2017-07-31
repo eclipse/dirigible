@@ -26,7 +26,7 @@ public class InsertTest {
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
@@ -41,7 +41,7 @@ public class InsertTest {
 			.column("LAST_NAME")
 			.value("?")
 			.value("'Smith'")
-			.toString();
+			.build();
 
 		assertNotNull(sql);
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, 'Smith')", sql);
@@ -54,7 +54,7 @@ public class InsertTest {
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
-			.select(Squle.getNative(new DerbySquleDialect()).select().column("*").from("SUPPLIERS").toString())
+			.select(Squle.getNative(new DerbySquleDialect()).select().column("*").from("SUPPLIERS").build())
 			.toString();
 
 		assertNotNull(sql);

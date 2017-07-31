@@ -23,7 +23,7 @@ public class DeleteTest {
 		String sql = Squle.getDefault()
 			.delete()
 			.from("CUSTOMERS")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("DELETE FROM CUSTOMERS", sql);
@@ -36,7 +36,7 @@ public class DeleteTest {
 				.from("CUSTOMERS")
 				.where("AGE > ?")
 				.where("COMPANY = 'SAP'")
-				.toString();
+				.build();
 			
 			assertNotNull(sql);
 			assertEquals("DELETE FROM CUSTOMERS WHERE (AGE > ?) AND (COMPANY = 'SAP')", sql);

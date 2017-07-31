@@ -25,7 +25,7 @@ public class InsertTest {
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
@@ -40,7 +40,7 @@ public class InsertTest {
 			.column("LAST_NAME")
 			.value("?")
 			.value("'Smith'")
-			.toString();
+			.build();
 
 		assertNotNull(sql);
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, 'Smith')", sql);
@@ -53,8 +53,8 @@ public class InsertTest {
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
-			.select(Squle.getDefault().select().column("*").from("SUPPLIERS").toString())
-			.toString();
+			.select(Squle.getDefault().select().column("*").from("SUPPLIERS").build())
+			.build();
 
 		assertNotNull(sql);
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) SELECT * FROM SUPPLIERS", sql);

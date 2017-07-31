@@ -24,12 +24,21 @@ public abstract class AbstractSquleBuilder implements ISquleBuilder {
 	protected ISquleDialect getDialect() {
 		return dialect;
 	}
+
 	/**
 	 * Usually returns the default generated snippet
 	 */
 	@Override
 	public String toString() {
+		return build();
+	}
+
+	/**
+	 * Returns the default generated snippet
+	 */
+	@Override
+	public String build() {
 		return generate();
 	}
-	
+
 }

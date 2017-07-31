@@ -24,7 +24,7 @@ public class SequenceTest {
 		String sql = Squle.getNative(new DerbySquleDialect())
 			.create()
 			.sequence("CUSTOMERS_SEQUENCE")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
@@ -35,7 +35,7 @@ public class SequenceTest {
 		String sql = Squle.getNative(new DerbySquleDialect())
 			.drop()
 			.sequence("CUSTOMERS_SEQUENCE")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE RESTRICT", sql);
@@ -45,7 +45,7 @@ public class SequenceTest {
 	public void nextvalSequnce() {
 		String sql = Squle.getNative(new DerbySquleDialect())
 			.nextval("CUSTOMERS_SEQUENCE")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("( VALUES NEXT VALUE FOR CUSTOMERS_SEQUENCE )", sql);

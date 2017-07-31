@@ -24,7 +24,7 @@ public class DropTableTest {
 		String sql = Squle.getNative(new SybaseSquleDialect())
 			.drop()
 			.table("CUSTOMERS")
-			.toString();
+			.build();
 		
 		assertNotNull(sql);
 		assertEquals("DROP TABLE CUSTOMERS", sql);
