@@ -41,6 +41,20 @@ public class ProjectTest extends AbstractGuiceTest {
 	}
 
 	@Test
+	public void createFolderDeepTest() {
+		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
+		IProject project1 = workspace1.createProject("Project1");
+		IFolder folder1 = project1.createFolder("Folder1/Folder2/Folder3");
+		assertNotNull(folder1);
+		assertNotNull(folder1.getInternal());
+		assertEquals("Folder3", folder1.getName());
+		assertEquals("/users/guest/TestWorkspace1/Project1/Folder1/Folder2/Folder3", folder1.getInternal().getPath());
+		project1.deleteFolder("Folder1");
+		workspace1.deleteProject("Project1");
+		workspacesCoreService.deleteWorkspace("TestWorkspace1");
+	}
+
+	@Test
 	public void getFolderTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
 		IProject project1 = workspace1.createProject("Project1");

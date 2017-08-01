@@ -3,7 +3,6 @@ package org.eclipse.dirigible.runtime.ide.workspaces.service;
 import static java.text.MessageFormat.format;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -22,9 +21,11 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.core.workspace.api.IFile;
+import org.eclipse.dirigible.core.workspace.api.IFolder;
+import org.eclipse.dirigible.core.workspace.api.IProject;
+import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
 
 import com.google.gson.Gson;
@@ -34,17 +35,17 @@ import com.google.gson.Gson;
  */
 @Singleton
 @Path("/ide/workspaces")
-@RolesAllowed({"Developer"})
+@RolesAllowed({ "Developer" })
 public class WorkspaceRestService implements IRestService {
-	
+
 	@Inject
 	private WorkspaceProcessor processor;
-	
+
 	@Override
 	public Class<? extends IRestService> getType() {
 		return WorkspaceRestService.class;
 	}
-	
+
 	// Workspace
 
 	@GET
@@ -54,12 +55,7 @@ public class WorkspaceRestService implements IRestService {
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-
-		ICollection collection = processor.listWorkspaces(user);
-		List<String> workspaces = new ArrayList<String>();
-		for (ICollection next : collection.getCollections()) {
-			workspaces.add(next.getName());
-		}
+		List<IWorkspace> workspaces = processor.listWorkspaces();
 		return Response.ok().entity(new Gson().toJson(workspaces)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
@@ -70,38 +66,41 @@ public class WorkspaceRestService implements IRestService {
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
+
+		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
-		ICollection collection = processor.getWorkspace(user, workspace);
-		if (!collection.exists()) {
+
+		IWorkspace workspaceObject = processor.getWorkspace(workspace);
+		if (!workspaceObject.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.ok().entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(processor.renderTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON)
+				.build();
 	}
-	
+
 	@POST
 	@Path("{workspace}")
-	public Response createWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) throws URISyntaxException {
+	public Response createWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request)
+			throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		
-		if (processor.existsWorkspace(user, workspace)) {
+
+		if (processor.existsWorkspace(workspace)) {
 			return Response.notModified().build();
 		}
-		
-		ICollection collection = processor.createWorkspace(user, workspace);
-		if (!collection.exists()) {
+
+		IWorkspace workspaceObject = processor.createWorkspace(workspace);
+		if (!workspaceObject.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.created(processor.getURI(workspace, null, null)).entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.created(processor.getURI(workspace, null, null)).entity(processor.renderTree(workspaceObject))
+				.type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
-	
+
 	@DELETE
 	@Path("{workspace}")
 	public Response deleteWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
@@ -109,224 +108,238 @@ public class WorkspaceRestService implements IRestService {
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
+
+		if (!processor.existsWorkspace(workspace)) {
 			return Response.ok().build();
 		}
-		
-		processor.deleteWorkspace(user, workspace);
-		return Response.noContent().build();
-	}
-	
-	// Project
-	
-	@GET
-	@Path("{workspace}/{project}")
-	public Response getProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
-		if (user == null) {
-			return Response.status(Status.FORBIDDEN).build();
-		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
-			String error = format("Workspace {0} does not exist.", workspace);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
-		}
-		
-		if (!processor.existsProject(user, workspace, project)) {
-			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
-		}
-		
-		ICollection collection = processor.getProject(user, workspace, project);
-		if (!collection.exists()) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-		return Response.ok().entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
-	}
-	
-	@POST
-	@Path("{workspace}/{project}")
-	public Response createProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request) throws URISyntaxException {
-		String user = request.getRemoteUser();
-		if (user == null) {
-			return Response.status(Status.FORBIDDEN).build();
-		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
-			String error = format("Workspace {0} does not exist.", workspace);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
-		}
-		
-		if (processor.existsProject(user, workspace, project)) {
-			return Response.notModified().build();
-		}
-		
-		ICollection collection = processor.createProject(user, workspace, project);
-		if (!collection.exists()) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
-		return Response.created(processor.getURI(workspace, project, null)).entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
-	}
-	
-	@DELETE
-	@Path("{workspace}/{project}")
-	public Response deleteProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
-		if (user == null) {
-			return Response.status(Status.FORBIDDEN).build();
-		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
-			String error = format("Workspace {0} does not exist.", workspace);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
-		}
-		
-		if (!processor.existsProject(user, workspace, project)) {
-			return Response.notModified().build();
-		}
-		
-		processor.deleteProject(user, workspace, project);
+
+		processor.deleteWorkspace(workspace);
 		return Response.noContent().build();
 	}
 
-	
-	// Resource
+	// Project
+
+	@GET
+	@Path("{workspace}/{project}")
+	public Response getProject(@PathParam("workspace") String workspace, @PathParam("project") String project,
+			@Context HttpServletRequest request) {
+		String user = request.getRemoteUser();
+		if (user == null) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if (!processor.existsWorkspace(workspace)) {
+			String error = format("Workspace {0} does not exist.", workspace);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		if (!processor.existsProject(workspace, project)) {
+			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		IProject projectObject = processor.getProject(workspace, project);
+		if (!projectObject.exists()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.ok().entity(processor.renderTree(projectObject)).type(ContentTypeHelper.APPLICATION_JSON)
+				.build();
+	}
+
+	@POST
+	@Path("{workspace}/{project}")
+	public Response createProject(@PathParam("workspace") String workspace, @PathParam("project") String project,
+			@Context HttpServletRequest request) throws URISyntaxException {
+		String user = request.getRemoteUser();
+		if (user == null) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if (!processor.existsWorkspace(workspace)) {
+			String error = format("Workspace {0} does not exist.", workspace);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		if (processor.existsProject(workspace, project)) {
+			return Response.notModified().build();
+		}
+
+		IProject projectObject = processor.createProject(workspace, project);
+		if (!projectObject.exists()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.created(processor.getURI(workspace, project, null)).entity(processor.renderTree(projectObject))
+				.type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+
+	@DELETE
+	@Path("{workspace}/{project}")
+	public Response deleteProject(@PathParam("workspace") String workspace, @PathParam("project") String project,
+			@Context HttpServletRequest request) {
+		String user = request.getRemoteUser();
+		if (user == null) {
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if (!processor.existsWorkspace(workspace)) {
+			String error = format("Workspace {0} does not exist.", workspace);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		if (!processor.existsProject(workspace, project)) {
+			return Response.notModified().build();
+		}
+
+		processor.deleteProject(workspace, project);
+		return Response.noContent().build();
+	}
+
+	// Folders and Files
 
 	@GET
 	@Path("{workspace}/{project}/{path:.*}")
-	public Response getResource(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path, @Context HttpServletRequest request) {
+	public Response getFile(@PathParam("workspace") String workspace, @PathParam("project") String project,
+			@PathParam("path") String path, @Context HttpServletRequest request) {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
+
+		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
-		if (!processor.existsProject(user, workspace, project)) {
+
+		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
-		IResource resource = processor.getResource(user, workspace, project, path);
-		if (!resource.exists()) {
-			ICollection collection = processor.getCollection(user, workspace, project, path);
+
+		IFile file = processor.getFile(workspace, project, path);
+		if (!file.exists()) {
+			IFolder collection = processor.getFolder(workspace, project, path);
 			if (!collection.exists()) {
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			return Response.ok().entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
+			return Response.ok().entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON)
+					.build();
 		}
-		if (resource.isBinary()) {
-			return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();
+		if (file.isBinary()) {
+			return Response.ok().entity(file.getContent()).type(file.getContentType()).build();
 		}
-		return Response.ok(new String(resource.getContent())).type(ContentTypeHelper.TEXT_PLAIN).build();
+		return Response.ok(new String(file.getContent())).type(ContentTypeHelper.TEXT_PLAIN).build();
 	}
-	
+
 	@POST
 	@Path("{workspace}/{project}/{path:.*}")
-	public Response createResource(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path, byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
+	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project,
+			@PathParam("path") String path, byte[] content, @Context HttpServletRequest request)
+			throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
+
+		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
-		if (!processor.existsProject(user, workspace, project)) {
+
+		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
+
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
-			ICollection collection = processor.getCollection(user, workspace, project, path);
-			if (collection.exists()) {
-				String error = format("Collection {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
+			IFolder folder = processor.getFolder(workspace, project, path);
+			if (folder.exists()) {
+				String error = format("Folder {0} already exists in Project {1} in Workspace {2}.", path, project,
+						workspace);
 				return Response.status(Status.BAD_REQUEST).entity(error).build();
 			}
-			
-			collection = processor.createCollection(user, workspace, project, path);
+
+			folder = processor.createFolder(workspace, project, path);
 			return Response.created(processor.getURI(workspace, project, path)).build();
 		}
-		
-		IResource resource = processor.getResource(user, workspace, project, path);
-		if (resource.exists()) {
-			String error = format("Resource {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
+
+		IFile file = processor.getFile(workspace, project, path);
+		if (file.exists()) {
+			String error = format("File {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
 			return Response.status(Status.BAD_REQUEST).entity(error).build();
 		}
-		
-		resource = processor.createResource(user, workspace, project, path, content, request.getContentType());
+
+		file = processor.createFile(workspace, project, path, content, request.getContentType());
 		return Response.created(processor.getURI(workspace, project, path)).build();
 	}
-	
+
 	@PUT
 	@Path("{workspace}/{project}/{path:.*}")
-	public Response updateResource(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path, byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
+	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project,
+			@PathParam("path") String path, byte[] content, @Context HttpServletRequest request)
+			throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
+
+		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
-		if (!processor.existsProject(user, workspace, project)) {
+
+		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
-		IResource resource = processor.getResource(user, workspace, project, path);
-		if (!resource.exists()) {
-			String error = format("Resource {0} does not exists in Project {1} in Workspace {2}.", path, project, workspace);
+
+		IFile file = processor.getFile(workspace, project, path);
+		if (!file.exists()) {
+			String error = format("File {0} does not exists in Project {1} in Workspace {2}.", path, project,
+					workspace);
 			return Response.status(Status.BAD_REQUEST).entity(error).build();
 		}
-		
-		resource = processor.updateResource(user, workspace, project, path, content);
+
+		file = processor.updateFile(workspace, project, path, content);
 		return Response.noContent().build();
 	}
-	
+
 	@DELETE
 	@Path("{workspace}/{project}/{path:.*}")
-	public Response deleteResource(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path, byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
+	public Response deleteFile(@PathParam("workspace") String workspace, @PathParam("project") String project,
+			@PathParam("path") String path, byte[] content, @Context HttpServletRequest request)
+			throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		
-		if (!processor.existsWorkspace(user, workspace)) {
+
+		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
-		if (!processor.existsProject(user, workspace, project)) {
+
+		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		
+
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
-			ICollection collection = processor.getCollection(user, workspace, project, path);
-			if (!collection.exists()) {
+			IFolder folder = processor.getFolder(workspace, project, path);
+			if (!folder.exists()) {
 				return Response.notModified().build();
 			}
-			
-			processor.deleteCollection(user, workspace, project, path);
+
+			processor.deleteFolder(workspace, project, path);
 			return Response.noContent().build();
 		}
-		
-		IResource resource = processor.getResource(user, workspace, project, path);
-		if (!resource.exists()) {
+
+		IFile file = processor.getFile(workspace, project, path);
+		if (!file.exists()) {
 			return Response.notModified().build();
 		}
-		
-		processor.deleteResource(user, workspace, project, path);
+
+		processor.deleteFile(workspace, project, path);
 		return Response.noContent().build();
 	}
-	
+
 }

@@ -14,6 +14,7 @@ import static java.text.MessageFormat.format;
 
 import java.util.List;
 
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
@@ -30,9 +31,9 @@ import org.slf4j.LoggerFactory;
  * The file system based implementation of {@link IResource}
  */
 public class LocalResource extends LocalEntity implements IResource {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(LocalResource.class);
-	
+
 	private boolean binary = false;
 
 	private String contentType;
@@ -118,9 +119,8 @@ public class LocalResource extends LocalEntity implements IResource {
 	@Override
 	public void setContent(byte[] content) throws RepositoryWriteException {
 
-		if ((this.contentType == null) || "".equals(this.contentType)) { //$NON-NLS-1$
-			this.contentType = IResource.CONTENT_TYPE_DEFAULT;
-		}
+		this.contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(getName()));
+		this.binary = ContentTypeHelper.isBinary(contentType);
 
 		if (exists()) {
 			final LocalFile document = getDocumentSafe();
