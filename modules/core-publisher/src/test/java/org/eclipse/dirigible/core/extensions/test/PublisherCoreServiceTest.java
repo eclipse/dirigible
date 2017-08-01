@@ -11,7 +11,7 @@ import org.eclipse.dirigible.core.publisher.api.IPublisherCoreService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
-import org.eclipse.dirigible.core.publisher.service.PublishCoreService;
+import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class PublisherCoreServiceTest extends AbstractGuiceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.publisherCoreService = getInjector().getInstance(PublishCoreService.class);
+		this.publisherCoreService = getInjector().getInstance(PublisherCoreService.class);
 	}
 	
 	@Test

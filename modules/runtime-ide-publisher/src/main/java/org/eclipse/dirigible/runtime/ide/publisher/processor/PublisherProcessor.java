@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
-import org.eclipse.dirigible.core.publisher.service.PublishCoreService;
+import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -23,7 +23,7 @@ public class PublisherProcessor {
 	private Logger logger = LoggerFactory.getLogger(PublisherProcessor.class);
 	
 	@Inject
-	private PublishCoreService publishCoreService;
+	private PublisherCoreService publishCoreService;
 	
 	@Inject
 	private IRepository repository;
@@ -31,7 +31,7 @@ public class PublisherProcessor {
 	
 	public long requestPublishing(String user, String workspace, String path) throws PublisherException {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
-		PublishRequestDefinition publishRequestDefinition = publishCoreService.createPublishRequest(workspacePath.toString(), path, IRepositoryStructure.REGISTRY_PUBLIC);
+		PublishRequestDefinition publishRequestDefinition = publishCoreService.createPublishRequest(workspacePath.toString(), path, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		logger.info("Publishing request created [{}]", publishRequestDefinition.getId());
 		return publishRequestDefinition.getId();
 	}
@@ -60,7 +60,7 @@ public class PublisherProcessor {
 	}
 
 	private StringBuilder generateWorkspacePath(String user, String workspace, String project, String path) {
-		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.USERS)
+		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS)
 				.append(IRepositoryStructure.SEPARATOR)
 				.append(user)
 				.append(IRepositoryStructure.SEPARATOR)

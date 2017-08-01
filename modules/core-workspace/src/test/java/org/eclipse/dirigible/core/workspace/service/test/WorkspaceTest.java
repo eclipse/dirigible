@@ -1,7 +1,9 @@
 package org.eclipse.dirigible.core.workspace.service.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -90,11 +92,12 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		assertNotNull(project1.getInternal());
 		assertEquals("Project1", project1.getName());
 		assertEquals("/users/guest/TestWorkspace1/Project1", project1.getInternal().getPath());
+		assertTrue(project1.exists());
 		workspace1.deleteProject("Project1");
 		IProject project2 = workspace1.getProject("Project1");
 		assertNotNull(project2);
 		assertNotNull(project2.getInternal());
-		assertEquals(false, project2.exists());
+		assertFalse(project2.exists());
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 

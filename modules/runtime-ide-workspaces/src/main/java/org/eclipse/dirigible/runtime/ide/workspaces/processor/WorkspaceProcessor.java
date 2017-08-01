@@ -150,7 +150,7 @@ public class WorkspaceProcessor {
 	}
 
 	public Collection renderTree(ICollection collection) {
-		return RepositoryJsonHelper.traverseCollection(collection, IRepositoryStructure.USERS, WORKSPACES);
+		return RepositoryJsonHelper.traverseCollection(collection, IRepositoryStructure.PATH_USERS, WORKSPACES);
 	}
 
 }

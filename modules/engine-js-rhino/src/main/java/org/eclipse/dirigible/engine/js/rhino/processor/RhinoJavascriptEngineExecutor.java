@@ -81,7 +81,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private RhinoRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
 		RhinoRepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
-		repositoryModuleSourceProvider = new RhinoRepositoryModuleSourceProvider(this, IRepositoryStructure.REGISTRY_PUBLIC);
+		repositoryModuleSourceProvider = new RhinoRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		return repositoryModuleSourceProvider;
 	}
 

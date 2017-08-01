@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.publisher.api.IPublisherCoreService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
-import org.eclipse.dirigible.core.publisher.service.PublishCoreService;
+import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.publisher.synchronizer.PublisherSynchronizer;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -33,7 +33,7 @@ public class PublisherSynchronizerTest extends AbstractGuiceTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.publisherCoreService = getInjector().getInstance(PublishCoreService.class);
+		this.publisherCoreService = getInjector().getInstance(PublisherCoreService.class);
 		this.publisherSynchronizer = getInjector().getInstance(PublisherSynchronizer.class);
 		this.repository = getInjector().getInstance(IRepository.class);
 	}
@@ -49,7 +49,7 @@ public class PublisherSynchronizerTest extends AbstractGuiceTest {
 		
 		publisherSynchronizer.synchronize();
 		
-		IResource publishedResource = repository.getResource(IRepositoryStructure.REGISTRY_PUBLIC + "/project1/folder1/file.txt");
+		IResource publishedResource = repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/project1/folder1/file.txt");
 		
 		assertTrue(publishedResource.exists());
 		assertEquals("My Data", new String(publishedResource.getContent()));
@@ -73,7 +73,7 @@ public class PublisherSynchronizerTest extends AbstractGuiceTest {
 		
 		publisherSynchronizer.synchronize();
 		
-		IResource publishedResource = repository.getResource(IRepositoryStructure.REGISTRY_PUBLIC + "/project1/folder1/file.txt");
+		IResource publishedResource = repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/project1/folder1/file.txt");
 		
 		assertTrue(publishedResource.exists());
 		assertEquals("My Data 2", new String(publishedResource.getContent()));

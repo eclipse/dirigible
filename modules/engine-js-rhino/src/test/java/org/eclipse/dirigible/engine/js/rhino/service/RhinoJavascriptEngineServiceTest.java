@@ -30,7 +30,7 @@ public class RhinoJavascriptEngineServiceTest extends AbstractGuiceTest {
 	
 	@Test
 	public void basicScript() throws IOException, ScriptingException {
-		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + "/tests/rhino/testSum.js", 
+		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/tests/rhino/testSum.js", 
 				("var testSum = function(){ var a=2; var b=2; " + "var c=a+b; return c;}; testSum(); ").getBytes());
 		
 		Object result = rhinoJavascriptEngineExecutor.executeServiceModule("tests/rhino/testSum", null);

@@ -31,11 +31,11 @@ public class RegistryProcessor {
 	}
 
 	public Collection renderTree(ICollection collection) {
-		return RepositoryJsonHelper.traverseCollection(collection, IRepositoryStructure.REGISTRY_PUBLIC, REGISTRY);
+		return RepositoryJsonHelper.traverseCollection(collection, IRepositoryStructure.PATH_REGISTRY_PUBLIC, REGISTRY);
 	}
 	
 	private StringBuilder generateRegistryPath(String path) {
-		StringBuilder registryPath = new StringBuilder(IRepositoryStructure.REGISTRY_PUBLIC)
+		StringBuilder registryPath = new StringBuilder(IRepositoryStructure.PATH_REGISTRY_PUBLIC)
 				.append(IRepositoryStructure.SEPARATOR)
 				.append(path);
 		return registryPath;

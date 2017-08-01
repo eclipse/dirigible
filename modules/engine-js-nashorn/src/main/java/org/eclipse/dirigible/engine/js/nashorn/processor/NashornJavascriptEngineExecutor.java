@@ -69,7 +69,7 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 	private NashornRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
 		NashornRepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
-		repositoryModuleSourceProvider = new NashornRepositoryModuleSourceProvider(this, IRepositoryStructure.REGISTRY_PUBLIC);
+		repositoryModuleSourceProvider = new NashornRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		return repositoryModuleSourceProvider;
 	}
 

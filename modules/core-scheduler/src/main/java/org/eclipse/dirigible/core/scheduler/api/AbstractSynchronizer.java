@@ -19,7 +19,7 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	}
 	
 	protected void synchronizeRegistry() throws SynchronizationException {
-		ICollection collection = getRepository().getCollection(IRepositoryStructure.REGISTRY_PUBLIC);
+		ICollection collection = getRepository().getCollection(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		if (collection.exists()) {
 			synchronizeCollection(collection);
 		}

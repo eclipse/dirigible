@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
-import org.eclipse.dirigible.core.publisher.service.PublishCoreService;
+import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -27,7 +27,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	private static final Logger logger = LoggerFactory.getLogger(PublisherSynchronizer.class);
 	
 	@Inject
-	private PublishCoreService publishCoreService;
+	private PublisherCoreService publishCoreService;
 	
 	private Map<String, String> resourceLocations = new HashMap<String, String>();
 	
@@ -73,7 +73,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		for (PublishRequestDefinition publishRequestDefinition : publishRequestDefinitions) {
 			currentWorkspace = publishRequestDefinition.getWorkspace();
 			String path = publishRequestDefinition.getPath();
-			currentRegistry = (publishRequestDefinition.getRegistry() != null ? publishRequestDefinition.getRegistry() : IRepositoryStructure.REGISTRY_PUBLIC);
+			currentRegistry = (publishRequestDefinition.getRegistry() != null ? publishRequestDefinition.getRegistry() : IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 			currentRequestTime = (publishRequestDefinition.getCreatedAt().after(currentRequestTime) ? publishRequestDefinition.getCreatedAt() : currentRequestTime);
 			
 			String sourceLocation = new RepositoryPath(currentWorkspace, path).toString();

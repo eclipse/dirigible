@@ -58,7 +58,7 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 	}
 
 	private StringBuilder generateWorkspacePath(String workspace, String project, String path) {
-		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.USERS).append(IRepositoryStructure.SEPARATOR)
+		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR)
 				.append(UserFacade.getName());
 		if (workspace != null) {
 			relativePath.append(IRepositoryStructure.SEPARATOR).append(workspace);

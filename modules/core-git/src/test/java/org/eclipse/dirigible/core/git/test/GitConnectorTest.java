@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
@@ -19,14 +20,15 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.junit.Test;
 
 public class GitConnectorTest {
-	
+
 	@Test
 	public void cloneRepository() throws IOException, InvalidRemoteException, TransportException, GitAPIException {
-		
-		Path path = Files.createTempDirectory("dirigible-tests");
+
+		Path path = Files.createDirectory(Paths.get("target/dirigible/git"));
 		try {
 			// clone repository
-			IGitConnector gitConnector = GitConnectorFactory.cloneRepository(path.toString(), "https://github.com/dirigiblelabs/sample_git_test.git", null, null, IGitConnector.GIT_MASTER);
+			IGitConnector gitConnector = GitConnectorFactory.cloneRepository(path.toString(), "https://github.com/dirigiblelabs/sample_git_test.git",
+					null, null, IGitConnector.GIT_MASTER);
 			Status status = gitConnector.status();
 			assertTrue(status.isClean());
 			File textFile = new File(path.toString() + File.separator + "test.txt");
@@ -39,7 +41,7 @@ public class GitConnectorTest {
 				FileUtils.deleteDirectory(path.toFile());
 			}
 		}
-		
+
 	}
 
 }

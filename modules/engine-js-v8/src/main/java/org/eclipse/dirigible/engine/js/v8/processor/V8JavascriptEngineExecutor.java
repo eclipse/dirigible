@@ -73,7 +73,7 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private V8RepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
 		V8RepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
-		repositoryModuleSourceProvider = new V8RepositoryModuleSourceProvider(this, IRepositoryStructure.REGISTRY_PUBLIC);
+		repositoryModuleSourceProvider = new V8RepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		return repositoryModuleSourceProvider;
 	}
 

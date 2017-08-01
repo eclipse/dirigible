@@ -39,7 +39,7 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	private Object runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
 		InputStream in = AbstractApiSuiteTest.class.getResourceAsStream(IRepositoryStructure.SEPARATOR + testModule);
-		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + testModule,
+		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + testModule,
 				IOUtils.readBytesFromStream(in));
 		Object result = executor.executeServiceModule(testModule, null);
 		return result;

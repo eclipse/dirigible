@@ -51,7 +51,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		extensionPointDefinitionCustom.setCreatedBy("test_user");
 		
 		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinitionCustom);
-		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint", json.getBytes());
+		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/custom/custom.extensionpoint", json.getBytes());
 		
 		extensionsPublisher.synchronize();
 		
@@ -66,7 +66,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 	public void cleanupExtensionPointTest() throws ExtensionsException, IOException {
 		createExtensionPointTest();
 		
-		repository.removeResource(IRepositoryStructure.REGISTRY_PUBLIC + "/custom/custom.extensionpoint");
+		repository.removeResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/custom/custom.extensionpoint");
 		
 		extensionsPublisher.synchronize();
 		

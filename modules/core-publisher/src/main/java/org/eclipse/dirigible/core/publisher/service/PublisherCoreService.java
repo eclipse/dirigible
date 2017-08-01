@@ -18,9 +18,10 @@ import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.squle.Squle;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
 @Singleton
-public class PublishCoreService implements IPublisherCoreService {
+public class PublisherCoreService implements IPublisherCoreService {
 
 	@Inject
 	private DataSource dataSource;
@@ -34,8 +35,7 @@ public class PublishCoreService implements IPublisherCoreService {
 	// Publish Request
 
 	@Override
-	public PublishRequestDefinition createPublishRequest(String workspace, String path, String registry)
-			throws PublisherException {
+	public PublishRequestDefinition createPublishRequest(String workspace, String path, String registry) throws PublisherException {
 		PublishRequestDefinition publishRequestDefinition = new PublishRequestDefinition();
 		publishRequestDefinition.setWorkspace(workspace);
 		publishRequestDefinition.setPath(path);
@@ -56,6 +56,11 @@ public class PublishCoreService implements IPublisherCoreService {
 		} catch (SQLException e) {
 			throw new PublisherException(e);
 		}
+	}
+
+	@Override
+	public PublishRequestDefinition createPublishRequest(String workspace, String path) throws PublisherException {
+		return createPublishRequest(workspace, path, IRepositoryStructure.PATH_REGISTRY);
 	}
 
 	@Override
@@ -106,13 +111,10 @@ public class PublishCoreService implements IPublisherCoreService {
 		}
 	}
 
-	
-	
 	// Publish Log
 
 	@Override
-	public PublishLogDefinition createPublishLog(String source, String target)
-			throws PublisherException {
+	public PublishLogDefinition createPublishLog(String source, String target) throws PublisherException {
 		PublishLogDefinition publishLogDefinition = new PublishLogDefinition();
 		publishLogDefinition.setSource(source);
 		publishLogDefinition.setTarget(target);
@@ -181,21 +183,14 @@ public class PublishCoreService implements IPublisherCoreService {
 			throw new PublisherException(e);
 		}
 	}
-	
-	
-	
-	
+
 	@Override
 	public List<PublishRequestDefinition> getPublishRequestsAfter(Timestamp timestamp) throws PublisherException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				
-				String sql = Squle.getNative(connection)
-						.select()
-						.column("*")
-						.from("DIRIGIBLE_PUBLISH_REQUESTS")
-						.where("PUBREQ_CREATED_AT > ?")
+
+				String sql = Squle.getNative(connection).select().column("*").from("DIRIGIBLE_PUBLISH_REQUESTS").where("PUBREQ_CREATED_AT > ?")
 						.toString();
 				Timestamp latest = (timestamp == null) ? new Timestamp(0) : timestamp;
 				return publishRequestPersistenceManager.query(connection, PublishRequestDefinition.class, sql, latest);
@@ -208,7 +203,7 @@ public class PublishCoreService implements IPublisherCoreService {
 			throw new PublisherException(e);
 		}
 	}
-	
+
 	@Override
 	public Timestamp getLatestPublishLog() throws PublisherException {
 		try {
@@ -216,12 +211,8 @@ public class PublishCoreService implements IPublisherCoreService {
 			try {
 				publishRequestPersistenceManager.tableCheck(connection, PublishLogDefinition.class);
 				Timestamp date = new Timestamp(new java.util.Date().getTime());
-				String sql = Squle.getNative(connection)
-						.select()
-						.column("MAX(PUBLOG_CREATED_AT)")
-						.from("DIRIGIBLE_PUBLISH_LOGS")
-						.toString();
-				
+				String sql = Squle.getNative(connection).select().column("MAX(PUBLOG_CREATED_AT)").from("DIRIGIBLE_PUBLISH_LOGS").toString();
+
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery(sql);
 				if (resultSet.next()) {

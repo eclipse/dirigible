@@ -57,7 +57,7 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 		access.getConstraints().get(1).getRoles().add("myrole4");
 		String json = access.serialize();
 		
-		repository.createResource(IRepositoryStructure.REGISTRY_PUBLIC + "/access/test.access", json.getBytes());
+		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/access/test.access", json.getBytes());
 		
 		securityPublisher.synchronize();
 		
@@ -70,7 +70,7 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 	public void cleanupAccessTest() throws SecurityException, IOException, AccessException {
 		createAccessTest();
 		
-		repository.removeResource(IRepositoryStructure.REGISTRY_PUBLIC + "/access/test.access");
+		repository.removeResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/access/test.access");
 		
 		securityPublisher.synchronize();
 		
