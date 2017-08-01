@@ -2,8 +2,8 @@ package org.eclipse.dirigible.api.v3.http;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingContextException;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 		}
 		try {
 			return (HttpServletRequest) ThreadContextFacade.get(HttpServletRequest.class.getCanonicalName());
-		} catch(ScriptingContextException e) {
+		} catch(ContextException e) {
 			logger.error(e.getMessage(), e);
 		}
 		return null;

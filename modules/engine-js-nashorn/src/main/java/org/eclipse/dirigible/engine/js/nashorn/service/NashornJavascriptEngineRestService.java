@@ -15,22 +15,20 @@ import javax.ws.rs.core.Response;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.engine.js.nashorn.processor.NashornJavascriptEngineProcessor;
-import org.eclipse.dirigible.engine.js.service.AbstractJavascriptEngineRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Front facing REST service serving the Nashorn based Javascript backend services
- *
  */
 @Singleton
-public class NashornJavascriptEngineRestService extends AbstractJavascriptEngineRestService {
-	
+public class NashornJavascriptEngineRestService implements IRestService {
+
 	private static final Logger logger = LoggerFactory.getLogger(NashornJavascriptEngineRestService.class.getCanonicalName());
-	
+
 	@Inject
 	private NashornJavascriptEngineProcessor processor;
-	
+
 	/**
 	 * @param path
 	 * @param request
@@ -41,12 +39,12 @@ public class NashornJavascriptEngineRestService extends AbstractJavascriptEngine
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
-			executeService(processor, path, request, response);
+			processor.executeService(path);
 			return Response.ok().build();
-		} catch(ScriptingDependencyException e) {
+		} catch (ScriptingDependencyException e) {
 			logger.error(e.getMessage(), e);
 			return Response.status(Response.Status.ACCEPTED).entity(e.getMessage()).build();
-		} catch(Throwable e) {
+		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}

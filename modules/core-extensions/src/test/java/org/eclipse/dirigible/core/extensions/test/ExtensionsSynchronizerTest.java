@@ -10,7 +10,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
-import org.eclipse.dirigible.core.extensions.api.ISecurityCoreService;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.synchronizer.ExtensionsSynchronizer;
@@ -23,7 +23,7 @@ import org.junit.Test;
 public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 	
 	@Inject
-	private ISecurityCoreService extensionsCoreService;
+	private IExtensionsCoreService extensionsCoreService;
 	
 	@Inject
 	private ExtensionsSynchronizer extensionsPublisher;

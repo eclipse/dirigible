@@ -16,7 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
-import org.eclipse.dirigible.core.extensions.api.ISecurityCoreService;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
@@ -147,13 +147,13 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		String resourceName = resource.getName();
-		if (resourceName.endsWith(ISecurityCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
+		if (resourceName.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
 			ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(resource.getContent());
 			extensionPointDefinition.setLocation(resource.getPath());
 			synchronizeExtensionPoint(extensionPointDefinition);
 		}
 		
-		if (resourceName.endsWith(ISecurityCoreService.FILE_EXTENSION_EXTENSION)) {
+		if (resourceName.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSION)) {
 			ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(resource.getContent());
 			extensionDefinition.setLocation(resource.getPath());
 			synchronizeExtension(extensionDefinition);

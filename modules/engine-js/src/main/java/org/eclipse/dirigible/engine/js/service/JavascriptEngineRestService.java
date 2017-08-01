@@ -20,16 +20,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Front facing REST service serving the Javascript backend services
- *
  */
 @Singleton
-public class JavascriptEngineRestService extends AbstractJavascriptEngineRestService {
+public class JavascriptEngineRestService implements IRestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(JavascriptEngineRestService.class.getCanonicalName());
 
 	@Inject
 	private JavascriptEngineProcessor processor;
-	
+
 	/**
 	 * @param path
 	 * @param request
@@ -40,12 +39,12 @@ public class JavascriptEngineRestService extends AbstractJavascriptEngineRestSer
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
-			executeService(processor, path, request, response);
+			processor.executeService(path);
 			return Response.ok().build();
-		} catch(ScriptingDependencyException e) {
+		} catch (ScriptingDependencyException e) {
 			logger.error(e.getMessage(), e);
 			return Response.status(Response.Status.ACCEPTED).entity(e.getMessage()).build();
-		} catch(Throwable e) {
+		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}

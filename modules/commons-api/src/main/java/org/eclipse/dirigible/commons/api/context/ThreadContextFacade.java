@@ -3,7 +3,6 @@ package org.eclipse.dirigible.commons.api.context;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.api.scripting.ScriptingContextException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,18 +19,18 @@ public class ThreadContextFacade {
 
     /**
      * Initializes the context. This has to be called at the very first (as possible) place at the service entry point
-     * @throws ScriptingContextException in case of an error
+     * @throws ContextException in case of an error
      */
-    public static final void setUp() throws ScriptingContextException {
+    public static final void setUp() throws ContextException {
     	CONTEXT.set(new HashMap<String, Object>());
     	logger.debug("Scripting context {} has been set up", Thread.currentThread().hashCode());
     }
     
     /**
      * IMPORTANT! This have to be added at the finally block to clean up objects after the execution of the service
-     * @throws ScriptingContextException in case of an error
+     * @throws ContextException in case of an error
      */
-    public static final void tearDown() throws ScriptingContextException {
+    public static final void tearDown() throws ContextException {
     	CONTEXT.set(null);
     	logger.debug("Scripting context {} has been torn up", Thread.currentThread().hashCode());
     }
@@ -41,9 +40,9 @@ public class ThreadContextFacade {
      * 
      * @param key the key
      * @return the value by this key
-     * @throws ScriptingContextException in case of an error
+     * @throws ContextException in case of an error
      */
-    public static final Object get(String key) throws ScriptingContextException {
+    public static final Object get(String key) throws ContextException {
     	checkContext();
     	return CONTEXT.get().get(key);
     }
@@ -53,17 +52,17 @@ public class ThreadContextFacade {
      * 
      * @param key the key
      * @param value the value
-     * @throws ScriptingContextException in case of an error
+     * @throws ContextException in case of an error
      */
-    public static final void set(String key, Object value) throws ScriptingContextException {
+    public static final void set(String key, Object value) throws ContextException {
     	checkContext();
     	CONTEXT.get().put(key, value);
     	logger.debug("Context object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
     }
     
-    private static void checkContext() throws ScriptingContextException {
+    private static void checkContext() throws ContextException {
 		if (CONTEXT.get() == null) {
-    		throw new ScriptingContextException("Context has not been initialized");
+    		throw new ContextException("Context has not been initialized");
     	}
 	}
     

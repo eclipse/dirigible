@@ -15,6 +15,7 @@ import static java.text.MessageFormat.format;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -30,7 +31,7 @@ import org.eclipse.dirigible.repository.fs.FileSystemUtils;
  * The file system based implementation of {@link ICollection}
  */
 public class LocalCollection extends LocalEntity implements ICollection {
-	
+
 	public LocalCollection(FileSystemRepository repository, RepositoryPath path) {
 		super(repository, path);
 	}
@@ -192,6 +193,13 @@ public class LocalCollection extends LocalEntity implements ICollection {
 			throw new RepositoryWriteException(format("Could not create child document {0}", name), ex);
 		}
 		return getResource(name);
+	}
+
+	@Override
+	public IResource createResource(String name, byte[] content) throws RepositoryWriteException {
+		String contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(name));
+		boolean isBinary = ContentTypeHelper.isBinary(contentType);
+		return createResource(name, content, isBinary, contentType);
 	}
 
 	@Override

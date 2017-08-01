@@ -54,6 +54,11 @@
             <artifactId>dirigible-api-http</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-runtime-core</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

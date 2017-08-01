@@ -5,7 +5,7 @@ import java.util.List;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
-import org.eclipse.dirigible.core.extensions.api.ISecurityCoreService;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
@@ -16,7 +16,7 @@ public class ExtensionsServiceFacade implements IScriptingFacade {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsServiceFacade.class);
 	
-	private static ISecurityCoreService extensionsCoreService = StaticInjector.getInjector().getInstance(ExtensionsCoreService.class);
+	private static IExtensionsCoreService extensionsCoreService = StaticInjector.getInjector().getInstance(ExtensionsCoreService.class);
 	
 	public static final String[] getExtensions(String extensionPointName) throws ExtensionsException {
 		logger.debug("API - ExtensionsServiceFacade.getExtensions() -> begin");

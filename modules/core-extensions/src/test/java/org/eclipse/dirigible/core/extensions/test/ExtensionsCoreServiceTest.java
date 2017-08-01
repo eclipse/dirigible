@@ -10,7 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
-import org.eclipse.dirigible.core.extensions.api.ISecurityCoreService;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
@@ -21,7 +21,7 @@ import org.junit.Test;
 public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	
 	@Inject
-	private ISecurityCoreService extensionsCoreService;
+	private IExtensionsCoreService extensionsCoreService;
 	
 	@Before
 	public void setUp() throws Exception {

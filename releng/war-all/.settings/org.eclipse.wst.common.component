@@ -86,6 +86,9 @@
         <dependent-module archiveName="dirigible-runtime-ide-workspaces-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-workspaces/dirigible-runtime-ide-workspaces">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-core-workspace-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-workspace/dirigible-core-workspace">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-runtime-ide-terminal-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-terminal/dirigible-runtime-ide-terminal">
             <dependency-type>uses</dependency-type>
         </dependent-module>
