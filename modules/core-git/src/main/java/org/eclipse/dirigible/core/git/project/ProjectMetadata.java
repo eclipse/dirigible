@@ -71,7 +71,7 @@ public class ProjectMetadata {
 	}
 
 	public ProjectMetadataLicense[] getLicenses() {
-		return licenses;
+		return licenses.clone();
 	}
 
 	public void setLicenses(ProjectMetadataLicense[] licenses) {
@@ -87,7 +87,7 @@ public class ProjectMetadata {
 	}
 
 	public ProjectMetadataDependency[] getDependencies() {
-		return dependencies;
+		return dependencies.clone();
 	}
 
 	public void setDependencies(ProjectMetadataDependency[] dependencies) {

@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.core.git.command;
+package org.eclipse.dirigible.core.git.project;
 
 import javax.inject.Inject;
 
@@ -17,12 +17,8 @@ import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class GitProjectPropertyVerifier {
-
-	private static final Logger logger = LoggerFactory.getLogger(GitProjectProperties.class);
+public class ProjectPropertiesVerifier {
 
 	@Inject
 	private IRepository repository;

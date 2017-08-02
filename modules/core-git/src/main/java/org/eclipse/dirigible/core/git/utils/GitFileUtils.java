@@ -43,7 +43,7 @@ public class GitFileUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(GitFileUtils.class);
 
-	public static final String TEMP_DIRECTORY_PREFIX = "dirigible.jgit."; //$NON-NLS-1$
+	public static final String TEMP_DIRECTORY_PREFIX = "dirigible_git_"; //$NON-NLS-1$
 
 	@Inject
 	private IRepository repository;
@@ -143,7 +143,9 @@ public class GitFileUtils {
 		for (File next : parentDirectory.listFiles()) {
 			if (next.getName().equals(selectedProject)) {
 				deleteFiles(next);
-				next.delete();
+				if (!next.delete()) {
+					logger.error(String.format("File [%s] deletion failed."));
+				}
 			}
 		}
 	}
@@ -151,7 +153,9 @@ public class GitFileUtils {
 	public static void deleteDirectory(File directory) {
 		if (directory != null) {
 			deleteFiles(directory);
-			directory.delete();
+			if (!directory.delete()) {
+				logger.error(String.format("Directory [%s] deletion failed."));
+			}
 		}
 	}
 

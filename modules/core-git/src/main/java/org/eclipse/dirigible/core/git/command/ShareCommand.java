@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
+import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
@@ -43,7 +44,7 @@ public class ShareCommand {
 	private ProjectMetadataManager projectMetadataManager;
 
 	@Inject
-	private GitProjectPropertyVerifier verifier;
+	private ProjectPropertiesVerifier verifier;
 
 	@Inject
 	private GitFileUtils gitFileUtils;

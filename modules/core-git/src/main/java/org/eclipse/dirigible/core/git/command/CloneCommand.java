@@ -200,7 +200,7 @@ public class CloneCommand {
 							publisherCoreService.createPublishRequest(workspace.getName(), projectName);
 							logger.info(String.format("Project [%s] has been published", project.getName()));
 						} catch (PublisherException e) {
-							logger.error(String.format("An error occurred while publishing the cloned project [%s]"), e);
+							logger.error(String.format("An error occurred while publishing the cloned project [%s]", project.getName()), e);
 						}
 						break;
 					}

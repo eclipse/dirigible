@@ -45,13 +45,9 @@ import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GitConnector implements IGitConnector {
 
-	private static final Logger logger = LoggerFactory.getLogger(GitConnector.class);
-	
 	private final Git git;
 	private Repository repository;
 
@@ -59,17 +55,17 @@ public class GitConnector implements IGitConnector {
 		this.repository = repository;
 		this.git = new Git(repository);
 	}
-	
+
 	public Repository getRepository() {
 		return repository;
 	}
-	
+
 	public Git getGit() {
 		return git;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#add(java.lang.String)
 	 */
 	@Override
@@ -79,8 +75,10 @@ public class GitConnector implements IGitConnector {
 		addCommand.call();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.git.IGitConnector#commit(java.lang.String, java.lang.String, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.git.IGitConnector#commit(java.lang.String, java.lang.String, java.lang.String,
+	 * boolean)
 	 */
 	@Override
 	public void commit(String message, String name, String email, boolean all) throws NoHeadException, NoMessageException, UnmergedPathsException,
@@ -93,7 +91,8 @@ public class GitConnector implements IGitConnector {
 		commitCommand.call();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#createBranch(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -107,7 +106,8 @@ public class GitConnector implements IGitConnector {
 		createBranchCommand.call();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#checkout(java.lang.String)
 	 */
 	@Override
@@ -118,7 +118,8 @@ public class GitConnector implements IGitConnector {
 		return checkoutCommand.call();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#hardReset()
 	 */
 	@Override
@@ -128,7 +129,8 @@ public class GitConnector implements IGitConnector {
 		resetCommand.call();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#pull()
 	 */
 	@Override
@@ -138,7 +140,8 @@ public class GitConnector implements IGitConnector {
 		pullCommand.call();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#push(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -148,7 +151,8 @@ public class GitConnector implements IGitConnector {
 		pushCommand.call();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#rebase(java.lang.String)
 	 */
 	@Override
@@ -159,7 +163,8 @@ public class GitConnector implements IGitConnector {
 		rebaseCommand.call();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#status()
 	 */
 	@Override
@@ -167,7 +172,8 @@ public class GitConnector implements IGitConnector {
 		return git.status().call();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#getLastSHAForBranch(java.lang.String)
 	 */
 	@Override
