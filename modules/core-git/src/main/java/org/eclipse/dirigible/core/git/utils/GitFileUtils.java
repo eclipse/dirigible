@@ -140,11 +140,11 @@ public class GitFileUtils {
 	}
 
 	public static void deleteProjectFolderFromDirectory(File parentDirectory, String selectedProject) {
-		for (File next : parentDirectory.listFiles()) {
-			if (next.getName().equals(selectedProject)) {
-				deleteFiles(next);
-				if (!next.delete()) {
-					logger.error(String.format("File [%s] deletion failed."));
+		for (File file : parentDirectory.listFiles()) {
+			if (file.getName().equals(selectedProject)) {
+				deleteFiles(file);
+				if (!file.delete()) {
+					logger.error(String.format("File [%s] deletion failed.", file.getAbsolutePath()));
 				}
 			}
 		}
@@ -154,7 +154,7 @@ public class GitFileUtils {
 		if (directory != null) {
 			deleteFiles(directory);
 			if (!directory.delete()) {
-				logger.error(String.format("Directory [%s] deletion failed."));
+				logger.error(String.format("Directory [%s] deletion failed.", directory.getAbsolutePath()));
 			}
 		}
 	}

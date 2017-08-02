@@ -19,8 +19,8 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
-import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
+import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
 import org.eclipse.dirigible.core.workspace.api.IProject;
@@ -131,7 +131,7 @@ public class PushCommand {
 
 				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties);
 
-				logger.info(String.format("Project has been pushed to remote repository.", selectedProject.getName()));
+				logger.info(String.format("Project [%s] has been pushed to remote repository.", selectedProject.getName()));
 			} else {
 				gitConnector.hardReset();
 				gitConnector.push(username, password);

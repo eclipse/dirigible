@@ -23,25 +23,26 @@ public class GitConnectorTest {
 
 	@Test
 	public void cloneRepository() throws IOException, InvalidRemoteException, TransportException, GitAPIException {
-
-		Path path = Files.createDirectory(Paths.get("target/dirigible/git"));
-		try {
-			// clone repository
-			IGitConnector gitConnector = GitConnectorFactory.cloneRepository(path.toString(), "https://github.com/dirigiblelabs/sample_git_test.git",
-					null, null, IGitConnector.GIT_MASTER);
-			Status status = gitConnector.status();
-			assertTrue(status.isClean());
-			File textFile = new File(path.toString() + File.separator + "test.txt");
-			assertNotNull(textFile);
-			String textContent = FileUtils.readFileToString(textFile, "UTF-8");
-			assertNotNull(textContent);
-			assertEquals("Test Content", textContent.trim());
-		} finally {
-			if (path.toFile().exists()) {
-				FileUtils.deleteDirectory(path.toFile());
+		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");
+		if (gitEnabled != null) {
+			Path path = Files.createDirectory(Paths.get("target/dirigible/git"));
+			try {
+				// clone repository
+				IGitConnector gitConnector = GitConnectorFactory.cloneRepository(path.toString(),
+						"https://github.com/dirigiblelabs/sample_git_test.git", null, null, IGitConnector.GIT_MASTER);
+				Status status = gitConnector.status();
+				assertTrue(status.isClean());
+				File textFile = new File(path.toString() + File.separator + "test.txt");
+				assertNotNull(textFile);
+				String textContent = FileUtils.readFileToString(textFile, "UTF-8");
+				assertNotNull(textContent);
+				assertEquals("Test Content", textContent.trim());
+			} finally {
+				if (path.toFile().exists()) {
+					FileUtils.deleteDirectory(path.toFile());
+				}
 			}
 		}
-
 	}
 
 }
