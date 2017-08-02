@@ -14,9 +14,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class GitFileUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(GitFileUtils.class);
 
-	public static final String TEMP_DIRECTORY_PREFIX = "org.eclipse.dirigible.jgit."; //$NON-NLS-1$
+	public static final String TEMP_DIRECTORY_PREFIX = "dirigible.jgit."; //$NON-NLS-1$
 
 	@Inject
 	private IRepository repository;
@@ -183,13 +185,12 @@ public class GitFileUtils {
 
 			InputStream in = new ByteArrayInputStream(file.getContent());
 			File outputFile = new File(tempGitDirectory, resourcePath);
-			FileOutputStream out = new FileOutputStream(outputFile);
 			try {
-				IOUtils.copy(in, out);
+				Path outPath = Paths.get(outputFile.getCanonicalPath());
+				Files.createDirectories(outPath.getParent());
+				Files.copy(in, outPath);
 			} finally {
 				in.close();
-				out.flush();
-				out.close();
 			}
 		}
 

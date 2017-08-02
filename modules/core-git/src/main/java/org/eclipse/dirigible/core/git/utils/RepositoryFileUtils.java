@@ -23,10 +23,6 @@ import org.eclipse.dirigible.repository.api.IResource;
 
 public class RepositoryFileUtils {
 
-	private static final String COULD_NOT_DELETE_TEMP_FILE_S = "Could not delete temp file: %s";
-	private static final String COULD_NOT_CREATE_TEMP_DIRECTORY_S = "Could not create temp directory: %s";
-	private static final String SLASH = "/"; //$NON-NLS-1$
-
 	public static File createTempDirectory(String directory) throws IOException {
 		String suffix = Long.toString(System.nanoTime());
 		return createTempDirectory(directory, suffix);
@@ -35,10 +31,10 @@ public class RepositoryFileUtils {
 	public static File createTempDirectory(String directory, String suffix) throws IOException {
 		final File temp = File.createTempFile(directory, suffix);
 		if (!(temp.delete())) {
-			throw new IOException(String.format(COULD_NOT_DELETE_TEMP_FILE_S, temp.getAbsolutePath()));
+			throw new IOException(String.format("Could not delete temp file: %s", temp.getAbsolutePath()));
 		}
 		if (!(temp.mkdir())) {
-			throw new IOException(String.format(COULD_NOT_CREATE_TEMP_DIRECTORY_S, temp.getAbsolutePath()));
+			throw new IOException(String.format("Could not create temp directory: %s", temp.getAbsolutePath()));
 		}
 		return temp;
 	}
@@ -60,7 +56,7 @@ public class RepositoryFileUtils {
 				String path = entity.getParent().getPath();
 				StringBuilder resourceDirectory = new StringBuilder();
 				resourceDirectory.append(path);
-				resourceDirectory.append(SLASH);
+				resourceDirectory.append(File.separator);
 
 				String directoryPath = resourceDirectory.toString();
 				for (String root : roots) {
