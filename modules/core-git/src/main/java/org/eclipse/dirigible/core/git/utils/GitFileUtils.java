@@ -14,17 +14,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
@@ -176,31 +175,39 @@ public class GitFileUtils {
 		for (IFile file : source.getFiles()) {
 			RepositoryPath path = new RepositoryPath(source.getPath());
 			StringBuilder resourceDirectory = new StringBuilder();
-			for (int i = 0; i < (path.getSegments().length - 1); i++) {
+			for (int i = 3; i < (path.getSegments().length - 1); i++) {
 				resourceDirectory.append(File.separator + path.getSegments()[i]);
 			}
 			resourceDirectory.append(File.separator);
 			new File(tempGitDirectory, resourceDirectory.toString()).mkdirs();
-			String resourcePath = file.getPath();
+			String resourcePath = resourceDirectory + file.getPath().substring(path.getParentPath().getPath().length() + 1);
 
 			InputStream in = new ByteArrayInputStream(file.getContent());
 			File outputFile = new File(tempGitDirectory, resourcePath);
+			outputFile.getParentFile().mkdirs();
+			outputFile.createNewFile();
+			FileOutputStream out = new FileOutputStream(outputFile);
 			try {
-				Path outPath = Paths.get(outputFile.getCanonicalPath());
-				Files.createDirectories(outPath.getParent());
-				Files.copy(in, outPath);
+				IOUtils.copy(in, out);
 			} finally {
 				in.close();
+				out.flush();
+				out.close();
 			}
+		}
+		for (IFolder folder : source.getFolders()) {
+			copyProjectToDirectory(folder, tempGitDirectory);
 		}
 
 	}
 
-	public GitProjectProperties getGitPropertiesForProject(final IWorkspace workspace, final IProject project, String user) throws IOException {
+	public GitProjectProperties getGitPropertiesForProject(final IWorkspace workspace, final IProject project) throws IOException {
 
 		String workspaceName = workspace.getName();
 		String projectName = project.getName();
-		IResource resource = repository.getResource(String.format(GitProjectProperties.GIT_PROPERTY_FILE_LOCATION, user, workspaceName, projectName));
+		String userName = UserFacade.getName();
+		IResource resource = repository
+				.getResource(String.format(GitProjectProperties.GIT_PROPERTY_FILE_LOCATION, userName, workspaceName, projectName));
 		InputStream in = new ByteArrayInputStream(resource.getContent());
 		GitProjectProperties gitProperties = new GitProjectProperties(in);
 		return gitProperties;

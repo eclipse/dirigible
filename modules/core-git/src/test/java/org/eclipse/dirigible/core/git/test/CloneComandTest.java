@@ -34,19 +34,22 @@ public class CloneComandTest extends AbstractGuiceTest {
 
 	@Test
 	public void createWorkspaceTest() throws GitConnectorException {
-		cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
-		IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
-		assertNotNull(workspace1);
-		assertTrue(workspace1.exists());
-		IProject project1 = workspace1.getProject("project1");
-		assertNotNull(project1);
-		assertTrue(project1.exists());
-		IFolder folder1 = project1.getFolder("folder1");
-		assertNotNull(folder1);
-		assertTrue(folder1.exists());
-		IFile file1 = folder1.getFile("service1.js");
-		assertNotNull(file1);
-		assertTrue(file1.exists());
+		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");
+		if (gitEnabled != null) {
+			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
+			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
+			assertNotNull(workspace1);
+			assertTrue(workspace1.exists());
+			IProject project1 = workspace1.getProject("project1");
+			assertNotNull(project1);
+			assertTrue(project1.exists());
+			IFolder folder1 = project1.getFolder("folder1");
+			assertNotNull(folder1);
+			assertTrue(folder1.exists());
+			IFile file1 = folder1.getFile("service1.js");
+			assertNotNull(file1);
+			assertTrue(file1.exists());
+		}
 	}
 
 }

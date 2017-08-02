@@ -59,13 +59,12 @@ public class PullCommand {
 	@Inject
 	private GitFileUtils gitFileUtils;
 
-	public Object execute(final IWorkspace workspace, final IProject[] projects, boolean publishAfterPull) {
+	public void execute(final IWorkspace workspace, final IProject[] projects, boolean publishAfterPull) {
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Pull action");
-			return null;
 		}
 
-		List<IProject> publishedProjects = new ArrayList<IProject>();
+		List<IProject> pulledProjects = new ArrayList<IProject>();
 		boolean atLeastOne = false;
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
@@ -73,24 +72,23 @@ public class PullCommand {
 				boolean pulled = pullProjectFromGitRepository(workspace, selectedProject);
 				atLeastOne = atLeastOne ? atLeastOne : pulled;
 				logger.debug(String.format("Pull of the Project %s finished.", selectedProject.getName()));
-				publishedProjects.add(selectedProject);
+				pulledProjects.add(selectedProject);
 			} else {
 				logger.warn(String.format("Project %s is local only. Select a previousely clonned project for Pull operation.", selectedProject));
 			}
 		}
 
 		if (atLeastOne && publishAfterPull) {
-			publishProjects(workspace, publishedProjects);
+			publishProjects(workspace, pulledProjects);
 		}
 
-		return null;
 	}
 
 	boolean pullProjectFromGitRepository(final IWorkspace workspace, final IProject selectedProject) {
 		final String errorMessage = String.format("Error occurred while pulling project [%s]", selectedProject.getName());
 		GitProjectProperties gitProperties = null;
 		try {
-			gitProperties = gitFileUtils.getGitPropertiesForProject(workspace, selectedProject, UserFacade.getName());
+			gitProperties = gitFileUtils.getGitPropertiesForProject(workspace, selectedProject);
 			if (gitProperties != null) {
 				logger.debug(String.format("Git properties for the project [%s]: %s", selectedProject.getName(), gitProperties.toString()));
 			} else {
@@ -172,7 +170,7 @@ public class PullCommand {
 
 				gitFileUtils.deleteRepositoryProject(selectedProject);
 
-				String workspacePath = String.format(GitProjectProperties.PATTERN_USERS_WORKSPACE, dirigibleUser, workspace.getName());
+				String workspacePath = GitProjectProperties.generateWorkspacePath(workspace, dirigibleUser);
 
 				logger.debug(String.format("Starting importing projects from the Git directory %s.", tempGitDirectory.getCanonicalPath()));
 				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties);

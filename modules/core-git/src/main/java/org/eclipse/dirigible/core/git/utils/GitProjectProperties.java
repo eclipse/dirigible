@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
+import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
 public class GitProjectProperties {
@@ -69,5 +70,10 @@ public class GitProjectProperties {
 
 	public byte[] getContent() {
 		return toString().getBytes(StandardCharsets.UTF_8);
+	}
+
+	public static String generateWorkspacePath(final IWorkspace workspace, String dirigibleUser) {
+		String workspacePath = String.format(GitProjectProperties.PATTERN_USERS_WORKSPACE, dirigibleUser, workspace.getName());
+		return workspacePath;
 	}
 }

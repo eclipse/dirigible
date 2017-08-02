@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
-import org.eclipse.dirigible.core.git.command.PullCommand;
+import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -17,13 +17,13 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PullComandTest extends AbstractGuiceTest {
+public class PushComandTest extends AbstractGuiceTest {
 
 	@Inject
 	private CloneCommand cloneCommand;
 
 	@Inject
-	private PullCommand pullCommand;
+	private PushCommand pushCommand;
 
 	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
@@ -31,7 +31,7 @@ public class PullComandTest extends AbstractGuiceTest {
 	@Before
 	public void setUp() throws Exception {
 		this.cloneCommand = getInjector().getInstance(CloneCommand.class);
-		this.pullCommand = getInjector().getInstance(PullCommand.class);
+		this.pushCommand = getInjector().getInstance(PushCommand.class);
 		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
 	}
 
@@ -46,7 +46,12 @@ public class PullComandTest extends AbstractGuiceTest {
 			IProject project1 = workspace1.getProject("project1");
 			assertNotNull(project1);
 			assertTrue(project1.exists());
-			pullCommand.execute(workspace1, new IProject[] { project1 }, true);
+			String username = System.getProperty("dirigibleTestGitUsername");
+			String password = System.getProperty("dirigibleTestGitPassword");
+			String email = System.getProperty("dirigibleTestGitEmail");
+			if (username != null) {
+				pushCommand.execute(workspace1, new IProject[] { project1 }, "test", username, password, email);
+			}
 		}
 	}
 
