@@ -62,7 +62,7 @@ public class PushCommand {
 				pushProjectToGitRepository(workspace, selectedProject, commitMessage, username, password, email);
 				logger.debug(String.format("Push of the project [%s] finished.", selectedProject.getName()));
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previousely clonned project for Push operation.", selectedProject));
+				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", selectedProject));
 			}
 		}
 
@@ -94,9 +94,9 @@ public class PushCommand {
 			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
 			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 
-			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, "[nobody]",
+			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
 					gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
-			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, null, null, gitRepositoryBranch);
+			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
 			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
 
 			IGitConnector gitConnector = GitConnectorFactory.getRepository(tempGitDirectory.getCanonicalPath());
@@ -120,10 +120,9 @@ public class PushCommand {
 				gitConnector.rebase(changesBranch);
 				gitConnector.push(username, password);
 
-				String dirigibleUser = UserFacade.getName();
-
 				gitFileUtils.deleteRepositoryProject(selectedProject);
 
+				String dirigibleUser = UserFacade.getName();
 				String workspacePath = GitProjectProperties.generateWorkspacePath(workspace, dirigibleUser);
 
 				String newLastSHA = gitConnector.getLastSHAForBranch(gitRepositoryBranch);
