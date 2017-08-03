@@ -2,7 +2,9 @@ package org.eclipse.dirigible.runtime.core.filter;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -10,6 +12,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,14 +25,23 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractSecurityFilter implements Filter {
+@WebFilter(urlPatterns = { "/services/v3/js/*", "/services/v3/rhino/*", "/services/v3/nashorn/*", "/services/v3/v8/*", "/services/v3/public/*",
+		"/services/v3/web/*" }, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
+public class SecurityFilter implements Filter {
 
-	private static final Logger logger = LoggerFactory.getLogger(AbstractSecurityFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
 	private static ISecurityCoreService securityCoreService = StaticInjector.getInjector().getInstance(SecurityCoreService.class);
+	private static final Set<String> SECURED_PREFIXES = new HashSet<String>();
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		SECURED_PREFIXES.add("/js");
+		SECURED_PREFIXES.add("/rhino");
+		SECURED_PREFIXES.add("/nashorn");
+		SECURED_PREFIXES.add("/v8");
+		SECURED_PREFIXES.add("/public");
+		SECURED_PREFIXES.add("/web");
 	}
 
 	@Override
@@ -40,9 +52,11 @@ public abstract class AbstractSecurityFilter implements Filter {
 			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
 			String uri = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : IRepositoryStructure.SEPARATOR;
-			String prefix = getPrefix();
-			if (uri.startsWith(prefix)) {
-				uri = uri.substring(prefix.length());
+			for (String prefix : SECURED_PREFIXES) {
+				if (uri.startsWith(prefix)) {
+					uri = uri.substring(prefix.length());
+					break;
+				}
 			}
 			String method = httpServletRequest.getMethod();
 
@@ -80,10 +94,9 @@ public abstract class AbstractSecurityFilter implements Filter {
 		response.sendError(HttpServletResponse.SC_FORBIDDEN, error);
 	}
 
-	protected abstract String getPrefix();
-
 	@Override
 	public void destroy() {
+		// Not Used
 	}
 
 }
