@@ -8,30 +8,23 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
-import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
-import org.eclipse.dirigible.core.security.service.SecurityCoreService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public abstract class AbstractHttpContextFilter implements Filter {
-
-	private static final Logger logger = LoggerFactory.getLogger(AbstractHttpContextFilter.class);
-
-	private static ISecurityCoreService securityCoreService = StaticInjector.getInjector().getInstance(SecurityCoreService.class);
+@WebFilter(urlPatterns = "/services/v3/*", filterName = "HttpContextFilter", description = "Set the HTTP Request and Response to the Context for all URIs")
+public class HttpContextFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		// Not used
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
 		try {
 			ThreadContextFacade.setUp();
 			try {
@@ -46,11 +39,11 @@ public abstract class AbstractHttpContextFilter implements Filter {
 		} catch (ContextException e) {
 			throw new ServletException(e);
 		}
-
 	}
 
 	@Override
 	public void destroy() {
+		// Not used
 	}
 
 }
