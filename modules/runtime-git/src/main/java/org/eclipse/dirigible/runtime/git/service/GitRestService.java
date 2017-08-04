@@ -61,10 +61,8 @@ public class GitRestService implements IRestService {
 	@POST
 	@Path("/pull/{project}")
 	@Produces("application/json")
-	public Response pullProject(@PathParam("workspace") String workspace, @PathParam("project") String project) {
-		GitPullModel model = new GitPullModel();
+	public Response pullProject(@PathParam("workspace") String workspace, @PathParam("project") String project, GitPullModel model) {
 		model.setProjects(Arrays.asList(project));
-		model.setPublish(true);
 		processor.pull(workspace, model);
 		return Response.ok().build();
 	}

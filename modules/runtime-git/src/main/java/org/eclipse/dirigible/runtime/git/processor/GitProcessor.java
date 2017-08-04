@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.runtime.git.processor;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,6 +16,7 @@ import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
+import org.eclipse.dirigible.runtime.git.model.BaseGitModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
 import org.eclipse.dirigible.runtime.git.model.GitPullModel;
 import org.eclipse.dirigible.runtime.git.model.GitPushModel;
@@ -53,7 +55,7 @@ public class GitProcessor {
 	private UpdateDependenciesCommand updateDependenciesCommand;
 
 	public void clone(String workspace, GitCloneModel model) throws GitConnectorException {
-		cloneCommand.execute(model.getRepository(), model.getBranch(), model.getUsername(), model.getPassword(), workspace, model.isPublish());
+		cloneCommand.execute(model.getRepository(), model.getBranch(), model.getUsername(), getPassword(model), workspace, model.isPublish());
 	}
 
 	public void pull(String workspace, GitPullModel model) {
@@ -65,26 +67,26 @@ public class GitProcessor {
 	public void push(String workspace, GitPushModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		pushCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), model.getPassword(), model.getEmail());
+		pushCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail());
 	}
 
 	public void reset(String workspace, GitResetModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		resetCommand.execute(workspaceApi, projects, model.getUsername(), model.getPassword());
+		resetCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model));
 	}
 
 	public void share(String workspace, GitShareModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject project = getProject(workspaceApi, model.getProject());
 		shareCommand.execute(workspaceApi, project, model.getRepository(), model.getBranch(), model.getCommitMessage(), model.getUsername(),
-				model.getPassword(), model.getEmail());
+				getPassword(model), model.getEmail());
 	}
 
 	public void updateDependencies(String workspace, GitUpdateDepenciesModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		updateDependenciesCommand.execute(workspaceApi, projects, model.getUsername(), model.getPassword(), model.isPublish());
+		updateDependenciesCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model), model.isPublish());
 	}
 
 	private IWorkspace getWorkspace(String workspace) {
@@ -101,5 +103,9 @@ public class GitProcessor {
 			projects.add(workspace.getProject(next));
 		}
 		return projects.toArray(new IProject[] {});
+	}
+
+	private String getPassword(BaseGitModel model) {
+		return new String(Base64.getDecoder().decode(model.getPassword().getBytes()));
 	}
 }
