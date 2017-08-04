@@ -195,6 +195,11 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-git</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-databases</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>

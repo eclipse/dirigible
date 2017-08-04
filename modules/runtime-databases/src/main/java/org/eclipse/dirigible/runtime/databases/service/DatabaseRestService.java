@@ -19,7 +19,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
 import org.eclipse.dirigible.runtime.databases.processor.DatabaseProcessor;
@@ -49,7 +48,7 @@ public class DatabaseRestService implements IRestService {
 			@ApiResponse(code = 401, message = "Unauthorized") })
 	public Response listDatabaseTypes(@Context HttpServletRequest request) {
 		List<String> databaseTypes = processor.getDatabaseTypes();
-		return Response.ok().entity(GsonHelper.GSON.toJson(databaseTypes)).build();
+		return Response.ok().entity(databaseTypes).build();
 	}
 
 	@GET
@@ -65,7 +64,7 @@ public class DatabaseRestService implements IRestService {
 			String error = format("Database Type {0} not known.", type);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		return Response.ok().entity(GsonHelper.GSON.toJson(list)).build();
+		return Response.ok().entity(list).build();
 
 	}
 

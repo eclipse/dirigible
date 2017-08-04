@@ -14,9 +14,7 @@ public class UpdateDependenciesCommand extends CloneCommand {
 
 	private static final Logger logger = LoggerFactory.getLogger(UpdateDependenciesCommand.class);
 
-	public void execute(final IWorkspace workspace, final IProject[] projects, String repositoryUri, String repositoryBranch, String username,
-			String password, boolean publishAfterClone) {
-
+	public void execute(final IWorkspace workspace, final IProject[] projects, String username, String password, boolean publishAfterClone) {
 		for (IProject selectedProject : projects) {
 			try {
 				Set<String> clonedProjects = new HashSet<String>();
@@ -30,7 +28,6 @@ public class UpdateDependenciesCommand extends CloneCommand {
 			} catch (GitConnectorException e) {
 				logger.error(String.format("Error occured while updating dependencies of the project [%s]", selectedProject.getName()), e);
 			}
-			break;
 		}
 	}
 

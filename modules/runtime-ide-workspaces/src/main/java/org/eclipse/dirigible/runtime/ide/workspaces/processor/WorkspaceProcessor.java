@@ -11,7 +11,7 @@ import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
-import org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService;
+import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.runtime.repository.json.Collection;
@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Processing the Registry Service incoming requests
- *
  */
 public class WorkspaceProcessor {
 
@@ -30,7 +29,7 @@ public class WorkspaceProcessor {
 	private static final String WORKSPACES = "/workspaces";
 
 	@Inject
-	private IWorkspacesCoreService workspacesCoreService;
+	private WorkspacesCoreService workspacesCoreService;
 
 	// Workspace
 

@@ -46,26 +46,33 @@ public class ProjectMetadataManager {
 	}
 
 	public static String getBranch(IProject selectedProject) throws IOException {
-		IFile projectFile = selectedProject.getFile(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
-		String content = IOUtils.toString(projectFile.getContent());
-		ProjectMetadata projectMetadata = ProjectMetadataUtils.fromJson(content);
+		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
 		ProjectMetadataRepository repository = projectMetadata.getRepository();
-		String branch = "master";
-		if (repository != null) {
-			branch = repository.getBranch();
+		return repository != null ? repository.getBranch() : "master";
+	}
+
+	public static String getRepositoryUri(IProject selectedProject) throws IOException {
+		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
+		if (projectMetadata == null) {
+			return null;
 		}
-		return branch;
+		return projectMetadata.getRepository() != null ? projectMetadata.getRepository().getUrl() : null;
 	}
 
 	public static ProjectMetadataDependency[] getDependencies(IProject selectedProject) throws IOException {
+		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
+		if (projectMetadata == null) {
+			return new ProjectMetadataDependency[] {};
+		}
+		return projectMetadata.getDependencies();
+	}
+
+	private static ProjectMetadata getProjectMetadata(IProject selectedProject) throws IOException {
 		IFile projectFile = selectedProject.getFile(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
 		if (!projectFile.exists()) {
 			return null;
 		}
 		String content = IOUtils.toString(projectFile.getContent());
-		ProjectMetadata projectMetadata = ProjectMetadataUtils.fromJson(content);
-		ProjectMetadataDependency[] dependencies = projectMetadata.getDependencies();
-		return dependencies;
+		return ProjectMetadataUtils.fromJson(content);
 	}
-
 }

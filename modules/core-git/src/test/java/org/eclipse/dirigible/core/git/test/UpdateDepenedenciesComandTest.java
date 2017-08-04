@@ -50,8 +50,7 @@ public class UpdateDepenedenciesComandTest extends AbstractGuiceTest {
 			String password = System.getProperty("dirigibleTestGitPassword");
 			String email = System.getProperty("dirigibleTestGitEmail");
 			if (username != null) {
-				updateDependenciesCommand.execute(workspace1, new IProject[] { project1 }, "https://github.com/dirigiblelabs/sample_git_test.git",
-						IGitConnector.GIT_MASTER, username, password, true);
+				updateDependenciesCommand.execute(workspace1, new IProject[] { project1 }, username, password, true);
 			}
 		}
 	}

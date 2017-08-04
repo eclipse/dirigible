@@ -156,36 +156,33 @@ public class CloneCommand {
 		IProject selectedProject = workspace.getProject(projectName);
 		ProjectMetadataDependency[] dependencies = ProjectMetadataManager.getDependencies(selectedProject);
 		PullCommand pull = new PullCommand();
-		if (dependencies != null) {
-			for (ProjectMetadataDependency dependency : dependencies) {
-				if (ProjectMetadataRepository.GIT.equalsIgnoreCase(dependency.getType())) {
-					String projectGuid = dependency.getGuid();
-					if (!clonedProjects.contains(projectGuid)) {
-						IProject alreadyClonedProject = workspace.getProject(projectGuid);
-						if (!alreadyClonedProject.exists()) {
-							String projectRepositoryURI = dependency.getUrl();
-							String projectRepositoryBranch = dependency.getBranch();
-							File projectGitDirectory = createGitDirectory(projectRepositoryURI);
-							logger.debug(
-									String.format("Start cloning of the project %s from the repository %s and branch %s into the directory %s ...",
-											projectGuid, projectRepositoryURI, projectRepositoryBranch, projectGitDirectory.getCanonicalPath()));
-							cloneProject(projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
-									clonedProjects); // assume
-						} else {
-							logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
-							pull.pullProjectFromGitRepository(workspace, alreadyClonedProject);
-						}
-						clonedProjects.add(projectGuid);
-
+		for (ProjectMetadataDependency dependency : dependencies) {
+			if (ProjectMetadataRepository.GIT.equalsIgnoreCase(dependency.getType())) {
+				String projectGuid = dependency.getGuid();
+				if (!clonedProjects.contains(projectGuid)) {
+					IProject alreadyClonedProject = workspace.getProject(projectGuid);
+					if (!alreadyClonedProject.exists()) {
+						String projectRepositoryURI = dependency.getUrl();
+						String projectRepositoryBranch = dependency.getBranch();
+						File projectGitDirectory = createGitDirectory(projectRepositoryURI);
+						logger.debug(String.format("Start cloning of the project %s from the repository %s and branch %s into the directory %s ...",
+								projectGuid, projectRepositoryURI, projectRepositoryBranch, projectGitDirectory.getCanonicalPath()));
+						cloneProject(projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
+								clonedProjects); // assume
 					} else {
-						logger.debug(String.format("Project %s has been already cloned during this session.", projectGuid));
+						logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
+						pull.pullProjectFromGitRepository(workspace, alreadyClonedProject);
 					}
+					clonedProjects.add(projectGuid);
 
 				} else {
-					String errorMessage = String.format("Repository type is not supported: %s.", dependency.getType());
-					logger.error(errorMessage);
-					throw new GitConnectorException(errorMessage);
+					logger.debug(String.format("Project %s has been already cloned during this session.", projectGuid));
 				}
+
+			} else {
+				String errorMessage = String.format("Repository type is not supported: %s.", dependency.getType());
+				logger.error(errorMessage);
+				throw new GitConnectorException(errorMessage);
 			}
 		}
 	}
