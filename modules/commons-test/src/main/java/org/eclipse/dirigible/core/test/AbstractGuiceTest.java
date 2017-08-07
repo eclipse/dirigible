@@ -1,9 +1,7 @@
 package org.eclipse.dirigible.core.test;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -28,7 +26,8 @@ public abstract class AbstractGuiceTest {
 
 	/**
 	 * Dependency injection before execution of every test method
-	 * @throws IOException 
+	 *
+	 * @throws IOException
 	 */
 	@Before
 	public void beforeEveryMethod() throws IOException {
@@ -36,19 +35,17 @@ public abstract class AbstractGuiceTest {
 	}
 
 	protected Injector getInjector() throws IOException {
-			FileUtils.deleteDirectory(new File("./target/derby_test_database"));
-			Configuration.setSystemProperty("DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT", "./target/derby_test_database");
-			return Guice.createInjector(
-					new DirigibleModulesInstallerModule(),
-					new Module() {
-		
-						@Override
-						public void configure(Binder binder) {
-							bind(binder);
-						}
-		
-					}
-			);
+		// TODO: doublecheck the logic for cleaning up the DB
+		// FileUtils.forceDelete(new File("./target/derby_test_database"));
+		Configuration.setSystemProperty("DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT", "./target/derby_test_database");
+		return Guice.createInjector(new DirigibleModulesInstallerModule(), new Module() {
+
+			@Override
+			public void configure(Binder binder) {
+				bind(binder);
+			}
+
+		});
 	}
 
 	protected void bind(Binder binder) {
