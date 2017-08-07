@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.api.v3.utils;
 
 import org.apache.commons.codec.binary.Base64;
+import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 
 public class Base64Facade {
 
@@ -15,15 +16,8 @@ public class Base64Facade {
 	}
 
 	public static final String encode(String input) {
-		if (input == null || input.length() < 2) {
-			throw new IllegalArgumentException("Invalid byte array");
-		}
-		String inputWithoutBraces = input.substring(1, input.length() - 1);
-		String[] bytesAsString = inputWithoutBraces.split(",");
-		byte[] bytes = new byte[bytesAsString.length];
-		for (int i = 0; i < bytesAsString.length; i++) {
-			bytes[i] = Byte.valueOf(bytesAsString[i]);
-		}
+		byte[] bytes = BytesHelper.jsonToBytes(input);
 		return encode(bytes);
 	}
+
 }

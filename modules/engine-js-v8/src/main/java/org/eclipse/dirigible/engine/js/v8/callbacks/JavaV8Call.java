@@ -8,6 +8,7 @@ import java.util.List;
 import org.eclipse.dirigible.api.v3.core.JavaFacade;
 
 import com.eclipsesource.v8.JavaCallback;
+import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
 import com.eclipsesource.v8.utils.V8ObjectUtils;
@@ -25,9 +26,12 @@ public class JavaV8Call implements JavaCallback {
 			params[j - 2] = V8ObjectUtils.getValue(param, 0);
 			param.release();
 		}
+		if ((params.length == 1) && params[0].equals(V8.getUndefined())) {
+			params = new Object[] {};
+		}
 		try {
 			Object result = JavaFacade.call(className, methodName, params);
-			if (result != null && result.getClass().isArray()) {
+			if ((result != null) && result.getClass().isArray()) {
 				List<Object> list = new ArrayList<>();
 				for (int j = 0; j < Array.getLength(result); j++) {
 					Object next = Array.get(result, j);
@@ -40,8 +44,7 @@ public class JavaV8Call implements JavaCallback {
 				return V8ObjectUtils.toV8Array(receiver.getRuntime(), list);
 			}
 			return result;
-		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException
-				| NoSuchMethodException e) {
+		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		} finally {
 			parameters.release();
