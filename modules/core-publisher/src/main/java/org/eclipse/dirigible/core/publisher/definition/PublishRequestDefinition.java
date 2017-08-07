@@ -7,27 +7,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name="DIRIGIBLE_PUBLISH_REQUESTS")
+@Table(name = "DIRIGIBLE_PUBLISH_REQUESTS")
 public class PublishRequestDefinition {
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="PUBREQ_ID", columnDefinition="BIGINT", nullable=false)
+	@Column(name = "PUBREQ_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
-	
-	@Column(name="PUBREQ_WORKSPACE", columnDefinition="VARCHAR", nullable=false, length=255)
+
+	@Column(name = "PUBREQ_WORKSPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String workspace;
-	
-	@Column(name="PUBREQ_PATH", columnDefinition="VARCHAR", nullable=false, length=255)
+
+	@Column(name = "PUBREQ_PATH", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String path;
-	
-	@Column(name="PUBREQ_REGISTRY", columnDefinition="VARCHAR", nullable=true, length=255)
-	private String registry;  // null means default to IRepositoryStructure.REGISTRY_PUBLIC
-	
-	@Column(name="PUBREQ_CREATED_BY", columnDefinition="VARCHAR", nullable=false, length=32)
+
+	@Column(name = "PUBREQ_REGISTRY", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	private String registry; // null means default to IRepositoryStructure.REGISTRY_PUBLIC
+
+	@Column(name = "PUBREQ_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
-	
-	@Column(name="PUBREQ_CREATED_AT", columnDefinition="TIMESTAMP", nullable=false)
+
+	@Column(name = "PUBREQ_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
 	public long getId() {
@@ -67,13 +67,18 @@ public class PublishRequestDefinition {
 	}
 
 	public Timestamp getCreatedAt() {
+		if (createdAt == null) {
+			return null;
+		}
 		return new Timestamp(createdAt.getTime());
 	}
 
 	public void setCreatedAt(Timestamp createdAt) {
+		if (createdAt == null) {
+			this.createdAt = null;
+			return;
+		}
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
-	
-	
 
 }

@@ -8,37 +8,37 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-@Table(name="DIRIGIBLE_JOBS")
+@Table(name = "DIRIGIBLE_JOBS")
 public class JobDefinition {
-	
+
 	@Id
-	@Column(name="JOB_NAME", columnDefinition="VARCHAR", nullable=false, length=255)
+	@Column(name = "JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
-	
-	@Column(name="JOB_GROUP", columnDefinition="VARCHAR", nullable=false, length=255)
+
+	@Column(name = "JOB_GROUP", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String group;
-	
-	@Column(name="JOB_CLASS", columnDefinition="VARCHAR", nullable=false, length=255)
+
+	@Column(name = "JOB_CLASS", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String clazz;
-	
-	@Column(name="JOB_DESCRIPTION", columnDefinition="VARCHAR", nullable=false, length=1024)
+
+	@Column(name = "JOB_DESCRIPTION", columnDefinition = "VARCHAR", nullable = false, length = 1024)
 	private String description;
-	
-	@Column(name="JOB_EXPRESSION", columnDefinition="VARCHAR", nullable=false, length=255)
+
+	@Column(name = "JOB_EXPRESSION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String expression;
-	
-	@Column(name="JOB_SINGLETON", columnDefinition="BOOLEAN", nullable=false)
+
+	@Column(name = "JOB_SINGLETON", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean singleton = false;
-	
-	@Column(name="JOB_ENABLED", columnDefinition="BOOLEAN", nullable=false)
+
+	@Column(name = "JOB_ENABLED", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean enabled = true;
-	
-	@Column(name="JOB_CREATED_BY", columnDefinition="VARCHAR", nullable=false, length=32)
+
+	@Column(name = "JOB_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
-	
-	@Column(name="JOBT_CREATED_AT", columnDefinition="TIMESTAMP", nullable=false)
+
+	@Column(name = "JOBT_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -46,19 +46,19 @@ public class JobDefinition {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getGroup() {
 		return group;
 	}
-	
+
 	public void setGroup(String group) {
 		this.group = group;
 	}
-	
+
 	public String getClazz() {
 		return clazz;
 	}
-	
+
 	public void setClazz(String clazz) {
 		this.clazz = clazz;
 	}
@@ -70,31 +70,31 @@ public class JobDefinition {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public String getExpression() {
 		return expression;
 	}
-	
+
 	public void setExpression(String expression) {
 		this.expression = expression;
 	}
-	
+
 	public boolean isSingleton() {
 		return singleton;
 	}
-	
+
 	public void setSingleton(boolean singleton) {
 		this.singleton = singleton;
 	}
-	
+
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	
+
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -104,21 +104,28 @@ public class JobDefinition {
 	}
 
 	public Timestamp getCreatedAt() {
+		if (createdAt == null) {
+			return null;
+		}
 		return new Timestamp(createdAt.getTime());
 	}
 
 	public void setCreatedAt(Timestamp createdAt) {
+		if (createdAt == null) {
+			this.createdAt = null;
+			return;
+		}
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
 	public static JobDefinition fromJson(String json) {
 		return GsonHelper.GSON.fromJson(json, JobDefinition.class);
 	}
-	
+
 	public String toJson() {
 		return GsonHelper.GSON.toJson(this, JobDefinition.class);
 	}
-	
+
 	@Override
 	public String toString() {
 		return toJson();
