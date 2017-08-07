@@ -14,7 +14,6 @@ import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
@@ -28,26 +27,27 @@ import org.slf4j.LoggerFactory;
 
 @Singleton
 public class ExtensionsSynchronizer extends AbstractSynchronizer {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
-	
-	private static final Map<String, ExtensionPointDefinition> EXTENSION_POINTS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, ExtensionPointDefinition>());
-	
-	private static final Map<String, ExtensionDefinition> EXTENSIONS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, ExtensionDefinition>());
-	
+
+	private static final Map<String, ExtensionPointDefinition> EXTENSION_POINTS_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, ExtensionPointDefinition>());
+
+	private static final Map<String, ExtensionDefinition> EXTENSIONS_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, ExtensionDefinition>());
+
 	private static final List<String> EXTENSION_POINTS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
-	
+
 	private static final List<String> EXTENSIONS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
-	
+
 	@Inject
 	private ExtensionsCoreService extensionsCoreService;
-	
-	
+
 	public static final void forceSynchronization() {
 		ExtensionsSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(ExtensionsSynchronizer.class);
 		extensionsSynchronizer.synchronize();
 	}
-	
+
 	public void registerPredeliveredExtensionPoint(String extensionPointPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPointPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
@@ -55,7 +55,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		extensionPointDefinition.setLocation(extensionPointPath);
 		EXTENSION_POINTS_PREDELIVERED.put(extensionPointPath, extensionPointDefinition);
 	}
-	
+
 	public void registerPredeliveredExtension(String extensionPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
@@ -63,10 +63,10 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		extensionDefinition.setLocation(extensionPath);
 		EXTENSIONS_PREDELIVERED.put(extensionPath, extensionDefinition);
 	}
-	
+
 	@Override
 	public void synchronize() {
-		synchronized(ExtensionsSynchronizer.class) {
+		synchronized (ExtensionsSynchronizer.class) {
 			logger.trace("Synchronizing Extension Points and Extensions...");
 			try {
 				clearCache();
@@ -102,13 +102,17 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	private void synchronizeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) throws SynchronizationException {
 		try {
 			if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
-				extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(), extensionPointDefinition.getDescription());
-				logger.info("Synchronized a new Extension Point [{}] from location: {}", extensionPointDefinition.getName(), extensionPointDefinition.getLocation());
+				extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(),
+						extensionPointDefinition.getDescription());
+				logger.info("Synchronized a new Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
+						extensionPointDefinition.getLocation());
 			} else {
 				ExtensionPointDefinition existing = extensionsCoreService.getExtensionPoint(extensionPointDefinition.getLocation());
 				if (!extensionPointDefinition.equals(existing)) {
-					extensionsCoreService.updateExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(), extensionPointDefinition.getDescription());
-					logger.info("Synchronized a modified Extension Point [{}] from location: {}", extensionPointDefinition.getName(), extensionPointDefinition.getLocation());
+					extensionsCoreService.updateExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(),
+							extensionPointDefinition.getDescription());
+					logger.info("Synchronized a modified Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
+							extensionPointDefinition.getLocation());
 				}
 			}
 			EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getLocation());
@@ -116,17 +120,21 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			throw new SynchronizationException(e);
 		}
 	}
-	
+
 	private void synchronizeExtension(ExtensionDefinition extensionDefinition) throws SynchronizationException {
 		try {
 			if (!extensionsCoreService.existsExtension(extensionDefinition.getLocation())) {
-				extensionsCoreService.createExtension(extensionDefinition.getLocation(), extensionDefinition.getModule(), extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
-				logger.info("Synchronized a new Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(), extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
+				extensionsCoreService.createExtension(extensionDefinition.getLocation(), extensionDefinition.getModule(),
+						extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
+				logger.info("Synchronized a new Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(),
+						extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
 			} else {
 				ExtensionDefinition existing = extensionsCoreService.getExtension(extensionDefinition.getLocation());
 				if (!extensionDefinition.equals(existing)) {
-					extensionsCoreService.updateExtension(extensionDefinition.getLocation(), extensionDefinition.getModule(), extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
-					logger.info("Synchronized a modified Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(), extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
+					extensionsCoreService.updateExtension(extensionDefinition.getLocation(), extensionDefinition.getModule(),
+							extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
+					logger.info("Synchronized a modified Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(),
+							extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
 				}
 			}
 			EXTENSIONS_SYNCHRONIZED.add(extensionDefinition.getLocation());
@@ -134,13 +142,13 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			throw new SynchronizationException(e);
 		}
 	}
-	
+
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
 		logger.trace("Synchronizing Extension Points and Extensions from Registry...");
-		
+
 		super.synchronizeRegistry();
-	
+
 		logger.trace("Done synchronizing Extension Points and Extensions from Registry.");
 	}
 
@@ -149,41 +157,44 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		String resourceName = resource.getName();
 		if (resourceName.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
 			ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(resource.getContent());
-			extensionPointDefinition.setLocation(resource.getPath());
+
+			extensionPointDefinition.setLocation(getRegistryPath(resource));
 			synchronizeExtensionPoint(extensionPointDefinition);
 		}
-		
+
 		if (resourceName.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSION)) {
 			ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(resource.getContent());
-			extensionDefinition.setLocation(resource.getPath());
+			extensionDefinition.setLocation(getRegistryPath(resource));
 			synchronizeExtension(extensionDefinition);
 		}
 	}
-	
+
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up Extension Points and Extensions...");
-		
+
 		try {
 			List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
 			for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
 				if (!EXTENSION_POINTS_SYNCHRONIZED.contains(extensionPointDefinition.getLocation())) {
 					extensionsCoreService.removeExtensionPoint(extensionPointDefinition.getLocation());
-					logger.warn("Cleaned up Extension Point [{}] from location: {}", extensionPointDefinition.getName(), extensionPointDefinition.getLocation());
+					logger.warn("Cleaned up Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
+							extensionPointDefinition.getLocation());
 				}
 			}
-			
+
 			List<ExtensionDefinition> extensionDefinitions = extensionsCoreService.getExtensions();
 			for (ExtensionDefinition extensionDefinition : extensionDefinitions) {
 				if (!EXTENSIONS_SYNCHRONIZED.contains(extensionDefinition.getLocation())) {
 					extensionsCoreService.removeExtension(extensionDefinition.getLocation());
-					logger.warn("Cleaned up Extension for Module [{}] from location: {}", extensionDefinition.getModule(), extensionDefinition.getLocation());
+					logger.warn("Cleaned up Extension for Module [{}] from location: {}", extensionDefinition.getModule(),
+							extensionDefinition.getLocation());
 				}
 			}
 		} catch (ExtensionsException e) {
 			throw new SynchronizationException(e);
 		}
-		
+
 		logger.trace("Done cleaning up Extension Points and Extensions.");
 	}
 }

@@ -21,59 +21,58 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
-	
+
 	@Inject
 	private IExtensionsCoreService extensionsCoreService;
-	
+
 	@Inject
 	private ExtensionsSynchronizer extensionsPublisher;
-	
+
 	@Inject
 	private IRepository repository;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		this.extensionsCoreService = getInjector().getInstance(ExtensionsCoreService.class);
 		this.extensionsPublisher = getInjector().getInstance(ExtensionsSynchronizer.class);
 		this.repository = getInjector().getInstance(IRepository.class);
 	}
-	
+
 	@Test
 	public void createExtensionPointTest() throws ExtensionsException, IOException {
 		extensionsPublisher.registerPredeliveredExtensionPoint("/control/control.extensionpoint");
 		extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
-		
+
 		ExtensionPointDefinition extensionPointDefinitionCustom = new ExtensionPointDefinition();
 		extensionPointDefinitionCustom.setLocation("/custom/custom.extensionpoint");
 		extensionPointDefinitionCustom.setName("/custom/custom");
 		extensionPointDefinitionCustom.setDescription("Test");
 		extensionPointDefinitionCustom.setCreatedAt(new Timestamp(new Date().getTime()));
 		extensionPointDefinitionCustom.setCreatedBy("test_user");
-		
+
 		String json = extensionsCoreService.serializeExtensionPoint(extensionPointDefinitionCustom);
 		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/custom/custom.extensionpoint", json.getBytes());
-		
+
 		extensionsPublisher.synchronize();
-		
+
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control.extensionpoint");
 		assertNotNull(extensionPointDefinition);
-		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/registry/public/custom/custom.extensionpoint");
+		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom.extensionpoint");
 		assertNotNull(extensionPointDefinition);
-		
+
 	}
-	
+
 	@Test
 	public void cleanupExtensionPointTest() throws ExtensionsException, IOException {
 		createExtensionPointTest();
-		
+
 		repository.removeResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/custom/custom.extensionpoint");
-		
+
 		extensionsPublisher.synchronize();
-		
-		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/registry/public/custom/custom.extensionpoint");
+
+		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom.extensionpoint");
 		assertNull(extensionPointDefinition);
-		
+
 	}
-	
 
 }

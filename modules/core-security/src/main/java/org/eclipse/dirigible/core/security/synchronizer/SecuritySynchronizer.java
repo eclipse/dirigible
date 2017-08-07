@@ -17,7 +17,6 @@ import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.core.security.api.AccessException;
@@ -31,29 +30,26 @@ import org.slf4j.LoggerFactory;
 
 @Singleton
 public class SecuritySynchronizer extends AbstractSynchronizer {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(SecuritySynchronizer.class);
-	
+
 	private static final Map<String, RoleDefinition[]> ROLES_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, RoleDefinition[]>());
-	
-	private static final Map<String, List<AccessDefinition>> ACCESS_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, List<AccessDefinition>>());
-	
-	
+
+	private static final Map<String, List<AccessDefinition>> ACCESS_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, List<AccessDefinition>>());
+
 	private static final Set<String> ROLES_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
-	
+
 	private static final Set<String> ACCESS_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
-	
-	
-	
+
 	@Inject
 	private SecurityCoreService securityCoreService;
-	
-	
+
 	public static final void forceSynchronization() {
 		SecuritySynchronizer securitySynchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
 		securitySynchronizer.synchronize();
-	}	
-	
+	}
+
 	public void registerPredeliveredRoles(String rolesPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(rolesPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
@@ -63,7 +59,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 		ROLES_PREDELIVERED.put(rolesPath, roleDefinitions);
 	}
-	
+
 	public void registerPredeliveredAccess(String accessPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(accessPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
@@ -73,10 +69,10 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 		ACCESS_PREDELIVERED.put(accessPath, accessDefinitions);
 	}
-	
+
 	@Override
 	public void synchronize() {
-		synchronized(SecuritySynchronizer.class) {
+		synchronized (SecuritySynchronizer.class) {
 			logger.trace("Synchronizing Roles and Access artifacts...");
 			try {
 				clearCache();
@@ -99,24 +95,24 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Roles and Access artifacts...");
-		
+
 		// Roles
 		for (RoleDefinition[] roleDefinitions : ROLES_PREDELIVERED.values()) {
 			for (RoleDefinition roleDefinition : roleDefinitions) {
 				synchronizeRole(roleDefinition);
 			}
 		}
-		
+
 		// Access
 		for (List<AccessDefinition> accessDefinitions : ACCESS_PREDELIVERED.values()) {
 			for (AccessDefinition accessDefinition : accessDefinitions) {
 				synchronizeAccess(accessDefinition);
 			}
 		}
-		
+
 		logger.trace("Done synchronizing predelivered Roles and Access artifacts.");
 	}
-	
+
 	private void synchronizeRole(RoleDefinition roleDefinition) throws SynchronizationException {
 		try {
 			if (!securityCoreService.existsRole(roleDefinition.getName())) {
@@ -126,7 +122,9 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 				RoleDefinition existing = securityCoreService.getRole(roleDefinition.getName());
 				if (!roleDefinition.equals(existing)) {
 					if (!roleDefinition.getLocation().equals(existing.getLocation())) {
-						throw new SynchronizationException(format("Trying to update the Role [{0}] already set from location [{1}] with a location [{2}]", roleDefinition.getName(), existing.getLocation(), roleDefinition.getLocation()));
+						throw new SynchronizationException(
+								format("Trying to update the Role [{0}] already set from location [{1}] with a location [{2}]",
+										roleDefinition.getName(), existing.getLocation(), roleDefinition.getLocation()));
 					}
 					securityCoreService.updateRole(roleDefinition.getName(), roleDefinition.getLocation(), roleDefinition.getDescription());
 					logger.info("Synchronized a modified Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());
@@ -141,16 +139,24 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	private void synchronizeAccess(AccessDefinition accessDefinition) throws SynchronizationException {
 		try {
 			if (!securityCoreService.existsAccessDefinition(accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole())) {
-				securityCoreService.createAccessDefinition(accessDefinition.getLocation(), accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getDescription());
-				logger.info("Synchronized a new Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
+				securityCoreService.createAccessDefinition(accessDefinition.getLocation(), accessDefinition.getUri(), accessDefinition.getMethod(),
+						accessDefinition.getRole(), accessDefinition.getDescription());
+				logger.info("Synchronized a new Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(),
+						accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
 			} else {
-				AccessDefinition existing = securityCoreService.getAccessDefinition(accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole());
+				AccessDefinition existing = securityCoreService.getAccessDefinition(accessDefinition.getUri(), accessDefinition.getMethod(),
+						accessDefinition.getRole());
 				if (!accessDefinition.equals(existing)) {
 					if (!accessDefinition.getLocation().equals(existing.getLocation())) {
-						throw new SynchronizationException(format("Trying to update the Access definition for [{0}-{1}-{2}] already set from location [{3}] with a location [{4}]", accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole(), existing.getLocation(), accessDefinition.getLocation()));
+						throw new SynchronizationException(
+								format("Trying to update the Access definition for [{0}-{1}-{2}] already set from location [{3}] with a location [{4}]",
+										accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole(), existing.getLocation(),
+										accessDefinition.getLocation()));
 					}
-					securityCoreService.updateAccessDefinition(existing.getId(), accessDefinition.getLocation(), accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getDescription());
-					logger.info("Synchronized a modified Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
+					securityCoreService.updateAccessDefinition(existing.getId(), accessDefinition.getLocation(), accessDefinition.getUri(),
+							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getDescription());
+					logger.info("Synchronized a modified Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(),
+							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
 				}
 			}
 			ACCESS_SYNCHRONIZED.add(accessDefinition.getLocation());
@@ -158,13 +164,13 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			throw new SynchronizationException(e);
 		}
 	}
-	
+
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
 		logger.trace("Synchronizing Extension Points and Extensions from Registry...");
-		
+
 		super.synchronizeRegistry();
-	
+
 		logger.trace("Done synchronizing Extension Points and Extensions from Registry.");
 	}
 
@@ -174,25 +180,25 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		if (resourceName.endsWith(ISecurityCoreService.FILE_EXTENSION_ROLES)) {
 			RoleDefinition[] roleDefinitions = securityCoreService.parseRoles(resource.getContent());
 			for (RoleDefinition roleDefinition : roleDefinitions) {
-				roleDefinition.setLocation(resource.getPath());
+				roleDefinition.setLocation(getRegistryPath(resource));
 				synchronizeRole(roleDefinition);
 			}
-			
+
 		}
 		if (resourceName.endsWith(ISecurityCoreService.FILE_EXTENSION_ACCESS)) {
 			List<AccessDefinition> accessDefinitions = securityCoreService.parseAccessDefinitions(resource.getContent());
 			for (AccessDefinition accessDefinition : accessDefinitions) {
-				accessDefinition.setLocation(resource.getPath());
+				accessDefinition.setLocation(getRegistryPath(resource));
 				synchronizeAccess(accessDefinition);
 			}
-			
+
 		}
 	}
-	
+
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up Roles and Access artifacts...");
-		
+
 		try {
 			List<RoleDefinition> roleDefinitions = securityCoreService.getRoles();
 			for (RoleDefinition roleDefinition : roleDefinitions) {
@@ -201,18 +207,19 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 					logger.warn("Cleaned up Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());
 				}
 			}
-			
+
 			List<AccessDefinition> accessDefinitions = securityCoreService.getAccessDefinitions();
 			for (AccessDefinition accessDefinition : accessDefinitions) {
 				if (!ACCESS_SYNCHRONIZED.contains(accessDefinition.getLocation())) {
 					securityCoreService.removeAccessDefinition(accessDefinition.getId());
-					logger.warn("Cleaned up Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
+					logger.warn("Cleaned up Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(),
+							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
 				}
 			}
 		} catch (AccessException e) {
 			throw new SynchronizationException(e);
 		}
-		
+
 		logger.trace("Done cleaning up Roles and Access artifacts.");
 	}
 }
