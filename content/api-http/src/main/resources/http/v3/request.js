@@ -12,6 +12,11 @@
 
 var java = require('core/v3/java');
 
+exports.isValid = function() {
+	var valid = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'isValid', []);
+	return valid;
+};
+
 exports.getMethod = function() {
 	var method = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getMethod', []);
 	return method;

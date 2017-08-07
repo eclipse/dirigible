@@ -40,6 +40,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
 		TEST_MODULES.add("http/v3/request/getServerName.js");
 
+		TEST_MODULES.add("http/v3/response/getHeaderNames.js");
+
 		TEST_MODULES.add("utils/v3/base64/encode.js");
 		TEST_MODULES.add("utils/v3/base64/decode.js");
 	}
@@ -47,14 +49,10 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
 			throws RepositoryWriteException, IOException, ScriptingException, ContextException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
-		when(mockedRequest.getMethod()).thenReturn("GET");
-		when(mockedRequest.getRemoteUser()).thenReturn("tester");
-		when(mockedRequest.getHeaderNames()).thenReturn(Collections.enumeration(Arrays.asList("header1", "header2")));
-		when(mockedRequest.getServerName()).thenReturn("server1");
-		when(mockedRequest.getHeader("header1")).thenReturn("header1");
-		when(mockedRequest.isUserInRole("role1")).thenReturn(true);
-
 		HttpServletResponse mockedResponse = Mockito.mock(HttpServletResponse.class);
+		mockRequest(mockedRequest);
+		mockResponse(mockedResponse);
+
 		ThreadContextFacade.setUp();
 		try {
 			ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), mockedRequest);
@@ -68,6 +66,19 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		} finally {
 			ThreadContextFacade.tearDown();
 		}
+	}
+
+	private void mockRequest(HttpServletRequest mockedRequest) {
+		when(mockedRequest.getMethod()).thenReturn("GET");
+		when(mockedRequest.getRemoteUser()).thenReturn("tester");
+		when(mockedRequest.getHeaderNames()).thenReturn(Collections.enumeration(Arrays.asList("header1", "header2")));
+		when(mockedRequest.getServerName()).thenReturn("server1");
+		when(mockedRequest.getHeader("header1")).thenReturn("header1");
+		when(mockedRequest.isUserInRole("role1")).thenReturn(true);
+	}
+
+	private void mockResponse(HttpServletResponse mockedResponse) {
+		when(mockedResponse.getHeaderNames()).thenReturn(Arrays.asList("header1", "header2"));
 	}
 
 	private Object runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
