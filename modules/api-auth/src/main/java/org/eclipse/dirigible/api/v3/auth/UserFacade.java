@@ -21,7 +21,9 @@ public class UserFacade implements IScriptingFacade {
 		// HTTP case
 		String userName = null;
 		try {
-			userName = HttpRequestFacade.getRemoteUser();
+			if (HttpRequestFacade.isValid()) {
+				userName = HttpRequestFacade.getRemoteUser();
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.context.ContextException;
+import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -34,11 +35,15 @@ public class HttpRequestFacade implements IScriptingFacade {
 		return null;
 	}
 
+	public static final boolean isValid() {
+		HttpServletRequest request = getRequest();
+		return request != null;
+	}
+
 	public static final String getMethod() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getMethod();
 	}
@@ -46,8 +51,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getRemoteUser() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getRemoteUser();
 	}
@@ -55,8 +59,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getPathInfo() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getPathInfo();
 	}
@@ -64,8 +67,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getPathTranslated() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getPathTranslated();
 	}
@@ -73,8 +75,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getHeader(String name) {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getHeader(name);
 	}
@@ -82,8 +83,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final boolean isUserInRole(String role) {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return false;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.isUserInRole(role);
 	}
@@ -91,8 +91,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getAttribute(String name) {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getAttribute(name) != null ? request.getAttribute(name).toString() : null;
 	}
@@ -100,8 +99,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getAuthType() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getAuthType();
 	}
@@ -109,8 +107,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getCookies() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return GsonHelper.GSON.toJson(request.getCookies());
 	}
@@ -118,8 +115,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getAttributeNames() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		List<String> list = Collections.list(request.getAttributeNames());
 		return GsonHelper.GSON.toJson(list.toArray());
@@ -128,8 +124,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getCharacterEncoding() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getCharacterEncoding();
 	}
@@ -137,8 +132,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final int getContentLength() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return -1;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getContentLength();
 	}
@@ -146,8 +140,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getHeaders(String name) {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		List<String> list = Collections.list(request.getHeaders(name));
 		return GsonHelper.GSON.toJson(list.toArray());
@@ -156,8 +149,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getContentType() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getContentType();
 	}
@@ -165,8 +157,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getBytes() throws IOException {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return BytesHelper.bytesToJson(IOUtils.toByteArray(request.getInputStream()));
 	}
@@ -174,8 +165,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getText() throws IOException {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		byte[] bytes = IOUtils.toByteArray(request.getInputStream());
 		String charset = (request.getCharacterEncoding() != null) ? request.getCharacterEncoding() : StandardCharsets.UTF_8.name();
@@ -185,8 +175,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getParameter(String name) {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getParameter(name);
 	}
@@ -194,8 +183,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getHeaderNames() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		List<String> list = Collections.list(request.getHeaderNames());
 		return GsonHelper.GSON.toJson(list.toArray());
@@ -204,8 +192,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getParameterNames() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		List<String> list = Collections.list(request.getParameterNames());
 		return GsonHelper.GSON.toJson(list.toArray());
@@ -214,8 +201,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getParameterValues(String name) {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return GsonHelper.GSON.toJson(request.getParameterValues(name));
 	}
@@ -223,8 +209,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getProtocol() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getProtocol();
 	}
@@ -232,8 +217,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getScheme() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getScheme();
 	}
@@ -241,8 +225,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getContextPath() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getContextPath();
 	}
@@ -250,8 +233,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getServerName() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getServerName();
 	}
@@ -259,8 +241,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final int getServerPort() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return -1;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getServerPort();
 	}
@@ -268,8 +249,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getQueryString() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getQueryString();
 	}
@@ -277,8 +257,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getRemoteAddress() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getRemoteAddr();
 	}
@@ -286,8 +265,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getRemoteHost() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getRemoteHost();
 	}
@@ -295,8 +273,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final void setAttribute(String name, String value) {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		request.setAttribute(name, value);
 	}
@@ -304,8 +281,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final void removeAttribute(String name) {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		request.removeAttribute(name);
 	}
@@ -313,8 +289,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getLocale() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return GsonHelper.GSON.toJson(request.getLocale());
 	}
@@ -322,8 +297,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getRequestURI() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getRequestURI();
 	}
@@ -331,8 +305,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final boolean isSecure() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return false;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.isSecure();
 	}
@@ -340,8 +313,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getRequestURL() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getRequestURL().toString();
 	}
@@ -349,8 +321,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getServicePath() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getServletPath();
 	}
@@ -358,8 +329,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final int getRemotePort() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return -1;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getRemotePort();
 	}
@@ -367,8 +337,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getLocalName() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getLocalName();
 	}
@@ -376,8 +345,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final String getLocalAddr() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return null;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getLocalAddr();
 	}
@@ -385,8 +353,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	public static final int getLocalPort() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
-			logger.error(NO_VALID_REQUEST);
-			return -1;
+			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getLocalPort();
 	}

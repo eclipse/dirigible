@@ -26,6 +26,11 @@ public class HttpResponseFacade implements IScriptingFacade {
 		return null;
 	}
 
+	public static final boolean isValid() {
+		HttpServletResponse response = getResponse();
+		return response != null;
+	}
+
 	public static final void println(String text) {
 		HttpServletResponse response = getResponse();
 		if (response == null) {
