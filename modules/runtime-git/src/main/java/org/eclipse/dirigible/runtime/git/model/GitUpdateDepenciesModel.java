@@ -1,26 +1,11 @@
 package org.eclipse.dirigible.runtime.git.model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class GitUpdateDepenciesModel extends BaseGitProjectModel {
 
-	private String repository;
-	private String branch;
+	@ApiModelProperty(value = "Whether to publish the project(s) after update of dependencies", example = "true")
 	private boolean publish;
-
-	public String getRepository() {
-		return repository;
-	}
-
-	public void setRepository(String repository) {
-		this.repository = repository;
-	}
-
-	public String getBranch() {
-		return branch;
-	}
-
-	public void setBranch(String branch) {
-		this.branch = branch;
-	}
 
 	public boolean isPublish() {
 		return publish;

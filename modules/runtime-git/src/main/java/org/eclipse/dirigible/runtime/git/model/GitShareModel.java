@@ -6,8 +6,14 @@ public class GitShareModel extends BaseGitModel {
 
 	@ApiModelProperty(hidden = true)
 	private String project;
+
+	@ApiModelProperty(value = "The Git Repository URL", example = "https://github.com/dirigiblelabs/sample_git_test.git", required = true)
 	private String repository;
+
+	@ApiModelProperty(value = "The Git Branch", example = "master", required = true)
 	private String branch;
+
+	@ApiModelProperty(value = "The Commit Message", example = "Initial Commit", required = true)
 	private String commitMessage;
 
 	public String getProject() {

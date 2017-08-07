@@ -1,9 +1,16 @@
 package org.eclipse.dirigible.runtime.git.model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class BaseGitModel {
 
+	@ApiModelProperty(value = "The User Name", required = true, example = "dirigible")
 	private String username;
+
+	@ApiModelProperty(value = "Base64 Encoded Password", required = true, example = "ZGlyaWdpYmxl")
 	private String password;
+
+	@ApiModelProperty(value = "The E-mail Address", example = "dirigible@gmail.com")
 	private String email;
 
 	public String getUsername() {
