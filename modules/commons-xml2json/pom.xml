@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>API - utils</name>
-	<artifactId>dirigible-api-utils</artifactId>
+	<name>Commons - XML to JSON</name>
+	<artifactId>dirigible-commons-xml2json</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -27,23 +27,5 @@
             </plugin>
         </plugins>
     </build>
-    <dependencies>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-core</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-xml2json</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
-		    <groupId>commons-codec</groupId>
-		    <artifactId>commons-codec</artifactId>
-		    <version>${commons.codec}</version>
-		</dependency>
-		
-    </dependencies>
 
 </project>
