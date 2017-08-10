@@ -12,11 +12,13 @@ import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
+import org.eclipse.dirigible.core.workspace.json.Folder;
+import org.eclipse.dirigible.core.workspace.json.Project;
+import org.eclipse.dirigible.core.workspace.json.Workspace;
+import org.eclipse.dirigible.core.workspace.json.WorkspaceJsonHelper;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.runtime.repository.json.Collection;
-import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,9 +151,19 @@ public class WorkspaceProcessor {
 		return new URI(relativePath.toString());
 	}
 
-	public Collection renderTree(ICollection collection) {
-		return RepositoryJsonHelper.traverseCollection(collection,
+	public Workspace renderWorkspaceTree(ICollection collection) {
+		return WorkspaceJsonHelper.traverseWorkspace(collection,
 				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), WORKSPACES);
+	}
+
+	public Project renderProjectTree(ICollection collection) {
+		return WorkspaceJsonHelper.traverseProject(collection,
+				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), WORKSPACES);
+	}
+
+	public Folder renderFolderTree(ICollection collection) {
+		return WorkspaceJsonHelper.traverseFolder(collection, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
+				WORKSPACES);
 	}
 
 }

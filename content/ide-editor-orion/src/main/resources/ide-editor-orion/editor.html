@@ -272,7 +272,7 @@
 				var file = url.searchParams.get('file');
 				if (file) {
 					var xhr = new XMLHttpRequest();
-					xhr.open('PUT', '/services/v3/ide/workspace' + file);
+					xhr.open('PUT', '/services/v3/ide/workspaces' + file);
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState == 4) {
 							console.log('file saved: ' + file);
@@ -306,7 +306,7 @@
 				var file = url.searchParams.get('file');
 				if (file) {
 					var xhr = new XMLHttpRequest();
-					xhr.open('GET', '/services/v3/ide/workspace' + file);
+					xhr.open('GET', '/services/v3/ide/workspaces' + file);
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState == 4) {
 							setText(xhr.responseText, getMode(file), false, false, 0, file);

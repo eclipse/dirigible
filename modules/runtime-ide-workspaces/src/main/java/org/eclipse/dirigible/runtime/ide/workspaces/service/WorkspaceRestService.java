@@ -81,7 +81,7 @@ public class WorkspaceRestService implements IRestService {
 		if (!workspaceObject.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.ok().entity(processor.renderTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(processor.renderWorkspaceTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	@POST
@@ -100,7 +100,7 @@ public class WorkspaceRestService implements IRestService {
 		if (!workspaceObject.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.created(processor.getURI(workspace, null, null)).entity(processor.renderTree(workspaceObject))
+		return Response.created(processor.getURI(workspace, null, null)).entity(processor.renderWorkspaceTree(workspaceObject))
 				.type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
@@ -144,7 +144,7 @@ public class WorkspaceRestService implements IRestService {
 		if (!projectObject.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.ok().entity(processor.renderTree(projectObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(processor.renderProjectTree(projectObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	@POST
@@ -169,7 +169,7 @@ public class WorkspaceRestService implements IRestService {
 		if (!projectObject.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.created(processor.getURI(workspace, project, null)).entity(processor.renderTree(projectObject))
+		return Response.created(processor.getURI(workspace, project, null)).entity(processor.renderProjectTree(projectObject))
 				.type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
@@ -222,7 +222,7 @@ public class WorkspaceRestService implements IRestService {
 			if (!collection.exists()) {
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			return Response.ok().entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
+			return Response.ok().entity(processor.renderFolderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
 		if (file.isBinary()) {
 			return Response.ok().entity(file.getContent()).type(file.getContentType()).build();
