@@ -9,6 +9,14 @@
 
     <title>Eclipse Dirigible - IDE</title>
 
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=QEM5AeRA72">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=QEM5AeRA72">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=QEM5AeRA72">
+	<link rel="manifest" href="manifest.json?v=QEM5AeRA72">
+	<link rel="mask-icon" href="safari-pinned-tab.svg?v=QEM5AeRA72" color="#f0c165">
+	<link rel="shortcut icon" href="http://localhost:8080/favicon.ico?v=QEM5AeRA72">
+	<meta name="theme-color" content="#8afac4">
+	
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -18,41 +26,149 @@
 	<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
 	<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />
 	
+	<script src="services/message_hub.js"></script>
+	
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+	<style>
+		.body {
+			background-color: #343436;
+		}
+		.shell {
+			display: flex;
+			height:100%;
+		}
+		.sidebar {
+			max-width: 4.5em;
+			padding: 0.5rem;
+		}
+		.plane {
+		    flex: 1 0 auto;
+		}
+		
+		.list-group-item {
+			background: none;
+			border: transparent;
+		}
+		a.list-group-item.hover,
+		a.list-group-item:hover{
+			background-color: #555;
+		}
 
-	<script type="text/javascript">
+		nav.navbar {
+			height: 2.7rem;
+			background-color: transparent;
+			border: transparent;
+		}
+		
+		.lm_header,
+		.lm_header .lm_tab,
+		.lm_header .lm_tab, .lm_title {
+			height: 1.99rem;
+			line-height: 1.99rem;
+		}
+		 .lm_header .lm_tab.lm_active{
+			box-shadow: none;
+		 }
+		 
+		 .lm_header .lm_tab {
+			border: 1px solid #555;
+			border-bottom: none;
+		}		
+		.lm_header, .lm_splitter{
+		    background-color: #292929;
+		}
+		.lm_splitter{
+		    opacity: inherit;
+		}
+	</style>
+</head>
+
+<body ng-app="workbench" ng-controller="WorkbenchController">
+
+	<nav class="navbar navbar-inverse" role="navigation">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#"><img src="img/dirigible-logo-small.png"></a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+			<ul id="main-menu" class="nav navbar-nav">
+				<li ng-class="{dropdown: !!menu.items}" ng-repeat="menuItem in menu">
+					<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="onClick(menuItem.onClick)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
+					<a ng-show="menuItem.items" href="" class="dropdown-toggle" data-toggle="dropdown">{{ menuItem.name }}</a>
+					<ul class="dropdown-menu">
+						<li ng-repeat="item in menuItem.items">
+							<a href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+			  <li class="dropdown" ng-include="'/services/web/resources/themes/themes.html'"></li>
+			  <li class="hidden-xs">
+				<a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
+			  </li>
+			</ul>
+		</div>
+	</nav>
+	
+	<div class="shell">
+		<div class="sidebar list-group">
+			<a class="list-group-item" style="padding: 10px;"><i class="fa fa-files-o fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-code-fork fa-2x"></i></a>
+			<a class="list-group-item" style="padding: 10px;"><img src="https://cdn2.iconfinder.com/data/icons/security-2-1/512/debugger-256.png" style="height:2.1rem; width: 2.1rem"/></a>
+		</div>
+	<div class="plane"></div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
+
+		<script type="text/javascript">
 		var config = {
+			dimensions: {
+				headerHeight: 28
+			},
 		    content: [{
 		        type: 'row',
 		        content:[{
+						id:"ws",
 		            	type: 'component',
 		            	componentName: 'Workspace',
 		            	componentState: { label: 'Workspace' }
 		        	},{
 		            	type: 'column',
 		            	content:[{
-		                	type: 'component',
-		                	componentName: 'Editor',
-		                	componentState: { label: 'Editor' }
-		            	},{
-		                	type: 'component',
-		                	componentName: 'Console',
-		                	componentState: { label: 'Console' }
-		            }]
+								id:"editor",
+								type: 'component',
+								componentName: 'Editor',
+								componentState: {  },
+								content: []
+							},{
+								id:"console",
+								type: 'component',
+								componentName: 'Console',
+								componentState: { label: 'Console' }
+						}]
 		        }]
 		    }]
 		};
 		
-		var myLayout = new GoldenLayout( config );
+		var myLayout = new GoldenLayout( config, $('.plane') );
+
 		
 		myLayout.registerComponent( 'Workspace', function( container, componentState ){
 		    container.getElement().html('<iframe src="workspace.html"></iframe>');
-		});
+		});		
 		myLayout.registerComponent( 'Editor', function( container, componentState ){
 		    container.getElement().html( '<iframe src="editor.html"></iframe>' );
 		});
@@ -62,46 +178,24 @@
 		
 		myLayout.init();
 		
+		var client = new FramesMessageHub({
+				topic: 'fileselected'
+			});
+		client.subscribe(function(msg){
+				var newItemConfig = {
+					id: msg.data.path || '123',
+					title: msg.data.label,
+					type: 'component',
+					componentName: 'Editor',
+					componentState:
+					{ 
+						path: msg.data.path
+					}
+				};
+				myLayout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
+			});
+		
 	</script>
-	
-</head>
-
-<body ng-app="workbench" ng-controller="WorkbenchController">
-
-		<nav class="navbar navbar-inverse" role="navigation">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#"><img src="img/dirigible-logo-small.png"></a>
-			</div>
-
-			<div class="collapse navbar-collapse" id="navbar-collapse">
-				<ul id="main-menu" class="nav navbar-nav">
-					<li ng-class="{dropdown: !!menu.items}" ng-repeat="menuItem in menu">
-						<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="onClick(menuItem.onClick)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
-						<a ng-show="menuItem.items" href="" class="dropdown-toggle" data-toggle="dropdown">{{ menuItem.name }}</a>
-						<ul class="dropdown-menu">
-							<li ng-repeat="item in menuItem.items">
-								<a href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-				  <li class="dropdown" ng-include="'/services/web/resources/themes/themes.html'"></li>
-		          <li class="hidden-xs">
-		            <a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
-		          </li>
-		        </ul>
-			</div>
-		</nav>
-	
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
 	
 	<script type="text/javascript">
 		angular.module('workbench', []);
@@ -110,7 +204,7 @@
 			var url = '../../js/ide/services/menu.js';
 			$http.get(url)
 				.success(function(data) {
- 					$scope.menu = data;
+					$scope.menu = data;
 			});
 			
 			$scope.onClick = function(action) {
@@ -119,7 +213,7 @@
 			
 		});
 	</script>
-
+		
 </body>
 
 </html>

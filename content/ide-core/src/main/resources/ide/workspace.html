@@ -3,9 +3,39 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Eclipse Dirigible - Workspace</title>
+		<script src="services/message_hub.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	</head>
 	<body style="background-color: #ddd">
     	<h1>Workspace</h1>
     	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		<input id="msg"/><button>Snd</button>
+		
+		<ul class="filelist">
+			<li>File 1</li>
+			<li>File 2</li>
+		</ul>	
+
+		<script>
+			var hub = new FramesMessageHub({
+				topic: 'something',
+				targetOrigin: 'http://localhost:8080'
+			});
+			$('button').click(function(evt){
+				hub.post({data:$('#msg').val()});
+			});
+			
+			var hub = new FramesMessageHub({
+				topic: 'fileselected',
+				targetOrigin: 'http://localhost:8080'
+			});
+			$('ul.filelist > li').click(function(evt){
+				hub.post({data: {
+					"label": $(this).text(),
+					"path": $(this).text()
+				}});
+			});
+		</script>
+		
 	</body>
 </html>
