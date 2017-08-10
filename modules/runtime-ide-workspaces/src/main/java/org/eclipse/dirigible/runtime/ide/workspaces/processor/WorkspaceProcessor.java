@@ -27,7 +27,7 @@ public class WorkspaceProcessor {
 
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceProcessor.class);
 
-	private static final String WORKSPACES = "/workspaces";
+	private static final String WORKSPACES = ""; // "/workspaces";
 
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
