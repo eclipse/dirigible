@@ -1,0 +1,50 @@
+.body {
+	background-color: #343436;
+}
+.shell {
+	display: flex;
+	height:100%;
+}
+.sidebar {
+	max-width: 4.5em;
+	padding: 0.5rem;
+}
+.plane {
+	flex: 1 0 auto;
+}
+
+.list-group-item {
+	background: none;
+	border: transparent;
+}
+a.list-group-item.hover,
+a.list-group-item:hover{
+	background-color: #555;
+}
+
+nav.navbar {
+	height: 2.7rem;
+	background-color: transparent;
+	border: transparent;
+}
+
+.lm_header,
+.lm_header .lm_tab,
+.lm_header .lm_tab, .lm_title {
+	height: 1.99rem;
+	line-height: 1.99rem;
+}
+ .lm_header .lm_tab.lm_active{
+	box-shadow: none;
+ }
+ 
+ .lm_header .lm_tab {
+	border: 1px solid #555;
+	border-bottom: none;
+}		
+.lm_header, .lm_splitter{
+	background-color: #292929;
+}
+.lm_splitter{
+	opacity: inherit;
+}

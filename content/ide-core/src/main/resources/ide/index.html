@@ -26,6 +26,8 @@
 	<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
 	<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />
 	
+	<link type="text/css" rel="stylesheet" href="css/dark.css" />
+	
 	<script src="services/message_hub.js"></script>
 	
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -34,58 +36,6 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-	<style>
-		.body {
-			background-color: #343436;
-		}
-		.shell {
-			display: flex;
-			height:100%;
-		}
-		.sidebar {
-			max-width: 4.5em;
-			padding: 0.5rem;
-		}
-		.plane {
-		    flex: 1 0 auto;
-		}
-		
-		.list-group-item {
-			background: none;
-			border: transparent;
-		}
-		a.list-group-item.hover,
-		a.list-group-item:hover{
-			background-color: #555;
-		}
-
-		nav.navbar {
-			height: 2.7rem;
-			background-color: transparent;
-			border: transparent;
-		}
-		
-		.lm_header,
-		.lm_header .lm_tab,
-		.lm_header .lm_tab, .lm_title {
-			height: 1.99rem;
-			line-height: 1.99rem;
-		}
-		 .lm_header .lm_tab.lm_active{
-			box-shadow: none;
-		 }
-		 
-		 .lm_header .lm_tab {
-			border: 1px solid #555;
-			border-bottom: none;
-		}		
-		.lm_header, .lm_splitter{
-		    background-color: #292929;
-		}
-		.lm_splitter{
-		    opacity: inherit;
-		}
-	</style>
 </head>
 
 <body ng-app="workbench" ng-controller="WorkbenchController">
@@ -146,6 +96,7 @@
 		            	componentName: 'Workspace',
 		            	componentState: { label: 'Workspace' }
 		        	},{
+						id: 'center',
 		            	type: 'column',
 		            	content:[{
 								id:"editor",
@@ -168,9 +119,12 @@
 		
 		myLayout.registerComponent( 'Workspace', function( container, componentState ){
 		    container.getElement().html('<iframe src="workspace.html"></iframe>');
-		});		
+		});
 		myLayout.registerComponent( 'Editor', function( container, componentState ){
-		    container.getElement().html( '<iframe src="editor.html"></iframe>' );
+			this.setContent = function(path){
+				container.getElement().empty().html( '<iframe src="/services/v3/web/ide-editor-orion/editor.html?file='+path+'"></iframe>' )
+			};
+			this.setContent(componentState.path);
 		});
 		myLayout.registerComponent( 'Console', function( container, componentState ){
 		    container.getElement().html( '<iframe src="../ide-console/console.html"></iframe>' );
@@ -183,16 +137,30 @@
 			});
 		client.subscribe(function(msg){
 				var newItemConfig = {
-					id: msg.data.path || '123',
+					id: msg.data.path,
 					title: msg.data.label,
 					type: 'component',
 					componentName: 'Editor',
-					componentState:
-					{ 
+					componentState:{ 
 						path: msg.data.path
 					}
 				};
-				myLayout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
+				//is an editor available to stack new children to it?
+				if(myLayout.root.getItemsById('editor')[0]){
+					//is already open?
+					if(myLayout.root.getItemsById(newItemConfig.id).length){
+						//replace content
+						var panel = myLayout.root.getItemsById(newItemConfig.id)[0];
+						panel.instance.setContent(newItemConfig.id)
+						panel.parent.setActiveContentItem(panel);
+					} else {
+						// open new tab
+						myLayout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
+					}
+				} else {
+					// open up
+					//myLayout.root.getItemsById('center').addChild( newItemConfig );
+				}
 			});
 		
 	</script>
@@ -210,7 +178,6 @@
 			$scope.onClick = function(action) {
 				eval(action);
 			};
-			
 		});
 	</script>
 		
