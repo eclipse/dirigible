@@ -14,9 +14,10 @@ import org.eclipse.dirigible.database.squle.ISquleDialect;
 import org.eclipse.dirigible.database.squle.SquleException;
 import org.eclipse.dirigible.database.squle.builders.sequence.DropSequenceBuilder;
 import org.eclipse.dirigible.database.squle.builders.table.DropTableBuilder;
+import org.eclipse.dirigible.database.squle.builders.view.DropViewBuilder;
 
 public class DropBranchingBuilder extends AbstractSquleBuilder {
-	
+
 	public DropBranchingBuilder(ISquleDialect dialect) {
 		super(dialect);
 	}
@@ -24,7 +25,11 @@ public class DropBranchingBuilder extends AbstractSquleBuilder {
 	public DropTableBuilder table(String table) {
 		return new DropTableBuilder(getDialect(), table);
 	}
-	
+
+	public DropViewBuilder view(String view) {
+		return new DropViewBuilder(getDialect(), view);
+	}
+
 	public DropSequenceBuilder sequence(String sequence) {
 		return new DropSequenceBuilder(getDialect(), sequence);
 	}

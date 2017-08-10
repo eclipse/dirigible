@@ -14,8 +14,9 @@ import org.eclipse.dirigible.database.squle.ISquleDialect;
 import org.eclipse.dirigible.database.squle.SquleException;
 import org.eclipse.dirigible.database.squle.builders.sequence.CreateSequenceBuilder;
 import org.eclipse.dirigible.database.squle.builders.table.CreateTableBuilder;
+import org.eclipse.dirigible.database.squle.builders.view.CreateViewBuilder;
 
-public class CreateBranchingBuilder	extends AbstractSquleBuilder {
+public class CreateBranchingBuilder extends AbstractSquleBuilder {
 
 	public CreateBranchingBuilder(ISquleDialect dialect) {
 		super(dialect);
@@ -23,6 +24,10 @@ public class CreateBranchingBuilder	extends AbstractSquleBuilder {
 
 	public CreateTableBuilder table(String table) {
 		return new CreateTableBuilder(getDialect(), table);
+	}
+
+	public CreateViewBuilder view(String view) {
+		return new CreateViewBuilder(getDialect(), view);
 	}
 
 	public CreateSequenceBuilder sequence(String sequence) {

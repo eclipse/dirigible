@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public interface ISquleKeywords {
-	
+
 	public static final String KEYWORD_SELECT = "SELECT"; //$NON-NLS-1$
 	public static final String KEYWORD_DISTINCT = "DISTINCT"; //$NON-NLS-1$
 	public static final String KEYWORD_FROM = "FROM"; //$NON-NLS-1$
@@ -56,11 +56,12 @@ public interface ISquleKeywords {
 	public static final String KEYWORD_UNIQUE = "UNIQUE"; //$NON-NLS-1$
 	public static final String KEYWORD_COLUMN = "COLUMN"; //$NON-NLS-1$
 	public static final String KEYWORD_ROWS = "ROWS"; //$NON-NLS-1$
-	
+	public static final String KEYWORD_VIEW = "VIEW"; //$NON-NLS-1$
+
 	public static final String FUNCTION_CURRENT_DATE = "CURRENT_DATE"; //$NON-NLS-1$
 	public static final String FUNCTION_CURRENT_TIME = "CURRENT_TIME"; //$NON-NLS-1$
 	public static final String FUNCTION_CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP"; //$NON-NLS-1$
-	
+
 	public static final String COMMA = ","; //$NON-NLS-1$
 	public static final String SPACE = " "; //$NON-NLS-1$
 	public static final String OPEN = "("; //$NON-NLS-1$
@@ -68,7 +69,7 @@ public interface ISquleKeywords {
 	public static final String QUESTION = "?"; //$NON-NLS-1$
 	public static final String EQUALS = "="; //$NON-NLS-1$
 	public static final String UNDERSCROE = "_"; //$NON-NLS-1$
-	
+
 	public static final String METADATA_SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
 	public static final String METADATA_LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
 	public static final String METADATA_GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
@@ -77,6 +78,7 @@ public interface ISquleKeywords {
 	public static final String METADATA_VIEW = "VIEW"; //$NON-NLS-1$
 	public static final String METADATA_TABLE = "TABLE"; //$NON-NLS-1$
 
-	public static final List<String> METADATA_TABLE_TYPES = Collections.unmodifiableList(Arrays.asList(METADATA_TABLE, METADATA_VIEW, METADATA_ALIAS, METADATA_SYNONYM, METADATA_GLOBAL_TEMPORARY, METADATA_LOCAL_TEMPORARY, METADATA_SYSTEM_TABLE));
-	
+	public static final List<String> METADATA_TABLE_TYPES = Collections.unmodifiableList(Arrays.asList(METADATA_TABLE, METADATA_VIEW, METADATA_ALIAS,
+			METADATA_SYNONYM, METADATA_GLOBAL_TEMPORARY, METADATA_LOCAL_TEMPORARY, METADATA_SYSTEM_TABLE));
+
 }
