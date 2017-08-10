@@ -51,6 +51,7 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				engine.eval(Require.CODE);
 				engine.eval("load(\"nashorn:mozilla_compat.js\");");
 				result = engine.eval(code);
+				forceFlush();
 			} catch (ScriptException e) {
 				if ((e.getMessage() != null) && e.getMessage().contains("\"exports\" is not defined")) {
 					throw new ScriptingDependencyException("Requested endpoint is not a service, but rather a library.");

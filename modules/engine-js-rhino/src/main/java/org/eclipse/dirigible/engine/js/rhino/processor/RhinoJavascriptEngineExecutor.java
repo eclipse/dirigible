@@ -60,6 +60,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 				ModuleSource moduleSource = sourceProvider.loadSource(module, null, null);
 				try {
 					result = context.evaluateReader(topLevelScope, moduleSource.getReader(), module, 0, null);
+					forceFlush();
 				} catch (EcmaError e) {
 					logger.error(e.getMessage());
 					if ((e.getMessage() != null) && e.getMessage().contains("\"exports\" is not defined")) {

@@ -32,7 +32,6 @@ public class HttpContextFilter implements Filter {
 				ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
 
 				chain.doFilter(request, response);
-
 			} finally {
 				ThreadContextFacade.tearDown();
 			}
