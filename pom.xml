@@ -365,6 +365,7 @@
 		<module>modules/commons-config</module>
 		<module>modules/commons-process</module>
 		<module>modules/commons-test</module>
+		<module>modules/commons-xml2json</module>
 
 		<module>modules/repository-api</module>
 		<module>modules/repository-api-test</module>

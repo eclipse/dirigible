@@ -44,6 +44,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		TEST_MODULES.add("utils/v3/base64/encode.js");
 		TEST_MODULES.add("utils/v3/base64/decode.js");
+
+		TEST_MODULES.add("utils/v3/xml2json/fromJson.js");
+		TEST_MODULES.add("utils/v3/xml2json/toJson.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
