@@ -27,10 +27,10 @@ import org.slf4j.LoggerFactory;
  * The file system based implementation of {@link IEntity}
  */
 public abstract class LocalEntity implements IEntity {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(LocalEntity.class);
 
-	private final FileSystemRepository repository;
+	private transient final FileSystemRepository repository;
 
 	private final RepositoryPath path;
 
@@ -48,7 +48,8 @@ public abstract class LocalEntity implements IEntity {
 	/**
 	 * Returns the path of this {@link IEntity} represented by an instance of
 	 * {@link RepositoryPath}.
-	 * @return the repository path location 
+	 * 
+	 * @return the repository path location
 	 */
 	protected RepositoryPath getRepositoryPath() {
 		return this.path;
@@ -96,8 +97,10 @@ public abstract class LocalEntity implements IEntity {
 	 * Returns the {@link LocalObject} that matches this entity's path. If there is
 	 * no such object in the real repository, then an {@link RepositoryNotFoundException} is
 	 * thrown.
+	 * 
 	 * @return the {@link LocalObject} that matches this entity's path
-	 * @throws RepositoryNotFoundException If there is no such object in the real repository
+	 * @throws RepositoryNotFoundException
+	 *             If there is no such object in the real repository
 	 */
 	protected LocalObject getLocalObjectSafe() throws RepositoryNotFoundException {
 		final LocalObject result = getLocalObject();

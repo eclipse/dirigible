@@ -16,7 +16,7 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 
 public class Folder implements IFolder {
 
-	private ICollection internal;
+	private transient ICollection internal;
 
 	public Folder(ICollection collection) {
 		this.internal = collection;

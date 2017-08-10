@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
@@ -149,7 +150,8 @@ public class WorkspaceProcessor {
 	}
 
 	public Collection renderTree(ICollection collection) {
-		return RepositoryJsonHelper.traverseCollection(collection, IRepositoryStructure.PATH_USERS, WORKSPACES);
+		return RepositoryJsonHelper.traverseCollection(collection,
+				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), WORKSPACES);
 	}
 
 }

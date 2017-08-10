@@ -14,12 +14,13 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 
 public class File implements IFile {
 
-	private IResource internal;
+	private transient IResource internal;
 
 	public File(IResource resource) {
 		this.internal = resource;
 	}
 
+	@Override
 	public IResource getInternal() {
 		return internal;
 	}

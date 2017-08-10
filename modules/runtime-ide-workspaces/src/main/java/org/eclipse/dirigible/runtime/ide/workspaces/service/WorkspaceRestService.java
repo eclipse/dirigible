@@ -3,6 +3,7 @@ package org.eclipse.dirigible.runtime.ide.workspaces.service;
 import static java.text.MessageFormat.format;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -56,7 +57,11 @@ public class WorkspaceRestService implements IRestService {
 			return Response.status(Status.FORBIDDEN).build();
 		}
 		List<IWorkspace> workspaces = processor.listWorkspaces();
-		return Response.ok().entity(new Gson().toJson(workspaces)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		List<String> workspacesNames = new ArrayList<String>();
+		for (IWorkspace workspace : workspaces) {
+			workspacesNames.add(workspace.getName());
+		}
+		return Response.ok().entity(new Gson().toJson(workspacesNames)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	@GET
@@ -76,14 +81,12 @@ public class WorkspaceRestService implements IRestService {
 		if (!workspaceObject.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.ok().entity(processor.renderTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON)
-				.build();
+		return Response.ok().entity(processor.renderTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	@POST
 	@Path("{workspace}")
-	public Response createWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request)
-			throws URISyntaxException {
+	public Response createWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -121,8 +124,7 @@ public class WorkspaceRestService implements IRestService {
 
 	@GET
 	@Path("{workspace}/{project}")
-	public Response getProject(@PathParam("workspace") String workspace, @PathParam("project") String project,
-			@Context HttpServletRequest request) {
+	public Response getProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request) {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -142,14 +144,13 @@ public class WorkspaceRestService implements IRestService {
 		if (!projectObject.exists()) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.ok().entity(processor.renderTree(projectObject)).type(ContentTypeHelper.APPLICATION_JSON)
-				.build();
+		return Response.ok().entity(processor.renderTree(projectObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	@POST
 	@Path("{workspace}/{project}")
-	public Response createProject(@PathParam("workspace") String workspace, @PathParam("project") String project,
-			@Context HttpServletRequest request) throws URISyntaxException {
+	public Response createProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request)
+			throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -198,8 +199,8 @@ public class WorkspaceRestService implements IRestService {
 
 	@GET
 	@Path("{workspace}/{project}/{path:.*}")
-	public Response getFile(@PathParam("workspace") String workspace, @PathParam("project") String project,
-			@PathParam("path") String path, @Context HttpServletRequest request) {
+	public Response getFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
+			@Context HttpServletRequest request) {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -221,8 +222,7 @@ public class WorkspaceRestService implements IRestService {
 			if (!collection.exists()) {
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			return Response.ok().entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON)
-					.build();
+			return Response.ok().entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
 		if (file.isBinary()) {
 			return Response.ok().entity(file.getContent()).type(file.getContentType()).build();
@@ -232,9 +232,8 @@ public class WorkspaceRestService implements IRestService {
 
 	@POST
 	@Path("{workspace}/{project}/{path:.*}")
-	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project,
-			@PathParam("path") String path, byte[] content, @Context HttpServletRequest request)
-			throws URISyntaxException {
+	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
+			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -253,8 +252,7 @@ public class WorkspaceRestService implements IRestService {
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
 			IFolder folder = processor.getFolder(workspace, project, path);
 			if (folder.exists()) {
-				String error = format("Folder {0} already exists in Project {1} in Workspace {2}.", path, project,
-						workspace);
+				String error = format("Folder {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
 				return Response.status(Status.BAD_REQUEST).entity(error).build();
 			}
 
@@ -274,9 +272,8 @@ public class WorkspaceRestService implements IRestService {
 
 	@PUT
 	@Path("{workspace}/{project}/{path:.*}")
-	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project,
-			@PathParam("path") String path, byte[] content, @Context HttpServletRequest request)
-			throws URISyntaxException {
+	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
+			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -294,8 +291,7 @@ public class WorkspaceRestService implements IRestService {
 
 		IFile file = processor.getFile(workspace, project, path);
 		if (!file.exists()) {
-			String error = format("File {0} does not exists in Project {1} in Workspace {2}.", path, project,
-					workspace);
+			String error = format("File {0} does not exists in Project {1} in Workspace {2}.", path, project, workspace);
 			return Response.status(Status.BAD_REQUEST).entity(error).build();
 		}
 
@@ -305,9 +301,8 @@ public class WorkspaceRestService implements IRestService {
 
 	@DELETE
 	@Path("{workspace}/{project}/{path:.*}")
-	public Response deleteFile(@PathParam("workspace") String workspace, @PathParam("project") String project,
-			@PathParam("path") String path, byte[] content, @Context HttpServletRequest request)
-			throws URISyntaxException {
+	public Response deleteFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
+			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
