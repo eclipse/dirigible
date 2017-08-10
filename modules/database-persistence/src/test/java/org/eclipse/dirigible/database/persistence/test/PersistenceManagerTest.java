@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.persistence.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
@@ -49,6 +50,8 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 			updatePojo(connection, persistenceManager);
 			// delete one record
 			deletePojo(connection, persistenceManager);
+			// delete one record by custom script
+			deleteCustom(connection, persistenceManager);
 			// drop the table
 			dropTableForPojo(connection, persistenceManager);
 		} finally {
@@ -110,7 +113,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	public void queryAll(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 
-		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").toString();
+		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").build();
 
 		List<Customer> list = persistenceManager.query(connection, Customer.class, sql);
 
@@ -130,7 +133,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	public void queryByName(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 
-		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").toString();
+		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
 
 		List<Object> values = new ArrayList<Object>();
 		values.add("Jane");
@@ -171,6 +174,29 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		int result = persistenceManager.delete(connection, Customer.class, 1);
 
 		assertEquals(1, result);
+	}
+
+	public void deleteCustom(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+		Customer customer = new Customer();
+		customer.setId(3);
+		customer.setFirstName("James");
+		customer.setLastName("Smith");
+		customer.setAge(34);
+		persistenceManager.insert(connection, customer);
+
+		customer = persistenceManager.find(connection, Customer.class, 3);
+
+		assertEquals("James", customer.getFirstName());
+
+		String sql = Squle.getNative(connection).delete().from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
+
+		int result = persistenceManager.execute(connection, sql, "James");
+
+		assertEquals(1, result);
+
+		customer = persistenceManager.find(connection, Customer.class, 3);
+
+		assertNull(customer);
 	}
 
 	public void dropTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
