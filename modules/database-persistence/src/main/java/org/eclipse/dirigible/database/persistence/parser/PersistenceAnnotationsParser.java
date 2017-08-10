@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -28,31 +30,32 @@ import javax.persistence.Table;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.squle.DataType;
 import org.eclipse.dirigible.database.squle.DataTypeUtils;
 
 public class PersistenceAnnotationsParser {
-	
+
 	private static final Map<Class, PersistenceTableModel> MODELS_CACHE = Collections.synchronizedMap(new HashMap<Class, PersistenceTableModel>());
-	
+
 	public PersistenceTableModel parsePojo(Object pojo) throws PersistenceException {
 		Class<? extends Object> clazz = pojo.getClass();
 		PersistenceTableModel persistenceTableModel = parseTable(clazz);
 		return persistenceTableModel;
 	}
-	
+
 	public PersistenceTableModel parsePojo(Class<? extends Object> clazz) throws PersistenceException {
 		PersistenceTableModel persistenceTableModel = parseTable(clazz);
 		return persistenceTableModel;
 	}
 
 	private PersistenceTableModel parseTable(Class<? extends Object> clazz) {
-		
+
 		PersistenceTableModel persistenceTableModel = MODELS_CACHE.get(clazz);
-		
+
 		if (persistenceTableModel != null) {
 			return persistenceTableModel;
 		}
-		
+
 		Annotation annotation = clazz.getAnnotation(Table.class);
 		if (annotation == null) {
 			throw new PersistenceException(format("No Table annotation found in Class {0}", clazz));
@@ -67,11 +70,11 @@ public class PersistenceAnnotationsParser {
 		if (table.schema() != null) {
 			persistenceTableModel.setSchemaName(table.schema());
 		}
-		
+
 		parseColumns(clazz, persistenceTableModel);
-		
+
 		MODELS_CACHE.put(clazz, persistenceTableModel);
-		
+
 		return persistenceTableModel;
 	}
 
@@ -88,38 +91,45 @@ public class PersistenceAnnotationsParser {
 			}
 			Column column = (Column) annotationColumn;
 			if (column.name() == null) {
-				throw new PersistenceException(format("Column Name is mandatory, but it is not present in Class [{0}] and Field [{1}]", clazz.getCanonicalName(), field.getName()));
+				throw new PersistenceException(format("Column Name is mandatory, but it is not present in Class [{0}] and Field [{1}]",
+						clazz.getCanonicalName(), field.getName()));
 			}
+			String type = column.columnDefinition();
+			if (type == null) {
+				type = DataTypeUtils.getDatabaseTypeNameByJavaType(field.getType().getClass());
+			}
+			int length = column.length();
+			if ((length == 0) && (DataTypeUtils.getDatabaseTypeByJavaType(field.getType().getClass()) == Types.VARCHAR)) {
+				length = DataTypeUtils.VARCHAR_DEFAULT_LENGTH;
+			}
+			boolean unique = column.unique();
 			// @Id
 			Annotation annotationId = field.getAnnotation(Id.class);
 			boolean primaryKey = annotationId != null;
 			// @GeneratedValue
 			Annotation annotationGeneratedValue = field.getAnnotation(GeneratedValue.class);
 			boolean generated = annotationGeneratedValue != null;
-			String type = column.columnDefinition();
-			if (type == null) {
-				type = DataTypeUtils.getDatabaseTypeNameByJavaType(field.getType().getClass());
+
+			// @Enumerated
+			String enumerated = null;
+			Annotation annotationEnumerated = field.getAnnotation(Enumerated.class);
+			if (annotationEnumerated != null) {
+				Enumerated enumeratedAnnotation = (Enumerated) annotationEnumerated;
+				EnumType enumType = enumeratedAnnotation.value();
+				enumerated = enumType.name();
+				if (EnumType.ORDINAL.equals(enumType)) {
+					type = DataType.INTEGER.name();
+				} else {
+					type = DataType.VARCHAR.name();
+					length = DataTypeUtils.VARCHAR_DEFAULT_LENGTH;
+				}
 			}
-			int length = column.length();
-			if (length == 0 && DataTypeUtils.getDatabaseTypeByJavaType(field.getType().getClass()) == Types.VARCHAR) {
-				length = DataTypeUtils.VARCHAR_DEFAULT_LENGTH;
-			}
-			boolean unique = column.unique();
-			PersistenceTableColumnModel persistenceTableColumnModel = 
-					new PersistenceTableColumnModel(
-							field.getName(),
-							column.name(), 
-							type, 
-							length,
-							column.nullable(),
-							primaryKey,
-							column.precision(),
-							column.scale(),
-							generated,
-							unique);
+
+			PersistenceTableColumnModel persistenceTableColumnModel = new PersistenceTableColumnModel(field.getName(), column.name(), type, length,
+					column.nullable(), primaryKey, column.precision(), column.scale(), generated, unique, enumerated);
 			persistenceModel.getColumns().add(persistenceTableColumnModel);
 		}
-		
+
 	}
 
 }

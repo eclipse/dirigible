@@ -25,7 +25,7 @@ import org.eclipse.dirigible.database.squle.Squle;
 import org.junit.Test;
 
 public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
-	
+
 	@Test
 	public void orderedCrudTests() throws SQLException {
 		PersistenceManager<Customer> persistenceManager = new PersistenceManager<Customer>();
@@ -55,15 +55,15 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 			connection.close();
 		}
 	}
-	
+
 	public void createTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 		persistenceManager.tableCreate(connection, Customer.class);
 	}
-	
+
 	public boolean existsTable(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 		return persistenceManager.tableExists(connection, Customer.class);
 	}
-	
+
 	public void insertPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 		Customer customer = new Customer();
 		customer.setId(1);
@@ -72,7 +72,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		customer.setAge(33);
 		persistenceManager.insert(connection, customer);
 	}
-	
+
 	public void insertSecondPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 		Customer customer = new Customer();
 		customer.setId(2);
@@ -81,128 +81,98 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		customer.setAge(32);
 		persistenceManager.insert(connection, customer);
 	}
-	
+
 	public void findPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
-		Object pojo = persistenceManager.find(connection, Customer.class, 1);
-		
-		assertTrue(pojo instanceof Customer);
-		Customer customer = (Customer) pojo;
+		Customer customer = persistenceManager.find(connection, Customer.class, 1);
 		assertEquals("John", customer.getFirstName());
-		
 	}
-	
+
 	public void findAllPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 		List<Customer> list = persistenceManager.findAll(connection, Customer.class);
-		
+
 		assertNotNull(list);
 		assertFalse(list.isEmpty());
 		assertEquals(1, list.size());
-		Customer pojo = list.get(0);
-		assertTrue(pojo instanceof Customer);
-		Customer customer = (Customer) pojo;
+		Customer customer = list.get(0);
 		assertEquals("John", customer.getFirstName());
-		
+
 		insertSecondPojo(connection, persistenceManager);
-		
+
 		list = persistenceManager.findAll(connection, Customer.class);
-		
+
 		assertNotNull(list);
 		assertFalse(list.isEmpty());
 		assertEquals(2, list.size());
-		pojo = list.get(1);
-		assertTrue(pojo instanceof Customer);
-		customer = (Customer) pojo;
+		customer = list.get(1);
 		assertEquals("Jane", customer.getFirstName());
-		
+
 	}
-	
+
 	public void queryAll(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
-		
-		String sql = Squle.getNative(connection)
-				.select()
-				.column("*")
-				.from("CUSTOMERS")
-				.toString();
-		
+
+		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").toString();
+
 		List<Customer> list = persistenceManager.query(connection, Customer.class, sql);
-		
+
 		assertNotNull(list);
 		assertFalse(list.isEmpty());
 		assertEquals(2, list.size());
-		Customer pojo = list.get(0);
-		assertTrue(pojo instanceof Customer);
-		Customer customer = (Customer) pojo;
+		Customer customer = list.get(0);
 		assertEquals("John", customer.getFirstName());
-		
+
 		assertNotNull(list);
 		assertFalse(list.isEmpty());
 		assertEquals(2, list.size());
-		pojo = list.get(1);
-		assertTrue(pojo instanceof Customer);
-		customer = (Customer) pojo;
+		customer = list.get(1);
 		assertEquals("Jane", customer.getFirstName());
-		
+
 	}
-	
+
 	public void queryByName(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
-		
-		String sql = Squle.getNative(connection)
-				.select()
-				.column("*")
-				.from("CUSTOMERS")
-				.where("CUSTOMER_FIRST_NAME = ?")
-				.toString();
-		
-		
+
+		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").toString();
+
 		List<Object> values = new ArrayList<Object>();
 		values.add("Jane");
-		
+
 		List<Customer> list = persistenceManager.query(connection, Customer.class, sql, values);
-		
+
 		assertNotNull(list);
 		assertFalse(list.isEmpty());
 		assertEquals(1, list.size());
-		Object pojo = list.get(0);
-		assertTrue(pojo instanceof Customer);
-		Customer customer = (Customer) pojo;
+		Customer customer = list.get(0);
 		assertEquals("Jane", customer.getFirstName());
-		
+
 	}
-	
+
 	public void updatePojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
-		Object pojo = persistenceManager.find(connection, Customer.class, 1);
-		
-		assertTrue(pojo instanceof Customer);
-		Customer customer = (Customer) pojo;
+		Customer customer = persistenceManager.find(connection, Customer.class, 1);
+
 		assertEquals("John", customer.getFirstName());
 		assertEquals("Smith", customer.getLastName());
-		
+
 		customer.setLastName("Wayne");
-		
+
 		int result = persistenceManager.update(connection, customer, 1);
-		
+
 		assertEquals(1, result);
-		
-		pojo = persistenceManager.find(connection, Customer.class, 1);
-		
-		assertTrue(pojo instanceof Customer);
-		customer = (Customer) pojo;
+
+		customer = persistenceManager.find(connection, Customer.class, 1);
+
 		assertEquals("John", customer.getFirstName());
 		assertEquals("Wayne", customer.getLastName());
 	}
-	
+
 	public void deletePojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
-		Object pojo = persistenceManager.find(connection, Customer.class, 1);
-		
-		assertTrue(pojo instanceof Customer);
-		Customer customer = (Customer) pojo;
+		Customer customer = persistenceManager.find(connection, Customer.class, 1);
+
 		assertEquals("John", customer.getFirstName());
-		
+
 		int result = persistenceManager.delete(connection, Customer.class, 1);
-		
+
 		assertEquals(1, result);
 	}
-	
+
 	public void dropTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 		persistenceManager.tableDrop(connection, Customer.class);
 	}

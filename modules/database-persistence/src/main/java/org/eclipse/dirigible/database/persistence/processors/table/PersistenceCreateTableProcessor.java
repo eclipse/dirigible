@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import org.eclipse.dirigible.database.persistence.PersistenceException;
-import org.eclipse.dirigible.database.persistence.PersistenceFactory;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
@@ -26,29 +25,63 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		CreateTableBuilder createTableBuilder = Squle.getNative(Squle.deriveDialect(connection))
-				.create()
-				.table(tableModel.getTableName());
+		CreateTableBuilder createTableBuilder = Squle.getNative(Squle.deriveDialect(connection)).create().table(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			DataType dataType = DataType.valueOf(columnModel.getType());
 			switch (dataType) {
-				case VARCHAR: createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case CHAR: createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case DATE: createTableBuilder.columnDate(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case TIME: createTableBuilder.columnTime(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case TIMESTAMP: createTableBuilder.columnTimestamp(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case INTEGER: createTableBuilder.columnInteger(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case BIGINT: createTableBuilder.columnBigint(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case REAL: createTableBuilder.columnReal(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case DOUBLE: createTableBuilder.columnDouble(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case BOOLEAN: createTableBuilder.columnBoolean(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique()); break;
-				case BLOB: createTableBuilder.columnBlob(columnModel.getName(), columnModel.isNullable()); break;
+				case VARCHAR:
+					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
+							columnModel.isNullable(), columnModel.isUnique());
+					break;
+				case CHAR:
+					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
+							columnModel.isNullable(), columnModel.isUnique());
+					break;
+				case DATE:
+					createTableBuilder.columnDate(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case TIME:
+					createTableBuilder.columnTime(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case TIMESTAMP:
+					createTableBuilder.columnTimestamp(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case INTEGER:
+					createTableBuilder.columnInteger(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case TINYINT:
+					createTableBuilder.columnInteger(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case BIGINT:
+					createTableBuilder.columnBigint(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case REAL:
+					createTableBuilder.columnReal(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case DOUBLE:
+					createTableBuilder.columnDouble(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case BOOLEAN:
+					createTableBuilder.columnBoolean(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
+				case BLOB:
+					createTableBuilder.columnBlob(columnModel.getName(), columnModel.isNullable());
+					break;
 			}
 		}
 		String sql = createTableBuilder.toString();
 		return sql;
 	}
-	
+
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
 		String sql = null;

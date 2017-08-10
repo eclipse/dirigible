@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataTypeUtils {
-	
+
 	public static final int VARCHAR_DEFAULT_LENGTH = 512;
-	
+
 	private static final Map<Integer, DataType> DATABASE_TYPE_TO_DATA_TYPE = Collections.synchronizedMap(new HashMap<Integer, DataType>());
 	private static final Map<Class, Integer> JAVA_TYPE_TO_DATABASE_TYPE = Collections.synchronizedMap(new HashMap<Class, Integer>());
 	private static final Map<Integer, Class> DATABASE_TYPE_TO_JAVA_TYPE = Collections.synchronizedMap(new HashMap<Integer, Class>());
@@ -40,7 +40,7 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.DATE, DataType.DATE);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BOOLEAN, DataType.BOOLEAN);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BLOB, DataType.BLOB);
-		
+
 		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.VARCHAR);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Integer.class, Types.INTEGER);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(int.class, Types.INTEGER);
@@ -56,7 +56,7 @@ public class DataTypeUtils {
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Time.class, Types.TIME);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Timestamp.class, Types.TIMESTAMP);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(byte[].class, Types.BLOB);
-		
+
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.VARCHAR, String.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.CHAR, String.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.TIMESTAMP, Timestamp.class);
@@ -71,20 +71,20 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.DATE, Date.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.BOOLEAN, boolean.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.BLOB, byte[].class);
-		
+
 	}
-	
+
 	public static boolean isDatabaseTypeSupported(Integer type) {
 		return DATABASE_TYPE_TO_DATA_TYPE.containsKey(type);
 	}
-	
+
 	public static String getDatabaseTypeName(Integer type) {
 		if (isDatabaseTypeSupported(type)) {
 			return DATABASE_TYPE_TO_DATA_TYPE.get(type).toString();
 		}
 		throw new SquleException(format("Type {0} not supported", type));
 	}
-	
+
 	public static Integer getDatabaseTypeByJavaType(Class clazz) {
 		Integer type = JAVA_TYPE_TO_DATABASE_TYPE.get(clazz);
 		if (type == null) {
@@ -92,7 +92,7 @@ public class DataTypeUtils {
 		}
 		return type;
 	}
-	
+
 	public static Class getJavaTypeByDatabaseType(Integer type) {
 		Class clazz = DATABASE_TYPE_TO_JAVA_TYPE.get(type);
 		if (clazz == null) {
@@ -100,12 +100,12 @@ public class DataTypeUtils {
 		}
 		return clazz;
 	}
-	
+
 	public static String getDatabaseTypeNameByJavaType(Class clazz) {
 		Integer type = getDatabaseTypeByJavaType(clazz);
 		return getDatabaseTypeName(type);
 	}
-	
+
 	public static boolean isBlob(String dataType) {
 		return DataType.BLOB.toString().equals(dataType);
 	}
@@ -130,6 +130,10 @@ public class DataTypeUtils {
 		return DataType.INTEGER.toString().equals(dataType);
 	}
 
+	public static boolean isTinyint(String dataType) {
+		return DataType.TINYINT.toString().equals(dataType);
+	}
+
 	public static boolean isTimestamp(String dataType) {
 		return DataType.TIMESTAMP.toString().equals(dataType);
 	}
@@ -149,5 +153,5 @@ public class DataTypeUtils {
 	public static boolean isVarchar(String dataType) {
 		return DataType.VARCHAR.toString().equals(dataType);
 	}
-	
+
 }
