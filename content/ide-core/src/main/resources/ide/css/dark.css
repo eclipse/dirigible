@@ -48,3 +48,9 @@ nav.navbar {
 .lm_splitter{
 	opacity: inherit;
 }
+
+.logo {
+	padding-left: 8px;
+	
+	color: yellow;
+}

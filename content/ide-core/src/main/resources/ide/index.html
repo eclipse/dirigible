@@ -28,7 +28,7 @@
 	
 	<link type="text/css" rel="stylesheet" href="css/dark.css" />
 	
-	<script src="services/message_hub.js"></script>
+	<script src="ui/message-hub.js"></script>
 	
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -48,7 +48,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#"><img src="img/dirigible-logo-small.png"></a>
+			<a class="navbar-brand" href="#"><img class="logo" src="img/dirigible-logo-small.png"></a>
 		</div>
 
 		<div class="collapse navbar-collapse" id="navbar-collapse">
@@ -74,9 +74,18 @@
 	
 	<div class="shell">
 		<div class="sidebar list-group">
-			<a class="list-group-item" style="padding: 10px;"><i class="fa fa-files-o fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-files-o fa-2x"></i></a>
 			<a class="list-group-item"><i class="fa fa-code-fork fa-2x"></i></a>
-			<a class="list-group-item" style="padding: 10px;"><img src="https://cdn2.iconfinder.com/data/icons/security-2-1/512/debugger-256.png" style="height:2.1rem; width: 2.1rem"/></a>
+			<a class="list-group-item"><i class="fa fa-database fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-sitemap fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-bug fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-object-group fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-area-chart fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-truck fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-user-circle fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-puzzle-piece fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-lock fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-life-ring fa-2x"></i></a>
 		</div>
 	<div class="plane"></div>
 
@@ -94,7 +103,8 @@
 						id:"ws",
 		            	type: 'component',
 		            	componentName: 'Workspace',
-		            	componentState: { label: 'Workspace' }
+		            	componentState: { label: 'Workspace' },
+		            	width: 30
 		        	},{
 						id: 'center',
 		            	type: 'column',
@@ -108,7 +118,7 @@
 								id:"console",
 								type: 'component',
 								componentName: 'Console',
-								componentState: { label: 'Console' }
+								componentState: { label: 'Console' }								
 						}]
 		        }]
 		    }]
@@ -118,11 +128,11 @@
 
 		
 		myLayout.registerComponent( 'Workspace', function( container, componentState ){
-		    container.getElement().html('<iframe src="workspace.html"></iframe>');
+		    container.getElement().html('<iframe src="../ide-workspace/workspace.html"></iframe>');
 		});
 		myLayout.registerComponent( 'Editor', function( container, componentState ){
 			this.setContent = function(path){
-				container.getElement().empty().html( '<iframe src="/services/v3/web/ide-editor-orion/editor.html?file='+path+'"></iframe>' )
+				container.getElement().empty().html( '<iframe src="../ide-editor-orion/editor.html?file='+path+'"></iframe>' )
 			};
 			this.setContent(componentState.path);
 		});

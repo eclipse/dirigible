@@ -20,11 +20,12 @@
 	</scm>
 	
 	<properties>
-		<content.name>ide-workspace</content.name>
+		<content.repository.name>ide-workspace</content.repository.name>
+		<content.project.name>ide-workspace</content.project.name>
 
-		<content.scm.url>https://github.com/dirigiblelabs/${content.name}</content.scm.url>
-		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.name}.git</content.scm.connection>
-		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.name}</content.scm.developerConnection>
+		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
+		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
+		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
 	</properties>
 
 </project>

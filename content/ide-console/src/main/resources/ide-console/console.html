@@ -4,19 +4,19 @@
 		<meta charset="utf-8" />
 		<title>Eclipse Dirigible Log Console</title>
 	</head>
-	<body style="background-color: black; color: #44EE44; font-family: monospace;" onload="connectToLog()">
+	<body style="background-color: #222; color: #44EE44; font-family: monospace; font-size: x-small" onload="connectToLog()">
 		<div id="console">
 			<div id="content"></div>
 		</div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 		<script>
 		var connectToLog = function() {
-			document.body.style.backgroundColor = "black";
+			document.body.style.backgroundColor = "#222";
 			try {
 				var logSocket = new WebSocket(((location.protocol === 'https:') ? "wss://" : "ws://") 
 						+ window.location.host + "/websockets/v3/ide/console");
 			} catch(e) {
-				$("#content").after("<div style='background-color: black; font-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
+				$("#content").after("<div style='background-color: #222; font-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
 				
 			}
 			logSocket.onmessage = function (message) {
@@ -30,7 +30,7 @@
 				
 				var date = new Date(record.timestamp);
 				var id = record.timestamp;
-				$("#content").after("<div id='" + id + "' style='background-color: black; font-family: monospace; color: " + color + "'>[" + date.toISOString() + "]" + " [" + record.level + "] " + record.message + "</div>");
+				$("#content").after("<div id='" + id + "' style='background-color: #222; font-family: monospace; color: " + color + "'>[" + date.toISOString() + "]" + " [" + record.level + "] " + record.message + "</div>");
 				//window.location.hash = "#" + id;				
 			};
 			
@@ -38,8 +38,8 @@
 		}
 		var clear = function() {
 			$("#console").html('<div id="content"></div>');
-			document.body.style.backgroundColor = "black";
-			$("#content").after("<div style='background-color: black; font-family: monospace; color: gray'>[" + new Date().toISOString() + "][cleared]...</div>");
+			document.body.style.backgroundColor = "#222";
+			$("#content").after("<div style='background-color: #222; font-family: monospace; color: gray'>[" + new Date().toISOString() + "][cleared]...</div>");
 		}
 		</script>
 	</body>
