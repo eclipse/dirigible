@@ -66,11 +66,11 @@
             <version>${dirigible.version}</version>
         </dependency>
         
-        <!-- <dependency>
+        <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-content-api-auth</artifactId>
             <version>${dirigible.version}</version>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-content-api-core</artifactId>
@@ -84,11 +84,6 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-content-api-utils</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-content-api-auth</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
     </dependencies>

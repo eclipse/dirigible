@@ -35,16 +35,20 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		TEST_MODULES.add("auth/v3/user/getName.js");
 
+		TEST_MODULES.add("core/v3/env/get.js");
+		TEST_MODULES.add("core/v3/env/list.js");
+		TEST_MODULES.add("core/v3/globals/get.js");
+		TEST_MODULES.add("core/v3/globals/list.js");
+		TEST_MODULES.add("core/v3/context/get.js");
+
 		TEST_MODULES.add("http/v3/request/getMethod.js");
 		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
 		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
 		TEST_MODULES.add("http/v3/request/getServerName.js");
-
 		TEST_MODULES.add("http/v3/response/getHeaderNames.js");
 
 		TEST_MODULES.add("utils/v3/base64/encode.js");
 		TEST_MODULES.add("utils/v3/base64/decode.js");
-
 		TEST_MODULES.add("utils/v3/xml2json/fromJson.js");
 		TEST_MODULES.add("utils/v3/xml2json/toJson.js");
 	}
@@ -85,9 +89,14 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	}
 
 	private Object runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
-		InputStream in = AbstractApiSuiteTest.class.getResourceAsStream(IRepositoryStructure.SEPARATOR + testModule);
-		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + testModule,
-				IOUtils.readBytesFromStream(in));
+
+		try {
+			InputStream in = AbstractApiSuiteTest.class.getResourceAsStream(IRepositoryStructure.SEPARATOR + testModule);
+			repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + testModule,
+					IOUtils.readBytesFromStream(in));
+		} catch (RepositoryWriteException e) {
+			throw new IOException(IRepositoryStructure.SEPARATOR + testModule, e);
+		}
 		Object result = executor.executeServiceModule(testModule, null);
 		return result;
 	}
