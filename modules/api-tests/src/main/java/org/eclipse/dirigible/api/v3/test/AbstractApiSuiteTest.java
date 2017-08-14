@@ -37,9 +37,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		TEST_MODULES.add("core/v3/env/get.js");
 		TEST_MODULES.add("core/v3/env/list.js");
-		TEST_MODULES.add("core/v3/globals/get.js");
-		TEST_MODULES.add("core/v3/globals/list.js");
-		TEST_MODULES.add("core/v3/context/get.js");
+		// TEST_MODULES.add("core/v3/globals/get.js");
+		// TEST_MODULES.add("core/v3/globals/list.js");
+		// TEST_MODULES.add("core/v3/context/get.js");
 
 		TEST_MODULES.add("http/v3/request/getMethod.js");
 		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
