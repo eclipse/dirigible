@@ -7,15 +7,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Eclipse Dirigible - IDE</title>
+    <title>Eclipse Dirigible &trade;</title>
 
-	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=QEM5AeRA72">
-	<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=QEM5AeRA72">
-	<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=QEM5AeRA72">
-	<link rel="manifest" href="manifest.json?v=QEM5AeRA72">
-	<link rel="mask-icon" href="safari-pinned-tab.svg?v=QEM5AeRA72" color="#f0c165">
-	<link rel="shortcut icon" href="http://localhost:8080/favicon.ico?v=QEM5AeRA72">
-	<meta name="theme-color" content="#8afac4">
+	<link rel="shortcut icon" type="image/png" href="img/favicon.png" />
 	
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -48,7 +42,9 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#"><img class="logo" src="img/dirigible-logo-small.png"></a>
+			<a class="navbar-brand" href="#">
+				<i class="logo-icon icon-dirigible" style="color: #ffcc00">&#xe800;</i>
+			</a>
 		</div>
 
 		<div class="collapse navbar-collapse" id="navbar-collapse">
@@ -82,8 +78,8 @@
 			<a class="list-group-item"><i class="fa fa-object-group fa-2x"></i></a>
 			<a class="list-group-item"><i class="fa fa-area-chart fa-2x"></i></a>
 			<a class="list-group-item"><i class="fa fa-truck fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-user-circle fa-2x"></i></a>
 			<a class="list-group-item"><i class="fa fa-puzzle-piece fa-2x"></i></a>
+			<a class="list-group-item"><i class="fa fa-user fa-2x"></i></a>
 			<a class="list-group-item"><i class="fa fa-lock fa-2x"></i></a>
 			<a class="list-group-item"><i class="fa fa-life-ring fa-2x"></i></a>
 		</div>
@@ -132,7 +128,17 @@
 		});
 		myLayout.registerComponent( 'Editor', function( container, componentState ){
 			this.setContent = function(path){
-				container.getElement().empty().html( '<iframe src="../ide-editor-orion/editor.html?file='+path+'"></iframe>' )
+				if (path) {
+					container.getElement().empty().html( '<iframe src="../ide-editor-orion/editor.html?file='+path+'"></iframe>' );
+				} else {
+					container.setTitle( 'Welcome' );
+					container.getElement().empty().html( '<h1>Welcome to Eclipse Dirigible &trade;</h1><br><br><br>'
+					 + '<p style="font-size: 1.2em"><a href="http://www.dirigible.io" target=_blank>Eclipse Dirigible &trade;</a> is a Cloud Development Platform providing development tools and runtime environment. It supports full development life-cycle of on-demand applications by leveraging in-system programming models and rapid application development techniques.</p><br><br>'
+					 + '<p style="font-size: 1.2em">All the source code is licensed under the <a href="https://www.eclipse.org/legal/epl-v10.html" target=_blank>Eclipse Public License - v 1.0</a> and maintained at <a href="https://github.com/eclipse/dirigible" target=_blank>GitHub</a></p><br><br><br><br>'
+					 + '<div style="width: 32em"><p style="font-size: 2em" align=center><i class="logo-icon icon-dirigible">&#xe800;</i> &nbsp; dirigible</p>'
+					 + '<p style="font-size: 1.4em" align=center>Enjoy Programming Like Never Before</p></div>');
+				}
+				
 			};
 			this.setContent(componentState.path);
 		});
