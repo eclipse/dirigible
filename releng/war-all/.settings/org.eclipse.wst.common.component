@@ -20,6 +20,9 @@
         <dependent-module archiveName="dirigible-api-utils-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-utils/dirigible-api-utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-commons-xml2json-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-xml2json/dirigible-commons-xml2json">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-repository-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-api/dirigible-repository-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -50,9 +53,6 @@
         <dependent-module archiveName="dirigible-database-derby-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-derby/dirigible-database-derby">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-managed-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-managed/dirigible-database-managed">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="dirigible-core-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-extensions/dirigible-core-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -81,9 +81,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-extensions/dirigible-runtime-extensions">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-git/dirigible-runtime-git">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-databases-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-databases/dirigible-runtime-databases">
@@ -135,6 +132,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-content-api-utils-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-api-utils/dirigible-content-api-utils">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-content-api-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-api-auth/dirigible-content-api-auth">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-content-ide-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-core/dirigible-content-ide-core">

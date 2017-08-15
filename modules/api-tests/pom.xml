@@ -35,8 +35,18 @@
             <version>${dirigible.version}</version>
         </dependency>
         <dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-test</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
+        <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-test</artifactId>
+            <artifactId>dirigible-database-api</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-api</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
         <dependency>

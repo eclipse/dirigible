@@ -131,25 +131,39 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
 		Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
-		if (columnModel.getEnumerated() != null) {
-			if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL) && (value instanceof Integer)) {
-				if (field.getType().isEnum()) {
-					value = field.getType().getEnumConstants()[(Integer) value];
+		try {
+			if (columnModel.getEnumerated() != null) {
+				if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL) && (value instanceof Integer)) {
+					if (field.getType().isEnum()) {
+						value = field.getType().getEnumConstants()[(Integer) value];
+					} else {
+						throw new IllegalStateException("The annotation @Enumerated is set to a field with a type, which is not an enum type.");
+					}
+				} else if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.STRING) && (value instanceof String)) {
+					if (field.getType().isEnum()) {
+						value = Enum.valueOf((Class<Enum>) field.getType(), (String) value);
+					} else {
+						throw new IllegalStateException("The annotation @Enumerated is set to a field with a type, which is not an enum type.");
+					}
 				} else {
-					throw new IllegalStateException("The annotation @Enumerated is set to a field with a type, which is not an enum type.");
+					throw new IllegalStateException("The annotation @Enumerated is missused, the value is unknown.");
 				}
-			} else if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.STRING) && (value instanceof String)) {
-				if (field.getType().isEnum()) {
-					value = Enum.valueOf((Class<Enum>) field.getType(), (String) value);
-				} else {
-					throw new IllegalStateException("The annotation @Enumerated is set to a field with a type, which is not an enum type.");
-				}
-			} else {
-				throw new IllegalStateException("The annotation @Enumerated is missused, the value is unknown.");
 			}
+			field.set(pojo, value);
+		} finally {
+			resetAccesible(field, oldAccessible);
 		}
-		field.set(pojo, value);
-		resetAccesible(field, oldAccessible);
+	}
+
+	protected Object getValueFromPojo(Object pojo, PersistenceTableColumnModel columnModel)
+			throws NoSuchFieldException, SQLException, IllegalAccessException {
+		Field field = pojo.getClass().getDeclaredField(columnModel.getField());
+		boolean oldAccessible = setAccessible(field);
+		try {
+			return field.get(pojo);
+		} finally {
+			resetAccesible(field, oldAccessible);
+		}
 	}
 
 	protected PreparedStatement openPreparedStatement(Connection connection, String sql) throws SQLException {

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +19,8 @@ import org.apache.cxf.helpers.IOUtils;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
+import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -30,6 +33,18 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	private static List<String> TEST_MODULES = new ArrayList<String>();
 
+	@Inject
+	private IExtensionsCoreService extensionsCoreService;
+
+	@Inject
+	private IRepository repository;
+
+	@Before
+	public void setUp() throws Exception {
+		this.extensionsCoreService = getInjector().getInstance(ExtensionsCoreService.class);
+		this.repository = getInjector().getInstance(IRepository.class);
+	}
+
 	@Before
 	public void registerModules() {
 
@@ -37,9 +52,11 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		TEST_MODULES.add("core/v3/env/get.js");
 		TEST_MODULES.add("core/v3/env/list.js");
-		// TEST_MODULES.add("core/v3/globals/get.js");
-		// TEST_MODULES.add("core/v3/globals/list.js");
-		// TEST_MODULES.add("core/v3/context/get.js");
+		TEST_MODULES.add("core/v3/globals/get.js");
+		TEST_MODULES.add("core/v3/globals/list.js");
+		TEST_MODULES.add("core/v3/context/get.js");
+		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
+		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
 
 		TEST_MODULES.add("http/v3/request/getMethod.js");
 		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
