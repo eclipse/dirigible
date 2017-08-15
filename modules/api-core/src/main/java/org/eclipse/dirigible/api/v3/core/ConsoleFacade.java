@@ -59,51 +59,51 @@ public class ConsoleFacade {
 	}
 
 	public static void error(Object message) {
-		console.error(message != null ? message.toString() : null);
+		console.error(message != null ? message.toString() : "null");
 	}
 
 	public static void info(Object message) {
-		console.info(message != null ? message.toString() : null);
+		console.info(message != null ? message.toString() : "null");
 	}
 
 	public static void log(Object message) {
-		console.info(message != null ? message.toString() : null);
+		console.info(message != null ? message.toString() : "null");
 	}
 
 	public static void warn(Object message) {
-		console.warn(message != null ? message.toString() : null);
+		console.warn(message != null ? message.toString() : "null");
 	}
 
 	public static void debug(Object message) {
-		console.debug(message != null ? message.toString() : null);
+		console.debug(message != null ? message.toString() : "null");
 	}
 
 	public static void trace(Object message) {
-		console.trace(message != null ? message.toString() : null);
+		console.trace(message != null ? message.toString() : "null");
 	}
 
 	public static void error(ArrayList message) {
-		console.error(message != null ? message.toString() : null);
+		console.error(message != null ? message.toString() : "null");
 	}
 
 	public static void info(ArrayList message) {
-		console.info(message != null ? message.toString() : null);
+		console.info(message != null ? message.toString() : "null");
 	}
 
 	public static void log(ArrayList message) {
-		console.info(message != null ? message.toString() : null);
+		console.info(message != null ? message.toString() : "null");
 	}
 
 	public static void warn(ArrayList message) {
-		console.warn(message != null ? message.toString() : null);
+		console.warn(message != null ? message.toString() : "null");
 	}
 
 	public static void debug(ArrayList message) {
-		console.debug(message != null ? message.toString() : null);
+		console.debug(message != null ? message.toString() : "null");
 	}
 
 	public static void trace(ArrayList message) {
-		console.trace(message != null ? message.toString() : null);
+		console.trace(message != null ? message.toString() : "null");
 	}
 
 }
