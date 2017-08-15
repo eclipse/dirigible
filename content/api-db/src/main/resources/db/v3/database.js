@@ -13,26 +13,26 @@
 var java = require('core/v3/java');
 
 exports.getDatabaseTypes = function() {
-	var types = java.call('org.eclipse.dirigible.api.v3.db.DatabasesFacade', 'getDatabaseTypes', []);
+	var types = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getDatabaseTypes', []);
 	return types;
 };
 
 exports.getDataSources = function(databaseType) {
-	var datasources = java.call('org.eclipse.dirigible.api.v3.db.DatabasesFacade', 'getDataSources', [databaseType]);
+	var datasources = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getDataSources', [databaseType]);
 	return datasources;
 };
 
 exports.getMetadata = function(databaseType, datasourceName) {
-	var metadata = java.call('org.eclipse.dirigible.api.v3.db.DatabasesFacade', 'getMetadata', [databaseType, datasourceName]);
+	var metadata = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getMetadata', [databaseType, datasourceName]);
 	return metadata;
 };
 
 exports.query = function(databaseType, datasourceName, sql, parameters) {
-	var resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabasesFacade', 'query', [databaseType, datasourceName]);
+	var resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'query', [databaseType, datasourceName]);
 	return resultset;
 };
 
 exports.update = function(databaseType, datasourceName, sql, parameters) {
-	var result = java.call('org.eclipse.dirigible.api.v3.db.DatabasesFacade', 'update', [databaseType, datasourceName]);
+	var result = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'update', [databaseType, datasourceName]);
 	return result;
 };

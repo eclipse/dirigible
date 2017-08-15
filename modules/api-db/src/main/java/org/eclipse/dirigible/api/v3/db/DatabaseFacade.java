@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-public class DatabasesFacade implements IScriptingFacade {
+public class DatabaseFacade implements IScriptingFacade {
 
-	private static final Logger logger = LoggerFactory.getLogger(DatabasesFacade.class);
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
 
 	private static IDatabase database = StaticInjector.getInjector().getInstance(IDatabase.class);;
 
