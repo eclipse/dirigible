@@ -3,6 +3,7 @@ package org.eclipse.dirigible.engine.js.v8.callbacks;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.dirigible.api.v3.core.JavaFacade;
@@ -20,17 +21,24 @@ public class JavaV8Call implements JavaCallback {
 		int i = 0;
 		String className = (String) parameters.get(i++);
 		String methodName = (String) parameters.get(i++);
-		Object[] params = new Object[parameters.length() - 2];
+		List<Object> params = new ArrayList<Object>();
 		for (int j = i; j < parameters.length(); j++) {
-			V8Array param = (V8Array) parameters.get(j);
-			params[j - 2] = V8ObjectUtils.getValue(param, 0);
-			param.release();
+			V8Array paramArray = (V8Array) parameters.get(j);
+			List<Object> paramList = V8ObjectUtils.toList(paramArray);
+			for (Object param : paramList) {
+				params.add(param);
+			}
+			paramArray.release();
 		}
-		if ((params.length == 1) && params[0].equals(V8.getUndefined())) {
-			params = new Object[] {};
+		Iterator<Object> iterator = params.iterator();
+		while (iterator.hasNext()) {
+			Object param = iterator.next();
+			if (param.equals(V8.getUndefined())) {
+				iterator.remove();
+			}
 		}
 		try {
-			Object result = JavaFacade.call(className, methodName, params);
+			Object result = JavaFacade.call(className, methodName, params.toArray(new Object[] {}));
 			if ((result != null) && result.getClass().isArray()) {
 				List<Object> list = new ArrayList<>();
 				for (int j = 0; j < Array.getLength(result); j++) {
