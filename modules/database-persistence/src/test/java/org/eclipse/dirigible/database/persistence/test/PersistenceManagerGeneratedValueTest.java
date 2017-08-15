@@ -61,9 +61,9 @@ public class PersistenceManagerGeneratedValueTest extends AbstractPersistenceMan
 	}
 	
 	public void insertSecondPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
-		Order customer = new Order();
-		customer.setSubject("Subject 2");
-		persistenceManager.insert(connection, customer);
+		Order order = new Order();
+		order.setSubject("Subject 2");
+		persistenceManager.insert(connection, order);
 	}
 	
 	public void findAllPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {

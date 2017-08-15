@@ -39,11 +39,12 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
-			result = setGeneratedValues(connection, tableModel, pojo);
+			setGeneratedValues(connection, tableModel, pojo);
 			sql = generateScript(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			setValuesFromPojo(tableModel, pojo, preparedStatement);
 			preparedStatement.executeUpdate();
+			result = getPrimaryKeyValue(tableModel, pojo);
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
 		} finally {
@@ -52,17 +53,25 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		return result;
 	}
 
-	private Object setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
+	private void setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			if (columnModel.isGenerated()) {
+			if (columnModel.isPrimaryKey() && columnModel.isGenerated()) {
 				PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor = new PersistenceNextValueSequenceProcessor();
 				long id = persistenceNextValueSequenceProcessor.nextval(connection, tableModel);
 				setValueToPojo(pojo, id, columnModel);
-				return id;
 			}
 		}
-		return -1;
+	}
+
+	private Object getPrimaryKeyValue(PersistenceTableModel tableModel, Object pojo)
+			throws NoSuchFieldException, IllegalAccessException, SQLException {
+		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+			if (columnModel.isPrimaryKey()) {
+				return getValueFromPojo(pojo, columnModel);
+			}
+		}
+		return null;
 	}
 
 }
