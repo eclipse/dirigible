@@ -137,9 +137,9 @@ public class PersistenceManager<T> {
 	 *            the database connection
 	 * @param pojo
 	 *            the POJO instance
-	 * @return the result status of the insert statement execution
+	 * @return the id of the pojo just inserted
 	 */
-	public int insert(Connection connection, Object pojo) {
+	public Object insert(Connection connection, Object pojo) {
 		tableCheck(connection, pojo.getClass());
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(pojo);
 		PersistenceInsertProcessor insertProcessor = new PersistenceInsertProcessor();

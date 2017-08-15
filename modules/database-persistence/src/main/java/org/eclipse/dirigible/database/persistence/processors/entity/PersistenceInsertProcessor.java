@@ -26,26 +26,24 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		InsertBuilder insertBuilder = Squle.getNative(Squle.deriveDialect(connection))
-				.insert()
-				.into(tableModel.getTableName());
+		InsertBuilder insertBuilder = Squle.getNative(Squle.deriveDialect(connection)).insert().into(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			insertBuilder.column(columnModel.getName());
 		}
 		String sql = insertBuilder.toString();
 		return sql;
 	}
-	
-	public int insert(Connection connection, PersistenceTableModel tableModel, Object pojo) throws PersistenceException {
-		int result = 0;
+
+	public Object insert(Connection connection, PersistenceTableModel tableModel, Object pojo) throws PersistenceException {
+		Object result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
-			setGeneratedValues(connection, tableModel, pojo);
+			result = setGeneratedValues(connection, tableModel, pojo);
 			sql = generateScript(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			setValuesFromPojo(tableModel, pojo, preparedStatement);
-			result = preparedStatement.executeUpdate();
+			preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
 		} finally {
@@ -54,16 +52,17 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		return result;
 	}
 
-	private void setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo) throws NoSuchFieldException, IllegalAccessException, SQLException {
+	private Object setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
+			throws NoSuchFieldException, IllegalAccessException, SQLException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isGenerated()) {
 				PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor = new PersistenceNextValueSequenceProcessor();
 				long id = persistenceNextValueSequenceProcessor.nextval(connection, tableModel);
 				setValueToPojo(pojo, id, columnModel);
-				break;
+				return id;
 			}
 		}
-		
+		return -1;
 	}
 
 }
