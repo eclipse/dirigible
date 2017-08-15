@@ -8,10 +8,13 @@
         <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-config/dirigible-commons-config">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-core/dirigible-api-core">
+        <dependent-module archiveName="dirigible-api-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-auth/dirigible-api-auth">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-commons-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-api/dirigible-commons-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-api-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-core/dirigible-api-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-http-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-http/dirigible-api-http">
@@ -23,6 +26,9 @@
         <dependent-module archiveName="dirigible-commons-xml2json-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-xml2json/dirigible-commons-xml2json">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-api-db-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-db/dirigible-api-db">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-repository-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-api/dirigible-repository-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -30,9 +36,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-repository-local-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-local/dirigible-repository-local">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-api-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-auth/dirigible-api-auth">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-repository-master-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-master/dirigible-repository-master">
@@ -135,6 +138,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-content-api-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-api-auth/dirigible-content-api-auth">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-content-api-db-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-api-db/dirigible-content-api-db">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-content-ide-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-content-ide-core/dirigible-content-ide-core">

@@ -39,6 +39,7 @@
 		<module>api-http</module>
 		<module>api-utils</module>
 		<module>api-auth</module>
+		<module>api-db</module>
 
 		<!-- Content - IDE -->
 		<module>ide-core</module>

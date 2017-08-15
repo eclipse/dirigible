@@ -5,7 +5,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.Filter;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.Filter;
 
 public class DatabaseMetadata {
 	

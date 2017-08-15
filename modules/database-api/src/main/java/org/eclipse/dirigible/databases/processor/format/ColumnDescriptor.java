@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.databases.processor.format;
+package org.eclipse.dirigible.databases.processor.format;
 
 public class ColumnDescriptor {
 

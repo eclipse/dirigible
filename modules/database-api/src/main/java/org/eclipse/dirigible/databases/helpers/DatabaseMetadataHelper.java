@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.database.api.metadata;
+package org.eclipse.dirigible.databases.helpers;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -7,15 +7,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.Filter;
+import javax.sql.DataSource;
+
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
+import org.eclipse.dirigible.database.api.metadata.SchemaMetadata;
+import org.eclipse.dirigible.database.api.metadata.TableMetadata;
 import org.eclipse.dirigible.database.squle.ISquleDialect;
 import org.eclipse.dirigible.database.squle.Squle;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseMetadataHelper {
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadataHelper.class);
+
 	public static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
 	public static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
 	public static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
@@ -27,7 +33,7 @@ public class DatabaseMetadataHelper {
 	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
 	private static final String PRCNT = "%"; //$NON-NLS-1$
-	
+
 	private static final String COLUMN_NAME = "COLUMN_NAME"; //$NON-NLS-1$
 	private static final String TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
 	private static final String COLUMN_SIZE = "COLUMN_SIZE"; //$NON-NLS-1$
@@ -44,17 +50,17 @@ public class DatabaseMetadataHelper {
 	private static final String CARDINALITY = "CARDINALITY"; //$NON-NLS-1$
 	private static final String PAGES_INDEX = "PAGES"; //$NON-NLS-1$
 	private static final String FILTER_CONDITION = "FILTER_CONDITION"; //$NON-NLS-1$
-	
+
 	public interface Filter<T> {
 		boolean accepts(T t);
 	}
-	
+
 	private static ISquleDialect getDialect(Connection connection) {
 		return Squle.deriveDialect(connection);
 	}
-	
-	public static List<SchemaMetadata> listSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> tableNameFilter)
-			throws SQLException {
+
+	public static List<SchemaMetadata> listSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter,
+			Filter<String> tableNameFilter) throws SQLException {
 
 		DatabaseMetaData dmd = connection.getMetaData();
 
@@ -101,7 +107,7 @@ public class DatabaseMetadataHelper {
 
 		return result;
 	}
-	
+
 	public static List<TableMetadata> listTables(Connection connection, String catalogName, String schemeName, Filter<String> tableNameFilter)
 			throws SQLException {
 
@@ -190,5 +196,23 @@ public class DatabaseMetadataHelper {
 			pks.close();
 		}
 	}
-	
+
+	public static String getMetadataAsJson(DataSource dataSource) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			DatabaseMetadata database = new DatabaseMetadata(connection, null, null, null);
+			String json = GsonHelper.GSON.toJson(database);
+			return json;
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
+	}
+
 }

@@ -75,6 +75,11 @@
             <artifactId>dirigible-api-utils</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-db</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -94,6 +99,11 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-content-api-utils</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-content-api-db</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
     </dependencies>

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -12,31 +11,27 @@ import java.util.StringTokenizer;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper;
-import org.eclipse.dirigible.runtime.databases.helpers.DatabaseQueryHelper;
-import org.eclipse.dirigible.runtime.databases.helpers.DatabaseQueryHelper.RequestExecutionCallback;
-import org.eclipse.dirigible.runtime.databases.processor.format.ResultSetStringWriter;
+import org.eclipse.dirigible.databases.helpers.DatabaseQueryHelper;
+import org.eclipse.dirigible.databases.helpers.DatabaseQueryHelper.RequestExecutionCallback;
+import org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Processing the Database SQL Queries Service incoming requests 
- *
+ * Processing the Database SQL Queries Service incoming requests
  */
 public class DatabaseProcessor {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseProcessor.class);
-	
+
 	private static final String SCRIPT_DELIMITER = ";";
 	private boolean LIMITED = true;
-	
+
 	@Inject
 	private IDatabase database;
-	
+
 	public boolean existsDatabase(String type, String name) {
 		DataSource dataSource = getDataSource(type, name);
 		return dataSource != null;
@@ -45,7 +40,7 @@ public class DatabaseProcessor {
 	public List<String> getDatabaseTypes() {
 		return DatabaseModule.getDatabaseTypes();
 	}
-	
+
 	public Set<String> getDataSources(String type) {
 		return DatabaseModule.getDataSources(type);
 	}
@@ -63,7 +58,7 @@ public class DatabaseProcessor {
 		}
 		return dataSource;
 	}
-	
+
 	public String executeQuery(String type, String name, String sql) {
 		DataSource dataSource = getDataSource(type, name);
 		if (dataSource != null) {
@@ -88,7 +83,7 @@ public class DatabaseProcessor {
 
 		List<String> results = new ArrayList<String>();
 		List<String> errors = new ArrayList<String>();
-		
+
 		StringTokenizer tokenizer = new StringTokenizer(sql, SCRIPT_DELIMITER);
 		while (tokenizer.hasMoreTokens()) {
 			String line = tokenizer.nextToken();
@@ -108,7 +103,7 @@ public class DatabaseProcessor {
 					@Override
 					public void queryDone(ResultSet rs) {
 						try {
-							results.add(printResultSet(rs, LIMITED));
+							results.add(DatabaseResultSetHelper.printResultSet(rs, LIMITED));
 						} catch (SQLException e) {
 							logger.warn(e.getMessage(), e);
 							errors.add(e.getMessage());
@@ -139,31 +134,5 @@ public class DatabaseProcessor {
 		}
 		return String.join("\n", results);
 	}
-	
-	protected String printResultSet(ResultSet resultSet, boolean limited) throws SQLException {
-		ResultSetStringWriter writer = new ResultSetStringWriter();
-		writer.setLimited(limited);
-		String tableString = writer.writeTable(resultSet);
-		return tableString;
-	}
 
-	public String getMetadataAsJson(String type, String name) throws SQLException {
-		DataSource dataSource = getDataSource(type, name);
-		Connection connection = null;
-		try {
-			connection = dataSource.getConnection();
-			DatabaseMetadata database = new DatabaseMetadata(connection, null, null, null);
-			String json = GsonHelper.GSON.toJson(database);
-			return json;
-		} finally {
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					logger.warn(e.getMessage(), e);
-				}
-			}
-		}
-	}
-	
 }

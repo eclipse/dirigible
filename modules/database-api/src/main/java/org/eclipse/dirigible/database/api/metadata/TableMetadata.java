@@ -5,8 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.ColumnsIteratorCallback;
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.IndicesIteratorCallback;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.ColumnsIteratorCallback;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.IndicesIteratorCallback;
 
 import com.google.gson.JsonObject;
 

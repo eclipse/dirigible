@@ -11,12 +11,12 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper;
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.ColumnsIteratorCallback;
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadataHelper.IndicesIteratorCallback;
 import org.eclipse.dirigible.database.api.metadata.SchemaMetadata;
 import org.eclipse.dirigible.database.api.metadata.TableMetadata;
 import org.eclipse.dirigible.database.derby.DerbyDatabase;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.ColumnsIteratorCallback;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.IndicesIteratorCallback;
 import org.junit.Before;
 import org.junit.Test;
 

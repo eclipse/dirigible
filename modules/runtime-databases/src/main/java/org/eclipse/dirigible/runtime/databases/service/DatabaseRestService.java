@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.runtime.databases.processor.DatabaseProcessor;
 
 import io.swagger.annotations.Api;
@@ -82,7 +83,7 @@ public class DatabaseRestService implements IRestService {
 			String error = format("DataSource {0} of Type {1} not known.", name, type);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
-		String metadata = processor.getMetadataAsJson(type, name);
+		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 		return Response.ok().entity(metadata).build();
 
 	}

@@ -58,6 +58,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
 		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
 
+		TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
+
 		TEST_MODULES.add("http/v3/request/getMethod.js");
 		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
 		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
@@ -109,6 +111,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		try {
 			InputStream in = AbstractApiSuiteTest.class.getResourceAsStream(IRepositoryStructure.SEPARATOR + testModule);
+			if (in == null) {
+				throw new IOException(IRepositoryStructure.SEPARATOR + testModule + " does not exist");
+			}
 			repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + testModule,
 					IOUtils.readBytesFromStream(in));
 		} catch (RepositoryWriteException e) {

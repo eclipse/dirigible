@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.runtime.databases.helpers;
+package org.eclipse.dirigible.databases.helpers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
