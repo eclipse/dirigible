@@ -229,7 +229,7 @@ public class SelectTest {
 			.select()
 			.column("*")
 			.from("CUSTOMERS")
-			.where(Squle.getDefault().expr().and("PRICE > ?").or("AMOUNT < ?").build())
+			.where(Squle.getDefault().expression().and("PRICE > ?").or("AMOUNT < ?").build())
 			.build();
 		
 		assertNotNull(sql);

@@ -32,7 +32,7 @@ public interface ISqule<SELECT extends SelectBuilder, INSERT extends InsertBuild
 
 	public DELETE delete();
 
-	public ExpressionBuilder expr();
+	public ExpressionBuilder expression();
 
 	public CREATE create();
 

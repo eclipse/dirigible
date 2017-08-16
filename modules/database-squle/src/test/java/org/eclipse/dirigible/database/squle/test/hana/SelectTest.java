@@ -230,7 +230,7 @@ public class SelectTest {
 			.select()
 			.column("*")
 			.from("CUSTOMERS")
-			.where(Squle.getNative(new HanaSquleDialect()).expr().and("PRICE > ?").or("AMOUNT < ?").build())
+			.where(Squle.getNative(new HanaSquleDialect()).expression().and("PRICE > ?").or("AMOUNT < ?").build())
 			.build();
 		
 		assertNotNull(sql);

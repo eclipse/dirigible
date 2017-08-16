@@ -46,7 +46,7 @@ public class DefaultSquleDialect<SELECT extends SelectBuilder, INSERT extends In
 		return (DELETE) new DeleteBuilder(this);
 	}
 
-	public ExpressionBuilder expr() {
+	public ExpressionBuilder expression() {
 		return new ExpressionBuilder(this);
 	}
 

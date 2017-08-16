@@ -80,8 +80,8 @@ public class Squle<SELECT extends SelectBuilder, INSERT extends InsertBuilder, U
 	}
 
 	@Override
-	public ExpressionBuilder expr() {
-		return this.dialect.expr();
+	public ExpressionBuilder expression() {
+		return this.dialect.expression();
 	}
 
 	@Override

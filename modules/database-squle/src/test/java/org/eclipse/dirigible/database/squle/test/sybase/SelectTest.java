@@ -230,7 +230,7 @@ public class SelectTest {
 			.select()
 			.column("*")
 			.from("CUSTOMERS")
-			.where(Squle.getNative(new SybaseSquleDialect()).expr().and("PRICE > ?").or("AMOUNT < ?").build())
+			.where(Squle.getNative(new SybaseSquleDialect()).expression().and("PRICE > ?").or("AMOUNT < ?").build())
 			.build();
 		
 		assertNotNull(sql);

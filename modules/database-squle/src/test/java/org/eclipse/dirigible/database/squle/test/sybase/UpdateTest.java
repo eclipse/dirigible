@@ -80,7 +80,7 @@ public class UpdateTest {
 				.table("CUSTOMERS")
 				.set("FIRST_NAME", "'John'")
 				.set("LAST_NAME", "'Smith'")
-				.where(Squle.getNative(new SybaseSquleDialect()).expr().and("PRICE > ?").or("AMOUNT < ?").and("COMPANY = 'SAP'").build())
+				.where(Squle.getNative(new SybaseSquleDialect()).expression().and("PRICE > ?").or("AMOUNT < ?").and("COMPANY = 'SAP'").build())
 				.build();
 			
 			assertNotNull(sql);

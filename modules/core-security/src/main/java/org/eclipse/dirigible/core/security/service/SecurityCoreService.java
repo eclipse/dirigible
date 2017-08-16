@@ -329,7 +329,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 						.from("DIRIGIBLE_SECURITY_ACCESS")
 						.where("ACCESS_URI = ?")
 						.where(Squle.getNative(connection)
-								.expr().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
+								.expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
 						.toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, method, AccessDefinition.METHOD_ANY);
 			} finally {
@@ -354,7 +354,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 						.where("ACCESS_URI = ?")
 						.where("ACCESS_ROLE = ?")
 						.where(Squle.getNative(connection)
-								.expr().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
+								.expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
 						.toString();
 				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method, AccessDefinition.METHOD_ANY);
 				return !access.isEmpty();
