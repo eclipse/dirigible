@@ -103,7 +103,7 @@ public class DatabaseProcessor {
 					@Override
 					public void queryDone(ResultSet rs) {
 						try {
-							results.add(DatabaseResultSetHelper.printResultSet(rs, LIMITED));
+							results.add(DatabaseResultSetHelper.print(rs, LIMITED));
 						} catch (SQLException e) {
 							logger.warn(e.getMessage(), e);
 							errors.add(e.getMessage());

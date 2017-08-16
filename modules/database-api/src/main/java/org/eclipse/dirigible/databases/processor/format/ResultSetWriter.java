@@ -5,6 +5,6 @@ import java.sql.SQLException;
 
 public interface ResultSetWriter<T> {
 
-	T writeTable(ResultSet rs) throws SQLException;
+	T write(ResultSet rs) throws SQLException;
 	
 }

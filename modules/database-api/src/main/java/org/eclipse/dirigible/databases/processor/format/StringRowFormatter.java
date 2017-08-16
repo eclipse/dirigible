@@ -17,7 +17,7 @@ public class StringRowFormatter implements RowFormatter<String> {
 	@Override
 	public String write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException {
 		StringBuilder buff = new StringBuilder();
-		buff.append(ResultSetStringWriter.DELIMITER);
+		buff.append(ResultSetMonospacedWriter.DELIMITER);
 		for (ColumnDescriptor columnDescriptor : columnDescriptors) {
 
 			String value = null;
@@ -52,10 +52,10 @@ public class StringRowFormatter implements RowFormatter<String> {
 			}
 
 			buff.append(value);
-			buff.append(ResultSetStringWriter.DELIMITER);
+			buff.append(ResultSetMonospacedWriter.DELIMITER);
 
 		}
-		buff.append(ResultSetStringWriter.NEWLINE_CHARACTER);
+		buff.append(ResultSetMonospacedWriter.NEWLINE_CHARACTER);
 		return buff.toString();
 	}
 

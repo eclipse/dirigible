@@ -95,9 +95,11 @@ public class DatabaseFacade implements IScriptingFacade {
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			try {
-				setParameters(parameters, preparedStatement);
+				if (parameters != null) {
+					setParameters(parameters, preparedStatement);
+				}
 				ResultSet resultSet = preparedStatement.executeQuery();
-				return DatabaseResultSetHelper.printResultSet(resultSet, true);
+				return DatabaseResultSetHelper.toJson(resultSet, true);
 			} finally {
 				if (preparedStatement != null) {
 					preparedStatement.close();
@@ -118,6 +120,10 @@ public class DatabaseFacade implements IScriptingFacade {
 		return query(null, null, sql, parameters);
 	}
 
+	public static final String query(String sql) throws SQLException {
+		return query(null, null, sql, null);
+	}
+
 	public static final int update(String databaseType, String datasourceName, String sql, String parameters) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -128,7 +134,9 @@ public class DatabaseFacade implements IScriptingFacade {
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			try {
-				setParameters(parameters, preparedStatement);
+				if (parameters != null) {
+					setParameters(parameters, preparedStatement);
+				}
 				return preparedStatement.executeUpdate();
 			} finally {
 				if (preparedStatement != null) {
@@ -150,6 +158,10 @@ public class DatabaseFacade implements IScriptingFacade {
 		return update(null, null, sql, parameters);
 	}
 
+	public static final int update(String sql) throws SQLException {
+		return update(null, null, sql, null);
+	}
+
 	private static void setParameters(String parameters, PreparedStatement preparedStatement) throws SQLException {
 		JsonElement parametersElement = GsonHelper.PARSER.parse(parameters);
 		if (parametersElement instanceof JsonArray) {
@@ -162,7 +174,7 @@ public class DatabaseFacade implements IScriptingFacade {
 					if (parameterElement.getAsJsonPrimitive().isBoolean()) {
 						preparedStatement.setBoolean(i++, parameterElement.getAsBoolean());
 					} else if (parameterElement.getAsJsonPrimitive().isNumber()) {
-						preparedStatement.setObject(i++, parameterElement.getAsNumber());
+						preparedStatement.setObject(i++, parameterElement.getAsNumber().toString());
 					} else if (parameterElement.getAsJsonPrimitive().isString()) {
 						preparedStatement.setString(i++, parameterElement.getAsString());
 					} else {

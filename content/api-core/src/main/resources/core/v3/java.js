@@ -12,6 +12,13 @@
 
 exports.call = function(className, methodName, params) {
 	var result = null;
+	if (Array.isArray(params)) {
+		for (var i = 0; i < params.length; i++) {
+			if (Array.isArray(params[i])) {
+				params[i] = JSON.stringify(params[i]);
+			}
+		}
+	}
 	if (engine === "rhino") {
 		result = org.eclipse.dirigible.api.v3.core.JavaFacade.call(className, methodName, params);
 	} else if (engine === "nashorn") {

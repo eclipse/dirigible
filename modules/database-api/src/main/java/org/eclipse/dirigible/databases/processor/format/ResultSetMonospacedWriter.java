@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResultSetStringWriter implements ResultSetWriter<String> {
+public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
+
+	private static final int LIMIT = 100;
 
 	private static final String EMPTY_RESULT_SET = "Empty result set";
 	public static final String DELIMITER = "|"; //$NON-NLS-1$
@@ -26,9 +28,9 @@ public class ResultSetStringWriter implements ResultSetWriter<String> {
 	}
 
 	@Override
-	public String writeTable(ResultSet resultSet) throws SQLException {
+	public String write(ResultSet resultSet) throws SQLException {
 
-		StringBuilder tableSb = new StringBuilder();
+		StringBuilder buffer = new StringBuilder();
 
 		List<ColumnDescriptor> columnHeaderDescriptors = new ArrayList<ColumnDescriptor>();
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
@@ -43,49 +45,49 @@ public class ResultSetStringWriter implements ResultSetWriter<String> {
 
 			for (String headerForRow : headersForRow) {
 
-				ColumnDescriptor colDescr = new ColumnDescriptor();
+				ColumnDescriptor columnDescriptor = new ColumnDescriptor();
 
-				colDescr.setName(headerForRow);
+				columnDescriptor.setName(headerForRow);
 
-				int colindex = this.getColumIndexByName(colDescr.getName(), resultSetMetaData);
+				int columnIndex = this.getColumIndexByName(columnDescriptor.getName(), resultSetMetaData);
 
-				colDescr.setLabel(resultSetMetaData.getColumnLabel(colindex));
-				if (colDescr.getLabel() == null) {
-					colDescr.setLabel(colDescr.getName());
+				columnDescriptor.setLabel(resultSetMetaData.getColumnLabel(columnIndex));
+				if (columnDescriptor.getLabel() == null) {
+					columnDescriptor.setLabel(columnDescriptor.getName());
 				}
 
-				colDescr.setSqlType(resultSetMetaData.getColumnType(colindex));
+				columnDescriptor.setSqlType(resultSetMetaData.getColumnType(columnIndex));
 
-				int displaySize = resultSetMetaData.getColumnDisplaySize(colindex);
+				int displaySize = resultSetMetaData.getColumnDisplaySize(columnIndex);
 				if (displaySize > 256) {
 					displaySize = 256;
 				}
-				colDescr.setDisplaySize(displaySize);
-				if (colDescr.getDisplaySize() < colDescr.getName().length()) {
-					colDescr.setDisplaySize(colDescr.getName().length());// make sure headers never get truncated
+				columnDescriptor.setDisplaySize(displaySize);
+				if (columnDescriptor.getDisplaySize() < columnDescriptor.getName().length()) {
+					columnDescriptor.setDisplaySize(columnDescriptor.getName().length());// make sure headers never get truncated
 				}
 
-				if (!columnHeaderDescriptors.contains(colDescr)) {
-					columnHeaderDescriptors.add(colDescr);
+				if (!columnHeaderDescriptors.contains(columnDescriptor)) {
+					columnHeaderDescriptors.add(columnDescriptor);
 				}
 			}
 
-			tableSb.append(this.rowFormat.write(columnHeaderDescriptors, resultSetMetaData, resultSet));
+			buffer.append(this.rowFormat.write(columnHeaderDescriptors, resultSetMetaData, resultSet));
 
-			if (this.isLimited() && (++count > 100)) {
-				tableSb.append("..."); //$NON-NLS-1$
+			if (this.isLimited() && (++count > LIMIT)) {
+				buffer.append("..."); //$NON-NLS-1$
 				break;
 			}
 		}
 
 		if (columnHeaderDescriptors.size() > 0) {
 			String headers = (String) this.headerFormat.write(columnHeaderDescriptors);
-			tableSb.insert(0, headers);
+			buffer.insert(0, headers);
 		} else {
-			tableSb.append(EMPTY_RESULT_SET);
+			buffer.append(EMPTY_RESULT_SET);
 		}
 
-		return tableSb.toString();
+		return buffer.toString();
 	}
 
 	int getColumIndexByName(String columnName, ResultSetMetaData metadata) throws SQLException {
