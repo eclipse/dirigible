@@ -46,6 +46,8 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 			queryAll(connection, persistenceManager);
 			// make a bit more complicated query
 			queryByName(connection, persistenceManager);
+			// more complicated query with var args
+			queryByNameVarArgs(connection, persistenceManager);
 			// update one record
 			updatePojo(connection, persistenceManager);
 			// delete one record
@@ -139,6 +141,20 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		values.add("Jane");
 
 		List<Customer> list = persistenceManager.query(connection, Customer.class, sql, values);
+
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertEquals(1, list.size());
+		Customer customer = list.get(0);
+		assertEquals("Jane", customer.getFirstName());
+
+	}
+
+	public void queryByNameVarArgs(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+
+		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
+
+		List<Customer> list = persistenceManager.query(connection, Customer.class, sql, "Jane");
 
 		assertNotNull(list);
 		assertFalse(list.isEmpty());

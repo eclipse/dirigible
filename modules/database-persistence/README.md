@@ -131,8 +131,14 @@ It uses some of the standard JPA annotations, but it is different in some aspect
 	PersistenceManager<Customer> persistenceManager = new PersistenceManager<Customer>();
 	Connection connection = ...getConnection();
 	try {
-		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
-		List<Customer> list = persistenceManager.query(connection, Customer.class, sql);
+		String sql = Squle.getNative(connection)
+			.select()
+			.column("*")
+			.from("CUSTOMERS")
+			.where("CUSTOMER_FIRST_NAME = ?")
+			.build();
+
+		List<Customer> list = persistenceManager.query(connection, Customer.class, sql, "John");
 	} finally {
 		connection.close();
 	}
