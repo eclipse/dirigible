@@ -15,17 +15,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name="ORDERS")
+@Table(name = "ORDERS")
 public class Order {
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="ORDER_ID", columnDefinition="BIGINT", nullable=false)
+	@Column(name = "ORDER_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
-	
-	@Column(name="CUSTOMER_SUBJECT", columnDefinition="VARCHAR", nullable=false, length=512)
+
+	@Column(name = "CUSTOMER_SUBJECT", columnDefinition = "VARCHAR", nullable = false, length = 512)
 	private String subject;
-	
+
 	public long getId() {
 		return id;
 	}
@@ -42,5 +42,4 @@ public class Order {
 		this.subject = subject;
 	}
 
-	
 }

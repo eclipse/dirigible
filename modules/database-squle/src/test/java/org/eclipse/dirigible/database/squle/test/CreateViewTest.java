@@ -21,8 +21,13 @@ public class CreateViewTest extends CreateTableTest {
 	@Test
 	public void createViewAsSelect() {
 		createTableGeneric();
-		String sql = Squle.getDefault().create().view("CUSTOMERS_VIEW").column("ID").column("FIRST_NAME").column("LAST_NAME")
-				.asSelect(Squle.getDefault().select().column("*").from("CUSTOMERS").build()).build();
+		String sql = Squle.getDefault()
+				.create().view("CUSTOMERS_VIEW")
+				.column("ID")
+				.column("FIRST_NAME")
+				.column("LAST_NAME")
+				.asSelect(Squle.getDefault().select().column("*").from("CUSTOMERS").build())
+				.build();
 
 		assertNotNull(sql);
 		assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);

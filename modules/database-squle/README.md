@@ -4,6 +4,8 @@
 
 The **Squle** module provides a builder for defining SQL scripts.
 
+It is inspired by the Javascript library [Squel](https://hiddentao.com/squel/), but not limited to its features nor striving for compatibility.
+
 It aims at achieving:
 
 * Type safe methods for the respective builders
@@ -135,6 +137,100 @@ It is purely text generation and formating library without a requirement for an 
 
 > SELECT COUNTRY FROM CUSTOMERS UNION SELECT COUNTRY FROM SUPPLIERS
 
+### Create Table
 
+```java
+
+	String sql = Squle.getDefault()
+				.create()
+				.table("CUSTOMERS")
+				.column("ID", DataType.INTEGER, Modifiers.PRIMARY_KEY, Modifiers.NOT_NULL, Modifiers.NON_UNIQUE)
+				.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
+				.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+				.build();
+				
+```
+
+> CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )
+
+### Create View
+
+```java
+
+	String sql = Squle.getDefault()
+				.create().view("CUSTOMERS_VIEW")
+				.column("ID")
+				.column("FIRST_NAME")
+				.column("LAST_NAME")
+				.asSelect(Squle.getDefault().select().column("*").from("CUSTOMERS").build())
+				.build();
+				
+```
+
+> CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS
+
+### Insert Record
+
+```java
+
+	tring sql = Squle.getDefault()
+			.insert()
+			.into("CUSTOMERS")
+			.column("FIRST_NAME")
+			.column("LAST_NAME")
+			.build();
+			
+```
+
+> INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)
+
+### Update Record
+
+```java
+
+	String sql = Squle.getDefault()
+				.update()
+				.table("CUSTOMERS")
+				.set("FIRST_NAME", "'John'")
+				.set("LAST_NAME", "'Smith'")
+				.where("AGE > ?")
+				.where("COMPANY = 'SAP'")
+				.build();
+				
+```
+
+> UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (AGE > ?) AND (COMPANY = 'SAP')
+
+### Delete Record
+
+```java
+
+	String sql = Squle.getDefault()
+				.delete()
+				.from("CUSTOMERS")
+				.where("AGE > ?")
+				.where("COMPANY = 'SAP'")
+				.build();
+				
+```
+
+> DELETE FROM CUSTOMERS WHERE (AGE > ?) AND (COMPANY = 'SAP')
+
+### Drop Table
+
+```java
+
+	String sql = Squle.getNative(new PostgresSquleDialect())
+			.drop()
+			.table("CUSTOMERS")
+			.build();
+			
+```
+
+> DROP TABLE CUSTOMERS
+
+More samples are available under the test folder of the project.
+
+For the complete yet simplified POJO based database manipulation you might want to see the **Persistence** module
 
 
