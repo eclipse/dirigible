@@ -23,7 +23,7 @@ public class PersistenceTableColumnModel {
 	private boolean primaryKey;
 	private int precision;
 	private int scale;
-	private boolean generated;
+	private String generated;
 	private boolean unique;
 	private String enumerated;
 
@@ -54,7 +54,7 @@ public class PersistenceTableColumnModel {
 	 *            whether it is enumerated
 	 */
 	public PersistenceTableColumnModel(String field, String name, String type, int length, boolean nullable, boolean primaryKey, int precision,
-			int scale, boolean generated, boolean unique, String enumerated) {
+			int scale, String generated, boolean unique, String enumerated) {
 		this.field = field;
 		this.name = name;
 		this.type = type;
@@ -225,7 +225,7 @@ public class PersistenceTableColumnModel {
 	 *
 	 * @return true if generated
 	 */
-	public boolean isGenerated() {
+	public String getGenerated() {
 		return generated;
 	}
 
@@ -235,7 +235,7 @@ public class PersistenceTableColumnModel {
 	 * @param generated
 	 *            whether it is generated
 	 */
-	public void setGenerated(boolean generated) {
+	public void setGenerated(String generated) {
 		this.generated = generated;
 	}
 

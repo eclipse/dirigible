@@ -10,11 +10,15 @@
 
 package org.eclipse.dirigible.database.persistence;
 
+import static java.text.MessageFormat.format;
+
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import javax.persistence.GenerationType;
 
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
@@ -23,6 +27,7 @@ import org.eclipse.dirigible.database.persistence.processors.entity.PersistenceE
 import org.eclipse.dirigible.database.persistence.processors.entity.PersistenceInsertProcessor;
 import org.eclipse.dirigible.database.persistence.processors.entity.PersistenceQueryProcessor;
 import org.eclipse.dirigible.database.persistence.processors.entity.PersistenceUpdateProcessor;
+import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceCreateIdentityProcessor;
 import org.eclipse.dirigible.database.persistence.processors.sequence.PersistenceCreateSequenceProcessor;
 import org.eclipse.dirigible.database.persistence.processors.sequence.PersistenceDropSequenceProcessor;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCreateTableProcessor;
@@ -57,9 +62,16 @@ public class PersistenceManager<T> {
 	public int tableCreate(Connection connection, Class<T> clazz) {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			if (columnModel.isGenerated()) {
-				PersistenceCreateSequenceProcessor persistenceCreateSequenceProcessor = new PersistenceCreateSequenceProcessor();
-				persistenceCreateSequenceProcessor.create(connection, tableModel);
+			if (columnModel.getGenerated() != null) {
+				if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
+					PersistenceCreateSequenceProcessor persistenceCreateSequenceProcessor = new PersistenceCreateSequenceProcessor();
+					persistenceCreateSequenceProcessor.create(connection, tableModel);
+				} else if (GenerationType.TABLE.name().equals(columnModel.getGenerated())) {
+					PersistenceCreateIdentityProcessor persistenceCreateIdentityProcessor = new PersistenceCreateIdentityProcessor();
+					persistenceCreateIdentityProcessor.create(connection, tableModel);
+				} else {
+					throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", columnModel.getGenerated()));
+				}
 				break;
 			}
 		}
@@ -79,7 +91,7 @@ public class PersistenceManager<T> {
 	public int tableDrop(Connection connection, Class<T> clazz) {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			if (columnModel.isGenerated()) {
+			if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
 				PersistenceDropSequenceProcessor persistenceDropSequenceProcessor = new PersistenceDropSequenceProcessor();
 				persistenceDropSequenceProcessor.drop(connection, tableModel);
 				break;
@@ -162,6 +174,24 @@ public class PersistenceManager<T> {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
 		return queryProcessor.find(connection, tableModel, clazz, id);
+	}
+
+	/**
+	 * Getter for the single POJO instance and locks it for update
+	 *
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
+	 * @param id
+	 *            the primary key field's value
+	 * @return a POJO instance
+	 */
+	public T lock(Connection connection, Class<T> clazz, Object id) {
+		tableCheck(connection, clazz);
+		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
+		return queryProcessor.lock(connection, tableModel, clazz, id);
 	}
 
 	/**

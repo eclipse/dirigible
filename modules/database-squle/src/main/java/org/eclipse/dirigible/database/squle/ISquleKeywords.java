@@ -57,6 +57,7 @@ public interface ISquleKeywords {
 	public static final String KEYWORD_COLUMN = "COLUMN"; //$NON-NLS-1$
 	public static final String KEYWORD_ROWS = "ROWS"; //$NON-NLS-1$
 	public static final String KEYWORD_VIEW = "VIEW"; //$NON-NLS-1$
+	public static final String KEYWORD_FOR_UPDATE = "FOR UPDATE"; //$NON-NLS-1$
 
 	public static final String FUNCTION_CURRENT_DATE = "CURRENT_DATE"; //$NON-NLS-1$
 	public static final String FUNCTION_CURRENT_TIME = "CURRENT_TIME"; //$NON-NLS-1$

@@ -10,14 +10,19 @@
 
 package org.eclipse.dirigible.database.persistence.processors.entity;
 
+import static java.text.MessageFormat.format;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import javax.persistence.GenerationType;
 
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
+import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.persistence.processors.sequence.PersistenceNextValueSequenceProcessor;
 import org.eclipse.dirigible.database.squle.Squle;
 import org.eclipse.dirigible.database.squle.builders.records.InsertBuilder;
@@ -56,9 +61,17 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	private void setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			if (columnModel.isPrimaryKey() && columnModel.isGenerated()) {
-				PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor = new PersistenceNextValueSequenceProcessor();
-				long id = persistenceNextValueSequenceProcessor.nextval(connection, tableModel);
+			if (columnModel.isPrimaryKey() && (columnModel.getGenerated() != null)) {
+				long id = -1;
+				if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
+					PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor = new PersistenceNextValueSequenceProcessor();
+					id = persistenceNextValueSequenceProcessor.nextval(connection, tableModel);
+				} else if (GenerationType.TABLE.name().equals(columnModel.getGenerated())) {
+					PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor = new PersistenceNextValueIdentityProcessor();
+					id = persistenceNextValueIdentityProcessor.nextval(connection, tableModel);
+				} else {
+					throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", columnModel.getGenerated()));
+				}
 				setValueToPojo(pojo, id, columnModel);
 			}
 		}

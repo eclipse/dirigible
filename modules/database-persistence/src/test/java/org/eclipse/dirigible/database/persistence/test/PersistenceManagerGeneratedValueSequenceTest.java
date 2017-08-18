@@ -22,11 +22,11 @@ import java.util.List;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.junit.Test;
 
-public class PersistenceManagerGeneratedValueTest extends AbstractPersistenceManagerTest {
-	
+public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersistenceManagerTest {
+
 	@Test
-	public void orderedCrudTests() throws SQLException {
-		PersistenceManager<Order> persistenceManager = new PersistenceManager<Order>();
+	public void inquiryedCrudTests() throws SQLException {
+		PersistenceManager<Inquiry> persistenceManager = new PersistenceManager<Inquiry>();
 		Connection connection = getDataSrouce().getConnection();
 		try {
 			// create table
@@ -45,44 +45,42 @@ public class PersistenceManagerGeneratedValueTest extends AbstractPersistenceMan
 			connection.close();
 		}
 	}
-	
-	public void createTableForPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
-		persistenceManager.tableCreate(connection, Order.class);
+
+	public void createTableForPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
+		persistenceManager.tableCreate(connection, Inquiry.class);
 	}
-	
-	public boolean existsTable(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
-		return persistenceManager.tableExists(connection, Order.class);
+
+	public boolean existsTable(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
+		return persistenceManager.tableExists(connection, Inquiry.class);
 	}
-	
-	public void insertPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
-		Order order = new Order();
-		order.setSubject("Subject 1");
-		persistenceManager.insert(connection, order);
+
+	public void insertPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
+		Inquiry inquiry = new Inquiry();
+		inquiry.setSubject("Subject 1");
+		persistenceManager.insert(connection, inquiry);
 	}
-	
-	public void insertSecondPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
-		Order order = new Order();
-		order.setSubject("Subject 2");
-		persistenceManager.insert(connection, order);
+
+	public void insertSecondPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
+		Inquiry inquiry = new Inquiry();
+		inquiry.setSubject("Subject 2");
+		persistenceManager.insert(connection, inquiry);
 	}
-	
-	public void findAllPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
-		List<Order> list = persistenceManager.findAll(connection, Order.class);
-		
+
+	public void findAllPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
+		List<Inquiry> list = persistenceManager.findAll(connection, Inquiry.class);
+
 		assertNotNull(list);
 		assertFalse(list.isEmpty());
 		assertEquals(2, list.size());
-		Order pojo = list.get(0);
-		assertTrue(pojo instanceof Order);
-		Order order = (Order) pojo;
-		assertEquals("Subject 1", order.getSubject());
-		
-		System.out.println(order.getId());
-		
+		Inquiry inquiry = list.get(0);
+		assertEquals("Subject 1", inquiry.getSubject());
+
+		System.out.println(inquiry.getId());
+
 	}
-	
-	public void dropTableForPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
-		persistenceManager.tableDrop(connection, Order.class);
+
+	public void dropTableForPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
+		persistenceManager.tableDrop(connection, Inquiry.class);
 	}
 
 }

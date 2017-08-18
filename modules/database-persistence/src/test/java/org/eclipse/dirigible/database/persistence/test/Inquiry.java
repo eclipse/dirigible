@@ -12,18 +12,19 @@ package org.eclipse.dirigible.database.persistence.test;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name = "ORDERS")
-public class Order {
+@Table(name = "INQUIRIES")
+public class Inquiry {
 
 	@Id
-	@GeneratedValue
-	@Column(name = "ORDER_ID", columnDefinition = "BIGINT", nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "INQUIRY_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
 
-	@Column(name = "ORDER_SUBJECT", columnDefinition = "VARCHAR", nullable = false, length = 512)
+	@Column(name = "INQUIRY_SUBJECT", columnDefinition = "VARCHAR", nullable = false, length = 512)
 	private String subject;
 
 	public long getId() {

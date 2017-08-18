@@ -194,6 +194,10 @@ It uses some of the standard JPA annotations, but it is different in some aspect
 
 #### POJO Order with a generated field **id**
 
+Default strategy is **TABLE**. In case of **SEQUENCE** you can use ```@GeneratedValue(strategy = GenerationType.SEQUENCE)```. **AUTO** is considered **TABLE**, while **IDENTITY** is not supported.
+
+While the default strategy is the **TABLE** for better compatibility with the different databases, it is highly recommended to use **SEQUENCE**, if possible.
+
 ```java
 
 	@Table(name = "ORDERS")

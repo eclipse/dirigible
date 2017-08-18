@@ -24,6 +24,7 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -107,8 +108,19 @@ public class PersistenceAnnotationsParser {
 			Annotation annotationId = field.getAnnotation(Id.class);
 			boolean primaryKey = annotationId != null;
 			// @GeneratedValue
+			String generated = null;
 			Annotation annotationGeneratedValue = field.getAnnotation(GeneratedValue.class);
-			boolean generated = annotationGeneratedValue != null;
+			if (annotationGeneratedValue != null) {
+				GeneratedValue generatedValue = (GeneratedValue) annotationGeneratedValue;
+				if ((generatedValue.strategy() == null) || GenerationType.AUTO.equals(generatedValue.strategy())) {
+					generated = GenerationType.TABLE.name();
+				} else {
+					if (!GenerationType.SEQUENCE.equals(generatedValue.strategy()) && !GenerationType.TABLE.equals(generatedValue.strategy())) {
+						throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", generatedValue.strategy().name()));
+					}
+					generated = generatedValue.strategy().name();
+				}
+			}
 
 			// @Enumerated
 			String enumerated = null;

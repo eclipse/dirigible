@@ -8,38 +8,36 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.database.persistence.test;
+package org.eclipse.dirigible.database.persistence.processors.identity;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name = "ORDERS")
-public class Order {
+@Table(name = "DIRIGIBLE_IDENTITY")
+public class Identity {
 
 	@Id
-	@GeneratedValue
-	@Column(name = "ORDER_ID", columnDefinition = "BIGINT", nullable = false)
-	private long id;
+	@Column(name = "IDENTITY_TABLE", columnDefinition = "VARCHAR", nullable = false, length = 512)
+	private String table;
 
-	@Column(name = "ORDER_SUBJECT", columnDefinition = "VARCHAR", nullable = false, length = 512)
-	private String subject;
+	@Column(name = "IDENTITY_VALUE", columnDefinition = "BIGINT", nullable = false)
+	private long value;
 
-	public long getId() {
-		return id;
+	public String getTable() {
+		return table;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setTable(String table) {
+		this.table = table;
 	}
 
-	public String getSubject() {
-		return subject;
+	public long getValue() {
+		return value;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setValue(long value) {
+		this.value = value;
 	}
 
 }
