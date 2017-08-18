@@ -54,12 +54,6 @@
             <artifactId>dirigible-database-managed</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
-		
-		<dependency>
-		    <groupId>org.apache.cxf</groupId>
-		    <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
-		    <version>${cxf.version}</version>
-		</dependency>		        
     </dependencies>
 
 </project>

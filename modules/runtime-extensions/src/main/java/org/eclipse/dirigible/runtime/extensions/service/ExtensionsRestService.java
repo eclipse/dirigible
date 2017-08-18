@@ -29,6 +29,7 @@ import io.swagger.annotations.Authorization;
 @Singleton
 @Path("/core/extensions")
 @Api(value = "Core - Extensions", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class ExtensionsRestService implements IRestService {
 
 	@Inject
@@ -37,10 +38,8 @@ public class ExtensionsRestService implements IRestService {
 	@GET
 	@Path("/")
 	@Produces("application/json")
-	@ApiOperation(value = "List all the Extension Points with their Extensions")
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "List of Extension Points", response = ExtensionPoint.class, responseContainer = "List"),
-			@ApiResponse(code = 401, message = "Unauthorized"), })
+	@ApiOperation("List all the Extension Points with their Extensions")
+	@ApiResponses({ @ApiResponse(code = 200, message = "List of Extension Points", response = ExtensionPoint.class, responseContainer = "List") })
 	public Response listExtensionPoints() throws ExtensionsException {
 		return Response.ok().entity(processor.renderExtensionPoints()).build();
 	}
@@ -48,11 +47,10 @@ public class ExtensionsRestService implements IRestService {
 	@GET
 	@Path("/{name}")
 	@Produces("application/json")
-	@ApiOperation(value = "Returns the Extension Point with their Extensions requested by its name")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
-			@ApiResponse(code = 401, message = "Unauthorized"),
+	@ApiOperation("Returns the Extension Point with their Extensions requested by its name")
+	@ApiResponses({ @ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
 			@ApiResponse(code = 404, message = "Extension Point with the requested name does not exist") })
-	public Response getExtensionPoint(@ApiParam(value = "name of the ExtensionPoint", required = true) @PathParam("name") String name)
+	public Response getExtensionPoint(@ApiParam(value = "Name of the ExtensionPoint", required = true) @PathParam("name") String name)
 			throws ExtensionsException {
 		String json = processor.renderExtensionPoint(name);
 		if (json == null) {

@@ -14,17 +14,25 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.registry.processor.RegistryProcessor;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+
 /**
  * Front facing REST service serving the raw repository content
  */
 @Singleton
+@Path("/core/registry")
+@Api(value = "Core - Registry", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class RegistryRestService implements IRestService {
-	
+
 	@Inject
 	private RegistryProcessor processor;
-	
+
 	@GET
-	@Path("/core/registry/{path:.*}")
+	@Path("/path:.*}")
 	public Response getResource(@PathParam("path") String path) {
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
@@ -39,7 +47,7 @@ public class RegistryRestService implements IRestService {
 		}
 		return Response.ok(new String(resource.getContent())).type(resource.getContentType()).build();
 	}
-	
+
 	@Override
 	public Class<? extends IRestService> getType() {
 		return RegistryRestService.class;

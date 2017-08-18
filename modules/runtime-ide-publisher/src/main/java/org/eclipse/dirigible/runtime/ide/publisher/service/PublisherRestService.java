@@ -26,12 +26,21 @@ import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.runtime.ide.publisher.processor.PublisherProcessor;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+
 /**
  * Front facing REST service serving the raw repository content
  */
 @Singleton
 @Path("/ide/publisher")
 @RolesAllowed({ "Developer" })
+@Api(value = "IDE - Publish", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class PublisherRestService implements IRestService {
 
 	@Inject
@@ -44,7 +53,10 @@ public class PublisherRestService implements IRestService {
 
 	@POST
 	@Path("request/{workspace}/{path:.*}")
-	public Response requestPublishing(@PathParam("workspace") String workspace, @PathParam("path") String path, @Context HttpServletRequest request)
+	@ApiOperation("Publish Workspace Resources")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
+	public Response requestPublishing(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Resource Path") @PathParam("path") String path, @Context HttpServletRequest request)
 			throws PublisherException, URISyntaxException {
 		String user = request.getRemoteUser();
 		if (user == null) {

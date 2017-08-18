@@ -18,10 +18,19 @@ import org.eclipse.dirigible.engine.js.nashorn.processor.NashornJavascriptEngine
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+
 /**
  * Front facing REST service serving the Nashorn based Javascript backend services
  */
 @Singleton
+@Path("/nashorn")
+@Api(value = "JavaScript Engine - Nashorn", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class NashornJavascriptEngineRestService implements IRestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(NashornJavascriptEngineRestService.class.getCanonicalName());
@@ -35,8 +44,10 @@ public class NashornJavascriptEngineRestService implements IRestService {
 	 * @return resource content
 	 */
 	@GET
-	@Path("/nashorn/{path:.*}")
+	@Path("/{path:.*}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
 			processor.executeService(path);

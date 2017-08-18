@@ -31,12 +31,19 @@ import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor
 
 import com.google.gson.Gson;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+
 /**
  * Front facing REST service serving the raw repository content
  */
 @Singleton
 @Path("/ide/workspaces")
 @RolesAllowed({ "Developer" })
+@Api(value = "IDE - Workspace", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class WorkspaceRestService implements IRestService {
 
 	@Inject

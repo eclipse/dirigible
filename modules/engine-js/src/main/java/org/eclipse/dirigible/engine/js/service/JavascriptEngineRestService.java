@@ -2,13 +2,10 @@ package org.eclipse.dirigible.engine.js.service;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -18,10 +15,19 @@ import org.eclipse.dirigible.engine.js.processor.JavascriptEngineProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+
 /**
  * Front facing REST service serving the Javascript backend services
  */
 @Singleton
+@Path("/js")
+@Api(value = "JavaScript Engine", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class JavascriptEngineRestService implements IRestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(JavascriptEngineRestService.class.getCanonicalName());
@@ -31,13 +37,14 @@ public class JavascriptEngineRestService implements IRestService {
 
 	/**
 	 * @param path
-	 * @param request
 	 * @return resource content
 	 */
 	@GET
-	@Path("/js/{path:.*}")
+	@Path("/{path:.*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
+	@ApiOperation("Execute Server Side JavaScript Resource")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
+	public Response getResource(@PathParam("path") String path) {
 		try {
 			processor.executeService(path);
 			return Response.ok().build();

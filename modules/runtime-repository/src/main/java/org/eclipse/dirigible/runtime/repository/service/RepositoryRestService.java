@@ -24,17 +24,25 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.processor.RepositoryProcessor;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+
 /**
  * Front facing REST service serving the raw repository content
  */
 @Singleton
+@Path("/core/repository")
+@Api(value = "Core - Repository", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class RepositoryRestService implements IRestService {
-	
+
 	@Inject
 	private RepositoryProcessor processor;
-	
+
 	@GET
-	@Path("/core/repository/{path:.*}")
+	@Path("/{path:.*}")
 	public Response getResource(@PathParam("path") String path) {
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
@@ -49,9 +57,9 @@ public class RepositoryRestService implements IRestService {
 		}
 		return Response.ok(new String(resource.getContent())).type(resource.getContentType()).build();
 	}
-	
+
 	@POST
-	@Path("/repository/{path:.*}")
+	@Path("/{path:.*}")
 	public Response createResource(@PathParam("path") String path, byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		IResource resource = processor.getResource(path);
 		if (resource.exists()) {
@@ -60,9 +68,9 @@ public class RepositoryRestService implements IRestService {
 		resource = processor.createResource(path, content, request.getContentType());
 		return Response.created(new URI(resource.getPath())).build();
 	}
-	
+
 	@PUT
-	@Path("/repository/{path:.*}")
+	@Path("/{path:.*}")
 	public Response updateResource(@PathParam("path") String path, byte[] content) {
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
@@ -71,9 +79,9 @@ public class RepositoryRestService implements IRestService {
 		resource = processor.updateResource(path, content);
 		return Response.noContent().build();
 	}
-	
+
 	@DELETE
-	@Path("/repository/{path:.*}")
+	@Path("/{path:.*}")
 	public Response deleteResource(@PathParam("path") String path) {
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
@@ -82,8 +90,6 @@ public class RepositoryRestService implements IRestService {
 		processor.deleteResource(path);
 		return Response.noContent().build();
 	}
-	
-	
 
 	@Override
 	public Class<? extends IRestService> getType() {
