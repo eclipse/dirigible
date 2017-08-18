@@ -25,8 +25,14 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 	$http.get(workspacesSvcUrl)
 		.success(function(data) {
 			$scope.workspaces = data;
-			if(data[0])
+			if(data[0]) {
 				$scope.selectedWs = data[0];
+			} else {
+				$http.post(workspacesSvcUrl + "/workspace").success(function(data) {
+					$scope.selectedWs = data.name;
+					$scope.refreshWorkspace();
+				});
+			}
 			$scope.refreshWorkspace();
 	});
 	
@@ -106,6 +112,7 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 							 hub.post({data: data[0].original._file});
 						  })
 						  .on('delete_node.jstree', function (e, data) {
+						  		$http.delete(workspacesSvcUrl + data.node.original._file.path);
 								$.get('?operation=delete_node', { 'id' : data.node.id })
 									.fail(function () {
 										data.instance.refresh();

@@ -12,13 +12,7 @@
 
 exports.call = function(className, methodName, params) {
 	var result = null;
-	if (Array.isArray(params)) {
-		for (var i = 0; i < params.length; i++) {
-			if (Array.isArray(params[i])) {
-				params[i] = JSON.stringify(params[i]);
-			}
-		}
-	}
+	params = normalizeParameters(params);
 	if (engine === "rhino") {
 		result = org.eclipse.dirigible.api.v3.core.JavaFacade.call(className, methodName, params);
 	} else if (engine === "nashorn") {
@@ -28,3 +22,43 @@ exports.call = function(className, methodName, params) {
 	}
 	return result;
 };
+
+exports.instantiate = function(className, params) {
+	var result = null;
+	params = normalizeParameters(params);
+	
+	if (engine === "rhino") {
+		uuid = org.eclipse.dirigible.api.v3.core.JavaFacade.instantiate(className, params);
+	} else if (engine === "nashorn") {
+		uuid = Packages.org.eclipse.dirigible.api.v3.core.JavaFacade.instantiate(className, params);
+	} else if (engine === "v8") {
+		uuid = j2v8instantiate(className, params);
+	}
+	result = {};
+	result['uuid'] = uuid;
+	return result;
+};
+
+exports.invoke = function(uuid, methodName, params) {
+	var result = null;
+	params = normalizeParameters(params);
+	if (engine === "rhino") {
+		result = org.eclipse.dirigible.api.v3.core.JavaFacade.invoke(uuid, methodName, params);
+	} else if (engine === "nashorn") {
+		result = Packages.org.eclipse.dirigible.api.v3.core.JavaFacade.invoke(uuid, methodName, params);
+	} else if (engine === "v8") {
+		result = j2v8invoke(uuid, methodName, params);
+	}
+	return result;
+};
+
+function normalizeParameters(params) {
+	if (Array.isArray(params)) {
+		for (var i = 0; i < params.length; i++) {
+			if (Array.isArray(params[i])) {
+				params[i] = JSON.stringify(params[i]);
+			}
+		}
+	}
+	return params;
+}

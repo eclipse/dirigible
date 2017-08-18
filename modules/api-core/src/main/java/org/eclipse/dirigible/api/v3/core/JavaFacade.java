@@ -2,14 +2,21 @@ package org.eclipse.dirigible.api.v3.core;
 
 import static java.text.MessageFormat.format;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
+import org.eclipse.dirigible.commons.api.context.ContextException;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.internal.Primitives;
 
 public class JavaFacade {
 
@@ -18,19 +25,10 @@ public class JavaFacade {
 	public static final Object call(String className, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Class<?> clazz = Class.forName(className);
-		List<Object> params = new ArrayList<Object>();
-		for (Object param : parameters) {
-			if (!"undefined".equals(param) && (!"jdk.nashorn.internal.runtime.Undefined".equals(param.getClass().getName()))) {
-				params.add(param);
-			}
-		}
-		Class<?>[] parameterTypes = new Class[params.size()];
-		int i = 0;
-		for (Object param : params) {
-			parameterTypes[i++] = param.getClass();
-		}
+		List<Object> params = normalizeParameters(parameters);
+		Class<?>[] parameterTypes = enumerateTypes(params);
 		Method method = clazz.getMethod(methodName, parameterTypes);
-		if (Modifier.isStatic(method.getModifiers())) {
+		if ((method != null) && Modifier.isStatic(method.getModifiers())) {
 			Object result;
 			try {
 				result = method.invoke(null, params.toArray(new Object[] {}));
@@ -43,6 +41,120 @@ public class JavaFacade {
 		String message = format("No such static method [{0}] in class [{1}]", methodName, className);
 		logger.error(message);
 		throw new NoSuchMethodException(message);
+	}
+
+	public static final String instantiate(String className, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
+		Class<?> clazz = Class.forName(className);
+		List<Object> params = normalizeParameters(parameters);
+		Class<?>[] parameterTypes = enumerateTypes(params);
+		Constructor constructor = clazz.getConstructor(parameterTypes);
+		if (constructor != null) {
+			Object result;
+			try {
+				result = constructor.newInstance(params.toArray(new Object[] {}));
+				String uuid = UUID.randomUUID().toString();
+				ThreadContextFacade.setProxy(uuid, result);
+				return uuid;
+			} catch (Throwable t) {
+				logger.error(t.getMessage(), t);
+			}
+		}
+		String message = format("No such constructor [{0}] in class [{1}]", Arrays.toString(parameterTypes), className);
+		logger.error(message);
+		throw new NoSuchMethodException(message);
+	}
+
+	public static final Object invoke(String uuid, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
+		Object instance = ThreadContextFacade.getProxy(uuid);
+		if (instance == null) {
+			String message = format("Instance with UUID [{0}] does not exist in the context", uuid);
+			logger.error(message);
+			throw new IllegalStateException("");
+		}
+		Class<?> clazz = instance.getClass();
+		List<Object> params = normalizeParameters(parameters);
+		Class<?>[] parameterTypes = enumerateTypes(params);
+		Method method = null;
+		try {
+			method = clazz.getMethod(methodName, parameterTypes);
+		} catch (NoSuchMethodException e) {
+			Method[] methods = clazz.getMethods();
+			for (Method next : methods) {
+				if (!next.getName().equals(methodName)) {
+					continue;
+				}
+				Class[] nextParameterTypes = next.getParameterTypes();
+				if (nextParameterTypes.length != parameterTypes.length) {
+					break;
+				}
+				boolean matching = true;
+				for (int i = 0; i < nextParameterTypes.length; i++) {
+					Class nextClass = nextParameterTypes[i];
+					if (nextClass.isPrimitive()) {
+						nextClass = Primitives.wrap(nextClass);
+					}
+					if (parameterTypes[i].equals(Double.class)) {
+						Double value = (Double) params.get(i);
+						if ((value == Math.floor(value)) && !Double.isInfinite(value)) {
+							if (nextClass.isAssignableFrom(parameterTypes[i])) {
+								continue;
+							}
+							if (Integer.class.isAssignableFrom(nextClass)) {
+								params.set(i, value.intValue());
+								continue;
+							}
+							if (Long.class.isAssignableFrom(nextClass)) {
+								params.set(i, value.longValue());
+								continue;
+							}
+						}
+					} else {
+						if (!nextClass.isAssignableFrom(parameterTypes[i])) {
+							matching = false;
+							break;
+						}
+					}
+				}
+				if (matching) {
+					method = next;
+					break;
+				}
+			}
+		}
+		if (method != null) {
+			Object result;
+			try {
+				result = method.invoke(instance, params.toArray(new Object[] {}));
+			} catch (Throwable t) {
+				logger.error(t.getMessage(), t);
+				return null;
+			}
+			return result;
+		}
+		String message = format("No such method [{0}] in class [{1}]", methodName, clazz.getName());
+		logger.error(message);
+		throw new NoSuchMethodException(message);
+	}
+
+	private static List<Object> normalizeParameters(Object[] parameters) {
+		List<Object> params = new ArrayList<Object>();
+		for (Object param : parameters) {
+			if (!"undefined".equals(param) && (!"jdk.nashorn.internal.runtime.Undefined".equals(param.getClass().getName()))) {
+				params.add(param);
+			}
+		}
+		return params;
+	}
+
+	private static Class<?>[] enumerateTypes(List<Object> params) {
+		Class<?>[] parameterTypes = new Class[params.size()];
+		int i = 0;
+		for (Object param : params) {
+			parameterTypes[i++] = param.getClass();
+		}
+		return parameterTypes;
 	}
 
 }

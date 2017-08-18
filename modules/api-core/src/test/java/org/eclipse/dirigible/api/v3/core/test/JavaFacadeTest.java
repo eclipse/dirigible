@@ -15,26 +15,28 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class JavaFacadeTest extends AbstractGuiceTest {
-	
+
 	@Inject
 	private ExtensionsSynchronizer extensionsPublisher;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		this.extensionsPublisher = getInjector().getInstance(ExtensionsSynchronizer.class);
 	}
-	
+
 	@Test
-	public void testCall() throws IOException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		
+	public void testCall() throws IOException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException {
+
 		extensionsPublisher.registerPredeliveredExtensionPoint("/control/control.extensionpoint");
 		extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
-		
+
 		extensionsPublisher.synchronize();
-			
-		Object result = JavaFacade.call("org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade", "getExtensions", new String[]{"/control/control"});
+
+		Object result = JavaFacade.call("org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade", "getExtensions",
+				new String[] { "/control/control" });
 		assertTrue(result instanceof String[]);
-		assertEquals("/control/control", (String) ((String[]) result)[0]);
+		assertEquals("/control/control", ((String[]) result)[0]);
 	}
 
 }

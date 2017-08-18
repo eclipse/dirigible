@@ -48,6 +48,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	@Before
 	public void registerModules() {
 
+		TEST_MODULES.add("core/v3/java/call.js");
+		TEST_MODULES.add("core/v3/java/invoke.js");
+
 		TEST_MODULES.add("auth/v3/user/getName.js");
 
 		TEST_MODULES.add("core/v3/env/get.js");
@@ -74,6 +77,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("utils/v3/base64/decode.js");
 		TEST_MODULES.add("utils/v3/xml2json/fromJson.js");
 		TEST_MODULES.add("utils/v3/xml2json/toJson.js");
+		TEST_MODULES.add("utils/v3/uuid/validate.js");
+
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)

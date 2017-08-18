@@ -7,7 +7,9 @@ import java.util.Map;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
-import org.eclipse.dirigible.engine.js.v8.callbacks.JavaV8Call;
+import org.eclipse.dirigible.engine.js.v8.callbacks.JavaV8CallInstance;
+import org.eclipse.dirigible.engine.js.v8.callbacks.JavaV8CallStatic;
+import org.eclipse.dirigible.engine.js.v8.callbacks.JavaV8NewInstance;
 import org.eclipse.dirigible.engine.js.v8.callbacks.Require;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
@@ -21,7 +23,9 @@ import com.eclipsesource.v8.V8Object;
 
 public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
-	private static final String J2V8CALL_FUNCTION_NAME = "j2v8call";
+	private static final String J2V8_CALL_STATIC_FUNCTION_NAME = "j2v8call";
+	private static final String J2V8_NEW_INSTANCE_FUNCTION_NAME = "j2v8instantiate";
+	private static final String J2V8_CALL_INSTANCE_FUNCTION_NAME = "j2v8invoke";
 	private static final Logger logger = LoggerFactory.getLogger(V8JavascriptEngineExecutor.class);
 
 	@Override
@@ -40,7 +44,9 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		V8 v8 = V8.createV8Runtime();
 		try {
 			v8.add("engine", IJavascriptEngineExecutor.JS_TYPE_V8);
-			v8.registerJavaMethod(new JavaV8Call(), J2V8CALL_FUNCTION_NAME);
+			v8.registerJavaMethod(new JavaV8CallStatic(), J2V8_CALL_STATIC_FUNCTION_NAME);
+			v8.registerJavaMethod(new JavaV8NewInstance(), J2V8_NEW_INSTANCE_FUNCTION_NAME);
+			v8.registerJavaMethod(new JavaV8CallInstance(), J2V8_CALL_INSTANCE_FUNCTION_NAME);
 			v8.registerJavaMethod(new JavaCallback() {
 
 				@Override
