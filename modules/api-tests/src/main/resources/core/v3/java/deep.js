@@ -16,4 +16,8 @@ var result = _java.invoke(task.uuid, 'getName', []);
 
 console.log('>>>>> Task.name: ' + result);
 
+var exists = _java.invoke(process.uuid, 'existsTask', [task.uuid]);
+
+console.log('>>>>> Task exists?: ' + exists);
+
 result == 'task1';

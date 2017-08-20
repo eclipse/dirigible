@@ -189,4 +189,22 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	public static final Connection getConnection(String databaseType, String datasourceName) throws SQLException {
+		DataSource dataSource = getDataSource(databaseType, datasourceName);
+		if (dataSource == null) {
+			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
+			throw new IllegalArgumentException(error);
+		}
+		Connection connection = dataSource.getConnection();
+		return connection;
+	}
+
+	public static final Connection getConnection(String databaseType) throws SQLException {
+		return getConnection(databaseType, null);
+	}
+
+	public static final Connection getConnection() throws SQLException {
+		return getConnection(null, null);
+	}
+
 }

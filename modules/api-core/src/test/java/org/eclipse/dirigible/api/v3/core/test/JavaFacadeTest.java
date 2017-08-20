@@ -9,6 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.api.v3.core.JavaFacade;
+import org.eclipse.dirigible.commons.api.context.ContextException;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.core.extensions.synchronizer.ExtensionsSynchronizer;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
@@ -26,17 +28,22 @@ public class JavaFacadeTest extends AbstractGuiceTest {
 
 	@Test
 	public void testCall() throws IOException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException {
+			NoSuchMethodException, SecurityException, ContextException {
 
-		extensionsPublisher.registerPredeliveredExtensionPoint("/control/control.extensionpoint");
-		extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
+		ThreadContextFacade.setUp();
+		try {
+			extensionsPublisher.registerPredeliveredExtensionPoint("/control/control.extensionpoint");
+			extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
 
-		extensionsPublisher.synchronize();
+			extensionsPublisher.synchronize();
 
-		Object result = JavaFacade.call("org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade", "getExtensions",
-				new String[] { "/control/control" });
-		assertTrue(result instanceof String[]);
-		assertEquals("/control/control", ((String[]) result)[0]);
+			Object result = JavaFacade.call("org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade", "getExtensions",
+					new String[] { "/control/control" });
+			assertTrue(result instanceof String[]);
+			assertEquals("/control/control", ((String[]) result)[0]);
+		} finally {
+			ThreadContextFacade.tearDown();
+		}
 	}
 
 }

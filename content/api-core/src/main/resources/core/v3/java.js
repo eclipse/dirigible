@@ -10,7 +10,7 @@
 
 /* eslint-env node, dirigible */
 
-exports.call = function(className, methodName, params) {
+exports.call = function(className, methodName, params, deep) {
 	var result = null;
 	params = normalizeParameters(params);
 	if (engine === "rhino") {
@@ -19,6 +19,11 @@ exports.call = function(className, methodName, params) {
 		result = Packages.org.eclipse.dirigible.api.v3.core.JavaFacade.call(className, methodName, params);
 	} else if (engine === "v8") {
 		result = j2v8call(className, methodName, params);
+	}
+	if (deep) {
+		o = {};
+		o['uuid'] = result;
+		return o;
 	}
 	return result;
 };

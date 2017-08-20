@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.api.v3.core.JavaFacade;
+import org.eclipse.dirigible.commons.api.context.ContextException;
 
 import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.V8Array;
@@ -35,7 +36,8 @@ public class JavaV8CallStatic extends JavaV8Callback implements JavaCallback {
 				return V8ObjectUtils.toV8Array(receiver.getRuntime(), list);
 			}
 			return result;
-		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException
+				| SecurityException | ContextException e) {
 			throw new RuntimeException(e);
 		} finally {
 			parameters.release();

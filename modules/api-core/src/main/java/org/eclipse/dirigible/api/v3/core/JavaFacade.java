@@ -23,7 +23,7 @@ public class JavaFacade {
 	private static final Logger logger = LoggerFactory.getLogger(JavaFacade.class);
 
 	public static final Object call(String className, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
 		Class<?> clazz = Class.forName(className);
 		List<Object> params = normalizeParameters(parameters);
 		Class<?>[] parameterTypes = enumerateTypes(params);
@@ -35,6 +35,12 @@ public class JavaFacade {
 			} catch (Throwable t) {
 				logger.error(t.getMessage(), t);
 				return null;
+			}
+			if ((result != null) && !isPrimitive(result.getClass())) {
+				// non primitive result - add to the context
+				String resultUuid = generateUuid();
+				ThreadContextFacade.setProxy(resultUuid, result);
+				return resultUuid;
 			}
 			return result;
 		}
@@ -53,7 +59,7 @@ public class JavaFacade {
 			Object result;
 			try {
 				result = constructor.newInstance(params.toArray(new Object[] {}));
-				String uuid = UUID.randomUUID().toString();
+				String uuid = generateUuid();
 				ThreadContextFacade.setProxy(uuid, result);
 				return uuid;
 			} catch (Throwable t) {
@@ -131,7 +137,7 @@ public class JavaFacade {
 				result = method.invoke(instance, params.toArray(new Object[] {}));
 				if ((result != null) && !isPrimitive(result.getClass())) {
 					// non primitive result - add to the context
-					String resultUuid = UUID.randomUUID().toString();
+					String resultUuid = generateUuid();
 					ThreadContextFacade.setProxy(resultUuid, result);
 					return resultUuid;
 				}
@@ -146,17 +152,30 @@ public class JavaFacade {
 		throw new NoSuchMethodException(message);
 	}
 
+	private static String generateUuid() {
+		return UUID.randomUUID().toString();
+	}
+
+	public static final void free(String uuid) throws ContextException {
+		ThreadContextFacade.removeProxy(uuid);
+	}
+
 	private static boolean isPrimitive(Class<?> clazz) {
 		return (clazz.isPrimitive() && (clazz != void.class)) || (clazz == Double.class) || (clazz == Float.class) || (clazz == Long.class)
 				|| (clazz == Integer.class) || (clazz == Short.class) || (clazz == Character.class) || (clazz == Byte.class)
-				|| (clazz == Boolean.class) || (clazz == String.class);
+				|| (clazz == Boolean.class) || (clazz == String.class) || (clazz == int[].class) || (clazz == byte[].class)
+				|| (clazz == String[].class);
 	}
 
-	private static List<Object> normalizeParameters(Object[] parameters) {
+	private static List<Object> normalizeParameters(Object[] parameters) throws ContextException {
 		List<Object> params = new ArrayList<Object>();
 		for (Object param : parameters) {
 			if (!"undefined".equals(param) && (!"jdk.nashorn.internal.runtime.Undefined".equals(param.getClass().getName()))) {
-				params.add(param);
+				if ((param instanceof String) && (ThreadContextFacade.getProxy((String) param) != null)) {
+					params.add(ThreadContextFacade.getProxy((String) param));
+				} else {
+					params.add(param);
+				}
 			}
 		}
 		return params;

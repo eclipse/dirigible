@@ -45,7 +45,7 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Get an context scripting object
+	 * Get a context scripting object
 	 *
 	 * @param key
 	 *            the key
@@ -59,7 +59,7 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Set an context scripting object
+	 * Set a context scripting object
 	 *
 	 * @param key
 	 *            the key
@@ -72,6 +72,20 @@ public class ThreadContextFacade {
 		checkContext();
 		CONTEXT.get().put(key, value);
 		logger.debug("Context object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
+	}
+
+	/**
+	 * Remove a context scripting object
+	 *
+	 * @param key
+	 *            the key
+	 * @throws ContextException
+	 *             in case of an error
+	 */
+	public static final void remove(String key) throws ContextException {
+		checkContext();
+		CONTEXT.get().remove(key);
+		logger.debug("Context object has been removed - key {}", Thread.currentThread().hashCode(), key);
 	}
 
 	private static void checkContext() throws ContextException {
@@ -119,4 +133,17 @@ public class ThreadContextFacade {
 		logger.debug("Proxy object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
 	}
 
+	/**
+	 * Remove a proxy scripting object
+	 *
+	 * @param key
+	 *            the key
+	 * @throws ContextException
+	 *             in case of an error
+	 */
+	public static final void removeProxy(String key) throws ContextException {
+		checkContext();
+		PROXIES.get().remove(key);
+		logger.debug("Proxy object has been removes - key {}", Thread.currentThread().hashCode(), key);
+	}
 }
