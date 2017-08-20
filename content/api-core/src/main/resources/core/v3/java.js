@@ -39,7 +39,7 @@ exports.instantiate = function(className, params) {
 	return result;
 };
 
-exports.invoke = function(uuid, methodName, params) {
+exports.invoke = function(uuid, methodName, params, deep) {
 	var result = null;
 	params = normalizeParameters(params);
 	if (engine === "rhino") {
@@ -49,12 +49,20 @@ exports.invoke = function(uuid, methodName, params) {
 	} else if (engine === "v8") {
 		result = j2v8invoke(uuid, methodName, params);
 	}
+	if (deep) {
+		o = {};
+		o['uuid'] = result;
+		return o;
+	}
 	return result;
 };
 
 function normalizeParameters(params) {
 	if (Array.isArray(params)) {
 		for (var i = 0; i < params.length; i++) {
+			if (params[i] && params[i].uuid) {
+				continue;
+			}
 			if (Array.isArray(params[i])) {
 				params[i] = JSON.stringify(params[i]);
 			}

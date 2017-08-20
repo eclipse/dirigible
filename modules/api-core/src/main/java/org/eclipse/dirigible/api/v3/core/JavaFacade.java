@@ -71,7 +71,7 @@ public class JavaFacade {
 		if (instance == null) {
 			String message = format("Instance with UUID [{0}] does not exist in the context", uuid);
 			logger.error(message);
-			throw new IllegalStateException("");
+			throw new IllegalStateException(message);
 		}
 		Class<?> clazz = instance.getClass();
 		List<Object> params = normalizeParameters(parameters);
@@ -80,6 +80,7 @@ public class JavaFacade {
 		try {
 			method = clazz.getMethod(methodName, parameterTypes);
 		} catch (NoSuchMethodException e) {
+			// no method matching the exact parameters classes - try to find more generic one
 			Method[] methods = clazz.getMethods();
 			for (Method next : methods) {
 				if (!next.getName().equals(methodName)) {
@@ -96,6 +97,7 @@ public class JavaFacade {
 						nextClass = Primitives.wrap(nextClass);
 					}
 					if (parameterTypes[i].equals(Double.class)) {
+						// Double handling for Rhino
 						Double value = (Double) params.get(i);
 						if ((value == Math.floor(value)) && !Double.isInfinite(value)) {
 							if (nextClass.isAssignableFrom(parameterTypes[i])) {
@@ -127,6 +129,12 @@ public class JavaFacade {
 			Object result;
 			try {
 				result = method.invoke(instance, params.toArray(new Object[] {}));
+				if ((result != null) && !isPrimitive(result.getClass())) {
+					// non primitive result - add to the context
+					String resultUuid = UUID.randomUUID().toString();
+					ThreadContextFacade.setProxy(resultUuid, result);
+					return resultUuid;
+				}
 			} catch (Throwable t) {
 				logger.error(t.getMessage(), t);
 				return null;
@@ -136,6 +144,12 @@ public class JavaFacade {
 		String message = format("No such method [{0}] in class [{1}]", methodName, clazz.getName());
 		logger.error(message);
 		throw new NoSuchMethodException(message);
+	}
+
+	private static boolean isPrimitive(Class<?> clazz) {
+		return (clazz.isPrimitive() && (clazz != void.class)) || (clazz == Double.class) || (clazz == Float.class) || (clazz == Long.class)
+				|| (clazz == Integer.class) || (clazz == Short.class) || (clazz == Character.class) || (clazz == Byte.class)
+				|| (clazz == Boolean.class) || (clazz == String.class);
 	}
 
 	private static List<Object> normalizeParameters(Object[] parameters) {
