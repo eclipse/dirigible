@@ -17,7 +17,7 @@ import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
-import org.eclipse.dirigible.database.squle.Squle;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
 @Singleton
@@ -190,7 +190,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 			Connection connection = dataSource.getConnection();
 			try {
 
-				String sql = Squle.getNative(connection).select().column("*").from("DIRIGIBLE_PUBLISH_REQUESTS").where("PUBREQ_CREATED_AT > ?")
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PUBLISH_REQUESTS").where("PUBREQ_CREATED_AT > ?")
 						.toString();
 				Timestamp latest = (timestamp == null) ? new Timestamp(0) : timestamp;
 				return publishRequestPersistenceManager.query(connection, PublishRequestDefinition.class, sql, latest);
@@ -211,7 +211,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 			try {
 				publishRequestPersistenceManager.tableCheck(connection, PublishLogDefinition.class);
 				Timestamp date = new Timestamp(new java.util.Date().getTime());
-				String sql = Squle.getNative(connection).select().column("MAX(PUBLOG_CREATED_AT)").from("DIRIGIBLE_PUBLISH_LOGS").toString();
+				String sql = SqlFactory.getNative(connection).select().column("MAX(PUBLOG_CREATED_AT)").from("DIRIGIBLE_PUBLISH_LOGS").toString();
 
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery(sql);

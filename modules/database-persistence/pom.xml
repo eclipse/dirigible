@@ -31,7 +31,7 @@
     <dependencies>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-squle</artifactId>
+			<artifactId>dirigible-database-sql</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
     	<dependency>

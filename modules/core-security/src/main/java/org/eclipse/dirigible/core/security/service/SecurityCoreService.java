@@ -25,7 +25,7 @@ import org.eclipse.dirigible.core.security.definition.AccessArtifact;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
-import org.eclipse.dirigible.database.squle.Squle;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 
 @Singleton
 public class SecurityCoreService implements ISecurityCoreService {
@@ -205,7 +205,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = Squle.getNative(connection)
+				String sql = SqlFactory.getNative(connection)
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_SECURITY_ACCESS")
@@ -302,7 +302,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = Squle.getNative(connection)
+				String sql = SqlFactory.getNative(connection)
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_SECURITY_ACCESS")
@@ -323,12 +323,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = Squle.getNative(connection)
+				String sql = SqlFactory.getNative(connection)
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_SECURITY_ACCESS")
 						.where("ACCESS_URI = ?")
-						.where(Squle.getNative(connection)
+						.where(SqlFactory.getNative(connection)
 								.expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
 						.toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, method, AccessDefinition.METHOD_ANY);
@@ -347,13 +347,13 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = Squle.getNative(connection)
+				String sql = SqlFactory.getNative(connection)
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_SECURITY_ACCESS")
 						.where("ACCESS_URI = ?")
 						.where("ACCESS_ROLE = ?")
-						.where(Squle.getNative(connection)
+						.where(SqlFactory.getNative(connection)
 								.expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
 						.toString();
 				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method, AccessDefinition.METHOD_ANY);

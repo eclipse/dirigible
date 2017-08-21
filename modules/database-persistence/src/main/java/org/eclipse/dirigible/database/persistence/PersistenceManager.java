@@ -32,7 +32,7 @@ import org.eclipse.dirigible.database.persistence.processors.sequence.Persistenc
 import org.eclipse.dirigible.database.persistence.processors.sequence.PersistenceDropSequenceProcessor;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCreateTableProcessor;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceDropTableProcessor;
-import org.eclipse.dirigible.database.squle.Squle;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 
 /**
  * PersistenceManager is a simple transport mechanism to store and retrieve
@@ -113,7 +113,7 @@ public class PersistenceManager<T> {
 	public boolean tableExists(Connection connection, Class<T> clazz) {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		try {
-			return Squle.getNative(connection).exists(connection, tableModel.getTableName());
+			return SqlFactory.getNative(connection).exists(connection, tableModel.getTableName());
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		}

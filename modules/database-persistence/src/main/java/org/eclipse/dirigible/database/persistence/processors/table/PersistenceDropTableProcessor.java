@@ -16,14 +16,14 @@ import java.sql.PreparedStatement;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
-import org.eclipse.dirigible.database.squle.Squle;
-import org.eclipse.dirigible.database.squle.builders.table.DropTableBuilder;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.table.DropTableBuilder;
 
 public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor {
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		DropTableBuilder dropTableBuilder = Squle.getNative(Squle.deriveDialect(connection))
+		DropTableBuilder dropTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
 				.drop()
 				.table(tableModel.getTableName());
 		

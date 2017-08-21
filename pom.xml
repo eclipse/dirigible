@@ -383,7 +383,7 @@
 		<module>modules/repository-master</module>
 
 		<module>modules/database-api</module>
-		<module>modules/database-squle</module>
+		<module>modules/database-sql</module>
 		<module>modules/database-persistence</module>
 		<module>modules/database-data-structures</module>
 

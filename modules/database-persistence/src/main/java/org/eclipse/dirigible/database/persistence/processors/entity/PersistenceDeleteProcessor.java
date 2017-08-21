@@ -20,11 +20,11 @@ import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
-import org.eclipse.dirigible.database.squle.DataTypeUtils;
-import org.eclipse.dirigible.database.squle.ISquleKeywords;
-import org.eclipse.dirigible.database.squle.Squle;
-import org.eclipse.dirigible.database.squle.builders.records.DeleteBuilder;
-import org.eclipse.dirigible.database.squle.builders.records.SelectBuilder;
+import org.eclipse.dirigible.database.sql.DataTypeUtils;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
+import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 
 public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor {
 
@@ -34,20 +34,20 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 	}
 	
 	protected String generateScriptDelete(Connection connection, PersistenceTableModel tableModel) {
-		DeleteBuilder deleteBuilder = Squle.getNative(Squle.deriveDialect(connection))
+		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
 				.delete()
 				.from(tableModel.getTableName())
 				.where(getPrimaryKey(tableModel) + new StringBuilder()
-						.append(ISquleKeywords.SPACE)
-						.append(ISquleKeywords.EQUALS)
-						.append(ISquleKeywords.SPACE)
-						.append(ISquleKeywords.QUESTION).toString());
+						.append(ISqlKeywords.SPACE)
+						.append(ISqlKeywords.EQUALS)
+						.append(ISqlKeywords.SPACE)
+						.append(ISqlKeywords.QUESTION).toString());
 		String sql = deleteBuilder.toString();
 		return sql;
 	}
 	
 	protected String generateScriptDeleteAll(Connection connection, PersistenceTableModel tableModel) {
-		DeleteBuilder deleteBuilder = Squle.getNative(Squle.deriveDialect(connection))
+		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
 				.delete()
 				.from(tableModel.getTableName());
 		String sql = deleteBuilder.toString();

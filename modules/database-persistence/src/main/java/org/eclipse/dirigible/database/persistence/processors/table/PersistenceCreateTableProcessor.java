@@ -17,15 +17,15 @@ import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
-import org.eclipse.dirigible.database.squle.DataType;
-import org.eclipse.dirigible.database.squle.Squle;
-import org.eclipse.dirigible.database.squle.builders.table.CreateTableBuilder;
+import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 
 public class PersistenceCreateTableProcessor extends AbstractPersistenceProcessor {
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		CreateTableBuilder createTableBuilder = Squle.getNative(Squle.deriveDialect(connection)).create().table(tableModel.getTableName());
+		CreateTableBuilder createTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).create().table(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			DataType dataType = DataType.valueOf(columnModel.getType());
 			switch (dataType) {

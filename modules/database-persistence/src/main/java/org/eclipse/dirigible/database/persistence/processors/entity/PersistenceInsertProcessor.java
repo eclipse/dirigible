@@ -24,14 +24,14 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.persistence.processors.sequence.PersistenceNextValueSequenceProcessor;
-import org.eclipse.dirigible.database.squle.Squle;
-import org.eclipse.dirigible.database.squle.builders.records.InsertBuilder;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 
 public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		InsertBuilder insertBuilder = Squle.getNative(Squle.deriveDialect(connection)).insert().into(tableModel.getTableName());
+		InsertBuilder insertBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).insert().into(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			insertBuilder.column(columnModel.getName());
 		}

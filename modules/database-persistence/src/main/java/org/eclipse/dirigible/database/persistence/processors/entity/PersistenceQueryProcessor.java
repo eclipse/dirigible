@@ -20,9 +20,9 @@ import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
-import org.eclipse.dirigible.database.squle.ISquleKeywords;
-import org.eclipse.dirigible.database.squle.Squle;
-import org.eclipse.dirigible.database.squle.builders.records.SelectBuilder;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 
 public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 
@@ -32,11 +32,11 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	}
 
 	protected String generateScriptFind(Connection connection, PersistenceTableModel tableModel) {
-		SelectBuilder selectBuilder = Squle.getNative(connection).select().column("*").from(tableModel.getTableName());
+		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey()) {
-				selectBuilder.where(new StringBuilder().append(columnModel.getName()).append(ISquleKeywords.SPACE).append(ISquleKeywords.EQUALS)
-						.append(ISquleKeywords.SPACE).append(ISquleKeywords.QUESTION).toString());
+				selectBuilder.where(new StringBuilder().append(columnModel.getName()).append(ISqlKeywords.SPACE).append(ISqlKeywords.EQUALS)
+						.append(ISqlKeywords.SPACE).append(ISqlKeywords.QUESTION).toString());
 				break;
 			}
 		}
@@ -45,11 +45,11 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	}
 
 	protected String generateScriptLock(Connection connection, PersistenceTableModel tableModel) {
-		SelectBuilder selectBuilder = Squle.getNative(connection).select().column("*").from(tableModel.getTableName());
+		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey()) {
-				selectBuilder.where(new StringBuilder().append(columnModel.getName()).append(ISquleKeywords.SPACE).append(ISquleKeywords.EQUALS)
-						.append(ISquleKeywords.SPACE).append(ISquleKeywords.QUESTION).toString());
+				selectBuilder.where(new StringBuilder().append(columnModel.getName()).append(ISqlKeywords.SPACE).append(ISqlKeywords.EQUALS)
+						.append(ISqlKeywords.SPACE).append(ISqlKeywords.QUESTION).toString());
 				break;
 			}
 		}
@@ -59,7 +59,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	}
 
 	protected String generateScriptFindAll(Connection connection, PersistenceTableModel tableModel) {
-		SelectBuilder selectBuilder = Squle.getNative(connection).select().column("*").from(tableModel.getTableName());
+		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
 		String sql = selectBuilder.toString();
 		return sql;
 	}

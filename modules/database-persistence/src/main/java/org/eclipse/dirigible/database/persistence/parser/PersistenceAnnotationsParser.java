@@ -31,8 +31,8 @@ import javax.persistence.Table;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
-import org.eclipse.dirigible.database.squle.DataType;
-import org.eclipse.dirigible.database.squle.DataTypeUtils;
+import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.DataTypeUtils;
 
 public class PersistenceAnnotationsParser {
 

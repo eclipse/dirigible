@@ -27,7 +27,7 @@ import javax.persistence.EnumType;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
-import org.eclipse.dirigible.database.squle.DataTypeUtils;
+import org.eclipse.dirigible.database.sql.DataTypeUtils;
 
 public abstract class AbstractPersistenceProcessor implements IPersistenceProcessor {
 

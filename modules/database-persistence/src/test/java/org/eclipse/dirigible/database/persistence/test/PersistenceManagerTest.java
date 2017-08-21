@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
-import org.eclipse.dirigible.database.squle.Squle;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
 public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
@@ -115,7 +115,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	public void queryAll(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 
-		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").build();
+		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").build();
 
 		List<Customer> list = persistenceManager.query(connection, Customer.class, sql);
 
@@ -135,7 +135,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	public void queryByName(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 
-		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
+		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
 
 		List<Object> values = new ArrayList<Object>();
 		values.add("Jane");
@@ -152,7 +152,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	public void queryByNameVarArgs(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
 
-		String sql = Squle.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
+		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
 
 		List<Customer> list = persistenceManager.query(connection, Customer.class, sql, "Jane");
 
@@ -204,7 +204,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 		assertEquals("James", customer.getFirstName());
 
-		String sql = Squle.getNative(connection).delete().from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
+		String sql = SqlFactory.getNative(connection).delete().from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
 
 		int result = persistenceManager.execute(connection, sql, "James");
 

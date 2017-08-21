@@ -23,7 +23,7 @@ import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
-import org.eclipse.dirigible.database.squle.Squle;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 
 @Singleton
 public class ExtensionsCoreService implements IExtensionsCoreService {
@@ -84,7 +84,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = Squle.getNative(connection)
+				String sql = SqlFactory.getNative(connection)
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_EXTENSION_POINTS")
@@ -260,7 +260,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = Squle.getNative(connection)
+				String sql = SqlFactory.getNative(connection)
 						.select()
 						.column("*")
 						.from("DIRIGIBLE_EXTENSIONS")

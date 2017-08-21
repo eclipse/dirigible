@@ -16,17 +16,17 @@ import java.sql.PreparedStatement;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
-import org.eclipse.dirigible.database.squle.ISquleKeywords;
-import org.eclipse.dirigible.database.squle.Squle;
-import org.eclipse.dirigible.database.squle.builders.sequence.DropSequenceBuilder;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 
 public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcessor {
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		DropSequenceBuilder dropSequenceBuilder = Squle.getNative(Squle.deriveDialect(connection))
+		DropSequenceBuilder dropSequenceBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
 				.drop()
-				.sequence(tableModel.getTableName() + ISquleKeywords.UNDERSCROE + ISquleKeywords.KEYWORD_SEQUENCE);
+				.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
 		
 		String sql = dropSequenceBuilder.toString();
 		return sql;

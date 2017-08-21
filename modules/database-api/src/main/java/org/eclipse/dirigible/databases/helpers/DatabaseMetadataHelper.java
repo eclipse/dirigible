@@ -13,8 +13,8 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
 import org.eclipse.dirigible.database.api.metadata.SchemaMetadata;
 import org.eclipse.dirigible.database.api.metadata.TableMetadata;
-import org.eclipse.dirigible.database.squle.ISquleDialect;
-import org.eclipse.dirigible.database.squle.Squle;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +55,8 @@ public class DatabaseMetadataHelper {
 		boolean accepts(T t);
 	}
 
-	private static ISquleDialect getDialect(Connection connection) {
-		return Squle.deriveDialect(connection);
+	private static ISqlDialect getDialect(Connection connection) {
+		return SqlFactory.deriveDialect(connection);
 	}
 
 	public static List<SchemaMetadata> listSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter,
@@ -67,14 +67,14 @@ public class DatabaseMetadataHelper {
 		List<SchemaMetadata> result = new ArrayList<SchemaMetadata>();
 		ResultSet rs = null;
 
-		ISquleDialect squleDialect = getDialect(connection);
+		ISqlDialect sqlDialect = getDialect(connection);
 
 		try {
 
-			if (squleDialect.isSchemaFilterSupported()) {
+			if (sqlDialect.isSchemaFilterSupported()) {
 				try {
 					// low level filtering for schema
-					rs = connection.createStatement().executeQuery(squleDialect.getSchemaFilterScript());
+					rs = connection.createStatement().executeQuery(sqlDialect.getSchemaFilterScript());
 				} catch (Exception e) {
 					// backup in case of wrong product recognition
 					rs = dmd.getSchemas(catalogName, null);
@@ -83,7 +83,7 @@ public class DatabaseMetadataHelper {
 						rs.close();
 					}
 				}
-			} else if (squleDialect.isCatalogForSchema()) {
+			} else if (sqlDialect.isCatalogForSchema()) {
 				rs = dmd.getCatalogs();
 			} else {
 				rs = dmd.getSchemas(catalogName, null);
@@ -113,12 +113,12 @@ public class DatabaseMetadataHelper {
 
 		DatabaseMetaData dmd = connection.getMetaData();
 
-		ISquleDialect squleDialect = getDialect(connection);
+		ISqlDialect sqlDialect = getDialect(connection);
 
 		List<TableMetadata> result = new ArrayList<TableMetadata>();
 
 		ResultSet rs = null;
-		if (squleDialect.isCatalogForSchema()) {
+		if (sqlDialect.isCatalogForSchema()) {
 			rs = dmd.getTables(schemeName, null, PRCNT, TABLE_TYPES);
 		} else {
 			rs = dmd.getTables(catalogName, schemeName, PRCNT, TABLE_TYPES);

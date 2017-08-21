@@ -10,8 +10,8 @@ It uses some of the standard JPA annotations, but it is different in some aspect
 * Direct mapping from POJO to Tables as well as Views
 * Flat entities only support
 * No caches (L1, L2)
-* No JPQL - it uses **Squle** module for native SQL script generation
-* No heavyweight external dependencies - only to the JDBC driver and Squle module
+* No JPQL - it uses **SQL** module for native SQL script generation
+* No heavyweight external dependencies - only to the JDBC driver and SQL module
 * Enum types support
 * Initializing of the schema (tables, views, sequences, etc.) can be done by itself or can be used an external library e.g. Liquibase
 * Connection have to be provided from outside, hence it is flexible to be established from a container managed DataSource, a custom DataSource or even in standalone mode.
@@ -131,7 +131,7 @@ It uses some of the standard JPA annotations, but it is different in some aspect
 	PersistenceManager<Customer> persistenceManager = new PersistenceManager<Customer>();
 	Connection connection = ...getConnection();
 	try {
-		String sql = Squle.getNative(connection)
+		String sql = SqlFactory.getNative(connection)
 			.select()
 			.column("*")
 			.from("CUSTOMERS")
