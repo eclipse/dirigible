@@ -164,7 +164,8 @@ public class JavaFacade {
 		return (clazz.isPrimitive() && (clazz != void.class)) || (clazz == Double.class) || (clazz == Float.class) || (clazz == Long.class)
 				|| (clazz == Integer.class) || (clazz == Short.class) || (clazz == Character.class) || (clazz == Byte.class)
 				|| (clazz == Boolean.class) || (clazz == String.class) || (clazz == int[].class) || (clazz == byte[].class)
-				|| (clazz == String[].class);
+				|| (clazz == double[].class) || (clazz == long[].class) || (clazz == float[].class) || (clazz == short[].class)
+				|| (clazz == char[].class) || (clazz == String[].class);
 	}
 
 	private static List<Object> normalizeParameters(Object[] parameters) throws ContextException {

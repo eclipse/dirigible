@@ -38,9 +38,9 @@ exports.update = function(databaseType, datasourceName, sql, parameters) {
 };
 
 exports.getConnection = function(databaseType, datasourceName) {
-	var instance = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getConnection', [databaseType, datasourceName], true);
+	var connectionInstance = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getConnection', [databaseType, datasourceName], true);
 	var connection = new Connection();
-	connection.uuid = instance.uuid;
+	connection.uuid = connectionInstance.uuid;
 	return connection;
 };
 
@@ -177,7 +177,7 @@ function Statement(internalStatement) {
 
 	this.setDate = function(index, value) {
 		if(value!==null && value!==undefined) {
-			var dateInstance = _java.instantiate('java.sql.Date', [value.getTime()]);
+			var dateInstance = java.instantiate('java.sql.Date', [value.getTime()]);
 			try {
 				java.invoke(this.uuid, 'setDate', [index, dateInstance.uuid]);
 			} finally {
@@ -238,7 +238,7 @@ function Statement(internalStatement) {
 
 	this.setTime = function(index, value) {
 		if(value!==null && value!==undefined) {
-			var timeInstance = _java.instantiate('java.sql.Time', [value.getTime()]);
+			var timeInstance = java.instantiate('java.sql.Time', [value.getTime()]);
 			try {
 				java.invoke(this.uuid, 'setTime', [index, timeInstance.uuid]);
 			} finally {
@@ -251,7 +251,7 @@ function Statement(internalStatement) {
 
 	this.setTimestamp = function(index, value) {
 		if(value!==null && value!==undefined) {
-			var timestampInstance = _java.instantiate('java.sql.Timestamp', [value.getTime()]);
+			var timestampInstance = java.instantiate('java.sql.Timestamp', [value.getTime()]);
 			try {
 				java.invoke(this.uuid, 'setTimestamp', [index, timestampInstance.uuid]);
 			} finally {
