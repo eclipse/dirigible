@@ -274,62 +274,62 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		<!-- Content - API -->
+		<!-- API - Javascript -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-api-core</artifactId>
+		 	<artifactId>dirigible-api-javascript-core</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-api-http</artifactId>
+		 	<artifactId>dirigible-api-javascript-http</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-api-utils</artifactId>
+		 	<artifactId>dirigible-api-javascript-utils</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-api-auth</artifactId>
+		 	<artifactId>dirigible-api-javascript-auth</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-api-db</artifactId>
+		 	<artifactId>dirigible-api-javascript-db</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		<!-- Content - IDE -->
+		<!-- IDE Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-ide-core</artifactId>
+		 	<artifactId>dirigible-ide-core</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-ide-terminal</artifactId>
+		 	<artifactId>dirigible-ide-terminal</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-ide-console</artifactId>
+		 	<artifactId>dirigible-ide-console</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-ide-editor-orion</artifactId>
+		 	<artifactId>dirigible-ide-editor-orion</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-ide-swagger</artifactId>
+		 	<artifactId>dirigible-ide-swagger</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-content-ide-workspace</artifactId>
+		 	<artifactId>dirigible-ide-workspace</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 

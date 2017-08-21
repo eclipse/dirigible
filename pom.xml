@@ -367,6 +367,9 @@
 	</properties>
 
 	<modules>
+	
+		<module>api-facades</module>
+		
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
 		<module>modules/commons-process</module>
@@ -414,17 +417,9 @@
 		<module>modules/engine-js-rhino</module>
 		<module>modules/engine-js-nashorn</module>
 		<module>modules/engine-js-v8</module>
-
-		<module>modules/api-core</module>
-		<module>modules/api-utils</module>
-		<module>modules/api-http</module>
-		<module>modules/api-auth</module>
-		<module>modules/api-db</module>
 		
-		<module>modules/api-tests</module>
-
-		<!-- Content -->
-		<module>content</module>
+		<module>api-javascript</module>
+		<module>ide</module>
 
 		<module>releng/war-all</module>
 	</modules>
