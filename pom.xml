@@ -368,7 +368,8 @@
 
 	<modules>
 	
-		<module>api-facades</module>
+		<module>api/api-facades</module>
+		<module>api/api-javascript</module>
 		
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
@@ -418,7 +419,6 @@
 		<module>modules/engine-js-nashorn</module>
 		<module>modules/engine-js-v8</module>
 		
-		<module>api-javascript</module>
 		<module>ide</module>
 
 		<module>releng/war-all</module>
