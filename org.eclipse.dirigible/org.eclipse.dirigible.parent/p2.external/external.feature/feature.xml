@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dirigible.external.feature"
       label="Dirigible External Bundles Feature"
-      version="2.7.170608"
+      version="2.8.170821"
       provider-name="Eclipse.org - Dirigible"
       os="linux,macosx,win32"
       ws="cocoa,gtk,win32"
