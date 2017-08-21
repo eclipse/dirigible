@@ -22,7 +22,7 @@ Dirigible supports access to RDBMS via  JDBC. Currently supported versions for R
 
 The project started as an internal SAP initiative to address the extension and adaption use-cases related to SOA and Enterprise Services.
 
-- [Try](#try)
+- [Try](#trial)
 - [Get Started](#get-started)
 	- [Download](#download)
 	- [Build](#build)
@@ -51,6 +51,8 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
 ### Build
 
+#### 2.x
+
 ##### Prerequisites
 
 - [Git](http://git-scm.com/)
@@ -59,13 +61,32 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
 ##### Steps
 
-1. Clone the [project repository](https://github.com/eclipse/dirigible.git) or [download the latest release](https://github.com/eclipse/dirigible/archive/master.zip).
+1. Clone the [project repository - master-2.x branch](https://github.com/eclipse/dirigible/tree/master-2.x) or [download the latest 2.x sources](https://github.com/eclipse/dirigible/archive/master-2.x.zip).
 2. Go to the `org.eclipse.dirigible/org.eclipse.dirigible.parent` folder.
 3. Build the project with:
 
         mvn clean install
 
 The build should pass successfully. The produced WAR files under target sub-folder `org.eclipse.dirigible/org.eclipse.dirigible.parent/releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type.
+
+#### 3.x
+
+##### Prerequisites
+
+- [Git](http://git-scm.com/)
+- [Maven 3.0.x](http://maven.apache.org/docs/3.0.5/release-notes.html)
+
+
+##### Steps
+
+1. Clone the [project repository - master branch](https://github.com/eclipse/dirigible/tree/master) or [download the latest 2.x sources](https://github.com/eclipse/dirigible/archive/master.zip).
+2. Go to the root folder.
+3. Build the project with:
+
+        mvn clean install
+
+The build should pass successfully. The produced WAR files under target sub-folder `releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type.
+
 
 ### Deploy
 
