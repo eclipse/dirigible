@@ -3,6 +3,7 @@ dist/
 .settings/
 target/
 dirigible_local/
+bin/
 
 # files
 .DS_Store

@@ -13,3 +13,4 @@ dirigible_local/
 *.class
 *.jar
 derby.log
+/bin/
