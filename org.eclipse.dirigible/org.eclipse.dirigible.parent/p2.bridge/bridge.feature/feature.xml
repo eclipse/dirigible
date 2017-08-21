@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dirigible.bridge.feature"
       label="Dirigible Bridge Bundles Feature"
-      version="2.7.170608"
+      version="2.8.170821"
       provider-name="Eclipse.org - Dirigible">
 
    <description url="http://www.dirigible.io/">
