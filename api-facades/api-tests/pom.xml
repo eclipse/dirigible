@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API- Javascript - Compatibility Test Suite</name>
+	<name>API - Javascript - Compatibility Test Suite</name>
 	<artifactId>dirigible-api-tests</artifactId>
     <packaging>jar</packaging>
     
