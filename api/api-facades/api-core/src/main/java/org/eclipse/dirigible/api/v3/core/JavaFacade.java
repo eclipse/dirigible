@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,11 +38,16 @@ public class JavaFacade {
 				return null;
 			}
 			if ((result != null) && !isPrimitive(result.getClass())) {
+				if (isArrayOfPrimitives(result.getClass())) {
+					String json = GsonHelper.GSON.toJson(result);
+					return json;
+				}
 				// non primitive result - add to the context
 				String resultUuid = generateUuid();
 				ThreadContextFacade.setProxy(resultUuid, result);
 				return resultUuid;
 			}
+
 			return result;
 		}
 		String message = format("No such static method [{0}] in class [{1}]", methodName, className);
@@ -135,16 +141,21 @@ public class JavaFacade {
 			Object result;
 			try {
 				result = method.invoke(instance, params.toArray(new Object[] {}));
-				if ((result != null) && !isPrimitive(result.getClass())) {
-					// non primitive result - add to the context
-					String resultUuid = generateUuid();
-					ThreadContextFacade.setProxy(resultUuid, result);
-					return resultUuid;
-				}
 			} catch (Throwable t) {
 				logger.error(t.getMessage(), t);
 				return null;
 			}
+			if ((result != null) && !isPrimitive(result.getClass())) {
+				if (isArrayOfPrimitives(result.getClass())) {
+					String json = GsonHelper.GSON.toJson(result);
+					return json;
+				}
+				// non primitive result - add to the context
+				String resultUuid = generateUuid();
+				ThreadContextFacade.setProxy(resultUuid, result);
+				return resultUuid;
+			}
+
 			return result;
 		}
 		String message = format("No such method [{0}] in class [{1}]", methodName, clazz.getName());
@@ -163,9 +174,12 @@ public class JavaFacade {
 	private static boolean isPrimitive(Class<?> clazz) {
 		return (clazz.isPrimitive() && (clazz != void.class)) || (clazz == Double.class) || (clazz == Float.class) || (clazz == Long.class)
 				|| (clazz == Integer.class) || (clazz == Short.class) || (clazz == Character.class) || (clazz == Byte.class)
-				|| (clazz == Boolean.class) || (clazz == String.class) || (clazz == int[].class) || (clazz == byte[].class)
-				|| (clazz == double[].class) || (clazz == long[].class) || (clazz == float[].class) || (clazz == short[].class)
-				|| (clazz == char[].class) || (clazz == String[].class);
+				|| (clazz == Boolean.class) || (clazz == String.class);
+	}
+
+	private static boolean isArrayOfPrimitives(Class<?> clazz) {
+		return (clazz == int[].class) || (clazz == byte[].class) || (clazz == double[].class) || (clazz == long[].class) || (clazz == float[].class)
+				|| (clazz == short[].class) || (clazz == char[].class) || (clazz == String[].class);
 	}
 
 	private static List<Object> normalizeParameters(Object[] parameters) throws ContextException {

@@ -19,6 +19,9 @@ exports.encode = function(input) {
 
 exports.decode = function(input) {
 	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'decode', [input]);
+	if (output && output != null) {
+		return JSON.parse(output);
+	}
 	return output;
 };
 

@@ -41,6 +41,7 @@
 		<module>api-utils</module>
 		<module>api-auth</module>
 		<module>api-db</module>
+		<module>api-io</module>
 	</modules>
 
 	<profiles>
