@@ -32,12 +32,12 @@ public class SqlDialectFactory {
 
 	public static final ISqlDialect DATABASE_TYPE_DERBY = new DerbySqlDialect();
 	public static final ISqlDialect DATABASE_TYPE_H2 = new H2SqlDialect();
-	// public static final ISquleDialect DATABASE_TYPE_HSQL = "hsql";
-	// public static final ISquleDialect DATABASE_TYPE_MYSQL = "mysql";
-	// public static final ISquleDialect DATABASE_TYPE_ORACLE = "oracle";
+	// public static final ISqlDialect DATABASE_TYPE_HSQL = "hsql";
+	// public static final ISqlDialect DATABASE_TYPE_MYSQL = "mysql";
+	// public static final ISqlDialect DATABASE_TYPE_ORACLE = "oracle";
 	public static final ISqlDialect DATABASE_TYPE_POSTGRES = new PostgresSqlDialect();
-	// public static final ISquleDialect DATABASE_TYPE_MSSQL = "mssql";
-	// public static final ISquleDialect DATABASE_TYPE_DB2 = "db2";
+	// public static final ISqlDialect DATABASE_TYPE_MSSQL = "mssql";
+	// public static final ISqlDialect DATABASE_TYPE_DB2 = "db2";
 	public static final ISqlDialect DATABASE_TYPE_HANA = new HanaSqlDialect();
 	public static final ISqlDialect DATABASE_TYPE_SYBASE = new SybaseSqlDialect();
 
