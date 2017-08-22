@@ -1,7 +1,7 @@
 package org.eclipse.dirigible.commons.api.context;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +25,8 @@ public class ThreadContextFacade {
 	 *             in case of an error
 	 */
 	public static final void setUp() throws ContextException {
-		CONTEXT.set(new WeakHashMap<String, Object>());
-		PROXIES.set(new WeakHashMap<String, Object>());
+		CONTEXT.set(new HashMap<String, Object>());
+		PROXIES.set(new HashMap<String, Object>());
 		logger.debug("Scripting context {} has been set up", Thread.currentThread().hashCode());
 	}
 

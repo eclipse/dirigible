@@ -66,8 +66,8 @@ OutputStream = function() {
 	
 	this.getBytes = function() {
 		var result = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'getBytes', [this.uuid]);
-		result = JSON.parse(result);
-		return result;
+		bytes = JSON.parse(result);
+		return bytes;
 	};
 	
 };
