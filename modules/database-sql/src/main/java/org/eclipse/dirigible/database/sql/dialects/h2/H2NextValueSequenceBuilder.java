@@ -17,7 +17,7 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
 
 public class H2NextValueSequenceBuilder extends NextValueSequenceBuilder {
 
-	private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = " SELECT NEXTVAL( ''{0}'' )";
+	private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT NEXTVAL( ''{0}'' )";
 
 	public H2NextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect, sequence);

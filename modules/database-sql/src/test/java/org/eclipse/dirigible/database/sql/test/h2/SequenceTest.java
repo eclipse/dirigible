@@ -18,37 +18,29 @@ import org.eclipse.dirigible.database.sql.dialects.h2.H2SqlDialect;
 import org.junit.Test;
 
 public class SequenceTest {
-	
+
 	@Test
 	public void createSequence() {
-		String sql = SqlFactory.getNative(new H2SqlDialect())
-			.create()
-			.sequence("CUSTOMERS_SEQUENCE")
-			.build();
-		
+		String sql = SqlFactory.getNative(new H2SqlDialect()).create().sequence("CUSTOMERS_SEQUENCE").build();
+
 		assertNotNull(sql);
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
 	}
-	
+
 	@Test
 	public void dropSequnce() {
-		String sql = SqlFactory.getNative(new H2SqlDialect())
-			.drop()
-			.sequence("CUSTOMERS_SEQUENCE")
-			.build();
-		
+		String sql = SqlFactory.getNative(new H2SqlDialect()).drop().sequence("CUSTOMERS_SEQUENCE").build();
+
 		assertNotNull(sql);
 		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
 	}
-	
+
 	@Test
 	public void nextvalSequnce() {
-		String sql = SqlFactory.getNative(new H2SqlDialect())
-			.nextval("CUSTOMERS_SEQUENCE")
-			.build();
-		
+		String sql = SqlFactory.getNative(new H2SqlDialect()).nextval("CUSTOMERS_SEQUENCE").build();
+
 		assertNotNull(sql);
-		assertEquals("NEXTVAL( 'CUSTOMERS_SEQUENCE' )", sql);
+		assertEquals("SELECT NEXTVAL( 'CUSTOMERS_SEQUENCE' )", sql);
 	}
 
 }
