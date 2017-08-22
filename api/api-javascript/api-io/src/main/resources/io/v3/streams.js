@@ -25,12 +25,17 @@ exports.createInputStream = function() {
 InputStream = function() {
 	
 	this.read = function() {
-		var value = java.call('org.eclipse.dirigible.api.v3.io.IoFacade', 'read', [this.uuid]);
+		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'read', [this.uuid]);
+		return value;
+	};
+	
+	this.readText = function() {
+		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'readText', [this.uuid]);
 		return value;
 	};
 	
 	this.close = function() {
-		java.call('org.eclipse.dirigible.api.v3.io.IoFacade', 'close', [this.uuid]);
+		java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'close', [this.uuid]);
 	};
 	
 };
@@ -47,22 +52,28 @@ exports.createOutputStream = function() {
  */
 OutputStream = function() {
 
-	this.write = function(value) {
-		var value = java.call('org.eclipse.dirigible.api.v3.io.IoFacade', 'write', [this.uuid, value]);
+	this.write = function(byte) {
+		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'write', [this.uuid, byte]);
+	};
+	
+	this.writeText = function(text) {
+		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'writeText', [this.uuid, text]);
 	};
 
 	this.close = function() {
-		java.call('org.eclipse.dirigible.api.v3.io.IoFacade', 'close', [this.uuid]);
+		java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'close', [this.uuid]);
 	};
 	
 	this.getBytes = function() {
-		return java.call('org.eclipse.dirigible.api.v3.io.IoFacade', 'getBytes', [this.uuid]);
+		var result = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'getBytes', [this.uuid]);
+		result = JSON.parse(result);
+		return result;
 	};
 	
 };
 
 exports.copy = function(input, output) {
-	java.call('org.eclipse.dirigible.api.v3.io.IoFacade', 'copy', [input.uuid, output.uuid]);
+	java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'copy', [input.uuid, output.uuid]);
 };
 
 
@@ -70,7 +81,12 @@ exports.copy = function(input, output) {
  * Create an ByteArrayInputStream for byte array provided
  */
 exports.createByteArrayInputStream = function(bytes) {
-	var inputStreamInstance = java.call('org.eclipse.dirigible.api.v3.io.IoFacade', 'createByteArrayInputStream', [JSON.stringify(bytes)], true);
+	var inputStreamInstance = {};
+	if (bytes) {
+		inputStreamInstance = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'createByteArrayInputStream', [JSON.stringify(bytes)], true);
+	} else {
+		inputStreamInstance = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'createByteArrayInputStream', [], true);
+	}
 	var inputStream = new InputStream();
 	inputStream.uuid = inputStreamInstance.uuid;
 	return inputStream;
@@ -81,7 +97,7 @@ exports.createByteArrayInputStream = function(bytes) {
  * Create a ByteArrayOutputStream
  */
 exports.createByteArrayOutputStream = function() {
-	var outputStreamInstance = java.call('org.eclipse.dirigible.api.v3.io.IoFacade', 'createByteArrayOutputStream', [], true);
+	var outputStreamInstance = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'createByteArrayOutputStream', [], true);
 	var outputStream = new OutputStream();
 	outputStream.uuid = outputStreamInstance.uuid;
 	return outputStream;

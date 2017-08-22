@@ -5,14 +5,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 
-public class IoFacade {
+public class StreamsFacade {
 	
 	public static final int read(InputStream input) throws IOException {
 		return input.read();
+	}
+	
+	public static final String readText(InputStream input) throws IOException {
+		return IOUtils.toString(input, StandardCharsets.UTF_8);
+	}
+	
+	public static final String readText(ByteArrayInputStream input) throws IOException {
+		return IOUtils.toString(input, StandardCharsets.UTF_8);
 	}
 	
 	public static final void close(InputStream input) throws IOException {
@@ -21,6 +31,14 @@ public class IoFacade {
 	
 	public static final void write(OutputStream output, int value) throws IOException {
 		output.write(value);
+	}
+	
+	public static final void writeText(OutputStream output, String value) throws IOException {
+		output.write(value.getBytes(StandardCharsets.UTF_8));
+	}
+	
+	public static final void writeText(ByteArrayOutputStream output, String value) throws IOException {
+		output.write(value.getBytes(StandardCharsets.UTF_8));
 	}
 	
 	public static final void close(OutputStream output) throws IOException {
@@ -42,6 +60,10 @@ public class IoFacade {
 	public static final ByteArrayInputStream createByteArrayInputStream(String input) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
 		return new ByteArrayInputStream(bytes);
+	}
+	
+	public static final ByteArrayInputStream createByteArrayInputStream() throws IOException {
+		return new ByteArrayInputStream(new byte[]{});
 	}
 	
 	public static final ByteArrayOutputStream createByteArrayOutputStream() throws IOException {

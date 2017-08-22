@@ -2,9 +2,10 @@
 
 var streams = require('io/v3/streams');
 
-var bais = streams.createByteArrayInputStream([61, 62, 63]);
 var baos = streams.createByteArrayOutputStream();
-streams.copy(bais, baos);
+baos.writeText("some text");
 var result = baos.getBytes();
+var bais = streams.createByteArrayInputStream(result);
+result = bais.readText();
 
-result[1] === 62;
+result == "some text";
