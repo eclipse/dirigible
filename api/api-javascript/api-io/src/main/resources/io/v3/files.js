@@ -11,7 +11,7 @@
 /* eslint-env node, dirigible */
 
 var java = require('core/v3/java');
-//var streams = require("io/streams");
+var streams = require("io/v3/streams");
 
    
 exports.exists = function(path){
@@ -131,5 +131,19 @@ exports.createTempFile = function(prefix, suffix) {
 
 exports.createTempDirectory = function(prefix) {
  	 return java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "createTempDirectory", [prefix]);
+};
+
+exports.createInputStream = function(path) {
+	 var inputStreamInstance = java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "createInputStream", [path], true);
+	 var inputStream = new streams.InputStream();
+	 inputStream.uuid = inputStreamInstance.uuid;
+	 return inputStream;
+};
+
+exports.createOutputStream = function(path) {
+	 var outputStreamInstance = java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "createOutputStream", [path], true);
+	 var outputStream = new streams.OutputStream();
+	 outputStream.uuid = outputStreamInstance.uuid;
+	 return outputStream;
 };
 

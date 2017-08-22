@@ -28,7 +28,7 @@ public class JavaFacade {
 		Class<?> clazz = Class.forName(className);
 		List<Object> params = normalizeParameters(parameters);
 		Class<?>[] parameterTypes = enumerateTypes(params);
-		Method method = clazz.getMethod(methodName, parameterTypes);
+		Method method = findMethod(methodName, clazz, parameterTypes, params);
 		if ((method != null) && Modifier.isStatic(method.getModifiers())) {
 			Object result;
 			try {
@@ -55,39 +55,7 @@ public class JavaFacade {
 		throw new NoSuchMethodException(message);
 	}
 
-	public static final String instantiate(String className, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
-		Class<?> clazz = Class.forName(className);
-		List<Object> params = normalizeParameters(parameters);
-		Class<?>[] parameterTypes = enumerateTypes(params);
-		Constructor constructor = clazz.getConstructor(parameterTypes);
-		if (constructor != null) {
-			Object result;
-			try {
-				result = constructor.newInstance(params.toArray(new Object[] {}));
-				String uuid = generateUuid();
-				ThreadContextFacade.setProxy(uuid, result);
-				return uuid;
-			} catch (Throwable t) {
-				logger.error(t.getMessage(), t);
-			}
-		}
-		String message = format("No such constructor [{0}] in class [{1}]", Arrays.toString(parameterTypes), className);
-		logger.error(message);
-		throw new NoSuchMethodException(message);
-	}
-
-	public static final Object invoke(String uuid, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
-		Object instance = ThreadContextFacade.getProxy(uuid);
-		if (instance == null) {
-			String message = format("Instance with UUID [{0}] does not exist in the context", uuid);
-			logger.error(message);
-			throw new IllegalStateException(message);
-		}
-		Class<?> clazz = instance.getClass();
-		List<Object> params = normalizeParameters(parameters);
-		Class<?>[] parameterTypes = enumerateTypes(params);
+	private static Method findMethod(String methodName, Class<?> clazz, Class<?>[] parameterTypes, List<Object> params) throws NoSuchMethodException {
 		Method method = null;
 		try {
 			method = clazz.getMethod(methodName, parameterTypes);
@@ -137,6 +105,43 @@ public class JavaFacade {
 				}
 			}
 		}
+		return method;
+	}
+
+	public static final String instantiate(String className, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
+		Class<?> clazz = Class.forName(className);
+		List<Object> params = normalizeParameters(parameters);
+		Class<?>[] parameterTypes = enumerateTypes(params);
+		Constructor constructor = clazz.getConstructor(parameterTypes);
+		if (constructor != null) {
+			Object result;
+			try {
+				result = constructor.newInstance(params.toArray(new Object[] {}));
+				String uuid = generateUuid();
+				ThreadContextFacade.setProxy(uuid, result);
+				return uuid;
+			} catch (Throwable t) {
+				logger.error(t.getMessage(), t);
+			}
+		}
+		String message = format("No such constructor [{0}] in class [{1}]", Arrays.toString(parameterTypes), className);
+		logger.error(message);
+		throw new NoSuchMethodException(message);
+	}
+
+	public static final Object invoke(String uuid, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
+		Object instance = ThreadContextFacade.getProxy(uuid);
+		if (instance == null) {
+			String message = format("Instance with UUID [{0}] does not exist in the context", uuid);
+			logger.error(message);
+			throw new IllegalStateException(message);
+		}
+		Class<?> clazz = instance.getClass();
+		List<Object> params = normalizeParameters(parameters);
+		Class<?>[] parameterTypes = enumerateTypes(params);
+		Method method = findMethod(methodName, clazz, parameterTypes, params);
 		if (method != null) {
 			Object result;
 			try {

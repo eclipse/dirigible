@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
@@ -21,10 +20,6 @@ public class StreamsFacade {
 		return IOUtils.toString(input, StandardCharsets.UTF_8);
 	}
 	
-	public static final String readText(ByteArrayInputStream input) throws IOException {
-		return IOUtils.toString(input, StandardCharsets.UTF_8);
-	}
-	
 	public static final void close(InputStream input) throws IOException {
 		input.close();
 	}
@@ -37,19 +32,11 @@ public class StreamsFacade {
 		output.write(value.getBytes(StandardCharsets.UTF_8));
 	}
 	
-	public static final void writeText(ByteArrayOutputStream output, String value) throws IOException {
-		output.write(value.getBytes(StandardCharsets.UTF_8));
-	}
-	
 	public static final void close(OutputStream output) throws IOException {
 		output.close();
 	}
 	
 	public static final void copy(InputStream input, OutputStream output) throws IOException {
-		IOUtils.copy(input, output);
-	}
-	
-	public static final void copy(ByteArrayInputStream input, ByteArrayOutputStream output) throws IOException {
 		IOUtils.copy(input, output);
 	}
 	

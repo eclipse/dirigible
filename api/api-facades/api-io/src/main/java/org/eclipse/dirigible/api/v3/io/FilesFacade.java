@@ -2,6 +2,8 @@ package org.eclipse.dirigible.api.v3.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -194,6 +196,12 @@ public class FilesFacade {
 	}
 	
 	
-
+	public static final InputStream createInputStream(String path) throws IOException {
+		return Files.newInputStream(Paths.get(path));
+	}
+	
+	public static final OutputStream createOutputStream(String path) throws IOException {
+		return Files.newOutputStream(Paths.get(path));
+	}
 
 }

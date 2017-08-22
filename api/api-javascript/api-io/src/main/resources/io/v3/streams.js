@@ -13,16 +13,9 @@
 var java = require('core/v3/java');
 
 /**
- * Create an InputStream
- */
-exports.createInputStream = function() {
-	return new InputStream();
-};
-
-/**
  * InputStream object. To be used internally by the API layer
  */
-InputStream = function() {
+exports.InputStream = function() {
 	
 	this.read = function() {
 		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'read', [this.uuid]);
@@ -41,16 +34,9 @@ InputStream = function() {
 };
 
 /**
- * Create an OutputStream
- */
-exports.createOutputStream = function() {
-	return new OutputStream();
-};
-
-/**
  * OutputStream object. To be used internally by the API layer
  */
-OutputStream = function() {
+exports.OutputStream = function() {
 
 	this.write = function(byte) {
 		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'write', [this.uuid, byte]);
@@ -87,7 +73,7 @@ exports.createByteArrayInputStream = function(bytes) {
 	} else {
 		inputStreamInstance = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'createByteArrayInputStream', [], true);
 	}
-	var inputStream = new InputStream();
+	var inputStream = new exports.InputStream();
 	inputStream.uuid = inputStreamInstance.uuid;
 	return inputStream;
 };
@@ -98,7 +84,7 @@ exports.createByteArrayInputStream = function(bytes) {
  */
 exports.createByteArrayOutputStream = function() {
 	var outputStreamInstance = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'createByteArrayOutputStream', [], true);
-	var outputStream = new OutputStream();
+	var outputStream = new exports.OutputStream();
 	outputStream.uuid = outputStreamInstance.uuid;
 	return outputStream;
 };
