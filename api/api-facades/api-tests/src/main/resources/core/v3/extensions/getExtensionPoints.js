@@ -4,4 +4,4 @@ var extensions = require('core/v3/extensions');
 
 var result = extensions.getExtensionPoints();
 
-result !== undefined && result !== null;
+result[0] == "test_extpoint1";

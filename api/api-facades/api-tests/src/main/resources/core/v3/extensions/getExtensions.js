@@ -2,6 +2,6 @@
 
 var extensions = require('core/v3/extensions');
 
-var result = extensions.getExtensions('ide-menu');
+var result = extensions.getExtensions('test_extpoint1');
 
-result !== undefined && result !== null;
+result[0] == "/test_ext_module1";

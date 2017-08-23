@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,6 +18,7 @@ import org.apache.cxf.helpers.IOUtils;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
@@ -33,10 +33,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	private static List<String> TEST_MODULES = new ArrayList<String>();
 
-	@Inject
 	private IExtensionsCoreService extensionsCoreService;
 
-	@Inject
 	private IRepository repository;
 
 	@Before
@@ -89,7 +87,7 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
-			throws RepositoryWriteException, IOException, ScriptingException, ContextException {
+			throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
 		HttpServletResponse mockedResponse = Mockito.mock(HttpServletResponse.class);
 		mockRequest(mockedRequest);
@@ -99,6 +97,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		try {
 			ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), mockedRequest);
 			ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), mockedResponse);
+			extensionsCoreService.createExtensionPoint("/test_extpoint1", "test_extpoint1", "Test");
+			extensionsCoreService.createExtension("/test_ext1", "/test_ext_module1", "test_extpoint1", "Test");
 			for (String testModule : TEST_MODULES) {
 				Object result = runTest(executor, repository, testModule);
 				assertNotNull(result);

@@ -54,6 +54,11 @@
             <artifactId>dirigible-engine-js</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-core-extensions</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>

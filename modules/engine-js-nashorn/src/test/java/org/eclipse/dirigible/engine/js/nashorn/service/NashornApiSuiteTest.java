@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.nashorn.processor.NashornJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
@@ -20,14 +21,16 @@ public class NashornApiSuiteTest extends AbstractApiSuiteTest {
 
 	private NashornJavascriptEngineExecutor nashornJavascriptEngineExecutor;
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
+		super.setUp();
 		this.repository = getInjector().getInstance(IRepository.class);
 		this.nashornJavascriptEngineExecutor = getInjector().getInstance(NashornJavascriptEngineExecutor.class);
 	}
 
 	@Test
-	public void runSuite() throws RepositoryWriteException, IOException, ScriptingException, ContextException {
+	public void runSuite() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		super.runSuite(this.nashornJavascriptEngineExecutor, repository);
 	}
 

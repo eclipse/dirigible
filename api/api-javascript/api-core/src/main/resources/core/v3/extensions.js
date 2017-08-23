@@ -14,10 +14,12 @@ var java = require('core/v3/java');
 
 exports.getExtensions = function(extensionPoint) {
 	var extensions = java.call('org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade', 'getExtensions', [extensionPoint]);
+	extensions = JSON.parse(extensions);
 	return extensions;
 };
 
 exports.getExtensionPoints = function() {
 	var extensionPoints = java.call('org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade', 'getExtensionPoints', []);
+	extensionPoints = JSON.parse(extensionPoints);
 	return extensionPoints;
 };

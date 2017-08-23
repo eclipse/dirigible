@@ -17,7 +17,6 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
@@ -27,18 +26,18 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 
 @Singleton
 public class ExtensionsCoreService implements IExtensionsCoreService {
-	
+
 	@Inject
 	private DataSource dataSource;
-	
+
 	@Inject
 	private PersistenceManager<ExtensionPointDefinition> extensionPointPersistenceManager;
-	
+
 	@Inject
 	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager;
-	
+
 	// Extension Points
-	
+
 	@Override
 	public ExtensionPointDefinition createExtensionPoint(String location, String name, String description) throws ExtensionsException {
 		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
@@ -47,7 +46,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		extensionPointDefinition.setDescription(description);
 		extensionPointDefinition.setCreatedBy(UserFacade.getName());
 		extensionPointDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
-		
+
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -62,7 +61,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public ExtensionPointDefinition getExtensionPoint(String location) throws ExtensionsException {
 		try {
@@ -78,23 +77,23 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public ExtensionPointDefinition getExtensionPointByName(String name) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = SqlFactory.getNative(connection)
-						.select()
-						.column("*")
-						.from("DIRIGIBLE_EXTENSION_POINTS")
-						.where("EXTENSIONPOINT_NAME = ?").toString();
-				List<ExtensionPointDefinition> extensionPointDefinitions = extensionPointPersistenceManager.query(connection, ExtensionPointDefinition.class, sql, Arrays.asList(name));
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_EXTENSION_POINTS").where("EXTENSIONPOINT_NAME = ?")
+						.toString();
+				List<ExtensionPointDefinition> extensionPointDefinitions = extensionPointPersistenceManager.query(connection,
+						ExtensionPointDefinition.class, sql, Arrays.asList(name));
 				if (extensionPointDefinitions.isEmpty()) {
 					return null;
 				}
 				if (extensionPointDefinitions.size() > 1) {
-					throw new ExtensionsException(format("There are more that one ExtensionPoints with the same name [{0}] at locations: [{1}] and [{2}].", name, extensionPointDefinitions.get(0).getLocation(), extensionPointDefinitions.get(1).getLocation()));
+					throw new ExtensionsException(
+							format("There are more that one ExtensionPoints with the same name [{0}] at locations: [{1}] and [{2}].", name,
+									extensionPointDefinitions.get(0).getLocation(), extensionPointDefinitions.get(1).getLocation()));
 				}
 				return extensionPointDefinitions.get(0);
 			} finally {
@@ -106,7 +105,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public void removeExtensionPoint(String location) throws ExtensionsException {
 		try {
@@ -122,7 +121,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public void updateExtensionPoint(String location, String name, String description) throws ExtensionsException {
 		try {
@@ -141,7 +140,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public List<ExtensionPointDefinition> getExtensionPoints() throws ExtensionsException {
 		try {
@@ -158,10 +157,8 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		}
 	}
 
-	
-	
 	// Extensions
-	
+
 	@Override
 	public ExtensionDefinition createExtension(String location, String module, String extensionPoint, String description) throws ExtensionsException {
 		ExtensionDefinition extensionDefinition = new ExtensionDefinition();
@@ -171,7 +168,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		extensionDefinition.setDescription(description);
 		extensionDefinition.setCreatedBy(UserFacade.getName());
 		extensionDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
-		
+
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -186,7 +183,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public ExtensionDefinition getExtension(String location) throws ExtensionsException {
 		try {
@@ -202,7 +199,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public void removeExtension(String location) throws ExtensionsException {
 		try {
@@ -218,7 +215,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public void updateExtension(String location, String module, String extensionPoint, String description) throws ExtensionsException {
 		try {
@@ -238,7 +235,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public List<ExtensionDefinition> getExtensions() throws ExtensionsException {
 		try {
@@ -254,18 +251,23 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public List<ExtensionDefinition> getExtensionsByExtensionPoint(String extensionPoint) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = SqlFactory.getNative(connection)
-						.select()
-						.column("*")
-						.from("DIRIGIBLE_EXTENSIONS")
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_EXTENSIONS")
 						.where("EXTENSION_EXTENSIONPOINT_NAME = ?").toString();
-				return extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql, Arrays.asList(extensionPoint));
+				List<ExtensionDefinition> extensions = extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql,
+						Arrays.asList(extensionPoint));
+				if (extensions.isEmpty()) {
+					ExtensionPointDefinition extensionPointDefinition = this.getExtensionPointByName(extensionPoint);
+					if (extensionPointDefinition == null) {
+						throw new ExtensionsException(format("There is no an ExtensionPoint with name [{0}] at all.", extensionPoint));
+					}
+				}
+				return extensions;
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -275,45 +277,46 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 			throw new ExtensionsException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean existsExtensionPoint(String location) throws ExtensionsException {
 		return getExtensionPoint(location) != null;
 	}
-	
+
 	@Override
 	public boolean existsExtension(String location) throws ExtensionsException {
 		return getExtension(location) != null;
 	}
-	
+
 	@Override
 	public ExtensionPointDefinition parseExtensionPoint(String json) {
 		return GsonHelper.GSON.fromJson(json, ExtensionPointDefinition.class);
 	}
-	
+
 	@Override
 	public ExtensionDefinition parseExtension(String json) {
 		return GsonHelper.GSON.fromJson(json, ExtensionDefinition.class);
 	}
-	
+
 	@Override
 	public ExtensionPointDefinition parseExtensionPoint(byte[] json) {
-		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ExtensionPointDefinition.class);
+		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8),
+				ExtensionPointDefinition.class);
 	}
-	
+
 	@Override
 	public ExtensionDefinition parseExtension(byte[] json) {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ExtensionDefinition.class);
 	}
-	
+
 	@Override
 	public String serializeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) {
 		return GsonHelper.GSON.toJson(extensionPointDefinition);
 	}
-	
+
 	@Override
 	public String serializeExtension(ExtensionDefinition extensionDefinition) {
 		return GsonHelper.GSON.toJson(extensionDefinition);
 	}
-	
+
 }
