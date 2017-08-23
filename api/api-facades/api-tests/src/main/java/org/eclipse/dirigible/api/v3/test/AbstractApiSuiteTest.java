@@ -99,11 +99,17 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 			ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), mockedResponse);
 			extensionsCoreService.createExtensionPoint("/test_extpoint1", "test_extpoint1", "Test");
 			extensionsCoreService.createExtension("/test_ext1", "/test_ext_module1", "test_extpoint1", "Test");
-			for (String testModule : TEST_MODULES) {
-				Object result = runTest(executor, repository, testModule);
-				assertNotNull(result);
-				assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
-				System.out.println(String.format("API test [%s] on engine [%s] passed successfully.", testModule, executor.getType()));
+			try {
+				for (String testModule : TEST_MODULES) {
+					Object result = runTest(executor, repository, testModule);
+					assertNotNull(result);
+					assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
+					System.out.println(String.format("API test [%s] on engine [%s] passed successfully.", testModule,
+							executor.getType()));
+				} 
+			} finally {
+				extensionsCoreService.removeExtension("/test_ext1");
+				extensionsCoreService.removeExtensionPoint("/test_extpoint1");
 			}
 		} finally {
 			ThreadContextFacade.tearDown();
