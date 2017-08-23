@@ -43,7 +43,7 @@ public class ConsoleFacade {
 	}
 
 	public static void log(String message) {
-		console.info(message);
+		console.log(message);
 	}
 
 	public static void warn(String message) {
@@ -67,7 +67,7 @@ public class ConsoleFacade {
 	}
 
 	public static void log(Object message) {
-		console.info(message != null ? message.toString() : "null");
+		console.log(message != null ? message.toString() : "null");
 	}
 
 	public static void warn(Object message) {
@@ -91,7 +91,7 @@ public class ConsoleFacade {
 	}
 
 	public static void log(ArrayList message) {
-		console.info(message != null ? message.toString() : "null");
+		console.log(message != null ? message.toString() : "null");
 	}
 
 	public static void warn(ArrayList message) {

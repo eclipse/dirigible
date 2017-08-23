@@ -18,8 +18,8 @@ public class Console {
 		logger.info(String.format(message, args));
 	}
 
-	public void log(String message, Object... args) {
-		logger.info(String.format(message, args));
+	public void log(String message) {
+		logger.info(message);
 	}
 
 	public void warn(String message, Object... args) {

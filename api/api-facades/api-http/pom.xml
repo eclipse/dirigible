@@ -34,6 +34,23 @@
             <artifactId>dirigible-commons-api</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-config</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        
+        <dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.5.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpmime</artifactId>
+		    <version>4.5.3</version>
+		</dependency>
+
     </dependencies>
 
 </project>

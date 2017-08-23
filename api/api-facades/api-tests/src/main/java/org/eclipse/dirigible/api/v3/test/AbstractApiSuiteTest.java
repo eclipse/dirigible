@@ -72,6 +72,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
 		TEST_MODULES.add("http/v3/request/getServerName.js");
 		TEST_MODULES.add("http/v3/response/getHeaderNames.js");
+		TEST_MODULES.add("http/v3/client/get.js");
+		TEST_MODULES.add("http/v3/client/get-binary.js");
 		
 		TEST_MODULES.add("io/v3/streams/copy.js");
 		TEST_MODULES.add("io/v3/streams/text.js");

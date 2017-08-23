@@ -18,7 +18,7 @@ try {
 		try {
 			while (resultset.next()) {
 				var value = resultset.getString('B');
-				console.log('>>>>> B: ' + value);
+				console.log('B: ' + value);
 			}
 		} finally {
 			resultset.close();

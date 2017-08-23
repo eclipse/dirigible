@@ -12,16 +12,16 @@
 
 var java = require('core/v3/java');
 
+exports.log = function(message) {
+	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'log', [message]);
+};
+
 exports.error = function(message, args) {
 	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'error', [message, args]);
 };
 
 exports.info = function(message, args) {
 	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'info', [message, args]);
-};
-
-exports.log = function(message, args) {
-	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'log', [message, args]);
 };
 
 exports.warn = function(message, args) {

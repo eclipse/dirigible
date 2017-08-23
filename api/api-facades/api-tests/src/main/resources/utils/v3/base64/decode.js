@@ -5,7 +5,7 @@ var base64 = require('utils/v3/base64');
 var input = 'PT4/';
 var result = base64.decode(input);
 
-console.log('>>>>>>>>> ' + result);
+console.log('decoded: ' + result);
 
 (result[0] === 61 &&
 result[1] === 62 &&
