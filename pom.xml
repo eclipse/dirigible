@@ -418,6 +418,7 @@
 		<module>modules/engine-js-rhino</module>
 		<module>modules/engine-js-nashorn</module>
 		<module>modules/engine-js-v8</module>
+		<module>modules/engine-wiki</module>
 		
 		<module>ide</module>
 

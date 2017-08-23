@@ -29,7 +29,8 @@ public abstract class AbstractWebEngineRestService implements IRestService {
 			if (resource.isBinary()) {
 				return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();
 			}
-			return Response.ok(new String(resource.getContent())).type(resource.getContentType()).build();
+			String content = new String(resource.getContent());
+			return Response.ok(content).type(resource.getContentType()).build();
 		}
 		try {
 			byte[] content = processor.getResourceContent(path);

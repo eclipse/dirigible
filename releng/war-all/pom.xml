@@ -273,6 +273,11 @@
 		 	<artifactId>dirigible-engine-js-v8</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-wiki</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		<!-- API - Javascript -->
 		<dependency>

@@ -134,6 +134,9 @@
         <dependent-module archiveName="dirigible-engine-js-v8-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript - V8/Engine - Javascript - V8">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-engine-wiki-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Wiki/Engine - Wiki">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - core/API - Javascript - core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
