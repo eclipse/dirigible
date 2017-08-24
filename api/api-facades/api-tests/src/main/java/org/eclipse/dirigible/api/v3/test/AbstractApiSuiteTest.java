@@ -49,6 +49,7 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("core/v3/java/call.js");
 		TEST_MODULES.add("core/v3/java/invoke.js");
 		TEST_MODULES.add("core/v3/java/deep.js");
+		TEST_MODULES.add("core/v3/console/log.js");
 
 		TEST_MODULES.add("auth/v3/user/getName.js");
 
@@ -63,9 +64,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
 		TEST_MODULES.add("db/v3/database/getDataSources.js");
 		TEST_MODULES.add("db/v3/database/getMetadata.js");
-		TEST_MODULES.add("db/v3/database/query.js");
-		TEST_MODULES.add("db/v3/database/update.js");
 		TEST_MODULES.add("db/v3/database/getConnection.js");
+		TEST_MODULES.add("db/v3/query/query.js");
+		TEST_MODULES.add("db/v3/update/update.js");
 
 		TEST_MODULES.add("http/v3/request/getMethod.js");
 		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
@@ -82,9 +83,11 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		TEST_MODULES.add("utils/v3/base64/encode.js");
 		TEST_MODULES.add("utils/v3/base64/decode.js");
-		TEST_MODULES.add("utils/v3/xml2json/fromJson.js");
-		TEST_MODULES.add("utils/v3/xml2json/toJson.js");
+		TEST_MODULES.add("utils/v3/xml/fromJson.js");
+		TEST_MODULES.add("utils/v3/xml/toJson.js");
 		TEST_MODULES.add("utils/v3/uuid/validate.js");
+		TEST_MODULES.add("utils/v3/uuid/alias.js");
+		TEST_MODULES.add("utils/v3/uuid/alias-modules.js");
 
 	}
 

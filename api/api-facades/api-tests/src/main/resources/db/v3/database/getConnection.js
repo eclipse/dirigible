@@ -1,10 +1,11 @@
 /* eslint-env node, dirigible */
 
 var database = require('db/v3/database');
+var update = require('db/v3/update');
 
-database.update("CREATE TABLE T (A INT, B VARCHAR(10))");
-database.update("INSERT INTO T VALUES (1, 'ABC')");
-database.update("INSERT INTO T VALUES (2, 'DEF')");
+update.execute("CREATE TABLE T (A INT, B VARCHAR(10))");
+update.execute("INSERT INTO T VALUES (1, 'ABC')");
+update.execute("INSERT INTO T VALUES (2, 'DEF')");
 
 var sql = "SELECT * FROM T WHERE A = ?";
 
@@ -30,6 +31,6 @@ try {
 	connection.close();
 }
 
-database.update("DROP TABLE T");
+update.execute("DROP TABLE T");
 
 value == 'DEF';
