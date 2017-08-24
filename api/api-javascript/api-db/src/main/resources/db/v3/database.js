@@ -27,16 +27,6 @@ exports.getMetadata = function(databaseType, datasourceName) {
 	return metadata;
 };
 
-exports.query = function(databaseType, datasourceName, sql, parameters) {
-	var resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'query', [databaseType, datasourceName]);
-	return resultset;
-};
-
-exports.update = function(databaseType, datasourceName, sql, parameters) {
-	var result = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'update', [databaseType, datasourceName]);
-	return result;
-};
-
 exports.getConnection = function(databaseType, datasourceName) {
 	var connectionInstance = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getConnection', [databaseType, datasourceName], true);
 	var connection = new Connection();
