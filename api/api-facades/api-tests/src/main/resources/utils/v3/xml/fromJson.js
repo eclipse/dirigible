@@ -1,6 +1,6 @@
 /* eslint-env node, dirigible */
 
-var xml2json = require('utils/v3/xml2json');
+var xml2json = require('utils/v3/xml');
 
 var input = '{"a":{"b":"text_b","c":"text_c","d":{"e":"text_e"}}}';
 var result = xml2json.fromJson(input);

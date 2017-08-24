@@ -10,7 +10,7 @@
 
 /* eslint-env node, dirigible */
 
-var xml2json = require('utils/v3/xml2json');
+var xml2json = require('utils/v3/xml');
 for(var propertyName in xml2json) {
 	exports[propertyName] = xml2json[propertyName];
 }
