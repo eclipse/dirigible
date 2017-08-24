@@ -45,6 +45,30 @@
 		<filter-name>guiceFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<filter>
+		<filter-name>QoSFilter</filter-name>
+		<filter-class>org.eclipse.jetty.servlets.QoSFilter</filter-class>
+		<init-param>
+			<param-name>maxRequests</param-name>
+			<param-value>5000</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>QoSFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>DoSFilter</filter-name>
+		<filter-class>org.eclipse.jetty.servlets.DoSFilter</filter-class>
+		<init-param>
+			<param-name>maxRequestsPerSec</param-name>
+			<param-value>3000</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>DoSFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	
 	<!-- <resource-ref>
 		<res-ref-name>jdbc/DefaultDB</res-ref-name>

@@ -364,6 +364,7 @@
 		<maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
 		<derby.version>10.12.1.1</derby.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
+		<jetty.version>9.4.5.v20170502</jetty.version>
 	</properties>
 
 	<modules>

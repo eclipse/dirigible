@@ -219,7 +219,6 @@
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
-		
 		<!-- Runtime IDE Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -343,7 +342,14 @@
 		  <artifactId>jsr250-api</artifactId>
 		  <version>${jsr250-api.version}</version>
 		</dependency>
-		
+
+		<!-- External - Jetty -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlets</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
 		<!-- <dependency>
 		 	<groupId>org.activiti</groupId>
 		 	<artifactId>activiti-engine</artifactId>
