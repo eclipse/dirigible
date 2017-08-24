@@ -117,6 +117,12 @@
 								type: 'component',
 								componentName: 'Console',
 								componentState: { label: 'Console' }								
+							}, {
+								id:"preview",
+								type: 'component',
+								componentName: 'Preview',
+								componentState: {  },
+								content: []
 						}]
 		        }]
 		    }]
@@ -146,6 +152,9 @@
 		});
 		myLayout.registerComponent( 'Console', function( container, componentState ){
 		    container.getElement().html( '<iframe src="../ide-console/console.html"></iframe>' );
+		});
+		myLayout.registerComponent( 'Preview', function( container, componentState ){
+		    container.getElement().html( '<iframe src="../ide-preview/preview.html"></iframe>' );
 		});
 		
 		myLayout.init();
