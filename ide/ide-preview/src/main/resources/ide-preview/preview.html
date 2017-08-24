@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	
+	<title>Eclipse Dirigible - Preview</title>
+
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="preview.js"></script>
+
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" >
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+	<link href="../ide/css/bootstrap.min.css" type="text/css"  rel="stylesheet">
+	<link href="../ide/css/dark.css" type="text/css" rel="stylesheet" />
+	<link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body ng-app="preview">
+	<div class="form-group">
+		 <label for="previewUrl">URL:</label>
+		<input class="form-control" type="text" ng-model="previewUrl" id="previewUrl">
+	</div>
+	<div class="fluidMedia">
+	    <iframe ng-src="{{previewUrl}}" frameborder="0"> </iframe>
+	</div>
+</body>
+</html>

@@ -41,6 +41,7 @@
 		<module>ide-editor-orion</module>
 		<module>ide-swagger</module>
 		<module>ide-workspace</module>
+		<module>ide-preview</module>
 	</modules>
 
 	<profiles>
