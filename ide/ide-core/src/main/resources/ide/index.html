@@ -98,32 +98,34 @@
 		    content: [{
 		        type: 'row',
 		        content:[{
-						id:"ws",
-		            	type: 'component',
-		            	componentName: 'Workspace',
-		            	componentState: { label: 'Workspace' },
-		            	width: 30
-		        	},{
-						id: 'center',
-		            	type: 'column',
-		            	content:[{
-								id:"editor",
-								type: 'component',
-								componentName: 'Editor',
-								componentState: {  },
-								content: []
-							},{
-								id:"console",
-								type: 'component',
-								componentName: 'Console',
-								componentState: { label: 'Console' }								
-							}, {
-								id:"preview",
-								type: 'component',
-								componentName: 'Preview',
-								componentState: {  },
-								content: []
+					id:"ws",
+					type: 'component',
+					componentName: 'Workspace',
+					componentState: { label: 'Workspace' },
+					width: 30
+				}, {
+					id: 'center',
+					type: 'column',
+					content:[{
+						id:"editor",
+						type: 'component',
+						componentName: 'Editor',
+						componentState: {  },
+						content: []
+					}, {
+						type: 'stack',
+						content: [{
+							id:"console",
+							type: 'component',
+							componentName: 'Console',
+							componentState: { label: 'Console' }								
+						}, {
+							id:"preview",
+							type: 'component',
+							componentName: 'Preview',
+							componentState: { label: 'Preview' }
 						}]
+					}]
 		        }]
 		    }]
 		};
