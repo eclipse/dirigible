@@ -14,16 +14,25 @@ var java = require('core/v3/java');
 
 exports.getDatabaseTypes = function() {
 	var types = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getDatabaseTypes', []);
+	if (types) {
+		return JSON.parse(types);
+	}
 	return types;
 };
 
 exports.getDataSources = function(databaseType) {
 	var datasources = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getDataSources', [databaseType]);
+	if (datasources) {
+		return JSON.parse(datasources);
+	}
 	return datasources;
 };
 
 exports.getMetadata = function(databaseType, datasourceName) {
 	var metadata = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getMetadata', [databaseType, datasourceName]);
+	if (metadata) {
+		return JSON.parse(metadata);
+	}
 	return metadata;
 };
 

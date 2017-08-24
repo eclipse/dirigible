@@ -14,5 +14,8 @@ var java = require('core/v3/java');
 
 exports.execute = function(databaseType, datasourceName, sql, parameters) {
 	var resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'query', [databaseType, datasourceName]);
+	if (resultset) {
+		return JSON.parse(resultset);
+	}
 	return resultset;
 };
