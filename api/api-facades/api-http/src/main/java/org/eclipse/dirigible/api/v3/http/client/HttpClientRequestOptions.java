@@ -26,6 +26,8 @@ public class HttpClientRequestOptions {
 	private int socketTimeout;
 	private boolean contentCompressionEnabled;
 
+	private boolean sslTrustAllEnabled;
+
 	// binary content for POST and PUT
 	private byte[] data;
 	// text content for POST and PUT
@@ -161,6 +163,14 @@ public class HttpClientRequestOptions {
 
 	public void setContentCompressionEnabled(boolean contentCompressionEnabled) {
 		this.contentCompressionEnabled = contentCompressionEnabled;
+	}
+
+	public boolean isSslTrustAllEnabled() {
+		return sslTrustAllEnabled;
+	}
+
+	public void setSslTrustAllEnabled(boolean sslTrustAllEnabled) {
+		this.sslTrustAllEnabled = sslTrustAllEnabled;
 	}
 
 	public byte[] getData() {

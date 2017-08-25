@@ -42,10 +42,9 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	public static final String get(String url, String options) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		HttpGet httpGet = new HttpGet(url);
 		httpGet.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpGet);
@@ -56,6 +55,7 @@ public class HttpClientFacade implements IScriptingFacade {
 	}
 
 	public static final String post(String url, String options) throws IOException {
+
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
 		if (httpClientRequestOptions.getData() != null) {
 			return postBinary(url, httpClientRequestOptions);
@@ -70,10 +70,8 @@ public class HttpClientFacade implements IScriptingFacade {
 	}
 
 	private static final String postBinary(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
-
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPost);
@@ -90,12 +88,11 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	private static final String postText(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		if (httpClientRequestOptions.getText() == null) {
 			throw new IllegalArgumentException("The element [text] in [options] cannot be null for POST requests in [text] mode");
 		}
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPost);
@@ -113,12 +110,11 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	private static final String postForm(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		if (httpClientRequestOptions.getParams() == null) {
 			throw new IllegalArgumentException("The element [params] in [options] cannot be null for POST requests in [form] mode");
 		}
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPost);
@@ -138,12 +134,11 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	private static final String postFiles(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		if (httpClientRequestOptions.getParams() == null) {
 			throw new IllegalArgumentException("The element [files] in [options] cannot be null for POST requests in [file] mode");
 		}
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPost);
@@ -178,9 +173,8 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	private static final String putBinary(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		HttpPut httpPut = new HttpPut(url);
 		httpPut.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPut);
@@ -197,12 +191,11 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	private static final String putText(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		if (httpClientRequestOptions.getText() == null) {
 			throw new IllegalArgumentException("The element [text] in [options] cannot be null for POST requests in [text] mode");
 		}
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		HttpPut httpPut = new HttpPut(url);
 		httpPut.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPut);
@@ -220,9 +213,8 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	public static final String delete(String url, String options) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
 		HttpDelete httpDelete = new HttpDelete(url);
 		httpDelete.setConfig(config);
@@ -235,9 +227,8 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	public static final String head(String url, String options) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
 		HttpHead httpHead = new HttpHead(url);
 		httpHead.setConfig(config);
@@ -250,9 +241,8 @@ public class HttpClientFacade implements IScriptingFacade {
 
 	public static final String trace(String url, String options) throws IOException {
 
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(true);
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
 		HttpTrace httpTrace = new HttpTrace(url);
 		httpTrace.setConfig(config);
