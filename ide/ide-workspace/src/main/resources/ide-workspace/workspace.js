@@ -1,24 +1,15 @@
-//var hub2 = new FramesMessageHub({
-//	topic: 'something',
-//	targetOrigin: 'http://localhost:8080'
-//});
-//$('button').click(function(evt){
-//	hub2.post({data:$('#msg').val()});
-//});
-
-var hub = new FramesMessageHub({
+var messageHub = new FramesMessageHub({
 	topic: 'fileselected',
-	targetOrigin: 'http://localhost:8080'
+	targetOrigin: window.top.location.protocol+'//'+window.top.location.host
 });
-$('ul.filelist > li').click(function(evt){
-	hub.post({data: JSON.parse($(this).text())});
-});
-			
-			
-			
+
+messageHub.fireFileOpen = function(fileDescriptor){
+	messageHub.post({data: fileDescriptor});
+}
+
 angular.module('workspace', []).controller('WorkspaceController', function ($scope, $http) {
 					
-	var workspacesSvcUrl = "../../ide/workspaces";
+	var workspacesSvcUrl = "/services/v3/ide/workspaces";
 	$scope.selectedWs;
 	$scope.jstree;
 	
@@ -41,7 +32,7 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 				$http.get(workspacesSvcUrl + '/' + $scope.selectedWs)
 					.success(function(data) {
 						$scope.projects = data.projects;
-							
+						this.baseUrl = workspacesSvcUrl + '/' + $scope.selectedWs;
 						var projects = $scope.projects.map(function(project){
 							return build(project);
 						})
@@ -49,7 +40,7 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 							$('.workspace').jstree(true).settings.core.data = projects;
 							$('.workspace').jstree(true).refresh();
 						} else {
-						$scope.jstree = $('.workspace').jstree({
+						  $scope.jstree = $('.workspace').jstree({
 							"core" : {
 							  "data" : projects,
 							  "themes": {
@@ -68,48 +59,76 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 									return true;
 								  }
 							  },
+							  'types': {
+								  'default': {
+									  'icon': "fa fa-file"
+								  },
+								  'folder': {
+									  'icon': "fa fa-folder"
+								  },
+								  'file': {
+									  'icon': "fa fa-file"
+								  },
+								  'project': {
+									  'icon': "fa fa-folder"
+								  }
+							  },
 					          'contextmenu' : {
 									'items' : function(node) {
-										var tmp = $.jstree.defaults.contextmenu.items();
-										delete tmp.create.action;
-										tmp.create.label = "New";
-										tmp.create.submenu = {
-											"create_folder" : {
-												"separator_after"	: true,
-												"label"				: "Folder",
-												"action"			: function (data) {
-													var inst = $.jstree.reference(data.reference),
-														obj = inst.get_node(data.reference);
-													inst.create_node(obj, { type : "default" }, "last", function (new_node) {
-														setTimeout(function () { inst.edit(new_node); },0);
-													});
-												}
-											},
-											"create_file" : {
-												"label"				: "File",
-												"action"			: function (data) {
-													var inst = $.jstree.reference(data.reference),
-														obj = inst.get_node(data.reference);
-													inst.create_node(obj, { type : "file" }, "last", function (new_node) {
-														setTimeout(function () { inst.edit(new_node); },0);
-													});
-												}
-											}
-										};
+										var ctxmenu = $.jstree.defaults.contextmenu.items();
 										if(this.get_type(node) === "file") {
-											delete tmp.create;
-										}
-										return tmp;
+											delete ctxmenu.create;
+										} else {
+											delete ctxmenu.create.action;
+											ctxmenu.create.label = "New";
+											ctxmenu.create.submenu = {
+												"create_folder" : {
+													"separator_after"	: true,
+													"label"				: "Folder",
+													"action"			: function (data) {
+														var inst = $.jstree.reference(data.reference),
+															obj = inst.get_node(data.reference);
+														inst.create_node(obj, { type : "default" }, "last", function (new_node) {
+															setTimeout(function () { inst.edit(new_node); },0);
+														});
+													}
+												},
+												"create_file" : {
+													"label"				: "File",
+													"action"			: function (data) {
+														var inst = $.jstree.reference(data.reference),
+															obj = inst.get_node(data.reference);
+														inst.create_node(obj, { type : "file" }, "last", function (new_node) {
+															setTimeout(function () { inst.edit(new_node); },0);
+														});
+													}
+												}
+											};
+											
+										}										
+										ctxmenu.remove.shortcut = 46;
+										ctxmenu.remove.shortcut_label = 'Del';
+										ctxmenu.rename.shortcut = 113;
+										ctxmenu.rename.shortcut_label = 'F2';
+										return ctxmenu;
 									}
 								},
 								"plugins": ['state','dnd','sort','types','contextmenu','unique']
 						  })
 						 .on('select_node.jstree', function (e, data) {
-							//hub.post({data: data.node.original._file});
+							//messageHub.post({data: data.node.original._file});
 						  })
-						 .on('dblclick.jstree', function (e) {
+						 .on('dblclick.jstree', function (evt, node) {
 							 var data= $('.workspace').jstree().get_selected(true);
-							 hub.post({data: data[0].original._file});
+							 var type = $('.workspace').jstree().get_node(evt.target).original.type;
+							 if(['folder','project'].indexOf(type)<0)
+								messageHub.fireFileOpen(data[0].original._file);
+						  })
+						  .on('open_node.jstree', function(evt, data) {
+							data.instance.set_icon(data.node, 'fa fa-folder-open-o');
+						  })
+						  .on('close_node.jstree', function(evt, data) {
+							data.instance.set_icon(data.node, true);
 						  })
 						  .on('delete_node.jstree', function (e, data) {
 						  		$http.delete(workspacesSvcUrl + data.node.original._file.path);
@@ -135,7 +154,7 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 									.fail(function () {
 										data.instance.refresh();
 									});
-							})
+							}.bind(this))
 							.on('move_node.jstree', function (e, data) {
 								$.get('?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent })
 									.done(function (d) {
@@ -157,7 +176,7 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 									});
 							});
 						}
-				});
+				}.bind(this));
 			}
 	};
 	
@@ -190,8 +209,6 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 						$scope.refreshWorkspace();
 		});
 	};
-					
-	
 
 });
 	

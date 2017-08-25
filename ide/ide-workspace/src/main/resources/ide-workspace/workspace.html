@@ -19,35 +19,14 @@
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
 	<script src="workspace.js"></script>
+	
+	<link type="text/css" rel="stylesheet" href="/services/v3/web/ide/css/dark.css" />
 
 </head>
 
 <body style="background-color: #222" border="1px" ng-app="workspace" ng-controller="WorkspaceController">
 
 	<div>
-	
-	
-<!-- 		<nav class="navbar navbar-inverse bg-inverse">
-		  <button class="navbar-toggler navbar-toggler-right btn-default" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		    <span><i class="fa fa-bars"></i></span>
-		  </button>
-		  <select ng-model="selectedWs" ng-options="o as o for o in workspaces" ng-change="selected()"
-						class="dropdown btn btn-default dropdown-toggle"></select>
-		  
-		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-		    <ul class="navbar-nav mr-auto">
-		      <li class="nav-item"><a class="nav-link" href="#">Project</a></li>
-		      <li class="nav-item"><a class="nav-link" href="#">Folder</a></li>
-		      <li class="nav-item"><a class="nav-link" href="#">File</a></li>
-		      <li><div class="dropdown-divider"></div></li>
-		      <li class="nav-item"><a class="nav-link" href="#">Table</a></li>
-		      <li class="nav-item"><a class="nav-link" href="#">View</a></li>
-		      <li class="nav-item"><a class="nav-link" href="#">Service</a></li>
-		      <li class="nav-item"><a class="nav-link" href="#">HTML</a></li>
-		    </ul>
-		  </div>
-		</nav> -->
-	
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
 			<div class="btn-group">
 			  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="New">
@@ -75,11 +54,9 @@
 			<button type="button" class="btn btn-default" title="Publish"><i class="fa fa-cloud-upload"></i></button>
 			<select ng-model="selectedWs" ng-options="o as o for o in workspaces" ng-change="selected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
-			
 		</div>
-
-		
 	</div>
+	
 	<div class="workspace"></div>
 
 </body>
