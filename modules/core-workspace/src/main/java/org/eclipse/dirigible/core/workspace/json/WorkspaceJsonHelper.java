@@ -24,6 +24,14 @@ public class WorkspaceJsonHelper {
 			projectPojo.getFolders().add(traverseFolder(childCollection, removePathPrefix, addPathPrefix));
 		}
 
+		for (IResource childResource : collection.getResources()) {
+			File resourcePojo = new File();
+			resourcePojo.setName(childResource.getName());
+			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
+			resourcePojo.setContentType(childResource.getContentType());
+			projectPojo.getFiles().add(resourcePojo);
+		}
+
 		return projectPojo;
 	}
 
