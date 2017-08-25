@@ -16,6 +16,10 @@ public class StreamsFacade {
 		return input.read();
 	}
 	
+	public static final byte[] readBytes(InputStream input) throws IOException {
+		return IOUtils.toByteArray(input);
+	}
+	
 	public static final String readText(InputStream input) throws IOException {
 		return IOUtils.toString(input, StandardCharsets.UTF_8);
 	}
@@ -26,6 +30,11 @@ public class StreamsFacade {
 	
 	public static final void write(OutputStream output, int value) throws IOException {
 		output.write(value);
+	}
+	
+	public static final void writeBytes(OutputStream output, String input) throws IOException {
+		byte[] bytes = BytesHelper.jsonToBytes(input);
+		output.write(bytes);
 	}
 	
 	public static final void writeText(OutputStream output, String value) throws IOException {
@@ -60,6 +69,12 @@ public class StreamsFacade {
 	public static final byte[] getBytes(ByteArrayOutputStream output) throws IOException {
 		byte[] bytes = output.toByteArray();
 		return bytes;
+	}
+	
+	public static final String getText(ByteArrayOutputStream output) throws IOException {
+		byte[] bytes = output.toByteArray();
+		String text = new String(bytes, StandardCharsets.UTF_8);
+		return text;
 	}
 
 }

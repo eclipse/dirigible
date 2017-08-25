@@ -22,6 +22,14 @@ exports.InputStream = function() {
 		return value;
 	};
 	
+	this.readBytes = function() {
+		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'readBytes', [this.uuid]);
+		if (value && value != null) {
+			return JSON.parse(value);
+		}
+		return value;
+	};
+	
 	this.readText = function() {
 		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'readText', [this.uuid]);
 		return value;
@@ -42,6 +50,10 @@ exports.OutputStream = function() {
 		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'write', [this.uuid, byte]);
 	};
 	
+	this.writeBytes = function(bytes) {
+		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'writeBytes', [this.uuid, JSON.stringify(bytes)]);
+	};
+	
 	this.writeText = function(text) {
 		var value = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'writeText', [this.uuid, text]);
 	};
@@ -54,6 +66,11 @@ exports.OutputStream = function() {
 		var result = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'getBytes', [this.uuid]);
 		bytes = JSON.parse(result);
 		return bytes;
+	};
+	
+	this.getText = function() {
+		var text = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'getText', [this.uuid]);
+		return text;
 	};
 	
 };

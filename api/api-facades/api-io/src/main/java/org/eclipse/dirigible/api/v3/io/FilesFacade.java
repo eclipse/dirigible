@@ -69,7 +69,7 @@ public class FilesFacade {
 		return new File(path).getParentFile().getPath();
 	}
 	
-	public static final byte[] read(String path) throws IOException {
+	public static final byte[] readBytes(String path) throws IOException {
 		return Files.readAllBytes(Paths.get(path));
 	}
 	
@@ -77,7 +77,7 @@ public class FilesFacade {
 		return new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
 	}
 	
-	public static final void write(String path, String input) throws IOException {
+	public static final void writeBytes(String path, String input) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
 		Files.write(Paths.get(path), bytes);
 	}

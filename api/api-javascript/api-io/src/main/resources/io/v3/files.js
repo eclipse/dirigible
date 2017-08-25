@@ -59,14 +59,18 @@ exports.getParentPath = function(path) {
 	return java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "getParentPath", [path]);
 };
 
-exports.readText = function(path){
-    var result = java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "readText", [path]);
+exports.readBytes = function(path){
+    var result = java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "readBytes", [path]);
     var bytes = JSON.parse(result);
     return bytes;
 }
 
 exports.readText = function(path){
     return java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "readText", [path]);
+}
+
+exports.writeBytes = function(path, bytes){
+    java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "writeBytes", [path, JSON.stringify(bytes)]);
 }
 
 exports.writeText = function(path, text){
@@ -93,8 +97,8 @@ exports.getPermissions = function(path) {
    	return java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "getPermissions", [path]);
 };
 
-exports.getPermissions = function(path, permissions) {
-   	java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "getPermissions", [path, permissions]);
+exports.setPermissions = function(path, permissions) {
+   	java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "setPermissions", [path, permissions]);
 };
 
 exports.size = function(path) {
