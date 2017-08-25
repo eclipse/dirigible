@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
     <title>Eclipse Dirigible &trade;</title>
 
@@ -16,7 +14,8 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
-	<script type="text/javascript" src="https://golden-layout.com/files/latest/js/goldenlayout.min.js"></script>
+	<script type="text/javascript" src="https://golden-layout.com/files/latest/js/goldenlayout.js"></script>
+	
 	<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
 	<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />
 	
@@ -34,39 +33,40 @@
 
 <body ng-app="workbench" ng-controller="WorkbenchController">
 
-	<nav class="navbar navbar-inverse" role="navigation">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#">
-				<!-- <img src="img/dirigible.png" style="width: 30px; margin-left: 10px"> -->
-				<!-- <i class="logo-icon icon-dirigible" style="color: #ffcc00">&#xe800;</i> -->
-				
-			</a>
-		</div>
-
-		<div class="collapse navbar-collapse" id="navbar-collapse">
-			<ul id="main-menu" class="nav navbar-nav">
-				<li ng-class="{dropdown: !!menu.items}" ng-repeat="menuItem in menu">
-					<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="onClick(menuItem.onClick)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
-					<a ng-show="menuItem.items" href="" class="dropdown-toggle" data-toggle="dropdown">{{ menuItem.name }}</a>
-					<ul class="dropdown-menu">
-						<li ng-repeat="item in menuItem.items">
-							<a href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-			  <li class="dropdown" ng-include="'/services/web/resources/themes/themes.html'"></li>
-			  <li class="hidden-xs">
-				<a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
-			  </li>
-			</ul>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-flex">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">
+					<!-- <img src="img/dirigible.png" style="width: 30px; margin-left: 10px"> -->
+					<!-- <i class="logo-icon icon-dirigible" style="color: #ffcc00">&#xe800;</i> -->
+					
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbar-collapse">
+				<ul id="main-menu" class="nav navbar-nav">
+					<li ng-class="{dropdown: !!menu.items}" ng-repeat="menuItem in menu">
+						<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="onClick(menuItem.onClick)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
+						<a ng-show="menuItem.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ menuItem.name }}</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="item in menuItem.items">
+								<a href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+				  <li class="dropdown" ng-include="'/services/web/resources/themes/themes.html'"></li>
+				  <li class="hidden-xs">
+					<a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
+				  </li>
+				</ul>
+			</div>
 		</div>
 	</nav>
 	
@@ -90,107 +90,140 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
 
-		<script type="text/javascript">
-		var config = {
-			dimensions: {
-				headerHeight: 28
-			},
-		    content: [{
-		        type: 'row',
-		        content:[{
-					id:"ws",
-					type: 'component',
-					componentName: 'Workspace',
-					componentState: { label: 'Workspace' },
-					width: 30
-				}, {
-					id: 'center',
-					type: 'column',
+	<script type="text/javascript">
+	
+		function LayoutController(){
+			this.config = {
+				dimensions: {
+					headerHeight: 26,
+					borderWidth: 3
+				},
+				content: [{
+					type: 'row',
 					content:[{
-						id:"editor",
-						type: 'component',
-						componentName: 'Editor',
-						componentState: {  },
-						content: []
-					}, {
-						type: 'stack',
-						content: [{
-							id:"console",
+							id:"ws",
 							type: 'component',
-							componentName: 'Console',
-							componentState: { label: 'Console' }								
-						}, {
-							id:"preview",
-							type: 'component',
-							componentName: 'Preview',
-							componentState: { label: 'Preview' }
-						}]
+							componentName: 'Workspace',
+							componentState: { label: 'Workspace' },
+							width: 30
+						},{
+							id: 'center',
+							type: 'column',
+							content:[{
+									id:"editor",
+									type: 'component',
+									componentName: 'Editor',
+									componentState: {  },
+									content: []
+								},{
+									type: 'stack',
+									content: [{
+										id:"console",
+										type: 'component',
+										componentName: 'Console',
+										componentState: { label: 'Console' }	
+									},{
+										id:"preview",
+										type: 'component',
+										componentName: 'Preview',
+										componentState: { label: 'Preview' }	
+									}]							
+							}]
 					}]
-		        }]
-		    }]
+				}]
+			};
+			
+			this.layout = new GoldenLayout(this.config, $('.plane') );
+			
+			this.layout.registerComponent( 'Workspace', function( container, componentState ){
+				container.getElement().html('<iframe src="../ide-workspace/workspace.html"></iframe>');
+			});
+			this.layout.registerComponent( 'Editor', function( container, componentState ){
+				this.setContent = function(path){
+					if (path) {
+						container.getElement().empty().html( '<iframe src="../ide-editor-orion/editor.html?file='+path+'"></iframe>' );
+					} else {
+						container.setTitle( 'Welcome' );
+						container.getElement().empty().html( '<iframe src="welcome.html"></iframe>' );
+					}
+					
+				};
+				this.setContent(componentState.path);
+			});
+			this.layout.registerComponent( 'Console', function( container, componentState ){
+				container.getElement().html( '<iframe src="../ide-console/console.html"></iframe>' );
+			});
+			
+			this.listeners = {};
+			
+			this.addListener = function(eventType, callback){
+				if(!this.listeners[eventType]){
+					this.listeners[eventType] = [];
+				}
+				var client = new FramesMessageHub({
+					topic: eventType
+				});
+				client.subscribe(callback);
+
+				var entry = {
+					id: uuidv4(),
+					handler: client
+				};
+				this.listeners[eventType].push(entry);
+				return entry.id;
+			};		
+			this.removeListener = function(id, eventType){
+				if(!this.listeners[eventType])
+					return;
+				for (var i = a.length - 1; i >= 0; i--) {
+				  if (this.listeners[eventType][i].id == id) {
+					 this.listeners[eventType].splice(i, 1);
+				  }
+				}
+			};
+			this.init = function(){
+				this.layout.init();
+			}
 		};
 		
-		var myLayout = new GoldenLayout( config, $('.plane') );
-
+		function uuidv4() {
+		  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+			return v.toString(16);
+		  });
+		}
+	
+		var layoutCtrl = new LayoutController();
 		
-		myLayout.registerComponent( 'Workspace', function( container, componentState ){
-		    container.getElement().html('<iframe src="../ide-workspace/workspace.html"></iframe>');
-		});
-		myLayout.registerComponent( 'Editor', function( container, componentState ){
-			this.setContent = function(path){
-				if (path) {
-					container.getElement().empty().html( '<iframe src="../ide-editor-orion/editor.html?file='+path+'"></iframe>' );
-				} else {
-					container.setTitle( 'Welcome' );
-					container.getElement().empty().html( '<h1>Welcome to Eclipse Dirigible &trade;</h1><br><br><br>'
-					 + '<p style="font-size: 1.2em"><a href="http://www.dirigible.io" target=_blank>Eclipse Dirigible &trade;</a> is a Cloud Development Platform providing development tools and runtime environment. It supports full development life-cycle of on-demand applications by leveraging in-system programming models and rapid application development techniques.</p><br><br>'
-					 + '<p style="font-size: 1.2em">All the source code is licensed under the <a href="https://www.eclipse.org/legal/epl-v10.html" target=_blank>Eclipse Public License - v 1.0</a> and maintained at <a href="https://github.com/eclipse/dirigible" target=_blank>GitHub</a></p><br><br><br><br>'
-					 + '<div style="width: 32em"><p style="font-size: 2em" align=center><i class="logo-icon icon-dirigible">&#xe800;</i> &nbsp; dirigible</p>'
-					 + '<p style="font-size: 1.4em" align=center>Enjoy Programming Like Never Before</p></div>');
+		layoutCtrl.addListener('fileselected', function(msg){
+			var newItemConfig = {
+				id: msg.data.path,
+				title: msg.data.label,
+				type: 'component',
+				componentName: 'Editor',
+				componentState:{ 
+					path: msg.data.path
 				}
-				
 			};
-			this.setContent(componentState.path);
-		});
-		myLayout.registerComponent( 'Console', function( container, componentState ){
-		    container.getElement().html( '<iframe src="../ide-console/console.html"></iframe>' );
-		});
-		myLayout.registerComponent( 'Preview', function( container, componentState ){
-		    container.getElement().html( '<iframe src="../ide-preview/preview.html"></iframe>' );
-		});
-		
-		myLayout.init();
-		
-		var client = new FramesMessageHub({
-				topic: 'fileselected'
-			});
-		client.subscribe(function(msg){
-				var newItemConfig = {
-					id: msg.data.path,
-					title: msg.data.label,
-					type: 'component',
-					componentName: 'Editor',
-					componentState:{ 
-						path: msg.data.path
-					}
-				};
-				//is an editor available to stack new children to it?
-				if(myLayout.root.getItemsById('editor')[0]){
-					//is already open?
-					if(myLayout.root.getItemsById(newItemConfig.id).length){
-						//replace content
-						var panel = myLayout.root.getItemsById(newItemConfig.id)[0];
-						panel.instance.setContent(newItemConfig.id)
-						panel.parent.setActiveContentItem(panel);
-					} else {
-						// open new tab
-						myLayout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
-					}
+			//is an editor available to stack new children to it?
+			if(layoutCtrl.layout.root.getItemsById('editor')[0]){
+				//is already open?
+				if(layoutCtrl.layout.root.getItemsById(newItemConfig.id).length){
+					//replace content
+					var panel = layoutCtrl.layout.root.getItemsById(newItemConfig.id)[0];
+					panel.instance.setContent(newItemConfig.id)
+					panel.parent.setActiveContentItem(panel);
 				} else {
-					// open up
-					//myLayout.root.getItemsById('center').addChild( newItemConfig );
+					// open new tab
+					layoutCtrl.layout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
 				}
-			});
+			} else {
+				// open up
+				//myLayout.root.getItemsById('center').addChild( newItemConfig );
+			}
+		});
+		
+		layoutCtrl.init();
 		
 	</script>
 	
