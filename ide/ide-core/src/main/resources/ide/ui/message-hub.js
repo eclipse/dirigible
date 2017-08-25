@@ -1,160 +1,105 @@
 var FramesMessageHub = (function () {
-
+	/**
+	 * @class FramesMessageHub A Publish-Subscribe mechanism for secure cross-domain message exchange between browser windows/iframes entirely clientside, built on the HTML5 postMessage
+	 framework.
+	 *
+	 * @param {Object} [settings] parameters overriding defaults
+	 * @param {string} [settings.defaultTopic] an optional default topic sink for all messages posted without explicit topic. Note that the subscribers will still need to subscribe exactly to this topic name. No default value.
+	 * @param {Object} [settings.hubWindow] optional window object used to propagate the 'message' event. Defaults to window.top
+	 * @param {string[]} [settings.allowedOrigins] messages are inspected for their origin and then this setting is consulted to check if their origin is allowed or not and prevent message spoofing. Use for whitelisting origins. By default only the same origin as the current window's origin is allowed: [window.location.origin].
+	 * @param {Object} [settings.targetOrigin] targetOrigin specifies the target of the message (the hubWindow) as a URI string. The event will make it ot its destination only if the destination window location matches this URL. Though it is possible to denote 'no preference' by using the *' alias, this is highly NOT recommended. Always specify the hubWindow targetOrigin URI to avoid spoofing messages. Defaults to settings.hubWindow.location.origin.
+	 */
 	function FramesMessageHub(settings) {
 		this.settings = settings || {};
 		this.settings.hubWindow = this.settings.hubWindow || top;
-		this.settings.topic = this.settings.topic || '*';
 		this.settings.allowedOrigins = this.settings.allowedOrigins || [location.origin];
-		this.settings.targetOrigin = this.settings.targetOrigin || '*';
+		this.settings.targetOrigin = this.settings.targetOrigin || this.settings.hubWindow.location.origin;
 	}
 
-	FramesMessageHub.prototype.post = function(msg){
+	/**
+	 * Posts a message to a topic. Subscribed message handler will be notified for this event and invoked to handle it (see the subscribe method for details).
+	 *
+	 * @param {Object|string} message - a JSON object message delivered in the topic. Alternatively, a simple string can be provided and it will be automatically wrapped in a JSON object according to the expected schema.
+	 * @param {Object} message.data - the message payload.
+	 * @param {string} [message.defaultTopic] - (optional) the message topic. Instead of provisioning a second argument to this method for a topic, the message object parameter topic can be supplied with the same purpose. In case both are present, the  method argument will take precedence.
+	 */
+	FramesMessageHub.prototype.post = function(msg, topic){
 		if(msg === undefined)
 			msg = {};
+		// make it easy for simple string messages
 		if(typeof msg === 'string'){
 			msg = {
 				data: msg
 			};
 		}
-		if(this.settings.topic!=='*')
-			msg.topic = this.settings.topic;
+		topic = topic || this.settings.defaultTopic;//in case this client has been setup with a fixed topic and none overriding topic argument has been provided to the method.
+		if(topic!==undefined){
+			//inject the topic, if any, into the message.
+			msg.topic = topic;	
+		}
 		this.settings.hubWindow.postMessage(msg, this.settings.targetOrigin);
 	};
 	
-	FramesMessageHub.prototype.subscribe = function(messageHandler){
+	var onMessageReceived = function(messageHandler, topic, e){
+		//check if this message origin is whitelisted
+		if(this.settings.allowedOrigins===undefined || this.settings.allowedOrigins.length==0)
+			console.warn('[FramesMessageHub] settings.allowedOrigins is not used. This may impose security risks.');
+		else {
+			if(this.settings.allowedOrigins.indexOf(e.origin)<0){
+				console.warn('[FramesMessageHub] message blocked from non-whitelisted origin: ' + e.origin);
+				return; 
+			}	
+		}
+		//ensure that the handler will be invoked only for messages posted in the topic it was subscribed to
+		if(topic!==this.settings.defaultTopic && e.data && e.data.topic !== topic){
+			//console.warn('[FramesMessageHub] message is not for this subscription topic: ' + e.data.topic);
+			return; 
+		}
+		var message = e.data;
+		messageHandler.apply(this, [message, e]);
+	}
+	
+	/**
+	 * Subscribes a handler function invoked upon posting messages in a topic.
+	 *
+	 * @param {FramesMessageHub~messageHandler} messageHandler - a function processing messages received in the subscribed topic.
+	 * @returns - a reference to the function subscirbed as event listener. Note that to unsubscribe you need to use this reference instead of the messageHandler provided as argument to this method.
+	 */
+	FramesMessageHub.prototype.subscribe = function(messageHandler, topic){
 		//TODO: use stadnard jsonschema and json schema validation
 		//settings.dataSchema = settings.dataSchema;
 		//if we expect messages delegate them to message handler
 		if(messageHandler && (typeof messageHandler === 'function')){
-			this.settings.hubWindow.addEventListener("message", function(e){
-				if(this.settings.allowedOrigins.indexOf(e.origin)<0){
-					console.warn('[FramesMessageHub] message blocked from non-whitelisted origin: ' + e.origin);
-					return; 
-				}
-				if(this.settings.topic!=='*' && e.data && e.data.topic !== this.settings.topic){
-					console.warn('[FramesMessageHub] message is not for this subscription topic: ' + e.data.topic);
-					return; 
-				}
-				var message = e.data;
-				messageHandler.apply(this, [message, e]);
-			}.bind(this), false);	
+			topic = topic || this.settings.defaultTopic;
+			if(topic === undefined)
+				throw Error('[FramesMessageHub] Invallid argument: cannot subscribe without topic. Either specifi topic as argument to the subscribe method or specify a default sink topic in settings parameter of the FramesMessageHub constructor');
+			//ensure a unique function instance per handler to support single handler per multiple topics (controller-like pattern)
+			var handler = function(messageHandler, topic, evt){
+				onMessageReceived.call(this, messageHandler, topic, evt);
+			}.bind(this, messageHandler, topic);
+			this.settings.hubWindow.addEventListener("message", handler, false);
 		}
-		return this;
+		return handler;
 	};
+	
+	/**
+	 * A handler function processing messages posted in a topic, to which it has been subscribed to with subscribe method.
+	 *
+	 * @callback FramesMessageHub~messageHandler
+	 * @param {Object|string} message - a JSON object message delivered in the topic. Alternatively, a simple string can be provided and it will be automatically wrapped in a JSON object according to the expected schema.
+	 * @param {Object} message.data - the message payload.
+	 * @param {string} message.topic - the message topic.
+	 * @param {Object} event - the original 'message' event that invoked this handler.
+	 */
+	
+	/**
+	 * Unsubscribes a handler function that was subscribed previously with the subscribe method from listening for messages in a topic. 
+	 *
+	 * @callback {FramesMessageHub~messageHandler} - The handler to be unsubscribed. Must be the function returned by the subscribe mehtod.
+	 */
+	FramesMessageHub.prototype.unsubscribe = function(messageHandler){
+		this.settings.hubWindow.removeEventListener("message", messageHandler, false);
+	}
 	
 	return FramesMessageHub;
 }());
-
-var RpcServiceOperation = (function () {
-
-	var RpcServiceOperation = Object.create(FramesMessageHub);
-
-	function RpcServiceOperation(settings) {
-		FramesMessageHub.call(this, settings);
-		this.settings.messageHandler = settings.messageHandler;
-		this.subscribe(function(msg, originalEvent){
-			var returnValue = this.settings.messageHandler.apply(this, [msg, originalEvent]);
-			if(returnValue){
-				var client = new FramesMessageHub.call(this, {
-					topic: this.settings.topic,
-					targetOrigin: originalEvent.origin
-				});
-				client.post({
-					data: returnValue,
-					corellationId: msg.corellationId					
-				});
-			}
-		}.bind(this));
-	};
-	
-	RpcServiceOperation.prototype.constructor = RpcServiceOperation;
-	
-	return RpcServiceOperation;
-}());
-
-var RpcServiceClientOperation = (function () {
-
-	var RpcServiceClientOperation = Object.create(FramesMessageHub);
-	function RpcServiceClientOperation(settings) {
-		FramesMessageHub.call(this, settings);
-		this.corellationid = '123';
-		this.subscribe(function(msg, originalEvent){
-			var returnValue = this.settings.messageHandler.apply(this, [msg, originalEvent]);
-			if(returnValue){
-				var client = new FramesMessageHub.call(this, {
-					topic: this.settings.topic,
-					targetOrigin: originalEvent.origin
-				});
-				client.post({
-					data: returnValue,
-					corellationId: msg.corellationId					
-				});
-			}
-		}.bind(this));
-	}
-	RpcServiceClientOperation.prototype.constructor = RpcServiceClientOperation;
-	
-	this.operation1 = function(){
-		this.post('hey');
-		this.timeoutid = window.setTimeout(function(){
-			return this.response;
-		}.bind(this), 20);
-	}
-	
-	return RpcServiceOperation;
-}());
-
-/*
-var xFrameRpcService = (function (svcname, svc) {
-	var propNames = Object.keys(svcStub);
-	var operations = {};
-	propNames.forEach(function(propName){
-		if(typeof svcStub[propName] === 'function')
-			operations[propName] = svcStub[propName];
-	})
-	this.service = function(){
-		var hub = new FramesMessageHub();
-		var opNames = Object.keys(operations);
-		opNames.forEach(function(opName){
-			hub.subscribe(function(msg){
-				var args = msg.arguments || [];
-				operations[opName].apply(operations, args);
-			})
-			window.addEventListener("message", function (e) {
-				if(e.origin !== location.origin){
-					return; 
-				}
-				var message = e.data;
-				if(message){
-					if(message.action === opName){
-						var arguments = message.arguments;
-						operations[opName].apply(operations, aguments)
-					}
-				}
-			}.bind(this), false);
-		}.bind(this))
-	};
-	this.request = function(){}
-	this.metadata = function(){
-		var opNames = Object.keys(operations);
-		opNames.forEach(function(opName){
-			window.addEventListener("message", function (e) {
-				if(e.origin !== location.origin){
-					return; 
-				}
-				var message = e.data;
-				if(message && message.topic && message.topic===svcname){
-					
-				}
-			}.bind(this), false);
-		}.bind(this))
-	};
-}());
-var xFrameRpcClient = (function () {
-	this.client = function(){
-		operations.forEach(function(opName){
-			operations[opName].;
-		}
-	}
-}());
-*/

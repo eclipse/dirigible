@@ -76,11 +76,11 @@ exports.getContentType = function() {
 };
 
 exports.sendError = function(status, message) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendError', [status, message]);
-};
-
-exports.sendError = function(status) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendError', [status]);
+	if (message) {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendError', [status, message]);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendError', [status]);
+	}
 };
 
 exports.setCharacterEncoding = function(charset) {

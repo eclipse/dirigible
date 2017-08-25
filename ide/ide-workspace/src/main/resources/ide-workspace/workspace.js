@@ -1,10 +1,7 @@
-var messageHub = new FramesMessageHub({
-	topic: 'fileselected',
-	targetOrigin: window.top.location.protocol+'//'+window.top.location.host
-});
+var messageHub = new FramesMessageHub();
 
 messageHub.fireFileOpen = function(fileDescriptor){
-	messageHub.post({data: fileDescriptor});
+	messageHub.post({data: fileDescriptor}, 'fileselected');
 }
 
 angular.module('workspace', []).controller('WorkspaceController', function ($scope, $http) {
