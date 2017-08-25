@@ -35,11 +35,11 @@ public class RepositoryPath {
 		this(repositoryPath.segments);
 	}
 
-	public RepositoryPath(String...segments) {
+	public RepositoryPath(String... segments) {
 		this.segments = Arrays.copyOf(segments, segments.length);
 		this.path = toString();
 	}
-	
+
 	/**
 	 * Getter for the last segment
 	 *
@@ -124,7 +124,7 @@ public class RepositoryPath {
 		return Arrays.copyOf(segments, segments.length);
 	}
 
-	public String constructPath(int number) {
+	public String constructPathTo(int number) {
 		if (number >= segments.length) {
 			return toString();
 		}
@@ -133,6 +133,21 @@ public class RepositoryPath {
 		}
 		final StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < number; i++) {
+			builder.append(IRepository.SEPARATOR);
+			builder.append(segments[i]);
+		}
+		return builder.toString();
+	}
+
+	public String constructPathFrom(int number) {
+		if (number >= segments.length) {
+			return toString();
+		}
+		if (segments.length == 0) {
+			return IRepository.SEPARATOR;
+		}
+		final StringBuilder builder = new StringBuilder();
+		for (int i = number; i < segments.length; i++) {
 			builder.append(IRepository.SEPARATOR);
 			builder.append(segments[i]);
 		}

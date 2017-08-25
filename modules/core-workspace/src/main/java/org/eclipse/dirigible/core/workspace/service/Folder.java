@@ -172,6 +172,13 @@ public class Folder implements IFolder {
 	}
 
 	@Override
+	public boolean existsFolder(String path) {
+		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		ICollection collection = this.getRepository().getCollection(fullPath);
+		return collection.exists();
+	}
+
+	@Override
 	public List<IFolder> getFolders() {
 		List<IFolder> folders = new ArrayList<IFolder>();
 		List<ICollection> collections = this.getCollections();
@@ -206,6 +213,13 @@ public class Folder implements IFolder {
 		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
 		IResource resource = this.getRepository().getResource(fullPath);
 		return new File(resource);
+	}
+
+	@Override
+	public boolean existsFile(String path) {
+		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		IResource resource = this.getRepository().getResource(fullPath);
+		return resource.exists();
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class LocalResourceVersion implements IResourceVersion {
 		this.repository = repository;
 		this.path = path;
 		this.version = version;
-		this.fileVersion = getRepository().getRepositoryDAO().getFileVersionByPath(getPath(), version);
+		this.fileVersion = getRepository().getRepositoryDao().getFileVersionByPath(getPath(), version);
 	}
 
 	public FileSystemRepository getRepository() {

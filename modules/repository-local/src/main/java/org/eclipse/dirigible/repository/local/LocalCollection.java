@@ -77,7 +77,12 @@ public class LocalCollection extends LocalEntity implements ICollection {
 
 	@Override
 	public void copyTo(String path) throws RepositoryWriteException {
-		throw new RepositoryWriteException("Not implemented");
+		final LocalFolder folder = getFolderSafe();
+		try {
+			folder.copyFolder(path);
+		} catch (LocalRepositoryException ex) {
+			throw new RepositoryWriteException(format("Could not move collection {0}", this.getName()), ex);
+		}
 	}
 
 	@Override

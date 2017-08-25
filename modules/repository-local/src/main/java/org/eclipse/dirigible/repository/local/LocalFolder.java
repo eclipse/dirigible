@@ -25,24 +25,28 @@ public class LocalFolder extends LocalObject {
 	}
 
 	public void deleteTree() throws LocalRepositoryException {
-		getRepository().getRepositoryDAO().removeFolderByPath(getPath());
+		getRepository().getRepositoryDao().removeFolderByPath(getPath());
 	}
 
 	public List<LocalObject> getChildren() throws LocalRepositoryException {
-		List<LocalObject> result = getRepository().getRepositoryDAO().getChildrenByFolder(getPath());
+		List<LocalObject> result = getRepository().getRepositoryDao().getChildrenByFolder(getPath());
 		return result;
 	}
 
 	public void createFolder(String name) throws LocalRepositoryException {
-		getRepository().getRepositoryDAO().createFolder(RepositoryPath.normalizePath(getPath(), name));
+		getRepository().getRepositoryDao().createFolder(RepositoryPath.normalizePath(getPath(), name));
 	}
 
 	public void createFile(String name, byte[] content, boolean isBinary, String contentType) throws LocalRepositoryException {
-		getRepository().getRepositoryDAO().createFile(RepositoryPath.normalizePath(getPath(), name), content, isBinary, contentType);
+		getRepository().getRepositoryDao().createFile(RepositoryPath.normalizePath(getPath(), name), content, isBinary, contentType);
 	}
 
 	public void renameFolder(String newPath) throws LocalRepositoryException {
-		getRepository().getRepositoryDAO().renameFolder(getPath(), newPath);
+		getRepository().getRepositoryDao().renameFolder(getPath(), newPath);
+	}
+
+	public void copyFolder(String newPath) throws LocalRepositoryException {
+		getRepository().getRepositoryDao().copyFolder(getPath(), newPath);
 	}
 
 }

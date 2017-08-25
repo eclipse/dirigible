@@ -93,6 +93,12 @@ public class WorkspaceProcessor {
 		return folderObject;
 	}
 
+	public boolean existsFolder(String workspace, String project, String path) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		IProject projectObject = workspaceObject.getProject(project);
+		return projectObject.existsFolder(path);
+	}
+
 	public IFolder createFolder(String workspace, String project, String path) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
 		IProject projectObject = workspaceObject.getProject(project);
@@ -113,6 +119,12 @@ public class WorkspaceProcessor {
 		IProject projectObject = workspaceObject.getProject(project);
 		IFile fileObject = projectObject.getFile(path);
 		return fileObject;
+	}
+
+	public boolean existsFile(String workspace, String project, String path) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		IProject projectObject = workspaceObject.getProject(project);
+		return projectObject.existsFile(path);
 	}
 
 	public IFile createFile(String workspace, String project, String path, byte[] content, String contentType) {
@@ -164,6 +176,36 @@ public class WorkspaceProcessor {
 	public Folder renderFolderTree(ICollection collection) {
 		return WorkspaceJsonHelper.traverseFolder(collection, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
 				WORKSPACES);
+	}
+
+	public void copyProject(String workspace, String sourceProject, String targetProject) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		workspaceObject.copyProject(sourceProject, targetProject);
+	}
+
+	public void copyFolder(String workspace, String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		workspaceObject.copyFolder(sourceProject, sourceFolderPath, targetProject, targetFolderPath);
+	}
+
+	public void copyFile(String workspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		workspaceObject.copyFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
+	}
+
+	public void moveProject(String workspace, String sourceProject, String targetProject) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		workspaceObject.moveProject(sourceProject, targetProject);
+	}
+
+	public void moveFolder(String workspace, String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		workspaceObject.moveFolder(sourceProject, sourceFolderPath, targetProject, targetFolderPath);
+	}
+
+	public void moveFile(String workspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		workspaceObject.moveFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
 	}
 
 }

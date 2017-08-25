@@ -217,7 +217,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	@Override
 	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException {
 		try {
-			return getRepository().getRepositoryDAO().getResourceVersionsByPath(getPath());
+			return getRepository().getRepositoryDao().getResourceVersionsByPath(getPath());
 		} catch (LocalRepositoryException ex) {
 			logger.error(ex.getMessage(), ex);
 		}

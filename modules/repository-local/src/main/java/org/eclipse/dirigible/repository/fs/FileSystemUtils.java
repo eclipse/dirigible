@@ -54,6 +54,13 @@ public class FileSystemUtils {
 		Files.move(pathOld, pathNew);
 	}
 
+	public static void copyFile(String workspacePathOld, String workspacePathNew) throws FileNotFoundException, IOException {
+		createFoldersIfNecessary(workspacePathNew);
+		Path pathOld = FileSystems.getDefault().getPath(workspacePathOld);
+		Path pathNew = FileSystems.getDefault().getPath(workspacePathNew);
+		Files.copy(pathOld, pathNew);
+	}
+
 	public static void removeFile(String workspacePath) throws FileNotFoundException, IOException {
 		Path path = FileSystems.getDefault().getPath(workspacePath);
 		// logger.debug("Deleting file: " + file);

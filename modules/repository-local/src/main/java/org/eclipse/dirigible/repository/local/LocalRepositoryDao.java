@@ -35,7 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LocalRepositoryDao {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepositoryDao.class);
 
 	private static final String LAST = "last";
@@ -47,8 +47,6 @@ public class LocalRepositoryDao {
 	private static final String CREATED_AT = "createdAt";
 
 	private static final String CREATED_BY = "createdBy";
-
-	
 
 	static final int OBJECT_TYPE_FOLDER = 0;
 	static final int OBJECT_TYPE_DOCUMENT = 1;
@@ -174,7 +172,6 @@ public class LocalRepositoryDao {
 	}
 
 	public void renameFile(String path, String newPath) {
-
 		try {
 			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
@@ -185,6 +182,21 @@ public class LocalRepositoryDao {
 				createInfo(workspacePathNew);
 				removeVersions(workspacePathOld);
 				removeInfo(workspacePathOld);
+			}
+		} catch (IOException e) {
+			throw new LocalRepositoryException(e);
+		}
+	}
+
+	public void copyFile(String path, String newPath) {
+		try {
+			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
+			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
+			FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
+			byte[] content = FileSystemUtils.loadFile(workspacePathNew);
+			if (content != null) {
+				createVersion(workspacePathNew, content);
+				createInfo(workspacePathNew);
 			}
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
@@ -230,7 +242,19 @@ public class LocalRepositoryDao {
 			FileSystemUtils.moveFile(workspacePathOld, workspacePathNew);
 			removeVersions(workspacePathNew);
 			removeInfo(workspacePathNew);
-			// TODO recursion for the files initial version!
+		} catch (IOException e) {
+			throw new LocalRepositoryException(e);
+		}
+
+	}
+
+	public void copyFolder(String path, String newPath) {
+
+		try {
+			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
+			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
+			FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
+			createInfo(workspacePathNew);
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
 		}
@@ -247,7 +271,7 @@ public class LocalRepositoryDao {
 			if (!objectFile.exists()) {
 				// This is folder, that was not created
 				if (ContentTypeHelper.getExtension(workspacePath).isEmpty() && !workspacePath.endsWith(".")) {
-//					FileSystemUtils.createFolder(workspacePath);
+					// FileSystemUtils.createFolder(workspacePath);
 					return null;
 				}
 			}
@@ -354,7 +378,7 @@ public class LocalRepositoryDao {
 
 		return null;
 	}
-	
+
 	private String getUser() {
 		return UserFacade.getName();
 	}

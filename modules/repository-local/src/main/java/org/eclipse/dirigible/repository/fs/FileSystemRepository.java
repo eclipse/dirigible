@@ -233,7 +233,7 @@ public abstract class FileSystemRepository implements IRepository {
 		logger.trace("entering createResource with Content"); //$NON-NLS-1$
 		try {
 			final RepositoryPath wrapperPath = new RepositoryPath(path);
-			getRepositoryDAO().createFile(wrapperPath.toString(), content, isBinary, contentType);
+			getRepositoryDao().createFile(wrapperPath.toString(), content, isBinary, contentType);
 		} catch (LocalRepositoryException e) {
 			throw new RepositoryWriteException(e);
 		}
@@ -275,7 +275,7 @@ public abstract class FileSystemRepository implements IRepository {
 		// repositoryDAO.dispose();
 	}
 
-	public LocalRepositoryDao getRepositoryDAO() {
+	public LocalRepositoryDao getRepositoryDao() {
 		return repositoryDao;
 	}
 

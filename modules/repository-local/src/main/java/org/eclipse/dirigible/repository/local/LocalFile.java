@@ -28,19 +28,23 @@ public class LocalFile extends LocalObject {
 	}
 
 	public void delete() throws LocalRepositoryException {
-		getRepository().getRepositoryDAO().removeFileByPath(getPath());
+		getRepository().getRepositoryDao().removeFileByPath(getPath());
 	}
 
 	public void rename(String newPath) throws LocalRepositoryException {
-		getRepository().getRepositoryDAO().renameFile(getPath(), newPath);
+		getRepository().getRepositoryDao().renameFile(getPath(), newPath);
+	}
+
+	public void copyTo(String newPath) throws LocalRepositoryException {
+		getRepository().getRepositoryDao().copyFile(getPath(), newPath);
 	}
 
 	public byte[] getData() throws LocalRepositoryException {
-		return getRepository().getRepositoryDAO().getFileContent(this);
+		return getRepository().getRepositoryDao().getFileContent(this);
 	}
 
 	public void setData(byte[] content) throws LocalRepositoryException {
-		getRepository().getRepositoryDAO().setFileContent(this, content);
+		getRepository().getRepositoryDao().setFileContent(this, content);
 	}
 
 	public boolean isBinary() {

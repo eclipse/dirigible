@@ -10,6 +10,8 @@ public interface IFolder extends ICollection {
 
 	public IFolder createFolder(String path);
 
+	public boolean existsFolder(String path);
+
 	public IFolder getFolder(String path);
 
 	public List<IFolder> getFolders();
@@ -21,6 +23,8 @@ public interface IFolder extends ICollection {
 	public IFile createFile(String path, byte[] content, boolean isBinary, String contentType);
 
 	public IFile getFile(String path);
+
+	public boolean existsFile(String path);
 
 	public List<IFile> getFiles();
 
