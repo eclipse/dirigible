@@ -9,6 +9,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="../ide/ui/message-hub.js"></script>
 	<script src="preview.js"></script>
 
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" >
@@ -18,7 +19,7 @@
 	<link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
 </head>
 
-<body ng-app="preview">
+<body ng-app="preview" ng-controller="PreviewController">
 	<div class="form-group">
 		 <label for="previewUrl">URL:</label>
 		<input class="form-control" type="text" ng-model="previewUrl" id="previewUrl">
