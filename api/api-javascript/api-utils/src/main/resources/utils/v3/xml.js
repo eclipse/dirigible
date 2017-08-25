@@ -10,15 +10,7 @@
 
 /* eslint-env node, dirigible */
 
-var java = require('core/v3/java');
-
-exports.fromJson = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Xml2JsonFacade', 'fromJson', [input]);
-	return output;
-};
-
-exports.toJson = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Xml2JsonFacade', 'toJson', [input]);
-	return output;
-};
-
+var xml2json = require('utils/v3/xml');
+for(var propertyName in xml2json) {
+	exports[propertyName] = xml2json[propertyName];
+}

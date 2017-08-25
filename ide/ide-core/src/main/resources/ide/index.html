@@ -153,6 +153,9 @@
 			this.layout.registerComponent( 'Console', function( container, componentState ){
 				container.getElement().html( '<iframe src="../ide-console/console.html"></iframe>' );
 			});
+			this.layout.registerComponent( 'Preview', function( container, componentState ){
+				container.getElement().html( '<iframe src="../ide-preview/preview.html"></iframe>' );
+			});
 			
 			this.listeners = {};
 			
