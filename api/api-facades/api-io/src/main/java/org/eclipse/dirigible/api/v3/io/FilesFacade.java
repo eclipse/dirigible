@@ -10,6 +10,7 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFilePermission;
@@ -121,11 +122,25 @@ public class FilesFacade {
 	}
 	
 	public static final void createDirectory(String path) throws IOException {
-		Files.createDirectory(Paths.get(path));
+		Files.createDirectories(Paths.get(path));
 	}
 	
 	public static final void copy(String source, String target) throws IOException {
-		Files.copy(Paths.get(source), Paths.get(target));
+		Path sourcePath = Paths.get(source);
+		Path targetPath = Paths.get(target);
+		Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
+				Files.createDirectories(targetPath.resolve(sourcePath.relativize(dir)));
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+				Files.copy(file, targetPath.resolve(sourcePath.relativize(file)));
+				return FileVisitResult.CONTINUE;
+			}
+		});
 	}
 	
 	public static final void move(String source, String target) throws IOException {

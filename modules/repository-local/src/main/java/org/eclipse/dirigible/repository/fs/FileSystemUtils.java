@@ -18,6 +18,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
@@ -58,7 +59,20 @@ public class FileSystemUtils {
 		createFoldersIfNecessary(workspacePathNew);
 		Path pathOld = FileSystems.getDefault().getPath(workspacePathOld);
 		Path pathNew = FileSystems.getDefault().getPath(workspacePathNew);
-		Files.copy(pathOld, pathNew);
+
+		Files.walkFileTree(pathOld, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
+				Files.createDirectories(pathNew.resolve(pathOld.relativize(dir)));
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+				Files.copy(file, pathNew.resolve(pathOld.relativize(file)));
+				return FileVisitResult.CONTINUE;
+			}
+		});
 	}
 
 	public static void removeFile(String workspacePath) throws FileNotFoundException, IOException {

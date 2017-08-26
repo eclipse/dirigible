@@ -235,7 +235,6 @@ public class LocalRepositoryDao {
 	}
 
 	public void renameFolder(String path, String newPath) {
-
 		try {
 			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
@@ -249,7 +248,6 @@ public class LocalRepositoryDao {
 	}
 
 	public void copyFolder(String path, String newPath) {
-
 		try {
 			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
