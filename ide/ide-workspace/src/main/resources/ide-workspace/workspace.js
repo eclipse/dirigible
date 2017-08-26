@@ -125,7 +125,7 @@ angular.module('workspace', []).controller('WorkspaceController', function ($sco
 							data.instance.set_icon(data.node, 'fa fa-folder-open-o');
 						  })
 						  .on('close_node.jstree', function(evt, data) {
-							data.instance.set_icon(data.node, true);
+							data.instance.set_icon(data.node, 'fa fa-folder-o');
 						  })
 						  .on('delete_node.jstree', function (e, data) {
 						  		$http.delete(workspacesSvcUrl + data.node.original._file.path);
