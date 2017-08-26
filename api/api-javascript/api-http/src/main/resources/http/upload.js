@@ -10,22 +10,7 @@
 
 /* eslint-env node, dirigible */
 
-exports.getClient = function() {
-	var client = require('http/v3/client');
-	return client;
-};
-
-exports.getRequest = function() {
-	var request = require('http/v3/request');
-	return request;
-};
-
-exports.getResponse = function() {
-	var response = require('http/v3/response');
-	return response;
-};
-
-exports.getUpload = function() {
-	var upload = require('http/v3/upload');
-	return upload;
-};
+var upload = require('http/v3/upload');
+for(var propertyName in upload) {
+	exports[propertyName] = upload[propertyName];
+}

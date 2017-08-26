@@ -23,7 +23,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpRequestFacade.class);
 
-	private static final HttpServletRequest getRequest() {
+	static final HttpServletRequest getRequest() {
 		if (!ThreadContextFacade.isValid()) {
 			return null;
 		}
