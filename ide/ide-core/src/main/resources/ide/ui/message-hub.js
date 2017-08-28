@@ -1,4 +1,12 @@
-var FramesMessageHub = (function () {
+(function (name, context, definition) {
+  // AMD -> CommonJS -> Globals
+  if (typeof module != 'undefined' && module.exports)
+    module.exports = definition();
+  else if (typeof define == 'function' && define.amd)
+    define(name, definition);
+  else
+    context[name] = definition();
+}('FramesMessageHub', this, function () {
 	/**
 	 * @class FramesMessageHub A Publish-Subscribe mechanism for secure cross-domain message exchange between browser windows/iframes entirely clientside, built on the HTML5 postMessage
 	 framework.
@@ -102,4 +110,4 @@ var FramesMessageHub = (function () {
 	}
 	
 	return FramesMessageHub;
-}());
+}));
