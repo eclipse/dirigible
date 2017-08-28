@@ -10,22 +10,7 @@
 
 /* eslint-env node, dirigible */
 
-exports.getBase64 = function() {
-	var base64 = require('utils/v3/base64');
-	return base64;
-};
-
-exports.getDigest = function() {
-	var digest = require('utils/v3/digest');
-	return digest;
-};
-
-exports.getUuid = function() {
-	var uuid = require('utils/v3/uuid');
-	return uuid;
-};
-
-exports.getXml = function() {
-	var xml = require('utils/v3/xml');
-	return xml;
-};
+var digest = require('utils/v3/digest');
+for(var propertyName in digest) {
+	exports[propertyName] = digest[propertyName];
+}
