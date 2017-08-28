@@ -99,6 +99,11 @@
 		 	<artifactId>dirigible-api-db</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-io</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		<!-- Repository -->
 		<dependency>
@@ -302,6 +307,11 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-db</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-javascript-io</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		
