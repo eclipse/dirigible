@@ -1,10 +1,11 @@
 package org.eclipse.dirigible.commons.api.context;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Scripting context facade is the centralized place where the different scripting facade providers
@@ -17,6 +18,8 @@ public class ThreadContextFacade {
 	private static final ThreadLocal<Map<String, Object>> CONTEXT = new ThreadLocal<Map<String, Object>>();
 
 	private static final ThreadLocal<Map<String, Object>> PROXIES = new ThreadLocal<Map<String, Object>>();
+
+	private static final AtomicLong UUID_GENERATOR = new AtomicLong(Long.MIN_VALUE);
 
 	/**
 	 * Initializes the context. This has to be called at the very first (as possible) place at the service entry point
@@ -60,6 +63,21 @@ public class ThreadContextFacade {
 
 	/**
 	 * Set a context scripting object
+	 *
+	 * @param value the value
+	 * @return the UUID of the object
+	 * @throws ContextException in case of an error
+	 */
+	public static final String set(Object value) throws ContextException {
+		final String uuid = generateObjectId();
+		set(uuid, value);
+		return uuid;
+	}
+
+	/**
+	 * Set a context scripting object. If object with
+	 * with this key exists, it will be replaced with
+	 * the new object
 	 *
 	 * @param key
 	 *            the key
@@ -119,6 +137,25 @@ public class ThreadContextFacade {
 
 	/**
 	 * Set a proxy scripting object
+	 *
+	 * @param value the value
+	 * @return the UUID of the object
+	 * @throws ContextException in case of an error
+	 */
+	public static final String setProxy(Object value) throws ContextException {
+		final String uuid = generateObjectId();
+		setProxy(uuid, value);
+		return uuid;
+	}
+
+	private static String generateObjectId() {
+		return Long.toString(UUID_GENERATOR.incrementAndGet(), Character.MAX_RADIX);
+	}
+
+	/**
+	 * Set a proxy scripting object. If proxy object
+	 * with this key exists, it will be replaced with
+	 * the new object
 	 *
 	 * @param key
 	 *            the key
