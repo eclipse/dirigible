@@ -38,7 +38,7 @@ function FileItems() {
 	};
 
 	this.size = function() {
-		java.invoke(this.uuid, 'size', []);
+		return java.invoke(this.uuid, 'size', []);
 	};
 };
 
@@ -55,31 +55,32 @@ function FileItem() {
 	};
 
 	this.getContentType = function() {
-		java.invoke(this.uuid, 'getContentType', []);
+		return java.invoke(this.uuid, 'getContentType', []);
 	};
 	
 	this.getName = function() {
-		java.invoke(this.uuid, 'getName', []);
+		return java.invoke(this.uuid, 'getName', []);
 	};
 	
 	this.getSize = function() {
-		java.invoke(this.uuid, 'getSize', []);
+		return java.invoke(this.uuid, 'getSize', []);
 	};
 	
 	this.getBytes = function() {
-		java.invoke(this.uuid, 'getBytes', []);
+		var bytes = java.invoke(this.uuid, 'get', []);
+		return JSON.parse(bytes);
 	};
 	
 	this.getText = function() {
-		java.invoke(this.uuid, 'getString', []);
+		return java.invoke(this.uuid, 'getString', []);
 	};
 	
 	this.isFormField = function() {
-		java.invoke(this.uuid, 'isFormField', []);
+		return java.invoke(this.uuid, 'isFormField', []);
 	};
 	
 	this.getFieldName = function() {
-		java.invoke(this.uuid, 'getFieldName', []);
+		return java.invoke(this.uuid, 'getFieldName', []);
 	};
 	
 };

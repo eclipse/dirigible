@@ -2,13 +2,14 @@ package org.eclipse.dirigible.engine.js.nashorn.service;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -40,15 +41,14 @@ public class NashornJavascriptEngineRestService implements IRestService {
 
 	/**
 	 * @param path
-	 * @param request
-	 * @return resource content
+	 * @return result of the execution of the service
 	 */
 	@GET
 	@Path("/{path:.*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response getResource(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response) {
+	public Response executeService(@PathParam("path") String path) {
 		try {
 			processor.executeService(path);
 			return Response.ok().build();
@@ -59,6 +59,58 @@ public class NashornJavascriptEngineRestService implements IRestService {
 			logger.error(e.getMessage(), e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
+	}
+
+	/**
+	 * @param path
+	 * @return result of the execution of the service
+	 */
+	@POST
+	@Path("/{path:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
+	public Response executeServicePost(@PathParam("path") String path) {
+		return executeService(path);
+	}
+
+	/**
+	 * @param path
+	 * @return result of the execution of the service
+	 */
+	@PUT
+	@Path("/{path:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
+	public Response executeServicePut(@PathParam("path") String path) {
+		return executeService(path);
+	}
+
+	/**
+	 * @param path
+	 * @return result of the execution of the service
+	 */
+	@DELETE
+	@Path("/{path:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
+	public Response executeServiceDelete(@PathParam("path") String path) {
+		return executeService(path);
+	}
+
+	/**
+	 * @param path
+	 * @return result of the execution of the service
+	 */
+	@HEAD
+	@Path("/{path:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
+	public Response executeServiceHead(@PathParam("path") String path) {
+		return executeService(path);
 	}
 
 	@Override
