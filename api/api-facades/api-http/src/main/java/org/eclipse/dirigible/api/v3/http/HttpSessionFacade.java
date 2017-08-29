@@ -80,6 +80,11 @@ public class HttpSessionFacade implements IScriptingFacade {
 		session.setAttribute(arg0, arg1);
 	}
 
+	public static final void removeAttribute(String arg0) {
+		HttpSession session = getSession();
+		session.removeAttribute(arg0);
+	}
+
 	public static final void setMaxInactiveInterval(int arg0) {
 		HttpSession session = getSession();
 		session.setMaxInactiveInterval(arg0);

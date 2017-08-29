@@ -63,6 +63,10 @@ exports.setAttribute = function(name, value) {
 	java.call('org.eclipse.dirigible.api.v3.http.HttpSessionFacade', 'setAttribute', [name, value]);
 };
 
+exports.removeAttribute = function(name) {
+	java.call('org.eclipse.dirigible.api.v3.http.HttpSessionFacade', 'removeAttribute', [name]);
+};
+
 exports.setMaxInactiveInterval = function(interval) {
 	java.call('org.eclipse.dirigible.api.v3.http.HttpSessionFacade', 'setMaxInactiveInterval', [interval]);
 };
