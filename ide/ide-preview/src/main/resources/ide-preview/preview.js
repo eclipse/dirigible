@@ -8,14 +8,20 @@ angular.module('preview', []).controller('PreviewController', function ($scope, 
 		var url = window.top.location.protocol + '//' + window.top.location.host + '/services/v3';
 		var type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
 		switch(type) {
+			case 'rhino':
+				url += '/rhino';
+				break;
+			case 'nashorn':
+				url += '/nashorn';
+				break;
+			case 'v8':
+				url += 'v8';
+				break;
 			case 'js':
 				url += '/js';
 				break;
-			case 'html':
-				url += '/web';
-				break;
 			default:
-				return;
+				url += '/web';
 		}
 		url += resourcePath;
 		$scope.previewUrl = url;
