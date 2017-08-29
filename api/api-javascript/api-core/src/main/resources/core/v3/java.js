@@ -21,7 +21,7 @@ exports.call = function(className, methodName, params, deep) {
 		result = j2v8call(className, methodName, params);
 	}
 	if (deep) {
-		o = {};
+		var o = {};
 		o['uuid'] = result;
 		return o;
 	}
@@ -29,17 +29,18 @@ exports.call = function(className, methodName, params, deep) {
 };
 
 exports.instantiate = function(className, params) {
-	var result = null;
 	params = normalizeParameters(params);
-	
+
+	var uuid = null;
 	if (engine === "rhino") {
-		uuid = org.eclipse.dirigible.api.v3.core.JavaFacade.instantiate(className, params);
+        uuid = org.eclipse.dirigible.api.v3.core.JavaFacade.instantiate(className, params);
 	} else if (engine === "nashorn") {
 		uuid = Packages.org.eclipse.dirigible.api.v3.core.JavaFacade.instantiate(className, params);
 	} else if (engine === "v8") {
 		uuid = j2v8instantiate(className, params);
 	}
-	result = {};
+
+	var result = {};
 	result['uuid'] = uuid;
 	return result;
 };
@@ -55,7 +56,7 @@ exports.invoke = function(uuid, methodName, params, deep) {
 		result = j2v8invoke(uuid, methodName, params);
 	}
 	if (deep) {
-		o = {};
+		var o = {};
 		o['uuid'] = result;
 		return o;
 	}
