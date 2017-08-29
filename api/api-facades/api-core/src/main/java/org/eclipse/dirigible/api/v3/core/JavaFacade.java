@@ -43,9 +43,7 @@ public class JavaFacade {
 					return json;
 				}
 				// non primitive result - add to the context
-				String resultUuid = generateUuid();
-				ThreadContextFacade.setProxy(resultUuid, result);
-				return resultUuid;
+				return ThreadContextFacade.setProxy(result);
 			}
 
 			return result;
@@ -118,9 +116,7 @@ public class JavaFacade {
 			Object result;
 			try {
 				result = constructor.newInstance(params.toArray(new Object[] {}));
-				String uuid = generateUuid();
-				ThreadContextFacade.setProxy(uuid, result);
-				return uuid;
+				return ThreadContextFacade.setProxy(result);
 			} catch (Throwable t) {
 				logger.error(t.getMessage(), t);
 			}
@@ -156,9 +152,7 @@ public class JavaFacade {
 					return json;
 				}
 				// non primitive result - add to the context
-				String resultUuid = generateUuid();
-				ThreadContextFacade.setProxy(resultUuid, result);
-				return resultUuid;
+				return ThreadContextFacade.setProxy(result);
 			}
 
 			return result;
@@ -166,10 +160,6 @@ public class JavaFacade {
 		String message = format("No such method [{0}] in class [{1}]", methodName, clazz.getName());
 		logger.error(message);
 		throw new NoSuchMethodException(message);
-	}
-
-	private static String generateUuid() {
-		return UUID.randomUUID().toString();
 	}
 
 	public static final void free(String uuid) throws ContextException {
