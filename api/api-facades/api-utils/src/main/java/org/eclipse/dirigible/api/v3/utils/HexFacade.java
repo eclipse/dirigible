@@ -1,18 +1,17 @@
 package org.eclipse.dirigible.api.v3.utils;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 
 public class HexFacade {
 
 	public static final String encode(byte[] input) {
-		Base64 base64 = new Base64();
-		return base64.encodeAsString(input);
+		return Hex.encodeHexString(input);
 	}
 
-	public static final byte[] decode(String input) {
-		Base64 base64 = new Base64();
-		return base64.decode(input);
+	public static final byte[] decode(String input) throws DecoderException {
+		return Hex.decodeHex(input.toCharArray());
 	}
 
 	public static final String encode(String input) {

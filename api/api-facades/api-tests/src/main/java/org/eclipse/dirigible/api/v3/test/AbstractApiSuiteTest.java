@@ -83,6 +83,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		TEST_MODULES.add("utils/v3/base64/encode.js");
 		TEST_MODULES.add("utils/v3/base64/decode.js");
+		TEST_MODULES.add("utils/v3/hex/encode.js");
+		TEST_MODULES.add("utils/v3/hex/decode.js");
 		TEST_MODULES.add("utils/v3/digest/sha1.js");
 		TEST_MODULES.add("utils/v3/xml/fromJson.js");
 		TEST_MODULES.add("utils/v3/xml/toJson.js");
