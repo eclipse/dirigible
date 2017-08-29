@@ -10,32 +10,15 @@
 
 /* eslint-env node, dirigible */
 
-exports.getBase64 = function() {
-	var base64 = require('utils/v3/base64');
-	return base64;
+var java = require('core/v3/java');
+
+exports.encode = function(input, charset) {
+	var output = java.call('org.eclipse.dirigible.api.v3.utils.UrlFacade', 'encode', [input, charset]);
+	return output;
 };
 
-exports.getDigest = function() {
-	var digest = require('utils/v3/digest');
-	return digest;
+exports.decode = function(input, charset) {
+	var output = java.call('org.eclipse.dirigible.api.v3.utils.UrlFacade', 'decode', [input, charset]);
+	return output;
 };
 
-exports.getHex = function() {
-	var hex = require('utils/v3/hex');
-	return hex;
-};
-
-exports.getUuid = function() {
-	var uuid = require('utils/v3/uuid');
-	return uuid;
-};
-
-exports.getXml = function() {
-	var xml = require('utils/v3/xml');
-	return xml;
-};
-
-exports.getUrl = function() {
-	var url = require('utils/v3/url');
-	return url;
-};
