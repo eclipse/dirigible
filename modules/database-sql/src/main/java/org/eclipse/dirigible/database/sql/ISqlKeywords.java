@@ -70,6 +70,7 @@ public interface ISqlKeywords {
 	public static final String QUESTION = "?"; //$NON-NLS-1$
 	public static final String EQUALS = "="; //$NON-NLS-1$
 	public static final String UNDERSCROE = "_"; //$NON-NLS-1$
+	public static final String STAR = "*"; //$NON-NLS-1$
 
 	public static final String METADATA_SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
 	public static final String METADATA_LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$

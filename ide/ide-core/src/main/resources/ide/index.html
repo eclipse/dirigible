@@ -72,21 +72,11 @@
 	
 	<div class="shell">
 		<div class="sidebar list-group">
-			<a class="list-group-item"><i class="fa fa-files-o fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-code-fork fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-database fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-sitemap fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-bug fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-object-group fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-area-chart fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-truck fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-puzzle-piece fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-user fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-lock fa-2x"></i></a>
-			<a class="list-group-item"><i class="fa fa-life-ring fa-2x"></i></a>
+			<a class="list-group-item" ng-repeat="perspective in perspectives" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
 		</div>
-	<div class="plane"></div>
-
+		<div class="plane"></div>
+	</div>
+	
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
 
@@ -135,6 +125,8 @@
 			
 			this.layout = new GoldenLayout(this.config, $('.plane') );
 			
+			this.messageHub = new FramesMessageHub();
+			
 			this.layout.registerComponent( 'Workspace', function( container, componentState ){
 				container.getElement().html('<iframe src="../ide-workspace/workspace.html"></iframe>');
 			});
@@ -163,12 +155,11 @@
 				if(!this.listeners[eventType]){
 					this.listeners[eventType] = [];
 				}
-				var client = new FramesMessageHub();
-				client.subscribe(callback, eventType);
+				var subscriber = this.messageHub.subscribe(callback, eventType);
 
 				var entry = {
 					id: uuidv4(),
-					handler: client
+					handler: subscriber
 				};
 				this.listeners[eventType].push(entry);
 				return entry.id;
@@ -178,7 +169,9 @@
 					return;
 				for (var i = this.listeners[eventType].length - 1; i >= 0; i--) {
 				  if (this.listeners[eventType][i].id == id) {
-					 this.listeners[eventType].splice(i, 1);
+					var subscriber = this.listeners[eventType][i].handler;
+				  	this.messageHub.unsibscribe(subscriber);
+					this.listeners[eventType].splice(i, 1);
 				  }
 				}
 			};
@@ -195,7 +188,7 @@
 	
 		var layoutCtrl = new LayoutController();
 		
-		layoutCtrl.addListener('fileselected', function(msg){
+		var listenerId = layoutCtrl.addListener('fileselected', function(msg){
 			var newItemConfig = {
 				id: msg.data.path,
 				title: msg.data.label,
@@ -240,9 +233,15 @@
 			$scope.onClick = function(action) {
 				eval(action);
 			};
+			
+			var urlPerspectives = '../../js/ide/services/perspectives.js';
+			$http.get(urlPerspectives)
+				.success(function(data) {
+					$scope.perspectives = data;
+			});
 		});
 	</script>
-		
+	
 </body>
 
 </html>

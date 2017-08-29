@@ -290,5 +290,16 @@ public class SelectTest {
 		assertNotNull(sql);
 		assertEquals("SELECT COUNTRY FROM CUSTOMERS UNION SELECT COUNTRY FROM SUPPLIERS", sql);
 	}
+	
+	@Test
+	public void selectStarOmitted() {
+		String sql = SqlFactory.getDefault()
+			.select()
+			.from("CUSTOMERS")
+			.build();
+		
+		assertNotNull(sql);
+		assertEquals("SELECT * FROM CUSTOMERS", sql);
+	}
 
 }

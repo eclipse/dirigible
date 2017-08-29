@@ -42,6 +42,7 @@
 		<module>ide-swagger</module>
 		<module>ide-workspace</module>
 		<module>ide-preview</module>
+		<module>ide-help</module>
 	</modules>
 
 	<profiles>

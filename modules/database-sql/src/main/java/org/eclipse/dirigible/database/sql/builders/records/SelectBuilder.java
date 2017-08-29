@@ -264,11 +264,14 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	}
 
 	protected String traverseColumns() {
-		StringBuilder snippet = new StringBuilder();
-		for (String column : this.columns) {
-			snippet.append(column).append(COMMA).append(SPACE);
+		if (!this.columns.isEmpty()) {
+			StringBuilder snippet = new StringBuilder();
+			for (String column : this.columns) {
+				snippet.append(column).append(COMMA).append(SPACE);
+			}
+			return snippet.toString().substring(0, snippet.length() - 2);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return STAR;
 	}
 
 	protected String traverseTables() {
