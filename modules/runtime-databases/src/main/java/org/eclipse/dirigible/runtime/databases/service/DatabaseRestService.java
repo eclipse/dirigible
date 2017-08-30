@@ -16,9 +16,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
@@ -35,7 +37,7 @@ import io.swagger.annotations.Authorization;
  * Front facing REST service serving the raw repository content
  */
 @Singleton
-@Path("/core/databases")
+@Path("/ide/databases")
 @Api(value = "Core - Databases", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class DatabaseRestService implements IRestService {
@@ -89,7 +91,6 @@ public class DatabaseRestService implements IRestService {
 
 	@POST
 	@Path("{type}/{name}/query")
-	@Produces("text/plain")
 	@ApiOperation("Executes a query operation on the datasource {name} and {type} and returns the result in a tabular format")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
 			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
@@ -105,13 +106,17 @@ public class DatabaseRestService implements IRestService {
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
-		String result = processor.executeQuery(type, name, new String(sql));
-		return Response.ok().entity(result).build();
+		String accept = request.getHeader("Accept");
+		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
+			String result = processor.executeQuery(type, name, new String(sql), false);
+			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
+		}
+		String result = processor.executeQuery(type, name, new String(sql), true);
+		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
 	@POST
 	@Path("{type}/{name}/update")
-	@Produces("text/plain")
 	@ApiOperation("Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
 			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
@@ -127,8 +132,39 @@ public class DatabaseRestService implements IRestService {
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
-		String result = processor.executeUpdate(type, name, new String(sql));
-		return Response.ok().entity(result).build();
+		String accept = request.getHeader("Accept");
+		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
+			String result = processor.executeUpdate(type, name, new String(sql), false);
+			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
+		}
+		String result = processor.executeUpdate(type, name, new String(sql), true);
+		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
+	}
+
+	@POST
+	@Path("{type}/{name}/execute")
+	@ApiOperation("Executes a query or update operation on the datasource {name} and {type} and returns the result in a tabular format")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
+			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
+	public Response execute(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
+			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
+		String user = request.getRemoteUser();
+		if (user == null) {
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+
+		if (!processor.existsDatabase(type, name)) {
+			String error = format("Datasource {0} does not exist as {1}.", name, type);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		String accept = request.getHeader("Accept");
+		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
+			String result = processor.execute(type, name, new String(sql), false);
+			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
+		}
+		String result = processor.execute(type, name, new String(sql), true);
+		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
 	@Override

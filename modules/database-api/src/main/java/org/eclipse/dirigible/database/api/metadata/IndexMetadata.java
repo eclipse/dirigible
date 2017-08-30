@@ -1,29 +1,31 @@
 package org.eclipse.dirigible.database.api.metadata;
 
 public class IndexMetadata {
-	
+
 	private String name;
-	
+
 	private String type;
-	
+
 	private String column;
-	
+
 	private boolean nonUnique;
-	
+
 	private String qualifier;
-	
+
 	private String ordinalPosition;
-	
+
 	private String sortOrder;
-	
+
 	private int cardinality;
-	
+
 	private int pages;
-	
+
 	private String filterCondition;
 
-	public IndexMetadata(String name, String type, String column, boolean nonUnique, String qualifier, String ordinalPosition,
-			String sortOrder, int cardinality, int pages, String filterCondition) {
+	private String kind = "index";
+
+	public IndexMetadata(String name, String type, String column, boolean nonUnique, String qualifier, String ordinalPosition, String sortOrder,
+			int cardinality, int pages, String filterCondition) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -116,5 +118,13 @@ public class IndexMetadata {
 	public void setFilterCondition(String filterCondition) {
 		this.filterCondition = filterCondition;
 	}
-	
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
 }

@@ -59,23 +59,31 @@ public class DatabaseProcessor {
 		return dataSource;
 	}
 
-	public String executeQuery(String type, String name, String sql) {
+	public String executeQuery(String type, String name, String sql, boolean isJson) {
 		DataSource dataSource = getDataSource(type, name);
 		if (dataSource != null) {
-			return executeStatement(dataSource, sql, true);
+			return executeStatement(dataSource, sql, true, isJson);
 		}
 		return null;
 	}
 
-	public String executeUpdate(String type, String name, String sql) {
+	public String executeUpdate(String type, String name, String sql, boolean isJson) {
 		DataSource dataSource = getDataSource(type, name);
 		if (dataSource != null) {
-			return executeStatement(dataSource, sql, false);
+			return executeStatement(dataSource, sql, false, isJson);
 		}
 		return null;
 	}
 
-	public String executeStatement(DataSource dataSource, String sql, boolean isQuery) {
+	public String execute(String type, String name, String sql, boolean isJson) {
+		DataSource dataSource = getDataSource(type, name);
+		if (dataSource != null) {
+			return executeStatement(dataSource, sql, true, isJson);
+		}
+		return null;
+	}
+
+	public String executeStatement(DataSource dataSource, String sql, boolean isQuery, boolean isJson) {
 
 		if ((sql == null) || (sql.length() == 0)) {
 			return "";
@@ -103,7 +111,11 @@ public class DatabaseProcessor {
 					@Override
 					public void queryDone(ResultSet rs) {
 						try {
-							results.add(DatabaseResultSetHelper.print(rs, LIMITED));
+							if (isJson) {
+								results.add(DatabaseResultSetHelper.toJson(rs, LIMITED));
+							} else {
+								results.add(DatabaseResultSetHelper.print(rs, LIMITED));
+							}
 						} catch (SQLException e) {
 							logger.warn(e.getMessage(), e);
 							errors.add(e.getMessage());

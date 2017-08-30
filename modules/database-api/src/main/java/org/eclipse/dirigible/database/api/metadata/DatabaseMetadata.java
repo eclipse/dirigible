@@ -9,7 +9,7 @@ import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.Filter;
 
 public class DatabaseMetadata {
-	
+
 	private boolean allProceduresAreCallable;
 	private boolean allTablesAreSelectable;
 	private String getURL;
@@ -144,10 +144,13 @@ public class DatabaseMetadata {
 	private boolean generatedKeyAlwaysReturned;
 	private long getMaxLogicalLobSize;
 	private boolean supportsRefCursors;
-	
+
 	private List<SchemaMetadata> schemas;
 
-	public DatabaseMetadata(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> tableNameFilter) throws SQLException {
+	private String kind = "database";
+
+	public DatabaseMetadata(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> tableNameFilter)
+			throws SQLException {
 		super();
 		DatabaseMetaData databaseMetaData = connection.getMetaData();
 		this.allProceduresAreCallable = databaseMetaData.allProceduresAreCallable();
@@ -284,7 +287,7 @@ public class DatabaseMetadata {
 		this.generatedKeyAlwaysReturned = databaseMetaData.generatedKeyAlwaysReturned();
 		this.getMaxLogicalLobSize = databaseMetaData.getMaxLogicalLobSize();
 		this.supportsRefCursors = databaseMetaData.supportsRefCursors();
-		
+
 		this.schemas = DatabaseMetadataHelper.listSchemas(connection, catalogName, schemaNameFilter, tableNameFilter);
 	}
 
@@ -1188,8 +1191,7 @@ public class DatabaseMetadata {
 		return supportsDataDefinitionAndDataManipulationTransactions;
 	}
 
-	public void setSupportsDataDefinitionAndDataManipulationTransactions(
-			boolean supportsDataDefinitionAndDataManipulationTransactions) {
+	public void setSupportsDataDefinitionAndDataManipulationTransactions(boolean supportsDataDefinitionAndDataManipulationTransactions) {
 		this.supportsDataDefinitionAndDataManipulationTransactions = supportsDataDefinitionAndDataManipulationTransactions;
 	}
 
@@ -1360,188 +1362,199 @@ public class DatabaseMetadata {
 	public void setSupportsRefCursors(boolean supportsRefCursors) {
 		this.supportsRefCursors = supportsRefCursors;
 	}
-	
+
 	public List<SchemaMetadata> getSchemas() {
 		return schemas;
 	}
-	
-//	public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
-//		return databaseMetaData.supportsTransactionIsolationLevel(level);
-//	}
-//
-//	public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern)
-//			throws SQLException {
-//		return databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern);
-//	}
-//
-//	public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern,
-//			String columnNamePattern) throws SQLException {
-//		return databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern);
-//	}
-//
-//	public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)
-//			throws SQLException {
-//		return databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types);
-//	}
-//
-//	public ResultSet getSchemas() throws SQLException {
-//		return databaseMetaData.getSchemas();
-//	}
-//
-//	public ResultSet getCatalogs() throws SQLException {
-//		return databaseMetaData.getCatalogs();
-//	}
-//
-//	public ResultSet getTableTypes() throws SQLException {
-//		return databaseMetaData.getTableTypes();
-//	}
 
-//	public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
-//			throws SQLException {
-//		return databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
-//	}
-//
-//	public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern)
-//			throws SQLException {
-//		return databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern);
-//	}
-//
-//	public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern)
-//			throws SQLException {
-//		return databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
-//	}
-//
-//	public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable)
-//			throws SQLException {
-//		return databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable);
-//	}
-//
-//	public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
-//		return databaseMetaData.getVersionColumns(catalog, schema, table);
-//	}
-//
-//	public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
-//		return databaseMetaData.getPrimaryKeys(catalog, schema, table);
-//	}
-//
-//	public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
-//		return databaseMetaData.getImportedKeys(catalog, schema, table);
-//	}
-//
-//	public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
-//		return databaseMetaData.getExportedKeys(catalog, schema, table);
-//	}
-//
-//	public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable,
-//			String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
-//		return databaseMetaData.getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog,
-//				foreignSchema, foreignTable);
-//	}
-//
-//	public ResultSet getTypeInfo() throws SQLException {
-//		return databaseMetaData.getTypeInfo();
-//	}
-//
-//	public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate)
-//			throws SQLException {
-//		return databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate);
-//	}
-//
-//	public boolean supportsResultSetType(int type) throws SQLException {
-//		return databaseMetaData.supportsResultSetType(type);
-//	}
-//
-//	public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
-//		return databaseMetaData.supportsResultSetConcurrency(type, concurrency);
-//	}
-//
-//	public boolean ownUpdatesAreVisible(int type) throws SQLException {
-//		return databaseMetaData.ownUpdatesAreVisible(type);
-//	}
-//
-//	public boolean ownDeletesAreVisible(int type) throws SQLException {
-//		return databaseMetaData.ownDeletesAreVisible(type);
-//	}
-//
-//	public boolean ownInsertsAreVisible(int type) throws SQLException {
-//		return databaseMetaData.ownInsertsAreVisible(type);
-//	}
-//
-//	public boolean othersUpdatesAreVisible(int type) throws SQLException {
-//		return databaseMetaData.othersUpdatesAreVisible(type);
-//	}
-//
-//	public boolean othersDeletesAreVisible(int type) throws SQLException {
-//		return databaseMetaData.othersDeletesAreVisible(type);
-//	}
-//
-//	public boolean othersInsertsAreVisible(int type) throws SQLException {
-//		return databaseMetaData.othersInsertsAreVisible(type);
-//	}
-//
-//	public boolean updatesAreDetected(int type) throws SQLException {
-//		return databaseMetaData.updatesAreDetected(type);
-//	}
-//
-//	public boolean deletesAreDetected(int type) throws SQLException {
-//		return databaseMetaData.deletesAreDetected(type);
-//	}
-//
-//	public boolean insertsAreDetected(int type) throws SQLException {
-//		return databaseMetaData.insertsAreDetected(type);
-//	}
-//	
-//	public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types)
-//			throws SQLException {
-//		return databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types);
-//	}
-//
-//	public Connection getConnection() throws SQLException {
-//		return databaseMetaData.getConnection();
-//	}
-//
-//	public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException {
-//		return databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern);
-//	}
-//
-//	public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-//		return databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern);
-//	}
-//
-//	public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern,
-//			String attributeNamePattern) throws SQLException {
-//		return databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern);
-//	}
-//
-//	public boolean supportsResultSetHoldability(int holdability) throws SQLException {
-//		return databaseMetaData.supportsResultSetHoldability(holdability);
-//	}
-//
-//	public RowIdLifetime getRowIdLifetime() throws SQLException {
-//		return databaseMetaData.getRowIdLifetime();
-//	}
-//
-//	public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
-//		return databaseMetaData.getSchemas(catalog, schemaPattern);
-//	}
-//
-//	public ResultSet getClientInfoProperties() throws SQLException {
-//		return databaseMetaData.getClientInfoProperties();
-//	}
-//
-//	public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
-//			throws SQLException {
-//		return databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern);
-//	}
-//
-//	public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern,
-//			String columnNamePattern) throws SQLException {
-//		return databaseMetaData.getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern);
-//	}
-//
-//	public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern,
-//			String columnNamePattern) throws SQLException {
-//		return databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
-//	}
+	// public boolean supportsTransactionIsolationLevel(int level) throws SQLException {
+	// return databaseMetaData.supportsTransactionIsolationLevel(level);
+	// }
+	//
+	// public ResultSet getProcedures(String catalog, String schemaPattern, String procedureNamePattern)
+	// throws SQLException {
+	// return databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern);
+	// }
+	//
+	// public ResultSet getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern,
+	// String columnNamePattern) throws SQLException {
+	// return databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern);
+	// }
+	//
+	// public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)
+	// throws SQLException {
+	// return databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types);
+	// }
+	//
+	// public ResultSet getSchemas() throws SQLException {
+	// return databaseMetaData.getSchemas();
+	// }
+	//
+	// public ResultSet getCatalogs() throws SQLException {
+	// return databaseMetaData.getCatalogs();
+	// }
+	//
+	// public ResultSet getTableTypes() throws SQLException {
+	// return databaseMetaData.getTableTypes();
+	// }
+
+	// public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String
+	// columnNamePattern)
+	// throws SQLException {
+	// return databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+	// }
+	//
+	// public ResultSet getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern)
+	// throws SQLException {
+	// return databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern);
+	// }
+	//
+	// public ResultSet getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern)
+	// throws SQLException {
+	// return databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
+	// }
+	//
+	// public ResultSet getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable)
+	// throws SQLException {
+	// return databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable);
+	// }
+	//
+	// public ResultSet getVersionColumns(String catalog, String schema, String table) throws SQLException {
+	// return databaseMetaData.getVersionColumns(catalog, schema, table);
+	// }
+	//
+	// public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
+	// return databaseMetaData.getPrimaryKeys(catalog, schema, table);
+	// }
+	//
+	// public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
+	// return databaseMetaData.getImportedKeys(catalog, schema, table);
+	// }
+	//
+	// public ResultSet getExportedKeys(String catalog, String schema, String table) throws SQLException {
+	// return databaseMetaData.getExportedKeys(catalog, schema, table);
+	// }
+	//
+	// public ResultSet getCrossReference(String parentCatalog, String parentSchema, String parentTable,
+	// String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
+	// return databaseMetaData.getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog,
+	// foreignSchema, foreignTable);
+	// }
+	//
+	// public ResultSet getTypeInfo() throws SQLException {
+	// return databaseMetaData.getTypeInfo();
+	// }
+	//
+	// public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate)
+	// throws SQLException {
+	// return databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate);
+	// }
+	//
+	// public boolean supportsResultSetType(int type) throws SQLException {
+	// return databaseMetaData.supportsResultSetType(type);
+	// }
+	//
+	// public boolean supportsResultSetConcurrency(int type, int concurrency) throws SQLException {
+	// return databaseMetaData.supportsResultSetConcurrency(type, concurrency);
+	// }
+	//
+	// public boolean ownUpdatesAreVisible(int type) throws SQLException {
+	// return databaseMetaData.ownUpdatesAreVisible(type);
+	// }
+	//
+	// public boolean ownDeletesAreVisible(int type) throws SQLException {
+	// return databaseMetaData.ownDeletesAreVisible(type);
+	// }
+	//
+	// public boolean ownInsertsAreVisible(int type) throws SQLException {
+	// return databaseMetaData.ownInsertsAreVisible(type);
+	// }
+	//
+	// public boolean othersUpdatesAreVisible(int type) throws SQLException {
+	// return databaseMetaData.othersUpdatesAreVisible(type);
+	// }
+	//
+	// public boolean othersDeletesAreVisible(int type) throws SQLException {
+	// return databaseMetaData.othersDeletesAreVisible(type);
+	// }
+	//
+	// public boolean othersInsertsAreVisible(int type) throws SQLException {
+	// return databaseMetaData.othersInsertsAreVisible(type);
+	// }
+	//
+	// public boolean updatesAreDetected(int type) throws SQLException {
+	// return databaseMetaData.updatesAreDetected(type);
+	// }
+	//
+	// public boolean deletesAreDetected(int type) throws SQLException {
+	// return databaseMetaData.deletesAreDetected(type);
+	// }
+	//
+	// public boolean insertsAreDetected(int type) throws SQLException {
+	// return databaseMetaData.insertsAreDetected(type);
+	// }
+	//
+	// public ResultSet getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types)
+	// throws SQLException {
+	// return databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types);
+	// }
+	//
+	// public Connection getConnection() throws SQLException {
+	// return databaseMetaData.getConnection();
+	// }
+	//
+	// public ResultSet getSuperTypes(String catalog, String schemaPattern, String typeNamePattern) throws SQLException
+	// {
+	// return databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern);
+	// }
+	//
+	// public ResultSet getSuperTables(String catalog, String schemaPattern, String tableNamePattern) throws
+	// SQLException {
+	// return databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern);
+	// }
+	//
+	// public ResultSet getAttributes(String catalog, String schemaPattern, String typeNamePattern,
+	// String attributeNamePattern) throws SQLException {
+	// return databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern);
+	// }
+	//
+	// public boolean supportsResultSetHoldability(int holdability) throws SQLException {
+	// return databaseMetaData.supportsResultSetHoldability(holdability);
+	// }
+	//
+	// public RowIdLifetime getRowIdLifetime() throws SQLException {
+	// return databaseMetaData.getRowIdLifetime();
+	// }
+	//
+	// public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
+	// return databaseMetaData.getSchemas(catalog, schemaPattern);
+	// }
+	//
+	// public ResultSet getClientInfoProperties() throws SQLException {
+	// return databaseMetaData.getClientInfoProperties();
+	// }
+	//
+	// public ResultSet getFunctions(String catalog, String schemaPattern, String functionNamePattern)
+	// throws SQLException {
+	// return databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern);
+	// }
+	//
+	// public ResultSet getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern,
+	// String columnNamePattern) throws SQLException {
+	// return databaseMetaData.getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern);
+	// }
+	//
+	// public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern,
+	// String columnNamePattern) throws SQLException {
+	// return databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+	// }
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
 
 }

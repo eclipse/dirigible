@@ -356,6 +356,11 @@
 		 	<artifactId>dirigible-ide-help</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-database</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 
 		<dependency>
 		  <groupId>javax.annotation</groupId>

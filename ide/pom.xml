@@ -43,6 +43,7 @@
 		<module>ide-workspace</module>
 		<module>ide-preview</module>
 		<module>ide-help</module>
+		<module>ide-database</module>
 	</modules>
 
 	<profiles>

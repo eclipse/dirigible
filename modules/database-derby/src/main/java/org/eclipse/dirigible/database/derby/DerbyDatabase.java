@@ -37,13 +37,14 @@ public class DerbyDatabase implements IDatabase {
 	public static final String TYPE = "derby";
 	public static final String DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER = "DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER"; //$NON-NLS-1$
 	public static final String DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT = DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER + "_DEFAULT"; //$NON-NLS-1$
-	
+
 	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
-	
+
 	/**
 	 * Constructor with default root folder - user.dir
 	 *
-	 * @throws DerbyDatabaseException in case the database cannot be created
+	 * @throws DerbyDatabaseException
+	 *             in case the database cannot be created
 	 */
 	public DerbyDatabase() throws DerbyDatabaseException {
 		this(null);
@@ -52,14 +53,16 @@ public class DerbyDatabase implements IDatabase {
 	/**
 	 * Constructor with root folder parameter
 	 *
-	 * @param rootFolder the root folder
-	 * @throws DerbyDatabaseException in case the database cannot be created
+	 * @param rootFolder
+	 *            the root folder
+	 * @throws DerbyDatabaseException
+	 *             in case the database cannot be created
 	 */
 	public DerbyDatabase(String rootFolder) throws DerbyDatabaseException {
 		logger.debug("Initializing the embedded Derby datasource...");
-		
+
 		initialize();
-		
+
 		logger.debug("Embedded Derby datasource initialized.");
 	}
 
@@ -73,33 +76,36 @@ public class DerbyDatabase implements IDatabase {
 	public DataSource getDataSource() {
 		return getDataSource(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
-	
+
 	@Override
 	public DataSource getDataSource(String name) {
 		DataSource dataSource = DATASOURCES.get(name);
 		if (dataSource != null) {
 			return dataSource;
 		}
-		dataSource = createDataSource(name);
-		return dataSource;
+		if (DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name) || DIRIGIBLE_DATABASE_DATASOURCE_TEST.equals(name)) {
+			dataSource = createDataSource(name);
+			return dataSource;
+		}
+		return null;
 	}
 
 	@Override
 	public String getType() {
 		return TYPE;
 	}
-	
+
 	protected DataSource createDataSource(String name) {
 		logger.debug("Creating an embedded Derby datasource...");
-		
-		synchronized(DerbyDatabase.class) {
+
+		synchronized (DerbyDatabase.class) {
 			try {
 				DataSource dataSource = new EmbeddedDataSource();
 				String derbyRoot = prepareRootFolder(name);
 				((EmbeddedDataSource) dataSource).setDatabaseName(derbyRoot);
 				((EmbeddedDataSource) dataSource).setCreateDatabase("create");
 				logger.warn(String.format("Embedded Derby at: %s", derbyRoot));
-	
+
 				WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource);
 				DATASOURCES.put(name, wrappedDataSource);
 				return wrappedDataSource;
@@ -113,11 +119,10 @@ public class DerbyDatabase implements IDatabase {
 	private String prepareRootFolder(String name) throws IOException {
 		// TODO validate name parameter
 		// TODO get by name form Configuration
-		
-		String rootFolder = (IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? 
-				DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT :
-				DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER + name;
-		String derbyRoot = (String) Configuration.get(rootFolder, name);
+
+		String rootFolder = (IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT
+				: DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER + name;
+		String derbyRoot = Configuration.get(rootFolder, name);
 		File rootFile = new File(derbyRoot);
 		File parentFile = rootFile.getCanonicalFile().getParentFile();
 		if (!parentFile.exists()) {

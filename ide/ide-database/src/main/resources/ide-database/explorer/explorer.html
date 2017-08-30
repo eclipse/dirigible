@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	
+	<title>Eclipse Dirigible - Database</title>
+	
+	<script src="../../ide/ui/message-hub.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
+	
+	<link href="../../ide/css/jstree.min.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.4/jstree.min.js"></script>
+	
+	<link rel="stylesheet" href="../../ide/css/bootstrap.min.css">
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	<script src="explorer.js"></script>
+	
+	<link type="text/css" rel="stylesheet" href="../../ide/css/dark.css" />
+
+</head>
+
+<body style="background-color: #222" border="1px" ng-app="database" ng-controller="DatabaseController">
+
+	<div>
+		<div class="btn-group pull-right" role="group" aria-label="toolbar">
+			<div class="btn-group">
+			  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="New">
+			    <i class="fa fa-file-o"></i>
+			  </button>
+			  <div class="dropdown-menu">
+				  <a class="dropdown-item" href="#">Table</a>
+				  <div class="dropdown-divider"></div>
+				  <a class="dropdown-item" href="#">View</a>
+			  </div>
+			</div>
+			<select ng-model="selectedDatabase" ng-options="o as o for o in databases" ng-change="selectedDatabase()"
+				class="dropdown btn btn-default dropdown-toggle" title="Databases"></select>
+		</div>
+	</div>
+	
+	<div class="database"></div>
+
+</body>
+</html>

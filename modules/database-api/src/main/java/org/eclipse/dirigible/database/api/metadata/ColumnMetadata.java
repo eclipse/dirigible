@@ -1,16 +1,18 @@
 package org.eclipse.dirigible.database.api.metadata;
 
 public class ColumnMetadata {
-	
+
 	private String name;
-	
+
 	private String type;
-	
+
 	private int size;
-	
+
 	private boolean nullable;
-	
+
 	private boolean key;
+
+	private String kind = "column";
 
 	public ColumnMetadata(String name, String type, int size, boolean nullable, boolean key) {
 		super();
@@ -60,7 +62,13 @@ public class ColumnMetadata {
 	public void setKey(boolean key) {
 		this.key = key;
 	}
-	
-	
-	
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
 }
