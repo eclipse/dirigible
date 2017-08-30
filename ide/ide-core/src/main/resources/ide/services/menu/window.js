@@ -10,6 +10,8 @@
 
 /* eslint-env node, dirigible */
 
+var extensions = require('core/v3/extensions');
+
 exports.getMenu = function() {
 	var menu = {
 			"name":"Window",
@@ -21,15 +23,44 @@ exports.getMenu = function() {
 					"name":"Open Perspective",
 					"link":"#",
 					"order":"810",
-					"onClick":"alert('Open Perspective has been clicked')"
+					"items":[]
 				},
 				{
 					"name":"Show View",
 					"link":"#",
 					"order":"820",
-					"onClick":"alert('Show View has been clicked')"
+					"items":[]
 				}
 			]
 		};
+		
+		
+		
+	var perspectiveExtensions = extensions.getExtensions('ide-perspective');
+	for (var i=0; i<perspectiveExtensions.length; i++) {
+    	var module = perspectiveExtensions[i];
+    	perspectiveExtension = require(module);
+    	var perspectiveInfo = perspectiveExtension.getPerspective();
+    	var perspectiveMenu = {
+			"name": perspectiveInfo.name,
+			"link":"#",
+			"order":"" + (810 + i),
+			"onClick":"window.open('" + perspectiveInfo.link + "', '_blank')"};
+    	menu.items[0].items.push(perspectiveMenu);
+	}
+	
+	var viewExtensions = extensions.getExtensions('ide-view');
+	for (var i=0; i<viewExtensions.length; i++) {
+    	var module = viewExtensions[i];
+    	viewExtension = require(module);
+    	var viewInfo = viewExtension.getView();
+    	var viewMenu = {
+			"name": viewInfo.name,
+			"link":"#",
+			"order":"" + (820 + i),
+			"onClick":"window.open('" + viewInfo.link + "', '_blank')"};
+    	menu.items[1].items.push(viewMenu);
+	}
+		
 	return menu;
 }

@@ -55,7 +55,14 @@
 						<a ng-show="menuItem.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ menuItem.name }}</a>
 						<ul class="dropdown-menu">
 							<li ng-repeat="item in menuItem.items">
-								<a href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
+								<a ng-hide="item.items" href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
+								<a ng-show="item.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ item.name }}</a>
+								<ul class="dropdown-submenu">
+									<li ng-repeat="subItem in item.items">
+										<a href="{{subItem.link}}" ng-click="onClick(subItem.onClick)" target="{{subItem.newTab ? '_blank' : '_self'}}">{{ subItem.name }}</a>
+									</li>
+								</ul>
+								
 							</li>
 						</ul>
 					</li>
@@ -187,6 +194,10 @@
 		}
 	
 		var layoutCtrl = new LayoutController();
+		
+		$(window).resize(function() {
+  			layoutCtrl.layout.updateSize();
+		});
 		
 		var listenerId = layoutCtrl.addListener('fileselected', function(msg){
 			var newItemConfig = {
