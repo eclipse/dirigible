@@ -13,7 +13,8 @@
 	<link href="css/jstree.min.css" rel="stylesheet">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.4/jstree.min.js"></script>
+	<!--script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.4/jstree.js"></script-->
+	<script src="js/jstree.js"></script>
 	
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -24,7 +25,7 @@
 
 </head>
 
-<body style="background-color: #222" border="1px" ng-app="workspace" ng-controller="WorkspaceController">
+<body style="background-color: #222" border="1px" ng-app="workspace" ng-controller="WorkspaceController as workspace">
 
 	<div>
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
@@ -52,7 +53,7 @@
 			  </div>
 			</div>
 			<button type="button" class="btn btn-default" title="Publish"><i class="fa fa-cloud-upload"></i></button>
-			<select ng-model="selectedWs" ng-options="o as o for o in workspaces" ng-change="selected()"
+			<select ng-model="selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
 		</div>
 	</div>
