@@ -199,7 +199,7 @@
   			layoutCtrl.layout.updateSize();
 		});
 		
-		var listenerId = layoutCtrl.addListener('fileselected', function(msg){
+		var listenerId = layoutCtrl.addListener('workspace.file.open', function(msg){
 			var newItemConfig = {
 				id: msg.data.path,
 				title: msg.data.label,
