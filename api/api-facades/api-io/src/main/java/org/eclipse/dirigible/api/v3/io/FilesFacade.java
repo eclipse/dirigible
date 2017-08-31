@@ -27,7 +27,8 @@ public class FilesFacade {
 	private static final Logger logger = LoggerFactory.getLogger(FilesFacade.class);
 	
 	public static final boolean exists(String path) throws IOException {
-		return Files.exists(Paths.get(path));
+//		return Files.exists(Paths.get(path));
+		return Paths.get(path).toFile().exists();
 	}
 	
 	public static final boolean isExecutable(String path) throws IOException {
@@ -162,7 +163,8 @@ public class FilesFacade {
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 	
-					if (Files.exists(dir)) {
+//					if (Files.exists(dir)) {
+					if (dir.toFile().exists()) {
 						logger.trace(String.format("Deleting directory: %s", dir));
 						try {
 							Files.delete(dir);
@@ -180,7 +182,8 @@ public class FilesFacade {
 	
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					if (Files.exists(file)) {
+//					if (Files.exists(file)) {
+					if (file.toFile().exists()) {
 						logger.trace(String.format("Deleting file: %s", file));
 						try {
 							Files.delete(file);

@@ -42,7 +42,8 @@ public class FileSystemUtils {
 
 	public static byte[] loadFile(String workspacePath) throws FileNotFoundException, IOException {
 		Path path = FileSystems.getDefault().getPath(workspacePath);
-		if (Files.exists(path)) {
+		// if (Files.exists(path)) {
+		if (path.toFile().exists()) {
 			return Files.readAllBytes(path);
 		}
 		return null;
@@ -84,7 +85,8 @@ public class FileSystemUtils {
 			@Override
 			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 
-				if (Files.exists(dir)) {
+				// if (Files.exists(dir)) {
+				if (dir.toFile().exists()) {
 					logger.trace(String.format("Deleting directory: %s", dir));
 					try {
 						Files.delete(dir);
@@ -102,7 +104,8 @@ public class FileSystemUtils {
 
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				if (Files.exists(file)) {
+				// if (Files.exists(file)) {
+				if (file.toFile().exists()) {
 					logger.trace(String.format("Deleting file: %s", file));
 					try {
 						Files.delete(file);
