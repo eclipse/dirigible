@@ -21,4 +21,7 @@ for (var i=0; i<perspectiveExtensions.length; i++) {
     var perspective = perspectiveExtension.getPerspective();
     perspectives.push(perspective);
 }
+perspectives.sort(function(p, n) {
+	return (parseInt(p.order) - parseInt(n.order));
+});
 response.println(JSON.stringify(perspectives));

@@ -21,4 +21,7 @@ for (var i=0; i<menuExtensions.length; i++) {
     var menu = menuExtension.getMenu();
     mainmenu.push(menu);
 }
+mainmenu.sort(function(p, n) {
+	return (parseInt(p.order) - parseInt(n.order));
+});
 response.println(JSON.stringify(mainmenu));

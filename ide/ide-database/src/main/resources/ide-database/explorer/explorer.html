@@ -28,18 +28,10 @@
 
 	<div>
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
-			<div class="btn-group">
-			  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="New">
-			    <i class="fa fa-file-o"></i>
-			  </button>
-			  <div class="dropdown-menu">
-				  <a class="dropdown-item" href="#">Table</a>
-				  <div class="dropdown-divider"></div>
-				  <a class="dropdown-item" href="#">View</a>
-			  </div>
-			</div>
-			<select ng-model="selectedDatabase" ng-options="o as o for o in databases" ng-change="selectedDatabase()"
+			<select ng-model="selectedDatabase" ng-options="o as o for o in databases" ng-change="databaseChanged()"
 				class="dropdown btn btn-default dropdown-toggle" title="Databases"></select>
+			<select ng-model="selectedDatasource" ng-options="o as o for o in datasources" ng-change="datasourceChanged()"
+				class="dropdown btn btn-default dropdown-toggle" title="Datasources"></select>
 		</div>
 	</div>
 	

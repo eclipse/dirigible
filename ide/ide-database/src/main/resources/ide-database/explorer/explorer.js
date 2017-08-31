@@ -18,12 +18,11 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 				$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).success(function(data) {
 					$scope.datasources = data;
 					if(data[0]) {
-						$scope.selectedDatasource = data;
+						$scope.selectedDatasource = data[0];
 						$scope.refreshDatabase();
 					}
 				});
 			}
-			$scope.refreshDatabase();
 	});
 	
 	$scope.refreshDatabase = function() {
@@ -131,6 +130,9 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 						  });
 						}
 				}.bind(this));
+			} else {
+				$('.database').jstree(true).settings.core.data = [];
+				$('.database').jstree(true).refresh();
 			}
 	};
 	
@@ -164,12 +166,21 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 		}
 	}
 	
-	$scope.selected = function(evt){
+	$scope.databaseChanged = function(evt){
 		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase)
 				.success(function(data) {
-						$scope.databases = data.databases;
-						$scope.refreshDatabase();
+					$scope.datasources = data;
+					if (data[0]) {
+						$scope.selectedDatasource = data[0];
+					} else {
+						$scope.selectedDatasource = undefined;
+					}
+					$scope.refreshDatabase();
 		});
+	};
+	
+	$scope.datasourceChanged = function(evt){
+		$scope.refreshDatabase();
 	};
 
 });
