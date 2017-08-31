@@ -10,7 +10,8 @@
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
 	
-	<link href="css/jstree.min.css" rel="stylesheet">
+	<link href="css/jstree.css" rel="stylesheet">
+	<!--link href="css/jstree.min.css" rel="stylesheet"-->
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	
 	<!--script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.4/jstree.js"></script-->
@@ -52,7 +53,7 @@
 				  <div class="dropdown-divider"></div>
 			  </div>
 			</div>
-			<button type="button" class="btn btn-default" title="Publish"><i class="fa fa-cloud-upload"></i></button>
+			<button type="button" class="btn btn-default" title="Publish" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
 			<select ng-model="workspace.selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
 		</div>

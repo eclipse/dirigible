@@ -202,11 +202,13 @@ WorkspaceService.prototype.listWorkspaceNames = function(){
 			});
 }
 
+
 /**
  * Workspace Tree Adapter mediating the workspace service REST api and the jst tree componet working with it
  */
-var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, $messageHub){
+var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, $messageHub){
 	this.treeConfig = treeConfig;
+	this.publishService = publishService;
 	this.$messageHub = $messageHub;
 	this.workspaceSvc = workspaceSvc;
 
@@ -265,6 +267,13 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
 	}.bind(this))
 	.on('copy_node.jstree', function (e, data) {
 		//TODO
+	}.bind(this))
+	.on('jstree.workspace.publish', function (e, data) {		
+		this.publish(data);
+	}.bind(this))
+	.on('jstree.workspace.file.properties', function (e, data) {
+		var url = data.path + '/' + data.name;
+		this.openNodeProperties(url);
 	}.bind(this));
 	
 	this.jstree = $.jstree.reference(jstree);	
@@ -373,11 +382,21 @@ WorkspaceTreeAdapter.prototype.refresh = function(workspaceName, keepState){
 					this.jstree.refresh();
 			}.bind(this));
 }
+WorkspaceTreeAdapter.prototype.openNodeProperties = function(resource){
+	this.$messageHub.announceFilePropertiesOpen(resource);
+};
+WorkspaceTreeAdapter.prototype.publish = function(resource){
+	return this.publishService.publish(resource.path)
+	.then(function(){
+		return this.$messageHub.announcePublish(resource);
+	}.bind(this));
+};
 
 angular.module('workspace.config', [])
 	.constant('WS_SVC_URL','/services/v3/ide/workspaces')
 	.constant('WS_SVC_MANAGER_URL','/services/v3/ide/workspace')
-
+	.constant('PUBLISH_SVC_URL','/services/v3/ide/publisher/request')
+	
 angular.module('workspace', ['workspace.config'])
 .config(['$httpProvider', function($httpProvider) {
 	//check if response is error. errors currently are non-json formatted and fail too early
@@ -421,13 +440,21 @@ angular.module('workspace', ['workspace.config'])
 		};
 		this.message('file.moved', data);
 	};
+	var announceFilePropertiesOpen = function(fileDescriptor){
+		this.message('file.properties', fileDescriptor);
+	};
+	var announcePublish = function(fileDescriptor){
+		this.message('file.publish', fileDescriptor);
+	};
 	return {
 		message: message,
 		announceFileCreated: announceFileCreated,
 		announceFileOpen: announceFileOpen,
 		announceFileDeleted: announceFileDeleted,
 		announceFileRenamed: announceFileRenamed,
-		announceFileMoved: announceFileMoved
+		announceFileMoved: announceFileMoved,
+		announceFilePropertiesOpen: announceFilePropertiesOpen,
+		announcePublish: announcePublish
 	};
 }])
 .factory('$treeConfig', [function(){
@@ -486,22 +513,14 @@ angular.module('workspace', ['workspace.config'])
 			"default": {
 				"icon": "fa fa-file-o",
 				"default_name": "file",
-				"template_new_name": "{name}{counter}",
-				"valid_children": []
+				"template_new_name": "{name}{counter}"
 			},
 			'folder': {
 				"default_name": "folder",
-				'icon': "fa fa-folder-o",
-				"valid_children": ["folder","file","txt"]
-			},
-			'file': {},
-			'txt': {
-				'template_new_name': "{name}{counter}.txt",
-				"valid_children": []
+				'icon': "fa fa-folder-o"
 			},
 			"project": {
-				"icon": "fa fa-folder-o",
-				"valid_children": ["folder","file","txt"]
+				"icon": "fa fa-folder-o"
 			}
 		},
 		"contextmenu": {
@@ -531,7 +550,6 @@ angular.module('workspace', ['workspace.config'])
 							"label"				: "File",
 							"action"			: function (tree, data) {
 								var parentNode = tree.get_node(data.reference);
-								//self.createNode(parentNode);
 								var fileNode = {
 									type: 'file'
 								};
@@ -544,18 +562,48 @@ angular.module('workspace', ['workspace.config'])
 				}										
 				ctxmenu.remove.shortcut = 46;
 				ctxmenu.remove.shortcut_label = 'Del';
+				
 				ctxmenu.rename.shortcut = 113;
 				ctxmenu.rename.shortcut_label = 'F2';
+				
+				ctxmenu.publish = {
+					"separator_before": true,
+					"label": "Publish",
+					"action": function(data){
+						var tree = $.jstree.reference(data.reference);
+						var node = tree.get_node(data.reference);
+						tree.element.trigger('jstree.workspace.publish', [node.original._file]);
+					}.bind(this)
+				}
+				
+				ctxmenu.properties = {
+					"separator_before": true,
+					"label": "Properties...",
+					"action": function(data){
+						var tree = $.jstree.reference(data.reference);
+						var node = tree.get_node(data.reference);
+						tree.element.trigger('jstree.workspace.file.properties', [node.original._file]);
+					}
+				}
+				
 				return ctxmenu;
 			}
 		}
 	}
 }])
-.factory('workspaceService', ['$http', 'WS_SVC_MANAGER_URL','WS_SVC_URL','$treeConfig', function($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
+.factory('publishService', ['$http', 'PUBLISH_SVC_URL', function($http, PUBLISH_SVC_URL){
+	return {
+		publish : function(resourcePath){
+			var url = new UriBuilder().path(PUBLISH_SVC_URL.split('/')).path(resourcePath.split('/')).build();
+			return $http.post(url);
+		}
+	}
+}])
+.factory('workspaceService', ['$http', 'WS_SVC_MANAGER_URL', 'WS_SVC_URL', '$treeConfig', function($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
 	return new WorkspaceService($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig);
 }])
-.factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', '$messageHub', function($treeConfig, WorkspaceService, $messageHub){
-	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, $messageHub);
+.factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', '$messageHub', function($treeConfig, WorkspaceService, publishService, $messageHub){
+	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, $messageHub);
 }])
 .controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', function (workspaceService, workspaceTreeAdapter) {
 
@@ -577,6 +625,10 @@ angular.module('workspace', ['workspace.config'])
 		if(!workspaceService.typeMapping)
 			workspaceService.typeMapping = $treeConfig[types];
 		this.wsTree.refresh();
+	};
+	
+	this.publish = function(){
+		
 	};
 
 }]);

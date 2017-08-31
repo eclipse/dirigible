@@ -4417,7 +4417,8 @@
 							"display" : "inline-block",
 							"height" : (this._data.core.li_height) + "px",
 							"lineHeight" : (this._data.core.li_height) + "px",
-							"width" : "150px" // will be set a bit further down
+							"width" : "150px", // will be set a bit further down
+							"color": "#000"
 						},
 						"blur" : $.proxy(function (e) {
 							e.stopImmediatePropagation();
