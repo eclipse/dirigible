@@ -1,15 +1,26 @@
-var messageHub = new FramesMessageHub();
-var topic = 'fileselected';
+angular.module('preview', [])
+.factory('$messageHub', [function(){
+	var messageHub = new FramesMessageHub();	
+	var message = function(evtName, data){
+		messageHub.post({data: data}, 'workspace.' + evtName);
+	};
+	var on = function(topic, callback){
+		messageHub.subscribe(callback, topic);
+	};
+	return {
+		message: message,
+		on: on
+	};
+}])
+.controller('PreviewController', ['$scope', '$http', '$messageHub', function ($scope, $http, $messageHub) {
 
-angular.module('preview', []).controller('PreviewController', function ($scope, $http) {
-
-	$scope.refresh = function() {
-		var url = $scope.previewUrl;
+	this.refresh = function() {
+		var url = this.previewUrl;
 		url = url.indexOf('?refreshToken') > 0 ? url.substring(0, url.indexOf('?refreshToken')) : url;
-		$scope.previewUrl = url + '?refreshToken=' + new Date().getTime();
+		this.previewUrl = url + '?refreshToken=' + new Date().getTime();
 	};
 
-	messageHub.subscribe(function(msg) {
+	$messageHub.on('workspace.file.open', function(msg) {
 		var resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1))
 		var url = window.top.location.protocol + '//' + window.top.location.host + '/services/v3';
 		var type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
@@ -30,10 +41,10 @@ angular.module('preview', []).controller('PreviewController', function ($scope, 
 				url += '/web';
 		}
 		url += resourcePath;
-		$scope.previewUrl = url;
+		this.previewUrl = url;
 		$scope.$apply();
-	}, topic);
+	}.bind(this));
 
-}).config(function($sceProvider) {
+}]).config(function($sceProvider) {
     $sceProvider.enabled(false);
 });

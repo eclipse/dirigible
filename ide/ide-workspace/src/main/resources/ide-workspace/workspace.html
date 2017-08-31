@@ -53,7 +53,7 @@
 			  </div>
 			</div>
 			<button type="button" class="btn btn-default" title="Publish"><i class="fa fa-cloud-upload"></i></button>
-			<select ng-model="selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
+			<select ng-model="workspace.selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
 		</div>
 	</div>

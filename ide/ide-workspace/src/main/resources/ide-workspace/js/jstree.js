@@ -8272,14 +8272,17 @@
 				}
 				if(!node) { node = {}; }
 				var tmp, n, dpc, i, j, m = this._model.data, s = this.settings.unique.case_sensitive, cb = this.settings.unique.duplicate;
-				n = tmp = this.get_string('New node');
+				if(this.settings.unique.newNodeName && typeof this.settings.unique.newNodeName === 'function')
+					n = tmp = this.settings.unique.newNodeName(node, this.settings.types);
+				else
+					n = tmp = this.get_string('New node');
 				dpc = [];
 				for(i = 0, j = par.children.length; i < j; i++) {
 					dpc.push(s ? m[par.children[i]].text : m[par.children[i]].text.toLowerCase());
 				}
-				i = 1;
+				i = 0;
 				while($.inArray(s ? n : n.toLowerCase(), dpc) !== -1) {
-					n = cb.call(this, tmp, (++i)).toString();
+					n = cb.call(this, tmp, (++i), node, this.settings.types).toString();
 				}
 				node.text = n;
 			}

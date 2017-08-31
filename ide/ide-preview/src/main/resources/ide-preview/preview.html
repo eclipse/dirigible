@@ -19,13 +19,15 @@
 	<link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
 </head>
 
-<body ng-app="preview" ng-controller="PreviewController">
-	<div class="form-group">
-		 <label for="previewUrl">URL:</label>
-		<input class="form-control" type="text" ng-model="previewUrl" id="previewUrl">
+<body ng-app="preview" ng-controller="PreviewController as preview">
+	<div class="input-group">
+		<span class="input-group-btn">
+			<button class="btn btn-default" type="button" ng-click="preview.refresh()"><i class="fa fa-refresh"></i></button>
+		</span>
+		<input type="text" class="form-control" type="text" ng-model="preview.previewUrl" placeholder="Preview ..." >
 	</div>
 	<div class="fluidMedia">
-	    <iframe ng-src="{{previewUrl}}" frameborder="0"> </iframe>
+	    <iframe ng-src="{{preview.previewUrl}}" frameborder="0"> </iframe>
 	</div>
 </body>
 </html>
