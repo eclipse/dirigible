@@ -1,10 +1,7 @@
 /**
  * Utility URL builder
  */
-var UriBuilder = function UriBuilder(baseUri){
-	this.baseUri = baseUri;
-	if(this.baseUri.length && this.baseUri.charAt(this.baseUri.length-1) !=='/')
-		this.baseUri+='/';
+var UriBuilder = function UriBuilder(){
 	this.pathSegments = [];
 	return this;
 }
@@ -26,18 +23,18 @@ UriBuilder.prototype.path = function(_pathSegments){
 	return this;
 }
 UriBuilder.prototype.build = function(){
-	var uriPath = this.pathSegments.join('/');
-	return this.baseUri + uriPath;
+	var uriPath = '/'+this.pathSegments.join('/');
+	return uriPath;
 }
 
 /**
- * Bridge between jstree and workspace API
+ * Workspace Service API delegate
  */
-var WorkspaceService = function(workspaceManagerServiceUrl, workspacesServiceUrl, fileTypesCfg, $http){
+var WorkspaceService = function($http, workspaceManagerServiceUrl, workspacesServiceUrl, treeCfg){
 
 	this.workspaceManagerServiceUrl = workspaceManagerServiceUrl;
 	this.workspacesServiceUrl = workspacesServiceUrl;
-	this.typeMapping = fileTypesCfg;
+	this.typeMapping = treeCfg['types'];
 	this.$http = $http;
 	
 	this.newFileName = function(name, type, siblingFilenames){
@@ -145,10 +142,14 @@ WorkspaceService.prototype.createFolder = function(type){
 };
 
 WorkspaceService.prototype.createFile = function(name, path, isDirectory){
-	var url = new UriBuilder(this.workspacesServiceUrl+path).path(name).build();
+	var url = new UriBuilder().path((this.workspacesServiceUrl+path).split('/')).path(name).build();
 	if(isDirectory)
 		url+="/";
 	return this.$http.post(url)
+			.then(function(response){
+				var filePath = response.headers('location');
+				return this.$http.get(filePath);
+			}.bind(this))
 			.catch(function(response) {
 				var msg;
 				if(response.data && response.data.error)
@@ -159,16 +160,16 @@ WorkspaceService.prototype.createFile = function(name, path, isDirectory){
 			});	
 };
 WorkspaceService.prototype.remove = function(filepath){
-	var url = new UriBuilder(this.workspacesServiceUrl).path(filepath.split('/')).build();
+	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(filepath.split('/')).build();
 	return this.$http['delete'](url);
 };
 WorkspaceService.prototype.rename = function(oldName, newName, path){
 	var pathSegments = path.split('/');
 	if(pathSegments.length > 0){
 		var workspaceName = path.split('/')[1];
-		var url = new UriBuilder(this.workspaceManagerServiceUrl).path(workspaceName).path('rename').build();
-		var sourcepath = new UriBuilder(path).path(oldName).build();
-		var targetpath = new UriBuilder(path).path(newName).build();
+		var url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('rename').build();
+		var sourcepath = new UriBuilder().path(path).path(oldName).build();
+		var targetpath = new UriBuilder().path(path).path(newName).build();
 		return this.$http.post(url, {
 					source: sourcepath,
 					target: targetpath
@@ -178,25 +179,36 @@ WorkspaceService.prototype.rename = function(oldName, newName, path){
 				});
 	}
 };
-WorkspaceService.prototype.copy = function(){};
-WorkspaceService.prototype.move = function(){};
-
-WorkspaceService.prototype.load = function(selectedWs){
-	return this.$http.get(this.workspacesServiceUrl + '/' + selectedWs)
-	.then(function(response){
-		return response.data;
+WorkspaceService.prototype.move = function(filename, sourcepath, targetpath, workspaceName){
+	var url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('move').build();
+	return this.$http.post(url, { 
+		source: sourcepath + '/' + filename,
+		target: targetpath + '/' + filename,
 	})
+};
+WorkspaceService.prototype.copy = function(){};
+WorkspaceService.prototype.load = function(workspaceName){
+	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspaceName).build();
+	return this.$http.get(url)
+			.then(function(response){
+				return response.data;
+			});
+}
+WorkspaceService.prototype.listWorkspaceNames = function(){
+	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).build();
+	return this.$http.get(url)
+			.then(function(response){
+				return response.data;
+			});
 }
 
-var WorkspaceTreeAdapter = function(containerEl, treeConfig, $messageHub, wsManagerBaseUrl, wsServiceBaseUrl, $http, workspaceName){
-	this.containerEl = containerEl;
+/**
+ * Workspace Tree Adapter mediating the workspace service REST api and the jst tree componet working with it
+ */
+var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, $messageHub){
 	this.treeConfig = treeConfig;
 	this.$messageHub = $messageHub;
-	this.$http = $http;
-	this.workspaceName = workspaceName;
-	this.workspaceSvc = new WorkspaceService(wsManagerBaseUrl, wsServiceBaseUrl, this.treeConfig.types, $http);
-	this.jstree;
-	this.init();
+	this.workspaceSvc = workspaceSvc;
 
 	this._buildTreeNode = function(f){
 		var children = [];
@@ -210,69 +222,25 @@ var WorkspaceTreeAdapter = function(containerEl, treeConfig, $messageHub, wsMana
 			"text": f.name,
 			"children": children,
 			"type": f.type,
-			"_file": f,
-			"icon": f.type=='file'?'fa fa-file-o':undefined
+			"_file": f
 		}
 	};
 	
 	return this;
 }
-WorkspaceTreeAdapter.prototype.init = function(){
-	var self = this;
-	this.treeConfig.contextmenu = {
-		'items' : function(node) {
-			var ctxmenu = $.jstree.defaults.contextmenu.items();
-			if(this.get_type(node) === "file") {
-				delete ctxmenu.create;
-			} else {
-				delete ctxmenu.create.action;
-				ctxmenu.create.label = "New";
-				ctxmenu.create.submenu = {
-					"create_folder" : {
-						"separator_after"	: true,
-						"label"				: "Folder",
-						"action"			: function (data) {
-							var tree = data.reference.jstree(true);
-							var parentNode = tree.get_node(data.reference);
-							self.createNode(parentNode, 'folder', 'folder');
-						}
-					},
-					"create_file" : {
-						"label"				: "File",
-						"action"			: function (tree, data) {
-							var parentNode = tree.get_node(data.reference);
-							self.createNode(parentNode);
-						}.bind(self, this)
-					},
-					"create_file_txt" : {
-						"label"				: "Text File",
-						"action"			: function (tree, data) {
-							var parentNode = tree.get_node(data.reference);
-							self.createNode(parentNode, 'txt');
-						}.bind(self, this)
-					}
-				};
-			}										
-			ctxmenu.remove.shortcut = 46;
-			ctxmenu.remove.shortcut_label = 'Del';
-			ctxmenu.rename.shortcut = 113;
-			ctxmenu.rename.shortcut_label = 'F2';
-			return ctxmenu;
-		}
-	};
+WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
+	this.containerEl = containerEl;
+	this.workspaceName = workspaceName;
 	
+	var self = this;
 	var jstree = this.containerEl.jstree(this.treeConfig);
 	
 	//subscribe event listeners
 	jstree.on('select_node.jstree', function (e, data) {
-		//messageHub.post({data: data.node.original._file});
+		//TODO
 	})
 	.on('dblclick.jstree', function (evt) {
-		var tree = $.jstree.reference(jstree);
-		var selectedNodes = tree.get_selected(true);
-		var type = tree.get_node(evt.target).original.type;
-		if(['folder','project'].indexOf(type)<0)
-			this.$messageHub.fireFileOpen(selectedNodes[0].original._file);
+		this.dblClickNode(this.jstree.get_node(evt.target))
 	}.bind(this))
 	.on('open_node.jstree', function(evt, data) {
 		data.instance.set_icon(data.node, 'fa fa-folder-open-o');
@@ -281,41 +249,25 @@ WorkspaceTreeAdapter.prototype.init = function(){
 		data.instance.set_icon(data.node, 'fa fa-folder-o');
 	})
 	.on('delete_node.jstree', function (e, data) {
-		this.deleteNode(data.node);
+		this.deleteNode(data.node)
 	}.bind(this))
 	.on('create_node.jstree', function (e, data) {})
 	.on('rename_node.jstree', function (e, data) {
-		if(data.old !== data.text){
+		if(data.old !== data.text || !data.node.original._file){
 			this.renameNode(data.node, data.old, data.text);
 		}
 	}.bind(this))
 	.on('move_node.jstree', function (e, data) {
-		var parentNode = data.instance.get_node(data.parent);
-		$.get(this.wsManagerBaseUrl+'/'+this.workspaceName+'/move', { 
-			source: data.node.original._file.path,
-			target: data.text//FIXME
-		})
-		.then(function (d) {
-			//data.instance.load_node(data.parent);
-		})
-		.finally(function () {
-			jstree.refresh();
-		});
-	})
+		var node = data.node;
+		var targetpath = data.instance.get_node(data.node.parent).original._file.path;
+		var sourcepath = data.node.original._file.path;
+		this.moveNode(node, sourcepath, targetpath);
+	}.bind(this))
 	.on('copy_node.jstree', function (e, data) {
-		var parentNode = data.instance.get_node(data.parent);
-		$.get(this.wsManagerBaseUrl+'/'+this.workspaceName+'/copy', { 
-			source: data.node.original._file.path,
-			target: data.text//FIXME
-		})
-		.then(function (d) {
-			//data.instance.load_node(data.parent);
-		})
-		.finally(function () {
-			jstree.refresh();
-		});
+		//TODO
 	}.bind(this));
-	this.jstree = $.jstree.reference(jstree);
+	
+	this.jstree = $.jstree.reference(jstree);	
 	return this;
 };
 WorkspaceTreeAdapter.prototype.createNode = function(parentNode, type, defaultName){
@@ -352,10 +304,14 @@ WorkspaceTreeAdapter.prototype.createNode = function(parentNode, type, defaultNa
 WorkspaceTreeAdapter.prototype.deleteNode = function(node){
 	if(node.original && node.original._file){
 		var path = node.original._file.path;
+		var self = this;
 		return this.workspaceSvc.remove.apply(this.workspaceSvc, [path])
+				.then(function(){
+					self.$messageHub.announceFileDeleted(node.original._file);
+				})
 				.finally(function () {
-					this.refresh(undefined, true);
-				}.bind(this));	
+					self.refresh(undefined, true);
+				});	
 	}
 }
 WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
@@ -364,6 +320,10 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 		var parentNode = this.jstree.get_node(node.parent);
 		var fpath = parentNode.original._file.path;
 		this.workspaceSvc.createFile.apply(this.workspaceSvc, [newName, fpath, node.type=='folder'])
+			.then(function(f){
+				node.original._file = f;
+				this.$messageHub.announceFileCreated(f);
+			}.bind(this))
 			.catch(function(node, err){
 				this.jstree.delete_node(node);
 				this.refresh(undefined, true);
@@ -372,12 +332,29 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 	} else {
 		this.workspaceSvc.rename.apply(this.workspaceSvc, [oldName, newName, node.original._file.path])
 			.then(function(data){
+				this.$messageHub.announceFileRenamed(node.original._file, oldName, newName);
 				//this.jstree.reference(node).select_node(node);
 			}.bind(this))
 			.finally(function() {
 				this.jstree.refresh();
 			}.bind(this));		
 	}
+}
+WorkspaceTreeAdapter.prototype.moveNode = function(node, sourcepath, targetpath){
+	sourcepath = sourcepath.substring(0, sourcepath.indexOf(node.text)-1);
+	var self = this;
+	return this.workspaceSvc.move(node.text, sourcepath, targetpath, this.workspaceName)
+			.then(function(){
+				self.$messageHub.announceFileMoved(node.original._file, sourcepath, targetpath);
+			})
+			.finally(function () {
+				self.refresh(undefined, true);
+			});
+}
+WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
+	var type = node.original.type;
+	if(['folder','project'].indexOf(type)<0)
+		this.$messageHub.announceFileOpen(node.original._file);
 }
 WorkspaceTreeAdapter.prototype.raw = function(){
 	return this.jstree;
@@ -397,7 +374,11 @@ WorkspaceTreeAdapter.prototype.refresh = function(workspaceName, keepState){
 			}.bind(this));
 }
 
-angular.module('workspace', [])
+angular.module('workspace.config', [])
+	.constant('WS_SVC_URL','/services/v3/ide/workspaces')
+	.constant('WS_SVC_MANAGER_URL','/services/v3/ide/workspace')
+
+angular.module('workspace', ['workspace.config'])
 .config(['$httpProvider', function($httpProvider) {
 	//check if response is error. errors currently are non-json formatted and fail too early
 	$httpProvider.defaults.transformResponse.unshift(function(data, headersGetter, status){
@@ -411,13 +392,43 @@ angular.module('workspace', [])
 	});
 }])
 .factory('$messageHub', [function(){
-	var messageHub = new FramesMessageHub();
-	var fireFileOpen = function(fileDescriptor){
-		messageHub.post({data: fileDescriptor}, 'fileselected');
-	}
+	var messageHub = new FramesMessageHub();	
+	var message = function(evtName, data){
+		messageHub.post({data: data}, 'workspace.' + evtName);
+	};
+	var announceFileCreated = function(fileDescriptor){
+		this.message('file.created', fileDescriptor);
+	};
+	var announceFileOpen = function(fileDescriptor){
+		this.message('file.open', fileDescriptor);
+	};
+	var announceFileDeleted = function(fileDescriptor){
+		this.message('file.deleted', fileDescriptor);
+	};
+	var announceFileRenamed = function(fileDescriptor, oldName, newName){
+		var data = {
+			"file": fileDescriptor,
+			"oldName": oldName,
+			"newName": newName
+		};
+		this.message('file.renamed', data);
+	};	
+	var announceFileMoved = function(fileDescriptor, sourcepath, targetpath){
+		var data = {
+			"file": fileDescriptor,
+			"sourcepath": sourcepath,
+			"targetpath": targetpath
+		};
+		this.message('file.moved', data);
+	};
 	return {
-		fireFileOpen: fireFileOpen
-	}
+		message: message,
+		announceFileCreated: announceFileCreated,
+		announceFileOpen: announceFileOpen,
+		announceFileDeleted: announceFileDeleted,
+		announceFileRenamed: announceFileRenamed,
+		announceFileMoved: announceFileMoved
+	};
 }])
 .factory('$treeConfig', [function(){
 	return {
@@ -440,52 +451,132 @@ angular.module('workspace', [])
 		},
 		'plugins': ['state','dnd','sort','types','contextmenu','unique'],
 		'unique': {
-			duplicate : function (name, counter) {
-				return name + ' (' + counter + ')';
+			'newNodeName': function(node, typesConfig){
+				var typeCfg = typesConfig[node.type] || typesConfig['default'];
+				var name = typeCfg.default_name || typesConfig['default'].default_name || 'file';
+				var tmplName = typeCfg.template_new_name || typesConfig['default'].template_new_name || '{name}{ext}';
+				var parameters = {
+					'{name}': name,
+					'{counter}': '',
+					'{ext}': typeCfg.ext || typesConfig['default'].ext || ''
+				};
+				var regex = new RegExp(Object.keys(parameters).join('|'), 'g');
+				var fName = tmplName.replace(regex, function(m) {
+					return parameters[m]!==undefined?parameters[m]:m;
+				});
+				return fName;
+			},
+			'duplicate' : function (name, counter, node, typesConfig) {
+				var typeCfg = typesConfig[node.type] || typesConfig['default'];
+				var name = typeCfg.default_name || typesConfig['default'].default_name || 'file';
+				var tmplName = typeCfg.template_new_name || typesConfig['default'].template_new_name || '{name}{counter}{ext}';
+				var parameters = {
+					'{name}': name,
+					'{counter}': counter,
+					'{ext}': typeCfg.ext
+				};
+				var regex = new RegExp(Object.keys(parameters).join('|'), 'g');
+				var fName = tmplName.replace(regex, function(m) {
+					return parameters[m]!==undefined?parameters[m]:m;
+				});
+				return fName;
 			}
 		},
-		'types': {
-			'default': {
-				'icon': "fa fa-file",
-				'template_new_name': "{name}{increment}",
+		"types": {
+			"default": {
+				"icon": "fa fa-file-o",
+				"default_name": "file",
+				"template_new_name": "{name}{counter}",
+				"valid_children": []
 			},
 			'folder': {
-				'icon': "fa fa-folder"
+				"default_name": "folder",
+				'icon': "fa fa-folder-o",
+				"valid_children": ["folder","file","txt"]
 			},
-			'file': {
-				'template_new_name': "{name}{increment}"
-			},
+			'file': {},
 			'txt': {
-				'template_new_name': "{name}{increment}.txt",
+				'template_new_name': "{name}{counter}.txt",
+				"valid_children": []
 			},
-			'project': {
-				'icon': "fa fa-folder"
+			"project": {
+				"icon": "fa fa-folder-o",
+				"valid_children": ["folder","file","txt"]
+			}
+		},
+		"contextmenu": {
+			"items" : function(node) {
+				var ctxmenu = $.jstree.defaults.contextmenu.items();
+				if(this.get_type(node) === "file") {
+					delete ctxmenu.create;
+				} else {
+					delete ctxmenu.create.action;
+					ctxmenu.create.label = "New";
+					ctxmenu.create.submenu = {
+						"create_folder" : {
+							"separator_after"	: true,
+							"label"				: "Folder",
+							"action"			: function (data) {
+								var tree = data.reference.jstree(true);
+								var parentNode = tree.get_node(data.reference);
+								var folderNode = {
+									type: 'folder'
+								};
+								tree.create_node(parentNode, folderNode, "last", function (new_node) {
+										tree.edit(new_node); 
+									});
+							}
+						},
+						"create_file" : {
+							"label"				: "File",
+							"action"			: function (tree, data) {
+								var parentNode = tree.get_node(data.reference);
+								//self.createNode(parentNode);
+								var fileNode = {
+									type: 'file'
+								};
+								tree.create_node(parentNode, fileNode, "last", function (new_node) {
+										tree.edit(new_node); 
+									});
+							}.bind(self, this)
+						}
+					};
+				}										
+				ctxmenu.remove.shortcut = 46;
+				ctxmenu.remove.shortcut_label = 'Del';
+				ctxmenu.rename.shortcut = 113;
+				ctxmenu.rename.shortcut_label = 'F2';
+				return ctxmenu;
 			}
 		}
 	}
 }])
-.controller('WorkspaceController', ['$http', '$messageHub', '$treeConfig', function ($http, $messageHub, $treeConfig) {
-					
-	var workspacesSvcUrl = "/services/v3/ide/workspaces";
-	var workspacesManagerSvcUrl = "/services/v3/ide/workspace";
+.factory('workspaceService', ['$http', 'WS_SVC_MANAGER_URL','WS_SVC_URL','$treeConfig', function($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
+	return new WorkspaceService($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig);
+}])
+.factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', '$messageHub', function($treeConfig, WorkspaceService, $messageHub){
+	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, $messageHub);
+}])
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', function (workspaceService, workspaceTreeAdapter) {
+
 	this.wsTree;
 	this.workspaces;
-	this.selectedWs;	
+	this.selectedWs;
 	
-	$http.get(workspacesSvcUrl)
-		.then(function(response) {
-			this.workspaces = response.data;
+	workspaceService.listWorkspaceNames()
+		.then(function(workspaceNames) {
+			this.workspaces = workspaceNames;
 			if(this.workspaces[0]) {
 				this.selectedWs = this.workspaces[0];
-				this.workspaceSelected()
+				this.workspaceSelected()					
 			} 
 		}.bind(this));
 	
-	this.workspaceSelected = function(evt){
-		//if(this.selectedWs !== ){
-			this.wsTree = new WorkspaceTreeAdapter($('.workspace'), $treeConfig, $messageHub, workspacesManagerSvcUrl, workspacesSvcUrl, $http, this.selectedWs);
-			this.wsTree.refresh();
-		//}
+	this.workspaceSelected = function(){
+		this.wsTree = workspaceTreeAdapter.init($('.workspace'), this.selectedWs);
+		if(!workspaceService.typeMapping)
+			workspaceService.typeMapping = $treeConfig[types];
+		this.wsTree.refresh();
 	};
 
 }]);

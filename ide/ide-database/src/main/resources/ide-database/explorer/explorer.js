@@ -137,6 +137,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 	var build = function(f){
 		var children = [];
 		var icon = 'fa fa-th-large';
+		var name = f.name;
 		if(f.kind=='schema') {
 			children = f.tables.map(function(_table){
 				return build(_table)
@@ -147,10 +148,15 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 				return build(_column)
 			});
 			icon = 'fa fa-table';
+		} else if(f.kind=='column') {
+			icon = 'fa fa-th-large';
+			name += ' [<i>' + f.type + '</i>';
+			name += ' <i>(' + f.size + ')</i>';
+			name += ']';
 		}
 		f.label = f.name;
 		return {
-			"text": f.name,
+			"text": name,
 			"children": children,
 			"type": f.kind,
 			"_file": f,
