@@ -29,7 +29,7 @@ public class WorkspaceProcessor {
 
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceProcessor.class);
 
-	private static final String WORKSPACES = ""; // "/workspaces";
+	private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
 
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
@@ -153,7 +153,7 @@ public class WorkspaceProcessor {
 	}
 
 	public URI getURI(String workspace, String project, String path) throws URISyntaxException {
-		StringBuilder relativePath = new StringBuilder(workspace);
+		StringBuilder relativePath = new StringBuilder(WORKSPACES_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR).append(workspace);
 		if (project != null) {
 			relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
 		}
@@ -165,17 +165,17 @@ public class WorkspaceProcessor {
 
 	public Workspace renderWorkspaceTree(ICollection collection) {
 		return WorkspaceJsonHelper.traverseWorkspace(collection,
-				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), WORKSPACES);
+				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
 	}
 
 	public Project renderProjectTree(ICollection collection) {
 		return WorkspaceJsonHelper.traverseProject(collection,
-				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), WORKSPACES);
+				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
 	}
 
 	public Folder renderFolderTree(ICollection collection) {
 		return WorkspaceJsonHelper.traverseFolder(collection, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
-				WORKSPACES);
+				"");
 	}
 
 	public void copyProject(String workspace, String sourceProject, String targetProject) {
