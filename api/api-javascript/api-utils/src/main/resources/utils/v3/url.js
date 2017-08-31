@@ -22,3 +22,8 @@ exports.decode = function(input, charset) {
 	return output;
 };
 
+exports.escape = function(input) {
+	var output = java.call('org.eclipse.dirigible.api.v3.utils.UrlFacade', 'escape', [input]);
+	return output;
+};
+

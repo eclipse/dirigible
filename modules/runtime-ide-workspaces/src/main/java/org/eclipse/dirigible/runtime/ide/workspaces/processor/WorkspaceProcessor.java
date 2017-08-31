@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
@@ -160,7 +161,7 @@ public class WorkspaceProcessor {
 		if (path != null) {
 			relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
 		}
-		return new URI(relativePath.toString());
+		return new URI(UrlFacade.escape(relativePath.toString()));
 	}
 
 	public Workspace renderWorkspaceTree(ICollection collection) {

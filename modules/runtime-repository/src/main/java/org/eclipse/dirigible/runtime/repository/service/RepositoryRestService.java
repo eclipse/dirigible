@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -66,7 +67,7 @@ public class RepositoryRestService implements IRestService {
 			return Response.status(Status.BAD_REQUEST).entity(format("Resource at location {0} already exists", path)).build();
 		}
 		resource = processor.createResource(path, content, request.getContentType());
-		return Response.created(new URI(resource.getPath())).build();
+		return Response.created(new URI(UrlFacade.escape(resource.getPath()))).build();
 	}
 
 	@PUT

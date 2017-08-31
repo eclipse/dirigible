@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.runtime.ide.workspaces.service;
 
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
 import javax.annotation.security.RolesAllowed;
@@ -45,7 +46,8 @@ public class WorkspaceManagerService implements IRestService {
 
 	@POST
 	@Path("{workspace}/copy")
-	public Response copy(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request) throws URISyntaxException {
+	public Response copy(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request)
+			throws URISyntaxException, UnsupportedEncodingException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -91,7 +93,8 @@ public class WorkspaceManagerService implements IRestService {
 
 	@POST
 	@Path("{workspace}/move")
-	public Response move(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request) throws URISyntaxException {
+	public Response move(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request)
+			throws URISyntaxException, UnsupportedEncodingException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -133,7 +136,8 @@ public class WorkspaceManagerService implements IRestService {
 
 	@POST
 	@Path("{workspace}/rename")
-	public Response rename(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request) throws URISyntaxException {
+	public Response rename(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request)
+			throws URISyntaxException, UnsupportedEncodingException {
 		return move(workspace, content, request);
 	}
 
