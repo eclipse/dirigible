@@ -23,41 +23,41 @@ import org.slf4j.LoggerFactory;
 
 @Singleton
 public class PublisherSynchronizer extends AbstractSynchronizer {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(PublisherSynchronizer.class);
-	
+
 	@Inject
 	private PublisherCoreService publishCoreService;
-	
+
 	private Map<String, String> resourceLocations = new HashMap<String, String>();
-	
+
 	private String currentWorkspace = null;
 	private String currentRegistry = null;
 	private Timestamp currentRequestTime = new Timestamp(0);
-	
+
 	public static final void forceSynchronization() {
 		PublisherSynchronizer publisherSynchronizer = StaticInjector.getInjector().getInstance(PublisherSynchronizer.class);
 		publisherSynchronizer.synchronize();
 	}
-	
+
 	@Override
 	public void synchronize() {
-		synchronized(PublisherSynchronizer.class) {
+		synchronized (PublisherSynchronizer.class) {
 			logger.trace("Publishing...");
 			try {
 				List<PublishRequestDefinition> publishRequestDefinitions = getPendingPublishedRequests();
-				
+
 				if (publishRequestDefinitions.isEmpty()) {
 					logger.trace("Nothing to publish.");
 					return;
 				}
-				
+
 				enumerateResourcesForPublish(publishRequestDefinitions);
-				
+
 				synchronizeRegistry();
-				
+
 				removeProcessedRequests(publishRequestDefinitions);
-				
+
 				cleanup();
 			} catch (Exception e) {
 				logger.error("Publishing failed.", e);
@@ -66,16 +66,16 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
-	
-	private void enumerateResourcesForPublish(List<PublishRequestDefinition> publishRequestDefinitions)
-			throws SynchronizationException {
+	private void enumerateResourcesForPublish(List<PublishRequestDefinition> publishRequestDefinitions) throws SynchronizationException {
 		resourceLocations.clear();
 		for (PublishRequestDefinition publishRequestDefinition : publishRequestDefinitions) {
 			currentWorkspace = publishRequestDefinition.getWorkspace();
 			String path = publishRequestDefinition.getPath();
-			currentRegistry = (publishRequestDefinition.getRegistry() != null ? publishRequestDefinition.getRegistry() : IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-			currentRequestTime = (publishRequestDefinition.getCreatedAt().after(currentRequestTime) ? publishRequestDefinition.getCreatedAt() : currentRequestTime);
-			
+			currentRegistry = (publishRequestDefinition.getRegistry() != null ? publishRequestDefinition.getRegistry()
+					: IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+			currentRequestTime = (publishRequestDefinition.getCreatedAt().after(currentRequestTime) ? publishRequestDefinition.getCreatedAt()
+					: currentRequestTime);
+
 			String sourceLocation = new RepositoryPath(currentWorkspace, path).toString();
 			ICollection collection = getRepository().getCollection(sourceLocation);
 			if (collection.exists()) {
@@ -98,23 +98,20 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	@Override
 	public void synchronizeRegistry() throws SynchronizationException {
 		logger.trace("Synchronizing published artefacts in Registry...");
-		
+
 		publishResources();
-	
+
 		logger.trace("Done synchronizing published artefacts in Registry.");
 	}
 
 	private void publishResources() throws SynchronizationException {
 		for (Map.Entry<String, String> entry : resourceLocations.entrySet()) {
-			
+
 			// pre publish handlers
-			
-			
+
 			// publish
 			publishResource(entry);
-			
-			
-			
+
 			// post publish handlers
 		}
 	}
@@ -126,7 +123,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		IResource targetResource = getRepository().getResource(targetLocation);
 		if (targetResource.exists()) {
 			java.util.Date lastModified = targetResource.getInformation().getModifiedAt();
-			if (currentRequestTime.getTime() > lastModified.getTime()) {
+			if ((lastModified == null) || (currentRequestTime.getTime() > lastModified.getTime())) {
 				targetResource.setContent(sourceResource.getContent());
 			}
 		} else {
@@ -138,7 +135,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 			throw new SynchronizationException(e);
 		}
 	}
-	
+
 	private void removeProcessedRequests(List<PublishRequestDefinition> publishRequestDefinitions) throws PublisherException {
 		for (PublishRequestDefinition publishRequestDefinition : publishRequestDefinitions) {
 			publishCoreService.removePublishRequest(publishRequestDefinition.getId());
@@ -152,7 +149,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		String targetLocation = new RepositoryPath(currentRegistry, path).toString();
 		resourceLocations.put(sourceLocation, targetLocation);
 	}
-	
+
 	@Override
 	public void cleanup() throws SynchronizationException {
 		resourceLocations.clear();
