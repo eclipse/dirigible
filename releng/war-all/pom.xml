@@ -373,6 +373,16 @@
 		 	<artifactId>dirigible-resources-themes</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-angular</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-bootstrap</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 
 		<!-- External -->
 		<dependency>

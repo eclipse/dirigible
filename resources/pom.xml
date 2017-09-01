@@ -36,6 +36,8 @@
 
 	<modules>
 		<module>resources-themes</module>
+		<module>resources-angular</module>
+		<module>resources-bootstrap</module>
 	</modules>
 
 	<profiles>
