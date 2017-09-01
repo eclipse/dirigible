@@ -148,7 +148,7 @@ WorkspaceService.prototype.createFile = function(name, path, isDirectory){
 	return this.$http.post(url)
 			.then(function(response){
 				var filePath = response.headers('location');
-				return this.$http.get(filePath);
+				return this.$http.get(filePath).then(function(_response){ return response.data});
 			}.bind(this))
 			.catch(function(response) {
 				var msg;
