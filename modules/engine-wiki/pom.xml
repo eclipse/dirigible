@@ -55,10 +55,16 @@
             <version>${dirigible.version}</version>
         </dependency>
         
-        <dependency>
+        <!-- <dependency>
 		    <groupId>com.vladsch.flexmark</groupId>
 		    <artifactId>flexmark-all</artifactId>
 		    <version>0.26.4</version>
+		</dependency> -->
+		
+		<dependency>
+		    <groupId>org.eclipse.mylyn.docs</groupId>
+		    <artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
+		    <version>3.0.18</version>
 		</dependency>
 
     </dependencies>

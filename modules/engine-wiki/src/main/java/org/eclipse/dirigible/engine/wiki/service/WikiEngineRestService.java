@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.engine.wiki.service;
 
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 import javax.inject.Inject;
@@ -15,11 +16,9 @@ import org.eclipse.dirigible.engine.wiki.processor.WikiEngineProcessor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
-
-import com.vladsch.flexmark.ast.Node;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.options.MutableDataSet;
+import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,10 +38,6 @@ public class WikiEngineRestService implements IRestService {
 
 	@Inject
 	private WikiEngineProcessor processor;
-
-	private MutableDataSet options = new MutableDataSet();
-	private Parser parser = Parser.builder(options).build();
-	private HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
 	@GET
 	@Path("/{path:.*}")
@@ -80,9 +75,16 @@ public class WikiEngineRestService implements IRestService {
 	}
 
 	private String renderContent(String content) {
-		Node document = parser.parse(content);
-		String html = renderer.render(document);
-		return html;
+
+		StringWriter writer = new StringWriter();
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
+		builder.setEmitAsDocument(false);
+		MarkupParser markupParser = new MarkupParser();
+		markupParser.setBuilder(builder);
+		markupParser.setMarkupLanguage(new MarkdownLanguage());
+		markupParser.parse(content);
+		String htmlContent = writer.toString();
+		return htmlContent;
 	}
 
 	@Override
