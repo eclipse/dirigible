@@ -5,187 +5,175 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Configurations/Commons - Configurations">
+        <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-config/dirigible-commons-config">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - auth/API - Facade - auth">
+        <dependent-module archiveName="dirigible-api-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-auth/dirigible-api-auth">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - API/Commons - API">
+        <dependent-module archiveName="dirigible-commons-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-api/dirigible-commons-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - core/API - Facade - core">
+        <dependent-module archiveName="dirigible-api-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-core/dirigible-api-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-http-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - http/API - Facade - http">
+        <dependent-module archiveName="dirigible-api-http-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-http/dirigible-api-http">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-utils-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - utils/API - Facade - utils">
+        <dependent-module archiveName="dirigible-api-utils-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-utils/dirigible-api-utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-xml2json-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - XML to JSON/Commons - XML to JSON">
+        <dependent-module archiveName="dirigible-commons-xml2json-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-xml2json/dirigible-commons-xml2json">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-db-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - db/API - Facade - db">
+        <dependent-module archiveName="dirigible-api-db-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-db/dirigible-api-db">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-io-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - io/API - Facade - io">
+        <dependent-module archiveName="dirigible-repository-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-api/dirigible-repository-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - API/Repository - API">
+        <dependent-module archiveName="dirigible-repository-zip-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-zip/dirigible-repository-zip">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-zip-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - ZIP/Repository - ZIP">
+        <dependent-module archiveName="dirigible-repository-local-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-local/dirigible-repository-local">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-local-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - Local/Repository - Local">
+        <dependent-module archiveName="dirigible-repository-master-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-master/dirigible-repository-master">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-master-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - Master/Repository - Master">
+        <dependent-module archiveName="dirigible-database-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-api/dirigible-database-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - API/Database - API">
+        <dependent-module archiveName="dirigible-database-sql-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-sql/dirigible-database-sql">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-sql-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - SQL Builders/Database - SQL Builders">
+        <dependent-module archiveName="dirigible-database-persistence-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-persistence/dirigible-database-persistence">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-persistence-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Persistence/Database - Persistence">
+        <dependent-module archiveName="dirigible-database-data-structures-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-data-structures/dirigible-database-data-structures">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-data-structures-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Data Structures/Database - Data Structures">
+        <dependent-module archiveName="dirigible-database-derby-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-derby/dirigible-database-derby">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-derby-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Derby/Database - Derby">
+        <dependent-module archiveName="dirigible-database-managed-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-managed/dirigible-database-managed">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-managed-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Managed/Database - Managed">
+        <dependent-module archiveName="dirigible-core-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-extensions/dirigible-core-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Extensions/Core - Extensions">
+        <dependent-module archiveName="dirigible-core-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-git/dirigible-core-git">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Git/Core - Git">
+        <dependent-module archiveName="dirigible-core-workspace-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-workspace/dirigible-core-workspace">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-workspace-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Workspace/Core - Workspace">
+        <dependent-module archiveName="dirigible-core-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-security/dirigible-core-security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Security/Core - Security">
+        <dependent-module archiveName="dirigible-core-scheduler-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-scheduler/dirigible-core-scheduler">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-scheduler-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Scheduler/Core - Scheduler">
+        <dependent-module archiveName="dirigible-core-publisher-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-publisher/dirigible-core-publisher">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-publisher-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Publisher/Core - Publisher">
+        <dependent-module archiveName="dirigible-runtime-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-core/dirigible-runtime-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Core/Runtime - Core">
+        <dependent-module archiveName="dirigible-runtime-repository-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-repository/dirigible-runtime-repository">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-repository-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Repository/Runtime - Repository">
+        <dependent-module archiveName="dirigible-runtime-registry-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-registry/dirigible-runtime-registry">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-registry-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Registry/Runtime - Registry">
+        <dependent-module archiveName="dirigible-runtime-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-extensions/dirigible-runtime-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Extensions/Runtime - Extensions">
+        <dependent-module archiveName="dirigible-runtime-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-git/dirigible-runtime-git">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Git/Runtime - Git">
+        <dependent-module archiveName="dirigible-runtime-databases-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-databases/dirigible-runtime-databases">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-databases-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Databases/Runtime - IDE - Databases">
+        <dependent-module archiveName="dirigible-runtime-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-security/dirigible-runtime-security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Security/Runtime - Security">
+        <dependent-module archiveName="dirigible-runtime-ide-workspaces-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-workspaces/dirigible-runtime-ide-workspaces">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-theme-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Theme/Runtime - Theme">
+        <dependent-module archiveName="dirigible-runtime-ide-terminal-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-terminal/dirigible-runtime-ide-terminal">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-ide-workspaces-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Workspaces/Runtime - IDE - Workspaces">
+        <dependent-module archiveName="dirigible-commons-process-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-process/dirigible-commons-process">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-ide-terminal-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Terminal/Runtime - IDE - Terminal">
+        <dependent-module archiveName="dirigible-runtime-ide-console-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-console/dirigible-runtime-ide-console">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-process-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Process/Commons - Process">
+        <dependent-module archiveName="dirigible-runtime-ide-publisher-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-runtime-ide-publisher/dirigible-runtime-ide-publisher">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-ide-console-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Console/Runtime - IDE - Console">
+        <dependent-module archiveName="dirigible-engine-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-api/dirigible-engine-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-ide-publisher-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Publisher/Runtime - IDE - Publisher">
+        <dependent-module archiveName="dirigible-engine-web-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-web/dirigible-engine-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - API/Engine - API">
+        <dependent-module archiveName="dirigible-engine-js-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js/dirigible-engine-js">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-web-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Web/Engine - Web">
+        <dependent-module archiveName="dirigible-engine-js-rhino-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js-rhino/dirigible-engine-js-rhino">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-js-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript/Engine - Javascript">
+        <dependent-module archiveName="dirigible-commons-test-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-test/dirigible-commons-test">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-js-rhino-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript - Rhino/Engine - Javascript - Rhino">
+        <dependent-module archiveName="dirigible-engine-js-nashorn-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js-nashorn/dirigible-engine-js-nashorn">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-test-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Test/Commons - Test">
+        <dependent-module archiveName="dirigible-engine-js-v8-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-js-v8/dirigible-engine-js-v8">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-js-nashorn-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript - Nashorn/Engine - Javascript - Nashorn">
+        <dependent-module archiveName="dirigible-engine-wiki-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-wiki/dirigible-engine-wiki">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-js-v8-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript - V8/Engine - Javascript - V8">
+        <dependent-module archiveName="dirigible-api-javascript-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-core/dirigible-api-javascript-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-wiki-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Wiki/Engine - Wiki">
+        <dependent-module archiveName="dirigible-api-javascript-http-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-http/dirigible-api-javascript-http">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - core/API - Javascript - core">
+        <dependent-module archiveName="dirigible-api-javascript-utils-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-utils/dirigible-api-javascript-utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-http-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - http/API - Javascript - http">
+        <dependent-module archiveName="dirigible-api-javascript-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-auth/dirigible-api-javascript-auth">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-utils-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - utils/API - Javascript - utils">
+        <dependent-module archiveName="dirigible-api-javascript-db-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-db/dirigible-api-javascript-db">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - auth/API - Javascript - auth">
+        <dependent-module archiveName="dirigible-api-javascript-io-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-io/dirigible-api-javascript-io">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-db-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - db/API - Javascript - db">
+        <dependent-module archiveName="dirigible-ide-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-core/dirigible-ide-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-io-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - io/API - Javascript - io">
+        <dependent-module archiveName="dirigible-ide-terminal-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-terminal/dirigible-ide-terminal">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Core/IDE - Core">
+        <dependent-module archiveName="dirigible-ide-console-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-console/dirigible-ide-console">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-terminal-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Terminal/IDE - Terminal">
+        <dependent-module archiveName="dirigible-ide-editor-orion-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-editor-orion/dirigible-ide-editor-orion">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-console-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Console/IDE - Console">
+        <dependent-module archiveName="dirigible-ide-swagger-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-swagger/dirigible-ide-swagger">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-editor-orion-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Editor - Orion/IDE - Editor - Orion">
+        <dependent-module archiveName="dirigible-ide-workspace-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-workspace/dirigible-ide-workspace">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-swagger-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Swagger/IDE - Swagger">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-ide-workspace-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Workspace/IDE - Workspace">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-ide-preview-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Preview/IDE - Preview">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-ide-database-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Database/IDE - Database">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-resources-themes-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Themes/Resources - Themes">
+        <dependent-module archiveName="dirigible-ide-preview-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-preview/dirigible-ide-preview">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>

@@ -181,14 +181,16 @@ WorkspaceService.prototype.rename = function(oldName, newName, path){
 };
 WorkspaceService.prototype.move = function(filename, sourcepath, targetpath, workspaceName){
 	var url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('move').build();
+	//NOTE: The third argument is a temporary fix for the REST API issue that sending header  content-type: 'application/json' fails the move operation
 	return this.$http.post(url, { 
 		source: sourcepath + '/' + filename,
 		target: targetpath + '/' + filename,
-	})
+	},
+	{headers: { 'Content-Type': ''}})
 };
 WorkspaceService.prototype.copy = function(){};
-WorkspaceService.prototype.load = function(workspaceName){
-	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspaceName).build();
+WorkspaceService.prototype.load = function(wsResourcePath){
+	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(wsResourcePath.split('/')).build();
 	return this.$http.get(url)
 			.then(function(response){
 				return response.data;
@@ -228,8 +230,25 @@ var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, $m
 		}
 	};
 	
-	return this;
-}
+	this._fnr = function (node, replacement){
+		if(node.children){
+			var done;
+			node.children = node.children.map(function(c){
+				if(!done && c._file.path === replacement._file.path){
+					done = true;
+					return replacement;
+				}
+				return c;
+			});
+			if(done)
+				return true;
+			node.children.forEach(function(c){
+				return this._fnr(c, replacement);
+			}.bind(this));
+		}
+		return;
+	};
+};	
 WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
 	this.containerEl = containerEl;
 	this.workspaceName = workspaceName;
@@ -239,8 +258,8 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
 	
 	//subscribe event listeners
 	jstree.on('select_node.jstree', function (e, data) {
-		//TODO
-	})
+		this.clickNode(this.jstree.get_node(data.node));
+	}.bind(this))
 	.on('dblclick.jstree', function (evt) {
 		this.dblClickNode(this.jstree.get_node(evt.target))
 	}.bind(this))
@@ -261,9 +280,8 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
 	}.bind(this))
 	.on('move_node.jstree', function (e, data) {
 		var node = data.node;
-		var targetpath = data.instance.get_node(data.node.parent).original._file.path;
-		var sourcepath = data.node.original._file.path;
-		this.moveNode(node, sourcepath, targetpath);
+		var oldParentNode = data.instance.get_node(data.old_parent);
+		this.moveNode(oldParentNode, node);
 	}.bind(this))
 	.on('copy_node.jstree', function (e, data) {
 		//TODO
@@ -319,7 +337,7 @@ WorkspaceTreeAdapter.prototype.deleteNode = function(node){
 					self.$messageHub.announceFileDeleted(node.original._file);
 				})
 				.finally(function () {
-					self.refresh(undefined, true);
+					self.refresh();
 				});	
 	}
 }
@@ -335,7 +353,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 			}.bind(this))
 			.catch(function(node, err){
 				this.jstree.delete_node(node);
-				this.refresh(undefined, true);
+				this.refresh();
 				throw err;
 			}.bind(this, node));
 	} else {
@@ -348,40 +366,70 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 				this.jstree.refresh();
 			}.bind(this));		
 	}
-}
-WorkspaceTreeAdapter.prototype.moveNode = function(node, sourcepath, targetpath){
-	sourcepath = sourcepath.substring(0, sourcepath.indexOf(node.text)-1);
+};
+WorkspaceTreeAdapter.prototype.moveNode = function(sourceParentNode, node){
+	//strip the "/{workspace}" segment from paths and the file segment from source path (for consistency) 
+	var sourceParentNode = sourceParentNode;
+	var sourcepath = sourceParentNode.original._file.path.substring(this.workspaceName.length+1);
+	var tagetParentNode = this.jstree.get_node(node.parent);
+	var targetpath = tagetParentNode.original._file.path.substring(this.workspaceName.length+1);
 	var self = this;
 	return this.workspaceSvc.move(node.text, sourcepath, targetpath, this.workspaceName)
-			.then(function(){
-				self.$messageHub.announceFileMoved(node.original._file, sourcepath, targetpath);
-			})
-			.finally(function () {
-				self.refresh(undefined, true);
-			});
-}
+			.then(function(sourceParentNode, tagetParentNode){
+				self.refresh(sourceParentNode, true);
+				self.refresh(tagetParentNode, true).then(function(){
+					self.$messageHub.announceFileMoved(targetpath+'/'+node.text, sourcepath, targetpath);
+				});
+			}.bind(this, sourceParentNode, tagetParentNode));
+};
 WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
 	var type = node.original.type;
 	if(['folder','project'].indexOf(type)<0)
 		this.$messageHub.announceFileOpen(node.original._file);
 }
+WorkspaceTreeAdapter.prototype.clickNode = function(node){
+	var type = node.original.type;
+	this.$messageHub.announceFileSelected(node.original._file);
+};
 WorkspaceTreeAdapter.prototype.raw = function(){
 	return this.jstree;
 }
-WorkspaceTreeAdapter.prototype.refresh = function(workspaceName, keepState){
+WorkspaceTreeAdapter.prototype.refresh = function(node, keepState){
 	//TODO: This is reliable but a bit intrusive. Find out a more subtle way to update on demand
-	return this.workspaceSvc.load((workspaceName||this.workspaceName))
+	var resourcepath;
+	if(node){
+		resourcepath = node.original._file.path;
+	} else {
+		resourcepath = this.workspaceName;
+	}
+	return this.workspaceSvc.load(resourcepath)
 			.then(function(_data){
-				if(!Array.isArray(_data.projects))
-					data = [_data.projects];
-				else
+				var data = [];
+				if(_data.type == 'workspace'){
 					data = _data.projects;
+				} else if(_data.type == 'folder' || _data.type == 'project'){
+					data = [_data];
+				}
+				
 				data = data.map(this._buildTreeNode.bind(this));
-				this.jstree.settings.core.data = data;
+				
+				if(!this.jstree.settings.core.data || _data.type === 'workspace')
+					this.jstree.settings.core.data = data;
+				else{
+					//find and replace the loaded node
+					var self  = this;
+					this.jstree.settings.core.data = this.jstree.settings.core.data.map(function(node){
+						data.forEach(function(_node, replacement){
+							if(self._fnr(_node, replacement))
+								return;
+						}.bind(self, node));
+						return node;
+					});
+				}
 				if(!keepState)
 					this.jstree.refresh();
 			}.bind(this));
-}
+};
 WorkspaceTreeAdapter.prototype.openNodeProperties = function(resource){
 	this.$messageHub.announceFilePropertiesOpen(resource);
 };
@@ -414,6 +462,9 @@ angular.module('workspace', ['workspace.config'])
 	var messageHub = new FramesMessageHub();	
 	var message = function(evtName, data){
 		messageHub.post({data: data}, 'workspace.' + evtName);
+	};
+	var announceFileSelected = function(fileDescriptor){
+		this.message('file.selected', fileDescriptor);
 	};
 	var announceFileCreated = function(fileDescriptor){
 		this.message('file.created', fileDescriptor);
@@ -448,6 +499,7 @@ angular.module('workspace', ['workspace.config'])
 	};
 	return {
 		message: message,
+		announceFileSelected: announceFileSelected,
 		announceFileCreated: announceFileCreated,
 		announceFileOpen: announceFileOpen,
 		announceFileDeleted: announceFileDeleted,
@@ -514,6 +566,9 @@ angular.module('workspace', ['workspace.config'])
 				"icon": "fa fa-file-o",
 				"default_name": "file",
 				"template_new_name": "{name}{counter}"
+			},
+			'file': {
+				"valid_children": []
 			},
 			'folder': {
 				"default_name": "folder",
