@@ -1,0 +1,104 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-parent</artifactId>
+		<version>${dirigible.version}</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<name>Resources - Plugins</name>
+	<artifactId>dirigible-resources</artifactId>
+	<description>Resources Plugins</description>
+    <packaging>pom</packaging>
+
+	<scm>
+		<url>${content.scm.url}</url>
+		<connection>${content.scm.connection}</connection>
+		<developerConnection>${content.scm.developerConnection}</developerConnection>
+	</scm>
+	
+	<properties>
+		<content.repository.name>dirigiblelabs</content.repository.name>
+		<content.project.name>dirigiblelabs</content.project.name>
+
+		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
+		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
+		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+
+		<content.scm.server>github</content.scm.server>
+		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
+		<content.source.directory>target/${content.project.name}</content.source.directory>
+		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
+	</properties>
+
+	<modules>
+		<module>resources-themes</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<id>content</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<finalName>${project.artifactId}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<version>${maven.scm.plugin.version}</version>
+						<configuration>
+							<goals>checkout</goals>
+							<checkoutDirectory>${content.scm.checkoutDirectory}</checkoutDirectory>
+							<server>${content.scm.server}</server>
+						</configuration>
+						<executions>
+							<execution>
+								<id>generated-sources</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>${maven.resource.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>copy-content-resources</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${content.output.directory}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${content.source.directory}</directory>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-compiler-plugin</artifactId>
+		                <version>${maven.compiler.plugin.version}</version>
+		                <configuration>
+		                    <source>${java.version}</source>
+		                    <target>${java.version}</target>
+		                </configuration>
+		            </plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

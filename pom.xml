@@ -406,6 +406,7 @@
 		<module>modules/runtime-git</module>
 		<module>modules/runtime-databases</module>
 		<module>modules/runtime-security</module>
+		<module>modules/runtime-theme</module>
 
 		<module>modules/runtime-ide-workspaces</module>
 		<module>modules/runtime-ide-terminal</module>
@@ -422,6 +423,8 @@
 		<module>modules/engine-wiki</module>
 		
 		<module>ide</module>
+		
+		<module>resources</module>
 
 		<module>releng/war-all</module>
 	</modules>

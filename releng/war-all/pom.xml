@@ -223,6 +223,11 @@
 		 	<artifactId>dirigible-runtime-security</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-theme</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		<!-- Runtime IDE Services -->
 		<dependency>
@@ -361,7 +366,15 @@
 		 	<artifactId>dirigible-ide-database</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		
+		<!-- Resources Plugins -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-themes</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 
+		<!-- External -->
 		<dependency>
 		  <groupId>javax.annotation</groupId>
 		  <artifactId>jsr250-api</artifactId>

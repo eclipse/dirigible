@@ -1,0 +1,136 @@
+package org.eclipse.dirigible.runtime.theme.service;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryException;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+
+/**
+ * Front facing REST service serving the raw repository content
+ */
+@Singleton
+@Path("/core/theme")
+@Api(value = "Core - Theme", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
+public class ThemeRestService implements IRestService {
+
+	private static final Logger logger = LoggerFactory.getLogger(ThemeRestService.class);
+
+	private static final String NAME_PARAM = "name"; //$NON-NLS-1$
+	private static final String DEFAULT_THEME = "default"; //$NON-NLS-1$
+	private static final String INIT_PARAM_DEFAULT_THEME = "DIRIGIBLE_THEME_DEFAULT"; //$NON-NLS-1$
+	private static final String COOKIE_THEME = "dirigible-theme"; //$NON-NLS-1$
+
+	@Inject
+	private IRepository repository;
+
+	private static final String THEMES_PATH = "/resources/themes/";
+
+	@GET
+	@Path("/")
+	public Response getTheme(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
+		String cookieValue = getCurrentTheme(request, response);
+
+		return Response.ok().entity(cookieValue).type(ContentTypeHelper.TEXT_PLAIN).build();
+	}
+
+	private String getCurrentTheme(HttpServletRequest request, HttpServletResponse response) {
+		String env = Configuration.get(INIT_PARAM_DEFAULT_THEME);
+		String cookieValue = (env == null) ? DEFAULT_THEME : env;
+		String themеName = request.getParameter(NAME_PARAM);
+		themеName = EscapeFacade.escapeHtml4(themеName);
+		themеName = EscapeFacade.escapeJavascript(themеName);
+		if ((null != themеName) && !themеName.isEmpty()) {
+			themеName = themеName.trim();
+
+			// if there is valid theme name, then force the setting of the cookie
+			setCookieUser(response, themеName);
+			cookieValue = themеName;
+		} else {
+			// parameter not present, so look up in the cookies
+			Cookie[] cookies = request.getCookies();
+			String cookieName = COOKIE_THEME;
+			for (Cookie cookie : cookies) {
+				if (cookieName.equals(cookie.getName())) {
+					cookieValue = cookie.getValue();
+					// cookie exists, hence use it
+					break;
+				}
+			}
+		}
+		cookieValue = EscapeFacade.escapeHtml4(cookieValue);
+		cookieValue = EscapeFacade.escapeJavascript(cookieValue);
+		return cookieValue.trim();
+	}
+
+	private void setCookieUser(HttpServletResponse resp, String themeName) {
+		Cookie cookie = new Cookie(COOKIE_THEME, themeName);
+		cookie.setMaxAge(30 * 24 * 60 * 60);
+		cookie.setPath("/");
+		resp.addCookie(cookie);
+	}
+
+	@GET
+	@Path("/{path:.*}")
+	public Response getStyle(@PathParam("path") String path, @Context HttpServletRequest request, @Context HttpServletResponse response)
+			throws IOException {
+
+		String cookieValue = getCurrentTheme(request, response);
+
+		if ((path == null) || "".equals(path)) {
+			return Response.ok().entity(cookieValue.trim()).type(ContentTypeHelper.TEXT_PLAIN).build();
+		}
+
+		String repositoryPath = IRepositoryStructure.PATH_REGISTRY_PUBLIC + THEMES_PATH + cookieValue + IRepository.SEPARATOR + path;
+		final IResource resource = repository.getResource(repositoryPath);
+		if (resource.exists()) {
+			return Response.ok().entity(resource.getContent()).type(ContentTypeHelper.TEXT_CSS).build();
+		}
+
+		// try from the classloader
+		try {
+			InputStream bundled = ThemeRestService.class.getResourceAsStream(THEMES_PATH + cookieValue + IRepository.SEPARATOR + path);
+			if (bundled != null) {
+				return Response.ok().entity(IOUtils.toByteArray(bundled)).type(ContentTypeHelper.TEXT_CSS).build();
+			}
+		} catch (IOException e) {
+			throw new RepositoryException(e);
+		}
+
+		final String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
+		logger.error(logMsg);
+		throw new RepositoryNotFoundException(logMsg);
+	}
+
+	@Override
+	public Class<? extends IRestService> getType() {
+		return ThemeRestService.class;
+	}
+}
