@@ -38,6 +38,7 @@
 		<module>resources-themes</module>
 		<module>resources-angular</module>
 		<module>resources-bootstrap</module>
+		<module>resources-goldenlayout</module>
 	</modules>
 
 	<profiles>
