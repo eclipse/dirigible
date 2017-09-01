@@ -1,6 +1,5 @@
 package org.eclipse.dirigible.runtime.ide.workspaces.service;
 
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
@@ -15,7 +14,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
@@ -46,24 +44,23 @@ public class WorkspaceManagerService implements IRestService {
 
 	@POST
 	@Path("{workspace}/copy")
-	public Response copy(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request)
+	public Response copy(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
 
-		SourceTargetPair workspaceManagerCopy = GsonHelper.GSON.fromJson(content, SourceTargetPair.class);
-		if ((workspaceManagerCopy.getSource() == null) || (workspaceManagerCopy.getTarget() == null)) {
+		if ((content.getSource() == null) || (content.getTarget() == null)) {
 			return Response.status(Status.BAD_REQUEST).entity("Source and Target paths have to be present in the body of the request").build();
 		}
 
-		RepositoryPath sourcePath = new RepositoryPath(workspaceManagerCopy.getSource());
+		RepositoryPath sourcePath = new RepositoryPath(content.getSource());
 		if (sourcePath.getSegments().length == 0) {
 			return Response.status(Status.BAD_REQUEST).entity("Source path is empty").build();
 		}
 
-		RepositoryPath targetPath = new RepositoryPath(workspaceManagerCopy.getTarget());
+		RepositoryPath targetPath = new RepositoryPath(content.getTarget());
 		if (targetPath.getSegments().length == 0) {
 			return Response.status(Status.BAD_REQUEST).entity("Target path is empty").build();
 		}
@@ -88,29 +85,28 @@ public class WorkspaceManagerService implements IRestService {
 			processor.copyFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
 		}
 
-		return Response.created(processor.getURI(workspace, null, workspaceManagerCopy.getTarget())).build();
+		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
 	}
 
 	@POST
 	@Path("{workspace}/move")
-	public Response move(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request)
+	public Response move(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException {
 		String user = request.getRemoteUser();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
 
-		SourceTargetPair workspaceManagerCopy = GsonHelper.GSON.fromJson(content, SourceTargetPair.class);
-		if ((workspaceManagerCopy.getSource() == null) || (workspaceManagerCopy.getTarget() == null)) {
+		if ((content.getSource() == null) || (content.getTarget() == null)) {
 			return Response.status(Status.BAD_REQUEST).entity("Source and Target paths have to be present in the body of the request").build();
 		}
 
-		RepositoryPath sourcePath = new RepositoryPath(workspaceManagerCopy.getSource());
+		RepositoryPath sourcePath = new RepositoryPath(content.getSource());
 		if (sourcePath.getSegments().length == 0) {
 			return Response.status(Status.BAD_REQUEST).entity("Source path is empty").build();
 		}
 
-		RepositoryPath targetPath = new RepositoryPath(workspaceManagerCopy.getTarget());
+		RepositoryPath targetPath = new RepositoryPath(content.getTarget());
 		if (targetPath.getSegments().length == 0) {
 			return Response.status(Status.BAD_REQUEST).entity("Target path is empty").build();
 		}
@@ -131,12 +127,12 @@ public class WorkspaceManagerService implements IRestService {
 			processor.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
 		}
 
-		return Response.created(processor.getURI(workspace, null, workspaceManagerCopy.getTarget())).build();
+		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
 	}
 
 	@POST
 	@Path("{workspace}/rename")
-	public Response rename(@PathParam("workspace") String workspace, Reader content, @Context HttpServletRequest request)
+	public Response rename(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException {
 		return move(workspace, content, request);
 	}

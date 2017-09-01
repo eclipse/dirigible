@@ -325,22 +325,17 @@ public class WorkspaceRestService implements IRestService {
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
-		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
-			IFolder folder = processor.getFolder(workspace, project, path);
-			if (!folder.exists()) {
+		IFolder folder = processor.getFolder(workspace, project, path);
+		if (!folder.exists()) {
+			IFile file = processor.getFile(workspace, project, path);
+			if (!file.exists()) {
 				return Response.notModified().build();
 			}
 
-			processor.deleteFolder(workspace, project, path);
+			processor.deleteFile(workspace, project, path);
 			return Response.noContent().build();
 		}
-
-		IFile file = processor.getFile(workspace, project, path);
-		if (!file.exists()) {
-			return Response.notModified().build();
-		}
-
-		processor.deleteFile(workspace, project, path);
+		processor.deleteFolder(workspace, project, path);
 		return Response.noContent().build();
 	}
 
