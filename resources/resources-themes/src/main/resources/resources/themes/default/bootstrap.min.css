@@ -934,7 +934,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .tab-content>.tab-pane{display:none}
 .tab-content>.active{display:block}
 .nav-tabs .dropdown-menu{margin-top:-1px;border-top-right-radius:0;border-top-left-radius:0}
-.navbar{position:relative;min-height:20px;margin-bottom:0px;border:1px solid transparent}
+.navbar{position:relative;min-height:20px;margin-bottom:14px;border:1px solid transparent}
 .navbar-collapse{overflow-x:visible;padding-right:5px;padding-left:5px;border-top:1px solid transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.1);-webkit-overflow-scrolling:touch}
 .navbar-collapse.in{overflow-y:auto}
 @media (min-width:768px){.navbar{border-radius:3px}
@@ -1444,80 +1444,6 @@ td.visible-print,th.visible-print{display:table-cell!important}
 
 
 
-/* orion editor */
-
-.ruler.annotations {
-	background-color: #3D3D3D;
-}
-.ruler.lines {
-	background-color: #3D3D3D;
-}
-.ruler.folding {
-	background-color: #3D3D3D;
-}
-.ruler.overview {
-	background-color: white;
-}
-.rulerLines {
-	color: lightgray;
-}
-.rulerLines.even {
-	color: lightgray;
-}
-.rulerLines.odd {
-	color: lightgray;
-}
-.entity-name-tag {
-	color: cornFlowerBlue;
-}
-.entity-other-attribute-name {
-	color: cadetBlue;
-}
-.string-quoted {
-	color: lightcoral;
-}
-.meta.annotation.currentLine {
-	background-color: lightcyan;
-}
-.keyword {
-	color: cornFlowerBlue;
-}
-.string {
-	color: lightsalmon;
-}
-.comment {
-	color: mediumslategreen;
-}
-.comment.block.documentation {
-	color: mediumslategreen;
-}
-.keyword.other.documentation.markup {
-	color: mediumslateblue;
-}
-.variable {
-	color: #8888c8;
-}
-.constant {
-	color: #aaaafa;
-}
-.entity {
-	color: lightcoral;
-}
-.annotationLine.currentLine {
-	background-color: #303030;
-}
-.ruler.overview {
-    background-color: #404040;
-}
-.textview {
-	background-color: #202020;
-	color: mintcream;
-}
-.side-nav {
-    top: 20px;
-}
-
-
 
 
 
@@ -1645,5 +1571,3 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	background-color: #343436;
 	color: #ababac;
 }
-    
-

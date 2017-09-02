@@ -1,0 +1,112 @@
+body {
+  background-color: #343436;
+}
+.shell {
+  padding-top: 2.7rem;
+  display: flex;
+  height: 100%;
+}
+.sidebar {
+  max-width: 4.5em;
+  padding: 0.5rem;
+}
+.plane {
+ flex: 1 0 auto;
+}
+
+.list-group-item {
+  background: none;
+  border: transparent;
+}
+a.list-group-item.hover,
+a.list-group-item:hover{
+  background-color: #555;
+  color: #fff;
+}
+
+nav.navbar {
+  background-color: transparent;
+  border: transparent;
+  top: 0;
+}
+
+nav.navbar a{
+  line-height: 21px;
+}
+nav.navbar .dropdown-menu{
+  border: 0px;
+}
+.navbar-inverse .navbar-nav>.open>a, 
+.navbar-inverse .navbar-nav>.open>a:focus, 
+.navbar-inverse .navbar-nav>.open>a:hover{
+  background-color: #555;
+}
+
+.lm_header,
+.lm_header .lm_tab,
+.lm_header .lm_tab, .lm_title {
+  height: 19px;
+  line-height: 19px;
+}
+.lm_header .lm_tab.lm_active{
+  box-shadow: none;
+  padding-bottom: 4px;
+}
+ 
+.lm_header .lm_tab {
+  /*border: 1px solid #555;*/
+  padding-bottom: 4px;
+  box-shadow: none;
+  /*top: 1px;  */
+}
+.lm_header, .lm_splitter{
+  background-color: #292929;
+}
+.lm_splitter{
+  opacity: inherit;
+}
+.lm_items {
+  /*border: 1px solid #555;*/
+	border: 0;
+}
+
+.vakata-context, .vakata-context ul {
+    box-shadow: none;
+}
+
+.vakata-context li>a {
+	font-size: 11px;
+    line-height: 2em;
+    height: 2.2rem;
+    font-family: arial;
+	padding: 0 2rem;
+}
+
+.vakata-context li>a>i:empty {
+    width: 2rem;
+    line-height: 2rem;
+}
+
+.vakata-context li>a>i {
+	height: 2.2rem;
+	margin: 0 0 0 -2rem;
+}
+
+.vakata-context li>a .vakata-contextmenu-sep {
+	height: 2.2rem;
+	margin: 0 .5em 0 0;
+}
+
+ul.vakata-context.jstree-contextmenu > li > a {
+	display: block;
+}
+ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
+	display: block;
+	color: #292929;
+	float:right;
+	margin-left: 2rem;
+}
+
+#preview {
+	background-color: #777;
+}

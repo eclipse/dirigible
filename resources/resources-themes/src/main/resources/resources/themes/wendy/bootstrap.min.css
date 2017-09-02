@@ -1030,7 +1030,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .navbar-inverse .navbar-brand{color:#9d9d9d}
 .navbar-inverse .navbar-brand:focus,.navbar-inverse .navbar-brand:hover{color:#fff;background-color:transparent}
 .navbar-inverse .navbar-nav>li>a,.navbar-inverse .navbar-text{color:#9d9d9d}
-.navbar-inverse .navbar-nav>li>a:focus,.navbar-inverse .navbar-nav>li>a:hover{color:#fff;background-color:transparent}
+.navbar-inverse .navbar-nav>li>a:focus,.navbar-inverse .navbar-nav>li>a:hover{color:#333;background-color:transparent}
 .navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:focus,.navbar-inverse .navbar-nav>.active>a:hover{color:#fff;background-color:#080808}
 .navbar-inverse .navbar-nav>.disabled>a,.navbar-inverse .navbar-nav>.disabled>a:focus,.navbar-inverse .navbar-nav>.disabled>a:hover{color:#444;background-color:transparent}
 .navbar-inverse .navbar-toggle{border-color:#333}
@@ -1442,79 +1442,6 @@ td.visible-print,th.visible-print{display:table-cell!important}
 
 
 
-/* orion editor */
-
-.ruler.annotations {
-	background-color: #3D3D3D;
-}
-.ruler.lines {
-	background-color: #3D3D3D;
-}
-.ruler.folding {
-	background-color: #3D3D3D;
-}
-.ruler.overview {
-	background-color: white;
-}
-.rulerLines {
-	color: lightgray;
-}
-.rulerLines.even {
-	color: lightgray;
-}
-.rulerLines.odd {
-	color: lightgray;
-}
-.entity-name-tag {
-	color: cornFlowerBlue;
-}
-.entity-other-attribute-name {
-	color: cadetBlue;
-}
-.string-quoted {
-	color: lightcoral;
-}
-.meta.annotation.currentLine {
-	background-color: lightcyan;
-}
-.keyword {
-	color: cornFlowerBlue;
-}
-.string {
-	color: lightsalmon;
-}
-.comment {
-	color: mediumslategreen;
-}
-.comment.block.documentation {
-	color: mediumslategreen;
-}
-.keyword.other.documentation.markup {
-	color: mediumslateblue;
-}
-.variable {
-	color: #8888c8;
-}
-.constant {
-	color: #aaaafa;
-}
-.entity {
-	color: lightcoral;
-}
-.annotationLine.currentLine {
-	background-color: #303030;
-}
-.ruler.overview {
-    background-color: #404040;
-}
-.textview {
-	background-color: #202020;
-	color: mintcream;
-}
-.side-nav {
-    top: 20px;
-}
-
 
 
 
@@ -1637,6 +1564,6 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .view {
-	background-color: #ababac;
+	background-color: #f6f6f6;
 	color: #343436;
 }

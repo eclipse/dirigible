@@ -513,7 +513,7 @@ angular.module('workspace', ['workspace.config'])
 	return {
 		'core' : {
 			'themes': {
-				"name": "default-dark",
+				"name": "default",
 				"responsive": false,
 				"dots": false,
 				"icons": true,

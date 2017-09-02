@@ -10,16 +10,25 @@
 	<link rel="shortcut icon" type="image/png" href="../ide/img/favicon.png" />
 	
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
-	<script type="text/javascript" src="https://golden-layout.com/files/latest/js/goldenlayout.js"></script>
+	<!-- jQuery -->
+	<script src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
 	
-	<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
-	<link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />
+	<!-- AngularJS -->
+	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 	
-	<link type="text/css" rel="stylesheet" href="../ide/css/dark.css" />
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+	<script src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
+	
+	<!-- GoldenLayout with Theme Support -->
+	<script type="text/javascript" src="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.js"></script>
+	<link type="text/css" rel="stylesheet" href="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/goldenlayout-theme.css" />
+	
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
 	
 	<script src="../ide/ui/message-hub.js"></script>
 	
@@ -68,7 +77,7 @@
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-				  <li class="dropdown" ng-include="'/services/web/resources/themes/themes.html'"></li>
+				  <li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li>
 				  <li class="hidden-xs">
 					<a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
 				  </li>
@@ -84,9 +93,6 @@
 		<div class="plane"></div>
 	</div>
 	
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
-
 	<script type="text/javascript">
 	
 		function LayoutController(){

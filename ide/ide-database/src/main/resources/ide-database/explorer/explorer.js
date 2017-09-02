@@ -42,7 +42,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 							"core" : {
 							  "data" : schemas,
 							  "themes": {
-						            "name": "default-dark",
+						            "name": "default",
 						            "responsive": false,
 						            "dots": false,
 									"icons": true,
