@@ -1641,8 +1641,9 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	margin-left: 2rem;
 }
 
-#preview {
-	background-color: #777;
+.view {
+	background-color: #343436;
+	color: #ababac;
 }
     
 

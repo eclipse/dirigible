@@ -39,6 +39,8 @@
 		<module>resources-angular</module>
 		<module>resources-bootstrap</module>
 		<module>resources-goldenlayout</module>
+		<module>resources-jquery</module>
+		<module>resources-jstree</module>
 	</modules>
 
 	<profiles>

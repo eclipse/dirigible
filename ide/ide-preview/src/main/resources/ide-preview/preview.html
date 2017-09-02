@@ -5,21 +5,21 @@
 	
 	<title>Eclipse Dirigible - Preview</title>
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
+	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+	<script src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
 	<script src="../ide/ui/message-hub.js"></script>
 	<script src="preview.js"></script>
 
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" >
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-	<link href="../ide/css/bootstrap.min.css" type="text/css"  rel="stylesheet">
+
 	<link href="../ide/css/dark.css" type="text/css" rel="stylesheet" />
 	<link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
 </head>
 
-<body ng-app="preview" ng-controller="PreviewController as preview" id="preview">
+<body ng-app="preview" ng-controller="PreviewController as preview" class="view">
 	<div class="input-group">
 		<span class="input-group-btn">
 			<button class="btn btn-default" type="button" ng-click="preview.refresh()"><i class="fa fa-refresh"></i></button>

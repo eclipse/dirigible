@@ -126,7 +126,12 @@
 										id:"preview",
 										type: 'component',
 										componentName: 'Preview',
-										componentState: { label: 'Preview' }	
+										componentState: { label: 'Preview' }
+									},{
+ 										id:"properties",
+ 										type: 'component',
+ 										componentName: 'Properties',
+ 										componentState: { label: 'Properties' }	
 									}]							
 							}]
 					}]
@@ -158,6 +163,9 @@
 			this.layout.registerComponent( 'Preview', function( container, componentState ){
 				container.getElement().html( '<iframe src="../ide-preview/preview.html"></iframe>' );
 			});
+			this.layout.registerComponent( 'Properties', function( container, componentState ){
+ 				container.getElement().html( '<iframe src="properties.html"></iframe>' );
+ 			});
 			
 			this.listeners = {};
 			
@@ -202,7 +210,7 @@
   			layoutCtrl.layout.updateSize();
 		});
 		
-		var listenerId = layoutCtrl.addListener('workspace.file.open', function(msg){
+		var wsFileOpenListenerId = layoutCtrl.addListener('workspace.file.open', function(msg){
 			var newItemConfig = {
 				id: msg.data.path,
 				title: msg.data.label,
@@ -230,6 +238,16 @@
 			}
 		});
 		
+		var wsFileDeletedListenerId = layoutCtrl.addListener('workspace.file.deleted', function(msg){
+ 			//TODO: check if deleted file is currently open in editor and close the editor window
+ 			console.log('file deleted recieved:'+ msg);
+ 		});
+ 		
+ 		var wsFilePropertiesOpenListenerId = layoutCtrl.addListener('workspace.file.properties', function(msg){
+ 			//TODO: open up a properties dilaog 
+ 			console.log('file properties open recieved:'+ msg);
+ 		});
+ 		
 		layoutCtrl.init();
 		
 	</script>
