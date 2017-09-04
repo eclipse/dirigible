@@ -17,7 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.dirigible.engine.api.script.IScriptExecutor;
+import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSource;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase;
@@ -28,11 +28,11 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
-	private transient IScriptExecutor executor;
+	private transient IScriptEngineExecutor executor;
 	
 	private String root;
 	
-	public RhinoRepositoryModuleSourceProvider(IScriptExecutor executor, String root) {
+	public RhinoRepositoryModuleSourceProvider(IScriptEngineExecutor executor, String root) {
 		this.executor = executor;
 		this.root = root;
 	}

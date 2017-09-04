@@ -26,7 +26,7 @@ public class JavascriptEngineProcessor implements IJavascriptEngineProcessor {
 	}
 
 	private IJavascriptEngineExecutor getEngineExecutor() {
-		String headerEngineType = HttpRequestFacade.getHeader(IJavascriptEngineExecutor.DIRIGIBLE_JS_ENGINE_TYPE_HEADER);
+		String headerEngineType = HttpRequestFacade.getHeader(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER);
 		if (!StringUtils.isEmpty(headerEngineType)) {
 			for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
 				if (next.getType().equals(headerEngineType)) {

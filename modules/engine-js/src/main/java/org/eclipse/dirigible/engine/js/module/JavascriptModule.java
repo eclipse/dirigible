@@ -16,7 +16,7 @@ public class JavascriptModule extends AbstractDirigibleModule {
 		
 		Configuration.load("/dirigible-js.properties");
 		
-		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JS_ENGINE_TYPE_DEFAULT, IJavascriptEngineExecutor.JS_TYPE_RHINO);
+		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_TYPE_ENGINE_DEFAULT, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);
 		for (IJavascriptEngineExecutor next : javascriptEngineExecutors) {
 			if (next.getType().equals(javascriptEngineType)) {
 				bind(IJavascriptEngineExecutor.class).toInstance(next);

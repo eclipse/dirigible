@@ -53,7 +53,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 			require.install(topLevelScope);
 
-			topLevelScope.put(IJavascriptEngineExecutor.JS_ENGINE_TYPE, topLevelScope, IJavascriptEngineExecutor.JS_TYPE_RHINO);
+			topLevelScope.put(IJavascriptEngineExecutor.JAVASCRIPT_ENGINE_TYPE, topLevelScope, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);
 			topLevelScope.put(IJavascriptEngineExecutor.CONSOLE, topLevelScope, ConsoleFacade.getConsole());
 
 			try {
@@ -88,6 +88,6 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	@Override
 	public String getType() {
-		return JS_TYPE_RHINO;
+		return JAVASCRIPT_TYPE_RHINO;
 	}
 }

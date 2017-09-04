@@ -42,7 +42,7 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 			bindings.put("SourceProvider", sourceProvider);
 
-			bindings.put(IJavascriptEngineExecutor.JS_ENGINE_TYPE, IJavascriptEngineExecutor.JS_TYPE_NASHORN);
+			bindings.put(IJavascriptEngineExecutor.JAVASCRIPT_ENGINE_TYPE, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_NASHORN);
 			bindings.put(IJavascriptEngineExecutor.CONSOLE, ConsoleFacade.getConsole());
 
 			String code = sourceProvider.loadSource(module);
@@ -76,6 +76,6 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 	@Override
 	public String getType() {
-		return JS_TYPE_NASHORN;
+		return JAVASCRIPT_TYPE_NASHORN;
 	}
 }

@@ -14,17 +14,17 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.dirigible.engine.api.script.IScriptExecutor;
+import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 
 public class V8RepositoryModuleSourceProvider {
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
-	private IScriptExecutor executor;
+	private IScriptEngineExecutor executor;
 	
 	private String root;
 	
-	public V8RepositoryModuleSourceProvider(IScriptExecutor executor, String root) {
+	public V8RepositoryModuleSourceProvider(IScriptEngineExecutor executor, String root) {
 		this.executor = executor;
 		this.root = root;
 	}

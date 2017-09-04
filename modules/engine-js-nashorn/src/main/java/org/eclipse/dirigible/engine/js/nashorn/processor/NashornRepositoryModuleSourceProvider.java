@@ -14,17 +14,17 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.eclipse.dirigible.engine.api.script.IScriptExecutor;
+import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 
 public class NashornRepositoryModuleSourceProvider {
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
-	private IScriptExecutor executor;
+	private IScriptEngineExecutor executor;
 	
 	private String rootPath;
 	
-	public NashornRepositoryModuleSourceProvider(IScriptExecutor executor, String rootPath) {
+	public NashornRepositoryModuleSourceProvider(IScriptEngineExecutor executor, String rootPath) {
 		this.executor = executor;
 		this.rootPath = rootPath;
 	}

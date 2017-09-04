@@ -10,27 +10,20 @@
 
 package org.eclipse.dirigible.engine.api.script;
 
-import java.util.Map;
-
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractScriptExecutor extends AbstractResourceExecutor implements IScriptExecutor {
+public abstract class AbstractScriptExecutor extends AbstractResourceExecutor implements IScriptEngineExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractScriptExecutor.class);
-
-	protected abstract Object executeServiceModule(String module,
-			Map<Object, Object> executionContext) throws ScriptingException;
-
 
 	@Override
 	public Module retrieveModule(String root, String module) throws RepositoryException {
 		return retrieveModule(root, module, null);
 	}
-	
+
 	@Override
 	public Module retrieveModule(String root, String module, String extension) throws RepositoryException {
 		String resourcePath = createResourcePath(root, module, extension);

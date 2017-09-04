@@ -43,7 +43,7 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		V8RepositoryModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 		V8 v8 = V8.createV8Runtime();
 		try {
-			v8.add("engine", IJavascriptEngineExecutor.JS_TYPE_V8);
+			v8.add("engine", IJavascriptEngineExecutor.JAVASCRIPT_TYPE_V8);
 			v8.registerJavaMethod(new JavaV8CallStatic(), J2V8_CALL_STATIC_FUNCTION_NAME);
 			v8.registerJavaMethod(new JavaV8NewInstance(), J2V8_NEW_INSTANCE_FUNCTION_NAME);
 			v8.registerJavaMethod(new JavaV8CallInstance(), J2V8_CALL_INSTANCE_FUNCTION_NAME);
@@ -86,6 +86,6 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	@Override
 	public String getType() {
-		return JS_TYPE_V8;
+		return JAVASCRIPT_TYPE_V8;
 	}
 }
