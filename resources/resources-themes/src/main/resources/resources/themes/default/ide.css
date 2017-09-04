@@ -1,23 +1,56 @@
+html, body {
+    height: 100%;
+    margin: 0;         /* Reset default margin on the body element */
+}
+iframe {
+    display: block;       /* iframes are inline by default */
+    border: none;         /* Reset default border */
+    width: 100%;
+    height: 100%;
+}
 body {
   background-color: #343436;
+  color: #f6f6f6;
+}
+.navbar {
+	margin-bottom: 0px !important;
 }
 .shell {
-  padding-top: 2.7rem;
-  display: flex;
-  height: 100%;
+	display: -webkit-flex;
+	display: flex;
+	flex-wrap: row wrap;
+	width: 100%;
+	height: calc(100% - 24px);
 }
 .sidebar {
-  max-width: 4.5em;
-  padding: 0.5rem;
+	width: 4.5em;
+	vertical-align: top;
+	-webkit-flex: none;
+	flex: none;
+	position: relative;
+	top: 20px;
 }
 .plane {
- flex: 1 0 auto;
+ 	-webkit-flex: 1;
+ 	flex: 1 1 auto;
+    position: absolute;
+	width: calc(100% - 4.5em);
+	height: calc(100% - (24px + 2em));
+	left: 4.5em;
+	top: 24px;
+}
+.statusbar {
+	width: 100%;
+	height: 2em;
+	background: #000;
+	color: #fec600;
+	position: relative;
+}
+.list-group-item {
+  background: none !important;
+  border: transparent !important;
 }
 
-.list-group-item {
-  background: none;
-  border: transparent;
-}
 a.list-group-item.hover,
 a.list-group-item:hover{
   background-color: #555;
@@ -107,6 +140,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	margin-left: 2rem;
 }
 
-#preview {
-	background-color: #777;
+.view {
+	background-color: #f6f6f6;
+	color: #343436;
 }
