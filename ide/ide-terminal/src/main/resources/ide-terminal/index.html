@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Eclipse Dirigible &trade; | Database </title>
+    <title>Eclipse Dirigible &trade; | Terminal </title>
 
 	<link rel="shortcut icon" type="image/png" href="../ide/img/favicon.png" />
 	
@@ -30,7 +30,7 @@
 	<!-- Custom IDE Styles -->
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
 	
-	<script src="../ide/ui/message-hub.js"></script>
+	<!-- <script src="../ide/ui/message-hub.js"></script> -->
 	
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -40,7 +40,7 @@
     <![endif]-->
 </head>
 
-<body ng-app="database" ng-controller="DatabaseController">
+<body ng-app="terminal" ng-controller="TerminalController">
 
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-flex">
@@ -107,83 +107,19 @@
 					content:[{
 							id:"ws",
 							type: 'component',
-							componentName: 'Database',
-							componentState: { label: 'Database' },
-							width: 30
-						},{
-							id: 'center',
-							type: 'column',
-							content:[{
-									id:"editor",
-									type: 'component',
-									componentName: 'Editor',
-									componentState: {  },
-									content: []
-								},{
-									type: 'stack',
-									content: [{
-										id:"result",
-										type: 'component',
-										componentName: 'Result',
-										componentState: { label: 'Result' }	
-									}, {
-										id:"console",
-										type: 'component',
-										componentName: 'Console',
-										componentState: { label: 'Console' }	
-									}]							
-							}]
-					}]
+							componentName: 'Terminal',
+							componentState: { label: 'Terminal' }
+						}]
 				}]
 			};
 			
 			this.layout = new GoldenLayout(this.config, $('.plane') );
 			
-			this.messageHub = new FramesMessageHub();
-			
-			this.layout.registerComponent( 'Database', function( container, componentState ){
-				container.getElement().html('<iframe src="explorer/explorer.html"></iframe>');
-			});
-			this.layout.registerComponent( 'Editor', function( container, componentState ){
-				this.setContent = function(path){
-					container.setTitle( 'SQL' );
-					container.getElement().empty().html( '<iframe src="sql/editor.html"></iframe>' );
-				};
-				this.setContent(componentState.path);
-			});
-			this.layout.registerComponent( 'Result', function( container, componentState ){
-				container.getElement().html( '<iframe src="result.html"></iframe>' );
-			});
-			this.layout.registerComponent( 'Console', function( container, componentState ){
-				container.getElement().html( '<iframe src="../ide-console/console.html"></iframe>' );
+			this.layout.registerComponent( 'Terminal', function( container, componentState ){
+				container.getElement().html('<iframe src="terminal.html"></iframe>');
 			});
 			
-			this.listeners = {};
 			
-			this.addListener = function(eventType, callback){
-				if(!this.listeners[eventType]){
-					this.listeners[eventType] = [];
-				}
-				var subscriber = this.messageHub.subscribe(callback, eventType);
-
-				var entry = {
-					id: uuidv4(),
-					handler: subscriber
-				};
-				this.listeners[eventType].push(entry);
-				return entry.id;
-			};		
-			this.removeListener = function(id, eventType){
-				if(!this.listeners[eventType])
-					return;
-				for (var i = this.listeners[eventType].length - 1; i >= 0; i--) {
-				  if (this.listeners[eventType][i].id == id) {
-					var subscriber = this.listeners[eventType][i].handler;
-				  	this.messageHub.unsibscribe(subscriber);
-					this.listeners[eventType].splice(i, 1);
-				  }
-				}
-			};
 			this.init = function(){
 				this.layout.init();
 			}
@@ -202,43 +138,17 @@
   			layoutCtrl.layout.updateSize();
 		});
 		
-		var listenerId = layoutCtrl.addListener('fileselected', function(msg){
-			var newItemConfig = {
-				id: msg.data.path,
-				title: msg.data.label,
-				type: 'component',
-				componentName: 'Editor',
-				componentState:{ 
-					path: msg.data.path
-				}
-			};
-			//is an editor available to stack new children to it?
-			if(layoutCtrl.layout.root.getItemsById('editor')[0]){
-				//is already open?
-				if(layoutCtrl.layout.root.getItemsById(newItemConfig.id).length){
-					//replace content
-					var panel = layoutCtrl.layout.root.getItemsById(newItemConfig.id)[0];
-					panel.instance.setContent(newItemConfig.id)
-					panel.parent.setActiveContentItem(panel);
-				} else {
-					// open new tab
-					layoutCtrl.layout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
-				}
-			} else {
-				// open up
-				//myLayout.root.getItemsById('center').addChild( newItemConfig );
-			}
-		});
+		
 		
 		layoutCtrl.init();
 		
 	</script>
 	
 	<script type="text/javascript">
-		angular.module('database', []);
-		angular.module('database').controller('DatabaseController', function ($scope, $http) {
+		angular.module('terminal', []);
+		angular.module('terminal').controller('TerminalController', function ($scope, $http) {
 			
-			var url = '../../js/ide-database/services/menu-database.js';
+			var url = '../../js/ide-terminal/services/menu-terminal.js';
 			$http.get(url)
 				.success(function(data) {
 					$scope.menu = data;

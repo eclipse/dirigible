@@ -27,6 +27,8 @@
 		</style>
 		
 	<link rel="stylesheet" href="/services/v3/core/theme/ace.css">
+
+	<script src="../../ide/ui/message-hub.js"></script>
 		
 	</head>
 	<body style="height: 100%;">
@@ -38,6 +40,8 @@
 			var editor = ace.edit("editor");
 			var aceRange = ace.require('ace/range').Range;
 			var beforeSaveText = "";
+			var sqlPlaceholder = "-- ctrl+x to execute\n";
+			var messageHub = new FramesMessageHub();
 			
 		    editor.setOptions({
 		        enableBasicAutocompletion: true,
@@ -84,14 +88,17 @@
 				}
 				editor.setReadOnly(status);
 			}
-			
+
 			function executeCalled() {
-				$.post( "/services/v3/ide/databases/derby/DefaultDB/query", beforeSaveText, function( data ) {
-  					alert(JSON.stringify(data));
-				});
+				var sqlCommand = beforeSaveText;
+				var sqlPlaceHolderIndex = beforeSaveText.indexOf(sqlPlaceholder);
+				if (sqlPlaceHolderIndex >= 0) {
+					sqlCommand = beforeSaveText.substring(sqlPlaceholder.length);
+				}
+				messageHub.post({data: sqlCommand}, 'database.sql.execute');
 			}
 			
-			setText("-- ctrl+x to execute\n", "sql", false, false, 2);
+			setText(sqlPlaceholder, "sql", false, false, 2);
 
 			
 		</script>

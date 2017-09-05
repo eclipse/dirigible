@@ -8,7 +8,7 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 
-public class DefaultJavascriptEngineProcessor extends AbstractJavascriptExecutor implements IJavascriptEngineExecutor {
+public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor implements IJavascriptEngineExecutor {
 
 	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
 
