@@ -19,40 +19,40 @@ import org.slf4j.LoggerFactory;
 @Singleton
 @ServerEndpoint("/websockets/v3/ide/console")
 public class ConsoleWebsocketService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ConsoleWebsocketService.class);
-	
+
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
-	
+
 	@OnOpen
-    public void onOpen(Session session) {
-        OPEN_SESSIONS.put(session.getId(), session);
+	public void onOpen(Session session) {
+		OPEN_SESSIONS.put(session.getId(), session);
 		logger.info("[ws:console] onOpen: " + session.getId());
-    }
- 
-    @OnMessage
-    public void onMessage(String message, Session session) {
-    	logger.trace("[ws:console] onMessage: " + message);
-    }
- 
-    @OnError
-    public void onError(Session session, Throwable throwable) {
-        logger.info(String.format("[ws:console] Session %s error %s", session.getId(), throwable.getMessage()));
-        logger.error("[ws:console] " + throwable.getMessage(), throwable);
-    }
-    
-    @OnClose
-    public void onClose(Session session, CloseReason closeReason) {
-        logger.info(String.format("[ws:console] Session %s closed because of %s", session.getId(), closeReason));
-        OPEN_SESSIONS.remove(session.getId());
-    }
-    
-    public static void distribute(ConsoleLogRecord record) {
-    	for (Session session : OPEN_SESSIONS.values()) {
-    		synchronized (session.getAsyncRemote()) {
-    			session.getAsyncRemote().sendText(GsonHelper.GSON.toJson(record));
-    		}
-    	}
-    }
+	}
+
+	@OnMessage
+	public void onMessage(String message, Session session) {
+		logger.trace("[ws:console] onMessage: " + message);
+	}
+
+	@OnError
+	public void onError(Session session, Throwable throwable) {
+		logger.info(String.format("[ws:console] Session %s error %s", session.getId(), throwable.getMessage()));
+		logger.error("[ws:console] " + throwable.getMessage(), throwable);
+	}
+
+	@OnClose
+	public void onClose(Session session, CloseReason closeReason) {
+		logger.info(String.format("[ws:console] Session %s closed because of %s", session.getId(), closeReason));
+		OPEN_SESSIONS.remove(session.getId());
+	}
+
+	public static void distribute(ConsoleLogRecord record) {
+		for (Session session : OPEN_SESSIONS.values()) {
+			synchronized (ConsoleWebsocketService.class) {
+				session.getAsyncRemote().sendText(GsonHelper.GSON.toJson(record));
+			}
+		}
+	}
 
 }

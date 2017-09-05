@@ -6,9 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Singleton;
@@ -28,24 +26,24 @@ import org.slf4j.LoggerFactory;
 @Singleton
 @ServerEndpoint("/websockets/v3/ide/terminal")
 public class TerminalWebsocketService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(TerminalWebsocketService.class);
-	
+
 	private static final String Ctrl_C = "^C";
-	
+
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
 	private static Map<String, ProcessRunnable> SESSION_TO_PROCESS = new ConcurrentHashMap<String, ProcessRunnable>();
-	
+
 	@OnOpen
-    public void onOpen(Session session) {
-        OPEN_SESSIONS.put(session.getId(), session);
+	public void onOpen(Session session) {
+		OPEN_SESSIONS.put(session.getId(), session);
 		logger.trace("[ws:terminal] onOpen: " + session.getId());
 		startProcessRunnable(session);
-    }
- 
-    @OnMessage
-    public void onMessage(String message, Session session) {
-    	logger.trace("[ws:terminal] onMessage: " + message);
+	}
+
+	@OnMessage
+	public void onMessage(String message, Session session) {
+		logger.trace("[ws:terminal] onMessage: " + message);
 
 		ProcessRunnable processRunnable = SESSION_TO_PROCESS.get(session.getId());
 		Process process = processRunnable.getProcess();
@@ -58,29 +56,44 @@ public class TerminalWebsocketService {
 					// startProcessRunnable(session);
 					session.close();
 				} else {
-					byte[] data = message.getBytes(StandardCharsets.UTF_8);
-					process.getOutputStream().write(data);
-					process.getOutputStream().flush();
+					if (!"".equals(message.trim())) {
+						byte[] data = message.getBytes(StandardCharsets.UTF_8);
+						processRunnable.keepReplying = true;
+						process.getOutputStream().write(data);
+						process.getOutputStream().flush();
+					} else {
+						session.getBasicRemote().sendText("\n", true);
+					}
 				}
 			} catch (IOException e) {
-				logger.error("[ws:terminal] "  + e.getMessage(), e);
+				logger.error("[ws:terminal] " + e.getMessage(), e);
 			}
 		}
-    }
- 
-    @OnError
-    public void onError(Session session, Throwable throwable) {
-        logger.info(String.format("[ws:terminal] Session %s error %s", session.getId(), throwable.getMessage()));
-        logger.error("[ws:terminal] " + throwable.getMessage(), throwable);
-    }
-    
-    @OnClose
-    public void onClose(Session session, CloseReason closeReason) {
-        logger.trace(String.format("[ws:terminal] Session %s closed because of %s", session.getId(), closeReason));
-        OPEN_SESSIONS.remove(session.getId());
-    }
-    
-    protected void startProcessRunnable(Session session) {
+	}
+
+	@OnError
+	public void onError(Session session, Throwable throwable) {
+		logger.info(String.format("[ws:terminal] Session %s error %s", session.getId(), throwable.getMessage()));
+		logger.error("[ws:terminal] " + throwable.getMessage(), throwable);
+	}
+
+	@OnClose
+	public void onClose(Session session, CloseReason closeReason) {
+		logger.trace(String.format("[ws:terminal] Session %s closed because of %s", session.getId(), closeReason));
+		ProcessRunnable processRunnable = SESSION_TO_PROCESS.get(session.getId());
+		if (processRunnable != null) {
+			Process process = processRunnable.getProcess();
+			terminateProcess(session, process);
+		}
+	}
+
+	private void terminateProcess(Session session, Process process) {
+		process.destroy();
+		SESSION_TO_PROCESS.remove(session.getId());
+		OPEN_SESSIONS.remove(session.getId());
+	}
+
+	protected void startProcessRunnable(Session session) {
 		try {
 			ProcessRunnable processRunnable = new ProcessRunnable(session);
 			new Thread(processRunnable).start();
@@ -90,7 +103,7 @@ public class TerminalWebsocketService {
 			logger.error(e.getMessage(), e);
 		}
 	}
-    
+
 	class ProcessRunnable implements Runnable {
 
 		private static final String BASH_COMMAND = "bash";
@@ -99,6 +112,8 @@ public class TerminalWebsocketService {
 		private Session session;
 
 		private Process process;
+
+		private boolean keepReplying = true;
 
 		public Process getProcess() {
 			return process;
@@ -111,7 +126,6 @@ public class TerminalWebsocketService {
 		@Override
 		public void run() {
 			try {
-
 				String os = System.getProperty("os.name").toLowerCase();
 				String command = BASH_COMMAND;
 				if (os.indexOf("windows") >= 0) {
@@ -130,44 +144,54 @@ public class TerminalWebsocketService {
 					do {
 						Thread.sleep(ProcessUtils.DEFAULT_WAIT_TIME);
 						try {
-							synchronized (session) {
-								BufferedReader reader = new BufferedReader(
-										new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
-								String line = null;
-								while ((line = reader.readLine()) != null) {
-									logger.trace("sending process data: " + line);
-									if (session.isOpen()) {
-										synchronized(session.getAsyncRemote()) {
-											session.getAsyncRemote().sendText(line);
-										}
-									}
-								}
-								out.reset();
+							BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
+							String line = null;
+							while ((line = reader.readLine()) != null) {
+								logger.debug("sending process data: " + line);
+								sendLine(line);
+								i = 0;
+								keepReplying = false;
+							}
+							out.reset();
+
+							sendLine("exit: " + process.exitValue());
+
+							deadYet = true;
+						} catch (IllegalThreadStateException e) {
+							if (++i >= ProcessUtils.DEFAULT_LOOP_COUNT) {
+								terminateProcess(session, process);
+								throw new RuntimeException(
+										"Exeeds timeout: " + ((ProcessUtils.DEFAULT_WAIT_TIME / 1000) * ProcessUtils.DEFAULT_LOOP_COUNT));
+							}
+							if (keepReplying) {
+								sendLine("");
+								keepReplying = false;
 							}
 
-							process.exitValue();
-							deadYet = true;
-							removeProcess(process);
-						} catch (IllegalThreadStateException e) {
-							if (++i >= 600) {
-								process.destroy();
-								throw new RuntimeException("Exeeds timeout: " + ((ProcessUtils.DEFAULT_WAIT_TIME / 1000) * 600));
-							}
 						}
 					} while (!deadYet);
-					session.close();
 
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
-				synchronized (session.getAsyncRemote()) {
-					if (session.isOpen()) {
-						session.getAsyncRemote().sendText(new String(out.toByteArray(), StandardCharsets.UTF_8));
-					}
-				}
+				String line = new String(out.toByteArray(), StandardCharsets.UTF_8);
+				sendLine(line);
+				terminateProcess(session, process);
+			} catch (
 
-			} catch (IOException e) {
+			IOException e) {
 				logger.error(e.getMessage(), e);
+			}
+		}
+
+		private void sendLine(String line) throws IOException {
+			if (session.isOpen()) {
+				synchronized (this) {
+					if ("".equals(line)) {
+						line = "\n";
+					}
+					session.getBasicRemote().sendText(line, true);
+				}
 			}
 		}
 
@@ -190,17 +214,6 @@ public class TerminalWebsocketService {
 		logger.trace("exiting startProcess: " + message + " | " + session.getId());
 
 		return process;
-	}
-
-	protected void removeProcess(Process process) {
-		Iterator<Entry<String, ProcessRunnable>> iter = SESSION_TO_PROCESS.entrySet().iterator();
-		while (iter.hasNext()) {
-			Entry<String, ProcessRunnable> entry = iter.next();
-			if (entry.getValue().getProcess().equals(process)) {
-				iter.remove();
-				break;
-			}
-		}
 	}
 
 }
