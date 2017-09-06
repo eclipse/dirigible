@@ -17,7 +17,7 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
-import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
+import org.eclipse.dirigible.core.extensions.definition.DataStructureTableModel;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -30,8 +30,8 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
 
-	private static final Map<String, ExtensionPointDefinition> EXTENSION_POINTS_PREDELIVERED = Collections
-			.synchronizedMap(new HashMap<String, ExtensionPointDefinition>());
+	private static final Map<String, DataStructureTableModel> EXTENSION_POINTS_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, DataStructureTableModel>());
 
 	private static final Map<String, ExtensionDefinition> EXTENSIONS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, ExtensionDefinition>());
@@ -51,7 +51,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	public void registerPredeliveredExtensionPoint(String extensionPointPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPointPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(json);
+		DataStructureTableModel extensionPointDefinition = extensionsCoreService.parseExtensionPoint(json);
 		extensionPointDefinition.setLocation(extensionPointPath);
 		EXTENSION_POINTS_PREDELIVERED.put(extensionPointPath, extensionPointDefinition);
 	}
@@ -89,7 +89,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Extension Points and Extensions...");
 		// Extension Points
-		for (ExtensionPointDefinition extensionPointDefinition : EXTENSION_POINTS_PREDELIVERED.values()) {
+		for (DataStructureTableModel extensionPointDefinition : EXTENSION_POINTS_PREDELIVERED.values()) {
 			synchronizeExtensionPoint(extensionPointDefinition);
 		}
 		// Extensions
@@ -99,7 +99,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Extension Points and Extensions.");
 	}
 
-	private void synchronizeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) throws SynchronizationException {
+	private void synchronizeExtensionPoint(DataStructureTableModel extensionPointDefinition) throws SynchronizationException {
 		try {
 			if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
 				extensionsCoreService.createExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(),
@@ -107,7 +107,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 				logger.info("Synchronized a new Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
 						extensionPointDefinition.getLocation());
 			} else {
-				ExtensionPointDefinition existing = extensionsCoreService.getExtensionPoint(extensionPointDefinition.getLocation());
+				DataStructureTableModel existing = extensionsCoreService.getExtensionPoint(extensionPointDefinition.getLocation());
 				if (!extensionPointDefinition.equals(existing)) {
 					extensionsCoreService.updateExtensionPoint(extensionPointDefinition.getLocation(), extensionPointDefinition.getName(),
 							extensionPointDefinition.getDescription());
@@ -156,7 +156,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		String resourceName = resource.getName();
 		if (resourceName.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
-			ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(resource.getContent());
+			DataStructureTableModel extensionPointDefinition = extensionsCoreService.parseExtensionPoint(resource.getContent());
 
 			extensionPointDefinition.setLocation(getRegistryPath(resource));
 			synchronizeExtensionPoint(extensionPointDefinition);
@@ -174,8 +174,8 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		logger.trace("Cleaning up Extension Points and Extensions...");
 
 		try {
-			List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
-			for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
+			List<DataStructureTableModel> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
+			for (DataStructureTableModel extensionPointDefinition : extensionPointDefinitions) {
 				if (!EXTENSION_POINTS_SYNCHRONIZED.contains(extensionPointDefinition.getLocation())) {
 					extensionsCoreService.removeExtensionPoint(extensionPointDefinition.getLocation());
 					logger.warn("Cleaned up Extension Point [{}] from location: {}", extensionPointDefinition.getName(),

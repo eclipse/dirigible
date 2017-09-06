@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 @Table(name = "DIRIGIBLE_EXTENSION_POINTS")
-public class ExtensionPointDefinition {
+public class DataStructureTableModel {
 
 	@Id
 	@Column(name = "EXTENSIONPOINT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -74,12 +74,12 @@ public class ExtensionPointDefinition {
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
-	public static ExtensionPointDefinition fromJson(String json) {
-		return GsonHelper.GSON.fromJson(json, ExtensionPointDefinition.class);
+	public static DataStructureTableModel fromJson(String json) {
+		return GsonHelper.GSON.fromJson(json, DataStructureTableModel.class);
 	}
 
 	public String toJson() {
-		return GsonHelper.GSON.toJson(this, ExtensionPointDefinition.class);
+		return GsonHelper.GSON.toJson(this, DataStructureTableModel.class);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class ExtensionPointDefinition {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		ExtensionPointDefinition other = (ExtensionPointDefinition) obj;
+		DataStructureTableModel other = (DataStructureTableModel) obj;
 		if (description == null) {
 			if (other.description != null) {
 				return false;

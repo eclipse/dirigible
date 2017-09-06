@@ -17,7 +17,7 @@ public class DataStructureViewTest {
 	public void parseView() {
 		try {
 			String viewFile = IOUtils.toString(DataStructureViewTest.class.getResourceAsStream("/customer_orders.view"), StandardCharsets.UTF_8);
-			DataStructureViewModel view = DataStructureModelFactory.createViewModel(viewFile);
+			DataStructureViewModel view = DataStructureModelFactory.parseView(viewFile);
 			assertEquals("CUSTOMER_ORDERS", view.getName());
 		} catch (Exception e) {
 			e.printStackTrace();

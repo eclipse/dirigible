@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
-import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
+import org.eclipse.dirigible.core.extensions.definition.DataStructureTableModel;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.synchronizer.ExtensionsSynchronizer;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
@@ -43,7 +43,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		extensionsPublisher.registerPredeliveredExtensionPoint("/control/control.extensionpoint");
 		extensionsPublisher.registerPredeliveredExtension("/control/control.extension");
 
-		ExtensionPointDefinition extensionPointDefinitionCustom = new ExtensionPointDefinition();
+		DataStructureTableModel extensionPointDefinitionCustom = new DataStructureTableModel();
 		extensionPointDefinitionCustom.setLocation("/custom/custom.extensionpoint");
 		extensionPointDefinitionCustom.setName("/custom/custom");
 		extensionPointDefinitionCustom.setDescription("Test");
@@ -55,7 +55,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 
 		extensionsPublisher.synchronize();
 
-		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control.extensionpoint");
+		DataStructureTableModel extensionPointDefinition = extensionsCoreService.getExtensionPoint("/control/control.extensionpoint");
 		assertNotNull(extensionPointDefinition);
 		extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom.extensionpoint");
 		assertNotNull(extensionPointDefinition);
@@ -70,7 +70,7 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 
 		extensionsPublisher.synchronize();
 
-		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom.extensionpoint");
+		DataStructureTableModel extensionPointDefinition = extensionsCoreService.getExtensionPoint("/custom/custom.extensionpoint");
 		assertNull(extensionPointDefinition);
 
 	}

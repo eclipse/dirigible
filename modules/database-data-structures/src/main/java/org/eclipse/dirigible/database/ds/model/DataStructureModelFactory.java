@@ -10,27 +10,29 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
-import com.google.gson.Gson;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
  * The factory for creation of the data structure models from source content
  */
 public class DataStructureModelFactory {
-	
-	private static final Gson gson = new Gson();
-	
+
 	/**
 	 * Creates a table model from the raw content
 	 *
 	 * @param content
 	 *            the table definition
 	 * @return the table model instance
-	 * @throws DataStructureModelException
-	 *             in case of failure
 	 */
-	public static DataStructureTableModel createTableModel(String content) throws DataStructureModelException {
-		DataStructureTableModel tableModel = gson.fromJson(content, DataStructureTableModel.class);
-		return tableModel;
+	public static DataStructureTableModel parseTable(String content) {
+		DataStructureTableModel result = GsonHelper.GSON.fromJson(content, DataStructureTableModel.class);
+		result.setHash(DigestUtils.md5Hex(content));
+		return result;
 	}
 
 	/**
@@ -39,12 +41,39 @@ public class DataStructureModelFactory {
 	 * @param content
 	 *            the view definition
 	 * @return the view model instance
-	 * @throws DataStructureModelException
-	 *             in case of failure
 	 */
-	public static DataStructureViewModel createViewModel(String content) throws DataStructureModelException {
-		DataStructureViewModel viewModel = gson.fromJson(content, DataStructureViewModel.class);
-		return viewModel;
+	public static DataStructureViewModel parseView(String content) {
+		DataStructureViewModel result = GsonHelper.GSON.fromJson(content, DataStructureViewModel.class);
+		result.setHash(DigestUtils.md5Hex(content));
+		return result;
+	}
+
+	/**
+	 * Creates a table model from the raw content
+	 *
+	 * @param bytes
+	 *            the table definition
+	 * @return the table model instance
+	 */
+	public static DataStructureTableModel parseTable(byte[] bytes) {
+		DataStructureTableModel result = GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8),
+				DataStructureTableModel.class);
+		result.setHash(DigestUtils.md5Hex(bytes));
+		return result;
+	}
+
+	/**
+	 * Creates a view model from the raw content
+	 *
+	 * @param bytes
+	 *            the view definition
+	 * @return the view model instance
+	 */
+	public static DataStructureViewModel parseView(byte[] bytes) {
+		DataStructureViewModel result = GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8),
+				DataStructureViewModel.class);
+		result.setHash(DigestUtils.md5Hex(bytes));
+		return result;
 	}
 
 }

@@ -21,8 +21,16 @@ public class DataStructureTableColumnModel {
 	private boolean nullable;
 	private boolean primaryKey;
 	private String defaultValue;
-	private int precision;
-	private int scale;
+	private String precision;
+	private String scale;
+	private boolean unique;
+
+	/**
+	 * The default constructor
+	 */
+	public DataStructureTableColumnModel() {
+
+	}
 
 	/**
 	 * The constructor from the fields
@@ -44,8 +52,8 @@ public class DataStructureTableColumnModel {
 	 * @param scale
 	 *            the scale value for floating point types
 	 */
-	public DataStructureTableColumnModel(String name, String type, String length, boolean nullable,
-			boolean primaryKey, String defaultValue, int precision, int scale) {
+	public DataStructureTableColumnModel(String name, String type, String length, boolean nullable, boolean primaryKey, String defaultValue,
+			String precision, String scale, boolean unique) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -55,6 +63,7 @@ public class DataStructureTableColumnModel {
 		this.defaultValue = defaultValue;
 		this.precision = precision;
 		this.scale = scale;
+		this.unique = unique;
 	}
 
 	/**
@@ -173,40 +182,59 @@ public class DataStructureTableColumnModel {
 
 	/**
 	 * Getter for the precision value
-	 * 
+	 *
 	 * @return the precision value
 	 */
-	public int getPrecision() {
+	public String getPrecision() {
 		return precision;
 	}
-	
+
 	/**
 	 * Setter for the precision value
-	 * 
+	 *
 	 * @param precision
-	 * 			the precision value
+	 *            the precision value
 	 */
-	public void setPrecision(int precision) {
+	public void setPrecision(String precision) {
 		this.precision = precision;
 	}
-	
+
 	/**
 	 * Getter for the scale value
-	 * 
+	 *
 	 * @return the scale value
 	 */
-	public int getScale() {
+	public String getScale() {
 		return scale;
 	}
-	
+
 	/**
 	 * Setter for the scale value
-	 * 
+	 *
 	 * @param scale
-	 * 			the scale value
+	 *            the scale value
 	 */
-	public void setScale(int scale) {
+	public void setScale(String scale) {
 		this.scale = scale;
 	}
-	
+
+	/**
+	 * Check for unique
+	 *
+	 * @return true if unique
+	 */
+	public boolean isUnique() {
+		return unique;
+	}
+
+	/**
+	 * Setter for the unique
+	 *
+	 * @param unique
+	 *            the unique value
+	 */
+	public void setUnique(boolean unique) {
+		this.unique = unique;
+	}
+
 }

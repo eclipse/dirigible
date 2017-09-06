@@ -16,8 +16,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -33,8 +36,12 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnMo
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PersistenceAnnotationsParser {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceAnnotationsParser.class);
 
 	private static final Map<Class, PersistenceTableModel> MODELS_CACHE = Collections.synchronizedMap(new HashMap<Class, PersistenceTableModel>());
 
@@ -57,7 +64,7 @@ public class PersistenceAnnotationsParser {
 			return persistenceTableModel;
 		}
 
-		Annotation annotation = clazz.getAnnotation(Table.class);
+		Annotation annotation = getTableAnnotation(clazz);
 		if (annotation == null) {
 			throw new PersistenceException(format("No Table annotation found in Class {0}", clazz));
 		}
@@ -79,8 +86,16 @@ public class PersistenceAnnotationsParser {
 		return persistenceTableModel;
 	}
 
+	private Annotation getTableAnnotation(Class<? extends Object> clazz) {
+		Annotation annotation = clazz.getAnnotation(Table.class);
+		if ((annotation == null) && (clazz.getSuperclass() != null)) {
+			return getTableAnnotation(clazz.getSuperclass());
+		}
+		return annotation;
+	}
+
 	private void parseColumns(Class<? extends Object> clazz, PersistenceTableModel persistenceModel) {
-		for (Field field : clazz.getDeclaredFields()) {
+		for (Field field : collectFields(clazz)) {
 			boolean isTransient = Modifier.isTransient(field.getModifiers());
 			if (isTransient) {
 				continue;
@@ -88,7 +103,8 @@ public class PersistenceAnnotationsParser {
 			// @Column
 			Annotation annotationColumn = field.getAnnotation(Column.class);
 			if (annotationColumn == null) {
-				throw new PersistenceException(format("No Column annotation found in Class {0} and Field {1}", clazz, field.getName()));
+				logger.warn(format("No Column annotation found in Class {0} and Field {1}", clazz, field.getName()));
+				continue;
 			}
 			Column column = (Column) annotationColumn;
 			if (column.name() == null) {
@@ -142,6 +158,22 @@ public class PersistenceAnnotationsParser {
 			persistenceModel.getColumns().add(persistenceTableColumnModel);
 		}
 
+	}
+
+	private Field[] collectFields(Class<? extends Object> clazz) {
+		List<Field> fields = new ArrayList<Field>();
+		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+		if (clazz.getSuperclass() != null) {
+			collectFieldsFromSuperclass(clazz.getSuperclass(), fields);
+		}
+		return fields.toArray(new Field[] {});
+	}
+
+	private void collectFieldsFromSuperclass(Class<?> clazz, List<Field> fields) {
+		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+		if (clazz.getSuperclass() != null) {
+			collectFieldsFromSuperclass(clazz.getSuperclass(), fields);
+		}
 	}
 
 }

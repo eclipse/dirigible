@@ -7,7 +7,7 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
-import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
+import org.eclipse.dirigible.core.extensions.definition.DataStructureTableModel;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +32,10 @@ public class ExtensionsServiceFacade implements IScriptingFacade {
 	
 	public static final String[] getExtensionPoints() throws ExtensionsException {
 		logger.debug("API - ExtensionsServiceFacade.getExtensionPoints() -> begin");
-		List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
+		List<DataStructureTableModel> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();
 		String[] extensionPoints = new String[extensionPointDefinitions.size()];
 		int i = 0;
-		for (ExtensionPointDefinition extensionPointDefinition : extensionPointDefinitions) {
+		for (DataStructureTableModel extensionPointDefinition : extensionPointDefinitions) {
 			extensionPoints[i++] = extensionPointDefinition.getName();
 		}
 		logger.debug("API - ExtensionsServiceFacade.getExtensionPoints() -> end");

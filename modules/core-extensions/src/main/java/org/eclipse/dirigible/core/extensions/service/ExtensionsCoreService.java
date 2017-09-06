@@ -20,7 +20,7 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
-import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
+import org.eclipse.dirigible.core.extensions.definition.DataStructureTableModel;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 
@@ -31,7 +31,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	private DataSource dataSource;
 
 	@Inject
-	private PersistenceManager<ExtensionPointDefinition> extensionPointPersistenceManager;
+	private PersistenceManager<DataStructureTableModel> extensionPointPersistenceManager;
 
 	@Inject
 	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager;
@@ -39,8 +39,8 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	// Extension Points
 
 	@Override
-	public ExtensionPointDefinition createExtensionPoint(String location, String name, String description) throws ExtensionsException {
-		ExtensionPointDefinition extensionPointDefinition = new ExtensionPointDefinition();
+	public DataStructureTableModel createExtensionPoint(String location, String name, String description) throws ExtensionsException {
+		DataStructureTableModel extensionPointDefinition = new DataStructureTableModel();
 		extensionPointDefinition.setLocation(location);
 		extensionPointDefinition.setName(name);
 		extensionPointDefinition.setDescription(description);
@@ -63,11 +63,11 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 
 	@Override
-	public ExtensionPointDefinition getExtensionPoint(String location) throws ExtensionsException {
+	public DataStructureTableModel getExtensionPoint(String location) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				return extensionPointPersistenceManager.find(connection, ExtensionPointDefinition.class, location);
+				return extensionPointPersistenceManager.find(connection, DataStructureTableModel.class, location);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -79,14 +79,14 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 
 	@Override
-	public ExtensionPointDefinition getExtensionPointByName(String name) throws ExtensionsException {
+	public DataStructureTableModel getExtensionPointByName(String name) throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_EXTENSION_POINTS").where("EXTENSIONPOINT_NAME = ?")
 						.toString();
-				List<ExtensionPointDefinition> extensionPointDefinitions = extensionPointPersistenceManager.query(connection,
-						ExtensionPointDefinition.class, sql, Arrays.asList(name));
+				List<DataStructureTableModel> extensionPointDefinitions = extensionPointPersistenceManager.query(connection,
+						DataStructureTableModel.class, sql, Arrays.asList(name));
 				if (extensionPointDefinitions.isEmpty()) {
 					return null;
 				}
@@ -111,7 +111,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				extensionPointPersistenceManager.delete(connection, ExtensionPointDefinition.class, location);
+				extensionPointPersistenceManager.delete(connection, DataStructureTableModel.class, location);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -127,7 +127,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				ExtensionPointDefinition extensionPointDefinition = getExtensionPoint(location);
+				DataStructureTableModel extensionPointDefinition = getExtensionPoint(location);
 				extensionPointDefinition.setName(name);
 				extensionPointDefinition.setDescription(description);
 				extensionPointPersistenceManager.update(connection, extensionPointDefinition, location);
@@ -142,11 +142,11 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 
 	@Override
-	public List<ExtensionPointDefinition> getExtensionPoints() throws ExtensionsException {
+	public List<DataStructureTableModel> getExtensionPoints() throws ExtensionsException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				return extensionPointPersistenceManager.findAll(connection, ExtensionPointDefinition.class);
+				return extensionPointPersistenceManager.findAll(connection, DataStructureTableModel.class);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -262,7 +262,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 				List<ExtensionDefinition> extensions = extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql,
 						Arrays.asList(extensionPoint));
 				if (extensions.isEmpty()) {
-					ExtensionPointDefinition extensionPointDefinition = this.getExtensionPointByName(extensionPoint);
+					DataStructureTableModel extensionPointDefinition = this.getExtensionPointByName(extensionPoint);
 					if (extensionPointDefinition == null) {
 						throw new ExtensionsException(format("There is no an ExtensionPoint with name [{0}] at all.", extensionPoint));
 					}
@@ -289,8 +289,8 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 
 	@Override
-	public ExtensionPointDefinition parseExtensionPoint(String json) {
-		return GsonHelper.GSON.fromJson(json, ExtensionPointDefinition.class);
+	public DataStructureTableModel parseExtensionPoint(String json) {
+		return GsonHelper.GSON.fromJson(json, DataStructureTableModel.class);
 	}
 
 	@Override
@@ -299,9 +299,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 
 	@Override
-	public ExtensionPointDefinition parseExtensionPoint(byte[] json) {
+	public DataStructureTableModel parseExtensionPoint(byte[] json) {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8),
-				ExtensionPointDefinition.class);
+				DataStructureTableModel.class);
 	}
 
 	@Override
@@ -310,7 +310,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	}
 
 	@Override
-	public String serializeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) {
+	public String serializeExtensionPoint(DataStructureTableModel extensionPointDefinition) {
 		return GsonHelper.GSON.toJson(extensionPointDefinition);
 	}
 
