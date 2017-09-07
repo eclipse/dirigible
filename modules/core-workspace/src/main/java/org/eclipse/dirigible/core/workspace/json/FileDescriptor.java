@@ -1,17 +1,14 @@
 package org.eclipse.dirigible.core.workspace.json;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Workspace {
+public class FileDescriptor {
 
 	private String name;
 
 	private String path;
 
-	private String type = "workspace";
+	private String type = "file";
 
-	private List<Project> projects = new ArrayList<Project>();
+	private String contentType;
 
 	public String getName() {
 		return name;
@@ -29,12 +26,12 @@ public class Workspace {
 		this.path = path;
 	}
 
-	public List<Project> getProjects() {
-		return projects;
+	public String getContentType() {
+		return contentType;
 	}
 
-	public void set(List<Project> projects) {
-		this.projects = projects;
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 
 }

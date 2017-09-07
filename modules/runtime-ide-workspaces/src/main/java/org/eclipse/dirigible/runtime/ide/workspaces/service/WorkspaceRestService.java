@@ -225,11 +225,15 @@ public class WorkspaceRestService implements IRestService {
 
 		IFile file = processor.getFile(workspace, project, path);
 		if (!file.exists()) {
-			IFolder collection = processor.getFolder(workspace, project, path);
-			if (!collection.exists()) {
+			IFolder folder = processor.getFolder(workspace, project, path);
+			if (!folder.exists()) {
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			return Response.ok().entity(processor.renderFolderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
+			return Response.ok().entity(processor.renderFolderTree(folder)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		}
+		String headerContentType = request.getHeader("describe");
+		if ((headerContentType != null) && ContentTypeHelper.APPLICATION_JSON.equals(headerContentType)) {
+			return Response.ok().entity(processor.renderFileDescription(file)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
 		if (file.isBinary()) {
 			return Response.ok().entity(file.getContent()).type(file.getContentType()).build();

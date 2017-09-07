@@ -148,7 +148,8 @@ WorkspaceService.prototype.createFile = function(name, path, isDirectory){
 	return this.$http.post(url)
 			.then(function(response){
 				var filePath = response.headers('location');
-				return this.$http.get(filePath).then(function(_response){ return response.data});
+				return this.$http.get(filePath, {headers: { 'describe': 'application/json'}})
+					.then(function(response){ return response.data});
 			}.bind(this))
 			.catch(function(response) {
 				var msg;
@@ -349,6 +350,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 		this.workspaceSvc.createFile.apply(this.workspaceSvc, [newName, fpath, node.type=='folder'])
 			.then(function(f){
 				node.original._file = f;
+				node.original._file.label = node.original._file.name;
 				this.$messageHub.announceFileCreated(f);
 			}.bind(this))
 			.catch(function(node, err){
@@ -631,15 +633,15 @@ angular.module('workspace', ['workspace.config'])
 					}.bind(this)
 				}
 				
-				ctxmenu.properties = {
-					"separator_before": true,
-					"label": "Properties...",
-					"action": function(data){
-						var tree = $.jstree.reference(data.reference);
-						var node = tree.get_node(data.reference);
-						tree.element.trigger('jstree.workspace.file.properties', [node.original._file]);
-					}
-				}
+				// ctxmenu.properties = {
+// 					"separator_before": true,
+// 					"label": "Properties...",
+// 					"action": function(data){
+// 						var tree = $.jstree.reference(data.reference);
+// 						var node = tree.get_node(data.reference);
+// 						tree.element.trigger('jstree.workspace.file.properties', [node.original._file]);
+// 					}
+// 				}
 				
 				return ctxmenu;
 			}

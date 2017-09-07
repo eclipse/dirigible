@@ -3,7 +3,7 @@ package org.eclipse.dirigible.core.workspace.json;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Folder {
+public class FolderDescriptor {
 
 	private String name;
 
@@ -11,9 +11,9 @@ public class Folder {
 
 	private String type = "folder";
 
-	private List<Folder> folders = new ArrayList<Folder>();
+	private List<FolderDescriptor> folders = new ArrayList<FolderDescriptor>();
 
-	private List<File> files = new ArrayList<File>();
+	private List<FileDescriptor> files = new ArrayList<FileDescriptor>();
 
 	public String getName() {
 		return name;
@@ -31,19 +31,19 @@ public class Folder {
 		this.path = path;
 	}
 
-	public List<Folder> getFolders() {
+	public List<FolderDescriptor> getFolders() {
 		return folders;
 	}
 
-	public void set(List<Folder> folders) {
+	public void set(List<FolderDescriptor> folders) {
 		this.folders = folders;
 	}
 
-	public List<File> getFiles() {
+	public List<FileDescriptor> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<File> files) {
+	public void setFiles(List<FileDescriptor> files) {
 		this.files = files;
 	}
 

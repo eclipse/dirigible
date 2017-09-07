@@ -13,12 +13,12 @@ import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
-import org.eclipse.dirigible.core.workspace.json.Folder;
-import org.eclipse.dirigible.core.workspace.json.Project;
-import org.eclipse.dirigible.core.workspace.json.Workspace;
+import org.eclipse.dirigible.core.workspace.json.FileDescriptor;
+import org.eclipse.dirigible.core.workspace.json.FolderDescriptor;
+import org.eclipse.dirigible.core.workspace.json.ProjectDescriptor;
+import org.eclipse.dirigible.core.workspace.json.WorkspaceDescriptor;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceJsonHelper;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
-import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,19 +164,23 @@ public class WorkspaceProcessor {
 		return new URI(UrlFacade.escape(relativePath.toString()));
 	}
 
-	public Workspace renderWorkspaceTree(ICollection collection) {
-		return WorkspaceJsonHelper.traverseWorkspace(collection,
+	public WorkspaceDescriptor renderWorkspaceTree(IWorkspace workspace) {
+		return WorkspaceJsonHelper.describeWorkspace(workspace,
 				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
 	}
 
-	public Project renderProjectTree(ICollection collection) {
-		return WorkspaceJsonHelper.traverseProject(collection,
-				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
-	}
-
-	public Folder renderFolderTree(ICollection collection) {
-		return WorkspaceJsonHelper.traverseFolder(collection, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
+	public ProjectDescriptor renderProjectTree(IProject project) {
+		return WorkspaceJsonHelper.describeProject(project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
 				"");
+	}
+
+	public FolderDescriptor renderFolderTree(IFolder folder) {
+		return WorkspaceJsonHelper.describeFolder(folder, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
+				"");
+	}
+
+	public FileDescriptor renderFileDescription(IFile file) {
+		return WorkspaceJsonHelper.describeFile(file, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
 	}
 
 	public void copyProject(String workspace, String sourceProject, String targetProject) {

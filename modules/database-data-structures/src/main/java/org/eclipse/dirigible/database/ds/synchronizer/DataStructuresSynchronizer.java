@@ -242,10 +242,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				try {
 					DataStructureTopologicalSorter.sort(DATA_STRUCTURE_MODELS, output, external);
 
-					logger.debug("topological sorting");
+					logger.trace("topological sorting");
 
 					for (String location : output) {
-						logger.debug("location: " + location);
+						logger.trace("location: " + location);
 					}
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
