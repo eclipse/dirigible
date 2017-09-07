@@ -192,7 +192,7 @@ WorkspaceService.prototype.move = function(filename, sourcepath, targetpath, wor
 WorkspaceService.prototype.copy = function(){};
 WorkspaceService.prototype.load = function(wsResourcePath){
 	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(wsResourcePath.split('/')).build();
-	return this.$http.get(url)
+	return this.$http.get(url, {headers: { 'describe': 'application/json'}})
 			.then(function(response){
 				return response.data;
 			});
@@ -200,6 +200,20 @@ WorkspaceService.prototype.load = function(wsResourcePath){
 WorkspaceService.prototype.listWorkspaceNames = function(){
 	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).build();
 	return this.$http.get(url)
+			.then(function(response){
+				return response.data;
+			});
+}
+WorkspaceService.prototype.createWorkspace = function(workspace){
+	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).build();
+	return this.$http.post(url)
+			.then(function(response){
+				return response.data;
+			});
+}
+WorkspaceService.prototype.createProject = function(workspace, project){
+	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project).build();
+	return this.$http.post(url)
 			.then(function(response){
 				return response.data;
 			});
@@ -249,7 +263,8 @@ var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, $m
 		}
 		return;
 	};
-};	
+};
+
 WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
 	this.containerEl = containerEl;
 	this.workspaceName = workspaceName;
@@ -265,10 +280,12 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
 		this.dblClickNode(this.jstree.get_node(evt.target))
 	}.bind(this))
 	.on('open_node.jstree', function(evt, data) {
-		data.instance.set_icon(data.node, 'fa fa-folder-open-o');
+		if (data.node.type !== 'project')
+			data.instance.set_icon(data.node, 'fa fa-folder-open-o');
 	})
 	.on('close_node.jstree', function(evt, data) {
-		data.instance.set_icon(data.node, 'fa fa-folder-o');
+		if (data.node.type !== 'project')
+			data.instance.set_icon(data.node, 'fa fa-folder-o');
 	})
 	.on('delete_node.jstree', function (e, data) {
 		this.deleteNode(data.node)
@@ -577,7 +594,7 @@ angular.module('workspace', ['workspace.config'])
 				'icon': "fa fa-folder-o"
 			},
 			"project": {
-				"icon": "fa fa-folder-o"
+				"icon": "fa fa-pencil-square-o"
 			}
 		},
 		"contextmenu": {
@@ -662,7 +679,7 @@ angular.module('workspace', ['workspace.config'])
 .factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', '$messageHub', function($treeConfig, WorkspaceService, publishService, $messageHub){
 	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, $messageHub);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', function (workspaceService, workspaceTreeAdapter) {
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', function (workspaceService, workspaceTreeAdapter, publishService) {
 
 	this.wsTree;
 	this.workspaces;
@@ -678,14 +695,34 @@ angular.module('workspace', ['workspace.config'])
 		}.bind(this));
 	
 	this.workspaceSelected = function(){
+		if (this.wsTree) {
+			this.wsTree.workspaceName = this.selectedWs;
+			this.wsTree.refresh();
+			return;
+		}
 		this.wsTree = workspaceTreeAdapter.init($('.workspace'), this.selectedWs);
 		if(!workspaceService.typeMapping)
 			workspaceService.typeMapping = $treeConfig[types];
 		this.wsTree.refresh();
 	};
 	
+	this.createWorkspace = function(){
+		var workspace = prompt("Workspace Name: ", "workspace");
+		if (workspace) {
+			workspaceService.createWorkspace(workspace);
+		}
+	};
+	
+	this.createProject = function(){
+		var project = prompt("Project Name: ", "project");
+		if (project) {
+			workspaceService.createProject(this.selectedWs, project);
+			this.wsTree.refresh();
+		}
+	};
+	
 	this.publish = function(){
-		
+		publishService.publish(this.selectedWs + '/*');
 	};
 
 }]);

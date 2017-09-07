@@ -30,6 +30,9 @@ public class PublisherProcessor {
 
 	public long requestPublishing(String user, String workspace, String path) throws PublisherException {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
+		if ("*".equals(path)) {
+			path = "";
+		}
 		PublishRequestDefinition publishRequestDefinition = publishCoreService.createPublishRequest(workspacePath.toString(), path,
 				IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		logger.info("Publishing request created [{}]", publishRequestDefinition.getId());
