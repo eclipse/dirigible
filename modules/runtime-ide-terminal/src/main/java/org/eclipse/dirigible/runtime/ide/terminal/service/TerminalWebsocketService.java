@@ -187,10 +187,11 @@ public class TerminalWebsocketService {
 		private void sendLine(String line) throws IOException {
 			if (session.isOpen()) {
 				synchronized (this) {
-					if ("".equals(line)) {
-						line = "\n";
+					String lineToSend = line;
+					if ("".equals(lineToSend)) {
+						lineToSend = "\n";
 					}
-					session.getBasicRemote().sendText(line, true);
+					session.getBasicRemote().sendText(lineToSend, true);
 				}
 			}
 		}

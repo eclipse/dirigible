@@ -49,7 +49,7 @@ public class ConsoleWebsocketService {
 
 	public static void distribute(ConsoleLogRecord record) {
 		for (Session session : OPEN_SESSIONS.values()) {
-			synchronized (ConsoleWebsocketService.class) {
+			synchronized (session) {
 				session.getAsyncRemote().sendText(GsonHelper.GSON.toJson(record));
 			}
 		}
