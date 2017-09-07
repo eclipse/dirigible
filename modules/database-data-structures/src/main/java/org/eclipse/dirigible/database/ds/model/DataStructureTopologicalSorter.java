@@ -21,9 +21,7 @@ public class DataStructureTopologicalSorter {
 	 *            the external dependencies
 	 * @throws DataStructureModelException
 	 */
-	public static void sort(Map<String, DataStructureModel> input, List<String> output, List<String> external)
-			throws DataStructureModelException {
-
+	public static void sort(Map<String, DataStructureModel> input, List<String> output, List<String> external) throws DataStructureModelException {
 		List<String> processing = new ArrayList<String>();
 		for (Entry<String, DataStructureModel> entry : input.entrySet()) {
 			DataStructureModel dataStructureModel = entry.getValue();
@@ -44,8 +42,7 @@ public class DataStructureTopologicalSorter {
 			String dependencyName = dependencyModel.getName();
 			if (input.containsKey(dependencyName)) {
 				if (processing.contains(dependencyName)) {
-					throw new DataStructureModelException(
-							String.format("Cyclic dependency %s in %s", dataStructureModel.getName(), dependencyName));
+					throw new DataStructureModelException(String.format("Cyclic dependency %s in %s", dataStructureModel.getName(), dependencyName));
 				}
 				DataStructureModel dependentModel = input.get(dependencyName);
 				if (!output.contains(dependencyName)) {

@@ -126,13 +126,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		try {
 			if (!dataStructuresCoreService.existsTable(tableModel.getLocation())) {
 				dataStructuresCoreService.createTable(tableModel.getLocation(), tableModel.getName(), tableModel.getHash());
-				DATA_STRUCTURE_MODELS.put(tableModel.getLocation(), tableModel);
+				DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
 				logger.info("Synchronized a new Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());
 			} else {
 				DataStructureTableModel existing = dataStructuresCoreService.getTable(tableModel.getLocation());
 				if (!tableModel.equals(existing)) {
 					dataStructuresCoreService.updateTable(tableModel.getLocation(), tableModel.getName(), tableModel.getHash());
-					DATA_STRUCTURE_MODELS.put(tableModel.getLocation(), tableModel);
+					DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
 					logger.info("Synchronized a modified Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());
 				}
 			}
@@ -146,13 +146,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		try {
 			if (!dataStructuresCoreService.existsView(viewModel.getLocation())) {
 				dataStructuresCoreService.createView(viewModel.getLocation(), viewModel.getName(), viewModel.getHash());
-				DATA_STRUCTURE_MODELS.put(viewModel.getLocation(), viewModel);
+				DATA_STRUCTURE_MODELS.put(viewModel.getName(), viewModel);
 				logger.info("Synchronized a new View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
 			} else {
 				DataStructureViewModel existing = dataStructuresCoreService.getView(viewModel.getLocation());
 				if (!viewModel.equals(existing)) {
 					dataStructuresCoreService.updateView(viewModel.getLocation(), viewModel.getName(), viewModel.getHash());
-					DATA_STRUCTURE_MODELS.put(viewModel.getLocation(), viewModel);
+					DATA_STRUCTURE_MODELS.put(viewModel.getName(), viewModel);
 					logger.info("Synchronized a modified View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
 				}
 			}
@@ -225,6 +225,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	}
 
 	private void updateDatabase() {
+
+		if (DATA_STRUCTURE_MODELS.isEmpty()) {
+			logger.trace("No Data Structures to update.");
+			return;
+		}
+
 		List<String> errors = new ArrayList<String>();
 		try {
 			Connection connection = null;
@@ -236,7 +242,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				try {
 					DataStructureTopologicalSorter.sort(DATA_STRUCTURE_MODELS, output, external);
 
-					logger.debug("topological sorting ------");
+					logger.debug("topological sorting");
 
 					for (String location : output) {
 						logger.debug("location: " + location);
@@ -250,7 +256,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				if (output.isEmpty()) {
 					// something wrong happened with the sorting - probably cyclic dependencies
 					// we go for the back-up list and try to apply what would succeed
-					logger.debug("Probably there are cyclic dependencies!");
+					logger.warn("Probably there are cyclic dependencies!");
 					output.addAll(DATA_STRUCTURE_MODELS.keySet());
 				}
 
@@ -317,12 +323,23 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			String scale = columnModel.getScale();
 			String args = "";
 			if (length != null) {
-				args = ISqlKeywords.OPEN + length + ISqlKeywords.CLOSE;
+				if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR)) {
+					args = ISqlKeywords.OPEN + length + ISqlKeywords.CLOSE;
+				}
 			} else if ((precision != null) && (scale != null)) {
-				args = ISqlKeywords.OPEN + precision + "," + scale + ISqlKeywords.CLOSE;
+				if (type.equals(DataType.DECIMAL)) {
+					args = ISqlKeywords.OPEN + precision + "," + scale + ISqlKeywords.CLOSE;
+				}
 			}
 			if (defaultValue != null) {
-				args += " DEFAULT '" + defaultValue + "'";
+				if ("".equals(defaultValue)) {
+					if ((type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR))) {
+						args += " DEFAULT '" + defaultValue + "' ";
+					}
+				} else {
+					args += " DEFAULT " + defaultValue + " ";
+				}
+
 			}
 			createTableBuilder.column(name, type, isPrimaryKey, isNullable, isUnique, args);
 		}

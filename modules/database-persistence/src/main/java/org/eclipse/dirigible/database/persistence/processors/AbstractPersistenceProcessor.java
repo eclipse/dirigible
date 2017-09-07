@@ -21,12 +21,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.EnumType;
 
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.PersistenceAnnotationsParser;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 
 public abstract class AbstractPersistenceProcessor implements IPersistenceProcessor {
@@ -37,7 +40,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
 		int i = 1;
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			Field field = pojo.getClass().getDeclaredField(columnModel.getField());
+			// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
+			Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 			String dataType = columnModel.getType();
 			Object valueObject = null;
 			boolean oldAccessible = setAccessible(field);
@@ -129,7 +133,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 
 	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
-		Field field = pojo.getClass().getDeclaredField(columnModel.getField());
+		// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
+		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
 		try {
 			if (columnModel.getEnumerated() != null) {
@@ -157,13 +162,29 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 
 	protected Object getValueFromPojo(Object pojo, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
-		Field field = pojo.getClass().getDeclaredField(columnModel.getField());
+		// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
+		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
 		try {
 			return field.get(pojo);
 		} finally {
 			resetAccesible(field, oldAccessible);
 		}
+	}
+
+	private Field getFieldFromClass(Class clazz, String fieldName) throws NoSuchFieldException {
+		Field field = null;
+		List<Field> fields = Arrays.asList(PersistenceAnnotationsParser.collectFields(clazz));
+		for (Field next : fields) {
+			if (next.getName().equals(fieldName)) {
+				field = next;
+				break;
+			}
+		}
+		if (field == null) {
+			throw new NoSuchFieldException(format("There is no a Field named [{0}] in the POJO of Class [{1}]", fieldName, clazz.getCanonicalName()));
+		}
+		return field;
 	}
 
 	protected PreparedStatement openPreparedStatement(Connection connection, String sql) throws SQLException {

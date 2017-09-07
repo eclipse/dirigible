@@ -95,7 +95,8 @@ public class PersistenceAnnotationsParser {
 	}
 
 	private void parseColumns(Class<? extends Object> clazz, PersistenceTableModel persistenceModel) {
-		for (Field field : collectFields(clazz)) {
+		Field[] fields = collectFields(clazz);
+		for (Field field : fields) {
 			boolean isTransient = Modifier.isTransient(field.getModifiers());
 			if (isTransient) {
 				continue;
@@ -160,7 +161,7 @@ public class PersistenceAnnotationsParser {
 
 	}
 
-	private Field[] collectFields(Class<? extends Object> clazz) {
+	public static Field[] collectFields(Class<? extends Object> clazz) {
 		List<Field> fields = new ArrayList<Field>();
 		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 		if (clazz.getSuperclass() != null) {
@@ -169,7 +170,7 @@ public class PersistenceAnnotationsParser {
 		return fields.toArray(new Field[] {});
 	}
 
-	private void collectFieldsFromSuperclass(Class<?> clazz, List<Field> fields) {
+	private static void collectFieldsFromSuperclass(Class<?> clazz, List<Field> fields) {
 		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 		if (clazz.getSuperclass() != null) {
 			collectFieldsFromSuperclass(clazz.getSuperclass(), fields);

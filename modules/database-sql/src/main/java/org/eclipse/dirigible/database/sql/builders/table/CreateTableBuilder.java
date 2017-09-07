@@ -47,7 +47,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 		if (isPrimaryKey) {
 			column = Stream.of(column, new String[] { getDialect().getPrimaryKeyArgument() }).flatMap(Stream::of).toArray(String[]::new);
 		}
-		if (isUnique) {
+		if (isUnique && !isPrimaryKey) {
 			column = Stream.of(column, new String[] { getDialect().getUniqueArgument() }).flatMap(Stream::of).toArray(String[]::new);
 		}
 
@@ -105,6 +105,13 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 
 	public CreateTableBuilder columnBlob(String name, boolean isNullable, String... args) {
 		return this.column(name, DataType.BLOB, false, isNullable, false, args);
+	}
+
+	public CreateTableBuilder columnDecimal(String name, boolean isPrimaryKey, boolean isNullable, boolean isUnique, int precision, int scale,
+			String... args) {
+		String[] definition = new String[] { OPEN + precision + "," + scale + CLOSE };
+		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+		return this.column(name, DataType.CHAR, isPrimaryKey, isNullable, isUnique, coulmn);
 	}
 
 	@Override
