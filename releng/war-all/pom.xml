@@ -366,6 +366,11 @@
 		 	<artifactId>dirigible-ide-database</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-git</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		<!-- Resources Plugins -->
 		<dependency>

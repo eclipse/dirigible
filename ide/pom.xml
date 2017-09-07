@@ -44,6 +44,7 @@
 		<module>ide-preview</module>
 		<module>ide-help</module>
 		<module>ide-database</module>
+		<module>ide-git</module>
 	</modules>
 
 	<profiles>

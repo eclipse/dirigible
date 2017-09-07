@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Eclipse Dirigible &trade; | Git </title>
+
+	<link rel="shortcut icon" type="image/png" href="../ide/img/favicon.png" />
+	
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<!-- jQuery -->
+	<script src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	
+	<!-- AngularJS -->
+	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+	
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+	<script src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
+	
+	<!-- GoldenLayout with Theme Support -->
+	<script type="text/javascript" src="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.js"></script>
+	<link type="text/css" rel="stylesheet" href="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/goldenlayout-theme.css" />
+	
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
+	
+	<script src="../ide/ui/message-hub.js"></script>
+	
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body ng-app="git" ng-controller="GitController">
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-flex">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">
+					<!-- <img src="img/dirigible.png" style="width: 30px; margin-left: 10px"> -->
+					<!-- <i class="logo-icon icon-dirigible" style="color: #ffcc00">&#xe800;</i> -->
+					
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="navbar-collapse">
+				<ul id="main-menu" class="nav navbar-nav">
+					<li ng-class="{dropdown: !!menu.items}" ng-repeat="menuItem in menu">
+						<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="onClick(menuItem.onClick)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
+						<a ng-show="menuItem.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ menuItem.name }}</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="item in menuItem.items">
+								<a ng-hide="item.items" href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
+								<a ng-show="item.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ item.name }}</a>
+								<ul class="dropdown-submenu">
+									<li ng-repeat="subItem in item.items">
+										<a href="{{subItem.link}}" ng-click="onClick(subItem.onClick)" target="{{subItem.newTab ? '_blank' : '_self'}}">{{ subItem.name }}</a>
+									</li>
+								</ul>
+								
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+				  <li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li>
+				  <li class="hidden-xs">
+					<a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
+				  </li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="shell">
+		<div class="sidebar list-group">
+			<a class="list-group-item" ng-repeat="perspective in perspectives" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
+		</div>
+		<div class="plane"></div>
+	</div>
+	<div class="statusbar"></div>
+	
+	<script type="text/javascript">
+	
+		function LayoutController(){
+			this.config = {
+				dimensions: {
+					headerHeight: 26,
+					borderWidth: 3
+				},
+				content: [{
+					type: 'row',
+					content:[{
+							id:"ws",
+							type: 'component',
+							componentName: 'Git',
+							componentState: { label: 'Git' },
+							width: 30
+						},{
+							id: 'center',
+							type: 'column',
+							content:[{
+									id:"editor",
+									type: 'component',
+									componentName: 'Editor',
+									componentState: {  },
+									content: []
+								},{
+									type: 'stack',
+									content: [{
+										id:"console",
+										type: 'component',
+										componentName: 'Console',
+										componentState: { label: 'Console' }	
+									}]							
+							}]
+					}]
+				}]
+			};
+			
+			this.layout = new GoldenLayout(this.config, $('.plane') );
+			
+			this.messageHub = new FramesMessageHub();
+			
+			this.layout.registerComponent( 'Git', function( container, componentState ){
+				container.getElement().html('<iframe src="git/git.html"></iframe>');
+			});
+			this.layout.registerComponent( 'Editor', function( container, componentState ){
+				//
+			});
+			this.layout.registerComponent( 'Console', function( container, componentState ){
+				container.getElement().html( '<iframe src="../ide-console/console.html"></iframe>' );
+			});
+			
+			this.listeners = {};
+			
+			this.addListener = function(eventType, callback){
+				if(!this.listeners[eventType]){
+					this.listeners[eventType] = [];
+				}
+				var subscriber = this.messageHub.subscribe(callback, eventType);
+
+				var entry = {
+					id: uuidv4(),
+					handler: subscriber
+				};
+				this.listeners[eventType].push(entry);
+				return entry.id;
+			};		
+			this.removeListener = function(id, eventType){
+				if(!this.listeners[eventType])
+					return;
+				for (var i = this.listeners[eventType].length - 1; i >= 0; i--) {
+				  if (this.listeners[eventType][i].id == id) {
+					var subscriber = this.listeners[eventType][i].handler;
+				  	this.messageHub.unsibscribe(subscriber);
+					this.listeners[eventType].splice(i, 1);
+				  }
+				}
+			};
+			this.init = function(){
+				this.layout.init();
+			}
+			
+		};
+		
+		function uuidv4() {
+		  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+		  )
+		}
+	
+		var layoutCtrl = new LayoutController();
+		
+		$(window).resize(function() {
+  			layoutCtrl.layout.updateSize();
+		});
+		
+		var listenerId = layoutCtrl.addListener('fileselected', function(msg){
+			var newItemConfig = {
+				id: msg.data.path,
+				title: msg.data.label,
+				type: 'component',
+				componentName: 'Editor',
+				componentState:{ 
+					path: msg.data.path
+				}
+			};
+			//is an editor available to stack new children to it?
+			if(layoutCtrl.layout.root.getItemsById('editor')[0]){
+				//is already open?
+				if(layoutCtrl.layout.root.getItemsById(newItemConfig.id).length){
+					//replace content
+					var panel = layoutCtrl.layout.root.getItemsById(newItemConfig.id)[0];
+					panel.instance.setContent(newItemConfig.id)
+					panel.parent.setActiveContentItem(panel);
+				} else {
+					// open new tab
+					layoutCtrl.layout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
+				}
+			} else {
+				// open up
+				//myLayout.root.getItemsById('center').addChild( newItemConfig );
+			}
+		});
+		
+		layoutCtrl.init();
+		
+	</script>
+	
+	<script type="text/javascript">
+		angular.module('git', []);
+		angular.module('git').controller('GitController', function ($scope, $http) {
+			
+			var url = '../../js/ide-git/services/menu-git.js';
+			$http.get(url)
+				.success(function(data) {
+					$scope.menu = data;
+			});
+			
+			$scope.onClick = function(action) {
+				eval(action);
+			};
+			
+			var urlPerspectives = '../../js/ide/services/perspectives.js';
+			$http.get(urlPerspectives)
+				.success(function(data) {
+					$scope.perspectives = data;
+			});
+		});
+	</script>
+	
+	<script src="/services/v3/web/resources/themes/theme.js"></script>
+	
+</body>
+
+</html>
