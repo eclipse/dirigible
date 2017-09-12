@@ -116,7 +116,7 @@
 							content:[{
 									id:"editor",
 									type: 'component',
-									componentName: 'Editor',
+									componentName: 'Stage',
 									componentState: {  },
 									content: []
 								},{
@@ -139,7 +139,7 @@
 			this.layout.registerComponent( 'Git', function( container, componentState ){
 				container.getElement().html('<iframe src="git/git.html"></iframe>');
 			});
-			this.layout.registerComponent( 'Editor', function( container, componentState ){
+			this.layout.registerComponent( 'Stage', function( container, componentState ){
 				//
 			});
 			this.layout.registerComponent( 'Console', function( container, componentState ){

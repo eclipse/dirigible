@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	
-	<title>Eclipse Dirigible - Workspace</title>
+	<title>Eclipse Dirigible - Git</title>
 	
 	<script src="../../ide/ui/message-hub.js"></script>
 	
@@ -41,13 +41,10 @@
 			    <i class="fa fa-plus"></i>
 			  </button>
 			  <div class="dropdown-menu">
-				  <a class="dropdown-item" href="#" ng-click="workspace.createWorkspace()">Workspace</a>
-				  <div class="dropdown-divider"></div>
-				  <a class="dropdown-item" href="#" ng-click="workspace.createProject()">Project</a>
+				  <a class="dropdown-item" href="#" ng-click="workspace.cloneProject()">Clone Project</a>
 				  <div class="dropdown-divider"></div>
 			  </div>
 			</div>
-			<button type="button" class="btn btn-default" title="Publish" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
 			<select ng-model="workspace.selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
 		</div>

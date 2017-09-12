@@ -106,6 +106,9 @@ public class GitProcessor {
 	}
 
 	private String getPassword(BaseGitModel model) {
+		if (model.getPassword() == null) {
+			return null;
+		}
 		return new String(Base64.getDecoder().decode(model.getPassword().getBytes()));
 	}
 }

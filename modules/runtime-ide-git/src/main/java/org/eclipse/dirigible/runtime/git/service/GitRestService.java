@@ -31,8 +31,8 @@ import io.swagger.annotations.Authorization;
  * Front facing REST service serving the raw repository content
  */
 @Singleton
-@Path("/core/git/{workspace}")
-@Api(value = "Core - Git", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@Path("/ide/git/{workspace}")
+@Api(value = "IDE - Git", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class GitRestService implements IRestService {
 
@@ -47,10 +47,6 @@ public class GitRestService implements IRestService {
 	public Response cloneRepository(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
 			GitCloneModel model) throws GitConnectorException {
 		processor.clone(workspace, model);
-		// {
-		// "workspace": "project1",
-		// "projects": ["api", "k8s", "ide"]
-		// }
 		return Response.ok().build();
 	}
 
