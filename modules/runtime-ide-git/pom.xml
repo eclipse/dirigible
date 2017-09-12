@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Runtime - Git</name>
-	<artifactId>dirigible-runtime-git</artifactId>
+	<name>Runtime - IDE - Git</name>
+	<artifactId>dirigible-runtime-ide-git</artifactId>
     <packaging>jar</packaging>
     
     <build>

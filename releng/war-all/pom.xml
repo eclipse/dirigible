@@ -210,7 +210,7 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-git</artifactId>
+		 	<artifactId>dirigible-runtime-ide-git</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>

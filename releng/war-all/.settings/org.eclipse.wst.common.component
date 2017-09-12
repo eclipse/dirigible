@@ -92,9 +92,6 @@
         <dependent-module archiveName="dirigible-runtime-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Extensions/Runtime - Extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Git/Runtime - Git">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="dirigible-runtime-databases-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Databases/Runtime - IDE - Databases">
             <dependency-type>uses</dependency-type>
         </dependent-module>

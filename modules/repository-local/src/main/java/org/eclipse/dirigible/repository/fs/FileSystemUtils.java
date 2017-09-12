@@ -19,7 +19,6 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 
@@ -37,7 +36,7 @@ public class FileSystemUtils {
 		if (content == null) {
 			content = new byte[] {};
 		}
-		Files.write(path, content, StandardOpenOption.CREATE);
+		Files.write(path, content);
 	}
 
 	public static byte[] loadFile(String workspacePath) throws FileNotFoundException, IOException {
