@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.runtime.ide.console.service;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,7 +51,11 @@ public class ConsoleWebsocketService {
 	public static void distribute(ConsoleLogRecord record) {
 		for (Session session : OPEN_SESSIONS.values()) {
 			synchronized (session) {
-				session.getAsyncRemote().sendText(GsonHelper.GSON.toJson(record));
+				try {
+					session.getBasicRemote().sendText(GsonHelper.GSON.toJson(record));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

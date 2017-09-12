@@ -15,6 +15,7 @@ import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
 import org.eclipse.dirigible.runtime.core.services.GsonMessageBodyHandler;
@@ -56,6 +57,8 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		logger.info("---------- Initializing Eclipse Dirigible Platform... ----------");
 		super.contextInitialized(servletContextEvent);
+
+		Configuration.load("/dirigible-core.properties");
 
 		loadPredeliveredContent();
 
