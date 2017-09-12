@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
- * Front facing REST service serving the raw repository content
+ * Front facing REST service serving the publishing requests
  */
 @Singleton
 @Path("/ide/publisher")

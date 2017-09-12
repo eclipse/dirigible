@@ -403,8 +403,9 @@
 		<module>modules/runtime-repository</module>
 		<module>modules/runtime-registry</module>
 		<module>modules/runtime-extensions</module>
+		<module>modules/runtime-transport</module>
 		
-		<module>modules/runtime-databases</module>
+		
 		<module>modules/runtime-security</module>
 		<module>modules/runtime-theme</module>
 
@@ -413,6 +414,8 @@
 		<module>modules/runtime-ide-git</module>
 		<module>modules/runtime-ide-console</module>
 		<module>modules/runtime-ide-publisher</module>
+		<module>modules/runtime-ide-databases</module>
+		
 
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>

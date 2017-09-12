@@ -45,8 +45,8 @@ import org.eclipse.dirigible.repository.local.LocalRepositoryDao;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.local.LocalResource;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
-import org.eclipse.dirigible.repository.zip.ZipExporter;
-import org.eclipse.dirigible.repository.zip.ZipImporter;
+import org.eclipse.dirigible.repository.zip.RepositoryZipExporter;
+import org.eclipse.dirigible.repository.zip.RepositoryZipImporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -295,7 +295,7 @@ public abstract class FileSystemRepository implements IRepository {
 			logger.error("Provided Zip Input Stream cannot be null");
 			throw new RepositoryImportException("Provided Zip Input Stream cannot be null");
 		}
-		ZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
+		RepositoryZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
 	}
 
 	@Override
@@ -315,17 +315,17 @@ public abstract class FileSystemRepository implements IRepository {
 			logger.error("Provided Zip Data cannot be null");
 			throw new RepositoryImportException("Provided Zip Data cannot be null");
 		}
-		ZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
+		RepositoryZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
 	}
 
 	@Override
 	public byte[] exportZip(List<String> relativeRoots) throws RepositoryExportException {
-		return ZipExporter.exportZip(this, relativeRoots);
+		return RepositoryZipExporter.exportZip(this, relativeRoots);
 	}
 
 	@Override
 	public byte[] exportZip(String relativeRoot, boolean inclusive) throws RepositoryExportException {
-		return ZipExporter.exportZip(this, relativeRoot, inclusive);
+		return RepositoryZipExporter.exportZip(this, relativeRoot, inclusive);
 	}
 
 	@Override

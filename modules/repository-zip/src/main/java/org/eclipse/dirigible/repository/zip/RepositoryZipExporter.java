@@ -29,7 +29,7 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 /**
  * Utility class which exports all the content under a given path
  */
-public class ZipExporter {
+public class RepositoryZipExporter {
 
 	/**
 	 * Export all the content under the given path(s) with the target repository

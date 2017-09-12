@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Runtime - IDE - Databases</name>
-	<artifactId>dirigible-runtime-databases</artifactId>
+	<name>Runtime - Transport</name>
+	<artifactId>dirigible-runtime-transport</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -36,22 +36,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-database-api</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-database-sql</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-database-derby</artifactId>
-            <version>${dirigible.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-database-managed</artifactId>
+            <artifactId>dirigible-core-git</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
     </dependencies>

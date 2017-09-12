@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
- * Front facing REST service serving the raw repository content
+ * Front facing REST service serving the raw database content
  */
 @Singleton
 @Path("/ide/databases")
@@ -47,7 +47,7 @@ public class DatabaseRestService implements IRestService {
 
 	@GET
 	@Path("")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("List all the databases types")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of Databases Types", response = String.class, responseContainer = "List") })
 	public Response listDatabaseTypes() {
@@ -57,7 +57,7 @@ public class DatabaseRestService implements IRestService {
 
 	@GET
 	@Path("{type}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Returns all the available data sources for the given database {type}")
 	@ApiResponses({ @ApiResponse(code = 200, message = "List of Data Sources", response = String.class, responseContainer = "List"),
 			@ApiResponse(code = 404, message = "Data Sources for the requested database {type} does not exist") })
@@ -73,7 +73,7 @@ public class DatabaseRestService implements IRestService {
 
 	@GET
 	@Path("{type}/{name}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Returns the metadata of the given data source with {name} and {type}")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Database Metadata", response = DatabaseMetadata.class),
 			@ApiResponse(code = 404, message = "Database Metadata for the requested database {type} does not exist") })

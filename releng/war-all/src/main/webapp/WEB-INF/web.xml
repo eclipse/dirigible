@@ -114,6 +114,16 @@
 	    </auth-constraint>
 	</security-constraint>
 	
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>Transport Services</web-resource-name>
+	        <url-pattern>/services/v3/transport/*</url-pattern>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <role-name>Operator</role-name>
+	    </auth-constraint>
+	</security-constraint>
+	
 	<login-config>
 		<auth-method>BASIC</auth-method>
 	</login-config>

@@ -92,13 +92,10 @@
         <dependent-module archiveName="dirigible-runtime-extensions-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Extensions/Runtime - Extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-ide-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Git/Runtime - IDE - Git">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-runtime-databases-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Databases/Runtime - IDE - Databases">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="dirigible-runtime-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Security/Runtime - Security">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-runtime-transport-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Transport/Runtime - Transport">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-theme-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Theme/Runtime - Theme">
@@ -116,7 +113,13 @@
         <dependent-module archiveName="dirigible-runtime-ide-console-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Console/Runtime - IDE - Console">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-runtime-ide-databases-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Databases/Runtime - IDE - Databases">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-runtime-ide-publisher-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Publisher/Runtime - IDE - Publisher">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-runtime-ide-git-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - IDE - Git/Runtime - IDE - Git">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-engine-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - API/Engine - API">
@@ -186,6 +189,15 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-resources-themes-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Themes/Resources - Themes">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-angular-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Angular/Resources - Angular">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-bootstrap-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Bootstrap/Resources - Bootstrap">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-goldenlayout-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - GoldenLayout/Resources - GoldenLayout">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>

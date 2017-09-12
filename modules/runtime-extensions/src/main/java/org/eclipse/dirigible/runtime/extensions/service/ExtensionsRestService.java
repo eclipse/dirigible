@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -37,7 +38,7 @@ public class ExtensionsRestService implements IRestService {
 
 	@GET
 	@Path("/")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("List all the Extension Points with their Extensions")
 	@ApiResponses({ @ApiResponse(code = 200, message = "List of Extension Points", response = ExtensionPoint.class, responseContainer = "List") })
 	public Response listExtensionPoints() throws ExtensionsException {
@@ -46,7 +47,7 @@ public class ExtensionsRestService implements IRestService {
 
 	@GET
 	@Path("/{name}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Returns the Extension Point with their Extensions requested by its name")
 	@ApiResponses({ @ApiResponse(code = 200, message = "The Extension Point", response = ExtensionPoint.class),
 			@ApiResponse(code = 404, message = "Extension Point with the requested name does not exist") })
