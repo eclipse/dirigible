@@ -17,13 +17,21 @@ import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
  */
 public abstract class AbstractWebEngineRestService implements IRestService {
 
+	private static final String INDEX_HTML = "index.html";
+
 	@Inject
 	private WebEngineProcessor processor;
 
 	public Response getResource(@PathParam("path") String path) {
-		if ("".equals(path.trim()) || path.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
+		if ("".equals(path.trim())) {
 			return Response.status(Status.FORBIDDEN).entity("Listing of web folders is forbidden.").build();
+		} else if (path.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
+			return getResourceByPath(path + INDEX_HTML);
 		}
+		return getResourceByPath(path);
+	}
+
+	private Response getResourceByPath(String path) {
 		if (processor.existResource(path)) {
 			IResource resource = processor.getResource(path);
 			if (resource.isBinary()) {
@@ -41,7 +49,6 @@ public abstract class AbstractWebEngineRestService implements IRestService {
 		} catch (RepositoryNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).entity("Resource not found: " + path).build();
 		}
-
 		return Response.status(Status.NOT_FOUND).build();
 	}
 
