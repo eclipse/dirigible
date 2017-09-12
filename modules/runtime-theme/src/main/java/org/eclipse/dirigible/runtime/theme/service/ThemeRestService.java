@@ -69,19 +69,20 @@ public class ThemeRestService implements IRestService {
 		themеName = EscapeFacade.escapeJavascript(themеName);
 		if ((null != themеName) && !themеName.isEmpty()) {
 			themеName = themеName.trim();
-
 			// if there is valid theme name, then force the setting of the cookie
 			setCookieUser(response, themеName);
 			cookieValue = themеName;
 		} else {
 			// parameter not present, so look up in the cookies
 			Cookie[] cookies = request.getCookies();
-			String cookieName = COOKIE_THEME;
-			for (Cookie cookie : cookies) {
-				if (cookieName.equals(cookie.getName())) {
-					cookieValue = cookie.getValue();
-					// cookie exists, hence use it
-					break;
+			if (cookies != null) {
+				String cookieName = COOKIE_THEME;
+				for (Cookie cookie : cookies) {
+					if (cookieName.equals(cookie.getName())) {
+						cookieValue = cookie.getValue();
+						// cookie exists, hence use it
+						break;
+					}
 				}
 			}
 		}
