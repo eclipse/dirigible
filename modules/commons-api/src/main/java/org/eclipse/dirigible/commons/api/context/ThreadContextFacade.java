@@ -1,11 +1,11 @@
 package org.eclipse.dirigible.commons.api.context;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Scripting context facade is the centralized place where the different scripting facade providers
@@ -30,7 +30,7 @@ public class ThreadContextFacade {
 	public static final void setUp() throws ContextException {
 		CONTEXT.set(new HashMap<String, Object>());
 		PROXIES.set(new HashMap<String, Object>());
-		logger.debug("Scripting context {} has been set up", Thread.currentThread().hashCode());
+		logger.trace("Scripting context {} has been set up", Thread.currentThread().hashCode());
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class ThreadContextFacade {
 		CONTEXT.remove();
 		PROXIES.get().clear();
 		PROXIES.remove();
-		logger.debug("Scripting context {} has been torn up", Thread.currentThread().hashCode());
+		logger.trace("Scripting context {} has been torn up", Thread.currentThread().hashCode());
 	}
 
 	/**
@@ -64,9 +64,11 @@ public class ThreadContextFacade {
 	/**
 	 * Set a context scripting object
 	 *
-	 * @param value the value
+	 * @param value
+	 *            the value
 	 * @return the UUID of the object
-	 * @throws ContextException in case of an error
+	 * @throws ContextException
+	 *             in case of an error
 	 */
 	public static final String set(Object value) throws ContextException {
 		final String uuid = generateObjectId();
@@ -89,7 +91,7 @@ public class ThreadContextFacade {
 	public static final void set(String key, Object value) throws ContextException {
 		checkContext();
 		CONTEXT.get().put(key, value);
-		logger.debug("Context object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
+		logger.trace("Context object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class ThreadContextFacade {
 	public static final void remove(String key) throws ContextException {
 		checkContext();
 		CONTEXT.get().remove(key);
-		logger.debug("Context object has been removed - key {}", Thread.currentThread().hashCode(), key);
+		logger.trace("Context object has been removed - key {}", Thread.currentThread().hashCode(), key);
 	}
 
 	private static void checkContext() throws ContextException {
@@ -138,9 +140,11 @@ public class ThreadContextFacade {
 	/**
 	 * Set a proxy scripting object
 	 *
-	 * @param value the value
+	 * @param value
+	 *            the value
 	 * @return the UUID of the object
-	 * @throws ContextException in case of an error
+	 * @throws ContextException
+	 *             in case of an error
 	 */
 	public static final String setProxy(Object value) throws ContextException {
 		final String uuid = generateObjectId();
@@ -167,7 +171,7 @@ public class ThreadContextFacade {
 	public static final void setProxy(String key, Object value) throws ContextException {
 		checkContext();
 		PROXIES.get().put(key, value);
-		logger.debug("Proxy object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
+		logger.trace("Proxy object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
 	}
 
 	/**
@@ -181,6 +185,6 @@ public class ThreadContextFacade {
 	public static final void removeProxy(String key) throws ContextException {
 		checkContext();
 		PROXIES.get().remove(key);
-		logger.debug("Proxy object has been removes - key {}", Thread.currentThread().hashCode(), key);
+		logger.trace("Proxy object has been removes - key {}", Thread.currentThread().hashCode(), key);
 	}
 }

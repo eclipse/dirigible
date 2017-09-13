@@ -2,9 +2,11 @@ package org.eclipse.dirigible.runtime.transport.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -13,6 +15,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.RepositoryExportException;
 import org.eclipse.dirigible.repository.api.RepositoryImportException;
@@ -29,7 +33,7 @@ import io.swagger.annotations.Authorization;
  * Front facing REST service serving the transport requests for projects
  */
 @Singleton
-@Path("/transport/project/{workspace}")
+@Path("/transport/project")
 @Api(value = "IDE - Transport - Project", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class TransportProjectRestService implements IRestService {
@@ -38,18 +42,21 @@ public class TransportProjectRestService implements IRestService {
 	private TransportProcessor processor;
 
 	@POST
-	@Path("/")
+	@Path("{workspace}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Import Project from Zip")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Project Imported") })
 	public Response importProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "The Zip file containing the Project artifacts", required = true) byte[] content) throws RepositoryImportException {
-		processor.importProject(workspace, content);
+			@ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<byte[]> files) throws RepositoryImportException {
+		for (byte[] file : files) {
+			processor.importProject(workspace, file);
+		}		
 		return Response.ok().build();
 	}
 	
 	@GET
-	@Path("/{project}")
+	@Path("{workspace}/{project}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	@ApiOperation("Export Project as Zip")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Project Exported") })

@@ -106,15 +106,23 @@
 				content: [{
 					type: 'row',
 					content:[{
-							id:"ws",
-							type: 'component',
-							componentName: 'Workspace',
-							componentState: { label: 'Workspace' },
-							width: 30
-						},{
-							id: 'center',
-							type: 'column',
-							content:[{
+								type: 'stack',
+								content: [{
+									id:"ws",
+									type: 'component',
+									componentName: 'Workspace',
+									componentState: { label: 'Workspace' },
+									width: 30
+								},{
+									id:"import",
+									type: 'component',
+									componentName: 'Import',
+									componentState: { label: 'Import' }
+								}]
+							},{
+								id: 'center',
+								type: 'column',
+								content:[{
 									id:"editor",
 									type: 'component',
 									componentName: 'Editor',
@@ -138,8 +146,8 @@
  										componentName: 'Properties',
  										componentState: { label: 'Properties' }	
 									}]							
+								}]
 							}]
-					}]
 				}]
 			};
 			
@@ -149,6 +157,9 @@
 			
 			this.layout.registerComponent( 'Workspace', function( container, componentState ){
 				container.getElement().html('<iframe src="../ide-workspace/workspace.html"></iframe>');
+			});
+			this.layout.registerComponent( 'Import', function( container, componentState ){
+				container.getElement().html('<iframe src="../ide-workspace/import.html"></iframe>');
 			});
 			this.layout.registerComponent( 'Editor', function( container, componentState ){
 				this.setContent = function(path){
