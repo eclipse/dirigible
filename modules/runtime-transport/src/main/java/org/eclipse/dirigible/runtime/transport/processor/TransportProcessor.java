@@ -34,6 +34,11 @@ public class TransportProcessor {
 		IProject projectApi = getProject(workspaceApi, project);
 		return repository.exportZip(projectApi.getPath(), true);
 	}
+	
+	public byte[] exportWorkspace(String workspace) {
+		IWorkspace workspaceApi = getWorkspace(workspace);
+		return repository.exportZip(workspaceApi.getPath(), false);
+	}
 
 	private IWorkspace getWorkspace(String workspace) {
 		return workspacesCoreService.getWorkspace(workspace);

@@ -30,12 +30,13 @@ UriBuilder.prototype.build = function(){
 /**
  * Workspace Service API delegate
  */
-var WorkspaceService = function($http, workspaceManagerServiceUrl, workspacesServiceUrl, treeCfg){
+var WorkspaceService = function($http, $window, workspaceManagerServiceUrl, workspacesServiceUrl, treeCfg){
 
+	this.$http = $http;
+	this.$window = $window;
 	this.workspaceManagerServiceUrl = workspaceManagerServiceUrl;
 	this.workspacesServiceUrl = workspacesServiceUrl;
 	this.typeMapping = treeCfg['types'];
-	this.$http = $http;
 	
 	this.newFileName = function(name, type, siblingFilenames){
 		type = type || 'default';
@@ -223,11 +224,12 @@ WorkspaceService.prototype.createProject = function(workspace, project){
 /**
  * Workspace Tree Adapter mediating the workspace service REST api and the jst tree componet working with it
  */
-var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, $messageHub){
+var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, exportService, $messageHub){
 	this.treeConfig = treeConfig;
-	this.publishService = publishService;
-	this.$messageHub = $messageHub;
 	this.workspaceSvc = workspaceSvc;
+	this.publishService = publishService;
+	this.exportService = exportService;
+	this.$messageHub = $messageHub;
 
 	this._buildTreeNode = function(f){
 		var children = [];
@@ -307,10 +309,14 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
 	.on('jstree.workspace.publish', function (e, data) {		
 		this.publish(data);
 	}.bind(this))
-	.on('jstree.workspace.file.properties', function (e, data) {
-		var url = data.path + '/' + data.name;
-		this.openNodeProperties(url);
-	}.bind(this));
+	.on('jstree.workspace.export', function (e, data) {		
+		this.exportProject(data);
+	}.bind(this))
+//	.on('jstree.workspace.file.properties', function (e, data) {
+//	 	var url = data.path + '/' + data.name;
+// 		this.openNodeProperties(url);
+// 	}.bind(this))
+	;
 	
 	this.jstree = $.jstree.reference(jstree);	
 	return this;
@@ -458,11 +464,17 @@ WorkspaceTreeAdapter.prototype.publish = function(resource){
 		return this.$messageHub.announcePublish(resource);
 	}.bind(this));
 };
+WorkspaceTreeAdapter.prototype.exportProject = function(resource){
+	if (resource.type === 'project') {
+		return this.exportService.exportProject(resource.path);
+	}
+};
 
 angular.module('workspace.config', [])
 	.constant('WS_SVC_URL','/services/v3/ide/workspaces')
 	.constant('WS_SVC_MANAGER_URL','/services/v3/ide/workspace')
 	.constant('PUBLISH_SVC_URL','/services/v3/ide/publisher/request')
+	.constant('EXPORT_SVC_URL','/services/v3/transport/project')
 	
 angular.module('workspace', ['workspace.config'])
 .config(['$httpProvider', function($httpProvider) {
@@ -516,6 +528,9 @@ angular.module('workspace', ['workspace.config'])
 	var announcePublish = function(fileDescriptor){
 		this.message('file.publish', fileDescriptor);
 	};
+	var announceExport = function(fileDescriptor){
+		this.message('project.exported', fileDescriptor);
+	};
 	return {
 		message: message,
 		announceFileSelected: announceFileSelected,
@@ -525,7 +540,8 @@ angular.module('workspace', ['workspace.config'])
 		announceFileRenamed: announceFileRenamed,
 		announceFileMoved: announceFileMoved,
 		announceFilePropertiesOpen: announceFilePropertiesOpen,
-		announcePublish: announcePublish
+		announcePublish: announcePublish,
+		announceExport: announceExport
 	};
 }])
 .factory('$treeConfig', [function(){
@@ -650,6 +666,16 @@ angular.module('workspace', ['workspace.config'])
 					}.bind(this)
 				}
 				
+				ctxmenu.exportProject = {
+					"separator_before": true,
+					"label": "Export",
+					"action": function(data){
+						var tree = $.jstree.reference(data.reference);
+						var node = tree.get_node(data.reference);
+						tree.element.trigger('jstree.workspace.export', [node.original._file]);
+					}.bind(this)
+				}
+				
 				// ctxmenu.properties = {
 // 					"separator_before": true,
 // 					"label": "Properties...",
@@ -673,13 +699,21 @@ angular.module('workspace', ['workspace.config'])
 		}
 	}
 }])
-.factory('workspaceService', ['$http', 'WS_SVC_MANAGER_URL', 'WS_SVC_URL', '$treeConfig', function($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
-	return new WorkspaceService($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig);
+.factory('exportService', ['$http', '$window', 'EXPORT_SVC_URL', function($http, $window, EXPORT_SVC_URL){
+	return {
+		exportProject : function(resourcePath){
+			var url = new UriBuilder().path(EXPORT_SVC_URL.split('/')).path(resourcePath.split('/')).build();
+			$window.open(url);
+		}
+	}
 }])
-.factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', '$messageHub', function($treeConfig, WorkspaceService, publishService, $messageHub){
-	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, $messageHub);
+.factory('workspaceService', ['$http', '$window', 'WS_SVC_MANAGER_URL', 'WS_SVC_URL', '$treeConfig', function($http, $window, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
+	return new WorkspaceService($http, $window, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', function (workspaceService, workspaceTreeAdapter, publishService) {
+.factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', 'exportService', '$messageHub', function($treeConfig, WorkspaceService, publishService, exportService, $messageHub){
+	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, exportService, $messageHub);
+}])
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', function (workspaceService, workspaceTreeAdapter, publishService, exportService) {
 
 	this.wsTree;
 	this.workspaces;
@@ -723,6 +757,10 @@ angular.module('workspace', ['workspace.config'])
 	
 	this.publish = function(){
 		publishService.publish(this.selectedWs + '/*');
+	};
+	
+	this.exportWorkspace = function(){
+		exportService.exportProject(this.selectedWs + '/*');
 	};
 
 }]);

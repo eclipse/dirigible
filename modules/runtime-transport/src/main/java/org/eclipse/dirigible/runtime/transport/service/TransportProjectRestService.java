@@ -1,5 +1,8 @@
 package org.eclipse.dirigible.runtime.transport.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
@@ -52,8 +55,13 @@ public class TransportProjectRestService implements IRestService {
 	@ApiResponses({ @ApiResponse(code = 200, message = "Project Exported") })
 	public Response exportProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project) throws RepositoryExportException {
+		SimpleDateFormat pattern = new SimpleDateFormat("yyyyMMddhhmmss");
+		if ("*".equals(project)) {
+			byte[] zip = processor.exportWorkspace(workspace);
+			return Response.ok().header("Content-Disposition",  "attachment; filename=\"" + workspace + "-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
+		}
 		byte[] zip = processor.exportProject(workspace, project);
-		return Response.ok().header("Content-Disposition",  "attachment; filename=\"" + project + ".zip\"").entity(zip).build();
+		return Response.ok().header("Content-Disposition",  "attachment; filename=\"" + project + "-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
 	}
 
 	@Override

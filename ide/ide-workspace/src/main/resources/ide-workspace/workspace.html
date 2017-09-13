@@ -47,9 +47,11 @@
 				  <div class="dropdown-divider"></div>
 			  </div>
 			</div>
-			<button type="button" class="btn btn-default" title="Publish" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
+			
 			<select ng-model="workspace.selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
+			<button type="button" class="btn btn-default" title="Publish" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
+			<button type="button" class="btn btn-default" title="Export" ng-click="workspace.exportWorkspace()"><i class="fa fa-download"></i></button>
 		</div>
 	</div>
 	
