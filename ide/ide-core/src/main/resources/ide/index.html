@@ -98,57 +98,94 @@
 	<script type="text/javascript">
 	
 		function LayoutController(){
+		
+			this.views = {
+				"ws": {
+					id:"ws",
+					type: 'component',
+					componentName: 'Workspace',
+					componentState: { label: 'Workspace' },
+					defaultParentId: 'west'
+				},
+				"import": {
+					id:"import",
+					type: 'component',
+					componentName: 'Import',
+					componentState: { label: 'Import' },
+					defaultParentId: 'west'
+				},
+				"editor":{
+					id:"editor",
+					type: 'component',
+					componentName: 'Editor',
+					componentState: {  },
+					content: [],
+					defaultParentId: 'center-middle'
+				},
+				"console":{
+					id:"console",
+					type: 'component',
+					componentName: 'Console',
+					componentState: { label: 'Console' },
+					defaultParentId: 'center-south'
+				},
+				"preview": {
+					id:"preview",
+					type: 'component',
+					componentName: 'Preview',
+					componentState: { label: 'Preview' },
+					defaultParentId: 'center-south'
+				},
+				"properties": {
+					id:"properties",
+					type: 'component',
+					componentName: 'Properties',
+					componentState: { label: 'Properties' }	,
+					defaultParentId: 'center-south'
+				}
+			};
+			
+			this.regions = {
+				'main': {
+					id: 'main',
+					type: 'row'
+				},
+				'west': {
+					id: 'west',
+					type: 'stack',
+					width: 30,
+					defaultParentId: 'main'
+				},
+				'center': {
+					id: 'center',
+					type: 'column',
+					defaultParentId: 'main'
+				},
+				'center-middle': {
+					id: 'center',				
+					type: 'stack',
+					defaultParentId: 'center'
+				},
+				'center-south': {
+					id: 'south',
+					type: 'stack',
+					defaultParentId: 'center'
+				}
+			}
+									
+			this.perspective = this.regions['main'];
+			this.perspective.content = [this.regions.west, this.regions.center];
+			this.regions.west.content = [this.views.ws, this.views.import];
+			this.regions.center.content = [this.regions['center-middle'], this.regions['center-south']];
+			this.regions['center-middle'].content = [this.views.editor];
+			this.regions['center-south'].content = [this.views.console, this.views.preview, this.views.properties];
+
 			this.config = {
 				dimensions: {
 					headerHeight: 26,
 					borderWidth: 3
 				},
-				content: [{
-					type: 'row',
-					content:[{
-								type: 'stack',
-								content: [{
-									id:"ws",
-									type: 'component',
-									componentName: 'Workspace',
-									componentState: { label: 'Workspace' },
-									width: 30
-								},{
-									id:"import",
-									type: 'component',
-									componentName: 'Import',
-									componentState: { label: 'Import' }
-								}]
-							},{
-								id: 'center',
-								type: 'column',
-								content:[{
-									id:"editor",
-									type: 'component',
-									componentName: 'Editor',
-									componentState: {  },
-									content: []
-								},{
-									type: 'stack',
-									content: [{
-										id:"console",
-										type: 'component',
-										componentName: 'Console',
-										componentState: { label: 'Console' }	
-									},{
-										id:"preview",
-										type: 'component',
-										componentName: 'Preview',
-										componentState: { label: 'Preview' }
-									},{
- 										id:"properties",
- 										type: 'component',
- 										componentName: 'Properties',
- 										componentState: { label: 'Properties' }	
-									}]							
-								}]
-							}]
-				}]
+				content: [this.perspective]
 			};
 			
 			this.layout = new GoldenLayout(this.config, $('.plane') );
@@ -209,9 +246,44 @@
 				  }
 				}
 			};
+			
+			this.closeView = function(viewId){
+				//TODO
+			};
+			
+			var parentIds = function(node, location, arr){
+				arr = arr || [];
+				var _parentId = location || node.defaultParentId;
+				if(!_parentId)
+					return arr;
+				if(this.regions[_parentId]){
+					arr.push(_parentId);
+					return parentIds.call(this, this.regions[_parentId], undefined, arr);
+				}
+				return arr;
+			}
+			
+			this.openView = function(viewId, region){
+				//FIXME: fix behavior when region is provided
+				if(this.views[viewId]){
+					//reopen parent containers if closed
+					var node = this.layout.root;
+					var path = [viewId];
+					path = path.concat(parentIds.call(this, this.views[viewId], region));
+					path.reverse().forEach(function(compId){
+						var child = this.regions[compId] || this.views[compId];
+						node = this.layout.root !== node ? this.layout.root.getItemsById(node.id)[0] : this.layout.root;
+						if(viewId === compId || !this.layout.root.getItemsById(compId)[0]){
+							node.addChild(child);
+						}
+						node = child;
+					}.bind(this));
+				}
+			};
+			
 			this.init = function(){
 				this.layout.init();
-			}
+			};
 		};
 		
 		function uuidv4() {
