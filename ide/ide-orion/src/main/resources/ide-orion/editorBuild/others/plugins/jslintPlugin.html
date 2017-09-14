@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>JSLint plugin</title>
+	<meta name="copyright" content="Copyright (c) IBM Corporation and others 2013, 2017." >
+	<meta http-equiv="Content-Language" content="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="../../requirejs/require.min.js"></script>
+	<script>
+		/*eslint-env browser, amd*/
+		require({
+		  baseUrl: '..',
+		  paths: {
+			  text: 'requirejs/text',
+			  i18n: 'requirejs/i18n',
+			  domReady: 'requirejs/domReady'
+		  }
+		});
+		require({
+		    config: {
+		        //'orion/jslint/nls/messages': {root: true, ja: true}
+		    }
+		});		    
+		require(["plugins/jslintPlugin"], function(plugin) {
+			plugin.connect();
+		});
+	</script>
+</head>
+<body>
+</body>
+</html>

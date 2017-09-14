@@ -201,7 +201,7 @@
 			this.layout.registerComponent( 'Editor', function( container, componentState ){
 				this.setContent = function(path){
 					if (path) {
-						container.getElement().empty().html( '<iframe src="../ide-editor-orion/editor.html?file='+path+'"></iframe>' );
+						container.getElement().empty().html( '<iframe src="../ide-orion/editor.html?file='+path+'"></iframe>' );
 					} else {
 						container.setTitle( 'Welcome' );
 						container.getElement().empty().html( '<iframe src="welcome.html"></iframe>' );

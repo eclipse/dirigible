@@ -344,7 +344,7 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-editor-orion</artifactId>
+		 	<artifactId>dirigible-ide-orion</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
