@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.core.scheduler.api;
 
+import static java.text.MessageFormat.format;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,8 +10,12 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractSynchronizer implements ISynchronizer {
+
+	private static final Logger logger = LoggerFactory.getLogger(AbstractSynchronizer.class);
 
 	@Inject
 	private IRepository repository;
@@ -28,7 +34,11 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	protected void synchronizeCollection(ICollection collection) throws SynchronizationException {
 		List<IResource> resources = collection.getResources();
 		for (IResource resource : resources) {
-			synchronizeResource(resource);
+			try {
+				synchronizeResource(resource);
+			} catch (Exception e) {
+				logger.error(format("Resource [{0}] skipped due to an error: {1}", resource.getPath(), e.getMessage()), e);
+			}
 		}
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {

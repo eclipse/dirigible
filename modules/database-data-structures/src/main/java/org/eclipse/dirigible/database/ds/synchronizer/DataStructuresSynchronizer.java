@@ -113,11 +113,19 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		logger.trace("Synchronizing predelivered Data Structures...");
 		// Tables
 		for (DataStructureTableModel tableModel : TABLES_PREDELIVERED.values()) {
-			synchronizeTable(tableModel);
+			try {
+				synchronizeTable(tableModel);
+			} catch (Exception e) {
+				logger.error(format("Table [{0}] skipped due to an error: {1}", tableModel.getLocation(), e.getMessage()), e);
+			}
 		}
 		// Views
 		for (DataStructureViewModel viewModel : VIEWS_PREDELIVERED.values()) {
-			synchronizeView(viewModel);
+			try {
+				synchronizeView(viewModel);
+			} catch (Exception e) {
+				logger.error(format("View [{0}] skipped due to an error: {1}", viewModel.getLocation(), e.getMessage()), e);
+			}
 		}
 		logger.trace("Done synchronizing predelivered Data Structures.");
 	}
@@ -125,6 +133,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	private void synchronizeTable(DataStructureTableModel tableModel) throws SynchronizationException {
 		try {
 			if (!dataStructuresCoreService.existsTable(tableModel.getLocation())) {
+				DataStructureTableModel duplicated = dataStructuresCoreService.getTableByName(tableModel.getName());
+				if (duplicated != null) {
+					throw new SynchronizationException(
+							format("Table [{0}] defined by the model at: [{1}] has already been defined by the model at: [{2}]", tableModel.getName(),
+									tableModel.getLocation(), duplicated.getLocation()));
+				}
 				dataStructuresCoreService.createTable(tableModel.getLocation(), tableModel.getName(), tableModel.getHash());
 				DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
 				logger.info("Synchronized a new Table [{}] from location: {}", tableModel.getName(), tableModel.getLocation());
@@ -145,6 +159,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	private void synchronizeView(DataStructureViewModel viewModel) throws SynchronizationException {
 		try {
 			if (!dataStructuresCoreService.existsView(viewModel.getLocation())) {
+				DataStructureViewModel duplicated = dataStructuresCoreService.getViewByName(viewModel.getName());
+				if (duplicated != null) {
+					throw new SynchronizationException(
+							format("View [{0}] defined by the model at: [{1}] has already been defined by the model at: [{2}]", viewModel.getName(),
+									viewModel.getLocation(), duplicated.getLocation()));
+				}
 				dataStructuresCoreService.createView(viewModel.getLocation(), viewModel.getName(), viewModel.getHash());
 				DATA_STRUCTURE_MODELS.put(viewModel.getName(), viewModel);
 				logger.info("Synchronized a new View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
