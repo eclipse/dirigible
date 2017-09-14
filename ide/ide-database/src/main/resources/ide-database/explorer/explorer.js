@@ -15,10 +15,12 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 			$scope.databases = data;
 			if(data[0]) {
 				$scope.selectedDatabase = data[0];
+				messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
 				$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).success(function(data) {
 					$scope.datasources = data;
 					if(data[0]) {
 						$scope.selectedDatasource = data[0];
+						messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
 						$scope.refreshDatabase();
 					}
 				});
@@ -73,41 +75,20 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 							  },
 					          'contextmenu' : {
 									'items' : function(node) {
-										var ctxmenu = $.jstree.defaults.contextmenu.items();
-										if(this.get_type(node) === "file") {
-											delete ctxmenu.create;
-										} else {
-											delete ctxmenu.create.action;
-											ctxmenu.create.label = "New";
-											ctxmenu.create.submenu = {
-												"create_folder" : {
-													"separator_after"	: true,
-													"label"				: "Folder",
-													"action"			: function (data) {
-														var inst = $.jstree.reference(data.reference),
-															obj = inst.get_node(data.reference);
-														inst.create_node(obj, { type : "default" }, "last", function (new_node) {
-															setTimeout(function () { inst.edit(new_node); },0);
-														});
-													}
-												},
-												"create_file" : {
-													"label"				: "File",
-													"action"			: function (data) {
-														var inst = $.jstree.reference(data.reference),
-															obj = inst.get_node(data.reference);
-														inst.create_node(obj, { type : "file" }, "last", function (new_node) {
-															setTimeout(function () { inst.edit(new_node); },0);
-														});
-													}
-												}
+										var ctxmenu = {};
+										if (node.original.type === 'table'
+											|| node.original.type === 'view') {
+											ctxmenu.contents = {
+												"separator_before": false,
+												"label": "Show Contents",
+												"action": function(data){
+													var tree = $.jstree.reference(data.reference);
+													var node = tree.get_node(data.reference);
+													var sqlCommand = "SELECT * FROM " + node.original.text;
+													messageHub.post({data: sqlCommand}, 'database.sql.execute');
+												}.bind(this)
 											};
-											
-										}										
-										ctxmenu.remove.shortcut = 46;
-										ctxmenu.remove.shortcut_label = 'Del';
-										ctxmenu.rename.shortcut = 113;
-										ctxmenu.rename.shortcut_label = 'F2';
+										}
 										return ctxmenu;
 									}
 								},
@@ -172,6 +153,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 					$scope.datasources = data;
 					if (data[0]) {
 						$scope.selectedDatasource = data[0];
+						messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
 					} else {
 						$scope.selectedDatasource = undefined;
 					}
@@ -180,6 +162,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 	};
 	
 	$scope.datasourceChanged = function(evt){
+		messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
 		$scope.refreshDatabase();
 	};
 
