@@ -54,7 +54,7 @@ public class ConsoleWebsocketService {
 				try {
 					session.getBasicRemote().sendText(GsonHelper.GSON.toJson(record));
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.err.println(e.getMessage());
 				}
 			}
 		}
