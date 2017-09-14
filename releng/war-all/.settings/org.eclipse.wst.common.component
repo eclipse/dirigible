@@ -173,6 +173,9 @@
         <dependent-module archiveName="dirigible-ide-console-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Console/IDE - Console">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-ide-orion-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Orion/IDE - Orion">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-ide-swagger-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Swagger/IDE - Swagger">
             <dependency-type>uses</dependency-type>
         </dependent-module>

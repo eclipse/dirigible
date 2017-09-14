@@ -4,7 +4,7 @@ define([
 ], function (tern, infer) {
 
 	var defs = {
-		"!name": "testplugin",
+		"!name": "commonjs-simplified",
 		"defineModule": {
 			"!type": "fn(name: string, def: fn()) -> !custom:defineModule"
 		},
@@ -13,7 +13,7 @@ define([
 		}
 	};
 	
-	tern.registerPlugin('testplugin', function (server, options) {
+	tern.registerPlugin('commonjs-simplified', function (server, options) {
 		server.addDefs(defs);
 	});
 
@@ -48,13 +48,10 @@ define([
 			var ternServer = infer.cx().parent;
 			var currentFile = argnodes[0].sourceFile.name;
 
-			getModule('../../' + moduleName + '.js').then(function (content) {
-				console.log('Adding file ' + moduleName + '.js ...');
-				content = "defineModule('" + moduleName + "', () => exports = {}; " + content + " return exports;)";
-				ternServer.addFile('/' + moduleName, content, currentFile);
-			}).catch(function (error) {
-				console.log(error);
-			});
+			var content = getModule('/services/v3/web/' + moduleName + '.js');
+			console.log('Adding file ' + moduleName + '.js ...');
+			content = "defineModule('" + moduleName + "', () => exports = {}; " + content + " return exports;)";
+			ternServer.addFile('/' + moduleName, content, currentFile);
 
 			return infer.ANull;
 		}
@@ -62,18 +59,11 @@ define([
 	});
 
 	function getModule(modulePath) {
-		if (!self.fetch) {
-			console.log('No Fetch API available!');
-		}
-		console.log('Fetching file ' + modulePath);
-		return fetch(modulePath).then(function (response) {
-			if (response.ok) {
-			    return response.text().then(function(text) {
-			        console.log('Fetched file ' + text);
-				    return text;
-			    });
-			}
-			throw new Error('Failed to fetch "' + modulePath + '": ' + response.status + ' ' + response.statusText);
-		});
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', modulePath, false);
+        xhr.send();
+        if (xhr.status === 200) {
+        	return xhr.responseText;
+        }
 	}
 });

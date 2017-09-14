@@ -44,7 +44,11 @@ public abstract class AbstractWebEngineRestService implements IRestService {
 			byte[] content = processor.getResourceContent(path);
 			if (content != null) {
 				String contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(path));
-				return Response.ok().entity(content).type(contentType).build();
+				if (ContentTypeHelper.isBinary(contentType)) {
+					return Response.ok().entity(content).type(contentType).build();
+				}
+				String text = new String(content);
+				return Response.ok(text).type(contentType).build();
 			}
 		} catch (RepositoryNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).entity("Resource not found: " + path).build();
