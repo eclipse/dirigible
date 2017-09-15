@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -60,12 +61,12 @@ public class RepositoryGenericExportZipTest {
 						}
 						outpath = outpath.replace(File.separator, IRepository.SEPARATOR);
 						if (outpath.equals("export/folder3/text3.txt")) { //$NON-NLS-1$
-							String read = new String(output.toByteArray());
+							String read = new String(output.toByteArray(), StandardCharsets.UTF_8);
 							assertEquals("text3", read); //$NON-NLS-1$
 							entriesCount++;
 						}
 						if (outpath.equals("export/folder4/text4.txt")) { //$NON-NLS-1$
-							String read = new String(output.toByteArray());
+							String read = new String(output.toByteArray(), StandardCharsets.UTF_8);
 							assertEquals("text4", read); //$NON-NLS-1$
 							entriesCount++;
 						}
@@ -126,12 +127,12 @@ public class RepositoryGenericExportZipTest {
 						}
 						outpath = outpath.replace(File.separator, IRepository.SEPARATOR);
 						if (outpath.equals("text3.txt")) { //$NON-NLS-1$
-							String read = new String(output.toByteArray());
+							String read = new String(output.toByteArray(), StandardCharsets.UTF_8);
 							assertEquals("text3", read); //$NON-NLS-1$
 							entriesCount++;
 						}
 						if (outpath.equals("text4.txt")) { //$NON-NLS-1$
-							String read = new String(output.toByteArray());
+							String read = new String(output.toByteArray(), StandardCharsets.UTF_8);
 							assertEquals("text4", read); //$NON-NLS-1$
 							entriesCount++;
 						}
@@ -190,12 +191,12 @@ public class RepositoryGenericExportZipTest {
 						}
 						outpath = outpath.replace(File.separator, IRepository.SEPARATOR);
 						if (outpath.equals("folder3/text3.txt")) { //$NON-NLS-1$
-							String read = new String(output.toByteArray());
+							String read = new String(output.toByteArray(), StandardCharsets.UTF_8);
 							assertEquals("text3", read); //$NON-NLS-1$
 							entriesCount++;
 						}
 						if (outpath.equals("folder4/text4.txt")) { //$NON-NLS-1$
-							String read = new String(output.toByteArray());
+							String read = new String(output.toByteArray(), StandardCharsets.UTF_8);
 							assertEquals("text4", read); //$NON-NLS-1$
 							entriesCount++;
 						}
@@ -249,7 +250,7 @@ public class RepositoryGenericExportZipTest {
 						}
 
 						if (outpath.equals("text3.txt")) { //$NON-NLS-1$
-							String read = new String(output.toByteArray());
+							String read = new String(output.toByteArray(), StandardCharsets.UTF_8);
 							assertEquals("text3", read); //$NON-NLS-1$
 							entriesCount++;
 						}

@@ -57,7 +57,7 @@ public class WikiEngineRestService implements IRestService {
 			if (resource.isBinary()) {
 				return Response.status(Status.NOT_FOUND).entity("Resource found, but it is a binary file: " + path).build();
 			}
-			String content = new String(resource.getContent());
+			String content = new String(resource.getContent(), StandardCharsets.UTF_8);
 			String html = renderContent(content);
 			return Response.ok(html).type(resource.getContentType()).build();
 		}

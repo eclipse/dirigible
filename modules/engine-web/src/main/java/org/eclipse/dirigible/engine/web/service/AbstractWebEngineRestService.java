@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.engine.web.service;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.inject.Inject;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
@@ -37,7 +39,7 @@ public abstract class AbstractWebEngineRestService implements IRestService {
 			if (resource.isBinary()) {
 				return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();
 			}
-			String content = new String(resource.getContent());
+			String content = new String(resource.getContent(), StandardCharsets.UTF_8);
 			return Response.ok(content).type(resource.getContentType()).build();
 		}
 		try {
@@ -47,7 +49,7 @@ public abstract class AbstractWebEngineRestService implements IRestService {
 				if (ContentTypeHelper.isBinary(contentType)) {
 					return Response.ok().entity(content).type(contentType).build();
 				}
-				String text = new String(content);
+				String text = new String(content, StandardCharsets.UTF_8);
 				return Response.ok(text).type(contentType).build();
 			}
 		} catch (RepositoryNotFoundException e) {

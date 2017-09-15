@@ -2,6 +2,7 @@ package org.eclipse.dirigible.runtime.databases.service;
 
 import static java.text.MessageFormat.format;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
@@ -108,10 +109,10 @@ public class DatabaseRestService implements IRestService {
 
 		String accept = request.getHeader("Accept");
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.executeQuery(type, name, new String(sql), false);
+			String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), false);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
-		String result = processor.executeQuery(type, name, new String(sql), true);
+		String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), true);
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -134,10 +135,10 @@ public class DatabaseRestService implements IRestService {
 
 		String accept = request.getHeader("Accept");
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.executeUpdate(type, name, new String(sql), false);
+			String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), false);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
-		String result = processor.executeUpdate(type, name, new String(sql), true);
+		String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), true);
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -160,10 +161,10 @@ public class DatabaseRestService implements IRestService {
 
 		String accept = request.getHeader("Accept");
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql), false);
+			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
-		String result = processor.execute(type, name, new String(sql), true);
+		String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), true);
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
