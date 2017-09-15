@@ -33,7 +33,7 @@
 <body ng-app="properties" ng-controller="PropertiesController as propsVm">
 
 	<div >
-		<div ng-repeat="property in propsVm.properties">{{property}}</div>
+		<div ng-repeat="(key, value) in propsVm.properties">{{key}}: {{value}}</div>
 	</div>
 	
 	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
@@ -57,7 +57,12 @@
 		.controller('PropertiesController', ['$scope', '$http', '$messageHub', function ($scope, $http, $messageHub) {
 			this.properties;
 			$messageHub.on('workspace.file.selected', function(f){
-				this.properties = f.data;//TODO
+				this.properties = f.data;
+				for(var prop in f.data){
+					if(Array.isArray(f.data[prop])){
+						f.data[prop] = f.data[prop].length;
+					}
+				}
 				$scope.$apply();
 			}.bind(this));
 		}]);
