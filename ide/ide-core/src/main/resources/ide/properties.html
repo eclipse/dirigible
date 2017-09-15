@@ -65,6 +65,11 @@
 				}
 				$scope.$apply();
 			}.bind(this));
+			$messageHub.on('workbench.theme.changed', function(msg){
+				var themeUrl = msg.data;
+				$('#theme-stylesheet').remove();
+				$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
+			}.bind(this));
 		}]);
 	</script>
 </body>

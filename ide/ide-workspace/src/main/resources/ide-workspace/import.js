@@ -1,7 +1,20 @@
 /*globals angular, $ */
 angular
 .module('import', ['angularFileUpload'])
-.controller('ImportController', ['$scope', '$http', 'FileUploader', function($scope, $http, FileUploader) {
+.factory('$messageHub', [function(){
+	var messageHub = new FramesMessageHub();	
+	var message = function(evtName, data){
+		messageHub.post({data: data}, 'properties.' + evtName);
+	};
+	var on = function(topic, callback){
+		messageHub.subscribe(callback, topic);
+	};
+	return {
+		message: message,
+		on: on
+	};
+}])
+.controller('ImportController', ['$scope', '$http', 'FileUploader', '$messageHub', function($scope, $http, FileUploader, $messageHub) {
 	
 	$scope.TRANSPORT_PROJECT_URL = "/services/v3/transport/project";
 	$scope.WORKSPACES_URL = "/services/v3/ide/workspaces";
@@ -70,4 +83,15 @@ angular
 //        console.info('onCompleteAll');
     };
 
+		
+	$messageHub.on('workbench.theme.changed', function(msg){
+		var themeUrl = msg.data;
+	
+		$('a[href="/services/v3/core/theme/ide.css"]').remove();
+		$('<link href="/services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
+		
+		$('#theme-stylesheet').remove();
+		$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
+	}.bind(this));
+	
 }]);
