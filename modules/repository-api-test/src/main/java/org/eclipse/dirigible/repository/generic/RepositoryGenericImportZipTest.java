@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.nio.charset.StandardCharsets;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -43,7 +42,7 @@ public class RepositoryGenericImportZipTest {
 			repository.importZip(zipInputStream, "/root1/import"); //$NON-NLS-1$
 
 			IResource resource = repository.getResource("/root1/import/folder1/text1.txt"); //$NON-NLS-1$
-			String read = new String(resource.getContent(), StandardCharsets.UTF_8);
+			String read = new String(resource.getContent());
 			assertEquals("text1", read); //$NON-NLS-1$
 
 			resource = repository.getResource("/root1/import/folder1/folder2/image1.png"); //$NON-NLS-1$

@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -79,7 +78,7 @@ public abstract class RepositoryGenericMultiThreadTest {
 			assertFalse(resource.isBinary());
 
 			IResource resourceBack = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
-			String contentback = new String(resourceBack.getContent(), StandardCharsets.UTF_8);
+			String contentback = new String(resourceBack.getContent());
 
 			assertEquals(content, contentback);
 

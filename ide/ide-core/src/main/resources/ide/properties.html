@@ -32,8 +32,47 @@
 
 <body ng-app="properties" ng-controller="PropertiesController as propsVm">
 
-	<div >
-		<div ng-repeat="(key, value) in propsVm.properties">{{key}}: {{value}}</div>
+	<style>
+		body {
+		  margin: 5px;
+		}
+		.row {
+		  display: flex;
+ 		  flex-wrap: wrap;
+		  width: 100%;
+		  margin: auto;
+		}
+		.key {
+		  flex: 1 1 auto;
+		  max-width: 15%;
+		  padding: 2px 5px;
+		  background: #292929;
+		}
+		.value {
+		  flex: 2 1 auto;
+		  padding: 2px 5px;
+		}
+		.striped-container .striped-item:nth-of-type(odd) {
+		  background: #565656;
+		}
+		.striped-container .striped-item:nth-of-type(odd) .key {
+		  background: #222;
+		}
+		.striped-container .striped-item:nth-of-type(odd) .value {
+		  background: #292929;
+		}
+		.striped-item:hover .value{
+			background: rgba(86, 86, 86, 0.85);
+		}
+		.striped-item:nth-of-type(odd):hover .value{
+			background: rgba(41, 41, 41, 0.85);
+		}
+	</style>
+	
+	<div class="striped-container">
+	  <div class="row striped-item" ng-repeat="(key, value) in propsVm.properties">
+		<div class="key">{{key}}</div><div class="value">{{value}}</div>
+	  </div>
 	</div>
 	
 	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>

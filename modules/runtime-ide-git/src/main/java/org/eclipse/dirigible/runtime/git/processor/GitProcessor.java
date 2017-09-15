@@ -1,6 +1,5 @@
 package org.eclipse.dirigible.runtime.git.processor;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -110,6 +109,6 @@ public class GitProcessor {
 		if (model.getPassword() == null) {
 			return null;
 		}
-		return new String(Base64.getDecoder().decode(model.getPassword().getBytes()), StandardCharsets.UTF_8);
+		return new String(Base64.getDecoder().decode(model.getPassword().getBytes()));
 	}
 }

@@ -16,8 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.nio.charset.StandardCharsets;
-
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
@@ -43,7 +41,7 @@ public class RepositoryGenericTextTest {
 			assertFalse(resource.isBinary());
 
 			IResource resourceBack = repository.getResource("/testCollection/toBeRemovedText1.txt"); //$NON-NLS-1$
-			String contentback = new String(resourceBack.getContent(), StandardCharsets.UTF_8);
+			String contentback = new String(resourceBack.getContent());
 
 			assertEquals(content, contentback);
 
