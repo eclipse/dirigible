@@ -52,6 +52,8 @@ var ViewRegistry = function() {
 		return _views;
 	}
 	
+	return this;
+	
 };
 
 function LayoutController(viewRegistry){
@@ -225,7 +227,7 @@ function LayoutController(viewRegistry){
 		var views = {};
 		viewNames.forEach(function(viewName){
 			views[viewName] = this.viewRegistry.view(viewName);
-		});
+		}.bind(this));
 		this.config = {
 			dimensions: {
 				headerHeight: 26,
@@ -290,3 +292,28 @@ function uuidv4() {
 	(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   )
 }
+
+GLOBAL_VIEW_REGISTRY = new ViewRegistry()
+.factory('frame', function(container, componentState){
+	container.setTitle(componentState.label || 'View');
+	container.getElement().empty().html( '<iframe src="'+componentState.path+'"></iframe>' );
+})
+.factory('Editor', function(container, componentState){
+	this.setContent = function(path){
+		if (path) {
+			container.getElement().empty().html( '<iframe src="../ide-orion/editor.html?file='+path+'"></iframe>' );
+		} else {
+			container.setTitle( 'Welcome' );
+			container.getElement().empty().html( '<iframe src="welcome.html"></iframe>' );
+		}
+		
+	};
+	this.setContent(componentState.path);
+})
+.view('ws', 'frame', 'left-top', 'Workspace',  {path: '../ide-workspace/workspace.html'})
+.view('import', 'frame', 'left-top', 'Import', {path: '../ide-workspace/import.html'})
+.view('editor', 'Editor', 'center-middle', 'Editor', {})
+.view('console', 'frame', 'center-bottom', 'Console', {path: '../ide-console/console.html'})
+.view('preview', 'frame', 'center-bottom', 'Preview', {path: '../ide-preview/preview.html'})
+.view('properties', 'frame', 'center-bottom', 'Properties', {path: '../ide/properties.html'})
+.view('terminal', 'frame', 'center-bottom', 'Terminal', {path: '../ide-terminal/terminal.html'});//.. and so on
