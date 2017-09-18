@@ -41,6 +41,7 @@
 		<module>resources-goldenlayout</module>
 		<module>resources-jquery</module>
 		<module>resources-jstree</module>
+		<module>resources-fonts</module>
 	</modules>
 
 	<profiles>

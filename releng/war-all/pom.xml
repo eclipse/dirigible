@@ -409,6 +409,11 @@
 		 	<artifactId>dirigible-resources-jstree</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-fonts</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 
 		<!-- External -->
 		<dependency>
