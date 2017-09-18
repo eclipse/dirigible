@@ -150,3 +150,13 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	background-color: #f6f6f6;
 	color: #343436;
 }
+
+.logo {
+	font-weight: bold !important;
+	color: #434344;
+	margin-left: 12px !important;
+}
+
+.user {
+	color: #434344;
+}

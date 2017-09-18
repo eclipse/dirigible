@@ -38,6 +38,8 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <link rel="stylesheet" href="/services/v3/web/resources/font/font.css">
 </head>
 
 <body ng-app="terminal" ng-controller="TerminalController">
@@ -52,9 +54,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#">
-					<!-- <img src="img/dirigible.png" style="width: 30px; margin-left: 10px"> -->
-					<!-- <i class="logo-icon icon-dirigible" style="color: #ffcc00">&#xe800;</i> -->
-					
+					<i class="logo logo-icon icon-dirigible">&#xe801;</i>
 				</a>
 			</div>
 			<div class="collapse navbar-collapse" id="navbar-collapse">
@@ -79,7 +79,7 @@
 				<ul class="nav navbar-nav navbar-right">
 				  <li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li>
 				  <li class="hidden-xs">
-					<a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
+					<a href=""><span class="fa fa-user user"></span> <span class="user" ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
 				  </li>
 				</ul>
 			</div>
@@ -88,7 +88,7 @@
 	
 	<div class="shell">
 		<div class="sidebar list-group">
-			<a class="list-group-item" ng-repeat="perspective in perspectives" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
+			<a class="list-group-item" ng-repeat="perspective in perspectives" ng-class="{active: perspective.name==='Terminal'}" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
 		</div>
 		<div class="plane"></div>
 	</div>

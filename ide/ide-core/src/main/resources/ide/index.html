@@ -35,6 +35,9 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+	<link rel="stylesheet" href="/services/v3/web/resources/font/font.css">
+    
 </head>
 
 <body ng-app="workbench" ng-controller="WorkbenchController as wb">
@@ -49,9 +52,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#">
-					<!-- <img src="img/dirigible.png" style="width: 30px; margin-left: 10px"> -->
-					<!-- <i class="logo-icon icon-dirigible" style="color: #ffcc00">&#xe800;</i> -->
-					
+					<i class="logo logo-icon icon-dirigible">&#xe801;</i>
 				</a>
 			</div>
 			<div class="collapse navbar-collapse" id="navbar-collapse">
@@ -73,9 +74,17 @@
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-				  <li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li>
+				  <!--li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li-->
+				  <li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Themes <b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		                <li><a href="#" data-theme="default" class="theme-link" ng-click="wb.selectTheme('default')">Default</a></li>
+		                <li><a href="#" data-theme="wendy" class="theme-link" ng-click="wb.selectTheme('wendy')">Wendy</a></li>
+		                <li><a href="#" data-theme="baroness" class="theme-link" ng-click="wb.selectTheme('baroness')">Baroness</a></li>
+		            </ul>
+				  </li>				  
 				  <li class="hidden-xs">
-					<a href=""><span class="fa fa-user"></span> <span ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
+					<a href=""><span class="fa fa-user user"></span> <span class="user" ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
 				  </li>
 				</ul>
 			</div>
@@ -84,7 +93,7 @@
 	
 	<div class="shell">
 		<div class="sidebar list-group">
-			<a class="list-group-item" ng-repeat="perspective in wb.perspectives" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
+			<a class="list-group-item" ng-repeat="perspective in wb.perspectives" ng-class="{active: perspective.name==='Workbench'}" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
 		</div>
 		<div class="plane"></div>
 	</div>
@@ -103,6 +112,22 @@
 		}])
 		.service('Menu', ['$resource', function($resource){
 			return $resource('../../js/ide/services/menu.js');
+		}])
+		.service('Theme', ['$resource', function($resource){
+			var themeswitcher = $resource('/services/v3/core/theme?name=:themeName', {themeName: 'default'});
+			var themes = {
+				"default": "/services/v3/web/resources/themes/default/bootstrap.min.css",
+				"wendy" : "/services/v3/web/resources/themes/wendy/bootstrap.min.css",
+				"baroness" : "/services/v3/web/resources/themes/baroness/bootstrap.min.css"
+			};
+			return {
+				changeTheme: function(themeName){
+					return themeswitcher.get({'themeName':themeName});
+				},
+				themeUrl: function(themeName){
+					return themes[themeName];
+				}			
+			}
 		}])
 		.factory('Layout', [function(){
 			var layoutCtrl = new LayoutController(GLOBAL_VIEW_REGISTRY);
@@ -149,7 +174,20 @@
 			
 			return layoutCtrl;
 		}])
-		.controller('WorkbenchController', ['Perspectives', 'Menu', 'Layout', function (Perspectives, Menu, Layout) {
+		.factory('$messageHub', [function(){
+			var messageHub = new FramesMessageHub();	
+			var message = function(evtName, data){
+				messageHub.post({data: data}, 'workbench.' + evtName);
+			};
+			var on = function(topic, callback){
+				messageHub.subscribe(callback, topic);
+			};
+			return {
+				message: message,
+				on: on
+			};		
+		}])
+		.controller('WorkbenchController', ['Perspectives', 'Menu', 'Theme', 'Layout', '$messageHub', function (Perspectives, Menu, Theme, Layout, $messageHub) {
 			this.perspectives = Perspectives.query();
 			this.menu = Menu.query();
 			this.Layout = Layout;
@@ -166,19 +204,34 @@
 				this.Layout.reset();
 			}
 			
-		}])
-		.factory('$messageHub', [function(){
-			return new FramesMessageHub();
+			this.selectTheme = function(themeName){
+				Theme.changeTheme(themeName);
+				var themeUrl = Theme.themeUrl(themeName);
+				$messageHub.message('theme.changed', themeUrl);
+			}
+			
+			$messageHub.on('workbench.theme.changed', function(msg){
+				var themeUrl = msg.data;
+				
+				$('a[href="/services/v3/core/theme/goldenlayout-theme.css"]').remove();
+				$('<link href="/services/v3/core/theme/goldenlayout-theme.css" rel="stylesheet" />').appendTo('head');
+				
+				$('a[href="/services/v3/core/theme/ide.css"]').remove();
+				$('<link href="/services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
+				
+				$('#theme-stylesheet').remove();
+				$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
+
+			}.bind(this));
+			
 		}])
 		.controller('StatusBarController', ['$scope', '$messageHub', function ($scope, $messageHub) {
-			$messageHub.subscribe(function(msg){
+			$messageHub.on('workbench.status.message', function(msg){
 				this.message = msg.data;
 				$scope.$apply();
-			}.bind(this), 'workbench.status.message');
+			}.bind(this));
 		}]);
 	</script>
-	
-	<script src="/services/v3/web/resources/themes/theme.js"></script>
 	
 </body>
 

@@ -541,7 +541,10 @@ angular.module('workspace', ['workspace.config'])
 		announceFileMoved: announceFileMoved,
 		announceFilePropertiesOpen: announceFilePropertiesOpen,
 		announcePublish: announcePublish,
-		announceExport: announceExport
+		announceExport: announceExport,
+		on: function(evt, cb){
+			messageHub.subscribe(cb, evt);
+		}
 	};
 }])
 .factory('$treeConfig', [function(){
@@ -713,7 +716,7 @@ angular.module('workspace', ['workspace.config'])
 .factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', 'exportService', '$messageHub', function($treeConfig, WorkspaceService, publishService, exportService, $messageHub){
 	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, exportService, $messageHub);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', function (workspaceService, workspaceTreeAdapter, publishService, exportService) {
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', '$messageHub', function (workspaceService, workspaceTreeAdapter, publishService, exportService, $messageHub) {
 
 	this.wsTree;
 	this.workspaces;
@@ -762,5 +765,18 @@ angular.module('workspace', ['workspace.config'])
 	this.exportWorkspace = function(){
 		exportService.exportProject(this.selectedWs + '/*');
 	};
+	
+	$messageHub.on('workbench.theme.changed', function(msg){
+		var themeUrl = msg.data;
+		
+		$('a[href="/services/v3/core/theme/jstree.css"]').remove();
+		$('<link id="theme-stylesheet" href="/services/v3/core/theme/jstree.css" rel="stylesheet" />').appendTo('head');
+		
+		$('a[href="/services/v3/core/theme/ide.css"]').remove();
+		$('<link href="/services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
+		
+		$('#theme-stylesheet').remove();
+		$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
+	}.bind(this));
 
 }]);
