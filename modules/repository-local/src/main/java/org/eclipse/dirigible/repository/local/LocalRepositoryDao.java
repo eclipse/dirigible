@@ -284,20 +284,24 @@ public class LocalRepositoryDao {
 
 			String infoPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getInfoPath());
 			if (FileSystemUtils.fileExists(infoPath)) {
-				byte[] bytes = FileSystemUtils.loadFile(infoPath);
-				if (bytes != null) {
-					Properties info = new Properties();
-					info.load(new ByteArrayInputStream(bytes));
-					localObject.setCreatedBy(info.getProperty(CREATED_BY));
-					String prop = info.getProperty(CREATED_AT);
-					if (prop != null) {
-						localObject.setCreatedAt(new Date(Long.parseLong(prop)));
+				try {
+					byte[] bytes = FileSystemUtils.loadFile(infoPath);
+					if (bytes != null) {
+						Properties info = new Properties();
+						info.load(new ByteArrayInputStream(bytes));
+						localObject.setCreatedBy(info.getProperty(CREATED_BY));
+						String prop = info.getProperty(CREATED_AT);
+						if (prop != null) {
+							localObject.setCreatedAt(new Date(Long.parseLong(prop)));
+						}
+						localObject.setModifiedBy(info.getProperty(MODIFIED_BY));
+						prop = info.getProperty(MODIFIED_AT);
+						if (prop != null) {
+							localObject.setModifiedAt(new Date(Long.parseLong(prop)));
+						}
 					}
-					localObject.setModifiedBy(info.getProperty(MODIFIED_BY));
-					prop = info.getProperty(MODIFIED_AT);
-					if (prop != null) {
-						localObject.setModifiedAt(new Date(Long.parseLong(prop)));
-					}
+				} catch (Throwable e) {
+					throw new LocalRepositoryException(e);
 				}
 			}
 

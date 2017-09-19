@@ -18,7 +18,6 @@ import java.util.Map;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
-import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 
 public class LocalWorkspaceMapper {
 
@@ -30,13 +29,6 @@ public class LocalWorkspaceMapper {
 	public static String getMappedName(FileSystemRepository repository, String repositoryName) throws RepositoryWriteException {
 		String workspaceName = null;
 
-		if ((repositoryName != null) && !"".equals(repositoryName)) {
-
-			if (FileSystemUtils.exists(repositoryName) && !IRepository.SEPARATOR.equals(repositoryName)) {
-				return repositoryName;
-			}
-		}
-
 		if (repositoryName != null) {
 			if (repositoryName.startsWith(repository.getRepositoryPath())) {
 				workspaceName = repositoryName;
@@ -44,7 +36,7 @@ public class LocalWorkspaceMapper {
 				workspaceName = repository.getRepositoryPath() + repositoryName;
 			}
 		}
-		
+
 		if (workspaceName != null) {
 			workspaceName = workspaceName.replace(IRepository.SEPARATOR, File.separator);
 		}
