@@ -10,10 +10,10 @@
 
 /* eslint-env node, dirigible */
 
-var request = require('http/v3/request');
+var user = require('auth/v3/user');
 var response = require('http/v3/response');
 
 response.setContentType("text/plain");
-response.println(request.getRemoteUser());
+response.println(user.getName());
 response.flush();
 response.close();

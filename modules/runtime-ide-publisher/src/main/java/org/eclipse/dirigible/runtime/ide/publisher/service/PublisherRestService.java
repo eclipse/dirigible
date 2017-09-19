@@ -19,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
@@ -58,7 +59,7 @@ public class PublisherRestService implements IRestService {
 	public Response requestPublishing(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
 			@ApiParam(value = "Resource Path") @PathParam("path") String path, @Context HttpServletRequest request)
 			throws PublisherException, URISyntaxException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -76,7 +77,7 @@ public class PublisherRestService implements IRestService {
 	@GET
 	@Path("request/{id}")
 	public Response getRequest(@PathParam("id") long id, @Context HttpServletRequest request) throws PublisherException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -91,7 +92,7 @@ public class PublisherRestService implements IRestService {
 	@GET
 	@Path("log")
 	public Response listLog(@Context HttpServletRequest request) throws PublisherException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -103,7 +104,7 @@ public class PublisherRestService implements IRestService {
 	@DELETE
 	@Path("log")
 	public Response clearLog(@Context HttpServletRequest request) throws PublisherException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}

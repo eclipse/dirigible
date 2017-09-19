@@ -54,6 +54,12 @@
             <artifactId>dirigible-database-managed</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-auth</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class WorkspacesCoreService implements IWorkspacesCoreService {
 
+	private static final String DEFAULT_WORKSPACE_NAME = "workspace";
+
 	private static final Logger logger = LoggerFactory.getLogger(WorkspacesCoreService.class);
 
 	@Inject
@@ -43,8 +45,15 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		StringBuilder workspacePath = generateWorkspacePath(null, null, null);
 		ICollection root = repository.getCollection(workspacePath.toString());
 		List<IWorkspace> workspaces = new ArrayList<IWorkspace>();
+		if (!root.exists()) {
+			root.create();
+		}
 		List<ICollection> collections = root.getCollections();
 		for (ICollection collection : collections) {
+			workspaces.add(new Workspace(collection));
+		}
+		if (workspaces.isEmpty()) {
+			ICollection collection = root.createCollection(DEFAULT_WORKSPACE_NAME);
 			workspaces.add(new Workspace(collection));
 		}
 		return workspaces;

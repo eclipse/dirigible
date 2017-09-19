@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
@@ -97,7 +98,7 @@ public class DatabaseRestService implements IRestService {
 			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
 	public Response executeQuery(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
@@ -123,7 +124,7 @@ public class DatabaseRestService implements IRestService {
 			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
 	public Response executeUpdate(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
@@ -149,7 +150,7 @@ public class DatabaseRestService implements IRestService {
 			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
 	public Response execute(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}

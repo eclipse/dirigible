@@ -14,6 +14,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
@@ -46,7 +47,7 @@ public class WorkspaceManagerService implements IRestService {
 	@Path("{workspace}/copy")
 	public Response copy(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -92,7 +93,7 @@ public class WorkspaceManagerService implements IRestService {
 	@Path("{workspace}/move")
 	public Response move(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}

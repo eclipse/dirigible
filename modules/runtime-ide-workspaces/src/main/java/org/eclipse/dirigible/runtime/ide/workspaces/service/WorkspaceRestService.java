@@ -20,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.dirigible.api.v3.auth.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.workspace.api.IFile;
@@ -59,7 +60,7 @@ public class WorkspaceRestService implements IRestService {
 	@GET
 	@Path("/")
 	public Response listWorkspaces(@Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -74,7 +75,7 @@ public class WorkspaceRestService implements IRestService {
 	@GET
 	@Path("{workspace}")
 	public Response getWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -94,7 +95,7 @@ public class WorkspaceRestService implements IRestService {
 	@POST
 	@Path("{workspace}")
 	public Response createWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) throws URISyntaxException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -114,7 +115,7 @@ public class WorkspaceRestService implements IRestService {
 	@DELETE
 	@Path("{workspace}")
 	public Response deleteWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -132,7 +133,7 @@ public class WorkspaceRestService implements IRestService {
 	@GET
 	@Path("{workspace}/{project}")
 	public Response getProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -158,7 +159,7 @@ public class WorkspaceRestService implements IRestService {
 	@Path("{workspace}/{project}")
 	public Response createProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request)
 			throws URISyntaxException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -184,7 +185,7 @@ public class WorkspaceRestService implements IRestService {
 	@Path("{workspace}/{project}")
 	public Response deleteProject(@PathParam("workspace") String workspace, @PathParam("project") String project,
 			@Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -208,7 +209,7 @@ public class WorkspaceRestService implements IRestService {
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response getFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
 			@Context HttpServletRequest request) {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -245,7 +246,7 @@ public class WorkspaceRestService implements IRestService {
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
 			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -285,7 +286,7 @@ public class WorkspaceRestService implements IRestService {
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
 			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
@@ -314,7 +315,7 @@ public class WorkspaceRestService implements IRestService {
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response deleteFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
 			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
-		String user = request.getRemoteUser();
+		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
 		}
