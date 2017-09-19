@@ -543,6 +543,11 @@
 		 	<artifactId>dirigible-ide-git</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-repository</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		<!-- Resources Plugins -->
 		<dependency>

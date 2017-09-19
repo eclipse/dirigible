@@ -51,7 +51,7 @@ public class RepositoryRestService implements IRestService {
 			if (!collection.exists()) {
 				return Response.status(Status.NOT_FOUND).build();
 			}
-			return Response.ok().entity(processor.renderTree(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
+			return Response.ok().entity(processor.renderRepository(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
 		if (resource.isBinary()) {
 			return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();

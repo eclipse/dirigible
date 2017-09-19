@@ -3,15 +3,15 @@ package org.eclipse.dirigible.runtime.repository.json;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Collection {
+public class Repository {
 
-	private static final String TYPE_COLLECTION = "collection";
+	private static final String TYPE_REPOSITORY = "repository";
 
 	private String name;
 
 	private String path;
 
-	private String type = TYPE_COLLECTION;
+	private String type = TYPE_REPOSITORY;
 
 	private List<Collection> collections = new ArrayList<Collection>();
 
