@@ -207,6 +207,17 @@
 			</releases>
 		</repository>
 	</repositories>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
 
 	<issueManagement>
 		<url>http://bugs.dirigible.io</url>
@@ -430,6 +441,7 @@
 		<module>resources</module>
 
 		<module>releng/war-all</module>
+		<module>releng/desktop-all</module>
 	</modules>
 
 </project>

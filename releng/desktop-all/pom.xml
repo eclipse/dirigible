@@ -1,0 +1,633 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-parent</artifactId>
+		<version>${dirigible.version}</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+    <name>Desktop - All</name>
+	<artifactId>dirigible-desktop-all</artifactId>
+	<packaging>war</packaging>
+	
+
+	<build>
+	
+	
+		<pluginManagement>
+	      <plugins>
+	        <plugin>
+	          <groupId>org.apache.tomcat.maven</groupId>
+	          <artifactId>tomcat7-maven-plugin</artifactId>
+	          <version>${tomcat.maven.version}</version>
+	          <dependencies>
+	          <dependency>
+	            <groupId>org.apache.tomcat.embed</groupId>
+	            <artifactId>tomcat-embed-core</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-util</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-coyote</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-api</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-jdbc</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-dbcp</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-servlet-api</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-jsp-api</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-jasper</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-jasper-el</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-el-api</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-catalina</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-tribes</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-catalina-ha</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-annotations-api</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat</groupId>
+	            <artifactId>tomcat-juli</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	
+	          <dependency>
+	            <groupId>org.apache.tomcat.embed</groupId>
+	            <artifactId>tomcat-embed-logging-juli</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	          <dependency>
+	            <groupId>org.apache.tomcat.embed</groupId>
+	            <artifactId>tomcat-embed-logging-log4j</artifactId>
+	            <version>${tomcat.version}</version>
+	          </dependency>
+	          
+	          </dependencies>
+	        </plugin>
+	      </plugins>
+	    </pluginManagement>
+	
+	
+	
+		<finalName>ROOT</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<inherited>true</inherited>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<!-- <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>true</failOnMissingWebXml>
+					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+					<warName>ROOT</warName>
+				</configuration>
+			</plugin> -->
+
+			<!-- Include only unit tests for maven-surefire-plugin that is run in -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!-- Do not define argLine here, it will overwrite the JaCoCo settings!
+						argLine should be defined as property in the properties section. -->
+					<skipTests>${skip.tests}</skipTests>
+					<excludes>
+						<exclude>**/integration/**/*Test.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<skipTests>${skip.tests}</skipTests>
+					<includes>
+						<include>**/integration/**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>${tomcat.maven.version}</version>
+				<executions>
+					<execution>
+						<id>tomcat-run</id>
+						<goals>
+							<goal>exec-war-only</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<path>/</path>
+							<enableNaming>false</enableNaming>
+							<finalName>${project.artifactId}-${project.version}.jar</finalName>
+							<charset>utf-8</charset>
+					 
+							<!-- extra dependencies to add jdbc driver, mail jars, etc. -->
+							<extraDependencies>
+							  <extraDependency>
+							    <groupId>org.apache.derby</groupId>
+							    <artifactId>derby</artifactId>
+							    <version>${derby.version}</version>
+							  </extraDependency>
+							  <extraDependency>
+							    <groupId>javax.mail</groupId>
+							    <artifactId>mail</artifactId>
+							    <version>1.4.7</version>
+							  </extraDependency>
+							  <extraDependency>
+							  	<groupId>javax.websocket</groupId>
+								<artifactId>javax.websocket-api</artifactId>
+								<version>1.1</version>
+							  </extraDependency>
+							  <extraDependency>
+							    <groupId>org.apache.tomcat.embed</groupId>
+							    <artifactId>tomcat-embed-websocket</artifactId>
+							    <version>${tomcat.websocket.version}</version>
+							  </extraDependency>
+							</extraDependencies>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+		</plugins>
+	</build>
+
+	<dependencies>
+	
+		<!-- Commons -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-commons-config</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+	
+		<!-- API Facades -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-auth</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-core</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-http</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-utils</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-db</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-io</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- Repository -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-api</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-zip</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-local</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-master</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- Database -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-api</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-sql</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-persistence</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-data-structures</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-derby</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-managed</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- Core Services -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-core-extensions</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-core-git</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-core-security</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-core-scheduler</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-core-publisher</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- Runtime Services -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-core</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-repository</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-registry</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-extensions</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-security</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-transport</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-theme</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- Runtime IDE Services -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-workspaces</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-terminal</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-console</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-databases</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-publisher</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-git</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		
+		<!-- Engines Services -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-api</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-web</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-js</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-js-rhino</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-js-nashorn</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-js-v8</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-wiki</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- API - Javascript -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-javascript-core</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-javascript-http</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-javascript-utils</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-javascript-auth</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-javascript-db</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-javascript-io</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- IDE Plugins -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-core</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-terminal</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-console</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-orion</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-swagger</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-workspace</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-preview</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-help</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-database</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-git</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		
+		<!-- Resources Plugins -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-themes</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-angular</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-bootstrap</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-goldenlayout</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-jquery</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-jstree</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-resources-fonts</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+
+		<!-- External -->
+		<dependency>
+		  <groupId>javax.annotation</groupId>
+		  <artifactId>jsr250-api</artifactId>
+		  <version>${jsr250-api.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.3.3</version>
+		</dependency>
+
+		<!-- External - Jetty -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlets</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
+		<!-- <dependency>
+		 	<groupId>org.activiti</groupId>
+		 	<artifactId>activiti-engine</artifactId>
+		 	<version>${activiti.version}</version>
+		</dependency>
+	  	<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${com.h2database.version}</version>
+		</dependency> -->
+		
+	</dependencies>
+
+	<!-- default properties -->
+	<properties>
+		<argLine>-Dorg.slf4j.simpleLogger.defaultLogLevel=debug -DwaitForAsyncTasks=true</argLine>
+
+		<!-- integration server ports. Override them in maven with -D.... -->
+		<local.server.http.port>8888</local.server.http.port>
+		<local.server.ajp.port>8889</local.server.ajp.port>
+		<local.server.config.port>8890</local.server.config.port>
+		<local.server.jmx.port>8891</local.server.jmx.port>
+		<local.server.shutdown.port>8892</local.server.shutdown.port>
+		<!-- end integration server ports -->
+		
+		<tomcat.version>8.0.46</tomcat.version> <!-- 7.0.37, 8.0.46 -->
+		<tomcat.websocket.version>8.0.46</tomcat.websocket.version> <!-- 7.0.52, 8.0.46 -->
+		<tomcat.maven.version>2.2</tomcat.maven.version>
+
+	</properties>
+</project>
