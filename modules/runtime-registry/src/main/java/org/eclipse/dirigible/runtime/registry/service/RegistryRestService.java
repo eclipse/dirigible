@@ -32,7 +32,7 @@ public class RegistryRestService implements IRestService {
 	private RegistryProcessor processor;
 
 	@GET
-	@Path("/path:.*}")
+	@Path("/{path:.*}")
 	public Response getResource(@PathParam("path") String path) {
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
