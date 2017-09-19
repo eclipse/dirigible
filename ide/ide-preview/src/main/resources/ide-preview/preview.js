@@ -37,6 +37,9 @@ angular.module('preview', [])
 			case 'js':
 				url += '/js';
 				break;
+			case 'md':
+				url += '/wiki';
+				break;
 			default:
 				url += '/web';
 		}
