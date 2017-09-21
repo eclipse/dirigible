@@ -56,7 +56,7 @@ var ViewRegistry = function() {
 	
 };
 
-function LayoutController(viewRegistry){
+function LayoutController(viewRegistry, messageHub){
 
 	this.viewRegistry = viewRegistry;
 	
@@ -191,7 +191,7 @@ function LayoutController(viewRegistry){
 		return grid;
 	}.bind(this);
 	
-	this.messageHub = new FramesMessageHub();
+	this.messageHub = messageHub || new FramesMessageHub();
 	
 	this.listeners = {};
 	

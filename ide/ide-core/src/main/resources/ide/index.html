@@ -84,7 +84,7 @@
 		            </ul>
 				  </li>				  
 				  <li class="hidden-xs">
-					<a href=""><span class="fa fa-user user"></span> <span class="user" ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
+					<a href=""><span class="fa fa-user user"></span> <span class="user" ng-bind="wb.user.name"></span>&nbsp;</a>
 				  </li>
 				</ul>
 			</div>
@@ -104,30 +104,12 @@
 	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 	
 	<script src="ui/ui-layout.js"></script>
+	<script src="ui/ui-core-ng-modules.js"></script>
 	
 	<script type="text/javascript">
-		angular.module('workbench', ['ngResource'])
-		.service('Perspectives', ['$resource', function($resource){
-			return $resource('../../js/ide/services/perspectives.js');
-		}])
-		.service('Menu', ['$resource', function($resource){
-			return $resource('../../js/ide/services/menu.js');
-		}])
-		.service('Theme', ['$resource', function($resource){
-			var themeswitcher = $resource('/services/v3/core/theme?name=:themeName', {themeName: 'default'});
-			var themes = {
-				"default": "/services/v3/web/resources/themes/default/bootstrap.min.css",
-				"wendy" : "/services/v3/web/resources/themes/wendy/bootstrap.min.css",
-				"baroness" : "/services/v3/web/resources/themes/baroness/bootstrap.min.css"
-			};
-			return {
-				changeTheme: function(themeName){
-					return themeswitcher.get({'themeName':themeName});
-				},
-				themeUrl: function(themeName){
-					return themes[themeName];
-				}			
-			}
+		angular.module('workbench', ['ngResource', 'ideUiCore'])
+		.config(["messageHubProvider", function(messageHubProvider) {
+		  messageHubProvider.evtNamePrefix = 'workbench';
 		}])
 		.factory('Layout', [function(){
 			var layoutCtrl = new LayoutController(GLOBAL_VIEW_REGISTRY);
@@ -174,23 +156,11 @@
 			
 			return layoutCtrl;
 		}])
-		.factory('$messageHub', [function(){
-			var messageHub = new FramesMessageHub();	
-			var message = function(evtName, data){
-				messageHub.post({data: data}, 'workbench.' + evtName);
-			};
-			var on = function(topic, callback){
-				messageHub.subscribe(callback, topic);
-			};
-			return {
-				message: message,
-				on: on
-			};		
-		}])
-		.controller('WorkbenchController', ['Perspectives', 'Menu', 'Theme', 'Layout', '$messageHub', function (Perspectives, Menu, Theme, Layout, $messageHub) {
+		.controller('WorkbenchController', ['Perspectives', 'Menu', 'Theme', 'Layout', 'User', 'messageHub', function (Perspectives, Menu, Theme, Layout, User, $messageHub) {
 			this.perspectives = Perspectives.query();
 			this.menu = Menu.query();
 			this.Layout = Layout;
+			this.user = User.get();
 			
 			this.onClick = function(action, item, subItem) {
 				if(item.name === 'Show View'){
@@ -225,7 +195,7 @@
 			}.bind(this));
 			
 		}])
-		.controller('StatusBarController', ['$scope', '$messageHub', function ($scope, $messageHub) {
+		.controller('StatusBarController', ['$scope', 'messageHub', function ($scope, $messageHub) {
 			$messageHub.on('workbench.status.message', function(msg){
 				this.message = msg.data;
 				$scope.$apply();
