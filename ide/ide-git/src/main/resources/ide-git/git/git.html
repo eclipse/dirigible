@@ -15,7 +15,9 @@
 	<!-- AngularJS -->
 	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
 	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
-
+	<script src="/services/v3/web/resources/angular/1.4.7/angular-animate.min.js"></script>
+	<script src="/services/v3/web/resources/angular/1.4.7/angular-sanitize.min.js"></script>
+	
 	<!-- jsTree -->
 	<link href="/services/v3/core/theme/jstree.css" rel="stylesheet">
 	<script src="/services/v3/web/resources/jstree/3.3.4/jstree.js"></script>
@@ -27,7 +29,9 @@
 	<!-- Custom IDE Styles -->
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
 	
+	<script src="../../ide/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
 	<script src="git.js"></script>
+	
 
 </head>
 
@@ -35,15 +39,17 @@
 
 	<div>
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
-			<div class="btn-group">
-			  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="New">
-			    <i class="fa fa-plus"></i>
-			  </button>
-			  <div class="dropdown-menu">
-				  <a class="dropdown-item" href="#" ng-click="workspace.cloneProject()">Clone Project</a>
-				  <div class="dropdown-divider"></div>
-			  </div>
-			</div>
+		
+			<button type="button" class="btn btn-default" title="Clone Project" data-toggle="modal" data-target="#dialogClone"><i class="fa fa-plus"></i></button>
+			
+			<button id="pullAll" type="button" class="btn btn-default" title="Pull All Projects" data-toggle="modal" data-target="#dialogPullAll"><i class="fa fa-download"></i></button>
+			<button id="pushAll" type="button" class="btn btn-default" title="Push All Projects" data-toggle="modal" data-target="#dialogPushAll"><i class="fa fa-upload"></i></button>
+						
+			<button id="pull" type="button" class="btn btn-default" ng-show="false" title="Pull Project" data-toggle="modal" data-target="#dialogPull"><i class="fa fa-download"></i></button>
+			<button id="push" type="button" class="btn btn-default" ng-show="false" title="Push Project" data-toggle="modal" data-target="#dialogPush"><i class="fa fa-upload"></i></button>
+			<button id="reset" type="button" class="btn btn-default" ng-show="false" title="Reset Project" data-toggle="modal" data-target="#dialogReset"><i class="fa fa-recycle"></i></button>
+			<button id="share" type="button" class="btn btn-default" ng-show="false" title="Share Project" data-toggle="modal" data-target="#dialogShare"><i class="fa fa-share"></i></button>
+			
 			<select ng-model="workspace.selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
 		</div>
@@ -51,5 +57,260 @@
 	
 	<div class="workspace"></div>
 
+	<!-- Clone -->
+	<div class="modal fade" id="dialogClone" tabindex="-1" role="dialog" aria-labelledby="dialogCloneLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Clone Project</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-3 col-form-label">URL</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="https://github.com/myspace/myproject.git" ng-model="workspace.clone.url" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Username</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Password</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okClone()" data-toggle="modal" data-target="#dialogClone">Clone</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- Pull All -->
+	<div class="modal fade" id="dialogPullAll" tabindex="-1" role="dialog" aria-labelledby="dialogPullAllLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Pull All Projects from Git</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-12 col-form-label">Do you want to Pull all the Projects in the Workspace form Git?</label>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Username</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Password</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okPullAll()" data-toggle="modal" data-target="#dialogPullAll">Pull All</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- Pull -->
+	<div class="modal fade" id="dialogPull" tabindex="-1" role="dialog" aria-labelledby="dialogPullLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Pull Project from Git</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-12 col-form-label">Do you want to Pull the selected Project form Git?</label>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Username</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Password</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okPull()" data-toggle="modal" data-target="#dialogPull">Pull</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- Push All -->
+	<div class="modal fade" id="dialogPushAll" tabindex="-1" role="dialog" aria-labelledby="dialogPushAllLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Push All Projects from Git</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-12 col-form-label">Do you want to Push all the Projects in the Workspace form Git?</label>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Message</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="Commit message" ng-model="workspace.commitMessage" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Username</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Password</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">e-mail</label>
+				<div class="col-xs-6">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.email" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okPushAll()" data-toggle="modal" data-target="#dialogPushAll">Push All</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- Push -->
+	<div class="modal fade" id="dialogPush" tabindex="-1" role="dialog" aria-labelledby="dialogPushLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Push Project from Git</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-12 col-form-label">Do you want to Push the selected Project form Git?</label>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Message</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="Commit message" ng-model="workspace.commitMessage" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Username</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Password</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">e-mail</label>
+				<div class="col-xs-6">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.email" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okPush()" data-toggle="modal" data-target="#dialogPush">Push</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- Reset -->
+	<div class="modal fade" id="dialogReset" tabindex="-1" role="dialog" aria-labelledby="dialogResetLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Reset Project from Git</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-12 col-form-label">Do you want to Reset the selected Project form Git?</label>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Message</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="Commit message" ng-model="workspace.commitMessage" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Username</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Password</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okReset()" data-toggle="modal" data-target="#dialogReset">Reset</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- Share -->
+	<div class="modal fade" id="dialogShare" tabindex="-1" role="dialog" aria-labelledby="dialogShareLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Share Project to Git</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-12 col-form-label">Do you want to Share the selected Project to Git?</label>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Repository</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="https://github.com/myspace/myproject.git" ng-model="workspace.repository" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Branch</label>
+				<div class="col-xs-7">
+					<input class="form-control" type="text" placeholder="master" ng-model="workspace.branch" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Message</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="Commit message" ng-model="workspace.commitMessage" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Username</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Password</label>
+				<div class="col-xs-5">
+					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">e-mail</label>
+				<div class="col-xs-6">
+					<input class="form-control" type="text" placeholder="" ng-model="workspace.email" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okShare()" data-toggle="modal" data-target="#dialogShare">Share</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	
+	
 </body>
 </html>

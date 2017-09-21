@@ -8,8 +8,7 @@
     <title>Eclipse Dirigible &trade; | Workbench </title>
 
 	<link rel="shortcut icon" type="image/png" href="img/favicon.png" />
-	
-    	<link href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	
 	<!-- jQuery -->
 	<script src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
@@ -36,7 +35,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     
-	<link rel="stylesheet" href="/services/v3/web/resources/font-dirigible/font.css">
+	<!--link rel="stylesheet" href="/services/v3/web/resources/font-dirigible/font.css"-->
     
 </head>
 
@@ -111,88 +110,71 @@
 		.config(["messageHubProvider", function(messageHubProvider) {
 		  messageHubProvider.evtNamePrefix = 'workbench';
 		}])
-		.factory('Layout', [function(){
-			var layoutCtrl = new LayoutController(GLOBAL_VIEW_REGISTRY);
-		
-			var wsFileOpenListenerId = layoutCtrl.addListener('workspace.file.open', function(msg){
-				var newItemConfig = {
-					id: msg.data.path,
-					title: msg.data.label,
-					type: 'component',
-					componentName: 'Editor',
-					componentState:{ 
-						path: msg.data.path
-					}
-				};
-				//is an editor available to stack new children to it?
-				if(this.layout.root.getItemsById('editor')[0]){
-					//is already open?
-					if(this.layout.root.getItemsById(newItemConfig.id).length){
-						//replace content
-						var panel = this.layout.root.getItemsById(newItemConfig.id)[0];
-						panel.instance.setContent(newItemConfig.id)
-						panel.parent.setActiveContentItem(panel);
-					} else {
-						// open new tab
-						this.layout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
-					}
-				} else {
-					this.openView('editor')
-				}
-			});
-			
-			var wsFileDeletedListenerId = layoutCtrl.addListener('workspace.file.deleted', function(msg){
-				//TODO: check if deleted file is currently open in editor and close the editor window
-				console.log('file deleted recieved:'+ msg);
-			});
-					
-			var openViewListenerId = layoutCtrl.addListener('ide.perspective.views.open', function(msg){
-				var viewId = msg.data.viewId;
-				var regionId = msg.data.regionId;
-				layoutCtrl.open(viewId, regionId);
-			})
-			$(window).resize(function(){layoutCtrl.layout.updateSize()});//TODO: do not expose the native layout object
-			layoutCtrl.init($('.plane'), ['ws', 'import', 'editor', 'properties', 'console', 'preview']);
-			
-			return layoutCtrl;
+		.factory('LayoutCtrl', ['viewRegistry', function(viewRegistry){
+			var init = function(){
+				return viewRegistry.get().then(function(registry){
+					var layoutCtrl = new LayoutController(registry);
+					layoutCtrl.addListener('workspace.file.open', function(msg){
+						layoutCtrl.openEditor(msg.data.path, msg.data.label);
+					});
+					layoutCtrl.addListener('workspace.file.deleted', function(msg){
+						//TODO: check if deleted file is currently open in editor and close the editor window
+						console.log('file deleted recieved:'+ msg);
+					});
+					layoutCtrl.addListener('ide.perspective.views.open', function(msg){
+						var viewId = msg.data.viewId;
+						var regionId = msg.data.regionId;
+						layoutCtrl.open(viewId, regionId);
+					});
+					$(window).resize(function(){layoutCtrl.layout.updateSize()});//TODO: do not expose the native layout object
+					layoutCtrl.init($('.plane'), ['workspace', 'import', 'editor', 'properties', 'console', 'preview']);
+					return layoutCtrl;
+				});
+			}
+			return {
+				init: init
+			}
 		}])
-		.controller('WorkbenchController', ['Perspectives', 'Menu', 'Theme', 'Layout', 'User', 'messageHub', function (Perspectives, Menu, Theme, Layout, User, $messageHub) {
+		.controller('WorkbenchController', ['Perspectives', 'Menu', 'Theme', 'LayoutCtrl', 'User', 'messageHub', function (Perspectives, Menu, Theme, LayoutCtrl, User, $messageHub) {
+			
 			this.perspectives = Perspectives.query();
 			this.menu = Menu.query();
-			this.Layout = Layout;
 			this.user = User.get();
 			
-			this.onClick = function(action, item, subItem) {
-				if(item.name === 'Show View'){
-					Layout.openView(subItem.name.toLowerCase());
-				} else {
-					eval(action);
+			LayoutCtrl.init()
+			.then(function(layout){
+			
+				this.layout = layout;
+				
+				this.onClick = function(action, item, subItem) {
+					if(item.name === 'Show View'){
+						this.layout.openView(subItem.name.toLowerCase());
+					} else {
+						eval(action);//TODO: fixme!!!
+					}
+				};
+				
+				this.reset = function(){
+					this.layout.reset();
 				}
+				
+				this.selectTheme = function(themeName){
+					Theme.changeTheme(themeName);
+					var themeUrl = Theme.themeUrl(themeName);
+					$messageHub.message('theme.changed', themeUrl);
+				}
+				
+			}.bind(this));
+			
+			var reloadThemeCss = function(themeResourcesArr){
+				(themeResourcesArr||[]).forEach(function(themeResource){
+					$('link[href="/services/v3/core/theme/'+themeResource+'"]').remove().appendTo('head');
+				})
 			};
 			
-			this.reset = function(){
-				this.Layout.reset();
-			}
-			
-			this.selectTheme = function(themeName){
-				Theme.changeTheme(themeName);
-				var themeUrl = Theme.themeUrl(themeName);
-				$messageHub.message('theme.changed', themeUrl);
-			}
-			
 			$messageHub.on('workbench.theme.changed', function(msg){
-				var themeUrl = msg.data;
-				
-				$('a[href="/services/v3/core/theme/goldenlayout-theme.css"]').remove();
-				$('<link href="/services/v3/core/theme/goldenlayout-theme.css" rel="stylesheet" />').appendTo('head');
-				
-				$('a[href="/services/v3/core/theme/ide.css"]').remove();
-				$('<link href="/services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
-				
-				$('#theme-stylesheet').remove();
-				$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
-
-			}.bind(this));
+				reloadThemeCss(['bootstrap.min.css','goldenlayout-theme.css','ide.css']);
+			});
 			
 		}])
 		.controller('StatusBarController', ['$scope', 'messageHub', function ($scope, $messageHub) {

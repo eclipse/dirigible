@@ -62,7 +62,7 @@ public class GitRestService implements IRestService {
 	}
 
 	@POST
-	@Path("/pull/{project}")
+	@Path("/{project}/pull")
 	@Produces("application/json")
 	@ApiOperation("Pull Git Project into the Workspace")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Pulled") })
@@ -85,7 +85,7 @@ public class GitRestService implements IRestService {
 	}
 
 	@POST
-	@Path("/push/{project}")
+	@Path("/{project}/push")
 	@Produces("application/json")
 	@ApiOperation("Push Git Project into Git Repository")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Pushed") })
@@ -108,7 +108,7 @@ public class GitRestService implements IRestService {
 	}
 
 	@POST
-	@Path("/reset/{project}")
+	@Path("/{project}/reset")
 	@Produces("application/json")
 	@ApiOperation("Hard Reset Git Project in the Workspace")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Reset") })
@@ -120,7 +120,7 @@ public class GitRestService implements IRestService {
 	}
 
 	@POST
-	@Path("/share/{project}")
+	@Path("/{project}/share")
 	@Produces("application/json")
 	@ApiOperation("Share Git Project into Git Repository")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Shared") })
@@ -143,7 +143,7 @@ public class GitRestService implements IRestService {
 	}
 
 	@POST
-	@Path("/uppdate-dependencies/{project}")
+	@Path("/{project}/uppdate-dependencies")
 	@Produces("application/json")
 	@ApiOperation("Update Git Project Dependencies")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Dependencies Updated") })
