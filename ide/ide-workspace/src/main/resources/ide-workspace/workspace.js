@@ -212,10 +212,11 @@ WorkspaceService.prototype.createWorkspace = function(workspace){
 				return response.data;
 			});
 }
-WorkspaceService.prototype.createProject = function(workspace, project){
+WorkspaceService.prototype.createProject = function(workspace, project, wsTree){
 	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project).build();
 	return this.$http.post(url)
 			.then(function(response){
+				wsTree.refresh();
 				return response.data;
 			});
 }
@@ -756,8 +757,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	};
 	this.okCreateProject = function() {
 		if (this.projectName) {
-			workspaceService.createProject(this.selectedWs, this.projectName);
-			this.wsTree.refresh();
+			workspaceService.createProject(this.selectedWs, this.projectName, this.wsTree);
 		}
 	};
 	
@@ -767,6 +767,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	
 	this.exportWorkspace = function(){
 		exportService.exportProject(this.selectedWs + '/*');
+	};
+	
+	this.refresh = function(){
+		this.wsTree.refresh();
 	};
 	
 	$messageHub.on('workbench.theme.changed', function(msg){

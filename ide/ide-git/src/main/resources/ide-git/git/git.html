@@ -30,6 +30,7 @@
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
 	
 	<script src="../../ide/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	
 	<script src="git.js"></script>
 	
 
@@ -49,6 +50,8 @@
 			<button id="push" type="button" class="btn btn-default" ng-show="false" title="Push Project" data-toggle="modal" data-target="#dialogPush"><i class="fa fa-upload"></i></button>
 			<button id="reset" type="button" class="btn btn-default" ng-show="false" title="Reset Project" data-toggle="modal" data-target="#dialogReset"><i class="fa fa-recycle"></i></button>
 			<button id="share" type="button" class="btn btn-default" ng-show="false" title="Share Project" data-toggle="modal" data-target="#dialogShare"><i class="fa fa-share"></i></button>
+			
+			<button type="button" class="btn btn-default" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
 			
 			<select ng-model="workspace.selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>

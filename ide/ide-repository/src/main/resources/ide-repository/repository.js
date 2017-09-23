@@ -647,5 +647,9 @@ angular.module('repository', ['repository.config'])
 	this.exportRepository = function(){
 		exportService.exportRepository();
 	};
+	
+	this.refresh = function(){
+		this.repositoryTree.refresh();
+	};
 
 }]);

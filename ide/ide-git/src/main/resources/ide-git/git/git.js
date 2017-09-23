@@ -589,6 +589,9 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	this.okShare = function() {
 		gitService.shareProject(this.wsTree, this.selectedWs, this.selectedProject, this.repository, this.branch, this.commitMessage, this.username, this.password, this.email);
 	};
-
+	
+	this.refresh = function(){
+		this.wsTree.refresh();
+	};
 	
 }]);
