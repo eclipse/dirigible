@@ -14,10 +14,6 @@
 	<!-- jQuery -->
 	<script src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
 	
-	<!-- AngularJS -->
-	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
-	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
-	
 	<!-- Twitter Bootstrap with Theme Support -->
 	<link rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
 	<script src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
@@ -39,7 +35,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    	<link rel="stylesheet" href="/services/v3/web/resources/font-dirigible/font.css">
+	<!-- <link rel="stylesheet" href="/services/v3/web/resources/font-dirigible/font.css"> -->
 </head>
 
 <body ng-app="git" ng-controller="GitController">
@@ -53,9 +49,9 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">
+				<!-- <a class="navbar-brand" href="#">
 					<i class="logo logo-icon icon-dirigible">&#xe801;</i>
-				</a>
+				</a> -->
 			</div>
 			<div class="collapse navbar-collapse" id="navbar-collapse">
 				<ul id="main-menu" class="nav navbar-nav">
@@ -77,7 +73,15 @@
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-				  <li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li>
+				  <!-- <li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li> -->
+				  <li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Themes <b class="caret"></b></a>
+		          	<ul class="dropdown-menu">
+		                <li><a href="#" data-theme="default" class="theme-link" ng-click="wb.selectTheme('default')">Default</a></li>
+		                <li><a href="#" data-theme="wendy" class="theme-link" ng-click="wb.selectTheme('wendy')">Wendy</a></li>
+		                <li><a href="#" data-theme="baroness" class="theme-link" ng-click="wb.selectTheme('baroness')">Baroness</a></li>
+		            </ul>
+				  </li>
 				  <li class="hidden-xs">
 					<a href=""><span class="fa fa-user user"></span> <span class="user" ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
 				  </li>
@@ -93,6 +97,13 @@
 		<div class="plane"></div>
 	</div>
 	<div class="statusbar"></div>
+	
+	<!-- AngularJS -->
+	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+	
+	<!-- <script src="../ide/ui/ui-layout.js"></script>
+	<script src="../ide/ui/ui-core-ng-modules.js"></script> -->
 	
 	<script type="text/javascript">
 	

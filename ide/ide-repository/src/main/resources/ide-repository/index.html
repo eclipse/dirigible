@@ -38,6 +38,8 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+    <!-- <link rel="stylesheet" href="/services/v3/web/resources/font-dirigible/font.css"> -->
 </head>
 
 <body ng-app="repository" ng-controller="RepositoryController">
@@ -51,11 +53,9 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">
-					<!-- <img src="img/dirigible.png" style="width: 30px; margin-left: 10px"> -->
-					<!-- <i class="logo-icon icon-dirigible" style="color: #ffcc00">&#xe800;</i> -->
-					
-				</a>
+				<!-- <a class="navbar-brand" href="#">
+					<i class="logo logo-icon icon-dirigible">&#xe801;</i>
+				</a> -->
 			</div>
 			<div class="collapse navbar-collapse" id="navbar-collapse">
 				<ul id="main-menu" class="nav navbar-nav">
@@ -88,7 +88,7 @@
 	
 	<div class="shell">
 		<div class="sidebar list-group">
-			<a class="list-group-item" ng-repeat="perspective in perspectives" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
+			<a class="list-group-item" ng-repeat="perspective in perspectives" ng-class="{active: perspective.name==='Repository'}" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
 		</div>
 		<div class="plane"></div>
 	</div>
@@ -105,11 +105,20 @@
 				content: [{
 					type: 'row',
 					content:[{
-							id:"repository",
-							type: 'component',
-							componentName: 'Repository',
-							componentState: { label: 'Repository' },
-							width: 30
+							type: 'stack',
+							content: [{	
+								id:"repository",
+								type: 'component',
+								componentName: 'Repository',
+								componentState: { label: 'Repository' },
+								width: 30
+							},{	
+								id:"snapshot",
+								type: 'component',
+								componentName: 'Snapshot',
+								componentState: { label: 'Snapshot' },
+								width: 30
+							}]
 						},{
 							id: 'center',
 							type: 'column',
@@ -141,6 +150,9 @@
 			
 			this.layout.registerComponent( 'Repository', function( container, componentState ){
 				container.getElement().html('<iframe src="repository.html"></iframe>');
+			});
+			this.layout.registerComponent( 'Snapshot', function( container, componentState ){
+				container.getElement().html('<iframe src="snapshot.html"></iframe>');
 			});
 			
 			this.layout.registerComponent( 'Editor', function( container, componentState ){

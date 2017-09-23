@@ -33,7 +33,7 @@ import io.swagger.annotations.Authorization;
  * Front facing REST service serving the transport requests for projects
  */
 @Singleton
-@Path("/transport/project")
+@Path("/transport")
 @Api(value = "IDE - Transport - Project", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class TransportProjectRestService implements IRestService {
@@ -42,7 +42,7 @@ public class TransportProjectRestService implements IRestService {
 	private TransportProcessor processor;
 
 	@POST
-	@Path("{workspace}")
+	@Path("/project/{workspace}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Import Project from Zip")
@@ -56,7 +56,7 @@ public class TransportProjectRestService implements IRestService {
 	}
 	
 	@GET
-	@Path("{workspace}/{project}")
+	@Path("/project/{workspace}/{project}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	@ApiOperation("Export Project as Zip")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Project Exported") })
@@ -69,6 +69,31 @@ public class TransportProjectRestService implements IRestService {
 		}
 		byte[] zip = processor.exportProject(workspace, project);
 		return Response.ok().header("Content-Disposition",  "attachment; filename=\"" + project + "-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
+	}
+	
+	@POST
+	@Path("/snapshot")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Import Snapshot from Zip")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Snapshot Imported") })
+	public Response importSnapshot(
+			@ApiParam(value = "The Zip file(s) containing the Snapshot contents", required = true) @Multipart("file") List<byte[]> files) throws RepositoryImportException {
+		for (byte[] file : files) {
+			processor.importSnapshot(file);
+		}		
+		return Response.ok().build();
+	}
+	
+	@GET
+	@Path("/snapshot")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@ApiOperation("Export Snapshot as Zip")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Snapshot Exported") })
+	public Response exportSnapshot() throws RepositoryExportException {
+		SimpleDateFormat pattern = new SimpleDateFormat("yyyyMMddhhmmss");
+		byte[] zip = processor.exportSnapshot();
+		return Response.ok().header("Content-Disposition",  "attachment; filename=\"repository-snapshot-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
 	}
 
 	@Override

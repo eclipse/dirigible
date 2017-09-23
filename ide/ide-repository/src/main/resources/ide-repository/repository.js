@@ -444,7 +444,7 @@ RepositoryTreeAdapter.prototype.exportProject = function(resource){
 
 angular.module('repository.config', [])
 	.constant('REPOSITORY_SVC_URL','/services/v3/core/repository')
-	.constant('EXPORT_SVC_URL','/services/v3/transport/repository')
+	.constant('EXPORT_SVC_URL','/services/v3/transport/snapshot')
 	
 angular.module('repository', ['repository.config'])
 .config(['$httpProvider', function($httpProvider) {
@@ -644,5 +644,8 @@ angular.module('repository', ['repository.config'])
 		repositoryService.typeMapping = $treeConfig[types];
 	this.repositoryTree.refresh();
 
+	this.exportRepository = function(){
+		exportService.exportRepository();
+	};
 
 }]);

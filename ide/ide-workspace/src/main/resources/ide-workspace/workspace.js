@@ -476,7 +476,7 @@ angular.module('workspace.config', [])
 	.constant('PUBLISH_SVC_URL','/services/v3/ide/publisher/request')
 	.constant('EXPORT_SVC_URL','/services/v3/transport/project')
 	
-angular.module('workspace', ['workspace.config'])
+angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
 	//check if response is error. errors currently are non-json formatted and fail too early
 	$httpProvider.defaults.transformResponse.unshift(function(data, headersGetter, status){
@@ -678,17 +678,7 @@ angular.module('workspace', ['workspace.config'])
 						tree.element.trigger('jstree.workspace.export', [node.original._file]);
 					}.bind(this)
 				}
-				
-				// ctxmenu.properties = {
-// 					"separator_before": true,
-// 					"label": "Properties...",
-// 					"action": function(data){
-// 						var tree = $.jstree.reference(data.reference);
-// 						var node = tree.get_node(data.reference);
-// 						tree.element.trigger('jstree.workspace.file.properties', [node.original._file]);
-// 					}
-// 				}
-				
+
 				return ctxmenu;
 			}
 		}
@@ -722,14 +712,22 @@ angular.module('workspace', ['workspace.config'])
 	this.workspaces;
 	this.selectedWs;
 	
-	workspaceService.listWorkspaceNames()
+	
+	
+	this.refreshWorkspaces = function() {
+		workspaceService.listWorkspaceNames()
 		.then(function(workspaceNames) {
 			this.workspaces = workspaceNames;
-			if(this.workspaces[0]) {
+			if(this.workspaceName) {
+				this.selectedWs = this.workspaceName;
+				this.workspaceSelected()
+			} else if(this.workspaces[0]) {
 				this.selectedWs = this.workspaces[0];
 				this.workspaceSelected()					
 			} 
 		}.bind(this));
+	};
+	this.refreshWorkspaces();
 	
 	this.workspaceSelected = function(){
 		if (this.wsTree) {
@@ -744,16 +742,21 @@ angular.module('workspace', ['workspace.config'])
 	};
 	
 	this.createWorkspace = function(){
-		var workspace = prompt("Workspace Name: ", "workspace");
-		if (workspace) {
-			workspaceService.createWorkspace(workspace);
+		$('#createWorkspace').click();
+	};
+	this.okCreateWorkspace = function() {
+		if (this.workspaceName) {
+			workspaceService.createWorkspace(this.workspaceName);
+			this.refreshWorkspaces();
 		}
 	};
 	
 	this.createProject = function(){
-		var project = prompt("Project Name: ", "project");
-		if (project) {
-			workspaceService.createProject(this.selectedWs, project);
+		$('#createProject').click();
+	};
+	this.okCreateProject = function() {
+		if (this.projectName) {
+			workspaceService.createProject(this.selectedWs, this.projectName);
 			this.wsTree.refresh();
 		}
 	};

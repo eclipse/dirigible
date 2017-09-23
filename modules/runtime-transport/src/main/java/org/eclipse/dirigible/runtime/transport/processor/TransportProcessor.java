@@ -8,6 +8,7 @@ import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +47,14 @@ public class TransportProcessor {
 
 	private IProject getProject(IWorkspace workspaceApi, String project) {
 		return workspaceApi.getProject(project);
+	}
+	
+	public void importSnapshot(byte[] content) {
+		repository.importZip(content, IRepositoryStructure.SEPARATOR, true, false, null);
+	}
+
+	public byte[] exportSnapshot() {
+		return repository.exportZip(IRepositoryStructure.SEPARATOR, true);
 	}
 
 	
