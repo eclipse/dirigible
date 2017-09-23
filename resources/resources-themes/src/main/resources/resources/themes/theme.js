@@ -18,6 +18,7 @@
 		        var themeUrl = themes[$(this).attr('data-theme')];
 		        themesheet.attr('href',themeUrl);
 		        $.get( "/services/v3/core/theme?name=" + themeName);
+		        location.reload();
 	    	});
 		});
 	});

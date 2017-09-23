@@ -50,9 +50,9 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">
+				<!-- <a class="navbar-brand" href="#">
 					<i class="logo logo-icon icon-dirigible">&#xe801;</i>
-				</a>
+				</a> -->
 			</div>
 			<div class="collapse navbar-collapse" id="navbar-collapse">
 				<ul id="main-menu" class="nav navbar-nav">
@@ -161,20 +161,10 @@
 				this.selectTheme = function(themeName){
 					Theme.changeTheme(themeName);
 					var themeUrl = Theme.themeUrl(themeName);
-					$messageHub.message('theme.changed', themeUrl);
+					Theme.reload();
 				}
 				
 			}.bind(this));
-			
-			var reloadThemeCss = function(themeResourcesArr){
-				(themeResourcesArr||[]).forEach(function(themeResource){
-					$('link[href="/services/v3/core/theme/'+themeResource+'"]').remove().appendTo('head');
-				})
-			};
-			
-			$messageHub.on('workbench.theme.changed', function(msg){
-				reloadThemeCss(['bootstrap.min.css','goldenlayout-theme.css','ide.css']);
-			});
 			
 		}])
 		.controller('StatusBarController', ['$scope', 'messageHub', function ($scope, $messageHub) {

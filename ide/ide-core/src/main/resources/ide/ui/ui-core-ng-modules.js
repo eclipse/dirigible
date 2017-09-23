@@ -40,7 +40,10 @@ angular.module('ideUiCore', ['ngResource'])
 		},
 		themeUrl: function(themeName){
 			return themes[themeName];
-		}			
+		},
+		reload: function(){
+			location.reload();
+		}
 	}
 }])
 .service('Perspectives', ['$resource', function($resource){
