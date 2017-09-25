@@ -131,4 +131,100 @@ angular.module('ideUiCore', ['ngResource'])
 	return {
 		get: get
 	};
-}]);
+}])
+.factory('Layouts', [function(){
+	return {
+		manager: undefined
+	};
+}])
+.directive('menu', ['$resource', 'Theme', 'User', 'Layouts', function($resource, Theme, User, Layouts){
+	return {
+		restrict: 'AE',
+		transclude: true,
+		replace: 'true',
+		scope: {
+			url: '@menuDataUrl',
+			menu:  '=menuData'
+		},
+		link: function(scope, el, attrs){
+			var url = scope.url;
+			function loadMenu(){
+				scope.menu = $resource(url).query();
+			}
+			if(!scope.menu && url)
+				loadMenu.call(scope);
+			scope.menuClick = function(item, subItem) {
+				if(item.name === 'Show View'){
+					// open view
+					Layouts.manager.openView(subItem.name.toLowerCase());
+				} else if(item.name === 'Open Perspective'){
+					// open perspective`
+					window.open(subItem.onClick.substring(subItem.onClick.indexOf('(')+2, subItem.onClick.indexOf(',')-1));//TODO: change the menu service ot provide paths instead
+				}						
+			};
+			scope.selectTheme = function(themeName){
+				Theme.changeTheme(themeName);
+				var themeUrl = Theme.themeUrl(themeName);
+				Theme.reload();
+			};
+			scope.user = User.get();
+		},
+		templateUrl: 'ui/tmpl/menu.html'
+	}
+}])
+.directive('sidebar', ['Perspectives', function(Perspectives){
+	return {
+		restrict: 'AE',
+		transclude: true,
+		replace: 'true',
+		link: function(scope, el, attrs){
+			scope.perspectives = Perspectives.query();
+		},
+		templateUrl: 'ui/tmpl/sidebar.html'
+	}
+}])
+.directive('statusBar', ['messageHub', function(messageHub){
+	return {
+		restrict: 'AE',
+		scope: {
+			statusBarTopic: '@'
+		},
+		link: function(scope, el, attrs){
+			messageHub.on(scope.statusBarTopic || 'status.message', function(msg){
+				scope.message = msg.data;
+			});
+		}
+	}
+}])
+.directive('viewsLayout', ['viewRegistry', 'Layouts', function(viewRegistry, Layouts){
+	return {
+		restrict: 'AE',
+		scope: {
+			viewsLayoutModel: '=',
+			viewsLayoutViews: '@',
+		},
+		link: function(scope, el, attrs){
+			var views;
+			if(scope.layoutViews){
+				views = scope.layoutViews.split(',');
+			} else {
+				views =  scope.viewsLayoutModel.views;
+			}
+			var eventHandlers = scope.viewsLayoutModel.events;
+			
+			viewRegistry.get().then(function(registry){
+				scope.layoutManager = new LayoutController(registry);
+				if(eventHandlers){
+					Object.keys(eventHandlers).forEach(function(evtName){
+						var handler = eventHandlers[evtName];
+						if(typeof handler === 'function')
+							scope.layoutManager.addListener(evtName, handler);
+					});
+				}
+				$(window).resize(function(){scope.layoutManager.layout.updateSize()});
+				scope.layoutManager.init(el, views);
+				Layouts.manager = scope.layoutManager;
+			});
+		}
+	}
+}])	;

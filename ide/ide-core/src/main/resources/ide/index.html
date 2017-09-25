@@ -26,77 +26,18 @@
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
 	
 	<script src="ui/message-hub.js"></script>
-	
-	
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    
-	<!--link rel="stylesheet" href="/services/v3/web/resources/font-dirigible/font.css"-->
     
 </head>
 
 <body ng-app="workbench" ng-controller="WorkbenchController as wb">
 
-	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-		<div class="container-flex">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<!-- <a class="navbar-brand" href="#">
-					<i class="logo logo-icon icon-dirigible">&#xe801;</i>
-				</a> -->
-			</div>
-			<div class="collapse navbar-collapse" id="navbar-collapse">
-				<ul id="main-menu" class="nav navbar-nav">
-					<li ng-class="{dropdown: !!wb.menu.items}" ng-repeat="menuItem in wb.menu">
-						<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="wb.onClick(menuItem.onClick, item)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
-						<a ng-show="menuItem.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ menuItem.name }}</a>
-						<ul class="dropdown-menu">
-							<li ng-repeat="item in menuItem.items">
-								<a ng-hide="item.items" href="{{item.link}}" ng-click="wb.onClick(item.onClick, item)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
-								<a ng-show="item.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ item.name }}</a>
-								<ul class="dropdown-submenu">
-									<li ng-repeat="subItem in item.items">
-										<a href="{{subItem.link}}" ng-click="wb.onClick(subItem.onClick, item, subItem)" target="{{subItem.newTab ? '_blank' : '_self'}}">{{ subItem.name }}</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-				  <!--li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li-->
-				  <li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Themes <b class="caret"></b></a>
-		          	<ul class="dropdown-menu">
-		                <li><a href="#" data-theme="default" class="theme-link" ng-click="wb.selectTheme('default')">Default</a></li>
-		                <li><a href="#" data-theme="wendy" class="theme-link" ng-click="wb.selectTheme('wendy')">Wendy</a></li>
-		                <li><a href="#" data-theme="baroness" class="theme-link" ng-click="wb.selectTheme('baroness')">Baroness</a></li>
-		            </ul>
-				  </li>				  
-				  <li class="hidden-xs">
-					<a href=""><span class="fa fa-user user"></span> <span class="user" ng-bind="wb.user.name"></span>&nbsp;</a>
-				  </li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<div menu menu-data-url="../../js/ide/services/menu.js"></div>
 	
 	<div class="shell">
-		<div class="sidebar list-group">
-			<a class="list-group-item" ng-repeat="perspective in wb.perspectives" ng-class="{active: perspective.name==='Workbench'}" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
-		</div>
-		<div class="plane"></div>
+		<div class="sidebar list-group" sidebar></div>
+		<div class="plane" views-layout views-layout-model="wb.layoutModel"></div>
 	</div>
-	<div class="statusbar" ng-controller="StatusBarController as statusbar">{{statusbar.message}}</div>
+	<div class="statusbar" status-bar>{{message}}</div>
 	
 	<!-- AngularJS -->
 	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
@@ -108,70 +49,32 @@
 	<script type="text/javascript">
 		angular.module('workbench', ['ngResource', 'ideUiCore'])
 		.config(["messageHubProvider", function(messageHubProvider) {
-		  messageHubProvider.evtNamePrefix = 'workbench';
-		}])
-		.factory('LayoutCtrl', ['viewRegistry', function(viewRegistry){
-			var init = function(){
-				return viewRegistry.get().then(function(registry){
-					var layoutCtrl = new LayoutController(registry);
-					layoutCtrl.addListener('workspace.file.open', function(msg){
-						layoutCtrl.openEditor(msg.data.path, msg.data.label);
-					});
-					layoutCtrl.addListener('workspace.file.deleted', function(msg){
+			messageHubProvider.evtNamePrefix = 'workbench';
+		}])	
+		.controller('WorkbenchController', ['Layouts', function (Layouts) {
+			
+			this.layoutModel = {
+				views: ['workspace', 'import', 'editor', 'properties', 'console', 'preview'],
+				events: {
+					'workspace.file.open': function(msg){
+						Layouts.manager.openEditor(msg.data.path, msg.data.label);
+					},
+					'workspace.file.deleted': function(msg){
 						//TODO: check if deleted file is currently open in editor and close the editor window
 						console.log('file deleted recieved:'+ msg);
-					});
-					layoutCtrl.addListener('ide.perspective.views.open', function(msg){
+					},
+					'ide.perspective.views.open': function(msg){
 						var viewId = msg.data.viewId;
 						var regionId = msg.data.regionId;
-						layoutCtrl.open(viewId, regionId);
-					});
-					$(window).resize(function(){layoutCtrl.layout.updateSize()});//TODO: do not expose the native layout object
-					layoutCtrl.init($('.plane'), ['workspace', 'import', 'editor', 'properties', 'console', 'preview']);
-					return layoutCtrl;
-				});
-			}
-			return {
-				init: init
-			}
-		}])
-		.controller('WorkbenchController', ['Perspectives', 'Menu', 'Theme', 'LayoutCtrl', 'User', 'messageHub', function (Perspectives, Menu, Theme, LayoutCtrl, User, $messageHub) {
-			
-			this.perspectives = Perspectives.query();
-			this.menu = Menu.query();
-			this.user = User.get();
-			
-			LayoutCtrl.init()
-			.then(function(layout){
-			
-				this.layout = layout;
-				
-				this.onClick = function(action, item, subItem) {
-					if(item.name === 'Show View'){
-						this.layout.openView(subItem.name.toLowerCase());
-					} else {
-						eval(action);//TODO: fixme!!!
+						Layouts.manager.open(viewId, regionId);
 					}
-				};
-				
-				this.reset = function(){
-					this.layout.reset();
 				}
-				
-				this.selectTheme = function(themeName){
-					Theme.changeTheme(themeName);
-					var themeUrl = Theme.themeUrl(themeName);
-					Theme.reload();
-				}
-				
-			}.bind(this));
+			};
 			
-		}])
-		.controller('StatusBarController', ['$scope', 'messageHub', function ($scope, $messageHub) {
-			$messageHub.on('workbench.status.message', function(msg){
-				this.message = msg.data;
-				$scope.$apply();
-			}.bind(this));
+			this.reset = function(){
+				Layouts.manager.reset();
+			};
+					
 		}]);
 	</script>
 	
