@@ -41,8 +41,8 @@ public class Xml2JsonTest {
 			System.out.println(xml);
 			InputStream inXml = Xml2JsonTest.class.getResourceAsStream(xmlFile);
 			String xmlExpected = IOUtils.toString(inXml);
-			normalizeLineEndings(xmlExpected);
-			normalizeLineEndings(xml);
+			xmlExpected = normalizeLineEndings(xmlExpected);
+			xml = normalizeLineEndings(xml);
 			assertEquals(xmlExpected, xml);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -50,10 +50,11 @@ public class Xml2JsonTest {
 		}
 	}
 
-	private void normalizeLineEndings(String content) {
-		content.replace("\r\n", "\n");
-		content.replace("\n\r", "\n");
-		content.replace("\r", "\n");
+	private String normalizeLineEndings(String content) {
+		content = content.replace("\r\n", "\n");
+		content = content.replace("\n\r", "\n");
+		content = content.replace("\r", "\n");
+		return content;
 	}
 
 	@Test
