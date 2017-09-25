@@ -1,11 +1,11 @@
 exports.getView = function() {
 	var view = {
-			"id":"terminal",
-			"name":"Terminal",
+			"id":"preview",
+			"name":"Preview",
 			"factory":"frame",
 			"region":"center-bottom",
-			"label":"Terminal",
-			"link":"../ide-terminal/terminal.html"
+			"label":"Preview",
+			"link":"../ide-preview/preview.html"
 	};
 	return view;
 }
