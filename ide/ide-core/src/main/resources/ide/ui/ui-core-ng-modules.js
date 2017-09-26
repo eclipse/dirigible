@@ -105,20 +105,17 @@ angular.module('ideUiCore', ['ngResource'])
 				.then(function(data){
 					//TODO: load everyhting from the sevice instead of transforming, once its features all data we need here
 					data = data.map(function(v){
-						v.id = v.name.toLowerCase();
-						v.label = v.name;
-						v.factory = 'frame';
+						v.id = v.id || v.name.toLowerCase();
+						v.label = v.label || v.name;
+						v.factory = v.factory || 'frame';
 						v.settings = {
 							"path": v.link
 						}
-						if(['workspace','import'].indexOf(v.id)>-1)
-							v.region = 'left-top';
-						else if(['console','preview','properties','terminal'].indexOf(v.id)>-1)
-							v.region = 'center-bottom';
+						v.region = v.region || 'left-top';
 						return v;
 					});
 					data.push({ "id": "editor", "factory": "Editor", "region": "center-middle", "label":"Editor", "settings": {}});
-					data.push({ "id": "preview", "factory": "frame", "region": "center-bottom", "label":"Preview", "settings": {"path":  "../ide-preview/preview.html"}});
+					//data.push({ "id": "preview", "factory": "frame", "region": "center-bottom", "label":"Preview", "settings": {"path":  "../ide-preview/preview.html"}});
 					data.push({ "id": "properties", "factory": "frame", "region": "center-bottom", "label":"Properties", "settings": {"path":  "../ide/properties.html"}});
 					//register views
 					data.forEach(function(viewDef){
