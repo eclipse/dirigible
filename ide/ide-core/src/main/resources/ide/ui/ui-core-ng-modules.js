@@ -69,25 +69,28 @@ angular.module('ideUiCore', ['ngResource'])
 /**
  * Creates a map object associating a view factory function with a name (id)
  */
-.factory('ViewFactories', function(){
-	return {
-		"frame": function(container, componentState){
-			container.setTitle(componentState.label || 'View');
-			container.getElement().empty().html( '<iframe src="'+componentState.path+'"></iframe>' );
-		},
-		"Editor": function(container, componentState){
-			this.setContent = function(path){
-				if (path) {
-					container.getElement().empty().html( '<iframe src="../ide-orion/editor.html?file='+path+'"></iframe>' );
-				} else {
-					container.setTitle( 'Welcome' );
-					container.getElement().empty().html( '<iframe src="welcome.html"></iframe>' );
-				}
-				
-			};
-			this.setContent(componentState.path);
-		}
-	}
+.provider('ViewFactories', function(){
+	this.factories = {
+			"frame": function(container, componentState){
+				container.setTitle(componentState.label || 'View');
+				container.getElement().empty().html( '<iframe src="'+componentState.path+'"></iframe>' );
+			},
+			"editor": function(container, componentState){
+				this.setContent = function(path){
+					if (path) {
+						container.getElement().empty().html( '<iframe src="../ide-orion/editor.html?file='+path+'"></iframe>' );
+					} else {
+						container.setTitle("Welcome");
+						container.getElement().empty().html( '<iframe src="/services/v3/web/ide/welcome.html"></iframe>' );
+					}
+					
+				};
+				this.setContent(componentState.path);
+			}
+	};
+	this.$get = [function viewFactoriesFactory() {
+		return this.factories;
+	}];
 })
 /**
  * Wrap the ViewRegistry class in an angular service object for dependency injection
@@ -103,7 +106,6 @@ angular.module('ideUiCore', ['ngResource'])
 	var get = function(){
 		return $resource('../../js/ide/services/views.js').query().$promise
 				.then(function(data){
-					//TODO: load everyhting from the sevice instead of transforming, once its features all data we need here
 					data = data.map(function(v){
 						v.id = v.id || v.name.toLowerCase();
 						v.label = v.label || v.name;
@@ -114,9 +116,12 @@ angular.module('ideUiCore', ['ngResource'])
 						v.region = v.region || 'left-top';
 						return v;
 					});
-					data.push({ "id": "editor", "factory": "Editor", "region": "center-middle", "label":"Editor", "settings": {}});
-					//data.push({ "id": "preview", "factory": "frame", "region": "center-bottom", "label":"Preview", "settings": {"path":  "../ide-preview/preview.html"}});
+					//no extension point. provisioned "manually"
+					data.push({ "id": "editor", "factory": "editor", "region": "center-middle", "label":"Editor", "settings": {}});
+					//no extension point yet
+					data.push({ "id": "result", "factory": "frame", "region": "center-bottom", "label":"Result", "settings": {"path":  "../ide-database/sql/result.html"}});
 					data.push({ "id": "properties", "factory": "frame", "region": "center-bottom", "label":"Properties", "settings": {"path":  "../ide/properties.html"}});
+					data.push({ "id": "sql", "factory": "frame", "region": "center-middle", "label":"SQL", "settings": {"path":  "../ide-database/sql/editor.html"}});
 					//register views
 					data.forEach(function(viewDef){
 						ViewRegistrySvc.view(viewDef.id, viewDef.factory, viewDef.region, viewDef.label,  viewDef.settings);
@@ -166,7 +171,7 @@ angular.module('ideUiCore', ['ngResource'])
 			};
 			scope.user = User.get();
 		},
-		templateUrl: 'ui/tmpl/menu.html'
+		templateUrl: '/services/v3/web/ide/ui/tmpl/menu.html'
 	}
 }])
 .directive('sidebar', ['Perspectives', function(Perspectives){
@@ -174,10 +179,13 @@ angular.module('ideUiCore', ['ngResource'])
 		restrict: 'AE',
 		transclude: true,
 		replace: 'true',
+		scope: {
+			active: '@'
+		},
 		link: function(scope, el, attrs){
 			scope.perspectives = Perspectives.query();
 		},
-		templateUrl: 'ui/tmpl/sidebar.html'
+		templateUrl: '/services/v3/web/ide/ui/tmpl/sidebar.html'
 	}
 }])
 .directive('statusBar', ['messageHub', function(messageHub){

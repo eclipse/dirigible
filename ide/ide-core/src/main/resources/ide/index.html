@@ -30,8 +30,8 @@
 	<div menu menu-data-url="../../js/ide/services/menu.js"></div>
 	
 	<div class="shell">
-		<div class="sidebar list-group" sidebar></div>
-		<div class="plane" views-layout views-layout-model="wb.layoutModel"></div>
+		<div class="sidebar list-group" sidebar active="Workbench"></div>
+		<div id="workbench" class="plane" views-layout views-layout-model="wb.layoutModel"></div>
 	</div>
 	<div class="statusbar" status-bar>{{message}}</div>
 	
@@ -46,7 +46,7 @@
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 
 	<!-- GoldenLayout with Theme Support -->
-	<script type="text/javascript" src="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.js"></script>
+	<script type="text/javascript" src="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
 	<script type="text/javascript" src="ui/message-hub.js"></script>	
 	<script type="text/javascript" src="ui/ui-layout.js"></script>

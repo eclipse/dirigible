@@ -183,8 +183,10 @@ function LayoutController(viewRegistry, messageHub){
 		var grid = copy(this.regions.main);
 		if(views){
 			Object.values(views).map(function(view){
-				view = copy(view);
-				addView(views, view, grid);
+				if(view){
+					view = copy(view);
+					addView(views, view, grid);			
+				}
 				return view;
 			}.bind(this));
 		}	
@@ -219,39 +221,54 @@ function LayoutController(viewRegistry, messageHub){
 		  }
 		}
 	};
-	
-	this.init = function(containerEl, viewNames){
+	/**
+	 * Provide id to enable save/restore state for browser's localStorage. No id will implicitly always reconstruct the instance and will not attempt future state changes save.
+	 * Providing an id and the reconstruct flag set to true will not retrive from local storage last state, but will subscribe and save the reconstructed instance future changes.
+	 * The layout will be always reconstructed on first init regardless of the reconstruct flag.
+	 */
+	this.init = function(containerEl, viewNames, id, reconstruct){
+		
 		this.containerEl = containerEl;
 		this.viewNames = viewNames;
+		id = id || $(containerEl).attr("id");
 		
-		var views = {};
-		viewNames.forEach(function(viewName){
-			views[viewName] = this.viewRegistry.view(viewName);
-		}.bind(this));
-		this.config = {
-			dimensions: {
-				headerHeight: 26,
-				borderWidth: 3
-			},
-			content: [this.layoutViews.call(this, views)]
-		};
-		
-		var savedState = localStorage.getItem('DIRIGIBLE.IDE.GL.state');
-		var cfg = this.config;
-		if( savedState !== null ) {
-			cfg = JSON.parse(savedState);
+		if(id){
+			if(!reconstruct){
+				//load from localStorage
+				var savedState = localStorage.getItem('DIRIGIBLE.IDE.GL.state.'+ id);
+				if(savedState !== null) {
+					this.config = JSON.parse(savedState);
+				}				
+			}
+		} 
+		if(!id || reconstruct || !this.config){
+			//reconstruct (ignore previously saved state)
+			var views = {};
+			this.viewNames.forEach(function(viewName){
+				views[viewName] = this.viewRegistry.view(viewName);
+			}.bind(this));
+			this.config = {
+				dimensions: {
+					headerHeight: 26,
+					borderWidth: 3
+				},
+				content: [this.layoutViews.call(this, views)]
+			};
 		}
-		this.layout = new GoldenLayout(cfg, containerEl);
+		
+		this.layout = new GoldenLayout(this.config, containerEl);
 		
 		Object.keys(this.viewRegistry.factories()).forEach(function(factoryname){
 			this.layout.registerComponent(factoryname, this.viewRegistry.factory(factoryname));
 		}.bind(this));
 		
-		this.layout.on('stateChanged', function(){
-			//TODO: debounce or do taht only with save button! This fires a lot
-			var state = JSON.stringify( this.layout.toConfig() );
-			localStorage.setItem('DIRIGIBLE.IDE.GL.state', state );
-		}.bind(this));
+		if(id){
+			this.layout.on('stateChanged', function(){
+				//TODO: debounce or do that only with save button! This fires a lot
+				var state = JSON.stringify( this.layout.toConfig() );
+				localStorage.setItem('DIRIGIBLE.IDE.GL.state.'+ id, state );
+			}.bind(this));			
+		}
 		
 		this.layout.init();
 	};
@@ -281,7 +298,7 @@ function LayoutController(viewRegistry, messageHub){
 			id: resourcePath,
 			title: resourceLabel,
 			type: 'component',
-			componentName: 'Editor',
+			componentName: 'editor',
 			componentState:{ 
 				path: resourcePath
 			}
