@@ -73,17 +73,18 @@ angular.module('ideUiCore', ['ngResource'])
 	this.factories = {
 			"frame": function(container, componentState){
 				container.setTitle(componentState.label || 'View');
-				container.getElement().empty().html( '<iframe src="'+componentState.path+'"></iframe>' );
+					$('<iframe>').attr('src', componentState.path).appendTo(container.getElement().empty());
 			},
 			"editor": function(container, componentState){
 				this.setContent = function(path){
+					var src;
 					if (path) {
-						container.getElement().empty().html( '<iframe src="../ide-orion/editor.html?file='+path+'"></iframe>' );
+						src = '../ide-orion/editor.html?file='+path;
 					} else {
 						container.setTitle("Welcome");
-						container.getElement().empty().html( '<iframe src="/services/v3/web/ide/welcome.html"></iframe>' );
+						src = '/services/v3/web/ide/welcome.html';
 					}
-					
+					$('<iframe>').attr('src', src).appendTo(container.getElement().empty());
 				};
 				this.setContent(componentState.path);
 			}
