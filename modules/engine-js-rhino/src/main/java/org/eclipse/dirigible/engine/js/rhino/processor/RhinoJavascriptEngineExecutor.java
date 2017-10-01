@@ -36,6 +36,9 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
 
+		module = trimPathParameters(module, MODULE_EXT_JS);
+		module = trimPathParameters(module, MODULE_EXT_RHINO);
+
 		Object result = null;
 
 		ModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();

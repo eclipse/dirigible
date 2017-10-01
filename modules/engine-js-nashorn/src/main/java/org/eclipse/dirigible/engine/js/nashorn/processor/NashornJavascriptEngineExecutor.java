@@ -31,6 +31,9 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
 
+		module = trimPathParameters(module, MODULE_EXT_JS);
+		module = trimPathParameters(module, MODULE_EXT_NASHORN);
+
 		Object result = null;
 
 		ScriptEngineManager engineManager = new ScriptEngineManager();

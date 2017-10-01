@@ -40,7 +40,7 @@ import io.swagger.annotations.Authorization;
  */
 @Singleton
 @Path("/ide/databases")
-@Api(value = "Core - Databases", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@Api(value = "IDE - Databases", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class DatabaseRestService implements IRestService {
 
