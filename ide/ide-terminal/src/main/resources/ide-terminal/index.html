@@ -1,173 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    	<meta charset="utf-8">
-    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-    	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    	<title>Eclipse Dirigible &trade; | Terminal </title>
+    <title>Eclipse Dirigible &trade; | Terminal </title>
 
 	<link rel="shortcut icon" type="image/png" href="../ide/img/favicon.png" />
 	
-    	<link href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
-	
-	<!-- jQuery -->
-	<script src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
-	
-	<!-- AngularJS -->
-	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
-	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
-	
+	<!-- FontAwesome icon set -->
+    <link type="text/css" href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		
 	<!-- Twitter Bootstrap with Theme Support -->
-	<link rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
-	<script src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
-	
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+
 	<!-- GoldenLayout with Theme Support -->
-	<script type="text/javascript" src="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.js"></script>
 	<link type="text/css" rel="stylesheet" href="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/goldenlayout-theme.css" />
 	
 	<!-- Custom IDE Styles -->
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
-	
-	<!-- <script src="../ide/ui/message-hub.js"></script> -->
-	
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-	<!-- <link rel="stylesheet" href="/services/v3/web/resources/font-dirigible/font.css"> -->
 </head>
 
-<body ng-app="terminal" ng-controller="TerminalController">
+<body ng-app="terminal" ng-controller="TerminalController as db">
 
-	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-		<div class="container-flex">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<!-- <a class="navbar-brand" href="#">
-					<i class="logo logo-icon icon-dirigible">&#xe801;</i>
-				</a> -->
-			</div>
-			<div class="collapse navbar-collapse" id="navbar-collapse">
-				<ul id="main-menu" class="nav navbar-nav">
-					<li ng-class="{dropdown: !!menu.items}" ng-repeat="menuItem in menu">
-						<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="onClick(menuItem.onClick)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
-						<a ng-show="menuItem.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ menuItem.name }}</a>
-						<ul class="dropdown-menu">
-							<li ng-repeat="item in menuItem.items">
-								<a ng-hide="item.items" href="{{item.link}}" ng-click="onClick(item.onClick)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
-								<a ng-show="item.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ item.name }}</a>
-								<ul class="dropdown-submenu">
-									<li ng-repeat="subItem in item.items">
-										<a href="{{subItem.link}}" ng-click="onClick(subItem.onClick)" target="{{subItem.newTab ? '_blank' : '_self'}}">{{ subItem.name }}</a>
-									</li>
-								</ul>
-								
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-				  <li class="dropdown" ng-include="'/services/v3/web/resources/themes/themes.html'"></li>
-				  <li class="hidden-xs">
-					<a href=""><span class="fa fa-user user"></span> <span class="user" ng-include="'../../js/ide/services/user-name.js'"></span>&nbsp;</a>
-				  </li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<div menu menu-data-url="../../js/ide-terminal/services/menu-terminal.js"></div>
 	
 	<div class="shell">
-		<div class="sidebar list-group">
-			<a class="list-group-item" ng-repeat="perspective in perspectives" ng-class="{active: perspective.name==='Terminal'}" title="{{perspective.name}}" href="{{perspective.link}}" target="_blank"><i class="fa fa-{{perspective.image}} fa-2x"></i></a>
-		</div>
-		<div class="plane"></div>
+		<div class="sidebar list-group" sidebar active="Terminal"></div>
+		<div id="terminal" class="plane" views-layout views-layout-model="db.layoutModel"></div>
 	</div>
-	<div class="statusbar"></div>
+	<div class="statusbar" status-bar>{{message}}</div>
+	
+	<!-- jQuery -->
+	<script type="text/javascript" src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	
+	<!-- Twitter Bootstrap with Theme Support -->
+	<script type="text/javascript" src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
+	
+	<!-- AngularJS -->
+	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+
+	<!-- GoldenLayout with Theme Support -->
+	<script type="text/javascript" src="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
+
+	<script type="text/javascript" src="../ide/ui/message-hub.js"></script>	
+	<script type="text/javascript" src="../ide/ui/ui-layout.js"></script>
+	<script type="text/javascript" src="../ide/ui/ui-core-ng-modules.js"></script>
 	
 	<script type="text/javascript">
-	
-		function LayoutController(){
-			this.config = {
-				dimensions: {
-					headerHeight: 26,
-					borderWidth: 3
-				},
-				content: [{
-					type: 'row',
-					content:[{
-							id:"ws",
-							type: 'component',
-							componentName: 'Terminal',
-							componentState: { label: 'Terminal' }
-						}]
-				}]
+		angular.module('terminal', ['ngResource', 'ideUiCore'])
+		.config(["messageHubProvider", function(messageHubProvider) {
+			messageHubProvider.evtNamePrefix = 'terminal';
+		}])	
+		.controller('TerminalController', ['Layouts', function (Layouts) {
+			
+			this.layoutModel = {
+				views: ['terminal'],
+				events: {
+					'fileselected': function(msg){
+						Layouts.manager.openEditor(msg.data.path, msg.data.label);
+					}
+				}
 			};
-			
-			this.layout = new GoldenLayout(this.config, $('.plane') );
-			
-			this.layout.registerComponent( 'Terminal', function( container, componentState ){
-				container.getElement().html('<iframe src="terminal.html"></iframe>');
-			});
-			
-			
-			this.init = function(){
-				this.layout.init();
-			}
-			
-		};
-		
-		function uuidv4() {
-		  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-		  )
-		}
-	
-		var layoutCtrl = new LayoutController();
-		
-		$(window).resize(function() {
-  			layoutCtrl.layout.updateSize();
-		});
-		
-		
-		
-		layoutCtrl.init();
-		
+					
+		}]);
 	</script>
-	
-	<script type="text/javascript">
-		angular.module('terminal', []);
-		angular.module('terminal').controller('TerminalController', function ($scope, $http) {
-			
-			var url = '../../js/ide-terminal/services/menu-terminal.js';
-			$http.get(url)
-				.success(function(data) {
-					$scope.menu = data;
-			});
-			
-			$scope.onClick = function(action) {
-				eval(action);
-			};
-			
-			var urlPerspectives = '../../js/ide/services/perspectives.js';
-			$http.get(urlPerspectives)
-				.success(function(data) {
-					$scope.perspectives = data;
-			});
-		});
-	</script>
-	
-	<script src="/services/v3/web/resources/themes/theme.js"></script>
-	
 </body>
 
 </html>

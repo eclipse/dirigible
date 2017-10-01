@@ -163,7 +163,9 @@ angular.module('ideUiCore', ['ngResource'])
 				} else if(item.name === 'Open Perspective'){
 					// open perspective`
 					window.open(subItem.onClick.substring(subItem.onClick.indexOf('(')+2, subItem.onClick.indexOf(',')-1));//TODO: change the menu service ot provide paths instead
-				}						
+				} else {
+					eval(item.onClick);
+				}
 			};
 			scope.selectTheme = function(themeName){
 				Theme.changeTheme(themeName);
