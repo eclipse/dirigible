@@ -47,6 +47,11 @@ angular.module('preview', [])
 		this.previewUrl = url;
 		$scope.$apply();
 	}.bind(this));
+	
+	$messageHub.on('workspace.file.published', function(msg){
+		this.refresh();
+		$scope.$apply();
+	}.bind(this));
 
 }]).config(function($sceProvider) {
     $sceProvider.enabled(false);

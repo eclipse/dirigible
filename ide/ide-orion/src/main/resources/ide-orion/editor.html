@@ -4,7 +4,10 @@
 		<meta http-equiv="Content-Language" content="en-us">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Orion Editor</title>
-	   <link rel="stylesheet" type="text/css" href="/services/v3/core/theme/orion.css"/>
+		
+		<script src="../ide/ui/message-hub.js"></script>
+		
+	    <link rel="stylesheet" type="text/css" href="/services/v3/core/theme/orion.css"/>
         <style>
 	        body {
 	            overflow: hidden;
@@ -100,6 +103,8 @@
 		</script>
 		
 		<script>
+			var messageHub = new FramesMessageHub();
+		
 			function saveContents(text) {
 				console.log('Save called...');
 				if (file) {
@@ -111,6 +116,7 @@
 						}
 					}
 					xhr.send(text);
+					messageHub.post({data: file}, 'editor.file.saved');
 				} else {
 					console.error('file parameter is not present in the request');
 				}

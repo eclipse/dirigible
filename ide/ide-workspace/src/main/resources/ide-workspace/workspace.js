@@ -530,7 +530,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		this.message('file.properties', fileDescriptor);
 	};
 	var announcePublish = function(fileDescriptor){
-		this.message('file.publish', fileDescriptor);
+		this.message('file.published', fileDescriptor);
 	};
 	var announceExport = function(fileDescriptor){
 		this.message('project.exported', fileDescriptor);
@@ -787,6 +787,14 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		
 		$('#theme-stylesheet').remove();
 		$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
+	}.bind(this));
+	
+	$messageHub.on('editor.file.saved', function(msg){
+		var filePath = msg.data;
+		// TODO auto-publish configuration
+		publishService.publish(filePath).then(function(filePath){
+			return $messageHub.announcePublish();
+		}.bind(this));
 	}.bind(this));
 
 }]);
