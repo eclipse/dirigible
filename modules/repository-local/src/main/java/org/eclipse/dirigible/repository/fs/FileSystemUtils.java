@@ -202,7 +202,8 @@ public class FileSystemUtils {
 		} catch (java.nio.file.InvalidPathException e) {
 			return false;
 		}
-		return Files.exists(path);
+		return path.toFile().exists();
+		// return Files.exists(path);
 	}
 
 	public static boolean directoryExists(String location) {
@@ -220,6 +221,7 @@ public class FileSystemUtils {
 		} catch (java.nio.file.InvalidPathException e) {
 			return false;
 		}
-		return Files.isDirectory(path);
+		return path.toFile().isDirectory();
+		// return Files.isDirectory(path);
 	}
 }

@@ -167,11 +167,12 @@ WorkspaceService.prototype.remove = function(filepath){
 };
 WorkspaceService.prototype.rename = function(oldName, newName, path){
 	var pathSegments = path.split('/');
-	if(pathSegments.length > 0){
+	if(pathSegments.length > 2){
 		var workspaceName = path.split('/')[1];
 		var url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('rename').build();
-		var sourcepath = new UriBuilder().path(path).path(oldName).build();
-		var targetpath = new UriBuilder().path(path).path(newName).build();
+		var parent = pathSegments.slice(2, -1);
+		var sourcepath = new UriBuilder().path(parent).path(oldName).build();
+		var targetpath = new UriBuilder().path(parent).path(newName).build();
 		return this.$http.post(url, {
 					source: sourcepath,
 					target: targetpath
@@ -187,8 +188,7 @@ WorkspaceService.prototype.move = function(filename, sourcepath, targetpath, wor
 	return this.$http.post(url, { 
 		source: sourcepath + '/' + filename,
 		target: targetpath + '/' + filename,
-	},
-	{headers: { 'Content-Type': ''}})
+	})
 };
 WorkspaceService.prototype.copy = function(){};
 WorkspaceService.prototype.load = function(wsResourcePath){
@@ -389,8 +389,8 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 				//this.jstree.reference(node).select_node(node);
 			}.bind(this))
 			.finally(function() {
-				this.jstree.refresh();
-			}.bind(this));		
+				this.refresh();
+			}.bind(this));
 	}
 };
 WorkspaceTreeAdapter.prototype.moveNode = function(sourceParentNode, node){
@@ -406,7 +406,10 @@ WorkspaceTreeAdapter.prototype.moveNode = function(sourceParentNode, node){
 				self.refresh(tagetParentNode, true).then(function(){
 					self.$messageHub.announceFileMoved(targetpath+'/'+node.text, sourcepath, targetpath);
 				});
-			}.bind(this, sourceParentNode, tagetParentNode));
+			}.bind(this, sourceParentNode, tagetParentNode))
+			.finally(function() {
+				this.refresh();
+			}.bind(this));
 };
 WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
 	var type = node.original.type;

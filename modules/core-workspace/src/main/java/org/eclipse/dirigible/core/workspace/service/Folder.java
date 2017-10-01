@@ -9,8 +9,8 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IEntityInformation;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 
@@ -159,21 +159,21 @@ public class Folder implements IFolder {
 
 	@Override
 	public IFolder createFolder(String path) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		ICollection collection = this.getRepository().createCollection(fullPath);
 		return new Folder(collection);
 	}
 
 	@Override
 	public IFolder getFolder(String path) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		ICollection collection = this.getRepository().getCollection(fullPath);
 		return new Folder(collection);
 	}
 
 	@Override
 	public boolean existsFolder(String path) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		ICollection collection = this.getRepository().getCollection(fullPath);
 		return collection.exists();
 	}
@@ -190,34 +190,34 @@ public class Folder implements IFolder {
 
 	@Override
 	public void deleteFolder(String path) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		this.getRepository().removeCollection(fullPath);
 	}
 
 	@Override
 	public IFile createFile(String path, byte[] content) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		IResource resource = this.getRepository().createResource(fullPath, content);
 		return new File(resource);
 	}
 
 	@Override
 	public IFile createFile(String path, byte[] content, boolean isBinary, String contentType) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		IResource resource = this.getRepository().createResource(fullPath, content, isBinary, contentType);
 		return new File(resource);
 	}
 
 	@Override
 	public IFile getFile(String path) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		IResource resource = this.getRepository().getResource(fullPath);
 		return new File(resource);
 	}
 
 	@Override
 	public boolean existsFile(String path) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		IResource resource = this.getRepository().getResource(fullPath);
 		return resource.exists();
 	}
@@ -234,8 +234,12 @@ public class Folder implements IFolder {
 
 	@Override
 	public void deleteFile(String path) {
-		String fullPath = this.getPath() + IRepositoryStructure.SEPARATOR + path;
+		String fullPath = constructPath(path);
 		this.getRepository().removeResource(fullPath);
+	}
+
+	protected String constructPath(String path) {
+		return new RepositoryPath(new String[] { this.getPath(), path }).build();
 	}
 
 }

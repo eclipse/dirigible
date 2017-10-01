@@ -14,7 +14,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
@@ -46,7 +48,7 @@ public class WorkspaceManagerService implements IRestService {
 	@POST
 	@Path("{workspace}/copy")
 	public Response copy(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
-			throws URISyntaxException, UnsupportedEncodingException {
+			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -56,12 +58,12 @@ public class WorkspaceManagerService implements IRestService {
 			return Response.status(Status.BAD_REQUEST).entity("Source and Target paths have to be present in the body of the request").build();
 		}
 
-		RepositoryPath sourcePath = new RepositoryPath(content.getSource());
+		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
 		if (sourcePath.getSegments().length == 0) {
 			return Response.status(Status.BAD_REQUEST).entity("Source path is empty").build();
 		}
 
-		RepositoryPath targetPath = new RepositoryPath(content.getTarget());
+		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
 		if (targetPath.getSegments().length == 0) {
 			return Response.status(Status.BAD_REQUEST).entity("Target path is empty").build();
 		}
@@ -92,7 +94,7 @@ public class WorkspaceManagerService implements IRestService {
 	@POST
 	@Path("{workspace}/move")
 	public Response move(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
-			throws URISyntaxException, UnsupportedEncodingException {
+			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return Response.status(Status.FORBIDDEN).build();
@@ -102,12 +104,12 @@ public class WorkspaceManagerService implements IRestService {
 			return Response.status(Status.BAD_REQUEST).entity("Source and Target paths have to be present in the body of the request").build();
 		}
 
-		RepositoryPath sourcePath = new RepositoryPath(content.getSource());
+		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
 		if (sourcePath.getSegments().length == 0) {
 			return Response.status(Status.BAD_REQUEST).entity("Source path is empty").build();
 		}
 
-		RepositoryPath targetPath = new RepositoryPath(content.getTarget());
+		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
 		if (targetPath.getSegments().length == 0) {
 			return Response.status(Status.BAD_REQUEST).entity("Target path is empty").build();
 		}
@@ -124,8 +126,10 @@ public class WorkspaceManagerService implements IRestService {
 		String targetFilePath = targetPath.constructPathFrom(1);
 		if (processor.existsFile(workspace, sourceProject, sourceFilePath)) {
 			processor.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
-		} else {
+		} else if (processor.existsFolder(workspace, sourceProject, sourceFilePath)) {
 			processor.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+		} else {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Path does not exists.").build();
 		}
 
 		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
@@ -134,7 +138,7 @@ public class WorkspaceManagerService implements IRestService {
 	@POST
 	@Path("{workspace}/rename")
 	public Response rename(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
-			throws URISyntaxException, UnsupportedEncodingException {
+			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		return move(workspace, content, request);
 	}
 

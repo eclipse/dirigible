@@ -10,7 +10,9 @@
 
 package org.eclipse.dirigible.repository.api;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -35,8 +37,16 @@ public class RepositoryPath {
 		this(repositoryPath.segments);
 	}
 
-	public RepositoryPath(String... segments) {
-		this.segments = Arrays.copyOf(segments, segments.length);
+	public RepositoryPath(String... input) {
+		List<String> allSegments = new ArrayList<String>();
+		for (String segment : input) {
+			final StringTokenizer tokenizer = new StringTokenizer(segment, IRepository.SEPARATOR);
+			String[] segmentParts = new String[tokenizer.countTokens()];
+			for (int i = 0; i < segmentParts.length; ++i) {
+				allSegments.add(tokenizer.nextToken());
+			}
+		}
+		this.segments = allSegments.toArray(new String[] {});
 		this.path = toString();
 	}
 
@@ -90,10 +100,16 @@ public class RepositoryPath {
 		}
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
-			builder.append(IRepository.SEPARATOR);
+			if (!segment.equals(IRepository.SEPARATOR)) {
+				builder.append(IRepository.SEPARATOR);
+			}
 			builder.append(segment);
 		}
 		return builder.toString();
+	}
+
+	public String build() {
+		return toString();
 	}
 
 	public String getPath() {
