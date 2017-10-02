@@ -776,6 +776,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		this.wsTree.refresh();
 	};
 	
+	this.saveAll = function(){
+		$messageHub.message('editor.save', {data: ""});
+	};
+	
 	$messageHub.on('workbench.theme.changed', function(msg){
 		var themeUrl = msg.data;
 		
