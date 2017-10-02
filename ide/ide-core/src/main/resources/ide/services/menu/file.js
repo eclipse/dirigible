@@ -15,53 +15,13 @@ exports.getMenu = function() {
 			"name":"File",
 			"link":"#",
 			"order":"100",
-			"onClick":"alert('File has been clicked')",
 			"items":[
 				{
-					"name":"Import",
+					"name":"Save All",
 					"link":"#",
-					"order":"110",
-					"onClick":"alert('Import has been clicked')",
-					"items":[
-						{
-							"name":"Project",
-							"link":"#",
-							"order":"111",
-							"onClick":"alert('Import Project has been clicked')"
-						},
-						{
-							"name":"Snapshot",
-							"link":"#",
-							"order":"112",
-							"onClick":"alert('Import Snapshot has been clicked')"
-						}
-					]
-				},
-				{
-					"name":"Export",
-					"link":"#",
-					"order":"120",
-					"onClick":"alert('Export has been clicked')",
-					"items":[
-						{
-							"name":"Project",
-							"link":"#",
-							"order":"111",
-							"onClick":"alert('Export Project has been clicked')"
-						},
-						{
-							"name":"Snapshot",
-							"link":"#",
-							"order":"112",
-							"onClick":"alert('Export Snapshot has been clicked')"
-						}
-					]
-				},
-				{
-					"name":"Preferences",
-					"link":"#",
-					"order":"190",
-					"onClick":"alert('Preferences has been clicked')"
+					"order":"105",
+					"event":"editor.save",
+					"data": ""
 				}
 			]
 		};

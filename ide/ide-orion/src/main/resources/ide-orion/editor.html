@@ -74,15 +74,19 @@
 					name: ".eslintrc"
 				}];
 	
+			var orionEditor;
 			window.onload=function(){
 				var codeEdit = new orion.codeEdit();
 				var startup = function() {
 					codeEdit.create({parent: "embeddedEditor"}).then(function(editorViewer) {
+						orionEditor = editorViewer.editor;
 						editorViewer.inputManager.setAutoSaveTimeout(-1);
 						editorViewer.editor.addEventListener("InputChanged", function(evt) {
 					        if(evt.contentsSaved) {
 					        	var text = editorViewer.editor.getTextView().getText();
 						    	saveContents(text);
+							} else {
+								messageHub.post({data: file}, 'editor.file.dirty');
 							}
 					    });
 						editorViewer.setContents(contents, mode);
@@ -121,6 +125,10 @@
 					console.error('file parameter is not present in the request');
 				}
 			}
+			
+			messageHub.subscribe(function() {
+				saveContents(orionEditor.getText());
+			}, 'workbench.editor.save');
 		</script>
 		
     </head>

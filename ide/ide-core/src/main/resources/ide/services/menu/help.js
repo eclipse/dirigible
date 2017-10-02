@@ -21,25 +21,36 @@ exports.getMenu = function() {
 					"name":"Contents",
 					"link":"#",
 					"order":"910",
-					"onClick":"window.open('http://www.dirigible.io/help/index.html', '_blank')"
+					"event":"open",
+					"data": "http://www.dirigible.io/help/index.html"
 				},
 				{
 					"name":"API",
 					"link":"#",
 					"order":"915",
-					"onClick":"window.open('http://www.dirigible.io/api/index.html', '_blank')"
+					"event":"open",
+					"data": "http://www.dirigible.io/api/index.html"
 				},
 				{
 					"name":"Issues",
 					"link":"#",
-					"order":"915",
-					"onClick":"window.open('https://github.com/eclipse/dirigible/issues', '_blank')"
+					"order":"920",
+					"event":"open",
+					"data": "https://github.com/eclipse/dirigible/issues"
+				},
+				{
+					"name":"Wiki",
+					"link":"#",
+					"order":"920",
+					"event":"open",
+					"data": "https://github.com/eclipse/dirigible/wiki"
 				},
 				{
 					"name":"About",
 					"link":"#",
 					"order":"990",
-					"onClick":"window.open('http://www.dirigible.io', '_blank')"
+					"event":"open",
+					"data": "http://www.dirigible.io"
 				}
 			]
 		};

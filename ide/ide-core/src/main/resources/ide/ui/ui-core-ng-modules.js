@@ -140,7 +140,7 @@ angular.module('ideUiCore', ['ngResource'])
 		manager: undefined
 	};
 }])
-.directive('menu', ['$resource', 'Theme', 'User', 'Layouts', function($resource, Theme, User, Layouts){
+.directive('menu', ['$resource', 'Theme', 'User', 'Layouts', 'messageHub', function($resource, Theme, User, Layouts, messageHub){
 	return {
 		restrict: 'AE',
 		transclude: true,
@@ -164,7 +164,8 @@ angular.module('ideUiCore', ['ngResource'])
 					// open perspective`
 					window.open(subItem.onClick.substring(subItem.onClick.indexOf('(')+2, subItem.onClick.indexOf(',')-1));//TODO: change the menu service ot provide paths instead
 				} else {
-					eval(item.onClick);
+					//eval(item.onClick);
+					messageHub.message(item.event, item.data);
 				}
 			};
 			scope.selectTheme = function(themeName){

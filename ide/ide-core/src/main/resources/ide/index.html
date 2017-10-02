@@ -72,6 +72,12 @@
 						var viewId = msg.data.viewId;
 						var regionId = msg.data.regionId;
 						Layouts.manager.open(viewId, regionId);
+					},
+					'workbench.open': function(msg){
+						window.open(msg.data, '_blank');
+					},
+					'workbench.alert': function(msg){
+						alert(msg.data);
 					}
 				}
 			};
