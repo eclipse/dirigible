@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-    <name>WAR - All</name>
-	<artifactId>dirigible-war-all</artifactId>
+    <name>Server - All</name>
+	<artifactId>dirigible-server-all</artifactId>
 	<packaging>war</packaging>
 	
 
