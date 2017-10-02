@@ -160,3 +160,35 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .user {
 	color: #434344;
 }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: auto;
+}
+.key {
+  flex: 1 1 auto;
+  max-width: 15%;
+  padding: 2px 5px;
+  background: #e8e8e8;
+}
+.value {
+  flex: 2 1 auto;
+  padding: 2px 5px;
+}
+.striped-container .striped-item:nth-of-type(odd) {
+  background: #efefef;
+}
+.striped-container .striped-item:nth-of-type(odd) .key {
+  background: #ddd;
+}
+.striped-container .striped-item:nth-of-type(odd) .value {
+  background: #e8e8e8;
+}
+.striped-item:hover .value {
+  background: rgba(210, 210, 210, 0.85);
+}
+.striped-item:nth-of-type(odd):hover .value{
+  background: rgba(200, 200, 200, 0.85);
+}
