@@ -15,13 +15,11 @@
 	
 
 	<build>
-	
-	
 		<pluginManagement>
 	      <plugins>
 	        <plugin>
 	          <groupId>org.apache.tomcat.maven</groupId>
-	          <artifactId>tomcat7-maven-plugin</artifactId>
+	          <artifactId>tomcat8-maven-plugin</artifactId>
 	          <version>${tomcat.maven.version}</version>
 	          <dependencies>
 	          <dependency>
@@ -184,7 +182,7 @@
 			
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
+				<artifactId>tomcat8-maven-plugin</artifactId>
 				<version>${tomcat.maven.version}</version>
 				<executions>
 					<execution>
@@ -630,9 +628,9 @@
 		<local.server.shutdown.port>8892</local.server.shutdown.port>
 		<!-- end integration server ports -->
 		
-		<tomcat.version>8.0.46</tomcat.version> <!-- 7.0.37, 8.0.46 -->
-		<tomcat.websocket.version>8.0.46</tomcat.websocket.version> <!-- 7.0.52, 8.0.46 -->
-		<tomcat.maven.version>2.2</tomcat.maven.version>
+		<tomcat.version>8.5.2</tomcat.version> <!-- 7.0.37, 8.0.46 -->
+		<tomcat.websocket.version>8.5.2</tomcat.websocket.version> <!-- 7.0.52, 8.0.46 -->
+		<tomcat.maven.version>3.0-r1756463</tomcat.maven.version>
 
 	</properties>
 </project>

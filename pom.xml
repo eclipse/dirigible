@@ -208,6 +208,19 @@
 		</repository>
 	</repositories>
 	
+	<pluginRepositories>
+	    <pluginRepository>
+	      <id>alfresco</id>
+		  <url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+	      <snapshots>
+	        <enabled>true</enabled>
+	      </snapshots>
+	      <releases>
+	        <enabled>true</enabled>
+	      </releases>
+	    </pluginRepository>
+	</pluginRepositories>
+	
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
