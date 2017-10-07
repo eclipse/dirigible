@@ -225,12 +225,12 @@ WorkspaceService.prototype.createProject = function(workspace, project, wsTree){
 /**
  * Workspace Tree Adapter mediating the workspace service REST api and the jst tree componet working with it
  */
-var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, exportService, $messageHub){
+var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, exportService, messageHub){
 	this.treeConfig = treeConfig;
 	this.workspaceSvc = workspaceSvc;
 	this.publishService = publishService;
 	this.exportService = exportService;
-	this.$messageHub = $messageHub;
+	this.messageHub = messageHub;
 
 	this._buildTreeNode = function(f){
 		var children = [];
@@ -359,7 +359,7 @@ WorkspaceTreeAdapter.prototype.deleteNode = function(node){
 		var self = this;
 		return this.workspaceSvc.remove.apply(this.workspaceSvc, [path])
 				.then(function(){
-					self.$messageHub.announceFileDeleted(node.original._file);
+					self.messageHub.announceFileDeleted(node.original._file);
 				})
 				.finally(function () {
 					self.refresh();
@@ -375,7 +375,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 			.then(function(f){
 				node.original._file = f;
 				node.original._file.label = node.original._file.name;
-				this.$messageHub.announceFileCreated(f);
+				this.messageHub.announceFileCreated(f);
 			}.bind(this))
 			.catch(function(node, err){
 				this.jstree.delete_node(node);
@@ -385,7 +385,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 	} else {
 		this.workspaceSvc.rename.apply(this.workspaceSvc, [oldName, newName, node.original._file.path])
 			.then(function(data){
-				this.$messageHub.announceFileRenamed(node.original._file, oldName, newName);
+				this.messageHub.announceFileRenamed(node.original._file, oldName, newName);
 				//this.jstree.reference(node).select_node(node);
 			}.bind(this))
 			.finally(function() {
@@ -404,7 +404,7 @@ WorkspaceTreeAdapter.prototype.moveNode = function(sourceParentNode, node){
 			.then(function(sourceParentNode, tagetParentNode){
 				self.refresh(sourceParentNode, true);
 				self.refresh(tagetParentNode, true).then(function(){
-					self.$messageHub.announceFileMoved(targetpath+'/'+node.text, sourcepath, targetpath);
+					self.messageHub.announceFileMoved(targetpath+'/'+node.text, sourcepath, targetpath);
 				});
 			}.bind(this, sourceParentNode, tagetParentNode))
 			.finally(function() {
@@ -414,11 +414,11 @@ WorkspaceTreeAdapter.prototype.moveNode = function(sourceParentNode, node){
 WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
 	var type = node.original.type;
 	if(['folder','project'].indexOf(type)<0)
-		this.$messageHub.announceFileOpen(node.original._file);
+		this.messageHub.announceFileOpen(node.original._file);
 }
 WorkspaceTreeAdapter.prototype.clickNode = function(node){
 	var type = node.original.type;
-	this.$messageHub.announceFileSelected(node.original._file);
+	this.messageHub.announceFileSelected(node.original._file);
 };
 WorkspaceTreeAdapter.prototype.raw = function(){
 	return this.jstree;
@@ -460,12 +460,12 @@ WorkspaceTreeAdapter.prototype.refresh = function(node, keepState){
 			}.bind(this));
 };
 WorkspaceTreeAdapter.prototype.openNodeProperties = function(resource){
-	this.$messageHub.announceFilePropertiesOpen(resource);
+	this.messageHub.announceFilePropertiesOpen(resource);
 };
 WorkspaceTreeAdapter.prototype.publish = function(resource){
 	return this.publishService.publish(resource.path)
 	.then(function(){
-		return this.$messageHub.announcePublish(resource);
+		return this.messageHub.announcePublish(resource);
 	}.bind(this));
 };
 WorkspaceTreeAdapter.prototype.exportProject = function(resource){
@@ -493,22 +493,22 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		return data;
 	});
 }])
-.factory('$messageHub', [function(){
+.factory('messageHub', [function(){
 	var messageHub = new FramesMessageHub();	
-	var message = function(evtName, data){
-		messageHub.post({data: data}, 'workspace.' + evtName);
+	var send = function(evtName, data, absolute){
+		messageHub.post({data: data}, (absolute ? '' : 'workspace.') + evtName);
 	};
 	var announceFileSelected = function(fileDescriptor){
-		this.message('file.selected', fileDescriptor);
+		this.send('file.selected', fileDescriptor);
 	};
 	var announceFileCreated = function(fileDescriptor){
-		this.message('file.created', fileDescriptor);
+		this.send('file.created', fileDescriptor);
 	};
 	var announceFileOpen = function(fileDescriptor){
-		this.message('file.open', fileDescriptor);
+		this.send('file.open', fileDescriptor);
 	};
 	var announceFileDeleted = function(fileDescriptor){
-		this.message('file.deleted', fileDescriptor);
+		this.send('file.deleted', fileDescriptor);
 	};
 	var announceFileRenamed = function(fileDescriptor, oldName, newName){
 		var data = {
@@ -516,7 +516,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 			"oldName": oldName,
 			"newName": newName
 		};
-		this.message('file.renamed', data);
+		this.send('file.renamed', data);
 	};	
 	var announceFileMoved = function(fileDescriptor, sourcepath, targetpath){
 		var data = {
@@ -524,19 +524,19 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 			"sourcepath": sourcepath,
 			"targetpath": targetpath
 		};
-		this.message('file.moved', data);
+		this.send('file.moved', data);
 	};
 	var announceFilePropertiesOpen = function(fileDescriptor){
-		this.message('file.properties', fileDescriptor);
+		this.send('file.properties', fileDescriptor);
 	};
 	var announcePublish = function(fileDescriptor){
-		this.message('file.published', fileDescriptor);
+		this.send('file.published', fileDescriptor);
 	};
 	var announceExport = function(fileDescriptor){
-		this.message('project.exported', fileDescriptor);
+		this.send('project.exported', fileDescriptor);
 	};
 	return {
-		message: message,
+		send: send,
 		announceFileSelected: announceFileSelected,
 		announceFileCreated: announceFileCreated,
 		announceFileOpen: announceFileOpen,
@@ -707,10 +707,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 .factory('workspaceService', ['$http', '$window', 'WS_SVC_MANAGER_URL', 'WS_SVC_URL', '$treeConfig', function($http, $window, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
 	return new WorkspaceService($http, $window, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig);
 }])
-.factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', 'exportService', '$messageHub', function($treeConfig, WorkspaceService, publishService, exportService, $messageHub){
-	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, exportService, $messageHub);
+.factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', 'exportService', 'messageHub', function($treeConfig, WorkspaceService, publishService, exportService, messageHub){
+	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, exportService, messageHub);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', '$messageHub', function (workspaceService, workspaceTreeAdapter, publishService, exportService, $messageHub) {
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', 'messageHub', function (workspaceService, workspaceTreeAdapter, publishService, exportService, messageHub) {
 
 	this.wsTree;
 	this.workspaces;
@@ -777,10 +777,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	};
 	
 	this.saveAll = function(){
-		$messageHub.message('editor.save', {data: ""});
+		messageHub.send('workbench.editor.save', {data: ""}, true);
 	};
 	
-	$messageHub.on('workbench.theme.changed', function(msg){
+	messageHub.on('workbench.theme.changed', function(msg){
 		var themeUrl = msg.data;
 		
 		$('a[href="/services/v3/core/theme/jstree.css"]').remove();
@@ -793,12 +793,12 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
 	}.bind(this));
 	
-	$messageHub.on('editor.file.saved', function(msg){
+	messageHub.on('editor.file.saved', function(msg){
 		var filePath = msg.data;
 		// TODO auto-publish configuration
 		publishService.publish(filePath).then(function(filePath){
-			return $messageHub.announcePublish();
+			return messageHub.announcePublish();
 		}.bind(this));
-	}.bind(this));
+	}.bind(this), true);
 
 }]);

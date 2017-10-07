@@ -11,10 +11,10 @@ angular.module('ideUiCore', ['ngResource'])
 	//normalize prefix if any
 	this.evtNamePrefix = this.evtNamePrefix || '';
 	this.evtNamePrefix = this.evtNamePrefix ? (this.evtNamePrefix+this.evtNameDelimiter): this.evtNamePrefix;
-	var message = function(evtName, data){
+	var send = function(evtName, data, absolute){
 		if(!evtName)
 			throw Error('evtname argument must be a valid string, identifying an existing event');
-		messageHub.post({data: data}, this.evtNamePrefix + evtName);
+		messageHub.post({data: data}, (absolute ? '' : this.evtNamePrefix) + evtName);
 	}.bind(this);
 	var on = function(evtName, callbackFunc){
 		if(typeof callbackFunc !== 'function')
@@ -22,7 +22,7 @@ angular.module('ideUiCore', ['ngResource'])
 		messageHub.subscribe(callbackFunc, evtName);
 	};
 	return {
-		message: message,
+		send: send,
 		on: on
 	};
   }];
@@ -32,7 +32,8 @@ angular.module('ideUiCore', ['ngResource'])
 	var themes = {
 		"default": "/services/v3/web/resources/themes/default/bootstrap.min.css",
 		"wendy" : "/services/v3/web/resources/themes/wendy/bootstrap.min.css",
-		"baroness" : "/services/v3/web/resources/themes/baroness/bootstrap.min.css"
+		"baroness" : "/services/v3/web/resources/themes/baroness/bootstrap.min.css",
+		"simone" : "/services/v3/web/resources/themes/simone/bootstrap.min.css"
 	};
 	return {
 		changeTheme: function(themeName){
@@ -165,7 +166,7 @@ angular.module('ideUiCore', ['ngResource'])
 					window.open(subItem.onClick.substring(subItem.onClick.indexOf('(')+2, subItem.onClick.indexOf(',')-1));//TODO: change the menu service ot provide paths instead
 				} else {
 					//eval(item.onClick);
-					messageHub.message(item.event, item.data);
+					messageHub.send(item.event, item.data, true);
 				}
 			};
 			scope.selectTheme = function(themeName){

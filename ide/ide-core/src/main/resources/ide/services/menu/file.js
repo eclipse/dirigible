@@ -20,7 +20,7 @@ exports.getMenu = function() {
 					"name":"Save All",
 					"link":"#",
 					"order":"105",
-					"event":"editor.save",
+					"event":"workbench.editor.save",
 					"data": ""
 				}
 			]
