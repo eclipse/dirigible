@@ -186,3 +186,10 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .striped-item:nth-of-type(odd):hover .value{
   background: rgba(41, 41, 41, 0.85);
 }
+
+.modal {
+	color: #ccc;
+}
+.modal-backdrop.in{
+	opacity:.7;filter:alpha(opacity=50)
+}

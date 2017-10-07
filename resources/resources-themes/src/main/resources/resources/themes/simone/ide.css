@@ -9,8 +9,8 @@ iframe {
     height: 100%;
 }
 body {
-  background-color: #343436;
-  color: #f6f6f6;
+  background-color: #ebf3f9;
+  color: #163550;
 }
 .navbar {
 	margin-bottom: 0px !important;
@@ -42,9 +42,15 @@ body {
 .statusbar {
 	width: 100%;
 	height: 2em;
-	background: #555;
-	color: #ccc;
+	background: #4c91cd;
+	color: #fec600;
 	position: relative;
+}
+.lm_header .lm_tab {
+	background: #c3daee;
+}
+.lm_header .lm_active {
+    background: #9cc2e3;
 }
 .list-group-item {
   background: none !important;
@@ -53,8 +59,8 @@ body {
 
 a.list-group-item.hover,
 a.list-group-item:hover{
-  background-color: #555;
-  color: #fff;
+  background-color: #aaa;
+  color: #222;
 }
 
 nav.navbar {
@@ -72,7 +78,7 @@ nav.navbar .dropdown-menu{
 .navbar-inverse .navbar-nav>.open>a, 
 .navbar-inverse .navbar-nav>.open>a:focus, 
 .navbar-inverse .navbar-nav>.open>a:hover{
-  background-color: #555;
+  background-color: #aaa;
 }
 
 .lm_header,
@@ -93,20 +99,19 @@ nav.navbar .dropdown-menu{
   /*top: 1px;  */
 }
 .lm_header, .lm_splitter{
-  background-color: #292929;
+  background-color: #c3daee;
 }
 .lm_splitter{
   opacity: inherit;
 }
 .lm_items {
-  /*border: 1px solid #555;*/
+  /*border: 1px solid #aaa;*/
 	border: 0;
 }
 
 .vakata-context, .vakata-context ul {
     box-shadow: none;
 }
-
 .vakata-context li>a {
 	font-size: 11px;
     line-height: 2em;
@@ -114,45 +119,41 @@ nav.navbar .dropdown-menu{
     font-family: arial;
 	padding: 0 2rem;
 }
-
 .vakata-context li>a>i:empty {
     width: 2rem;
     line-height: 2rem;
 }
-
 .vakata-context li>a>i {
 	height: 2.2rem;
 	margin: 0 0 0 -2rem;
 }
-
 .vakata-context li>a .vakata-contextmenu-sep {
 	height: 2.2rem;
 	margin: 0 .5em 0 0;
 }
-
 ul.vakata-context.jstree-contextmenu > li > a {
 	display: block;
 }
 ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	display: block;
-	color: #292929;
+	color: #cececf;
 	float:right;
 	margin-left: 2rem;
 }
 
 .view {
-	background-color: #929292;
-	color: #f6f6f6;
+	background-color: #ebf3f9;
+	color: #343436;
 }
 
 .logo {
 	font-weight: bold !important;
-	color: #eee;
+	color: #434344;
 	margin-left: 12px !important;
 }
 
 .user {
-	color: #eee;
+	color: #434344;
 }
 
 .row {
@@ -165,30 +166,30 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
   flex: 1 1 auto;
   max-width: 15%;
   padding: 2px 5px;
-  background: #292929;
+  background: #c3daee;
 }
 .value {
   flex: 2 1 auto;
   padding: 2px 5px;
 }
 .striped-container .striped-item:nth-of-type(odd) {
-  background: #565656;
+  background: #efefef;
 }
 .striped-container .striped-item:nth-of-type(odd) .key {
-  background: #222;
+  background: #b3daff;
 }
 .striped-container .striped-item:nth-of-type(odd) .value {
-  background: #292929;
+  background: #c3daee;
 }
 .striped-item:hover .value {
-  background: rgba(86, 86, 86, 0.85);
+  background: rgba(210, 210, 210, 0.85);
 }
 .striped-item:nth-of-type(odd):hover .value{
-  background: rgba(41, 41, 41, 0.85);
+  background: rgba(200, 200, 200, 0.85);
 }
 
 .modal {
-	color: #ccc;
+	color: #c3daee;
 }
 .modal-backdrop.in{
 	opacity:.7;filter:alpha(opacity=50)
