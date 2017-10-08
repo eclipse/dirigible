@@ -76,7 +76,7 @@
 		<!-- API Facades -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-auth</artifactId>
+		 	<artifactId>dirigible-api-security</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
@@ -279,7 +279,7 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-auth</artifactId>
+		 	<artifactId>dirigible-api-javascript-security</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>

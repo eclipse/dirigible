@@ -16,11 +16,11 @@ import java.net.UnknownHostException;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
-import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
+import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
 import org.eclipse.dirigible.core.workspace.api.IProject;

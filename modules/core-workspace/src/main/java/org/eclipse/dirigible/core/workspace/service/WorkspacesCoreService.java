@@ -6,7 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;

@@ -8,7 +8,7 @@
         <dependent-module archiveName="dirigible-commons-config-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Configurations/Commons - Configurations">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - auth/API - Facade - auth">
+        <dependent-module archiveName="dirigible-api-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - security/API - Facade - security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-commons-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - API/Commons - API">
@@ -155,7 +155,7 @@
         <dependent-module archiveName="dirigible-api-javascript-utils-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - utils/API - Javascript - utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-auth-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - auth/API - Javascript - auth">
+        <dependent-module archiveName="dirigible-api-javascript-security-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - security/API - Javascript - security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-db-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - db/API - Javascript - db">

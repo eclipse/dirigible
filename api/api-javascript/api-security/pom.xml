@@ -9,9 +9,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Javascript - auth</name>
-	<artifactId>dirigible-api-javascript-auth</artifactId>
-	<description>Authentication and Authorization Modules</description>
+	<name>API - Javascript - security</name>
+	<artifactId>dirigible-api-javascript-security</artifactId>
+	<description>Security Modules</description>
     <packaging>jar</packaging>
 
 	<scm>
@@ -21,8 +21,8 @@
 	</scm>
 	
 	<properties>
-		<content.repository.name>api-v3-auth</content.repository.name>
-		<content.project.name>auth</content.project.name>
+		<content.repository.name>api-v3-security</content.repository.name>
+		<content.project.name>security</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
 		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>

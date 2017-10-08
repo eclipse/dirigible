@@ -16,7 +16,7 @@ import java.net.UnknownHostException;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;

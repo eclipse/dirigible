@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
@@ -29,21 +29,21 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 
 @Singleton
 public class SecurityCoreService implements ISecurityCoreService {
-	
+
 	@Inject
 	private DataSource dataSource;
-	
+
 	@Inject
 	private PersistenceManager<RoleDefinition> rolesPersistenceManager;
-	
+
 	@Inject
 	private PersistenceManager<AccessDefinition> accessPersistenceManager;
-	
+
 	// used by the access security filter to minimize the performance implications on getting the whole list
 	private static final List<AccessDefinition> CACHE = Collections.synchronizedList(new ArrayList<AccessDefinition>());
-	
+
 	// Roles
-	
+
 	@Override
 	public RoleDefinition createRole(String name, String location, String description) throws AccessException {
 		RoleDefinition roleDefinition = new RoleDefinition();
@@ -52,7 +52,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		roleDefinition.setDescription(description);
 		roleDefinition.setCreatedBy(UserFacade.getName());
 		roleDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
-		
+
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -67,7 +67,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public RoleDefinition getRole(String name) throws AccessException {
 		try {
@@ -83,12 +83,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean existsRole(String name) throws AccessException {
 		return getRole(name) != null;
 	}
-	
+
 	@Override
 	public void removeRole(String name) throws AccessException {
 		try {
@@ -104,7 +104,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public void updateRole(String name, String location, String description) throws AccessException {
 		try {
@@ -123,7 +123,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public List<RoleDefinition> getRoles() throws AccessException {
 		try {
@@ -139,26 +139,27 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public RoleDefinition[] parseRoles(String json) {
 		return GsonHelper.GSON.fromJson(json, RoleDefinition[].class);
 	}
-	
+
 	@Override
 	public RoleDefinition[] parseRoles(byte[] json) {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), RoleDefinition[].class);
 	}
-	
+
 	@Override
 	public String serializeRoles(RoleDefinition[] roles) {
 		return GsonHelper.GSON.toJson(roles);
 	}
-	
+
 	// Access
-	
+
 	@Override
-	public AccessDefinition createAccessDefinition(String location, String uri, String method, String role, String description) throws AccessException {
+	public AccessDefinition createAccessDefinition(String location, String uri, String method, String role, String description)
+			throws AccessException {
 		AccessDefinition accessDefinition = new AccessDefinition();
 		accessDefinition.setLocation(location);
 		accessDefinition.setUri(uri);
@@ -167,7 +168,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		accessDefinition.setDescription(description);
 		accessDefinition.setCreatedBy(UserFacade.getName());
 		accessDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
-		
+
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -183,7 +184,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public AccessDefinition getAccessDefinition(long id) throws AccessException {
 		try {
@@ -199,26 +200,21 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public AccessDefinition getAccessDefinition(String uri, String method, String role) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = SqlFactory.getNative(connection)
-						.select()
-						.column("*")
-						.from("DIRIGIBLE_SECURITY_ACCESS")
-						.where("ACCESS_URI = ?")
-						.where("ACCESS_ROLE = ?")
-						.where("ACCESS_METHOD = ?")
-						.toString();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
+						.where("ACCESS_ROLE = ?").where("ACCESS_METHOD = ?").toString();
 				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method);
 				if (access.isEmpty()) {
 					return null;
 				}
 				if (access.size() > 1) {
-					throw new AccessException(format("Security Access duplication for URI [{0}] and Method [{1}] with Role [{2}]", uri, method, role));
+					throw new AccessException(
+							format("Security Access duplication for URI [{0}] and Method [{1}] with Role [{2}]", uri, method, role));
 				}
 				return access.get(0);
 			} finally {
@@ -229,14 +225,14 @@ public class SecurityCoreService implements ISecurityCoreService {
 		} catch (SQLException e) {
 			throw new AccessException(e);
 		}
-		
+
 	}
-	
+
 	@Override
 	public boolean existsAccessDefinition(String uri, String method, String role) throws AccessException {
 		return getAccessDefinition(uri, method, role) != null;
 	}
-	
+
 	@Override
 	public void removeAccessDefinition(long id) throws AccessException {
 		try {
@@ -252,7 +248,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public void updateAccessDefinition(long id, String location, String uri, String method, String role, String description) throws AccessException {
 		try {
@@ -275,7 +271,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public List<AccessDefinition> getAccessDefinitions() throws AccessException {
 		if (!CACHE.isEmpty()) {
@@ -296,17 +292,14 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public List<AccessDefinition> getAccessDefinitionsByUri(String uri) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = SqlFactory.getNative(connection)
-						.select()
-						.column("*")
-						.from("DIRIGIBLE_SECURITY_ACCESS")
-						.where("ACCESS_URI = ?").toString();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
+						.toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(uri));
 			} finally {
 				if (connection != null) {
@@ -317,20 +310,14 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public List<AccessDefinition> getAccessDefinitionsByUriAndMethod(String uri, String method) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = SqlFactory.getNative(connection)
-						.select()
-						.column("*")
-						.from("DIRIGIBLE_SECURITY_ACCESS")
-						.where("ACCESS_URI = ?")
-						.where(SqlFactory.getNative(connection)
-								.expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
-						.toString();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
+						.where(SqlFactory.getNative(connection).expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString()).toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, method, AccessDefinition.METHOD_ANY);
 			} finally {
 				if (connection != null) {
@@ -341,22 +328,17 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean isAccessAllowed(String uri, String method, String role) throws AccessException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
-				String sql = SqlFactory.getNative(connection)
-						.select()
-						.column("*")
-						.from("DIRIGIBLE_SECURITY_ACCESS")
-						.where("ACCESS_URI = ?")
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
 						.where("ACCESS_ROLE = ?")
-						.where(SqlFactory.getNative(connection)
-								.expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString())
-						.toString();
-				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method, AccessDefinition.METHOD_ANY);
+						.where(SqlFactory.getNative(connection).expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString()).toString();
+				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method,
+						AccessDefinition.METHOD_ANY);
 				return !access.isEmpty();
 			} finally {
 				if (connection != null) {
@@ -367,19 +349,19 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
-	
+
 	@Override
 	public List<AccessDefinition> parseAccessDefinitions(String json) {
 		AccessArtifact accessArtifact = AccessArtifact.parse(json);
 		return accessArtifact.divide();
 	}
-	
+
 	@Override
 	public List<AccessDefinition> parseAccessDefinitions(byte[] json) {
 		AccessArtifact accessArtifact = AccessArtifact.parse(json);
 		return accessArtifact.divide();
 	}
-	
+
 	@Override
 	public String serializeAccessDefinitions(List<AccessDefinition> accessDefinitions) {
 		AccessArtifact accessArtifact = AccessArtifact.combine(accessDefinitions);
@@ -389,5 +371,5 @@ public class SecurityCoreService implements ISecurityCoreService {
 	public void clearCache() {
 		CACHE.clear();
 	}
-	
+
 }

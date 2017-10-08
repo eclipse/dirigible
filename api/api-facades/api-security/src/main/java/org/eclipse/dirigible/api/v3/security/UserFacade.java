@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.api.v3.auth;
+package org.eclipse.dirigible.api.v3.security;
 
 import static java.text.MessageFormat.format;
 

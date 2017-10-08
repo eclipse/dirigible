@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Facade - auth</name>
-	<artifactId>dirigible-api-auth</artifactId>
+	<name>API - Facade - security</name>
+	<artifactId>dirigible-api-security</artifactId>
     <packaging>jar</packaging>
     
     <build>

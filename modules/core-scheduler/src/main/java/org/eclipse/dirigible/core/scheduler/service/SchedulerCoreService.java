@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
 
-import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
@@ -17,17 +17,18 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
 
 @Singleton
 public class SchedulerCoreService implements ISchedulerCoreService {
-	
+
 	@Inject
 	private DataSource dataSource;
-	
+
 	@Inject
 	private PersistenceManager<JobDefinition> jobPersistenceManager;
-	
+
 	// Jobs
-	
+
 	@Override
-	public JobDefinition createJob(String name, String group, String clazz, String description, String expression, boolean singleton) throws SchedulerException {
+	public JobDefinition createJob(String name, String group, String clazz, String description, String expression, boolean singleton)
+			throws SchedulerException {
 		JobDefinition jobDefinition = new JobDefinition();
 		jobDefinition.setName(name);
 		jobDefinition.setGroup(group);
@@ -37,7 +38,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		jobDefinition.setSingleton(singleton);
 		jobDefinition.setCreatedBy(UserFacade.getName());
 		jobDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
-		
+
 		return createJob(jobDefinition);
 	}
 
@@ -63,7 +64,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 			throw new SchedulerException(e);
 		}
 	}
-	
+
 	@Override
 	public JobDefinition getJob(String name) throws SchedulerException {
 		try {
@@ -79,7 +80,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 			throw new SchedulerException(e);
 		}
 	}
-	
+
 	@Override
 	public void removeJob(String name) throws SchedulerException {
 		try {
@@ -95,9 +96,10 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 			throw new SchedulerException(e);
 		}
 	}
-	
+
 	@Override
-	public void updateJob(String name, String group, String clazz, String description, String expression, boolean singleton) throws SchedulerException {
+	public void updateJob(String name, String group, String clazz, String description, String expression, boolean singleton)
+			throws SchedulerException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {
@@ -117,7 +119,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 			throw new SchedulerException(e);
 		}
 	}
-	
+
 	@Override
 	public List<JobDefinition> getJobs() throws SchedulerException {
 		try {
@@ -133,5 +135,5 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 			throw new SchedulerException(e);
 		}
 	}
-	
+
 }

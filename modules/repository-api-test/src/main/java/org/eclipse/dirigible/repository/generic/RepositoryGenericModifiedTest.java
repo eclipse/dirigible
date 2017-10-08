@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 
-import org.eclipse.dirigible.api.v3.auth.UserFacade;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -37,9 +37,9 @@ public class RepositoryGenericModifiedTest {
 		}
 
 		try {
-			
+
 			Configuration.enableTestMode();
-			
+
 			UserFacade.setName("guest1");
 			IResource resource = repository1.createResource("/testCollection/toBeModified.txt", //$NON-NLS-1$
 					"Some content".getBytes()); //$NON-NLS-1$
@@ -47,9 +47,8 @@ public class RepositoryGenericModifiedTest {
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
 
-			
 			assertEquals("guest1", resource.getInformation().getModifiedBy());
-//			assertEquals("nobody", resource.getInformation().getModifiedBy());
+			// assertEquals("nobody", resource.getInformation().getModifiedBy());
 
 			Date firstModified = resource.getInformation().getModifiedAt();
 
@@ -63,11 +62,11 @@ public class RepositoryGenericModifiedTest {
 			resource = repository2.getResource("/testCollection/toBeModified.txt"); //$NON-NLS-1$
 
 			assertEquals("guest2", resource.getInformation().getModifiedBy());
-//			assertEquals("nobody", resource.getInformation().getModifiedBy());
+			// assertEquals("nobody", resource.getInformation().getModifiedBy());
 			assertTrue(resource.getInformation().getModifiedAt().after(firstModified));
 
 			Configuration.disableTestMode();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
