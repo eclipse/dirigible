@@ -10,7 +10,7 @@
 
 /* eslint-env node, dirigible */
 
-var user = require('auth/v3/user');
+var user = require('security/v3/user');
 var response = require('http/v3/response');
 
 response.setContentType("text/plain");
