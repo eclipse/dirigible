@@ -282,6 +282,13 @@ public class WorkspaceRestService implements IRestService {
 		return Response.created(processor.getURI(workspace, project, path)).build();
 	}
 
+	@POST
+	@Path("{workspace}/{project}/{path:.*}")
+	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
+			String content, @Context HttpServletRequest request) throws URISyntaxException {
+		return createFile(workspace, project, path, content.getBytes(), request);
+	}
+
 	@PUT
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
@@ -309,6 +316,13 @@ public class WorkspaceRestService implements IRestService {
 
 		file = processor.updateFile(workspace, project, path, content);
 		return Response.noContent().build();
+	}
+
+	@PUT
+	@Path("{workspace}/{project}/{path:.*}")
+	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
+			String content, @Context HttpServletRequest request) throws URISyntaxException {
+		return updateFile(workspace, project, path, content.getBytes(), request);
 	}
 
 	@DELETE

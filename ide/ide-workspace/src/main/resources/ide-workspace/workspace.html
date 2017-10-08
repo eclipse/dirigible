@@ -54,6 +54,7 @@
 			
 			<button type="button" id="createWorkspace" ng-show=false data-toggle="modal" data-target="#dialogCreateWorkspace"></button>
 			<button type="button" id="createProject" ng-show=false data-toggle="modal" data-target="#dialogCreateProject"></button>
+			<button type="button" id="generateFromTemplate" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromTemplate"></button>
 			
 			<button type="button" class="btn btn-default" title="Save All" ng-click="workspace.saveAll()"><i class="fa fa-floppy-o"></i></button>
 			<button type="button" class="btn btn-default" title="Publish All" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
@@ -103,6 +104,37 @@
 	    </div>
 	    <div class="modal-footer">
 	      <button class="btn btn-primary" ng-click="workspace.okCreateProject()" data-toggle="modal" data-target="#dialogCreateProject">Create Project</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- Generate From Template -->
+	<div class="modal fade" id="dialogGenerateFromTemplate" tabindex="-1" role="dialog" aria-labelledby="dialogGenerateFromTemplateLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Generate From Template</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-3 col-form-label">Project</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">File</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="file name" ng-model="workspace.fileName" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Parameters</label>
+				<div class="col-xs-9">
+					<textarea class="form-control" placeholder="parameters" ng-model="workspace.parameters" required="required"></textarea>
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okGenerateFromTemplate()" data-toggle="modal" data-target="#dialogGenerateFromTemplate">Generate</button>
 	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
 	    </div>
 	</div>

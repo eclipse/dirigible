@@ -220,14 +220,22 @@ WorkspaceService.prototype.createProject = function(workspace, project, wsTree){
 				return response.data;
 			});
 }
+WorkspaceService.prototype.generateFromTemplate = function(workspace, project, file, parameters, wsTree){
+	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project).path(file.split('/')).build();
+	return this.$http.post(url, parameters)
+			.then(function(response){
+				wsTree.refresh();
+				return response.data;
+			});
+}
 
 
 /**
  * Workspace Tree Adapter mediating the workspace service REST api and the jst tree componet working with it
  */
-var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, exportService, messageHub){
+var WorkspaceTreeAdapter = function(treeConfig, workspaceService, publishService, exportService, messageHub){
 	this.treeConfig = treeConfig;
-	this.workspaceSvc = workspaceSvc;
+	this.workspaceService = workspaceService;
 	this.publishService = publishService;
 	this.exportService = exportService;
 	this.messageHub = messageHub;
@@ -268,9 +276,11 @@ var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, publishService, ex
 	};
 };
 
-WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
+WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController, scope){
 	this.containerEl = containerEl;
-	this.workspaceName = workspaceName;
+	this.workspaceController = workspaceController;
+	this.workspaceName = workspaceController.selectedWorkspace;
+	this.scope = scope;
 	
 	var self = this;
 	var jstree = this.containerEl.jstree(this.treeConfig);
@@ -313,6 +323,9 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName){
 	.on('jstree.workspace.export', function (e, data) {		
 		this.exportProject(data);
 	}.bind(this))
+	.on('jstree.workspace.generate', function (e, data) {		
+		this.generateFile(data, scope);
+	}.bind(this))
 //	.on('jstree.workspace.file.properties', function (e, data) {
 //	 	var url = data.path + '/' + data.name;
 // 		this.openNodeProperties(url);
@@ -341,7 +354,7 @@ WorkspaceTreeAdapter.prototype.createNode = function(parentNode, type, defaultNa
 
 	var node_tmpl = {
 		type: type,
-		text: this.workspaceSvc.newFileName(defaultName, type, filenames)
+		text: this.workspaceService.newFileName(defaultName, type, filenames)
 	}
 	
 	var ctxPath = parentNode.original._file.path;
@@ -357,7 +370,7 @@ WorkspaceTreeAdapter.prototype.deleteNode = function(node){
 	if(node.original && node.original._file){
 		var path = node.original._file.path;
 		var self = this;
-		return this.workspaceSvc.remove.apply(this.workspaceSvc, [path])
+		return this.workspaceService.remove.apply(this.workspaceService, [path])
 				.then(function(){
 					self.messageHub.announceFileDeleted(node.original._file);
 				})
@@ -371,7 +384,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 	if(!node.original._file){
 		var parentNode = this.jstree.get_node(node.parent);
 		var fpath = parentNode.original._file.path;
-		this.workspaceSvc.createFile.apply(this.workspaceSvc, [newName, fpath, node.type=='folder'])
+		this.workspaceService.createFile.apply(this.workspaceService, [newName, fpath, node.type=='folder'])
 			.then(function(f){
 				node.original._file = f;
 				node.original._file.label = node.original._file.name;
@@ -383,7 +396,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 				throw err;
 			}.bind(this, node));
 	} else {
-		this.workspaceSvc.rename.apply(this.workspaceSvc, [oldName, newName, node.original._file.path])
+		this.workspaceService.rename.apply(this.workspaceService, [oldName, newName, node.original._file.path])
 			.then(function(data){
 				this.messageHub.announceFileRenamed(node.original._file, oldName, newName);
 				//this.jstree.reference(node).select_node(node);
@@ -400,7 +413,7 @@ WorkspaceTreeAdapter.prototype.moveNode = function(sourceParentNode, node){
 	var tagetParentNode = this.jstree.get_node(node.parent);
 	var targetpath = tagetParentNode.original._file.path.substring(this.workspaceName.length+1);
 	var self = this;
-	return this.workspaceSvc.move(node.text, sourcepath, targetpath, this.workspaceName)
+	return this.workspaceService.move(node.text, sourcepath, targetpath, this.workspaceName)
 			.then(function(sourceParentNode, tagetParentNode){
 				self.refresh(sourceParentNode, true);
 				self.refresh(tagetParentNode, true).then(function(){
@@ -431,7 +444,7 @@ WorkspaceTreeAdapter.prototype.refresh = function(node, keepState){
 	} else {
 		resourcepath = this.workspaceName;
 	}
-	return this.workspaceSvc.load(resourcepath)
+	return this.workspaceService.load(resourcepath)
 			.then(function(_data){
 				var data = [];
 				if(_data.type == 'workspace'){
@@ -471,6 +484,16 @@ WorkspaceTreeAdapter.prototype.publish = function(resource){
 WorkspaceTreeAdapter.prototype.exportProject = function(resource){
 	if (resource.type === 'project') {
 		return this.exportService.exportProject(resource.path);
+	}
+};
+WorkspaceTreeAdapter.prototype.generateFile = function(resource, scope){
+	if (resource.type === 'project' || resource.type === 'folder') {
+		var segments = resource.path.split('/');
+		this.workspaceController.projectName = segments[2];
+		segments = segments.splice(3, segments.length);
+		this.workspaceController.fileName = new UriBuilder().path(segments).path("file_name.txt").build();
+		scope.$apply();
+		$('#generateFromTemplate').click();
 	}
 };
 
@@ -630,7 +653,6 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 					ctxmenu.create.label = "New";
 					ctxmenu.create.submenu = {
 						"create_folder" : {
-							"separator_after"	: true,
 							"label"				: "Folder",
 							"action"			: function (data) {
 								var tree = data.reference.jstree(true);
@@ -644,6 +666,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 							}
 						},
 						"create_file" : {
+							"separator_after"	: true,
 							"label"				: "File",
 							"action"			: function (tree, data) {
 								var parentNode = tree.get_node(data.reference);
@@ -653,6 +676,16 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 								tree.create_node(parentNode, fileNode, "last", function (new_node) {
 										tree.edit(new_node); 
 									});
+							}.bind(self, this)
+						},
+						"generate_file" : {
+							"label"				: "Generate",
+							"action"			: function (tree, data) {
+								var parentNode = tree.get_node(data.reference);
+								var fileNode = {
+									type: 'file'
+								};
+								tree.element.trigger('jstree.workspace.generate', [parentNode.original._file]);
 							}.bind(self, this)
 						}
 					};
@@ -710,23 +743,21 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 .factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', 'exportService', 'messageHub', function($treeConfig, WorkspaceService, publishService, exportService, messageHub){
 	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, exportService, messageHub);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', 'messageHub', function (workspaceService, workspaceTreeAdapter, publishService, exportService, messageHub) {
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', 'messageHub', '$scope', function (workspaceService, workspaceTreeAdapter, publishService, exportService, messageHub, $scope) {
 
 	this.wsTree;
 	this.workspaces;
-	this.selectedWs;
-	
-	
+	this.selectedWorkspace;
 	
 	this.refreshWorkspaces = function() {
 		workspaceService.listWorkspaceNames()
 		.then(function(workspaceNames) {
 			this.workspaces = workspaceNames;
 			if(this.workspaceName) {
-				this.selectedWs = this.workspaceName;
+				this.selectedWorkspace = this.workspaceName;
 				this.workspaceSelected()
 			} else if(this.workspaces[0]) {
-				this.selectedWs = this.workspaces[0];
+				this.selectedWorkspace = this.workspaces[0];
 				this.workspaceSelected()					
 			} 
 		}.bind(this));
@@ -735,11 +766,11 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	
 	this.workspaceSelected = function(){
 		if (this.wsTree) {
-			this.wsTree.workspaceName = this.selectedWs;
+			this.wsTree.workspaceName = this.selectedWorkspace;
 			this.wsTree.refresh();
 			return;
 		}
-		this.wsTree = workspaceTreeAdapter.init($('.workspace'), this.selectedWs);
+		this.wsTree = workspaceTreeAdapter.init($('.workspace'), this, $scope);
 		if(!workspaceService.typeMapping)
 			workspaceService.typeMapping = $treeConfig[types];
 		this.wsTree.refresh();
@@ -760,16 +791,25 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	};
 	this.okCreateProject = function() {
 		if (this.projectName) {
-			workspaceService.createProject(this.selectedWs, this.projectName, this.wsTree);
+			workspaceService.createProject(this.selectedWorkspace, this.projectName, this.wsTree);
+		}
+	};
+	
+	this.generateFromTemplate = function(){
+		$('#generateFromTemplate').click();
+	};
+	this.okGenerateFromTemplate = function() {
+		if (this.projectName) {
+			workspaceService.generateFromTemplate(this.selectedWorkspace, this.projectName, this.fileName, this.parameters, this.wsTree);
 		}
 	};
 	
 	this.publish = function(){
-		publishService.publish(this.selectedWs + '/*');
+		publishService.publish(this.selectedWorkspace + '/*');
 	};
 	
 	this.exportWorkspace = function(){
-		exportService.exportProject(this.selectedWs + '/*');
+		exportService.exportProject(this.selectedWorkspace + '/*');
 	};
 	
 	this.refresh = function(){
