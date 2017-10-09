@@ -23,6 +23,8 @@ public interface IScriptEngineExecutor {
 
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException;
 
+	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException;
+
 	public String getType();
 
 }

@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Processing the Registry Service incoming requests
+ * Processing the Workspace Service incoming requests
  */
 public class WorkspaceProcessor {
 
@@ -34,6 +34,10 @@ public class WorkspaceProcessor {
 
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
+
+	public WorkspacesCoreService getWorkspacesCoreService() {
+		return workspacesCoreService;
+	}
 
 	// Workspace
 

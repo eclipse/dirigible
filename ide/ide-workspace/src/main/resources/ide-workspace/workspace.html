@@ -62,7 +62,7 @@
 			
 			<button type="button" class="btn btn-default" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
 			
-			<select ng-model="workspace.selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
+			<select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
 			
 		</div>
@@ -114,6 +114,13 @@
 	        <h4>Generate From Template</h4>
 	    </div>
 	    <div class="modal-body">
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Template</label>
+				<div class="col-xs-9">
+					<select ng-model="workspace.selectedTemplate" ng-options="o.id as o.name for o in workspace.templates" ng-change="workspace.templateSelected()"
+						class="dropdown btn btn-default dropdown-toggle form-control" title="Templates"></select>
+				</div>
+			</div>
 	        <div class="form-group row">
 				<label class="col-xs-3 col-form-label">Project</label>
 				<div class="col-xs-9">

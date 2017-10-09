@@ -19,8 +19,8 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceSourceTargetPair;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
-import org.eclipse.dirigible.runtime.ide.workspaces.service.manager.SourceTargetPair;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -47,7 +47,7 @@ public class WorkspaceManagerService implements IRestService {
 
 	@POST
 	@Path("{workspace}/copy")
-	public Response copy(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
+	public Response copy(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
@@ -93,7 +93,7 @@ public class WorkspaceManagerService implements IRestService {
 
 	@POST
 	@Path("{workspace}/move")
-	public Response move(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
+	public Response move(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
@@ -137,7 +137,7 @@ public class WorkspaceManagerService implements IRestService {
 
 	@POST
 	@Path("{workspace}/rename")
-	public Response rename(@PathParam("workspace") String workspace, SourceTargetPair content, @Context HttpServletRequest request)
+	public Response rename(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		return move(workspace, content, request);
 	}

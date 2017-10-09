@@ -23,16 +23,24 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(module, executionContext, true);
+	}
 
+	@Override
+	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(code, executionContext, false);
+	}
+
+	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
 		logger.debug("entering: executeServiceModule()"); //$NON-NLS-1$
-		logger.debug("module=" + module); //$NON-NLS-1$
+		logger.debug("module or code=" + moduleOrCode); //$NON-NLS-1$
 
-		if (module == null) {
+		if (moduleOrCode == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
 
-		module = trimPathParameters(module, MODULE_EXT_JS);
-		module = trimPathParameters(module, MODULE_EXT_NASHORN);
+		moduleOrCode = trimPathParameters(moduleOrCode, MODULE_EXT_JS);
+		moduleOrCode = trimPathParameters(moduleOrCode, MODULE_EXT_NASHORN);
 
 		Object result = null;
 
@@ -48,7 +56,7 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			bindings.put(IJavascriptEngineExecutor.JAVASCRIPT_ENGINE_TYPE, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_NASHORN);
 			bindings.put(IJavascriptEngineExecutor.CONSOLE, ConsoleFacade.getConsole());
 
-			String code = sourceProvider.loadSource(module);
+			String code = (isModule ? sourceProvider.loadSource(moduleOrCode) : moduleOrCode);
 
 			try {
 				engine.eval(Require.CODE);

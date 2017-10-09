@@ -30,16 +30,25 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(module, executionContext, true);
+	}
+
+	@Override
+	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(code, executionContext, false);
+	}
+
+	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
 
 		logger.debug("entering: executeServiceModule()"); //$NON-NLS-1$
-		logger.debug("module=" + module); //$NON-NLS-1$
+		logger.debug("module or code=" + moduleOrCode); //$NON-NLS-1$
 
-		if (module == null) {
+		if (moduleOrCode == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
 
-		module = trimPathParameters(module, MODULE_EXT_JS);
-		module = trimPathParameters(module, MODULE_EXT_V8);
+		moduleOrCode = trimPathParameters(moduleOrCode, MODULE_EXT_JS);
+		moduleOrCode = trimPathParameters(moduleOrCode, MODULE_EXT_V8);
 
 		Object result = null;
 
@@ -64,7 +73,7 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 			}, "_j2v8loadSource");
 			v8.executeScript(Require.CODE);
 			v8.executeScript("var console = require('core/v3/console')");
-			String source = sourceProvider.loadSource(module);
+			String source = (isModule ? sourceProvider.loadSource(moduleOrCode) : moduleOrCode);
 			result = v8.executeScript(source);
 			forceFlush();
 		} catch (Exception e) {

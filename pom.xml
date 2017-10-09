@@ -439,6 +439,7 @@
 		<module>modules/runtime-ide-console</module>
 		<module>modules/runtime-ide-publisher</module>
 		<module>modules/runtime-ide-databases</module>
+		<module>modules/runtime-ide-generation</module>
 		
 
 		<module>modules/engine-api</module>

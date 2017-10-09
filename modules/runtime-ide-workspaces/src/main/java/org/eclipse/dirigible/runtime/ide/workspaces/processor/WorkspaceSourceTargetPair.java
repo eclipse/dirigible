@@ -1,6 +1,6 @@
-package org.eclipse.dirigible.runtime.ide.workspaces.service.manager;
+package org.eclipse.dirigible.runtime.ide.workspaces.processor;
 
-public class SourceTargetPair {
+public class WorkspaceSourceTargetPair {
 
 	private String source;
 

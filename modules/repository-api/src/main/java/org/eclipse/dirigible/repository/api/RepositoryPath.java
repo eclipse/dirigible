@@ -42,7 +42,7 @@ public class RepositoryPath {
 		for (String segment : input) {
 			final StringTokenizer tokenizer = new StringTokenizer(segment, IRepository.SEPARATOR);
 			String[] segmentParts = new String[tokenizer.countTokens()];
-			for (int i = 0; i < segmentParts.length; ++i) {
+			for (String segmentPart : segmentParts) {
 				allSegments.add(tokenizer.nextToken());
 			}
 		}
@@ -82,14 +82,12 @@ public class RepositoryPath {
 	 * @return
 	 */
 	public RepositoryPath append(String name) {
-
 		final StringTokenizer tokenizer = new StringTokenizer(name, IRepository.SEPARATOR);
 		final String[] newSegments = Arrays.copyOf(segments, segments.length + tokenizer.countTokens());
 		int i = 0;
 		while (tokenizer.hasMoreTokens()) {
 			newSegments[segments.length + i++] = tokenizer.nextToken();
 		}
-
 		return new RepositoryPath(newSegments);
 	}
 

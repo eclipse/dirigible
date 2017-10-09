@@ -255,6 +255,11 @@
 		 	<artifactId>dirigible-runtime-ide-git</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-ide-generation</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		
 		<!-- Engines Services -->

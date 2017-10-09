@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.util.ServiceLoader;
 
+import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ public class ScriptEngineExecutorFactory {
 	public static IScriptEngineExecutor getScriptEngineExecutor(String type) {
 		for (IScriptEngineExecutor next : SCRIPT_ENGINE_EXECUTORS) {
 			if (next.getType().equals(type)) {
-				return next;
+				return StaticInjector.getInjector().getInstance(next.getClass());
 			}
 		}
 		logger.error(format("Script Executor of Type {0} does not exist.", type));

@@ -28,16 +28,25 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(module, executionContext, true);
+	}
+
+	@Override
+	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(code, executionContext, false);
+	}
+
+	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
 
 		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
-		logger.debug("module=" + module); //$NON-NLS-1$
+		logger.debug("module or code=" + moduleOrCode); //$NON-NLS-1$
 
-		if (module == null) {
+		if (moduleOrCode == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
 
-		module = trimPathParameters(module, MODULE_EXT_JS);
-		module = trimPathParameters(module, MODULE_EXT_RHINO);
+		moduleOrCode = trimPathParameters(moduleOrCode, MODULE_EXT_JS);
+		moduleOrCode = trimPathParameters(moduleOrCode, MODULE_EXT_RHINO);
 
 		Object result = null;
 
@@ -60,9 +69,13 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 			topLevelScope.put(IJavascriptEngineExecutor.CONSOLE, topLevelScope, ConsoleFacade.getConsole());
 
 			try {
-				ModuleSource moduleSource = sourceProvider.loadSource(module, null, null);
+				ModuleSource moduleSource = (isModule ? sourceProvider.loadSource(moduleOrCode, null, null) : null);
 				try {
-					result = context.evaluateReader(topLevelScope, moduleSource.getReader(), module, 0, null);
+					if (moduleSource != null) {
+						result = context.evaluateReader(topLevelScope, moduleSource.getReader(), moduleOrCode, 0, null);
+					} else {
+						result = context.evaluateString(topLevelScope, moduleOrCode, "dynamic", 0, null);
+					}
 					forceFlush();
 				} catch (EcmaError e) {
 					logger.error(e.getMessage());

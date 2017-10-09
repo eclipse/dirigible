@@ -220,15 +220,6 @@ WorkspaceService.prototype.createProject = function(workspace, project, wsTree){
 				return response.data;
 			});
 }
-WorkspaceService.prototype.generateFromTemplate = function(workspace, project, file, parameters, wsTree){
-	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project).path(file.split('/')).build();
-	return this.$http.post(url, parameters)
-			.then(function(response){
-				wsTree.refresh();
-				return response.data;
-			});
-}
-
 
 /**
  * Workspace Tree Adapter mediating the workspace service REST api and the jst tree componet working with it
@@ -497,11 +488,23 @@ WorkspaceTreeAdapter.prototype.generateFile = function(resource, scope){
 	}
 };
 
+var TemplatesService = function($http, $window, TEMPLATES_SVC_URL) {
+	this.$http = $http;
+	this.$window = $window;
+	this.TEMPLATES_SVC_URL = TEMPLATES_SVC_URL;
+}
+TemplatesService.prototype.listTemplates = function(){
+	var url = new UriBuilder().path(this.TEMPLATES_SVC_URL.split('/')).build();
+	return this.$http.get(url).then(function(response){ return response.data});
+}
+
 angular.module('workspace.config', [])
 	.constant('WS_SVC_URL','/services/v3/ide/workspaces')
 	.constant('WS_SVC_MANAGER_URL','/services/v3/ide/workspace')
 	.constant('PUBLISH_SVC_URL','/services/v3/ide/publisher/request')
 	.constant('EXPORT_SVC_URL','/services/v3/transport/project')
+	.constant('TEMPLATES_SVC_URL','/services/v3/js/ide/services/templates.js')
+	.constant('GENERATION_SVC_URL','/services/v3/ide/generation')
 	
 angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
@@ -737,30 +740,54 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		}
 	}
 }])
+.factory('generationService', ['$http', 'GENERATION_SVC_URL', function($http, GENERATION_SVC_URL){
+	return {
+		generateFromTemplate : function(workspace, project, file, template, parameters, wsTree) {
+			var url = new UriBuilder().path(GENERATION_SVC_URL.split('/')).path(workspace).path(project).path(file.split('/')).build();
+			return $http.post(url, {"template":template, "parameters":JSON.parse(parameters)})
+					.then(function(response){
+						wsTree.refresh();
+						return response.data;
+					});
+		}
+	}
+}])
+.factory('templatesService', ['$http', '$window', 'TEMPLATES_SVC_URL', function($http, $window, TEMPLATES_SVC_URL){
+	return new TemplatesService($http, $window, TEMPLATES_SVC_URL);
+}])
 .factory('workspaceService', ['$http', '$window', 'WS_SVC_MANAGER_URL', 'WS_SVC_URL', '$treeConfig', function($http, $window, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
 	return new WorkspaceService($http, $window, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig);
 }])
 .factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'publishService', 'exportService', 'messageHub', function($treeConfig, WorkspaceService, publishService, exportService, messageHub){
 	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, exportService, messageHub);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', 'messageHub', '$scope', function (workspaceService, workspaceTreeAdapter, publishService, exportService, messageHub, $scope) {
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', 'templatesService', 'generationService', 'messageHub', '$scope', function (workspaceService, workspaceTreeAdapter, publishService, exportService, templatesService, generationService, messageHub, $scope) {
 
 	this.wsTree;
 	this.workspaces;
 	this.selectedWorkspace;
+	this.selectedTemplate;
+
+	this.refreshTemplates = function() {
+		templatesService.listTemplates()
+			.then(function(data) {
+				this.templates = data;
+			}.bind(this));
+	};
+	this.refreshTemplates();
 	
 	this.refreshWorkspaces = function() {
 		workspaceService.listWorkspaceNames()
-		.then(function(workspaceNames) {
-			this.workspaces = workspaceNames;
-			if(this.workspaceName) {
-				this.selectedWorkspace = this.workspaceName;
-				this.workspaceSelected()
-			} else if(this.workspaces[0]) {
-				this.selectedWorkspace = this.workspaces[0];
-				this.workspaceSelected()					
-			} 
-		}.bind(this));
+			.then(function(workspaceNames) {
+				this.workspaces = workspaceNames;
+				if(this.workspaceName) {
+					this.selectedWorkspace = this.workspaceName;
+					this.workspaceSelected()
+				} else if(this.workspaces[0]) {
+					this.selectedWorkspace = this.workspaces[0];
+					this.workspaceSelected()					
+				} 
+			}.bind(this));
 	};
 	this.refreshWorkspaces();
 	
@@ -800,7 +827,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	};
 	this.okGenerateFromTemplate = function() {
 		if (this.projectName) {
-			workspaceService.generateFromTemplate(this.selectedWorkspace, this.projectName, this.fileName, this.parameters, this.wsTree);
+			generationService.generateFromTemplate(this.selectedWorkspace, this.projectName, this.fileName, this.selectedTemplate, this.parameters, this.wsTree);
 		}
 	};
 	
