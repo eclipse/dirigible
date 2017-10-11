@@ -40,6 +40,9 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
 		int i = 1;
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+			if (!shouldSetColumnValue(columnModel)) {
+				continue;
+			}
 			// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 			Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 			String dataType = columnModel.getType();
@@ -64,6 +67,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				throw new PersistenceException(format("Database type [{0}] not supported (Class: [{1}])", dataType, pojo.getClass()));
 			}
 		}
+	}
+
+	protected boolean shouldSetColumnValue(PersistenceTableColumnModel columnModel) {
+		return true;
 	}
 
 	private void resetAccesible(Field field, boolean oldAccessible) {

@@ -25,24 +25,26 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		UpdateBuilder updateBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
-				.update()
-				.table(tableModel.getTableName());
-				
+		UpdateBuilder updateBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).update().table(tableModel.getTableName());
+
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			updateBuilder.set(columnModel.getName(), ISqlKeywords.QUESTION);
+			if (!columnModel.isPrimaryKey()) {
+				updateBuilder.set(columnModel.getName(), ISqlKeywords.QUESTION);
+			}
 		}
-		
-		updateBuilder.where(getPrimaryKey(tableModel) + new StringBuilder()
-				.append(ISqlKeywords.SPACE)
-				.append(ISqlKeywords.EQUALS)
-				.append(ISqlKeywords.SPACE)
-				.append(ISqlKeywords.QUESTION).toString());
-		
+
+		updateBuilder.where(new StringBuilder() //
+				.append(getPrimaryKey(tableModel)) //
+				.append(ISqlKeywords.SPACE) //
+				.append(ISqlKeywords.EQUALS) //
+				.append(ISqlKeywords.SPACE) //
+				.append(ISqlKeywords.QUESTION) //
+				.toString());
+
 		String sql = updateBuilder.toString();
 		return sql;
 	}
-	
+
 	public int update(Connection connection, PersistenceTableModel tableModel, Object pojo, Object id) throws PersistenceException {
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -50,7 +52,7 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 			sql = generateScript(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			setValuesFromPojo(tableModel, pojo, preparedStatement);
-			setValue(preparedStatement, tableModel.getColumns().size() + 1, id);
+			setValue(preparedStatement, tableModel.getColumns().size(), id);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
@@ -59,4 +61,8 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 		}
 	}
 
+	@Override
+	protected boolean shouldSetColumnValue(PersistenceTableColumnModel columnModel) {
+		return !columnModel.isPrimaryKey();
+	}
 }
