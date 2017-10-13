@@ -42,6 +42,7 @@
 		<module>api-security</module>
 		<module>api-db</module>
 		<module>api-io</module>
+		<module>api-messaging</module>
 	</modules>
 
 	<profiles>

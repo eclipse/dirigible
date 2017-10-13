@@ -54,7 +54,7 @@ public class MessagingProducer implements Runnable {
 			TextMessage textMessage = session.createTextMessage(this.message);
 
 			producer.send(textMessage);
-			logger.debug(format("Message sent in [{0}]", this.name));
+			logger.trace(format("Message sent in [{0}]", this.name));
 
 			session.close();
 			connection.close();

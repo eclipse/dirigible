@@ -58,7 +58,7 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 	public void fullListenerTest() throws MessagingException, IOException, InterruptedException {
 		createListenerTest();
 
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 
 		repository.removeResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/custom/custom.listener");
 
@@ -94,7 +94,7 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 		assertNotNull(listenerDefinition);
 
 		MessagingProducer messagingProducer = new MessagingProducer("/control/control", DestinationType.QUEUE, "Test Message");
-		messagingProducer.run();
+		new Thread(messagingProducer).start();
 	}
 
 }
