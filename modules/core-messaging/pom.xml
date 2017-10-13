@@ -46,15 +46,79 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-auth</artifactId>
+			<artifactId>dirigible-api-security</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-core-scheduler</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
     	
     	<dependency>
+		    <groupId>javax.jms</groupId>
+		    <artifactId>jms-api</artifactId>
+		    <version>1.1-rev-1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.geronimo.specs</groupId>
+		    <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
+		    <version>1.0.1</version>
+		</dependency>
+		
+
+    	<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-broker</artifactId>
+		    <version>${activemq.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-client</artifactId>
+		    <version>${activemq.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-jdbc-store</artifactId>
+		    <version>${activemq.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-kahadb-store</artifactId>
+		    <version>${activemq.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.activemq</groupId>
+		    <artifactId>activemq-openwire-legacy</artifactId>
+		    <version>${activemq.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.fusesource.hawtbuf</groupId>
+		    <artifactId>hawtbuf</artifactId>
+		    <version>1.11</version>
+		</dependency>
+		
+		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-derby</artifactId>
+			<version>${dirigible.version}</version>
+			<scope>test</scope>
+    	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-local</artifactId>
+            <version>${dirigible.version}</version>
+            <scope>test</scope>
+        </dependency>    	
     </dependencies>
+    
+    <properties>
+    	<activemq.version>5.14.5</activemq.version>
+    </properties>
 
 </project>

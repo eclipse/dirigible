@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
-import org.eclipse.dirigible.core.extensions.definition.DataStructureTableModel;
+import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 
 /**
@@ -22,8 +22,8 @@ public class ExtensionsProcessor {
 	
 	public String renderExtensionPoints() throws ExtensionsException {
 		List<ExtensionPoint> bundles = new ArrayList<ExtensionPoint>();
-		List<DataStructureTableModel> extensionPoints = extensionsCoreService.getExtensionPoints();
-		for (DataStructureTableModel extensionPointDefinition : extensionPoints) {
+		List<ExtensionPointDefinition> extensionPoints = extensionsCoreService.getExtensionPoints();
+		for (ExtensionPointDefinition extensionPointDefinition : extensionPoints) {
 			List<ExtensionDefinition> extensions = extensionsCoreService.getExtensionsByExtensionPoint(extensionPointDefinition.getName());
 			ExtensionPoint bundle = new ExtensionPoint(extensionPointDefinition, extensions);
 			bundles.add(bundle);
@@ -32,7 +32,7 @@ public class ExtensionsProcessor {
 	}
 	
 	public String renderExtensionPoint(String name) throws ExtensionsException {
-		DataStructureTableModel extensionPointDefinition = extensionsCoreService.getExtensionPointByName(name);
+		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPointByName(name);
 		if (extensionPointDefinition == null) {
 			return null;
 		}

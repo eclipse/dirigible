@@ -161,6 +161,11 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 					throw new IllegalStateException("The annotation @Enumerated is missused, the value is unknown.");
 				}
 			}
+			if (field.getType().equals(byte.class) || field.getType().equals(Byte.class)) {
+				if (value instanceof Integer) {
+					value = ((Integer) value).byteValue();
+				}
+			}
 			field.set(pojo, value);
 		} finally {
 			resetAccesible(field, oldAccessible);
