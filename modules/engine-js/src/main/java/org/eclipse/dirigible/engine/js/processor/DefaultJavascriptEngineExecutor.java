@@ -27,7 +27,7 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				return StaticInjector.getInjector().getInstance(next.getClass()).executeServiceModule(module, executionContext);
 			}
 		}
-		return null;
+		throw new ScriptingException("No Javascript Engine registered");
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				return StaticInjector.getInjector().getInstance(next.getClass()).executeServiceCode(code, executionContext);
 			}
 		}
-		return null;
+		throw new ScriptingException("No Javascript Engine registered");
 	}
 
 }

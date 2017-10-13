@@ -49,6 +49,11 @@
             <artifactId>dirigible-core-security</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-core-messaging</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
     	
 		<dependency>
 		    <groupId>javax.websocket</groupId>

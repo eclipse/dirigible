@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
-import org.eclipse.dirigible.core.messaging.api.ListenerType;
+import org.eclipse.dirigible.core.messaging.api.DestinationType;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -36,7 +36,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 	// Listener
 
 	@Override
-	public ListenerDefinition createListener(String location, String name, ListenerType type, String module, String description)
+	public ListenerDefinition createListener(String location, String name, DestinationType type, String module, String description)
 			throws MessagingException {
 		ListenerDefinition listenerDefinition = new ListenerDefinition();
 		listenerDefinition.setLocation(location);
@@ -121,7 +121,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 	}
 
 	@Override
-	public void updateListener(String location, String name, ListenerType type, String module, String description) throws MessagingException {
+	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException {
 		try {
 			Connection connection = dataSource.getConnection();
 			try {

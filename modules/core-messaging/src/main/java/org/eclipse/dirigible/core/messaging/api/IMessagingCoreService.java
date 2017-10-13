@@ -11,7 +11,7 @@ public interface IMessagingCoreService extends ICoreService {
 
 	// Listener
 
-	public ListenerDefinition createListener(String location, String name, ListenerType type, String module, String description)
+	public ListenerDefinition createListener(String location, String name, DestinationType type, String module, String description)
 			throws MessagingException;
 
 	public ListenerDefinition getListener(String location) throws MessagingException;
@@ -22,7 +22,7 @@ public interface IMessagingCoreService extends ICoreService {
 
 	public void removeListener(String location) throws MessagingException;
 
-	public void updateListener(String location, String name, ListenerType type, String module, String description) throws MessagingException;
+	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException;
 
 	public List<ListenerDefinition> getListeners() throws MessagingException;
 

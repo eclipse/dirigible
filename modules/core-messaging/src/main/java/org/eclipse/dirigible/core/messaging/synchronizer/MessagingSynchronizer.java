@@ -14,11 +14,12 @@ import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.core.messaging.api.DestinationType;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
-import org.eclipse.dirigible.core.messaging.api.ListenerType;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.core.messaging.service.MessagingCoreService;
+import org.eclipse.dirigible.core.messaging.service.MessagingManager;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -36,19 +37,22 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	private static final List<String> LISTENERS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
 	@Inject
-	private MessagingCoreService extensionsCoreService;
+	private MessagingCoreService messagingCoreService;
+
+	@Inject
+	private MessagingManager messagingManager;
 
 	public static final void forceSynchronization() {
 		MessagingSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(MessagingSynchronizer.class);
 		extensionsSynchronizer.synchronize();
 	}
 
-	public void registerPredeliveredListener(String extensionPointPath) throws IOException {
-		InputStream in = MessagingSynchronizer.class.getResourceAsStream(extensionPointPath);
+	public void registerPredeliveredListener(String listenerPath) throws IOException {
+		InputStream in = MessagingSynchronizer.class.getResourceAsStream(listenerPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-		ListenerDefinition listenerDefinition = extensionsCoreService.parseListener(json);
-		listenerDefinition.setLocation(extensionPointPath);
-		LISTENERS_PREDELIVERED.put(extensionPointPath, listenerDefinition);
+		ListenerDefinition listenerDefinition = messagingCoreService.parseListener(json);
+		listenerDefinition.setLocation(listenerPath);
+		LISTENERS_PREDELIVERED.put(listenerPath, listenerDefinition);
 	}
 
 	@Override
@@ -59,6 +63,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 				clearCache();
 				synchronizePredelivered();
 				synchronizeRegistry();
+				startListeners();
 				cleanup();
 				clearCache();
 			} catch (Exception e) {
@@ -66,6 +71,36 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 			}
 			logger.trace("Done synchronizing Listeners.");
 		}
+	}
+
+	private void startListeners() {
+		logger.trace("Start Listeners...");
+
+		for (String listenerLocation : LISTENERS_SYNCHRONIZED) {
+			if (!messagingManager.existsListener(listenerLocation)) {
+				try {
+					ListenerDefinition listenerDefinition = messagingCoreService.getListener(listenerLocation);
+					messagingManager.startListener(listenerDefinition);
+				} catch (MessagingException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+
+		List<String> runningListeners = messagingManager.getRunningListeners();
+		for (String listenerLocation : runningListeners) {
+			try {
+				if (!LISTENERS_SYNCHRONIZED.contains(listenerLocation)) {
+					ListenerDefinition listenerDefinition = messagingCoreService.getListener(listenerLocation);
+					messagingManager.stopListener(listenerDefinition);
+				}
+			} catch (MessagingException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+
+		logger.debug("Running Listeners: " + runningListeners.size());
+		logger.trace("Done starting Listeners.");
 	}
 
 	private void clearCache() {
@@ -83,17 +118,17 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 
 	private void synchronizeListener(ListenerDefinition listenerDefinition) throws SynchronizationException {
 		try {
-			if (!extensionsCoreService.existsListener(listenerDefinition.getLocation())) {
-				extensionsCoreService.createListener(listenerDefinition.getLocation(), listenerDefinition.getName(),
-						ListenerType.values()[listenerDefinition.getType()], listenerDefinition.getModule(), listenerDefinition.getDescription());
-				logger.info("Synchronized a new Extension Point [{}] from location: {}", listenerDefinition.getName(),
-						listenerDefinition.getLocation());
+			if (!messagingCoreService.existsListener(listenerDefinition.getLocation())) {
+				messagingCoreService.createListener(listenerDefinition.getLocation(), listenerDefinition.getName(),
+						DestinationType.values()[listenerDefinition.getType()], listenerDefinition.getModule(), listenerDefinition.getDescription());
+				logger.info("Synchronized a new Listener [{}] from location: {}", listenerDefinition.getName(), listenerDefinition.getLocation());
 			} else {
-				ListenerDefinition existing = extensionsCoreService.getListener(listenerDefinition.getLocation());
+				ListenerDefinition existing = messagingCoreService.getListener(listenerDefinition.getLocation());
 				if (!listenerDefinition.equals(existing)) {
-					extensionsCoreService.updateListener(listenerDefinition.getLocation(), listenerDefinition.getName(),
-							ListenerType.values()[listenerDefinition.getType()], listenerDefinition.getModule(), listenerDefinition.getDescription());
-					logger.info("Synchronized a modified Extension Point [{}] from location: {}", listenerDefinition.getName(),
+					messagingCoreService.updateListener(listenerDefinition.getLocation(), listenerDefinition.getName(),
+							DestinationType.values()[listenerDefinition.getType()], listenerDefinition.getModule(),
+							listenerDefinition.getDescription());
+					logger.info("Synchronized a modified Listener [{}] from location: {}", listenerDefinition.getName(),
 							listenerDefinition.getLocation());
 				}
 			}
@@ -116,7 +151,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		String resourceName = resource.getName();
 		if (resourceName.endsWith(IMessagingCoreService.FILE_EXTENSION_LISTENER)) {
-			ListenerDefinition listenerDefinition = extensionsCoreService.parseListener(resource.getContent());
+			ListenerDefinition listenerDefinition = messagingCoreService.parseListener(resource.getContent());
 			listenerDefinition.setLocation(getRegistryPath(resource));
 			synchronizeListener(listenerDefinition);
 		}
@@ -128,11 +163,11 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		logger.trace("Cleaning up Listeners...");
 
 		try {
-			List<ListenerDefinition> listenerDefinitions = extensionsCoreService.getListeners();
+			List<ListenerDefinition> listenerDefinitions = messagingCoreService.getListeners();
 			for (ListenerDefinition listenerDefinition : listenerDefinitions) {
 				if (!LISTENERS_SYNCHRONIZED.contains(listenerDefinition.getLocation())) {
-					extensionsCoreService.removeListener(listenerDefinition.getLocation());
-					logger.warn("Cleaned up Extension Point [{}] from location: {}", listenerDefinition.getName(), listenerDefinition.getLocation());
+					messagingCoreService.removeListener(listenerDefinition.getLocation());
+					logger.warn("Cleaned up Listener [{}] from location: {}", listenerDefinition.getName(), listenerDefinition.getLocation());
 				}
 			}
 		} catch (MessagingException e) {

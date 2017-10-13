@@ -54,6 +54,21 @@
 			<artifactId>dirigible-core-scheduler</artifactId>
 			<version>${dirigible.version}</version>
     	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-engine-api</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-engine-js</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-engine-js-rhino</artifactId>
+			<version>${dirigible.version}</version>
+    	</dependency>
     	
     	<dependency>
 		    <groupId>javax.jms</groupId>
@@ -65,7 +80,6 @@
 		    <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
 		    <version>1.0.1</version>
 		</dependency>
-		
 
     	<dependency>
 		    <groupId>org.apache.activemq</groupId>

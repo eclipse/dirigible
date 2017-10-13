@@ -15,17 +15,17 @@ public class ScriptEngineExecutorsManager {
 		}
 
 		throw new ScriptingException(
-				format("Script Executor of Type {0} does not exist, hence the Module{1} cannot be processed", engineType, module));
+				format("Script Executor of Type [{0}] does not exist, hence the Module [{1}] cannot be processed", engineType, module));
 	}
 
-	public static Object executeServiceCode(String engineType, String module, Map<Object, Object> executionContext) throws ScriptingException {
+	public static Object executeServiceCode(String engineType, String code, Map<Object, Object> executionContext) throws ScriptingException {
 		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
 		if (scriptEngineExecutor != null) {
-			return scriptEngineExecutor.executeServiceCode(module, executionContext);
+			return scriptEngineExecutor.executeServiceCode(code, executionContext);
 		}
 
 		throw new ScriptingException(
-				format("Script Executor of Type {0} does not exist, hence the Module{1} cannot be processed", engineType, module));
+				format("Script Executor of Type [{0}] does not exist, hence the code [{1}] cannot be processed", engineType, code));
 	}
 
 }

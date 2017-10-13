@@ -16,6 +16,7 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.core.messaging.service.MessagingManager;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
 import org.eclipse.dirigible.runtime.core.services.GsonMessageBodyHandler;
@@ -65,6 +66,8 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		registerRestServicesForCxf();
 
 		startupScheduler();
+
+		startupMessaging();
 
 		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
 	}
@@ -148,6 +151,26 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.trace("Done shutting down Scheduler.");
 	}
 
+	private void startupMessaging() {
+		logger.info("Starting Message Broker...");
+		try {
+			injector.getInstance(MessagingManager.class).initialize();
+		} catch (Exception e) {
+			logger.error("Failed starting Messaging", e);
+		}
+		logger.info("Done starting Message Broker.");
+	}
+
+	private void shutdownMessaging() {
+		logger.trace("Shutting down Message Broker...");
+		try {
+			MessagingManager.shutdown();
+		} catch (Exception e) {
+			logger.error("Failed shutting down Message Broker", e);
+		}
+		logger.trace("Done shutting down Message Broker.");
+	}
+
 	/**
 	 * Get singleton services registred to this application.
 	 *
@@ -162,6 +185,8 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.info("Shutting down Eclipse Dirigible Platform...");
 
 		shutdownScheduler();
+
+		shutdownMessaging();
 
 		super.contextDestroyed(servletContextEvent);
 
