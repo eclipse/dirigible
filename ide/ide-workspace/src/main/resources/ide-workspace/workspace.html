@@ -117,7 +117,7 @@
 			<div class="form-group row">
 				<label class="col-xs-3 col-form-label">Template</label>
 				<div class="col-xs-9">
-					<select ng-model="workspace.selectedTemplate" ng-options="o.id as o.name for o in workspace.templates" ng-change="workspace.templateSelected()"
+					<select ng-model="workspace.selectedTemplate" ng-options="o.id as o.name for o in workspace.templates"
 						class="dropdown btn btn-default dropdown-toggle form-control" title="Templates"></select>
 				</div>
 			</div>
@@ -133,10 +133,10 @@
 					<input class="form-control" type="text" placeholder="file name" ng-model="workspace.fileName" required="required">
 				</div>
 			</div>
-			<div class="form-group row">
-				<label class="col-xs-3 col-form-label">Parameters</label>
+			<div class="form-group row" ng-repeat="parameter in workspace.templateParameters[workspace.selectedTemplate]">
+				<label class="col-xs-3 col-form-label">{{parameter.label}}</label>
 				<div class="col-xs-9">
-					<textarea class="form-control" placeholder="parameters" ng-model="workspace.parameters" required="required"></textarea>
+					<input class="form-control" type="text" placeholder="{{parameter.label}}" ng-model="workspace.parameters[parameter.name]" required="required">
 				</div>
 			</div>
 	    </div>

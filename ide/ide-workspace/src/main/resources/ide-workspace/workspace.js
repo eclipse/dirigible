@@ -504,7 +504,7 @@ angular.module('workspace.config', [])
 	.constant('PUBLISH_SVC_URL','/services/v3/ide/publisher/request')
 	.constant('EXPORT_SVC_URL','/services/v3/transport/project')
 	.constant('TEMPLATES_SVC_URL','/services/v3/js/ide/services/templates.js')
-	.constant('GENERATION_SVC_URL','/services/v3/ide/generation')
+	.constant('GENERATION_SVC_URL','/services/v3/ide/generation');
 	
 angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
@@ -744,7 +744,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	return {
 		generateFromTemplate : function(workspace, project, file, template, parameters, wsTree) {
 			var url = new UriBuilder().path(GENERATION_SVC_URL.split('/')).path(workspace).path(project).path(file.split('/')).build();
-			return $http.post(url, {"template":template, "parameters":JSON.parse(parameters)})
+			return $http.post(url, {"template":template, "parameters":parameters})
 					.then(function(response){
 						wsTree.refresh();
 						return response.data;
@@ -772,6 +772,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		templatesService.listTemplates()
 			.then(function(data) {
 				this.templates = data;
+				this.templateParameters = [];
+				for (var i = 0 ; i < data.length; i++) {
+					this.templateParameters[data[i].id] = data[i].parameters;
+				}
 			}.bind(this));
 	};
 	this.refreshTemplates();
