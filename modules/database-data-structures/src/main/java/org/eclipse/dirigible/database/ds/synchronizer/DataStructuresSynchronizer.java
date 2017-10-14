@@ -320,15 +320,21 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	}
 
 	private void executeTableUpdate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		logger.info("Processing Drop View: " + tableModel.getName());
+		logger.info("Processing Update Table: " + tableModel.getName());
 		if (SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
-			executeTableAlter(connection, tableModel);
+			if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
+				executeTableDrop(connection, tableModel);
+				executeTableCreate(connection, tableModel);
+			} else {
+				executeTableAlter(connection, tableModel);
+			}
 		} else {
 			executeTableCreate(connection, tableModel);
 		}
 	}
 
 	private void executeTableCreate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		logger.info("Processing Create Table: " + tableModel.getName());
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableModel.getName());
 		List<DataStructureTableColumnModel> columns = tableModel.getColumns();
 		for (DataStructureTableColumnModel columnModel : columns) {
@@ -381,7 +387,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	}
 
 	private void executeTableAlter(Connection connection, DataStructureTableModel tableModel) {
-		throw new NotImplementedException("Alter Table not implemented yet.");
+		throw new NotImplementedException("Altering a non-empty table is not implemented yet.");
 	}
 
 	private void executeTableDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
