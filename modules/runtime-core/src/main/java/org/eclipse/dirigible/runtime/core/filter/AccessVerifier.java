@@ -27,22 +27,24 @@ import org.slf4j.LoggerFactory;
 public class AccessVerifier {
 
 	private static final Logger logger = LoggerFactory.getLogger(AccessVerifier.class);
-	
+
 	/**
 	 * Checks whether the URI is secured via the *.access file or not
 	 *
 	 * @param uri
 	 * @return all the most specific AccessDefinition entry matching the URI if any
 	 * @throws ServletException
-	 * @throws AccessException 
+	 * @throws AccessException
 	 */
-	public static List<AccessDefinition> getMatchingAccessDefinitions(ISecurityCoreService securityCoreService, String uri, String method) throws ServletException, AccessException {
+	public static List<AccessDefinition> getMatchingAccessDefinitions(ISecurityCoreService securityCoreService, String uri, String method)
+			throws ServletException, AccessException {
 		List<AccessDefinition> accessDefinitions = new ArrayList<AccessDefinition>();
 		AccessDefinition current = null;
 		for (AccessDefinition accessDefinition : securityCoreService.getAccessDefinitions()) {
-			if (uri.startsWith(accessDefinition.getUri()) 
+			if (uri.startsWith(accessDefinition.getUri())
 					&& (accessDefinition.getMethod().equals("*") || method.equals(accessDefinition.getMethod()))) {
-				logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", uri, method, accessDefinition.getLocation()));
+				logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", uri, method,
+						accessDefinition.getLocation()));
 				if ((current == null) || (accessDefinition.getUri().length() > current.getUri().length())) {
 					current = accessDefinition;
 					accessDefinitions.clear();
@@ -53,7 +55,7 @@ public class AccessVerifier {
 			}
 		}
 		if (accessDefinitions.isEmpty()) {
-			logger.debug(String.format("URI [%s] with HTTP method [%s] is NOT secured", uri, method));
+			logger.trace(String.format("URI [%s] with HTTP method [%s] is NOT secured", uri, method));
 		}
 		return accessDefinitions;
 	}
