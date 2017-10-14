@@ -27,13 +27,21 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	private String name;
 	private DestinationType type;
 	private String handler;
+	private int timeout = 1000;
 
 	private boolean stopped;
 
-	public MessagingConsumer(String name, DestinationType type, String handler) {
+	public MessagingConsumer(String name, DestinationType type, String handler, int timeout) {
 		this.name = name;
 		this.type = type;
 		this.handler = handler;
+		this.timeout = timeout;
+	}
+
+	public MessagingConsumer(String name, DestinationType type, int timeout) {
+		this.name = name;
+		this.type = type;
+		this.timeout = timeout;
 	}
 
 	public void stop() {
@@ -42,6 +50,10 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 
 	@Override
 	public void run() {
+		receiveMessage();
+	}
+
+	public String receiveMessage() {
 		try {
 			logger.info("Starting a message listener for " + this.name);
 
@@ -64,30 +76,46 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 			}
 
 			MessageConsumer consumer = session.createConsumer(destination);
-
-			Message message = null;
-			while (!this.stopped) {
-				message = consumer.receive(1000);
-				if (message == null) {
-					continue;
-				}
-				logger.debug(format("Start processing a received message in [{0}] by [{1}] ..."), this.name, this.handler);
-				if (message instanceof TextMessage) {
-					TextMessage textMessage = (TextMessage) message;
-					String text = textMessage.getText();
-					String wrapper = generateWrapperOnMessage(text);
-					ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
+			try {
+				Message message = null;
+				if (this.handler != null) {
+					while (!this.stopped) {
+						message = consumer.receive(this.timeout);
+						if (message == null) {
+							continue;
+						}
+						logger.debug(format("Start processing a received message in [{0}] by [{1}] ..."), this.name, this.handler);
+						if (message instanceof TextMessage) {
+							TextMessage textMessage = (TextMessage) message;
+							String text = textMessage.getText();
+							String wrapper = generateWrapperOnMessage(text);
+							ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
+						} else {
+							throw new MessagingException(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
+						}
+						logger.debug(format("Done processing the received message in [{0}] by [{1}]"), this.name, this.handler);
+					}
 				} else {
-					throw new MessagingException(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
+					message = consumer.receive(this.timeout);
+					logger.debug(format("Received message in [{0}] by synchronous consumer."), this.name);
+					if (message instanceof TextMessage) {
+						TextMessage textMessage = (TextMessage) message;
+						String text = textMessage.getText();
+						return text;
+					}
+					return null;
 				}
-				logger.debug(format("Done processing the received message in [{0}] by [{1}]"), this.name, this.handler);
+			} finally {
+				consumer.close();
+				session.close();
+				connection.close();
 			}
-			consumer.close();
-			session.close();
-			connection.close();
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
+
+		return null;
 	}
 
 	@Override

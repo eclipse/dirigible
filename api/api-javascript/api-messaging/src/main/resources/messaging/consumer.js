@@ -8,8 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-var java = require('core/v3/java');
-
-exports.send = function(destination, message) {
-	java.call('org.eclipse.dirigible.api.v3.messaging.MessagingFacade', 'sendToTopic', [destination, message]);
-};
+var consumer = require('messaging/v3/consumer');
+for(var propertyName in consumer) {
+	exports[propertyName] = consumer[propertyName];
+}

@@ -99,7 +99,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 			}
 		}
 
-		logger.debug("Running Listeners: " + runningListeners.size());
+		logger.trace("Running Listeners: " + runningListeners.size());
 		logger.trace("Done starting Listeners.");
 	}
 

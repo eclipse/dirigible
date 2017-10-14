@@ -8,12 +8,12 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-exports.getQueue = function() {
-	var queue = require('messaging/v3/queue');
-	return queue;
+exports.getProducer = function() {
+	var producer = require('messaging/v3/producer');
+	return producer;
 };
 
-exports.getTopic = function() {
-	var topic = require('messaging/v3/topic');
-	return topic;
+exports.getConsumer = function() {
+	var consumer = require('messaging/v3/consumer');
+	return consumer;
 };

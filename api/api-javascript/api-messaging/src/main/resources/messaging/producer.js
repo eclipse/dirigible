@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-var queue = require('messaging/v3/queue');
-for(var propertyName in queue) {
-	exports[propertyName] = queue[propertyName];
+var producer = require('messaging/v3/producer');
+for(var propertyName in producer) {
+	exports[propertyName] = producer[propertyName];
 }

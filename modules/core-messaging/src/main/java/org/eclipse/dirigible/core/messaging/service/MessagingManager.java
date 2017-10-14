@@ -41,17 +41,19 @@ public class MessagingManager {
 	private static Map<String, MessagingConsumer> LISTENERS = Collections.synchronizedMap(new HashMap<String, MessagingConsumer>());
 
 	public void initialize() throws Exception {
-		if (broker == null) {
-			broker = new BrokerService();
-			PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
-			broker.setPersistenceAdapter(persistenceAdapter);
-			broker.setPersistent(true);
-			broker.setUseJmx(false);
-			PListStore pListStore = new PListStoreImpl();
-			pListStore.setDirectory(new File(LOCATION_TEMP_STORE));
-			broker.setTempDataStore(pListStore);
-			broker.addConnector(CONNECTOR_URL);
-			broker.start();
+		synchronized (MessagingManager.class) {
+			if (broker == null) {
+				broker = new BrokerService();
+				PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
+				broker.setPersistenceAdapter(persistenceAdapter);
+				broker.setPersistent(true);
+				broker.setUseJmx(false);
+				PListStore pListStore = new PListStoreImpl();
+				pListStore.setDirectory(new File(LOCATION_TEMP_STORE));
+				broker.setTempDataStore(pListStore);
+				broker.addConnector(CONNECTOR_URL);
+				broker.start();
+			}
 		}
 	}
 
@@ -70,8 +72,8 @@ public class MessagingManager {
 
 	public void startListener(ListenerDefinition listener) {
 		if (!LISTENERS.keySet().contains(listener.getLocation())) {
-			MessagingConsumer consumer = new MessagingConsumer(listener.getName(), DestinationType.values()[listener.getType()],
-					listener.getModule());
+			MessagingConsumer consumer = new MessagingConsumer(listener.getName(), DestinationType.values()[listener.getType()], listener.getModule(),
+					1000);
 			Thread consumerThread = new Thread(consumer);
 			consumerThread.setDaemon(false);
 			consumerThread.start();
