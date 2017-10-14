@@ -40,6 +40,8 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 
 	public boolean exists(Connection connection, String table) throws SQLException;
 
+	public int count(Connection connection, String table) throws SQLException;
+
 	public NEXT nextval(String sequence);
 
 }

@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
@@ -30,34 +31,42 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
 public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder>
 		implements ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> {
 
+	@Override
 	public SELECT select() {
 		return (SELECT) new SelectBuilder(this);
 	}
 
+	@Override
 	public INSERT insert() {
 		return (INSERT) new InsertBuilder(this);
 	}
 
+	@Override
 	public UPDATE update() {
 		return (UPDATE) new UpdateBuilder(this);
 	}
 
+	@Override
 	public DELETE delete() {
 		return (DELETE) new DeleteBuilder(this);
 	}
 
+	@Override
 	public ExpressionBuilder expression() {
 		return new ExpressionBuilder(this);
 	}
 
+	@Override
 	public CREATE create() {
 		return (CREATE) new CreateBranchingBuilder(this);
 	}
 
+	@Override
 	public DROP drop() {
 		return (DROP) new DropBranchingBuilder(this);
 	}
 
+	@Override
 	public NEXT nextval(String sequence) {
 		return (NEXT) new NextValueSequenceBuilder(this, sequence);
 	}
@@ -85,11 +94,22 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {
 		DatabaseMetaData metadata = connection.getMetaData();
-		ResultSet resultSet = metadata.getTables(null, null, table, ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[]{}));
+		ResultSet resultSet = metadata.getTables(null, null, table, ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
 		if (resultSet.next()) {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public int count(Connection connection, String table) throws SQLException {
+		String sql = new SelectBuilder(this).column("COUNT(*)").from(table).build();
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql);
+		if (resultSet.next()) {
+			return resultSet.getInt(1);
+		}
+		throw new SQLException("Cannot calculate the count of records of table: " + table);
 	}
 
 	@Override

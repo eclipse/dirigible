@@ -104,4 +104,9 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 		return this.dialect.exists(connection, table);
 	}
 
+	@Override
+	public int count(Connection connection, String table) throws SQLException {
+		return this.dialect.count(connection, table);
+	}
+
 }

@@ -50,14 +50,26 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 
 	/**
 	 * Check existence of a table
-	 * 
+	 *
 	 * @param connection
 	 *            the current connection
 	 * @param table
 	 *            the table name
 	 * @return true if the table exists and false otherwise
 	 */
+	@Override
 	public boolean exists(Connection connection, String table) throws SQLException;
+
+	/**
+	 * Returns the count of rows in the given table
+	 *
+	 * @param connection
+	 *            the current connection
+	 * @param table
+	 *            the table name
+	 * @return count of rows
+	 */
+	public int count(Connection connection, String table) throws SQLException;
 
 	/**
 	 * Checks if the database is capable of schema-level filtering statements
@@ -87,21 +99,21 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 
 	/**
 	 * Gives the dialect specific name of the CURRENT_DATE function
-	 * 
+	 *
 	 * @return the name of the function
 	 */
 	String functionCurrentDate();
 
 	/**
 	 * Gives the dialect specific name of the CURRENT_TIME function
-	 * 
+	 *
 	 * @return the name of the function
 	 */
 	String functionCurrentTime();
 
 	/**
 	 * Gives the dialect specific name of the CURRENT_TIMESTAMP function
-	 * 
+	 *
 	 * @return the name of the function
 	 */
 	String functionCurrentTimestamp();
