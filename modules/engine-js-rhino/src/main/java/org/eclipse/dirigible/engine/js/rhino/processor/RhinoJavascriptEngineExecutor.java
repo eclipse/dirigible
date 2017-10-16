@@ -5,10 +5,12 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
+import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
+import org.eclipse.dirigible.engine.js.api.ResourcePath;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
@@ -45,8 +47,13 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
 
-		moduleOrCode = trimPathParameters(moduleOrCode, MODULE_EXT_JS);
-		moduleOrCode = trimPathParameters(moduleOrCode, MODULE_EXT_RHINO);
+		if (isModule) {
+			ResourcePath resourcePath = getResourcePath(moduleOrCode, MODULE_EXT_JS, MODULE_EXT_RHINO);
+			moduleOrCode = resourcePath.getModule();
+			if (HttpRequestFacade.isValid()) {
+				HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, resourcePath.getPath());
+			}
+		}
 
 		Object result = null;
 

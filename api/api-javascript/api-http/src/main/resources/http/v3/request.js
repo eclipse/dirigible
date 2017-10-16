@@ -107,6 +107,16 @@ exports.getParameter = function(name) {
 	return param;
 };
 
+exports.getParameters = function(name) {
+	var params = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameters', []);
+	return JSON.parse(params);
+};
+
+exports.getResourcePath = function(name) {
+	var resourcePath = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getResourcePath', []);
+	return resourcePath;
+};
+
 exports.getHeaderNames = function() {
 	var headerNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaderNames', []);
 	var headerNames = JSON.parse(headerNamesJson);

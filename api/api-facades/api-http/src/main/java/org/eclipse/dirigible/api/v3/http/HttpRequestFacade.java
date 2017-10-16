@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 public class HttpRequestFacade implements IScriptingFacade {
 
+	public static final String ATTRIBUTE_REST_RESOURCE_PATH = "dirigible-rest-resource-path";
+
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Request Facade without a valid Request";
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpRequestFacade.class);
@@ -178,6 +180,23 @@ public class HttpRequestFacade implements IScriptingFacade {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		return request.getParameter(name);
+	}
+
+	public static final String getParameters() {
+		HttpServletRequest request = getRequest();
+		if (request == null) {
+			throw new InvalidStateException(NO_VALID_REQUEST);
+		}
+		return GsonHelper.GSON.toJson(request.getParameterMap());
+	}
+
+	public static final String getResourcePath() {
+		HttpServletRequest request = getRequest();
+		if (request == null) {
+			throw new InvalidStateException(NO_VALID_REQUEST);
+		}
+		Object resourcePathParameter = request.getAttribute(ATTRIBUTE_REST_RESOURCE_PATH);
+		return (resourcePathParameter != null ? resourcePathParameter.toString() : "");
 	}
 
 	public static final String getHeaderNames() {
