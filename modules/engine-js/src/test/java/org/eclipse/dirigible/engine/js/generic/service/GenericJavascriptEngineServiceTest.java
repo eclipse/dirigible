@@ -10,55 +10,55 @@ public class GenericJavascriptEngineServiceTest {
 
 	@Test
 	public void generateResourcePathFull() {
-		String module = "module1.js/1/2?n=v";
-		String[] extensions = new String[] { ".js", ".rhino" };
+		String module = "myproject/module1.js/1/2?n=v";
+		String[] extensions = new String[] { ".js/", ".rhino/" };
 		ResourcePath resourcePath = AbstractJavascriptExecutor.generateResourcePath(module, extensions);
-		assertEquals("module1.js", resourcePath.getModule());
+		assertEquals("myproject/module1.js", resourcePath.getModule());
 		assertEquals("1/2?n=v", resourcePath.getPath());
 	}
 
 	@Test
 	public void generateResourcePathRhinoFull() {
-		String module = "module1.rhino/1/2?n=v";
-		String[] extensions = new String[] { ".js", ".rhino" };
+		String module = "myproject/module1.rhino/1/2?n=v";
+		String[] extensions = new String[] { ".js/", ".rhino/" };
 		ResourcePath resourcePath = AbstractJavascriptExecutor.generateResourcePath(module, extensions);
-		assertEquals("module1.rhino", resourcePath.getModule());
+		assertEquals("myproject/module1.rhino", resourcePath.getModule());
 		assertEquals("1/2?n=v", resourcePath.getPath());
 	}
 
 	@Test
 	public void generateResourcePathNoPath() {
-		String module = "module1.js";
-		String[] extensions = new String[] { ".js", ".rhino" };
+		String module = "myproject/module1.js";
+		String[] extensions = new String[] { ".js/", ".rhino/" };
 		ResourcePath resourcePath = AbstractJavascriptExecutor.generateResourcePath(module, extensions);
-		assertEquals("module1.js", resourcePath.getModule());
+		assertEquals("myproject/module1.js", resourcePath.getModule());
 		assertEquals("", resourcePath.getPath());
 	}
 
 	@Test
 	public void generateResourcePathNoPathSlash() {
-		String module = "module1.js/";
-		String[] extensions = new String[] { ".js", ".rhino" };
+		String module = "myproject/module1.js/";
+		String[] extensions = new String[] { ".js/", ".rhino/" };
 		ResourcePath resourcePath = AbstractJavascriptExecutor.generateResourcePath(module, extensions);
-		assertEquals("module1.js", resourcePath.getModule());
+		assertEquals("myproject/module1.js", resourcePath.getModule());
 		assertEquals("", resourcePath.getPath());
 	}
 
 	@Test
 	public void generateResourcePathRhinoNoPath() {
-		String module = "module1.rhino";
-		String[] extensions = new String[] { ".js", ".rhino" };
+		String module = "myproject/module1.rhino";
+		String[] extensions = new String[] { ".js/", ".rhino/" };
 		ResourcePath resourcePath = AbstractJavascriptExecutor.generateResourcePath(module, extensions);
-		assertEquals("module1.rhino", resourcePath.getModule());
+		assertEquals("myproject/module1.rhino", resourcePath.getModule());
 		assertEquals("", resourcePath.getPath());
 	}
 
 	@Test
 	public void generateResourcePathRhinoNoPathSlash() {
-		String module = "module1.rhino";
-		String[] extensions = new String[] { ".js", ".rhino" };
+		String module = "myproject/module1.rhino";
+		String[] extensions = new String[] { ".js/", ".rhino/" };
 		ResourcePath resourcePath = AbstractJavascriptExecutor.generateResourcePath(module, extensions);
-		assertEquals("module1.rhino", resourcePath.getModule());
+		assertEquals("myproject/module1.rhino", resourcePath.getModule());
 		assertEquals("", resourcePath.getPath());
 	}
 
