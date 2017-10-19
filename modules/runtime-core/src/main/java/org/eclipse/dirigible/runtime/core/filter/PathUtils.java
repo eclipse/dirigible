@@ -36,7 +36,7 @@ public class PathUtils {
 
 	public static String extractPathWebSocket(HandshakeRequest request) {
 		String requestPath = request.getRequestURI().toString();
-		if (requestPath == null) {
+		if ("".equals(requestPath)) {
 			requestPath = IRepository.SEPARATOR;
 		}
 		return requestPath;
