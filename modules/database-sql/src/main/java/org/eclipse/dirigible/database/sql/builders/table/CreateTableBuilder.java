@@ -12,16 +12,22 @@ package org.eclipse.dirigible.database.sql.builders.table;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
 
 public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 
 	private String table = null;
 	private List<String[]> columns = new ArrayList<String[]>();
+	private CreateTablePrimaryKeyBuilder primaryKey;
+	private List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<CreateTableForeignKeyBuilder>();
+	private List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<CreateTableUniqueIndexBuilder>();
+	private List<CreateTableCheckBuilder> checks = new ArrayList<CreateTableCheckBuilder>();
 
 	public CreateTableBuilder(ISqlDialect dialect, String table) {
 		super(dialect);
@@ -114,6 +120,50 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 		return this.column(name, DataType.CHAR, isPrimaryKey, isNullable, isUnique, coulmn);
 	}
 
+	public CreateTableBuilder primaryKey(String name, String[] columns) {
+		if (this.primaryKey != null) {
+			throw new SqlException("Setting of primary key must be called only once");
+		}
+		this.primaryKey = new CreateTablePrimaryKeyBuilder(this.getDialect(), name);
+		for (String column : columns) {
+			this.primaryKey.column(column);
+		}
+		return this;
+	}
+
+	public CreateTableBuilder primaryKey(String[] columns) {
+		return primaryKey(null, columns);
+	}
+
+	public CreateTableBuilder foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
+		CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
+		for (String column : columns) {
+			foreignKey.column(column);
+		}
+		foreignKey.referencedTable(referencedTable);
+		for (String column : referencedColumns) {
+			foreignKey.referencedColumn(column);
+		}
+		this.foreignKeys.add(foreignKey);
+		return this;
+	}
+
+	public CreateTableBuilder unique(String name, String[] columns) {
+		CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
+		for (String column : columns) {
+			uniqueIndex.column(column);
+		}
+		this.uniqueIndices.add(uniqueIndex);
+		return this;
+	}
+
+	public CreateTableBuilder check(String name, String expression) {
+		CreateTableCheckBuilder check = new CreateTableCheckBuilder(this.getDialect(), name);
+		check.expression(expression);
+		this.checks.add(check);
+		return this;
+	}
+
 	@Override
 	public String generate() {
 
@@ -125,8 +175,24 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 		// TABLE
 		generateTable(sql);
 
+		sql.append(SPACE).append(OPEN);
+
 		// COLUMNS
 		generateColumns(sql);
+
+		// PRIMARY KEY
+		generatePrimaryKey(sql);
+
+		// FOREIGN KEYS
+		generateForeignKeys(sql);
+
+		// UNIQUE INDICES
+		generateUniqueIndices(sql);
+
+		// INDICES
+		generateChecks(sql);
+
+		sql.append(CLOSE);
 
 		return sql.toString();
 	}
@@ -137,7 +203,69 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
-			sql.append(SPACE).append(OPEN).append(traverseColumns()).append(CLOSE);
+			sql.append(traverseColumns());
+		}
+	}
+
+	protected void generatePrimaryKey(StringBuilder sql) {
+		if (this.primaryKey != null) {
+			sql.append(COMMA).append(SPACE);
+			if (this.primaryKey.getName() != null) {
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(this.primaryKey.getName()).append(SPACE);
+			}
+			sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
+					.append(traverseColumnNames(this.primaryKey.getColumns())).append(CLOSE);
+		}
+	}
+
+	protected void generateForeignKeys(StringBuilder sql) {
+		for (CreateTableForeignKeyBuilder foreignKey : this.foreignKeys) {
+			generateForeignKey(sql, foreignKey);
+		}
+	}
+
+	protected void generateForeignKey(StringBuilder sql, CreateTableForeignKeyBuilder foreignKey) {
+		if (foreignKey != null) {
+			sql.append(COMMA).append(SPACE);
+			if (foreignKey.getName() != null) {
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKey.getName()).append(SPACE);
+			}
+			sql.append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
+					.append(traverseColumnNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE)
+					.append(foreignKey.getReferencedTable()).append(OPEN).append(traverseColumnNames(foreignKey.getReferencedColumns()))
+					.append(CLOSE);
+		}
+	}
+
+	protected void generateUniqueIndices(StringBuilder sql) {
+		for (CreateTableUniqueIndexBuilder uniqueIndex : this.uniqueIndices) {
+			generateUniqueIndex(sql, uniqueIndex);
+		}
+	}
+
+	protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
+		if (uniqueIndex != null) {
+			sql.append(COMMA).append(SPACE);
+			if (uniqueIndex.getName() != null) {
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(uniqueIndex.getName()).append(SPACE);
+			}
+			sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseColumnNames(uniqueIndex.getColumns())).append(CLOSE);
+		}
+	}
+
+	protected void generateChecks(StringBuilder sql) {
+		for (CreateTableCheckBuilder index : this.checks) {
+			generateCheck(sql, index);
+		}
+	}
+
+	protected void generateCheck(StringBuilder sql, CreateTableCheckBuilder check) {
+		if (check != null) {
+			sql.append(COMMA).append(SPACE);
+			if (check.getName() != null) {
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(check.getName()).append(SPACE);
+			}
+			sql.append(KEYWORD_CHECK).append(SPACE).append(OPEN).append(check.getExpression()).append(CLOSE);
 		}
 	}
 
@@ -149,6 +277,15 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 				snippet.append(arg).append(SPACE);
 			}
 			snippet.append(COMMA).append(SPACE);
+		}
+		return snippet.toString().substring(0, snippet.length() - 2);
+	}
+
+	protected String traverseColumnNames(Set<String> columns) {
+		StringBuilder snippet = new StringBuilder();
+		snippet.append(SPACE);
+		for (String column : columns) {
+			snippet.append(column).append(SPACE).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}

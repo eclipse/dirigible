@@ -46,6 +46,8 @@ public interface ISqlKeywords {
 	public static final String KEYWORD_CREATE = "CREATE"; //$NON-NLS-1$
 	public static final String KEYWORD_TABLE = "TABLE"; //$NON-NLS-1$
 	public static final String KEYWORD_PRIMARY = "PRIMARY"; //$NON-NLS-1$
+	public static final String KEYWORD_FOREIGN = "FOREIGN"; //$NON-NLS-1$
+	public static final String KEYWORD_REFERENCES = "REFERENCES"; //$NON-NLS-1$
 	public static final String KEYWORD_KEY = "KEY"; //$NON-NLS-1$
 	public static final String KEYWORD_DROP = "DROP"; //$NON-NLS-1$
 	public static final String KEYWORD_DELETE = "DELETE"; //$NON-NLS-1$
@@ -54,10 +56,13 @@ public interface ISqlKeywords {
 	public static final String KEYWORD_SEQUENCE = "SEQUENCE"; //$NON-NLS-1$
 	public static final String KEYWORD_NEXT_VALUE_FOR = "NEXT VALUE FOR"; //$NON-NLS-1$
 	public static final String KEYWORD_UNIQUE = "UNIQUE"; //$NON-NLS-1$
+	public static final String KEYWORD_INDEX = "INDEX"; //$NON-NLS-1$
+	public static final String KEYWORD_CHECK = "CHECK"; //$NON-NLS-1$
 	public static final String KEYWORD_COLUMN = "COLUMN"; //$NON-NLS-1$
 	public static final String KEYWORD_ROWS = "ROWS"; //$NON-NLS-1$
 	public static final String KEYWORD_VIEW = "VIEW"; //$NON-NLS-1$
 	public static final String KEYWORD_FOR_UPDATE = "FOR UPDATE"; //$NON-NLS-1$
+	public static final String KEYWORD_CONSTRAINT = "CONSTRAINT"; //$NON-NLS-1$
 
 	public static final String FUNCTION_CURRENT_DATE = "CURRENT_DATE"; //$NON-NLS-1$
 	public static final String FUNCTION_CURRENT_TIME = "CURRENT_TIME"; //$NON-NLS-1$

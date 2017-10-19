@@ -60,6 +60,8 @@ public class DataStructureTableModel extends DataStructureModel {
 
 	private List<DataStructureTableColumnModel> columns = new ArrayList<DataStructureTableColumnModel>();
 
+	private DataStructureTableConstraintsModel constraints = new DataStructureTableConstraintsModel();
+
 	/**
 	 * Getter for the columns
 	 *
@@ -67,6 +69,10 @@ public class DataStructureTableModel extends DataStructureModel {
 	 */
 	public List<DataStructureTableColumnModel> getColumns() {
 		return columns;
+	}
+
+	public DataStructureTableConstraintsModel getConstraints() {
+		return constraints;
 	}
 
 }

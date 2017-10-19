@@ -153,6 +153,27 @@ It is purely text generation and formating library without a requirement for an 
 
 > CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )
 
+### Create Table with Constraints
+
+```java
+
+	String sql = SqlFactory.getDefault()
+				.create()
+				.table("CUSTOMERS")
+				.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NOT_NULL, Modifiers.UNIQUE, "(20)")
+				.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+				.column("ADDRESS_ID", DataType.INTEGER, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE)
+				.primaryKey(new String[] { "FIRST_NAME", "LAST_NAME" })
+				.foreignKey("ADDRESS_FK", new String[] { "PERSON_ADDRESS_ID" }, "ADDRESSES", new String[] { "ADDRESS_ID" })
+				.unique("LAST_NAME_UNIQUE", new String[] { "LAST_NAME" })
+				.check("LAST_NAME_CHECK", "LAST_NAME = 'Smith'")
+				.build();
+				
+```
+
+> CREATE TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) NOT NULL , LAST_NAME VARCHAR (30) , ADDRESS_ID INTEGER , PRIMARY KEY ( FIRST_NAME , LAST_NAME ), CONSTRAINT ADDRESS_FK FOREIGN KEY ( PERSON_ADDRESS_ID ) REFERENCES ADDRESSES( ADDRESS_ID ), CONSTRAINT LAST_NAME_UNIQUE UNIQUE ( LAST_NAME ), CONSTRAINT LAST_NAME_CHECK CHECK (LAST_NAME = 'Smith'))
+
+
 ### Create View
 
 ```java
