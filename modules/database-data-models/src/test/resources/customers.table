@@ -7,7 +7,7 @@
 				"name":"id",
 				"type":"INTEGER",
 				"length":"0",
-				"notNull":"true",
+				"nullable":"false",
 				"primaryKey":"true",
 				"defaultValue":""
 			},
@@ -15,7 +15,7 @@
 				"name":"CUSTOMER_FIRST_NAME",
 				"type":"VARCHAR",
 				"length":"32",
-				"notNull":"false",
+				"nullable":"true",
 				"primaryKey":"false",
 				"defaultValue":""
 			},

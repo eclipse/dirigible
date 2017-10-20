@@ -97,6 +97,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 		return this.column(name, DataType.BIGINT, isPrimaryKey, isNullable, isUnique, args);
 	}
 
+	public CreateTableBuilder columnSmallint(String name, boolean isPrimaryKey, boolean isNullable, boolean isUnique, String... args) {
+		return this.column(name, DataType.SMALLINT, isPrimaryKey, isNullable, isUnique, args);
+	}
+
 	public CreateTableBuilder columnReal(String name, boolean isPrimaryKey, boolean isNullable, boolean isUnique, String... args) {
 		return this.column(name, DataType.REAL, isPrimaryKey, isNullable, isUnique, args);
 	}

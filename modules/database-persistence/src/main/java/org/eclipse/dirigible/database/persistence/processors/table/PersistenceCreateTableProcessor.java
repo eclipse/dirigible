@@ -61,6 +61,10 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					createTableBuilder.columnBigint(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
 							columnModel.isUnique());
 					break;
+				case SMALLINT:
+					createTableBuilder.columnSmallint(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
 				case REAL:
 					createTableBuilder.columnReal(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
 							columnModel.isUnique());

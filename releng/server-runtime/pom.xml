@@ -9,7 +9,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-    <name>Server - Runtime</name>
+    <name>Releng - Server - Runtime</name>
 	<artifactId>dirigible-server-runtime</artifactId>
 	<packaging>war</packaging>
 	
@@ -146,6 +146,11 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-persistence</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-data-models</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>

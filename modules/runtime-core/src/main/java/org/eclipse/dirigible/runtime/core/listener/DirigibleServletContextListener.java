@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.runtime.core.listener;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -135,7 +136,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.info("Starting Scheduler...");
 		try {
 			injector.getInstance(SchedulerInitializer.class).initialize();
-		} catch (SchedulerException e) {
+		} catch (SchedulerException | SQLException | IOException e) {
 			logger.error("Failed starting Scheduler", e);
 		}
 		logger.info("Done starting Scheduler.");

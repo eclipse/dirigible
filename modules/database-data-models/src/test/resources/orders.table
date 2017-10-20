@@ -7,7 +7,7 @@
 				"name":"id",
 				"type":"INTEGER",
 				"length":"0",
-				"notNull":"true",
+				"nullable":"false",
 				"primaryKey":"true",
 				"defaultValue":""
 			},
@@ -15,7 +15,7 @@
 				"name":"amount",
 				"type":"FLOAT",
 				"length":"0",
-				"notNull":"false",
+				"nullable":"true",
 				"primaryKey":"false",
 				"defaultValue":"",
 				"precision": "5",

@@ -2,38 +2,44 @@ package org.eclipse.dirigible.core.scheduler.manager;
 
 import static java.text.MessageFormat.format;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
+import org.eclipse.dirigible.core.scheduler.quartz.QuartzDatabaseLayoutInitializer;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SchedulerInitializer {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerInitializer.class);
-	
+
 	@Inject
 	private SchedulerCoreService schedulerCoreService;
-	
-	public void initialize() throws SchedulerException {
-		
+
+	@Inject
+	private QuartzDatabaseLayoutInitializer quartzDatabaseLayoutInitializer;
+
+	public void initialize() throws SchedulerException, SQLException, IOException {
+
 		logger.trace("Initializing Job Scheduler Service...");
-		
+
 		initializeScheduler();
-		
+
 		// schedule the System Job
 		scheduleSystemJob();
-		
+
 		// enumerate the Internal Jobs
 		scheduleInternalJobs();
-		
+
 		startScheduler();
-		
+
 		logger.trace("Done initializing Job Scheduler Service.");
 	}
 
@@ -55,7 +61,7 @@ public class SchedulerInitializer {
 			logger.trace(format("Done installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()));
 		}
 		logger.trace("Done initializing the Internal Jobs.");
-		
+
 	}
 
 	private void scheduleSystemJob() throws SchedulerException {
@@ -73,14 +79,13 @@ public class SchedulerInitializer {
 		SchedulerManager.startScheduler();
 	}
 
-	private void initializeScheduler() throws SchedulerException {
+	private void initializeScheduler() throws SchedulerException, SQLException, IOException {
+		quartzDatabaseLayoutInitializer.initialize();
 		SchedulerManager.createScheduler();
 	}
 
 	public static void shutdown() throws SchedulerException {
 		SchedulerManager.shutdownScheduler();
 	}
-	
-	
 
 }

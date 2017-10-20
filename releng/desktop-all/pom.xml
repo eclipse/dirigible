@@ -9,7 +9,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-    <name>Desktop - All</name>
+    <name>Releng - Desktop - All</name>
 	<artifactId>dirigible-desktop-all</artifactId>
 	<packaging>war</packaging>
 	
@@ -310,6 +310,11 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-persistence</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-data-models</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>

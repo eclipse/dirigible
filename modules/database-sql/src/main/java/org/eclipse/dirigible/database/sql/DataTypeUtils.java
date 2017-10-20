@@ -35,6 +35,7 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.TIME, DataType.TIME);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.INTEGER, DataType.INTEGER);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BIGINT, DataType.BIGINT);
+		DATABASE_TYPE_TO_DATA_TYPE.put(Types.SMALLINT, DataType.SMALLINT);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.REAL, DataType.REAL);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.DOUBLE, DataType.DOUBLE);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.DATE, DataType.DATE);
@@ -127,6 +128,10 @@ public class DataTypeUtils {
 
 	public static boolean isBigint(String dataType) {
 		return DataType.BIGINT.toString().equals(dataType);
+	}
+
+	public static boolean isSmallint(String dataType) {
+		return DataType.SMALLINT.toString().equals(dataType);
 	}
 
 	public static boolean isInteger(String dataType) {

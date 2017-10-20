@@ -1,0 +1,26 @@
+{
+	"name": "QUARTZ_PAUSED_TRIGGER_GRPS",
+	"type": "TABLE",
+	"columns":
+		[
+			{
+				"name":"SCHED_NAME",
+				"type":"VARCHAR",
+				"length":"120",
+				"nullable":"false",
+				"primaryKey":"false"
+			},
+			{
+				"name":"TRIGGER_GROUP",
+				"type":"VARCHAR",
+				"length":"200",
+				"nullable":"false",
+				"primaryKey":"false"
+			}
+		],
+	"constraints": {
+		"primaryKey": {
+			"columns": ["SCHED_NAME","TRIGGER_GROUP"]
+		}
+	}
+}
