@@ -35,20 +35,15 @@
 			<version>${dirigible.version}</version>
     	</dependency>
     	<dependency>
-		    <groupId>javax.persistence</groupId>
-		    <artifactId>persistence-api</artifactId>
-		    <version>1.0</version>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-core</artifactId>
+		    <version>${lucene.version}</version>
 		</dependency>
 		<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-persistence</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-auth</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-queryparser</artifactId>
+		    <version>${lucene.version}</version>
+		</dependency>
     	
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
@@ -56,5 +51,9 @@
 			<version>${dirigible.version}</version>
     	</dependency>
     </dependencies>
+    
+    <properties>
+    	<lucene.version>7.0.0</lucene.version>
+    </properties>
 
 </project>
