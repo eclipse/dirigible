@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-api-facades</artifactId>
 		<version>${dirigible.version}</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Indexing</name>
-	<artifactId>dirigible-core-indexing</artifactId>
+	<name>API - Facade - indexing</name>
+	<artifactId>dirigible-api-indexing</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -30,30 +30,21 @@
     
     <dependencies>
     	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-api</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
-    	<dependency>
-		    <groupId>org.apache.lucene</groupId>
-		    <artifactId>lucene-core</artifactId>
-		    <version>${lucene.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.lucene</groupId>
-		    <artifactId>lucene-queryparser</artifactId>
-		    <version>${lucene.version}</version>
-		</dependency>
-    	
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-test</artifactId>
-			<version>${dirigible.version}</version>
-    	</dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-api</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-config</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-core-indexing</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
+
     </dependencies>
-    
-    <properties>
-    	<lucene.version>7.0.1</lucene.version>
-    </properties>
 
 </project>

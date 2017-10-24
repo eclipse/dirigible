@@ -95,6 +95,10 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("utils/v3/uuid/alias-modules.js");
 		TEST_MODULES.add("utils/v3/url/encode.js");
 		TEST_MODULES.add("utils/v3/url/decode.js");
+		
+		TEST_MODULES.add("indexing/v3/writer/add.js");
+		TEST_MODULES.add("indexing/v3/searcher/search.js");
+		TEST_MODULES.add("indexing/v3/searcher/between.js");
 
 	}
 

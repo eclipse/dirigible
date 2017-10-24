@@ -34,3 +34,8 @@ exports.getUpload = function() {
 	var upload = require('http/v3/upload');
 	return upload;
 };
+
+exports.getRest = function() {
+	var rest = require('http/v3/rest');
+	return rest;
+};

@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -32,6 +35,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.indexing.api.IIndexingCoreService;
 import org.eclipse.dirigible.core.indexing.api.IndexingException;
@@ -43,7 +47,7 @@ public class IndexingCoreService implements IIndexingCoreService {
 
 	private static final String FIELD_CONTENTS = "contents";
 	private static final String FIELD_MODIFIED = "modified";
-	private static final String FIELD_PATH = "path";
+	private static final String FIELD_LOCATION = "location";
 
 	private static final String US = "_";
 	private static final String BS = "\\";
@@ -60,7 +64,7 @@ public class IndexingCoreService implements IIndexingCoreService {
 	}
 
 	@Override
-	public void add(String index, String location, long lastModified, byte[] contents, Map<String, String> parameters) throws IndexingException {
+	public void add(String index, String location, byte[] contents, long lastModified, Map<String, String> parameters) throws IndexingException {
 		String indexName = index;
 		if (index != null) {
 			indexName = flattenizeIndexName(indexName);
@@ -76,15 +80,17 @@ public class IndexingCoreService implements IIndexingCoreService {
 			IndexWriter writer = new IndexWriter(dir, iwc);
 			try {
 				Document doc = new Document();
-				Field pathField = new StringField(FIELD_PATH, location, Field.Store.YES);
+				Field pathField = new StringField(FIELD_LOCATION, location, Field.Store.YES);
 				doc.add(pathField);
 				doc.add(new LongPoint(FIELD_MODIFIED, lastModified));
-				for (String key : parameters.keySet()) {
-					doc.add(new StringField(key, parameters.get(key), Field.Store.YES));
+				if (parameters != null) {
+					for (String key : parameters.keySet()) {
+						doc.add(new StringField(key, parameters.get(key), Field.Store.YES));
+					}
 				}
 				doc.add(new TextField(FIELD_CONTENTS,
 						new BufferedReader(new InputStreamReader(new ByteArrayInputStream(contents), StandardCharsets.UTF_8))));
-				writer.updateDocument(new Term(FIELD_PATH, location), doc);
+				writer.updateDocument(new Term(FIELD_LOCATION, location), doc);
 			} finally {
 				writer.close();
 			}
@@ -94,8 +100,8 @@ public class IndexingCoreService implements IIndexingCoreService {
 	}
 
 	@Override
-	public String[] search(String index, String term) throws IndexingException {
-		List<String> results = new ArrayList<String>();
+	public String search(String index, String term) throws IndexingException {
+		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
 		String indexName = index;
 		if (index != null) {
 			indexName = flattenizeIndexName(indexName);
@@ -105,18 +111,69 @@ public class IndexingCoreService implements IIndexingCoreService {
 		try {
 			Directory dir = FSDirectory.open(Paths.get(ROOT_FOLDER + File.separator + indexName));
 			IndexReader reader = DirectoryReader.open(dir);
-			IndexSearcher searcher = new IndexSearcher(reader);
-			Analyzer analyzer = new StandardAnalyzer();
-			String field = FIELD_CONTENTS;
-			QueryParser parser = new QueryParser(field, analyzer);
-			Query query = parser.parse(term);
-			TopDocs topDocs = searcher.search(query, MAX_RESULTS);
-			for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-				Document document = searcher.doc(scoreDoc.doc);
-				results.add(document.getField(FIELD_PATH).stringValue());
+			try {
+				IndexSearcher searcher = new IndexSearcher(reader);
+				Analyzer analyzer = new StandardAnalyzer();
+				String field = FIELD_CONTENTS;
+				QueryParser parser = new QueryParser(field, analyzer);
+				Query query = parser.parse(term);
+				TopDocs topDocs = searcher.search(query, MAX_RESULTS);
+				for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+					Document document = searcher.doc(scoreDoc.doc);
+					Map<String, String> map = new HashMap<String, String>();
+					for (IndexableField indexableField : document.getFields()) {
+						map.put(indexableField.name(), indexableField.stringValue());
+					}
+					results.add(map);
+				}
+			} finally {
+				reader.close();
 			}
-			return results.toArray(new String[] {});
+			return GsonHelper.GSON.toJson(results);
 		} catch (IOException | ParseException e) {
+			throw new IndexingException(e);
+		}
+	}
+
+	@Override
+	public String before(String index, long date) throws IndexingException {
+		return between(index, new Date(0).getTime(), date);
+	}
+
+	@Override
+	public String after(String index, long date) throws IndexingException {
+		return between(index, date, new Date().getTime());
+	}
+
+	@Override
+	public String between(String index, long lower, long upper) throws IndexingException {
+		List<Map<String, String>> results = new ArrayList<Map<String, String>>();
+		String indexName = index;
+		if (index != null) {
+			indexName = flattenizeIndexName(indexName);
+		} else {
+			throw new IndexingException("Index name may not be null");
+		}
+		try {
+			Directory dir = FSDirectory.open(Paths.get(ROOT_FOLDER + File.separator + indexName));
+			IndexReader reader = DirectoryReader.open(dir);
+			try {
+				IndexSearcher searcher = new IndexSearcher(reader);
+				Query query = LongPoint.newRangeQuery(FIELD_MODIFIED, lower, upper);
+				TopDocs topDocs = searcher.search(query, MAX_RESULTS);
+				for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+					Document document = searcher.doc(scoreDoc.doc);
+					Map<String, String> map = new HashMap<String, String>();
+					for (IndexableField indexableField : document.getFields()) {
+						map.put(indexableField.name(), indexableField.stringValue());
+					}
+					results.add(map);
+				}
+			} finally {
+				reader.close();
+			}
+			return GsonHelper.GSON.toJson(results);
+		} catch (IOException e) {
 			throw new IndexingException(e);
 		}
 	}

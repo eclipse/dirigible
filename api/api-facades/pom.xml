@@ -23,6 +23,7 @@
 		<module>api-utils</module>
 		<module>api-io</module>
 		<module>api-messaging</module>
+		<module>api-indexing</module>
 	</modules>
 
 </project>

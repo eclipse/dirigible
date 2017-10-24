@@ -5,10 +5,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.indexing.api.IIndexingCoreService;
 import org.eclipse.dirigible.core.indexing.api.IndexingException;
 import org.eclipse.dirigible.core.indexing.service.IndexingCoreService;
@@ -29,33 +31,54 @@ public class IndexingCoreServiceTest extends AbstractGuiceTest {
 	}
 
 	@Test
-	public void createListenerTest() throws IndexingException {
+	public void searchTest() throws IndexingException {
 
 		Map<String, String> parameters = new HashMap<String, String>();
-		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file1.txt", new Date().getTime(),
-				"Apache LuceneTM is a high-performance, full-featured text search engine library written entirely in Java.".getBytes(), parameters);
-		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file2.txt", new Date().getTime(),
+		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file1.txt",
+				"Apache LuceneTM is a high-performance, full-featured text search engine library written entirely in Java.".getBytes(),
+				new Date().getTime(), parameters);
+		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file2.txt",
 				"It is a technology suitable for nearly any application that requires full-text search, especially cross-platform.".getBytes(),
-				parameters);
-		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file2.txt", new Date().getTime(),
+				new Date().getTime(), parameters);
+		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file3.txt",
 				"Apache Lucene is an open source project available for free download. Please use the links on the right to access Lucene.".getBytes(),
-				parameters);
+				new Date().getTime(), parameters);
 
-		String[] matches = indexingCoreService.search(TEST_INDEX, "Lucene");
+		List matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "Lucene"), List.class);
 		assertNotNull(matches);
-		assertEquals(1, matches.length);
+		assertEquals(1, matches.size());
 
-		matches = indexingCoreService.search(TEST_INDEX, "Apache");
+		matches = matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "Apache"), List.class);
 		assertNotNull(matches);
-		assertEquals(2, matches.length);
+		assertEquals(2, matches.size());
 
-		matches = indexingCoreService.search(TEST_INDEX, "apache");
+		matches = matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "apache"), List.class);
 		assertNotNull(matches);
-		assertEquals(2, matches.length);
+		assertEquals(2, matches.size());
 
-		matches = indexingCoreService.search(TEST_INDEX, "NoMatches");
+		matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "NoMatches"), List.class);
 		assertNotNull(matches);
-		assertEquals(0, matches.length);
+		assertEquals(0, matches.size());
+	}
+
+	@Test
+	public void betweenTest() throws IndexingException {
+
+		Map<String, String> parameters = new HashMap<String, String>();
+		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file4.txt",
+				"Apache LuceneTM is a high-performance, full-featured text search engine library written entirely in Java.".getBytes(),
+				new Date(123).getTime(), parameters);
+		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file5.txt",
+				"It is a technology suitable for nearly any application that requires full-text search, especially cross-platform.".getBytes(),
+				new Date(456).getTime(), parameters);
+		indexingCoreService.add(TEST_INDEX, "/root/folder/subfolder/file6.txt",
+				"Apache Lucene is an open source project available for free download. Please use the links on the right to access Lucene.".getBytes(),
+				new Date(789).getTime(), parameters);
+
+		List matches = GsonHelper.GSON.fromJson(indexingCoreService.between(TEST_INDEX, new Date(124).getTime(), new Date(689).getTime()),
+				List.class);
+		assertNotNull(matches);
+		assertEquals(1, matches.size());
 	}
 
 }

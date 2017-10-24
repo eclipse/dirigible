@@ -48,6 +48,7 @@ public class MessagingManager {
 				broker.setPersistenceAdapter(persistenceAdapter);
 				broker.setPersistent(true);
 				broker.setUseJmx(false);
+				// broker.setUseShutdownHook(false);
 				PListStore pListStore = new PListStoreImpl();
 				pListStore.setDirectory(new File(LOCATION_TEMP_STORE));
 				broker.setTempDataStore(pListStore);
