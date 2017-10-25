@@ -114,6 +114,11 @@
 		 	<artifactId>dirigible-api-indexing</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-log</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
 		
 		<!-- Repository -->
 		<dependency>
@@ -325,6 +330,11 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-indexing</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-log</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		

@@ -44,6 +44,7 @@
 		<module>api-io</module>
 		<module>api-messaging</module>
 		<module>api-indexing</module>
+		<module>api-log</module>
 	</modules>
 
 	<profiles>

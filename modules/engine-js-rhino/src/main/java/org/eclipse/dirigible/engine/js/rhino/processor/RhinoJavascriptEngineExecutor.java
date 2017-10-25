@@ -13,6 +13,7 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.engine.js.api.ResourcePath;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.ModuleScriptProvider;
@@ -27,6 +28,19 @@ import org.slf4j.LoggerFactory;
 public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineExecutor.class);
+
+	static {
+		ContextFactory.initGlobal(new ContextFactory() {
+			@Override
+			protected boolean hasFeature(Context cx, int featureIndex) {
+				if (featureIndex == Context.FEATURE_LOCATION_INFORMATION_IN_ERROR) {
+					return true;
+				}
+				return super.hasFeature(cx, featureIndex);
+			}
+		});
+		// RhinoException.setStackStyle(StackStyle.V8);
+	}
 
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
