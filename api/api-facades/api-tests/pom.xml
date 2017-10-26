@@ -131,6 +131,11 @@
             <artifactId>dirigible-api-javascript-indexing</artifactId>
             <version>${dirigible.version}</version>
         </dependency>
+         <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-javascript-log</artifactId>
+            <version>${dirigible.version}</version>
+        </dependency>
         
     </dependencies>
 
