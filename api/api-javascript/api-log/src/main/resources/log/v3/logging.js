@@ -107,8 +107,13 @@ exports.getLogger = function(loggerName) {
 		}, 
 		log: function(msg, level){
 			var msgParameters = [];
-			if(arguments.length>2)
+			if(arguments.length>2){
 				msgParameters = Array.prototype.slice.call(arguments, 2);
+				//prepare for serialization
+				msgParameters = msgParameters.map(function(param){
+					return JSON.stringify(param);
+				});
+			}
 			require('core/v3/java').call(LogFacadeClassName, "log", [loggerName, level, msg, msgParameters]);
 		},
 		logError: function(msg, error, level){
