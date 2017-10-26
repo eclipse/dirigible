@@ -9,8 +9,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
@@ -45,7 +43,6 @@ public class RhinoJavascriptEngineRestService implements IRestService {
 	 */
 	@GET
 	@Path("/{path:.*}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Execute Server Side JavaScript Rhino Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeService(@PathParam("path") String path) {
@@ -67,7 +64,6 @@ public class RhinoJavascriptEngineRestService implements IRestService {
 	 */
 	@POST
 	@Path("/{path:.*}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeServicePost(@PathParam("path") String path) {
@@ -80,7 +76,6 @@ public class RhinoJavascriptEngineRestService implements IRestService {
 	 */
 	@PUT
 	@Path("/{path:.*}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeServicePut(@PathParam("path") String path) {
@@ -93,7 +88,6 @@ public class RhinoJavascriptEngineRestService implements IRestService {
 	 */
 	@DELETE
 	@Path("/{path:.*}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeServiceDelete(@PathParam("path") String path) {
@@ -106,7 +100,6 @@ public class RhinoJavascriptEngineRestService implements IRestService {
 	 */
 	@HEAD
 	@Path("/{path:.*}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeServiceHead(@PathParam("path") String path) {
