@@ -8,7 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
 "use strict";
 var ormstatements = require('db/v3/ormstatements');
 for(var propertyName in ormstatements) {

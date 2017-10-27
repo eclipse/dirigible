@@ -15,6 +15,7 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper;
 import org.slf4j.Logger;
@@ -22,6 +23,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+
+import ch.qos.logback.classic.db.SQLBuilder;
 
 public class DatabaseFacade implements IScriptingFacade {
 
@@ -85,7 +88,7 @@ public class DatabaseFacade implements IScriptingFacade {
 		return dataSource;
 	}
 
-	public static final String query(String databaseType, String datasourceName, String sql, String parameters) throws SQLException {
+	public static final String query(String sql, String parameters, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
@@ -112,19 +115,19 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
-	public static final String query(String databaseType, String sql, String parameters) throws SQLException {
-		return query(databaseType, null, sql, parameters);
+	public static final String query(String sql, String parameters, String databaseType) throws SQLException {
+		return query(sql, parameters, databaseType, null);
 	}
 
 	public static final String query(String sql, String parameters) throws SQLException {
-		return query(null, null, sql, parameters);
+		return query(sql, parameters, null, null);
 	}
 
 	public static final String query(String sql) throws SQLException {
-		return query(null, null, sql, null);
+		return query(sql, null, null, null);
 	}
 
-	public static final int update(String databaseType, String datasourceName, String sql, String parameters) throws SQLException {
+	public static final int update(String sql, String parameters, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
@@ -150,16 +153,16 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
-	public static final int update(String databaseType, String sql, String parameters) throws SQLException {
-		return update(databaseType, null, sql, parameters);
+	public static final int update(String sql, String parameters, String databaseType) throws SQLException {
+		return update(sql, parameters, databaseType, null);
 	}
 
 	public static final int update(String sql, String parameters) throws SQLException {
-		return update(null, null, sql, parameters);
+		return update(sql, parameters, null, null);
 	}
 
 	public static final int update(String sql) throws SQLException {
-		return update(null, null, sql, null);
+		return update(sql, null, null, null);
 	}
 
 	private static void setParameters(String parameters, PreparedStatement preparedStatement) throws SQLException {
@@ -205,6 +208,121 @@ public class DatabaseFacade implements IScriptingFacade {
 
 	public static final Connection getConnection() throws SQLException {
 		return getConnection(null, null);
+	}
+	
+	public static final long nextval(String sequence, String databaseType, String datasourceName) throws SQLException {
+		DataSource dataSource = getDataSource(databaseType, datasourceName);
+		if (dataSource == null) {
+			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
+			throw new IllegalArgumentException(error);
+		}
+		Connection connection = dataSource.getConnection();
+		try {
+			try {
+				return getNextVal(sequence, connection);
+			} catch (SQLException e) {
+				// assuming the sequence does not exists first time, hence create it implicitly
+				logger.warn( format("Implicitly creating a Sequence [{0}] due to: [{1}]", sequence, e.getMessage()));
+				createSequenceInternal(sequence, connection);
+				return getNextVal(sequence, connection);
+			}
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	private static long getNextVal(String sequence, Connection connection) throws SQLException {
+		String sql = SqlFactory.getNative(connection).nextval(sequence).build();
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		try {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getLong(1);
+			}
+			throw new SQLException("ResultSet is empty while getting next value of the Sequence: " + sequence);
+		} finally {
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	private static void createSequenceInternal(String sequence, Connection connection) throws SQLException {
+		String sql = SqlFactory.getNative(connection).create().sequence(sequence).build();
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		try {
+			preparedStatement.executeUpdate();
+		} finally {
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public static long nextval(String sequence, String databaseType) throws SQLException {
+		return nextval(sequence, databaseType, null);
+	}
+
+	public static long nextval(String sequence) throws SQLException {
+		return nextval(sequence, null, null);
+	}
+	
+	public static final void createSequence(String sequence, String databaseType, String datasourceName) throws SQLException {
+		DataSource dataSource = getDataSource(databaseType, datasourceName);
+		if (dataSource == null) {
+			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
+			throw new IllegalArgumentException(error);
+		}
+		Connection connection = dataSource.getConnection();
+		try {
+			createSequenceInternal(sequence, connection);
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	public static void createSequence(String sequence, String databaseType) throws SQLException {
+		createSequence(sequence, databaseType, null);
+	}
+
+	public static void createSequence(String sequence) throws SQLException {
+		createSequence(sequence, null, null);
+	}
+	
+	public static final void dropSequence(String sequence, String databaseType, String datasourceName) throws SQLException {
+		DataSource dataSource = getDataSource(databaseType, datasourceName);
+		if (dataSource == null) {
+			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
+			throw new IllegalArgumentException(error);
+		}
+		Connection connection = dataSource.getConnection();
+		try {
+			String sql = SqlFactory.getNative(connection).drop().sequence(sequence).build();
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			try {
+				preparedStatement.executeUpdate();
+			} finally {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+			}
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	public static void dropSequence(String sequence, String databaseType) throws SQLException {
+		dropSequence(sequence, databaseType, null);
+	}
+
+	public static void dropSequence(String sequence) throws SQLException {
+		dropSequence(sequence, null, null);
 	}
 
 }

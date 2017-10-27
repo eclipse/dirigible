@@ -8,7 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
 "use strict";
 var statements = require('db/v3/statements');
 for(var propertyName in statements) {

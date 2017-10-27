@@ -8,12 +8,23 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
-
 var java = require('core/v3/java');
 
-exports.execute = function(databaseType, datasourceName, sql, parameters) {
-	var resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'query', [databaseType, datasourceName]);
+exports.execute = function(sql, parameters, databaseType, datasourceName) {
+	var resultset = [];
+	if (parameters) {
+		if (databaseType) {
+			if (datasourceName) {
+				resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'query', [sql, parameters, databaseType, datasourceName]);
+			} else {
+				resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'query', [sql, parameters, databaseType]);
+			}
+		} else {
+			resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'query', [sql, parameters]);
+		}
+	} else {
+		resultset = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'query', [sql]);
+	}
 	if (resultset) {
 		return JSON.parse(resultset);
 	}

@@ -8,8 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
-
 var update = require('db/v3/update');
 for(var propertyName in update) {
 	exports[propertyName] = update[propertyName];

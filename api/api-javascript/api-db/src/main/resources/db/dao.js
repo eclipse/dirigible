@@ -8,7 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
 "use strict";
 var dao = require('db/v3/dao');
 for(var propertyName in dao) {

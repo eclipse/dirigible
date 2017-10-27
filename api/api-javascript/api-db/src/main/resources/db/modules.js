@@ -8,8 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
-
 exports.getDatabase = function() {
 	var database = require('db/v3/database');
 	return database;
@@ -23,4 +21,14 @@ exports.getQuery = function() {
 exports.getUpdate = function() {
 	var update = require('db/v3/update');
 	return update;
+};
+
+exports.getSequence = function() {
+	var sequence = require('db/v3/sequence');
+	return sequence;
+};
+
+exports.getDao = function() {
+	var dao = require('db/v3/dao');
+	return dao;
 };

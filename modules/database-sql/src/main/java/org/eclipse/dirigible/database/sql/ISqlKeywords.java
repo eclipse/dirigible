@@ -63,6 +63,8 @@ public interface ISqlKeywords {
 	public static final String KEYWORD_VIEW = "VIEW"; //$NON-NLS-1$
 	public static final String KEYWORD_FOR_UPDATE = "FOR UPDATE"; //$NON-NLS-1$
 	public static final String KEYWORD_CONSTRAINT = "CONSTRAINT"; //$NON-NLS-1$
+	public static final String KEYWORD_START = "START"; //$NON-NLS-1$
+	public static final String KEYWORD_WITH = "WITH"; //$NON-NLS-1$
 
 	public static final String FUNCTION_CURRENT_DATE = "CURRENT_DATE"; //$NON-NLS-1$
 	public static final String FUNCTION_CURRENT_TIME = "CURRENT_TIME"; //$NON-NLS-1$

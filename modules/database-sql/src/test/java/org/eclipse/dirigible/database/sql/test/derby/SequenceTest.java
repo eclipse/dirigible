@@ -18,35 +18,27 @@ import org.eclipse.dirigible.database.sql.dialects.derby.DerbySqlDialect;
 import org.junit.Test;
 
 public class SequenceTest {
-	
+
 	@Test
 	public void createSequence() {
-		String sql = SqlFactory.getNative(new DerbySqlDialect())
-			.create()
-			.sequence("CUSTOMERS_SEQUENCE")
-			.build();
-		
+		String sql = SqlFactory.getNative(new DerbySqlDialect()).create().sequence("CUSTOMERS_SEQUENCE").build();
+
 		assertNotNull(sql);
-		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
+		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE AS BIGINT START WITH 0", sql);
 	}
-	
+
 	@Test
 	public void dropSequnce() {
-		String sql = SqlFactory.getNative(new DerbySqlDialect())
-			.drop()
-			.sequence("CUSTOMERS_SEQUENCE")
-			.build();
-		
+		String sql = SqlFactory.getNative(new DerbySqlDialect()).drop().sequence("CUSTOMERS_SEQUENCE").build();
+
 		assertNotNull(sql);
 		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE RESTRICT", sql);
 	}
-	
+
 	@Test
 	public void nextvalSequnce() {
-		String sql = SqlFactory.getNative(new DerbySqlDialect())
-			.nextval("CUSTOMERS_SEQUENCE")
-			.build();
-		
+		String sql = SqlFactory.getNative(new DerbySqlDialect()).nextval("CUSTOMERS_SEQUENCE").build();
+
 		assertNotNull(sql);
 		assertEquals("( VALUES NEXT VALUE FOR CUSTOMERS_SEQUENCE )", sql);
 	}

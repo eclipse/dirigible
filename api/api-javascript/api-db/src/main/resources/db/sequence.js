@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-var query = require('db/v3/query');
-for(var propertyName in query) {
-	exports[propertyName] = query[propertyName];
+var sequence = require('db/v3/sequence');
+for(var propertyName in sequence) {
+	exports[propertyName] = sequence[propertyName];
 }

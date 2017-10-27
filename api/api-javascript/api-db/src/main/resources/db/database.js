@@ -8,8 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
-
 var database = require('db/v3/database');
 for(var propertyName in database) {
 	exports[propertyName] = database[propertyName];

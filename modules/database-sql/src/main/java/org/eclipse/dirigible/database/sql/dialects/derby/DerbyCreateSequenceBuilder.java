@@ -11,23 +11,18 @@
 package org.eclipse.dirigible.database.sql.dialects.derby;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder;
 
-public class DerbyCreateBranchingBuilder extends CreateBranchingBuilder {
+public class DerbyCreateSequenceBuilder extends CreateSequenceBuilder {
 
-	public DerbyCreateBranchingBuilder(ISqlDialect dialect) {
-		super(dialect);
+	public DerbyCreateSequenceBuilder(ISqlDialect dialect, String sequence) {
+		super(dialect, sequence);
 	}
 
 	@Override
-	public DerbyCreateViewBuilder view(String view) {
-		return new DerbyCreateViewBuilder(this.getDialect(), view);
-	}
-
-	@Override
-	public CreateSequenceBuilder sequence(String sequence) {
-		return new DerbyCreateSequenceBuilder(this.getDialect(), sequence);
+	protected void generateStart(StringBuilder sql) {
+		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append("BIGINT").append(SPACE).append(KEYWORD_START).append(SPACE).append(KEYWORD_WITH)
+				.append(SPACE).append(0);
 	}
 
 }
