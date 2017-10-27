@@ -32,3 +32,8 @@ exports.getDao = function() {
 	var dao = require('db/v3/dao');
 	return dao;
 };
+
+exports.getSql = function() {
+	var sql = require('db/v3/sql');
+	return sql;
+};

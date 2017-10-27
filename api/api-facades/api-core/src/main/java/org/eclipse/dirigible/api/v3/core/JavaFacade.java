@@ -9,7 +9,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
@@ -48,7 +47,8 @@ public class JavaFacade {
 
 			return result;
 		}
-		String message = format("No such static method [{0}] in class [{1}]", methodName, className);
+		String message = format("No such static method [{0}] in class [{1}] with parameters of types [{2}]", methodName, className,
+				Arrays.toString(parameterTypes));
 		logger.error(message);
 		throw new NoSuchMethodException(message);
 	}
@@ -157,7 +157,8 @@ public class JavaFacade {
 
 			return result;
 		}
-		String message = format("No such method [{0}] in class [{1}]", methodName, clazz.getName());
+		String message = format("No such method [{0}] in class [{1}] with parameters of types [{2}]", methodName, clazz.getName(),
+				Arrays.toString(parameterTypes));
 		logger.error(message);
 		throw new NoSuchMethodException(message);
 	}

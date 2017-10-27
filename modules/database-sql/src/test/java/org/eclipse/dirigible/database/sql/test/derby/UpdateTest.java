@@ -86,20 +86,5 @@ public class UpdateTest {
 			assertNotNull(sql);
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (PRICE > ? OR AMOUNT < ? AND COMPANY = 'SAP')", sql);
 	}
-	
-	@Test
-	public void updateWhereOrderLimit() {
-		String sql = SqlFactory.getNative(new DerbySqlDialect())
-				.update()
-				.table("CUSTOMERS")
-				.set("FIRST_NAME", "'John'")
-				.set("LAST_NAME", "'Smith'")
-				.where("COMPANY = 'SAP'")
-				.order("FIRST_NAME", false)
-				.limit(5)
-				.build();
-			
-			assertNotNull(sql);
-			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (COMPANY = 'SAP') ORDER BY FIRST_NAME DESC LIMIT 5", sql);
-	}
+
 }

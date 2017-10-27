@@ -16,6 +16,7 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper;
 import org.slf4j.Logger;
@@ -88,6 +89,8 @@ public class DatabaseFacade implements IScriptingFacade {
 		return dataSource;
 	}
 
+	//  ============  Query  ===========
+	
 	public static final String query(String sql, String parameters, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -126,6 +129,8 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static final String query(String sql) throws SQLException {
 		return query(sql, null, null, null);
 	}
+	
+	//  ===========  Update  ===========
 
 	public static final int update(String sql, String parameters, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
@@ -209,6 +214,9 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static final Connection getConnection() throws SQLException {
 		return getConnection(null, null);
 	}
+	
+	//  =========  Sequence  ===========
+	
 	
 	public static final long nextval(String sequence, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
@@ -324,5 +332,17 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static void dropSequence(String sequence) throws SQLException {
 		dropSequence(sequence, null, null);
 	}
+	
+	
+	//  =========== SQL ===========
+	
+	
+	public static SqlFactory getDefault() throws SQLException {
+		return SqlFactory.getDefault();
+	}
 
+	public static SqlFactory getNative(Connection connection) throws SQLException {
+		return SqlFactory.getNative(connection);
+	}
+	
 }

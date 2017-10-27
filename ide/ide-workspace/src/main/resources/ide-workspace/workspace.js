@@ -482,7 +482,7 @@ WorkspaceTreeAdapter.prototype.generateFile = function(resource, scope){
 		var segments = resource.path.split('/');
 		this.workspaceController.projectName = segments[2];
 		segments = segments.splice(3, segments.length);
-		this.workspaceController.fileName = new UriBuilder().path(segments).path("file_name.txt").build();
+		this.workspaceController.fileName = new UriBuilder().path(segments).path("fileName").build();
 		scope.$apply();
 		$('#generateFromTemplate').click();
 	}
@@ -744,6 +744,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	return {
 		generateFromTemplate : function(workspace, project, file, template, parameters, wsTree) {
 			var url = new UriBuilder().path(GENERATION_SVC_URL.split('/')).path(workspace).path(project).path(file.split('/')).build();
+			parameters = parameters === undefined || parameters === null ? [] : parameters;
 			return $http.post(url, {"template":template, "parameters":parameters})
 					.then(function(response){
 						wsTree.refresh();

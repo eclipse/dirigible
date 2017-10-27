@@ -81,8 +81,8 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					createTableBuilder.columnBlob(columnModel.getName(), columnModel.isNullable());
 					break;
 				case DECIMAL:
-					createTableBuilder.columnDecimal(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
-							columnModel.isUnique(), columnModel.getPrecision(), columnModel.getScale());
+					createTableBuilder.columnDecimal(columnModel.getName(), columnModel.getPrecision(), columnModel.getScale(),
+							columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique());
 					break;
 			}
 		}

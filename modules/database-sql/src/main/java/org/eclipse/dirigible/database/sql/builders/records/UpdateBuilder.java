@@ -24,13 +24,11 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	private String table;
 	private Map<String, String> values = new LinkedHashMap<String, String>();
 	private List<String> wheres = new ArrayList<String>();
-	private List<String> orders = new ArrayList<String>();
-	private int limit = -1;
 
 	public UpdateBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
-	
+
 	public UpdateBuilder table(String table) {
 		this.table = table;
 		return this;
@@ -43,24 +41,6 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 
 	public UpdateBuilder where(String condition) {
 		wheres.add(OPEN + condition + CLOSE);
-		return this;
-	}
-
-	public UpdateBuilder order(String column) {
-		return order(column, true);
-	}
-	
-	public UpdateBuilder order(String column, boolean asc) {
-		if (asc) {
-			this.orders.add(column + SPACE + KEYWORD_ASC);
-		} else {
-			this.orders.add(column + SPACE + KEYWORD_DESC);
-		}
-		return this;
-	}
-
-	public UpdateBuilder limit(int limit){
-		this.limit = limit;
 		return this;
 	}
 
@@ -79,36 +59,22 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 
 		// WHERE
 		generateWhere(sql, wheres);
-		
-		// ORDER BY
-		generateOrderBy(sql, orders);
-
-		// LIMIT
-		generateLimit(sql, limit);
 
 		return sql.toString();
 	}
 
 	protected void generateTable(StringBuilder sql) {
-		sql.append(SPACE)
-			.append(this.table);
+		sql.append(SPACE).append(this.table);
 	}
-	
+
 	protected void generateSetValues(StringBuilder sql) {
-		sql.append(SPACE)
-			.append(KEYWORD_SET);
+		sql.append(SPACE).append(KEYWORD_SET);
 		for (Entry<String, String> next : values.entrySet()) {
-			sql.append(SPACE)
-				.append(next.getKey())
-				.append(SPACE)
-				.append(EQUALS)
-				.append(SPACE)
-				.append(next.getValue())
-				.append(COMMA);
+			sql.append(SPACE).append(next.getKey()).append(SPACE).append(EQUALS).append(SPACE).append(next.getValue()).append(COMMA);
 		}
 		sql.delete(sql.length() - 1, sql.length());
 	}
-	
+
 	protected void generateUpdate(StringBuilder sql) {
 		sql.append(KEYWORD_UPDATE);
 	}
@@ -125,13 +91,4 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 		return wheres;
 	}
 
-	public List<String> getOrders() {
-		return orders;
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-	
-	
 }
