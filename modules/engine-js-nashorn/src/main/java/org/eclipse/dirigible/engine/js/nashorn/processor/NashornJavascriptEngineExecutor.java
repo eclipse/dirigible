@@ -10,7 +10,6 @@ import javax.script.ScriptException;
 
 import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
@@ -72,7 +71,10 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				forceFlush();
 			} catch (ScriptException e) {
 				if ((e.getMessage() != null) && e.getMessage().contains("\"exports\" is not defined")) {
-					throw new ScriptingDependencyException("Requested endpoint is not a service, but rather a library.");
+					String message = "Requested endpoint is not a service, but rather a library.";
+					// throw new ScriptingDependencyException(message);
+					logger.warn(message);
+					return message;
 				}
 				throw new ScriptingException(e);
 			}
