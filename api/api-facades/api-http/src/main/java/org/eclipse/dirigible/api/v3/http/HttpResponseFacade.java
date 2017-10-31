@@ -50,6 +50,28 @@ public class HttpResponseFacade implements IScriptingFacade {
 		}
 	}
 
+	public static final void print(Object o) {
+		if (o != null) {
+			print(o.toString());
+		}
+	}
+
+	public static final void print(int i) {
+		print(i + "");
+	}
+
+	public static final void print(double d) {
+		print(d + "");
+	}
+
+	public static final void print(Integer i) {
+		print(i + "");
+	}
+
+	public static final void print(Double d) {
+		print(d + "");
+	}
+
 	public static final void println(String text) {
 		HttpServletResponse response = getResponse();
 		if (response == null) {
@@ -60,6 +82,28 @@ public class HttpResponseFacade implements IScriptingFacade {
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	public static final void println(Object o) {
+		if (o != null) {
+			println(o.toString());
+		}
+	}
+
+	public static final void println(int i) {
+		println(i + "");
+	}
+
+	public static final void println(double d) {
+		println(d + "");
+	}
+
+	public static final void println(Integer i) {
+		println(i + "");
+	}
+
+	public static final void println(Double d) {
+		println(d + "");
 	}
 
 	public static final void write(byte[] bytes) {

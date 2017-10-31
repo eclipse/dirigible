@@ -18,10 +18,6 @@ public class Console {
 		logger.info(String.format(message, args));
 	}
 
-	public void log(String message) {
-		logger.info(message);
-	}
-
 	public void warn(String message, Object... args) {
 		logger.warn(String.format(message, args));
 	}
@@ -37,6 +33,10 @@ public class Console {
 			buff.append(element.toString()).append(System.getProperty("line.separator"));
 		}
 		logger.error(buff.toString());
+	}
+
+	public void log(String message) {
+		logger.info(message);
 	}
 
 }
