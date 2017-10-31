@@ -20,7 +20,7 @@ angular.module('preview', [])
 		this.previewUrl = url + '?refreshToken=' + new Date().getTime();
 	};
 
-	$messageHub.on('workspace.file.open', function(msg) {
+	$messageHub.on('workspace.file.selected', function(msg) {
 		var resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1))
 		var url = window.top.location.protocol + '//' + window.top.location.host + '/services/v3';
 		var type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);

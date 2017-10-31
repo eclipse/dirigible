@@ -80,6 +80,19 @@ var HttpController = exports.HttpController = function(oConfiguration){
 		return matches;
 	};
 	
+	//  content-type, consumes
+	//  accepts, produces
+	var isMimeTypeCompatible = function(source, target){
+		if(source === target)
+			return true;
+		var targetM = target.split('/');
+		var sourceM = source.split('/');
+		if(targetM[0] === '*' && targetM[1] === sourceM[1])
+			return true;
+		if(targetM[1] === '*' && targetM[0] === sourceM[0])
+			return true;		
+	};
+	
 	var normalizeMediaTypeHeaderValue = this.normalizeMediaTypeHeaderValue = function(sMediaType){
 		if(sMediaType === undefined || sMediaType === null)
 			return;
@@ -92,7 +105,6 @@ var HttpController = exports.HttpController = function(oConfiguration){
 	
 	//find MIME types intersections
 	var matchMediaType = function(request, producesMediaTypes, consumesMediaTypes){
-		//TODO: add support for wildcards as per HTTP headers specification (e.g. */json or text/*)
 		var isProduceMatched = false;	
 		var acceptsMediaTypes = normalizeMediaTypeHeaderValue(request.getHeader('Accept'));
 		if(!acceptsMediaTypes || acceptsMediaTypes.indexOf('*/*')>-1){ //output media type is not restricted
@@ -101,8 +113,9 @@ var HttpController = exports.HttpController = function(oConfiguration){
 			var matchedProducesMIME;
 			if(producesMediaTypes && producesMediaTypes.length){
 				matchedProducesMIME = acceptsMediaTypes.filter(function(acceptsMediaType) {
-					//TODO: improve with wildcard media types assessment instead of completematch with equals.
-				    return producesMediaTypes.indexOf(acceptsMediaType) > -1;
+				    return producesMediaTypes.filter(function(producesMediaType){
+				    	return isMimeTypeCompatible(acceptsMediaType, producesMediaType)
+				    }).length > 0;
 				});
 				isProduceMatched = matchedProducesMIME && matchedProducesMIME.length>0;
 			}
@@ -116,8 +129,9 @@ var HttpController = exports.HttpController = function(oConfiguration){
 			var matchedConsumesMIME;
 			if(contentTypeMediaTypes && consumesMediaTypes && consumesMediaTypes.length){
 				matchedConsumesMIME = contentTypeMediaTypes.filter(function(contentTypeMediaType) {
-					//TODO: improve with wildcard media types assessment instead of completematch with equals.
-				    return consumesMediaTypes.indexOf(contentTypeMediaType) > -1;
+				    return consumesMediaTypes.filter(function(consumesMediaType){
+				    	return isMimeTypeCompatible(contentTypeMediaType, consumesMediaType);
+				    }).length > 0;
 				});
 				isConsumeMatched = matchedConsumesMIME && matchedConsumesMIME.length>0;
 			}
@@ -146,7 +160,12 @@ var HttpController = exports.HttpController = function(oConfiguration){
 		return queryParams;
 	};
 	
-  	this.service = function(request, response){
+	var catchErrorHandler = function(logctx, ctx, err, request, response){
+		this.logger.error('Serving resource[' + logctx.path + '], Verb['+logctx.method+'], Content-Type['+logctx.contentType+'], Accept['+logctx.accepts+'] finished in error', err);
+		this.sendError(response.INTERNAL_SERVER_ERROR, 'Internal Server Error: ' + err.message);
+	};
+	
+  	this.execute = this.service = function(request, response){
   
   		request = request || require("http/v3/request");
 		var requestPath = request.getResourcePath();
@@ -172,30 +191,52 @@ var HttpController = exports.HttpController = function(oConfiguration){
 		
 		if(resourceHandler){
 			var ctx = {
-				"path": {
-					"resolvedPath": matches[0].p
-				},
-				"pathParams": {},
-				"queryParams": {}
+				"pathParameters": {},
+				"queryParameters": {}
 			};
 			if(matches[0].pathParams){
-				ctx.pathParams = matches[0].pathParams;
+				ctx.pathParameters =  matches[0].pathParams;
 			}
-			ctx.queryParams = queryParams;
-			if(resourceHandler.beforeHandler){
-			 	if(resourceHandler.beforeHandler.constructor !== Function)
-			 		throw Error('Invalid configuration exception: verbHandler.beforeHandle is not a function');
-				resourceHandler.beforeHandler.apply(self, [ctx, io]);
-			}
-			if(!ctx.err){
-				resourceHandler.handler.apply(self, [ctx, io]);
-				HttpController.prototype.closeResponse.call(this);
-				self.logger.info('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}] finished', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
+			ctx.queryParameters = queryParams;
+						
+			var noop = function(){};
+			var _before, _serve, _catch, _finally;
+			_before = resourceHandler.beforeHandle || noop;
+			_serve = resourceHandler.handler || resourceHandler.serve || noop;
+			//TODO: move default catch handler globally.
+			_catch = resourceHandler.catch || catchErrorHandler.bind(self, {
+				path: resourcePath,
+				method: method.toUpperCase(),
+				contentType: contentTypeHeader, 
+				accepts: acceptsHeader
+			})
+			_finally = resourceHandler.finally || noop;
+			
+		 	try{
+		 		self.logger.trace('Before serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}]', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
+				_before.apply(self, [ctx, request, response]);
+				self.logger.trace('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}]', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
+				_serve.apply(self, [ctx, request, response]);
+				self.logger.trace('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}] finished', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
+			} catch(err){
+				try{ 
+					_catch.apply(self, [ctx, err, request, response]);	
+				} catch(_catchErr){
+					self.logger.error('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}] error handler threw error', _catchErr);
+					throw _catchErr;
+				}
+			} finally{
+				HttpController.prototype.closeResponse.call(this);				
+				try{
+					_finally.apply(self, []);
+				} catch(_finallyErr){
+					self.logger.error('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}] post handler threw error', _finallyErr);
+				}
 			}
 		} else {
 			self.logger.error('No suitable resource handler for resource [' + resourcePath + '], Verb['+method.toUpperCase()+'], Content-Type['+contentTypeHeader+'], Accept['+acceptsHeader+'] found');
 			self.sendError(io.response.BAD_REQUEST, 'Bad Request');
-		}		
+		}
   	};
 };
 
@@ -250,7 +291,6 @@ HttpController.prototype.addResourceHandler = function(sPath, sMethod, fHandler,
 		handlerDef['consumes'] = aConsumesMediaTypes;
 	if(aProducesMediaTypes)
 		handlerDef['produces'] = aProducesMediaTypes;
-
 	if(this._oConfiguration[sPath] === undefined){
 		this._oConfiguration[sPath] = {};
 	}
@@ -295,4 +335,372 @@ HttpController.prototype.closeResponse = function(){
 
 exports.get = function(oConfiguration){
 	return new HttpController(oConfiguration);
+};
+
+
+/**
+ * 
+ * Resource API
+ * 
+ */
+
+var arrayEquals = function(source, target){
+	if(source===target)
+		return true;
+	if(!Array.isArray(source) || !Array.isArray(source))
+		return false;
+	if(source.length !== target.length)
+		return false;
+	for(var i=0; i<source.length; i++){
+		if(source[i]!==target[i])
+			return false;
+	}
+	return true;
+}
+
+/**
+ * Commmon function for initializng the callback functions in the resource verb handler specification
+ */
+var handlerFunction = function(sHandlerFuncName, fHandler, sHandlerCfgName){
+	if(fHandler !== undefined){
+		if(typeof fHandler !== 'function'){
+			throw Error('Invalid argument: ' + sHandlerFuncName + ' method argument must be valid javascript function, but instead is ' + (typeof fHandler));
+		}
+		if(!sHandlerCfgName)
+			sHandlerCfgName = sHandlerFuncName;
+		this._oSpec[sHandlerCfgName] = fHandler;
+	}
+	
+	return this;
+};
+
+/**
+ * Commmon function for initializng the 'consumes' and 'produces' arrays in the resource verb handler specification
+ */
+var mimeSetting = function(mimeSettingName, mimeTypes){
+	
+	if(mimeTypes !== undefined){
+		if(typeof mimeTypes === 'string'){
+			mimeTypes = [mimeTypes];
+		} else if(!Array.isArray(mimeTypes)){
+			throw Error('Invalid argument: '+mimeSettingName+' mime type argument must be valid MIME type string or array of such strings, but instead is ' + (typeof mimeTypes));
+		}
+		
+		mimeTypes.forEach(function(mimeType){
+			var mt = mimeType.split('/');
+			if(mt === null || mt.length < 2)
+				throw Error('Invalid argument. Not a valid MIME type format type/subtype: '+mimeType);
+			//TODO: stricter checks
+		});
+
+		if(!this._oSpec[mimeSettingName])
+			this._oSpec[mimeSettingName] = [];
+		//deduplicate entries
+		mimeTypes = mimeTypes.filter(function(mimeType){
+			return this._oSpec[mimeSettingName].indexOf(mimeType) < 0;
+		}.bind(this));
+		
+		this._oSpec[mimeSettingName] = this._oSpec[mimeSettingName].concat(mimeTypes);
+	}
+
+	return this;
+};	
+
+/**
+ * Constructs a new ResourceVerbHandler instance. 
+ * 
+ */
+var ResourceVerbHandler = function(oSpec){
+	this._oSpec = oSpec;
+	return this;
+};
+
+/**
+ * Defines the MIME types that this resource verb handler consumes. Together with the definition of those that it will produce, they constitute
+ * the target against which requests with this verb will be matched to enact handler specification.
+ * 
+ * @param {Function} Callback function for the finally phase of procesing matched resource requests
+ * @returns {ResourceVerbHandler} the verb handler instance for method chaning
+ */
+
+ResourceVerbHandler.prototype.consumes = function(mimeTypes){
+	return mimeSetting.apply(this, ['consumes', mimeTypes]);
+};
+
+/**
+ * Defines the MIME types that this resource verb handler produces. Together with the definition of those that it will consume, they constitute
+ * the target against which requests with this verb will be matched to enact handler specification.
+ * 
+ * @param {Function} Callback function for the finally phase of procesing matched resource requests
+ * @returns {ResourceVerbHandler} the verb handler instance for method chaning
+ */
+ResourceVerbHandler.prototype.produces = function(mimeTypes){
+	return mimeSetting.apply(this, ['produces', mimeTypes]);
+};
+/**
+ * Applies a callback function for the before phase of processing a matched resource request.
+ * 
+ * @param {Function} Callback function for the before phase of procesing matched resource requests
+ * @returns {ResourceVerbHandler} the verb handler instance for method chaning
+ */
+ResourceVerbHandler.prototype.before = function(fHandler){
+	return handlerFunction.apply(this, ['before', fHandler, 'beforeHandle']);
+};
+/**
+ * Applies a callback function for the serve phase of processing a matched resource request. Mandatory for valid resource handling specifications.
+ * 
+ * @param {Function} Callback function for the serve phase of procesing matched resource requests
+ * @returns {ResourceVerbHandler} the verb handler instance for method chaning
+ */
+ResourceVerbHandler.prototype.serve = function(fHandler){
+	return handlerFunction.apply(this, ['serve', fHandler, 'handler']);
+};
+/**
+ * Applies a callback function for the catch errors phase of processing a matched resource request.
+ * 
+ * @param {Function} Callback function for the catch errors phase of procesing matched resource requests
+ * @returns {ResourceVerbHandler} the verb handler instance for method chaning
+ */
+ResourceVerbHandler.prototype.catch = function(fHandler){
+	return handlerFunction.apply(this, ['catch', fHandler]);
+};
+/**
+ * Applies a callback function for the finally phase of processing a matched resource request.
+ * 
+ * @param {Function} Callback function for the finally phase of procesing matched resource requests
+ * @returns {ResourceVerbHandler} the verb handler instance for method chaning
+ */
+ResourceVerbHandler.prototype.finally = function(fHandler){
+	return handlerFunction.apply(this, ['finally', fHandler]);
+};
+
+/**
+ * Constructs a new Resource instance initialized with the supplied path parameter.
+ * 
+ * @param {String} sPath
+ * @returns {Resource} the resource instance for method chaining
+ */
+var Resource = function(sPath){
+	this._buildCtx = {
+		"path": sPath
+	};
+	return this;	
+};
+
+/**
+ * Sets the URL path for this resource, overriding the one specified upon its construction.
+ * 
+ * @returns {Resource} the resource instance for method chaining
+ */
+Resource.prototype.path = function(sPath){
+	if(arguments.length === 0)
+		return this._buildCtx.path;
+	this._buildCtx = {
+		"path": sPath
+	};
+	return this;
+}
+
+/**
+ * Creates a new HTTP verb handling specification.
+ * The second, optional argument is a specification object or array of such specification objects. It allows to initialize 
+ * the verb handlers before manually setting up specifications and to setup multiple handler specifications in one call.
+ * 
+ * @param {String} sHttpVerb - the HTTP verb (method)
+ * @param {Object|Array} oConfiguration - the handler specification(s) for this HTTP verb
+ * @returns {ResourceVerbHandler} 
+ */
+Resource.prototype.method = Resource.prototype.verb = function(sHttpVerb, oConfiguration){
+	if(sHttpVerb===undefined)
+		throw new Error('Illegal sHttpVerb argument: ' + sHttpVerb);	
+
+	var verb = sHttpVerb.toLowerCase();	
+	
+	if(!this._buildCtx[verb])
+		this._buildCtx[verb] = [];
+	
+	if(oConfiguration){
+		var arrConfig = oConfiguration;
+		if(!Array.isArray(oConfiguration)){
+			arrConfig = [oConfiguration];
+		}
+		arrConfig.forEach(function(handlerSpec){
+			this._buildCtx[verb].push(new ResourceVerbHandler(handlerSpec));
+		}.bind(this));
+	}
+	
+	var handlerSpec = {};
+	this._buildCtx[verb].push(handlerSpec);
+		
+	return new ResourceVerbHandler(handlerSpec);
+
+};
+/**
+ * Creates a handling specification for the HTTP verb "GET".
+ * 
+ * Same as invoking method("get") on a resource.
+ */
+Resource.prototype.get = function(){
+	return this.method('get');
+};
+/**
+ * Creates a handling specification for the HTTP verb "POST".
+ * 
+ * Same as invoking method("post") on a resource.
+ */
+Resource.prototype.post = function(){
+	return this.method('post');
+};
+/**
+ * Creates a handling specification for the HTTP verb "PUT".
+ * 
+ * Same as invoking method("put") on a resource.
+ */
+Resource.prototype.put = function(){
+	return this.method('put');
+};
+/**
+ * Creates a handling specification for the HTTP verb "DELETE".
+ * 
+ * Same as invoking method("delete") on a resource.
+ */
+Resource.prototype["delete"] = Resource.prototype.remove = function(){
+	return this.method('delete');
+};
+
+/**
+ * Returns the configuration of this resource.
+ * 
+ */
+Resource.prototype.configuration = function(){
+	var _cfg = {};
+	Object.keys(this._buildCtx).forEach(function(entry){
+		if(entry!=='path'){
+			var verb = _cfg[entry] = this._buildCtx[entry];
+			//check for overlapping verb specs
+			if(verb.length>1){
+				var allConsumeDefinitions = verb.map(function(verbHandlerSpec){
+					return verbHandlerSpec.consumes;
+				});
+				var allProduceDefinitions = verb.map(function(verbHandlerSpec){
+					return verbHandlerSpec.consumes;
+				});
+				for(var i=0; i<allConsumeDefinitions.length; i++){
+					var cons = allConsumeDefinitions[i]!==undefined?allConsumeDefinitions[i].sort(): undefined;
+					var prod = allProduceDefinitions[i]!==undefined?allProduceDefinitions[i].sort(): undefined;
+					for(var j=i+1; j<allConsumeDefinitions.length; j++){
+						var nextCons = allConsumeDefinitions[j]!==undefined?allConsumeDefinitions[j].sort():undefined;
+						var nextProd = allProduceDefinitions[j]!==undefined?allProduceDefinitions[j].sort():undefined;
+						if(arrayEquals.apply(this, [cons, nextCons]))
+							console.warn('Overlapping "consumption" definitions detected - '+cons+'. This may shadow handlers.');
+						if(arrayEquals.apply(this, [prod, nextProd]))
+							console.warn('Overlapping "produces" definitions detected - '+prod+'. This may shadow handlers.');
+					}
+				}
+			}
+		}
+
+	}.bind(this));
+	
+	return _cfg;
+};
+
+/**
+ * Instructs redirection of the request base don the parameter. If it is a stirng representing URI, the request will be
+ * redirected to this URI for any verb. If it's a function it will be invoked and epxected to return a URI string to redirect to.
+ * 
+ * @param {Function|String} 
+ */
+Resource.prototype.redirect = function(fRedirector){
+	if(typeof fRedirector === 'string'){
+		fRedirector = function(){
+			return fRedirector;
+		}
+	}	
+	return handlerFunction.apply(this, ['redirect', fRedirector]);
+};
+
+/**
+ * Constructs a REST API definition instance.
+ * 
+ * @param {Object} [oConfiguration]
+ */
+var RestAPI = function(oConfiguration){
+	this._resources = {};
+	if(oConfiguration){
+		Object.keys(oConfiguration).forEach(function(sPath){
+			this._resources[sPath] = this.resource(sPath, oConfiguration[sPath]);
+		}.bind(this));
+	}
+};
+
+/**
+ * Creates new Resource object. The second, optional argument can be used to initialize the resource prior to manipulating it.
+ * 
+ * @param {String} sPath
+ * @param {Object} [oConfiguration]
+ * 
+ * @returns {Resource} 
+ */
+RestAPI.prototype.resource = function(sPath, oConfiguration){
+	if(!this._resources[sPath])
+		this._resources[sPath] = new Resource(sPath);
+	if(typeof oConfiguration === 'object'){
+		Object.keys(oConfiguration).forEach(function(verb){
+			var _verbSpecs = oConfiguration[verb];
+			if(_verbSpecs){
+				_verbSpecs.forEach(function(verbSpec){
+					var _resourceVerb = this._resources[sPath].method(verb);
+					if(verbSpec['consumes'])
+						_resourceVerb.consumes(verbSpec['consumes']);
+					if(verbSpec['produces'])
+						_resourceVerb.produces(verbSpec['produces']);
+					if(verbSpec['beforeHandle'])
+						_resourceVerb.before(verbSpec['beforeHandle']);
+					if(verbSpec['before'])
+						_resourceVerb.before(verbSpec['before']);
+					if(verbSpec['serve'])
+						_resourceVerb.serve(verbSpec['serve']);
+					if(verbSpec['handler'])
+						_resourceVerb.serve(verbSpec['handler']);
+					if(verbSpec['catch'])
+						_resourceVerb.catch(verbSpec['catch']);
+					if(verbSpec['finally'])
+						_resourceVerb.serve(verbSpec['finally']);
+					if(verbSpec['redirce'])
+						_resourceVerb.serve(verbSpec['redirect']);
+				}.bind(this));
+			}
+		}.bind(this));
+	}
+	return this._resources[sPath];
+};
+
+/**
+ * Returns the configuration of this rest API.
+ */
+RestAPI.prototype.configuration = function(){
+	var _cfg = {};
+	Object.keys(this._resources).forEach(function(path){
+		_cfg[path] = this._resources[path].configuration();
+	}.bind(this));
+	return _cfg;
+};
+
+/**
+ * Creates a service with the configuration of this REST API that can handle HTTP requests
+ */
+RestAPI.prototype.service = function(){
+	return new HttpController(this.configuration());
+};
+
+/**
+ * Creates a new REST API instance. The oConfiguraiton parameter can be used to initialize the API instance.
+ * 
+ * @param {Object} [oConfiguration]
+ * 
+ */
+exports.api = function(oConfiguration){
+	this.api = new RestAPI(oConfiguration); 
+	return this.api;
 };
