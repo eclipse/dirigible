@@ -41,7 +41,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	}
 
 	public SelectBuilder forUpdate() {
-		this.distinct = true;
+		this.forUpdate = true;
 		return this;
 	}
 
@@ -152,9 +152,17 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
+	public SelectBuilder limit(Double limit) {
+		return limit(limit.intValue());
+	}
+
 	public SelectBuilder offset(int offset) {
 		this.offset = offset;
 		return this;
+	}
+
+	public SelectBuilder offset(Double offset) {
+		return offset(offset.intValue());
 	}
 
 	public SelectBuilder having(String having) {

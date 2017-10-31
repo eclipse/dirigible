@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.database.persistence.processors.identity;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -38,9 +39,26 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 			persistenceManager.insert(connection, identity);
 			return 1;
 		}
-		identity = persistenceManager.lock(connection, Identity.class, tableModel.getTableName());
-		identity.setValue(identity.getValue() + 1);
-		persistenceManager.update(connection, identity, tableModel.getTableName());
+
+		try {
+			boolean autoCommit = connection.getAutoCommit();
+			try {
+				try {
+					if (autoCommit) {
+						connection.setAutoCommit(false);
+					}
+					identity = persistenceManager.lock(connection, Identity.class, tableModel.getTableName());
+					identity.setValue(identity.getValue() + 1);
+					persistenceManager.update(connection, identity, tableModel.getTableName());
+				} finally {
+					connection.commit();
+				}
+			} finally {
+				connection.setAutoCommit(autoCommit);
+			}
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		}
 		return identity.getValue();
 	}
 
