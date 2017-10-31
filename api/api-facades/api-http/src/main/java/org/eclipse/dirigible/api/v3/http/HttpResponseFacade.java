@@ -228,12 +228,20 @@ public class HttpResponseFacade implements IScriptingFacade {
 		response.sendError(sc, msg);
 	}
 
+	public static final void sendError(Double sc, String msg) throws IOException {
+		sendError(sc.intValue(), msg);
+	}
+
 	public static final void sendError(int sc) throws IOException {
 		HttpServletResponse response = getResponse();
 		if (response == null) {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
 		response.sendError(sc);
+	}
+
+	public static final void sendError(Double sc) throws IOException {
+		sendError(sc.intValue());
 	}
 
 	public static final void setCharacterEncoding(String charset) {
@@ -260,6 +268,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 		response.setContentLength(len);
 	}
 
+	public static final void setContentLength(Double len) {
+		setContentLength(len.intValue());
+	}
+
 	public static final void setHeader(String name, String value) {
 		HttpServletResponse response = getResponse();
 		if (response == null) {
@@ -282,6 +294,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
 		response.setStatus(sc);
+	}
+
+	public static final void setStatus(Double sc) {
+		setStatus(sc.intValue());
 	}
 
 	public static final void reset() {

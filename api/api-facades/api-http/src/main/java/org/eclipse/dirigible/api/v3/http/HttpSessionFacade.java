@@ -90,4 +90,8 @@ public class HttpSessionFacade implements IScriptingFacade {
 		session.setMaxInactiveInterval(arg0);
 	}
 
+	public static final void setMaxInactiveInterval(Double arg0) {
+		setMaxInactiveInterval(arg0.intValue());
+	}
+
 }

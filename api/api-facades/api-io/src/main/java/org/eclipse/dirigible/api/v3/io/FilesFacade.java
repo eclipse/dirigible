@@ -96,6 +96,10 @@ public class FilesFacade {
 		Files.setLastModifiedTime(Paths.get(path), FileTime.fromMillis(time));
 	}
 	
+	public static final void setLastModified(String path, Double time) throws IOException {
+		setLastModified(path, time.longValue());
+	}
+	
 	public static final String getOwner(String path) throws IOException {
 		return Files.getOwner(Paths.get(path)).getName();
 	}
