@@ -39,3 +39,8 @@ exports.getUrl = function() {
 	var url = require('utils/v3/url');
 	return url;
 };
+
+exports.getEscape = function() {
+	var url = require('utils/v3/escape');
+	return url;
+};
