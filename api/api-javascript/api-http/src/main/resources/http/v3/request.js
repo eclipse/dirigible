@@ -96,11 +96,16 @@ exports.getBytes = function() {
 	return bytes;
 };
 
-exports.getText = function() {
-	var textJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getText', []);
-	var text = JSON.parse(textJson);
-	return text;
+var getText = exports.getText = function() {
+	return java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getText', []);
 };
+
+exports.getJSON = function() {
+	var text = getText();
+	var json = JSON.parse(text);
+	return json;
+};
+
 
 exports.getParameter = function(name) {
 	var param = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameter', [name]);
