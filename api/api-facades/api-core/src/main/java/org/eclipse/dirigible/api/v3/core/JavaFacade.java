@@ -96,6 +96,7 @@ public class JavaFacade {
 							break;
 						}
 					}
+					matching = false;
 				}
 				if (matching) {
 					method = next;
