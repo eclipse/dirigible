@@ -81,7 +81,11 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 			v8.executeScript(Require.CODE);
 			v8.executeScript("var console = require('core/v3/console')");
 			String source = (isModule ? sourceProvider.loadSource(moduleOrCode) : moduleOrCode);
-			result = v8.executeScript(source);
+			if (isModule) {
+				result = v8.executeScript(source);
+			} else {
+				result = v8.executeScript(source, moduleOrCode, 0);
+			}
 			forceFlush();
 		} catch (Exception e) {
 			throw new ScriptingException(e);
