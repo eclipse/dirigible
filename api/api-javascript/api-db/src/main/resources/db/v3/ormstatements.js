@@ -68,7 +68,7 @@ ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
 		for(var i=0; i<filterFieldNames.length; i++){
 			var property = this.orm.getProperty(filterFieldNames[i]);
 			if(!property)
-				throw Error('Unknown property name: ' + filterFieldNames[i]);
+				throw Error('Unknown property name: ' + filterFieldNames[i]+" in $filter");
 			stmnt.where(property.dbName + "=?", [property]);
 		}
 	}
@@ -81,7 +81,7 @@ ORMStatements.prototype.find = function(params){
 		for(var i=0; i<selectedFields.length; i++){
 			var property = this.orm.getProperty(selectedFields[i]);
 			if(!property)
-				throw Error('Unknown field name ['+ selectedFields[i] + ']')
+				throw Error('Unknown field name ['+ selectedFields[i] + '] in $select');
 			stmnt = stmnt.field(property.dbName);
 		}
 	}
@@ -107,7 +107,7 @@ ORMStatements.prototype.list= function(settings){
 		for(var i=0; i<selectedFields.length; i++){
 			var property = this.orm.getProperty(selectedFields[i]);
 			if(!property)
-				throw Error('Unknown field name ['+ selectedFields[i] + ']')
+				throw Error('Unknown field name ['+ selectedFields[i] + '] in $select');
 			stmnt = stmnt.field(property.dbName);
 		}
 	}

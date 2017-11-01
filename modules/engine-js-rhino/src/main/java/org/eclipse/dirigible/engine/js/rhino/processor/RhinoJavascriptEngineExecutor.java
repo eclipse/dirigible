@@ -92,9 +92,9 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 				ModuleSource moduleSource = (isModule ? sourceProvider.loadSource(moduleOrCode, null, null) : null);
 				try {
 					if (moduleSource != null) {
-						result = context.evaluateReader(topLevelScope, moduleSource.getReader(), moduleOrCode, 0, null);
+						result = context.evaluateReader(topLevelScope, moduleSource.getReader(), moduleOrCode, -1, null);
 					} else {
-						result = context.evaluateString(topLevelScope, moduleOrCode, "dynamic", 0, null);
+						result = context.evaluateString(topLevelScope, moduleOrCode, "dynamic", -1, null);
 					}
 					forceFlush();
 				} catch (EcmaError e) {
