@@ -11,32 +11,31 @@
 /* eslint-env node, dirigible */
 "use strict";
 var database = require("db/v3/database");
+var sequence = require("db/v3/sequence");
+var ormLib = require("db/v3/orm");
+var ormStatements = require('db/v3/ormstatements');
+var logging = require('log/logging');
 
-var DAO = exports.DAO = function(orm, logCtxName){
+var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 	if(orm === undefined)
 		throw Error('Illegal argument: orm['+ orm + ']');
 	
-	if(arguments.length > 2){
-		if(typeof arguments[2] === 'string'){
-			this.dataSourceName = arguments[2];
-			if(arguments.length>3)
-				this.databaseType = arguments[3];
-		}
-	}
+	this.dataSourceName = dataSourceName;
+	this.databaseType = databaseType;
 
-	this.orm = require("db/v3/orm").get(orm);
+	this.orm = ormLib.get(orm);
 	
 	//setup loggerName
 	var loggerName = logCtxName;
 	if(!loggerName){
-		loggerName = 'db.dao';
+		loggerName = 'org.eclipse.dirigible.db.dao';
 		if(this.orm.table)
-			loggerName = 'db.dao.'+(this.orm.table.toLowerCase());
+			loggerName = 'org.eclipse.dirigible.db.dao.'+(this.orm.table.toLowerCase());
 	}
-	this.$log = require('log/logging').getLogger(loggerName);
+	this.$log = logging.getLogger(loggerName);
 	
 	var dbProductName = database.getMetadata(this.databaseType, this.dataSourceName).databaseProductName;
-	this.ormstatements = require('db/v3/ormstatements').forDatasource(this.orm, dbProductName);
+	this.ormstatements = ormStatements.forDatasource(this.orm, dbProductName);
 };
 
 DAO.prototype.getConnection = function(){
@@ -181,9 +180,8 @@ DAO.prototype.insert = function(_entity){
 	    var ids = [];
 	    try {
 	        var parametericStatement = this.ormstatements.insert.apply(this.ormstatements);
-	
-	        //FIXME!
-	        var id = dbEntity[this.orm.getPrimaryKey().name];//this.datasource.getSequence(this.orm.dbName+'_'+this.orm.getPrimaryKey.name.toUpperCase()).next();
+
+	        var id = sequence.nextval(this.orm.dbName+'_'+this.orm.getPrimaryKey.name.toUpperCase(), this.databaseType, this.datasourceName);
 	        dbEntity[this.orm.getPrimaryKey().name] = id;
 	        
 			var updatedRecordCount = this.ormstatements.execute(parametericStatement, connection, dbEntity);
@@ -220,7 +218,6 @@ DAO.prototype.insert = function(_entity){
 					}
 				}		
 			}
-			
 
 			if(updatedRecordCount>0){
 				this.$log.info('{}[] entity inserted', this.orm.dbName, dbEntity[this.orm.getPrimaryKey().name]);
@@ -313,7 +310,10 @@ DAO.prototype.remove = function() {
 	for(var i=0; i<ids.length; i++) {
 	
 		var id = ids[i];
-
+       	//prevent implicit type convertion
+       	if(this.orm.getPrimaryKey().type !== 'string')
+       		id = parseInt(id, 10);
+       		
 		if(ids.length>1)
 			this.$log.info('Deleting '+this.orm.dbName+'[' + id + '] entity');
 	
@@ -523,6 +523,11 @@ DAO.prototype.find = function(id, expand, select) {
 		};		
         var parametericStatement = this.ormstatements.find.apply(this.ormstatements, [findQbParams]);
        	var params = {};
+       	
+       	//prevent implicit type convertion
+       	if(this.orm.getPrimaryKey().type !== 'string')
+       		id = parseInt(id, 10);
+       	
        	params[this.orm.getPrimaryKey().name] = id;
        	var resultSet = this.ormstatements.execute(parametericStatement, connection, params);
  
@@ -578,15 +583,14 @@ DAO.prototype.count = function() {
             count = rs.getInt(1);
         }
     } catch(e) {
-        console.error(e.message);
-    	console.error(e.stack);
+    	this.$log.error('Counting '+this.orm.dbName+' entities failed', e);
 		e.errContext = parametericStatement.toString();
 		throw e;
     } finally {
         connection.close();
     }
     
-    this.$log.info('' + count + ' '+this.orm.dbName+' entities counted');
+    this.$log.info(String(count) + ' '+this.orm.dbName+' entities counted');
 
     return count;
 };
@@ -620,10 +624,7 @@ DAO.prototype.list = function(settings) {
 
 	var listArgs = [];
 	for(var key in settings){
-		if(settings[key] && settings[key].constructor === Array){
-			listArgs.push(' ' + key + settings[key]);
-		} else
-			listArgs.push(' ' + key + '[' + settings[key] + ']');
+		listArgs.push(' ' + key + '[' + settings[key] + ']');
 	}
 	
 	this.$log.info('Listing {} entity collection with list operators: {}', this.orm.dbName, listArgs.join(','));
