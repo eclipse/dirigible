@@ -9,27 +9,82 @@
  *******************************************************************************/
 
 /* eslint-env node, dirigible */
-(function(){
-"use strict";
+var rs = require('http/v3/rs');
+var DAO = require('db/v3/dao').DAO;
 
-var HandlersProvider = exports.HandlersProvider = function(loggerName){
-	this.logger = require('log/logging').getLogger((loggerName || 'rs.data.dao.provider'));
+var RestAPI = rs.RestAPI;
+
+/**
+ * Deep merge for JS objects (typeof o === 'object' is true).
+ * Array members are copied as is without changes. That means that array in target object will overwrite a coresponding memeber with the same name in source
+ */
+var merge = function(target, source) {
+    Object.keys(source).forEach(function(key) {
+        if (source[key]){
+			if(typeof source[key] === 'object' && !Array.isArray(source[key])) {
+            	return merge(target[key] = target[key] || {}, source[key]);
+        	}
+        }
+        target[key] = source[key];
+    });
 };
-HandlersProvider.prototype.getHandlers = function(){return {}};
 
-var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpController, loggerName){
-	HandlersProvider.call(this, loggerName);
-	this.logger = require('log/logging').getLogger((loggerName || 'rs.data.dao.provider.default'));
-	var _oHttpController = this.oHttpController = oHttpController;
-	this.dao = dao;
-	var self = this;
-		
+
+var DataProtocolDefinition = function(){	
+	this.dataProtocolApi = rs.api();
+	
+	this.collectionResource = this.dataProtocolApi.resource("");
+	this.entityResource = this.dataProtocolApi.resource("{id}");
+	
+	//entity collection functions
+	this.query = this.collectionResource.get().produces(['application/json']);
+	this.create = this.collectionResource.post().consumes(['*/json']);
+	this.count = this.dataProtocolApi.resource("count").get().produces(['application/json']);
+	//entity functions
+	this.get = this.entityResource.get().produces(['application/json']);
+	this.update = this.entityResource.put().consumes(['*/json']);	
+	this.remove = this.entityResource.remove();
+	//association functions
+	this.associationList = this.dataProtocolApi.resource("{id}/{associationName}").get().produces(['application/json']);
+	this.associationCreate = this.dataProtocolApi.resource("{id}/{associationName}").post().consumes(['*/json']);	
+	//api functions
+	this.metadata = this.dataProtocolApi.resource("metadata").get().produces(['application/json']);	
+	
+};
+
+var ProtocolHandlerAdapter = function(oDataProtocolApi){
+	
+	this.logger = require('log/logging').getLogger('rs.data.dao.provider.default');
+	
+	var oConfig = {};
+	var protocolApi = oDataProtocolApi || new DataProtocolDefinition();
+	var _self = this;
+	
 	var parseIntStrict = function (value) {
 	  if(/^(\-|\+)?([0-9]+|Infinity)$/.test(value))
 	    return Number(value);
 	  return NaN;
+	};	
+	
+	this.adapt = function(){
+		var protocolFunctionNames = ["query", "create", "update", "remove", "get", "count", "metadata", "associationList", "associationCreate"];
+		for(var i = 0; i < protocolFunctionNames.length; i++){
+			var functionName = protocolFunctionNames[i];
+			var resourceVerbHandlerDef = protocolApi[functionName];
+			_self[functionName].call(_self, resourceVerbHandlerDef, this);
+			merge(oConfig, protocolApi.dataProtocolApi.configuration());
+		}
+		return oConfig;
 	};
 	
+	//functions deifned on the api prototype will be weaved in the using class
+	this.api = function(){
+		this.dao = function(orm){
+			this._dao = new DAO(orm);
+			return this;
+		};
+	};	
+		
 	var notify = function(event){
 		var func = this[event];
 		if(!this[event])
@@ -39,147 +94,134 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		var args = [].slice.call(arguments);
 		return func.apply(this, args.slice(1));
 	};
-	
-	var create = this.create = function(context, request, response){
-		var input = request.getText();
-	    var entity = JSON.parse(input);
-		notify.call(self, 'onEntityInsert', entity, context);
-	  	if(!context.err){	
-		    try{
-				var ids = dao.insert(entity, context.queryParameters.$cascaded || true);
-				notify.call(self, 'onAfterEntityInsert', entity, ids, context);
-				if(ids && ids.constructor!== Array)	{
-					response.setHeader('Location', $.getRequest().getRequestURL().toString() + '/' + ids);
-					response.setStatus(response.NO_CONTENT);
-				} else {
-					response.println(JSON.stringify(ids, null, 2));
-					response.setStatus(response.OK);
-				}
-			} catch(e) {
-	    	    var errorCode = response.INTERNAL_SERVER_ERROR;
-	    	    self.logger.error(e.message, e);
-	        	_oHttpController.sendError(errorCode, e.message);
-	        	throw e;
-			}
-		}
+		
+	var throwBadRequestError = function(context, errorName, errorCode, errorMessage, error){
+		context.suppressStack = true;
+		context.httpErrorCode = 400;
+		context.errorMessage = errorMessage;
+		context.errorName = errorName;
+		context.errorCode = errorCode;
+		//re-throw or construct new
+		throw (error || Error(errorMessage));
 	};
-	
-	var remove = this.remove = function(context, request, response){
-		var id = context.pathParameters.id;	
-		notify.call(self, 'onBeforeRemove', id, context);
-		if(!context.err){
+		
+	this.create = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
+			var entity;
 			try{
-				dao.remove(id);
-				notify.call(self, 'onAfterRemove', id, context);
-				if(!context.err){	
-					response.setStatus(response.NO_CONTENT);
-				}
-			} catch(e) {
-	    	    var errorCode = response.INTERNAL_SERVER_ERROR;
-	    	    self.logger.error(e.message, e);
-	        	_oHttpController.sendError(errorCode, e.message);
-	        	throw e;
+				entity = request.getJSON();	
+			} catch(err){
+				throwBadRequestError(context, "Invalid Client Input", undefined, "Invalid JSON in create entity request payload", err);
 			}
-		}
-	};
-		
-	var update = this.update = function(context, request, response){
-		var id = context.pathParameters.id;
-		var input = request.readInputText();
-	    var entity = JSON.parse(input);
-	    //check for potential mismatch in path id and id in input
-	    var ctx = {};
-	    try{
-	    	notify.call(self, 'onEntityUpdate', entity, id, ctx);	
-			entity[dao.orm.getPrimaryKey()] = dao.update(entity);
-			response.setStatus(response.NO_CONTENT);
-	    } catch (er){
-    	    var errorCode = response.INTERNAL_SERVER_ERROR ;
-    	    self.logger.error(e.message, e);	    	
-	   		_oHttpController.sendError(errorCode, e.message);
-	      	throw e;
-	    }
-
+			notify.call(this, 'onEntityInsert', entity, context);
+			var ids = this._dao.insert(entity, context.queryParameters.$cascaded || true);
+			notify.call(this, 'onAfterEntityInsert', entity, ids, context);
+			if(ids && ids.constructor!== Array)	{
+				response.setHeader('Location', request.getRequestURL().toString() + '/' + ids);
+				response.setStatus(response.NO_CONTENT);
+			} else {				
+				var responseBodyJson = JSON.stringify(ids, null, 2);
+				response.println(responseBodyJson);
+	        	response.setContentType(handlerDef.produces[0]);
+				response.setStatus(response.OK);
+			}
+		}.bind(_this));
 	};
 	
-	var get = this.get = function(context, request, response){
-		var id = context.pathParameters.id;
-		//id is mandatory parameter and an integer
-		if(id === undefined || isNaN(parseIntStrict(id))) {
-			_oHttpController.sendError(response.BAD_REQUEST, "Invalid id parameter: " + id);
-			return;
-		}
-		var $expand = context.queryParameters['$expand'];
-		if($expand){
-			if($expand===true || $expand.toLowerCase() === '$all') {
-				$expand = dao.orm.getAssociationNames().join(',');
-			} else {
-				$expand = String(new java.lang.String(""+$expand));
-				$expand = $expand.split(',').map(function(exp){
-					return exp.trim();
-				});
+	this.remove = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response){
+			var id = context.pathParameters.id;	
+			notify.call(this, 'onBeforeRemove', id, context);
+			this._dao.remove(id);
+			notify.call(this, 'onAfterRemove', id, context);
+			response.setStatus(response.NO_CONTENT);
+		}.bind(_this));
+	};
+	
+	this.update = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response){
+			var id = context.pathParameters.id;
+			var entity;
+			try{
+				entity = request.getJSON();
+			} catch (err){
+				throwBadRequestError(context, "Invalid Client Input", undefined, "Invalid JSON in update request payload", err);
 			}
-		}
-		var $select = context.queryParameters['$select'];
-		if($select){
-			if($select===true || $select.toLowerCase() === '$all') {
-				$select = dao.orm.getAssociationNames().join(',');
-			} else {
-				$select = String(new java.lang.String(""+$select));
-				$select = $select.split(',').map(function(sel){
-					return sel.trim();
-				});
+		    //check for potential mismatch in path id and id in input
+		    var entityIdName = this._dao.orm.getPrimaryKey().name;
+		    if(entity[entityIdName]!==null && entity[entityIdName]!==undefined && id !== entity[entityIdName])
+		    	throwBadRequestError(context, "Invalid Client Input", undefined, "The id parameter in the request path["+id+"] and the id in the payload["+entity[entityIdName]+"] do not match.");
+		    entity[entityIdName] = id;
+		    //prevent implicit type convertion
+	       	if(this._dao.orm.getPrimaryKey().type !== 'string')
+    	   		entity[entityIdName] = parseInt(entity[entityIdName], 10);
+
+	    	notify.call(this, 'onEntityUpdate', entity, id);
+			entity[this._dao.orm.getPrimaryKey()] = this._dao.update(entity);
+			response.setStatus(response.NO_CONTENT);
+		}.bind(_this));
+	};
+	
+	this.get = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
+			var id = context.pathParameters.id;
+			//id is mandatory parameter and an integer
+			if(id === undefined || isNaN(parseIntStrict(id))){
+				throwBadRequestError(context, "Invalid Client Input", undefined, "Invalid id parameter: " + id);
 			}
-		}		
+			var $expand = context.queryParameters['$expand'];
+			if($expand){
+				if($expand===true || $expand.toLowerCase() === '$all') {
+					$expand = this._dao.orm.getAssociationNames().join(',');
+				} else {
+					$expand = String(new java.lang.String(""+$expand));
+					$expand = $expand.split(',').map(function(exp){
+						return exp.trim();
+					});
+				}
+			}
+			var $select = context.queryParameters['$select'];
+			if($select){
+				if($select===true || $select.toLowerCase() === '$all') {
+					$select = this._dao.orm.getAssociationNames().join(',');
+				} else {
+					$select = String(new java.lang.String(""+$select));
+					$select = $select.split(',').map(function(sel){
+						return sel.trim();
+					});
+				}
+			}		
 		
-	    try{
-			var entity = dao.find.apply(dao, [id, $expand, $select]);
-			notify.call(self, 'onAfterFind', entity, context);
-			if(context.err){
-				return;//TODO?
-			}
+			var entity = this._dao.find.apply(this._dao, [id, $expand, $select]);
+			notify.call(this, 'onAfterFind', entity, context);
 			if(!entity){
-				self.logger.error("Record with id: " + id + " does not exist.");
-        		_oHttpController.sendError(response.NOT_FOUND, "Record with id: " + id + " does not exist.");
-        		return;
+				this.logger.error("Record with id: " + id + " does not exist.");
+				context.httpErrorCode = response.NOT_FOUND;
+				context.suppressStack = true;
+        		throw Error("Record with id: " + id + " does not exist.");
 			}
 			var jsonResponse = JSON.stringify(entity, null, 2);
-			response.setContentType("application/json; charset=UTF-8");//TODO: read this from context as defined in config
+			response.setContentType(handlerDef.produces[0]);
 	        response.println(jsonResponse);
-		} catch(e) {
-    	    var errorCode = response.INTERNAL_SERVER_ERROR ;
-			self.logger.error(e.message, e);		    	    
-        	_oHttpController.sendError(errorCode, e.message);
-        	throw e;
-		}	
+		}.bind(_this));
 	};
-		
-	var validateQueryInputs = this.validateQueryInputs = function(context, request, response){	
+	
+	var validateQueryInputs = this.validateQueryInputs = function(context){
 
 		var limit = context.queryParameters.$limit || context.queryParameters.limit;
 		if (limit === undefined || limit === null) {
 			context.queryParameters.limit = 10000;//default constraint
 		}  else if(isNaN(parseIntStrict(limit)) || limit < 0) {
-			self.logger.error("Invallid limit parameter: " + limit + ". Must be a positive integer.");
-			_oHttpController.sendError(response.BAD_REQUEST, "Invallid limit parameter: " + limit + ". Must be a positive integer.");
-			context.err = {
-				httpCode: response.BAD_REQUEST, 
-				errCode: 1, 
-				message: "Invallid limit parameter: " + limit + ". Must be a positive integer."
-			};
+			throwBadRequestError(context, "Invalid Client Input", undefined, "Invallid limit parameter: " + limit + ". Must be a positive integer.");
+			return false;
 		}
 		
 		var offset = context.queryParameters.$offset || context.queryParameters.offset;
 		if (offset === undefined || offset === null) {
 			context.queryParameters.offset = 0;
 		} else if(isNaN(parseIntStrict(offset)) || offset < 0) {
-			self.logger.error("Invallid offset parameter: " + offset + ". Must be a positive integer.");				
-			_oHttpController.sendError(response.BAD_REQUEST, "Invallid offset parameter: " + offset + ". Must be a positive integer.");
-			context.err = {
-				httpCode: response.BAD_REQUEST, 
-				errCode: 1, 
-				message: "Invallid offset parameter: " + offset + ". Must be a positive integer."
-			};
+			throwBadRequestError(context, "Invalid Client Input", undefined, "Invallid offset parameter: " + offset + ". Must be a positive integer.");
+			return false;
 		}		
 
 		var sort = context.queryParameters.$sort || context.queryParameters.sort || null;
@@ -189,14 +231,10 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 				return srt.trim();
 			});
 			for(var i=0; i<sortPropertyNames.length;i++){
-				var prop = self.dao.orm.getProperty(sortPropertyNames[i]);
+				var prop = this._dao.orm.getProperty(sortPropertyNames[i]);
 				if(!prop){
-					_oHttpController.sendError(response.BAD_REQUEST, "Invalid sort by property name: " + sortPropertyNames[i]);
-					context.err = {
-						httpCode: response.BAD_REQUEST, 
-						errCode: 1, 
-						message: "Invalid sort by property name: " + sortPropertyNames[i]
-					};				
+					throwBadRequestError(context, "Invalid Client Input", undefined, "Invalid $sort by property name: " + sortPropertyNames[i]);
+					return false;
 				}
 			}
 			context.queryParameters.$sort = sortPropertyNames;			
@@ -205,19 +243,11 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		var order = context.queryParameters.order || context.queryParameters.$order || null;
 		if(order!==null){
 			if(sort === null){
-				_oHttpController.sendError(response.BAD_REQUEST, "Parameter order is invalid without paramter sort to order by.");
-				context.err = {
-					httpCode: response.BAD_REQUEST, 
-					errCode: 1, 
-					message: "Parameter order is invalid without paramter sort to order by."
-				};
+				throwBadRequestError(context, "Invalid Client Input", undefined, "Invalid Client Input", undefined, "Parameter $order is invalid without paramter sort to order by.");
+				return false;				
 			} else if(['asc', 'desc'].indexOf(order.trim().toLowerCase())<0){
-				_oHttpController.sendError(response.BAD_REQUEST, "Invallid order parameter: " + order + ". Must be either ASC or DESC.");
-				context.err = {
-					httpCode: response.BAD_REQUEST, 
-					errCode: 1, 
-					message: "Invallid order parameter: " + order + ". Must be either ASC or DESC."
-				};
+				throwBadRequestError(context, "Invalid Client Input", undefined, "Invallid $order parameter: " + order + ". Must be either ASC or DESC.");
+				return false;
 			}
 		} else if(sort !== null){
 			context.queryParameters.order = 'asc';
@@ -225,7 +255,7 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 		
 		var $expand = context.queryParameters['$expand'];
 		if($expand!==undefined) {
-			var associationNames = self.dao.orm.getAssociationNames();
+			var associationNames = this._dao.orm.getAssociationNames();
 			if($expand===true || $expand.toLowerCase() === '$all') {
 				$expand = associationNames.join(',');
 			} else {
@@ -234,8 +264,10 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 					return sel.trim();
 				});
 				for(var i=0;i<$expand.length; i++){
-					if(associationNames.indexOf($expand[i])<0)
-						throw Error('Invalid expand association name - ' + $expand[i]);
+					if(associationNames.indexOf($expand[i])<0){
+						throwBadRequestError(context, "Invalid Client Input", undefined, 'Invalid expand association name - ' + $expand[i]);
+						return false;
+					}
 				}
 			}
 			context.queryParameters['$expand'] = $expand;
@@ -248,269 +280,233 @@ var DAOHandlersProvider = exports.DAOHandlersProvider = function(dao, oHttpContr
 				return sel.trim();
 			});
 			for(var i=0;i<selectedFieldNames.length; i++){
-				if(self.dao.orm.getProperty(selectedFieldNames[i])<0)
-					throw Error('Invalid select property name - ' + selectedFieldNames[i]);
+				if(this._dao.orm.getProperty(selectedFieldNames[i]) === undefined){
+					throwBadRequestError(context, "Invalid Client Input", undefined, 'Invalid select property name - ' + selectedFieldNames[i]);
+					return false;
+				}
 			}
 			context.queryParameters['$select'] = selectedFieldNames;
 		}
+		return true;
 	};
 	
-	var query = this.query = function(context, request, response){		
-		validateQueryInputs(context, request, response);
-		if(context.err)
-			return;	
-		var args = [context.queryParameters];
-		for(var propName in context.queryParameters){
-			var val = context.queryParameters[propName];
-			if(val==='$null')
-				context.queryParameters[propName] = null;
-		}
-	    try{
-			var entities = dao.list.apply(dao, args) || [];
-			var _entities = notify.call(self, 'postQuery', entities, context);
-			if(_entities===undefined){
-				_entities = entities;
+	this.query = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
+			if(typeof handlerDef["beforeQuery"] === 'function')
+				handlerDef["beforeQuery"].call(this, context);
+			if(!validateQueryInputs.call(this, context, request, response))
+				return;
+			var args = [context.queryParameters];
+			for(var propName in context.queryParameters){
+				var val = context.queryParameters[propName];
+				if(val==='$null')
+					context.queryParameters[propName] = null;
 			}
-			var $count = dao.count.apply(dao) || 0;
-			response.addHeader('X-dservice-list-count', $count);
-	        var jsonResponse = JSON.stringify(_entities, null, 2);
-	    	response.println(jsonResponse);
-		} catch(e) {
-    	    var errorCode = response.INTERNAL_SERVER_ERROR ;
-    	    self.logger.error(e.message, e);
-        	_oHttpController.sendError(errorCode, e.message);
-        	throw e;
-		}		
-	};	
+			
+			var $count = this._dao.count.apply(this._dao) || 0;
+			response.addHeader('X-dservice-list-count', String($count));
 		
-	var count = this.count = function(context, request, response){
-	    try{
-			var entitiesCount = dao.count() || 0;
+			var entities;
+			if($count > 0){
+				entities = this._dao.list.apply(this._dao, args) || [];					
+				if(typeof handlerDef["afterQuery"] ==='function')
+					handlerDef["afterQuery"].call(this, entities, context);
+				notify.call(this, 'postQuery', entities, context);								
+			} else {
+				entities = [];
+			}
+			
+	        var jsonResponse = JSON.stringify(entities, null, 2);
+	        response.setContentType(handlerDef.produces[0]);
+	    	response.println(jsonResponse);
+	    	response.setStatus(response.OK)
+		}.bind(_this));
+	};
+	
+	this.count = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
+			var entitiesCount = this._dao.count() || 0;
 			response.setHeader("Content-Type", "application/json");
 			var payload = {
 				"count": entitiesCount
 			};
 	    	response.println(JSON.stringify(payload, null, 2)); 
-		} catch(e) {
-    	    var errorCode = response.INTERNAL_SERVER_ERROR ;
-    	    self.logger.error(e.message, e);
-        	_oHttpController.sendError(errorCode, e.message);
-        	throw e;
-		}
+			response.setContentType(handlerDef.produces[0]);
+	    	response.setStatus(response.OK);
+    	}.bind(_this));
 	};
-		
-	var metadata = this.metadata = function(context, request, response){
- 		try{
-			var entityMetadata = dao.metadata();
-			response.setHeader("Content-Type", "application/json");
+	
+	this.metadata = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
+			//TODO: in process
+			var entityMetadata = this._dao.orm.orm;
+			response.setContentType(handlerDef.produces[0]);
 			response.println(JSON.stringify(entityMetadata, null, 2));
-		} catch(e) {
-    	    var errorCode = response.INTERNAL_SERVER_ERROR ;
-    	    self.logger.error(e.message, e);
-        	_oHttpController.sendError(errorCode, e.message);
-        	throw e;        	
-		}		
+			response.setStatus(response.OK)
+		}.bind(_this));
 	};
-
+	
 	//Associations handlers
-	var associationListGetHandler = this.associationListGetHandler = function(context, request, response){
-	    try{
+	this.associationList = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response){
 	    	var associationName = context.pathParameters.associationName;
-	    	if(!dao.orm.getAssociation(associationName)){
-		    	var errorCode = response.BAD_REQUEST;
-			    self.logger.error('Invalid association  set name requested: ' + associationName);
-		    	_oHttpController.sendError(errorCode, 'Invalid association set name requested: ' + associationName);
-				return;
-	    	}
+	    	if(!this._dao.orm.getAssociation(associationName))
+				throwBadRequestError(context, undefined, 'Invalid association set name requested: ' + associationName);
 		    var args = context.queryParameters;
-	    	args[dao.orm.getPrimaryKey().name] = context.pathParameters.id;
+	    	args[this._dao.orm.getPrimaryKey().name] = context.pathParameters.id;
 			var expansionPath = [associationName];//Tmp solution with array of one component until handler can be installed for paths with multiple segments
-			var associationSetEntities = dao.expand.apply(dao, [expansionPath, context.pathParameters.id]) || [];
+			var associationSetEntities = this._dao.expand.apply(this._dao, [expansionPath, context.pathParameters.id]) || [];
 			response.setStatus(response.OK);
 			response.println(JSON.stringify(associationSetEntities, null, 2));
-		} catch(e) {
-		    var errorCode = response.INTERNAL_SERVER_ERROR;
-		    self.logger.error(e.message, e);
-	    	_oHttpController.sendError(errorCode, e.message);
-	    	throw e;
-		}
+		}.bind(_this));
 	};
-		
-	var associationListCreateHandler = this.associationListCreateHandler = function(context, request, response){
-	    try{
+	
+	this.associationCreate = function(oResourceVerbHandler, _this){
+		oResourceVerbHandler.serve(function(context, request, response){
 	    	var associationName = context.pathParameters.associationName;
-	    	var associationDef = dao.orm.getAssociation(associationName);
-	    	if(!associationDef){
-		    	var errorCode = response.BAD_REQUEST;
-			    self.logger.error('Invalid association set name requested: ' + associationName);
-		    	_oHttpController.sendError(errorCode, 'Invalid association set name requested: ' + associationName);
-				return;
-	    	}
+	    	var associationDef = this._dao.orm.getAssociation(associationName);
+	    	if(!associationDef)
+				throwBadRequestError(context, undefined, 'Invalid association set name requested: ' + associationName);	
 	    	var associationType = associationDef.type;
 	    	//create works only for one-to-many
-	    	if(dao.orm.ASSOCIATION_TYPES['ONE-TO-MANY']!==associationType){
-		    	var errorCode = response.BAD_REQUEST;
-			    self.logger.error('Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
-		    	_oHttpController.sendError(errorCode, 'Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
+	    	if(this._dao.orm.ASSOCIATION_TYPES['ONE-TO-MANY']!==associationType){
+			    this.logger.error('Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
+				throwBadRequestError(context, undefined, 'Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
 	    	}
 	    	
 	    	var joinKey = associationDef.joinKey;
 	    	if(joinKey === undefined){
-		    	var errorCode = response.INTERNAL_SERVER_ERROR;
-			    self.logger.error('Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
-		    	_oHttpController.sendError(errorCode, 'Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
+			    this.logger.error('Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
+				context.suppressStack = true;
+				context.httpErrorCode = response.INTERNAL_SERVER_ERROR;
+				throw Error('Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
 	    	}
 		    	
 	    	var dependendDao = associationDef.targetDao;
 	    	if(dependendDao === undefined){
-		    	var errorCode = response.INTERNAL_SERVER_ERROR;
-			    self.logger.error('Invalid configuration: missing dao factory in configuraiton for association \'' + associationName + '\'.');
-		    	_oHttpController.sendError(errorCode, 'Invalid configuration: missing dao factory in configuration for association \'' + associationName + '\'.');
+			    this.logger.error('Invalid configuration: missing dao factory in configuraiton for association \'' + associationName + '\'.');
+				context.suppressStack = true;
+				context.httpErrorCode = response.INTERNAL_SERVER_ERROR;
+		    	throw Error('Invalid configuration: missing dao factory in configuration for association \'' + associationName + '\'.');
 		    }
-			var input = request.readInputText();
-			var dependendEntity = JSON.parse(input);
-			if(self.onEntityInsert){
-			    self.onEntityInsert(dependendEntity);
+
+			var dependendEntity;
+			try{
+				dependendEntity= request.getJSON();	
+			} catch(err){
+				throwBadRequestError(context, "Invalid Client Input", undefined, "Invalid JSON in create association request payload", err);
+			}
+			if(this.onEntityInsert){
+			    this.onEntityInsert(dependendEntity);
 			}
 			dependendEntity[dependendDao.orm.getPrimaryKey()] = dependendDao.insert(dependendEntity, context.queryParameters.cascaded);
 			response.setStatus(response.OK);
-			response.setHeader('Location', $.getRequest().getRequestURL().toString() + '/' + dependendEntity[dao.orm.getPrimaryKey()]);
-		} catch(e) {
-		    var errorCode = response.INTERNAL_SERVER_ERROR;
-		    self.logger.error(e.message, e);
-	    	_oHttpController.sendError(errorCode, e.message);
-	    	throw e;
+			response.setHeader('Location', request.getRequestURL().toString() + '/' + dependendEntity[this._dao.orm.getPrimaryKey()]);
+		}.bind(_this));
+	};
+};
+
+/**
+ * Constructs new DataService instances.
+ * 
+ * @constructs DataService
+ * @param {Object} [oConfig] initial configuration that will be manipulated for building the protocol API. Defaults to an empty object {}.
+ * @param {Object} [oProtocolHandlersAdapter] Defaults to a new ProtocolHandlerAdapter instance
+ * @param {Object} [oDataProtocolDefinition]  oDataProtocolDefinition supplies the callback functions for each protocol method (e.g. query). Defaults to a new DataProtocolDefinition instance
+ */
+var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition) {
+	this.oProtocolHandlersAdapter = oProtocolHandlersAdapter;
+	if(!this.oProtocolHandlersAdapter){
+		this.oProtocolHandlersAdapter = new ProtocolHandlerAdapter(oDataProtocolDefinition);
+	}
+	
+	var _oConfig = this.oProtocolHandlersAdapter.adapt.call(this);
+	if(oConfig === undefined)
+		this.oConfig = _oConfig;
+	else {
+		this.oConfig = merge(oConfig, _oConfig);
+	}
+	
+	RestAPI.call(this, this.oConfig);
+	//weave in methods from the oProtocolHandlersAdapter that it requires.
+	this.oProtocolHandlersAdapter.api.call(this);
+	return this;
+};
+
+DataService.prototype = RestAPI.prototype;
+DataService.constructor = DataService;
+
+DataService.prototype.query = function(){
+	var handler = this.find("", "get", undefined, ['application/json']);
+	if(!handler.beforeQuery)
+		handler.beforeQuery = function(fCb){
+			handler.configuration()["beforeQuery"] = fCb;
+			return this;
 		}
-	};
-		
-	this.getHandlers = function(){		
-		return {
-			"create"			: create,
-			"update"			: update,
-			"remove"			: remove,
-			"query"				: query,
-			"get"				: get,
-			"count"				: count,
-			"metadata"			: metadata,
-			"associationList" 	: associationListGetHandler,
-			"associationCreate" : associationListCreateHandler
-		};
-	};
+	if(!handler.afterQuery)
+		handler.afterQuery = function(fCb){
+			handler.configuration()["afterQuery"] = fCb;
+			return this;
+		}
+	return handler;
+};
+DataService.prototype.create = function(){
+	var handler = this.find("", "post", ['application/json']);
+	return handler;
+};
+DataService.prototype.remove = function(){
+	var handler = this.find("{id}", "delete", ['application/json']);
+	return handler;
+};
+DataService.prototype.count = function(){
+	var handler = this.find("count", "get", undefined, ['application/json']);
+	return handler;
+};
+DataService.prototype.metadata = function(){
+	var handler = this.find("metadata", "get", undefined, ['application/json']);
+	return handler;
+};
+DataService.prototype.get = function(){
+	var handler = this.find("{id}", "get", undefined, ['application/json']);
+	return handler;
 };
 
-DAOHandlersProvider.prototype.getHandlers = function(){
-	return this.getHandlers();
+DataService.prototype.disableMethods = function(){
+	for(var i=0; i< arguments.length; i++){
+		if(arguments[i] === "query"){
+			this.disable("", "get", undefined, ['application/json']);
+		}
+		if(arguments[i] === "get"){
+			this.disable("{id}", "get", undefined, ['application/json']);
+		}
+		if(arguments[i] === "count"){
+			this.disable("count", "get", undefined, ['application/json']);
+		}
+		if(arguments[i] === "metadata"){
+			this.disable("metadata", "get", undefined, ['application/json']);
+		}
+		if(arguments[i] === "create"){
+			this.disable("", "post", ['application/json']);
+		}
+		if(arguments[i] === "update"){
+			this.disable("{id}", "post", ['application/json']);
+		}
+		if(arguments[i] === "delete" || arguments[i] === "remove"){
+			this.disable("{id}", "delete");
+		}
+	}
+	return this;
 };
 
-DAOHandlersProvider.prototype = Object.create(HandlersProvider.prototype);
-DAOHandlersProvider.prototype.constructor = DAOHandlersProvider;
-
-var HttpController = require('http/v3/rs').HttpController;
-	
-var DataService = exports.DataService = function(dao, loggerName){
-	if(arguments[0]===undefined)
-		throw Error('Illegal argument exception: arguments[0] is undefined');
-
-	this.logger = require('log/logging').getLogger((loggerName||'rs.data.svc'));
-	
-	HttpController.call(this, {});
-
-	this.handlersProvider;
-	if(arguments[0] instanceof HandlersProvider){
-		this.handlersProvider = arguments[0];
-		this.handlersProvider.oHttpController = this;
-	} else {
-		this.handlersProvider = new DAOHandlersProvider(arguments[0], this);
-	}
-	this.handlers = this.handlersProvider.getHandlers();
-	if(this.handlers['query'])
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"": {
-				"get": [{
-					produces: ['application/json'],
-					handler: this.handlers.query
-				}]
-			}
-		});
-	if(this.handlers['create'])
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"": {
-				"post": [{
-					consumes: ['application/json'],
-					handler: this.handlers.create
-				}]
-			}
-		});	
-	if(this.handlers['get'])
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"{id}": {
-				"get": [{
-					produces: ['application/json'],
-					handler: this.handlers.get
-				}]
-			}
-		});	
-	if(this.handlers['update'])
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"{id}": {
-				"put": [{
-					consumes: ['application/json'],
-					handler: this.handlers.update
-				}]
-			}
-		});				
-	if(this.handlers['remove'])
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"{id}": {
-				"delete": [{
-					handler: this.handlers.remove
-				}]
-			}
-		});	
-	if(this.handlers['count'])
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"count": {
-				"get": [{
-					produces: ['application/json'],
-					handler: this.handlers.count
-				}]
-			}
-		});
-	if(this.handlers['metadata'])
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"metadata": {
-				"get": [{
-					produces: ['application/json'],
-					handler: this.handlers.metadata
-				}]
-			}
-		});
-  	
-	//setup configuration for handling associations
-	if(this.handlers['associationList']){
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"{id}/{associationName}": {
-				"get": [{
-					produces: ["application/json"],
-					handler: this.handlers['associationList']
-				}]
-			}
-		});
-	}
-	if(this.handlers['associationCreate']){
-		HttpController.prototype.addResourceHandlers.call(this, {
-			"{id}/{associationName}": {
-				"post": [{
-					consumes: ["application/json"],
-					handler: this.handlers['associationCreate']
-				}]
-			}
-		});
-	}
-  	
+/**
+ * Creates new DataService instances.
+ * 
+ * @param {Object} [oConfig] ] initial REST API configuration. Defaults to an empty object {}.
+ * @param {Object} [oProtocolHandlersAdapter] a custom protocol handlers provider. Defaults to a new ProtocolHandlerAdapter instance
+ * @param {Object} [oDataProtocolDefinition]  oDataProtocolDefinition supplies the callback functions for each protocol method (e.g. query). Defaults to a new DataProtocolDefinition instance 
+ * @returns {DataService} 
+ */
+exports.api = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition){
+	var ds = new DataService(oConfig, oProtocolHandlersAdapter);
+	return ds;
 };
-
-DataService.prototype = Object.create(HttpController.prototype);
-DataService.prototype.constructor = DataService;
-		
-})();
