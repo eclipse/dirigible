@@ -18,10 +18,10 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,24 +55,18 @@ public class FileSystemUtils {
 		Files.move(pathOld, pathNew);
 	}
 
-	public static void copyFile(String workspacePathOld, String workspacePathNew) throws FileNotFoundException, IOException {
-		createFoldersIfNecessary(workspacePathNew);
-		Path pathOld = FileSystems.getDefault().getPath(workspacePathOld);
-		Path pathNew = FileSystems.getDefault().getPath(workspacePathNew);
+	public static void copyFile(String srcPath, String destPath) throws FileNotFoundException, IOException {
+		createFoldersIfNecessary(destPath);
+		Path srcFile = FileSystems.getDefault().getPath(srcPath);
+		Path destFile = FileSystems.getDefault().getPath(destPath);
+		FileUtils.copyFile(srcFile.toFile(), destFile.toFile());
+	}
 
-		Files.walkFileTree(pathOld, new SimpleFileVisitor<Path>() {
-			@Override
-			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
-				Files.createDirectories(pathNew.resolve(pathOld.relativize(dir)));
-				return FileVisitResult.CONTINUE;
-			}
-
-			@Override
-			public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-				Files.copy(file, pathNew.resolve(pathOld.relativize(file)));
-				return FileVisitResult.CONTINUE;
-			}
-		});
+	public static void copyFolder(String srcPath, String destPath) throws FileNotFoundException, IOException {
+		createFoldersIfNecessary(destPath);
+		Path srcDir = FileSystems.getDefault().getPath(srcPath);
+		Path destDir = FileSystems.getDefault().getPath(destPath);
+		FileUtils.copyDirectory(srcDir.toFile(), destDir.toFile(), true);
 	}
 
 	public static void removeFile(String workspacePath) throws FileNotFoundException, IOException {

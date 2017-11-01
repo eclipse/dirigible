@@ -18,9 +18,10 @@ import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceSourceTargetPair;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
+import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceSourceTargetPair;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -77,7 +78,7 @@ public class WorkspaceManagerService implements IRestService {
 		}
 
 		String targetFilePath = targetPath.constructPathFrom(1);
-		if (!processor.existsFolder(workspace, sourceProject, targetFilePath)) {
+		if (!processor.existsFolder(workspace, targetProject, targetFilePath)) {
 			return Response.status(Status.BAD_REQUEST).entity("Target path points to a non-existing folder").build();
 		}
 
@@ -85,7 +86,8 @@ public class WorkspaceManagerService implements IRestService {
 		if (processor.existsFile(workspace, sourceProject, sourceFilePath)) {
 			processor.copyFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
 		} else {
-			processor.copyFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+			processor.copyFolder(workspace, sourceProject, sourceFilePath, targetProject,
+					targetFilePath + IRepositoryStructure.SEPARATOR + sourcePath.getLastSegment());
 		}
 
 		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();

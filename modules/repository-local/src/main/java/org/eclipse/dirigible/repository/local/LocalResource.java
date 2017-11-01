@@ -12,6 +12,7 @@ package org.eclipse.dirigible.repository.local;
 
 import static java.text.MessageFormat.format;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
@@ -89,8 +90,15 @@ public class LocalResource extends LocalEntity implements IResource {
 
 	@Override
 	public void copyTo(String path) throws RepositoryWriteException {
-		// TODO Auto-generated method stub
-		throw new RepositoryWriteException("Not implemented");
+		try {
+			String repositorySourcePath = getRepositoryPath().toString();
+			String repositoryTargetPath = RepositoryPath.normalizePath(path, getName());
+			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), repositorySourcePath);
+			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryTargetPath);
+			FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
+		} catch (IOException e) {
+			throw new RepositoryWriteException(e);
+		}
 	}
 
 	@Override

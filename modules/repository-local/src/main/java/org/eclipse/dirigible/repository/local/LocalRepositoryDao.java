@@ -251,7 +251,7 @@ public class LocalRepositoryDao {
 		try {
 			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
-			FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
+			FileSystemUtils.copyFolder(workspacePathOld, workspacePathNew);
 			createInfo(workspacePathNew);
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);

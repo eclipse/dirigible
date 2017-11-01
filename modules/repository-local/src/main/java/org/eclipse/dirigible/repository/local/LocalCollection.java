@@ -81,7 +81,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		try {
 			folder.copyFolder(path);
 		} catch (LocalRepositoryException ex) {
-			throw new RepositoryWriteException(format("Could not move collection {0}", this.getName()), ex);
+			throw new RepositoryWriteException(format("Could not copy collection {0}", this.getName()), ex);
 		}
 	}
 

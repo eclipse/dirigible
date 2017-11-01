@@ -190,7 +190,14 @@ WorkspaceService.prototype.move = function(filename, sourcepath, targetpath, wor
 		target: targetpath + '/' + filename,
 	})
 };
-WorkspaceService.prototype.copy = function(){};
+WorkspaceService.prototype.copy = function(filename, sourcepath, targetpath, workspaceName){
+	var url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('copy').build();
+	//NOTE: The third argument is a temporary fix for the REST API issue that sending header  content-type: 'application/json' fails the move operation
+	return this.$http.post(url, { 
+		source: sourcepath + '/' + filename,
+		target: targetpath + '/',
+	})
+};
 WorkspaceService.prototype.load = function(wsResourcePath){
 	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(wsResourcePath.split('/')).build();
 	return this.$http.get(url, {headers: { 'describe': 'application/json'}})
@@ -306,7 +313,9 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController,
 		this.moveNode(oldParentNode, node);
 	}.bind(this))
 	.on('copy_node.jstree', function (e, data) {
-		//TODO
+		var node = data.node;
+		var oldParentNode = data.instance.get_node(data.old_parent);
+		this.copyNode(oldParentNode, node);
 	}.bind(this))
 	.on('jstree.workspace.publish', function (e, data) {		
 		this.publish(data);
@@ -409,6 +418,24 @@ WorkspaceTreeAdapter.prototype.moveNode = function(sourceParentNode, node){
 				self.refresh(sourceParentNode, true);
 				self.refresh(tagetParentNode, true).then(function(){
 					self.messageHub.announceFileMoved(targetpath+'/'+node.text, sourcepath, targetpath);
+				});
+			}.bind(this, sourceParentNode, tagetParentNode))
+			.finally(function() {
+				this.refresh();
+			}.bind(this));
+};
+WorkspaceTreeAdapter.prototype.copyNode = function(sourceParentNode, node){
+	//strip the "/{workspace}" segment from paths and the file segment from source path (for consistency) 
+	var sourceParentNode = sourceParentNode;
+	var sourcepath = sourceParentNode.original._file.path.substring(this.workspaceName.length+1);
+	var tagetParentNode = this.jstree.get_node(node.parent);
+	var targetpath = tagetParentNode.original._file.path.substring(this.workspaceName.length+1);
+	var self = this;
+	return this.workspaceService.copy(node.text, sourcepath, targetpath, this.workspaceName)
+			.then(function(sourceParentNode, tagetParentNode){
+				self.refresh(sourceParentNode, true);
+				self.refresh(tagetParentNode, true).then(function(){
+					self.messageHub.announceFileCopied(targetpath+'/'+node.text, sourcepath, targetpath);
 				});
 			}.bind(this, sourceParentNode, tagetParentNode))
 			.finally(function() {
@@ -552,6 +579,14 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		};
 		this.send('file.moved', data);
 	};
+	var announceFileCopied = function(fileDescriptor, sourcepath, targetpath){
+		var data = {
+			"file": fileDescriptor,
+			"sourcepath": sourcepath,
+			"targetpath": targetpath
+		};
+		this.send('file.copied', data);
+	};
 	var announceFilePropertiesOpen = function(fileDescriptor){
 		this.send('file.properties', fileDescriptor);
 	};
@@ -569,6 +604,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		announceFileDeleted: announceFileDeleted,
 		announceFileRenamed: announceFileRenamed,
 		announceFileMoved: announceFileMoved,
+		announceFileCopied: announceFileCopied,
 		announceFilePropertiesOpen: announceFilePropertiesOpen,
 		announcePublish: announcePublish,
 		announceExport: announceExport,
