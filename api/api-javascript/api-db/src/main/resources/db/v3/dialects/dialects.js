@@ -1,4 +1,13 @@
-/* globals $ */
+/*******************************************************************************
+ * Copyright (c) 2017 SAP and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * SAP - initial API and implementation
+ *******************************************************************************/
+
 /* eslint-env node, dirigible */
 "use strict";
 
@@ -35,9 +44,9 @@ Dialects.prototype.unregisterDialectResource = function(dialectResourcePath){
 		return;
 	else
 		config = JSON.parse(config);
-	for(var dbName in config){
-		if(dialectResourcePath === config[dbName])
-			delete config[dbName];
+	for(var databaseName in config){
+		if(dialectResourcePath === config[databaseName])
+			delete config[databaseName];
 	}
 	env.set(this.configKey, JSON.stringify(config));
 };
@@ -49,14 +58,14 @@ Dialects.prototype.getDialect = function(dbProductName){
 		return;
 	else
 		config = JSON.parse(config);
-	for(var dbNamePattern in config){
-		if(dbProductName.indexOf(dbNamePattern)>-1){
-			var resourcePath = config[dbNamePattern];
+	for(var databaseNamePattern in config){
+		if(dbProductName.indexOf(databaseNamePattern)>-1){
+			var resourcePath = config[databaseNamePattern];
 			var dialectResource = require(resourcePath);
 			if(!dialectResource.get){
 				throw Error('Missing factory function "get" in dialect resource '+ resourcePath);
 			}
-			return dialectResource.get(dbNamePattern);
+			return dialectResource.get(databaseNamePattern);
 		}
 	}
 	return;
