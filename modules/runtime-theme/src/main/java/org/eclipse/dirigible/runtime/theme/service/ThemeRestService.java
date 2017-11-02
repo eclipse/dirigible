@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -39,7 +40,7 @@ import io.swagger.annotations.Authorization;
 @Path("/core/theme")
 @Api(value = "Core - Theme", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
-public class ThemeRestService implements IRestService {
+public class ThemeRestService extends AbstractRestService implements IRestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ThemeRestService.class);
 
@@ -51,13 +52,15 @@ public class ThemeRestService implements IRestService {
 	@Inject
 	private IRepository repository;
 
+	@Context
+	private HttpServletResponse response;
+
 	private static final String THEMES_PATH = "/resources/themes/";
 
 	@GET
 	@Path("/")
 	public Response getTheme(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
 		String cookieValue = getCurrentTheme(request, response);
-
 		return Response.ok().entity(cookieValue).type(ContentTypeHelper.TEXT_PLAIN).build();
 	}
 
@@ -125,13 +128,19 @@ public class ThemeRestService implements IRestService {
 			throw new RepositoryException(e);
 		}
 
-		final String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
-		logger.error(logMsg);
-		throw new RepositoryNotFoundException(logMsg);
+		final String message = String.format("There is no resource at the specified path: %s", repositoryPath);
+		logger.error(message);
+		sendErrorNotFound(response, message);
+		throw new RepositoryNotFoundException(message);
 	}
 
 	@Override
 	public Class<? extends IRestService> getType() {
 		return ThemeRestService.class;
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
 	}
 }

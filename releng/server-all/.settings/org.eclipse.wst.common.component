@@ -38,6 +38,9 @@
         <dependent-module archiveName="dirigible-api-indexing-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - indexing/API - Facade - indexing">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-api-log-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - log/API - Facade - log">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-repository-api-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - API/Repository - API">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -183,6 +186,15 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-messaging-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - messaging/API - Javascript - messaging">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-api-javascript-indexing-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - indexing/API - Javascript - indexing">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-api-javascript-log-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - log/API - Javascript - log">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-api-javascript-test-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - test/API - Javascript - test">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-ide-core-3.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Core/IDE - Core">

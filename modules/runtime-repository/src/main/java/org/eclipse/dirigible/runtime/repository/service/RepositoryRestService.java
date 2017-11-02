@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,12 +19,16 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.processor.RepositoryProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -36,19 +41,32 @@ import io.swagger.annotations.Authorization;
 @Singleton
 @Path("/core/repository")
 @Api(value = "Core - Repository", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
-@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
-public class RepositoryRestService implements IRestService {
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
+		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
+public class RepositoryRestService extends AbstractRestService implements IRestService {
+
+	private static final Logger logger = LoggerFactory.getLogger(RepositoryRestService.class);
 
 	@Inject
 	private RepositoryProcessor processor;
 
+	@Context
+	private HttpServletResponse response;
+
 	@GET
 	@Path("/{path:.*}")
 	public Response getResource(@PathParam("path") String path) {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
 			ICollection collection = processor.getCollection(path);
 			if (!collection.exists()) {
+				sendErrorNotFound(response, path);
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			return Response.ok().entity(processor.renderRepository(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -62,9 +80,17 @@ public class RepositoryRestService implements IRestService {
 	@POST
 	@Path("/{path:.*}")
 	public Response createResource(@PathParam("path") String path, byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		IResource resource = processor.getResource(path);
 		if (resource.exists()) {
-			return Response.status(Status.BAD_REQUEST).entity(format("Resource at location {0} already exists", path)).build();
+			String message = format("Resource at location {0} already exists", path);
+			sendErrorBadRequest(response, message);
+			return Response.status(Status.BAD_REQUEST).entity(message).build();
 		}
 		resource = processor.createResource(path, content, request.getContentType());
 		return Response.created(new URI(UrlFacade.escape(resource.getPath()))).build();
@@ -73,9 +99,17 @@ public class RepositoryRestService implements IRestService {
 	@PUT
 	@Path("/{path:.*}")
 	public Response updateResource(@PathParam("path") String path, byte[] content) {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
-			return Response.status(Status.NOT_FOUND).entity(format("Resource at location {0} does not exist", path)).build();
+			String message = format("Resource at location {0} does not exist", path);
+			sendErrorNotFound(response, message);
+			return Response.status(Status.NOT_FOUND).entity(message).build();
 		}
 		resource = processor.updateResource(path, content);
 		return Response.noContent().build();
@@ -84,9 +118,17 @@ public class RepositoryRestService implements IRestService {
 	@DELETE
 	@Path("/{path:.*}")
 	public Response deleteResource(@PathParam("path") String path) {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
-			return Response.status(Status.NOT_FOUND).entity(format("Resource at location {0} does not exist", path)).build();
+			String message = format("Resource at location {0} does not exist", path);
+			sendErrorNotFound(response, message);
+			return Response.status(Status.NOT_FOUND).entity(message).build();
 		}
 		processor.deleteResource(path);
 		return Response.noContent().build();
@@ -95,5 +137,10 @@ public class RepositoryRestService implements IRestService {
 	@Override
 	public Class<? extends IRestService> getType() {
 		return RepositoryRestService.class;
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
 	}
 }

@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,10 +24,13 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.runtime.databases.processor.DatabaseProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,10 +46,15 @@ import io.swagger.annotations.Authorization;
 @Path("/ide/databases")
 @Api(value = "IDE - Databases", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
-public class DatabaseRestService implements IRestService {
+public class DatabaseRestService extends AbstractRestService implements IRestService {
+
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseRestService.class);
 
 	@Inject
 	private DatabaseProcessor processor;
+
+	@Context
+	private HttpServletResponse response;
 
 	@GET
 	@Path("")
@@ -53,6 +62,12 @@ public class DatabaseRestService implements IRestService {
 	@ApiOperation("List all the databases types")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of Databases Types", response = String.class, responseContainer = "List") })
 	public Response listDatabaseTypes() {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		List<String> databaseTypes = processor.getDatabaseTypes();
 		return Response.ok().entity(databaseTypes).build();
 	}
@@ -64,9 +79,16 @@ public class DatabaseRestService implements IRestService {
 	@ApiResponses({ @ApiResponse(code = 200, message = "List of Data Sources", response = String.class, responseContainer = "List"),
 			@ApiResponse(code = 404, message = "Data Sources for the requested database {type} does not exist") })
 	public Response listDataSources(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type) {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		Set<String> list = processor.getDataSources(type);
 		if (list == null) {
 			String error = format("Database Type {0} not known.", type);
+			sendErrorNotFound(response, error);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 		return Response.ok().entity(list).build();
@@ -81,9 +103,16 @@ public class DatabaseRestService implements IRestService {
 			@ApiResponse(code = 404, message = "Database Metadata for the requested database {type} does not exist") })
 	public Response listArtifacts(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name) throws SQLException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		DataSource dataSource = processor.getDataSource(type, name);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Type {1} not known.", name, type);
+			sendErrorNotFound(response, error);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
@@ -100,11 +129,13 @@ public class DatabaseRestService implements IRestService {
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			return Response.status(Status.UNAUTHORIZED).build();
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
 		}
 
 		if (!processor.existsDatabase(type, name)) {
 			String error = format("Datasource {0} does not exist as {1}.", name, type);
+			sendErrorNotFound(response, error);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
@@ -126,11 +157,13 @@ public class DatabaseRestService implements IRestService {
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			return Response.status(Status.UNAUTHORIZED).build();
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
 		}
 
 		if (!processor.existsDatabase(type, name)) {
 			String error = format("Datasource {0} does not exist as {1}.", name, type);
+			sendErrorNotFound(response, error);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
@@ -152,11 +185,13 @@ public class DatabaseRestService implements IRestService {
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			return Response.status(Status.UNAUTHORIZED).build();
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
 		}
 
 		if (!processor.existsDatabase(type, name)) {
 			String error = format("Datasource {0} does not exist as {1}.", name, type);
+			sendErrorNotFound(response, error);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
@@ -172,6 +207,11 @@ public class DatabaseRestService implements IRestService {
 	@Override
 	public Class<? extends IRestService> getType() {
 		return DatabaseRestService.class;
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
 	}
 
 }

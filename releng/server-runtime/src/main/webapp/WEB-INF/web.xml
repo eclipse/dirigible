@@ -77,6 +77,43 @@
 		<res-sharing-scope>Shareable</res-sharing-scope>
 	</resource-ref> -->
 	
+	<login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+         	<form-login-page>/login-form.html</form-login-page>
+            <form-error-page>/login-error.html</form-error-page>
+    	</form-login-config>
+    </login-config>
+
+	<!-- Error Pages -->     
+    <error-page>
+	    <error-code>403</error-code>
+	    <location>/403.html</location>
+	</error-page>
+	<error-page>
+	    <error-code>404</error-code>
+	    <location>/404.html</location>
+	</error-page>
+	<error-page>
+	    <location>/error.html</location>
+	</error-page>
+	
+	<!-- Landing Page -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Landing Page</web-resource-name>
+			<url-pattern>/index.html</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+	
+	<!-- Themes -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Themes</web-resource-name>
+			<url-pattern>/services/v3/core/theme/*</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+	
 	<security-constraint>
 	    <web-resource-collection>
 	        <web-resource-name>Engine Services</web-resource-name>

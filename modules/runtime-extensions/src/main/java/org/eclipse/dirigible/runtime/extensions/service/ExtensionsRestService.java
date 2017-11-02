@@ -4,18 +4,24 @@ import static java.text.MessageFormat.format;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.runtime.extensions.processor.ExtensionPoint;
 import org.eclipse.dirigible.runtime.extensions.processor.ExtensionsProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,11 +36,17 @@ import io.swagger.annotations.Authorization;
 @Singleton
 @Path("/core/extensions")
 @Api(value = "Core - Extensions", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
-@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
-public class ExtensionsRestService implements IRestService {
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
+		@ApiResponse(code = 404, message = "Not Found") })
+public class ExtensionsRestService extends AbstractRestService implements IRestService {
+
+	private static final Logger logger = LoggerFactory.getLogger(ExtensionsRestService.class);
 
 	@Inject
 	private ExtensionsProcessor processor;
+
+	@Context
+	private HttpServletResponse response;
 
 	@GET
 	@Path("/")
@@ -42,6 +54,12 @@ public class ExtensionsRestService implements IRestService {
 	@ApiOperation("List all the Extension Points with their Extensions")
 	@ApiResponses({ @ApiResponse(code = 200, message = "List of Extension Points", response = ExtensionPoint.class, responseContainer = "List") })
 	public Response listExtensionPoints() throws ExtensionsException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		return Response.ok().entity(processor.renderExtensionPoints()).build();
 	}
 
@@ -53,9 +71,17 @@ public class ExtensionsRestService implements IRestService {
 			@ApiResponse(code = 404, message = "Extension Point with the requested name does not exist") })
 	public Response getExtensionPoint(@ApiParam(value = "Name of the ExtensionPoint", required = true) @PathParam("name") String name)
 			throws ExtensionsException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
 		String json = processor.renderExtensionPoint(name);
 		if (json == null) {
-			return Response.status(Status.NOT_FOUND).entity(format("ExtensionPoint with name [{0}] does not exist", name)).build();
+			String error = format("ExtensionPoint with name [{0}] does not exist", name);
+			sendErrorNotFound(response, error);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 		return Response.ok().entity(json).build();
 	}
@@ -63,5 +89,10 @@ public class ExtensionsRestService implements IRestService {
 	@Override
 	public Class<? extends IRestService> getType() {
 		return ExtensionsRestService.class;
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
 	}
 }

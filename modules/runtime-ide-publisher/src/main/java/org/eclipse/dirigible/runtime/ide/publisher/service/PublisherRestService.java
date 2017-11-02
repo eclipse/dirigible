@@ -10,6 +10,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,11 +22,14 @@ import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.runtime.ide.publisher.processor.PublisherProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,11 +45,17 @@ import io.swagger.annotations.Authorization;
 @Path("/ide/publisher")
 @RolesAllowed({ "Developer" })
 @Api(value = "IDE - Publish", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
-@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
-public class PublisherRestService implements IRestService {
+@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
+		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
+public class PublisherRestService extends AbstractRestService implements IRestService {
+
+	private static final Logger logger = LoggerFactory.getLogger(PublisherRestService.class);
 
 	@Inject
 	private PublisherProcessor processor;
+
+	@Context
+	private HttpServletResponse response;
 
 	@Override
 	public Class<? extends IRestService> getType() {
@@ -61,11 +71,13 @@ public class PublisherRestService implements IRestService {
 			throws PublisherException, URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
 			return Response.status(Status.FORBIDDEN).build();
 		}
 
 		if (!processor.existsWorkspace(user, workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
+			sendErrorNotFound(response, error);
 			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
@@ -79,6 +91,7 @@ public class PublisherRestService implements IRestService {
 	public Response getRequest(@PathParam("id") long id, @Context HttpServletRequest request) throws PublisherException {
 		String user = UserFacade.getName();
 		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
 			return Response.status(Status.FORBIDDEN).build();
 		}
 
@@ -86,7 +99,9 @@ public class PublisherRestService implements IRestService {
 		if (publishRequestDefinition != null) {
 			return Response.ok().entity(publishRequestDefinition).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
-		return Response.status(Status.NOT_FOUND).entity("Publishing request does not exist or has already been processed.").build();
+		String message = "Publishing request does not exist or has already been processed.";
+		sendErrorNotFound(response, message);
+		return Response.status(Status.NOT_FOUND).entity(message).build();
 	}
 
 	@GET
@@ -94,6 +109,7 @@ public class PublisherRestService implements IRestService {
 	public Response listLog(@Context HttpServletRequest request) throws PublisherException {
 		String user = UserFacade.getName();
 		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
 			return Response.status(Status.FORBIDDEN).build();
 		}
 
@@ -106,11 +122,17 @@ public class PublisherRestService implements IRestService {
 	public Response clearLog(@Context HttpServletRequest request) throws PublisherException {
 		String user = UserFacade.getName();
 		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
 			return Response.status(Status.FORBIDDEN).build();
 		}
 
 		processor.clearPublishingLog();
 		return Response.noContent().build();
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return logger;
 	}
 
 }

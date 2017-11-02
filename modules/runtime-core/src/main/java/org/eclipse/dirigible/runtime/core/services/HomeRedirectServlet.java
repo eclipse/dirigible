@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
-@WebServlet(name = "HomeRedirectServlet", urlPatterns = { "/*" })
+@WebServlet(name = "HomeRedirectServlet", urlPatterns = { "/home" })
 public class HomeRedirectServlet extends HttpServlet {
 
 	private static final String DIRIGIBLE_HOME_URL = "DIRIGIBLE_HOME_URL";
