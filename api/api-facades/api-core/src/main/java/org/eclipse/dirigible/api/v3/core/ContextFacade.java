@@ -11,7 +11,7 @@ public class ContextFacade implements IScriptingFacade {
 	private static final Logger logger = LoggerFactory.getLogger(ContextFacade.class);
 
 	public static final String get(String name) {
-		logger.debug("API - ContextFacade.get() -> begin");
+		logger.trace("API - ContextFacade.get() -> begin");
 		Object contextValue;
 		try {
 			contextValue = ThreadContextFacade.get(name);
@@ -20,19 +20,19 @@ public class ContextFacade implements IScriptingFacade {
 			throw new IllegalStateException(e);
 		}
 		String value = contextValue != null ? contextValue.toString() : null;
-		logger.debug("API - ContextFacade.get() -> end");
+		logger.trace("API - ContextFacade.get() -> end");
 		return value;
 	}
 
 	public static final void set(String name, String value) {
-		logger.debug("API - ContextFacade.set() -> begin");
+		logger.trace("API - ContextFacade.set() -> begin");
 		try {
 			ThreadContextFacade.set(name, value);
 		} catch (ContextException e) {
 			logger.error(e.getMessage(), e);
 			throw new IllegalStateException(e);
 		}
-		logger.debug("API - ContextFacade.set() -> end");
+		logger.trace("API - ContextFacade.set() -> end");
 	}
 
 }

@@ -10,22 +10,22 @@ public class GlobalsFacade implements IScriptingFacade {
 	private static final Logger logger = LoggerFactory.getLogger(GlobalsFacade.class);
 
 	public static final String get(String name) {
-		logger.debug("API - GlobalsFacade.get() -> begin");
+		logger.trace("API - GlobalsFacade.get() -> begin");
 		String value = System.getProperty(name);
-		logger.debug("API - GlobalsFacade.get() -> end");
+		logger.trace("API - GlobalsFacade.get() -> end");
 		return value;
 	}
 
 	public static final void set(String name, String value) {
-		logger.debug("API - GlobalsFacade.set() -> begin");
+		logger.trace("API - GlobalsFacade.set() -> begin");
 		System.setProperty(name, value);
-		logger.debug("API - GlobalsFacade.set() -> end");
+		logger.trace("API - GlobalsFacade.set() -> end");
 	}
 
 	public static final String list() {
-		logger.debug("API - GlobalsFacade.get() -> begin");
+		logger.trace("API - GlobalsFacade.get() -> begin");
 		String value = GsonHelper.GSON.toJson(System.getProperties());
-		logger.debug("API - GlobalsFacade.get() -> end");
+		logger.trace("API - GlobalsFacade.get() -> end");
 		return value;
 	}
 

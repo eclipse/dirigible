@@ -10,16 +10,16 @@ public class EnvFacade implements IScriptingFacade {
 	private static final Logger logger = LoggerFactory.getLogger(EnvFacade.class);
 
 	public static final String get(String name) {
-		logger.debug("API - EnvFacade.get() -> begin");
+		logger.trace("API - EnvFacade.get() -> begin");
 		String value = System.getenv(name);
-		logger.debug("API - EnvFacade.get() -> end");
+		logger.trace("API - EnvFacade.get() -> end");
 		return value;
 	}
 
 	public static final String list() {
-		logger.debug("API - EnvFacade.get() -> begin");
+		logger.trace("API - EnvFacade.get() -> begin");
 		String value = GsonHelper.GSON.toJson(System.getenv());
-		logger.debug("API - EnvFacade.get() -> end");
+		logger.trace("API - EnvFacade.get() -> end");
 		return value;
 	}
 

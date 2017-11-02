@@ -26,6 +26,7 @@ public class JavaFacade {
 
 	public static final Object call(String className, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
+		logger.trace("API - JavaFacade.call() -> begin");
 		Class<?> clazz = Class.forName(className);
 		List<Object> params = normalizeParameters(parameters);
 		Class<?>[] parameterTypes = enumerateTypes(params);
@@ -52,6 +53,7 @@ public class JavaFacade {
 		String message = format("No such static method [{0}] in class [{1}] with parameters of types [{2}]", methodName, className,
 				Arrays.toString(parameterTypes));
 		logger.error(message);
+		logger.trace("API - JavaFacade.call() -> end");
 		throw new NoSuchMethodException(message);
 	}
 
@@ -115,6 +117,7 @@ public class JavaFacade {
 
 	public static final String instantiate(String className, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
+		logger.trace("API - JavaFacade.instantiate() -> begin");
 		Class<?> clazz = Class.forName(className);
 		List<Object> params = normalizeParameters(parameters);
 		Class<?>[] parameterTypes = enumerateTypes(params);
@@ -130,11 +133,13 @@ public class JavaFacade {
 		}
 		String message = format("No such constructor [{0}] in class [{1}]", Arrays.toString(parameterTypes), className);
 		logger.error(message);
+		logger.trace("API - JavaFacade.instantiate() -> end");
 		throw new NoSuchMethodException(message);
 	}
 
 	public static final Object invoke(String uuid, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
+		logger.trace("API - JavaFacade.invoke() -> begin");
 		Object instance = ThreadContextFacade.getProxy(uuid);
 		if (instance == null) {
 			String message = format("Instance with UUID [{0}] does not exist in the context", uuid);
@@ -167,6 +172,7 @@ public class JavaFacade {
 		String message = format("No such method [{0}] in class [{1}] with parameters of types [{2}]", methodName, clazz.getName(),
 				Arrays.toString(parameterTypes));
 		logger.error(message);
+		logger.trace("API - JavaFacade.invoke() -> end");
 		throw new NoSuchMethodException(message);
 	}
 
