@@ -50,6 +50,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("core/v3/java/call.js");
 		TEST_MODULES.add("core/v3/java/invoke.js");
 		TEST_MODULES.add("core/v3/java/deep.js");
+		TEST_MODULES.add("core/v3/java/null.js");
+		
 		TEST_MODULES.add("core/v3/console/log.js");
 
 		TEST_MODULES.add("security/v3/user/getName.js");

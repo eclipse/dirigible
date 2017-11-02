@@ -23,7 +23,7 @@ public class JavaV8Callback {
 		Iterator<Object> iterator = params.iterator();
 		while (iterator.hasNext()) {
 			Object param = iterator.next();
-			if (param.equals(V8.getUndefined())) {
+			if ((param != null) && param.equals(V8.getUndefined())) {
 				iterator.remove();
 			}
 		}

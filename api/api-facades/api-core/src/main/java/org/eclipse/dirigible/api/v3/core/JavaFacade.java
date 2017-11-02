@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.lang.model.type.NullType;
+
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -91,6 +93,10 @@ public class JavaFacade {
 							}
 						}
 					} else {
+						if (NullType.class.equals(parameterTypes[i])) {
+							matching = true;
+							break;
+						}
 						if (nextClass.isAssignableFrom(parameterTypes[i])) {
 							matching = true;
 							break;
@@ -182,6 +188,10 @@ public class JavaFacade {
 	private static List<Object> normalizeParameters(Object[] parameters) throws ContextException {
 		List<Object> params = new ArrayList<Object>();
 		for (Object param : parameters) {
+			if (param == null) {
+				params.add(null);
+				continue;
+			}
 			if (!"undefined".equals(param) && (!"jdk.nashorn.internal.runtime.Undefined".equals(param.getClass().getName()))) {
 				if ((param instanceof String) && (ThreadContextFacade.getProxy((String) param) != null)) {
 					params.add(ThreadContextFacade.getProxy((String) param));
@@ -197,6 +207,10 @@ public class JavaFacade {
 		Class<?>[] parameterTypes = new Class[params.size()];
 		int i = 0;
 		for (Object param : params) {
+			if (param == null) {
+				parameterTypes[i++] = NullType.class;
+				continue;
+			}
 			parameterTypes[i++] = param.getClass();
 		}
 		return parameterTypes;
