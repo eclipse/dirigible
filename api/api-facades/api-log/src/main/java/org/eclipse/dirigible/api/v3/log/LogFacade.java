@@ -63,7 +63,8 @@ public class LogFacade implements IScriptingFacade {
 			if (args == null) {
 				args = new Object[] { ex };
 			} else {
-				Arrays.copyOf(args, args.length + 1)[args.length - 1] = ex;
+				args = Arrays.copyOf(args, args.length + 1);
+				args[args.length - 1] = ex;
 			}
 		}
 
