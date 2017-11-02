@@ -91,8 +91,8 @@ public class JavaFacade {
 							}
 						}
 					} else {
-						if (!nextClass.isAssignableFrom(parameterTypes[i])) {
-							matching = false;
+						if (nextClass.isAssignableFrom(parameterTypes[i])) {
+							matching = true;
 							break;
 						}
 					}
