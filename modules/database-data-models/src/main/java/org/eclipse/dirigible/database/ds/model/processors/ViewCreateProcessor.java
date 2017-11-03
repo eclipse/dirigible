@@ -16,7 +16,7 @@ public class ViewCreateProcessor {
 	public static void execute(Connection connection, DataStructureViewModel viewModel) throws SQLException {
 		logger.info("Processing Create View: " + viewModel.getName());
 		if (!SqlFactory.getNative(connection).exists(connection, viewModel.getName())) {
-			String sql = SqlFactory.getNative(connection).create().view(viewModel.getName()).column("*").asSelect(viewModel.getQuery()).build();
+			String sql = SqlFactory.getNative(connection).create().view(viewModel.getName()).asSelect(viewModel.getQuery()).build();
 			Statement statement = connection.createStatement();
 			try {
 				logger.info(sql);
