@@ -99,7 +99,7 @@ ORMStatements.prototype.list= function(settings){
 	var sort = settings.$sort || settings.sort;
 	var order = settings.$order || settings.order;
 	var selectedFields = settings.$select || settings.select;
-	
+
 	var stmnt = this.builder(this.dialect).select().from(this.orm.table);
 
 	//add selected fields if any
@@ -121,13 +121,25 @@ ORMStatements.prototype.list= function(settings){
     	return false;
     });
     if(propertyDefinitions.length>0){
-	    for(var i=0; i<propertyDefinitions.length; i++){
+		for(var i=0; i<propertyDefinitions.length; i++){
         	var def = propertyDefinitions[i];
-	    	if(settings.$filter && settings.$filter.indexOf(def.name)>-1)
+	    	if(settings.$filter && settings.$filter.indexOf(def.name)>-1){
 	    		stmnt.where(def.column + ' LIKE ?', [def]);
-	   		else
-	   			stmnt.where(def.column + '=?', [def]);
-        }
+	   		} else {
+				var val = settings[def.name];
+	   			if(val === null || val === undefined){
+	   				stmnt.where(def.column + ' IS NULL', [def]);
+	   			} else {
+	   				if(val.indexOf && val.indexOf('>')>-1){
+		   				stmnt.where(def.column + ' > ?', [def]);
+		   			} else if(val.indexOf && val.indexOf('<')>-1){
+		   				stmnt.where(def.column + ' < ?', [def]);
+		   			} else{
+		   				stmnt.where(def.column + '=?', [def]);
+	   				}
+	   			}
+        	}
+    	}
     }
 
     if (sort !== undefined) {
@@ -147,6 +159,8 @@ ORMStatements.prototype.list= function(settings){
     }
     return stmnt;
 };
+
+exports.ORMStatements = ORMStatements;
 
 exports.forDatasource = function(orm, databaseName){
 	var dialect = require("db/v3/dialects/dialects").get().getDialect(databaseName);

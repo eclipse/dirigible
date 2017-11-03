@@ -166,6 +166,8 @@ StatementBuilder.prototype.fieldDef = function(fieldDef){
 StatementBuilder.prototype.toString = function(){
 	if(this.operation===undefined)
 		throw Error('Missing operation. Forgot to invoke insert/delete/update/select on the statement builder?');
+	if(this.dialect===undefined)
+		throw Error('No dialect available for the toString operation. The StatementBuilder object must have been initialized with a valid dialect ot invoke this operation on it.');
 	return this.dialect.builders[this.operation.toLowerCase()].apply(this);
 };
 StatementBuilder.prototype.toParams = function(){
@@ -187,7 +189,7 @@ var getStatementBuilder = exports.getStatementBuilder = function(dialect){
 };
 
 var Statements = exports.Statements = function(){
-	this.$log = require('log/logging').getLogger('db.dao.statements');
+	this.$log = require('log/logging').getLogger('org. eclipse.dirigible.db.dao.statements');
 };
 exports.get = function(){
 	return new Statements();
@@ -207,6 +209,9 @@ Statements.prototype.execute = function(statementBuilder, connection, entity){
  	if(parametricFields){
 	 	for(var i=0; i<parametricFields.length; i++){
 	 		var val = entity ? entity[parametricFields[i].name] : undefined;
+      if((val=== null || val===undefined) && statementBuilder.operation!==undefined && statementBuilder.operation.toLowerCase()==='select'){
+	 			continue;
+ 			}
 	 		var index = i+1;
 	 		this.$log.info('Binding to parameter[{}]: {}', index, val);
 	 		statement['set'+parametricFields[i].type](index, val);

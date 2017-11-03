@@ -77,5 +77,6 @@ exports.get = function(configKey){
 	//TODO: move this to a one-time config phase
 	dialects.register("Default", "db/v3/dialects/defaults");
 	dialects.register("Derby", "db/v3/dialects/derby");
+  dialects.register("HDB", "db/v3/dialects/hdb");
 	return dialects;
 };
