@@ -123,8 +123,8 @@ ORM.prototype.getAssociation = function(associationName){
 };
 
 ORM.prototype.validate = function(){
-	if(!this.dbName)
-		throw new Error('Illegal configuration: invalid property dbName['+this.dbName+']');
+	if(!this.table)
+		throw new Error('Illegal configuration: invalid property table['+this.table+']');
 	if(!this.properties)
 		throw new Error('Illegal configuration: invalid property properties['+this.properties+']');
 	if(this.properties.constructor !== Array)
@@ -137,8 +137,8 @@ ORM.prototype.validate = function(){
 			throw new Error('Illegal configuration: invalid property name['+property.name+']');
 		if(!property.type)
 			throw new Error('Illegal configuration: invalid property type['+property.type+']');	
-		if(!property.dbName)
-			throw new Error('Illegal configuration: invalid property dbName['+property.dbName+']');
+		if(!property.column)
+			throw new Error('Illegal configuration: invalid property column['+property.column+']');
 		if(property.allowedOps){
 			if(property.allowedOps.constructor !== Array)
 				throw new Error("Illegal configuration: Association " + property.name + " property allowedOps is expected ot be Array. Instead, it was "+(typeof property.allowedOps));		

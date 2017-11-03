@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.api.v3.log;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
@@ -39,21 +40,34 @@ public class LogFacade implements IScriptingFacade {
 	}
 
 	private static final ObjectMapper om = new ObjectMapper();
-	private static final ArrayType stringArrayType = TypeFactory.defaultInstance().constructArrayType(String.class);
+	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
 
-	public static final void log(String loggerName, String level, String message, String arguments) {
+	public static final void log(String loggerName, String level, String message, String logArguments, String errorJson) throws IOException {
+
 		final Logger _logger = getLogger(loggerName);
+
 		Object[] args = null;
-		if (arguments != null) {
+		if (logArguments != null) {
 			try {
-				args = om.readValue(arguments, stringArrayType);
+				args = om.readValue(logArguments, objectArrayType);
 				if (args.length < 1) {
 					args = null;
 				}
 			} catch (IOException e) {
-				LOGGER.error("Cannot parse log arguments[" + arguments + "] for logger[" + loggerName + "]", e);
+				LOGGER.error("Cannot parse log arguments[" + logArguments + "] for logger[" + loggerName + "]", e);
 			}
 		}
+		// https://www.slf4j.org/faq.html#paramException
+		if (errorJson != null) {
+			JSServiceException ex = toException(errorJson);
+			if (args == null) {
+				args = new Object[] { ex };
+			} else {
+				args = Arrays.copyOf(args, args.length + 1);
+				args[args.length - 1] = ex;
+			}
+		}
+
 		if (ch.qos.logback.classic.Level.DEBUG.toString().equalsIgnoreCase(level)) {
 			_logger.debug(message, args);
 		} else if (ch.qos.logback.classic.Level.TRACE.toString().equalsIgnoreCase(level)) {
@@ -64,22 +78,6 @@ public class LogFacade implements IScriptingFacade {
 			_logger.warn(message, args);
 		} else if (ch.qos.logback.classic.Level.ERROR.toString().equalsIgnoreCase(level)) {
 			_logger.error(message, args);
-		}
-	}
-
-	public static final void logError(final String loggerName, String level, String message, String errorJson) throws IOException {
-		final Logger _logger = getLogger(loggerName);
-		JSServiceException ex = toException(errorJson);
-		if (ch.qos.logback.classic.Level.DEBUG.toString().equalsIgnoreCase(level)) {
-			_logger.debug(message, ex);
-		} else if (ch.qos.logback.classic.Level.TRACE.toString().equalsIgnoreCase(level)) {
-			_logger.trace(message, ex);
-		} else if (ch.qos.logback.classic.Level.INFO.toString().equalsIgnoreCase(level)) {
-			_logger.info(message, ex);
-		} else if (ch.qos.logback.classic.Level.WARN.toString().equalsIgnoreCase(level)) {
-			_logger.warn(message, ex);
-		} else if (ch.qos.logback.classic.Level.ERROR.toString().equalsIgnoreCase(level)) {
-			_logger.error(message, ex);
 		}
 	}
 

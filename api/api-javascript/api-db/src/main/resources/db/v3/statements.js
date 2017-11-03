@@ -153,7 +153,7 @@ StatementBuilder.prototype.fieldDef = function(fieldDef){
 	if(!this.fieldSet)
 		this.fieldSet = [];
 	this.fieldSet.push({
-		dbName: fieldDef.dbName,
+		column: fieldDef.column,
 		type: fieldDef.type,
 		size: fieldDef.size,
 		required: fieldDef.required || true,
@@ -207,8 +207,9 @@ Statements.prototype.execute = function(statementBuilder, connection, entity){
  	if(parametricFields){
 	 	for(var i=0; i<parametricFields.length; i++){
 	 		var val = entity ? entity[parametricFields[i].name] : undefined;
-	 		this.$log.info('Binding to parameter[{}]: {}', (i+1), val);
-	 		statement['set'+parametricFields[i].type](i+1, val);
+	 		var index = i+1;
+	 		this.$log.info('Binding to parameter[{}]: {}', index, val);
+	 		statement['set'+parametricFields[i].type](index, val);
 	 	} 	
  	}
  	if(statementBuilder.operation!==undefined){

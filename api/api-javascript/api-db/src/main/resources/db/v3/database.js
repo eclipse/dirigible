@@ -212,6 +212,7 @@ function Statement(internalStatement) {
 	};
 
 	this.setLong = function(index, value) {
+		index = parseInt(index, 10);//Rhino things.. 
 		if(value!==null && value!==undefined) {
 			java.invoke(this.uuid, 'setLong', [index, value]);
 		} else {

@@ -1,4 +1,13 @@
-/* globals $ */
+/*******************************************************************************
+ * Copyright (c) 2017 SAP and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * SAP - initial API and implementation
+ *******************************************************************************/
+
 /* eslint-env node, dirigible */
 "use strict";
 
@@ -19,7 +28,7 @@ var defaults = {
 										}).join(',');
 			this.sql+= '(';
 			for(var i in this.updFieldSet){
-				this.sql += this.updFieldSet[i].dbName+', ';
+				this.sql += this.updFieldSet[i].column+', ';
 			}
 			this.sql = this.sql.substring(0, this.sql.length-2);
 			this.sql+= ') VALUES(';
@@ -41,7 +50,7 @@ var defaults = {
 			if(this.updFieldSet){
 				for(var i in this.updFieldSet){
 					//var val = this.updValueSet[i];
-					this.sql += this.updFieldSet[i].dbName+'='+this.fieldValueSet[i]+', ';
+					this.sql += this.updFieldSet[i].column+'='+this.fieldValueSet[i]+', ';
 				}
 				this.sql = this.sql.substring(0, this.sql.length-2);
 			}

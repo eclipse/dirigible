@@ -80,20 +80,13 @@ exports.getLogger = function(loggerName) {
 		var stack = [];
 		if (engine==='v8'){
 			stack = parseIntoStackTraceElementsV8(err.stack);
-		} else if(engine==='rhino'){
+		} else if(engine==='rhino' && err.stack){
 			stack = parseIntoStackTraceElementsRhino(err.stack);
 		} 
 		return {
 			message: err.message,
 			stack: stack
 		};
-	};
-	var setupFuncInvocationArgs = function(initialArgs, funcArguments){
-		if(funcArguments && funcArguments.length){
-			var msgParameters = Array.prototype.slice.call(funcArguments, 1);
-			return Array.prototype.concat.call(initialArgs, msgParameters);
-		}
-		return initialArgs;
 	};
 	
 	const LogFacadeClassName = 'org.eclipse.dirigible.api.v3.log.LogFacade';
@@ -106,61 +99,46 @@ exports.getLogger = function(loggerName) {
 			return this;
 		}, 
 		log: function(msg, level){
-			var msgParameters = [];
-			if(arguments.length>2){
-				msgParameters = Array.prototype.slice.call(arguments, 2);
-				//prepare for serialization
-				msgParameters = msgParameters.map(function(param){
+			var args = Array.prototype.slice.call(arguments);
+			var msgParameters = [];			
+			var errObjectJson = null;
+			if(args.length>2){
+				if(args[2] instanceof Error){
+					var errObject = resolveError(args[2]);
+					if(errObject){
+						errObjectJson = JSON.stringify(errObject);
+					}
+				}
+				var sliceIndex = errObjectJson?3:2;
+				msgParameters = args.slice(sliceIndex).map(function(param){
 					return JSON.stringify(param);
 				});
-			}
-			require('core/v3/java').call(LogFacadeClassName, "log", [loggerName, level, msg, msgParameters]);
-		},
-		logError: function(msg, error, level){
-			var errObjectJson;
-			if(error){
-				var errObject = resolveError(error);
-				if(errObject)
-					errObjectJson = JSON.stringify(errObject);
-			}
-			require('core/v3/java').call(LogFacadeClassName, "logError", [loggerName, level, msg, errObjectJson]);
+			}		
+			require('core/v3/java').call(LogFacadeClassName, "log", [loggerName, level, msg, msgParameters, errObjectJson]);
 		},
 		debug: function(msg){
-			var args = setupFuncInvocationArgs([msg, 'DEBUG'], arguments);
+			var args = Array.prototype.slice.call(arguments);
+			args.splice(1, 0, 'DEBUG');//insert DEBUG on second position in arguments array
 			this.log.apply(this, args);
-		}, 
-		debugError: function(msg, error){
-			this.logError(msg, error, 'DEBUG');
 		},
 		info: function(msg){
-			var args = setupFuncInvocationArgs([msg, 'INFO'], arguments);
+			var args = Array.prototype.slice.call(arguments);
+			args.splice(1, 0, 'INFO');//insert INFO on second position in arguments array
 			this.log.apply(this, args);			
 		}, 
-		infoError: function(msg, error){
-			this.logError(msg, error, 'INFO');
-		},		
 		trace: function(msg){
-			var args = setupFuncInvocationArgs([msg, 'TRACE'], arguments);
+			var args = Array.prototype.slice.call(arguments);
+			args.splice(1, 0, 'TRACE');//insert DEBUG on second position in arguments array
 			this.log.apply(this, args);
 		}, 
-		traceError: function(msg, error){
-			this.logError(msg, error, 'TRACE');
-		}, 		
 		warn: function(msg){
-			var args = setupFuncInvocationArgs([msg, 'WARN'], arguments);
+			var args = Array.prototype.slice.call(arguments);
+			args.splice(1, 0, 'WARN');//insert WARN on second position in arguments array
 			this.log.apply(this, args);			
 		}, 
-		warnError: function(msg, error){
-			this.logError(msg, error, 'WARN');
-		},
 		error: function(msg){
-			if(arguments.length>1){
-				if(arguments[1] instanceof Error){
-					this.logError(msg, arguments[1], 'ERROR');
-					return;
-				}
-			}
-			var args = setupFuncInvocationArgs([msg, 'ERROR'], arguments);
+			var args = Array.prototype.slice.call(arguments);
+			args.splice(1, 0, 'ERROR');//insert ERROR on second position in arguments array
 			this.log.apply(this, args);			
 		}
 	};

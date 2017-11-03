@@ -1,4 +1,13 @@
-/* globals $ */
+/*******************************************************************************
+ * Copyright (c) 2017 SAP and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * SAP - initial API and implementation
+ *******************************************************************************/
+
 /* eslint-env node, dirigible */
 "use strict";
 
@@ -38,7 +47,7 @@ Derby.builders.createtable = function(){
 		
 		var fieldType = Derby.sqlTypeFor(field.type, field.size);
 		if(fieldType===undefined)
-			throw Error('No SQL type mapped to field ' + field.dbName + ' type ' + field.type+ ' in Derby dialect');
+			throw Error('No SQL type mapped to field ' + field.column + ' type ' + field.type+ ' in Derby dialect');
 		
 		var defaultValueConstraint='';
 		if(field.defaultValue!==undefined && field.pk!==true){
@@ -50,13 +59,13 @@ Derby.builders.createtable = function(){
 		
 		var sizeConstraint = field.size!==undefined && fieldType.toUpperCase()!=='LONG VARCHAR'?'('+field.size+')':'';
 		
-		this.sql += field.dbName+' '+fieldType + sizeConstraint + notNullConstraint+defaultValueConstraint+', ';
+		this.sql += field.column+' '+fieldType + sizeConstraint + notNullConstraint+defaultValueConstraint+', ';
 	}
 	this.sql = this.sql.substring(0, this.sql.length-2);
 	if(pks.length>0){	
 		this.sql+=' , PRIMARY KEY (';
 		for(var i=0;i<pks.length;i++){
-			this.sql+=pks[i].dbName+', ';
+			this.sql+=pks[i].column+', ';
 		}
 		this.sql = this.sql.substring(0, this.sql.length-2);
 		this.sql+= ')';					

@@ -24,7 +24,7 @@ ORMStatements.prototype.constructor = ORMStatements;
 
 ORMStatements.prototype.createTable = function(){
 	var stmnt = this.builder(this.dialect);
-	stmnt.createTable(this.orm.dbName);
+	stmnt.createTable(this.orm.table);
 	for(var i=0; i<this.orm.properties.length;i++){
 		var fieldDef = this.orm.properties[i];
 		fieldDef["pk"] = fieldDef.id;
@@ -34,11 +34,11 @@ ORMStatements.prototype.createTable = function(){
 };
 
 ORMStatements.prototype.dropTable = function(){
-	return this.builder(this.dialect).dropTable(this.orm.dbName);
+	return this.builder(this.dialect).dropTable(this.orm.table);
 };
 
 ORMStatements.prototype.insert = function(){
-	var stmnt = this.builder(this.dialect).insert().into(this.orm.dbName);
+	var stmnt = this.builder(this.dialect).insert().into(this.orm.table);
  	for(var i=0; i<this.orm.properties.length; i++){
  		stmnt.set(this.orm.properties[i]);
  	}
@@ -51,16 +51,16 @@ ORMStatements.prototype.update = function(entity){
 	var updFieldDefs = this.orm.properties.filter(function(property){
 		return Object.keys(entity).indexOf(property.name)>-1 && (!property.allowedOps || property.allowedOps.indexOf('update')>-1);
 	});
-	var stmnt = this.builder(this.dialect).update().table(this.orm.dbName);
+	var stmnt = this.builder(this.dialect).update().table(this.orm.table);
 	for(var i=0; i<updFieldDefs.length; i++){
 		if(!updFieldDefs[i].id)
 			stmnt.set(updFieldDefs[i]);
 	}
-	stmnt.where(this.orm.getPrimaryKey().dbName+'=?', [this.orm.getPrimaryKey()]);
+	stmnt.where(this.orm.getPrimaryKey().column+'=?', [this.orm.getPrimaryKey()]);
 	return stmnt;
 };
 ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
-	var stmnt = this.builder(this.dialect).remove().from(this.orm.dbName);
+	var stmnt = this.builder(this.dialect).remove().from(this.orm.table);
 	if(arguments[0]!==undefined){
 		var filterFieldNames = arguments[0];
 		if(filterFieldNames.constructor!==Array)
@@ -69,7 +69,7 @@ ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
 			var property = this.orm.getProperty(filterFieldNames[i]);
 			if(!property)
 				throw Error('Unknown property name: ' + filterFieldNames[i]+" in $filter");
-			stmnt.where(property.dbName + "=?", [property]);
+			stmnt.where(property.column + "=?", [property]);
 		}
 	}
 	return stmnt;
@@ -82,15 +82,15 @@ ORMStatements.prototype.find = function(params){
 			var property = this.orm.getProperty(selectedFields[i]);
 			if(!property)
 				throw Error('Unknown field name ['+ selectedFields[i] + '] in $select');
-			stmnt = stmnt.field(property.dbName);
+			stmnt = stmnt.field(property.column);
 		}
 	}
-	stmnt = stmnt.from(this.orm.dbName)
-		.where(this.orm.getPrimaryKey().dbName + "=?", [this.orm.getPrimaryKey()]);
+	stmnt = stmnt.from(this.orm.table)
+		.where(this.orm.getPrimaryKey().column + "=?", [this.orm.getPrimaryKey()]);
 	return stmnt;
 };
 ORMStatements.prototype.count = function(){
-	return this.builder(this.dialect).select().from(this.orm.dbName).field('COUNT(*)');
+	return this.builder(this.dialect).select().from(this.orm.table).field('COUNT(*)');
 };
 ORMStatements.prototype.list= function(settings){
 	settings = settings || {};
@@ -100,7 +100,7 @@ ORMStatements.prototype.list= function(settings){
 	var order = settings.$order || settings.order;
 	var selectedFields = settings.$select || settings.select;
 	
-	var stmnt = this.builder(this.dialect).select().from(this.orm.dbName);
+	var stmnt = this.builder(this.dialect).select().from(this.orm.table);
 
 	//add selected fields if any
 	if(selectedFields){
@@ -108,7 +108,7 @@ ORMStatements.prototype.list= function(settings){
 			var property = this.orm.getProperty(selectedFields[i]);
 			if(!property)
 				throw Error('Unknown field name ['+ selectedFields[i] + '] in $select');
-			stmnt = stmnt.field(property.dbName);
+			stmnt = stmnt.field(property.column);
 		}
 	}
 
@@ -124,9 +124,9 @@ ORMStatements.prototype.list= function(settings){
 	    for(var i=0; i<propertyDefinitions.length; i++){
         	var def = propertyDefinitions[i];
 	    	if(settings.$filter && settings.$filter.indexOf(def.name)>-1)
-	    		stmnt.where(def.dbName + ' LIKE ?', [def]);
+	    		stmnt.where(def.column + ' LIKE ?', [def]);
 	   		else
-	   			stmnt.where(def.dbName + '=?', [def]);
+	   			stmnt.where(def.column + '=?', [def]);
         }
     }
 
@@ -139,7 +139,7 @@ ORMStatements.prototype.list= function(settings){
 	            	_order = order.toLowerCase() === 'desc' ? false : true;
 	            }
 	        }
-	      	stmnt.order(this.orm.getProperty(sort[i]).dbName, _order);
+	      	stmnt.order(this.orm.getProperty(sort[i]).column, _order);
     	}
     }
     if (limit !== undefined && offset !== undefined) {
