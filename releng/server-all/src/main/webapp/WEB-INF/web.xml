@@ -3,12 +3,6 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
-	
-	<display-name>Eclipse Dirigible - Cloud Development Platform</display-name>
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
-	
 	<listener>
 		<listener-class>org.eclipse.dirigible.runtime.core.listener.DirigibleServletContextListener</listener-class>
 	</listener>
@@ -117,6 +111,7 @@
 		<web-resource-collection>
 			<web-resource-name>Themes</web-resource-name>
 			<url-pattern>/services/v3/core/theme/*</url-pattern>
+			<url-pattern>/services/v3/web/resources/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
 	
@@ -142,7 +137,7 @@
 	        <url-pattern>/websockets/v3/ide/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
-	        <role-name>Developer</role-name>
+	        <role-name>Nobody</role-name>
 	    </auth-constraint>
 	</security-constraint>
 	
@@ -166,5 +161,5 @@
 	        <role-name>Operator</role-name>
 	    </auth-constraint>
 	</security-constraint>
-
+	
 </web-app>
