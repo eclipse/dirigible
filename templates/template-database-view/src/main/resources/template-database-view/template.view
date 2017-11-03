@@ -1,0 +1,9 @@
+{
+	"name": "{{viewName}}",
+	"type": "VIEW",
+	"query": "SELECT EXTENSION_DESCRIPTION FROM DIRIGIBLE_EXTENSIONS where EXTENSION_EXTENSIONPOINT_NAME = 'ide-template'",
+ 	"dependencies": [{
+ 		"name":"DIRIGIBLE_EXTENSIONS",
+ 		"type":"TABLE"
+ 	}]
+}

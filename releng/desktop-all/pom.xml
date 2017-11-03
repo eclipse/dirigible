@@ -601,7 +601,34 @@
 		 	<artifactId>dirigible-ide-repository</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
-		
+
+		<!-- Templates Plugins -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>template-hello-world</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>template-http-client</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>template-database-access</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>template-database-table</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>template-database-view</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+
 		<!-- Resources Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>

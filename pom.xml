@@ -192,7 +192,6 @@
 				</plugins>
 			</build>
 		</profile>
-
 	</profiles>
 
 	<repositories>
@@ -207,7 +206,7 @@
 			</releases>
 		</repository>
 	</repositories>
-	
+
 	<pluginRepositories>
 	    <pluginRepository>
 	      <id>alfresco</id>
@@ -220,7 +219,7 @@
 	      </releases>
 	    </pluginRepository>
 	</pluginRepositories>
-	
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -242,7 +241,7 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -314,7 +313,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>${commons.io}</version>
 		</dependency>
-		
+
 		<dependency>
 		  <groupId>javax.annotation</groupId>
 		  <artifactId>jsr250-api</artifactId>
@@ -356,7 +355,6 @@
 			<version>${hamcrest.all.version}</version>
 		</dependency>
 		<!-- End Test Dependencies -->
-
 	</dependencies>
 
 	<properties>
@@ -392,10 +390,9 @@
 	</properties>
 
 	<modules>
-	
 		<module>api/api-facades</module>
 		<module>api/api-javascript</module>
-		
+
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
 		<module>modules/commons-process</module>
@@ -413,10 +410,9 @@
 		<module>modules/database-persistence</module>
 		<module>modules/database-data-models</module>
 		<module>modules/database-data-structures</module>
-
 		<module>modules/database-derby</module>
 		<module>modules/database-managed</module>
-		
+
 		<module>modules/core-extensions</module>
 		<module>modules/core-security</module>
 		<module>modules/core-git</module>
@@ -431,8 +427,6 @@
 		<module>modules/runtime-registry</module>
 		<module>modules/runtime-extensions</module>
 		<module>modules/runtime-transport</module>
-		
-		
 		<module>modules/runtime-security</module>
 		<module>modules/runtime-theme</module>
 
@@ -443,7 +437,6 @@
 		<module>modules/runtime-ide-publisher</module>
 		<module>modules/runtime-ide-databases</module>
 		<module>modules/runtime-ide-generation</module>
-		
 
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>
@@ -452,9 +445,10 @@
 		<module>modules/engine-js-nashorn</module>
 		<module>modules/engine-js-v8</module>
 		<module>modules/engine-wiki</module>
-		
+
 		<module>ide</module>
-		
+		<module>templates</module>
+
 		<module>resources</module>
 
 		<module>releng/server-all</module>
