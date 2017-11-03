@@ -54,7 +54,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
 
 		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
-		logger.debug("module or code=" + moduleOrCode); //$NON-NLS-1$
+		logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
 
 		if (moduleOrCode == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");

@@ -33,8 +33,8 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	}
 
 	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
-		logger.debug("entering: executeServiceModule()"); //$NON-NLS-1$
-		logger.debug("module or code=" + moduleOrCode); //$NON-NLS-1$
+		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
+		logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
 
 		if (moduleOrCode == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
@@ -82,7 +82,7 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			throw new ScriptingException(e);
 		}
 
-		logger.debug("exiting: executeServiceModule()");
+		logger.trace("exiting: executeServiceModule()");
 
 		return result;
 
