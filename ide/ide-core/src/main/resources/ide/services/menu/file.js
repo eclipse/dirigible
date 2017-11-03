@@ -22,6 +22,13 @@ exports.getMenu = function() {
 					"order":"105",
 					"event":"workbench.editor.save",
 					"data": ""
+				},
+				{
+					"name":"Exit",
+					"link":"/logout",
+					"order":"199",
+					"event":"workbench.editor.save",
+					"data": ""
 				}
 			]
 		};
