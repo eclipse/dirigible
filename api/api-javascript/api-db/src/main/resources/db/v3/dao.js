@@ -99,15 +99,15 @@ DAO.prototype.createEntity = function(resultSet, entityPropertyNames) {
     		entity[prop.name] = prop.value(entity[prop.name]);
     	}
     }
-    
-    for(var key in Object.keys(entity)){
-		if(entity[key] === null)
-			entity[key] = undefined;
-	}
-	var entitySegment = "";
-	if(entity[this.orm.getPrimaryKey().name]){
-		entitySegment= "["+entity[this.orm.getPrimaryKey().name]+"]";
-	}
+    Object.keys(entity).forEach(function(propertyName){
+      if(entity[propertyName] === null)
+        entity[propertyName] = undefined;
+    });
+
+	  var entitySegment = "";
+	  if(entity[this.orm.getPrimaryKey().name]){
+		  entitySegment= "["+entity[this.orm.getPrimaryKey().name]+"]";
+	  }
     this.$log.info("Transformation from {} DB JSON object finished", (this.orm.table+entitySegment));
     return entity;
 };
@@ -225,7 +225,7 @@ DAO.prototype.insert = function(_entity){
 				this.$log.info('No changes incurred in {}', this.orm.table);
 			}
 
-        	ids.push(dbEntity[this.orm.getPrimaryKey().name]);
+      ids.push(dbEntity[this.orm.getPrimaryKey().name]);
 
 	    } catch(e) {
 	    	this.$log.error("Inserting "+this.orm.table+" "+(entities.length===1?'entity':'entities')+" failed", e);
@@ -415,7 +415,14 @@ DAO.prototype.expand = function(expansionPath, context){
 	if(association.type===this.orm.ASSOCIATION_TYPES['ONE-TO-ONE'] || association.type===this.orm.ASSOCIATION_TYPES['MANY-TO-ONE']){
 		var joinId = contextEntity[joinKey];
 		this.$log.info('Expanding association type {} on {}[{}]', association.type, joinKey, joinId);
-		expansion = associationTargetDAO.find.apply(associationTargetDAO, [joinId]);
+		if(!association.key || association.key === associationTargetDAO.orm.getPrimaryKey().name)
+			expansion = associationTargetDAO.find.apply(associationTargetDAO, [joinId]);
+		else {
+			var listSettings = {};
+			listSettings["$filter"] = association.key;
+			listSettings[association.key] = joinId;
+			expansion = associationTargetDAO.list.apply(associationTargetDAO, [listSettings])[0];
+		}
 		
 		if(expansionPath.length>0){
 			this.expand(expansionPath, expansion);
@@ -592,21 +599,47 @@ DAO.prototype.count = function() {
  * - $offset
  */
 DAO.prototype.list = function(settings) {
+	
 	settings = settings || {};
+	
 	var expand = settings.$expand || settings.expand;
 	if(expand!==undefined){
 		if(expand.constructor !== Array){
 			if(expand.constructor === String){
-				expand =  expand.split(',').map(function(exp){
-					if(exp.constructor !== String)
-						throw Error('Illegal argument: expand array components are expected ot be strings but found ' + (typeof exp));
-					return exp.trim();
-				});
+				if(expand.indexOf(',')>-1){
+					settings.$expand =  expand.split(',').map(function(exp){
+						if(exp.constructor !== String)
+							throw Error('Illegal argument: expand array components are expected ot be strings but found ' + (typeof exp));
+						return exp.trim();
+					});	
+				} else {
+					settings.$expand = [expand];
+				}
 			} else {
 				throw Error('Illegal argument: expand is expected to be string or array of strings but was ' + (typeof expand));
 			}
 		}
-	}			
+	}
+	
+	var select = settings.$select || settings.select; 
+	if(select!==undefined){
+		if(select.constructor !== Array){
+			if(select.constructor === String){
+				if(select.indexOf(',')>-1){
+					settings.$select =  select.split(',').map(function(exp){
+						if(exp.constructor !== String)
+							throw Error('Illegal argument: select array components are expected ot be strings but found ' + (typeof exp));
+						return exp.trim();
+					});	
+				} else {
+					settings.$select = [select];
+				}
+			} else {
+				throw Error('Illegal argument: select is expected to be string or array of strings but was ' + (typeof expand));
+			}
+		}
+	}
+	
 
 	var listArgs = [];
 	for(var key in settings){
@@ -618,48 +651,60 @@ DAO.prototype.list = function(settings) {
 	if(settings.$select!==undefined && expand!==undefined){
 		settings.$select.push(this.orm.getPrimaryKey().name);
 	}
-   //simplistic filtering of (only) string properties with like
-   if(settings.$filter){
-		settings.$filter = settings.$filter.split(',');
-		var self = this;
+
+    //simplistic filtering of (only) string properties with like
+	if(settings.$filter){
+		if(settings.$filter.indexOf(',')>-1){
+			settings.$filter = settings.$filter.split(',');			
+		} else {
+			settings.$filter = [settings.$filter];
+		}
 		settings.$filter = settings.$filter.filter(function(filterField){
-			var prop = self.ormstatements.orm.getProperty(filterField);
+			var prop = this.ormstatements.orm.getProperty(filterField);
 			if(prop===undefined || prop.type!=='String' || settings[prop.name]===undefined)
 				return false;
 			settings[prop.name] = settings[prop.name] + '%%';
 			return true;
-		});
+		}.bind(this));
 	}
-	
+
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
-    var connection = this.getConnection();
-    try {
-        var entities = [];
-		var resultSet = this.ormstatements.execute(parametericStatement, connection, settings);
+
+	//cleanup filtering value expressions if any
+	for(var key in settings){
+		var s = settings[key];
+		if(new java.lang.String(''+s).startsWith('>') || new java.lang.String(''+s).startsWith('<'))
+			settings[key] = s.substring(1,s.length).trim();
+	}
+  
+  var connection = this.getConnection();
+  try {
+    var entities = [];
+	  var resultSet = this.ormstatements.execute(parametericStatement, connection, settings);
         
-        while (resultSet.next()) {
-        	var entity = this.createEntity(resultSet, settings.$select);
-        	if(expand){
-        		var associationNames = this.orm.getAssociationNames();
+    while (resultSet.next()) {
+      var entity = this.createEntity(resultSet, settings.$select);
+      if(expand){
+        var associationNames = this.orm.getAssociationNames();
 				for(var idx in associationNames){
 					var associationName = associationNames[idx];
 					if(expand.indexOf(associationName)>-1){
 						entity[associationName] = this.expand([associationName], entity);
 					}
 				}
-        	}
-        	this.notify('afterFound', entity, settings);
-            entities.push(entity);
-        }
-        this.$log.info('{} {} entities found', entities.length, this.orm.table);
-        
-        return entities;
-    }  catch(e) {
-        this.$log.error(e.message, e);
-		throw e;
-    } finally {
-        connection.close();
+      }
+      this.notify('afterFound', entity, settings);
+      entities.push(entity);
     }
+    this.$log.info('{} {} entities found', entities.length, this.orm.table);
+        
+    return entities;
+  } catch(e) {
+    this.$log.error(e.message, e);
+		throw e;
+  } finally {
+    connection.close();
+  }
 };
 
 DAO.prototype.createTable = function() {
@@ -757,17 +802,11 @@ var fromTableDef = function(tableDef){
 	return orm;
 };
 
-
-exports.dao = function(tableDef, logCtxName, ds){
-	var orm = fromTableDef (tableDef);
-	return new DAO(orm, logCtxName, ds);
-};
-
 /**
  * oDefinition can be a valid path to a .table file or any other text file contianing a standard dao orm definition.
  * Or it can be table definition or standard orm definition object.
  */
-exports.dao = function(oDefinition, logCtxName, ds){
+exports.create = exports.dao = function(oDefinition, logCtxName, ds){
 	var orm;
 	if(typeof oDefinition === 'string'){
 		var files = require('io/v3/files');
@@ -789,6 +828,6 @@ exports.dao = function(oDefinition, logCtxName, ds){
 		orm = fromTableDef(oDefinition);
 	} else {
 		orm = oDefinition;
-	} console.error(JSON.stringify(orm))
+	}
 	return new DAO(orm, logCtxName, ds);
 };

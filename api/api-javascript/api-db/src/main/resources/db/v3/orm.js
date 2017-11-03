@@ -116,7 +116,7 @@ ORM.prototype.getAssociation = function(associationName){
 	if(this.associations){
 		return this.associations
 				.filter(function(assoc){
-					return associationName !== assoc.name;
+					return assoc.name !== associationName;
 				})[0];
 	}
 	return;
