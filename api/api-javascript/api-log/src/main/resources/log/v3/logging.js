@@ -111,7 +111,7 @@ exports.getLogger = function(loggerName) {
 				}
 				var sliceIndex = errObjectJson?3:2;
 				msgParameters = args.slice(sliceIndex).map(function(param){
-					return JSON.stringify(param);
+					return typeof param === 'object' ? JSON.stringify(param) : param;
 				});
 			}		
 			require('core/v3/java').call(LogFacadeClassName, "log", [loggerName, level, msg, msgParameters, errObjectJson]);
