@@ -5,6 +5,7 @@ import static java.text.MessageFormat.format;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
@@ -38,6 +40,8 @@ import com.github.mustachejava.MustacheFactory;
  */
 public class GenerationProcessor extends WorkspaceProcessor {
 
+	private static final String ACTION_COPY = "copy";
+	private static final String ACTION_GENERATE = "generate";
 	private static final Logger logger = LoggerFactory.getLogger(GenerationProcessor.class);
 
 	public List<IFile> generateFile(String workspace, String project, String path, GenerationTemplateParameters parameters) throws ScriptingException, IOException {
@@ -56,32 +60,17 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				IResource sourceResource = projectObject.getRepository().getResource(sourcePath);
 				if (sourceResource.exists()) {
 					byte[] input = sourceResource.getContent();
-					byte[] output = null;
-					String action = source.getAction();
-					if (action != null) {
-						if ("generate".equals(action)) {
-							output = generateContent(parameters, source.getLocation(), input);
-						} else if ("copy".equals(action)) {
-							output = input;
-						}
-					} else {
-						output = input;
-					}
-					
-					String generatedFileName; 
-					String rename = source.getRename();
-					if (rename != null) {
-						generatedFileName = generateName(parameters, source.getLocation() + "-name", rename);
-					} else {
-						generatedFileName = new RepositoryPath().append(source.getLocation()).getLastSegment();
-					}
-					String generatedFilePath = new RepositoryPath().append(parameters.getParameters().get("packagePath").toString()).append(generatedFileName).build();
-					String contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(generatedFileName));
-					boolean isBinary = ContentTypeHelper.isBinary(contentType);
-				    IFile fileObject = projectObject.createFile(generatedFilePath, output, isBinary, contentType);
-				    generatedFiles.add(fileObject);
+					logger.trace("Generating using template from the Registry: " + sourcePath);
+					generateWithTemplate(parameters, projectObject, generatedFiles, source, input);
 				} else {
-					throw new ScriptingException(format("Invalid source location of [{0}] in template definition file: [{1}] or the reousrce does not exist", source.getLocation(), parameters.getTemplate()));
+					InputStream in = GenerationProcessor.class.getResourceAsStream(source.getLocation());
+					if (in != null) {
+						byte[] input = IOUtils.toByteArray(in);
+						logger.trace("Generating using built-in template: " + source.getLocation());
+						generateWithTemplate(parameters, projectObject, generatedFiles, source, input);
+					} else {
+						throw new ScriptingException(format("Invalid source location of [{0}] in template definition file: [{1}] or the resource does not exist", source.getLocation(), parameters.getTemplate()));
+					}
 				}
 			}
 			return generatedFiles;
@@ -89,6 +78,36 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		}
 		
 		throw new ScriptingException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
+	}
+
+	private void generateWithTemplate(GenerationTemplateParameters parameters, IProject projectObject,
+			List<IFile> generatedFiles, GenerationTemplateMetadataSource source, byte[] input) throws IOException, ScriptingException {
+		byte[] output = null;
+		String action = source.getAction();
+		if (action != null) {
+			if (ACTION_GENERATE.equals(action)) {
+				output = generateContent(parameters, source.getLocation(), input);
+			} else if (ACTION_COPY.equals(action)) {
+				output = input;
+			} else {
+				throw new ScriptingException(format("Invalid action in template definition: [{0}]", action));
+			}
+		} else {
+			output = input;
+		}
+		
+		String generatedFileName; 
+		String rename = source.getRename();
+		if (rename != null) {
+			generatedFileName = generateName(parameters, source.getLocation() + "-name", rename);
+		} else {
+			generatedFileName = new RepositoryPath().append(source.getLocation()).getLastSegment();
+		}
+		String generatedFilePath = new RepositoryPath().append(parameters.getParameters().get("packagePath").toString()).append(generatedFileName).build();
+		String contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(generatedFileName));
+		boolean isBinary = ContentTypeHelper.isBinary(contentType);
+		IFile fileObject = projectObject.createFile(generatedFilePath, output, isBinary, contentType);
+		generatedFiles.add(fileObject);
 	}
 
 	private String generateWrapper(GenerationTemplateParameters parameters) {
