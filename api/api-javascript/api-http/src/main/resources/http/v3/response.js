@@ -341,3 +341,61 @@ exports.UNSUPPORTED_MEDIA_TYPE = 415;
  *  Status code (305) indicating that the requested resource MUST be accessed through the proxy given by the Location field.
  */
 exports.USE_PROXY = 305;
+
+/**
+ * Mapping between HTTP response codes (string) and reason-pharses as defiend in rfc7231 section 6.1 (https://tools.ietf.org/html/rfc7231#section-6.1).
+ * (See HttpCodesReasons.getReason for number based retrieval of reason-phrase for code)
+ * 
+ */
+var HttpCodesReasons = exports.HttpCodesReasons = {
+	"100": "Continue",	
+	"101": "Switching Protocols",
+	"200": "OK",	
+	"201": "Created",	
+	"202": "Accepted",
+	"203": "Non-Authoritative Information",	
+	"204": "No Content",	
+	"205": "Reset Content",		
+	"206": "Partial Content",
+	"300": "Multiple Choices",			
+	"301": "Moved Permanently",
+	"302": "Found",	
+	"303": "See Other",
+	"304": "Not Modified",	
+	"305": "Use Proxy",	
+	"307": "Temporary Redirect",
+	"400": "Bad Request",
+	"401": "Unauthorized",
+	"402": "Payment Required",
+	"403": "Forbidden",
+	"404": "Not Found",
+	"405": "Method Not Allowed",	
+	"406": "Not Acceptable",		
+	"407": "Proxy Authentication Required",
+	"408": "Request Timeout",			
+	"409": "Conflict",
+	"410": "Gone",	
+	"411": "Length Required",		
+	"412": "Precondition Failed",			
+	"413": "Payload Too Large",	
+	"414": "URI Too Large",	
+	"415": "Unsupported Media Type",		
+	"416": "Range Not Satisfiable",
+	"417": "Expectation Failed",
+	"426": "Upgrade Required",	
+	"500": "Internal Server Error",	
+	"501": "Not Implemented",		
+	"502": "Bad Gateway",		
+	"503": "Service Unavailable",			
+	"504": "Gateway Timmeout",
+	"505": "HTTP Version Not Supported"				
+};
+
+/**
+ * Utility method that accepts HTTP code as argument (stirng or number) and returns its coresponding reason-phrase as defined in rfc7231 section 6.1 (https://tools.ietf.org/html/rfc7231#section-6.1)
+ */
+HttpCodesReasons.getReason = function(code){
+	if(isNaN(code))
+		throw Error('Illegal argument for code['+code+']. Valid HTTP codes are integer numbers in the range [100-505].')
+	return HttpCodesReasons[String(code)];
+};
