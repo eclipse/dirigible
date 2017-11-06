@@ -36,6 +36,11 @@ exports.getUpload = function() {
 };
 
 exports.getRest = function() {
-	var rest = require('http/v3/rest');
+	var rest = require('http/v3/rs');
 	return rest;
+};
+
+exports.getRestData = function() {
+	var restData = require('http/v3/rs-data');
+	return restData;
 };
