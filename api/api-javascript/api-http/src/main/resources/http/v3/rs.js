@@ -9,17 +9,6 @@
  *******************************************************************************/
 
 /* eslint-env node, dirigible */
-
-//TODO: expand the list and move to repsonse.js
-var HttpErrorCodeNames = {
-	"400": "Bad Request",
-	"500": "Internal Server Error",
-	"404": "Not Found"
-};
-HttpErrorCodeNames.name = function(nCode){
-	return HttpErrorCodeNames[String(nCode)];
-};
-
 var HttpController = exports.HttpController = function(oConfiguration){
 	this.logger = require('log/logging').getLogger('http.rs.controller');
 	//var xss = require("utils/xss");
@@ -148,31 +137,10 @@ var HttpController = exports.HttpController = function(oConfiguration){
 		}
 		return isProduceMatched && isConsumeMatched;
 	};
-			
-	var queryStringToMap = function(queryString){
-		if(!queryString)
-			return;
-		queryString = decodeURI(queryString);
-		//Note: Rhino has strange ways of handling ampersand replace/splits
-		//queryString = xss.unescapeHtml(queryString).replace(/&amp;/g, '&');
-		var queryStringSegments = queryString.split('&');
-		var queryParams = {};
-		if(queryStringSegments.length>0){
-			for(var i=0; i< queryStringSegments.length; i++){
-				var seg = queryStringSegments[i];
-				seg = seg.replace('amp;','');
-				var kv = seg.split('=');
-				var key = kv[0].trim();
-				var value = kv[1]===undefined ? true : kv[1].trim();
-				queryParams[key] = value;
-			}
-		}
-		return queryParams;
-	};
 	
 	var catchErrorHandler = function(logctx, ctx, err, request, response){
 		if(ctx.suppressStack){
-			var detailsMsg = ctx.errorName + (ctx.errorCode ? " ["+ctx.errorCode+"]": "") + (ctx.errorMessage ? ": "+ctx.errorMessage : ""); 
+			var detailsMsg = (ctx.errorName || "") + (ctx.errorCode ? " ["+ctx.errorCode+"]": "") + (ctx.errorMessage ? ": "+ctx.errorMessage : ""); 
 			this.logger.info('Serving resource[{}], Verb[{}], Content-Type[{}], Accept[{}] finished in error. {}', logctx.path, logctx.method, logctx.contentType, logctx.accepts, detailsMsg);
 		} else
 			this.logger.error('Serving resource['+logctx.path+'], Verb['+logctx.method+'], Content-Type['+logctx.contentType+'], Accept['+logctx.accepts+'] finished in error', err);
@@ -201,7 +169,7 @@ var HttpController = exports.HttpController = function(oConfiguration){
 		}
 
 		response = response || require("http/v3/response");
-		var queryParams = queryStringToMap(request.getQueryString()) || {};		
+		var queryParams = request.getQueryParametersMap() || {};		
 		var acceptsHeader = normalizeMediaTypeHeaderValue(request.getHeader('Accept')) || '[]';
 		var contentTypeHeader = normalizeMediaTypeHeaderValue(request.getHeader('Content-Type')) || '[]';
 		var resourcePath = requestPath;
@@ -673,20 +641,29 @@ RestAPI.prototype.find = function(sPath, sVerb, arrConsumes, arrProduces){
 	return;
 };
 
-/**
- * Creates a service with the configuration of this REST API that can handle HTTP requests
- */
-RestAPI.prototype.service = function(){
-	return new HttpController(this.configuration());
-};
 
 /**
- * Creates a new REST API instance. The oConfiguraiton parameter can be used to initialize the API instance.
+ * Creates a new REST API instance. The oConfiguration parameter can be used to initialize the API instance.
  * 
  * @param {Object} [oConfiguration]
  * 
  */
-exports.api = function(oConfiguration){
+exports.mappings = function(oConfiguration){
 	var api = new RestAPI(oConfiguration); 
 	return api;
+};
+
+/**
+ * Creates a service with the configuration of this REST API that can handle HTTP requests
+ * 
+ * @param {Object} oMappings
+ *
+ */
+exports.service = function(oMappings){
+	var config;
+	if(oMappings instanceof RestAPI){
+		config = oMappings.configuration();
+	}
+	var controller = new HttpController(config);
+	return controller;
 };
