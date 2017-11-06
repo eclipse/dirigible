@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Template - Database View</name>
-	<artifactId>template-database-view</artifactId>
+	<artifactId>dirigible-template-database-view</artifactId>
     <packaging>jar</packaging>
 
 	<scm>

@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Template - Database Access</name>
-	<artifactId>template-database-access</artifactId>
+	<artifactId>dirigible-template-database-access</artifactId>
     <packaging>jar</packaging>
 
 	<scm>

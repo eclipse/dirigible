@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Template - Hello World</name>
-	<artifactId>template-hello-world</artifactId>
+	<artifactId>dirigible-template-hello-world</artifactId>
     <packaging>jar</packaging>
 
 	<scm>

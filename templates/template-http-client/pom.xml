@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Template - HTTP Client</name>
-	<artifactId>template-http-client</artifactId>
+	<artifactId>dirigible-template-http-client</artifactId>
     <packaging>jar</packaging>
 
 	<scm>

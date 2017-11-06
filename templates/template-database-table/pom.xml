@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Template - Database Table</name>
-	<artifactId>template-database-table</artifactId>
+	<artifactId>dirigible-template-database-table</artifactId>
     <packaging>jar</packaging>
 
 	<scm>
