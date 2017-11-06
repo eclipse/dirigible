@@ -3,7 +3,7 @@ exports.getTemplate = function() {
 		"name": "Hello World",
 		"description": "Hello World Template",
 		"sources": [{
-			"location": "/template-hello-world/service.js", 
+			"location": "/template-hello-world/service.template", 
 			"action": "generate",
 			"rename": "{{fileName}}.js"
 		}],

@@ -3,7 +3,7 @@ exports.getTemplate = function() {
 		"name": "Database View",
 		"description": "Database View Template",
 		"sources": [{
-			"location": "/template-database-view/template.view", 
+			"location": "/template-database-view/view.template", 
 			"action": "generate",
 			"rename": "{{fileName}}.view"
 		}],

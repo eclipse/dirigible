@@ -3,7 +3,7 @@ exports.getTemplate = function() {
 		"name": "Database Table",
 		"description": "Database Table Template",
 		"sources": [{
-			"location": "/template-database-table/template.table", 
+			"location": "/template-database-table/table.template", 
 			"action": "generate",
 			"rename": "{{fileName}}.table"
 		}],
