@@ -10,7 +10,7 @@
 
 /* eslint-env node, dirigible */
 var rs = require('http/v3/rs');
-var DAO = require('db/v3/dao').DAO;
+var daos = require('db/v3/dao');
 
 var RestAPI = rs.RestAPI;
 
@@ -31,33 +31,33 @@ var merge = function(target, source) {
 
 
 var DataProtocolDefinition = function(){	
-	this.dataProtocolApi = rs.api();
+	this.mappings = rs.mappings();
 	
-	this.collectionResource = this.dataProtocolApi.resource("");
-	this.entityResource = this.dataProtocolApi.resource("{id}");
+	this.collectionResource = this.mappings.resource("");
+	this.entityResource = this.mappings.resource("{id}");
 	
 	//entity collection functions
 	this.query = this.collectionResource.get().produces(['application/json']);
 	this.create = this.collectionResource.post().consumes(['*/json']);
-	this.count = this.dataProtocolApi.resource("count").get().produces(['application/json']);
+	this.count = this.mappings.resource("count").get().produces(['application/json']);
 	//entity functions
 	this.get = this.entityResource.get().produces(['application/json']);
 	this.update = this.entityResource.put().consumes(['*/json']);	
 	this.remove = this.entityResource.remove();
 	//association functions
-	this.associationList = this.dataProtocolApi.resource("{id}/{associationName}").get().produces(['application/json']);
-	this.associationCreate = this.dataProtocolApi.resource("{id}/{associationName}").post().consumes(['*/json']);	
+	this.associationList = this.mappings.resource("{id}/{associationName}").get().produces(['application/json']);
+	this.associationCreate = this.mappings.resource("{id}/{associationName}").post().consumes(['*/json']);	
 	//api functions
-	this.metadata = this.dataProtocolApi.resource("metadata").get().produces(['application/json']);	
+	this.metadata = this.mappings.resource("metadata").get().produces(['application/json']);	
 	
 };
 
-var ProtocolHandlerAdapter = function(oDataProtocolApi){
+var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 	
 	this.logger = require('log/logging').getLogger('rs.data.dao.provider.default');
-	
+
 	var oConfig = {};
-	var protocolApi = oDataProtocolApi || new DataProtocolDefinition();
+	var protocolDef = oDataProtocolMappings || new DataProtocolDefinition();
 	var _self = this;
 	
 	var parseIntStrict = function (value) {
@@ -70,9 +70,9 @@ var ProtocolHandlerAdapter = function(oDataProtocolApi){
 		var protocolFunctionNames = ["query", "create", "update", "remove", "get", "count", "metadata", "associationList", "associationCreate"];
 		for(var i = 0; i < protocolFunctionNames.length; i++){
 			var functionName = protocolFunctionNames[i];
-			var resourceVerbHandlerDef = protocolApi[functionName];
+			var resourceVerbHandlerDef = protocolDef[functionName];
 			_self[functionName].call(_self, resourceVerbHandlerDef, this);
-			merge(oConfig, protocolApi.dataProtocolApi.configuration());
+			merge(oConfig, protocolDef.mappings.configuration());
 		}
 		return oConfig;
 	};
@@ -80,7 +80,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolApi){
 	//functions deifned on the api prototype will be weaved in the using class
 	this.api = function(){
 		this.dao = function(orm){
-			this._dao = new DAO(orm);
+			this._dao = daos.create(orm);
 			return this;
 		};
 	};	
@@ -191,13 +191,15 @@ var ProtocolHandlerAdapter = function(oDataProtocolApi){
 					});
 				}
 			}		
-		
+
 			var entity = this._dao.find.apply(this._dao, [id, $expand, $select]);
 			notify.call(this, 'onAfterFind', entity, context);
 			if(!entity){
-				this.logger.error("Record with id: " + id + " does not exist.");
+				_this.logger.error("Record with id: " + id + " does not exist.");
 				context.httpErrorCode = response.NOT_FOUND;
 				context.suppressStack = true;
+				context.errorCode = context.httpErrorCode;
+				context.errorName = response.HttpCodesReasons.getReason(context.errorCode);
         		throw Error("Record with id: " + id + " does not exist.");
 			}
 			var jsonResponse = JSON.stringify(entity, null, 2);
@@ -370,13 +372,13 @@ var ProtocolHandlerAdapter = function(oDataProtocolApi){
 	    	var associationType = associationDef.type;
 	    	//create works only for one-to-many
 	    	if(this._dao.orm.ASSOCIATION_TYPES['ONE-TO-MANY']!==associationType){
-			    this.logger.error('Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
+			    _this.logger.error('Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
 				throwBadRequestError(context, undefined, 'Invalid operation \'create\' requested for association set \''+associationName+'\' with association type ' + associationType + '. Association type must be one-to-many.');
 	    	}
 	    	
 	    	var joinKey = associationDef.joinKey;
 	    	if(joinKey === undefined){
-			    this.logger.error('Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
+			    _this.logger.error('Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
 				context.suppressStack = true;
 				context.httpErrorCode = response.INTERNAL_SERVER_ERROR;
 				throw Error('Invalid configuration: missing join key in configuration for association \'' + associationName + '\'.');
@@ -384,7 +386,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolApi){
 		    	
 	    	var dependendDao = associationDef.targetDao;
 	    	if(dependendDao === undefined){
-			    this.logger.error('Invalid configuration: missing dao factory in configuraiton for association \'' + associationName + '\'.');
+			    _this.logger.error('Invalid configuration: missing dao factory in configuraiton for association \'' + associationName + '\'.');
 				context.suppressStack = true;
 				context.httpErrorCode = response.INTERNAL_SERVER_ERROR;
 		    	throw Error('Invalid configuration: missing dao factory in configuration for association \'' + associationName + '\'.');
@@ -413,6 +415,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolApi){
  * @param {Object} [oConfig] initial configuration that will be manipulated for building the protocol API. Defaults to an empty object {}.
  * @param {Object} [oProtocolHandlersAdapter] Defaults to a new ProtocolHandlerAdapter instance
  * @param {Object} [oDataProtocolDefinition]  oDataProtocolDefinition supplies the callback functions for each protocol method (e.g. query). Defaults to a new DataProtocolDefinition instance
+ * @param {Object} [sLoggerName] An optional logger name to use with this instance. Defaults to 'http.rs.data.service'
  */
 var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition) {
 	this.oProtocolHandlersAdapter = oProtocolHandlersAdapter;
@@ -430,6 +433,18 @@ var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefi
 	RestAPI.call(this, this.oConfig);
 	//weave in methods from the oProtocolHandlersAdapter that it requires.
 	this.oProtocolHandlersAdapter.api.call(this);
+	
+	var loggerName;
+	//use supplied loggername if any or use own
+	for(var i=0; i<arguments.length; i++){
+		if(typeof arguments[i] === 'string'){	
+			loggerName = arguments[i];
+			break;
+		}
+	}
+	loggerName = loggerName || 'http.rs.data.service';
+	this.logger = require('log/v3/logging').getLogger(loggerName);
+	
 	return this;
 };
 
@@ -498,6 +513,10 @@ DataService.prototype.disableMethods = function(){
 	return this;
 };
 
+DataService.prototype.build = function(){
+	return rs.service(this);
+};
+
 /**
  * Creates new DataService instances.
  * 
@@ -506,7 +525,7 @@ DataService.prototype.disableMethods = function(){
  * @param {Object} [oDataProtocolDefinition]  oDataProtocolDefinition supplies the callback functions for each protocol method (e.g. query). Defaults to a new DataProtocolDefinition instance 
  * @returns {DataService} 
  */
-exports.api = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition){
+exports.builder = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition){
 	var ds = new DataService(oConfig, oProtocolHandlersAdapter);
 	return ds;
 };
