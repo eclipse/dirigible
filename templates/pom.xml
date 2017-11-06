@@ -37,6 +37,7 @@
 	<modules>
 		<module>template-hello-world</module>
 		<module>template-http-client</module>
+		<module>template-html</module>
 		<module>template-database-access</module>
 		<module>template-database-table</module>
 		<module>template-database-view</module>
@@ -51,6 +52,18 @@
 			<build>
 				<finalName>${project.artifactId}</finalName>
 				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>${maven.clean.plugin.version}</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/resources</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-scm-plugin</artifactId>

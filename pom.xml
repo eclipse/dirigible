@@ -361,6 +361,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<dirigible.version>3.0</dirigible.version>
+		<maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
+		<maven.clean.plugin.version>3.0.0</maven.clean.plugin.version>
+		<maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
+		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
 		<java.version>1.8</java.version>
 		<commons.io>2.5</commons.io>
 		<commons.codec>1.10</commons.codec>
@@ -369,7 +373,6 @@
 		<guice.version>3.0</guice.version>
 		<javax.persistence.version>2.1.0</javax.persistence.version>
 		<eclipselink.version>2.5.1</eclipselink.version>
-		<maven.resource.plugin.version>2.7</maven.resource.plugin.version>
 		<skip.tests>true</skip.tests>
 		<mockito.version>1.10.8</mockito.version>
 		<junit.version>4.11</junit.version>
@@ -381,9 +384,6 @@
 		<logback.version>1.2.3</logback.version>
 		<activiti.version>5.22.0</activiti.version>
 		<com.h2database.version>1.4.193</com.h2database.version>
-		<maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
-		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
-		<maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
 		<derby.version>10.12.1.1</derby.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.5.v20170502</jetty.version>
