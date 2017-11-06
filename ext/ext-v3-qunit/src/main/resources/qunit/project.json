@@ -1,0 +1,16 @@
+{
+    "guid":"qunit",
+    "repository":{
+        "type":"git",
+        "branch":"master",
+        "url":"https://github.com/dirigiblelabs/qunit.git"
+    },
+    "dependencies": [
+        {
+            "guid":"test",
+            "type": "git",
+            "url": "https://github.com/dirigiblelabs/api-v3-test.git",
+            "branch":"master"
+    	}
+	]
+}
