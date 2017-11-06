@@ -171,10 +171,10 @@ var getQueryString = exports.getQueryString = function() {
 };
 
 /**
- * Returns the query string name value pairs as JS object map. When multiple query parametes with the same name are specified,
+ * Returns the query string name value pairs as JS object map. When multiple query parameters with the same name are specified,
  * it will collect theirs values in an array in the order of declaration under that name in the map.
  */
-exports.getQueryMap = function() {
+exports.getQueryParametersMap = function() {
 	var queryString = getQueryString();
 	if(!queryString)
 			return {};
