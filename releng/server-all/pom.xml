@@ -441,27 +441,27 @@
 		<!-- Templates Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>template-hello-world</artifactId>
+		 	<artifactId>dirigible-template-hello-world</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>template-http-client</artifactId>
+		 	<artifactId>dirigible-template-http-client</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>template-database-access</artifactId>
+		 	<artifactId>dirigible-template-database-access</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>template-database-table</artifactId>
+		 	<artifactId>dirigible-template-database-table</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>template-database-view</artifactId>
+		 	<artifactId>dirigible-template-database-view</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
 
@@ -501,6 +501,14 @@
 		 	<artifactId>dirigible-resources-fonts</artifactId>
 		 	<version>${dirigible.version}</version>
 		</dependency>
+
+		<!-- External API modules -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ext-qunit</artifactId>
+		 	<version>${dirigible.version}</version>
+		</dependency>
+
 
 		<!-- External -->
 		<dependency>
