@@ -78,11 +78,11 @@
 	</resource-ref> -->
 	
 	<login-config>
-        <auth-method>BASIC</auth-method>
-        <!-- <form-login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
          	<form-login-page>/login-form.html</form-login-page>
             <form-error-page>/login-error.html</form-error-page>
-    	</form-login-config> -->
+    	</form-login-config>
     </login-config>
 
 	<!-- Error Pages -->     
