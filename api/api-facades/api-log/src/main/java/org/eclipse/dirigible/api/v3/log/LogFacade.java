@@ -21,21 +21,40 @@ public class LogFacade implements IScriptingFacade {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogFacade.class);
 
+	private static final String APP_LOGGER_NAME_PREFX = "app";
+	private static final String APP_LOGGER_NAME_SEPARATOR = ".";
+
 	/**
 	 * @param url
 	 * @return Logger
 	 */
-	public static final Logger getLogger(String loggerName) {
-		return LoggerFactory.getLogger(loggerName);
+	public static final Logger getLogger(final String loggerName) {
+		/*
+		 * logger names are implicitly prefixed with 'app.' to derive from the applications root logger configuration
+		 * for severity and appenders. Null arguments for logger name will be treated as reference to the 'app' logger
+		 */
+		String appLoggerName = loggerName;
+		if (appLoggerName == null) {
+			appLoggerName = APP_LOGGER_NAME_PREFX;
+		} else {
+			appLoggerName = APP_LOGGER_NAME_PREFX + APP_LOGGER_NAME_SEPARATOR + appLoggerName;
+		}
+
+		final Logger logger = LoggerFactory.getLogger(appLoggerName);
+
+		return logger;
 	}
 
 	public static final void setLevel(String loggerName, String level) {
-		final org.slf4j.Logger _logger = getLogger(loggerName);
-		if (!(_logger instanceof ch.qos.logback.classic.Logger)) {
-			LOGGER.debug("Logger with name {} is not of type " + ch.qos.logback.classic.Logger.class.getName(), loggerName);
+
+		final org.slf4j.Logger logger = getLogger(loggerName);
+
+		if (!(logger instanceof ch.qos.logback.classic.Logger)) {
+			LOGGER.error("Logger with name {} is not of type " + ch.qos.logback.classic.Logger.class.getName(), loggerName);
 			return;
 		}
-		ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) _logger;
+
+		ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) logger;
 		logbackLogger.setLevel(ch.qos.logback.classic.Level.valueOf(level));
 	}
 
@@ -44,7 +63,7 @@ public class LogFacade implements IScriptingFacade {
 
 	public static final void log(String loggerName, String level, String message, String logArguments, String errorJson) throws IOException {
 
-		final Logger _logger = getLogger(loggerName);
+		final Logger logger = getLogger(loggerName);
 
 		Object[] args = null;
 		if (logArguments != null) {
@@ -69,15 +88,15 @@ public class LogFacade implements IScriptingFacade {
 		}
 
 		if (ch.qos.logback.classic.Level.DEBUG.toString().equalsIgnoreCase(level)) {
-			_logger.debug(message, args);
+			logger.debug(message, args);
 		} else if (ch.qos.logback.classic.Level.TRACE.toString().equalsIgnoreCase(level)) {
-			_logger.trace(message, args);
+			logger.trace(message, args);
 		} else if (ch.qos.logback.classic.Level.INFO.toString().equalsIgnoreCase(level)) {
-			_logger.info(message, args);
+			logger.info(message, args);
 		} else if (ch.qos.logback.classic.Level.WARN.toString().equalsIgnoreCase(level)) {
-			_logger.warn(message, args);
+			logger.warn(message, args);
 		} else if (ch.qos.logback.classic.Level.ERROR.toString().equalsIgnoreCase(level)) {
-			_logger.error(message, args);
+			logger.error(message, args);
 		}
 	}
 
