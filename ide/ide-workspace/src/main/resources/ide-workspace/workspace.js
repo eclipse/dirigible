@@ -285,7 +285,9 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController,
 	
 	//subscribe event listeners
 	jstree.on('select_node.jstree', function (e, data) {
-		this.clickNode(this.jstree.get_node(data.node));
+		if (data.node.type === 'file') {
+			this.clickNode(this.jstree.get_node(data.node));
+		}
 	}.bind(this))
 	.on('dblclick.jstree', function (evt) {
 		this.dblClickNode(this.jstree.get_node(evt.target))
