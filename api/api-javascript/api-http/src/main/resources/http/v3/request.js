@@ -165,9 +165,39 @@ exports.getServerPort = function() {
 	return serverPort;
 };
 
-exports.getQueryString = function() {
+var getQueryString = exports.getQueryString = function() {
 	var queryString = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getQueryString', []);
 	return queryString;
+};
+
+/**
+ * Returns the query string name value pairs as JS object map. When multiple query parametes with the same name are specified,
+ * it will collect theirs values in an array in the order of declaration under that name in the map.
+ */
+exports.getQueryMap = function() {
+	var queryString = getQueryString();
+	if(!queryString)
+			return {};
+			
+	queryString = decodeURI(queryString);
+	var queryStringSegments = queryString.split('&');
+	
+	var queryMap = {};
+	queryStringSegments.forEach(function(seg){
+		seg = seg.replace('amp;','');
+		var kv = seg.split('=');
+		var key = kv[0].trim();
+		var value = kv[1]===undefined ? true : kv[1].trim();
+		if(queryMap[key] !== undefined){
+			if(!Array.isArray(queryMap[key]))
+				queryMap[key] = [queryMap[key]];
+			else
+				queryMap[key].push(value);
+		} else{
+			queryMap[key] = value;	
+		}
+	}.bind(this));
+	return queryMap;
 };
 
 exports.getRemoteAddress = function() {
