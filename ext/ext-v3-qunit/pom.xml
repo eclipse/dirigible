@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Ext - QUnit</name>
-	<artifactId>ext-qunit</artifactId>
+	<artifactId>dirigible-ext-qunit</artifactId>
     <packaging>jar</packaging>
 
 	<scm>
