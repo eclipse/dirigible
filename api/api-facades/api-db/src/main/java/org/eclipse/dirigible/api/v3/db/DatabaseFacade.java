@@ -42,7 +42,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	public static final String getDataSources() {
-		return GsonHelper.GSON.toJson(database.getDataSources());
+		return GsonHelper.GSON.toJson(database.getDataSources().keySet());
 	}
 
 	public static final String getMetadata(String databaseType, String datasourceName) throws SQLException {
