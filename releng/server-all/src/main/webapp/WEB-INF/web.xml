@@ -137,7 +137,7 @@
 	        <url-pattern>/websockets/v3/ide/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
-	        <role-name>Nobody</role-name>
+	        <role-name>Developer</role-name>
 	    </auth-constraint>
 	</security-constraint>
 	
