@@ -7,6 +7,10 @@ public class GenerationTemplateMetadataSource {
 	private String action;
 	
 	private String rename;
+	
+	private String start;
+	
+	private String end;
 
 	public String getLocation() {
 		return location;
@@ -31,7 +35,21 @@ public class GenerationTemplateMetadataSource {
 	public void setRename(String rename) {
 		this.rename = rename;
 	}
-	
-	
 
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
+	public String getEnd() {
+		return end;
+	}
+
+	public void setEnd(String end) {
+		this.end = end;
+	}
+	
 }
