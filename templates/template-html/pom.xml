@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Template - HTTP Client</name>
+	<name>Template - HTML</name>
 	<artifactId>dirigible-template-html</artifactId>
     <packaging>jar</packaging>
 
@@ -18,7 +18,7 @@
 		<connection>${content.scm.connection}</connection>
 		<developerConnection>${content.scm.developerConnection}</developerConnection>
 	</scm>
-	
+
 	<properties>
 		<content.repository.name>template-v3-html</content.repository.name>
 		<content.project.name>template-html</content.project.name>
