@@ -31,33 +31,89 @@ var merge = function(target, source) {
 
 
 var DataProtocolDefinition = function(){	
-	this.mappings = rs.mappings();
-	
-	this.collectionResource = this.mappings.resource("");
-	this.entityResource = this.mappings.resource("{id}");
+	var mappings = this.mappings = rs.mappings();
+		
+	mappings.collectionResource = mappings.resource("");
+	mappings.entityResource = mappings.resource("{id}");
 	
 	//entity collection functions
-	this.query = this.collectionResource.get().produces(['application/json']);
-	this.create = this.collectionResource.post().consumes(['*/json']);
-	this.count = this.mappings.resource("count").get().produces(['application/json']);
+	var _query = mappings.collectionResource.get().produces(['application/json']);	
+	mappings.query = function(){
+		return _query;
+	};
+	var _create = mappings.collectionResource.post().consumes(['*/json']);
+	mappings.create = function(){
+		return _create;
+	};
+	var _count = mappings.resource("count").get().produces(['application/json']); 
+	mappings.count = function(){
+		return _count;
+	};
 	//entity functions
-	this.get = this.entityResource.get().produces(['application/json']);
-	this.update = this.entityResource.put().consumes(['*/json']);	
-	this.remove = this.entityResource.remove();
+	var _get = mappings.entityResource.get().produces(['application/json']);
+	mappings.get = function(){
+		return _get;
+	};
+	var _update = mappings.entityResource.put().consumes(['*/json']);	
+	mappings.update = function(){
+		return _update;
+	};
+	var _remove = mappings.entityResource.remove();
+	mappings.remove = function(){
+		return _remove;
+	};
 	//association functions
-	this.associationList = this.mappings.resource("{id}/{associationName}").get().produces(['application/json']);
-	this.associationCreate = this.mappings.resource("{id}/{associationName}").post().consumes(['*/json']);	
+	var _associationList = mappings.resource("{id}/{associationName}").get().produces(['application/json']);
+	mappings.associationList = function(){
+		return _associationList;
+	};
+	var _associationCreate = mappings.resource("{id}/{associationName}").post().consumes(['*/json']);
+	mappings.associationCreate = function(){
+		return _associationCreate;
+	};
 	//api functions
-	this.metadata = this.mappings.resource("metadata").get().produces(['application/json']);	
+	var _metadata = mappings.resource("metadata").get().produces(['application/json']);
+	mappings.metadata = function(){
+		return _metadata;
+	};
 	
+	//TODO: automate finding resource config by name and make it applicable beyond the well known mehtod names
+	mappings.disableByName = function(){
+		for(var i=0; i< arguments.length; i++){
+			var name = arguments[i];
+			if(arguments[i] === "query"){
+				this.disable("", "get", undefined, ['application/json']);
+			}
+			if(arguments[i] === "get"){
+				this.disable("{id}", "get", undefined, ['application/json']);
+			}
+			if(arguments[i] === "count"){
+				this.disable("count", "get", undefined, ['application/json']);
+			}
+			if(arguments[i] === "metadata"){
+				this.disable("metadata", "get", undefined, ['application/json']);
+			}
+			if(arguments[i] === "create"){
+				this.disable("", "post", ['application/json']);
+			}
+			if(arguments[i] === "update"){
+				this.disable("{id}", "post", ['application/json']);
+			}
+			if(arguments[i] === "delete" || arguments[i] === "remove"){
+				this.disable("{id}", "delete");
+			}
+		}
+		return this;
+	}.bind(this);
+	
+	return this;
 };
 
 var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 	
 	this.logger = require('log/logging').getLogger('rs.data.dao.provider.default');
 
-	var oConfig = {};
-	var protocolDef = oDataProtocolMappings || new DataProtocolDefinition();
+	var protocolDef = oDataProtocolMappings || new DataProtocolDefinition().mappings;
 	var _self = this;
 	
 	var parseIntStrict = function (value) {
@@ -70,16 +126,25 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 		var protocolFunctionNames = ["query", "create", "update", "remove", "get", "count", "metadata", "associationList", "associationCreate"];
 		for(var i = 0; i < protocolFunctionNames.length; i++){
 			var functionName = protocolFunctionNames[i];
-			var resourceVerbHandlerDef = protocolDef[functionName];
-			_self[functionName].call(_self, resourceVerbHandlerDef, this);
-			merge(oConfig, protocolDef.mappings.configuration());
+			if(protocolDef[functionName]){
+				var resourceVerbHandlerDef;
+				if(typeof protocolDef[functionName] === 'function')
+					resourceVerbHandlerDef = protocolDef[functionName]();
+				else
+					resourceVerbHandlerDef = protocolDef[functionName];
+				_self[functionName].call(_self, resourceVerbHandlerDef, this);
+			}
 		}
-		return oConfig;
+		return protocolDef;
 	};
 	
 	//functions deifned on the api prototype will be weaved in the using class
 	this.api = function(){
 		this.dao = function(orm){
+			//check if accessor requested
+			if(arguments< 1){
+				return this._dao;
+			}
 			this._dao = daos.create(orm);
 			return this;
 		};
@@ -104,6 +169,14 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 		//re-throw or construct new
 		throw (error || Error(errorMessage));
 	};
+	
+	var installCallbackInVerbHandlerConfig = function(oResourceVerbHandler, sCbName){
+		if(!oResourceVerbHandler[sCbName])
+			oResourceVerbHandler[sCbName] = function(fCb){
+				oResourceVerbHandler.configuration()[sCbName] = fCb;
+				return this;
+			};
+	};
 		
 	this.create = function(oResourceVerbHandler, _this){
 		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
@@ -126,6 +199,10 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 				response.setStatus(response.OK);
 			}
 		}.bind(_this));
+		//expose specific callback setup methods
+		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "onEntityInsert");
+		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "onAfterEntityInsert");
+		
 	};
 	
 	this.remove = function(oResourceVerbHandler, _this){
@@ -136,6 +213,9 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 			notify.call(this, 'onAfterRemove', id, context);
 			response.setStatus(response.NO_CONTENT);
 		}.bind(_this));
+		//expose specific callback setup methods
+		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "onBeforeRemove");
+		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "onAfterRemove");		
 	};
 	
 	this.update = function(oResourceVerbHandler, _this){
@@ -160,6 +240,8 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 			entity[this._dao.orm.getPrimaryKey()] = this._dao.update(entity);
 			response.setStatus(response.NO_CONTENT);
 		}.bind(_this));
+		//expose specific callback setup methods
+		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "onEntityUpdate");
 	};
 	
 	this.get = function(oResourceVerbHandler, _this){
@@ -206,6 +288,8 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 			response.setContentType(handlerDef.produces[0]);
 	        response.println(jsonResponse);
 		}.bind(_this));
+		//expose specific callback setup methods		
+		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "onAfterFind");
 	};
 	
 	var validateQueryInputs = this.validateQueryInputs = function(context){
@@ -295,7 +379,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 	this.query = function(oResourceVerbHandler, _this){
 		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
 			if(typeof handlerDef["beforeQuery"] === 'function')
-				handlerDef["beforeQuery"].call(this, context);
+				handlerDef["beforeQuery"].call(_this, context);
 			if(!validateQueryInputs.call(this, context, request, response))
 				return;
 			var args = [context.queryParameters];
@@ -312,7 +396,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 			if($count > 0){
 				entities = this._dao.list.apply(this._dao, args) || [];					
 				if(typeof handlerDef["afterQuery"] ==='function')
-					handlerDef["afterQuery"].call(this, entities, context);
+					handlerDef["afterQuery"].call(_this, entities, context);
 				notify.call(this, 'postQuery', entities, context);								
 			} else {
 				entities = [];
@@ -321,8 +405,11 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 	        var jsonResponse = JSON.stringify(entities, null, 2);
 	        response.setContentType(handlerDef.produces[0]);
 	    	response.println(jsonResponse);
-	    	response.setStatus(response.OK)
+	    	response.setStatus(response.OK);
 		}.bind(_this));
+		//expose specific callback setup methods
+		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "beforeQuery");
+		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "afterQuery");	
 	};
 	
 	this.count = function(oResourceVerbHandler, _this){
@@ -419,18 +506,17 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
  */
 var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition) {
 	this.oProtocolHandlersAdapter = oProtocolHandlersAdapter;
-	if(!this.oProtocolHandlersAdapter){
+	if(this.oProtocolHandlersAdapter === undefined){
 		this.oProtocolHandlersAdapter = new ProtocolHandlerAdapter(oDataProtocolDefinition);
 	}
 	
-	var _oConfig = this.oProtocolHandlersAdapter.adapt.call(this);
-	if(oConfig === undefined)
-		this.oConfig = _oConfig;
-	else {
-		this.oConfig = merge(oConfig, _oConfig);
+	this._mappings = this.oProtocolHandlersAdapter.adapt.call(this);
+	if(oConfig !== undefined){
+		Object.keys(oConfig).forEach(function(sPath){
+			this._mappings.resource(sPath, oConfig[sPath]);
+		}.bind(this));
 	}
-	
-	RestAPI.call(this, this.oConfig);
+
 	//weave in methods from the oProtocolHandlersAdapter that it requires.
 	this.oProtocolHandlersAdapter.api.call(this);
 	
@@ -448,73 +534,14 @@ var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefi
 	return this;
 };
 
-DataService.prototype = RestAPI.prototype;
-DataService.constructor = DataService;
-
-DataService.prototype.query = function(){
-	var handler = this.find("", "get", undefined, ['application/json']);
-	if(!handler.beforeQuery)
-		handler.beforeQuery = function(fCb){
-			handler.configuration()["beforeQuery"] = fCb;
-			return this;
-		}
-	if(!handler.afterQuery)
-		handler.afterQuery = function(fCb){
-			handler.configuration()["afterQuery"] = fCb;
-			return this;
-		}
-	return handler;
-};
-DataService.prototype.create = function(){
-	var handler = this.find("", "post", ['application/json']);
-	return handler;
-};
-DataService.prototype.remove = function(){
-	var handler = this.find("{id}", "delete", ['application/json']);
-	return handler;
-};
-DataService.prototype.count = function(){
-	var handler = this.find("count", "get", undefined, ['application/json']);
-	return handler;
-};
-DataService.prototype.metadata = function(){
-	var handler = this.find("metadata", "get", undefined, ['application/json']);
-	return handler;
-};
-DataService.prototype.get = function(){
-	var handler = this.find("{id}", "get", undefined, ['application/json']);
-	return handler;
+DataService.prototype.mappings = function(){
+	return this._mappings;
 };
 
-DataService.prototype.disableMethods = function(){
-	for(var i=0; i< arguments.length; i++){
-		if(arguments[i] === "query"){
-			this.disable("", "get", undefined, ['application/json']);
-		}
-		if(arguments[i] === "get"){
-			this.disable("{id}", "get", undefined, ['application/json']);
-		}
-		if(arguments[i] === "count"){
-			this.disable("count", "get", undefined, ['application/json']);
-		}
-		if(arguments[i] === "metadata"){
-			this.disable("metadata", "get", undefined, ['application/json']);
-		}
-		if(arguments[i] === "create"){
-			this.disable("", "post", ['application/json']);
-		}
-		if(arguments[i] === "update"){
-			this.disable("{id}", "post", ['application/json']);
-		}
-		if(arguments[i] === "delete" || arguments[i] === "remove"){
-			this.disable("{id}", "delete");
-		}
-	}
-	return this;
-};
-
-DataService.prototype.build = function(){
-	return rs.service(this);
+DataService.prototype.execute = function() {
+	var cfg = this.mappings().configuration();
+	var httpSvc = rs.service(cfg);
+	return httpSvc.execute();
 };
 
 /**
@@ -525,7 +552,7 @@ DataService.prototype.build = function(){
  * @param {Object} [oDataProtocolDefinition]  oDataProtocolDefinition supplies the callback functions for each protocol method (e.g. query). Defaults to a new DataProtocolDefinition instance 
  * @returns {DataService} 
  */
-exports.builder = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition){
-	var ds = new DataService(oConfig, oProtocolHandlersAdapter);
+exports.service = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition){
+	var ds = new DataService(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition);
 	return ds;
 };
