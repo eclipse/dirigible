@@ -8,8 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
-
 var java = require('core/v3/java');
 
 /**
@@ -37,6 +35,10 @@ exports.InputStream = function() {
 	
 	this.close = function() {
 		java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'close', [this.uuid]);
+	};
+	
+	this.isValid = function() {
+		return this.uuid !== null;
 	};
 	
 };
@@ -71,6 +73,10 @@ exports.OutputStream = function() {
 	this.getText = function() {
 		var text = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'getText', [this.uuid]);
 		return text;
+	};
+	
+	this.isValid = function() {
+		return this.uuid !== null;
 	};
 	
 };

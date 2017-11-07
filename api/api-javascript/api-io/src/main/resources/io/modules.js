@@ -8,8 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
-
 exports.getFiles = function() {
 	var files = require('io/v3/files');
 	return files;
@@ -18,4 +16,9 @@ exports.getFiles = function() {
 exports.getStreams = function() {
 	var streams = require('io/v3/streams');
 	return streams;
+};
+
+exports.getZip = function() {
+	var zip = require('io/v3/zip');
+	return zip;
 };

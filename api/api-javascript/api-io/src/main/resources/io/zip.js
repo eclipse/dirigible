@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-var streams = require('io/v3/streams');
-for(var propertyName in streams) {
-	exports[propertyName] = streams[propertyName];
+var zip = require('io/v3/zip');
+for(var propertyName in zip) {
+	exports[propertyName] = zip[propertyName];
 }

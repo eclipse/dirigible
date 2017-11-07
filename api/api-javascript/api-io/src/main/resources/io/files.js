@@ -8,8 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
-
 var files = require('io/v3/files');
 for(var propertyName in files) {
 	exports[propertyName] = files[propertyName];
