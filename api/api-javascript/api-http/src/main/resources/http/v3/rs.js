@@ -663,6 +663,8 @@ exports.service = function(oMappings){
 	var config;
 	if(oMappings instanceof RestAPI){
 		config = oMappings.configuration();
+	} else {
+		config = oMappings;
 	}
 	var controller = new HttpController(config);
 	return controller;
