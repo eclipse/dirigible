@@ -9,16 +9,13 @@
  *******************************************************************************/
 
 /* eslint-env node, dirigible */
-var rs = require('http/v3/rs');
-var daos = require('db/v3/dao');
 
-var RestAPI = rs.RestAPI;
 
 /**
  * Deep merge for JS objects (typeof o === 'object' is true).
  * Array members are copied as is without changes. That means that array in target object will overwrite a coresponding memeber with the same name in source
  */
-var merge = function(target, source) {
+/*var merge = function(target, source) {
     Object.keys(source).forEach(function(key) {
         if (source[key]){
 			if(typeof source[key] === 'object' && !Array.isArray(source[key])) {
@@ -28,9 +25,10 @@ var merge = function(target, source) {
         target[key] = source[key];
     });
 };
+*/
 
-
-var DataProtocolDefinition = function(){	
+var DataProtocolDefinition = function(){
+	var rs = require('http/v3/rs');
 	var mappings = this.mappings = rs.mappings();
 		
 	mappings.collectionResource = mappings.resource("");
@@ -138,6 +136,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 		return protocolDef;
 	};
 	
+	var daos = require('db/v3/dao');
 	//functions deifned on the api prototype will be weaved in the using class
 	this.api = function(){
 		this.dao = function(orm){
@@ -256,7 +255,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 				if($expand===true || $expand.toLowerCase() === '$all') {
 					$expand = this._dao.orm.getAssociationNames().join(',');
 				} else {
-					$expand = String(new java.lang.String(""+$expand));
+					$expand = String($expand);
 					$expand = $expand.split(',').map(function(exp){
 						return exp.trim();
 					});
@@ -267,7 +266,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 				if($select===true || $select.toLowerCase() === '$all') {
 					$select = this._dao.orm.getAssociationNames().join(',');
 				} else {
-					$select = String(new java.lang.String(""+$select));
+					$select = String($select);
 					$select = $select.split(',').map(function(sel){
 						return sel.trim();
 					});
@@ -312,7 +311,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 
 		var sort = context.queryParameters.$sort || context.queryParameters.sort || null;
 		if(sort !== undefined && sort !== null){
-			sort = String(new java.lang.String(""+sort));
+			sort = String(sort);
 			var sortPropertyNames = sort.split(',').map(function(srt){
 				return srt.trim();
 			});
@@ -345,7 +344,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 			if($expand===true || $expand.toLowerCase() === '$all') {
 				$expand = associationNames.join(',');
 			} else {
-				$expand = String(new java.lang.String(""+$expand));
+				$expand = String($expand);
 				$expand = $expand.split(',').map(function(sel){
 					return sel.trim();
 				});
@@ -361,7 +360,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 		
 		var select = context.queryParameters['$select'];
 		if(select!==undefined){
-			select = String(new java.lang.String(""+select));
+			select = String(select);
 			var selectedFieldNames = select.split(',').map(function(sel){
 				return sel.trim();
 			});
@@ -505,20 +504,24 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
  * @param {Object} [sLoggerName] An optional logger name to use with this instance. Defaults to 'http.rs.data.service'
  */
 var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition) {
-	this.oProtocolHandlersAdapter = oProtocolHandlersAdapter;
-	if(this.oProtocolHandlersAdapter === undefined){
-		this.oProtocolHandlersAdapter = new ProtocolHandlerAdapter(oDataProtocolDefinition);
+	var _oProtocolHandlersAdapter = oProtocolHandlersAdapter;
+	if(_oProtocolHandlersAdapter === undefined){
+		_oProtocolHandlersAdapter = new ProtocolHandlerAdapter(oDataProtocolDefinition);
 	}
 	
-	this._mappings = this.oProtocolHandlersAdapter.adapt.call(this);
+	var _mappings = _oProtocolHandlersAdapter.adapt.call(this);
 	if(oConfig !== undefined){
 		Object.keys(oConfig).forEach(function(sPath){
-			this._mappings.resource(sPath, oConfig[sPath]);
-		}.bind(this));
+			_mappings.resource(sPath, oConfig[sPath]);
+		});
 	}
 
+	this.mappings = function(){
+		return _mappings;
+	};
+
 	//weave in methods from the oProtocolHandlersAdapter that it requires.
-	this.oProtocolHandlersAdapter.api.call(this);
+	_oProtocolHandlersAdapter.api.call(this);
 	
 	var loggerName;
 	//use supplied loggername if any or use own
@@ -534,25 +537,22 @@ var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefi
 	return this;
 };
 
-DataService.prototype.mappings = function(){
-	return this._mappings;
-};
-
-DataService.prototype.execute = function() {
+DataService.prototype.execute = function(oRequest, oResponse) {
 	var cfg = this.mappings().configuration();
+	var rs = require('http/v3/rs');
 	var httpSvc = rs.service(cfg);
-	return httpSvc.execute();
+	return httpSvc.execute(oRequest, oResponse);
 };
 
 /**
  * Creates new DataService instances.
  * 
  * @param {Object} [oConfig] ] initial REST API configuration. Defaults to an empty object {}.
- * @param {Object} [oProtocolHandlersAdapter] a custom protocol handlers provider. Defaults to a new ProtocolHandlerAdapter instance
+ * @param {Object} [oProtocolHandlersAdaptRestAPIer] a custom protocol handlers provider. Defaults to a new ProtocolHandlerAdapter instance
  * @param {Object} [oDataProtocolDefinition]  oDataProtocolDefinition supplies the callback functions for each protocol method (e.g. query). Defaults to a new DataProtocolDefinition instance 
  * @returns {DataService} 
  */
-exports.service = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition){
-	var ds = new DataService(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition);
+exports.service = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition, sLoggerName){
+	var ds = new DataService(oConfig, oProtocolHandlersAdapter, oDataProtocolDefinition, sLoggerName);
 	return ds;
 };
