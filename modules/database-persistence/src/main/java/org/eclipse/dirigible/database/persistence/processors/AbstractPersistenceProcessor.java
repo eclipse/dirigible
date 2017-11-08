@@ -114,11 +114,15 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			preparedStatement.setInt(i, (Integer) value);
 		} else if (DataTypeUtils.isTinyint(dataType)) {
 			preparedStatement.setByte(i, (byte) value);
+		} else if (DataTypeUtils.isSmallint(dataType)) {
+			preparedStatement.setShort(i, (Short) value);
 		} else if (DataTypeUtils.isBigint(dataType)) {
 			preparedStatement.setLong(i, (Long) value);
 		} else if (DataTypeUtils.isReal(dataType)) {
 			preparedStatement.setFloat(i, (Float) value);
 		} else if (DataTypeUtils.isDouble(dataType)) {
+			preparedStatement.setDouble(i, (Double) value);
+		} else if (DataTypeUtils.isDecimal(dataType)) {
 			preparedStatement.setDouble(i, (Double) value);
 		} else if (DataTypeUtils.isBoolean(dataType)) {
 			preparedStatement.setBoolean(i, (Boolean) value);
