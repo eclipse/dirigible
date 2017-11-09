@@ -171,6 +171,63 @@ ORM.prototype.validate = function(){
 	}		
 };
 
+ORM.prototype.toColumn = function(ormProperty){
+	var column;
+	if(ormProperty){
+		column = {
+			name: ormProperty.column,
+			type: ormProperty.type,
+			length: String(ormProperty.length),
+			primaryKey: String(ormProperty.id===undefined?false:ormProperty.id),
+			nullable: String(!ormProperty.required),
+			defaultValue: ormProperty.defaultValue
+		};
+	}
+	return column;
+};
+
+ORM.prototype.toTable = function(){
+	var table = {
+		"name": this.table,
+		"type": "TABLE",
+	};
+
+	var uniqueIndices = [];
+	var primaryKeys = [];	
+	if(this.properties){
+		table["columns"] = [];
+		this.properties.forEach(function(property){
+			var column = this.toColumn(property);
+			if(property.unique)
+				uniqueIndices.push({
+					"columns": column.name
+				});
+			if(property.id)
+				primaryKeys.push({
+					"columns": column.name
+				});
+			//TODO : analyze associations to add FKs if possible
+			table.columns.push(column);
+		});
+	}
+	
+	if(primaryKeys.length > 1 || uniqueIndices.length > 0 ) {
+		table["constraints"] = {};
+	}
+	
+	if(primaryKeys.length > 1){
+		table.columns = table.columns.map(function(column){
+			column.primaryKey = "false";
+			return column;
+		});
+		table.constraints["primarKeys"] = primaryKeys;
+	}
+	if(uniqueIndices.length>0)
+		table.constraints["uniqueIndices"] = uniqueIndices;
+
+	return table;	
+};
+
 exports.get = function(orm){
 	var _orm = new ORM(orm);
 	_orm.validate();
