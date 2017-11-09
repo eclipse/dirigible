@@ -61,7 +61,7 @@ public class WorkspacesCoreServiceTest extends AbstractGuiceTest {
 		if (worskapce3.getName().equals("TestWorkspace1")) {
 			assertEquals("/users/guest/TestWorkspace1", workspace1.getInternal().getPath());
 		} else {
-			assertEquals("/users/guest/TestWorkspace2", workspace1.getInternal().getPath());
+			assertEquals("/users/guest/TestWorkspace2", workspace2.getInternal().getPath());
 		}
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 		workspacesCoreService.deleteWorkspace("TestWorkspace2");
