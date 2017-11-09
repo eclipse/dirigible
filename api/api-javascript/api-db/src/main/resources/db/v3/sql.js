@@ -17,10 +17,10 @@ exports.getDialect = function(connection) {
 	 */
 	var Dialect = function() {
 		
-		var _parametricFields = [];
+		var _parameters = [];
 		
-		var parametricFields = function(){
-			return _parametricFields;
+		var parameters = function(){
+			return _parameters;
 		};
 		
 		var build = function() {
@@ -63,17 +63,17 @@ exports.getDialect = function(connection) {
 						java.invoke(this.uuid, 'join', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
-								_parametricFields = _parametricFields.concat([arguments[3]]);
+								_parameters = _parameters.concat([arguments[3]]);
 							else
-								_parametricFields.push(arguments[3]);
+								_parameters.push(arguments[3]);
 						}
 					} else {
 						java.invoke(this.uuid, 'join', [table, on]);
 						if(arguments.length>2){
 							if(Array.isArray(arguments[2]))
-								_parametricFields = _parametricFields.concat([arguments[2]]);
+								_parameters = _parameters.concat([arguments[2]]);
 							else
-								_parametricFields.push(arguments[2]);
+								_parameters.push(arguments[2]);
 						}
 					}
 					return this;
@@ -84,17 +84,17 @@ exports.getDialect = function(connection) {
 						java.invoke(this.uuid, 'innerJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
-								_parametricFields = _parametricFields.concat(arguments[3]);
+								_parameters = _parameters.concat(arguments[3]);
 							else
-								_parametricFields.push(arguments[3]);
+								_parameters.push(arguments[3]);
 						}
 					} else {
 						java.invoke(this.uuid, 'innerJoin', [table, on]);
 						if(arguments.length>2){
 							if(Array.isArray(arguments[2]))
-								_parametricFields = _parametricFields.concat(arguments[2]);
+								_parameters = _parameters.concat(arguments[2]);
 							else
-								_parametricFields.push(arguments[2]);
+								_parameters.push(arguments[2]);
 						}
 					}
 					return this;
@@ -105,17 +105,17 @@ exports.getDialect = function(connection) {
 						java.invoke(this.uuid, 'outerJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
-								_parametricFields = _parametricFields.concat(arguments[3]);
+								_parameters = _parameters.concat(arguments[3]);
 							else
-								_parametricFields.push(arguments[3]);
+								_parameters.push(arguments[3]);
 						}
 					} else {
 						java.invoke(this.uuid, 'outerJoin', [table, on]);
 						if(arguments.length>2){
 							if(Array.isArray(arguments[2]))
-								_parametricFields = _parametricFields.concat(arguments[2]);
+								_parameters = _parameters.concat(arguments[2]);
 							else
-								_parametricFields.push(arguments[2]);
+								_parameters.push(arguments[2]);
 						}
 					}
 					return this;
@@ -126,17 +126,17 @@ exports.getDialect = function(connection) {
 						java.invoke(this.uuid, 'leftJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
-								_parametricFields = _parametricFields.concat(arguments[3]);
+								_parameters = _parameters.concat(arguments[3]);
 							else
-								_parametricFields.push(arguments[3]);
+								_parameters.push(arguments[3]);
 						}
 					} else {
 						java.invoke(this.uuid, 'leftJoin', [table, on]);
 						if(arguments.length>2){
 							if(Array.isArray(arguments[2]))
-								_parametricFields = _parametricFields.concat(arguments[2]);
+								_parameters = _parameters.concat(arguments[2]);
 							else
-								_parametricFields.push(arguments[2]);
+								_parameters.push(arguments[2]);
 						}
 					}
 					return this;
@@ -147,17 +147,17 @@ exports.getDialect = function(connection) {
 						java.invoke(this.uuid, 'rightJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
-								_parametricFields = _parametricFields.concat(arguments[3]);
+								_parameters = _parameters.concat(arguments[3]);
 							else
-								_parametricFields.push(arguments[3]);
+								_parameters.push(arguments[3]);
 						}
 					} else {
 						java.invoke(this.uuid, 'rightJoin', [table, on]);
 						if(arguments.length>2){
 							if(Array.isArray(arguments[2]))
-								_parametricFields = _parametricFields.concat(arguments[2]);
+								_parameters = _parameters.concat(arguments[2]);
 							else
-								_parametricFields.push(arguments[2]);
+								_parameters.push(arguments[2]);
 						}
 					}
 					return this;
@@ -168,17 +168,17 @@ exports.getDialect = function(connection) {
 						java.invoke(this.uuid, 'fullJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
-								_parametricFields = _parametricFields.concat(arguments[3]);
+								_parameters = _parameters.concat(arguments[3]);
 							else
-								_parametricFields.push(arguments[3]);
+								_parameters.push(arguments[3]);
 						}
 					} else {
 						java.invoke(this.uuid, 'fullJoin', [table, on]);
 						if(arguments.length>2){
 							if(Array.isArray(arguments[2]))
-								_parametricFields = _parametricFields.concat(arguments[2]);
+								_parameters = _parameters.concat(arguments[2]);
 							else
-								_parametricFields.push(arguments[2]);
+								_parameters.push(arguments[2]);
 						}
 					}
 					return this;
@@ -188,9 +188,9 @@ exports.getDialect = function(connection) {
 					java.invoke(this.uuid, 'where', [condition]);
 					if(arguments.length>1){
 						if(Array.isArray(arguments[1]))
-							_parametricFields = _parametricFields.concat(arguments[1]);
+							_parameters = _parameters.concat(arguments[1]);
 						else
-							_parametricFields.push(arguments[1]);
+							_parameters.push(arguments[1]);
 					}
 					return this;
 				};
@@ -231,11 +231,11 @@ exports.getDialect = function(connection) {
 
 				this.build = build.bind(this);
 
-				this.parametricFields = parametricFields.bind(this);
+				this.parameters = parameters.bind(this);
 
 			}
 			
-			_parametricFields = [];
+			_parameters = [];
 			var selectInstance = java.invoke(this.uuid, 'select', [], true);
 			var select = new Select();
 			select.uuid = selectInstance.uuid;
@@ -263,9 +263,9 @@ exports.getDialect = function(connection) {
 					java.invoke(this.uuid, 'value', [value]);
 					if(arguments.length>1){
 						if(Array.isArray(arguments[1]))
-							_parametricFields = _parametricFields.concat(arguments[1]);
+							_parameters = _parameters.concat(arguments[1]);
 						else
-							_parametricFields.push(arguments[1]);
+							_parameters.push(arguments[1]);
 					}
 					return this;
 				};
@@ -277,11 +277,11 @@ exports.getDialect = function(connection) {
 
 				this.build = build.bind(this);
 				
-				this.parametricFields = parametricFields.bind(this);
+				this.parameters = parameters.bind(this);
 
 			};
 
-			_parametricFields = [];			
+			_parameters = [];			
 			var insertInstance = java.invoke(this.uuid, 'insert', [], true);
 			var insert = new Insert();
 			insert.uuid = insertInstance.uuid;
@@ -304,9 +304,9 @@ exports.getDialect = function(connection) {
 					java.invoke(this.uuid, 'set', [column, value]);
 					if(arguments.length>2){
 						if(Array.isArray(arguments[2]))
-							_parametricFields = _parametricFields.concat(arguments[2]);
+							_parameters = _parameters.concat(arguments[2]);
 						else
-							_parametricFields.push(arguments[2]);
+							_parameters.push(arguments[2]);
 					}
 					return this;
 				};
@@ -315,20 +315,20 @@ exports.getDialect = function(connection) {
 					java.invoke(this.uuid, 'where', [condition]);
 					if(arguments.length>1){
 						if(Array.isArray(arguments[1]))
-							_parametricFields = _parametricFields.concat(arguments[1]);
+							_parameters = _parameters.concat(arguments[1]);
 						else
-							_parametricFields.push(arguments[1]);
+							_parameters.push(arguments[1]);
 					}
 					return this;
 				};
 				
 				this.build = build.bind(this);
 				
-				this.parametricFields = parametricFields.bind(this);
+				this.parameters = parameters.bind(this);
 
 			};
 			
-			_parametricFields = [];
+			_parameters = [];
 			var updateInstance = java.invoke(this.uuid, 'update', [], true);
 			var update = new Update();
 			update.uuid = updateInstance.uuid;
@@ -351,20 +351,20 @@ exports.getDialect = function(connection) {
 					java.invoke(this.uuid, 'where', [condition]);
 					if(arguments.length>1){
 						if(Array.isArray(arguments[1]))
-							_parametricFields = _parametricFields.concat(arguments[1]);
+							_parameters = _parameters.concat(arguments[1]);
 						else
-							_parametricFields.push(arguments[1]);
+							_parameters.push(arguments[1]);
 					}
 					return this;
 				};
 				
 				this.build = build.bind(this);
 				
-				this.parametricFields = parametricFields.bind(this);
+				this.parameters = parameters.bind(this);
 
 			}
 			
-			_parametricFields = [];			
+			_parameters = [];			
 			var deleteInstance = java.invoke(this.uuid, 'delete', [], true);
 			var deleteRows = new Delete();
 			deleteRows.uuid = deleteInstance.uuid;
@@ -780,7 +780,7 @@ exports.getDialect = function(connection) {
 						this.build = build.bind(this);
 					}
 					
-					_parametricFields = [];
+					_parameters = [];
 					var createViewInstance = java.invoke(this.uuid, 'view', [view], true);
 					var createView = new CreateView();
 					createView.uuid = createViewInstance.uuid;
