@@ -10,43 +10,77 @@
 
 /* eslint-env node, dirigible */
 "use strict";
-var database = require("db/v3/database");
-var sequence = require("db/v3/sequence");
-var ormLib = require("db/v3/orm");
-var ormStatements = require('db/v3/ormstatements');
-var logging = require('log/logging');
 
 var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 	if(orm === undefined)
 		throw Error('Illegal argument: orm['+ orm + ']');
 	
-	this.dataSourceName = dataSourceName;
-	this.databaseType = databaseType;
-
-	this.orm = ormLib.get(orm);
+	this.getConnection = function(){
+		return require("db/v3/database").getConnection(databaseType, dataSourceName);
+	};
+		
+	this.orm = require("db/v3/orm").get(orm);
 	
+	var sequences = require("db/v3/sequence");
+	this.sequenceName = this.orm.table+'_'+this.orm.getPrimaryKey().name.toUpperCase();
+	this.dropIdGenerator = function(){
+		return sequences.drop(this.sequenceName, databaseType, dataSourceName);
+	};	
+	this.generateId = function(){
+		return sequences.nextval(this.sequenceName, databaseType, dataSourceName);
+	};	
+	
+	var conn = this.getConnection();
+	try{
+		this.ormstatements = require('db/v3/ormstatements').create(this.orm, conn);
+	} finally {
+		conn.close();
+	}
+
 	//setup loggerName
 	var loggerName = logCtxName;
 	if(!loggerName){
-		loggerName = 'org.eclipse.dirigible.db.dao';
+		loggerName = 'db.dao';
 		if(this.orm.table)
-			loggerName = 'org.eclipse.dirigible.db.dao.'+(this.orm.table.toLowerCase());
+			loggerName = 'db.dao.'+(this.orm.table.toLowerCase());
 	}
-	this.$log = logging.getLogger(loggerName);
+	this.$log = require('log/logging').getLogger(loggerName);
+
+	var execQuery = require('db/v3/query');
+	var execUpdate = require('db/v3/update');
 	
-	var dbProductName = database.getMetadata(this.databaseType, this.dataSourceName).databaseProductName;
-	this.ormstatements = ormStatements.forDatasource(this.orm, dbProductName);
-};
-
-DAO.prototype.getConnection = function(){
-	return database.getConnection(this.databaseType, this.dataSourceName);
-};
-
-/*obsolete*/
-DAO.prototype.withDataSource = function(ds){
-	this.datasource = ds || database.getDataSources()[0];
-	this.ormstatements = require('db/v3/ormstatements').forDatasource(this.orm, this.datasource);
-	return this;
+	this.execute = function(sqlBuilder, entity){
+		var sql = sqlBuilder.build();
+		if(sql === undefined || sql.length<1)
+			throw Error("Illegal argument: sql from statement builder is invalid["+sql+"]");
+		this.$log.info('Executing SQL Statement: {}', sql);
+	 	
+	 	var parametricFields = sqlBuilder.parametricFields && sqlBuilder.parametricFields();
+	 	var parameterBindings;
+	 	if(entity && parametricFields && parametricFields.length>0){
+	 		parameterBindings= [];
+		 	for(var i=0; i<parametricFields.length; i++){
+		 		var val = entity ? entity[parametricFields[i].name] : undefined;
+	      		if((val=== null || val===undefined) && sqlBuilder.operation!==undefined && sqlBuilder.operation.toLowerCase()==='select'){
+		 			continue;
+	 			}
+		 		var index = i+1;
+		 		this.$log.info('Binding to parameter[{}]: {}', index, val);
+		 		parameterBindings.push(val);
+		 	} 
+	 	}
+	 	
+	 	var result; 
+	
+	 	if(sql.startsWith('SELECT') || sql.startsWith('select')){
+	 		result = execQuery.execute(sql, parameterBindings, databaseType, dataSourceName);
+	 	} else {
+	 		result = execUpdate.execute(sql, parameterBindings, databaseType, dataSourceName);
+	 	} 		
+	 	
+	 	return result !== null ? result : [];
+	};
+	
 };
 
 DAO.prototype.notify = function(event){
@@ -84,7 +118,7 @@ DAO.prototype.createSQLEntity = function(entity) {
 };
 
 //create entity as JSON object from ResultSet current Row
-DAO.prototype.createEntity = function(resultSet, entityPropertyNames) {
+DAO.prototype.createEntity = function(resultSetEntry, entityPropertyNames) {
     var entity = {};
     var properties = this.orm.properties;
     if(entityPropertyNames && entityPropertyNames.length>0){
@@ -94,7 +128,7 @@ DAO.prototype.createEntity = function(resultSet, entityPropertyNames) {
     }
     for(var i=0; i<properties.length; i++){
     	var prop = properties[i];
-    	entity[prop.name] = resultSet['get'+prop.type](prop.column);
+    	entity[prop.name] = resultSetEntry[prop.column];
     	if(prop.value){
     		entity[prop.name] = prop.value(entity[prop.name]);
     	}
@@ -104,10 +138,10 @@ DAO.prototype.createEntity = function(resultSet, entityPropertyNames) {
         entity[propertyName] = undefined;
     });
 
-	  var entitySegment = "";
-	  if(entity[this.orm.getPrimaryKey().name]){
-		  entitySegment= "["+entity[this.orm.getPrimaryKey().name]+"]";
-	  }
+	var entitySegment = "";
+	if(entity[this.orm.getPrimaryKey().name]){
+		entitySegment= "["+entity[this.orm.getPrimaryKey().name]+"]";
+	}
     this.$log.info("Transformation from {} DB JSON object finished", (this.orm.table+entitySegment));
     return entity;
 };
@@ -150,42 +184,33 @@ DAO.prototype.insert = function(_entity){
 		var entity = entities[i];
 
 		this.validateEntity(entity, [this.orm.getPrimaryKey().name]);
-
-		var connection;
 	
 		//check for unique constraint violations
 		var uniques = this.orm.getUniqueProperties();
 		for(var _i = 0; _i< uniques.length; _i++){
 			var prop = uniques[_i];
-			var st = this.ormstatements.builder(this.ormstatements.dialect)
+			var st = this.ormstatements.dialect
 						.select(prop.column)
 						.from(this.orm.table)
 						.where(prop.column+'=?', [prop]);
-			try{
-				connection = this.getConnection();						
-				var params = {};
-				params[prop.name] = entity[prop.name];
-				var rs = this.ormstatements.execute(st, connection, params);
-				if(rs.next()){
-					throw Error('Unique constraint violation for ' + prop.name + '['+entity[prop.name]+']');
-				}
-			} finally {
-				connection.close();
-			}
+			var params = {};
+			params[prop.name] = entity[prop.name];
+			var rs = this.execute(st, params);
+			if(rs.length>0)
+				throw Error('Unique constraint violation for ' + prop.name + '['+entity[prop.name]+']');
 		}
 	
 	    var dbEntity = this.createSQLEntity(entity);
 	
-	    connection = this.getConnection();
 	    var ids = [];
 	    try {
 	        var parametericStatement = this.ormstatements.insert.apply(this.ormstatements);
 
-	        var id = sequence.nextval(this.orm.table+'_'+this.orm.getPrimaryKey.name.toUpperCase(), this.databaseType, this.datasourceName);
+	        var id = this.generateId();
 	        dbEntity[this.orm.getPrimaryKey().name] = id;
-	        
-			var updatedRecordCount = this.ormstatements.execute(parametericStatement, connection, dbEntity);
-			
+
+			var updatedRecordCount = this.execute(parametericStatement, dbEntity);
+
 			this.notify('afterInsert', dbEntity);
 			this.notify('beforeInsertAssociationSets', dbEntity);
 			if(this.orm.associations && Object.keys(this.orm.associations).length){
@@ -220,26 +245,24 @@ DAO.prototype.insert = function(_entity){
 			}
 
 			if(updatedRecordCount>0){
+      			ids.push(dbEntity[this.orm.getPrimaryKey().name]);				
 				this.$log.info('{}[] entity inserted', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 			} else {
 				this.$log.info('No changes incurred in {}', this.orm.table);
 			}
 
-      ids.push(dbEntity[this.orm.getPrimaryKey().name]);
 
 	    } catch(e) {
-	    	this.$log.error("Inserting "+this.orm.table+" "+(entities.length===1?'entity':'entities')+" failed", e);
+	    	this.$log.error("Inserting {} {} failed", e, this.orm.table, (entities.length===1?'entity':'entities'));
 	    	this.$log.info('Rolling back changes after failed {}[{}] insert. ', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 			if(dbEntity[this.orm.getPrimaryKey().name]){
 				try{
 					this.remove(dbEntity[this.orm.getPrimaryKey().name]);
 				} catch(err) {
-					this.$log.error('Could not rollback changes after failed '+this.orm.table+'[' +  dbEntity[this.orm.getPrimaryKey().name] + '] insert. ', err);
+					this.$log.error('Could not rollback changes after failed {}[{}}] insert. ', err, this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 				}
 			}
 			throw e;
-	    } finally {
-	        connection.close();
 	    }
     }
     
@@ -271,20 +294,20 @@ DAO.prototype.update = function(entity) {
 
 	var dbEntity = this.createSQLEntity(entity);
 
-    var connection = this.getConnection();
     try {
      	this.notify('beforeUpdateEntity', dbEntity);
-    	var updatedRecordsCount = this.ormstatements.execute(parametericStatement, connection, dbEntity);
-        this.$log.info(updatedRecordsCount ? this.orm.table+'[' + dbEntity[this.orm.getPrimaryKey().name] + '] entity updated' : 'No changes incurred in '+this.orm.table);
+    	var updatedRecordsCount = this.execute(parametericStatement, dbEntity);
+    	if(updatedRecordsCount > 0)
+        	this.$log.info('{}[{}] entity updated', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
+        else
+            this.$log.info('No changes incurred in {}', this.orm.table);
         
         return this;
         
     } catch(e) {
-    	this.$log.error('Updating '+this.orm.table+'['+entity!==undefined?entity[this.orm.getPrimaryKey().name]:entity+'] failed', e);
+    	this.$log.error('Updating {}[{}] failed', e, this.orm.table, entity!==undefined?entity[this.orm.getPrimaryKey().name]:entity);
 		throw e;
-    } finally {
-        connection.close();
-    }
+    } 
 };
 
 // delete entity by id, or array of ids, or delete all (if not argument is provided).
@@ -311,7 +334,7 @@ DAO.prototype.remove = function() {
 	
 		var id = ids[i];
        	//prevent implicit type convertion
-       	if(this.orm.getPrimaryKey().type !== 'string')
+       	if(this.orm.getPrimaryKey().type.toUpperCase() !== 'VARCHAR')
        		id = parseInt(id, 10);
        		
 		if(ids.length>1)
@@ -321,7 +344,6 @@ DAO.prototype.remove = function() {
 			throw new Error('Illegal argument for id parameter:' + id);
 		}
 	
-	    var connection = this.getConnection();
 	    try {
 	    
 	    	this.notify('beforeRemoveEntity', id);
@@ -357,7 +379,8 @@ DAO.prototype.remove = function() {
 								
 							}
 							this.$log.info("{}[{}] entity's {} dependent {} {} deleted.", this.orm.table, id, associatedEntities.length, associationName, associatedEntities.length>1?'entities':'entity');
-						}					}
+						}					
+					}
 				} 
 	        }
 	    	//Delete by primary key value
@@ -365,15 +388,16 @@ DAO.prototype.remove = function() {
 			var params = {};
 	       	params[this.orm.getPrimaryKey().name] = id;
 	       	
-			var updatedRecordsCount = this.ormstatements.execute(parametericStatement, connection, params);
+			var updatedRecordsCount = this.execute(parametericStatement, params);
 			
-	   		this.$log.info(updatedRecordsCount>0?this.orm.table+'[' + id + '] entity deleted':'No changes incurred in '+this.orm.table);
+			if(updatedRecordsCount>0)
+	   			this.$log.info('{}[{}] entity deleted', this.orm.table,  id);
+	   		else
+	   			this.$log.info('No changes incurred in {}', this.orm.table);
 
 	    } catch(e) {
-			this.$log.error(e.message, e);
+			this.$log.error('Deleting {}[{}] entity failed', e, this.orm.table, id);
 			throw e;
-	    } finally {
-	        connection.close();
 	    }
 	    
     }
@@ -484,7 +508,6 @@ DAO.prototype.find = function(id, expand, select) {
 		throw new Error('Illegal argument for id parameter:' + id);
 	}
 
-    var connection = this.getConnection();
     try {
         var entity;
         if(select!==undefined){
@@ -516,23 +539,23 @@ DAO.prototype.find = function(id, expand, select) {
 		};		
         var parametericStatement = this.ormstatements.find.apply(this.ormstatements, [findQbParams]);
        	var params = {};
-       	
+
        	//prevent implicit type convertion
-       	if(this.orm.getPrimaryKey().type !== 'string')
+       	if(this.orm.getPrimaryKey().type.toUpperCase() !== 'VARCHAR')
        		id = parseInt(id, 10);
        	
        	params[this.orm.getPrimaryKey().name] = id;
-       	var resultSet = this.ormstatements.execute(parametericStatement, connection, params);
+       	var resultSet = this.execute(parametericStatement, params);
  
-        if (resultSet.next()) {
-        	entity = this.createEntity(resultSet, select);
+        if (resultSet[0]) {
+        	entity = this.createEntity(resultSet[0], select);
 			if(entity){
             	this.$log.info('{}[{}] entity found', this.orm.table, id);
             	this.notify('afterFound', entity);
 				if(expand!==undefined){
 					if(expand.constructor !== Array){
 						if(expand.constructor === String){
-							expand = String(new java.lang.String(""+expand));
+							expand = String(expand);
 							expand =  expand.split(',').map(function(exp){
 								if(exp.constructor !== String)
 									throw Error('Illegal argument: expand array components are expected ot be strings but found ' + (typeof exp));
@@ -556,10 +579,8 @@ DAO.prototype.find = function(id, expand, select) {
         } 
         return entity;
     } catch(e) {
-        this.$log.error(e.message, e);
+        this.$log.error("Finding {}[{}] entitiy failed.", e, this.orm.table, id);
 		throw e;
-    } finally {
-        connection.close();
     }
 };
 
@@ -568,19 +589,18 @@ DAO.prototype.count = function() {
 	this.$log.info('Counting '+this.orm.table+' entities');
 
     var count = 0;
-    var connection = this.getConnection();
     try {
     	var parametericStatement = this.ormstatements.count.apply(this.ormstatements);
-		var rs = this.ormstatements.execute(parametericStatement, connection);
-        if (rs.next()) {
-            count = rs.getString(1);
+		var rs = this.execute(parametericStatement);
+        if (rs.length>0) {
+        	//expectaion is that there is a single object in the result set with a single porperty
+        	var key  = Object.keys(rs[0])[0];
+            count = parseInt(rs[0][key], 10);
         }
     } catch(e) {
-    	this.$log.error('Counting '+this.orm.table+' entities failed', e);
+    	this.$log.error('Counting {} entities failed', e, this.orm.table); 
 		e.errContext = parametericStatement.toString();
 		throw e;
-    } finally {
-        connection.close();
     }
     
     this.$log.info('{} {} entities counted', String(count), this.orm.table);
@@ -661,7 +681,7 @@ DAO.prototype.list = function(settings) {
 		}
 		settings.$filter = settings.$filter.filter(function(filterField){
 			var prop = this.ormstatements.orm.getProperty(filterField);
-			if(prop===undefined || prop.type!=='String' || settings[prop.name]===undefined)
+			if(prop===undefined || prop.type.toUpperCase()!=='VARCHAR' || settings[prop.name]===undefined)
 				return false;
 			settings[prop.name] = settings[prop.name] + '%%';
 			return true;
@@ -673,17 +693,17 @@ DAO.prototype.list = function(settings) {
 	//cleanup filtering value expressions if any
 	for(var key in settings){
 		var s = settings[key];
-		if(new java.lang.String(''+s).startsWith('>') || new java.lang.String(''+s).startsWith('<'))
+		if(String(s).startsWith('>') || String(s).startsWith('<'))
 			settings[key] = s.substring(1,s.length).trim();
 	}
   
-  var connection = this.getConnection();
   try {
-    var entities = [];
-	  var resultSet = this.ormstatements.execute(parametericStatement, connection, settings);
-        
-    while (resultSet.next()) {
-      var entity = this.createEntity(resultSet, settings.$select);
+    var entities = []; 
+	
+	var resultSet = this.execute(parametericStatement, settings);
+
+    resultSet.forEach(function(rsEntry){
+      var entity = this.createEntity(rsEntry, settings.$select);
       if(expand){
         var associationNames = this.orm.getAssociationNames();
 				for(var idx in associationNames){
@@ -695,48 +715,48 @@ DAO.prototype.list = function(settings) {
       }
       this.notify('afterFound', entity, settings);
       entities.push(entity);
-    }
+	}.bind(this));
+	
     this.$log.info('{} {} entities found', entities.length, this.orm.table);
         
     return entities;
   } catch(e) {
-    this.$log.error(e.message, e);
-		throw e;
-  } finally {
-    connection.close();
-  }
+  	this.$log.error("Listing {} entities failed.", e, this.orm.table);
+	throw e;
+  } 
 };
 
 DAO.prototype.createTable = function() {
 	this.$log.info('Creating table {}', this.orm.table);
 	var parametericStatement = this.ormstatements.createTable.apply(this.ormstatements);
-    var connection = this.getConnection();
     try {
-    	this.ormstatements.execute(parametericStatement, connection);
+    	this.execute(parametericStatement);
         this.$log.info('{} table created', this.orm.table);
         return this;
     } catch(e) {
-    	this.$log.error(e.message, e);
+    	this.$log.error("Create table {} failed", e, this.orm.table);
 		throw e;
-    } finally {
-        connection.close();
-    }
-    return this;
+    } 
 };
 
 DAO.prototype.dropTable = function() {
-	this.$log.info('Dropping table {}', this.orm.table);
+	this.$log.info('Dropping table {}.', this.orm.table);
 	var parametericStatement = this.ormstatements.dropTable.apply(this.ormstatements);
-    var connection = this.getConnection();
     try {
-    	this.ormstatements.execute(parametericStatement, connection);
-        this.$log.info('{} table dropped', this.orm.table);
-        return this;
+    	this.execute(parametericStatement);
+        this.$log.info('Table {} dropped.', this.orm.table);
     } catch(e) {
-    	this.$log.error(e.message, e);
+    	this.$log.error("Dropping table {} failed.", e, this.orm.table);
 		throw e;
-    } finally {
-        connection.close();
+    } 
+    
+    this.$log.info('Dropping table {} sequence {}.', this.orm.table, this.sequenceName);
+   	try{
+   	   	this.dropIdGenerator();	
+    	this.$log.info('Table {} sequence {} dropped.', this.orm.table, this.sequenceName);   	   	
+   	} catch(e) {
+    	this.$log.error("Dropping table {} sequence {} failed.", e, this.orm.table, this.sequenceName);
+		throw e;
     }
     return this;
 };
@@ -748,40 +768,6 @@ var toCamelCase = function(str){
 	});
 };
 
-//TODO: this must be fetched dynammically based on dialect
-var typeForSql = function(name, length){
-	if(name==='INTEGER'){
-		return "Int";
-	}
-	if(['CHAR', 'VARCHAR', 'CLOB'].indexOf(name)>-1){
-		return 'String';
-	}
-	if(name==='BIGINT'){
-		return "Long";
-	}
-	if(name==='REAL'){
-		return "Float";
-	}
-	if(name==='DOUBLE'){
-		return "Double";
-	}
-	if(name==='SMALLINT'){
-		return "Short";
-	}
-	if(name==='BOOLEAN'){
-		return "Boolean";
-	}		
-	if(name==='TIMESTAMP'){
-		return "Timestamp";
-	}
-	if(name==='TIME'){
-		return "Time";
-	}		
-	if(name==='DATE'){
-		return "Date";
-	}
-	return;
-};
 
 var fromTableDef = exports.ormFromTable = function(tableDef){
 	var orm = {};
@@ -791,11 +777,14 @@ var fromTableDef = exports.ormFromTable = function(tableDef){
 			var property = {
 				"name": toCamelCase(columnDef["name"]),
 				"column": columnDef["name"],
-				"type": typeForSql(columnDef["type"]),
+				"type": columnDef["type"],
 				"size": columnDef["length"] !== undefined && columnDef["length"] !=="0"? parseInt(columnDef["length"], 10) : undefined,
 				"id": columnDef["primaryKey"]==='true',
 				"required": columnDef["nullable"] !== 'true'
 			};
+			if(tableDef.constraints && tableDef.constraints.uniqueIndices && tableDef.constraints.uniqueIndices.columns && tableDef.constraints.uniqueIndices.columns.indexOf(columnDef['name'])>-1){
+				property["unique"] = true;
+			}
 			return property;
 		});
 	};
@@ -803,8 +792,8 @@ var fromTableDef = exports.ormFromTable = function(tableDef){
 };
 
 /**
- * oDefinition can be a valid path to a .table file or any other text file contianing a standard dao orm definition.
- * Or it can be table definition or standard orm definition object.
+ * oDefinition can be table definition or standard orm definition object. Or it can be a valid path to
+ * a .table file, or any other text file contianing a standard dao orm definition.
  */
 exports.create = exports.dao = function(oDefinition, logCtxName, ds){
 	var orm;
@@ -815,8 +804,8 @@ exports.create = exports.dao = function(oDefinition, logCtxName, ds){
 			try{
 				oDefinition = JSON.parse(defText);
 			} catch (parseError){
-				var logger = logging.getLogger("org.eclipse.dirigible.db.dao");
-				logger.error("Invalid JSON in " + oDefinition, parseError);
+				var logger = require('log/logging').getLogger("db.dao");
+				logger.error("Invalid JSON in {}", parseError, oDefinition);
 				throw parseError;
 			}
 		} else {
@@ -831,3 +820,7 @@ exports.create = exports.dao = function(oDefinition, logCtxName, ds){
 	}
 	return new DAO(orm, logCtxName, ds);
 };
+
+//TODO: ability to defien easily associations on daos created from .table definitions. 
+
+//TODO: factory function for generating a set of related DAOs from an ER underlying model defined in .table models. 
