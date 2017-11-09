@@ -11,6 +11,35 @@
 /* eslint-env node, dirigible */
 "use strict";
 
+/**
+ * Supported ORM schema:
+ * {
+ *	 name: <string>,
+ *   table: <string>,
+ *   properties: [{
+ *	   name: <string>,
+ *	   column: <string>,
+ *	   id: <boolean>,
+ *	   required: <boolean>, 
+ *	   unique: <boolean>, 
+ *	   dbValue: <function>, 
+ *	   value: <function>, 
+ *	   allowedOps: <Array['insert','update']>
+ *   }],
+ * 	 associations: [{
+ *	   name: <string>,
+ *     joinKey: <string>,
+ *     key: <string>,
+ *     type: <ORM.ASSOCIATION_TYPES>,
+ *     targetDao: <function|DAO>,
+ *     joinDao: <function|DAO>,
+ *     defaults: <Object>,
+ *   }]
+ * }
+ * 
+ * 
+ */
+
 var ORM = exports.ORM = function(orm){
 	this.orm = orm;
 	for(var i in orm){
@@ -141,10 +170,10 @@ ORM.prototype.validate = function(){
 			throw new Error('Illegal configuration: invalid property column['+property.column+']');
 		if(property.allowedOps){
 			if(property.allowedOps.constructor !== Array)
-				throw new Error("Illegal configuration: Association " + property.name + " property allowedOps is expected ot be Array. Instead, it was "+(typeof property.allowedOps));		
+				throw new Error("Illegal configuration: property[" + property.name + "]  allowedOps is expected ot be Array. Instead, it was "+(typeof property.allowedOps));		
 			for(var j=0; j<property.allowedOps.length; j++){
 				if(['insert', 'update'].indexOf(property.allowedOps[j])<0)
-					throw new Error("Illegal configuration: Association " + property.name + " property allowedOps["+property.allowedOps+"] must be an array containing some or all of the following values: ['insert','update']");			
+					throw new Error("Illegal configuration: property[" + property.name + "] allowedOps["+property.allowedOps+"] must be an array containing some or all of the following values: ['insert','update']");			
 			}
 		}
 	}
