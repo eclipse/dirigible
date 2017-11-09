@@ -51,7 +51,8 @@ public class WrappedDataSource implements DataSource {
 	 * Wrapper of the default datasource provided by the underlying platform
 	 * It has some fault tolerance features, which are not available by default in the popular JDBC drivers
 	 *
-	 * @param originalDataSource the original data source
+	 * @param originalDataSource
+	 *            the original data source
 	 */
 	public WrappedDataSource(DataSource originalDataSource) {
 		super();
@@ -136,6 +137,7 @@ public class WrappedDataSource implements DataSource {
 		if (oldestConnection != null) {
 			logger.error("Potential connection leak; victim connection is: " + oldestConnection.hashCode() + ", used (ms): "
 					+ oldestConnection.getTimeUsed());
+			logger.error(oldestConnection.getOperationalInfo());
 			oldestConnection.close();
 		}
 		logger.trace("exiting - forceRelaseConnection()");
@@ -156,8 +158,19 @@ public class WrappedDataSource implements DataSource {
 
 	private void addConnection(WrappedConnection connection) {
 		logger.trace("entering - addConnection()");
+		String operationalInfo = getOperationalInfo();
+		connection.setOperationalInfo(operationalInfo);
 		connections.add(connection);
 		logger.trace("exiting - addConnection()");
+	}
+
+	private String getOperationalInfo() {
+		StringBuilder buff = new StringBuilder();
+		for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+			buff.append(element.toString()).append(System.getProperty("line.separator"));
+		}
+		String operationalInfo = buff.toString();
+		return operationalInfo;
 	}
 
 	private void removeConnection(WrappedConnection connection) {
