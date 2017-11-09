@@ -14,11 +14,7 @@
 var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 	if(orm === undefined)
 		throw Error('Illegal argument: orm['+ orm + ']');
-	
-	this.getConnection = function(){
-		return require("db/v3/database").getConnection(databaseType, dataSourceName);
-	};
-		
+
 	this.orm = require("db/v3/orm").get(orm);
 	
 	var sequences = require("db/v3/sequence");
@@ -30,7 +26,7 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 		return sequences.nextval(this.sequenceName, databaseType, dataSourceName);
 	};	
 	
-	var conn = this.getConnection();
+	var conn = require("db/v3/database").getConnection(databaseType, dataSourceName);
 	try{
 		this.ormstatements = require('db/v3/ormstatements').create(this.orm, conn);
 	} finally {
@@ -49,33 +45,43 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 	var execQuery = require('db/v3/query');
 	var execUpdate = require('db/v3/update');
 	
-	this.execute = function(sqlBuilder, entity){
+	this.execute = function(sqlBuilder, parameterBindings){
 		var sql = sqlBuilder.build();
 		if(sql === undefined || sql.length<1)
 			throw Error("Illegal argument: sql from statement builder is invalid["+sql+"]");
 		this.$log.info('Executing SQL Statement: {}', sql);
 	 	
-	 	var parametricFields = sqlBuilder.parametricFields && sqlBuilder.parametricFields();
-	 	var parameterBindings;
-	 	if(entity && parametricFields && parametricFields.length>0){
-	 		parameterBindings= [];
-		 	for(var i=0; i<parametricFields.length; i++){
-		 		var val = entity ? entity[parametricFields[i].name] : undefined;
-	      		if((val=== null || val===undefined) && sqlBuilder.operation!==undefined && sqlBuilder.operation.toLowerCase()==='select'){
+	 	var parameters = sqlBuilder.parameters && sqlBuilder.parameters();
+	 	var _parameterBindings;
+	 	if(parameters && parameters.length>0){
+	 		_parameterBindings = [];
+		 	for(var i = 0; i< parameters.length; i++){
+		 		var val;
+		 		if(parameterBindings){
+		 			if(Array.isArray(parameterBindings)){
+		 				val = parameterBindings[i];
+		 			} else {
+		 				val = parameterBindings[parameters[i].name];
+		 			}
+		 		}
+	      		if((val=== null || val===undefined) && sql.toLowerCase().startsWith('select')){
 		 			continue;
 	 			}
 		 		var index = i+1;
 		 		this.$log.info('Binding to parameter[{}]: {}', index, val);
-		 		parameterBindings.push(val);
+		 		_parameterBindings.push({
+		 			"type": parameters[i].type,
+		 			"value": val
+		 		});
 		 	} 
 	 	}
 	 	
-	 	var result; 
-	
-	 	if(sql.startsWith('SELECT') || sql.startsWith('select')){
-	 		result = execQuery.execute(sql, parameterBindings, databaseType, dataSourceName);
+	 	var result;
+	 	
+	 	if(sql.toLowerCase().startsWith('select')){
+	 		result = execQuery.execute(sql, _parameterBindings, databaseType, dataSourceName);
 	 	} else {
-	 		result = execUpdate.execute(sql, parameterBindings, databaseType, dataSourceName);
+	 		result = execUpdate.execute(sql, _parameterBindings, databaseType, dataSourceName);
 	 	} 		
 	 	
 	 	return result !== null ? result : [];
@@ -739,7 +745,7 @@ DAO.prototype.createTable = function() {
     } 
 };
 
-DAO.prototype.dropTable = function() {
+DAO.prototype.dropTable = function(dropIdSequence) {
 	this.$log.info('Dropping table {}.', this.orm.table);
 	var parametericStatement = this.ormstatements.dropTable.apply(this.ormstatements);
     try {
@@ -750,14 +756,17 @@ DAO.prototype.dropTable = function() {
 		throw e;
     } 
     
-    this.$log.info('Dropping table {} sequence {}.', this.orm.table, this.sequenceName);
-   	try{
-   	   	this.dropIdGenerator();	
-    	this.$log.info('Table {} sequence {} dropped.', this.orm.table, this.sequenceName);   	   	
-   	} catch(e) {
-    	this.$log.error("Dropping table {} sequence {} failed.", e, this.orm.table, this.sequenceName);
-		throw e;
+    if(dropIdSequence){
+	    this.$log.info('Dropping table {} sequence {}.', this.orm.table, this.sequenceName);
+	   	try{
+	   	   	this.dropIdGenerator();	
+	    	this.$log.info('Table {} sequence {} dropped.', this.orm.table, this.sequenceName);   	   	
+	   	} catch(e) {
+	    	this.$log.error("Dropping table {} sequence {} failed.", e, this.orm.table, this.sequenceName);
+			throw e;
+	    }    	
     }
+
     return this;
 };
 
@@ -767,7 +776,6 @@ var toCamelCase = function(str){
 		return offset===0 ? p1 : p1.toUpperCase();
 	});
 };
-
 
 var fromTableDef = exports.ormFromTable = function(tableDef){
 	var orm = {};
@@ -787,7 +795,7 @@ var fromTableDef = exports.ormFromTable = function(tableDef){
 			}
 			return property;
 		});
-	};
+	}
 	return orm;
 };
 
