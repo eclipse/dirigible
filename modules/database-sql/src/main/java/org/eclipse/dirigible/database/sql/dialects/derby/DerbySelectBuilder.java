@@ -8,25 +8,29 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.dirigible.database.sql.dialects.sybase;
+package org.eclipse.dirigible.database.sql.dialects.derby;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 
-public class SybaseSelectBuilder extends SelectBuilder {
+public class DerbySelectBuilder extends SelectBuilder {
 
-	public SybaseSelectBuilder(ISqlDialect dialect) {
+	public DerbySelectBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
 	@Override
 	protected void generateLimitAndOffset(StringBuilder sql, int limit, int offset) {
-		if (limit > -1) {
-			sql.append(SPACE).append(KEYWORD_ROWS).append(SPACE).append(KEYWORD_LIMIT).append(SPACE).append(limit);
-		}
+
 		if (offset > -1) {
-			sql.append(SPACE).append(KEYWORD_OFFSET).append(SPACE).append(offset);
+			sql.append(SPACE).append(KEYWORD_OFFSET).append(SPACE).append(offset).append(SPACE).append(KEYWORD_ROWS);
 		}
+
+		if (limit > -1) {
+			sql.append(SPACE).append(KEYWORD_FETCH).append(SPACE).append(KEYWORD_NEXT).append(SPACE).append(limit).append(SPACE).append(KEYWORD_ROWS)
+					.append(SPACE).append(KEYWORD_ONLY);
+		}
+
 	}
 
 }

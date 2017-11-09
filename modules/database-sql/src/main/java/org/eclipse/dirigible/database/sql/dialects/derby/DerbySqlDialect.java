@@ -12,12 +12,11 @@ package org.eclipse.dirigible.database.sql.dialects.derby;
 
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 public class DerbySqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, DerbyCreateBranchingBuilder, DerbyDropBranchingBuilder, DerbyNextValueSequenceBuilder> {
+		DefaultSqlDialect<DerbySelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, DerbyCreateBranchingBuilder, DerbyDropBranchingBuilder, DerbyNextValueSequenceBuilder> {
 
 	@Override
 	public DerbyNextValueSequenceBuilder nextval(String sequence) {
@@ -32,6 +31,11 @@ public class DerbySqlDialect extends
 	@Override
 	public DerbyDropBranchingBuilder drop() {
 		return new DerbyDropBranchingBuilder(this);
+	}
+
+	@Override
+	public DerbySelectBuilder select() {
+		return new DerbySelectBuilder(this);
 	}
 
 }

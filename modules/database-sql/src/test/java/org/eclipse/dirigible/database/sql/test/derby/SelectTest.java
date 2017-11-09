@@ -247,7 +247,7 @@ public class SelectTest {
 			.build();
 
 		assertNotNull(sql);
-		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10", sql);
+		assertEquals("SELECT * FROM CUSTOMERS FETCH NEXT 10 ROWS ONLY", sql);
 	}
 	
 	@Test
@@ -261,7 +261,7 @@ public class SelectTest {
 			.build();
 		
 		assertNotNull(sql);
-		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10 OFFSET 20", sql);
+		assertEquals("SELECT * FROM CUSTOMERS OFFSET 20 ROWS FETCH NEXT 10 ROWS ONLY", sql);
 	}
 	
 	@Test

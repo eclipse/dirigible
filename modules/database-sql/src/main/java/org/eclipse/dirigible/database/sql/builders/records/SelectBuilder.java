@@ -207,10 +207,7 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		generateOrderBy(sql, orders);
 
 		// LIMIT
-		generateLimit(sql, limit);
-
-		// OFFSET
-		generateOffset(sql);
+		generateLimitAndOffset(sql, limit, offset);
 
 		// UNION
 		generateUnion(sql);
@@ -224,12 +221,6 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	protected void generateUnion(StringBuilder sql) {
 		if (!unions.isEmpty()) {
 			sql.append(SPACE).append(KEYWORD_UNION).append(SPACE).append(traverseUnions());
-		}
-	}
-
-	protected void generateOffset(StringBuilder sql) {
-		if (offset > -1) {
-			sql.append(SPACE).append(KEYWORD_OFFSET).append(SPACE).append(offset);
 		}
 	}
 
