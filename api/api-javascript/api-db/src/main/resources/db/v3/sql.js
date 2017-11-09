@@ -17,6 +17,16 @@ exports.getDialect = function(connection) {
 	 */
 	var Dialect = function() {
 		
+		var _parametricFields = [];
+		
+		var parametricFields = function(){
+			return _parametricFields;
+		};
+		
+		var build = function() {
+			return java.invoke(this.uuid, 'build', []);
+		};
+		
 		this.select = function() {
 			
 			/**
@@ -51,8 +61,20 @@ exports.getDialect = function(connection) {
 				this.join = function(table, on, alias) {
 					if (alias) {
 						java.invoke(this.uuid, 'join', [table, on, alias]);
+						if(arguments.length>3){
+							if(Array.isArray(arguments[3]))
+								_parametricFields = _parametricFields.concat([arguments[3]]);
+							else
+								_parametricFields.push(arguments[3]);
+						}
 					} else {
 						java.invoke(this.uuid, 'join', [table, on]);
+						if(arguments.length>2){
+							if(Array.isArray(arguments[2]))
+								_parametricFields = _parametricFields.concat([arguments[2]]);
+							else
+								_parametricFields.push(arguments[2]);
+						}
 					}
 					return this;
 				};
@@ -60,8 +82,20 @@ exports.getDialect = function(connection) {
 				this.innerJoin = function(table, on, alias) {
 					if (alias) {
 						java.invoke(this.uuid, 'innerJoin', [table, on, alias]);
+						if(arguments.length>3){
+							if(Array.isArray(arguments[3]))
+								_parametricFields = _parametricFields.concat(arguments[3]);
+							else
+								_parametricFields.push(arguments[3]);
+						}
 					} else {
 						java.invoke(this.uuid, 'innerJoin', [table, on]);
+						if(arguments.length>2){
+							if(Array.isArray(arguments[2]))
+								_parametricFields = _parametricFields.concat(arguments[2]);
+							else
+								_parametricFields.push(arguments[2]);
+						}
 					}
 					return this;
 				};
@@ -69,8 +103,20 @@ exports.getDialect = function(connection) {
 				this.outerJoin = function(table, on, alias) {
 					if (alias) {
 						java.invoke(this.uuid, 'outerJoin', [table, on, alias]);
+						if(arguments.length>3){
+							if(Array.isArray(arguments[3]))
+								_parametricFields = _parametricFields.concat(arguments[3]);
+							else
+								_parametricFields.push(arguments[3]);
+						}
 					} else {
 						java.invoke(this.uuid, 'outerJoin', [table, on]);
+						if(arguments.length>2){
+							if(Array.isArray(arguments[2]))
+								_parametricFields = _parametricFields.concat(arguments[2]);
+							else
+								_parametricFields.push(arguments[2]);
+						}
 					}
 					return this;
 				};
@@ -78,8 +124,20 @@ exports.getDialect = function(connection) {
 				this.leftJoin = function(table, on, alias) {
 					if (alias) {
 						java.invoke(this.uuid, 'leftJoin', [table, on, alias]);
+						if(arguments.length>3){
+							if(Array.isArray(arguments[3]))
+								_parametricFields = _parametricFields.concat(arguments[3]);
+							else
+								_parametricFields.push(arguments[3]);
+						}
 					} else {
 						java.invoke(this.uuid, 'leftJoin', [table, on]);
+						if(arguments.length>2){
+							if(Array.isArray(arguments[2]))
+								_parametricFields = _parametricFields.concat(arguments[2]);
+							else
+								_parametricFields.push(arguments[2]);
+						}
 					}
 					return this;
 				};
@@ -87,8 +145,20 @@ exports.getDialect = function(connection) {
 				this.rightJoin = function(table, on, alias) {
 					if (alias) {
 						java.invoke(this.uuid, 'rightJoin', [table, on, alias]);
+						if(arguments.length>3){
+							if(Array.isArray(arguments[3]))
+								_parametricFields = _parametricFields.concat(arguments[3]);
+							else
+								_parametricFields.push(arguments[3]);
+						}
 					} else {
 						java.invoke(this.uuid, 'rightJoin', [table, on]);
+						if(arguments.length>2){
+							if(Array.isArray(arguments[2]))
+								_parametricFields = _parametricFields.concat(arguments[2]);
+							else
+								_parametricFields.push(arguments[2]);
+						}
 					}
 					return this;
 				};
@@ -96,14 +166,32 @@ exports.getDialect = function(connection) {
 				this.fullJoin = function(table, on, alias) {
 					if (alias) {
 						java.invoke(this.uuid, 'fullJoin', [table, on, alias]);
+						if(arguments.length>3){
+							if(Array.isArray(arguments[3]))
+								_parametricFields = _parametricFields.concat(arguments[3]);
+							else
+								_parametricFields.push(arguments[3]);
+						}
 					} else {
 						java.invoke(this.uuid, 'fullJoin', [table, on]);
+						if(arguments.length>2){
+							if(Array.isArray(arguments[2]))
+								_parametricFields = _parametricFields.concat(arguments[2]);
+							else
+								_parametricFields.push(arguments[2]);
+						}
 					}
 					return this;
 				};
 				
 				this.where = function(condition) {
 					java.invoke(this.uuid, 'where', [condition]);
+					if(arguments.length>1){
+						if(Array.isArray(arguments[1]))
+							_parametricFields = _parametricFields.concat(arguments[1]);
+						else
+							_parametricFields.push(arguments[1]);
+					}
 					return this;
 				};
 				
@@ -141,12 +229,13 @@ exports.getDialect = function(connection) {
 					return this;
 				};
 
-				this.build = function() {
-					return java.invoke(this.uuid, 'build', []);
-				};
+				this.build = build.bind(this);
+
+				this.parametricFields = parametricFields.bind(this);
 
 			}
 			
+			_parametricFields = [];
 			var selectInstance = java.invoke(this.uuid, 'select', [], true);
 			var select = new Select();
 			select.uuid = selectInstance.uuid;
@@ -172,6 +261,12 @@ exports.getDialect = function(connection) {
 				
 				this.value = function(value) {
 					java.invoke(this.uuid, 'value', [value]);
+					if(arguments.length>1){
+						if(Array.isArray(arguments[1]))
+							_parametricFields = _parametricFields.concat(arguments[1]);
+						else
+							_parametricFields.push(arguments[1]);
+					}
 					return this;
 				};
 				
@@ -180,12 +275,13 @@ exports.getDialect = function(connection) {
 					return this;
 				};
 
-				this.build = function() {
-					return java.invoke(this.uuid, 'build', []);
-				};
+				this.build = build.bind(this);
+				
+				this.parametricFields = parametricFields.bind(this);
 
-			}
-			
+			};
+
+			_parametricFields = [];			
 			var insertInstance = java.invoke(this.uuid, 'insert', [], true);
 			var insert = new Insert();
 			insert.uuid = insertInstance.uuid;
@@ -206,20 +302,33 @@ exports.getDialect = function(connection) {
 				
 				this.set = function(column, value) {
 					java.invoke(this.uuid, 'set', [column, value]);
+					if(arguments.length>2){
+						if(Array.isArray(arguments[2]))
+							_parametricFields = _parametricFields.concat(arguments[2]);
+						else
+							_parametricFields.push(arguments[2]);
+					}
 					return this;
 				};
 				
 				this.where = function(condition) {
 					java.invoke(this.uuid, 'where', [condition]);
+					if(arguments.length>1){
+						if(Array.isArray(arguments[1]))
+							_parametricFields = _parametricFields.concat(arguments[1]);
+						else
+							_parametricFields.push(arguments[1]);
+					}
 					return this;
 				};
 				
-				this.build = function() {
-					return java.invoke(this.uuid, 'build', []);
-				};
+				this.build = build.bind(this);
+				
+				this.parametricFields = parametricFields.bind(this);
 
-			}
+			};
 			
+			_parametricFields = [];
 			var updateInstance = java.invoke(this.uuid, 'update', [], true);
 			var update = new Update();
 			update.uuid = updateInstance.uuid;
@@ -240,15 +349,22 @@ exports.getDialect = function(connection) {
 				
 				this.where = function(condition) {
 					java.invoke(this.uuid, 'where', [condition]);
+					if(arguments.length>1){
+						if(Array.isArray(arguments[1]))
+							_parametricFields = _parametricFields.concat(arguments[1]);
+						else
+							_parametricFields.push(arguments[1]);
+					}
 					return this;
 				};
 				
-				this.build = function() {
-					return java.invoke(this.uuid, 'build', []);
-				};
+				this.build = build.bind(this);
+				
+				this.parametricFields = parametricFields.bind(this);
 
 			}
 			
+			_parametricFields = [];			
 			var deleteInstance = java.invoke(this.uuid, 'delete', [], true);
 			var deleteRows = new Delete();
 			deleteRows.uuid = deleteInstance.uuid;
@@ -265,9 +381,7 @@ exports.getDialect = function(connection) {
 				
 				this.name = name;
 				
-				this.build = function() {
-					return java.invoke(this.uuid, 'build', []);
-				};
+				this.build = build.bind(this);
 
 			}
 			
@@ -637,9 +751,8 @@ exports.getDialect = function(connection) {
 							return this;
 						};
 						
-						this.build = function() {
-							return java.invoke(this.uuid, 'build', []);
-						};
+						this.build = build.bind(this);
+						
 					}
 					
 					var createTableInstance = java.invoke(this.uuid, 'table', [table], true);
@@ -664,11 +777,10 @@ exports.getDialect = function(connection) {
 							return this;
 						};
 						
-						this.build = function() {
-							return java.invoke(this.uuid, 'build', []);
-						};
+						this.build = build.bind(this);
 					}
 					
+					_parametricFields = [];
 					var createViewInstance = java.invoke(this.uuid, 'view', [view], true);
 					var createView = new CreateView();
 					createView.uuid = createViewInstance.uuid;
@@ -681,9 +793,7 @@ exports.getDialect = function(connection) {
 					 */
 					var CreateSequence = function() {
 						
-						this.build = function() {
-							return java.invoke(this.uuid, 'build', []);
-						};
+						this.build = build.bind(this);
 					}
 					
 					var createSequenceInstance = java.invoke(this.uuid, 'sequence', [sequence], true);
@@ -713,9 +823,7 @@ exports.getDialect = function(connection) {
 					 */
 					var DropTable = function() {
 						
-						this.build = function() {
-							return java.invoke(this.uuid, 'build', []);
-						};
+						this.build = build.bind(this);
 					}
 					
 					var dropTableInstance = java.invoke(this.uuid, 'table', [table], true);
@@ -730,9 +838,7 @@ exports.getDialect = function(connection) {
 					 */
 					var DropView = function() {
 						
-						this.build = function() {
-							return java.invoke(this.uuid, 'build', []);
-						};
+						this.build = build.bind(this);
 					}
 					
 					var dropViewInstance = java.invoke(this.uuid, 'view', [view], true);
@@ -747,9 +853,7 @@ exports.getDialect = function(connection) {
 					 */
 					var DropSequence = function() {
 						
-						this.build = function() {
-							return java.invoke(this.uuid, 'build', []);
-						};
+						this.build = build.bind(this);
 					}
 					
 					var dropSequenceInstance = java.invoke(this.uuid, 'sequence', [sequence], true);
@@ -760,13 +864,14 @@ exports.getDialect = function(connection) {
 				
 			}
 			
-			var createInstance = java.invoke(this.uuid, 'create', [], true);
-			var create = new Create();
-			create.uuid = createInstance.uuid;
-			return create;
+			var dropInstance = java.invoke(this.uuid, 'drop', [], true);
+			var drop = new Drop();
+			drop.uuid = dropInstance.uuid;
+			return drop;
 		};
 	}
 	
+	var dialectInstance;
 	if (connection) {
 		dialectInstance = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getNative', [connection.uuid], true);
 	} else {
@@ -776,8 +881,3 @@ exports.getDialect = function(connection) {
 	dialect.uuid = dialectInstance.uuid;
 	return dialect;
 };
-
-
-
-
-
