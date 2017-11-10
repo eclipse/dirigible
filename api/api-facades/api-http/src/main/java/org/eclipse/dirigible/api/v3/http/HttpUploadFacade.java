@@ -23,22 +23,19 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HttpUploadFacade.
+ * Java facade for working uploading files
  */
 public class HttpUploadFacade implements IScriptingFacade {
 
-	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Upload Facade without a valid Request";
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpUploadFacade.class);
 
 	/**
-	 * Checks if is multipart content.
+	 * Checks if the request contains multipart content.
 	 *
-	 * @return true, if is multipart content
+	 * @return true, if the request contains is multipart content
 	 */
 	public static final boolean isMultipartContent() {
 
@@ -53,8 +50,9 @@ public class HttpUploadFacade implements IScriptingFacade {
 	/**
 	 * Parses the request.
 	 *
-	 * @return the list
-	 * @throws FileUploadException the file upload exception
+	 * @return A list of FileItem instances parsed from the request, in the order that they were transmitted.
+	 * @throws FileUploadException
+	 *             if there is a problem parsing the request
 	 */
 	public static final List<FileItem> parseRequest() throws FileUploadException {
 		ServletFileUpload servletFileUpload = new ServletFileUpload(new DiskFileItemFactory());

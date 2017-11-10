@@ -46,22 +46,23 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HttpClientFacade.
+ * Java face for HTTP operations
  */
 public class HttpClientFacade implements IScriptingFacade {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientFacade.class);
 
 	/**
-	 * Gets the.
+	 * Performs a GET request for the specified URL and options
 	 *
-	 * @param url the url
-	 * @param options the options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
 	 */
 	public static final String get(String url, String options) throws IOException {
 
@@ -78,12 +79,15 @@ public class HttpClientFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Post.
+	 * Performs a POST request for the specified URL and options
 	 *
-	 * @param url the url
-	 * @param options the options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
 	 */
 	public static final String post(String url, String options) throws IOException {
 
@@ -100,14 +104,6 @@ public class HttpClientFacade implements IScriptingFacade {
 		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for POST requests");
 	}
 
-	/**
-	 * Post binary.
-	 *
-	 * @param url the url
-	 * @param httpClientRequestOptions the http client request options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
 	private static final String postBinary(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
@@ -125,14 +121,6 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
-	/**
-	 * Post text.
-	 *
-	 * @param url the url
-	 * @param httpClientRequestOptions the http client request options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
 	private static final String postText(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
 		if (httpClientRequestOptions.getText() == null) {
@@ -155,14 +143,6 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
-	/**
-	 * Post form.
-	 *
-	 * @param url the url
-	 * @param httpClientRequestOptions the http client request options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
 	private static final String postForm(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
 		if (httpClientRequestOptions.getParams() == null) {
@@ -187,14 +167,6 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
-	/**
-	 * Post files.
-	 *
-	 * @param url the url
-	 * @param httpClientRequestOptions the http client request options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
 	private static final String postFiles(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
 		if (httpClientRequestOptions.getParams() == null) {
@@ -221,12 +193,15 @@ public class HttpClientFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Put.
+	 * Performs a PUT request for the specified URL and options
 	 *
-	 * @param url the url
-	 * @param options the options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static final String put(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -242,14 +217,6 @@ public class HttpClientFacade implements IScriptingFacade {
 		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for POST requests");
 	}
 
-	/**
-	 * Put binary.
-	 *
-	 * @param url the url
-	 * @param httpClientRequestOptions the http client request options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
 	private static final String putBinary(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
 		RequestConfig config = prepareConfig(httpClientRequestOptions);
@@ -268,14 +235,6 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
-	/**
-	 * Put text.
-	 *
-	 * @param url the url
-	 * @param httpClientRequestOptions the http client request options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
 	private static final String putText(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
 
 		if (httpClientRequestOptions.getText() == null) {
@@ -299,12 +258,15 @@ public class HttpClientFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Delete.
+	 * Performs a DELETE request for the specified URL and options
 	 *
-	 * @param url the url
-	 * @param options the options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
 	 */
 	public static final String delete(String url, String options) throws IOException {
 
@@ -321,12 +283,15 @@ public class HttpClientFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Head.
+	 * Performs a HEAD request for the specified URL and options
 	 *
-	 * @param url the url
-	 * @param options the options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
 	 */
 	public static final String head(String url, String options) throws IOException {
 
@@ -343,12 +308,15 @@ public class HttpClientFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Trace.
+	 * Performs a TRACE request for the specified URL and options
 	 *
-	 * @param url the url
-	 * @param options the options
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
 	 */
 	public static final String trace(String url, String options) throws IOException {
 
@@ -364,23 +332,11 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
-	/**
-	 * Parses the options.
-	 *
-	 * @param options the options
-	 * @return the http client request options
-	 */
 	private static HttpClientRequestOptions parseOptions(String options) {
 		HttpClientRequestOptions httpClientRequestOptions = GsonHelper.GSON.fromJson(options, HttpClientRequestOptions.class);
 		return httpClientRequestOptions;
 	}
 
-	/**
-	 * Prepare config.
-	 *
-	 * @param httpClientRequestOptions the http client request options
-	 * @return the request config
-	 */
 	private static RequestConfig prepareConfig(HttpClientRequestOptions httpClientRequestOptions) {
 
 		RequestConfig.Builder configBuilder = RequestConfig.custom();
@@ -405,26 +361,12 @@ public class HttpClientFacade implements IScriptingFacade {
 		return config;
 	}
 
-	/**
-	 * Prepare headers.
-	 *
-	 * @param httpClientRequestOptions the http client request options
-	 * @param httpRequestBase the http request base
-	 */
 	private static void prepareHeaders(HttpClientRequestOptions httpClientRequestOptions, HttpRequestBase httpRequestBase) {
 		for (HttpClientHeader httpClientHeader : httpClientRequestOptions.getHeaders()) {
 			httpRequestBase.setHeader(httpClientHeader.getName(), httpClientHeader.getValue());
 		}
 	}
 
-	/**
-	 * Process response.
-	 *
-	 * @param response the response
-	 * @param binary the binary
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
 	private static String processResponse(CloseableHttpResponse response, boolean binary) throws IOException {
 		try {
 			HttpClientResponse httpClientResponse = new HttpClientResponse();
