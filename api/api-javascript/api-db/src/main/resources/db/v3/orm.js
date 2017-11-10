@@ -11,6 +11,35 @@
 /* eslint-env node, dirigible */
 "use strict";
 
+/**
+ * Supported ORM schema:
+ * {
+ *	 name: <string>,
+ *   table: <string>,
+ *   properties: [{
+ *	   name: <string>,
+ *	   column: <string>,
+ *	   id: <boolean>,
+ *	   required: <boolean>, 
+ *	   unique: <boolean>, 
+ *	   dbValue: <function>, 
+ *	   value: <function>, 
+ *	   allowedOps: <Array['insert','update']>
+ *   }],
+ * 	 associations: [{
+ *	   name: <string>,
+ *     joinKey: <string>,
+ *     key: <string>,
+ *     type: <ORM.ASSOCIATION_TYPES>,
+ *     targetDao: <function|DAO>,
+ *     joinDao: <function|DAO>,
+ *     defaults: <Object>,
+ *   }]
+ * }
+ * 
+ * 
+ */
+
 var ORM = exports.ORM = function(orm){
 	this.orm = orm;
 	for(var i in orm){
@@ -141,10 +170,10 @@ ORM.prototype.validate = function(){
 			throw new Error('Illegal configuration: invalid property column['+property.column+']');
 		if(property.allowedOps){
 			if(property.allowedOps.constructor !== Array)
-				throw new Error("Illegal configuration: Association " + property.name + " property allowedOps is expected ot be Array. Instead, it was "+(typeof property.allowedOps));		
+				throw new Error("Illegal configuration: property[" + property.name + "]  allowedOps is expected ot be Array. Instead, it was "+(typeof property.allowedOps));		
 			for(var j=0; j<property.allowedOps.length; j++){
 				if(['insert', 'update'].indexOf(property.allowedOps[j])<0)
-					throw new Error("Illegal configuration: Association " + property.name + " property allowedOps["+property.allowedOps+"] must be an array containing some or all of the following values: ['insert','update']");			
+					throw new Error("Illegal configuration: property[" + property.name + "] allowedOps["+property.allowedOps+"] must be an array containing some or all of the following values: ['insert','update']");			
 			}
 		}
 	}
@@ -169,6 +198,63 @@ ORM.prototype.validate = function(){
 			} 
 		}
 	}		
+};
+
+ORM.prototype.toColumn = function(ormProperty){
+	var column;
+	if(ormProperty){
+		column = {
+			name: ormProperty.column,
+			type: ormProperty.type,
+			length: String(ormProperty.length),
+			primaryKey: String(ormProperty.id===undefined?false:ormProperty.id),
+			nullable: String(!ormProperty.required),
+			defaultValue: ormProperty.defaultValue
+		};
+	}
+	return column;
+};
+
+ORM.prototype.toTable = function(){
+	var table = {
+		"name": this.table,
+		"type": "TABLE",
+	};
+
+	var uniqueIndices = [];
+	var primaryKeys = [];	
+	if(this.properties){
+		table["columns"] = [];
+		this.properties.forEach(function(property){
+			var column = this.toColumn(property);
+			if(property.unique)
+				uniqueIndices.push({
+					"columns": column.name
+				});
+			if(property.id)
+				primaryKeys.push({
+					"columns": column.name
+				});
+			//TODO : analyze associations to add FKs if possible
+			table.columns.push(column);
+		});
+	}
+	
+	if(primaryKeys.length > 1 || uniqueIndices.length > 0 ) {
+		table["constraints"] = {};
+	}
+	
+	if(primaryKeys.length > 1){
+		table.columns = table.columns.map(function(column){
+			column.primaryKey = "false";
+			return column;
+		});
+		table.constraints["primarKeys"] = primaryKeys;
+	}
+	if(uniqueIndices.length>0)
+		table.constraints["uniqueIndices"] = uniqueIndices;
+
+	return table;	
 };
 
 exports.get = function(orm){
