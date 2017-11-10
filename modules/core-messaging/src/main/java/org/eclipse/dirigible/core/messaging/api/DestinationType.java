@@ -10,14 +10,14 @@
 
 package org.eclipse.dirigible.core.messaging.api;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum DestinationType.
  */
 public enum DestinationType {
-	
+
 	/** The queue. */
-	QUEUE, 
- /** The topic. */
- TOPIC
+	QUEUE,
+
+	/** The topic. */
+	TOPIC
 }

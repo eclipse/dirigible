@@ -30,37 +30,30 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessagingConsumer.
  */
 public class MessagingConsumer implements Runnable, ExceptionListener {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MessagingConsumer.class);
 
-	/** The name. */
 	private String name;
-	
-	/** The type. */
 	private DestinationType type;
-	
-	/** The handler. */
 	private String handler;
-	
-	/** The timeout. */
 	private int timeout = 1000;
-
-	/** The stopped. */
 	private boolean stopped;
 
 	/**
 	 * Instantiates a new messaging consumer.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param handler the handler
-	 * @param timeout the timeout
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param handler
+	 *            the handler
+	 * @param timeout
+	 *            the timeout
 	 */
 	public MessagingConsumer(String name, DestinationType type, String handler, int timeout) {
 		this.name = name;
@@ -72,9 +65,12 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	/**
 	 * Instantiates a new messaging consumer.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param timeout the timeout
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param timeout
+	 *            the timeout
 	 */
 	public MessagingConsumer(String name, DestinationType type, int timeout) {
 		this.name = name;
@@ -83,13 +79,14 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	}
 
 	/**
-	 * Stop.
+	 * Stops to recieve messages.
 	 */
 	public void stop() {
 		this.stopped = true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
@@ -167,7 +164,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.jms.ExceptionListener#onException(javax.jms.JMSException)
 	 */
 	@Override
@@ -184,7 +182,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	/**
 	 * Generate wrapper on message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 * @return the string
 	 */
 	private String generateWrapperOnMessage(String message) {
@@ -196,7 +195,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	/**
 	 * Generate wrapper on error.
 	 *
-	 * @param error the error
+	 * @param error
+	 *            the error
 	 * @return the string
 	 */
 	private String generateWrapperOnError(String error) {
@@ -208,7 +208,8 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	/**
 	 * Escape code string.
 	 *
-	 * @param raw the raw
+	 * @param raw
+	 *            the raw
 	 * @return the string
 	 */
 	private String escapeCodeString(String raw) {

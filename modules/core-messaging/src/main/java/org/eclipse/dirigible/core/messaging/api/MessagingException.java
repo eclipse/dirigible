@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.core.messaging.api;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessagingException.
  */
 public class MessagingException extends Exception {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**
@@ -29,10 +27,14 @@ public class MessagingException extends Exception {
 	/**
 	 * Instantiates a new messaging exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param enableSuppression
+	 *            the enable suppression
+	 * @param writableStackTrace
+	 *            the writable stack trace
 	 */
 	public MessagingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
@@ -41,8 +43,10 @@ public class MessagingException extends Exception {
 	/**
 	 * Instantiates a new messaging exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public MessagingException(String message, Throwable cause) {
 		super(message, cause);
@@ -51,7 +55,8 @@ public class MessagingException extends Exception {
 	/**
 	 * Instantiates a new messaging exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public MessagingException(String message) {
 		super(message);
@@ -60,7 +65,8 @@ public class MessagingException extends Exception {
 	/**
 	 * Instantiates a new messaging exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public MessagingException(Throwable cause) {
 		super(cause);

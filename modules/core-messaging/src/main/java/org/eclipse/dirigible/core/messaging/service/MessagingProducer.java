@@ -25,30 +25,26 @@ import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessagingProducer.
  */
 public class MessagingProducer implements Runnable {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MessagingProducer.class);
 
-	/** The name. */
 	private String name;
-	
-	/** The type. */
 	private DestinationType type;
-	
-	/** The message. */
 	private String message;
 
 	/**
 	 * Instantiates a new messaging producer.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param message the message
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param message
+	 *            the message
 	 */
 	public MessagingProducer(String name, DestinationType type, String message) {
 		this.name = name;
@@ -56,7 +52,8 @@ public class MessagingProducer implements Runnable {
 		this.message = message;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override

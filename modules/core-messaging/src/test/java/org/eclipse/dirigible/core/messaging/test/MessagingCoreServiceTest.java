@@ -18,8 +18,8 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.DestinationType;
+import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.core.messaging.service.MessagingCoreService;
@@ -27,20 +27,19 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessagingCoreServiceTest.
  */
 public class MessagingCoreServiceTest extends AbstractGuiceTest {
 
-	/** The messaging core service. */
 	@Inject
 	private IMessagingCoreService messagingCoreService;
 
 	/**
 	 * Sets the up.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -50,7 +49,8 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	/**
 	 * Creates the listener test.
 	 *
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	@Test
 	public void createListenerTest() throws MessagingException {
@@ -65,8 +65,8 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	/**
 	 * Gets the listener test.
 	 *
-	 * @return the listener test
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	@Test
 	public void getListenerTest() throws MessagingException {
@@ -81,7 +81,8 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	/**
 	 * Updatet listener test.
 	 *
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	@Test
 	public void updatetListenerTest() throws MessagingException {
@@ -100,7 +101,8 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	/**
 	 * Removes the listener test.
 	 *
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	@Test
 	public void removeListenerTest() throws MessagingException {
@@ -117,7 +119,8 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	/**
 	 * Parses the listener test.
 	 *
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	@Test
 	public void parseListenerTest() throws MessagingException {
