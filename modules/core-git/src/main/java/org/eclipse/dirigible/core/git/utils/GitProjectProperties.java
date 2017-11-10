@@ -18,38 +18,38 @@ import java.util.Properties;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GitProjectProperties.
+ * The Git project properties manager.
  */
 public class GitProjectProperties {
-	
-	/** The git properties. */
+
 	private final Properties gitProperties;
-	
+
 	/** The Constant PROJECT_GIT_PROPERTY. */
 	public static final String PROJECT_GIT_PROPERTY = "git.property";
-	
+
 	/** The Constant PROPERTY_LAST_COMMIT_SHA. */
 	public static final String PROPERTY_LAST_COMMIT_SHA = "last.commit.sha";
-	
+
 	/** The Constant PROPERTY_GIT_REPOSITORY_URL. */
 	public static final String PROPERTY_GIT_REPOSITORY_URL = "git.repository.url";
-	
+
 	/** The Constant PATTERN_USERS_GIT_REPOSITORY. */
 	public static final String PATTERN_USERS_GIT_REPOSITORY = IRepositoryStructure.PATH_ROOT + "git/%s/%s/%s"; // /git/john/workspace1/
-	
+
 	/** The Constant PATTERN_USERS_WORKSPACE. */
 	public static final String PATTERN_USERS_WORKSPACE = IRepositoryStructure.PATH_USERS + "/%s/%s/"; // /users/john/workspace1
-	
+
 	/** The Constant GIT_PROPERTY_FILE_LOCATION. */
 	public static final String GIT_PROPERTY_FILE_LOCATION = PATTERN_USERS_GIT_REPOSITORY + IRepositoryStructure.SEPARATOR + PROJECT_GIT_PROPERTY;
 
 	/**
 	 * Instantiates a new git project properties.
 	 *
-	 * @param URL the url
-	 * @param SHA the sha
+	 * @param URL
+	 *            the url
+	 * @param SHA
+	 *            the sha
 	 */
 	public GitProjectProperties(String URL, String SHA) {
 		gitProperties = new Properties();
@@ -60,8 +60,10 @@ public class GitProjectProperties {
 	/**
 	 * Instantiates a new git project properties.
 	 *
-	 * @param in the in
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param in
+	 *            the in
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public GitProjectProperties(InputStream in) throws IOException {
 		gitProperties = new Properties();
@@ -71,8 +73,10 @@ public class GitProjectProperties {
 	/**
 	 * Load.
 	 *
-	 * @param in the in
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param in
+	 *            the in
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void load(InputStream in) throws IOException {
 		gitProperties.load(in);
@@ -99,7 +103,8 @@ public class GitProjectProperties {
 	/**
 	 * Sets the SHA.
 	 *
-	 * @param SHA the sha
+	 * @param SHA
+	 *            the sha
 	 * @return the git project properties
 	 */
 	public GitProjectProperties setSHA(String SHA) {
@@ -110,7 +115,8 @@ public class GitProjectProperties {
 	/**
 	 * Sets the URL.
 	 *
-	 * @param URL the url
+	 * @param URL
+	 *            the url
 	 * @return the git project properties
 	 */
 	public GitProjectProperties setURL(String URL) {
@@ -118,7 +124,8 @@ public class GitProjectProperties {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -141,8 +148,10 @@ public class GitProjectProperties {
 	/**
 	 * Generate workspace path.
 	 *
-	 * @param workspace the workspace
-	 * @param dirigibleUser the dirigible user
+	 * @param workspace
+	 *            the workspace
+	 * @param dirigibleUser
+	 *            the dirigible user
 	 * @return the string
 	 */
 	public static String generateWorkspacePath(final IWorkspace workspace, String dirigibleUser) {

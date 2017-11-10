@@ -20,9 +20,8 @@ import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class UpdateDependenciesCommand.
+ * Update project's dependencies.
  */
 public class UpdateDependenciesCommand extends CloneCommand {
 
@@ -30,13 +29,18 @@ public class UpdateDependenciesCommand extends CloneCommand {
 	private static final Logger logger = LoggerFactory.getLogger(UpdateDependenciesCommand.class);
 
 	/**
-	 * Execute.
+	 * Execute Update Dependencies Command.
 	 *
-	 * @param workspace the workspace
-	 * @param projects the projects
-	 * @param username the username
-	 * @param password the password
-	 * @param publishAfterClone the publish after clone
+	 * @param workspace
+	 *            the workspace
+	 * @param projects
+	 *            the projects
+	 * @param username
+	 *            the username
+	 * @param password
+	 *            the password
+	 * @param publishAfterClone
+	 *            the publish after clone
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, String username, String password, boolean publishAfterClone) {
 		for (IProject selectedProject : projects) {

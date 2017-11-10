@@ -36,25 +36,19 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * Pull project(s) from a Git repository and optionally publish it.
  */
 public class PullCommand {
 
-	/** The Constant CHANGES_BRANCH. */
 	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
-	
-	/** The Constant SLASH. */
+
 	private static final String SLASH = "/"; //$NON-NLS-1$
-	
-	/** The Constant DOT_GIT. */
+
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
-	
-	/** The Constant MASTER. */
+
 	private static final String MASTER = "master"; //$NON-NLS-1$
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PullCommand.class);
 
 	/** The publisher core service. */
@@ -74,11 +68,14 @@ public class PullCommand {
 	private GitFileUtils gitFileUtils;
 
 	/**
-	 * Execute.
+	 * Execute a Pull command.
 	 *
-	 * @param workspace the workspace
-	 * @param projects the projects
-	 * @param publishAfterPull the publish after pull
+	 * @param workspace
+	 *            the workspace
+	 * @param projects
+	 *            the projects
+	 * @param publishAfterPull
+	 *            the publish after pull
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, boolean publishAfterPull) {
 		if (projects.length == 0) {
@@ -106,10 +103,12 @@ public class PullCommand {
 	}
 
 	/**
-	 * Pull project from git repository.
+	 * Pull project from git repository by executing several low level Git commands.
 	 *
-	 * @param workspace the workspace
-	 * @param selectedProject the selected project
+	 * @param workspace
+	 *            the workspace
+	 * @param selectedProject
+	 *            the selected project
 	 * @return true, if successful
 	 */
 	boolean pullProjectFromGitRepository(final IWorkspace workspace, final IProject selectedProject) {
@@ -238,8 +237,10 @@ public class PullCommand {
 	/**
 	 * Publish projects.
 	 *
-	 * @param workspace the workspace
-	 * @param pulledProjects the pulled projects
+	 * @param workspace
+	 *            the workspace
+	 * @param pulledProjects
+	 *            the pulled projects
 	 */
 	protected void publishProjects(IWorkspace workspace, List<IProject> pulledProjects) {
 		if (pulledProjects.size() > 0) {

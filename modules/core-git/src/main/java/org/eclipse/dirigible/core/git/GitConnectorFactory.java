@@ -28,12 +28,11 @@ import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.util.StringUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating GitConnector objects.
  */
 public class GitConnectorFactory {
-	
+
 	/**
 	 * Gets org.eclipse.jgit.lib.Repository object for existing Git Repository.
 	 *
@@ -75,7 +74,7 @@ public class GitConnectorFactory {
 	public static IGitConnector cloneRepository(String repositoryDirectory, String repositoryUri, String username, String password, String branch)
 			throws InvalidRemoteException, TransportException, GitAPIException {
 		try {
-			
+
 			CloneCommand cloneCommand = Git.cloneRepository();
 			cloneCommand.setURI(repositoryUri);
 			if (!StringUtils.isEmptyOrNull(username) && !StringUtils.isEmptyOrNull(password)) {
@@ -84,11 +83,11 @@ public class GitConnectorFactory {
 			cloneCommand.setBranch(branch);
 			cloneCommand.setDirectory(new File(repositoryDirectory));
 			cloneCommand.call();
-			
+
 			return getRepository(repositoryDirectory);
 		} catch (Exception e) {
 			throw new TransportException(e.getMessage());
 		}
 	}
-	
+
 }

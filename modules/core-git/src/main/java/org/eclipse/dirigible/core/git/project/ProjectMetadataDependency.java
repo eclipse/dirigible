@@ -10,22 +10,17 @@
 
 package org.eclipse.dirigible.core.git.project;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ProjectMetadataDependency.
+ * The ProjectMetadataDependency serialization object.
  */
 public class ProjectMetadataDependency {
 
-	/** The guid. */
 	private String guid;
 
-	/** The type. */
 	private String type;
 
-	/** The url. */
 	private String url;
 
-	/** The branch. */
 	private String branch;
 
 	/**
@@ -40,7 +35,8 @@ public class ProjectMetadataDependency {
 	/**
 	 * Sets the guid.
 	 *
-	 * @param guid the new guid
+	 * @param guid
+	 *            the new guid
 	 */
 	public void setGuid(String guid) {
 		this.guid = guid;
@@ -58,7 +54,8 @@ public class ProjectMetadataDependency {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type the new type
+	 * @param type
+	 *            the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -76,7 +73,8 @@ public class ProjectMetadataDependency {
 	/**
 	 * Sets the url.
 	 *
-	 * @param url the new url
+	 * @param url
+	 *            the new url
 	 */
 	public void setUrl(String url) {
 		this.url = url;
@@ -94,7 +92,8 @@ public class ProjectMetadataDependency {
 	/**
 	 * Sets the branch.
 	 *
-	 * @param branch the new branch
+	 * @param branch
+	 *            the new branch
 	 */
 	public void setBranch(String branch) {
 		this.branch = branch;

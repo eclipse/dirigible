@@ -10,37 +10,27 @@
 
 package org.eclipse.dirigible.core.git.project;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ProjectMetadata.
+ * The ProjectMetadata representation of the project.json file.
  */
 public class ProjectMetadata {
 
-	/** The Constant PROJECT_METADATA_FILE_NAME. */
 	public static final String PROJECT_METADATA_FILE_NAME = "project.json"; //$NON-NLS-1$
 
-	/** The guid. */
 	private String guid;
 
-	/** The name. */
 	private String name;
 
-	/** The component. */
 	private String component;
 
-	/** The description. */
 	private String description;
 
-	/** The author. */
 	private String author;
 
-	/** The licenses. */
 	private ProjectMetadataLicense[] licenses;
 
-	/** The repository. */
 	private ProjectMetadataRepository repository;
 
-	/** The dependencies. */
 	private ProjectMetadataDependency[] dependencies;
 
 	/**
@@ -55,7 +45,8 @@ public class ProjectMetadata {
 	/**
 	 * Sets the guid.
 	 *
-	 * @param guid the new guid
+	 * @param guid
+	 *            the new guid
 	 */
 	public void setGuid(String guid) {
 		this.guid = guid;
@@ -73,7 +64,8 @@ public class ProjectMetadata {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -91,7 +83,8 @@ public class ProjectMetadata {
 	/**
 	 * Sets the component.
 	 *
-	 * @param component the new component
+	 * @param component
+	 *            the new component
 	 */
 	public void setComponent(String component) {
 		this.component = component;
@@ -109,7 +102,8 @@ public class ProjectMetadata {
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -127,7 +121,8 @@ public class ProjectMetadata {
 	/**
 	 * Sets the author.
 	 *
-	 * @param author the new author
+	 * @param author
+	 *            the new author
 	 */
 	public void setAuthor(String author) {
 		this.author = author;
@@ -145,7 +140,8 @@ public class ProjectMetadata {
 	/**
 	 * Sets the licenses.
 	 *
-	 * @param licenses the new licenses
+	 * @param licenses
+	 *            the new licenses
 	 */
 	public void setLicenses(ProjectMetadataLicense[] licenses) {
 		this.licenses = licenses;
@@ -163,7 +159,8 @@ public class ProjectMetadata {
 	/**
 	 * Sets the repository.
 	 *
-	 * @param repository the new repository
+	 * @param repository
+	 *            the new repository
 	 */
 	public void setRepository(ProjectMetadataRepository repository) {
 		this.repository = repository;
@@ -181,7 +178,8 @@ public class ProjectMetadata {
 	/**
 	 * Sets the dependencies.
 	 *
-	 * @param dependencies the new dependencies
+	 * @param dependencies
+	 *            the new dependencies
 	 */
 	public void setDependencies(ProjectMetadataDependency[] dependencies) {
 		this.dependencies = dependencies;

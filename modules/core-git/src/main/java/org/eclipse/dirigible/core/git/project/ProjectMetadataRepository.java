@@ -10,22 +10,17 @@
 
 package org.eclipse.dirigible.core.git.project;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ProjectMetadataRepository.
+ * The ProjectMetadataRepository serialization object.
  */
 public class ProjectMetadataRepository {
 
-	/** The Constant GIT. */
 	public static final String GIT = "git";
 
-	/** The type. */
 	private String type;
 
-	/** The branch. */
 	private String branch;
 
-	/** The url. */
 	private String url;
 
 	/**
@@ -40,7 +35,8 @@ public class ProjectMetadataRepository {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type the new type
+	 * @param type
+	 *            the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -58,7 +54,8 @@ public class ProjectMetadataRepository {
 	/**
 	 * Sets the branch.
 	 *
-	 * @param branch the new branch
+	 * @param branch
+	 *            the new branch
 	 */
 	public void setBranch(String branch) {
 		this.branch = branch;
@@ -76,7 +73,8 @@ public class ProjectMetadataRepository {
 	/**
 	 * Sets the url.
 	 *
-	 * @param url the new url
+	 * @param url
+	 *            the new url
 	 */
 	public void setUrl(String url) {
 		this.url = url;

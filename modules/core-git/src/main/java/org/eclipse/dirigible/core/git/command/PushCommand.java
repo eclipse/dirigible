@@ -31,22 +31,17 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * Push the changes of a project from the local repository to remote Git repository.
  */
 public class PushCommand {
 
-	/** The Constant CHANGES_BRANCH. */
 	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
-	
-	/** The Constant DOT_GIT. */
+
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
-	
-	/** The Constant MASTER. */
+
 	private static final String MASTER = "master"; //$NON-NLS-1$
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PushCommand.class);
 
 	/** The project metadata manager. */
@@ -62,14 +57,20 @@ public class PushCommand {
 	private GitFileUtils gitFileUtils;
 
 	/**
-	 * Execute.
+	 * Execute the Push command.
 	 *
-	 * @param workspace the workspace
-	 * @param projects the projects
-	 * @param commitMessage the commit message
-	 * @param username the username
-	 * @param password the password
-	 * @param email the email
+	 * @param workspace
+	 *            the workspace
+	 * @param projects
+	 *            the projects
+	 * @param commitMessage
+	 *            the commit message
+	 * @param username
+	 *            the username
+	 * @param password
+	 *            the password
+	 * @param email
+	 *            the email
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, final String commitMessage, final String username,
 			final String password, final String email) {
@@ -90,14 +91,20 @@ public class PushCommand {
 	}
 
 	/**
-	 * Push project to git repository.
+	 * Push project to git repository by executing several low level Git commands.
 	 *
-	 * @param workspace the workspace
-	 * @param selectedProject the selected project
-	 * @param commitMessage the commit message
-	 * @param username the username
-	 * @param password the password
-	 * @param email the email
+	 * @param workspace
+	 *            the workspace
+	 * @param selectedProject
+	 *            the selected project
+	 * @param commitMessage
+	 *            the commit message
+	 * @param username
+	 *            the username
+	 * @param password
+	 *            the password
+	 * @param email
+	 *            the email
 	 */
 	private void pushProjectToGitRepository(final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
 			final String username, final String password, final String email) {
