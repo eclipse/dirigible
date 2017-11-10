@@ -10,23 +10,21 @@
 
 package org.eclipse.dirigible.api.v3.http.client;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HttpClientParam.
+ * Represents an HTTP param
  */
 public class HttpClientParam {
 
-	/** The name. */
 	private String name;
-
-	/** The value. */
 	private String value;
 
 	/**
 	 * Instantiates a new http client param.
 	 *
-	 * @param name the name
-	 * @param value the value
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
 	 */
 	public HttpClientParam(String name, String value) {
 		super();
@@ -35,7 +33,7 @@ public class HttpClientParam {
 	}
 
 	/**
-	 * Gets the name.
+	 * Returns the name.
 	 *
 	 * @return the name
 	 */
@@ -46,14 +44,15 @@ public class HttpClientParam {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Gets the value.
+	 * Returns the value.
 	 *
 	 * @return the value
 	 */
@@ -64,7 +63,8 @@ public class HttpClientParam {
 	/**
 	 * Sets the value.
 	 *
-	 * @param value the new value
+	 * @param value
+	 *            the new value
 	 */
 	public void setValue(String value) {
 		this.value = value;

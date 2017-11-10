@@ -25,20 +25,17 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HttpResponseFacade.
+ * Java facade for working HttpServletResponse
  */
 public class HttpResponseFacade implements IScriptingFacade {
 
-	/** The Constant NO_VALID_RESPONSE. */
 	private static final String NO_VALID_RESPONSE = "Trying to use HTTP Response Facade without a valid Response";
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpResponseFacade.class);
 
 	/**
-	 * Gets the response.
+	 * Returns the HttpServletResponse associated with the current thread context
 	 *
 	 * @return the response
 	 */
@@ -55,9 +52,9 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if is valid.
+	 * Checks if there is a HttpServletResponse associated with the current thread context
 	 *
-	 * @return true, if is valid
+	 * @return true, if there is a HttpServletResponse associated with the current thread context
 	 */
 	public static final boolean isValid() {
 		HttpServletResponse response = getResponse();
@@ -65,9 +62,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the.
+	 * Prints the text
 	 *
-	 * @param text the text
+	 * @param text
+	 *            the text
 	 */
 	public static final void print(String text) {
 		HttpServletResponse response = getResponse();
@@ -82,9 +80,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the.
+	 * Prints the object as text
 	 *
-	 * @param o the o
+	 * @param o
+	 *            the object to be printed
 	 */
 	public static final void print(Object o) {
 		if (o != null) {
@@ -93,45 +92,50 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the.
+	 * Prints the int primitive as text
 	 *
-	 * @param i the i
+	 * @param i
+	 *            the integer to be printed
 	 */
 	public static final void print(int i) {
 		print(i + "");
 	}
 
 	/**
-	 * Prints the.
+	 * Prints the double primitev as text
 	 *
-	 * @param d the d
+	 * @param d
+	 *            the double to be printed
 	 */
 	public static final void print(double d) {
 		print(d + "");
 	}
 
 	/**
-	 * Prints the.
+	 * Prints the integer as text
 	 *
-	 * @param i the i
+	 * @param i
+	 *            the integer to be printed
 	 */
 	public static final void print(Integer i) {
 		print(i + "");
 	}
 
 	/**
-	 * Prints the.
+	 * Prints the double as text
 	 *
-	 * @param d the d
+	 * @param d
+	 *            the double to be printed
 	 */
 	public static final void print(Double d) {
 		print(d + "");
 	}
 
 	/**
-	 * Println.
+	 * Prints the text with a carriage return
 	 *
-	 * @param text the text
+	 * @param text
+	 *            the text
 	 */
 	public static final void println(String text) {
 		HttpServletResponse response = getResponse();
@@ -146,9 +150,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Println.
+	 * Prints the object as text with a carriage return
 	 *
-	 * @param o the o
+	 * @param o
+	 *            the object
 	 */
 	public static final void println(Object o) {
 		if (o != null) {
@@ -157,45 +162,50 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Println.
+	 * Prints the int primitive as text with a carriage return
 	 *
-	 * @param i the i
+	 * @param i
+	 *            the int primitive
 	 */
 	public static final void println(int i) {
 		println(i + "");
 	}
 
 	/**
-	 * Println.
+	 * Prints the double primitive as text with a carriage return
 	 *
-	 * @param d the d
+	 * @param d
+	 *            the double primitive
 	 */
 	public static final void println(double d) {
 		println(d + "");
 	}
 
 	/**
-	 * Println.
+	 * Prints the Integer as text with a carriage return
 	 *
-	 * @param i the i
+	 * @param i
+	 *            the integer
 	 */
 	public static final void println(Integer i) {
 		println(i + "");
 	}
 
 	/**
-	 * Println.
+	 * Prints the Double as text with a carriage return
 	 *
-	 * @param d the d
+	 * @param d
+	 *            the double
 	 */
 	public static final void println(Double d) {
 		println(d + "");
 	}
 
 	/**
-	 * Write.
+	 * Writes the bytes to the output stream
 	 *
-	 * @param bytes the bytes
+	 * @param bytes
+	 *            the bytes
 	 */
 	public static final void write(byte[] bytes) {
 		HttpServletResponse response = getResponse();
@@ -210,9 +220,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Write.
+	 * Writes the string bytes to the output stream
 	 *
-	 * @param input the input
+	 * @param input
+	 *            the input
 	 */
 	public static final void write(String input) {
 		HttpServletResponse response = getResponse();
@@ -228,7 +239,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if is committed.
+	 * Checks if the response is committed.
 	 *
 	 * @return true, if is committed
 	 */
@@ -243,7 +254,8 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the content type.
 	 *
-	 * @param contentType the new content type
+	 * @param contentType
+	 *            the new content type
 	 */
 	public static final void setContentType(String contentType) {
 		HttpServletResponse response = getResponse();
@@ -254,7 +266,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Flush.
+	 * Flushes the response
 	 */
 	public static final void flush() {
 		HttpServletResponse response = getResponse();
@@ -269,7 +281,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Close.
+	 * Closes the response output stream
 	 */
 	public static final void close() {
 		HttpServletResponse response = getResponse();
@@ -284,9 +296,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Adds the cookie.
+	 * Adds a cookie
 	 *
-	 * @param cookieJson the cookie json
+	 * @param cookieJson
+	 *            the cookie in JSON format
 	 */
 	public static final void addCookie(String cookieJson) {
 		HttpServletResponse response = getResponse();
@@ -298,10 +311,11 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Contains header.
+	 * Checks if the response contains a header with the specified name
 	 *
-	 * @param name the name
-	 * @return true, if successful
+	 * @param name
+	 *            the name
+	 * @return true, if the header has already been added
 	 */
 	public static final boolean containsHeader(String name) {
 		HttpServletResponse response = getResponse();
@@ -312,10 +326,11 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Encode URL.
+	 * Encodes the specified URL
 	 *
-	 * @param url the url
-	 * @return the string
+	 * @param url
+	 *            the url
+	 * @return the URL encoded
 	 */
 	public static final String encodeURL(String url) {
 		HttpServletResponse response = getResponse();
@@ -326,7 +341,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the character encoding.
+	 * Returns the character encoding.
 	 *
 	 * @return the character encoding
 	 */
@@ -341,7 +356,8 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Encode redirect URL.
 	 *
-	 * @param url the url
+	 * @param url
+	 *            the url
 	 * @return the string
 	 */
 	public static final String encodeRedirectURL(String url) {
@@ -353,7 +369,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the content type.
+	 * Returns the content type.
 	 *
 	 * @return the content type
 	 */
@@ -366,11 +382,14 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Send error.
+	 * Sends and error.
 	 *
-	 * @param sc the sc
-	 * @param msg the msg
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param sc
+	 *            the sc
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static final void sendError(int sc, String msg) throws IOException {
 		HttpServletResponse response = getResponse();
@@ -381,21 +400,26 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Send error.
+	 * Sends error.
 	 *
-	 * @param sc the sc
-	 * @param msg the msg
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param sc
+	 *            the sc
+	 * @param msg
+	 *            the msg
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static final void sendError(Double sc, String msg) throws IOException {
 		sendError(sc.intValue(), msg);
 	}
 
 	/**
-	 * Send error.
+	 * Sends error.
 	 *
-	 * @param sc the sc
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param sc
+	 *            the sc
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static final void sendError(int sc) throws IOException {
 		HttpServletResponse response = getResponse();
@@ -406,10 +430,12 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Send error.
+	 * Sends error.
 	 *
-	 * @param sc the sc
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param sc
+	 *            the sc
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static final void sendError(Double sc) throws IOException {
 		sendError(sc.intValue());
@@ -418,7 +444,8 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the character encoding.
 	 *
-	 * @param charset the new character encoding
+	 * @param charset
+	 *            the new character encoding
 	 */
 	public static final void setCharacterEncoding(String charset) {
 		HttpServletResponse response = getResponse();
@@ -429,10 +456,12 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Send redirect.
+	 * Sends redirect.
 	 *
-	 * @param location the location
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param location
+	 *            the location
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static final void sendRedirect(String location) throws IOException {
 		HttpServletResponse response = getResponse();
@@ -445,7 +474,8 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the content length.
 	 *
-	 * @param len the new content length
+	 * @param len
+	 *            the new content length
 	 */
 	public static final void setContentLength(int len) {
 		HttpServletResponse response = getResponse();
@@ -458,7 +488,8 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the content length.
 	 *
-	 * @param len the new content length
+	 * @param len
+	 *            the new content length
 	 */
 	public static final void setContentLength(Double len) {
 		setContentLength(len.intValue());
@@ -467,8 +498,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the header.
 	 *
-	 * @param name the name
-	 * @param value the value
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
 	 */
 	public static final void setHeader(String name, String value) {
 		HttpServletResponse response = getResponse();
@@ -481,8 +514,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Adds the header.
 	 *
-	 * @param name the name
-	 * @param value the value
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
 	 */
 	public static final void addHeader(String name, String value) {
 		HttpServletResponse response = getResponse();
@@ -495,7 +530,8 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the status.
 	 *
-	 * @param sc the new status
+	 * @param sc
+	 *            the new status
 	 */
 	public static final void setStatus(int sc) {
 		HttpServletResponse response = getResponse();
@@ -508,14 +544,15 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the status.
 	 *
-	 * @param sc the new status
+	 * @param sc
+	 *            the new status
 	 */
 	public static final void setStatus(Double sc) {
 		setStatus(sc.intValue());
 	}
 
 	/**
-	 * Reset.
+	 * Reset the buffer
 	 */
 	public static final void reset() {
 		HttpServletResponse response = getResponse();
@@ -526,9 +563,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the header.
+	 * Returns the value of the header with the specified name
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the header
 	 */
 	public static final String getHeader(String name) {
@@ -542,7 +580,8 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the locale.
 	 *
-	 * @param language the new locale
+	 * @param language
+	 *            the new locale
 	 */
 	public static final void setLocale(String language) {
 		HttpServletResponse response = getResponse();
@@ -555,8 +594,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the locale.
 	 *
-	 * @param language the language
-	 * @param country the country
+	 * @param language
+	 *            the language
+	 * @param country
+	 *            the country
 	 */
 	public static final void setLocale(String language, String country) {
 		HttpServletResponse response = getResponse();
@@ -569,9 +610,12 @@ public class HttpResponseFacade implements IScriptingFacade {
 	/**
 	 * Sets the locale.
 	 *
-	 * @param language the language
-	 * @param country the country
-	 * @param variant the variant
+	 * @param language
+	 *            the language
+	 * @param country
+	 *            the country
+	 * @param variant
+	 *            the variant
 	 */
 	public static final void setLocale(String language, String country, String variant) {
 		HttpServletResponse response = getResponse();
@@ -582,9 +626,10 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the headers.
+	 * Returns the headers.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the headers
 	 */
 	public static final String getHeaders(String name) {
@@ -596,7 +641,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the header names.
+	 * Returns the header names.
 	 *
 	 * @return the header names
 	 */
@@ -609,7 +654,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the locale.
+	 * Returns the locale.
 	 *
 	 * @return the locale
 	 */

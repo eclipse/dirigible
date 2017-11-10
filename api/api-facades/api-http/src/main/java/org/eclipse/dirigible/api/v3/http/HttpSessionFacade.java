@@ -21,20 +21,17 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HttpSessionFacade.
+ * Java facade for working with HttpSession
  */
 public class HttpSessionFacade implements IScriptingFacade {
 
-	/** The Constant NO_VALID_REQUEST. */
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpSessionFacade.class);
 
 	/**
-	 * Gets the session.
+	 * Returns the session associated with the current thread context
 	 *
 	 * @return the session
 	 */
@@ -52,7 +49,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if is valid.
+	 * Checks if there is a session associated with the current thread context
 	 *
 	 * @return true, if is valid
 	 */
@@ -62,9 +59,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the attribute.
+	 * Returns the object bound to the specified name
 	 *
-	 * @param arg0 the arg 0
+	 * @param arg0
+	 *            the name
 	 * @return the attribute
 	 */
 	public static final String getAttribute(String arg0) {
@@ -73,7 +71,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the attribute names.
+	 * Returns the attribute names.
 	 *
 	 * @return the attribute names
 	 */
@@ -83,7 +81,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the creation time.
+	 * Returns the time the session was created
 	 *
 	 * @return the creation time
 	 */
@@ -93,7 +91,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the id.
+	 * Returns the id of the session
 	 *
 	 * @return the id
 	 */
@@ -103,7 +101,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the last accessed time.
+	 * Returns the last accessed time.
 	 *
 	 * @return the last accessed time
 	 */
@@ -113,7 +111,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the max inactive interval.
+	 * Returns the max inactive interval.
 	 *
 	 * @return the max inactive interval
 	 */
@@ -123,7 +121,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Invalidate.
+	 * Invalidates the session
 	 */
 	public static final void invalidate() {
 		HttpSession session = getSession();
@@ -131,7 +129,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Checks if is new.
+	 * Checks if the session is new
 	 *
 	 * @return true, if is new
 	 */
@@ -143,8 +141,10 @@ public class HttpSessionFacade implements IScriptingFacade {
 	/**
 	 * Sets the attribute.
 	 *
-	 * @param arg0 the arg 0
-	 * @param arg1 the arg 1
+	 * @param arg0
+	 *            the name
+	 * @param arg1
+	 *            the value
 	 */
 	public static final void setAttribute(String arg0, String arg1) {
 		HttpSession session = getSession();
@@ -154,7 +154,8 @@ public class HttpSessionFacade implements IScriptingFacade {
 	/**
 	 * Removes the attribute.
 	 *
-	 * @param arg0 the arg 0
+	 * @param arg0
+	 *            the name of the attribute
 	 */
 	public static final void removeAttribute(String arg0) {
 		HttpSession session = getSession();
@@ -164,7 +165,8 @@ public class HttpSessionFacade implements IScriptingFacade {
 	/**
 	 * Sets the max inactive interval.
 	 *
-	 * @param arg0 the new max inactive interval
+	 * @param arg0
+	 *            the new max inactive interval
 	 */
 	public static final void setMaxInactiveInterval(int arg0) {
 		HttpSession session = getSession();
@@ -174,7 +176,8 @@ public class HttpSessionFacade implements IScriptingFacade {
 	/**
 	 * Sets the max inactive interval.
 	 *
-	 * @param arg0 the new max inactive interval
+	 * @param arg0
+	 *            the new max inactive interval
 	 */
 	public static final void setMaxInactiveInterval(Double arg0) {
 		setMaxInactiveInterval(arg0.intValue());
