@@ -15,9 +15,8 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class EnvFacade.
+ * The EnvFacade is used to retrieve the environment variables.
  */
 public class EnvFacade implements IScriptingFacade {
 
@@ -25,9 +24,10 @@ public class EnvFacade implements IScriptingFacade {
 	private static final Logger logger = LoggerFactory.getLogger(EnvFacade.class);
 
 	/**
-	 * Gets the.
+	 * Gets the environment variable by name.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the string
 	 */
 	public static final String get(String name) {
@@ -38,7 +38,7 @@ public class EnvFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * List.
+	 * List all the environment variables.
 	 *
 	 * @return the string
 	 */

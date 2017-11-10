@@ -30,29 +30,37 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.internal.Primitives;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class JavaFacade.
+ * The JavaFacade plays the role of the bridge between both environment - Java and Javascript.
  */
 public class JavaFacade {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JavaFacade.class);
 
 	/**
-	 * Call.
+	 * Call a static method of the given class.
 	 *
-	 * @param className the class name
-	 * @param methodName the method name
-	 * @param parameters the parameters
+	 * @param className
+	 *            the class name
+	 * @param methodName
+	 *            the method name
+	 * @param parameters
+	 *            the parameters
 	 * @return the object
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws IllegalAccessException the illegal access exception
-	 * @throws IllegalArgumentException the illegal argument exception
-	 * @throws InvocationTargetException the invocation target exception
-	 * @throws NoSuchMethodException the no such method exception
-	 * @throws SecurityException the security exception
-	 * @throws ContextException the context exception
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
+	 * @throws IllegalArgumentException
+	 *             the illegal argument exception
+	 * @throws InvocationTargetException
+	 *             the invocation target exception
+	 * @throws NoSuchMethodException
+	 *             the no such method exception
+	 * @throws SecurityException
+	 *             the security exception
+	 * @throws ContextException
+	 *             the context exception
 	 */
 	public static final Object call(String className, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
@@ -88,14 +96,20 @@ public class JavaFacade {
 	}
 
 	/**
-	 * Find method.
+	 * Find method of a given class per name and parameters. It performs some artificial logic based on the underlying
+	 * javascript engine in use
 	 *
-	 * @param methodName the method name
-	 * @param clazz the clazz
-	 * @param parameterTypes the parameter types
-	 * @param params the params
+	 * @param methodName
+	 *            the method name
+	 * @param clazz
+	 *            the clazz
+	 * @param parameterTypes
+	 *            the parameter types
+	 * @param params
+	 *            the params
 	 * @return the method
-	 * @throws NoSuchMethodException the no such method exception
+	 * @throws NoSuchMethodException
+	 *             the no such method exception
 	 */
 	private static Method findMethod(String methodName, Class<?> clazz, Class<?>[] parameterTypes, List<Object> params) throws NoSuchMethodException {
 		Method method = null;
@@ -156,18 +170,27 @@ public class JavaFacade {
 	}
 
 	/**
-	 * Instantiate.
+	 * Instantiate an Object at Java side per given class name and constructor parameters.
 	 *
-	 * @param className the class name
-	 * @param parameters the parameters
+	 * @param className
+	 *            the class name
+	 * @param parameters
+	 *            the parameters
 	 * @return the string
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws IllegalAccessException the illegal access exception
-	 * @throws IllegalArgumentException the illegal argument exception
-	 * @throws InvocationTargetException the invocation target exception
-	 * @throws NoSuchMethodException the no such method exception
-	 * @throws SecurityException the security exception
-	 * @throws ContextException the context exception
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
+	 * @throws IllegalArgumentException
+	 *             the illegal argument exception
+	 * @throws InvocationTargetException
+	 *             the invocation target exception
+	 * @throws NoSuchMethodException
+	 *             the no such method exception
+	 * @throws SecurityException
+	 *             the security exception
+	 * @throws ContextException
+	 *             the context exception
 	 */
 	public static final String instantiate(String className, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
@@ -192,19 +215,29 @@ public class JavaFacade {
 	}
 
 	/**
-	 * Invoke.
+	 * Invoke an object instance's method with list of parameters.
 	 *
-	 * @param uuid the uuid
-	 * @param methodName the method name
-	 * @param parameters the parameters
+	 * @param uuid
+	 *            the uuid pointer to the object instance
+	 * @param methodName
+	 *            the method name
+	 * @param parameters
+	 *            the parameters
 	 * @return the object
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws IllegalAccessException the illegal access exception
-	 * @throws IllegalArgumentException the illegal argument exception
-	 * @throws InvocationTargetException the invocation target exception
-	 * @throws NoSuchMethodException the no such method exception
-	 * @throws SecurityException the security exception
-	 * @throws ContextException the context exception
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
+	 * @throws IllegalArgumentException
+	 *             the illegal argument exception
+	 * @throws InvocationTargetException
+	 *             the invocation target exception
+	 * @throws NoSuchMethodException
+	 *             the no such method exception
+	 * @throws SecurityException
+	 *             the security exception
+	 * @throws ContextException
+	 *             the context exception
 	 */
 	public static final Object invoke(String uuid, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
@@ -246,10 +279,12 @@ public class JavaFacade {
 	}
 
 	/**
-	 * Free.
+	 * Free the object instance from the execution context.
 	 *
-	 * @param uuid the uuid
-	 * @throws ContextException the context exception
+	 * @param uuid
+	 *            the uuid the object instance pointer
+	 * @throws ContextException
+	 *             the context exception
 	 */
 	public static final void free(String uuid) throws ContextException {
 		ThreadContextFacade.removeProxy(uuid);
@@ -258,7 +293,8 @@ public class JavaFacade {
 	/**
 	 * Checks if is primitive.
 	 *
-	 * @param clazz the clazz
+	 * @param clazz
+	 *            the clazz
 	 * @return true, if is primitive
 	 */
 	private static boolean isPrimitive(Class<?> clazz) {
@@ -270,7 +306,8 @@ public class JavaFacade {
 	/**
 	 * Checks if is array of primitives.
 	 *
-	 * @param clazz the clazz
+	 * @param clazz
+	 *            the clazz
 	 * @return true, if is array of primitives
 	 */
 	private static boolean isArrayOfPrimitives(Class<?> clazz) {
@@ -281,9 +318,11 @@ public class JavaFacade {
 	/**
 	 * Normalize parameters.
 	 *
-	 * @param parameters the parameters
+	 * @param parameters
+	 *            the parameters
 	 * @return the list
-	 * @throws ContextException the context exception
+	 * @throws ContextException
+	 *             the context exception
 	 */
 	private static List<Object> normalizeParameters(Object[] parameters) throws ContextException {
 		List<Object> params = new ArrayList<Object>();
@@ -306,7 +345,8 @@ public class JavaFacade {
 	/**
 	 * Enumerate types.
 	 *
-	 * @param params the params
+	 * @param params
+	 *            the params
 	 * @return the class[]
 	 */
 	private static Class<?>[] enumerateTypes(List<Object> params) {
