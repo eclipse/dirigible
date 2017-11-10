@@ -12,15 +12,30 @@ package org.eclipse.dirigible.api.v3.utils;
 
 import org.eclipse.dirigible.commons.utils.xml2json.Xml2Json;
 
+/**
+ * The Class Xml2JsonFacade.
+ */
 public class Xml2JsonFacade {
 
+	/**
+	 * Converts JSON to XML
+	 *
+	 * @param json
+	 * @return the JSON as XML
+	 * @throws Exception
+	 */
 	public static final String fromJson(String json) throws Exception {
-		String xml = Xml2Json.toXml(json);
-		return xml;
+		return Xml2Json.toXml(json);
 	}
 
+	/**
+	 * Converts XML to JSON
+	 *
+	 * @param xml
+	 * @return the XML as JSON
+	 * @throws Exception
+	 */
 	public static final String toJson(String xml) throws Exception {
-		String json = Xml2Json.toJson(xml);
-		return json;
+		return Xml2Json.toJson(xml);
 	}
 }

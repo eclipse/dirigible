@@ -22,12 +22,24 @@ import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The ExtensionsServiceFacade expose the information about the current extension points and extensions.
+ */
 public class ExtensionsServiceFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsServiceFacade.class);
 
 	private static IExtensionsCoreService extensionsCoreService = StaticInjector.getInjector().getInstance(ExtensionsCoreService.class);
 
+	/**
+	 * Gets the extensions per extension point.
+	 *
+	 * @param extensionPointName
+	 *            the extension point name
+	 * @return the extensions
+	 * @throws ExtensionsException
+	 *             the extensions exception
+	 */
 	public static final String[] getExtensions(String extensionPointName) throws ExtensionsException {
 		logger.trace("API - ExtensionsServiceFacade.getExtensions() -> begin");
 		List<ExtensionDefinition> extensionDefinitions = extensionsCoreService.getExtensionsByExtensionPoint(extensionPointName);
@@ -40,6 +52,13 @@ public class ExtensionsServiceFacade implements IScriptingFacade {
 		return extensions;
 	}
 
+	/**
+	 * Gets all the extension points.
+	 *
+	 * @return the extension points
+	 * @throws ExtensionsException
+	 *             the extensions exception
+	 */
 	public static final String[] getExtensionPoints() throws ExtensionsException {
 		logger.trace("API - ExtensionsServiceFacade.getExtensionPoints() -> begin");
 		List<ExtensionPointDefinition> extensionPointDefinitions = extensionsCoreService.getExtensionPoints();

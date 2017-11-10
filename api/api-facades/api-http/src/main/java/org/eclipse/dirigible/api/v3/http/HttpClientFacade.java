@@ -46,10 +46,24 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Java face for HTTP operations
+ */
 public class HttpClientFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientFacade.class);
 
+	/**
+	 * Performs a GET request for the specified URL and options
+	 *
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
+	 */
 	public static final String get(String url, String options) throws IOException {
 
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -64,6 +78,17 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
+	/**
+	 * Performs a POST request for the specified URL and options
+	 *
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
+	 */
 	public static final String post(String url, String options) throws IOException {
 
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -167,6 +192,17 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
+	/**
+	 * Performs a PUT request for the specified URL and options
+	 *
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	public static final String put(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
 		if (httpClientRequestOptions.getData() != null) {
@@ -221,6 +257,17 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
+	/**
+	 * Performs a DELETE request for the specified URL and options
+	 *
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
+	 */
 	public static final String delete(String url, String options) throws IOException {
 
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -235,6 +282,17 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
+	/**
+	 * Performs a HEAD request for the specified URL and options
+	 *
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
+	 */
 	public static final String head(String url, String options) throws IOException {
 
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
@@ -249,6 +307,17 @@ public class HttpClientFacade implements IScriptingFacade {
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
+	/**
+	 * Performs a TRACE request for the specified URL and options
+	 *
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             In case an I/O exception occurs
+	 */
 	public static final String trace(String url, String options) throws IOException {
 
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);

@@ -16,10 +16,20 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The ContextFacade is used to store name value pairs to the execution (Thread) context.
+ */
 public class ContextFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContextFacade.class);
 
+	/**
+	 * Gets the value per name.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the string
+	 */
 	public static final String get(String name) {
 		logger.trace("API - ContextFacade.get() -> begin");
 		Object contextValue;
@@ -34,6 +44,14 @@ public class ContextFacade implements IScriptingFacade {
 		return value;
 	}
 
+	/**
+	 * Sets the value for name.
+	 *
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
+	 */
 	public static final void set(String name, String value) {
 		logger.trace("API - ContextFacade.set() -> begin");
 		try {

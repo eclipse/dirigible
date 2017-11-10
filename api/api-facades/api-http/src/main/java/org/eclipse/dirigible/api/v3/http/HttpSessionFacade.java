@@ -21,12 +21,20 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Java facade for working with HttpSession
+ */
 public class HttpSessionFacade implements IScriptingFacade {
 
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpSessionFacade.class);
 
+	/**
+	 * Returns the session associated with the current thread context
+	 *
+	 * @return the session
+	 */
 	static final HttpSession getSession() {
 		if (!ThreadContextFacade.isValid()) {
 			return null;
@@ -40,66 +48,137 @@ public class HttpSessionFacade implements IScriptingFacade {
 		return null;
 	}
 
+	/**
+	 * Checks if there is a session associated with the current thread context
+	 *
+	 * @return true, if is valid
+	 */
 	public static final boolean isValid() {
 		HttpSession session = getSession();
 		return session != null;
 	}
 
+	/**
+	 * Returns the object bound to the specified name
+	 *
+	 * @param arg0
+	 *            the name
+	 * @return the attribute
+	 */
 	public static final String getAttribute(String arg0) {
 		HttpSession session = getSession();
 		return session.getAttribute(arg0) != null ? session.getAttribute(arg0).toString() : null;
 	}
 
+	/**
+	 * Returns the attribute names.
+	 *
+	 * @return the attribute names
+	 */
 	public static final String[] getAttributeNames() {
 		HttpSession session = getSession();
 		return Collections.list(session.getAttributeNames()).toArray(new String[] {});
 	}
 
+	/**
+	 * Returns the time the session was created
+	 *
+	 * @return the creation time
+	 */
 	public static final long getCreationTime() {
 		HttpSession session = getSession();
 		return session.getCreationTime();
 	}
 
+	/**
+	 * Returns the id of the session
+	 *
+	 * @return the id
+	 */
 	public static final String getId() {
 		HttpSession session = getSession();
 		return session.getId();
 	}
 
+	/**
+	 * Returns the last accessed time.
+	 *
+	 * @return the last accessed time
+	 */
 	public static final long getLastAccessedTime() {
 		HttpSession session = getSession();
 		return session.getLastAccessedTime();
 	}
 
+	/**
+	 * Returns the max inactive interval.
+	 *
+	 * @return the max inactive interval
+	 */
 	public static final int getMaxInactiveInterval() {
 		HttpSession session = getSession();
 		return session.getMaxInactiveInterval();
 	}
 
+	/**
+	 * Invalidates the session
+	 */
 	public static final void invalidate() {
 		HttpSession session = getSession();
 		session.invalidate();
 	}
 
+	/**
+	 * Checks if the session is new
+	 *
+	 * @return true, if is new
+	 */
 	public static final boolean isNew() {
 		HttpSession session = getSession();
 		return session.isNew();
 	}
 
+	/**
+	 * Sets the attribute.
+	 *
+	 * @param arg0
+	 *            the name
+	 * @param arg1
+	 *            the value
+	 */
 	public static final void setAttribute(String arg0, String arg1) {
 		HttpSession session = getSession();
 		session.setAttribute(arg0, arg1);
 	}
 
+	/**
+	 * Removes the attribute.
+	 *
+	 * @param arg0
+	 *            the name of the attribute
+	 */
 	public static final void removeAttribute(String arg0) {
 		HttpSession session = getSession();
 		session.removeAttribute(arg0);
 	}
 
+	/**
+	 * Sets the max inactive interval.
+	 *
+	 * @param arg0
+	 *            the new max inactive interval
+	 */
 	public static final void setMaxInactiveInterval(int arg0) {
 		HttpSession session = getSession();
 		session.setMaxInactiveInterval(arg0);
 	}
 
+	/**
+	 * Sets the max inactive interval.
+	 *
+	 * @param arg0
+	 *            the new max inactive interval
+	 */
 	public static final void setMaxInactiveInterval(Double arg0) {
 		setMaxInactiveInterval(arg0.intValue());
 	}
