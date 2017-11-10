@@ -10,11 +10,16 @@
 
 package org.eclipse.dirigible.api.v3.log;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class JSServiceException.
  */
 public class JSServiceException extends Exception {
+
+	/**
+	 * Instantiates a new JS service exception.
+	 */
+	public JSServiceException() {
+	}
 
 	/**
 	 * Instantiates a new JS service exception.
@@ -29,16 +34,10 @@ public class JSServiceException extends Exception {
 	 * Instantiates a new JS service exception.
 	 *
 	 * @param message the message
-	 * @param t the t
+	 * @param t the throwable
 	 */
 	public JSServiceException(String message, Throwable t) {
 		super(message, t);
-	}
-
-	/**
-	 * Instantiates a new JS service exception.
-	 */
-	public JSServiceException() {
 	}
 
 }

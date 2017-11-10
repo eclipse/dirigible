@@ -41,17 +41,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DatabaseFacade.
  */
 public class DatabaseFacade implements IScriptingFacade {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
 
-	/** The database. */
-	private static IDatabase database = StaticInjector.getInjector().getInstance(IDatabase.class);;
+	private static IDatabase database = StaticInjector.getInjector().getInstance(IDatabase.class);
 
 	/**
 	 * Gets the database types.
@@ -156,13 +153,13 @@ public class DatabaseFacade implements IScriptingFacade {
 	//  ============  Query  ===========
 	
 	/**
-	 * Query.
+	 * Executes SQL query.
 	 *
 	 * @param sql the sql
 	 * @param parameters the parameters
 	 * @param databaseType the database type
 	 * @param datasourceName the datasource name
-	 * @return the string
+	 * @return the result of the query as JSON
 	 * @throws SQLException the SQL exception
 	 */
 	public static final String query(String sql, String parameters, String databaseType, String datasourceName) throws SQLException {
@@ -193,12 +190,12 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Query.
+	 * Executes SQL query.
 	 *
 	 * @param sql the sql
 	 * @param parameters the parameters
 	 * @param databaseType the database type
-	 * @return the string
+	 * @return the result of the query as JSON
 	 * @throws SQLException the SQL exception
 	 */
 	public static final String query(String sql, String parameters, String databaseType) throws SQLException {
@@ -206,11 +203,11 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Query.
+	 * Executes SQL query.
 	 *
 	 * @param sql the sql
 	 * @param parameters the parameters
-	 * @return the string
+	 * @return the result of the query as JSON
 	 * @throws SQLException the SQL exception
 	 */
 	public static final String query(String sql, String parameters) throws SQLException {
@@ -218,10 +215,10 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Query.
+	 * Executes SQL query.
 	 *
 	 * @param sql the sql
-	 * @return the string
+	 * @return the result of the query as JSON
 	 * @throws SQLException the SQL exception
 	 */
 	public static final String query(String sql) throws SQLException {
@@ -231,13 +228,13 @@ public class DatabaseFacade implements IScriptingFacade {
 	//  ===========  Update  ===========
 
 	/**
-	 * Update.
+	 * Executes SQL update.
 	 *
 	 * @param sql the sql
 	 * @param parameters the parameters
 	 * @param databaseType the database type
 	 * @param datasourceName the datasource name
-	 * @return the int
+	 * @return the number of the rows that has been changed
 	 * @throws SQLException the SQL exception
 	 */
 	public static final int update(String sql, String parameters, String databaseType, String datasourceName) throws SQLException {
@@ -267,12 +264,12 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Update.
+	 * Executes SQL update.
 	 *
 	 * @param sql the sql
 	 * @param parameters the parameters
 	 * @param databaseType the database type
-	 * @return the int
+	 * @return the number of the rows that has been changed
 	 * @throws SQLException the SQL exception
 	 */
 	public static final int update(String sql, String parameters, String databaseType) throws SQLException {
@@ -280,11 +277,11 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Update.
+	 * Executes SQL update.
 	 *
 	 * @param sql the sql
 	 * @param parameters the parameters
-	 * @return the int
+	 * @return the number of the rows that has been changed
 	 * @throws SQLException the SQL exception
 	 */
 	public static final int update(String sql, String parameters) throws SQLException {
@@ -292,10 +289,10 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Update.
+	 * Executes SQL update.
 	 *
 	 * @param sql the sql
-	 * @return the int
+	 * @return the number of the rows that has been changed
 	 * @throws SQLException the SQL exception
 	 */
 	public static final int update(String sql) throws SQLException {
@@ -495,7 +492,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @param sequence the sequence
 	 * @param databaseType the database type
 	 * @param datasourceName the datasource name
-	 * @return the long
+	 * @return the nextval
 	 * @throws SQLException the SQL exception
 	 */
 	public static final long nextval(String sequence, String databaseType, String datasourceName) throws SQLException {
@@ -690,9 +687,9 @@ public class DatabaseFacade implements IScriptingFacade {
 	
 	
 	/**
-	 * Gets the default.
+	 * Gets the default SQL factory.
 	 *
-	 * @return the default
+	 * @return the default SQL factory
 	 * @throws SQLException the SQL exception
 	 */
 	public static SqlFactory getDefault() throws SQLException {
@@ -700,10 +697,10 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Gets the native.
+	 * Gets a native SQL factory.
 	 *
 	 * @param connection the connection
-	 * @return the native
+	 * @return a native SQL factory
 	 * @throws SQLException the SQL exception
 	 */
 	public static SqlFactory getNative(Connection connection) throws SQLException {

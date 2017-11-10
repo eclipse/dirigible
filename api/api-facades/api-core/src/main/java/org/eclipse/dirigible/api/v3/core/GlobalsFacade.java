@@ -15,20 +15,19 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GlobalsFacade.
+ * The GlobalsFacade is used to store and retrieve values per name.
  */
 public class GlobalsFacade implements IScriptingFacade {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GlobalsFacade.class);
 
 	/**
-	 * Gets the.
+	 * Gets the value per name.
 	 *
-	 * @param name the name
-	 * @return the string
+	 * @param name
+	 *            the name
+	 * @return the string value
 	 */
 	public static final String get(String name) {
 		logger.trace("API - GlobalsFacade.get() -> begin");
@@ -38,10 +37,12 @@ public class GlobalsFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Sets the.
+	 * Sets the value per name.
 	 *
-	 * @param name the name
-	 * @param value the value
+	 * @param name
+	 *            the name
+	 * @param value
+	 *            the value
 	 */
 	public static final void set(String name, String value) {
 		logger.trace("API - GlobalsFacade.set() -> begin");
@@ -50,7 +51,7 @@ public class GlobalsFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * List.
+	 * List all the name value pairs.
 	 *
 	 * @return the string
 	 */

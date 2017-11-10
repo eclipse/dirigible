@@ -12,77 +12,87 @@ package org.eclipse.dirigible.api.v3.core;
 
 import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ConsoleFacade.
+ * The ConsoleFacade is used for debug purposes to trace messages into the standard outputs
  */
 public class ConsoleFacade {
 
-	/** The Constant console. */
 	private static final Console console = new Console();
 
 	/**
-	 * Error.
+	 * Prints an error message.
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 *            the message
+	 * @param args
+	 *            the args
 	 */
 	public static void error(String message, Object... args) {
 		console.error(message, args);
 	}
 
 	/**
-	 * Info.
+	 * Prints an info message.
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 *            the message
+	 * @param args
+	 *            the args
 	 */
 	public static void info(String message, Object... args) {
 		console.info(message, args);
 	}
 
 	/**
-	 * Log.
+	 * Prints a raw log message.
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 *            the message
+	 * @param args
+	 *            the args
 	 */
 	public static void log(String message, Object... args) {
 		console.info(message, args);
 	}
 
 	/**
-	 * Warn.
+	 * Prints a warning message.
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 *            the message
+	 * @param args
+	 *            the args
 	 */
 	public static void warn(String message, Object... args) {
 		console.warn(message, args);
 	}
 
 	/**
-	 * Debug.
+	 * Prints a debug message.
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 *            the message
+	 * @param args
+	 *            the args
 	 */
 	public static void debug(String message, Object... args) {
 		console.debug(message, args);
 	}
 
 	/**
-	 * Trace.
+	 * Prints a trace message.
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 *            the message
+	 * @param args
+	 *            the args
 	 */
 	public static void trace(String message, Object... args) {
 		console.trace(message, args);
 	}
 
 	/**
-	 * Gets the console.
+	 * Gets the console instance.
 	 *
 	 * @return the console
 	 */
@@ -91,162 +101,180 @@ public class ConsoleFacade {
 	}
 
 	/**
-	 * Error.
+	 * Prints an error message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void error(String message) {
 		console.error(message);
 	}
 
 	/**
-	 * Info.
+	 * Prints an info message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void info(String message) {
 		console.info(message);
 	}
 
 	/**
-	 * Log.
+	 * Prints a raw log message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void log(String message) {
 		console.log(message);
 	}
 
 	/**
-	 * Warn.
+	 * Prints a waringing message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void warn(String message) {
 		console.warn(message);
 	}
 
 	/**
-	 * Debug.
+	 * Prints a debug message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void debug(String message) {
 		console.debug(message);
 	}
 
 	/**
-	 * Trace.
+	 * Prints a trace message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void trace(String message) {
 		console.trace(message);
 	}
 
 	/**
-	 * Error.
+	 * Prints an error message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void error(Object message) {
 		console.error(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Info.
+	 * Prints an info message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void info(Object message) {
 		console.info(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Log.
+	 * Prints a raw log message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void log(Object message) {
 		console.log(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Warn.
+	 * Prints an warning message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void warn(Object message) {
 		console.warn(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Debug.
+	 * Prints an debug message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void debug(Object message) {
 		console.debug(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Trace.
+	 * Prints an trace message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void trace(Object message) {
 		console.trace(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Error.
+	 * Prints an error message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void error(ArrayList message) {
 		console.error(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Info.
+	 * Prints an info message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void info(ArrayList message) {
 		console.info(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Log.
+	 * Prints an raw message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void log(ArrayList message) {
 		console.log(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Warn.
+	 * Prints an warning message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void warn(ArrayList message) {
 		console.warn(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Debug.
+	 * Prints an debug message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void debug(ArrayList message) {
 		console.debug(message != null ? message.toString() : "null");
 	}
 
 	/**
-	 * Trace.
+	 * Prints a trace message.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public static void trace(ArrayList message) {
 		console.trace(message != null ? message.toString() : "null");

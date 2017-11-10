@@ -10,8 +10,6 @@
 
 package org.eclipse.dirigible.api.v3.indexing;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -23,20 +21,17 @@ import org.eclipse.dirigible.core.indexing.service.IndexingCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class IndexingFacade.
  */
 public class IndexingFacade implements IScriptingFacade {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(IndexingFacade.class);
-	
-	/** The Constant indexingCoreService. */
+
 	private static final IIndexingCoreService indexingCoreService = StaticInjector.getInjector().getInstance(IndexingCoreService.class);
 
 	/**
-	 * Adds the.
+	 * Adds an index.
 	 *
 	 * @param index the index
 	 * @param location the location
@@ -49,54 +44,54 @@ public class IndexingFacade implements IScriptingFacade {
 		Map map = GsonHelper.GSON.fromJson(parameters, Map.class);
 		indexingCoreService.add(index, location, contents.getBytes(), Long.parseLong(lastModified), map);
 	}
-	
+
 	/**
-	 * Search.
+	 * Search an index by term.
 	 *
 	 * @param index the index
 	 * @param term the term
-	 * @return the string
+	 * @return the values as JSON
 	 * @throws IndexingException the indexing exception
 	 */
 	public static final String search(String index, String term) throws IndexingException {
 		return indexingCoreService.search(index, term);
 	}
-	
+
 	/**
-	 * Before.
+	 * Search an index by date before.
 	 *
 	 * @param index the index
 	 * @param date the date
-	 * @return the string
+	 * @return the values as JSON
 	 * @throws IndexingException the indexing exception
 	 */
 	public static final String before(String index, String date) throws IndexingException {
 		return indexingCoreService.before(index, Long.parseLong(date));
 	}
-	
+
 	/**
-	 * After.
+	 * Search an index by date after.
 	 *
 	 * @param index the index
 	 * @param date the date
-	 * @return the string
+	 * @return the values as JSON
 	 * @throws IndexingException the indexing exception
 	 */
 	public static final String after(String index, String date) throws IndexingException {
 		return indexingCoreService.after(index, Long.parseLong(date));
 	}
-	
+
 	/**
-	 * Between.
+	 * Search an index by date between.
 	 *
 	 * @param index the index
 	 * @param lower the lower
 	 * @param upper the upper
-	 * @return the string
+	 * @return the values as JSON
 	 * @throws IndexingException the indexing exception
 	 */
 	public static final String between(String index, String lower, String upper) throws IndexingException {
 		return indexingCoreService.between(index, Long.parseLong(lower), Long.parseLong(upper));
 	}
-	
+
 }
