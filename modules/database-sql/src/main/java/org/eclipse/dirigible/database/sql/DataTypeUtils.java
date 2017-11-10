@@ -25,6 +25,7 @@ public class DataTypeUtils {
 	public static final int VARCHAR_DEFAULT_LENGTH = 512;
 
 	private static final Map<Integer, DataType> DATABASE_TYPE_TO_DATA_TYPE = Collections.synchronizedMap(new HashMap<Integer, DataType>());
+	private static final Map<String, Integer> STRING_TO_DATABASE_TYPE = Collections.synchronizedMap(new HashMap<String, Integer>());
 	private static final Map<Class, Integer> JAVA_TYPE_TO_DATABASE_TYPE = Collections.synchronizedMap(new HashMap<Class, Integer>());
 	private static final Map<Integer, Class> DATABASE_TYPE_TO_JAVA_TYPE = Collections.synchronizedMap(new HashMap<Integer, Class>());
 
@@ -42,6 +43,20 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BOOLEAN, DataType.BOOLEAN);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BLOB, DataType.BLOB);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.DECIMAL, DataType.DECIMAL);
+
+		STRING_TO_DATABASE_TYPE.put("VARCHAR", Types.VARCHAR);
+		STRING_TO_DATABASE_TYPE.put("CHAR", Types.CHAR);
+		STRING_TO_DATABASE_TYPE.put("TIMESTAMP", Types.TIMESTAMP);
+		STRING_TO_DATABASE_TYPE.put("TIME", Types.TIME);
+		STRING_TO_DATABASE_TYPE.put("INTEGER", Types.INTEGER);
+		STRING_TO_DATABASE_TYPE.put("BIGINT", Types.BIGINT);
+		STRING_TO_DATABASE_TYPE.put("SMALLINT", Types.SMALLINT);
+		STRING_TO_DATABASE_TYPE.put("REAL", Types.REAL);
+		STRING_TO_DATABASE_TYPE.put("DOUBLE", Types.DOUBLE);
+		STRING_TO_DATABASE_TYPE.put("DATE", Types.DATE);
+		STRING_TO_DATABASE_TYPE.put("BOOLEAN", Types.BOOLEAN);
+		STRING_TO_DATABASE_TYPE.put("BLOB", Types.BLOB);
+		STRING_TO_DATABASE_TYPE.put("DECIMAL", Types.DECIMAL);
 
 		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.VARCHAR);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Integer.class, Types.INTEGER);
@@ -103,6 +118,14 @@ public class DataTypeUtils {
 			throw new SqlException(format("Type {0} does not have mapping to a java type", type));
 		}
 		return clazz;
+	}
+
+	public static Integer getSqlTypeByDataType(String type) {
+		type = type.toUpperCase();
+		if (STRING_TO_DATABASE_TYPE.containsKey(type)) {
+			return STRING_TO_DATABASE_TYPE.get(type);
+		}
+		throw new SqlException(format("Type {0} not supported", type));
 	}
 
 	public static String getDatabaseTypeNameByJavaType(Class clazz) {

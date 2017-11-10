@@ -3,7 +3,6 @@ package org.eclipse.dirigible.api.v3.db;
 import static java.text.MessageFormat.format;
 
 import java.io.ByteArrayInputStream;
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -197,9 +196,14 @@ public class DatabaseFacade implements IScriptingFacade {
 					JsonObject jsonObject = parameterElement.getAsJsonObject();
 					JsonElement typeElement = jsonObject.get("type");
 					JsonElement valueElement = jsonObject.get("value");
+					
 					if (typeElement.isJsonPrimitive() && typeElement.getAsJsonPrimitive().isString()) {
 						String dataType = typeElement.getAsJsonPrimitive().getAsString();
-						if (DataTypeUtils.isVarchar(dataType)) {
+						
+						if(valueElement.isJsonNull()){
+							Integer sqlType = DataTypeUtils.getSqlTypeByDataType(dataType);
+							preparedStatement.setNull(i++, sqlType);
+						} else if (DataTypeUtils.isVarchar(dataType)) {
 							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
 								String value = valueElement.getAsJsonPrimitive().getAsString();
 								preparedStatement.setString(i++, value);
