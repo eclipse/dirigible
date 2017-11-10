@@ -20,171 +20,155 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class StreamsFacade.
+ * Facade for working with I/O streams
  */
 public class StreamsFacade {
-	
+
 	/**
-	 * Read.
-	 *
-	 * @param input the input
-	 * @return the int
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Read the next byte from the provided {@link InputStream}
+	 * @param input the input stream to read from
+	 * @return the next byte of data in the range 0-255 or -1 if end of stream is reached
+	 * @throws IOException
 	 */
 	public static final int read(InputStream input) throws IOException {
 		return input.read();
 	}
-	
+
 	/**
-	 * Read bytes.
-	 *
-	 * @param input the input
-	 * @return the byte[]
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Read the content of the provided {@link InputStream} as byte array
+	 * @param input the input stream to read from
+	 * @return the input stream content
+	 * @throws IOException
 	 */
 	public static final byte[] readBytes(InputStream input) throws IOException {
 		return IOUtils.toByteArray(input);
 	}
-	
+
 	/**
-	 * Read text.
-	 *
-	 * @param input the input
-	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Read the content of the {@link InputStream} as UTF-8 text
+	 * @param input the input stream to read from
+	 * @return the content of the stream as string
+	 * @throws IOException
 	 */
 	public static final String readText(InputStream input) throws IOException {
 		return IOUtils.toString(input, StandardCharsets.UTF_8);
 	}
-	
+
 	/**
-	 * Close.
-	 *
-	 * @param input the input
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Close the provided {@link InputStream}
+	 * @param input the input stream to close
+	 * @throws IOException
 	 */
 	public static final void close(InputStream input) throws IOException {
 		input.close();
 	}
-	
+
 	/**
-	 * Write.
-	 *
-	 * @param output the output
-	 * @param value the value
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Write byte to the provided {@link OutputStream}. The 24 higher bits are ignored.
+	 * @param output the output stream to write to
+	 * @param value the byte to write
+	 * @throws IOException
 	 */
 	public static final void write(OutputStream output, int value) throws IOException {
 		output.write(value);
 	}
-	
+
 	/**
-	 * Write bytes.
-	 *
-	 * @param output the output
-	 * @param input the input
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Write data to the provided {@link OutputStream}
+	 * @param output the output stream to write to
+	 * @param input the data to write
+	 * @throws IOException
 	 */
 	public static final void writeBytes(OutputStream output, String input) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
 		output.write(bytes);
 	}
-	
+
 	/**
-	 * Write text.
-	 *
-	 * @param output the output
-	 * @param value the value
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Write text to the provided {@link OutputStream} using UTF-8 encoding
+	 * @param output the output stream to write to
+	 * @param value the text to write
+	 * @throws IOException
 	 */
 	public static final void writeText(OutputStream output, String value) throws IOException {
 		output.write(value.getBytes(StandardCharsets.UTF_8));
 	}
-	
+
 	/**
-	 * Close.
-	 *
-	 * @param output the output
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Close the provided {@link OutputStream}
+	 * @param output the output stream that is to be closed
+	 * @throws IOException
 	 */
 	public static final void close(OutputStream output) throws IOException {
 		output.close();
 	}
-	
+
 	/**
-	 * Copy.
-	 *
-	 * @param input the input
-	 * @param output the output
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Write the {@link InputStream} content into the {@link OutputStream}
+	 * @param input the input stream to read from
+	 * @param output the output stream to write to
+	 * @throws IOException
 	 */
 	public static final void copy(InputStream input, OutputStream output) throws IOException {
 		IOUtils.copy(input, output);
 	}
-	
+
 	/**
-	 * Creates the byte array input stream.
-	 *
-	 * @param input the input
-	 * @return the byte array input stream
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Get the byte array as {@link ByteArrayInputStream}
+	 * @param input the byte array
+	 * @return the created byte array input stream
+	 * @throws IOException
 	 */
 	public static final ByteArrayInputStream createByteArrayInputStream(byte[] input) throws IOException {
 		return new ByteArrayInputStream(input);
 	}
-	
+
 	/**
-	 * Creates the byte array input stream.
-	 *
-	 * @param input the input
-	 * @return the byte array input stream
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Get the input data as {@link ByteArrayInputStream}
+	 * @param input the input data
+	 * @return the created byte array input stream
+	 * @throws IOException
 	 */
 	public static final ByteArrayInputStream createByteArrayInputStream(String input) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
 		return new ByteArrayInputStream(bytes);
 	}
-	
+
 	/**
-	 * Creates the byte array input stream.
-	 *
-	 * @return the byte array input stream
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Create empty {@link ByteArrayInputStream}
+	 * @return the created byte array input stream
+	 * @throws IOException
 	 */
 	public static final ByteArrayInputStream createByteArrayInputStream() throws IOException {
 		return new ByteArrayInputStream(new byte[]{});
 	}
-	
+
 	/**
-	 * Creates the byte array output stream.
-	 *
-	 * @return the byte array output stream
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Create empty {@link ByteArrayOutputStream}
+	 * @return the created byte array output stream
+	 * @throws IOException
 	 */
 	public static final ByteArrayOutputStream createByteArrayOutputStream() throws IOException {
 		return new ByteArrayOutputStream();
 	}
-	
+
 	/**
-	 * Gets the bytes.
-	 *
-	 * @param output the output
-	 * @return the bytes
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Get the {@link ByteArrayOutputStream} content as byte array
+	 * @param output the byte array output stream
+	 * @return the content of the byte array output stream
+	 * @throws IOException
 	 */
 	public static final byte[] getBytes(ByteArrayOutputStream output) throws IOException {
 		byte[] bytes = output.toByteArray();
 		return bytes;
 	}
-	
+
 	/**
-	 * Gets the text.
-	 *
-	 * @param output the output
-	 * @return the text
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Get the {@link ByteArrayOutputStream} content as UTF-8 string
+	 * @param output the byte array output stream
+	 * @return the content of the byte array output stream
+	 * @throws IOException
 	 */
 	public static final String getText(ByteArrayOutputStream output) throws IOException {
 		byte[] bytes = output.toByteArray();
