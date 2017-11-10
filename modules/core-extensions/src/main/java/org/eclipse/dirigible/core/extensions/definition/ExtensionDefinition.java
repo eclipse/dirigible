@@ -18,35 +18,28 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ExtensionDefinition.
+ * The ExtensionDefinition Entity.
  */
 @Table(name = "DIRIGIBLE_EXTENSIONS")
 public class ExtensionDefinition {
 
-	/** The location. */
 	@Id
 	@Column(name = "EXTENSION_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
-	/** The extension point. */
 	@Column(name = "EXTENSION_EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String extensionPoint;
 
-	/** The module. */
 	@Column(name = "EXTENSION_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String module;
 
-	/** The description. */
 	@Column(name = "EXTENSION_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	/** The created by. */
 	@Column(name = "EXTENSION_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	/** The created at. */
 	@Column(name = "EXTENSION_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -62,7 +55,8 @@ public class ExtensionDefinition {
 	/**
 	 * Sets the location.
 	 *
-	 * @param location the new location
+	 * @param location
+	 *            the new location
 	 */
 	public void setLocation(String location) {
 		this.location = location;
@@ -80,7 +74,8 @@ public class ExtensionDefinition {
 	/**
 	 * Sets the extension point.
 	 *
-	 * @param extensionPoint the new extension point
+	 * @param extensionPoint
+	 *            the new extension point
 	 */
 	public void setExtensionPoint(String extensionPoint) {
 		this.extensionPoint = extensionPoint;
@@ -98,7 +93,8 @@ public class ExtensionDefinition {
 	/**
 	 * Sets the module.
 	 *
-	 * @param module the new module
+	 * @param module
+	 *            the new module
 	 */
 	public void setModule(String module) {
 		this.module = module;
@@ -116,7 +112,8 @@ public class ExtensionDefinition {
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -134,7 +131,8 @@ public class ExtensionDefinition {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -155,7 +153,8 @@ public class ExtensionDefinition {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
@@ -166,9 +165,10 @@ public class ExtensionDefinition {
 	}
 
 	/**
-	 * From json.
+	 * Creates ExtensionDefinition from JSON.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the JSON
 	 * @return the extension definition
 	 */
 	public static ExtensionDefinition fromJson(String json) {
@@ -176,15 +176,16 @@ public class ExtensionDefinition {
 	}
 
 	/**
-	 * To json.
+	 * Converts ExtensionDefinition to JSON.
 	 *
-	 * @return the string
+	 * @return the JSON
 	 */
 	public String toJson() {
 		return GsonHelper.GSON.toJson(this, ExtensionDefinition.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -192,7 +193,8 @@ public class ExtensionDefinition {
 		return toJson();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -206,7 +208,8 @@ public class ExtensionDefinition {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

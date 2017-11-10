@@ -18,31 +18,25 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ExtensionPointDefinition.
+ * The ExtensionPointDefinition Entity.
  */
 @Table(name = "DIRIGIBLE_EXTENSION_POINTS")
 public class ExtensionPointDefinition {
 
-	/** The location. */
 	@Id
 	@Column(name = "EXTENSIONPOINT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
-	/** The name. */
 	@Column(name = "EXTENSIONPOINT_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
 	private String name;
 
-	/** The description. */
 	@Column(name = "EXTENSIONPOINT_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	/** The created by. */
 	@Column(name = "EXTENSIONPOINT_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	/** The created at. */
 	@Column(name = "EXTENSIONPOINT_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -58,7 +52,8 @@ public class ExtensionPointDefinition {
 	/**
 	 * Sets the location.
 	 *
-	 * @param location the new location
+	 * @param location
+	 *            the new location
 	 */
 	public void setLocation(String location) {
 		this.location = location;
@@ -76,7 +71,8 @@ public class ExtensionPointDefinition {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -94,7 +90,8 @@ public class ExtensionPointDefinition {
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -112,7 +109,8 @@ public class ExtensionPointDefinition {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -133,7 +131,8 @@ public class ExtensionPointDefinition {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
@@ -144,9 +143,10 @@ public class ExtensionPointDefinition {
 	}
 
 	/**
-	 * From json.
+	 * Creates ExtensionPointDefinition from JSON.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the JSON
 	 * @return the extension point definition
 	 */
 	public static ExtensionPointDefinition fromJson(String json) {
@@ -154,15 +154,16 @@ public class ExtensionPointDefinition {
 	}
 
 	/**
-	 * To json.
+	 * Converts ExtensionPointDefinition to JSON.
 	 *
-	 * @return the string
+	 * @return the JSON
 	 */
 	public String toJson() {
 		return GsonHelper.GSON.toJson(this, ExtensionPointDefinition.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -170,7 +171,8 @@ public class ExtensionPointDefinition {
 		return toJson();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -183,7 +185,8 @@ public class ExtensionPointDefinition {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

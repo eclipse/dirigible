@@ -13,13 +13,13 @@ package org.eclipse.dirigible.core.extensions.synchronizer;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ExtensionsSynchronizerJobDefinitionProvider.
  */
 public class ExtensionsSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()
 	 */
 	@Override
