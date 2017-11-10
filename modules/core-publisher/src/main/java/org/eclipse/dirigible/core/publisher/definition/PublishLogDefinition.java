@@ -17,9 +17,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PublishLogDefinition.
+ * The PublishLogDefinition serialization object.
  */
 @Table(name = "DIRIGIBLE_PUBLISH_LOGS")
 public class PublishLogDefinition {
@@ -67,7 +66,8 @@ public class PublishLogDefinition {
 	/**
 	 * Sets the source.
 	 *
-	 * @param source the new source
+	 * @param source
+	 *            the new source
 	 */
 	public void setSource(String source) {
 		this.source = source;
@@ -85,7 +85,8 @@ public class PublishLogDefinition {
 	/**
 	 * Sets the target.
 	 *
-	 * @param target the new target
+	 * @param target
+	 *            the new target
 	 */
 	public void setTarget(String target) {
 		this.target = target;
@@ -103,7 +104,8 @@ public class PublishLogDefinition {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -124,7 +126,8 @@ public class PublishLogDefinition {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
