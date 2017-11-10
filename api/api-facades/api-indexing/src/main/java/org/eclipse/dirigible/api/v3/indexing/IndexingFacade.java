@@ -23,29 +23,78 @@ import org.eclipse.dirigible.core.indexing.service.IndexingCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class IndexingFacade.
+ */
 public class IndexingFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(IndexingFacade.class);
 	
+	/** The Constant indexingCoreService. */
 	private static final IIndexingCoreService indexingCoreService = StaticInjector.getInjector().getInstance(IndexingCoreService.class);
 
+	/**
+	 * Adds the.
+	 *
+	 * @param index the index
+	 * @param location the location
+	 * @param contents the contents
+	 * @param lastModified the last modified
+	 * @param parameters the parameters
+	 * @throws IndexingException the indexing exception
+	 */
 	public static final void add(String index, String location, String contents, String lastModified, String parameters) throws IndexingException {
 		Map map = GsonHelper.GSON.fromJson(parameters, Map.class);
 		indexingCoreService.add(index, location, contents.getBytes(), Long.parseLong(lastModified), map);
 	}
 	
+	/**
+	 * Search.
+	 *
+	 * @param index the index
+	 * @param term the term
+	 * @return the string
+	 * @throws IndexingException the indexing exception
+	 */
 	public static final String search(String index, String term) throws IndexingException {
 		return indexingCoreService.search(index, term);
 	}
 	
+	/**
+	 * Before.
+	 *
+	 * @param index the index
+	 * @param date the date
+	 * @return the string
+	 * @throws IndexingException the indexing exception
+	 */
 	public static final String before(String index, String date) throws IndexingException {
 		return indexingCoreService.before(index, Long.parseLong(date));
 	}
 	
+	/**
+	 * After.
+	 *
+	 * @param index the index
+	 * @param date the date
+	 * @return the string
+	 * @throws IndexingException the indexing exception
+	 */
 	public static final String after(String index, String date) throws IndexingException {
 		return indexingCoreService.after(index, Long.parseLong(date));
 	}
 	
+	/**
+	 * Between.
+	 *
+	 * @param index the index
+	 * @param lower the lower
+	 * @param upper the upper
+	 * @return the string
+	 * @throws IndexingException the indexing exception
+	 */
 	public static final String between(String index, String lower, String upper) throws IndexingException {
 		return indexingCoreService.between(index, Long.parseLong(lower), Long.parseLong(upper));
 	}

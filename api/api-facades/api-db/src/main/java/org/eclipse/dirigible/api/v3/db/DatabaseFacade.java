@@ -41,24 +41,54 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DatabaseFacade.
+ */
 public class DatabaseFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
 
+	/** The database. */
 	private static IDatabase database = StaticInjector.getInjector().getInstance(IDatabase.class);;
 
+	/**
+	 * Gets the database types.
+	 *
+	 * @return the database types
+	 */
 	public static final String getDatabaseTypes() {
 		return GsonHelper.GSON.toJson(DatabaseModule.getDatabaseTypes());
 	}
 
+	/**
+	 * Gets the data sources.
+	 *
+	 * @param databaseType the database type
+	 * @return the data sources
+	 */
 	public static final String getDataSources(String databaseType) {
 		return GsonHelper.GSON.toJson(DatabaseModule.getDataSources(databaseType));
 	}
 
+	/**
+	 * Gets the data sources.
+	 *
+	 * @return the data sources
+	 */
 	public static final String getDataSources() {
 		return GsonHelper.GSON.toJson(database.getDataSources().keySet());
 	}
 
+	/**
+	 * Gets the metadata.
+	 *
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @return the metadata
+	 * @throws SQLException the SQL exception
+	 */
 	public static final String getMetadata(String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -69,6 +99,13 @@ public class DatabaseFacade implements IScriptingFacade {
 		return metadata;
 	}
 
+	/**
+	 * Gets the metadata.
+	 *
+	 * @param databaseType the database type
+	 * @return the metadata
+	 * @throws SQLException the SQL exception
+	 */
 	public static final String getMetadata(String databaseType) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, null);
 		if (dataSource == null) {
@@ -79,6 +116,12 @@ public class DatabaseFacade implements IScriptingFacade {
 		return metadata;
 	}
 
+	/**
+	 * Gets the metadata.
+	 *
+	 * @return the metadata
+	 * @throws SQLException the SQL exception
+	 */
 	public static final String getMetadata() throws SQLException {
 		DataSource dataSource = getDataSource(null, null);
 		if (dataSource == null) {
@@ -89,6 +132,13 @@ public class DatabaseFacade implements IScriptingFacade {
 		return metadata;
 	}
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @return the data source
+	 */
 	private static DataSource getDataSource(String databaseType, String datasourceName) {
 		DataSource dataSource = null;
 		if (databaseType == null) {
@@ -105,6 +155,16 @@ public class DatabaseFacade implements IScriptingFacade {
 
 	//  ============  Query  ===========
 	
+	/**
+	 * Query.
+	 *
+	 * @param sql the sql
+	 * @param parameters the parameters
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	public static final String query(String sql, String parameters, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -132,20 +192,54 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Query.
+	 *
+	 * @param sql the sql
+	 * @param parameters the parameters
+	 * @param databaseType the database type
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	public static final String query(String sql, String parameters, String databaseType) throws SQLException {
 		return query(sql, parameters, databaseType, null);
 	}
 
+	/**
+	 * Query.
+	 *
+	 * @param sql the sql
+	 * @param parameters the parameters
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	public static final String query(String sql, String parameters) throws SQLException {
 		return query(sql, parameters, null, null);
 	}
 
+	/**
+	 * Query.
+	 *
+	 * @param sql the sql
+	 * @return the string
+	 * @throws SQLException the SQL exception
+	 */
 	public static final String query(String sql) throws SQLException {
 		return query(sql, null, null, null);
 	}
 	
 	//  ===========  Update  ===========
 
+	/**
+	 * Update.
+	 *
+	 * @param sql the sql
+	 * @param parameters the parameters
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
 	public static final int update(String sql, String parameters, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -172,18 +266,49 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param sql the sql
+	 * @param parameters the parameters
+	 * @param databaseType the database type
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
 	public static final int update(String sql, String parameters, String databaseType) throws SQLException {
 		return update(sql, parameters, databaseType, null);
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param sql the sql
+	 * @param parameters the parameters
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
 	public static final int update(String sql, String parameters) throws SQLException {
 		return update(sql, parameters, null, null);
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param sql the sql
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
 	public static final int update(String sql) throws SQLException {
 		return update(sql, null, null, null);
 	}
 
+	/**
+	 * Sets the parameters.
+	 *
+	 * @param parameters the parameters
+	 * @param preparedStatement the prepared statement
+	 * @throws SQLException the SQL exception
+	 */
 	private static void setParameters(String parameters, PreparedStatement preparedStatement) throws SQLException {
 		JsonElement parametersElement = GsonHelper.PARSER.parse(parameters);
 		if (parametersElement instanceof JsonArray) {
@@ -322,6 +447,14 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Gets the connection.
+	 *
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 */
 	public static final Connection getConnection(String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -332,10 +465,23 @@ public class DatabaseFacade implements IScriptingFacade {
 		return connection;
 	}
 
+	/**
+	 * Gets the connection.
+	 *
+	 * @param databaseType the database type
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 */
 	public static final Connection getConnection(String databaseType) throws SQLException {
 		return getConnection(databaseType, null);
 	}
 
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 * @throws SQLException the SQL exception
+	 */
 	public static final Connection getConnection() throws SQLException {
 		return getConnection(null, null);
 	}
@@ -343,6 +489,15 @@ public class DatabaseFacade implements IScriptingFacade {
 	//  =========  Sequence  ===========
 	
 	
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @return the long
+	 * @throws SQLException the SQL exception
+	 */
 	public static final long nextval(String sequence, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -366,6 +521,14 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Gets the next val.
+	 *
+	 * @param sequence the sequence
+	 * @param connection the connection
+	 * @return the next val
+	 * @throws SQLException the SQL exception
+	 */
 	private static long getNextVal(String sequence, Connection connection) throws SQLException {
 		String sql = SqlFactory.getNative(connection).nextval(sequence).build();
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -382,6 +545,13 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Creates the sequence internal.
+	 *
+	 * @param sequence the sequence
+	 * @param connection the connection
+	 * @throws SQLException the SQL exception
+	 */
 	private static void createSequenceInternal(String sequence, Connection connection) throws SQLException {
 		String sql = SqlFactory.getNative(connection).create().sequence(sequence).build();
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -394,14 +564,37 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @param databaseType the database type
+	 * @return the long
+	 * @throws SQLException the SQL exception
+	 */
 	public static long nextval(String sequence, String databaseType) throws SQLException {
 		return nextval(sequence, databaseType, null);
 	}
 
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @return the long
+	 * @throws SQLException the SQL exception
+	 */
 	public static long nextval(String sequence) throws SQLException {
 		return nextval(sequence, null, null);
 	}
 	
+	/**
+	 * Creates the sequence.
+	 *
+	 * @param sequence the sequence
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @throws SQLException the SQL exception
+	 */
 	public static final void createSequence(String sequence, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -418,14 +611,35 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Creates the sequence.
+	 *
+	 * @param sequence the sequence
+	 * @param databaseType the database type
+	 * @throws SQLException the SQL exception
+	 */
 	public static void createSequence(String sequence, String databaseType) throws SQLException {
 		createSequence(sequence, databaseType, null);
 	}
 
+	/**
+	 * Creates the sequence.
+	 *
+	 * @param sequence the sequence
+	 * @throws SQLException the SQL exception
+	 */
 	public static void createSequence(String sequence) throws SQLException {
 		createSequence(sequence, null, null);
 	}
 	
+	/**
+	 * Drop sequence.
+	 *
+	 * @param sequence the sequence
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @throws SQLException the SQL exception
+	 */
 	public static final void dropSequence(String sequence, String databaseType, String datasourceName) throws SQLException {
 		DataSource dataSource = getDataSource(databaseType, datasourceName);
 		if (dataSource == null) {
@@ -450,10 +664,23 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Drop sequence.
+	 *
+	 * @param sequence the sequence
+	 * @param databaseType the database type
+	 * @throws SQLException the SQL exception
+	 */
 	public static void dropSequence(String sequence, String databaseType) throws SQLException {
 		dropSequence(sequence, databaseType, null);
 	}
 
+	/**
+	 * Drop sequence.
+	 *
+	 * @param sequence the sequence
+	 * @throws SQLException the SQL exception
+	 */
 	public static void dropSequence(String sequence) throws SQLException {
 		dropSequence(sequence, null, null);
 	}
@@ -462,10 +689,23 @@ public class DatabaseFacade implements IScriptingFacade {
 	//  =========== SQL ===========
 	
 	
+	/**
+	 * Gets the default.
+	 *
+	 * @return the default
+	 * @throws SQLException the SQL exception
+	 */
 	public static SqlFactory getDefault() throws SQLException {
 		return SqlFactory.getDefault();
 	}
 
+	/**
+	 * Gets the native.
+	 *
+	 * @param connection the connection
+	 * @return the native
+	 * @throws SQLException the SQL exception
+	 */
 	public static SqlFactory getNative(Connection connection) throws SQLException {
 		return SqlFactory.getNative(connection);
 	}

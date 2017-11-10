@@ -15,10 +15,21 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EnvFacade.
+ */
 public class EnvFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(EnvFacade.class);
 
+	/**
+	 * Gets the.
+	 *
+	 * @param name the name
+	 * @return the string
+	 */
 	public static final String get(String name) {
 		logger.trace("API - EnvFacade.get() -> begin");
 		String value = System.getenv(name);
@@ -26,6 +37,11 @@ public class EnvFacade implements IScriptingFacade {
 		return value;
 	}
 
+	/**
+	 * List.
+	 *
+	 * @return the string
+	 */
 	public static final String list() {
 		logger.trace("API - EnvFacade.get() -> begin");
 		String value = GsonHelper.GSON.toJson(System.getenv());
