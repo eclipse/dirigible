@@ -14,19 +14,45 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 
+/**
+ * The Class HexFacade.
+ */
 public class HexFacade {
 
+	/**
+	 * Converts an array of bytes into a String representing the hexadecimal values of each byte in order. The returned
+	 * String will be double the length of the passed array, as it takes two characters to represent any given byte.
+	 *
+	 * @param input
+	 * @return the hexadecimal value
+	 */
 	public static final String encode(byte[] input) {
 		return Hex.encodeHexString(input);
 	}
 
-	public static final byte[] decode(String input) throws DecoderException {
-		return Hex.decodeHex(input.toCharArray());
-	}
-
+	/**
+	 * Converts an array of bytes into a String representing the hexadecimal values of each byte in order. The returned
+	 * String will be double the length of the passed array, as it takes two characters to represent any given byte.
+	 *
+	 * @param input
+	 * @return the hexadecimal value
+	 */
 	public static final String encode(String input) {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
 		return encode(bytes);
+	}
+
+	/**
+	 * Converts an array of characters representing hexadecimal values into an array of bytes of those same values. The
+	 * returned array will be half the length of the passed array, as it takes two characters to represent any given
+	 * byte. An exception is thrown if the passed char array has an odd number of elements.
+	 *
+	 * @param input
+	 * @return the input decoded
+	 * @throws DecoderException
+	 */
+	public static final byte[] decode(String input) throws DecoderException {
+		return Hex.decodeHex(input.toCharArray());
 	}
 
 }

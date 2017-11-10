@@ -13,27 +13,28 @@ package org.eclipse.dirigible.api.v3.utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DigestFacade.
  */
 public class DigestFacade {
 
 	/**
-	 * Md 5.
+	 * Calculates the MD5 digest and returns the value as a 16 element byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the MD5 digest
 	 */
 	public static final byte[] md5(byte[] input) {
 		return DigestUtils.md5(input);
 	}
 
 	/**
-	 * Md 5.
+	 * Calculates the MD5 digest and returns the value as a 16 element byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the MD5 digest
 	 */
 	public static final byte[] md5(String input) {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
@@ -41,20 +42,22 @@ public class DigestFacade {
 	}
 
 	/**
-	 * Md 5 hex.
+	 * Calculates the MD5 digest and returns the value as a 32 character hex string.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the MD5 digest
 	 */
 	public static final String md5Hex(byte[] input) {
 		return DigestUtils.md5Hex(input);
 	}
 
 	/**
-	 * Md 5 hex.
+	 * Calculates the MD5 digest and returns the value as a 32 character hex string.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the MD5 digest
 	 */
 	public static final String md5Hex(String input) {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
@@ -62,20 +65,22 @@ public class DigestFacade {
 	}
 
 	/**
-	 * Sha 1.
+	 * Calculates the SHA-1 digest and returns the value as a byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the SHA-1 digest
 	 */
 	public static final byte[] sha1(byte[] input) {
 		return DigestUtils.sha1(input);
 	}
 
 	/**
-	 * Sha 1.
+	 * Calculates the SHA-1 digest and returns the value as a byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the SHA-1 digest
 	 */
 	public static final byte[] sha1(String input) {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
@@ -83,20 +88,22 @@ public class DigestFacade {
 	}
 
 	/**
-	 * Sha 256.
+	 * Calculates the SHA-256 digest and returns the value as a byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the SHA-256 digest
 	 */
 	public static final byte[] sha256(byte[] input) {
 		return DigestUtils.sha256(input);
 	}
 
 	/**
-	 * Sha 256.
+	 * Calculates the SHA-256 digest and returns the value as a byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the SHA-256 digest
 	 */
 	public static final byte[] sha256(String input) {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
@@ -104,20 +111,22 @@ public class DigestFacade {
 	}
 
 	/**
-	 * Sha 384.
+	 * Calculates the SHA-384 digest and returns the value as a byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the SHA-384 digest
 	 */
 	public static final byte[] sha384(byte[] input) {
 		return DigestUtils.sha384(input);
 	}
 
 	/**
-	 * Sha 384.
+	 * Calculates the SHA-384 digest and returns the value as a byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the SHA-384 digest
 	 */
 	public static final byte[] sha384(String input) {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
@@ -125,20 +134,22 @@ public class DigestFacade {
 	}
 
 	/**
-	 * Sha 512.
+	 * Calculates the SHA-512 digest and returns the value as a byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the SHA-512 digest
 	 */
 	public static final byte[] sha512(byte[] input) {
 		return DigestUtils.sha512(input);
 	}
 
 	/**
-	 * Sha 512.
+	 * Calculates the SHA-512 digest and returns the value as a byte[].
 	 *
-	 * @param input the input
-	 * @return the byte[]
+	 * @param input
+	 *            the input
+	 * @return the SHA-512 digest
 	 */
 	public static final byte[] sha512(String input) {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
@@ -146,20 +157,22 @@ public class DigestFacade {
 	}
 
 	/**
-	 * Sha 1 hex.
+	 * Calculates the SHA-1 digest and returns the value as a hex string.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the SHA-1 digest
 	 */
 	public static final String sha1Hex(byte[] input) {
 		return DigestUtils.sha1Hex(input);
 	}
 
 	/**
-	 * Sha 1 hex.
+	 * Calculates the SHA-1 digest and returns the value as a hex string.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the SHA-1 digest
 	 */
 	public static final String sha1Hex(String input) {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
