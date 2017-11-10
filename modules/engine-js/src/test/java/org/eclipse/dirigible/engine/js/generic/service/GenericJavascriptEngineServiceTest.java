@@ -16,8 +16,15 @@ import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.ResourcePath;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GenericJavascriptEngineServiceTest.
+ */
 public class GenericJavascriptEngineServiceTest {
 
+	/**
+	 * Generate resource path full.
+	 */
 	@Test
 	public void generateResourcePathFull() {
 		String module = "myproject/module1.js/1/2?n=v";
@@ -27,6 +34,9 @@ public class GenericJavascriptEngineServiceTest {
 		assertEquals("1/2?n=v", resourcePath.getPath());
 	}
 
+	/**
+	 * Generate resource path rhino full.
+	 */
 	@Test
 	public void generateResourcePathRhinoFull() {
 		String module = "myproject/module1.rhino/1/2?n=v";
@@ -36,6 +46,9 @@ public class GenericJavascriptEngineServiceTest {
 		assertEquals("1/2?n=v", resourcePath.getPath());
 	}
 
+	/**
+	 * Generate resource path no path.
+	 */
 	@Test
 	public void generateResourcePathNoPath() {
 		String module = "myproject/module1.js";
@@ -45,6 +58,9 @@ public class GenericJavascriptEngineServiceTest {
 		assertEquals("", resourcePath.getPath());
 	}
 
+	/**
+	 * Generate resource path no path slash.
+	 */
 	@Test
 	public void generateResourcePathNoPathSlash() {
 		String module = "myproject/module1.js/";
@@ -54,6 +70,9 @@ public class GenericJavascriptEngineServiceTest {
 		assertEquals("", resourcePath.getPath());
 	}
 
+	/**
+	 * Generate resource path rhino no path.
+	 */
 	@Test
 	public void generateResourcePathRhinoNoPath() {
 		String module = "myproject/module1.rhino";
@@ -63,6 +82,9 @@ public class GenericJavascriptEngineServiceTest {
 		assertEquals("", resourcePath.getPath());
 	}
 
+	/**
+	 * Generate resource path rhino no path slash.
+	 */
 	@Test
 	public void generateResourcePathRhinoNoPathSlash() {
 		String module = "myproject/module1.rhino";

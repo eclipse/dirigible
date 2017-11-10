@@ -21,11 +21,24 @@ import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProjectMetadataManager.
+ */
 public class ProjectMetadataManager {
 
+	/** The workspaces core service. */
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
 
+	/**
+	 * Ensure project metadata.
+	 *
+	 * @param workspace the workspace
+	 * @param projectName the project name
+	 * @param repositoryURI the repository URI
+	 * @param branch the branch
+	 */
 	public void ensureProjectMetadata(IWorkspace workspace, String projectName, String repositoryURI, String branch) {
 		IProject project = workspace.getProject(projectName);
 		IFile projectFile = project.getFile(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
@@ -45,12 +58,26 @@ public class ProjectMetadataManager {
 
 	}
 
+	/**
+	 * Gets the branch.
+	 *
+	 * @param selectedProject the selected project
+	 * @return the branch
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static String getBranch(IProject selectedProject) throws IOException {
 		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
 		ProjectMetadataRepository repository = projectMetadata.getRepository();
 		return repository != null ? repository.getBranch() : "master";
 	}
 
+	/**
+	 * Gets the repository uri.
+	 *
+	 * @param selectedProject the selected project
+	 * @return the repository uri
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static String getRepositoryUri(IProject selectedProject) throws IOException {
 		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
 		if (projectMetadata == null) {
@@ -59,6 +86,13 @@ public class ProjectMetadataManager {
 		return projectMetadata.getRepository() != null ? projectMetadata.getRepository().getUrl() : null;
 	}
 
+	/**
+	 * Gets the dependencies.
+	 *
+	 * @param selectedProject the selected project
+	 * @return the dependencies
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static ProjectMetadataDependency[] getDependencies(IProject selectedProject) throws IOException {
 		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
 		if (projectMetadata == null) {
@@ -67,6 +101,13 @@ public class ProjectMetadataManager {
 		return projectMetadata.getDependencies();
 	}
 
+	/**
+	 * Gets the project metadata.
+	 *
+	 * @param selectedProject the selected project
+	 * @return the project metadata
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static ProjectMetadata getProjectMetadata(IProject selectedProject) throws IOException {
 		IFile projectFile = selectedProject.getFile(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
 		if (!projectFile.exists()) {

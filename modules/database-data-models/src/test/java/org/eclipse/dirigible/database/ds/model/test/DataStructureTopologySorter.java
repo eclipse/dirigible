@@ -26,8 +26,15 @@ import org.eclipse.dirigible.database.ds.model.DataStructureModelException;
 import org.eclipse.dirigible.database.ds.model.DataStructureTopologicalSorter;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataStructureTopologySorter.
+ */
 public class DataStructureTopologySorter {
 
+	/**
+	 * Test sort.
+	 */
 	@Test
 	public void testSort() {
 		Map<String, DataStructureModel> models = new HashMap<String, DataStructureModel>();
@@ -110,6 +117,9 @@ public class DataStructureTopologySorter {
 
 	}
 
+	/**
+	 * Test sort cyclic.
+	 */
 	@Test
 	public void testSortCyclic() {
 		Map<String, DataStructureModel> models = new HashMap<String, DataStructureModel>();

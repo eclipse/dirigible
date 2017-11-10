@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.ds.model;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
  * The table model representation
  * {
@@ -54,16 +55,18 @@ import java.util.List;
  * "type":"TABLE"
  * }
  * ]
- * }
+ * }.
  */
 public class DataStructureTableModel extends DataStructureModel {
 
+	/** The columns. */
 	private List<DataStructureTableColumnModel> columns = new ArrayList<DataStructureTableColumnModel>();
 
+	/** The constraints. */
 	private DataStructureTableConstraintsModel constraints = new DataStructureTableConstraintsModel();
 
 	/**
-	 * Getter for the columns
+	 * Getter for the columns.
 	 *
 	 * @return the columns
 	 */
@@ -71,6 +74,11 @@ public class DataStructureTableModel extends DataStructureModel {
 		return columns;
 	}
 
+	/**
+	 * Gets the constraints.
+	 *
+	 * @return the constraints
+	 */
 	public DataStructureTableConstraintsModel getConstraints() {
 		return constraints;
 	}

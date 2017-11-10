@@ -12,6 +12,19 @@ package org.eclipse.dirigible.databases.processor.format;
 
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface HeaderFormatter.
+ *
+ * @param <T> the generic type
+ */
 public interface HeaderFormatter<T> {
+	
+	/**
+	 * Write.
+	 *
+	 * @param columns the columns
+	 * @return the t
+	 */
 	T write(List<ColumnDescriptor> columns);
 }

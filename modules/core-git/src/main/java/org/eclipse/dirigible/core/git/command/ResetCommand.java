@@ -31,25 +31,41 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Reset the state of the local project, clear local changes
+ * Reset the state of the local project, clear local changes.
  */
 public class ResetCommand {
 
+	/** The Constant DOT_GIT. */
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	
+	/** The Constant MASTER. */
 	private static final String MASTER = "master"; //$NON-NLS-1$
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
 
+	/** The project metadata manager. */
 	@Inject
 	private ProjectMetadataManager projectMetadataManager;
 
+	/** The verifier. */
 	@Inject
 	private ProjectPropertiesVerifier verifier;
 
+	/** The git file utils. */
 	@Inject
 	private GitFileUtils gitFileUtils;
 
+	/**
+	 * Execute.
+	 *
+	 * @param workspace the workspace
+	 * @param projects the projects
+	 * @param username the username
+	 * @param password the password
+	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, final String username, final String password) {
 
 		if (projects.length == 0) {
@@ -68,6 +84,14 @@ public class ResetCommand {
 
 	}
 
+	/**
+	 * Hard reset.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param username the username
+	 * @param password the password
+	 */
 	private void hardReset(final IWorkspace workspace, final IProject project, final String username, final String password) {
 		final String errorMessage = String.format("While hard reseting project [%s] error occurred", project.getName());
 		File tempGitDirectory = null;

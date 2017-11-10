@@ -19,11 +19,19 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RhinoJavascriptEngineProcessor.
+ */
 public class RhinoJavascriptEngineProcessor implements IJavascriptEngineProcessor {
 	
+	/** The rhino engine executor. */
 	@Inject
 	private RhinoJavascriptEngineExecutor rhinoEngineExecutor;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
+	 */
 	@Override
 	public void executeService(String module) throws ScriptingException {
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();

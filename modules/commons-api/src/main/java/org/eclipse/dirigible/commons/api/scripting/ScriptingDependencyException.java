@@ -10,26 +10,58 @@
 
 package org.eclipse.dirigible.commons.api.scripting;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ScriptingDependencyException.
+ */
 public class ScriptingDependencyException extends ScriptingException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7175996091072301851L;
 
+	/**
+	 * Instantiates a new scripting dependency exception.
+	 */
 	public ScriptingDependencyException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new scripting dependency exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 * @param enableSuppression the enable suppression
+	 * @param writableStackTrace the writable stack trace
+	 */
 	public ScriptingDependencyException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
+	/**
+	 * Instantiates a new scripting dependency exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public ScriptingDependencyException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new scripting dependency exception.
+	 *
+	 * @param message the message
+	 */
 	public ScriptingDependencyException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new scripting dependency exception.
+	 *
+	 * @param cause the cause
+	 */
 	public ScriptingDependencyException(Throwable cause) {
 		super(cause);
 	}

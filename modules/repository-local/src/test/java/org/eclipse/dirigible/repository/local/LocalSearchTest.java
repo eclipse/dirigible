@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalSearchTest.
+ */
 public class LocalSearchTest extends RepositoryGenericSearchTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {
@@ -28,11 +35,17 @@ public class LocalSearchTest extends RepositoryGenericSearchTest {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
+	 */
 	@Override
 	public void testSearchPath() {
 		super.testSearchPath();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()
+	 */
 	@Override
 	public void testSearchText() {
 		// TODO to be implemented

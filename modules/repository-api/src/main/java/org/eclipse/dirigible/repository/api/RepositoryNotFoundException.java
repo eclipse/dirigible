@@ -10,21 +10,44 @@
 
 package org.eclipse.dirigible.repository.api;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryNotFoundException.
+ */
 public class RepositoryNotFoundException extends RepositoryReadException {
 
 
+	/**
+	 * Instantiates a new repository not found exception.
+	 */
 	public RepositoryNotFoundException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new repository not found exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public RepositoryNotFoundException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new repository not found exception.
+	 *
+	 * @param message the message
+	 */
 	public RepositoryNotFoundException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new repository not found exception.
+	 *
+	 * @param cause the cause
+	 */
 	public RepositoryNotFoundException(Throwable cause) {
 		super(cause);
 	}

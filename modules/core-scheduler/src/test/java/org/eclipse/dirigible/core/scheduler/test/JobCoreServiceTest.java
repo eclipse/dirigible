@@ -25,16 +25,31 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JobCoreServiceTest.
+ */
 public class JobCoreServiceTest extends AbstractGuiceTest {
 	
+	/** The job core service. */
 	@Inject
 	private ISchedulerCoreService jobCoreService;
 	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.jobCoreService = getInjector().getInstance(SchedulerCoreService.class);
 	}
 	
+	/**
+	 * Creates the job.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Test
 	public void createJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
@@ -48,6 +63,12 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 		jobCoreService.removeJob("test_job1");
 	}
 	
+	/**
+	 * Gets the job.
+	 *
+	 * @return the job
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Test
 	public void getJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
@@ -58,6 +79,11 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 		jobCoreService.removeJob("test_job1");
 	}
 	
+	/**
+	 * Updatet job.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Test
 	public void updatetJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
@@ -72,6 +98,11 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 		jobCoreService.removeJob("test_job1");
 	}
 	
+	/**
+	 * Removes the job.
+	 *
+	 * @throws SchedulerException the scheduler exception
+	 */
 	@Test
 	public void removeJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");

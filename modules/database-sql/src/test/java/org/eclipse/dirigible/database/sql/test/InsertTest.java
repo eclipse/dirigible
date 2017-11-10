@@ -16,8 +16,15 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class InsertTest.
+ */
 public class InsertTest {
 	
+	/**
+	 * Insert simple.
+	 */
 	@Test
 	public void insertSimple() {
 		String sql = SqlFactory.getDefault()
@@ -31,6 +38,9 @@ public class InsertTest {
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
 	}
 	
+	/**
+	 * Insert values.
+	 */
 	@Test
 	public void insertValues() {
 		String sql = SqlFactory.getDefault()
@@ -46,6 +56,9 @@ public class InsertTest {
 		assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, 'Smith')", sql);
 	}
 	
+	/**
+	 * Insert select.
+	 */
 	@Test
 	public void insertSelect() {
 		String sql = SqlFactory.getDefault()

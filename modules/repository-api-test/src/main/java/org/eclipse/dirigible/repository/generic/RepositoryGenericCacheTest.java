@@ -19,12 +19,21 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericCacheTest.
+ */
 public class RepositoryGenericCacheTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/** The disabled. */
 	protected static boolean disabled = false;
 
+	/**
+	 * Test cache text.
+	 */
 	@Test
 	public void testCacheText() {
 		if (repository == null) {

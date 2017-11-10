@@ -15,21 +15,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+// TODO: Auto-generated Javadoc
 /**
- * Data models sorter utility
+ * Data models sorter utility.
  */
 public class DataStructureTopologicalSorter {
 
 	/**
-	 * Sorts the data models
+	 * Sorts the data models.
 	 *
-	 * @param input
-	 *            the models that will be sorted
-	 * @param output
-	 *            the output of the sorting
-	 * @param external
-	 *            the external dependencies
-	 * @throws DataStructureModelException
+	 * @param input            the models that will be sorted
+	 * @param output            the output of the sorting
+	 * @param external            the external dependencies
+	 * @throws DataStructureModelException the data structure model exception
 	 */
 	public static void sort(Map<String, DataStructureModel> input, List<String> output, List<String> external) throws DataStructureModelException {
 		List<String> processing = new ArrayList<String>();
@@ -44,6 +42,16 @@ public class DataStructureTopologicalSorter {
 
 	}
 
+	/**
+	 * Follow dependencies.
+	 *
+	 * @param input the input
+	 * @param output the output
+	 * @param external the external
+	 * @param processing the processing
+	 * @param dataStructureModel the data structure model
+	 * @throws DataStructureModelException the data structure model exception
+	 */
 	protected static void followDependencies(Map<String, DataStructureModel> input, List<String> output, List<String> external,
 			List<String> processing, DataStructureModel dataStructureModel) throws DataStructureModelException {
 		processing.add(dataStructureModel.getName());

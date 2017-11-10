@@ -14,15 +14,30 @@ import java.util.List;
 
 import io.swagger.annotations.ApiModelProperty;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BaseGitProjectModel.
+ */
 public class BaseGitProjectModel extends BaseGitModel {
 
+	/** The projects. */
 	@ApiModelProperty(value = "List of projects, on which a Git Operation will be performed", required = true, example = "[core_api]")
 	private List<String> projects;
 
+	/**
+	 * Gets the projects.
+	 *
+	 * @return the projects
+	 */
 	public List<String> getProjects() {
 		return projects;
 	}
 
+	/**
+	 * Sets the projects.
+	 *
+	 * @param projects the new projects
+	 */
 	public void setProjects(List<String> projects) {
 		this.projects = projects;
 	}

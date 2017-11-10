@@ -10,6 +10,38 @@
 
 package org.eclipse.dirigible.database.sql;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Enum DataType.
+ */
 public enum DataType {
-	VARCHAR, CHAR, DATE, TIME, TIMESTAMP, INTEGER, TINYINT, BIGINT, SMALLINT, REAL, DOUBLE, BOOLEAN, BLOB, DECIMAL
+	
+	/** The varchar. */
+	VARCHAR, 
+ /** The char. */
+ CHAR, 
+ /** The date. */
+ DATE, 
+ /** The time. */
+ TIME, 
+ /** The timestamp. */
+ TIMESTAMP, 
+ /** The integer. */
+ INTEGER, 
+ /** The tinyint. */
+ TINYINT, 
+ /** The bigint. */
+ BIGINT, 
+ /** The smallint. */
+ SMALLINT, 
+ /** The real. */
+ REAL, 
+ /** The double. */
+ DOUBLE, 
+ /** The boolean. */
+ BOOLEAN, 
+ /** The blob. */
+ BLOB, 
+ /** The decimal. */
+ DECIMAL
 }

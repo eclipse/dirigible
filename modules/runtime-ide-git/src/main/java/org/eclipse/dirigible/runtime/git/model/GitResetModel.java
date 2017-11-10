@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.runtime.git.model;
 
+/**
+ * The Class GitResetModel.
+ */
 public class GitResetModel extends BaseGitProjectModel {
 
 }

@@ -13,27 +13,57 @@ package org.eclipse.dirigible.database.sql.builders.sequence;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateSequenceBuilder.
+ */
 public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 
+	/** The sequence. */
 	private String sequence = null;
+	
+	/** The start. */
 	private int start = 0;
+	
+	/** The increment. */
 	private int increment = 1;
 
+	/**
+	 * Instantiates a new creates the sequence builder.
+	 *
+	 * @param dialect the dialect
+	 * @param sequence the sequence
+	 */
 	public CreateSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect);
 		this.sequence = sequence;
 	}
 
+	/**
+	 * Start.
+	 *
+	 * @param start the start
+	 * @return the creates the sequence builder
+	 */
 	public CreateSequenceBuilder start(int start) {
 		this.start = start;
 		return this;
 	}
 
+	/**
+	 * Increment.
+	 *
+	 * @param increment the increment
+	 * @return the creates the sequence builder
+	 */
 	public CreateSequenceBuilder increment(int increment) {
 		this.increment = increment;
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 
@@ -54,10 +84,20 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 		return sql.toString();
 	}
 
+	/**
+	 * Generate sequence.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateSequence(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(this.sequence);
 	}
 
+	/**
+	 * Generate start.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateStart(StringBuilder sql) {
 		// sql.append(SPACE)
 		// .append(KEYWORD_START)
@@ -65,6 +105,11 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 		// .append(this.start);
 	}
 
+	/**
+	 * Generate increment.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateIncrement(StringBuilder sql) {
 		// sql.append(SPACE)
 		// .append(KEYWORD_INCREMENT)
@@ -72,14 +117,29 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 		// .append(this.increment);
 	}
 
+	/**
+	 * Gets the sequence.
+	 *
+	 * @return the sequence
+	 */
 	public String getSequence() {
 		return sequence;
 	}
 
+	/**
+	 * Gets the start.
+	 *
+	 * @return the start
+	 */
 	public int getStart() {
 		return start;
 	}
 
+	/**
+	 * Gets the increment.
+	 *
+	 * @return the increment
+	 */
 	public int getIncrement() {
 		return increment;
 	}

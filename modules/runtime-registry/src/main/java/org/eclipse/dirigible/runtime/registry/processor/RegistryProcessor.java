@@ -19,30 +19,57 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.json.Registry;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 
+// TODO: Auto-generated Javadoc
 /**
- * Processing the Registry Service incoming requests
+ * Processing the Registry Service incoming requests.
  */
 public class RegistryProcessor {
 
+	/** The Constant REGISTRY. */
 	private static final String REGISTRY = "/registry";
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param path the path
+	 * @return the resource
+	 */
 	public IResource getResource(String path) {
 		StringBuilder registryPath = generateRegistryPath(path);
 		return repository.getResource(registryPath.toString());
 	}
 
+	/**
+	 * Gets the collection.
+	 *
+	 * @param path the path
+	 * @return the collection
+	 */
 	public ICollection getCollection(String path) {
 		StringBuilder registryPath = generateRegistryPath(path);
 		return repository.getCollection(registryPath.toString());
 	}
 
+	/**
+	 * Render registry.
+	 *
+	 * @param collection the collection
+	 * @return the registry
+	 */
 	public Registry renderRegistry(ICollection collection) {
 		return RepositoryJsonHelper.traverseRegistry(collection, IRepositoryStructure.PATH_REGISTRY_PUBLIC, REGISTRY);
 	}
 
+	/**
+	 * Generate registry path.
+	 *
+	 * @param path the path
+	 * @return the string builder
+	 */
 	private StringBuilder generateRegistryPath(String path) {
 		StringBuilder registryPath = new StringBuilder(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(IRepositoryStructure.SEPARATOR).append(path);
 		return registryPath;

@@ -12,8 +12,18 @@ package org.eclipse.dirigible.engine.js.api;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IJavascriptEngineProcessor.
+ */
 public interface IJavascriptEngineProcessor {
 
+	/**
+	 * Execute service.
+	 *
+	 * @param module the module
+	 * @throws ScriptingException the scripting exception
+	 */
 	public void executeService(String module) throws ScriptingException;
 
 }

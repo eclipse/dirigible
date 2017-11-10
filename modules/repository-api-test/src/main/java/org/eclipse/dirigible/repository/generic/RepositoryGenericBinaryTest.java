@@ -21,10 +21,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericBinaryTest.
+ */
 public class RepositoryGenericBinaryTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test create binary.
+	 */
 	@Test
 	public void testCreateBinary() {
 		if (repository == null) {
@@ -43,6 +51,9 @@ public class RepositoryGenericBinaryTest {
 		}
 	}
 
+	/**
+	 * Test get binary.
+	 */
 	@Test
 	public void testGetBinary() {
 		if (repository == null) {
@@ -63,6 +74,9 @@ public class RepositoryGenericBinaryTest {
 		}
 	}
 
+	/**
+	 * Test remove binary.
+	 */
 	@Test
 	public void testRemoveBinary() {
 		if (repository == null) {

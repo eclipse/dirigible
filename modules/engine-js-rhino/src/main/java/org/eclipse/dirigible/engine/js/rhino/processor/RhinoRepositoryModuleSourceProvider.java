@@ -22,21 +22,38 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSource;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RhinoRepositoryModuleSourceProvider.
+ */
 public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBase {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5527033249080497877L;
 
+	/** The Constant JS_EXTENSION. */
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
+	/** The executor. */
 	private transient IScriptEngineExecutor executor;
 	
+	/** The root. */
 	private String root;
 	
+	/**
+	 * Instantiates a new rhino repository module source provider.
+	 *
+	 * @param executor the executor
+	 * @param root the root
+	 */
 	public RhinoRepositoryModuleSourceProvider(IScriptEngineExecutor executor, String root) {
 		this.executor = executor;
 		this.root = root;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase#loadSource(java.lang.String, org.mozilla.javascript.Scriptable, java.lang.Object)
+	 */
 	@Override
 	public ModuleSource loadSource(String module, Scriptable paths, Object validator) throws IOException, URISyntaxException {
 
@@ -53,6 +70,13 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 		return moduleSource;
 	}
 
+	/**
+	 * Creates the module.
+	 *
+	 * @param module the module
+	 * @return the module source
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	private ModuleSource createModule(String module) throws URISyntaxException {
 		byte[] sourceCode;
 		ModuleSource moduleSource;
@@ -62,6 +86,9 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 		return moduleSource;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase#loadFromUri(java.net.URI, java.net.URI, java.lang.Object)
+	 */
 	@Override
 	protected ModuleSource loadFromUri(URI uri, URI base, Object validator) throws IOException, URISyntaxException {
 		// not used

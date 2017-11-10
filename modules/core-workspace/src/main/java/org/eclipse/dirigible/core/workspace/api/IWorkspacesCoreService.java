@@ -14,14 +14,40 @@ import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IWorkspacesCoreService.
+ */
 public interface IWorkspacesCoreService extends ICoreService {
 
+	/**
+	 * Creates the workspace.
+	 *
+	 * @param name the name
+	 * @return the i workspace
+	 */
 	public IWorkspace createWorkspace(String name);
 
+	/**
+	 * Gets the workspace.
+	 *
+	 * @param name the name
+	 * @return the workspace
+	 */
 	public IWorkspace getWorkspace(String name);
 
+	/**
+	 * Gets the workspaces.
+	 *
+	 * @return the workspaces
+	 */
 	public List<IWorkspace> getWorkspaces();
 
+	/**
+	 * Delete workspace.
+	 *
+	 * @param name the name
+	 */
 	public void deleteWorkspace(String name);
 
 }

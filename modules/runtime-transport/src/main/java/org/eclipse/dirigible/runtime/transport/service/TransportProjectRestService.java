@@ -45,8 +45,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the transport requests for projects
+ * Front facing REST service serving the transport requests for projects.
  */
 @Singleton
 @Path("/transport")
@@ -54,14 +55,25 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class TransportProjectRestService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TransportProjectRestService.class);
 
+	/** The processor. */
 	@Inject
 	private TransportProcessor processor;
 	
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * Import project.
+	 *
+	 * @param workspace the workspace
+	 * @param files the files
+	 * @return the response
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	@POST
 	@Path("/project/{workspace}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -82,6 +94,14 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		return Response.ok().build();
 	}
 	
+	/**
+	 * Export project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the response
+	 * @throws RepositoryExportException the repository export exception
+	 */
 	@GET
 	@Path("/project/{workspace}/{project}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -104,6 +124,13 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		return Response.ok().header("Content-Disposition",  "attachment; filename=\"" + project + "-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
 	}
 	
+	/**
+	 * Import snapshot.
+	 *
+	 * @param files the files
+	 * @return the response
+	 * @throws RepositoryImportException the repository import exception
+	 */
 	@POST
 	@Path("/snapshot")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -124,6 +151,12 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		return Response.ok().build();
 	}
 	
+	/**
+	 * Export snapshot.
+	 *
+	 * @return the response
+	 * @throws RepositoryExportException the repository export exception
+	 */
 	@GET
 	@Path("/snapshot")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -141,15 +174,26 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		return Response.ok().header("Content-Disposition",  "attachment; filename=\"repository-snapshot-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
 	}
 
+	/**
+	 * Gets the date format.
+	 *
+	 * @return the date format
+	 */
 	private SimpleDateFormat getDateFormat() {
 		return new SimpleDateFormat("yyyyMMddhhmmss");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return TransportProjectRestService.class;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

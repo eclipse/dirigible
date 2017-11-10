@@ -30,20 +30,30 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PublisherCoreService.
+ */
 @Singleton
 public class PublisherCoreService implements IPublisherCoreService {
 
+	/** The data source. */
 	@Inject
 	private DataSource dataSource;
 
+	/** The publish request persistence manager. */
 	@Inject
 	private PersistenceManager<PublishRequestDefinition> publishRequestPersistenceManager;
 
+	/** The publish log persistence manager. */
 	@Inject
 	private PersistenceManager<PublishLogDefinition> publishLogPersistenceManager;
 
 	// Publish Request
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createPublishRequest(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public PublishRequestDefinition createPublishRequest(String workspace, String path, String registry) throws PublisherException {
 		PublishRequestDefinition publishRequestDefinition = new PublishRequestDefinition();
@@ -68,11 +78,17 @@ public class PublisherCoreService implements IPublisherCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createPublishRequest(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public PublishRequestDefinition createPublishRequest(String workspace, String path) throws PublisherException {
 		return createPublishRequest(workspace, path, IRepositoryStructure.PATH_REGISTRY);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishRequest(long)
+	 */
 	@Override
 	public PublishRequestDefinition getPublishRequest(long id) throws PublisherException {
 		try {
@@ -89,6 +105,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#removePublishRequest(long)
+	 */
 	@Override
 	public void removePublishRequest(long id) throws PublisherException {
 		try {
@@ -105,6 +124,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishRequests()
+	 */
 	@Override
 	public List<PublishRequestDefinition> getPublishRequests() throws PublisherException {
 		try {
@@ -123,6 +145,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 
 	// Publish Log
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createPublishLog(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public PublishLogDefinition createPublishLog(String source, String target) throws PublisherException {
 		PublishLogDefinition publishLogDefinition = new PublishLogDefinition();
@@ -146,6 +171,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishLog(long)
+	 */
 	@Override
 	public PublishLogDefinition getPublishLog(long id) throws PublisherException {
 		try {
@@ -162,6 +190,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#removePublishLog(long)
+	 */
 	@Override
 	public void removePublishLog(long id) throws PublisherException {
 		try {
@@ -178,6 +209,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishLogs()
+	 */
 	@Override
 	public List<PublishLogDefinition> getPublishLogs() throws PublisherException {
 		try {
@@ -194,6 +228,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishRequestsAfter(java.sql.Timestamp)
+	 */
 	@Override
 	public List<PublishRequestDefinition> getPublishRequestsAfter(Timestamp timestamp) throws PublisherException {
 		try {
@@ -214,6 +251,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getLatestPublishLog()
+	 */
 	@Override
 	public Timestamp getLatestPublishLog() throws PublisherException {
 		try {

@@ -46,20 +46,43 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GitConnector.
+ */
 public class GitConnector implements IGitConnector {
 
+	/** The git. */
 	private final Git git;
+	
+	/** The repository. */
 	private Repository repository;
 
+	/**
+	 * Instantiates a new git connector.
+	 *
+	 * @param repository the repository
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	GitConnector(Repository repository) throws IOException {
 		this.repository = repository;
 		this.git = new Git(repository);
 	}
 
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	public Repository getRepository() {
 		return repository;
 	}
 
+	/**
+	 * Gets the git.
+	 *
+	 * @return the git
+	 */
 	public Git getGit() {
 		return git;
 	}

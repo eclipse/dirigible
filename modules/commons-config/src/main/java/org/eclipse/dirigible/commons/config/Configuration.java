@@ -25,6 +25,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * Configuration Facade class keeps all the configurations in the Dirigible instance
  * It has the default built in properties file - dirigible.properties
@@ -38,14 +39,21 @@ import org.slf4j.LoggerFactory;
  */
 public class Configuration {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	
+	/** The Constant DIRIGIBLE_TEST_MODE_ENABLED. */
 	public static final String DIRIGIBLE_TEST_MODE_ENABLED = "DIRIGIBLE_TEST_MODE_ENABLED";
 	
+	/** The parameters. */
 	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<String, String>());
 	
+	/** The instance. */
 	private static Configuration INSTANCE;
 	
+	/**
+	 * Creates the.
+	 */
 	private static void create() {
 		synchronized(Configuration.class) {
 			INSTANCE = new Configuration();
@@ -53,6 +61,11 @@ public class Configuration {
 		}
 	}
 	
+	/**
+	 * Gets the single instance of Configuration.
+	 *
+	 * @return single instance of Configuration
+	 */
 	private static Configuration getInstance() {
 		if (INSTANCE == null) {
 			create();
@@ -60,6 +73,9 @@ public class Configuration {
 		return INSTANCE;
 	}
 	
+	/**
+	 * Instantiates a new configuration.
+	 */
 	private Configuration() {
 		init();
 	}
@@ -85,8 +101,9 @@ public class Configuration {
 	}
 
 	/**
-	 * Loads a custom properties file from the class loader
-	 * @param path
+	 * Loads a custom properties file from the class loader.
+	 *
+	 * @param path the path
 	 */
 	public static void load(String path) {
 		try {
@@ -108,8 +125,9 @@ public class Configuration {
 	}
 	
 	/**
-	 * Merge the provided properties object
-	 * @param custom
+	 * Merge the provided properties object.
+	 *
+	 * @param custom the custom
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void add(Properties custom) {
@@ -124,19 +142,21 @@ public class Configuration {
 	}
 	
 	/**
-	 * Getter for the value of the property by its key
-	 * @param key
-	 * @return
+	 * Getter for the value of the property by its key.
+	 *
+	 * @param key the key
+	 * @return the string
 	 */
 	public static String get(String key) {
 		return get(key, null);
 	}
 
 	/**
-	 * Getter for the value of the property by its key
-	 * @param key
-	 * @param defaultValue
-	 * @return
+	 * Getter for the value of the property by its key.
+	 *
+	 * @param key the key
+	 * @param defaultValue the default value
+	 * @return the string
 	 */
 	public static String get(String key, String defaultValue) {
 		String value = getInstance().parameters.get(key);
@@ -144,9 +164,10 @@ public class Configuration {
 	}
 
 	/**
-	 * Setter for the property's key and value
-	 * @param key
-	 * @param value
+	 * Setter for the property's key and value.
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	public static void set(String key, String value) {
 		try {
@@ -160,17 +181,18 @@ public class Configuration {
 	}
 	
 	/**
-	 * Getter for all the keys
-	 * @param key
-	 * @param value
-	 * @return
+	 * Getter for all the keys.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 * @return the keys
 	 */
 	public static String[] getKeys(String key, String value) {
 		return getInstance().parameters.keySet().toArray(new String[]{});
 	}
 	
 	/**
-	 * Update the properties values from the System's properties and from the Environment if any
+	 * Update the properties values from the System's properties and from the Environment if any.
 	 */
 	public static void update() {
 		Set<String> keys = getInstance().parameters.keySet();
@@ -188,11 +210,21 @@ public class Configuration {
 		}
 	}
 	
+	/**
+	 * Put all.
+	 *
+	 * @param properties the properties
+	 */
 	private void putAll(Properties properties) {
 		this.parameters.putAll((Map) properties);
 		update();
 	}
 	
+	/**
+	 * Checks if is test mode enabled.
+	 *
+	 * @return true, if is test mode enabled
+	 */
 	public static boolean isTestModeEnabled() {
 		String testMode = Configuration.get(DIRIGIBLE_TEST_MODE_ENABLED);
 		if (testMode != null || Boolean.parseBoolean(testMode)) {
@@ -201,18 +233,25 @@ public class Configuration {
 		return false;
 	}
 	
+	/**
+	 * Enable test mode.
+	 */
 	public static void enableTestMode() {
 		getInstance().parameters.put(DIRIGIBLE_TEST_MODE_ENABLED, "true");
 	}
 	
+	/**
+	 * Disable test mode.
+	 */
 	public static void disableTestMode() {
 		getInstance().parameters.put(DIRIGIBLE_TEST_MODE_ENABLED, "false");
 	}
 	
 	/**
-	 * Setter as a System's property
-	 * @param key
-	 * @param value
+	 * Setter as a System's property.
+	 *
+	 * @param key the key
+	 * @param value the value
 	 */
 	public static void setSystemProperty(String key, String value) {
 		System.setProperty(key, value);

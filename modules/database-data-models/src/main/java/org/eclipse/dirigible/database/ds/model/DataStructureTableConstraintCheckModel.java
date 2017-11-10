@@ -10,14 +10,29 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataStructureTableConstraintCheckModel.
+ */
 public class DataStructureTableConstraintCheckModel extends DataStructureTableConstraintModel {
 
+	/** The expression. */
 	private String expression;
 
+	/**
+	 * Gets the expression.
+	 *
+	 * @return the expression
+	 */
 	public String getExpression() {
 		return expression;
 	}
 
+	/**
+	 * Sets the expression.
+	 *
+	 * @param expression the new expression
+	 */
 	public void setExpression(String expression) {
 		this.expression = expression;
 	}

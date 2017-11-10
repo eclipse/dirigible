@@ -16,44 +16,105 @@ import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SelectBuilder.
+ */
 public class SelectBuilder extends AbstractQuerySqlBuilder {
 
+	/** The columns. */
 	private List<String> columns = new ArrayList<String>();
+	
+	/** The tables. */
 	private List<String> tables = new ArrayList<String>();
+	
+	/** The joins. */
 	private List<String> joins = new ArrayList<String>();
+	
+	/** The wheres. */
 	private List<String> wheres = new ArrayList<String>();
+	
+	/** The orders. */
 	private List<String> orders = new ArrayList<String>();
+	
+	/** The groups. */
 	private List<String> groups = new ArrayList<String>();
+	
+	/** The unions. */
 	private List<String> unions = new ArrayList<String>();
+	
+	/** The distinct. */
 	private boolean distinct = false;
+	
+	/** The having. */
 	private String having = null;
+	
+	/** The limit. */
 	private int limit = -1;
+	
+	/** The offset. */
 	private int offset = -1;
+	
+	/** The for update. */
 	private boolean forUpdate = false;
 
+	/**
+	 * Instantiates a new select builder.
+	 *
+	 * @param dialect the dialect
+	 */
 	public SelectBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
+	/**
+	 * Distinct.
+	 *
+	 * @return the select builder
+	 */
 	public SelectBuilder distinct() {
 		this.distinct = true;
 		return this;
 	}
 
+	/**
+	 * For update.
+	 *
+	 * @return the select builder
+	 */
 	public SelectBuilder forUpdate() {
 		this.forUpdate = true;
 		return this;
 	}
 
+	/**
+	 * Column.
+	 *
+	 * @param column the column
+	 * @return the select builder
+	 */
 	public SelectBuilder column(String column) {
 		this.columns.add(column);
 		return this;
 	}
 
+	/**
+	 * From.
+	 *
+	 * @param table the table
+	 * @return the select builder
+	 */
 	public SelectBuilder from(String table) {
 		return from(table, null);
 	}
 
+	/**
+	 * From.
+	 *
+	 * @param table the table
+	 * @param alias the alias
+	 * @return the select builder
+	 */
 	public SelectBuilder from(String table, String alias) {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(table);
@@ -64,54 +125,153 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @return the select builder
+	 */
 	public SelectBuilder join(String table, String on) {
 		return join(table, on, null);
 	}
 
+	/**
+	 * Join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @param alias the alias
+	 * @return the select builder
+	 */
 	public SelectBuilder join(String table, String on, String alias) {
 		return genericJoin(KEYWORD_INNER, table, on, alias);
 	}
 
+	/**
+	 * Inner join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @return the select builder
+	 */
 	public SelectBuilder innerJoin(String table, String on) {
 		return innerJoin(table, on, null);
 	}
 
+	/**
+	 * Inner join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @param alias the alias
+	 * @return the select builder
+	 */
 	public SelectBuilder innerJoin(String table, String on, String alias) {
 		return genericJoin(KEYWORD_INNER, table, on, alias);
 	}
 
+	/**
+	 * Outer join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @return the select builder
+	 */
 	public SelectBuilder outerJoin(String table, String on) {
 		return outerJoin(table, on, null);
 	}
 
+	/**
+	 * Outer join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @param alias the alias
+	 * @return the select builder
+	 */
 	public SelectBuilder outerJoin(String table, String on, String alias) {
 		return genericJoin(KEYWORD_OUTER, table, on, alias);
 	}
 
+	/**
+	 * Left join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @return the select builder
+	 */
 	public SelectBuilder leftJoin(String table, String on) {
 		return leftJoin(table, on, null);
 	}
 
+	/**
+	 * Left join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @param alias the alias
+	 * @return the select builder
+	 */
 	public SelectBuilder leftJoin(String table, String on, String alias) {
 		return genericJoin(KEYWORD_LEFT, table, on, alias);
 	}
 
+	/**
+	 * Right join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @return the select builder
+	 */
 	public SelectBuilder rightJoin(String table, String on) {
 		return rightJoin(table, on, null);
 	}
 
+	/**
+	 * Right join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @param alias the alias
+	 * @return the select builder
+	 */
 	public SelectBuilder rightJoin(String table, String on, String alias) {
 		return genericJoin(KEYWORD_RIGHT, table, on, alias);
 	}
 
+	/**
+	 * Full join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @return the select builder
+	 */
 	public SelectBuilder fullJoin(String table, String on) {
 		return fullJoin(table, on, null);
 	}
 
+	/**
+	 * Full join.
+	 *
+	 * @param table the table
+	 * @param on the on
+	 * @param alias the alias
+	 * @return the select builder
+	 */
 	public SelectBuilder fullJoin(String table, String on, String alias) {
 		return genericJoin(KEYWORD_FULL, table, on, alias);
 	}
 
+	/**
+	 * Generic join.
+	 *
+	 * @param type the type
+	 * @param table the table
+	 * @param on the on
+	 * @param alias the alias
+	 * @return the select builder
+	 */
 	public SelectBuilder genericJoin(String type, String table, String on, String alias) {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(table).append(SPACE).append(KEYWORD_ON).append(SPACE).append(on);
@@ -123,15 +283,34 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Where.
+	 *
+	 * @param condition the condition
+	 * @return the select builder
+	 */
 	public SelectBuilder where(String condition) {
 		this.wheres.add(OPEN + condition + CLOSE);
 		return this;
 	}
 
+	/**
+	 * Order.
+	 *
+	 * @param column the column
+	 * @return the select builder
+	 */
 	public SelectBuilder order(String column) {
 		return order(column, true);
 	}
 
+	/**
+	 * Order.
+	 *
+	 * @param column the column
+	 * @param asc the asc
+	 * @return the select builder
+	 */
 	public SelectBuilder order(String column, boolean asc) {
 		if (asc) {
 			this.orders.add(column + SPACE + KEYWORD_ASC);
@@ -142,39 +321,84 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
+	/**
+	 * Group.
+	 *
+	 * @param column the column
+	 * @return the select builder
+	 */
 	public SelectBuilder group(String column) {
 		this.groups.add(column);
 		return this;
 	}
 
+	/**
+	 * Limit.
+	 *
+	 * @param limit the limit
+	 * @return the select builder
+	 */
 	public SelectBuilder limit(int limit) {
 		this.limit = limit;
 		return this;
 	}
 
+	/**
+	 * Limit.
+	 *
+	 * @param limit the limit
+	 * @return the select builder
+	 */
 	public SelectBuilder limit(Double limit) {
 		return limit(limit.intValue());
 	}
 
+	/**
+	 * Offset.
+	 *
+	 * @param offset the offset
+	 * @return the select builder
+	 */
 	public SelectBuilder offset(int offset) {
 		this.offset = offset;
 		return this;
 	}
 
+	/**
+	 * Offset.
+	 *
+	 * @param offset the offset
+	 * @return the select builder
+	 */
 	public SelectBuilder offset(Double offset) {
 		return offset(offset.intValue());
 	}
 
+	/**
+	 * Having.
+	 *
+	 * @param having the having
+	 * @return the select builder
+	 */
 	public SelectBuilder having(String having) {
 		this.having = having;
 		return this;
 	}
 
+	/**
+	 * Union.
+	 *
+	 * @param select the select
+	 * @return the select builder
+	 */
 	public SelectBuilder union(String select) {
 		this.unions.add(select);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 		StringBuilder sql = new StringBuilder();
@@ -218,50 +442,95 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return sql.toString();
 	}
 
+	/**
+	 * Generate union.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateUnion(StringBuilder sql) {
 		if (!unions.isEmpty()) {
 			sql.append(SPACE).append(KEYWORD_UNION).append(SPACE).append(traverseUnions());
 		}
 	}
 
+	/**
+	 * Generate having.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateHaving(StringBuilder sql) {
 		if (having != null) {
 			sql.append(SPACE).append(KEYWORD_HAVING).append(SPACE).append(this.having);
 		}
 	}
 
+	/**
+	 * Generate group by.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateGroupBy(StringBuilder sql) {
 		if (!groups.isEmpty()) {
 			sql.append(SPACE).append(KEYWORD_GROUP_BY).append(SPACE).append(traverseGroups());
 		}
 	}
 
+	/**
+	 * Generate joins.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateJoins(StringBuilder sql) {
 		if (!joins.isEmpty()) {
 			sql.append(SPACE).append(traverseJoins());
 		}
 	}
 
+	/**
+	 * Generate tables.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateTables(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_FROM).append(SPACE).append(traverseTables());
 	}
 
+	/**
+	 * Generate columns.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateColumns(StringBuilder sql) {
 		sql.append(SPACE).append(traverseColumns());
 	}
 
+	/**
+	 * Generate distinct.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateDistinct(StringBuilder sql) {
 		if (distinct) {
 			sql.append(SPACE).append(KEYWORD_DISTINCT);
 		}
 	}
 
+	/**
+	 * Generate for update.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateForUpdate(StringBuilder sql) {
 		if (forUpdate) {
 			sql.append(SPACE).append(KEYWORD_FOR_UPDATE);
 		}
 	}
 
+	/**
+	 * Traverse columns.
+	 *
+	 * @return the string
+	 */
 	protected String traverseColumns() {
 		if (!this.columns.isEmpty()) {
 			StringBuilder snippet = new StringBuilder();
@@ -273,6 +542,11 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return STAR;
 	}
 
+	/**
+	 * Traverse tables.
+	 *
+	 * @return the string
+	 */
 	protected String traverseTables() {
 		StringBuilder snippet = new StringBuilder();
 		for (String table : this.tables) {
@@ -281,6 +555,11 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 
+	/**
+	 * Traverse joins.
+	 *
+	 * @return the string
+	 */
 	protected String traverseJoins() {
 		StringBuilder snippet = new StringBuilder();
 		for (String join : this.joins) {
@@ -289,6 +568,11 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 
+	/**
+	 * Traverse groups.
+	 *
+	 * @return the string
+	 */
 	protected String traverseGroups() {
 		StringBuilder snippet = new StringBuilder();
 		for (String group : this.groups) {
@@ -297,6 +581,11 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 
+	/**
+	 * Traverse unions.
+	 *
+	 * @return the string
+	 */
 	protected String traverseUnions() {
 		StringBuilder snippet = new StringBuilder();
 		for (String union : this.unions) {
@@ -305,54 +594,119 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 1);
 	}
 
+	/**
+	 * Generate select.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateSelect(StringBuilder sql) {
 		sql.append(KEYWORD_SELECT);
 	}
 
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the columns
+	 */
 	public List<String> getColumns() {
 		return columns;
 	}
 
+	/**
+	 * Gets the tables.
+	 *
+	 * @return the tables
+	 */
 	public List<String> getTables() {
 		return tables;
 	}
 
+	/**
+	 * Gets the joins.
+	 *
+	 * @return the joins
+	 */
 	public List<String> getJoins() {
 		return joins;
 	}
 
+	/**
+	 * Gets the wheres.
+	 *
+	 * @return the wheres
+	 */
 	public List<String> getWheres() {
 		return wheres;
 	}
 
+	/**
+	 * Gets the orders.
+	 *
+	 * @return the orders
+	 */
 	public List<String> getOrders() {
 		return orders;
 	}
 
+	/**
+	 * Gets the groups.
+	 *
+	 * @return the groups
+	 */
 	public List<String> getGroups() {
 		return groups;
 	}
 
+	/**
+	 * Gets the unions.
+	 *
+	 * @return the unions
+	 */
 	public List<String> getUnions() {
 		return unions;
 	}
 
+	/**
+	 * Checks if is distinct.
+	 *
+	 * @return true, if is distinct
+	 */
 	public boolean isDistinct() {
 		return distinct;
 	}
 
+	/**
+	 * Gets the having.
+	 *
+	 * @return the having
+	 */
 	public String getHaving() {
 		return having;
 	}
 
+	/**
+	 * Gets the limit.
+	 *
+	 * @return the limit
+	 */
 	public int getLimit() {
 		return limit;
 	}
 
+	/**
+	 * Gets the offset.
+	 *
+	 * @return the offset
+	 */
 	public int getOffset() {
 		return offset;
 	}
 
+	/**
+	 * Checks if is for update.
+	 *
+	 * @return true, if is for update
+	 */
 	public boolean isForUpdate() {
 		return forUpdate;
 	}

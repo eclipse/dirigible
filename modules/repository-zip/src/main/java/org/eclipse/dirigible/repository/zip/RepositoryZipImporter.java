@@ -23,16 +23,18 @@ import org.eclipse.dirigible.repository.api.RepositoryImportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Utility class which imports all the content from a given zip
+ * Utility class which imports all the content from a given zip.
  */
 public class RepositoryZipImporter {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryZipImporter.class);
 
 	/**
 	 * Import all the content from a given zip to the target repository instance
-	 * within the given path
+	 * within the given path.
 	 *
 	 * @param repository the target {@link IRepository} instance
 	 * @param zipInputStream the content input stream
@@ -45,7 +47,7 @@ public class RepositoryZipImporter {
 
 	/**
 	 * Import all the content from a given zip to the target repository instance
-	 * within the given path, overrides files during the pass
+	 * within the given path, overrides files during the pass.
 	 *
 	 * @param repository the target {@link IRepository} instance
 	 * @param zipInputStream the content input stream
@@ -59,13 +61,13 @@ public class RepositoryZipImporter {
 
 	/**
 	 * Import all the content from a given zip to the target repository instance
-	 * within the given path, overrides files during the pass and removes the root folder name
+	 * within the given path, overrides files during the pass and removes the root folder name.
 	 *
 	 * @param repository the target {@link IRepository} instance
 	 * @param zipInputStream the content input stream
 	 * @param relativeRoot the relative root
 	 * @param override whether to override existing
-	 * @param excludeRootFolderName
+	 * @param excludeRootFolderName the exclude root folder name
 	 * @throws RepositoryImportException in case the content cannot be imported
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
@@ -75,15 +77,14 @@ public class RepositoryZipImporter {
 
 	/**
 	 * Import all the content from a given zip to the target repository instance
-	 * within the given path, overrides files during the pass and removes the root folder name
+	 * within the given path, overrides files during the pass and removes the root folder name.
 	 *
 	 * @param repository the target {@link IRepository} instance
 	 * @param zipInputStream the content input stream
 	 * @param relativeRoot the relative root
 	 * @param override whether to override existing
-	 * @param excludeRootFolderName
-	 * @param filter
-	 *            map of old/new string for replacement in paths
+	 * @param excludeRootFolderName the exclude root folder name
+	 * @param filter            map of old/new string for replacement in paths
 	 * @throws RepositoryImportException in case the content cannot be imported
 	 */
 	public static void importZip(IRepository repository, ZipInputStream zipInputStream, String relativeRoot, boolean override,
@@ -157,6 +158,14 @@ public class RepositoryZipImporter {
 		logger.debug("importZip ended.");
 	}
 
+	/**
+	 * Gets the entry name.
+	 *
+	 * @param entry the entry
+	 * @param parentFolder the parent folder
+	 * @param excludeParentFolder the exclude parent folder
+	 * @return the entry name
+	 */
 	private static String getEntryName(ZipEntry entry, String parentFolder, boolean excludeParentFolder) {
 		return excludeParentFolder ? entry.getName().substring(parentFolder.length()) : entry.getName();
 	}

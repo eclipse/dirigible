@@ -20,10 +20,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericCollectionCopyTest.
+ */
 public class RepositoryGenericCollectionCopyTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test copy.
+	 */
 	@Test
 	public void testCopy() {
 		if (repository == null) {
@@ -61,6 +69,9 @@ public class RepositoryGenericCollectionCopyTest {
 		}
 	}
 
+	/**
+	 * Test copy deep.
+	 */
 	@Test
 	public void testCopyDeep() {
 		if (repository == null) {

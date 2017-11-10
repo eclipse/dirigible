@@ -30,10 +30,18 @@ import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.IndicesIte
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DatabaseMetadataHelperTest.
+ */
 public class DatabaseMetadataHelperTest {
 	
+	/** The data srouce. */
 	private DataSource dataSrouce = null;
 	
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {
@@ -45,10 +53,20 @@ public class DatabaseMetadataHelperTest {
 		}
 	}
 	
+	/**
+	 * Gets the data srouce.
+	 *
+	 * @return the data srouce
+	 */
 	public DataSource getDataSrouce() {
 		return dataSrouce;
 	}
 	
+	/**
+	 * List schema names test.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	@Test
 	public void listSchemaNamesTest() throws SQLException {
 		Connection connection = dataSrouce.getConnection();
@@ -67,6 +85,11 @@ public class DatabaseMetadataHelperTest {
 		}
 	}
 	
+	/**
+	 * List table names test.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	@Test
 	public void listTableNamesTest() throws SQLException {
 		Connection connection = dataSrouce.getConnection();
@@ -85,6 +108,11 @@ public class DatabaseMetadataHelperTest {
 		}
 	}
 	
+	/**
+	 * Iterate table definition test.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	@Test
 	public void iterateTableDefinitionTest() throws SQLException {
 		Connection connection = dataSrouce.getConnection();

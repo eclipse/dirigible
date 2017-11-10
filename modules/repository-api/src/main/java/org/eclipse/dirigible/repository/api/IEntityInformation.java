@@ -12,6 +12,7 @@ package org.eclipse.dirigible.repository.api;
 
 import java.util.Date;
 
+// TODO: Auto-generated Javadoc
 /**
  * Through this interface the user can obtain information on a particular
  * repository entity.
@@ -137,30 +138,30 @@ public interface IEntityInformation {
 	public Long getSize();
 
 	/**
-	 * The creator of the entity
-	 * 
+	 * The creator of the entity.
+	 *
 	 * @return the created by property of the {@link IEntity}
 	 */
 	public String getCreatedBy();
 
 	/**
-	 * Timestamp of the creation of the entity
-	 * 
+	 * Timestamp of the creation of the entity.
+	 *
 	 * @return the created at property of the {@link IEntity}
 	 */
 	public Date getCreatedAt();
 
 	/**
-	 * The last modifier of the entity
-	 * 
+	 * The last modifier of the entity.
+	 *
 	 * @return the modified by property of the {@link IEntity}
 	 */
 
 	public String getModifiedBy();
 
 	/**
-	 * Timestamp of the last modification of the entity
-	 * 
+	 * Timestamp of the last modification of the entity.
+	 *
 	 * @return the modified at property of the {@link IEntity}
 	 */
 	public Date getModifiedAt();

@@ -22,12 +22,24 @@ import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceCreateTableProcessor.
+ */
 public class PersistenceCreateTableProcessor extends AbstractPersistenceProcessor {
 
+	/**
+	 * Instantiates a new persistence create table processor.
+	 *
+	 * @param entityManagerInterceptor the entity manager interceptor
+	 */
 	public PersistenceCreateTableProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).create().table(tableModel.getTableName());
@@ -95,6 +107,14 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 		return sql;
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the int
+	 * @throws PersistenceException the persistence exception
+	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
 		String sql = null;

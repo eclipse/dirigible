@@ -11,6 +11,9 @@
 package org.eclipse.dirigible.engine.web.service;
 
 
+/**
+ * The Class WebEngineServiceTest.
+ */
 public class WebEngineServiceTest {
 
 }

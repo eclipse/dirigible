@@ -10,27 +10,59 @@
 
 package org.eclipse.dirigible.commons.config;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TestModeException.
+ */
 public class TestModeException extends Exception {
 	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7766343853084847849L;
 	
+	/**
+	 * Instantiates a new test mode exception.
+	 */
 	public TestModeException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new test mode exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 * @param enableSuppression the enable suppression
+	 * @param writableStackTrace the writable stack trace
+	 */
 	public TestModeException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
+	/**
+	 * Instantiates a new test mode exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public TestModeException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new test mode exception.
+	 *
+	 * @param message the message
+	 */
 	public TestModeException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new test mode exception.
+	 *
+	 * @param cause the cause
+	 */
 	public TestModeException(Throwable cause) {
 		super(cause);
 	}

@@ -21,8 +21,15 @@ import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataStructureTableConstraintsTest.
+ */
 public class DataStructureTableConstraintsTest {
 
+	/**
+	 * Parses the table.
+	 */
 	@Test
 	public void parseTable() {
 		try {

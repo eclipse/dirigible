@@ -45,20 +45,39 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Processing the Generation Service incoming requests
+ * Processing the Generation Service incoming requests.
  */
 public class GenerationProcessor extends WorkspaceProcessor {
 
+	/** The Constant ACTION_COPY. */
 	private static final String ACTION_COPY = "copy";
+	
+	/** The Constant ACTION_GENERATE. */
 	private static final String ACTION_GENERATE = "generate";
 	
+	/** The Constant MUSTACHE_DEFAULT_START_SYMBOL. */
 	private static final String MUSTACHE_DEFAULT_START_SYMBOL = "{{";
+	
+	/** The Constant MUSTACHE_DEFAULT_END_SYMBOL. */
 	private static final String MUSTACHE_DEFAULT_END_SYMBOL = "}}";
 	
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GenerationProcessor.class);
 
+	/**
+	 * Generate file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param parameters the parameters
+	 * @return the list
+	 * @throws ScriptingException the scripting exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public List<IFile> generateFile(String workspace, String project, String path, GenerationTemplateParameters parameters) throws ScriptingException, IOException {
 		IWorkspace workspaceObject = getWorkspacesCoreService().getWorkspace(workspace);
 		IProject projectObject = workspaceObject.getProject(project);
@@ -95,6 +114,17 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		throw new ScriptingException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
 	}
 
+	/**
+	 * Generate with template.
+	 *
+	 * @param parameters the parameters
+	 * @param projectObject the project object
+	 * @param generatedFiles the generated files
+	 * @param source the source
+	 * @param input the input
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
 	private void generateWithTemplate(GenerationTemplateParameters parameters, IProject projectObject,
 			List<IFile> generatedFiles, GenerationTemplateMetadataSource source, byte[] input) throws IOException, ScriptingException {
 		byte[] output = null;
@@ -131,6 +161,12 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		generatedFiles.add(fileObject);
 	}
 
+	/**
+	 * Generate wrapper.
+	 *
+	 * @param parameters the parameters
+	 * @return the string
+	 */
 	private String generateWrapper(GenerationTemplateParameters parameters) {
 		String wrapper = new StringBuilder()
 			.append("var template = require('")
@@ -139,6 +175,14 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		return wrapper;
 	}
 
+	/**
+	 * Adds the standard parameters.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param parameters the parameters
+	 */
 	private void addStandardParameters(String workspace, String project, String path,
 			GenerationTemplateParameters parameters) {
 		RepositoryPath filePath = new RepositoryPath().append(path);
@@ -156,6 +200,17 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		parameters.getParameters().put("packagePath", packagePath.build());
 	}
 
+	/**
+	 * Generate content.
+	 *
+	 * @param parameters the parameters
+	 * @param location the location
+	 * @param input the input
+	 * @param sm the sm
+	 * @param em the em
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private byte[] generateContent(GenerationTemplateParameters parameters, String location,
 			byte[] input, String sm, String em) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -167,6 +222,15 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		return baos.toByteArray();
 	}
 	
+	/**
+	 * Generate name.
+	 *
+	 * @param parameters the parameters
+	 * @param location the location
+	 * @param input the input
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String generateName(GenerationTemplateParameters parameters, String location,
 			String input) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

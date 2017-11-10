@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.h2.H2SqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DropViewTest.
+ */
 public class DropViewTest {
 
+	/**
+	 * Drop view.
+	 */
 	@Test
 	public void dropView() {
 		String sql = SqlFactory.getNative(new H2SqlDialect())

@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericFileRenameTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryFileRenameTest.
+ */
 public class LocalRepositoryFileRenameTest extends RepositoryGenericFileRenameTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

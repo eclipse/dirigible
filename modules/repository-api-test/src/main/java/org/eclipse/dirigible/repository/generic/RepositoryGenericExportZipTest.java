@@ -26,10 +26,18 @@ import java.util.zip.ZipInputStream;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericExportZipTest.
+ */
 public class RepositoryGenericExportZipTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test export zip.
+	 */
 	@Test
 	public void testExportZip() {
 		if (repository == null) {
@@ -93,6 +101,9 @@ public class RepositoryGenericExportZipTest {
 
 	}
 
+	/**
+	 * Test export zip multiple roots.
+	 */
 	@Test
 	public void testExportZipMultipleRoots() {
 		if (repository == null) {
@@ -162,6 +173,9 @@ public class RepositoryGenericExportZipTest {
 
 	}
 
+	/**
+	 * Test export zip exclusive root.
+	 */
 	@Test
 	public void testExportZipExclusiveRoot() {
 		if (repository == null) {
@@ -223,6 +237,9 @@ public class RepositoryGenericExportZipTest {
 
 	}
 
+	/**
+	 * Test export zip resource only.
+	 */
 	@Test
 	public void testExportZipResourceOnly() {
 		if (repository == null) {

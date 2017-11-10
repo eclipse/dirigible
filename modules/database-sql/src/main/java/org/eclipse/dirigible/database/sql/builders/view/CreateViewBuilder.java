@@ -16,43 +16,93 @@ import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateViewBuilder.
+ */
 public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 
+	/** The view. */
 	private String view = null;
+	
+	/** The columns. */
 	private List<String> columns = new ArrayList<String>();
+	
+	/** The select. */
 	private String select = null;
 
+	/**
+	 * Instantiates a new creates the view builder.
+	 *
+	 * @param dialect the dialect
+	 * @param view the view
+	 */
 	public CreateViewBuilder(ISqlDialect dialect, String view) {
 		super(dialect);
 		this.view = view;
 	}
 
+	/**
+	 * Gets the view.
+	 *
+	 * @return the view
+	 */
 	protected String getView() {
 		return view;
 	}
 
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the columns
+	 */
 	protected List<String> getColumns() {
 		return columns;
 	}
 
+	/**
+	 * Gets the select.
+	 *
+	 * @return the select
+	 */
 	protected String getSelect() {
 		return select;
 	}
 
+	/**
+	 * Sets the select.
+	 *
+	 * @param select the new select
+	 */
 	protected void setSelect(String select) {
 		this.select = select;
 	}
 
+	/**
+	 * Column.
+	 *
+	 * @param name the name
+	 * @return the creates the view builder
+	 */
 	public CreateViewBuilder column(String name) {
 		this.columns.add(name);
 		return this;
 	}
 
+	/**
+	 * As select.
+	 *
+	 * @param select the select
+	 * @return the creates the view builder
+	 */
 	public CreateViewBuilder asSelect(String select) {
 		this.select = select;
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 
@@ -73,16 +123,31 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		return sql.toString();
 	}
 
+	/**
+	 * Generate view.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateView(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(this.view);
 	}
 
+	/**
+	 * Generate columns.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
 			sql.append(SPACE).append(OPEN).append(traverseColumns()).append(CLOSE);
 		}
 	}
 
+	/**
+	 * Traverse columns.
+	 *
+	 * @return the string
+	 */
 	protected String traverseColumns() {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(SPACE);
@@ -93,6 +158,11 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 
+	/**
+	 * Generate as select.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateAsSelect(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(this.select);
 	}

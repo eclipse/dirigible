@@ -15,21 +15,38 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.input.BoundedInputStream;
 import org.eclipse.dirigible.commons.config.Configuration;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Piper.
+ */
 public class Piper implements java.lang.Runnable {
 
+	/** The Constant BROKEN_PIPE. */
 	private static final String BROKEN_PIPE = "Broken pipe";
 
+	/** The Constant MAX_COMMAND_OUTPUT_LENGTH. */
 	private static final long MAX_COMMAND_OUTPUT_LENGTH = 2097152;
 
+	/** The input. */
 	private java.io.InputStream input;
 
+	/** The output. */
 	private java.io.OutputStream output;
 
+	/**
+	 * Instantiates a new piper.
+	 *
+	 * @param input the input
+	 * @param output the output
+	 */
 	public Piper(java.io.InputStream input, java.io.OutputStream output) {
 		this.input = new BoundedInputStream(input, MAX_COMMAND_OUTPUT_LENGTH);
 		this.output = output;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		try {

@@ -22,8 +22,15 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnMo
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceFactoryTest.
+ */
 public class PersistenceFactoryTest {
 	
+	/**
+	 * Creates the model from pojo.
+	 */
 	@Test
 	public void createModelFromPojo() {
 		Customer customer = new Customer();
@@ -41,6 +48,11 @@ public class PersistenceFactoryTest {
 		assertEquals("INTEGER", persistenceCoulmnModelCustomerId.getType());
 	}
 	
+	/**
+	 * Creates the model from json.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void createModelFromJson() throws IOException {
 		String json = IOUtils.toString(PersistenceFactoryTest.class.getResourceAsStream("/Customer.json"));

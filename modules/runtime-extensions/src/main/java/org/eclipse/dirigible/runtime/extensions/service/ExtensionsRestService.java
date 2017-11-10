@@ -40,8 +40,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content
+ * Front facing REST service serving the raw repository content.
  */
 @Singleton
 @Path("/core/extensions")
@@ -50,14 +51,23 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found") })
 public class ExtensionsRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsRestService.class);
 
+	/** The processor. */
 	@Inject
 	private ExtensionsProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * List extension points.
+	 *
+	 * @return the response
+	 * @throws ExtensionsException the extensions exception
+	 */
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +83,13 @@ public class ExtensionsRestService extends AbstractRestService implements IRestS
 		return Response.ok().entity(processor.renderExtensionPoints()).build();
 	}
 
+	/**
+	 * Gets the extension point.
+	 *
+	 * @param name the name
+	 * @return the extension point
+	 * @throws ExtensionsException the extensions exception
+	 */
 	@GET
 	@Path("/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -96,11 +113,17 @@ public class ExtensionsRestService extends AbstractRestService implements IRestS
 		return Response.ok().entity(json).build();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return ExtensionsRestService.class;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

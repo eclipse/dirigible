@@ -10,12 +10,28 @@
 
 package org.eclipse.dirigible.commons.api.helpers;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BytesHelper.
+ */
 public class BytesHelper {
 
+	/**
+	 * Json to bytes.
+	 *
+	 * @param input the input
+	 * @return the byte[]
+	 */
 	public static byte[] jsonToBytes(String input) {
 		return GsonHelper.GSON.fromJson(input, byte[].class);
 	}
 
+	/**
+	 * Bytes to json.
+	 *
+	 * @param bytes the bytes
+	 * @return the string
+	 */
 	public static String bytesToJson(byte[] bytes) {
 		return GsonHelper.GSON.toJson(bytes);
 	}

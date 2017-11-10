@@ -51,8 +51,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the Workspace content
+ * Front facing REST service serving the Workspace content.
  */
 @Singleton
 @Path("/ide/workspaces")
@@ -61,14 +62,20 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class WorkspaceRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceRestService.class);
 
+	/** The processor. */
 	@Inject
 	private WorkspaceProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return WorkspaceRestService.class;
@@ -76,6 +83,12 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 
 	// Workspace
 
+	/**
+	 * List workspaces.
+	 *
+	 * @param request the request
+	 * @return the response
+	 */
 	@GET
 	@Path("/")
 	public Response listWorkspaces(@Context HttpServletRequest request) {
@@ -93,6 +106,13 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return Response.ok().entity(new Gson().toJson(workspacesNames)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Gets the workspace.
+	 *
+	 * @param workspace the workspace
+	 * @param request the request
+	 * @return the workspace
+	 */
 	@GET
 	@Path("{workspace}")
 	public Response getWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
@@ -116,6 +136,14 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return Response.ok().entity(processor.renderWorkspaceTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Creates the workspace.
+	 *
+	 * @param workspace the workspace
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@POST
 	@Path("{workspace}")
 	public Response createWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) throws URISyntaxException {
@@ -138,6 +166,13 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 				.type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Delete workspace.
+	 *
+	 * @param workspace the workspace
+	 * @param request the request
+	 * @return the response
+	 */
 	@DELETE
 	@Path("{workspace}")
 	public Response deleteWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
@@ -157,6 +192,14 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 
 	// Project
 
+	/**
+	 * Gets the project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param request the request
+	 * @return the project
+	 */
 	@GET
 	@Path("{workspace}/{project}")
 	public Response getProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request) {
@@ -186,6 +229,15 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return Response.ok().entity(processor.renderProjectTree(projectObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Creates the project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@POST
 	@Path("{workspace}/{project}")
 	public Response createProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request)
@@ -215,6 +267,14 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 				.type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Delete project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param request the request
+	 * @return the response
+	 */
 	@DELETE
 	@Path("{workspace}/{project}")
 	public Response deleteProject(@PathParam("workspace") String workspace, @PathParam("project") String project,
@@ -241,6 +301,15 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 
 	// Folders and Files
 
+	/**
+	 * Gets the file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param request the request
+	 * @return the file
+	 */
 	@GET
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response getFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
@@ -282,6 +351,17 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return Response.ok(new String(file.getContent())).type(ContentTypeHelper.TEXT_PLAIN).build();
 	}
 
+	/**
+	 * Creates the file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@POST
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
@@ -327,6 +407,17 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return Response.created(processor.getURI(workspace, project, path)).build();
 	}
 
+	/**
+	 * Creates the file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@POST
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
@@ -334,6 +425,17 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return createFile(workspace, project, path, content.getBytes(), request);
 	}
 
+	/**
+	 * Update file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@PUT
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
@@ -367,6 +469,17 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return Response.noContent().build();
 	}
 
+	/**
+	 * Update file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@PUT
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
@@ -374,6 +487,17 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return updateFile(workspace, project, path, content.getBytes(), request);
 	}
 
+	/**
+	 * Delete file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@DELETE
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response deleteFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
@@ -410,6 +534,9 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return Response.noContent().build();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

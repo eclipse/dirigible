@@ -36,30 +36,50 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Pull project(s) from a Git repository and optionally publish it
+ * Pull project(s) from a Git repository and optionally publish it.
  */
 public class PullCommand {
 
+	/** The Constant CHANGES_BRANCH. */
 	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
+	
+	/** The Constant SLASH. */
 	private static final String SLASH = "/"; //$NON-NLS-1$
+	
+	/** The Constant DOT_GIT. */
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	
+	/** The Constant MASTER. */
 	private static final String MASTER = "master"; //$NON-NLS-1$
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PullCommand.class);
 
+	/** The publisher core service. */
 	@Inject
 	private PublisherCoreService publisherCoreService;
 
+	/** The project metadata manager. */
 	@Inject
 	private ProjectMetadataManager projectMetadataManager;
 
+	/** The verifier. */
 	@Inject
 	private ProjectPropertiesVerifier verifier;
 
+	/** The git file utils. */
 	@Inject
 	private GitFileUtils gitFileUtils;
 
+	/**
+	 * Execute.
+	 *
+	 * @param workspace the workspace
+	 * @param projects the projects
+	 * @param publishAfterPull the publish after pull
+	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, boolean publishAfterPull) {
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Pull action");
@@ -85,6 +105,13 @@ public class PullCommand {
 
 	}
 
+	/**
+	 * Pull project from git repository.
+	 *
+	 * @param workspace the workspace
+	 * @param selectedProject the selected project
+	 * @return true, if successful
+	 */
 	boolean pullProjectFromGitRepository(final IWorkspace workspace, final IProject selectedProject) {
 		final String errorMessage = String.format("Error occurred while pulling project [%s]", selectedProject.getName());
 		GitProjectProperties gitProperties = null;
@@ -208,6 +235,12 @@ public class PullCommand {
 		return true;
 	}
 
+	/**
+	 * Publish projects.
+	 *
+	 * @param workspace the workspace
+	 * @param pulledProjects the pulled projects
+	 */
 	protected void publishProjects(IWorkspace workspace, List<IProject> pulledProjects) {
 		if (pulledProjects.size() > 0) {
 			for (IProject pulledProject : pulledProjects) {

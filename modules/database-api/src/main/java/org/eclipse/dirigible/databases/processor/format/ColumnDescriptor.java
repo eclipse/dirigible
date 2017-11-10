@@ -10,38 +10,99 @@
 
 package org.eclipse.dirigible.databases.processor.format;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ColumnDescriptor.
+ */
 public class ColumnDescriptor {
 
+	/** The name. */
 	private String name;
+	
+	/** The label. */
 	private String label;
+	
+	/** The sql type. */
 	private int sqlType;
+	
+	/** The display size. */
 	private int displaySize;
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * Gets the label.
+	 *
+	 * @return the label
+	 */
 	public String getLabel() {
 		return label;
 	}
+	
+	/**
+	 * Sets the label.
+	 *
+	 * @param label the new label
+	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
+	
+	/**
+	 * Gets the sql type.
+	 *
+	 * @return the sql type
+	 */
 	public int getSqlType() {
 		return sqlType;
 	}
+	
+	/**
+	 * Sets the sql type.
+	 *
+	 * @param sqlType the new sql type
+	 */
 	public void setSqlType(int sqlType) {
 		this.sqlType = sqlType;
 	}
+	
+	/**
+	 * Gets the display size.
+	 *
+	 * @return the display size
+	 */
 	public int getDisplaySize() {
 		return displaySize;
 	}
+	
+	/**
+	 * Sets the display size.
+	 *
+	 * @param displaySize the new display size
+	 */
 	public void setDisplaySize(int displaySize) {
 		this.displaySize = displaySize;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -53,6 +114,9 @@ public class ColumnDescriptor {
 		return result;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

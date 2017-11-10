@@ -22,47 +22,93 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Processing the Database SQL Queries Service incoming requests
+ * Processing the Database SQL Queries Service incoming requests.
  */
 public class TransportProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TransportProcessor.class);
 
+	/** The workspaces core service. */
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
 	
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/**
+	 * Import project.
+	 *
+	 * @param workspace the workspace
+	 * @param content the content
+	 */
 	public void importProject(String workspace, byte[] content) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		repository.importZip(content, workspaceApi.getPath(), true, false, null);
 	}
 
+	/**
+	 * Export project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the byte[]
+	 */
 	public byte[] exportProject(String workspace, String project) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject projectApi = getProject(workspaceApi, project);
 		return repository.exportZip(projectApi.getPath(), true);
 	}
 	
+	/**
+	 * Export workspace.
+	 *
+	 * @param workspace the workspace
+	 * @return the byte[]
+	 */
 	public byte[] exportWorkspace(String workspace) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		return repository.exportZip(workspaceApi.getPath(), false);
 	}
 
+	/**
+	 * Gets the workspace.
+	 *
+	 * @param workspace the workspace
+	 * @return the workspace
+	 */
 	private IWorkspace getWorkspace(String workspace) {
 		return workspacesCoreService.getWorkspace(workspace);
 	}
 
+	/**
+	 * Gets the project.
+	 *
+	 * @param workspaceApi the workspace api
+	 * @param project the project
+	 * @return the project
+	 */
 	private IProject getProject(IWorkspace workspaceApi, String project) {
 		return workspaceApi.getProject(project);
 	}
 	
+	/**
+	 * Import snapshot.
+	 *
+	 * @param content the content
+	 */
 	public void importSnapshot(byte[] content) {
 		repository.importZip(content, IRepositoryStructure.SEPARATOR, true, false, null);
 	}
 
+	/**
+	 * Export snapshot.
+	 *
+	 * @return the byte[]
+	 */
 	public byte[] exportSnapshot() {
 		return repository.exportZip(IRepositoryStructure.SEPARATOR, true);
 	}

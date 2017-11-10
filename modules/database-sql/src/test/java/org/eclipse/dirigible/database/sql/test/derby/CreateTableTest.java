@@ -18,8 +18,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.derby.DerbySqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateTableTest.
+ */
 public class CreateTableTest {
 	
+	/**
+	 * Creates the table generic.
+	 */
 	@Test
 	public void createTableGeneric() {
 		String sql = SqlFactory.getNative(new DerbySqlDialect())
@@ -34,6 +41,9 @@ public class CreateTableTest {
 		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
 	}
 	
+	/**
+	 * Creates the table type safe.
+	 */
 	@Test
 	public void createTableTypeSafe() {
 		String sql = SqlFactory.getNative(new DerbySqlDialect())

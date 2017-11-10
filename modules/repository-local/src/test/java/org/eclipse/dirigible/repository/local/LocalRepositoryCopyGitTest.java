@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.repository.local;
 
+/**
+ * The Class LocalRepositoryCopyGitTest.
+ */
 public class LocalRepositoryCopyGitTest {
 
 	// IRepository repositorySrc;

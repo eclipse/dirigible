@@ -24,149 +24,243 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Folder.
+ */
 public class Folder implements IFolder {
 
+	/** The internal. */
 	private transient ICollection internal;
 
+	/**
+	 * Instantiates a new folder.
+	 *
+	 * @param collection the collection
+	 */
 	public Folder(ICollection collection) {
 		this.internal = collection;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getInternal()
+	 */
 	@Override
 	public ICollection getInternal() {
 		return internal;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollections()
+	 */
 	@Override
 	public List<ICollection> getCollections() throws RepositoryReadException {
 		return internal.getCollections();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getRepository()
+	 */
 	@Override
 	public IRepository getRepository() {
 		return internal.getRepository();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getName()
+	 */
 	@Override
 	public String getName() {
 		return internal.getName();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollectionsNames()
+	 */
 	@Override
 	public List<String> getCollectionsNames() throws RepositoryReadException {
 		return internal.getCollectionsNames();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getPath()
+	 */
 	@Override
 	public String getPath() {
 		return internal.getPath();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getParent()
+	 */
 	@Override
 	public ICollection getParent() {
 		return internal.getParent();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#createCollection(java.lang.String)
+	 */
 	@Override
 	public ICollection createCollection(String name) throws RepositoryReadException {
 		return internal.createCollection(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getInformation()
+	 */
 	@Override
 	public IEntityInformation getInformation() throws RepositoryReadException {
 		return internal.getInformation();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollection(java.lang.String)
+	 */
 	@Override
 	public ICollection getCollection(String name) throws RepositoryReadException {
 		return internal.getCollection(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#create()
+	 */
 	@Override
 	public void create() throws RepositoryWriteException {
 		internal.create();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(java.lang.String)
+	 */
 	@Override
 	public void removeCollection(String name) throws RepositoryWriteException {
 		internal.removeCollection(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(org.eclipse.dirigible.repository.api.ICollection)
+	 */
 	@Override
 	public void removeCollection(ICollection collection) throws RepositoryWriteException {
 		collection.removeCollection(collection);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#delete()
+	 */
 	@Override
 	public void delete() throws RepositoryWriteException {
 		internal.delete();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#getResources()
+	 */
 	@Override
 	public List<IResource> getResources() throws RepositoryReadException {
 		return internal.getResources();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#renameTo(java.lang.String)
+	 */
 	@Override
 	public void renameTo(String name) throws RepositoryWriteException {
 		internal.renameTo(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#getResourcesNames()
+	 */
 	@Override
 	public List<String> getResourcesNames() throws RepositoryReadException {
 		return internal.getResourcesNames();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#moveTo(java.lang.String)
+	 */
 	@Override
 	public void moveTo(String path) throws RepositoryWriteException {
 		internal.moveTo(path);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#getResource(java.lang.String)
+	 */
 	@Override
 	public IResource getResource(String name) throws RepositoryReadException {
 		return internal.getResource(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#copyTo(java.lang.String)
+	 */
 	@Override
 	public void copyTo(String path) throws RepositoryWriteException {
 		internal.copyTo(path);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#removeResource(java.lang.String)
+	 */
 	@Override
 	public void removeResource(String name) throws RepositoryWriteException {
 		internal.removeResource(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#exists()
+	 */
 	@Override
 	public boolean exists() throws RepositoryReadException {
 		return internal.exists();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#removeResource(org.eclipse.dirigible.repository.api.IResource)
+	 */
 	@Override
 	public void removeResource(IResource resource) throws RepositoryWriteException {
 		internal.removeResource(resource);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#isEmpty()
+	 */
 	@Override
 	public boolean isEmpty() throws RepositoryReadException {
 		return internal.isEmpty();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#getChildren()
+	 */
 	@Override
 	public List<IEntity> getChildren() throws RepositoryReadException {
 		return internal.getChildren();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[], boolean, java.lang.String)
+	 */
 	@Override
 	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
 		return internal.createResource(name, content, isBinary, contentType);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[])
+	 */
 	@Override
 	public IResource createResource(String name, byte[] content) throws RepositoryWriteException {
 		return internal.createResource(name, content);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#createFolder(java.lang.String)
+	 */
 	@Override
 	public IFolder createFolder(String path) {
 		String fullPath = constructPath(path);
@@ -174,6 +268,9 @@ public class Folder implements IFolder {
 		return new Folder(collection);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getFolder(java.lang.String)
+	 */
 	@Override
 	public IFolder getFolder(String path) {
 		String fullPath = constructPath(path);
@@ -181,6 +278,9 @@ public class Folder implements IFolder {
 		return new Folder(collection);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#existsFolder(java.lang.String)
+	 */
 	@Override
 	public boolean existsFolder(String path) {
 		String fullPath = constructPath(path);
@@ -188,6 +288,9 @@ public class Folder implements IFolder {
 		return collection.exists();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getFolders()
+	 */
 	@Override
 	public List<IFolder> getFolders() {
 		List<IFolder> folders = new ArrayList<IFolder>();
@@ -198,12 +301,18 @@ public class Folder implements IFolder {
 		return folders;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#deleteFolder(java.lang.String)
+	 */
 	@Override
 	public void deleteFolder(String path) {
 		String fullPath = constructPath(path);
 		this.getRepository().removeCollection(fullPath);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#createFile(java.lang.String, byte[])
+	 */
 	@Override
 	public IFile createFile(String path, byte[] content) {
 		String fullPath = constructPath(path);
@@ -211,6 +320,9 @@ public class Folder implements IFolder {
 		return new File(resource);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#createFile(java.lang.String, byte[], boolean, java.lang.String)
+	 */
 	@Override
 	public IFile createFile(String path, byte[] content, boolean isBinary, String contentType) {
 		String fullPath = constructPath(path);
@@ -218,6 +330,9 @@ public class Folder implements IFolder {
 		return new File(resource);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getFile(java.lang.String)
+	 */
 	@Override
 	public IFile getFile(String path) {
 		String fullPath = constructPath(path);
@@ -225,6 +340,9 @@ public class Folder implements IFolder {
 		return new File(resource);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#existsFile(java.lang.String)
+	 */
 	@Override
 	public boolean existsFile(String path) {
 		String fullPath = constructPath(path);
@@ -232,6 +350,9 @@ public class Folder implements IFolder {
 		return resource.exists();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getFiles()
+	 */
 	@Override
 	public List<IFile> getFiles() {
 		List<IFile> files = new ArrayList<IFile>();
@@ -242,12 +363,21 @@ public class Folder implements IFolder {
 		return files;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#deleteFile(java.lang.String)
+	 */
 	@Override
 	public void deleteFile(String path) {
 		String fullPath = constructPath(path);
 		this.getRepository().removeResource(fullPath);
 	}
 
+	/**
+	 * Construct path.
+	 *
+	 * @param path the path
+	 * @return the string
+	 */
 	protected String constructPath(String path) {
 		return new RepositoryPath(new String[] { this.getPath(), path }).build();
 	}

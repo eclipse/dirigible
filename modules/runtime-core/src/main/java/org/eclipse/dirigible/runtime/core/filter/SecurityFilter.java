@@ -35,15 +35,26 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SecurityFilter.
+ */
 @WebFilter(urlPatterns = { "/services/v3/js/*", "/services/v3/rhino/*", "/services/v3/nashorn/*", "/services/v3/v8/*", "/services/v3/public/*",
 		"/services/v3/web/*" }, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
 public class SecurityFilter implements Filter {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
+	/** The security core service. */
 	private static ISecurityCoreService securityCoreService = StaticInjector.getInjector().getInstance(SecurityCoreService.class);
+	
+	/** The Constant SECURED_PREFIXES. */
 	private static final Set<String> SECURED_PREFIXES = new HashSet<String>();
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		SECURED_PREFIXES.add("/js");
@@ -54,6 +65,9 @@ public class SecurityFilter implements Filter {
 		SECURED_PREFIXES.add("/web");
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
@@ -98,12 +112,23 @@ public class SecurityFilter implements Filter {
 		chain.doFilter(request, response);
 	}
 
+	/**
+	 * Forbidden.
+	 *
+	 * @param uri the uri
+	 * @param message the message
+	 * @param response the response
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void forbidden(String uri, String message, HttpServletResponse response) throws IOException {
 		String error = String.format("Requested URI [%s] is forbidden: %s", uri, message);
 		logger.warn(error);
 		response.sendError(HttpServletResponse.SC_FORBIDDEN, error);
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.Filter#destroy()
+	 */
 	@Override
 	public void destroy() {
 		// Not Used

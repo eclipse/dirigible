@@ -23,17 +23,33 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractSynchronizer.
+ */
 public abstract class AbstractSynchronizer implements ISynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractSynchronizer.class);
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected IRepository getRepository() {
 		return repository;
 	}
 
+	/**
+	 * Synchronize registry.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	protected void synchronizeRegistry() throws SynchronizationException {
 		ICollection collection = getRepository().getCollection(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		if (collection.exists()) {
@@ -41,6 +57,12 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize collection.
+	 *
+	 * @param collection the collection
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	protected void synchronizeCollection(ICollection collection) throws SynchronizationException {
 		List<IResource> resources = collection.getResources();
 		for (IResource resource : resources) {
@@ -56,6 +78,13 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		}
 	}
 
+	/**
+	 * Gets the registry path.
+	 *
+	 * @param resource the resource
+	 * @return the registry path
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	protected String getRegistryPath(IResource resource) throws SynchronizationException {
 		String resourcePath = resource.getPath();
 		if (resourcePath.startsWith(IRepositoryStructure.PATH_REGISTRY_PUBLIC)) {
@@ -64,8 +93,19 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		return resourcePath;
 	}
 
+	/**
+	 * Synchronize resource.
+	 *
+	 * @param resource the resource
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	protected abstract void synchronizeResource(IResource resource) throws SynchronizationException;
 
+	/**
+	 * Cleanup.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	protected abstract void cleanup() throws SynchronizationException;
 
 }

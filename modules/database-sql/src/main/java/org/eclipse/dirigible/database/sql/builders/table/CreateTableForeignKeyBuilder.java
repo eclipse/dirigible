@@ -15,28 +15,63 @@ import java.util.TreeSet;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateTableForeignKeyBuilder.
+ */
 public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintBuilder<CreateTableForeignKeyBuilder> {
 
+	/** The referenced table. */
 	private String referencedTable;
+	
+	/** The referenced columns. */
 	private Set<String> referencedColumns = new TreeSet<String>();
 
+	/**
+	 * Instantiates a new creates the table foreign key builder.
+	 *
+	 * @param dialect the dialect
+	 * @param name the name
+	 */
 	CreateTableForeignKeyBuilder(ISqlDialect dialect, String name) {
 		super(dialect, name);
 	}
 
+	/**
+	 * Gets the referenced table.
+	 *
+	 * @return the referenced table
+	 */
 	public String getReferencedTable() {
 		return referencedTable;
 	}
 
+	/**
+	 * Gets the referenced columns.
+	 *
+	 * @return the referenced columns
+	 */
 	public Set<String> getReferencedColumns() {
 		return referencedColumns;
 	}
 
+	/**
+	 * Referenced table.
+	 *
+	 * @param referencedTable the referenced table
+	 * @return the creates the table foreign key builder
+	 */
 	public CreateTableForeignKeyBuilder referencedTable(String referencedTable) {
 		this.referencedTable = referencedTable;
 		return this;
 	}
 
+	/**
+	 * Referenced column.
+	 *
+	 * @param referencedColumn the referenced column
+	 * @return the creates the table foreign key builder
+	 */
 	public CreateTableForeignKeyBuilder referencedColumn(String referencedColumn) {
 		this.referencedColumns.add(referencedColumn);
 		return this;

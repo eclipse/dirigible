@@ -13,9 +13,9 @@ package org.eclipse.dirigible.repository.api;
 import java.io.IOException;
 import java.util.Date;
 
+// TODO: Auto-generated Javadoc
 /**
- * The interface representing a version instance of an {@link IResource}
- *
+ * The interface representing a version instance of an {@link IResource}.
  */
 public interface IResourceVersion extends Comparable<IResourceVersion> {
 
@@ -31,7 +31,7 @@ public interface IResourceVersion extends Comparable<IResourceVersion> {
 	public String getPath();
 
 	/**
-	 * Returns the version number
+	 * Returns the version number.
 	 *
 	 * @return the version
 	 */
@@ -39,34 +39,35 @@ public interface IResourceVersion extends Comparable<IResourceVersion> {
 
 	/**
 	 * Returns the content of the resource version as a byte array.
+	 *
 	 * @return the raw content
-	 * @throws RepositoryReadException 
+	 * @throws RepositoryReadException the repository read exception
 	 */
 	public byte[] getContent() throws RepositoryReadException;
 
 	/**
-	 * Getter for binary flag
+	 * Getter for binary flag.
 	 *
 	 * @return whether it is binary
 	 */
 	public boolean isBinary();
 
 	/**
-	 * Getter for the content type
+	 * Getter for the content type.
 	 *
 	 * @return the type of the content
 	 */
 	public String getContentType();
 
 	/**
-	 * The creator of the entity
+	 * The creator of the entity.
 	 *
 	 * @return the user created this version
 	 */
 	public String getCreatedBy();
 
 	/**
-	 * Timestamp of the creation of the entity
+	 * Timestamp of the creation of the entity.
 	 *
 	 * @return the time this version has been created
 	 */

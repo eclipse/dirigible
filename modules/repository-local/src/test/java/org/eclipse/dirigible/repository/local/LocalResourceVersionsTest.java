@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericResourceVersion
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalResourceVersionsTest.
+ */
 public class LocalResourceVersionsTest extends RepositoryGenericResourceVersionsTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

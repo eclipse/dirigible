@@ -25,8 +25,15 @@ import org.eclipse.dirigible.core.security.definition.AccessArtifactConstraint;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AccessArtifactTest.
+ */
 public class AccessArtifactTest {
 	
+	/**
+	 * Serialize test.
+	 */
 	@Test
 	public void serializeTest() {
 		AccessArtifact access = new AccessArtifact();
@@ -43,6 +50,11 @@ public class AccessArtifactTest {
 		assertNotNull(access.serialize());
 	}
 
+	/**
+	 * Parses the test.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void parseTest() throws IOException {
 		String json = IOUtils.toString(AccessArtifactTest.class.getResourceAsStream("/access/test.access"), StandardCharsets.UTF_8);
@@ -50,6 +62,11 @@ public class AccessArtifactTest {
 		assertEquals("*", access.getConstraints().get(0).getMethod());
 	}
 	
+	/**
+	 * Combine test.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void combineTest() throws IOException {
 		List<AccessDefinition> accessDefinitions = new ArrayList<AccessDefinition>();
@@ -77,6 +94,11 @@ public class AccessArtifactTest {
 		assertEquals("*", access.getConstraints().get(0).getMethod());
 	}
 	
+	/**
+	 * Divide test.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void divideTest() throws IOException {
 		String json = IOUtils.toString(AccessArtifactTest.class.getResourceAsStream("/access/test.access"), StandardCharsets.UTF_8);

@@ -16,12 +16,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractRestService.
+ */
 public abstract class AbstractRestService implements IRestService {
 
+	/** The Constant NO_LOGGED_IN_USER. */
 	public static final String NO_LOGGED_IN_USER = "No logged in user";
 
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	protected abstract Logger getLogger();
 
+	/**
+	 * Send error not found.
+	 *
+	 * @param response the response
+	 * @param message the message
+	 */
 	protected void sendErrorNotFound(HttpServletResponse response, String message) {
 		try {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -30,6 +46,12 @@ public abstract class AbstractRestService implements IRestService {
 		}
 	}
 
+	/**
+	 * Send error forbidden.
+	 *
+	 * @param response the response
+	 * @param message the message
+	 */
 	protected void sendErrorForbidden(HttpServletResponse response, String message) {
 		try {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -38,6 +60,12 @@ public abstract class AbstractRestService implements IRestService {
 		}
 	}
 
+	/**
+	 * Send error bad request.
+	 *
+	 * @param response the response
+	 * @param message the message
+	 */
 	protected void sendErrorBadRequest(HttpServletResponse response, String message) {
 		try {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -46,6 +74,12 @@ public abstract class AbstractRestService implements IRestService {
 		}
 	}
 
+	/**
+	 * Send error unathorized.
+	 *
+	 * @param response the response
+	 * @param message the message
+	 */
 	protected void sendErrorUnathorized(HttpServletResponse response, String message) {
 		try {
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -54,6 +88,12 @@ public abstract class AbstractRestService implements IRestService {
 		}
 	}
 
+	/**
+	 * Send error internal server error.
+	 *
+	 * @param response the response
+	 * @param message the message
+	 */
 	protected void sendErrorInternalServerError(HttpServletResponse response, String message) {
 		try {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);

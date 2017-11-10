@@ -45,8 +45,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content
+ * Front facing REST service serving the raw repository content.
  */
 @Singleton
 @Path("/core/repository")
@@ -55,14 +56,23 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class RepositoryRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryRestService.class);
 
+	/** The processor. */
 	@Inject
 	private RepositoryProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param path the path
+	 * @return the resource
+	 */
 	@GET
 	@Path("/{path:.*}")
 	public Response getResource(@PathParam("path") String path) {
@@ -87,6 +97,15 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		return Response.ok(new String(resource.getContent())).type(resource.getContentType()).build();
 	}
 
+	/**
+	 * Creates the resource.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@POST
 	@Path("/{path:.*}")
 	public Response createResource(@PathParam("path") String path, byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
@@ -106,6 +125,13 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		return Response.created(new URI(UrlFacade.escape(resource.getPath()))).build();
 	}
 
+	/**
+	 * Update resource.
+	 *
+	 * @param path the path
+	 * @param content the content
+	 * @return the response
+	 */
 	@PUT
 	@Path("/{path:.*}")
 	public Response updateResource(@PathParam("path") String path, byte[] content) {
@@ -125,6 +151,12 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		return Response.noContent().build();
 	}
 
+	/**
+	 * Delete resource.
+	 *
+	 * @param path the path
+	 * @return the response
+	 */
 	@DELETE
 	@Path("/{path:.*}")
 	public Response deleteResource(@PathParam("path") String path) {
@@ -144,11 +176,17 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		return Response.noContent().build();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return RepositoryRestService.class;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

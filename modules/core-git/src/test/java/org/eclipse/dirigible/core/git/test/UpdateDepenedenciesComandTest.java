@@ -27,17 +27,29 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UpdateDepenedenciesComandTest.
+ */
 public class UpdateDepenedenciesComandTest extends AbstractGuiceTest {
 
+	/** The clone command. */
 	@Inject
 	private CloneCommand cloneCommand;
 
+	/** The update dependencies command. */
 	@Inject
 	private UpdateDependenciesCommand updateDependenciesCommand;
 
+	/** The workspaces core service. */
 	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.cloneCommand = getInjector().getInstance(CloneCommand.class);
@@ -45,6 +57,11 @@ public class UpdateDepenedenciesComandTest extends AbstractGuiceTest {
 		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
 	}
 
+	/**
+	 * Creates the workspace test.
+	 *
+	 * @throws GitConnectorException the git connector exception
+	 */
 	@Test
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");

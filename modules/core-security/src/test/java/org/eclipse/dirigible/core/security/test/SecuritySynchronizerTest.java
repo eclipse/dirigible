@@ -31,17 +31,29 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SecuritySynchronizerTest.
+ */
 public class SecuritySynchronizerTest extends AbstractGuiceTest {
 
+	/** The security core service. */
 	@Inject
 	private ISecurityCoreService securityCoreService;
 
+	/** The security publisher. */
 	@Inject
 	private SecuritySynchronizer securityPublisher;
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.securityCoreService = getInjector().getInstance(SecurityCoreService.class);
@@ -49,6 +61,13 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 		this.repository = getInjector().getInstance(IRepository.class);
 	}
 
+	/**
+	 * Creates the access test.
+	 *
+	 * @throws SecurityException the security exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void createAccessTest() throws SecurityException, IOException, AccessException {
 		securityPublisher.registerPredeliveredAccess("/access/test.access");
@@ -75,6 +94,13 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 		assertTrue(securityCoreService.isAccessAllowed("/myproject/myfolder/myartifact3.txt", "GET", "myrole1"));
 	}
 
+	/**
+	 * Cleanup access test.
+	 *
+	 * @throws SecurityException the security exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void cleanupAccessTest() throws SecurityException, IOException, AccessException {
 		createAccessTest();

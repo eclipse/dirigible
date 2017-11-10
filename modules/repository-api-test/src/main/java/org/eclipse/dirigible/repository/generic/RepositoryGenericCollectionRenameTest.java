@@ -20,10 +20,18 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericCollectionRenameTest.
+ */
 public class RepositoryGenericCollectionRenameTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test create.
+	 */
 	@Test
 	public void testCreate() {
 		if (repository == null) {
@@ -55,6 +63,9 @@ public class RepositoryGenericCollectionRenameTest {
 		}
 	}
 
+	/**
+	 * Test rename.
+	 */
 	@Test
 	public void testRename() {
 		if (repository == null) {

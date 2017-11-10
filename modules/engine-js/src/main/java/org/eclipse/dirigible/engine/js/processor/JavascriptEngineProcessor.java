@@ -22,19 +22,33 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JavascriptEngineProcessor.
+ */
 public class JavascriptEngineProcessor implements IJavascriptEngineProcessor {
 
+	/** The Constant JAVASCRIPT_ENGINE_EXECUTORS. */
 	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
 
+	/** The engine executor. */
 	@Inject
 	private IJavascriptEngineExecutor engineExecutor;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
+	 */
 	@Override
 	public void executeService(String module) throws ScriptingException {
 		Map<Object, Object> executionContext = new HashMap<Object, Object>();
 		getEngineExecutor().executeServiceModule(module, executionContext);
 	}
 
+	/**
+	 * Gets the engine executor.
+	 *
+	 * @return the engine executor
+	 */
 	private IJavascriptEngineExecutor getEngineExecutor() {
 		String headerEngineType = HttpRequestFacade.getHeader(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER);
 		if (!StringUtils.isEmpty(headerEngineType)) {

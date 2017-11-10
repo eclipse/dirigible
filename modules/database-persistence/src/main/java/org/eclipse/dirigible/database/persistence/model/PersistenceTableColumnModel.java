@@ -10,48 +10,59 @@
 
 package org.eclipse.dirigible.database.persistence.model;
 
+// TODO: Auto-generated Javadoc
 /**
- * The column element of the persistence model
+ * The column element of the persistence model.
  */
 public class PersistenceTableColumnModel {
 
+	/** The field. */
 	private String field;
+	
+	/** The name. */
 	private String name;
+	
+	/** The type. */
 	private String type;
+	
+	/** The length. */
 	private int length;
+	
+	/** The nullable. */
 	private boolean nullable;
+	
+	/** The primary key. */
 	private boolean primaryKey;
+	
+	/** The precision. */
 	private int precision;
+	
+	/** The scale. */
 	private int scale;
+	
+	/** The generated. */
 	private String generated;
+	
+	/** The unique. */
 	private boolean unique;
+	
+	/** The enumerated. */
 	private String enumerated;
 
 	/**
-	 * The constructor from the fields
+	 * The constructor from the fields.
 	 *
-	 * @param field
-	 *            the field
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param length
-	 *            the length
-	 * @param nullable
-	 *            whether null values are allowed
-	 * @param primaryKey
-	 *            whether it is a primary key
-	 * @param precision
-	 *            the precision for floating point values
-	 * @param scale
-	 *            the scale for floating point values
-	 * @param generated
-	 *            whether it is a generated value
-	 * @param unique
-	 *            whether it is unique
-	 * @param enumerated
-	 *            whether it is enumerated
+	 * @param field            the field
+	 * @param name            the name
+	 * @param type            the type
+	 * @param length            the length
+	 * @param nullable            whether null values are allowed
+	 * @param primaryKey            whether it is a primary key
+	 * @param precision            the precision for floating point values
+	 * @param scale            the scale for floating point values
+	 * @param generated            whether it is a generated value
+	 * @param unique            whether it is unique
+	 * @param enumerated            whether it is enumerated
 	 */
 	public PersistenceTableColumnModel(String field, String name, String type, int length, boolean nullable, boolean primaryKey, int precision,
 			int scale, String generated, boolean unique, String enumerated) {
@@ -69,7 +80,7 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Getter for the field
+	 * Getter for the field.
 	 *
 	 * @return the field
 	 */
@@ -78,17 +89,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the field
+	 * Setter for the field.
 	 *
-	 * @param field
-	 *            the field
+	 * @param field            the field
 	 */
 	public void setField(String field) {
 		this.field = field;
 	}
 
 	/**
-	 * Getter for the name
+	 * Getter for the name.
 	 *
 	 * @return the name
 	 */
@@ -97,17 +107,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the name
+	 * Setter for the name.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name            the name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Getter for the type
+	 * Getter for the type.
 	 *
 	 * @return the type
 	 */
@@ -116,17 +125,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the type
+	 * Setter for the type.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type            the type
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * Getter for the length
+	 * Getter for the length.
 	 *
 	 * @return the length
 	 */
@@ -135,17 +143,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the length
+	 * Setter for the length.
 	 *
-	 * @param length
-	 *            the length
+	 * @param length            the length
 	 */
 	public void setLength(int length) {
 		this.length = length;
 	}
 
 	/**
-	 * Check for nullable
+	 * Check for nullable.
 	 *
 	 * @return true if can be null
 	 */
@@ -154,17 +161,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the nullable
+	 * Setter for the nullable.
 	 *
-	 * @param nullable
-	 *            whether null values are allowed
+	 * @param nullable            whether null values are allowed
 	 */
 	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
 	}
 
 	/**
-	 * Check for primary key
+	 * Check for primary key.
 	 *
 	 * @return true if primary key
 	 */
@@ -173,17 +179,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the primary key
+	 * Setter for the primary key.
 	 *
-	 * @param primaryKey
-	 *            whether it is a primary key
+	 * @param primaryKey            whether it is a primary key
 	 */
 	public void setPrimaryKey(boolean primaryKey) {
 		this.primaryKey = primaryKey;
 	}
 
 	/**
-	 * Getter for the precision
+	 * Getter for the precision.
 	 *
 	 * @return the precision
 	 */
@@ -192,17 +197,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the precision
+	 * Setter for the precision.
 	 *
-	 * @param precision
-	 *            the precision
+	 * @param precision            the precision
 	 */
 	public void setPrecision(int precision) {
 		this.precision = precision;
 	}
 
 	/**
-	 * Getter for the scale
+	 * Getter for the scale.
 	 *
 	 * @return the scale
 	 */
@@ -211,17 +215,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the scale
+	 * Setter for the scale.
 	 *
-	 * @param scale
-	 *            the scale
+	 * @param scale            the scale
 	 */
 	public void setScale(int scale) {
 		this.scale = scale;
 	}
 
 	/**
-	 * Check whether it is generated value
+	 * Check whether it is generated value.
 	 *
 	 * @return true if generated
 	 */
@@ -230,17 +233,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the generated
+	 * Setter for the generated.
 	 *
-	 * @param generated
-	 *            whether it is generated
+	 * @param generated            whether it is generated
 	 */
 	public void setGenerated(String generated) {
 		this.generated = generated;
 	}
 
 	/**
-	 * Check whether it is unique value
+	 * Check whether it is unique value.
 	 *
 	 * @return true if unique
 	 */
@@ -249,17 +251,16 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the unique
+	 * Setter for the unique.
 	 *
-	 * @param unique
-	 *            whether it is unique
+	 * @param unique            whether it is unique
 	 */
 	public void setUnique(boolean unique) {
 		this.unique = unique;
 	}
 
 	/**
-	 * Returns the name of the enumerated type in case the column is of type enumerated or null otherwise
+	 * Returns the name of the enumerated type in case the column is of type enumerated or null otherwise.
 	 *
 	 * @return enumerated type name
 	 */
@@ -268,9 +269,9 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
-	 * Setter for the enumerated type name
+	 * Setter for the enumerated type name.
 	 *
-	 * @param enumerated
+	 * @param enumerated the new enumerated
 	 */
 	public void setEnumerated(String enumerated) {
 		this.enumerated = enumerated;

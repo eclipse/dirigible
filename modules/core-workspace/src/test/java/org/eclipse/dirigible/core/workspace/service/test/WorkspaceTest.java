@@ -29,16 +29,29 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WorkspaceTest.
+ */
 public class WorkspaceTest extends AbstractGuiceTest {
 
+	/** The workspaces core service. */
 	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
 	}
 
+	/**
+	 * Creates the project test.
+	 */
 	@Test
 	public void createProjectTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -52,6 +65,11 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the project test.
+	 *
+	 * @return the project test
+	 */
 	@Test
 	public void getProjectTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -71,6 +89,11 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the projects test.
+	 *
+	 * @return the projects test
+	 */
 	@Test
 	public void getProjectsTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -97,6 +120,9 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Delete project test.
+	 */
 	@Test
 	public void deleteProjectTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -115,6 +141,9 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Copy project test.
+	 */
 	@Test
 	public void copyProjectTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -158,6 +187,9 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Move project test.
+	 */
 	@Test
 	public void moveProjectTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -198,6 +230,9 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Creates the folder test.
+	 */
 	@Test
 	public void createFolderTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -213,6 +248,11 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the folder test.
+	 *
+	 * @return the folder test
+	 */
 	@Test
 	public void getFolderTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -234,6 +274,11 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the folders test.
+	 *
+	 * @return the folders test
+	 */
 	@Test
 	public void getFoldersTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -262,6 +307,9 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Delete folder test.
+	 */
 	@Test
 	public void deleteFolderTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -282,6 +330,9 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Creates the file test.
+	 */
 	@Test
 	public void createFileTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -297,6 +348,11 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the file test.
+	 *
+	 * @return the file test
+	 */
 	@Test
 	public void getFileTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -319,6 +375,11 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the files test.
+	 *
+	 * @return the files test
+	 */
 	@Test
 	public void getFilesTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -347,6 +408,9 @@ public class WorkspaceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Delete file test.
+	 */
 	@Test
 	public void deleteFileTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");

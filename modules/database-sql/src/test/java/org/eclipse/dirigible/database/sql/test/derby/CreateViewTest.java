@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.derby.DerbySqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateViewTest.
+ */
 public class CreateViewTest extends CreateTableTest {
 
+	/**
+	 * Creates the view as select.
+	 */
 	@Test
 	public void createViewAsSelect() {
 		createTableGeneric();
@@ -29,6 +36,9 @@ public class CreateViewTest extends CreateTableTest {
 		assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
 	}
 
+	/**
+	 * Creates the view as values.
+	 */
 	@Test
 	public void createViewAsValues() {
 		String sql = SqlFactory.getNative(new DerbySqlDialect()).create().view("STATES").column("STATE")

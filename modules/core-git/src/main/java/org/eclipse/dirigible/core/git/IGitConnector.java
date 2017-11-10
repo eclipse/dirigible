@@ -32,27 +32,36 @@ import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IGitConnector.
+ */
 public interface IGitConnector {
 	
+	/** The Constant GIT_REFS_HEADS_MASTER. */
 	public static final String GIT_REFS_HEADS_MASTER = "refs/heads/master"; //$NON-NLS-1$
+	
+	/** The Constant GIT_MERGE. */
 	public static final String GIT_MERGE = "merge"; //$NON-NLS-1$
+	
+	/** The Constant GIT_MASTER. */
 	public static final String GIT_MASTER = "master"; //$NON-NLS-1$
+	
+	/** The Constant GIT_BRANCH. */
 	public static final String GIT_BRANCH = "branch"; //$NON-NLS-1$
+	
+	/** The Constant GIT_ADD_ALL_FILE_PATTERN. */
 	public static final String GIT_ADD_ALL_FILE_PATTERN = "."; //$NON-NLS-1$
 
 	/**
-	 * Adds content from file(s) to the staging index
+	 * Adds content from file(s) to the staging index.
 	 *
-	 * @param filePattern
-	 *            File to add content from. Example: "." includes all files. If
+	 * @param filePattern            File to add content from. Example: "." includes all files. If
 	 *            "dir/subdir/" is directory then "dir/subdir" all files from
 	 *            the directory recursively
-	 * @throws IOException
-	 *             IO Exception
-	 * @throws NoFilepatternException
-	 *             No File Pattern Exception
-	 * @throws GitAPIException
-	 *             Git API Exception
+	 * @throws IOException             IO Exception
+	 * @throws NoFilepatternException             No File Pattern Exception
+	 * @throws GitAPIException             Git API Exception
 	 */
 	void add(String filePattern) throws IOException, NoFilepatternException, GitAPIException;
 
@@ -90,42 +99,30 @@ public interface IGitConnector {
 			WrongRepositoryStateException, GitAPIException, IOException;
 
 	/**
-	 * Creates new branch from a particular start point
+	 * Creates new branch from a particular start point.
 	 *
-	 * @param name
-	 *            the branch name
-	 * @param startPoint
-	 *            valid tree-ish object example: "5c15e8", "master", "HEAD",
+	 * @param name            the branch name
+	 * @param startPoint            valid tree-ish object example: "5c15e8", "master", "HEAD",
 	 *            "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
-	 * @throws RefAlreadyExistsException
-	 *             Already Exists Exception
-	 * @throws RefNotFoundException
-	 *             Ref Not Found Exception
-	 * @throws InvalidRefNameException
-	 *             Invalid Ref Name Exception
-	 * @throws GitAPIException
-	 *             Git API Exception
+	 * @throws RefAlreadyExistsException             Already Exists Exception
+	 * @throws RefNotFoundException             Ref Not Found Exception
+	 * @throws InvalidRefNameException             Invalid Ref Name Exception
+	 * @throws GitAPIException             Git API Exception
 	 */
 	void createBranch(String name, String startPoint)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, GitAPIException;
 
 	/**
 	 * Checkout to a valid tree-ish object example: "5c15e8", "master", "HEAD",
-	 * "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
+	 * "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0".
 	 *
-	 * @param name
-	 *            the tree-ish object
+	 * @param name            the tree-ish object
 	 * @return {@link org.eclipse.jgit.lib.Ref} object
-	 * @throws RefAlreadyExistsException
-	 *             Ref Already Exists Exception
-	 * @throws RefNotFoundException
-	 *             Ref Not Found Exception
-	 * @throws InvalidRefNameException
-	 *             Invalid Ref Name Exception
-	 * @throws CheckoutConflictException
-	 *             Checkout Conflict Exception
-	 * @throws GitAPIException
-	 *             Git API Exception
+	 * @throws RefAlreadyExistsException             Ref Already Exists Exception
+	 * @throws RefNotFoundException             Ref Not Found Exception
+	 * @throws InvalidRefNameException             Invalid Ref Name Exception
+	 * @throws CheckoutConflictException             Checkout Conflict Exception
+	 * @throws GitAPIException             Git API Exception
 	 */
 	Ref checkout(String name) throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException,
 			CheckoutConflictException, GitAPIException;

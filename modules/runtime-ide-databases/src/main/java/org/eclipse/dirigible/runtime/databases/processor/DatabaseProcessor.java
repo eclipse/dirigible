@@ -29,32 +29,63 @@ import org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Processing the Database SQL Queries Service incoming requests
+ * Processing the Database SQL Queries Service incoming requests.
  */
 public class DatabaseProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseProcessor.class);
 
+	/** The Constant SCRIPT_DELIMITER. */
 	private static final String SCRIPT_DELIMITER = ";";
+	
+	/** The limited. */
 	private boolean LIMITED = true;
 
+	/** The database. */
 	@Inject
 	private IDatabase database;
 
+	/**
+	 * Exists database.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @return true, if successful
+	 */
 	public boolean existsDatabase(String type, String name) {
 		DataSource dataSource = getDataSource(type, name);
 		return dataSource != null;
 	}
 
+	/**
+	 * Gets the database types.
+	 *
+	 * @return the database types
+	 */
 	public List<String> getDatabaseTypes() {
 		return DatabaseModule.getDatabaseTypes();
 	}
 
+	/**
+	 * Gets the data sources.
+	 *
+	 * @param type the type
+	 * @return the data sources
+	 */
 	public Set<String> getDataSources(String type) {
 		return DatabaseModule.getDataSources(type);
 	}
 
+	/**
+	 * Gets the data source.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @return the data source
+	 */
 	public DataSource getDataSource(String type, String name) {
 		DataSource dataSource = null;
 		if (type == null) {
@@ -69,6 +100,15 @@ public class DatabaseProcessor {
 		return dataSource;
 	}
 
+	/**
+	 * Execute query.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @param sql the sql
+	 * @param isJson the is json
+	 * @return the string
+	 */
 	public String executeQuery(String type, String name, String sql, boolean isJson) {
 		DataSource dataSource = getDataSource(type, name);
 		if (dataSource != null) {
@@ -77,6 +117,15 @@ public class DatabaseProcessor {
 		return null;
 	}
 
+	/**
+	 * Execute update.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @param sql the sql
+	 * @param isJson the is json
+	 * @return the string
+	 */
 	public String executeUpdate(String type, String name, String sql, boolean isJson) {
 		DataSource dataSource = getDataSource(type, name);
 		if (dataSource != null) {
@@ -85,6 +134,15 @@ public class DatabaseProcessor {
 		return null;
 	}
 
+	/**
+	 * Execute.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @param sql the sql
+	 * @param isJson the is json
+	 * @return the string
+	 */
 	public String execute(String type, String name, String sql, boolean isJson) {
 		DataSource dataSource = getDataSource(type, name);
 		if (dataSource != null) {
@@ -93,6 +151,15 @@ public class DatabaseProcessor {
 		return null;
 	}
 
+	/**
+	 * Execute statement.
+	 *
+	 * @param dataSource the data source
+	 * @param sql the sql
+	 * @param isQuery the is query
+	 * @param isJson the is json
+	 * @return the string
+	 */
 	public String executeStatement(DataSource dataSource, String sql, boolean isQuery, boolean isJson) {
 
 		if ((sql == null) || (sql.length() == 0)) {

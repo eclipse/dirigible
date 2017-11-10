@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.commons.api.service;
 
+/**
+ * The Interface ICoreService.
+ */
 public interface ICoreService {
 
 }

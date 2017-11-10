@@ -12,8 +12,15 @@ package org.eclipse.dirigible.databases.processor.format;
 
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StringHeaderFormatter.
+ */
 public class StringHeaderFormatter implements HeaderFormatter<String>{
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.databases.processor.format.HeaderFormatter#write(java.util.List)
+	 */
 	@Override
 	public String write(List<ColumnDescriptor> columnDescriptors){
 		StringBuilder headerSb = new StringBuilder();

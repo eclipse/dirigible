@@ -12,8 +12,17 @@ package org.eclipse.dirigible.commons.api.module;
 
 import com.google.inject.AbstractModule;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractDirigibleModule.
+ */
 public abstract class AbstractDirigibleModule extends AbstractModule {
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public abstract String getName();
 	
 }

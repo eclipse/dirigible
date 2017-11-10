@@ -35,20 +35,33 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MessagingSynchronizerTest.
+ */
 public class MessagingSynchronizerTest extends AbstractGuiceTest {
 
+	/** The messaging core service. */
 	@Inject
 	private IMessagingCoreService messagingCoreService;
 
+	/** The messaging publisher. */
 	@Inject
 	private MessagingSynchronizer messagingPublisher;
 
+	/** The messaging manager. */
 	@Inject
 	private MessagingManager messagingManager;
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.messagingCoreService = getInjector().getInstance(MessagingCoreService.class);
@@ -59,11 +72,23 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 		messagingManager.initialize();
 	}
 
+	/**
+	 * Tear down.
+	 *
+	 * @throws Exception the exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 		messagingManager.shutdown();
 	}
 
+	/**
+	 * Full listener test.
+	 *
+	 * @throws MessagingException the messaging exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
+	 */
 	@Test
 	public void fullListenerTest() throws MessagingException, IOException, InterruptedException {
 		createListenerTest();
@@ -81,6 +106,12 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 		Thread.sleep(1000);
 	}
 
+	/**
+	 * Creates the listener test.
+	 *
+	 * @throws MessagingException the messaging exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void createListenerTest() throws MessagingException, IOException {
 		messagingPublisher.registerPredeliveredListener("/control/control.listener");
 

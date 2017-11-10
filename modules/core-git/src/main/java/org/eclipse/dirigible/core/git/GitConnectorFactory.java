@@ -28,6 +28,10 @@ import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.util.StringUtils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating GitConnector objects.
+ */
 public class GitConnectorFactory {
 	
 	/**

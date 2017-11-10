@@ -50,23 +50,40 @@ import org.eclipse.dirigible.repository.zip.RepositoryZipImporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * The File System based implementation of {@link IRepository}
+ * The File System based implementation of {@link IRepository}.
  */
 public abstract class FileSystemRepository implements IRepository {
 	
+	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(FileSystemRepository.class);
 
+	/** The Constant CURRENT_DIR. */
 	private static final String CURRENT_DIR = ".";
+	
+	/** The Constant DIRIGIBLE_LOCAL. */
 	private static final String DIRIGIBLE_LOCAL = "dirigible" + IRepository.SEPARATOR + "repository";
+	
+	/** The Constant PATH_SEGMENT_ROOT. */
 	private static final String PATH_SEGMENT_ROOT = "root";
+	
+	/** The Constant PATH_SEGMENT_VERSIONS. */
 	private static final String PATH_SEGMENT_VERSIONS = "versions";
+	
+	/** The Constant PATH_SEGMENT_INFO. */
 	private static final String PATH_SEGMENT_INFO = "info";
 
+	/** The repository path. */
 	private String repositoryPath = IRepository.SEPARATOR;
+	
+	/** The versions path. */
 	private String versionsPath = IRepository.SEPARATOR;
+	
+	/** The info path. */
 	private String infoPath = IRepository.SEPARATOR;
 
+	/** The repository dao. */
 	private LocalRepositoryDao repositoryDao;
 
 	/**
@@ -79,7 +96,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	/**
-	 * Constructor with root folder parameter
+	 * Constructor with root folder parameter.
 	 *
 	 * @param rootFolder the root folder
 	 * @throws LocalRepositoryException in case the repository cannot be created
@@ -89,7 +106,7 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	/**
-	 * Constructor with root folder parameter
+	 * Constructor with root folder parameter.
 	 *
 	 * @param rootFolder the root folder
 	 * @param absolute whether the root folder is absolute
@@ -99,6 +116,12 @@ public abstract class FileSystemRepository implements IRepository {
 		createRepository(rootFolder, absolute);
 	}
 	
+	/**
+	 * Creates the repository.
+	 *
+	 * @param rootFolder the root folder
+	 * @param absolute the absolute
+	 */
 	protected void createRepository(String rootFolder, boolean absolute) {
 		String root;
 		if (absolute) {
@@ -125,22 +148,48 @@ public abstract class FileSystemRepository implements IRepository {
 		logger.debug(String.format("File-based Repository Client for: %s, has been created.", root));
 	}
 
+	/**
+	 * Gets the repository path.
+	 *
+	 * @return the repository path
+	 */
 	public String getRepositoryPath() {
 		return repositoryPath;
 	}
 
+	/**
+	 * Gets the versions path.
+	 *
+	 * @return the versions path
+	 */
 	public String getVersionsPath() {
 		return versionsPath;
 	}
 
+	/**
+	 * Gets the info path.
+	 *
+	 * @return the info path
+	 */
 	public String getInfoPath() {
 		return infoPath;
 	}
 
+	/**
+	 * Gets the repository root folder.
+	 *
+	 * @return the repository root folder
+	 */
 	protected String getRepositoryRootFolder() {
 		return DIRIGIBLE_LOCAL;
 	}
 
+	/**
+	 * Initialize repository.
+	 *
+	 * @param rootFolder the root folder
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void initializeRepository(String rootFolder) throws IOException {
 		repositoryPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_ROOT; // $NON-NLS-1$
 		repositoryPath = repositoryPath.replace(IRepository.SEPARATOR, File.separator);
@@ -156,6 +205,9 @@ public abstract class FileSystemRepository implements IRepository {
 		FileSystemUtils.createFolder(infoPath);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getRoot()
+	 */
 	@Override
 	public ICollection getRoot() {
 		logger.trace("entering getRoot"); //$NON-NLS-1$
@@ -165,6 +217,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return dbCollection;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createCollection(java.lang.String)
+	 */
 	@Override
 	public ICollection createCollection(String path) throws RepositoryWriteException {
 		logger.trace("entering createCollection"); //$NON-NLS-1$
@@ -175,6 +230,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return collection;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getCollection(java.lang.String)
+	 */
 	@Override
 	public ICollection getCollection(String path) {
 		logger.trace("entering getCollection"); //$NON-NLS-1$
@@ -184,6 +242,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return localCollection;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#removeCollection(java.lang.String)
+	 */
 	@Override
 	public void removeCollection(String path) throws RepositoryWriteException {
 		logger.trace("entering removeCollection"); //$NON-NLS-1$
@@ -193,6 +254,9 @@ public abstract class FileSystemRepository implements IRepository {
 		logger.trace("exiting removeCollection"); //$NON-NLS-1$
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#hasCollection(java.lang.String)
+	 */
 	@Override
 	public boolean hasCollection(String path) throws RepositoryReadException {
 		logger.trace("entering hasCollection"); //$NON-NLS-1$
@@ -203,6 +267,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String)
+	 */
 	@Override
 	public IResource createResource(String path) throws RepositoryWriteException {
 		logger.trace("entering createResource"); //$NON-NLS-1$
@@ -213,6 +280,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return resource;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String, byte[])
+	 */
 	@Override
 	public IResource createResource(String path, byte[] content) throws RepositoryWriteException {
 		logger.trace("entering createResource with Content"); //$NON-NLS-1$
@@ -223,11 +293,17 @@ public abstract class FileSystemRepository implements IRepository {
 		return resource;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String, byte[], boolean, java.lang.String)
+	 */
 	@Override
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
 		return createResource(path, content, isBinary, contentType, false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#createResource(java.lang.String, byte[], boolean, java.lang.String, boolean)
+	 */
 	@Override
 	public IResource createResource(String path, byte[] content, boolean isBinary, String contentType, boolean override) throws RepositoryWriteException {
 		logger.trace("entering createResource with Content"); //$NON-NLS-1$
@@ -242,6 +318,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return resource;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getResource(java.lang.String)
+	 */
 	@Override
 	public IResource getResource(String path) {
 		logger.trace("entering getResource"); //$NON-NLS-1$
@@ -251,6 +330,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return resource;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#removeResource(java.lang.String)
+	 */
 	@Override
 	public void removeResource(String path) throws RepositoryWriteException {
 		logger.trace("entering removeResource"); //$NON-NLS-1$
@@ -260,6 +342,9 @@ public abstract class FileSystemRepository implements IRepository {
 		logger.trace("exiting removeResource"); //$NON-NLS-1$
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#hasResource(java.lang.String)
+	 */
 	@Override
 	public boolean hasResource(String path) throws RepositoryReadException {
 		logger.trace("entering hasResource"); //$NON-NLS-1$
@@ -270,25 +355,42 @@ public abstract class FileSystemRepository implements IRepository {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#dispose()
+	 */
 	@Override
 	public void dispose() {
 		// repositoryDAO.dispose();
 	}
 
+	/**
+	 * Gets the repository dao.
+	 *
+	 * @return the repository dao
+	 */
 	public LocalRepositoryDao getRepositoryDao() {
 		return repositoryDao;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream, java.lang.String)
+	 */
 	@Override
 	public void importZip(ZipInputStream zipInputStream, String path) throws RepositoryImportException {
 		importZip(zipInputStream, path, false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream, java.lang.String, boolean)
+	 */
 	@Override
 	public void importZip(ZipInputStream zipInputStream, String path, boolean override) throws RepositoryImportException {
 		importZip(zipInputStream, path, override, false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(java.util.zip.ZipInputStream, java.lang.String, boolean, boolean)
+	 */
 	@Override
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot, boolean override, boolean excludeRootFolderName) throws RepositoryImportException {
 		if (zipInputStream == null) {
@@ -298,16 +400,25 @@ public abstract class FileSystemRepository implements IRepository {
 		RepositoryZipImporter.importZip(this, zipInputStream, relativeRoot, override, excludeRootFolderName);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String)
+	 */
 	@Override
 	public void importZip(byte[] data, String path) throws RepositoryImportException {
 		importZip(data, path, false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String, boolean)
+	 */
 	@Override
 	public void importZip(byte[] data, String path, boolean override) throws RepositoryImportException {
 		importZip(data, path, override, false, null);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryImporter#importZip(byte[], java.lang.String, boolean, boolean, java.util.Map)
+	 */
 	@Override
 	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)
 			throws RepositoryImportException {
@@ -318,22 +429,34 @@ public abstract class FileSystemRepository implements IRepository {
 		RepositoryZipImporter.importZip(this, new ZipInputStream(new ByteArrayInputStream(data)), relativeRoot, override, excludeRootFolderName, filter);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryExporter#exportZip(java.util.List)
+	 */
 	@Override
 	public byte[] exportZip(List<String> relativeRoots) throws RepositoryExportException {
 		return RepositoryZipExporter.exportZip(this, relativeRoots);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryExporter#exportZip(java.lang.String, boolean)
+	 */
 	@Override
 	public byte[] exportZip(String relativeRoot, boolean inclusive) throws RepositoryExportException {
 		return RepositoryZipExporter.exportZip(this, relativeRoot, inclusive);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchName(java.lang.String, boolean)
+	 */
 	@Override
 	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		// return repositoryDAO.searchName(parameter, caseInsensitive);
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchName(java.lang.String, java.lang.String, boolean)
+	 */
 	@Override
 	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws RepositorySearchException {
 
@@ -366,6 +489,9 @@ public abstract class FileSystemRepository implements IRepository {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchPath(java.lang.String, boolean)
+	 */
 	@Override
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		try {
@@ -386,17 +512,26 @@ public abstract class FileSystemRepository implements IRepository {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchText(java.lang.String, boolean)
+	 */
 	@Override
 	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		// return repositoryDAO.searchText(parameter, caseInsensitive);
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryVersioning#getResourceVersions(java.lang.String)
+	 */
 	@Override
 	public List<IResourceVersion> getResourceVersions(String path) throws RepositorySearchException {
 		return repositoryDao.getResourceVersionsByPath(path);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryVersioning#getResourceVersion(java.lang.String, int)
+	 */
 	@Override
 	public IResourceVersion getResourceVersion(String path, int version) throws RepositorySearchException {
 		List<IResourceVersion> allVersions = getResourceVersions(path);
@@ -408,6 +543,9 @@ public abstract class FileSystemRepository implements IRepository {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#cleanupOldVersions()
+	 */
 	@Override
 	public void cleanupOldVersions() throws RepositoryWriteException {
 		String versionsRoot = getVersionsPath();
@@ -419,8 +557,14 @@ public abstract class FileSystemRepository implements IRepository {
 		}
 	}
 
+	/** The threshold date. */
 	Date thresholdDate;
 
+	/**
+	 * Clean older files.
+	 *
+	 * @param file the file
+	 */
 	private void cleanOlderFiles(File file) {
 		Iterator<File> filesToBeDeleted = FileUtils.iterateFiles(file, new AgeFileFilter(thresholdDate), TRUE);
 		while (filesToBeDeleted.hasNext()) {

@@ -13,15 +13,30 @@ package org.eclipse.dirigible.core.scheduler.quartz;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DatasourceProvider.
+ */
 public class DatasourceProvider {
 
+	/** The datasource. */
 	@Inject
 	private DataSource datasource;
 
+	/**
+	 * Gets the datasource.
+	 *
+	 * @return the datasource
+	 */
 	public DataSource getDatasource() {
 		return datasource;
 	}
 
+	/**
+	 * Sets the datasource.
+	 *
+	 * @param datasource the new datasource
+	 */
 	public void setDatasource(DataSource datasource) {
 		this.datasource = datasource;
 	}

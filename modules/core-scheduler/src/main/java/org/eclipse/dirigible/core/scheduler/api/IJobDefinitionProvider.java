@@ -12,8 +12,17 @@ package org.eclipse.dirigible.core.scheduler.api;
 
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IJobDefinitionProvider.
+ */
 public interface IJobDefinitionProvider {
 	
+	/**
+	 * Gets the job definition.
+	 *
+	 * @return the job definition
+	 */
 	public JobDefinition getJobDefinition();
 
 }

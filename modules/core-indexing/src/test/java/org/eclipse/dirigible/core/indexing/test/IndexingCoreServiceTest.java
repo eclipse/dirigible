@@ -28,18 +28,34 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class IndexingCoreServiceTest.
+ */
 public class IndexingCoreServiceTest extends AbstractGuiceTest {
 
+	/** The Constant TEST_INDEX. */
 	private static final String TEST_INDEX = "test_index";
 
+	/** The indexing core service. */
 	@Inject
 	private IIndexingCoreService indexingCoreService;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.indexingCoreService = getInjector().getInstance(IndexingCoreService.class);
 	}
 
+	/**
+	 * Search test.
+	 *
+	 * @throws IndexingException the indexing exception
+	 */
 	@Test
 	public void searchTest() throws IndexingException {
 
@@ -71,6 +87,11 @@ public class IndexingCoreServiceTest extends AbstractGuiceTest {
 		assertEquals(0, matches.size());
 	}
 
+	/**
+	 * Between test.
+	 *
+	 * @throws IndexingException the indexing exception
+	 */
 	@Test
 	public void betweenTest() throws IndexingException {
 

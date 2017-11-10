@@ -13,15 +13,30 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HanaCreateTableBuilder.
+ */
 public class HanaCreateTableBuilder extends CreateTableBuilder {
 	
+	/** The is column table. */
 	private boolean isColumnTable;
 
+	/**
+	 * Instantiates a new hana create table builder.
+	 *
+	 * @param dialect the dialect
+	 * @param table the table
+	 * @param isColumnTable the is column table
+	 */
 	public HanaCreateTableBuilder(ISqlDialect dialect, String table, boolean isColumnTable) {
 		super(dialect, table);
 		this.isColumnTable = isColumnTable;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder#generateTable(java.lang.StringBuilder)
+	 */
 	@Override
 	protected void generateTable(StringBuilder sql) {
 		sql.append(SPACE)

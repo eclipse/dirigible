@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.postgres.PostgresSqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeleteTest.
+ */
 public class DeleteTest {
 	
+	/**
+	 * Delete simple.
+	 */
 	@Test
 	public void deleteSimple() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -30,6 +37,9 @@ public class DeleteTest {
 		assertEquals("DELETE FROM CUSTOMERS", sql);
 	}
 
+	/**
+	 * Delete where.
+	 */
 	@Test
 	public void deleteWhere() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())

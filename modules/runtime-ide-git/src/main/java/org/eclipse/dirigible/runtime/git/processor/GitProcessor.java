@@ -37,56 +37,96 @@ import org.eclipse.dirigible.runtime.git.model.GitUpdateDepenciesModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Processing the Database SQL Queries Service incoming requests
+ * Processing the Database SQL Queries Service incoming requests.
  */
 public class GitProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitProcessor.class);
 
+	/** The workspaces core service. */
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
 
+	/** The clone command. */
 	@Inject
 	private CloneCommand cloneCommand;
 
+	/** The pull command. */
 	@Inject
 	private PullCommand pullCommand;
 
+	/** The push command. */
 	@Inject
 	private PushCommand pushCommand;
 
+	/** The reset command. */
 	@Inject
 	private ResetCommand resetCommand;
 
+	/** The share command. */
 	@Inject
 	private ShareCommand shareCommand;
 
+	/** The update dependencies command. */
 	@Inject
 	private UpdateDependenciesCommand updateDependenciesCommand;
 
+	/**
+	 * Clone.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 * @throws GitConnectorException the git connector exception
+	 */
 	public void clone(String workspace, GitCloneModel model) throws GitConnectorException {
 		cloneCommand.execute(model.getRepository(), model.getBranch(), model.getUsername(), getPassword(model), workspace, model.isPublish());
 	}
 
+	/**
+	 * Pull.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 */
 	public void pull(String workspace, GitPullModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
 		pullCommand.execute(workspaceApi, projects, model.isPublish());
 	}
 
+	/**
+	 * Push.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 */
 	public void push(String workspace, GitPushModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
 		pushCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail());
 	}
 
+	/**
+	 * Reset.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 */
 	public void reset(String workspace, GitResetModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
 		resetCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model));
 	}
 
+	/**
+	 * Share.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 */
 	public void share(String workspace, GitShareModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject project = getProject(workspaceApi, model.getProject());
@@ -94,20 +134,47 @@ public class GitProcessor {
 				getPassword(model), model.getEmail());
 	}
 
+	/**
+	 * Update dependencies.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 * @throws GitConnectorException the git connector exception
+	 */
 	public void updateDependencies(String workspace, GitUpdateDepenciesModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
 		updateDependenciesCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model), model.isPublish());
 	}
 
+	/**
+	 * Gets the workspace.
+	 *
+	 * @param workspace the workspace
+	 * @return the workspace
+	 */
 	private IWorkspace getWorkspace(String workspace) {
 		return workspacesCoreService.getWorkspace(workspace);
 	}
 
+	/**
+	 * Gets the project.
+	 *
+	 * @param workspaceApi the workspace api
+	 * @param project the project
+	 * @return the project
+	 */
 	private IProject getProject(IWorkspace workspaceApi, String project) {
 		return workspaceApi.getProject(project);
 	}
 
+	/**
+	 * Gets the projects.
+	 *
+	 * @param workspace the workspace
+	 * @param projectsNames the projects names
+	 * @return the projects
+	 */
 	private IProject[] getProjects(IWorkspace workspace, List<String> projectsNames) {
 		List<IProject> projects = new ArrayList<IProject>();
 		for (String next : projectsNames) {
@@ -116,6 +183,12 @@ public class GitProcessor {
 		return projects.toArray(new IProject[] {});
 	}
 
+	/**
+	 * Gets the password.
+	 *
+	 * @param model the model
+	 * @return the password
+	 */
 	private String getPassword(BaseGitModel model) {
 		if (model.getPassword() == null) {
 			return null;

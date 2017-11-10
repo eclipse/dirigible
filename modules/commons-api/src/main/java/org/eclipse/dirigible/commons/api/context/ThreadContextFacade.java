@@ -17,18 +17,23 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * Scripting context facade is the centralized place where the different scripting facade providers
- * can register the request (sync) scoped objects
+ * can register the request (sync) scoped objects.
  */
 public class ThreadContextFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ThreadContextFacade.class);
 
+	/** The Constant CONTEXT. */
 	private static final ThreadLocal<Map<String, Object>> CONTEXT = new ThreadLocal<Map<String, Object>>();
 
+	/** The Constant PROXIES. */
 	private static final ThreadLocal<Map<String, Object>> PROXIES = new ThreadLocal<Map<String, Object>>();
 
+	/** The Constant UUID_GENERATOR. */
 	private static final AtomicLong UUID_GENERATOR = new AtomicLong(Long.MIN_VALUE);
 
 	/**
@@ -44,10 +49,9 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * IMPORTANT! This have to be added at the finally block to clean up objects after the execution of the service
+	 * IMPORTANT! This have to be added at the finally block to clean up objects after the execution of the service.
 	 *
-	 * @throws ContextException
-	 *             in case of an error
+	 * @throws ContextException             in case of an error
 	 */
 	public static final void tearDown() throws ContextException {
 		CONTEXT.get().clear();
@@ -58,13 +62,11 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Get a context scripting object
+	 * Get a context scripting object.
 	 *
-	 * @param key
-	 *            the key
+	 * @param key            the key
 	 * @return the value by this key
-	 * @throws ContextException
-	 *             in case of an error
+	 * @throws ContextException             in case of an error
 	 */
 	public static final Object get(String key) throws ContextException {
 		checkContext();
@@ -72,13 +74,11 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Set a context scripting object
+	 * Set a context scripting object.
 	 *
-	 * @param value
-	 *            the value
+	 * @param value            the value
 	 * @return the UUID of the object
-	 * @throws ContextException
-	 *             in case of an error
+	 * @throws ContextException             in case of an error
 	 */
 	public static final String set(Object value) throws ContextException {
 		final String uuid = generateObjectId();
@@ -105,12 +105,10 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Remove a context scripting object
+	 * Remove a context scripting object.
 	 *
-	 * @param key
-	 *            the key
-	 * @throws ContextException
-	 *             in case of an error
+	 * @param key            the key
+	 * @throws ContextException             in case of an error
 	 */
 	public static final void remove(String key) throws ContextException {
 		checkContext();
@@ -118,6 +116,11 @@ public class ThreadContextFacade {
 		logger.trace("Context object has been removed - key {}", Thread.currentThread().hashCode(), key);
 	}
 
+	/**
+	 * Check context.
+	 *
+	 * @throws ContextException the context exception
+	 */
 	private static void checkContext() throws ContextException {
 		if (CONTEXT.get() == null) {
 			throw new ContextException("Context has not been initialized");
@@ -125,7 +128,7 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Check whether the facade is valid
+	 * Check whether the facade is valid.
 	 *
 	 * @return yes, if it is valid
 	 */
@@ -134,13 +137,11 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Get a proxy scripting object
+	 * Get a proxy scripting object.
 	 *
-	 * @param key
-	 *            the key
+	 * @param key            the key
 	 * @return the value by this key
-	 * @throws ContextException
-	 *             in case of an error
+	 * @throws ContextException             in case of an error
 	 */
 	public static final Object getProxy(String key) throws ContextException {
 		checkContext();
@@ -148,13 +149,11 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Set a proxy scripting object
+	 * Set a proxy scripting object.
 	 *
-	 * @param value
-	 *            the value
+	 * @param value            the value
 	 * @return the UUID of the object
-	 * @throws ContextException
-	 *             in case of an error
+	 * @throws ContextException             in case of an error
 	 */
 	public static final String setProxy(Object value) throws ContextException {
 		final String uuid = generateObjectId();
@@ -162,6 +161,11 @@ public class ThreadContextFacade {
 		return uuid;
 	}
 
+	/**
+	 * Generate object id.
+	 *
+	 * @return the string
+	 */
 	private static String generateObjectId() {
 		return Long.toString(UUID_GENERATOR.incrementAndGet(), Character.MAX_RADIX);
 	}
@@ -185,12 +189,10 @@ public class ThreadContextFacade {
 	}
 
 	/**
-	 * Remove a proxy scripting object
+	 * Remove a proxy scripting object.
 	 *
-	 * @param key
-	 *            the key
-	 * @throws ContextException
-	 *             in case of an error
+	 * @param key            the key
+	 * @throws ContextException             in case of an error
 	 */
 	public static final void removeProxy(String key) throws ContextException {
 		checkContext();

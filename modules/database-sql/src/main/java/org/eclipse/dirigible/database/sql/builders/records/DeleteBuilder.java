@@ -16,25 +16,52 @@ import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeleteBuilder.
+ */
 public class DeleteBuilder extends AbstractQuerySqlBuilder {
 
+	/** The table. */
 	private String table;
+	
+	/** The wheres. */
 	private List<String> wheres = new ArrayList<String>();
 
+	/**
+	 * Instantiates a new delete builder.
+	 *
+	 * @param dialect the dialect
+	 */
 	public DeleteBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 	
+	/**
+	 * From.
+	 *
+	 * @param table the table
+	 * @return the delete builder
+	 */
 	public DeleteBuilder from(String table) {
 		this.table = table;
 		return this;
 	}
 
+	/**
+	 * Where.
+	 *
+	 * @param condition the condition
+	 * @return the delete builder
+	 */
 	public DeleteBuilder where(String condition) {
 		wheres.add(OPEN + condition + CLOSE);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 		StringBuilder sql = new StringBuilder();
@@ -51,6 +78,11 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 		return sql.toString();
 	}
 
+	/**
+	 * Generate table.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateTable(StringBuilder sql) {
 		sql.append(SPACE)
 			.append(KEYWORD_FROM)
@@ -58,14 +90,29 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 			.append(this.table);
 	}
 	
+	/**
+	 * Generate delete.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateDelete(StringBuilder sql) {
 		sql.append(KEYWORD_DELETE);
 	}
 
+	/**
+	 * Gets the table.
+	 *
+	 * @return the table
+	 */
 	public String getTable() {
 		return table;
 	}
 
+	/**
+	 * Gets the wheres.
+	 *
+	 * @return the wheres
+	 */
 	public List<String> getWheres() {
 		return wheres;
 	}

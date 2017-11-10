@@ -25,19 +25,36 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RhinoJavascriptEngineServiceTest.
+ */
 public class RhinoJavascriptEngineServiceTest extends AbstractGuiceTest {
 	
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 	
+	/** The rhino javascript engine executor. */
 	private RhinoJavascriptEngineExecutor rhinoJavascriptEngineExecutor;
 	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.repository = getInjector().getInstance(IRepository.class);
 		this.rhinoJavascriptEngineExecutor = getInjector().getInstance(RhinoJavascriptEngineExecutor.class);
 	}
 	
+	/**
+	 * Basic script.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 */
 	@Test
 	public void basicScript() throws IOException, ScriptingException {
 		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/tests/rhino/testSum.js", 

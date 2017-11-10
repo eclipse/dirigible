@@ -27,16 +27,31 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MessagingCoreServiceTest.
+ */
 public class MessagingCoreServiceTest extends AbstractGuiceTest {
 
+	/** The messaging core service. */
 	@Inject
 	private IMessagingCoreService messagingCoreService;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.messagingCoreService = getInjector().getInstance(MessagingCoreService.class);
 	}
 
+	/**
+	 * Creates the listener test.
+	 *
+	 * @throws MessagingException the messaging exception
+	 */
 	@Test
 	public void createListenerTest() throws MessagingException {
 		messagingCoreService.removeListener("/test_listener1");
@@ -47,6 +62,12 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 		messagingCoreService.removeListener("/test_listener1");
 	}
 
+	/**
+	 * Gets the listener test.
+	 *
+	 * @return the listener test
+	 * @throws MessagingException the messaging exception
+	 */
 	@Test
 	public void getListenerTest() throws MessagingException {
 		messagingCoreService.removeListener("/test_listener1");
@@ -57,6 +78,11 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 		messagingCoreService.removeListener("/test_listener1");
 	}
 
+	/**
+	 * Updatet listener test.
+	 *
+	 * @throws MessagingException the messaging exception
+	 */
 	@Test
 	public void updatetListenerTest() throws MessagingException {
 		messagingCoreService.removeListener("/test_listener1");
@@ -71,6 +97,11 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 		messagingCoreService.removeListener("/test_listener1");
 	}
 
+	/**
+	 * Removes the listener test.
+	 *
+	 * @throws MessagingException the messaging exception
+	 */
 	@Test
 	public void removeListenerTest() throws MessagingException {
 		messagingCoreService.removeListener("/test_listener1");
@@ -83,6 +114,11 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 		assertNull(listenerDefinition);
 	}
 
+	/**
+	 * Parses the listener test.
+	 *
+	 * @throws MessagingException the messaging exception
+	 */
 	@Test
 	public void parseListenerTest() throws MessagingException {
 		ListenerDefinition listenerDefinition = new ListenerDefinition();

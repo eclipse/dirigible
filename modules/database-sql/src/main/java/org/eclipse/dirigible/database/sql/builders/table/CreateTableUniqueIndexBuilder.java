@@ -12,8 +12,18 @@ package org.eclipse.dirigible.database.sql.builders.table;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateTableUniqueIndexBuilder.
+ */
 public class CreateTableUniqueIndexBuilder extends AbstractCreateTableConstraintBuilder<CreateTableUniqueIndexBuilder> {
 
+	/**
+	 * Instantiates a new creates the table unique index builder.
+	 *
+	 * @param dialect the dialect
+	 * @param name the name
+	 */
 	CreateTableUniqueIndexBuilder(ISqlDialect dialect, String name) {
 		super(dialect, name);
 	}

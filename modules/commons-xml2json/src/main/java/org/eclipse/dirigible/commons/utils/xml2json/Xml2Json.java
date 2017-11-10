@@ -47,29 +47,59 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Xml2Json.
+ */
 public class Xml2Json {
+	
+	/** The Constant CDATA_CLOSE. */
 	private static final String CDATA_CLOSE = "]]>";
+	
+	/** The Constant CDATA_OPEN. */
 	private static final String CDATA_OPEN = "<![CDATA[";
+	
+	/** The Constant ESQ. */
 	private static final String ESQ = "=\"";
+	
+	/** The Constant SPACE. */
 	private static final String SPACE = " ";
+	
+	/** The Constant EQ. */
 	private static final String EQ = "\"";
+	
+	/** The Constant EMPTY. */
 	private static final String EMPTY = "";
+	
+	/** The Constant ATTR_TEXT. */
 	private static final String ATTR_TEXT = "#text";
+	
+	/** The Constant ATTR_CDATA. */
 	private static final String ATTR_CDATA = "#cdata-section";
+	
+	/** The Constant LTS. */
 	private static final String LTS = "</";
+	
+	/** The Constant GT. */
 	private static final String GT = ">";
+	
+	/** The Constant LT. */
 	private static final String LT = "<";
+	
+	/** The added by value. */
 	static List<Object> ADDED_BY_VALUE = new ArrayList<Object>();
+	
+	/** The reorganized. */
 	static Map<String, JsonElement> REORGANIZED = new HashMap<String, JsonElement>();
 
 	/**
-	 * Transform XML to JSON
+	 * Transform XML to JSON.
 	 *
-	 * @param xml
-	 * @return
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
+	 * @param xml the xml
+	 * @return the string
+	 * @throws ParserConfigurationException the parser configuration exception
+	 * @throws SAXException the SAX exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static String toJson(String xml) throws ParserConfigurationException, SAXException, IOException {
 		JsonObject rootJson = new JsonObject();
@@ -84,6 +114,13 @@ public class Xml2Json {
 		return json;
 	}
 
+	/**
+	 * Traverse node.
+	 *
+	 * @param parentNode the parent node
+	 * @param parentJson the parent json
+	 * @param upperJson the upper json
+	 */
 	private static void traverseNode(Node parentNode, JsonObject parentJson, JsonObject upperJson) {
 		NodeList childList = parentNode.getChildNodes();
 		for (int i = 0; i < childList.getLength(); i++) {
@@ -164,6 +201,14 @@ public class Xml2Json {
 		}
 	}
 
+	/**
+	 * Process text node.
+	 *
+	 * @param parentNode the parent node
+	 * @param upperJson the upper json
+	 * @param childJson the child json
+	 * @param childNode the child node
+	 */
 	private static void processTextNode(Node parentNode, JsonObject upperJson, JsonObject childJson, Node childNode) {
 		if (upperJson.has(parentNode.getNodeName())) {
 			// upper already has such an element
@@ -187,6 +232,15 @@ public class Xml2Json {
 		ADDED_BY_VALUE.add(parentNode);
 	}
 
+	/**
+	 * Reorganize element.
+	 *
+	 * @param parentNode the parent node
+	 * @param parentJson the parent json
+	 * @param childJson the child json
+	 * @param childNode the child node
+	 * @param existing the existing
+	 */
 	private static void reorganizeElement(Node parentNode, JsonObject parentJson, JsonObject childJson, Node childNode, JsonElement existing) {
 		parentJson.remove(childNode.getNodeName());
 		JsonArray arrayJson = new JsonArray();
@@ -195,6 +249,15 @@ public class Xml2Json {
 		parentJson.add(childNode.getNodeName(), arrayJson);
 	}
 
+	/**
+	 * Reorganize object to array.
+	 *
+	 * @param parentNode the parent node
+	 * @param upperJson the upper json
+	 * @param childJson the child json
+	 * @param childNode the child node
+	 * @param existing the existing
+	 */
 	private static void reorganizeObjectToArray(Node parentNode, JsonObject upperJson, JsonObject childJson, Node childNode, JsonElement existing) {
 		upperJson.remove(parentNode.getNodeName());
 		JsonArray arrayJson = new JsonArray();
@@ -205,6 +268,15 @@ public class Xml2Json {
 		REORGANIZED.put(parentNode.hashCode() + EMPTY, childJson);
 	}
 
+	/**
+	 * Reorganize primitive to array.
+	 *
+	 * @param parentNode the parent node
+	 * @param upperJson the upper json
+	 * @param childJson the child json
+	 * @param childNode the child node
+	 * @param existing the existing
+	 */
 	private static void reorganizePrimitiveToArray(Node parentNode, JsonObject upperJson, JsonObject childJson, Node childNode,
 			JsonElement existing) {
 		upperJson.remove(parentNode.getNodeName());
@@ -215,6 +287,12 @@ public class Xml2Json {
 		REORGANIZED.put(parentNode.hashCode() + EMPTY, childJson);
 	}
 
+	/**
+	 * Reorganize add attributes.
+	 *
+	 * @param childNode the child node
+	 * @param attrs the attrs
+	 */
 	private static void reorganizeAddAttributes(Node childNode, Iterator attrs) {
 		JsonElement reorganizedJson = REORGANIZED.get(childNode.hashCode() + EMPTY);
 		if (reorganizedJson instanceof JsonObject) {
@@ -229,6 +307,14 @@ public class Xml2Json {
 		REORGANIZED.remove(childNode.hashCode() + EMPTY);
 	}
 
+	/**
+	 * Reorganize for attributes.
+	 *
+	 * @param parentJson the parent json
+	 * @param childNode the child node
+	 * @param existing the existing
+	 * @param attrs the attrs
+	 */
 	private static void reorganizeForAttributes(JsonObject parentJson, Node childNode, JsonElement existing, Iterator attrs) {
 		parentJson.remove(childNode.getNodeName());
 		JsonObject objectJson = new JsonObject();
@@ -240,6 +326,12 @@ public class Xml2Json {
 		parentJson.add(childNode.getNodeName(), objectJson);
 	}
 
+	/**
+	 * Traverse attributes.
+	 *
+	 * @param childJson the child json
+	 * @param childNode the child node
+	 */
 	private static void traverseAttributes(JsonObject childJson, Node childNode) {
 		NamedNodeMap attrNodeMap = childNode.getAttributes();
 		for (int j = 0; j < attrNodeMap.getLength(); j++) {
@@ -248,6 +340,12 @@ public class Xml2Json {
 		}
 	}
 
+	/**
+	 * To xml.
+	 *
+	 * @param json the json
+	 * @return the string
+	 */
 	public static String toXml(String json) {
 		JsonParser parser = new JsonParser();
 		JsonElement rootJson = parser.parse(json);
@@ -256,6 +354,12 @@ public class Xml2Json {
 		return buff.toString();
 	}
 
+	/**
+	 * Serialize object as xml.
+	 *
+	 * @param objectJson the object json
+	 * @param buff the buff
+	 */
 	private static void serializeObjectAsXml(JsonObject objectJson, StringBuffer buff) {
 		Iterator elements = objectJson.entrySet().iterator();
 		while (elements.hasNext()) {
@@ -287,6 +391,12 @@ public class Xml2Json {
 		}
 	}
 
+	/**
+	 * Serialize object attributes.
+	 *
+	 * @param objectJson the object json
+	 * @param buff the buff
+	 */
 	private static void serializeObjectAttributes(JsonObject objectJson, StringBuffer buff) {
 		Iterator elements = objectJson.entrySet().iterator();
 		while (elements.hasNext()) {
@@ -301,6 +411,13 @@ public class Xml2Json {
 		}
 	}
 
+	/**
+	 * Serialize array as xml.
+	 *
+	 * @param buff the buff
+	 * @param key the key
+	 * @param value the value
+	 */
 	private static void serializeArrayAsXml(StringBuffer buff, Object key, Object value) {
 		JsonArray array = (JsonArray) value;
 		for (int i = 0; i < array.size(); i++) {
@@ -332,15 +449,15 @@ public class Xml2Json {
 	}
 
 	/**
-	 * Print the XML with indentation
+	 * Print the XML with indentation.
 	 *
-	 * @param xml
+	 * @param xml the xml
 	 * @return pretty xml
-	 * @throws TransformerFactoryConfigurationError
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws TransformerException
+	 * @throws TransformerFactoryConfigurationError the transformer factory configuration error
+	 * @throws ParserConfigurationException the parser configuration exception
+	 * @throws SAXException the SAX exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws TransformerException the transformer exception
 	 */
 	public String prettyPrintXml(String xml)
 			throws TransformerFactoryConfigurationError, ParserConfigurationException, SAXException, IOException, TransformerException {
@@ -355,6 +472,12 @@ public class Xml2Json {
 		return result.getWriter().toString();
 	}
 
+	/**
+	 * Pretty print json.
+	 *
+	 * @param xml the xml
+	 * @return the string
+	 */
 	public String prettyPrintJson(String xml) {
 		return null;
 	}

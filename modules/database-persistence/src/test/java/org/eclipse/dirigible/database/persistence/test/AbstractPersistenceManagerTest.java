@@ -21,10 +21,18 @@ import javax.sql.DataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractPersistenceManagerTest.
+ */
 public class AbstractPersistenceManagerTest {
 
+	/** The data source. */
 	private DataSource dataSource = null;
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {
@@ -36,10 +44,22 @@ public class AbstractPersistenceManagerTest {
 		}
 	}
 
+	/**
+	 * Gets the data srouce.
+	 *
+	 * @return the data srouce
+	 */
 	public DataSource getDataSrouce() {
 		return dataSource;
 	}
 
+	/**
+	 * Creates the data source.
+	 *
+	 * @param name the name
+	 * @return the data source
+	 * @throws Exception the exception
+	 */
 	protected DataSource createDataSource(String name) throws Exception {
 		try {
 			DataSource dataSource = new EmbeddedDataSource();
@@ -52,6 +72,13 @@ public class AbstractPersistenceManagerTest {
 		}
 	}
 
+	/**
+	 * Prepare root folder.
+	 *
+	 * @param name the name
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String prepareRootFolder(String name) throws IOException {
 		File rootFile = new File(name);
 		File parentFile = rootFile.getCanonicalFile().getParentFile();

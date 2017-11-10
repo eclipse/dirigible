@@ -24,13 +24,22 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class V8ApiSuiteTest.
+ */
 public class V8ApiSuiteTest extends AbstractApiSuiteTest {
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/** The v 8 javascript engine executor. */
 	private V8JavascriptEngineExecutor v8JavascriptEngineExecutor;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
+	 */
 	@Override
 	@Before
 	public void setUp() throws Exception {
@@ -39,6 +48,15 @@ public class V8ApiSuiteTest extends AbstractApiSuiteTest {
 		this.v8JavascriptEngineExecutor = getInjector().getInstance(V8JavascriptEngineExecutor.class);
 	}
 
+	/**
+	 * Run suite.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 * @throws ContextException the context exception
+	 * @throws ExtensionsException the extensions exception
+	 */
 	@Test
 	public void runSuite() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		super.runSuite(this.v8JavascriptEngineExecutor, repository);

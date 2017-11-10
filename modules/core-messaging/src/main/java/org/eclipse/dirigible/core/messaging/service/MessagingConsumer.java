@@ -30,17 +30,38 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MessagingConsumer.
+ */
 public class MessagingConsumer implements Runnable, ExceptionListener {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MessagingConsumer.class);
 
+	/** The name. */
 	private String name;
+	
+	/** The type. */
 	private DestinationType type;
+	
+	/** The handler. */
 	private String handler;
+	
+	/** The timeout. */
 	private int timeout = 1000;
 
+	/** The stopped. */
 	private boolean stopped;
 
+	/**
+	 * Instantiates a new messaging consumer.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param handler the handler
+	 * @param timeout the timeout
+	 */
 	public MessagingConsumer(String name, DestinationType type, String handler, int timeout) {
 		this.name = name;
 		this.type = type;
@@ -48,21 +69,39 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 		this.timeout = timeout;
 	}
 
+	/**
+	 * Instantiates a new messaging consumer.
+	 *
+	 * @param name the name
+	 * @param type the type
+	 * @param timeout the timeout
+	 */
 	public MessagingConsumer(String name, DestinationType type, int timeout) {
 		this.name = name;
 		this.type = type;
 		this.timeout = timeout;
 	}
 
+	/**
+	 * Stop.
+	 */
 	public void stop() {
 		this.stopped = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		receiveMessage();
 	}
 
+	/**
+	 * Receive message.
+	 *
+	 * @return the string
+	 */
 	public String receiveMessage() {
 		try {
 			logger.info("Starting a message listener for " + this.name);
@@ -128,6 +167,9 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.jms.ExceptionListener#onException(javax.jms.JMSException)
+	 */
 	@Override
 	public synchronized void onException(JMSException exception) {
 		String wrapper = generateWrapperOnError(exception.getMessage());
@@ -139,18 +181,36 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 		logger.error(exception.getMessage(), exception);
 	}
 
+	/**
+	 * Generate wrapper on message.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
 	private String generateWrapperOnMessage(String message) {
 		String wrapper = new StringBuilder().append("var handler = require('").append(escapeCodeString(this.handler))
 				.append("');handler.onMessage('" + escapeCodeString(message) + "');").toString();
 		return wrapper;
 	}
 
+	/**
+	 * Generate wrapper on error.
+	 *
+	 * @param error the error
+	 * @return the string
+	 */
 	private String generateWrapperOnError(String error) {
 		String wrapper = new StringBuilder().append("var handler = require('").append(escapeCodeString(this.handler))
 				.append("');handler.onError('" + escapeCodeString(error) + "');").toString();
 		return wrapper;
 	}
 
+	/**
+	 * Escape code string.
+	 *
+	 * @param raw the raw
+	 * @return the string
+	 */
 	private String escapeCodeString(String raw) {
 		return raw.replace("'", "&amp;");
 	}

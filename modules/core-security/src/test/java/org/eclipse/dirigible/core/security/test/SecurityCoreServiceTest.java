@@ -26,16 +26,31 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SecurityCoreServiceTest.
+ */
 public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	
+	/** The security core service. */
 	@Inject
 	private ISecurityCoreService securityCoreService;
 	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.securityCoreService = getInjector().getInstance(SecurityCoreService.class);
 	}
 	
+	/**
+	 * Creates the role.
+	 *
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void createRole() throws AccessException {
 		securityCoreService.removeRole("test_role1");
@@ -48,6 +63,12 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 	}
 	
+	/**
+	 * Gets the role.
+	 *
+	 * @return the role
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void getRole() throws AccessException {
 		securityCoreService.removeRole("test_role1");
@@ -58,6 +79,11 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 	}
 	
+	/**
+	 * Updatet role.
+	 *
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void updatetRole() throws AccessException {
 		securityCoreService.removeRole("test_role1");
@@ -72,6 +98,11 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 	}
 	
+	/**
+	 * Removes the role.
+	 *
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void removeRole() throws AccessException {
 		securityCoreService.removeRole("test_role1");
@@ -87,6 +118,11 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	
 	
 	
+	/**
+	 * Creates the access definition.
+	 *
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void createAccessDefinition() throws AccessException {
 		securityCoreService.removeRole("test_role1");
@@ -103,6 +139,12 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 	}
 	
+	/**
+	 * Gets the access definition.
+	 *
+	 * @return the access definition
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void getAccessDefinition() throws AccessException {
 		securityCoreService.removeRole("test_role1");
@@ -119,6 +161,12 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		
 	}
 	
+	/**
+	 * Gets the access definition list.
+	 *
+	 * @return the access definition list
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void getAccessDefinitionList() throws AccessException {
 		securityCoreService.removeRole("test_role1");
@@ -160,6 +208,11 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role2");
 	}
 	
+	/**
+	 * Updatet access definition.
+	 *
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void updatetAccessDefinition() throws AccessException {
 		securityCoreService.removeRole("test_role1");
@@ -180,6 +233,11 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 	}
 	
+	/**
+	 * Removes the access definition.
+	 *
+	 * @throws AccessException the access exception
+	 */
 	@Test
 	public void removeAccessDefinition() throws AccessException {
 		securityCoreService.removeRole("test_role1");

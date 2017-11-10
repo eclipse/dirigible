@@ -21,53 +21,72 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface ISqlDialect.
+ *
+ * @param <SELECT> the generic type
+ * @param <INSERT> the generic type
+ * @param <UPDATE> the generic type
+ * @param <DELETE> the generic type
+ * @param <CREATE> the generic type
+ * @param <DROP> the generic type
+ * @param <NEXT> the generic type
+ */
 public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder>
 		extends ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT>, ISqlKeywords {
 
 	/**
 	 * Default implementation returns the direct toString() conversion. It may
 	 * get overridden for specific database dialects
+	 *
+	 * @param dataType the data type
+	 * @return the data type name
 	 */
 	public String getDataTypeName(DataType dataType);
 
 	/**
 	 * PRIMARY KEY argument for a column for the create table script Default is
-	 * "PRIMARY KEY"
+	 * "PRIMARY KEY".
+	 *
+	 * @return the primary key argument
 	 */
 	public String getPrimaryKeyArgument();
 
 	/**
 	 * NOT NULL argument for a column for the create table script Default is
-	 * "NOT NULL"
+	 * "NOT NULL".
+	 *
+	 * @return the not null argument
 	 */
 	public String getNotNullArgument();
 
 	/**
 	 * UNIQUE argument for a column for the create table script Default is
-	 * "UNIQUE"
+	 * "UNIQUE".
+	 *
+	 * @return the unique argument
 	 */
 	public String getUniqueArgument();
 
 	/**
-	 * Check existence of a table
+	 * Check existence of a table.
 	 *
-	 * @param connection
-	 *            the current connection
-	 * @param table
-	 *            the table name
+	 * @param connection            the current connection
+	 * @param table            the table name
 	 * @return true if the table exists and false otherwise
+	 * @throws SQLException the SQL exception
 	 */
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException;
 
 	/**
-	 * Returns the count of rows in the given table
+	 * Returns the count of rows in the given table.
 	 *
-	 * @param connection
-	 *            the current connection
-	 * @param table
-	 *            the table name
+	 * @param connection            the current connection
+	 * @param table            the table name
 	 * @return count of rows
+	 * @throws SQLException the SQL exception
 	 */
 	public int count(Connection connection, String table) throws SQLException;
 
@@ -76,8 +95,8 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * (e.g. to reduce the provisioned schemas down to those that the current
 	 * user is entitled to see).
 	 *
-	 * @see IDialectSpecifier#getSchemaFilterScript()
 	 * @return true if the feature is supported , false otherwise
+	 * @see IDialectSpecifier#getSchemaFilterScript()
 	 */
 	public boolean isSchemaFilterSupported();
 
@@ -98,21 +117,21 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	boolean isCatalogForSchema();
 
 	/**
-	 * Gives the dialect specific name of the CURRENT_DATE function
+	 * Gives the dialect specific name of the CURRENT_DATE function.
 	 *
 	 * @return the name of the function
 	 */
 	String functionCurrentDate();
 
 	/**
-	 * Gives the dialect specific name of the CURRENT_TIME function
+	 * Gives the dialect specific name of the CURRENT_TIME function.
 	 *
 	 * @return the name of the function
 	 */
 	String functionCurrentTime();
 
 	/**
-	 * Gives the dialect specific name of the CURRENT_TIMESTAMP function
+	 * Gives the dialect specific name of the CURRENT_TIMESTAMP function.
 	 *
 	 * @return the name of the function
 	 */

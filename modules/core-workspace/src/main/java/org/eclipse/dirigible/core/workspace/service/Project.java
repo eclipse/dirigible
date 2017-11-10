@@ -13,8 +13,17 @@ package org.eclipse.dirigible.core.workspace.service;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.repository.api.ICollection;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Project.
+ */
 public class Project extends Folder implements IProject {
 
+	/**
+	 * Instantiates a new project.
+	 *
+	 * @param projectCollection the project collection
+	 */
 	public Project(ICollection projectCollection) {
 		super(projectCollection);
 	}

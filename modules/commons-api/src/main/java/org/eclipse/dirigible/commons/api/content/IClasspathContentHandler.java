@@ -12,10 +12,24 @@ package org.eclipse.dirigible.commons.api.content;
 
 import java.util.Set;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IClasspathContentHandler.
+ */
 public interface IClasspathContentHandler {
 	
+	/**
+	 * Accept.
+	 *
+	 * @param path the path
+	 */
 	public void accept(String path);
 	
+	/**
+	 * Gets the paths.
+	 *
+	 * @return the paths
+	 */
 	public Set<String> getPaths();
 
 }

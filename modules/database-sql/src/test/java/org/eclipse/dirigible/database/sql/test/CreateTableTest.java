@@ -18,8 +18,15 @@ import org.eclipse.dirigible.database.sql.Modifiers;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateTableTest.
+ */
 public class CreateTableTest {
 
+	/**
+	 * Creates the table generic.
+	 */
 	@Test
 	public void createTableGeneric() {
 		String sql = SqlFactory.getDefault().create()
@@ -34,6 +41,9 @@ public class CreateTableTest {
 				sql);
 	}
 
+	/**
+	 * Creates the table type safe.
+	 */
 	@Test
 	public void createTableTypeSafe() {
 		String sql = SqlFactory.getDefault().create()
@@ -47,6 +57,9 @@ public class CreateTableTest {
 		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )", sql);
 	}
 
+	/**
+	 * Creates the table type constraint primary key.
+	 */
 	@Test
 	public void createTableTypeConstraintPrimaryKey() {
 		String sql = SqlFactory.getDefault().create().table("CUSTOMERS")
@@ -61,6 +74,9 @@ public class CreateTableTest {
 				sql);
 	}
 
+	/**
+	 * Creates the table type constraint primary key no name.
+	 */
 	@Test
 	public void createTableTypeConstraintPrimaryKeyNoName() {
 		String sql = SqlFactory.getDefault().create()
@@ -74,6 +90,9 @@ public class CreateTableTest {
 		assertEquals("CREATE TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) , PRIMARY KEY ( FIRST_NAME , LAST_NAME ))", sql);
 	}
 
+	/**
+	 * Creates the table type constraint foregn key.
+	 */
 	@Test
 	public void createTableTypeConstraintForegnKey() {
 		String sql = SqlFactory.getDefault().create()
@@ -89,6 +108,9 @@ public class CreateTableTest {
 				sql);
 	}
 
+	/**
+	 * Creates the table type constraint unique index.
+	 */
 	@Test
 	public void createTableTypeConstraintUniqueIndex() {
 		String sql = SqlFactory.getDefault().create()
@@ -103,6 +125,9 @@ public class CreateTableTest {
 				sql);
 	}
 	
+	/**
+	 * Creates the table type constraint check.
+	 */
 	@Test
 	public void createTableTypeConstraintCheck() {
 		String sql = SqlFactory.getDefault().create()

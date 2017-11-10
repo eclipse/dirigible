@@ -23,23 +23,36 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * The file system based implementation of {@link IEntity}
+ * The file system based implementation of {@link IEntity}.
  */
 public abstract class LocalEntity implements IEntity {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalEntity.class);
 
+	/** The repository. */
 	private transient final FileSystemRepository repository;
 
+	/** The path. */
 	private final RepositoryPath path;
 
+	/**
+	 * Instantiates a new local entity.
+	 *
+	 * @param repository the repository
+	 * @param path the path
+	 */
 	public LocalEntity(FileSystemRepository repository, RepositoryPath path) {
 		super();
 		this.repository = repository;
 		this.path = path;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getRepository()
+	 */
 	@Override
 	public FileSystemRepository getRepository() {
 		return this.repository;
@@ -55,16 +68,25 @@ public abstract class LocalEntity implements IEntity {
 		return this.path;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getName()
+	 */
 	@Override
 	public String getName() {
 		return this.path.getLastSegment();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getPath()
+	 */
 	@Override
 	public String getPath() {
 		return this.path.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getParent()
+	 */
 	@Override
 	public ICollection getParent() {
 		final RepositoryPath parentPath = this.path.getParentPath();
@@ -74,6 +96,9 @@ public abstract class LocalEntity implements IEntity {
 		return new LocalCollection(repository, parentPath);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IEntity#getInformation()
+	 */
 	@Override
 	public IEntityInformation getInformation() throws RepositoryReadException {
 		return new LocalEntityInformation(this.path, getLocalObjectSafe());
@@ -83,6 +108,9 @@ public abstract class LocalEntity implements IEntity {
 	 * Returns the {@link LocalObject} that matches this entity's path. If there is
 	 * no such object in the real repository, then <code>null</code> is
 	 * returned.
+	 *
+	 * @return the local object
+	 * @throws RepositoryReadException the repository read exception
 	 */
 	protected LocalObject getLocalObject() throws RepositoryReadException {
 		try {
@@ -113,6 +141,8 @@ public abstract class LocalEntity implements IEntity {
 	/**
 	 * Creates all ancestors of the given {@link IEntity} inside the
 	 * repository if they don't already exist.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
 	 */
 	protected void createAncestorsIfMissing() throws RepositoryWriteException {
 		final ICollection parent = getParent();
@@ -124,6 +154,8 @@ public abstract class LocalEntity implements IEntity {
 	/**
 	 * Creates all ancestors of the given {@link IEntity} and itself too if
 	 * they don't already exist.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
 	 */
 	protected void createAncestorsAndSelfIfMissing() throws RepositoryWriteException {
 		createAncestorsIfMissing();
@@ -132,6 +164,9 @@ public abstract class LocalEntity implements IEntity {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -147,6 +182,9 @@ public abstract class LocalEntity implements IEntity {
 		return getPath().equals(other.getPath());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return getPath().hashCode();

@@ -10,32 +10,71 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataStructureTableConstraintModel.
+ */
 public class DataStructureTableConstraintModel {
 
+	/** The name. */
 	private String name;
+	
+	/** The modifiers. */
 	private String[] modifiers;
+	
+	/** The columns. */
 	private String[] columns;
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Gets the modifiers.
+	 *
+	 * @return the modifiers
+	 */
 	public String[] getModifiers() {
 		return modifiers;
 	}
 
+	/**
+	 * Sets the modifiers.
+	 *
+	 * @param modifiers the new modifiers
+	 */
 	public void setModifiers(String[] modifiers) {
 		this.modifiers = modifiers;
 	}
 
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the columns
+	 */
 	public String[] getColumns() {
 		return columns;
 	}
 
+	/**
+	 * Sets the columns.
+	 *
+	 * @param columns the new columns
+	 */
 	public void setColumns(String[] columns) {
 		this.columns = columns;
 	}

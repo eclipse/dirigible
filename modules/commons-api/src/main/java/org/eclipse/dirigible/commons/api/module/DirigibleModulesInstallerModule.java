@@ -20,10 +20,18 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DirigibleModulesInstallerModule.
+ */
 public class DirigibleModulesInstallerModule extends AbstractModule {
 	
+	/** The logger. */
 	private Logger logger = LoggerFactory.getLogger(DirigibleModulesInstallerModule.class);
 	
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		logger.trace("Initializing Dirigible Modules...");

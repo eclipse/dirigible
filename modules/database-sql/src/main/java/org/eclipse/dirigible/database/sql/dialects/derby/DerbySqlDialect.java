@@ -15,24 +15,40 @@ import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DerbySqlDialect.
+ */
 public class DerbySqlDialect extends
 		DefaultSqlDialect<DerbySelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, DerbyCreateBranchingBuilder, DerbyDropBranchingBuilder, DerbyNextValueSequenceBuilder> {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+	 */
 	@Override
 	public DerbyNextValueSequenceBuilder nextval(String sequence) {
 		return new DerbyNextValueSequenceBuilder(this, sequence);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
+	 */
 	@Override
 	public DerbyCreateBranchingBuilder create() {
 		return new DerbyCreateBranchingBuilder(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#drop()
+	 */
 	@Override
 	public DerbyDropBranchingBuilder drop() {
 		return new DerbyDropBranchingBuilder(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#select()
+	 */
 	@Override
 	public DerbySelectBuilder select() {
 		return new DerbySelectBuilder(this);

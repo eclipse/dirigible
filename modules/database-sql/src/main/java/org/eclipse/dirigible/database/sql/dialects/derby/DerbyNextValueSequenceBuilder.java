@@ -15,14 +15,28 @@ import static java.text.MessageFormat.format;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DerbyNextValueSequenceBuilder.
+ */
 public class DerbyNextValueSequenceBuilder extends NextValueSequenceBuilder {
 
+	/** The Constant PATTERN_SELECT_NEXT_VAL_SEQUENCE. */
 	private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "( VALUES NEXT VALUE FOR {0} )";
 
+	/**
+	 * Instantiates a new derby next value sequence builder.
+	 *
+	 * @param dialect the dialect
+	 * @param sequence the sequence
+	 */
 	public DerbyNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect, sequence);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 		String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, getSequence());

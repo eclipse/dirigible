@@ -23,10 +23,18 @@ import org.eclipse.dirigible.database.derby.DerbyDatabase;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DatabaseMetadataSerializerTest.
+ */
 public class DatabaseMetadataSerializerTest {
 	
+	/** The data source. */
 	private DataSource dataSource = null;
 	
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {
@@ -38,6 +46,11 @@ public class DatabaseMetadataSerializerTest {
 		}
 	}
 	
+	/**
+	 * Serialize to json.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	@Test
 	public void serializeToJson() throws SQLException {
 		Connection connection = dataSource.getConnection();

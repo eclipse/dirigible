@@ -13,6 +13,7 @@ package org.eclipse.dirigible.repository.api;
 import java.io.IOException;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
  * The <code>IResource</code> interface represents a resource located in the
  * repository.
@@ -20,9 +21,7 @@ import java.util.List;
  */
 public interface IResource extends IEntity {
 
-	/**
-	 * The default content type - text/plain
-	 */
+	/** The default content type - text/plain. */
 	public static final String CONTENT_TYPE_DEFAULT = "text/plain"; //$NON-NLS-1$
 
 	/**
@@ -34,9 +33,9 @@ public interface IResource extends IEntity {
 
 	/**
 	 * Sets this resource's content.
-	 * 
+	 *
 	 * @param content the raw content
-	 * @throws RepositoryWriteException 
+	 * @throws RepositoryWriteException the repository write exception
 	 */
 	public void setContent(byte[] content) throws RepositoryWriteException;
 
@@ -52,33 +51,33 @@ public interface IResource extends IEntity {
 			throws RepositoryWriteException;
 
 	/**
-	 * Getter for binary flag
-	 * 
+	 * Getter for binary flag.
+	 *
 	 * @return whether it is binary
 	 */
 	public boolean isBinary();
 
 	/**
-	 * Getter for the content type
-	 * 
+	 * Getter for the content type.
+	 *
 	 * @return the type of the content
 	 */
 	public String getContentType();
 
 	/**
-	 * Retrieve all the kept versions of a given resource
-	 * 
+	 * Retrieve all the kept versions of a given resource.
+	 *
 	 * @return the list of the {@link IResourceVersion} for this {link IResource}
-	 * @throws RepositoryVersioningException
+	 * @throws RepositoryVersioningException the repository versioning exception
 	 */
 	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException;
 
 	/**
-	 * Retrieve a particular version of a given resource
-	 * 
+	 * Retrieve a particular version of a given resource.
+	 *
 	 * @param version the exact version
 	 * @return the {@link IResourceVersion} for this {link IResource} for this version
-	 * @throws RepositoryVersioningException
+	 * @throws RepositoryVersioningException the repository versioning exception
 	 */
 	public IResourceVersion getResourceVersion(int version) throws RepositoryVersioningException;
 

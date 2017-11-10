@@ -16,15 +16,26 @@ import java.sql.SQLException;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.quartz.utils.ConnectionProvider;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DatasourceConnectionProvider.
+ */
 public class DatasourceConnectionProvider implements ConnectionProvider {
 
+	/** The datasource provider. */
 	private DatasourceProvider datasourceProvider;
 
+	/* (non-Javadoc)
+	 * @see org.quartz.utils.ConnectionProvider#getConnection()
+	 */
 	@Override
 	public Connection getConnection() throws SQLException {
 		return this.datasourceProvider.getDatasource().getConnection();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.quartz.utils.ConnectionProvider#initialize()
+	 */
 	@Override
 	public void initialize() throws SQLException {
 		if (this.datasourceProvider == null) {
@@ -32,6 +43,9 @@ public class DatasourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.quartz.utils.ConnectionProvider#shutdown()
+	 */
 	@Override
 	public void shutdown() throws SQLException {
 		//

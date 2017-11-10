@@ -24,13 +24,22 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NashornApiSuiteTest.
+ */
 public class NashornApiSuiteTest extends AbstractApiSuiteTest {
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/** The nashorn javascript engine executor. */
 	private NashornJavascriptEngineExecutor nashornJavascriptEngineExecutor;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
+	 */
 	@Override
 	@Before
 	public void setUp() throws Exception {
@@ -39,6 +48,15 @@ public class NashornApiSuiteTest extends AbstractApiSuiteTest {
 		this.nashornJavascriptEngineExecutor = getInjector().getInstance(NashornJavascriptEngineExecutor.class);
 	}
 
+	/**
+	 * Run suite.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 * @throws ContextException the context exception
+	 * @throws ExtensionsException the extensions exception
+	 */
 	@Test
 	public void runSuite() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		super.runSuite(this.nashornJavascriptEngineExecutor, repository);

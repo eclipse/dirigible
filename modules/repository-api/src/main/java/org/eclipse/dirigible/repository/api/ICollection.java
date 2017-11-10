@@ -12,6 +12,7 @@ package org.eclipse.dirigible.repository.api;
 
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
  * The <code>ICollection</code> interface represents a collection in the
  * repository.
@@ -151,41 +152,32 @@ public interface ICollection extends IEntity {
 	public void removeResource(IResource resource) throws RepositoryWriteException;
 
 	/**
-	 * List the children of this collection
+	 * List the children of this collection.
 	 *
 	 * @return a list of {@link IEntity} instances
-	 * @throws RepositoryReadException
-	 *             in case the list of the {@link IEntity} cannot be retreived
+	 * @throws RepositoryReadException             in case the list of the {@link IEntity} cannot be retreived
 	 */
 	public List<IEntity> getChildren() throws RepositoryReadException;
 
 	/**
-	 * Create resource under this collection by specifying the binary flag
+	 * Create resource under this collection by specifying the binary flag.
 	 *
-	 * @param name
-	 *            the name of the {@link IResource}
-	 * @param content
-	 *            the raw content
-	 * @param isBinary
-	 *            whether it is binary
-	 * @param contentType
-	 *            the type of the content
+	 * @param name            the name of the {@link IResource}
+	 * @param content            the raw content
+	 * @param isBinary            whether it is binary
+	 * @param contentType            the type of the content
 	 * @return an {@link IResource} instance
-	 * @throws RepositoryWriteException
-	 *             in case the {@link IResource} cannot be created
+	 * @throws RepositoryWriteException             in case the {@link IResource} cannot be created
 	 */
 	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException;
 
 	/**
-	 * Create resource under this collection by recognizing the content type and binary flag by its file extension
+	 * Create resource under this collection by recognizing the content type and binary flag by its file extension.
 	 *
-	 * @param name
-	 *            the name of the {@link IResource}
-	 * @param content
-	 *            the raw content
+	 * @param name            the name of the {@link IResource}
+	 * @param content            the raw content
 	 * @return an {@link IResource} instance
-	 * @throws RepositoryWriteException
-	 *             in case the {@link IResource} cannot be created
+	 * @throws RepositoryWriteException             in case the {@link IResource} cannot be created
 	 */
 	public IResource createResource(String name, byte[] content) throws RepositoryWriteException;
 

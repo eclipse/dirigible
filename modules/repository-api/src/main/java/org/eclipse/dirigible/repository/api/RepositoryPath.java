@@ -15,15 +15,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+// TODO: Auto-generated Javadoc
 /**
- * Utility class representing the path object in the Repository
+ * Utility class representing the path object in the Repository.
  */
 public class RepositoryPath {
 
+	/** The path. */
 	private String path;
 
+	/** The segments. */
 	private final String[] segments;
 
+	/**
+	 * Instantiates a new repository path.
+	 *
+	 * @param path the path
+	 */
 	public RepositoryPath(String path) {
 		this.path = path;
 		final StringTokenizer tokenizer = new StringTokenizer(path, IRepository.SEPARATOR);
@@ -33,10 +41,20 @@ public class RepositoryPath {
 		}
 	}
 
+	/**
+	 * Instantiates a new repository path.
+	 *
+	 * @param repositoryPath the repository path
+	 */
 	public RepositoryPath(RepositoryPath repositoryPath) {
 		this(repositoryPath.segments);
 	}
 
+	/**
+	 * Instantiates a new repository path.
+	 *
+	 * @param input the input
+	 */
 	public RepositoryPath(String... input) {
 		List<String> allSegments = new ArrayList<String>();
 		for (String segment : input) {
@@ -51,9 +69,9 @@ public class RepositoryPath {
 	}
 
 	/**
-	 * Getter for the last segment
+	 * Getter for the last segment.
 	 *
-	 * @return
+	 * @return the last segment
 	 */
 	public String getLastSegment() {
 		if (segments.length == 0) {
@@ -63,9 +81,9 @@ public class RepositoryPath {
 	}
 
 	/**
-	 * Getter for the path of the parent
+	 * Getter for the path of the parent.
 	 *
-	 * @return
+	 * @return the parent path
 	 */
 	public RepositoryPath getParentPath() {
 		if (segments.length == 0) {
@@ -76,10 +94,10 @@ public class RepositoryPath {
 	}
 
 	/**
-	 * Add new segment after the last position
+	 * Add new segment after the last position.
 	 *
-	 * @param name
-	 * @return
+	 * @param name the name
+	 * @return the repository path
 	 */
 	public RepositoryPath append(String name) {
 		final StringTokenizer tokenizer = new StringTokenizer(name, IRepository.SEPARATOR);
@@ -91,6 +109,9 @@ public class RepositoryPath {
 		return new RepositoryPath(newSegments);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		if (segments.length == 0) {
@@ -106,14 +127,27 @@ public class RepositoryPath {
 		return builder.toString();
 	}
 
+	/**
+	 * Builds the.
+	 *
+	 * @return the string
+	 */
 	public String build() {
 		return toString();
 	}
 
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
 	public String getPath() {
 		return path;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -129,15 +163,29 @@ public class RepositoryPath {
 		return getPath().equals(other.getPath());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return getPath().hashCode();
 	}
 
+	/**
+	 * Gets the segments.
+	 *
+	 * @return the segments
+	 */
 	public String[] getSegments() {
 		return Arrays.copyOf(segments, segments.length);
 	}
 
+	/**
+	 * Construct path to.
+	 *
+	 * @param number the number
+	 * @return the string
+	 */
 	public String constructPathTo(int number) {
 		if (number >= segments.length) {
 			return toString();
@@ -153,6 +201,12 @@ public class RepositoryPath {
 		return builder.toString();
 	}
 
+	/**
+	 * Construct path from.
+	 *
+	 * @param number the number
+	 * @return the string
+	 */
 	public String constructPathFrom(int number) {
 		if (number >= segments.length) {
 			return toString();
@@ -168,6 +222,13 @@ public class RepositoryPath {
 		return builder.toString();
 	}
 
+	/**
+	 * Normalize path.
+	 *
+	 * @param path the path
+	 * @param name the name
+	 * @return the string
+	 */
 	public static String normalizePath(String path, String name) {
 		String normalizedPath = null;
 		if (path != null) {
@@ -180,6 +241,12 @@ public class RepositoryPath {
 		return normalizedPath;
 	}
 
+	/**
+	 * Normalize name.
+	 *
+	 * @param name the name
+	 * @return the string
+	 */
 	public static String normalizeName(String name) {
 		return name.replaceAll("[^A-Za-z0-9_]", "_");
 	}

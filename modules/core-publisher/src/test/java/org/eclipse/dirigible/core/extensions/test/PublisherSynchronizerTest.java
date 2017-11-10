@@ -30,17 +30,29 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PublisherSynchronizerTest.
+ */
 public class PublisherSynchronizerTest extends AbstractGuiceTest {
 
+	/** The publisher core service. */
 	@Inject
 	private IPublisherCoreService publisherCoreService;
 
+	/** The publisher synchronizer. */
 	@Inject
 	private PublisherSynchronizer publisherSynchronizer;
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.publisherCoreService = getInjector().getInstance(PublisherCoreService.class);
@@ -48,6 +60,11 @@ public class PublisherSynchronizerTest extends AbstractGuiceTest {
 		this.repository = getInjector().getInstance(IRepository.class);
 	}
 
+	/**
+	 * Publish resource test.
+	 *
+	 * @throws PublisherException the publisher exception
+	 */
 	@Test
 	public void publishResourceTest() throws PublisherException {
 
@@ -69,6 +86,11 @@ public class PublisherSynchronizerTest extends AbstractGuiceTest {
 		assertTrue(after.after(before));
 	}
 
+	/**
+	 * Publish resource twice test.
+	 *
+	 * @throws PublisherException the publisher exception
+	 */
 	@Test
 	public void publishResourceTwiceTest() throws PublisherException {
 

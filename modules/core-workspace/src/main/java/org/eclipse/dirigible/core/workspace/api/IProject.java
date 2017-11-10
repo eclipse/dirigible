@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.core.workspace.api;
 
+/**
+ * The Interface IProject.
+ */
 public interface IProject extends IFolder {
 
 }

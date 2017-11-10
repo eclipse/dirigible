@@ -15,18 +15,71 @@ import java.util.List;
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface ISchedulerCoreService.
+ */
 public interface ISchedulerCoreService extends ICoreService {
 	
+	/**
+	 * Creates the job.
+	 *
+	 * @param name the name
+	 * @param group the group
+	 * @param clazz the clazz
+	 * @param description the description
+	 * @param expression the expression
+	 * @param singleton the singleton
+	 * @return the job definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public JobDefinition createJob(String name, String group, String clazz, String description, String expression, boolean singleton) throws SchedulerException;
 	
+	/**
+	 * Creates the job.
+	 *
+	 * @param jobDefinition the job definition
+	 * @return the job definition
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public JobDefinition createJob(JobDefinition jobDefinition) throws SchedulerException;
 
+	/**
+	 * Gets the job.
+	 *
+	 * @param name the name
+	 * @return the job
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public JobDefinition getJob(String name) throws SchedulerException;
 
+	/**
+	 * Removes the job.
+	 *
+	 * @param name the name
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public void removeJob(String name) throws SchedulerException;
 
+	/**
+	 * Update job.
+	 *
+	 * @param name the name
+	 * @param group the group
+	 * @param clazz the clazz
+	 * @param description the description
+	 * @param expression the expression
+	 * @param singleton the singleton
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public void updateJob(String name, String group, String clazz, String description, String expression, boolean singleton) throws SchedulerException;
 
+	/**
+	 * Gets the jobs.
+	 *
+	 * @return the jobs
+	 * @throws SchedulerException the scheduler exception
+	 */
 	public List<JobDefinition> getJobs() throws SchedulerException;
 
 }

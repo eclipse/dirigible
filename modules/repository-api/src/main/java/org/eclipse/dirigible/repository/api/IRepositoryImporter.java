@@ -13,15 +13,15 @@ package org.eclipse.dirigible.repository.api;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
 
+// TODO: Auto-generated Javadoc
 /**
- * The interface with the import methods for the repository 
- *
+ * The interface with the import methods for the repository .
  */
 public interface IRepositoryImporter {
 	
 	/**
 	 * Imports content from zip file to the repository, based on the relative
-	 * root
+	 * root.
 	 *
 	 * @param zipInputStream the input stream
 	 * @param relativeRoot the relative root
@@ -55,10 +55,9 @@ public interface IRepositoryImporter {
 
 	/**
 	 * Imports content from zip file to the repository, based on the relative
-	 * root
+	 * root.
 	 *
-	 * @param data
-	 *            the zip file as byte array
+	 * @param data            the zip file as byte array
 	 * @param relativeRoot the relative root
 	 * @throws RepositoryImportException in case the zip cannot be imported
 	 */
@@ -81,12 +80,11 @@ public interface IRepositoryImporter {
 	 * root. Overrides the previous content depending on the override parameter.
 	 * Excludes the name of the root folder, during the import, based on the excludeRootFolderName parameter.
 	 *
-	 * @param data
-	 *            the zip file as byte array
+	 * @param data            the zip file as byte array
 	 * @param relativeRoot the relative root
 	 * @param override whether to override existing
+	 * @param excludeRootFolderName the exclude root folder name
 	 * @param filter a filter
-	 * @param excludeRootFolderName
 	 * @throws RepositoryImportException in case the zip cannot be imported
 	 */
 	public void importZip(byte[] data, String relativeRoot, boolean override, boolean excludeRootFolderName, Map<String, String> filter)

@@ -28,47 +28,123 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DatabaseMetadataHelper.
+ */
 public class DatabaseMetadataHelper {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadataHelper.class);
 
+	/** The Constant SYSTEM_TABLE. */
 	public static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
+	
+	/** The Constant LOCAL_TEMPORARY. */
 	public static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
+	
+	/** The Constant GLOBAL_TEMPORARY. */
 	public static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
+	
+	/** The Constant SYNONYM. */
 	public static final String SYNONYM = "SYNONYM"; //$NON-NLS-1$
+	
+	/** The Constant ALIAS. */
 	public static final String ALIAS = "ALIAS"; //$NON-NLS-1$
+	
+	/** The Constant VIEW. */
 	public static final String VIEW = "VIEW"; //$NON-NLS-1$
+	
+	/** The Constant TABLE. */
 	public static final String TABLE = "TABLE"; //$NON-NLS-1$
 
+	/** The Constant TABLE_TYPES. */
 	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
+	/** The Constant PRCNT. */
 	private static final String PRCNT = "%"; //$NON-NLS-1$
 
+	/** The Constant COLUMN_NAME. */
 	private static final String COLUMN_NAME = "COLUMN_NAME"; //$NON-NLS-1$
+	
+	/** The Constant TYPE_NAME. */
 	private static final String TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
+	
+	/** The Constant COLUMN_SIZE. */
 	private static final String COLUMN_SIZE = "COLUMN_SIZE"; //$NON-NLS-1$
+	
+	/** The Constant EMPTY. */
 	private static final String EMPTY = ""; //$NON-NLS-1$
+	
+	/** The Constant PK. */
 	private static final String PK = "PK"; //$NON-NLS-1$
+	
+	/** The Constant IS_NULLABLE. */
 	private static final String IS_NULLABLE = "IS_NULLABLE"; //$NON-NLS-1$
 
+	/** The Constant INDEX_NAME. */
 	private static final String INDEX_NAME = "INDEX_NAME"; //$NON-NLS-1$
+	
+	/** The Constant TYPE_INDEX. */
 	private static final String TYPE_INDEX = "TYPE"; //$NON-NLS-1$
+	
+	/** The Constant NON_UNIQUE. */
 	private static final String NON_UNIQUE = "NON_UNIQUE"; //$NON-NLS-1$
+	
+	/** The Constant INDEX_QUALIFIER. */
 	private static final String INDEX_QUALIFIER = "INDEX_QUALIFIER"; //$NON-NLS-1$
+	
+	/** The Constant ORDINAL_POSITION. */
 	private static final String ORDINAL_POSITION = "ORDINAL_POSITION"; //$NON-NLS-1$
+	
+	/** The Constant ASC_OR_DESC. */
 	private static final String ASC_OR_DESC = "ASC_OR_DESC"; //$NON-NLS-1$
+	
+	/** The Constant CARDINALITY. */
 	private static final String CARDINALITY = "CARDINALITY"; //$NON-NLS-1$
+	
+	/** The Constant PAGES_INDEX. */
 	private static final String PAGES_INDEX = "PAGES"; //$NON-NLS-1$
+	
+	/** The Constant FILTER_CONDITION. */
 	private static final String FILTER_CONDITION = "FILTER_CONDITION"; //$NON-NLS-1$
 
+	/**
+	 * The Interface Filter.
+	 *
+	 * @param <T> the generic type
+	 */
 	public interface Filter<T> {
+		
+		/**
+		 * Accepts.
+		 *
+		 * @param t the t
+		 * @return true, if successful
+		 */
 		boolean accepts(T t);
 	}
 
+	/**
+	 * Gets the dialect.
+	 *
+	 * @param connection the connection
+	 * @return the dialect
+	 */
 	private static ISqlDialect getDialect(Connection connection) {
 		return SqlFactory.deriveDialect(connection);
 	}
 
+	/**
+	 * List schemas.
+	 *
+	 * @param connection the connection
+	 * @param catalogName the catalog name
+	 * @param schemaNameFilter the schema name filter
+	 * @param tableNameFilter the table name filter
+	 * @return the list
+	 * @throws SQLException the SQL exception
+	 */
 	public static List<SchemaMetadata> listSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter,
 			Filter<String> tableNameFilter) throws SQLException {
 
@@ -118,6 +194,16 @@ public class DatabaseMetadataHelper {
 		return result;
 	}
 
+	/**
+	 * List tables.
+	 *
+	 * @param connection the connection
+	 * @param catalogName the catalog name
+	 * @param schemeName the scheme name
+	 * @param tableNameFilter the table name filter
+	 * @return the list
+	 * @throws SQLException the SQL exception
+	 */
 	public static List<TableMetadata> listTables(Connection connection, String catalogName, String schemeName, Filter<String> tableNameFilter)
 			throws SQLException {
 
@@ -150,15 +236,57 @@ public class DatabaseMetadataHelper {
 		return result;
 	}
 
+	/**
+	 * The Interface ColumnsIteratorCallback.
+	 */
 	public interface ColumnsIteratorCallback {
+		
+		/**
+		 * On column.
+		 *
+		 * @param name the name
+		 * @param type the type
+		 * @param size the size
+		 * @param isNullable the is nullable
+		 * @param isKey the is key
+		 */
 		void onColumn(String name, String type, String size, String isNullable, String isKey);
 	}
 
+	/**
+	 * The Interface IndicesIteratorCallback.
+	 */
 	public interface IndicesIteratorCallback {
+		
+		/**
+		 * On index.
+		 *
+		 * @param indexName the index name
+		 * @param indexType the index type
+		 * @param columnName the column name
+		 * @param isNonUnique the is non unique
+		 * @param indexQualifier the index qualifier
+		 * @param ordinalPosition the ordinal position
+		 * @param sortOrder the sort order
+		 * @param cardinality the cardinality
+		 * @param pagesIndex the pages index
+		 * @param filterCondition the filter condition
+		 */
 		void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier, String ordinalPosition,
 				String sortOrder, String cardinality, String pagesIndex, String filterCondition);
 	}
 
+	/**
+	 * Iterate table definition.
+	 *
+	 * @param connection the connection
+	 * @param catalogName the catalog name
+	 * @param schemaName the schema name
+	 * @param tableName the table name
+	 * @param columnsIteratorCallback the columns iterator callback
+	 * @param indicesIteratorCallback the indices iterator callback
+	 * @throws SQLException the SQL exception
+	 */
 	public static void iterateTableDefinition(Connection connection, String catalogName, String schemaName, String tableName,
 			ColumnsIteratorCallback columnsIteratorCallback, IndicesIteratorCallback indicesIteratorCallback) throws SQLException {
 
@@ -207,6 +335,13 @@ public class DatabaseMetadataHelper {
 		}
 	}
 
+	/**
+	 * Gets the metadata as json.
+	 *
+	 * @param dataSource the data source
+	 * @return the metadata as json
+	 * @throws SQLException the SQL exception
+	 */
 	public static String getMetadataAsJson(DataSource dataSource) throws SQLException {
 		Connection connection = null;
 		try {

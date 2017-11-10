@@ -10,11 +10,17 @@
 
 package org.eclipse.dirigible.commons.api.service;
 
+// TODO: Auto-generated Javadoc
 /**
- * The interface for all the front facing REST (sync) services
+ * The interface for all the front facing REST (sync) services.
  */
 public interface IRestService {
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	public Class<? extends IRestService> getType();
 
 }

@@ -13,8 +13,20 @@ package org.eclipse.dirigible.runtime.repository.json;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryJsonHelper.
+ */
 public class RepositoryJsonHelper {
 
+	/**
+	 * Traverse repository.
+	 *
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @return the repository
+	 */
 	public static Repository traverseRepository(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		Repository repositoryPojo = new Repository();
 		repositoryPojo.setName(collection.getName());
@@ -34,6 +46,14 @@ public class RepositoryJsonHelper {
 		return repositoryPojo;
 	}
 
+	/**
+	 * Traverse registry.
+	 *
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @return the registry
+	 */
 	public static Registry traverseRegistry(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		Registry registryPojo = new Registry();
 		registryPojo.setName(collection.getName());
@@ -53,6 +73,14 @@ public class RepositoryJsonHelper {
 		return registryPojo;
 	}
 
+	/**
+	 * Traverse collection.
+	 *
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @return the collection
+	 */
 	public static Collection traverseCollection(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		Collection collectionPojo = new Collection();
 		collectionPojo.setName(collection.getName());

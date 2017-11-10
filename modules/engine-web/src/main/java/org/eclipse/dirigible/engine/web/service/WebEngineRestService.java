@@ -25,8 +25,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw web content from the registry/public space
+ * Front facing REST service serving the raw web content from the registry/public space.
  */
 @Singleton
 @Path("/web")
@@ -34,6 +35,9 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class WebEngineRestService extends AbstractWebEngineRestService {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.web.service.AbstractWebEngineRestService#getResource(java.lang.String)
+	 */
 	@Override
 	@GET
 	@Path("/{path:.*}")
@@ -44,6 +48,9 @@ public class WebEngineRestService extends AbstractWebEngineRestService {
 		return super.getResource(path);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return WebEngineRestService.class;

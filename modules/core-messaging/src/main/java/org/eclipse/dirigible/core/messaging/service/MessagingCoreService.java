@@ -34,17 +34,26 @@ import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MessagingCoreService.
+ */
 @Singleton
 public class MessagingCoreService implements IMessagingCoreService {
 
+	/** The data source. */
 	@Inject
 	private DataSource dataSource;
 
+	/** The listener persistence manager. */
 	@Inject
 	private PersistenceManager<ListenerDefinition> listenerPersistenceManager;
 
 	// Listener
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#createListener(java.lang.String, java.lang.String, org.eclipse.dirigible.core.messaging.api.DestinationType, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public ListenerDefinition createListener(String location, String name, DestinationType type, String module, String description)
 			throws MessagingException {
@@ -72,6 +81,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#getListener(java.lang.String)
+	 */
 	@Override
 	public ListenerDefinition getListener(String location) throws MessagingException {
 		try {
@@ -88,6 +100,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#getListenerByName(java.lang.String)
+	 */
 	@Override
 	public ListenerDefinition getListenerByName(String name) throws MessagingException {
 		try {
@@ -114,6 +129,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#removeListener(java.lang.String)
+	 */
 	@Override
 	public void removeListener(String location) throws MessagingException {
 		try {
@@ -130,6 +148,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#updateListener(java.lang.String, java.lang.String, org.eclipse.dirigible.core.messaging.api.DestinationType, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException {
 		try {
@@ -151,6 +172,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#getListeners()
+	 */
 	@Override
 	public List<ListenerDefinition> getListeners() throws MessagingException {
 		try {
@@ -167,21 +191,33 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#existsListener(java.lang.String)
+	 */
 	@Override
 	public boolean existsListener(String location) throws MessagingException {
 		return getListener(location) != null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#parseListener(java.lang.String)
+	 */
 	@Override
 	public ListenerDefinition parseListener(String json) {
 		return GsonHelper.GSON.fromJson(json, ListenerDefinition.class);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#parseListener(byte[])
+	 */
 	@Override
 	public ListenerDefinition parseListener(byte[] json) {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ListenerDefinition.class);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#serializeListener(org.eclipse.dirigible.core.messaging.definition.ListenerDefinition)
+	 */
 	@Override
 	public String serializeListener(ListenerDefinition listenerDefinition) {
 		return GsonHelper.GSON.toJson(listenerDefinition);

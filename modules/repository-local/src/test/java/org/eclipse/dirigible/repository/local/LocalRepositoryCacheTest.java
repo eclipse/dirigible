@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericCacheTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryCacheTest.
+ */
 public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

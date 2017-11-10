@@ -10,14 +10,28 @@
 
 package org.eclipse.dirigible.runtime.ide.console.service;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ConsoleLogRecord.
+ */
 public class ConsoleLogRecord {
 	
+	/** The level. */
 	private String level;
 	
+	/** The message. */
 	private String message;
 	
+	/** The timestamp. */
 	private long timestamp;
 
+	/**
+	 * Instantiates a new console log record.
+	 *
+	 * @param level the level
+	 * @param message the message
+	 * @param timestamp the timestamp
+	 */
 	public ConsoleLogRecord(String level, String message, long timestamp) {
 		super();
 		this.level = level;
@@ -25,14 +39,29 @@ public class ConsoleLogRecord {
 		this.timestamp = timestamp;
 	}
 
+	/**
+	 * Gets the level.
+	 *
+	 * @return the level
+	 */
 	public String getLevel() {
 		return level;
 	}
 	
+	/**
+	 * Gets the message.
+	 *
+	 * @return the message
+	 */
 	public String getMessage() {
 		return message;
 	}
 	
+	/**
+	 * Gets the timestamp.
+	 *
+	 * @return the timestamp
+	 */
 	public long getTimestamp() {
 		return timestamp;
 	}

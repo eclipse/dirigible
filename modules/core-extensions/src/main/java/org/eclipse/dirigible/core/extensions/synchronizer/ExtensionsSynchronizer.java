@@ -35,29 +35,48 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ExtensionsSynchronizer.
+ */
 @Singleton
 public class ExtensionsSynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
 
+	/** The Constant EXTENSION_POINTS_PREDELIVERED. */
 	private static final Map<String, ExtensionPointDefinition> EXTENSION_POINTS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, ExtensionPointDefinition>());
 
+	/** The Constant EXTENSIONS_PREDELIVERED. */
 	private static final Map<String, ExtensionDefinition> EXTENSIONS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, ExtensionDefinition>());
 
+	/** The Constant EXTENSION_POINTS_SYNCHRONIZED. */
 	private static final List<String> EXTENSION_POINTS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The Constant EXTENSIONS_SYNCHRONIZED. */
 	private static final List<String> EXTENSIONS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	/** The extensions core service. */
 	@Inject
 	private ExtensionsCoreService extensionsCoreService;
 
+	/**
+	 * Force synchronization.
+	 */
 	public static final void forceSynchronization() {
 		ExtensionsSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(ExtensionsSynchronizer.class);
 		extensionsSynchronizer.synchronize();
 	}
 
+	/**
+	 * Register predelivered extension point.
+	 *
+	 * @param extensionPointPath the extension point path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void registerPredeliveredExtensionPoint(String extensionPointPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPointPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
@@ -66,6 +85,12 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		EXTENSION_POINTS_PREDELIVERED.put(extensionPointPath, extensionPointDefinition);
 	}
 
+	/**
+	 * Register predelivered extension.
+	 *
+	 * @param extensionPath the extension path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void registerPredeliveredExtension(String extensionPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
@@ -74,6 +99,9 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		EXTENSIONS_PREDELIVERED.put(extensionPath, extensionDefinition);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
 	@Override
 	public void synchronize() {
 		synchronized (ExtensionsSynchronizer.class) {
@@ -91,11 +119,19 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		EXTENSION_POINTS_SYNCHRONIZED.clear();
 		EXTENSIONS_SYNCHRONIZED.clear();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Extension Points and Extensions...");
 		// Extension Points
@@ -109,6 +145,12 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Extension Points and Extensions.");
 	}
 
+	/**
+	 * Synchronize extension point.
+	 *
+	 * @param extensionPointDefinition the extension point definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeExtensionPoint(ExtensionPointDefinition extensionPointDefinition) throws SynchronizationException {
 		try {
 			if (!extensionsCoreService.existsExtensionPoint(extensionPointDefinition.getLocation())) {
@@ -131,6 +173,12 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize extension.
+	 *
+	 * @param extensionDefinition the extension definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeExtension(ExtensionDefinition extensionDefinition) throws SynchronizationException {
 		try {
 			if (!extensionsCoreService.existsExtension(extensionDefinition.getLocation())) {
@@ -153,6 +201,9 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
+	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
 		logger.trace("Synchronizing Extension Points and Extensions from Registry...");
@@ -162,6 +213,9 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Extension Points and Extensions from Registry.");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.repository.api.IResource)
+	 */
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		String resourceName = resource.getName();
@@ -179,6 +233,9 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
+	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up Extension Points and Extensions...");

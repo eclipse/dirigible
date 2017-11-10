@@ -13,44 +13,92 @@ package org.eclipse.dirigible.database.persistence.model;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceTableModel.
+ */
 public class PersistenceTableModel {
 	
+	/** The class name. */
 	private String className;
 	
+	/** The table name. */
 	private String tableName;
 	
+	/** The schema name. */
 	private String schemaName;
 	
+	/** The columns. */
 	private List<PersistenceTableColumnModel> columns = new ArrayList<PersistenceTableColumnModel>();
 
+	/**
+	 * Gets the class name.
+	 *
+	 * @return the class name
+	 */
 	public String getClassName() {
 		return className;
 	}
 	
+	/**
+	 * Sets the class name.
+	 *
+	 * @param className the new class name
+	 */
 	public void setClassName(String className) {
 		this.className = className;
 	}
 	
+	/**
+	 * Gets the table name.
+	 *
+	 * @return the table name
+	 */
 	public String getTableName() {
 		return tableName;
 	}
 
+	/**
+	 * Sets the table name.
+	 *
+	 * @param tableName the new table name
+	 */
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
 	}
 
+	/**
+	 * Gets the schema name.
+	 *
+	 * @return the schema name
+	 */
 	public String getSchemaName() {
 		return schemaName;
 	}
 
+	/**
+	 * Sets the schema name.
+	 *
+	 * @param schemaName the new schema name
+	 */
 	public void setSchemaName(String schemaName) {
 		this.schemaName = schemaName;
 	}
 
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the columns
+	 */
 	public List<PersistenceTableColumnModel> getColumns() {
 		return columns;
 	}
 
+	/**
+	 * Sets the columns.
+	 *
+	 * @param columns the new columns
+	 */
 	public void setColumns(List<PersistenceTableColumnModel> columns) {
 		this.columns = columns;
 	}

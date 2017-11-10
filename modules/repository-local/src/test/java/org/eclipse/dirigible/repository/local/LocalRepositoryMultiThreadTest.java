@@ -13,8 +13,15 @@ package org.eclipse.dirigible.repository.local;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryMultiThreadTest.
+ */
 public class LocalRepositoryMultiThreadTest extends RepositoryGenericMultiThreadTest {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest#getNewRepository(java.lang.String)
+	 */
 	@Override
 	protected IRepository getNewRepository(String user) {
 		// TODO uncomment only for manual tests
@@ -22,6 +29,11 @@ public class LocalRepositoryMultiThreadTest extends RepositoryGenericMultiThread
 		return null;
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		LocalRepositoryMultiThreadTest localMultiThreadTest = new LocalRepositoryMultiThreadTest();
 		localMultiThreadTest.multi();

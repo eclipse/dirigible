@@ -13,15 +13,29 @@ package org.eclipse.dirigible.database.sql.builders.sequence;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractDropSqlBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DropSequenceBuilder.
+ */
 public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 	
+	/** The sequence. */
 	private String sequence = null;
 	
+	/**
+	 * Instantiates a new drop sequence builder.
+	 *
+	 * @param dialect the dialect
+	 * @param sequence the sequence
+	 */
 	public DropSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect);
 		this.sequence = sequence;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 		
@@ -36,6 +50,11 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 		return sql.toString();
 	}
 	
+	/**
+	 * Generate sequence.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateSequence(StringBuilder sql) {
 		sql.append(SPACE)
 			.append(KEYWORD_SEQUENCE)
@@ -43,6 +62,11 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 			.append(this.sequence);
 	}
 	
+	/**
+	 * Gets the sequence.
+	 *
+	 * @return the sequence
+	 */
 	public String getSequence() {
 		return sequence;
 	}

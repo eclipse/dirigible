@@ -35,8 +35,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content
+ * Front facing REST service serving the raw repository content.
  */
 @Singleton
 @Path("/core/registry")
@@ -45,14 +46,23 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class RegistryRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RegistryRestService.class);
 
+	/** The processor. */
 	@Inject
 	private RegistryProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * Gets the resource.
+	 *
+	 * @param path the path
+	 * @return the resource
+	 */
 	@GET
 	@Path("/{path:.*}")
 	public Response getResource(@PathParam("path") String path) {
@@ -77,11 +87,17 @@ public class RegistryRestService extends AbstractRestService implements IRestSer
 		return Response.ok(new String(resource.getContent())).type(resource.getContentType()).build();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return RegistryRestService.class;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

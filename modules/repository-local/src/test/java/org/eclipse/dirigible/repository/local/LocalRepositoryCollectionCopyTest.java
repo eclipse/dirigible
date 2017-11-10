@@ -15,8 +15,15 @@ import static org.junit.Assert.fail;
 import org.eclipse.dirigible.repository.generic.RepositoryGenericCollectionCopyTest;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryCollectionCopyTest.
+ */
 public class LocalRepositoryCollectionCopyTest extends RepositoryGenericCollectionCopyTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

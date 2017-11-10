@@ -13,9 +13,18 @@ package org.eclipse.dirigible.commons.process;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Commandline.
+ */
 public class Commandline {
 	
-	/** ===================================================================================== */
+	/**
+	 *  =====================================================================================.
+	 *
+	 * @param toProcess the to process
+	 * @return the string[]
+	 */
 	/**	The following function has been taken from Apache Ant code base                       */
 	/** Class: org/apache/tools/ant/types/Commandline.java                                           */
 	/** ===================================================================================== */

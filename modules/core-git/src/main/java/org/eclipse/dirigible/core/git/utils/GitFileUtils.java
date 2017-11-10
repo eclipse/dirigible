@@ -36,15 +36,25 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GitFileUtils.
+ */
 public class GitFileUtils {
 
+	/** The Constant DOT_GIT. */
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	
+	/** The Constant MINIMUM_URL_LENGTH. */
 	private static final int MINIMUM_URL_LENGTH = 25;
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitFileUtils.class);
 
+	/** The Constant TEMP_DIRECTORY_PREFIX. */
 	public static final String TEMP_DIRECTORY_PREFIX = "dirigible_git_"; //$NON-NLS-1$
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
@@ -57,6 +67,11 @@ public class GitFileUtils {
 		}
 	}
 
+	/**
+	 * Delete temp directories.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static void deleteTempDirectories() throws IOException {
 		File file = GitFileUtils.createTempDirectory("DeleteDirectory");
 		File tempDirectory = file.getParentFile();
@@ -68,18 +83,50 @@ public class GitFileUtils {
 		GitFileUtils.deleteDirectory(file);
 	}
 
+	/**
+	 * Checks if is valid repository URI.
+	 *
+	 * @param repositoryURI the repository URI
+	 * @return true, if is valid repository URI
+	 */
 	public static boolean isValidRepositoryURI(String repositoryURI) {
 		return (repositoryURI.endsWith(DOT_GIT)) && (repositoryURI.length() > MINIMUM_URL_LENGTH);
 	}
 
+	/**
+	 * Creates the temp directory.
+	 *
+	 * @param directory the directory
+	 * @return the file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static File createTempDirectory(String directory) throws IOException {
 		return RepositoryFileUtils.createTempDirectory(directory);
 	}
 
+	/**
+	 * Creates the temp directory.
+	 *
+	 * @param directory the directory
+	 * @param suffix the suffix
+	 * @return the file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static File createTempDirectory(String directory, String suffix) throws IOException {
 		return RepositoryFileUtils.createTempDirectory(directory, suffix);
 	}
 
+	/**
+	 * Import project.
+	 *
+	 * @param gitDirectory the git directory
+	 * @param basePath the base path
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param properties the properties
+	 * @return the list
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public List<String> importProject(File gitDirectory, String basePath, String user, String workspace, GitProjectProperties properties)
 			throws IOException {
 		List<String> importedProjects = new ArrayList<String>(gitDirectory.listFiles().length);
@@ -94,6 +141,13 @@ public class GitFileUtils {
 		return importedProjects;
 	}
 
+	/**
+	 * Import project from git repository to workspace.
+	 *
+	 * @param gitRepositoryFile the git repository file
+	 * @param path the path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void importProjectFromGitRepositoryToWorkspace(File gitRepositoryFile, String path) throws IOException {
 		if (gitRepositoryFile.isDirectory()) {
 			for (File file : gitRepositoryFile.listFiles()) {
@@ -105,6 +159,13 @@ public class GitFileUtils {
 		}
 	}
 
+	/**
+	 * Read file.
+	 *
+	 * @param file the file
+	 * @return the byte[]
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static byte[] readFile(File file) throws IOException {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		final InputStream in = new FileInputStream(file);
@@ -116,10 +177,25 @@ public class GitFileUtils {
 		return out.toByteArray();
 	}
 
+	/**
+	 * Delete repository project.
+	 *
+	 * @param project the project
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void deleteRepositoryProject(IProject project) throws IOException {
 		project.delete();
 	}
 
+	/**
+	 * Save git properties file.
+	 *
+	 * @param properties the properties
+	 * @param user the user
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void saveGitPropertiesFile(GitProjectProperties properties, String user, String workspace, String project) throws IOException {
 		String dirigibleGitFolderPath = String.format(GitProjectProperties.PATTERN_USERS_GIT_REPOSITORY, user, workspace, project);
 		if (repository.hasCollection(dirigibleGitFolderPath)) {
@@ -139,6 +215,12 @@ public class GitFileUtils {
 
 	}
 
+	/**
+	 * Delete project folder from directory.
+	 *
+	 * @param parentDirectory the parent directory
+	 * @param selectedProject the selected project
+	 */
 	public static void deleteProjectFolderFromDirectory(File parentDirectory, String selectedProject) {
 		for (File file : parentDirectory.listFiles()) {
 			if (file.getName().equals(selectedProject)) {
@@ -150,6 +232,11 @@ public class GitFileUtils {
 		}
 	}
 
+	/**
+	 * Delete directory.
+	 *
+	 * @param directory the directory
+	 */
 	public static void deleteDirectory(File directory) {
 		if (directory != null) {
 			deleteFiles(directory);
@@ -159,6 +246,11 @@ public class GitFileUtils {
 		}
 	}
 
+	/**
+	 * Delete files.
+	 *
+	 * @param directory the directory
+	 */
 	private static void deleteFiles(File directory) {
 		if (directory != null) {
 			for (File file : directory.listFiles()) {
@@ -172,6 +264,13 @@ public class GitFileUtils {
 		}
 	}
 
+	/**
+	 * Copy project to directory.
+	 *
+	 * @param source the source
+	 * @param tempGitDirectory the temp git directory
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void copyProjectToDirectory(IFolder source, File tempGitDirectory) throws IOException {
 		if (!source.exists()) {
 			return;
@@ -205,6 +304,14 @@ public class GitFileUtils {
 
 	}
 
+	/**
+	 * Gets the git properties for project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the git properties for project
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public GitProjectProperties getGitPropertiesForProject(final IWorkspace workspace, final IProject project) throws IOException {
 
 		String workspaceName = workspace.getName();
@@ -217,6 +324,13 @@ public class GitFileUtils {
 		return gitProperties;
 	}
 
+	/**
+	 * Gets the valid project folders.
+	 *
+	 * @param gitDirectory the git directory
+	 * @return the valid project folders
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static String[] getValidProjectFolders(File gitDirectory) throws IOException {
 		List<String> valid = new ArrayList<String>();
 		String[] all = gitDirectory.list();

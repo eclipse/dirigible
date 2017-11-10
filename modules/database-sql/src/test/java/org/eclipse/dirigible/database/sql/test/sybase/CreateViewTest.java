@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.sybase.SybaseSqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateViewTest.
+ */
 public class CreateViewTest extends CreateTableTest {
 
+	/**
+	 * Creates the view as select.
+	 */
 	@Test
 	public void createViewAsSelect() {
 		createTableGeneric();

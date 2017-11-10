@@ -24,10 +24,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericPathTest.
+ */
 public class RepositoryGenericPathTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test path.
+	 */
 	@Test
 	public void testPath() {
 		if (repository == null) {
@@ -67,6 +75,9 @@ public class RepositoryGenericPathTest {
 		}
 	}
 
+	/**
+	 * Test path children.
+	 */
 	@Test
 	public void testPathChildren() {
 		if (repository == null) {
@@ -109,6 +120,9 @@ public class RepositoryGenericPathTest {
 		}
 	}
 
+	/**
+	 * Test path root.
+	 */
 	@Test
 	public void testPathRoot() {
 		if (repository == null) {

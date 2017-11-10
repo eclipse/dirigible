@@ -39,23 +39,49 @@ import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceAnnotationsParser.
+ */
 public class PersistenceAnnotationsParser {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceAnnotationsParser.class);
 
+	/** The Constant MODELS_CACHE. */
 	private static final Map<Class, PersistenceTableModel> MODELS_CACHE = Collections.synchronizedMap(new HashMap<Class, PersistenceTableModel>());
 
+	/**
+	 * Parses the pojo.
+	 *
+	 * @param pojo the pojo
+	 * @return the persistence table model
+	 * @throws PersistenceException the persistence exception
+	 */
 	public PersistenceTableModel parsePojo(Object pojo) throws PersistenceException {
 		Class<? extends Object> clazz = pojo.getClass();
 		PersistenceTableModel persistenceTableModel = parseTable(clazz);
 		return persistenceTableModel;
 	}
 
+	/**
+	 * Parses the pojo.
+	 *
+	 * @param clazz the clazz
+	 * @return the persistence table model
+	 * @throws PersistenceException the persistence exception
+	 */
 	public PersistenceTableModel parsePojo(Class<? extends Object> clazz) throws PersistenceException {
 		PersistenceTableModel persistenceTableModel = parseTable(clazz);
 		return persistenceTableModel;
 	}
 
+	/**
+	 * Parses the table.
+	 *
+	 * @param clazz the clazz
+	 * @return the persistence table model
+	 */
 	private PersistenceTableModel parseTable(Class<? extends Object> clazz) {
 
 		PersistenceTableModel persistenceTableModel = MODELS_CACHE.get(clazz);
@@ -86,6 +112,12 @@ public class PersistenceAnnotationsParser {
 		return persistenceTableModel;
 	}
 
+	/**
+	 * Gets the table annotation.
+	 *
+	 * @param clazz the clazz
+	 * @return the table annotation
+	 */
 	private Annotation getTableAnnotation(Class<? extends Object> clazz) {
 		Annotation annotation = clazz.getAnnotation(Table.class);
 		if ((annotation == null) && (clazz.getSuperclass() != null)) {
@@ -94,6 +126,12 @@ public class PersistenceAnnotationsParser {
 		return annotation;
 	}
 
+	/**
+	 * Parses the columns.
+	 *
+	 * @param clazz the clazz
+	 * @param persistenceModel the persistence model
+	 */
 	private void parseColumns(Class<? extends Object> clazz, PersistenceTableModel persistenceModel) {
 		Field[] fields = collectFields(clazz);
 		for (Field field : fields) {
@@ -161,6 +199,12 @@ public class PersistenceAnnotationsParser {
 
 	}
 
+	/**
+	 * Collect fields.
+	 *
+	 * @param clazz the clazz
+	 * @return the field[]
+	 */
 	public static Field[] collectFields(Class<? extends Object> clazz) {
 		List<Field> fields = new ArrayList<Field>();
 		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
@@ -170,6 +214,12 @@ public class PersistenceAnnotationsParser {
 		return fields.toArray(new Field[] {});
 	}
 
+	/**
+	 * Collect fields from superclass.
+	 *
+	 * @param clazz the clazz
+	 * @param fields the fields
+	 */
 	private static void collectFieldsFromSuperclass(Class<?> clazz, List<Field> fields) {
 		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 		if (clazz.getSuperclass() != null) {
