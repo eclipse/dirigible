@@ -14,20 +14,14 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.core.messaging.api.DestinationType;
 import org.eclipse.dirigible.core.messaging.service.MessagingConsumer;
 import org.eclipse.dirigible.core.messaging.service.MessagingProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessagingFacade.
  */
 public class MessagingFacade implements IScriptingFacade {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(MessagingFacade.class);
-
 	/**
-	 * Send to queue.
+	 * Send a message to queue.
 	 *
 	 * @param destination the destination
 	 * @param message the message
@@ -38,7 +32,7 @@ public class MessagingFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Send to topic.
+	 * Send a message to topic.
 	 *
 	 * @param destination the destination
 	 * @param message the message
@@ -49,11 +43,11 @@ public class MessagingFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Receive from queue.
+	 * Receive a message from queue.
 	 *
 	 * @param destination the destination
 	 * @param timeout the timeout
-	 * @return the string
+	 * @return the message as JSON
 	 */
 	public static final String receiveFromQueue(String destination, int timeout) {
 		MessagingConsumer consumer = new MessagingConsumer(destination, DestinationType.QUEUE, timeout);
@@ -61,11 +55,11 @@ public class MessagingFacade implements IScriptingFacade {
 	}
 	
 	/**
-	 * Receive from topic.
+	 * Receive a message from topic.
 	 *
 	 * @param destination the destination
 	 * @param timeout the timeout
-	 * @return the string
+	 * @return the the message as JSON
 	 */
 	public static final String receiveFromTopic(String destination, int timeout) {
 		MessagingConsumer consumer = new MessagingConsumer(destination, DestinationType.TOPIC, timeout);
