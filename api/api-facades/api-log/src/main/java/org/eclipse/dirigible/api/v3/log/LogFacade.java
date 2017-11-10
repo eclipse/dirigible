@@ -25,6 +25,8 @@ import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
 /**
+ * The Class LogFacade.
+ *
  * @author shturec (sthrakal@gmail.com)
  */
 public class LogFacade implements IScriptingFacade {
@@ -34,8 +36,13 @@ public class LogFacade implements IScriptingFacade {
 	private static final String APP_LOGGER_NAME_PREFX = "app";
 	private static final String APP_LOGGER_NAME_SEPARATOR = ".";
 
+	private static final ObjectMapper om = new ObjectMapper();
+	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
+
 	/**
-	 * @param url
+	 * Gets the logger.
+	 *
+	 * @param loggerName the logger name
 	 * @return Logger
 	 */
 	public static final Logger getLogger(final String loggerName) {
@@ -55,6 +62,12 @@ public class LogFacade implements IScriptingFacade {
 		return logger;
 	}
 
+	/**
+	 * Sets the logging level.
+	 *
+	 * @param loggerName the logger name
+	 * @param level the level
+	 */
 	public static final void setLevel(String loggerName, String level) {
 
 		final org.slf4j.Logger logger = getLogger(loggerName);
@@ -68,9 +81,16 @@ public class LogFacade implements IScriptingFacade {
 		logbackLogger.setLevel(ch.qos.logback.classic.Level.valueOf(level));
 	}
 
-	private static final ObjectMapper om = new ObjectMapper();
-	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
-
+	/**
+	 * Log.
+	 *
+	 * @param loggerName the logger name
+	 * @param level the level
+	 * @param message the message
+	 * @param logArguments the log arguments
+	 * @param errorJson the error json
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static final void log(String loggerName, String level, String message, String logArguments, String errorJson) throws IOException {
 
 		final Logger logger = getLogger(loggerName);
@@ -110,24 +130,51 @@ public class LogFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * The Class ErrorObject.
+	 */
 	static class ErrorObject {
+		
+		/** The error message. */
 		@JsonProperty("message")
 		public String message;
+		
+		/** The error stack. */
 		@JsonProperty("stack")
 		public StackTraceEl[] stack;
 	}
 
+	/**
+	 * The Class StackTraceEl.
+	 */
 	static class StackTraceEl {
+		
+		/** The file name. */
 		@JsonProperty("fileName")
 		public String fileName;
+		
+		/** The line number. */
 		@JsonProperty("lineNumber")
 		public int lineNumber;
+		
+		/** The declaring class. */
 		@JsonProperty("declaringClass")
 		public String declaringClass;
+		
+		/** The method name. */
 		@JsonProperty("methodName")
 		public String methodName;
 	}
 
+	/**
+	 * Creates a JSServiceExcetion from JSON.
+	 *
+	 * @param errorJson the error json
+	 * @return the JS service exception
+	 * @throws JsonParseException the json parse exception
+	 * @throws JsonMappingException the json mapping exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static JSServiceException toException(String errorJson) throws JsonParseException, JsonMappingException, IOException {
 
 		JSServiceException ex = null;

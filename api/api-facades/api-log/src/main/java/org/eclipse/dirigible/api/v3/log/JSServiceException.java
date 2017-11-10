@@ -10,17 +10,34 @@
 
 package org.eclipse.dirigible.api.v3.log;
 
+/**
+ * The Class JSServiceException.
+ */
 public class JSServiceException extends Exception {
 
+	/**
+	 * Instantiates a new JS service exception.
+	 */
+	public JSServiceException() {
+	}
+
+	/**
+	 * Instantiates a new JS service exception.
+	 *
+	 * @param message the message
+	 */
 	public JSServiceException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new JS service exception.
+	 *
+	 * @param message the message
+	 * @param t the throwable
+	 */
 	public JSServiceException(String message, Throwable t) {
 		super(message, t);
-	}
-
-	public JSServiceException() {
 	}
 
 }

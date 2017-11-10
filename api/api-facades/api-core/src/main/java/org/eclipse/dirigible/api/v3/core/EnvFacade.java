@@ -15,10 +15,21 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The EnvFacade is used to retrieve the environment variables.
+ */
 public class EnvFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(EnvFacade.class);
 
+	/**
+	 * Gets the environment variable by name.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the string
+	 */
 	public static final String get(String name) {
 		logger.trace("API - EnvFacade.get() -> begin");
 		String value = System.getenv(name);
@@ -26,6 +37,11 @@ public class EnvFacade implements IScriptingFacade {
 		return value;
 	}
 
+	/**
+	 * List all the environment variables.
+	 *
+	 * @return the string
+	 */
 	public static final String list() {
 		logger.trace("API - EnvFacade.get() -> begin");
 		String value = GsonHelper.GSON.toJson(System.getenv());

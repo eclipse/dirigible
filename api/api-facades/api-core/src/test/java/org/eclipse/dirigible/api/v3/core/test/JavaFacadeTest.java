@@ -31,16 +31,38 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JavaFacadeTest.
+ */
 public class JavaFacadeTest extends AbstractGuiceTest {
 
+	/** The extensions publisher. */
 	@Inject
 	private ExtensionsSynchronizer extensionsPublisher;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.extensionsPublisher = getInjector().getInstance(ExtensionsSynchronizer.class);
 	}
 
+	/**
+	 * Test call.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws InvocationTargetException the invocation target exception
+	 * @throws NoSuchMethodException the no such method exception
+	 * @throws SecurityException the security exception
+	 * @throws ContextException the context exception
+	 */
 	@Test
 	public void testCall() throws IOException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, ContextException {
