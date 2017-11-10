@@ -108,7 +108,8 @@ public class HttpRequestFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Returns any extra path information after the servlet name but before the query string, and translates it to a real
+	 * Returns any extra path information after the servlet name but before the query string, and translates it to a
+	 * real
 	 * path
 	 *
 	 * @return the path translated
@@ -402,7 +403,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	 *
 	 * @return the scheme
 	 */
-	public static final String Returnscheme() {
+	public static final String getScheme() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
@@ -428,7 +429,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	 *
 	 * @return the server name
 	 */
-	public static final String ReturnserverName() {
+	public static final String getServerName() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
@@ -441,7 +442,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	 *
 	 * @return the server port
 	 */
-	public static final int ReturnserverPort() {
+	public static final int getServerPort() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
@@ -575,7 +576,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 	 *
 	 * @return the service path
 	 */
-	public static final String ReturnservicePath() {
+	public static final String getServicePath() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
