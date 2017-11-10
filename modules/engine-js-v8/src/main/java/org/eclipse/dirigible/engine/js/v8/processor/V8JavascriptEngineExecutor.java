@@ -33,23 +33,49 @@ import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class V8JavascriptEngineExecutor.
+ */
 public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
+	/** The Constant J2V8_CALL_STATIC_FUNCTION_NAME. */
 	private static final String J2V8_CALL_STATIC_FUNCTION_NAME = "j2v8call";
+	
+	/** The Constant J2V8_NEW_INSTANCE_FUNCTION_NAME. */
 	private static final String J2V8_NEW_INSTANCE_FUNCTION_NAME = "j2v8instantiate";
+	
+	/** The Constant J2V8_CALL_INSTANCE_FUNCTION_NAME. */
 	private static final String J2V8_CALL_INSTANCE_FUNCTION_NAME = "j2v8invoke";
+	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(V8JavascriptEngineExecutor.class);
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 		return executeService(module, executionContext, true);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceCode(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
 		return executeService(code, executionContext, false);
 	}
 
+	/**
+	 * Execute service.
+	 *
+	 * @param moduleOrCode the module or code
+	 * @param executionContext the execution context
+	 * @param isModule the is module
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
 
 		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
@@ -111,12 +137,20 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		return result;
 	}
 
+	/**
+	 * Creates the repository module source provider.
+	 *
+	 * @return the v 8 repository module source provider
+	 */
 	private V8RepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
 		V8RepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
 		repositoryModuleSourceProvider = new V8RepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		return repositoryModuleSourceProvider;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#getType()
+	 */
 	@Override
 	public String getType() {
 		return JAVASCRIPT_TYPE_V8;

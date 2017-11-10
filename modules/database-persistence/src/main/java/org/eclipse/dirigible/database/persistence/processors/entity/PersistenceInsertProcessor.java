@@ -28,12 +28,24 @@ import org.eclipse.dirigible.database.persistence.processors.sequence.Persistenc
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceInsertProcessor.
+ */
 public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 
+	/**
+	 * Instantiates a new persistence insert processor.
+	 *
+	 * @param entityManagerInterceptor the entity manager interceptor
+	 */
 	public PersistenceInsertProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		InsertBuilder insertBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).insert().into(tableModel.getTableName());
@@ -44,6 +56,15 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		return sql;
 	}
 
+	/**
+	 * Insert.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param pojo the pojo
+	 * @return the object
+	 * @throws PersistenceException the persistence exception
+	 */
 	public Object insert(Connection connection, PersistenceTableModel tableModel, Object pojo) throws PersistenceException {
 		Object result = 0;
 		String sql = null;
@@ -63,6 +84,16 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		return result;
 	}
 
+	/**
+	 * Sets the generated values.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @param pojo the pojo
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SQLException the SQL exception
+	 */
 	private void setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
@@ -84,6 +115,16 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		}
 	}
 
+	/**
+	 * Gets the primary key value.
+	 *
+	 * @param tableModel the table model
+	 * @param pojo the pojo
+	 * @return the primary key value
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SQLException the SQL exception
+	 */
 	private Object getPrimaryKeyValue(PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {

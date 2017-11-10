@@ -10,26 +10,58 @@
 
 package org.eclipse.dirigible.commons.api.context;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class InvalidStateException.
+ */
 public class InvalidStateException extends RuntimeException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5039208772641246649L;
 
+	/**
+	 * Instantiates a new invalid state exception.
+	 */
 	public InvalidStateException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new invalid state exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 * @param enableSuppression the enable suppression
+	 * @param writableStackTrace the writable stack trace
+	 */
 	public InvalidStateException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
+	/**
+	 * Instantiates a new invalid state exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public InvalidStateException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new invalid state exception.
+	 *
+	 * @param message the message
+	 */
 	public InvalidStateException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new invalid state exception.
+	 *
+	 * @param cause the cause
+	 */
 	public InvalidStateException(Throwable cause) {
 		super(cause);
 	}

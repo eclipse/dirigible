@@ -13,8 +13,21 @@ package org.eclipse.dirigible.databases.processor.format;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface ResultSetWriter.
+ *
+ * @param <T> the generic type
+ */
 public interface ResultSetWriter<T> {
 
+	/**
+	 * Write.
+	 *
+	 * @param rs the rs
+	 * @return the t
+	 * @throws SQLException the SQL exception
+	 */
 	T write(ResultSet rs) throws SQLException;
 	
 }

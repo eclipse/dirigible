@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.commons.api.scripting;
 
+/**
+ * The Interface IScriptingFacade.
+ */
 public interface IScriptingFacade {
 
 }

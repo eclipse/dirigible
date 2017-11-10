@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.repository.api;
 
+// TODO: Auto-generated Javadoc
 /**
  * The {@link IEntity} interface is a base interface for {@link ICollection} and
  * {@link IResource}. <br>

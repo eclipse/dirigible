@@ -12,10 +12,30 @@ package org.eclipse.dirigible.database.persistence;
 
 import java.lang.reflect.Field;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IEntityManagerInterceptor.
+ */
 public interface IEntityManagerInterceptor {
 
+	/**
+	 * On set value before update.
+	 *
+	 * @param index the index
+	 * @param dataType the data type
+	 * @param value the value
+	 * @return the object
+	 */
 	public Object onSetValueBeforeUpdate(int index, String dataType, Object value);
 
+	/**
+	 * On set value after query.
+	 *
+	 * @param pojo the pojo
+	 * @param field the field
+	 * @param value the value
+	 * @return the object
+	 */
 	public Object onSetValueAfterQuery(Object pojo, Field field, Object value);
 
 }

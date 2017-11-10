@@ -19,21 +19,45 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HanaCreateBranchingBuilder.
+ */
 public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 
+	/**
+	 * Instantiates a new hana create branching builder.
+	 *
+	 * @param dialect the dialect
+	 */
 	protected HanaCreateBranchingBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
+	 */
 	@Override
 	public CreateTableBuilder table(String table) {
 		return new HanaCreateTableBuilder(this.getDialect(), table, false);
 	}
 	
+	/**
+	 * Column table.
+	 *
+	 * @param table the table
+	 * @return the creates the table builder
+	 */
 	public CreateTableBuilder columnTable(String table) {
 		return new HanaCreateTableBuilder(this.getDialect(), table, true);
 	}
 	
+	/**
+	 * Row table.
+	 *
+	 * @param table the table
+	 * @return the creates the table builder
+	 */
 	public CreateTableBuilder rowTable(String table) {
 		return new HanaCreateTableBuilder(this.getDialect(), table, false);
 	}

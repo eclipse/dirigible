@@ -26,24 +26,32 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.persist.UnitOfWork;
 
+// TODO: Auto-generated Javadoc
 /**
- * Test supporting class, enabling dependency injection
+ * Test supporting class, enabling dependency injection.
  */
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractGuiceTest {
 
+	/** The unit of work mock. */
 	protected UnitOfWork unitOfWorkMock;
 
 	/**
-	 * Dependency injection before execution of every test method
+	 * Dependency injection before execution of every test method.
 	 *
-	 * @throws IOException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@Before
 	public void beforeEveryMethod() throws IOException {
 		StaticInjector.setInjector(getInjector());
 	}
 
+	/**
+	 * Gets the injector.
+	 *
+	 * @return the injector
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected Injector getInjector() throws IOException {
 		// TODO: doublecheck the logic for cleaning up the DB
 		// FileUtils.forceDelete(new File("./target/derby_test_database"));
@@ -58,12 +66,20 @@ public abstract class AbstractGuiceTest {
 		});
 	}
 
+	/**
+	 * Bind.
+	 *
+	 * @param binder the binder
+	 */
 	protected void bind(Binder binder) {
 		setUpMocks();
 
 		binder.bind(UnitOfWork.class).toInstance(unitOfWorkMock);
 	}
 
+	/**
+	 * Sets the up mocks.
+	 */
 	protected void setUpMocks() {
 		this.unitOfWorkMock = Mockito.mock(UnitOfWork.class);
 	}

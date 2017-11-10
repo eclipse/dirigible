@@ -25,10 +25,18 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericResourceVersionsTest.
+ */
 public class RepositoryGenericResourceVersionsTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test check versions.
+	 */
 	@Test
 	public void testCheckVersions() {
 		if (repository == null) {

@@ -24,10 +24,23 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericMultiThreadTest.
+ */
 public abstract class RepositoryGenericMultiThreadTest {
 
+	/**
+	 * Gets the new repository.
+	 *
+	 * @param user the user
+	 * @return the new repository
+	 */
 	protected abstract IRepository getNewRepository(String user);
 
+	/**
+	 * Go test.
+	 */
 	@Test
 	public void goTest() {
 		multi();
@@ -63,6 +76,11 @@ public abstract class RepositoryGenericMultiThreadTest {
 	// }
 	// }
 
+	/**
+	 * Text.
+	 *
+	 * @param repository the repository
+	 */
 	private void text(IRepository repository) {
 		if (repository == null) {
 			return;
@@ -104,6 +122,9 @@ public abstract class RepositoryGenericMultiThreadTest {
 		}
 	}
 
+	/**
+	 * Multi.
+	 */
 	public void multi() {
 		int POOL_SIZE = 100;
 		ExecutorService executorService = Executors.newFixedThreadPool(POOL_SIZE);

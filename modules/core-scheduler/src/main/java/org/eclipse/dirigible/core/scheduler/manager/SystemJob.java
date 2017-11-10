@@ -24,13 +24,24 @@ import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.quartz.TriggerKey;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SystemJob.
+ */
 public class SystemJob implements Job {
 
+	/** The Constant SYSTEM_JOB_NAME. */
 	private static final String SYSTEM_JOB_NAME = "dirigible-system-job";
+	
+	/** The Constant SYSTEM_GROUP. */
 	private static final String SYSTEM_GROUP = "dirigible-system";
 	
+	/** The scheduler core service. */
 	private SchedulerCoreService schedulerCoreService = StaticInjector.getInjector().getInstance(SchedulerCoreService.class);
 	
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		try {
@@ -60,6 +71,11 @@ public class SystemJob implements Job {
 		
 	}
 	
+	/**
+	 * Gets the system job definition.
+	 *
+	 * @return the system job definition
+	 */
 	public static JobDefinition getSystemJobDefinition() {
 		JobDefinition jobDefinition = new JobDefinition(); 
 		jobDefinition.setName(SYSTEM_JOB_NAME);

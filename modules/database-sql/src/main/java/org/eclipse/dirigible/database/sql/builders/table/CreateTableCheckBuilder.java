@@ -12,18 +12,40 @@ package org.eclipse.dirigible.database.sql.builders.table;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateTableCheckBuilder.
+ */
 public class CreateTableCheckBuilder extends AbstractCreateTableConstraintBuilder<CreateTableCheckBuilder> {
 
+	/** The expression. */
 	private String expression;
 
+	/**
+	 * Instantiates a new creates the table check builder.
+	 *
+	 * @param dialect the dialect
+	 * @param name the name
+	 */
 	CreateTableCheckBuilder(ISqlDialect dialect, String name) {
 		super(dialect, name);
 	}
 
+	/**
+	 * Gets the expression.
+	 *
+	 * @return the expression
+	 */
 	public String getExpression() {
 		return expression;
 	}
 
+	/**
+	 * Expression.
+	 *
+	 * @param expression the expression
+	 * @return the creates the table check builder
+	 */
 	public CreateTableCheckBuilder expression(String expression) {
 		this.expression = expression;
 		return this;

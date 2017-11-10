@@ -18,11 +18,23 @@ import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.IRepository;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProjectPropertiesVerifier.
+ */
 public class ProjectPropertiesVerifier {
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/**
+	 * Verify.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return true, if successful
+	 */
 	public boolean verify(IWorkspace workspace, IProject project) {
 		boolean result = false;
 		String user = UserFacade.getName();

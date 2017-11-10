@@ -16,10 +16,18 @@ import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JavascriptModule.
+ */
 public class JavascriptModule extends AbstractDirigibleModule {
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Javascript Module";
 	
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		ServiceLoader<IJavascriptEngineExecutor> javascriptEngineExecutors = ServiceLoader.load(IJavascriptEngineExecutor.class);
@@ -35,6 +43,9 @@ public class JavascriptModule extends AbstractDirigibleModule {
 
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
 	public String getName() {
 		return MODULE_NAME;

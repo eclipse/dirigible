@@ -37,23 +37,34 @@ import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SecurityCoreService.
+ */
 @Singleton
 public class SecurityCoreService implements ISecurityCoreService {
 
+	/** The data source. */
 	@Inject
 	private DataSource dataSource;
 
+	/** The roles persistence manager. */
 	@Inject
 	private PersistenceManager<RoleDefinition> rolesPersistenceManager;
 
+	/** The access persistence manager. */
 	@Inject
 	private PersistenceManager<AccessDefinition> accessPersistenceManager;
 
+	/** The Constant CACHE. */
 	// used by the access security filter to minimize the performance implications on getting the whole list
 	private static final List<AccessDefinition> CACHE = Collections.synchronizedList(new ArrayList<AccessDefinition>());
 
 	// Roles
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#createRole(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public RoleDefinition createRole(String name, String location, String description) throws AccessException {
 		RoleDefinition roleDefinition = new RoleDefinition();
@@ -78,6 +89,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getRole(java.lang.String)
+	 */
 	@Override
 	public RoleDefinition getRole(String name) throws AccessException {
 		try {
@@ -94,11 +108,17 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#existsRole(java.lang.String)
+	 */
 	@Override
 	public boolean existsRole(String name) throws AccessException {
 		return getRole(name) != null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#removeRole(java.lang.String)
+	 */
 	@Override
 	public void removeRole(String name) throws AccessException {
 		try {
@@ -115,6 +135,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#updateRole(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void updateRole(String name, String location, String description) throws AccessException {
 		try {
@@ -134,6 +157,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getRoles()
+	 */
 	@Override
 	public List<RoleDefinition> getRoles() throws AccessException {
 		try {
@@ -150,16 +176,25 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#parseRoles(java.lang.String)
+	 */
 	@Override
 	public RoleDefinition[] parseRoles(String json) {
 		return GsonHelper.GSON.fromJson(json, RoleDefinition[].class);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#parseRoles(byte[])
+	 */
 	@Override
 	public RoleDefinition[] parseRoles(byte[] json) {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), RoleDefinition[].class);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#serializeRoles(org.eclipse.dirigible.core.security.definition.RoleDefinition[])
+	 */
 	@Override
 	public String serializeRoles(RoleDefinition[] roles) {
 		return GsonHelper.GSON.toJson(roles);
@@ -167,6 +202,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 
 	// Access
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#createAccessDefinition(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public AccessDefinition createAccessDefinition(String location, String uri, String method, String role, String description)
 			throws AccessException {
@@ -195,6 +233,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinition(long)
+	 */
 	@Override
 	public AccessDefinition getAccessDefinition(long id) throws AccessException {
 		try {
@@ -211,6 +252,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinition(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public AccessDefinition getAccessDefinition(String uri, String method, String role) throws AccessException {
 		try {
@@ -238,11 +282,17 @@ public class SecurityCoreService implements ISecurityCoreService {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#existsAccessDefinition(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean existsAccessDefinition(String uri, String method, String role) throws AccessException {
 		return getAccessDefinition(uri, method, role) != null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#removeAccessDefinition(long)
+	 */
 	@Override
 	public void removeAccessDefinition(long id) throws AccessException {
 		try {
@@ -259,6 +309,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#updateAccessDefinition(long, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void updateAccessDefinition(long id, String location, String uri, String method, String role, String description) throws AccessException {
 		try {
@@ -282,6 +335,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinitions()
+	 */
 	@Override
 	public List<AccessDefinition> getAccessDefinitions() throws AccessException {
 		if (!CACHE.isEmpty()) {
@@ -303,6 +359,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinitionsByUri(java.lang.String)
+	 */
 	@Override
 	public List<AccessDefinition> getAccessDefinitionsByUri(String uri) throws AccessException {
 		try {
@@ -321,6 +380,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinitionsByUriAndMethod(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public List<AccessDefinition> getAccessDefinitionsByUriAndMethod(String uri, String method) throws AccessException {
 		try {
@@ -339,6 +401,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#isAccessAllowed(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean isAccessAllowed(String uri, String method, String role) throws AccessException {
 		try {
@@ -360,24 +425,36 @@ public class SecurityCoreService implements ISecurityCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#parseAccessDefinitions(java.lang.String)
+	 */
 	@Override
 	public List<AccessDefinition> parseAccessDefinitions(String json) {
 		AccessArtifact accessArtifact = AccessArtifact.parse(json);
 		return accessArtifact.divide();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#parseAccessDefinitions(byte[])
+	 */
 	@Override
 	public List<AccessDefinition> parseAccessDefinitions(byte[] json) {
 		AccessArtifact accessArtifact = AccessArtifact.parse(json);
 		return accessArtifact.divide();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#serializeAccessDefinitions(java.util.List)
+	 */
 	@Override
 	public String serializeAccessDefinitions(List<AccessDefinition> accessDefinitions) {
 		AccessArtifact accessArtifact = AccessArtifact.combine(accessDefinitions);
 		return accessArtifact.serialize();
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	public void clearCache() {
 		CACHE.clear();
 	}

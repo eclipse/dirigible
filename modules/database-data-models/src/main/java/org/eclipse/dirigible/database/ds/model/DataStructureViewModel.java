@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
+// TODO: Auto-generated Javadoc
 /**
  * The view model representation
  * {
@@ -28,14 +29,15 @@ package org.eclipse.dirigible.database.ds.model;
  * "type":"TABLE"
  * }
  * ]
- * }
+ * }.
  */
 public class DataStructureViewModel extends DataStructureModel {
 
+	/** The query. */
 	private String query;
 
 	/**
-	 * Getter for the query field
+	 * Getter for the query field.
 	 *
 	 * @return the SQL query
 	 */
@@ -44,10 +46,9 @@ public class DataStructureViewModel extends DataStructureModel {
 	}
 
 	/**
-	 * Setter for the query field
+	 * Setter for the query field.
 	 *
-	 * @param query
-	 *            the SQL query
+	 * @param query            the SQL query
 	 */
 	public void setQuery(String query) {
 		this.query = query;

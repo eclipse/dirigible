@@ -20,8 +20,15 @@ import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataStructureTableTest.
+ */
 public class DataStructureTableTest {
 
+	/**
+	 * Parses the table.
+	 */
 	@Test
 	public void parseTable() {
 		try {
@@ -34,6 +41,9 @@ public class DataStructureTableTest {
 		}
 	}
 
+	/**
+	 * Parses the precision scale.
+	 */
 	@Test
 	public void parsePrecisionScale() {
 		try {

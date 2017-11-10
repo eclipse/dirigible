@@ -33,8 +33,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content
+ * Front facing REST service serving the raw repository content.
  */
 @Singleton
 @Path("/core/security")
@@ -42,14 +43,23 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class SecurityRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecurityRestService.class);
 
+	/** The processor. */
 	@Inject
 	private SecurityProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * List access.
+	 *
+	 * @return the response
+	 * @throws AccessException the access exception
+	 */
 	@GET
 	@Path("/access")
 	public Response listAccess() throws AccessException {
@@ -62,6 +72,12 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(processor.renderAccess()).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * List roles.
+	 *
+	 * @return the response
+	 * @throws AccessException the access exception
+	 */
 	@GET
 	@Path("/roles")
 	public Response listRoles() throws AccessException {
@@ -74,11 +90,17 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(processor.renderRoles()).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return SecurityRestService.class;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

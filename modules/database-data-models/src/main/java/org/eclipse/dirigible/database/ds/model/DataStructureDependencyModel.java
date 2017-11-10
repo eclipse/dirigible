@@ -10,22 +10,23 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
+// TODO: Auto-generated Javadoc
 /**
- * Dependency element of the DataStructureModel
+ * Dependency element of the DataStructureModel.
  */
 public class DataStructureDependencyModel {
 
+	/** The name. */
 	private String name;
 
+	/** The type. */
 	private String type;
 
 	/**
-	 * The constructor from fields
+	 * The constructor from fields.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
+	 * @param name            the name
+	 * @param type            the type
 	 */
 	public DataStructureDependencyModel(String name, String type) {
 		super();
@@ -34,7 +35,7 @@ public class DataStructureDependencyModel {
 	}
 
 	/**
-	 * Getter for the name
+	 * Getter for the name.
 	 *
 	 * @return the name
 	 */
@@ -43,17 +44,16 @@ public class DataStructureDependencyModel {
 	}
 
 	/**
-	 * Setter for the name
+	 * Setter for the name.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name            the name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Getter for the type
+	 * Getter for the type.
 	 *
 	 * @return the type
 	 */
@@ -62,10 +62,9 @@ public class DataStructureDependencyModel {
 	}
 
 	/**
-	 * Setter for the type
+	 * Setter for the type.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type            the type
 	 */
 	public void setType(String type) {
 		this.type = type;

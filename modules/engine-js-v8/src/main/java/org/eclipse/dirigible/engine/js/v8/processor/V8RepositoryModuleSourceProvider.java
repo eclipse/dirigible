@@ -16,19 +16,40 @@ import java.nio.charset.StandardCharsets;
 
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class V8RepositoryModuleSourceProvider.
+ */
 public class V8RepositoryModuleSourceProvider {
 
+	/** The Constant JS_EXTENSION. */
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
+	/** The executor. */
 	private IScriptEngineExecutor executor;
 	
+	/** The root. */
 	private String root;
 	
+	/**
+	 * Instantiates a new v 8 repository module source provider.
+	 *
+	 * @param executor the executor
+	 * @param root the root
+	 */
 	public V8RepositoryModuleSourceProvider(IScriptEngineExecutor executor, String root) {
 		this.executor = executor;
 		this.root = root;
 	}
 	
+	/**
+	 * Load source.
+	 *
+	 * @param module the module
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	public String loadSource(String module) throws IOException, URISyntaxException {
 
 		if (module == null) {

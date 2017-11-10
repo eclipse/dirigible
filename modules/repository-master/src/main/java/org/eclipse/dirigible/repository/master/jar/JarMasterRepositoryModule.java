@@ -17,15 +17,21 @@ import org.eclipse.dirigible.repository.master.IMasterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Module for managing JAR Repository instantiation and binding
+ * Module for managing JAR Repository instantiation and binding.
  */
 public class JarMasterRepositoryModule extends AbstractDirigibleModule {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(JarMasterRepositoryModule.class);
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Jar Master Repository Module";
 	
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		Configuration.load("/dirigible-repository-master-jar.properties");
@@ -37,6 +43,11 @@ public class JarMasterRepositoryModule extends AbstractDirigibleModule {
 		}
 	}
 
+	/**
+	 * Creates the instance.
+	 *
+	 * @return the i master repository
+	 */
 	private IMasterRepository createInstance() {
 		logger.debug("creating Jar Master Repository...");
 		String jar = Configuration.get(JarMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH);
@@ -45,6 +56,9 @@ public class JarMasterRepositoryModule extends AbstractDirigibleModule {
 		return jarMasterRepository;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
 	public String getName() {
 		return MODULE_NAME;

@@ -10,47 +10,58 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
+// TODO: Auto-generated Javadoc
 /**
- * The column element of the table model
+ * The column element of the table model.
  */
 public class DataStructureTableColumnModel {
 
+	/** The name. */
 	private String name;
+	
+	/** The type. */
 	private String type;
+	
+	/** The length. */
 	private String length;
+	
+	/** The nullable. */
 	private boolean nullable;
+	
+	/** The primary key. */
 	private boolean primaryKey;
+	
+	/** The default value. */
 	private String defaultValue;
+	
+	/** The precision. */
 	private String precision;
+	
+	/** The scale. */
 	private String scale;
+	
+	/** The unique. */
 	private boolean unique;
 
 	/**
-	 * The default constructor
+	 * The default constructor.
 	 */
 	public DataStructureTableColumnModel() {
 
 	}
 
 	/**
-	 * The constructor from the fields
+	 * The constructor from the fields.
 	 *
-	 * @param name
-	 *            the name
-	 * @param type
-	 *            the type
-	 * @param length
-	 *            the length
-	 * @param nullable
-	 *            whether null values are allowed
-	 * @param primaryKey
-	 *            whether it is a primary key
-	 * @param defaultValue
-	 *            the default value
-	 * @param precision
-	 *            the precision value for floating point types
-	 * @param scale
-	 *            the scale value for floating point types
+	 * @param name            the name
+	 * @param type            the type
+	 * @param length            the length
+	 * @param nullable            whether null values are allowed
+	 * @param primaryKey            whether it is a primary key
+	 * @param defaultValue            the default value
+	 * @param precision            the precision value for floating point types
+	 * @param scale            the scale value for floating point types
+	 * @param unique the unique
 	 */
 	public DataStructureTableColumnModel(String name, String type, String length, boolean nullable, boolean primaryKey, String defaultValue,
 			String precision, String scale, boolean unique) {
@@ -67,7 +78,7 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Getter for the name
+	 * Getter for the name.
 	 *
 	 * @return the name
 	 */
@@ -76,17 +87,16 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the name
+	 * Setter for the name.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name            the name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Getter for the type
+	 * Getter for the type.
 	 *
 	 * @return the type
 	 */
@@ -95,17 +105,16 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the type
+	 * Setter for the type.
 	 *
-	 * @param type
-	 *            the type
+	 * @param type            the type
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * Getter for the length
+	 * Getter for the length.
 	 *
 	 * @return the length
 	 */
@@ -114,17 +123,16 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the length
+	 * Setter for the length.
 	 *
-	 * @param length
-	 *            the length
+	 * @param length            the length
 	 */
 	public void setLength(String length) {
 		this.length = length;
 	}
 
 	/**
-	 * Check for nullable
+	 * Check for nullable.
 	 *
 	 * @return true if can be null
 	 */
@@ -133,17 +141,16 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the nullable
+	 * Setter for the nullable.
 	 *
-	 * @param nullable
-	 *            whether null values are allowed
+	 * @param nullable            whether null values are allowed
 	 */
 	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
 	}
 
 	/**
-	 * Check for primary key
+	 * Check for primary key.
 	 *
 	 * @return true if primary key
 	 */
@@ -152,17 +159,16 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the primary key
+	 * Setter for the primary key.
 	 *
-	 * @param primaryKey
-	 *            whether it is a primary key
+	 * @param primaryKey            whether it is a primary key
 	 */
 	public void setPrimaryKey(boolean primaryKey) {
 		this.primaryKey = primaryKey;
 	}
 
 	/**
-	 * Getter for the default value
+	 * Getter for the default value.
 	 *
 	 * @return the default value
 	 */
@@ -171,17 +177,16 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the default value
+	 * Setter for the default value.
 	 *
-	 * @param defaultValue
-	 *            the default value
+	 * @param defaultValue            the default value
 	 */
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
 	/**
-	 * Getter for the precision value
+	 * Getter for the precision value.
 	 *
 	 * @return the precision value
 	 */
@@ -190,17 +195,16 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the precision value
+	 * Setter for the precision value.
 	 *
-	 * @param precision
-	 *            the precision value
+	 * @param precision            the precision value
 	 */
 	public void setPrecision(String precision) {
 		this.precision = precision;
 	}
 
 	/**
-	 * Getter for the scale value
+	 * Getter for the scale value.
 	 *
 	 * @return the scale value
 	 */
@@ -209,17 +213,16 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the scale value
+	 * Setter for the scale value.
 	 *
-	 * @param scale
-	 *            the scale value
+	 * @param scale            the scale value
 	 */
 	public void setScale(String scale) {
 		this.scale = scale;
 	}
 
 	/**
-	 * Check for unique
+	 * Check for unique.
 	 *
 	 * @return true if unique
 	 */
@@ -228,10 +231,9 @@ public class DataStructureTableColumnModel {
 	}
 
 	/**
-	 * Setter for the unique
+	 * Setter for the unique.
 	 *
-	 * @param unique
-	 *            the unique value
+	 * @param unique            the unique value
 	 */
 	public void setUnique(boolean unique) {
 		this.unique = unique;

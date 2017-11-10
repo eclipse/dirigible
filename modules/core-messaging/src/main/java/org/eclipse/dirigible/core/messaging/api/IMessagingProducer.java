@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.core.messaging.api;
 
+/**
+ * The Interface IMessagingProducer.
+ */
 public interface IMessagingProducer {
 
 }

@@ -21,10 +21,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericCollectionMoveTest.
+ */
 public class RepositoryGenericCollectionMoveTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test move.
+	 */
 	@Test
 	public void testMove() {
 		if (repository == null) {
@@ -61,6 +69,9 @@ public class RepositoryGenericCollectionMoveTest {
 		}
 	}
 
+	/**
+	 * Test move deep.
+	 */
 	@Test
 	public void testMoveDeep() {
 		if (repository == null) {

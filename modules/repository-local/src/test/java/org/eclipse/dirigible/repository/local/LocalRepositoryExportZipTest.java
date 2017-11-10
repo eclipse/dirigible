@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericExportZipTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryExportZipTest.
+ */
 public class LocalRepositoryExportZipTest extends RepositoryGenericExportZipTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

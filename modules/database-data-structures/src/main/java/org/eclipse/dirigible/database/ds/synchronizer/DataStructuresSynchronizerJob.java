@@ -14,10 +14,18 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataStructuresSynchronizerJob.
+ */
 public class DataStructuresSynchronizerJob extends AbstractSynchronizerJob {
 	
+	/** The data structure synchronizer. */
 	private DataStructuresSynchronizer dataStructureSynchronizer = StaticInjector.getInjector().getInstance(DataStructuresSynchronizer.class);
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
+	 */
 	@Override
 	public ISynchronizer getSynchronizer() {
 		return dataStructureSynchronizer;

@@ -24,32 +24,83 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating Sql objects.
+ *
+ * @param <SELECT> the generic type
+ * @param <INSERT> the generic type
+ * @param <UPDATE> the generic type
+ * @param <DELETE> the generic type
+ * @param <CREATE> the generic type
+ * @param <DROP> the generic type
+ * @param <NEXT> the generic type
+ */
 public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder>
 		implements ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> {
 
+	/** The dialect. */
 	private ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> dialect;
 
+	/**
+	 * Gets the default.
+	 *
+	 * @return the default
+	 */
 	public static SqlFactory getDefault() {
 		return new SqlFactory();
 	}
 
+	/**
+	 * Gets the native.
+	 *
+	 * @param <SELECT> the generic type
+	 * @param <INSERT> the generic type
+	 * @param <UPDATE> the generic type
+	 * @param <DELETE> the generic type
+	 * @param <CREATE> the generic type
+	 * @param <DROP> the generic type
+	 * @param <NEXT> the generic type
+	 * @param dialect the dialect
+	 * @return the native
+	 */
 	public static <SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder> SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> getNative(
 			ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> dialect) {
 		return new SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT>(dialect);
 	}
 
+	/**
+	 * Gets the native.
+	 *
+	 * @param connection the connection
+	 * @return the native
+	 */
 	public static SqlFactory getNative(Connection connection) {
 		return new SqlFactory(deriveDialect(connection));
 	}
 
+	/**
+	 * Instantiates a new sql factory.
+	 */
 	private SqlFactory() {
 		this(new DefaultSqlDialect());
 	}
 
+	/**
+	 * Instantiates a new sql factory.
+	 *
+	 * @param dialect the dialect
+	 */
 	private SqlFactory(ISqlDialect dialect) {
 		this.dialect = dialect;
 	}
 
+	/**
+	 * Derive dialect.
+	 *
+	 * @param connection the connection
+	 * @return the i sql dialect
+	 */
 	public static ISqlDialect deriveDialect(Connection connection) {
 		try {
 			return SqlDialectFactory.getDialect(connection);
@@ -59,51 +110,81 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#select()
+	 */
 	@Override
 	public SELECT select() {
 		return this.dialect.select();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#insert()
+	 */
 	@Override
 	public INSERT insert() {
 		return this.dialect.insert();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#update()
+	 */
 	@Override
 	public UPDATE update() {
 		return this.dialect.update();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#delete()
+	 */
 	@Override
 	public DELETE delete() {
 		return this.dialect.delete();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#expression()
+	 */
 	@Override
 	public ExpressionBuilder expression() {
 		return this.dialect.expression();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#create()
+	 */
 	@Override
 	public CREATE create() {
 		return this.dialect.create();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#drop()
+	 */
 	@Override
 	public DROP drop() {
 		return this.dialect.drop();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#nextval(java.lang.String)
+	 */
 	@Override
 	public NEXT nextval(String sequence) {
 		return this.dialect.nextval(sequence);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String)
+	 */
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {
 		return this.dialect.exists(connection, table);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#count(java.sql.Connection, java.lang.String)
+	 */
 	@Override
 	public int count(Connection connection, String table) throws SQLException {
 		return this.dialect.count(connection, table);

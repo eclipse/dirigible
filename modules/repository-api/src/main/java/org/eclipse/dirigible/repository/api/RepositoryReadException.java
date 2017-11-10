@@ -10,22 +10,46 @@
 
 package org.eclipse.dirigible.repository.api;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryReadException.
+ */
 public class RepositoryReadException extends RepositoryException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -163847774919514248L;
 
+	/**
+	 * Instantiates a new repository read exception.
+	 */
 	public RepositoryReadException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new repository read exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public RepositoryReadException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new repository read exception.
+	 *
+	 * @param message the message
+	 */
 	public RepositoryReadException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new repository read exception.
+	 *
+	 * @param cause the cause
+	 */
 	public RepositoryReadException(Throwable cause) {
 		super(cause);
 	}

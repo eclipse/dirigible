@@ -16,11 +16,15 @@ import javax.ws.rs.core.Application;
 
 import org.eclipse.dirigible.runtime.core.listener.DirigibleServletContextListener;
 
+// TODO: Auto-generated Javadoc
 /**
  * Sets the singletons from Guice in the Application context.
  */
 public class DirigibleApplication extends Application {
 
+	/* (non-Javadoc)
+	 * @see javax.ws.rs.core.Application#getSingletons()
+	 */
 	@Override
 	public Set<Object> getSingletons() {
 		return DirigibleServletContextListener.getServices();

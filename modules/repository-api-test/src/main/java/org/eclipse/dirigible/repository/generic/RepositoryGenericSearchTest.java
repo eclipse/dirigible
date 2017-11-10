@@ -23,10 +23,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericSearchTest.
+ */
 public class RepositoryGenericSearchTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test search name.
+	 */
 	@Test
 	public void testSearchName() {
 		if (repository == null) {
@@ -57,6 +65,9 @@ public class RepositoryGenericSearchTest {
 		}
 	}
 
+	/**
+	 * Test search name under root.
+	 */
 	@Test
 	public void testSearchNameUnderRoot() {
 		if (repository == null) {
@@ -90,6 +101,9 @@ public class RepositoryGenericSearchTest {
 		}
 	}
 
+	/**
+	 * Test search path.
+	 */
 	@Test
 	public void testSearchPath() {
 		if (repository == null) {
@@ -132,6 +146,9 @@ public class RepositoryGenericSearchTest {
 		}
 	}
 
+	/**
+	 * Test search text.
+	 */
 	@Test
 	public void testSearchText() {
 		if (repository == null) {

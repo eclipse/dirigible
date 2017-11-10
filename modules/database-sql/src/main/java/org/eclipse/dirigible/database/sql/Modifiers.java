@@ -10,18 +10,28 @@
 
 package org.eclipse.dirigible.database.sql;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Modifiers.
+ */
 public class Modifiers {
 
+	/** The Constant PRIMARY_KEY. */
 	public static final boolean PRIMARY_KEY = true;
 
+	/** The Constant REGULAR. */
 	public static final boolean REGULAR = false;
 
+	/** The Constant NULLABLE. */
 	public static final boolean NULLABLE = true;
 
+	/** The Constant NOT_NULL. */
 	public static final boolean NOT_NULL = false;
 
+	/** The Constant UNIQUE. */
 	public static final boolean UNIQUE = true;
 
+	/** The Constant NON_UNIQUE. */
 	public static final boolean NON_UNIQUE = false;
 
 }

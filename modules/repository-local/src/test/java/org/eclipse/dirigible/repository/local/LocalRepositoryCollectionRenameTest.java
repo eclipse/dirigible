@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericCollectionRenam
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryCollectionRenameTest.
+ */
 public class LocalRepositoryCollectionRenameTest extends RepositoryGenericCollectionRenameTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

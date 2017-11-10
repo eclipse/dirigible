@@ -48,8 +48,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the publishing requests
+ * Front facing REST service serving the publishing requests.
  */
 @Singleton
 @Path("/ide/publisher")
@@ -59,19 +60,35 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class PublisherRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PublisherRestService.class);
 
+	/** The processor. */
 	@Inject
 	private PublisherProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return PublisherRestService.class;
 	}
 
+	/**
+	 * Request publishing.
+	 *
+	 * @param workspace the workspace
+	 * @param path the path
+	 * @param request the request
+	 * @return the response
+	 * @throws PublisherException the publisher exception
+	 * @throws URISyntaxException the URI syntax exception
+	 */
 	@POST
 	@Path("request/{workspace}/{path:.*}")
 	@ApiOperation("Publish Workspace Resources")
@@ -96,6 +113,14 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 		return Response.created(new URI("ide/publisher/" + id)).build();
 	}
 
+	/**
+	 * Gets the request.
+	 *
+	 * @param id the id
+	 * @param request the request
+	 * @return the request
+	 * @throws PublisherException the publisher exception
+	 */
 	@GET
 	@Path("request/{id}")
 	public Response getRequest(@PathParam("id") long id, @Context HttpServletRequest request) throws PublisherException {
@@ -114,6 +139,13 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 		return Response.status(Status.NOT_FOUND).entity(message).build();
 	}
 
+	/**
+	 * List log.
+	 *
+	 * @param request the request
+	 * @return the response
+	 * @throws PublisherException the publisher exception
+	 */
 	@GET
 	@Path("log")
 	public Response listLog(@Context HttpServletRequest request) throws PublisherException {
@@ -127,6 +159,13 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 		return Response.ok().entity(publishLogDefinitions).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Clear log.
+	 *
+	 * @param request the request
+	 * @return the response
+	 * @throws PublisherException the publisher exception
+	 */
 	@DELETE
 	@Path("log")
 	public Response clearLog(@Context HttpServletRequest request) throws PublisherException {
@@ -140,6 +179,9 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 		return Response.noContent().build();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

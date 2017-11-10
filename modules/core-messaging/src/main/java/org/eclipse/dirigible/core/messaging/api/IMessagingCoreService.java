@@ -15,31 +15,108 @@ import java.util.List;
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IMessagingCoreService.
+ */
 public interface IMessagingCoreService extends ICoreService {
 
+	/** The Constant FILE_EXTENSION_LISTENER. */
 	public static final String FILE_EXTENSION_LISTENER = ".listener";
 
 	// Listener
 
+	/**
+	 * Creates the listener.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param type the type
+	 * @param module the module
+	 * @param description the description
+	 * @return the listener definition
+	 * @throws MessagingException the messaging exception
+	 */
 	public ListenerDefinition createListener(String location, String name, DestinationType type, String module, String description)
 			throws MessagingException;
 
+	/**
+	 * Gets the listener.
+	 *
+	 * @param location the location
+	 * @return the listener
+	 * @throws MessagingException the messaging exception
+	 */
 	public ListenerDefinition getListener(String location) throws MessagingException;
 
+	/**
+	 * Gets the listener by name.
+	 *
+	 * @param name the name
+	 * @return the listener by name
+	 * @throws MessagingException the messaging exception
+	 */
 	public ListenerDefinition getListenerByName(String name) throws MessagingException;
 
+	/**
+	 * Exists listener.
+	 *
+	 * @param location the location
+	 * @return true, if successful
+	 * @throws MessagingException the messaging exception
+	 */
 	public boolean existsListener(String location) throws MessagingException;
 
+	/**
+	 * Removes the listener.
+	 *
+	 * @param location the location
+	 * @throws MessagingException the messaging exception
+	 */
 	public void removeListener(String location) throws MessagingException;
 
+	/**
+	 * Update listener.
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param type the type
+	 * @param module the module
+	 * @param description the description
+	 * @throws MessagingException the messaging exception
+	 */
 	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException;
 
+	/**
+	 * Gets the listeners.
+	 *
+	 * @return the listeners
+	 * @throws MessagingException the messaging exception
+	 */
 	public List<ListenerDefinition> getListeners() throws MessagingException;
 
+	/**
+	 * Parses the listener.
+	 *
+	 * @param json the json
+	 * @return the listener definition
+	 */
 	public ListenerDefinition parseListener(String json);
 
+	/**
+	 * Parses the listener.
+	 *
+	 * @param json the json
+	 * @return the listener definition
+	 */
 	public ListenerDefinition parseListener(byte[] json);
 
+	/**
+	 * Serialize listener.
+	 *
+	 * @param listenerDefinition the listener definition
+	 * @return the string
+	 */
 	public String serializeListener(ListenerDefinition listenerDefinition);
 
 }

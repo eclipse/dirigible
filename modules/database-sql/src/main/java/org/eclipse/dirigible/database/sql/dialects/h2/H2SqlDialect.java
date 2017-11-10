@@ -18,9 +18,16 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class H2SqlDialect.
+ */
 public class H2SqlDialect extends
 		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, H2NextValueSequenceBuilder> {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+	 */
 	@Override
 	public H2NextValueSequenceBuilder nextval(String sequence) {
 		return new H2NextValueSequenceBuilder(this, sequence);

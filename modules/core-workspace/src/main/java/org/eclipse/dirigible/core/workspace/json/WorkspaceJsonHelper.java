@@ -13,8 +13,20 @@ package org.eclipse.dirigible.core.workspace.json;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WorkspaceJsonHelper.
+ */
 public class WorkspaceJsonHelper {
 
+	/**
+	 * Describe workspace.
+	 *
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @return the workspace descriptor
+	 */
 	public static WorkspaceDescriptor describeWorkspace(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		WorkspaceDescriptor workspacePojo = new WorkspaceDescriptor();
 		workspacePojo.setName(collection.getName());
@@ -26,6 +38,14 @@ public class WorkspaceJsonHelper {
 		return workspacePojo;
 	}
 
+	/**
+	 * Describe project.
+	 *
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @return the project descriptor
+	 */
 	public static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
@@ -45,6 +65,14 @@ public class WorkspaceJsonHelper {
 		return projectPojo;
 	}
 
+	/**
+	 * Describe folder.
+	 *
+	 * @param collection the collection
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @return the folder descriptor
+	 */
 	public static FolderDescriptor describeFolder(ICollection collection, String removePathPrefix, String addPathPrefix) {
 		FolderDescriptor folderPojo = new FolderDescriptor();
 		folderPojo.setName(collection.getName());
@@ -64,6 +92,14 @@ public class WorkspaceJsonHelper {
 		return folderPojo;
 	}
 
+	/**
+	 * Describe file.
+	 *
+	 * @param resource the resource
+	 * @param removePathPrefix the remove path prefix
+	 * @param addPathPrefix the add path prefix
+	 * @return the file descriptor
+	 */
 	public static FileDescriptor describeFile(IResource resource, String removePathPrefix, String addPathPrefix) {
 		FileDescriptor resourcePojo = new FileDescriptor();
 		resourcePojo.setName(resource.getName());

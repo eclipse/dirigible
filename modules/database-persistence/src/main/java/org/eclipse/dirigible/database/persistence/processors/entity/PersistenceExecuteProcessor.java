@@ -19,17 +19,39 @@ import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceExecuteProcessor.
+ *
+ * @param <T> the generic type
+ */
 public class PersistenceExecuteProcessor<T> extends AbstractPersistenceProcessor {
 
+	/**
+	 * Instantiates a new persistence execute processor.
+	 *
+	 * @param entityManagerInterceptor the entity manager interceptor
+	 */
 	public PersistenceExecuteProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		throw new PersistenceException("Generate Script method cannot be invoked in Query Processor");
 	}
 
+	/**
+	 * Execute.
+	 *
+	 * @param connection the connection
+	 * @param sql the sql
+	 * @param values the values
+	 * @return the int
+	 */
 	public int execute(Connection connection, String sql, List<Object> values) {
 		PreparedStatement preparedStatement = null;
 		try {

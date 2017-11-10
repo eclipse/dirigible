@@ -24,12 +24,24 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericModifiedTest.
+ */
 public class RepositoryGenericModifiedTest {
 
+	/** The repository 1. */
 	protected IRepository repository1;
+	
+	/** The repository 2. */
 	protected IRepository repository2;
+	
+	/** The repository 3. */
 	protected IRepository repository3;
 
+	/**
+	 * Test modified.
+	 */
 	@Test
 	public void testModified() {
 		if (repository1 == null) {

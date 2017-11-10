@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.database.persistence.test;
 
+/**
+ * The Class GoldCustomer.
+ */
 public class GoldCustomer extends Customer {
 
 }

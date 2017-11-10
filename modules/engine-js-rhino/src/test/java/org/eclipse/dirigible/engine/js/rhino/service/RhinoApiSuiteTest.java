@@ -24,13 +24,22 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RhinoApiSuiteTest.
+ */
 public class RhinoApiSuiteTest extends AbstractApiSuiteTest {
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/** The rhino javascript engine executor. */
 	private RhinoJavascriptEngineExecutor rhinoJavascriptEngineExecutor;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
+	 */
 	@Override
 	@Before
 	public void setUp() throws Exception {
@@ -39,6 +48,15 @@ public class RhinoApiSuiteTest extends AbstractApiSuiteTest {
 		this.rhinoJavascriptEngineExecutor = getInjector().getInstance(RhinoJavascriptEngineExecutor.class);
 	}
 
+	/**
+	 * Run suite.
+	 *
+	 * @throws RepositoryWriteException the repository write exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ScriptingException the scripting exception
+	 * @throws ContextException the context exception
+	 * @throws ExtensionsException the extensions exception
+	 */
 	@Test
 	public void runSuite() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		super.runSuite(this.rhinoJavascriptEngineExecutor, repository);

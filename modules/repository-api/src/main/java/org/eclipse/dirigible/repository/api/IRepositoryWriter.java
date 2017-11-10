@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.repository.api;
 
+// TODO: Auto-generated Javadoc
 /**
  * This interface represents a Repository. It allows for querying, modifying and
  * navigating through collections and resources.

@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
+/**
+ * The Class DataStructureTableConstraintPrimaryKeyModel.
+ */
 public class DataStructureTableConstraintPrimaryKeyModel extends DataStructureTableConstraintModel {
 
 }

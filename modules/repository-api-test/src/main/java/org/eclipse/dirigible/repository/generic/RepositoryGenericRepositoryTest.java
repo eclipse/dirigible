@@ -25,10 +25,18 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.After;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericRepositoryTest.
+ */
 public class RepositoryGenericRepositoryTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test get root.
+	 */
 	@Test
 	public void testGetRoot() {
 		if (repository == null) {
@@ -38,6 +46,9 @@ public class RepositoryGenericRepositoryTest {
 		assertNotNull(repository.getRoot());
 	}
 
+	/**
+	 * Test create collection.
+	 */
 	@Test
 	public void testCreateCollection() {
 		if (repository == null) {
@@ -54,6 +65,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test get collection.
+	 */
 	@Test
 	public void testGetCollection() {
 		if (repository == null) {
@@ -71,6 +85,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test remove collection.
+	 */
 	@Test
 	public void testRemoveCollection() {
 		if (repository == null) {
@@ -90,6 +107,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test has collection.
+	 */
 	@Test
 	public void testHasCollection() {
 		if (repository == null) {
@@ -105,6 +125,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test create resource string.
+	 */
 	@Test
 	public void testCreateResourceString() {
 		if (repository == null) {
@@ -122,6 +145,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test create resource string byte array.
+	 */
 	@Test
 	public void testCreateResourceStringByteArray() {
 		if (repository == null) {
@@ -142,6 +168,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test get resource.
+	 */
 	@Test
 	public void testGetResource() {
 		if (repository == null) {
@@ -159,6 +188,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test remove resource.
+	 */
 	@Test
 	public void testRemoveResource() {
 		if (repository == null) {
@@ -178,6 +210,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test has resource.
+	 */
 	@Test
 	public void testHasResource() {
 		if (repository == null) {
@@ -197,6 +232,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Clean up.
+	 */
 	@After
 	public void cleanUp() {
 		if (repository == null) {
@@ -216,6 +254,9 @@ public class RepositoryGenericRepositoryTest {
 		}
 	}
 
+	/**
+	 * Test dispose.
+	 */
 	@Test
 	public void testDispose() {
 		// fail("Not yet implemented");

@@ -18,8 +18,19 @@ import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.utils.V8ObjectUtils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JavaV8Callback.
+ */
 public class JavaV8Callback {
 
+	/**
+	 * Normalize parameters.
+	 *
+	 * @param parameters the parameters
+	 * @param i the i
+	 * @return the list
+	 */
 	protected List<Object> normalizeParameters(V8Array parameters, int i) {
 		List<Object> params = new ArrayList<Object>();
 		for (int j = i; j < parameters.length(); j++) {

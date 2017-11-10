@@ -25,16 +25,26 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WorkspacesCoreService.
+ */
 @Singleton
 public class WorkspacesCoreService implements IWorkspacesCoreService {
 
+	/** The Constant DEFAULT_WORKSPACE_NAME. */
 	private static final String DEFAULT_WORKSPACE_NAME = "workspace";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WorkspacesCoreService.class);
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService#createWorkspace(java.lang.String)
+	 */
 	@Override
 	public IWorkspace createWorkspace(String name) {
 		ICollection collection = getWorkspace(name);
@@ -43,6 +53,9 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		return new Workspace(collection);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService#getWorkspace(java.lang.String)
+	 */
 	@Override
 	public IWorkspace getWorkspace(String name) {
 		StringBuilder workspacePath = generateWorkspacePath(name, null, null);
@@ -50,6 +63,9 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		return new Workspace(collection);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService#getWorkspaces()
+	 */
 	@Override
 	public List<IWorkspace> getWorkspaces() {
 		StringBuilder workspacePath = generateWorkspacePath(null, null, null);
@@ -69,6 +85,9 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		return workspaces;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService#deleteWorkspace(java.lang.String)
+	 */
 	@Override
 	public void deleteWorkspace(String name) {
 		ICollection collection = getWorkspace(name);
@@ -76,6 +95,14 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 		logger.info("Workspace deleted [{}]", collection.getPath());
 	}
 
+	/**
+	 * Generate workspace path.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the string builder
+	 */
 	private StringBuilder generateWorkspacePath(String workspace, String project, String path) {
 		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR)
 				.append(UserFacade.getName());

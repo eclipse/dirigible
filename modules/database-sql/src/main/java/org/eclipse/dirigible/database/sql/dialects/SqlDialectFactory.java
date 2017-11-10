@@ -23,27 +23,51 @@ import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.postgres.PostgresSqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.sybase.SybaseSqlDialect;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating SqlDialect objects.
+ */
 public class SqlDialectFactory {
 
+	/**
+	 * Gets the dialect.
+	 *
+	 * @param connection the connection
+	 * @return the dialect
+	 * @throws SQLException the SQL exception
+	 */
 	public static final ISqlDialect getDialect(Connection connection) throws SQLException {
 		String productName = connection.getMetaData().getDatabaseProductName();
 		return databaseTypeMappings.get(productName);
 	}
 
+	/** The Constant DATABASE_TYPE_DERBY. */
 	public static final ISqlDialect DATABASE_TYPE_DERBY = new DerbySqlDialect();
+	
+	/** The Constant DATABASE_TYPE_H2. */
 	public static final ISqlDialect DATABASE_TYPE_H2 = new H2SqlDialect();
 	// public static final ISqlDialect DATABASE_TYPE_HSQL = "hsql";
 	// public static final ISqlDialect DATABASE_TYPE_MYSQL = "mysql";
+	/** The Constant DATABASE_TYPE_POSTGRES. */
 	// public static final ISqlDialect DATABASE_TYPE_ORACLE = "oracle";
 	public static final ISqlDialect DATABASE_TYPE_POSTGRES = new PostgresSqlDialect();
 	// public static final ISqlDialect DATABASE_TYPE_MSSQL = "mssql";
+	/** The Constant DATABASE_TYPE_HANA. */
 	// public static final ISqlDialect DATABASE_TYPE_DB2 = "db2";
 	public static final ISqlDialect DATABASE_TYPE_HANA = new HanaSqlDialect();
+	
+	/** The Constant DATABASE_TYPE_SYBASE. */
 	public static final ISqlDialect DATABASE_TYPE_SYBASE = new SybaseSqlDialect();
 
+	/** The Constant databaseTypeMappings. */
 	// Lifted from Activiti
 	protected static final Map<String, ISqlDialect> databaseTypeMappings = getDefaultDatabaseTypeMappings();
 
+	/**
+	 * Gets the default database type mappings.
+	 *
+	 * @return the default database type mappings
+	 */
 	protected static Map<String, ISqlDialect> getDefaultDatabaseTypeMappings() {
 		Map<String, ISqlDialect> databaseTypeMappings = Collections.synchronizedMap(new HashMap<String, ISqlDialect>());
 		databaseTypeMappings.put("Apache Derby", DATABASE_TYPE_DERBY);

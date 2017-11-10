@@ -18,17 +18,37 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceCreateIdentityProcessor.
+ */
 public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProcessor {
 
+	/**
+	 * Instantiates a new persistence create identity processor.
+	 *
+	 * @param entityManagerInterceptor the entity manager interceptor
+	 */
 	public PersistenceCreateIdentityProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		return null;
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the int
+	 * @throws PersistenceException the persistence exception
+	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();
 		if (!persistenceManager.tableExists(connection, Identity.class)) {

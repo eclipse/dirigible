@@ -12,15 +12,32 @@ package org.eclipse.dirigible.core.git.project;
 
 import com.google.gson.Gson;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProjectMetadataUtils.
+ */
 public class ProjectMetadataUtils {
 
+	/** The gson. */
 	private static Gson gson = new Gson();
 
+	/**
+	 * To json.
+	 *
+	 * @param projectMetadata the project metadata
+	 * @return the string
+	 */
 	public static String toJson(ProjectMetadata projectMetadata) {
 		String json = gson.toJson(projectMetadata);
 		return json;
 	}
 
+	/**
+	 * From json.
+	 *
+	 * @param json the json
+	 * @return the project metadata
+	 */
 	public static ProjectMetadata fromJson(String json) {
 		ProjectMetadata projectMetadata = gson.fromJson(json, ProjectMetadata.class);
 		return projectMetadata;

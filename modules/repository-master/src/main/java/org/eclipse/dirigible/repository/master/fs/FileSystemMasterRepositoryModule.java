@@ -16,15 +16,21 @@ import org.eclipse.dirigible.repository.master.IMasterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Module for managing File System Repository instantiation and binding
+ * Module for managing File System Repository instantiation and binding.
  */
 public class FileSystemMasterRepositoryModule extends AbstractDirigibleModule {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemMasterRepositoryModule.class);
 	
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "File System Master Repository Module";
 
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		Configuration.load("/dirigible-repository-master-fs.properties");
@@ -36,6 +42,11 @@ public class FileSystemMasterRepositoryModule extends AbstractDirigibleModule {
 		}
 	}
 
+	/**
+	 * Creates the instance.
+	 *
+	 * @return the i master repository
+	 */
 	private IMasterRepository createInstance() {
 		logger.debug("creating FileSystem Master Repository...");
 		String rootFolder = Configuration.get(FileSystemMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER);
@@ -44,6 +55,9 @@ public class FileSystemMasterRepositoryModule extends AbstractDirigibleModule {
 		return fileSystemMasterRepository;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
 	public String getName() {
 		return MODULE_NAME;

@@ -12,8 +12,17 @@ package org.eclipse.dirigible.core.workspace.api;
 
 import org.eclipse.dirigible.repository.api.IResource;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IFile.
+ */
 public interface IFile extends IResource {
 
+	/**
+	 * Gets the internal.
+	 *
+	 * @return the internal
+	 */
 	public IResource getInternal();
 
 }

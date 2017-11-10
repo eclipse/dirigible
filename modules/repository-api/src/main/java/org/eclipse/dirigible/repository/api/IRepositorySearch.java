@@ -12,15 +12,15 @@ package org.eclipse.dirigible.repository.api;
 
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
- * The interface containing the search related methods of the repository 
- *
+ * The interface containing the search related methods of the repository .
  */
 public interface IRepositorySearch {
 
 	/**
 	 * Search the given parameter in the names of the files and folders ( means
-	 * *parameter)
+	 * *parameter).
 	 *
 	 * @param parameter the search text
 	 * @param caseInsensitive whether to be case insensitive
@@ -31,7 +31,7 @@ public interface IRepositorySearch {
 
 	/**
 	 * Search the given parameter in the names of the files and folders ( means
-	 * *parameter) under specified root folder (means *root)
+	 * *parameter) under specified root folder (means *root).
 	 *
 	 * @param root the root location to start the search from
 	 * @param parameter the search text
@@ -43,7 +43,7 @@ public interface IRepositorySearch {
 
 	/**
 	 * Search the given given parameter in the names of the files and folders
-	 * (means *parameter*)
+	 * (means *parameter*).
 	 *
 	 * @param parameter the search text
 	 * @param caseInsensitive whether to be case insensitive
@@ -54,7 +54,7 @@ public interface IRepositorySearch {
 
 	/**
 	 * Search the given given parameter in the names of the files and folders as
-	 * well as in the content of the text files
+	 * well as in the content of the text files.
 	 *
 	 * @param parameter the search text
 	 * @param caseInsensitive whether to be case insensitive

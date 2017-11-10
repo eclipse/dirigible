@@ -12,15 +12,30 @@ package org.eclipse.dirigible.runtime.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GitPushModel.
+ */
 public class GitPushModel extends BaseGitProjectModel {
 
+	/** The commit message. */
 	@ApiModelProperty(value = "The Commit Message", required = true, example = "Updates README.md")
 	private String commitMessage;
 
+	/**
+	 * Gets the commit message.
+	 *
+	 * @return the commit message
+	 */
 	public String getCommitMessage() {
 		return commitMessage;
 	}
 
+	/**
+	 * Sets the commit message.
+	 *
+	 * @param commitMessage the new commit message
+	 */
 	public void setCommitMessage(String commitMessage) {
 		this.commitMessage = commitMessage;
 	}

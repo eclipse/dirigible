@@ -42,8 +42,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the wiki pages
+ * Front facing REST service serving the wiki pages.
  */
 @Singleton
 @Path("/wiki")
@@ -52,14 +53,23 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found") })
 public class WikiEngineRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WikiEngineRestService.class);
 
+	/** The processor. */
 	@Inject
 	private WikiEngineProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * Gets the wiki page.
+	 *
+	 * @param path the path
+	 * @return the wiki page
+	 */
 	@GET
 	@Path("/{path:.*}")
 	@ApiOperation("Get Resource Content")
@@ -69,6 +79,12 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 		return render(path);
 	}
 
+	/**
+	 * Render.
+	 *
+	 * @param path the path
+	 * @return the response
+	 */
 	protected Response render(@PathParam("path") String path) {
 		if ("".equals(path.trim()) || path.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
 			String message = "Listing of web folders is forbidden.";
@@ -101,6 +117,12 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 		return Response.status(Status.NOT_FOUND).build();
 	}
 
+	/**
+	 * Render content.
+	 *
+	 * @param content the content
+	 * @return the string
+	 */
 	private String renderContent(String content) {
 
 		StringWriter writer = new StringWriter();
@@ -114,11 +136,17 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 		return htmlContent;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return WikiEngineRestService.class;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

@@ -32,20 +32,30 @@ import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataStructureCoreService.
+ */
 @Singleton
 public class DataStructureCoreService implements IDataStructuresCoreService {
 
+	/** The data source. */
 	@Inject
 	private DataSource dataSource;
 
+	/** The table persistence manager. */
 	@Inject
 	private PersistenceManager<DataStructureTableModel> tablePersistenceManager;
 
+	/** The view persistence manager. */
 	@Inject
 	private PersistenceManager<DataStructureViewModel> viewPersistenceManager;
 
 	// Tables
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createTable(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public DataStructureTableModel createTable(String location, String name, String hash) throws DataStructuresException {
 		DataStructureTableModel tableModel = new DataStructureTableModel();
@@ -71,6 +81,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getTable(java.lang.String)
+	 */
 	@Override
 	public DataStructureTableModel getTable(String location) throws DataStructuresException {
 		try {
@@ -87,6 +100,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getTableByName(java.lang.String)
+	 */
 	@Override
 	public DataStructureTableModel getTableByName(String name) throws DataStructuresException {
 		try {
@@ -114,6 +130,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeTable(java.lang.String)
+	 */
 	@Override
 	public void removeTable(String location) throws DataStructuresException {
 		try {
@@ -130,6 +149,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateTable(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void updateTable(String location, String name, String hash) throws DataStructuresException {
 		try {
@@ -149,6 +171,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getTables()
+	 */
 	@Override
 	public List<DataStructureTableModel> getTables() throws DataStructuresException {
 		try {
@@ -170,6 +195,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 
 	// Views
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createView(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public DataStructureViewModel createView(String location, String name, String hash) throws DataStructuresException {
 		DataStructureViewModel viewModel = new DataStructureViewModel();
@@ -195,6 +223,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getView(java.lang.String)
+	 */
 	@Override
 	public DataStructureViewModel getView(String location) throws DataStructuresException {
 		try {
@@ -211,6 +242,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getViewByName(java.lang.String)
+	 */
 	@Override
 	public DataStructureViewModel getViewByName(String name) throws DataStructuresException {
 		try {
@@ -238,6 +272,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeView(java.lang.String)
+	 */
 	@Override
 	public void removeView(String location) throws DataStructuresException {
 		try {
@@ -254,6 +291,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateView(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void updateView(String location, String name, String hash) throws DataStructuresException {
 		try {
@@ -273,6 +313,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getViews()
+	 */
 	@Override
 	public List<DataStructureViewModel> getViews() throws DataStructuresException {
 		try {
@@ -292,41 +335,65 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsTable(java.lang.String)
+	 */
 	@Override
 	public boolean existsTable(String location) throws DataStructuresException {
 		return getTable(location) != null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsView(java.lang.String)
+	 */
 	@Override
 	public boolean existsView(String location) throws DataStructuresException {
 		return getView(location) != null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseTable(java.lang.String)
+	 */
 	@Override
 	public DataStructureTableModel parseTable(String json) {
 		return DataStructureModelFactory.parseTable(json);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseView(java.lang.String)
+	 */
 	@Override
 	public DataStructureViewModel parseView(String json) {
 		return DataStructureModelFactory.parseView(json);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseTable(byte[])
+	 */
 	@Override
 	public DataStructureTableModel parseTable(byte[] json) {
 		return DataStructureModelFactory.parseTable(json);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseView(byte[])
+	 */
 	@Override
 	public DataStructureViewModel parseView(byte[] json) {
 		return DataStructureModelFactory.parseView(json);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#serializeTable(org.eclipse.dirigible.database.ds.model.DataStructureTableModel)
+	 */
 	@Override
 	public String serializeTable(DataStructureTableModel tableModel) {
 		return GsonHelper.GSON.toJson(tableModel);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#serializeView(org.eclipse.dirigible.database.ds.model.DataStructureViewModel)
+	 */
 	@Override
 	public String serializeView(DataStructureViewModel viewModel) {
 		return GsonHelper.GSON.toJson(viewModel);

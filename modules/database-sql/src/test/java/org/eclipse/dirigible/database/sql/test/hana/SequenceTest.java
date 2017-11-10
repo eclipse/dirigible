@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SequenceTest.
+ */
 public class SequenceTest {
 	
+	/**
+	 * Creates the sequence.
+	 */
 	@Test
 	public void createSequence() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -30,6 +37,9 @@ public class SequenceTest {
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
 	}
 	
+	/**
+	 * Drop sequnce.
+	 */
 	@Test
 	public void dropSequnce() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -41,6 +51,9 @@ public class SequenceTest {
 		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
 	}
 	
+	/**
+	 * Nextval sequnce.
+	 */
 	@Test
 	public void nextvalSequnce() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())

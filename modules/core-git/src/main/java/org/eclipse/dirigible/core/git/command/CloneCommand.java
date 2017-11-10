@@ -39,27 +39,45 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Clone project(s) from a Git repository and optionally publish it
+ * Clone project(s) from a Git repository and optionally publish it.
  */
 public class CloneCommand {
 
+	/** The Constant DOT_GIT. */
 	private static final String DOT_GIT = ".git";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 
+	/** The workspaces core service. */
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
 
+	/** The publisher core service. */
 	@Inject
 	private PublisherCoreService publisherCoreService;
 
+	/** The project metadata manager. */
 	@Inject
 	private ProjectMetadataManager projectMetadataManager;
 
+	/** The git file utils. */
 	@Inject
 	private GitFileUtils gitFileUtils;
 
+	/**
+	 * Execute.
+	 *
+	 * @param repositoryUri the repository uri
+	 * @param repositoryBranch the repository branch
+	 * @param username the username
+	 * @param password the password
+	 * @param workspaceName the workspace name
+	 * @param publishAfterClone the publish after clone
+	 * @throws GitConnectorException the git connector exception
+	 */
 	public void execute(String repositoryUri, String repositoryBranch, String username, String password, String workspaceName,
 			boolean publishAfterClone) throws GitConnectorException {
 		try {
@@ -78,12 +96,31 @@ public class CloneCommand {
 		}
 	}
 
+	/**
+	 * Creates the git directory.
+	 *
+	 * @param repositoryURI the repository URI
+	 * @return the file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected File createGitDirectory(String repositoryURI) throws IOException {
 		String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf("/") + 1, repositoryURI.lastIndexOf(DOT_GIT));
 		File gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 		return gitDirectory;
 	}
 
+	/**
+	 * Clone project.
+	 *
+	 * @param repositoryURI the repository URI
+	 * @param repositoryBranch the repository branch
+	 * @param username the username
+	 * @param password the password
+	 * @param gitDirectory the git directory
+	 * @param workspace the workspace
+	 * @param clonedProjects the cloned projects
+	 * @throws GitConnectorException the git connector exception
+	 */
 	protected void cloneProject(final String repositoryURI, final String repositoryBranch, final String username, final String password,
 			File gitDirectory, IWorkspace workspace, Set<String> clonedProjects) throws GitConnectorException {
 		try {
@@ -151,6 +188,17 @@ public class CloneCommand {
 		}
 	}
 
+	/**
+	 * Clone dependencies.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @param workspace the workspace
+	 * @param clonedProjects the cloned projects
+	 * @param projectName the project name
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws GitConnectorException the git connector exception
+	 */
 	protected void cloneDependencies(final String username, final String password, IWorkspace workspace, Set<String> clonedProjects,
 			String projectName) throws IOException, GitConnectorException {
 		IProject selectedProject = workspace.getProject(projectName);
@@ -187,6 +235,12 @@ public class CloneCommand {
 		}
 	}
 
+	/**
+	 * Publish projects.
+	 *
+	 * @param workspace the workspace
+	 * @param clonedProjects the cloned projects
+	 */
 	protected void publishProjects(IWorkspace workspace, Set<String> clonedProjects) {
 		if (clonedProjects.size() > 0) {
 			for (String projectName : clonedProjects) {

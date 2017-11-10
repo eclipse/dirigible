@@ -19,8 +19,15 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnMo
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceFactoryInheritanceTest.
+ */
 public class PersistenceFactoryInheritanceTest {
 
+	/**
+	 * Creates the model from pojo.
+	 */
 	@Test
 	public void createModelFromPojo() {
 		GoldCustomer customer = new GoldCustomer();

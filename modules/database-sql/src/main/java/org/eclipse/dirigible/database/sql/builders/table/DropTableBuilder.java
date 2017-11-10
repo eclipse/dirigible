@@ -13,15 +13,29 @@ package org.eclipse.dirigible.database.sql.builders.table;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractDropSqlBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DropTableBuilder.
+ */
 public class DropTableBuilder extends AbstractDropSqlBuilder {
 	
+	/** The table. */
 	private String table = null;
 	
+	/**
+	 * Instantiates a new drop table builder.
+	 *
+	 * @param dialect the dialect
+	 * @param table the table
+	 */
 	public DropTableBuilder(ISqlDialect dialect, String table) {
 		super(dialect);
 		this.table = table;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 		
@@ -36,6 +50,11 @@ public class DropTableBuilder extends AbstractDropSqlBuilder {
 		return sql.toString();
 	}
 	
+	/**
+	 * Generate table.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateTable(StringBuilder sql) {
 		sql.append(SPACE)
 			.append(KEYWORD_TABLE)

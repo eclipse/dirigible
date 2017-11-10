@@ -15,8 +15,15 @@ import static org.junit.Assert.fail;
 import org.eclipse.dirigible.repository.generic.RepositoryGenericCollectionMoveTest;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryCollectionMoveTest.
+ */
 public class LocalRepositoryCollectionMoveTest extends RepositoryGenericCollectionMoveTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

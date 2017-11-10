@@ -24,17 +24,24 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Module for managing Database instantiation and binding
+ * Module for managing Database instantiation and binding.
  */
 public class DatabaseModule extends AbstractDirigibleModule {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseModule.class);
 	
+	/** The Constant DATABASES. */
 	private static final ServiceLoader<IDatabase> DATABASES = ServiceLoader.load(IDatabase.class);
 	
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Database Module";
 	
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		Configuration.load("/dirigible-database.properties");
@@ -59,11 +66,21 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
 	public String getName() {
 		return MODULE_NAME;
 	}
 	
+	/**
+	 * Gets the data source.
+	 *
+	 * @param type the type
+	 * @param datasource the datasource
+	 * @return the data source
+	 */
 	public static DataSource getDataSource(String type, String datasource) {
 		DataSource dataSource = null;
 		for (IDatabase next : DATABASES) {
@@ -79,6 +96,11 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		return dataSource;
 	}
 
+	/**
+	 * Gets the database types.
+	 *
+	 * @return the database types
+	 */
 	public static List<String> getDatabaseTypes() {
 		List<String> result = new ArrayList<String>();
 		for (IDatabase next : DATABASES) {
@@ -87,6 +109,12 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		return result;
 	}
 	
+	/**
+	 * Gets the data sources.
+	 *
+	 * @param type the type
+	 * @return the data sources
+	 */
 	public static Set<String> getDataSources(String type) {
 		for (IDatabase next : DATABASES) {
 			if (next.getType().equals(type)) {

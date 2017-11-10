@@ -19,10 +19,22 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ViewDropProcessor.
+ */
 public class ViewDropProcessor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ViewDropProcessor.class);
 
+	/**
+	 * Execute.
+	 *
+	 * @param connection the connection
+	 * @param viewModel the view model
+	 * @throws SQLException the SQL exception
+	 */
 	public static void execute(Connection connection, DataStructureViewModel viewModel) throws SQLException {
 		logger.info("Processing Drop View: " + viewModel.getName());
 		if (SqlFactory.getNative(connection).exists(connection, viewModel.getName())) {

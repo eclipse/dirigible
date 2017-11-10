@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.derby.DerbySqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SequenceTest.
+ */
 public class SequenceTest {
 
+	/**
+	 * Creates the sequence.
+	 */
 	@Test
 	public void createSequence() {
 		String sql = SqlFactory.getNative(new DerbySqlDialect()).create().sequence("CUSTOMERS_SEQUENCE").build();
@@ -27,6 +34,9 @@ public class SequenceTest {
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE AS BIGINT START WITH 0", sql);
 	}
 
+	/**
+	 * Drop sequnce.
+	 */
 	@Test
 	public void dropSequnce() {
 		String sql = SqlFactory.getNative(new DerbySqlDialect()).drop().sequence("CUSTOMERS_SEQUENCE").build();
@@ -35,6 +45,9 @@ public class SequenceTest {
 		assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE RESTRICT", sql);
 	}
 
+	/**
+	 * Nextval sequnce.
+	 */
 	@Test
 	public void nextvalSequnce() {
 		String sql = SqlFactory.getNative(new DerbySqlDialect()).nextval("CUSTOMERS_SEQUENCE").build();

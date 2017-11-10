@@ -22,10 +22,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericTextTest.
+ */
 public class RepositoryGenericTextTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test text.
+	 */
 	@Test
 	public void testText() {
 		if (repository == null) {

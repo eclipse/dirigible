@@ -28,16 +28,32 @@ import org.eclipse.dirigible.runtime.core.filter.AccessVerifier;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AccessVerifierTest.
+ */
 public class AccessVerifierTest extends AbstractGuiceTest {
 	
+	/** The security core service. */
 	@Inject
 	private ISecurityCoreService securityCoreService;
 	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.securityCoreService = getInjector().getInstance(SecurityCoreService.class);
 	}
 	
+	/**
+	 * Creates the access definition.
+	 *
+	 * @throws AccessException the access exception
+	 * @throws ServletException the servlet exception
+	 */
 	@Test
 	public void createAccessDefinition() throws AccessException, ServletException {
 		securityCoreService.removeRole("test_role1");

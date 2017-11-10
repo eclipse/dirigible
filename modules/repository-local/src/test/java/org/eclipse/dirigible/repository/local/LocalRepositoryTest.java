@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericRepositoryTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryTest.
+ */
 public class LocalRepositoryTest extends RepositoryGenericRepositoryTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

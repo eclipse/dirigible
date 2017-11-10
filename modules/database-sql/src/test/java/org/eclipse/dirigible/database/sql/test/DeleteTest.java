@@ -16,8 +16,15 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeleteTest.
+ */
 public class DeleteTest {
 	
+	/**
+	 * Delete simple.
+	 */
 	@Test
 	public void deleteSimple() {
 		String sql = SqlFactory.getDefault()
@@ -29,6 +36,9 @@ public class DeleteTest {
 		assertEquals("DELETE FROM CUSTOMERS", sql);
 	}
 
+	/**
+	 * Delete where.
+	 */
 	@Test
 	public void deleteWhere() {
 		String sql = SqlFactory.getDefault()

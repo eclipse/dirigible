@@ -10,12 +10,14 @@
 
 package org.eclipse.dirigible.engine.js.nashorn.processor;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class contains the source code of the require() function (by CommonJS specification), added to the JavaScript
- * scripting service execution with Nashorn engine, where it is not included by default
+ * scripting service execution with Nashorn engine, where it is not included by default.
  */
 public class Require {
 
+	/** The Constant CODE. */
 	public static final String CODE = "var Require = (function(modulePath) {" + "	var _loadedModules = {};" + " var _require = function(path) {"
 			+ " var moduleInfo, buffered, head = '(function(exports,module,require){ ', code = '', tail = '})', line = null;"
 			+ " moduleInfo = _loadedModules[path];" + " if (moduleInfo) {" + "   return moduleInfo;" + " }"

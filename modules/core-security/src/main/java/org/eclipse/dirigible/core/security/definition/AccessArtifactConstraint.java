@@ -13,30 +13,62 @@ package org.eclipse.dirigible.core.security.definition;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AccessArtifactConstraint.
+ */
 public class AccessArtifactConstraint {
 	
+	/** The uri. */
 	private String uri;
 	
+	/** The method. */
 	private String method;
 	
+	/** The roles. */
 	private List<String> roles = new ArrayList<String>();
 
+	/**
+	 * Gets the uri.
+	 *
+	 * @return the uri
+	 */
 	public String getUri() {
 		return uri;
 	}
 
+	/**
+	 * Sets the uri.
+	 *
+	 * @param uri the new uri
+	 */
 	public void setUri(String uri) {
 		this.uri = uri;
 	}
 
+	/**
+	 * Gets the method.
+	 *
+	 * @return the method
+	 */
 	public String getMethod() {
 		return method;
 	}
 
+	/**
+	 * Sets the method.
+	 *
+	 * @param method the new method
+	 */
 	public void setMethod(String method) {
 		this.method = method;
 	}
 
+	/**
+	 * Gets the roles.
+	 *
+	 * @return the roles
+	 */
 	public List<String> getRoles() {
 		return roles;
 	}

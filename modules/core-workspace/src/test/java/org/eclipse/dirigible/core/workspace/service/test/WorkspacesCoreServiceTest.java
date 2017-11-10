@@ -24,16 +24,29 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WorkspacesCoreServiceTest.
+ */
 public class WorkspacesCoreServiceTest extends AbstractGuiceTest {
 
+	/** The workspaces core service. */
 	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
 	}
 
+	/**
+	 * Creates the workspace test.
+	 */
 	@Test
 	public void createWorkspaceTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -44,6 +57,11 @@ public class WorkspacesCoreServiceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the workspace test.
+	 *
+	 * @return the workspace test
+	 */
 	@Test
 	public void getWorkspaceTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -59,6 +77,11 @@ public class WorkspacesCoreServiceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the workspaces test.
+	 *
+	 * @return the workspaces test
+	 */
 	@Test
 	public void getWorkspacesTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -77,6 +100,9 @@ public class WorkspacesCoreServiceTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace2");
 	}
 
+	/**
+	 * Delete workspace test.
+	 */
 	@Test
 	public void deleteWorkspaceTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");

@@ -15,8 +15,19 @@ import javax.websocket.server.HandshakeRequest;
 
 import org.eclipse.dirigible.repository.api.IRepository;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PathUtils.
+ */
 public class PathUtils {
 
+	/**
+	 * Extract path.
+	 *
+	 * @param request the request
+	 * @return the string
+	 * @throws IllegalArgumentException the illegal argument exception
+	 */
 	public static String extractPath(HttpServletRequest request) throws IllegalArgumentException {
 		String requestPath = request.getPathInfo();
 		if (requestPath == null) {
@@ -25,6 +36,13 @@ public class PathUtils {
 		return requestPath;
 	}
 
+	/**
+	 * Gets the heading url.
+	 *
+	 * @param req the req
+	 * @param mapping the mapping
+	 * @return the heading url
+	 */
 	public static String getHeadingUrl(final HttpServletRequest req, String mapping) {
 		final String scheme = req.getScheme() + "://"; //$NON-NLS-1$
 		final String serverName = req.getServerName();
@@ -34,6 +52,12 @@ public class PathUtils {
 		return scheme + serverName + serverPort + contextPath + mapping;
 	}
 
+	/**
+	 * Extract path web socket.
+	 *
+	 * @param request the request
+	 * @return the string
+	 */
 	public static String extractPathWebSocket(HandshakeRequest request) {
 		String requestPath = request.getRequestURI().toString();
 		if ("".equals(requestPath)) {

@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.repository.api;
 
+// TODO: Auto-generated Javadoc
 /**
  * The {@link RepositoryException} is thrown in situations when a user is trying
  * to use any of the repository API in a way that is invalid or not expected.<br>
@@ -21,20 +22,40 @@ package org.eclipse.dirigible.repository.api;
  */
 public class RepositoryException extends RuntimeException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Instantiates a new repository exception.
+	 */
 	public RepositoryException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new repository exception.
+	 *
+	 * @param message the message
+	 */
 	public RepositoryException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new repository exception.
+	 *
+	 * @param ex the ex
+	 */
 	public RepositoryException(Throwable ex) {
 		super(ex);
 	}
 
+	/**
+	 * Instantiates a new repository exception.
+	 *
+	 * @param message the message
+	 * @param ex the ex
+	 */
 	public RepositoryException(String message, Throwable ex) {
 		super(message, ex);
 	}

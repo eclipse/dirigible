@@ -12,8 +12,18 @@ package org.eclipse.dirigible.database.sql.builders.table;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateTablePrimaryKeyBuilder.
+ */
 public class CreateTablePrimaryKeyBuilder extends AbstractCreateTableConstraintBuilder<CreateTablePrimaryKeyBuilder> {
 
+	/**
+	 * Instantiates a new creates the table primary key builder.
+	 *
+	 * @param dialect the dialect
+	 * @param name the name
+	 */
 	CreateTablePrimaryKeyBuilder(ISqlDialect dialect, String name) {
 		super(dialect, name);
 	}

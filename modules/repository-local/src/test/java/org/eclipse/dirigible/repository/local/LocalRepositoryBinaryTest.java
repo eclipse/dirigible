@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericBinaryTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryBinaryTest.
+ */
 public class LocalRepositoryBinaryTest extends RepositoryGenericBinaryTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

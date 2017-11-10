@@ -34,8 +34,13 @@ import org.mozilla.javascript.commonjs.module.provider.SoftCachingModuleScriptPr
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RhinoJavascriptEngineExecutor.
+ */
 public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineExecutor.class);
 
 	static {
@@ -51,16 +56,31 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		// RhinoException.setStackStyle(StackStyle.V8);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 		return executeService(module, executionContext, true);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceCode(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
 		return executeService(code, executionContext, false);
 	}
 
+	/**
+	 * Execute service.
+	 *
+	 * @param moduleOrCode the module or code
+	 * @param executionContext the execution context
+	 * @param isModule the is module
+	 * @return the object
+	 * @throws ScriptingException the scripting exception
+	 */
 	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
 
 		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
@@ -129,12 +149,20 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		return result;
 	}
 
+	/**
+	 * Creates the repository module source provider.
+	 *
+	 * @return the rhino repository module source provider
+	 */
 	private RhinoRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
 		RhinoRepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
 		repositoryModuleSourceProvider = new RhinoRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		return repositoryModuleSourceProvider;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#getType()
+	 */
 	@Override
 	public String getType() {
 		return JAVASCRIPT_TYPE_RHINO;

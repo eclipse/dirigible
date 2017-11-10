@@ -44,8 +44,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content
+ * Front facing REST service serving the raw repository content.
  */
 @Singleton
 @Path("/ide/git/{workspace}")
@@ -53,14 +54,25 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class GitRestService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitRestService.class);
 
+	/** The processor. */
 	@Inject
 	private GitProcessor processor;
 	
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * Clone repository.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
 	@POST
 	@Path("/clone")
 	@Produces("application/json")
@@ -77,6 +89,13 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Pull projects.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 * @return the response
+	 */
 	@POST
 	@Path("/pull")
 	@Produces("application/json")
@@ -93,6 +112,14 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Pull project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param model the model
+	 * @return the response
+	 */
 	@POST
 	@Path("/{project}/pull")
 	@Produces("application/json")
@@ -110,6 +137,13 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Push projects.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 * @return the response
+	 */
 	@POST
 	@Path("/push")
 	@Produces("application/json")
@@ -126,6 +160,14 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Push project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param model the model
+	 * @return the response
+	 */
 	@POST
 	@Path("/{project}/push")
 	@Produces("application/json")
@@ -143,6 +185,13 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Reset projects.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 * @return the response
+	 */
 	@POST
 	@Path("/reset")
 	@Produces("application/json")
@@ -159,6 +208,14 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Reset project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param model the model
+	 * @return the response
+	 */
 	@POST
 	@Path("/{project}/reset")
 	@Produces("application/json")
@@ -176,6 +233,14 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Share project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param model the model
+	 * @return the response
+	 */
 	@POST
 	@Path("/{project}/share")
 	@Produces("application/json")
@@ -193,6 +258,14 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Update projects dependencies.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
 	@POST
 	@Path("/uppdate-dependencies")
 	@Produces("application/json")
@@ -209,6 +282,15 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Update project dependencies.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param model the model
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
 	@POST
 	@Path("/{project}/uppdate-dependencies")
 	@Produces("application/json")
@@ -227,11 +309,17 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return GitRestService.class;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

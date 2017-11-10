@@ -18,12 +18,21 @@ import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SecurityClasspathContentHandler.
+ */
 public class SecurityClasspathContentHandler extends AbstractClasspathContentHandler {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecurityClasspathContentHandler.class);
 	
+	/** The extensions synchronizer. */
 	private SecuritySynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
+	 */
 	@Override
 	protected boolean isValid(String path) {
 		boolean isValid = false;
@@ -44,6 +53,9 @@ public class SecurityClasspathContentHandler extends AbstractClasspathContentHan
 		return isValid;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

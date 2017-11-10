@@ -26,22 +26,39 @@ import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractResourceExecutor.
+ */
 public class AbstractResourceExecutor implements IResourceExecutor {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 	
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	protected IRepository getRepository() {
 		return repository;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getResourceContent(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public byte[] getResourceContent(String root, String module) throws RepositoryException {
 		return getResourceContent(root, module, null);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getResourceContent(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public byte[] getResourceContent(String root, String module, String extension) throws RepositoryException {
 		if (module == null || "".equals(module.trim())) {
@@ -72,6 +89,9 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 		throw new RepositoryNotFoundException(logMsg);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getCollection(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public ICollection getCollection(String root, String module) throws RepositoryException {
 		String repositoryPath = createResourcePath(root, module);
@@ -85,11 +105,17 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 		throw new RepositoryException(logMsg);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getResource(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public IResource getResource(String root, String module) throws RepositoryException {
 		return getResource(root, module, null);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#getResource(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public IResource getResource(String root, String module, String extension) throws RepositoryException {
 		String repositoryPath = createResourcePath(root, module, extension);
@@ -104,11 +130,17 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#existResource(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean existResource(String root, String module) throws RepositoryException {
 		return existResource(root, module, null);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#existResource(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean existResource(String root, String module, String extension) throws RepositoryException {
 		String repositoryPath = createResourcePath(root, module, extension);
@@ -116,11 +148,17 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 		return resource.exists();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#createResourcePath(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public String createResourcePath(String root, String module) {
 		return createResourcePath(root, module, null);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.resource.IResourceExecutor#createResourcePath(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public String createResourcePath(String root, String module, String extension) {
 		StringBuilder buff = new StringBuilder().append(root).append(IRepository.SEPARATOR).append(module);

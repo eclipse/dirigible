@@ -14,13 +14,25 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractSynchronizerJob.
+ */
 public abstract class AbstractSynchronizerJob implements Job {
 	
+	/* (non-Javadoc)
+	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	 */
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		getSynchronizer().synchronize();
 	}
 
+	/**
+	 * Gets the synchronizer.
+	 *
+	 * @return the synchronizer
+	 */
 	protected abstract ISynchronizer getSynchronizer();
 
 }

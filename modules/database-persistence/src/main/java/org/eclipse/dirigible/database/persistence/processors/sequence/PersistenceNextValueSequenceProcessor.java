@@ -22,12 +22,24 @@ import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceNextValueSequenceProcessor.
+ */
 public class PersistenceNextValueSequenceProcessor extends AbstractPersistenceProcessor {
 
+	/**
+	 * Instantiates a new persistence next value sequence processor.
+	 *
+	 * @param entityManagerInterceptor the entity manager interceptor
+	 */
 	public PersistenceNextValueSequenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		NextValueSequenceBuilder nextValueBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
@@ -37,6 +49,14 @@ public class PersistenceNextValueSequenceProcessor extends AbstractPersistencePr
 		return sql;
 	}
 
+	/**
+	 * Nextval.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the long
+	 * @throws PersistenceException the persistence exception
+	 */
 	public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		long result = -1;
 		String sql = null;

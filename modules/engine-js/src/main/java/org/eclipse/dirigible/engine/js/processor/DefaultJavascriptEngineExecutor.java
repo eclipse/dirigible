@@ -19,15 +19,26 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DefaultJavascriptEngineExecutor.
+ */
 public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor implements IJavascriptEngineExecutor {
 
+	/** The Constant JAVASCRIPT_ENGINE_EXECUTORS. */
 	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#getType()
+	 */
 	@Override
 	public String getType() {
 		return JAVASCRIPT_TYPE_DEFAULT;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_TYPE_ENGINE_DEFAULT,
@@ -40,6 +51,9 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		throw new ScriptingException("No Javascript Engine registered");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceCode(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
 		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_TYPE_ENGINE_DEFAULT,

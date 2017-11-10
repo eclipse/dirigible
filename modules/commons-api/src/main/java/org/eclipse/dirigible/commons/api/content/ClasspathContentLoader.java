@@ -21,14 +21,26 @@ import java.util.jar.JarFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ClasspathContentLoader.
+ */
 public class ClasspathContentLoader {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ClasspathContentLoader.class);
 	
+	/** The Constant ROOT. */
 	private static final String ROOT = "/";
 	
+	/** The loaded. */
 	private static Boolean LOADED = false;
 	
+	/**
+	 * Load.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static final void load() throws IOException {
 		synchronized (ClasspathContentLoader.class) {
 			if (!LOADED) {

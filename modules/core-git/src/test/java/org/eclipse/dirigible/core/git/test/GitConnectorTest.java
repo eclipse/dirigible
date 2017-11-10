@@ -29,8 +29,20 @@ import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GitConnectorTest.
+ */
 public class GitConnectorTest {
 
+	/**
+	 * Clone repository.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InvalidRemoteException the invalid remote exception
+	 * @throws TransportException the transport exception
+	 * @throws GitAPIException the git API exception
+	 */
 	@Test
 	public void cloneRepository() throws IOException, InvalidRemoteException, TransportException, GitAPIException {
 		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");

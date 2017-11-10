@@ -16,8 +16,15 @@ import static org.junit.Assert.assertNotNull;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DropViewTest.
+ */
 public class DropViewTest {
 
+	/**
+	 * Drop table.
+	 */
 	@Test
 	public void dropTable() {
 		String sql = SqlFactory.getDefault().drop().view("CUSTOMERS_VIEW").build();

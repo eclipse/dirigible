@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.repository.api;
 
+// TODO: Auto-generated Javadoc
 /**
  * Utility class for handling Resource objects.
  * 
@@ -66,6 +67,9 @@ public final class ResourceUtil {
 		return name.substring(0, lastDotIndex);
 	}
 
+	/**
+	 * Instantiates a new resource util.
+	 */
 	/*
 	 * Disable instantiation
 	 */

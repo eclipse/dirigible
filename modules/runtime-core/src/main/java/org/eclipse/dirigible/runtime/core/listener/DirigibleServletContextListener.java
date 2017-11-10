@@ -41,18 +41,27 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import io.swagger.models.auth.BasicAuthDefinition;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 
+// TODO: Auto-generated Javadoc
 /**
  * This class handles the initialization of all Guice modules and all REST API
  * resources.
+ *
+ * @see DirigibleServletContextEvent
  */
 public class DirigibleServletContextListener extends GuiceServletContextListener {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleServletContextListener.class);
 
+	/** The Constant services. */
 	private static final HashSet<Object> services = new HashSet<Object>();
 
+	/** The injector. */
 	private Injector injector;
 
+	/* (non-Javadoc)
+	 * @see com.google.inject.servlet.GuiceServletContextListener#getInjector()
+	 */
 	@Override
 	protected Injector getInjector() {
 		logger.trace("Initializing Guice Injector with modules for dependency injection...");
@@ -65,6 +74,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		return injector;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.inject.servlet.GuiceServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+	 */
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		logger.info("---------- Initializing Eclipse Dirigible Platform... ----------");
@@ -83,6 +95,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
 	}
 
+	/**
+	 * Load predelivered content.
+	 */
 	private void loadPredeliveredContent() {
 		logger.trace("Loading the predelivered content...");
 		try {
@@ -93,6 +108,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.trace("Done loading predelivered content.");
 	}
 
+	/**
+	 * Register rest services for cxf.
+	 */
 	private void registerRestServicesForCxf() {
 		logger.trace("Registering REST services...");
 
@@ -106,6 +124,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.trace("Done registering REST services.");
 	}
 
+	/**
+	 * Adds the rest services.
+	 */
 	private void addRestServices() {
 		for (IRestService next : ServiceLoader.load(IRestService.class)) {
 			getServices().add(injector.getInstance(next.getType()));
@@ -113,6 +134,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		}
 	}
 
+	/**
+	 * Adds the exception handlers.
+	 */
 	private void addExceptionHandlers() {
 		for (AbstractExceptionHandler<?> next : ServiceLoader.load(AbstractExceptionHandler.class)) {
 			getServices().add(injector.getInstance(next.getType()));
@@ -120,6 +144,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		}
 	}
 
+	/**
+	 * Adds the swagger.
+	 */
 	private void addSwagger() {
 		Swagger2Feature feature = new Swagger2Feature();
 
@@ -142,6 +169,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		getServices().add(feature);
 	}
 
+	/**
+	 * Startup scheduler.
+	 */
 	private void startupScheduler() {
 		logger.info("Starting Scheduler...");
 		try {
@@ -152,6 +182,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.info("Done starting Scheduler.");
 	}
 
+	/**
+	 * Shutdown scheduler.
+	 */
 	private void shutdownScheduler() {
 		logger.trace("Shutting down Scheduler...");
 		try {
@@ -162,6 +195,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.trace("Done shutting down Scheduler.");
 	}
 
+	/**
+	 * Startup messaging.
+	 */
 	private void startupMessaging() {
 		logger.info("Starting Message Broker...");
 		try {
@@ -172,6 +208,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		logger.info("Done starting Message Broker.");
 	}
 
+	/**
+	 * Shutdown messaging.
+	 */
 	private void shutdownMessaging() {
 		logger.trace("Shutting down Message Broker...");
 		try {
@@ -191,6 +230,9 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		return services;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.inject.servlet.GuiceServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		logger.info("Shutting down Eclipse Dirigible Platform...");

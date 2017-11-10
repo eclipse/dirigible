@@ -27,16 +27,29 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RolesArtifactTest.
+ */
 public class RolesArtifactTest extends AbstractGuiceTest {
 	
+	/** The security core service. */
 	@Inject
 	private ISecurityCoreService securityCoreService;
 	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.securityCoreService = getInjector().getInstance(SecurityCoreService.class);
 	}
 	
+	/**
+	 * Serialize test.
+	 */
 	@Test
 	public void serializeTest() {
 		RoleDefinition[] roles = new RoleDefinition[2];
@@ -49,6 +62,11 @@ public class RolesArtifactTest extends AbstractGuiceTest {
 		assertNotNull(securityCoreService.serializeRoles(roles));
 	}
 
+	/**
+	 * Parses the test.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void parseTest() throws IOException {
 		String json = IOUtils.toString(RolesArtifactTest.class.getResourceAsStream("/access/test.roles"), StandardCharsets.UTF_8);

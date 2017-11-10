@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericBigTextTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryBigTextTest.
+ */
 public class LocalRepositoryBigTextTest extends RepositoryGenericBigTextTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

@@ -14,14 +14,24 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ConfigurationTest.
+ */
 public class ConfigurationTest {
 	
+	/**
+	 * Inits the test.
+	 */
 	@Test
 	public void initTest() {
 		String value = Configuration.get("DIRIGIBLE_INSTANCE_NAME");
 		assertEquals("local", value);
 	}
 	
+	/**
+	 * Update test.
+	 */
 	@Test
 	public void updateTest() {
 		String value = Configuration.get("DIRIGIBLE_INSTANCE_NAME");
@@ -39,6 +49,9 @@ public class ConfigurationTest {
 		Configuration.update();
 	}
 	
+	/**
+	 * Custom test.
+	 */
 	@Test
 	public void customTest() {
 		Configuration.load("/test.properties");

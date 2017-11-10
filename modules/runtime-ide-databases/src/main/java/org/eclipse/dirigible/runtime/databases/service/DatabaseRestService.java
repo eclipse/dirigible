@@ -49,8 +49,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw database content
+ * Front facing REST service serving the raw database content.
  */
 @Singleton
 @Path("/ide/databases")
@@ -58,14 +59,22 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class DatabaseRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseRestService.class);
 
+	/** The processor. */
 	@Inject
 	private DatabaseProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/**
+	 * List database types.
+	 *
+	 * @return the response
+	 */
 	@GET
 	@Path("")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -82,6 +91,12 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(databaseTypes).build();
 	}
 
+	/**
+	 * List data sources.
+	 *
+	 * @param type the type
+	 * @return the response
+	 */
 	@GET
 	@Path("{type}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -105,6 +120,14 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 
 	}
 
+	/**
+	 * List artifacts.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @return the response
+	 * @throws SQLException the SQL exception
+	 */
 	@GET
 	@Path("{type}/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -130,6 +153,15 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 
 	}
 
+	/**
+	 * Execute query.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @param sql the sql
+	 * @param request the request
+	 * @return the response
+	 */
 	@POST
 	@Path("{type}/{name}/query")
 	@ApiOperation("Executes a query operation on the datasource {name} and {type} and returns the result in a tabular format")
@@ -158,6 +190,15 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Execute update.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @param sql the sql
+	 * @param request the request
+	 * @return the response
+	 */
 	@POST
 	@Path("{type}/{name}/update")
 	@ApiOperation("Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format")
@@ -186,6 +227,15 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
+	/**
+	 * Execute.
+	 *
+	 * @param type the type
+	 * @param name the name
+	 * @param sql the sql
+	 * @param request the request
+	 * @return the response
+	 */
 	@POST
 	@Path("{type}/{name}/execute")
 	@ApiOperation("Executes a query or update operation on the datasource {name} and {type} and returns the result in a tabular format")
@@ -214,11 +264,17 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return DatabaseRestService.class;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

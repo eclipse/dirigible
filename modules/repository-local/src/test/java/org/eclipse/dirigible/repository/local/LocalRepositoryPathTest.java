@@ -16,8 +16,15 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericPathTest;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LocalRepositoryPathTest.
+ */
 public class LocalRepositoryPathTest extends RepositoryGenericPathTest {
 
+	/**
+	 * Sets the up.
+	 */
 	@Before
 	public void setUp() {
 		try {

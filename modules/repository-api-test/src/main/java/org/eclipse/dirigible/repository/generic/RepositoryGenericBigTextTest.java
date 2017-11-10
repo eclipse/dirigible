@@ -25,10 +25,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericBigTextTest.
+ */
 public class RepositoryGenericBigTextTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test big text.
+	 */
 	@Test
 	public void testBigText() {
 		if (repository == null) {
@@ -74,6 +82,9 @@ public class RepositoryGenericBigTextTest {
 		}
 	}
 
+	/**
+	 * Test spaces text.
+	 */
 	@Test
 	public void testSpacesText() {
 		if (repository == null) {

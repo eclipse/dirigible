@@ -16,37 +16,80 @@ import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class InsertBuilder.
+ */
 public class InsertBuilder extends AbstractSqlBuilder {
 	
+	/** The table. */
 	private String table = null;
+	
+	/** The columns. */
 	private List<String> columns = new ArrayList<String>();
+	
+	/** The values. */
 	private List<String> values = new ArrayList<String>();
+	
+	/** The select. */
 	private String select = null;
 	
+	/**
+	 * Instantiates a new insert builder.
+	 *
+	 * @param dialect the dialect
+	 */
 	public InsertBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
+	/**
+	 * Into.
+	 *
+	 * @param table the table
+	 * @return the insert builder
+	 */
 	public InsertBuilder into(String table) {
 		this.table = table;
 		return this;
 	}
 	
+	/**
+	 * Column.
+	 *
+	 * @param name the name
+	 * @return the insert builder
+	 */
 	public InsertBuilder column(String name) {
 		this.columns.add(name);
 		return this;
 	}
 	
+	/**
+	 * Value.
+	 *
+	 * @param value the value
+	 * @return the insert builder
+	 */
 	public InsertBuilder value(String value) {
 		this.values.add(value);
 		return this;
 	}
 	
+	/**
+	 * Select.
+	 *
+	 * @param select the select
+	 * @return the insert builder
+	 */
 	public InsertBuilder select(String select) {
 		this.select = select;
 		return this;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 		
@@ -70,6 +113,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		return sql.toString();
 	}
 	
+	/**
+	 * Generate table.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateTable(StringBuilder sql) {
 		sql.append(SPACE)
 			.append(KEYWORD_INTO)
@@ -77,6 +125,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 			.append(this.table);
 	}
 	
+	/**
+	 * Generate columns.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
 			sql.append(SPACE)
@@ -86,6 +139,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		}
 	}
 	
+	/**
+	 * Generate values.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateValues(StringBuilder sql) {
 		if (!this.values.isEmpty()) {
 			sql.append(SPACE)
@@ -104,6 +162,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		}
 	}
 	
+	/**
+	 * Generate select.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateSelect(StringBuilder sql) {
 		if (this.select != null) {
 			sql.append(SPACE)
@@ -111,6 +174,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		}
 	}
 	
+	/**
+	 * Traverse columns.
+	 *
+	 * @return the string
+	 */
 	protected String traverseColumns() {
 		StringBuilder snippet = new StringBuilder();
 		for (String column : this.columns) {
@@ -121,6 +189,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 	
+	/**
+	 * Traverse values.
+	 *
+	 * @return the string
+	 */
 	protected String traverseValues() {
 		StringBuilder snippet = new StringBuilder();
 		for (String value : this.values) {
@@ -131,6 +204,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 	
+	/**
+	 * Enumerate values.
+	 *
+	 * @return the string
+	 */
 	protected String enumerateValues() {
 		StringBuilder snippet = new StringBuilder();
 		for (int i=0; i< columns.size(); i++) {
@@ -141,22 +219,47 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 	
+	/**
+	 * Generate insert.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateInsert(StringBuilder sql) {
 		sql.append(KEYWORD_INSERT);
 	}
 
+	/**
+	 * Gets the table.
+	 *
+	 * @return the table
+	 */
 	public String getTable() {
 		return table;
 	}
 
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the columns
+	 */
 	public List<String> getColumns() {
 		return columns;
 	}
 
+	/**
+	 * Gets the values.
+	 *
+	 * @return the values
+	 */
 	public List<String> getValues() {
 		return values;
 	}
 
+	/**
+	 * Gets the select.
+	 *
+	 * @return the select
+	 */
 	public String getSelect() {
 		return select;
 	}

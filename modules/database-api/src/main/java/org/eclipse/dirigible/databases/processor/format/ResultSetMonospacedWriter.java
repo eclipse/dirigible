@@ -16,27 +16,54 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ResultSetMonospacedWriter.
+ */
 public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 
+	/** The Constant LIMIT. */
 	private static final int LIMIT = 100;
 
+	/** The Constant EMPTY_RESULT_SET. */
 	private static final String EMPTY_RESULT_SET = "Empty result set";
+	
+	/** The Constant DELIMITER. */
 	public static final String DELIMITER = "|"; //$NON-NLS-1$
+	
+	/** The Constant NEWLINE_CHARACTER. */
 	public static final String NEWLINE_CHARACTER = System.getProperty("line.separator"); //$NON-NLS-1$
 
+	/** The header format. */
 	private HeaderFormatter<?> headerFormat = new StringHeaderFormatter();
+	
+	/** The row format. */
 	private RowFormatter<?> rowFormat = new StringRowFormatter();
 
+	/** The limited. */
 	private boolean limited = true;
 
+	/**
+	 * Checks if is limited.
+	 *
+	 * @return true, if is limited
+	 */
 	public boolean isLimited() {
 		return limited;
 	}
 
+	/**
+	 * Sets the limited.
+	 *
+	 * @param limited the new limited
+	 */
 	public void setLimited(boolean limited) {
 		this.limited = limited;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)
+	 */
 	@Override
 	public String write(ResultSet resultSet) throws SQLException {
 
@@ -100,6 +127,14 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 		return buffer.toString();
 	}
 
+	/**
+	 * Gets the colum index by name.
+	 *
+	 * @param columnName the column name
+	 * @param metadata the metadata
+	 * @return the colum index by name
+	 * @throws SQLException the SQL exception
+	 */
 	int getColumIndexByName(String columnName, ResultSetMetaData metadata) throws SQLException {
 		for (int i = 1; i < (metadata.getColumnCount() + 1); i++) {
 			if (columnName.equals(metadata.getColumnName(i))) {
@@ -109,6 +144,13 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 		return Integer.MIN_VALUE;
 	}
 
+	/**
+	 * Gets the header.
+	 *
+	 * @param resultSetMetaData the result set meta data
+	 * @return the header
+	 * @throws SQLException the SQL exception
+	 */
 	List<String> getHeader(ResultSetMetaData resultSetMetaData) throws SQLException {
 
 		List<String> columHeaderLables = new ArrayList<String>();
@@ -122,18 +164,38 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 		return columHeaderLables;
 	}
 
+	/**
+	 * Gets the header format.
+	 *
+	 * @return the header format
+	 */
 	public HeaderFormatter<?> getHeaderFormat() {
 		return headerFormat;
 	}
 
+	/**
+	 * Sets the header format.
+	 *
+	 * @param headerFormat the new header format
+	 */
 	public void setHeaderFormat(HeaderFormatter<?> headerFormat) {
 		this.headerFormat = headerFormat;
 	}
 
+	/**
+	 * Gets the row format.
+	 *
+	 * @return the row format
+	 */
 	public RowFormatter<?> getRowFormat() {
 		return rowFormat;
 	}
 
+	/**
+	 * Sets the row format.
+	 *
+	 * @param rowFormat the new row format
+	 */
 	public void setRowFormat(RowFormatter<?> rowFormat) {
 		this.rowFormat = rowFormat;
 	}

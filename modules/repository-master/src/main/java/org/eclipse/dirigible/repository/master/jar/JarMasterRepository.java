@@ -13,11 +13,24 @@ package org.eclipse.dirigible.repository.master.jar;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JarMasterRepository.
+ */
 public class JarMasterRepository extends JarRepository implements IMasterRepository {
 
+	/** The Constant TYPE. */
 	public static final String TYPE = "jar";
+	
+	/** The Constant DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH. */
 	public static final String DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH = "DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH";
 
+	/**
+	 * Instantiates a new jar master repository.
+	 *
+	 * @param zip the zip
+	 * @throws LocalRepositoryException the local repository exception
+	 */
 	public JarMasterRepository(String zip) throws LocalRepositoryException {
 		super(zip);
 	}

@@ -21,12 +21,24 @@ import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceDropSequenceProcessor.
+ */
 public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcessor {
 
+	/**
+	 * Instantiates a new persistence drop sequence processor.
+	 *
+	 * @param entityManagerInterceptor the entity manager interceptor
+	 */
 	public PersistenceDropSequenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		DropSequenceBuilder dropSequenceBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).drop()
@@ -36,6 +48,14 @@ public class PersistenceDropSequenceProcessor extends AbstractPersistenceProcess
 		return sql;
 	}
 
+	/**
+	 * Drop.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the int
+	 * @throws PersistenceException the persistence exception
+	 */
 	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
 		String sql = null;

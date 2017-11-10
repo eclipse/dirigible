@@ -20,8 +20,17 @@ import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProcessTest.
+ */
 public class ProcessTest {
 	
+	/**
+	 * Test command.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void testCommand() throws IOException {
 		
@@ -40,6 +49,12 @@ public class ProcessTest {
 		executeCommand(args);
 	}
 
+	/**
+	 * Execute command.
+	 *
+	 * @param args the args
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void executeCommand(String[] args) throws IOException {
 		if (args.length <= 0) {
 			System.err.println("Need command to run");
@@ -64,6 +79,9 @@ public class ProcessTest {
 		System.out.println(new String(out.toByteArray()));
 	}
 
+	/**
+	 * Test split.
+	 */
 	@Test
 	public void testSplit()  {
 		String command  = "bash \"-c\" \"ps -ef\"";

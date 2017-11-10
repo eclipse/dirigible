@@ -22,6 +22,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
  * Convenience class for common DataSource operations.
  * An instance represents a single DataSource.
@@ -29,25 +30,67 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("javadoc")
 public class DatabaseQueryHelper {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseQueryHelper.class);
 
+	/**
+	 * The Enum Config.
+	 */
 	public enum Config {
-		ShowTableContentScript, SchemaFilterScript;
+		
+		/** The Show table content script. */
+		ShowTableContentScript, 
+ /** The Schema filter script. */
+ SchemaFilterScript;
 	}
 
+	/**
+	 * Instantiates a new database query helper.
+	 */
 	private DatabaseQueryHelper() {
 
 	}
 
+	/**
+	 * The Interface Filter.
+	 *
+	 * @param <T> the generic type
+	 */
 	public interface Filter<T> {
+		
+		/**
+		 * Accepts.
+		 *
+		 * @param t the t
+		 * @return true, if successful
+		 */
 		boolean accepts(T t);
 	}
 
+	/**
+	 * The Interface RequestExecutionCallback.
+	 */
 	public interface RequestExecutionCallback {
+		
+		/**
+		 * Update done.
+		 *
+		 * @param recordsCount the records count
+		 */
 		void updateDone(int recordsCount);
 
+		/**
+		 * Query done.
+		 *
+		 * @param rs the rs
+		 */
 		void queryDone(ResultSet rs);
 
+		/**
+		 * Error.
+		 *
+		 * @param t the t
+		 */
 		void error(Throwable t);
 	}
 
@@ -95,10 +138,29 @@ public class DatabaseQueryHelper {
 	 * method.
 	 */
 	public interface ResultSetIteratorCallback {
+		
+		/**
+		 * On query done.
+		 *
+		 * @param conn the conn
+		 * @param table the table
+		 */
 		void onQueryDone(Connection conn, List<NavigableMap<String, Object>> table);
 
+		/**
+		 * On row construction.
+		 *
+		 * @param conn the conn
+		 * @param row the row
+		 */
 		void onRowConstruction(Connection conn, NavigableMap<String, Object> row);
 
+		/**
+		 * On error.
+		 *
+		 * @param conn the conn
+		 * @param t the t
+		 */
 		void onError(Connection conn, Throwable t);
 	}
 

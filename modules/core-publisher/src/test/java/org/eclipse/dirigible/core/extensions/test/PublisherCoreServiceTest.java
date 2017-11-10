@@ -26,16 +26,31 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PublisherCoreServiceTest.
+ */
 public class PublisherCoreServiceTest extends AbstractGuiceTest {
 	
+	/** The publisher core service. */
 	@Inject
 	private IPublisherCoreService publisherCoreService;
 	
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.publisherCoreService = getInjector().getInstance(PublisherCoreService.class);
 	}
 	
+	/**
+	 * Creates the publish request test.
+	 *
+	 * @throws PublisherException the publisher exception
+	 */
 	@Test
 	public void createPublishRequestTest() throws PublisherException {
 		publisherCoreService.createPublishRequest("workspace1", "path1", "registry1");
@@ -49,6 +64,12 @@ public class PublisherCoreServiceTest extends AbstractGuiceTest {
 		publisherCoreService.removePublishRequest(publishRequestDefinition.getId());
 	}
 	
+	/**
+	 * Gets the publish request test.
+	 *
+	 * @return the publish request test
+	 * @throws PublisherException the publisher exception
+	 */
 	@Test
 	public void getPublishRequestTest() throws PublisherException {
 		PublishRequestDefinition publishRequestDefinition = publisherCoreService.createPublishRequest("workspace1", "path1", "registry1");
@@ -59,6 +80,11 @@ public class PublisherCoreServiceTest extends AbstractGuiceTest {
 		publisherCoreService.removePublishRequest(publishRequestDefinition.getId());
 	}
 	
+	/**
+	 * Removes the publish request test.
+	 *
+	 * @throws PublisherException the publisher exception
+	 */
 	@Test
 	public void removePublishRequestTest() throws PublisherException {
 		PublishRequestDefinition publishRequestDefinition = publisherCoreService.createPublishRequest("workspace1", "path1", "registry1");
@@ -73,6 +99,11 @@ public class PublisherCoreServiceTest extends AbstractGuiceTest {
 	
 		
 	
+	/**
+	 * Creates the publish log test.
+	 *
+	 * @throws PublisherException the publisher exception
+	 */
 	@Test
 	public void createPublishLogTest() throws PublisherException {
 		publisherCoreService.createPublishLog("source1", "target1");
@@ -85,6 +116,12 @@ public class PublisherCoreServiceTest extends AbstractGuiceTest {
 		publisherCoreService.removePublishLog(publishLogDefinition.getId());
 	}
 	
+	/**
+	 * Gets the publish log test.
+	 *
+	 * @return the publish log test
+	 * @throws PublisherException the publisher exception
+	 */
 	@Test
 	public void getPublishLogTest() throws PublisherException {
 		PublishLogDefinition publishLogDefinition = publisherCoreService.createPublishLog("source1", "target1");
@@ -94,6 +131,11 @@ public class PublisherCoreServiceTest extends AbstractGuiceTest {
 		publisherCoreService.removePublishLog(publishLogDefinition.getId());
 	}
 	
+	/**
+	 * Removes the publish log test.
+	 *
+	 * @throws PublisherException the publisher exception
+	 */
 	@Test
 	public void removePublishLogTest() throws PublisherException {
 		PublishLogDefinition publishLogDefinition = publisherCoreService.createPublishLog("source1", "target1");

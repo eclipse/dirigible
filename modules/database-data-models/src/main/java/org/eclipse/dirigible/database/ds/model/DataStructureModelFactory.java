@@ -17,16 +17,16 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
+// TODO: Auto-generated Javadoc
 /**
- * The factory for creation of the data structure models from source content
+ * The factory for creation of the data structure models from source content.
  */
 public class DataStructureModelFactory {
 
 	/**
-	 * Creates a table model from the raw content
+	 * Creates a table model from the raw content.
 	 *
-	 * @param content
-	 *            the table definition
+	 * @param content            the table definition
 	 * @return the table model instance
 	 */
 	public static DataStructureTableModel parseTable(String content) {
@@ -36,10 +36,9 @@ public class DataStructureModelFactory {
 	}
 
 	/**
-	 * Creates a view model from the raw content
+	 * Creates a view model from the raw content.
 	 *
-	 * @param content
-	 *            the view definition
+	 * @param content            the view definition
 	 * @return the view model instance
 	 */
 	public static DataStructureViewModel parseView(String content) {
@@ -49,10 +48,9 @@ public class DataStructureModelFactory {
 	}
 
 	/**
-	 * Creates a table model from the raw content
+	 * Creates a table model from the raw content.
 	 *
-	 * @param bytes
-	 *            the table definition
+	 * @param bytes            the table definition
 	 * @return the table model instance
 	 */
 	public static DataStructureTableModel parseTable(byte[] bytes) {
@@ -63,10 +61,9 @@ public class DataStructureModelFactory {
 	}
 
 	/**
-	 * Creates a view model from the raw content
+	 * Creates a view model from the raw content.
 	 *
-	 * @param bytes
-	 *            the view definition
+	 * @param bytes            the view definition
 	 * @return the view model instance
 	 */
 	public static DataStructureViewModel parseView(byte[] bytes) {

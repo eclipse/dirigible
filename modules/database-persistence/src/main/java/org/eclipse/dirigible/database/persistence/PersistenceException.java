@@ -10,27 +10,59 @@
 
 package org.eclipse.dirigible.database.persistence;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceException.
+ */
 public class PersistenceException extends RuntimeException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5051153858321560002L;
 
+	/**
+	 * Instantiates a new persistence exception.
+	 */
 	public PersistenceException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new persistence exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 * @param enableSuppression the enable suppression
+	 * @param writableStackTrace the writable stack trace
+	 */
 	public PersistenceException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
+	/**
+	 * Instantiates a new persistence exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public PersistenceException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new persistence exception.
+	 *
+	 * @param message the message
+	 */
 	public PersistenceException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new persistence exception.
+	 *
+	 * @param cause the cause
+	 */
 	public PersistenceException(Throwable cause) {
 		super(cause);
 	}

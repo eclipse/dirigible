@@ -13,20 +13,37 @@ package org.eclipse.dirigible.database.sql.dialects.postgres;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PostgresCreateViewBuilder.
+ */
 public class PostgresCreateViewBuilder extends CreateViewBuilder {
 
+	/** The values. */
 	private String values = null;
 
+	/**
+	 * Instantiates a new postgres create view builder.
+	 *
+	 * @param dialect the dialect
+	 * @param view the view
+	 */
 	public PostgresCreateViewBuilder(ISqlDialect dialect, String view) {
 		super(dialect, view);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(java.lang.String)
+	 */
 	@Override
 	public PostgresCreateViewBuilder column(String name) {
 		super.getColumns().add(name);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
+	 */
 	@Override
 	public PostgresCreateViewBuilder asSelect(String select) {
 		if (this.values != null) {
@@ -36,6 +53,12 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 		return this;
 	}
 
+	/**
+	 * As values.
+	 *
+	 * @param values the values
+	 * @return the postgres create view builder
+	 */
 	public PostgresCreateViewBuilder asValues(String values) {
 		if (getSelect() != null) {
 			throw new IllegalStateException("Create VIEW can use either AS SELECT or AS VALUES, but not both.");
@@ -44,6 +67,9 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()
+	 */
 	@Override
 	public String generate() {
 
@@ -70,6 +96,11 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 		return sql.toString();
 	}
 
+	/**
+	 * Generate as values.
+	 *
+	 * @param sql the sql
+	 */
 	protected void generateAsValues(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(this.values);
 	}

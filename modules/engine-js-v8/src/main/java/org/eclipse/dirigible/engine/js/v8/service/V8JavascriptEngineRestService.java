@@ -36,8 +36,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the V8 based Javascript backend services
+ * Front facing REST service serving the V8 based Javascript backend services.
  */
 @Singleton
 @Path("/v8")
@@ -46,16 +47,21 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class V8JavascriptEngineRestService extends AbstractRestService implements IRestService {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(V8JavascriptEngineRestService.class);
 
+	/** The processor. */
 	@Inject
 	private V8JavascriptEngineProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
 	/**
-	 * @param path
+	 * Execute service.
+	 *
+	 * @param path the path
 	 * @return result of the execution of the service
 	 */
 	@GET
@@ -78,7 +84,9 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	}
 
 	/**
-	 * @param path
+	 * Execute service post.
+	 *
+	 * @param path the path
 	 * @return result of the execution of the service
 	 */
 	@POST
@@ -90,7 +98,9 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	}
 
 	/**
-	 * @param path
+	 * Execute service put.
+	 *
+	 * @param path the path
 	 * @return result of the execution of the service
 	 */
 	@PUT
@@ -102,7 +112,9 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	}
 
 	/**
-	 * @param path
+	 * Execute service delete.
+	 *
+	 * @param path the path
 	 * @return result of the execution of the service
 	 */
 	@DELETE
@@ -114,7 +126,9 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	}
 
 	/**
-	 * @param path
+	 * Execute service head.
+	 *
+	 * @param path the path
 	 * @return result of the execution of the service
 	 */
 	@HEAD
@@ -125,11 +139,17 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 		return executeService(path);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return V8JavascriptEngineRestService.class;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

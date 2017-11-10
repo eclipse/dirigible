@@ -20,77 +20,145 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
+// TODO: Auto-generated Javadoc
 /**
- * The basis for all the data structure models
+ * The basis for all the data structure models.
  */
 @Table(name = "DIRIGIBLE_DATA_STRUCTURES")
 public class DataStructureModel {
 
+	/** The location. */
 	@Id
 	@Column(name = "DS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
+	/** The name. */
 	@Column(name = "DS_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
 	private String name;
 
+	/** The type. */
 	@Column(name = "DS_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	private String type;
 
+	/** The hash. */
 	@Column(name = "DS_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
+	/** The created by. */
 	@Column(name = "DS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
+	/** The created at. */
 	@Column(name = "DS_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
+	/** The dependencies. */
 	private List<DataStructureDependencyModel> dependencies = new ArrayList<DataStructureDependencyModel>();
 
+	/**
+	 * Gets the location.
+	 *
+	 * @return the location
+	 */
 	public String getLocation() {
 		return location;
 	}
 
+	/**
+	 * Sets the location.
+	 *
+	 * @param location the new location
+	 */
 	public void setLocation(String location) {
 		this.location = location;
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * Sets the type.
+	 *
+	 * @param type the new type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * Gets the hash.
+	 *
+	 * @return the hash
+	 */
 	public String getHash() {
 		return hash;
 	}
 
+	/**
+	 * Sets the hash.
+	 *
+	 * @param hash the new hash
+	 */
 	public void setHash(String hash) {
 		this.hash = hash;
 	}
 
+	/**
+	 * Gets the dependencies.
+	 *
+	 * @return the dependencies
+	 */
 	public List<DataStructureDependencyModel> getDependencies() {
 		return dependencies;
 	}
 
+	/**
+	 * Gets the created by.
+	 *
+	 * @return the created by
+	 */
 	public String getCreatedBy() {
 		return createdBy;
 	}
 
+	/**
+	 * Sets the created by.
+	 *
+	 * @param createdBy the new created by
+	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 
+	/**
+	 * Gets the created at.
+	 *
+	 * @return the created at
+	 */
 	public Timestamp getCreatedAt() {
 		if (createdAt == null) {
 			return null;
@@ -98,6 +166,11 @@ public class DataStructureModel {
 		return new Timestamp(createdAt.getTime());
 	}
 
+	/**
+	 * Sets the created at.
+	 *
+	 * @param createdAt the new created at
+	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
 			this.createdAt = null;
@@ -106,15 +179,26 @@ public class DataStructureModel {
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
+	/**
+	 * To json.
+	 *
+	 * @return the string
+	 */
 	public String toJson() {
 		return GsonHelper.GSON.toJson(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return toJson();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -126,6 +210,9 @@ public class DataStructureModel {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

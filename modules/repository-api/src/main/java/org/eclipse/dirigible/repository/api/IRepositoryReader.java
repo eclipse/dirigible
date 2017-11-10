@@ -10,14 +10,15 @@
 
 package org.eclipse.dirigible.repository.api;
 
+// TODO: Auto-generated Javadoc
 /**
  * This interface represents a READ ONLY Repository. It allows for navigating through collections and resources.
  */
 public interface IRepositoryReader {
 	
 	/**
-	 * Performs initialization tasks
-	 * 
+	 * Performs initialization tasks.
+	 *
 	 * @throws RepositoryInitializationException in case of an error
 	 */
 	public void initialize() throws RepositoryInitializationException;

@@ -24,8 +24,17 @@ import java.util.List;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceManagerEnumTest.
+ */
 public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 
+	/**
+	 * Ordered crud tests.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	@Test
 	public void orderedCrudTests() throws SQLException {
 		PersistenceManager<Process> persistenceManager = new PersistenceManager<Process>();
@@ -46,14 +55,36 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		}
 	}
 
+	/**
+	 * Creates the table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @throws SQLException the SQL exception
+	 */
 	public void createTableForPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
 		persistenceManager.tableCreate(connection, Process.class);
 	}
 
+	/**
+	 * Exists table.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	public boolean existsTable(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
 		return persistenceManager.tableExists(connection, Process.class);
 	}
 
+	/**
+	 * Insert pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @throws SQLException the SQL exception
+	 */
 	public void insertPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
 		Process process = new Process();
 		process.setName("Process1");
@@ -73,6 +104,13 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		}
 	}
 
+	/**
+	 * Find all pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @throws SQLException the SQL exception
+	 */
 	public void findAllPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
 		List<Process> list = persistenceManager.findAll(connection, Process.class);
 
@@ -88,6 +126,13 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 
 	}
 
+	/**
+	 * Drop table for pojo.
+	 *
+	 * @param connection the connection
+	 * @param persistenceManager the persistence manager
+	 * @throws SQLException the SQL exception
+	 */
 	public void dropTableForPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
 		persistenceManager.tableDrop(connection, Process.class);
 	}

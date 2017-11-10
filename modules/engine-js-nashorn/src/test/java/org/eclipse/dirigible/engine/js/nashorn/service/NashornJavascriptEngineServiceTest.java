@@ -11,6 +11,9 @@
 package org.eclipse.dirigible.engine.js.nashorn.service;
 
 
+/**
+ * The Class NashornJavascriptEngineServiceTest.
+ */
 public class NashornJavascriptEngineServiceTest {
 
 }

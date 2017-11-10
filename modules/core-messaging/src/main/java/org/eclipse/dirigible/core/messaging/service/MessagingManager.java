@@ -33,23 +33,39 @@ import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MessagingManager.
+ */
 public class MessagingManager {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MessagingManager.class);
 
+	/** The Constant CONNECTOR_URL. */
 	static final String CONNECTOR_URL = "vm://localhost";
 
+	/** The Constant CONNECTOR_URL_ATTACH. */
 	static final String CONNECTOR_URL_ATTACH = "vm://localhost?create=false";
 
+	/** The Constant LOCATION_TEMP_STORE. */
 	static final String LOCATION_TEMP_STORE = "./target/temp/kahadb";
 
+	/** The data source. */
 	@Inject
 	private DataSource dataSource;
 
+	/** The broker. */
 	private static BrokerService broker;
 
+	/** The listeners. */
 	private static Map<String, MessagingConsumer> LISTENERS = Collections.synchronizedMap(new HashMap<String, MessagingConsumer>());
 
+	/**
+	 * Initialize.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void initialize() throws Exception {
 		synchronized (MessagingManager.class) {
 			if (broker == null) {
@@ -68,6 +84,11 @@ public class MessagingManager {
 		}
 	}
 
+	/**
+	 * Shutdown.
+	 *
+	 * @throws Exception the exception
+	 */
 	public static void shutdown() throws Exception {
 		for (MessagingConsumer consumer : LISTENERS.values()) {
 			consumer.stop();
@@ -77,10 +98,20 @@ public class MessagingManager {
 		}
 	}
 
+	/**
+	 * Gets the broker service.
+	 *
+	 * @return the broker service
+	 */
 	public BrokerService getBrokerService() {
 		return broker;
 	}
 
+	/**
+	 * Start listener.
+	 *
+	 * @param listener the listener
+	 */
 	public void startListener(ListenerDefinition listener) {
 		if (!LISTENERS.keySet().contains(listener.getLocation())) {
 			MessagingConsumer consumer = new MessagingConsumer(listener.getName(), DestinationType.values()[listener.getType()], listener.getModule(),
@@ -95,6 +126,11 @@ public class MessagingManager {
 		}
 	}
 
+	/**
+	 * Stop listener.
+	 *
+	 * @param listener the listener
+	 */
 	public void stopListener(ListenerDefinition listener) {
 		MessagingConsumer consumer = LISTENERS.get(listener.getLocation());
 		if (consumer != null) {
@@ -106,10 +142,21 @@ public class MessagingManager {
 		}
 	}
 
+	/**
+	 * Exists listener.
+	 *
+	 * @param listenerLocation the listener location
+	 * @return true, if successful
+	 */
 	public boolean existsListener(String listenerLocation) {
 		return LISTENERS.keySet().contains(listenerLocation);
 	}
 
+	/**
+	 * Gets the running listeners.
+	 *
+	 * @return the running listeners
+	 */
 	public List<String> getRunningListeners() {
 		List<String> result = new ArrayList<String>();
 		result.addAll(LISTENERS.keySet());

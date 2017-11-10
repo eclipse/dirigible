@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 
+// TODO: Auto-generated Javadoc
 /**
  * Processing the incoming requests for the raw web content.
  * It supports only GET requests
@@ -22,20 +23,23 @@ import org.eclipse.dirigible.repository.api.IResource;
  */
 public class WebEngineProcessor {
 	
+	/** The web engine executor. */
 	@Inject
 	private WebEngineExecutor webEngineExecutor;
 	
 	/**
-	 * 
+	 * Exist resource.
+	 *
 	 * @param path the requested resource location
-	 * @return if the {@link IResource} 
+	 * @return if the {@link IResource}
 	 */
 	public boolean existResource(String path) {
 		return webEngineExecutor.existResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path);
 	}
 	
 	/**
-	 * 
+	 * Gets the resource.
+	 *
 	 * @param path the requested resource location
 	 * @return the {@link IResource} instance
 	 */
@@ -44,7 +48,8 @@ public class WebEngineProcessor {
 	}
 	 
 	/**
-	 * 
+	 * Gets the resource content.
+	 *
 	 * @param path the requested resource location
 	 * @return the {@link IResource} content as a byte array
 	 */

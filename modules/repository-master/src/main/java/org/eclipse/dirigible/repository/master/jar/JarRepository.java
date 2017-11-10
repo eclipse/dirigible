@@ -19,10 +19,21 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.zip.ZipRepository;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JarRepository.
+ */
 public class JarRepository extends ZipRepository {
 
+	/** The jar repository root folder. */
 	private String jarRepositoryRootFolder;
 
+	/**
+	 * Instantiates a new jar repository.
+	 *
+	 * @param zip the zip
+	 * @throws LocalRepositoryException the local repository exception
+	 */
 	public JarRepository(String zip) throws LocalRepositoryException {
 
 		InputStream in = JarRepository.class.getClassLoader().getSystemResourceAsStream(zip);
@@ -47,16 +58,31 @@ public class JarRepository extends ZipRepository {
 		}
 	}
 
+	/**
+	 * Instantiates a new jar repository.
+	 *
+	 * @param rootFolder the root folder
+	 * @param absolute the absolute
+	 * @throws LocalRepositoryException the local repository exception
+	 */
 	// disable usage
 	protected JarRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		super(rootFolder, absolute);
 	}
 
+	/**
+	 * Instantiates a new jar repository.
+	 *
+	 * @throws LocalRepositoryException the local repository exception
+	 */
 	// disable usage
 	protected JarRepository() throws LocalRepositoryException {
 		super();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.master.zip.ZipRepository#getRepositoryRootFolder()
+	 */
 	@Override
 	protected String getRepositoryRootFolder() {
 		return this.jarRepositoryRootFolder;

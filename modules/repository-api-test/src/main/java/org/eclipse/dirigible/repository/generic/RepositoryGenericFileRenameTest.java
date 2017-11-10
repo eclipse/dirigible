@@ -25,10 +25,18 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryGenericFileRenameTest.
+ */
 public class RepositoryGenericFileRenameTest {
 
+	/** The repository. */
 	protected IRepository repository;
 
+	/**
+	 * Test rename by collection.
+	 */
 	@Test
 	public void testRenameByCollection() {
 		if (repository == null) {
@@ -83,6 +91,9 @@ public class RepositoryGenericFileRenameTest {
 		}
 	}
 
+	/**
+	 * Test rename by file.
+	 */
 	@Test
 	public void testRenameByFile() {
 		if (repository == null) {

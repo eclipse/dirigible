@@ -18,8 +18,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateTableTest.
+ */
 public class CreateTableTest {
 	
+	/**
+	 * Creates the table generic.
+	 */
 	@Test
 	public void createTableGeneric() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -34,6 +41,9 @@ public class CreateTableTest {
 		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
 	}
 	
+	/**
+	 * Creates the table column.
+	 */
 	@Test
 	public void createTableColumn() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())
@@ -48,6 +58,9 @@ public class CreateTableTest {
 		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
 	}
 	
+	/**
+	 * Creates the table column type safe.
+	 */
 	@Test
 	public void createTableColumnTypeSafe() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())

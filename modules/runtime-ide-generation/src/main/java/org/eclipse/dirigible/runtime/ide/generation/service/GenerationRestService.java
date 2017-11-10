@@ -43,8 +43,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the Generation content
+ * Front facing REST service serving the Generation content.
  */
 @Singleton
 @Path("/ide/generation")
@@ -54,19 +55,38 @@ import io.swagger.annotations.Authorization;
 	@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class GenerationRestService extends AbstractRestService implements IRestService {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GenerationRestService.class);
 
+	/** The processor. */
 	@Inject
 	private GenerationProcessor processor;
 	
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return GenerationRestService.class;
 	}
 
+	/**
+	 * Generate file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param parameters the parameters
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws ScriptingException the scripting exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@POST
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response generateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
@@ -100,6 +120,9 @@ public class GenerationRestService extends AbstractRestService implements IRestS
 		return Response.created(processor.getURI(workspace, project, path)).build();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

@@ -26,16 +26,29 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProjectTest.
+ */
 public class ProjectTest extends AbstractGuiceTest {
 
+	/** The workspaces core service. */
 	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
 	}
 
+	/**
+	 * Creates the folder test.
+	 */
 	@Test
 	public void createFolderTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -50,6 +63,9 @@ public class ProjectTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Creates the folder deep test.
+	 */
 	@Test
 	public void createFolderDeepTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -64,6 +80,11 @@ public class ProjectTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the folder test.
+	 *
+	 * @return the folder test
+	 */
 	@Test
 	public void getFolderTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -85,6 +106,11 @@ public class ProjectTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Gets the folders test.
+	 *
+	 * @return the folders test
+	 */
 	@Test
 	public void getFoldersTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");
@@ -109,6 +135,9 @@ public class ProjectTest extends AbstractGuiceTest {
 		workspacesCoreService.deleteWorkspace("TestWorkspace1");
 	}
 
+	/**
+	 * Delete folder test.
+	 */
 	@Test
 	public void deleteFolderTest() {
 		IWorkspace workspace1 = workspacesCoreService.createWorkspace("TestWorkspace1");

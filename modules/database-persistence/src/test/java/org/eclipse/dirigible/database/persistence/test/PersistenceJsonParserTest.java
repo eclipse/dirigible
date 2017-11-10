@@ -19,8 +19,18 @@ import org.junit.Test;
 
 import com.google.gson.JsonSyntaxException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceJsonParserTest.
+ */
 public class PersistenceJsonParserTest {
 
+	/**
+	 * Model from json.
+	 *
+	 * @throws JsonSyntaxException the json syntax exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	@Test
 	public void modelFromJson() throws JsonSyntaxException, ClassNotFoundException {
 		PersistenceJsonParser<Order> parser = new PersistenceJsonParser<Order>();
@@ -29,6 +39,9 @@ public class PersistenceJsonParserTest {
 		assertEquals("Subject 1", persistenceModel.getTableName(), "CUSTOMERS");
 	}
 
+	/**
+	 * Model to json.
+	 */
 	@Test
 	public void modelToJson() {
 		Customer customer = new Customer();

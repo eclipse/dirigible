@@ -30,17 +30,29 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ExtensionsSynchronizerTest.
+ */
 public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 
+	/** The extensions core service. */
 	@Inject
 	private IExtensionsCoreService extensionsCoreService;
 
+	/** The extensions publisher. */
 	@Inject
 	private ExtensionsSynchronizer extensionsPublisher;
 
+	/** The repository. */
 	@Inject
 	private IRepository repository;
 
+	/**
+	 * Sets the up.
+	 *
+	 * @throws Exception the exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.extensionsCoreService = getInjector().getInstance(ExtensionsCoreService.class);
@@ -48,6 +60,12 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 		this.repository = getInjector().getInstance(IRepository.class);
 	}
 
+	/**
+	 * Creates the extension point test.
+	 *
+	 * @throws ExtensionsException the extensions exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void createExtensionPointTest() throws ExtensionsException, IOException {
 		extensionsPublisher.registerPredeliveredExtensionPoint("/control/control.extensionpoint");
@@ -72,6 +90,12 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 
 	}
 
+	/**
+	 * Cleanup extension point test.
+	 *
+	 * @throws ExtensionsException the extensions exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@Test
 	public void cleanupExtensionPointTest() throws ExtensionsException, IOException {
 		createExtensionPointTest();

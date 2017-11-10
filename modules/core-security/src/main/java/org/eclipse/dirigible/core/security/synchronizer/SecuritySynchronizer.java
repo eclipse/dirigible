@@ -38,28 +38,47 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SecuritySynchronizer.
+ */
 @Singleton
 public class SecuritySynchronizer extends AbstractSynchronizer {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecuritySynchronizer.class);
 
+	/** The Constant ROLES_PREDELIVERED. */
 	private static final Map<String, RoleDefinition[]> ROLES_PREDELIVERED = Collections.synchronizedMap(new HashMap<String, RoleDefinition[]>());
 
+	/** The Constant ACCESS_PREDELIVERED. */
 	private static final Map<String, List<AccessDefinition>> ACCESS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, List<AccessDefinition>>());
 
+	/** The Constant ROLES_SYNCHRONIZED. */
 	private static final Set<String> ROLES_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
 
+	/** The Constant ACCESS_SYNCHRONIZED. */
 	private static final Set<String> ACCESS_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
 
+	/** The security core service. */
 	@Inject
 	private SecurityCoreService securityCoreService;
 
+	/**
+	 * Force synchronization.
+	 */
 	public static final void forceSynchronization() {
 		SecuritySynchronizer securitySynchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
 		securitySynchronizer.synchronize();
 	}
 
+	/**
+	 * Register predelivered roles.
+	 *
+	 * @param rolesPath the roles path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void registerPredeliveredRoles(String rolesPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(rolesPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
@@ -70,6 +89,12 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		ROLES_PREDELIVERED.put(rolesPath, roleDefinitions);
 	}
 
+	/**
+	 * Register predelivered access.
+	 *
+	 * @param accessPath the access path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void registerPredeliveredAccess(String accessPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(accessPath);
 		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
@@ -80,6 +105,9 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		ACCESS_PREDELIVERED.put(accessPath, accessDefinitions);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
 	@Override
 	public void synchronize() {
 		synchronized (SecuritySynchronizer.class) {
@@ -97,12 +125,20 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Clear cache.
+	 */
 	private void clearCache() {
 		ROLES_SYNCHRONIZED.clear();
 		ACCESS_SYNCHRONIZED.clear();
 		securityCoreService.clearCache();
 	}
 
+	/**
+	 * Synchronize predelivered.
+	 *
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Roles and Access artifacts...");
 
@@ -123,6 +159,12 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing predelivered Roles and Access artifacts.");
 	}
 
+	/**
+	 * Synchronize role.
+	 *
+	 * @param roleDefinition the role definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeRole(RoleDefinition roleDefinition) throws SynchronizationException {
 		try {
 			if (!securityCoreService.existsRole(roleDefinition.getName())) {
@@ -146,6 +188,12 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize access.
+	 *
+	 * @param accessDefinition the access definition
+	 * @throws SynchronizationException the synchronization exception
+	 */
 	private void synchronizeAccess(AccessDefinition accessDefinition) throws SynchronizationException {
 		try {
 			if (!securityCoreService.existsAccessDefinition(accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole())) {
@@ -175,6 +223,9 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
+	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
 		logger.trace("Synchronizing Extension Points and Extensions from Registry...");
@@ -184,6 +235,9 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Extension Points and Extensions from Registry.");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.repository.api.IResource)
+	 */
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		String resourceName = resource.getName();
@@ -205,6 +259,9 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
+	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up Roles and Access artifacts...");

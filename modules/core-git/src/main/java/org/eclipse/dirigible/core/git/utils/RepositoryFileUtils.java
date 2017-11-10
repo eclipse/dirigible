@@ -21,13 +21,32 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IResource;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryFileUtils.
+ */
 public class RepositoryFileUtils {
 
+	/**
+	 * Creates the temp directory.
+	 *
+	 * @param directory the directory
+	 * @return the file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static File createTempDirectory(String directory) throws IOException {
 		String suffix = Long.toString(System.nanoTime());
 		return createTempDirectory(directory, suffix);
 	}
 
+	/**
+	 * Creates the temp directory.
+	 *
+	 * @param directory the directory
+	 * @param suffix the suffix
+	 * @return the file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static File createTempDirectory(String directory, String suffix) throws IOException {
 		final File temp = File.createTempFile(directory, suffix);
 		if (!(temp.delete())) {
@@ -39,10 +58,25 @@ public class RepositoryFileUtils {
 		return temp;
 	}
 
+	/**
+	 * Copy collection to directory.
+	 *
+	 * @param source the source
+	 * @param tempDirectory the temp directory
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void copyCollectionToDirectory(ICollection source, File tempDirectory) throws IOException {
 		copyCollectionToDirectory(source, tempDirectory, new String[] {});
 	}
 
+	/**
+	 * Copy collection to directory.
+	 *
+	 * @param source the source
+	 * @param tempDirectory the temp directory
+	 * @param roots the roots
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void copyCollectionToDirectory(ICollection source, File tempDirectory, String... roots) throws IOException {
 		if (!source.exists()) {
 			return;

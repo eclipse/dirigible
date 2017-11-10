@@ -21,8 +21,15 @@ import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataStructureViewTest.
+ */
 public class DataStructureViewTest {
 	
+	/**
+	 * Parses the view.
+	 */
 	@Test
 	public void parseView() {
 		try {

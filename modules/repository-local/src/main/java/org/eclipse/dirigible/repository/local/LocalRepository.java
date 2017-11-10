@@ -16,15 +16,22 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * The File System based Local Repository implementation of {@link IRepository}
+ * The File System based Local Repository implementation of {@link IRepository}.
  */
 public class LocalRepository extends FileSystemRepository {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepository.class);
 
+	/** The Constant TYPE. */
 	public static final String TYPE = "local";
+	
+	/** The Constant DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER. */
 	public static final String DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER"; //$NON-NLS-1$
+	
+	/** The Constant DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE. */
 	public static final String DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
 
 	/**
@@ -37,7 +44,7 @@ public class LocalRepository extends FileSystemRepository {
 	}
 
 	/**
-	 * Constructor with root folder parameter
+	 * Constructor with root folder parameter.
 	 *
 	 * @param rootFolder the root folder
 	 * @throws LocalRepositoryException in case the repository cannot be created
@@ -47,7 +54,7 @@ public class LocalRepository extends FileSystemRepository {
 	}
 
 	/**
-	 * Constructor with root folder parameter
+	 * Constructor with root folder parameter.
 	 *
 	 * @param rootFolder the reoot folder
 	 * @param absolute whether the root folder is absolute
@@ -57,6 +64,9 @@ public class LocalRepository extends FileSystemRepository {
 		super(rootFolder, absolute);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
+	 */
 	@Override
 	public void initialize() {
 		Configuration.load("/dirigible-repository-local.properties");

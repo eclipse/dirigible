@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.derby.DerbySqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DropViewTest.
+ */
 public class DropViewTest {
 
+	/**
+	 * Drop view.
+	 */
 	@Test
 	public void dropView() {
 		String sql = SqlFactory.getNative(new DerbySqlDialect()).drop().view("CUSTOMERS_VIEW").build();

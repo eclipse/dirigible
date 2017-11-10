@@ -16,15 +16,21 @@ import org.eclipse.dirigible.repository.master.IMasterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Module for managing ZIP Repository instantiation and binding
+ * Module for managing ZIP Repository instantiation and binding.
  */
 public class ZipMasterRepositoryModule extends AbstractDirigibleModule {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ZipMasterRepositoryModule.class);
 
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Zip Master Repository Module";
 	
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		Configuration.load("/dirigible-repository-master-zip.properties");
@@ -36,6 +42,11 @@ public class ZipMasterRepositoryModule extends AbstractDirigibleModule {
 		}
 	}
 
+	/**
+	 * Creates the instance.
+	 *
+	 * @return the i master repository
+	 */
 	private IMasterRepository createInstance() {
 		logger.debug("creating Zip Master Repository...");
 		String zip = Configuration.get(ZipMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION);
@@ -44,6 +55,9 @@ public class ZipMasterRepositoryModule extends AbstractDirigibleModule {
 		return zipMasterRepository;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
 	public String getName() {
 		return MODULE_NAME;

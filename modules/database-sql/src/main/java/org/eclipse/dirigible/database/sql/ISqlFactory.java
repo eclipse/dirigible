@@ -22,26 +22,95 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating ISql objects.
+ *
+ * @param <SELECT> the generic type
+ * @param <INSERT> the generic type
+ * @param <UPDATE> the generic type
+ * @param <DELETE> the generic type
+ * @param <CREATE> the generic type
+ * @param <DROP> the generic type
+ * @param <NEXT> the generic type
+ */
 public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder> {
 
+	/**
+	 * Select.
+	 *
+	 * @return the select
+	 */
 	public SELECT select();
 
+	/**
+	 * Insert.
+	 *
+	 * @return the insert
+	 */
 	public INSERT insert();
 
+	/**
+	 * Update.
+	 *
+	 * @return the update
+	 */
 	public UPDATE update();
 
+	/**
+	 * Delete.
+	 *
+	 * @return the delete
+	 */
 	public DELETE delete();
 
+	/**
+	 * Expression.
+	 *
+	 * @return the expression builder
+	 */
 	public ExpressionBuilder expression();
 
+	/**
+	 * Creates the.
+	 *
+	 * @return the creates the
+	 */
 	public CREATE create();
 
+	/**
+	 * Drop.
+	 *
+	 * @return the drop
+	 */
 	public DROP drop();
 
+	/**
+	 * Exists.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	public boolean exists(Connection connection, String table) throws SQLException;
 
+	/**
+	 * Count.
+	 *
+	 * @param connection the connection
+	 * @param table the table
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
 	public int count(Connection connection, String table) throws SQLException;
 
+	/**
+	 * Nextval.
+	 *
+	 * @param sequence the sequence
+	 * @return the next
+	 */
 	public NEXT nextval(String sequence);
 
 }

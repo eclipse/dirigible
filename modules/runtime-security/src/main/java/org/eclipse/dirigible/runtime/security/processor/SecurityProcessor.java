@@ -20,20 +20,33 @@ import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
 
+// TODO: Auto-generated Javadoc
 /**
- * Processing the Security Service incoming requests 
- *
+ * Processing the Security Service incoming requests .
  */
 public class SecurityProcessor {
 	
+	/** The security core service. */
 	@Inject
 	private SecurityCoreService securityCoreService;
 	
+	/**
+	 * Render access.
+	 *
+	 * @return the string
+	 * @throws AccessException the access exception
+	 */
 	public String renderAccess() throws AccessException {
 		List<AccessDefinition> accessDefinitions = securityCoreService.getAccessDefinitions();
 		return GsonHelper.GSON.toJson(accessDefinitions);
 	}
 	
+	/**
+	 * Render roles.
+	 *
+	 * @return the string
+	 * @throws AccessException the access exception
+	 */
 	public String renderRoles() throws AccessException {
 		List<RoleDefinition> roleDefinitions = securityCoreService.getRoles();
 		return GsonHelper.GSON.toJson(roleDefinitions);

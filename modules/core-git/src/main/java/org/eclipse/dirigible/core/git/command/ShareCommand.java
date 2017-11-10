@@ -31,29 +31,59 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Share the local project to the remote Git repository
+ * Share the local project to the remote Git repository.
  */
 public class ShareCommand {
 
+	/** The Constant DOT_GIT. */
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ShareCommand.class);
 
+	/** The project metadata manager. */
 	@Inject
 	private ProjectMetadataManager projectMetadataManager;
 
+	/** The verifier. */
 	@Inject
 	private ProjectPropertiesVerifier verifier;
 
+	/** The git file utils. */
 	@Inject
 	private GitFileUtils gitFileUtils;
 
+	/**
+	 * Execute.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param repositoryUri the repository uri
+	 * @param repositoryBranch the repository branch
+	 * @param commitMessage the commit message
+	 * @param username the username
+	 * @param password the password
+	 * @param email the email
+	 */
 	public void execute(final IWorkspace workspace, final IProject project, String repositoryUri, String repositoryBranch, final String commitMessage,
 			final String username, final String password, final String email) {
 		shareToGitRepository(workspace, project, commitMessage, username, email, password, repositoryUri, repositoryBranch);
 	}
 
+	/**
+	 * Share to git repository.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param commitMessage the commit message
+	 * @param username the username
+	 * @param email the email
+	 * @param password the password
+	 * @param gitRepositoryURI the git repository URI
+	 * @param gitRepositoryBranch the git repository branch
+	 */
 	private void shareToGitRepository(final IWorkspace workspace, final IProject project, final String commitMessage, final String username,
 			final String email, final String password, final String gitRepositoryURI, final String gitRepositoryBranch) {
 		final String errorMessage = String.format("Error occurred while sharing project [%s]", project.getName());

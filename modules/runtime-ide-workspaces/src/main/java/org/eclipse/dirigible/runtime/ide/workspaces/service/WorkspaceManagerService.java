@@ -42,8 +42,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+// TODO: Auto-generated Javadoc
 /**
- * Front facing RPC service serving the Workspace actions
+ * Front facing RPC service serving the Workspace actions.
  */
 @Singleton
 @Path("/ide/workspace")
@@ -53,25 +54,51 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class WorkspaceManagerService extends AbstractRestService implements IRestService {
 
+	/** The Constant ERROR_PATH_DOES_NOT_EXISTS. */
 	private static final String ERROR_PATH_DOES_NOT_EXISTS = "Path does not exists.";
+	
+	/** The Constant ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER. */
 	private static final String ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER = "Target path points to a non-existing folder";
+	
+	/** The Constant ERROR_TARGET_PATH_IS_EMPTY. */
 	private static final String ERROR_TARGET_PATH_IS_EMPTY = "Target path is empty";
+	
+	/** The Constant ERROR_SOURCE_PATH_IS_EMPTY. */
 	private static final String ERROR_SOURCE_PATH_IS_EMPTY = "Source path is empty";
+	
+	/** The Constant ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST. */
 	private static final String ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST = "Source and Target paths have to be present in the body of the request";
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceManagerService.class);
 
+	/** The processor. */
 	@Inject
 	private WorkspaceProcessor processor;
 
+	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return WorkspaceManagerService.class;
 	}
 
+	/**
+	 * Copy.
+	 *
+	 * @param workspace the workspace
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
+	 * @throws DecoderException the decoder exception
+	 */
 	@POST
 	@Path("{workspace}/copy")
 	public Response copy(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
@@ -124,6 +151,17 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
 	}
 
+	/**
+	 * Move.
+	 *
+	 * @param workspace the workspace
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
+	 * @throws DecoderException the decoder exception
+	 */
 	@POST
 	@Path("{workspace}/move")
 	public Response move(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
@@ -173,6 +211,17 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
 	}
 
+	/**
+	 * Rename.
+	 *
+	 * @param workspace the workspace
+	 * @param content the content
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws UnsupportedEncodingException the unsupported encoding exception
+	 * @throws DecoderException the decoder exception
+	 */
 	@POST
 	@Path("{workspace}/rename")
 	public Response rename(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
@@ -180,6 +229,9 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 		return move(workspace, content, request);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;

@@ -10,22 +10,46 @@
 
 package org.eclipse.dirigible.repository.api;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RepositoryImportException.
+ */
 public class RepositoryImportException extends RepositoryException {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -163847774919514248L;
 
+	/**
+	 * Instantiates a new repository import exception.
+	 */
 	public RepositoryImportException() {
 		super();
 	}
 
+	/**
+	 * Instantiates a new repository import exception.
+	 *
+	 * @param message the message
+	 * @param cause the cause
+	 */
 	public RepositoryImportException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Instantiates a new repository import exception.
+	 *
+	 * @param message the message
+	 */
 	public RepositoryImportException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Instantiates a new repository import exception.
+	 *
+	 * @param cause the cause
+	 */
 	public RepositoryImportException(Throwable cause) {
 		super(cause);
 	}

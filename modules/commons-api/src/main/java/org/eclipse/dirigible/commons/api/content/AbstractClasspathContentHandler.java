@@ -16,10 +16,18 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractClasspathContentHandler.
+ */
 public abstract class AbstractClasspathContentHandler implements IClasspathContentHandler {
 
+	/** The resources. */
 	private final Set<String> resources = Collections.synchronizedSet(new HashSet<String>());
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.content.IClasspathContentHandler#accept(java.lang.String)
+	 */
 	@Override
 	public void accept(String path) {
 		if (isValid(path)) {
@@ -28,13 +36,27 @@ public abstract class AbstractClasspathContentHandler implements IClasspathConte
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.content.IClasspathContentHandler#getPaths()
+	 */
 	@Override
 	public Set<String> getPaths() {
 		return resources;
 	}
 	
+	/**
+	 * Checks if is valid.
+	 *
+	 * @param path the path
+	 * @return true, if is valid
+	 */
 	protected abstract boolean isValid(String path);
 	
+	/**
+	 * Gets the logger.
+	 *
+	 * @return the logger
+	 */
 	protected abstract Logger getLogger();
 	
 }

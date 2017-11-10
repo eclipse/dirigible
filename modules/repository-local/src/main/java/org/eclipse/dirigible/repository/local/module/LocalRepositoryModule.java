@@ -17,15 +17,21 @@ import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
 /**
- * Module for managing Local Repository instantiation and binding
+ * Module for managing Local Repository instantiation and binding.
  */
 public class LocalRepositoryModule extends AbstractDirigibleModule {
 	
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepositoryModule.class);
 	
+	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Local Repository Module";
 
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		Configuration.load("/dirigible-repository-local.properties");
@@ -37,6 +43,11 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 		}
 	}
 
+	/**
+	 * Creates the instance.
+	 *
+	 * @return the i repository
+	 */
 	private IRepository createInstance() {
 		logger.debug("creating Local Repository...");
 		String rootFolder = Configuration.get(LocalRepository.DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER);
@@ -46,6 +57,9 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 		return localRepository;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
 	public String getName() {
 		return MODULE_NAME;

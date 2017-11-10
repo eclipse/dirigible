@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.h2.H2SqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UpdateTest.
+ */
 public class UpdateTest {
 	
+	/**
+	 * Update simple.
+	 */
 	@Test
 	public void updateSimple() {
 		String sql = SqlFactory.getNative(new H2SqlDialect())
@@ -31,6 +38,9 @@ public class UpdateTest {
 		assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
 	}
 
+	/**
+	 * Update values.
+	 */
 	@Test
 	public void updateValues() {
 		String sql = SqlFactory.getNative(new H2SqlDialect())
@@ -44,6 +54,9 @@ public class UpdateTest {
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith'", sql);
 	}
 	
+	/**
+	 * Update where.
+	 */
 	@Test
 	public void updateWhere() {
 		String sql = SqlFactory.getNative(new H2SqlDialect())
@@ -59,6 +72,9 @@ public class UpdateTest {
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (AGE > ?) AND (COMPANY = 'SAP')", sql);
 	}
 
+	/**
+	 * Update where select.
+	 */
 	@Test
 	public void updateWhereSelect() {
 		String sql = SqlFactory.getNative(new H2SqlDialect())
@@ -73,6 +89,9 @@ public class UpdateTest {
 			assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', SALARY = SELECT MAX(SALARY) FROM BENEFITS WHERE (COMPANY = 'SAP')", sql);
 	}
 
+	/**
+	 * Update where expr.
+	 */
 	@Test
 	public void updateWhereExpr() {
 		String sql = SqlFactory.getNative(new H2SqlDialect())

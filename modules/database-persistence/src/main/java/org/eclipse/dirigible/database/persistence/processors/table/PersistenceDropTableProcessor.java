@@ -20,12 +20,24 @@ import org.eclipse.dirigible.database.persistence.processors.AbstractPersistence
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.DropTableBuilder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceDropTableProcessor.
+ */
 public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor {
 
+	/**
+	 * Instantiates a new persistence drop table processor.
+	 *
+	 * @param entityManagerInterceptor the entity manager interceptor
+	 */
 	public PersistenceDropTableProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		DropTableBuilder dropTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).drop().table(tableModel.getTableName());
@@ -34,6 +46,14 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 		return sql;
 	}
 
+	/**
+	 * Drop.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @return the int
+	 * @throws PersistenceException the persistence exception
+	 */
 	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
 		String sql = null;

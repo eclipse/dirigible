@@ -19,19 +19,32 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
+// TODO: Auto-generated Javadoc
 /**
- * The file system based implementation of {@link IResourceVersion} 
+ * The file system based implementation of {@link IResourceVersion}.
  */
 public class LocalResourceVersion implements IResourceVersion {
 
+	/** The repository. */
 	private final FileSystemRepository repository;
 
+	/** The path. */
 	private final RepositoryPath path;
 
+	/** The version. */
 	private int version;
 
+	/** The file version. */
 	private LocalFileVersion fileVersion;
 
+	/**
+	 * Instantiates a new local resource version.
+	 *
+	 * @param repository the repository
+	 * @param path the path
+	 * @param version the version
+	 * @throws RepositoryWriteException the repository write exception
+	 */
 	public LocalResourceVersion(FileSystemRepository repository, RepositoryPath path, int version) throws RepositoryWriteException {
 		super();
 		this.repository = repository;
@@ -40,45 +53,74 @@ public class LocalResourceVersion implements IResourceVersion {
 		this.fileVersion = getRepository().getRepositoryDao().getFileVersionByPath(getPath(), version);
 	}
 
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
 	public FileSystemRepository getRepository() {
 		return repository;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getPath()
+	 */
 	@Override
 	public String getPath() {
 		return this.path.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getVersion()
+	 */
 	@Override
 	public int getVersion() {
 		return this.version;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getContent()
+	 */
 	@Override
 	public byte[] getContent() throws RepositoryReadException {
 		return this.fileVersion.getData();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#isBinary()
+	 */
 	@Override
 	public boolean isBinary() {
 		return this.fileVersion.isBinary();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getContentType()
+	 */
 	@Override
 	public String getContentType() {
 		return this.fileVersion.getContentType();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getCreatedBy()
+	 */
 	@Override
 	public String getCreatedBy() {
 		return this.fileVersion.getCreatedBy();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getCreatedAt()
+	 */
 	@Override
 	public Date getCreatedAt() {
 		return this.fileVersion.getCreatedAt();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -94,11 +136,17 @@ public class LocalResourceVersion implements IResourceVersion {
 		return getPath().equals(other.getPath());
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return getPath().hashCode();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(IResourceVersion o) {
 		try {

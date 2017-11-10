@@ -12,12 +12,17 @@ package org.eclipse.dirigible.commons.api.module;
 
 import com.google.inject.Injector;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StaticInjector.
+ */
 public class StaticInjector {
 	
+	/** The injector. */
 	private static Injector injector;
 	
 	/**
-	 * Gets the injector
+	 * Gets the injector.
 	 *
 	 * @return returns injector
 	 */
@@ -26,9 +31,9 @@ public class StaticInjector {
 	}
 	
 	/**
-	 * Sets the injector
+	 * Sets the injector.
 	 *
-	 * @param staticInjector
+	 * @param injector the new injector
 	 */
 	public static void setInjector(Injector injector) {
 		StaticInjector.injector = injector;

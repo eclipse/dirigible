@@ -26,10 +26,21 @@ import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ZipRepository.
+ */
 public class ZipRepository extends FileSystemRepository {
 
+	/** The zip repository root folder. */
 	private String zipRepositoryRootFolder;
 
+	/**
+	 * Instantiates a new zip repository.
+	 *
+	 * @param zip the zip
+	 * @throws LocalRepositoryException the local repository exception
+	 */
 	public ZipRepository(String zip) throws LocalRepositoryException {
 
 		File zipFile = new File(zip);
@@ -48,6 +59,13 @@ public class ZipRepository extends FileSystemRepository {
 		}
 	}
 
+	/**
+	 * Unpack zip.
+	 *
+	 * @param zip the zip
+	 * @param folder the folder
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	protected void unpackZip(InputStream zip, String folder) throws IOException {
 		ZipInputStream zipInputStream = new ZipInputStream(zip);
 		try {
@@ -68,21 +86,39 @@ public class ZipRepository extends FileSystemRepository {
 		}
 	}
 
+	/**
+	 * Instantiates a new zip repository.
+	 *
+	 * @param rootFolder the root folder
+	 * @param absolute the absolute
+	 * @throws LocalRepositoryException the local repository exception
+	 */
 	// disable usage
 	protected ZipRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		super(rootFolder, absolute);
 	}
 
+	/**
+	 * Instantiates a new zip repository.
+	 *
+	 * @throws LocalRepositoryException the local repository exception
+	 */
 	// disable usage
 	protected ZipRepository() throws LocalRepositoryException {
 		super();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
+	 */
 	@Override
 	protected String getRepositoryRootFolder() {
 		return this.zipRepositoryRootFolder;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
+	 */
 	@Override
 	public void initialize() throws RepositoryInitializationException {
 		// TODO Auto-generated method stub

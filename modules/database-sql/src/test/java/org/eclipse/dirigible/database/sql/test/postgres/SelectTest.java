@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.postgres.PostgresSqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SelectTest.
+ */
 public class SelectTest {
 	
+	/**
+	 * Select star.
+	 */
 	@Test
 	public void selectStar() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -31,6 +38,9 @@ public class SelectTest {
 		assertEquals("SELECT * FROM CUSTOMERS", sql);
 	}
 	
+	/**
+	 * Select columns from table.
+	 */
 	@Test
 	public void selectColumnsFromTable() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -44,6 +54,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS", sql);
 	}
 	
+	/**
+	 * Select columns from table aliases.
+	 */
 	@Test
 	public void selectColumnsFromTableAliases() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -57,6 +70,9 @@ public class SelectTest {
 		assertEquals("SELECT c.FIRST_NAME, c.LAST_NAME FROM CUSTOMERS AS c", sql);
 	}
 	
+	/**
+	 * Select columns from table join.
+	 */
 	@Test
 	public void selectColumnsFromTableJoin() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -71,6 +87,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS INNER JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
 	}
 	
+	/**
+	 * Select columns from table inner join.
+	 */
 	@Test
 	public void selectColumnsFromTableInnerJoin() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -85,6 +104,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS INNER JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
 	}
 	
+	/**
+	 * Select columns from table outer join.
+	 */
 	@Test
 	public void selectColumnsFromTableOuterJoin() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -99,6 +121,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS OUTER JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
 	}
 	
+	/**
+	 * Select columns from table left join.
+	 */
 	@Test
 	public void selectColumnsFromTableLeftJoin() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -113,6 +138,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS LEFT JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
 	}
 	
+	/**
+	 * Select columns from table right join.
+	 */
 	@Test
 	public void selectColumnsFromTableRightJoin() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -127,6 +155,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS RIGHT JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
 	}
 	
+	/**
+	 * Select columns from table full join.
+	 */
 	@Test
 	public void selectColumnsFromTableFullJoin() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -141,6 +172,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS FULL JOIN ADDRESSES ON CUSTOMERS.ADDRESS_ID=ADDRESSES.ADDRESS_ID", sql);
 	}
 	
+	/**
+	 * Select distinct columns from table.
+	 */
 	@Test
 	public void selectDistinctColumnsFromTable() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -155,6 +189,9 @@ public class SelectTest {
 		assertEquals("SELECT DISTINCT FIRST_NAME, LAST_NAME FROM CUSTOMERS", sql);
 	}
 	
+	/**
+	 * Select columns from table order by and desc.
+	 */
 	@Test
 	public void selectColumnsFromTableOrderByAndDesc() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -170,6 +207,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS ORDER BY FIRST_NAME ASC, LAST_NAME DESC", sql);
 	}
 	
+	/**
+	 * Select columns from table group by.
+	 */
 	@Test
 	public void selectColumnsFromTableGroupBy() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -184,6 +224,9 @@ public class SelectTest {
 		assertEquals("SELECT FIRST_NAME, LAST_NAME FROM CUSTOMERS GROUP BY FIRST_NAME", sql);
 	}
 	
+	/**
+	 * Select where simple.
+	 */
 	@Test
 	public void selectWhereSimple() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -197,6 +240,9 @@ public class SelectTest {
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ?)", sql);
 	}
 	
+	/**
+	 * Select where and.
+	 */
 	@Test
 	public void selectWhereAnd() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -211,6 +257,9 @@ public class SelectTest {
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ?) AND (AMOUNT < ?)", sql);
 	}
 	
+	/**
+	 * Select where or.
+	 */
 	@Test
 	public void selectWhereOr() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -224,6 +273,9 @@ public class SelectTest {
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ? OR AMOUNT < ?)", sql);
 	}
 	
+	/**
+	 * Select where expr.
+	 */
 	@Test
 	public void selectWhereExpr() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -237,6 +289,9 @@ public class SelectTest {
 		assertEquals("SELECT * FROM CUSTOMERS WHERE (PRICE > ? OR AMOUNT < ?)", sql);
 	}
 	
+	/**
+	 * Select limit.
+	 */
 	@Test
 	public void selectLimit() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -250,6 +305,9 @@ public class SelectTest {
 		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10", sql);
 	}
 	
+	/**
+	 * Select limit offset.
+	 */
 	@Test
 	public void selectLimitOffset() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -264,6 +322,9 @@ public class SelectTest {
 		assertEquals("SELECT * FROM CUSTOMERS LIMIT 10 OFFSET 20", sql);
 	}
 	
+	/**
+	 * Select having.
+	 */
 	@Test
 	public void selectHaving() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())
@@ -279,6 +340,9 @@ public class SelectTest {
 		assertEquals("SELECT COUNT(FIRST_NAME), COUNTRY FROM CUSTOMERS GROUP BY COUNTRY HAVING COUNT(FIRST_NAME) > 5", sql);
 	}
 	
+	/**
+	 * Select union.
+	 */
 	@Test
 	public void selectUnion() {
 		String sql = SqlFactory.getNative(new PostgresSqlDialect())

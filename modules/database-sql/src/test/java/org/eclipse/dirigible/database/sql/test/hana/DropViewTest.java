@@ -17,8 +17,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DropViewTest.
+ */
 public class DropViewTest {
 
+	/**
+	 * Drop view.
+	 */
 	@Test
 	public void dropView() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect()).drop().view("CUSTOMERS_VIEW").build();
