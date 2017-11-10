@@ -23,40 +23,90 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Facade for working with ZIP files
+ */
 public class ZipFacade {
-	
 	private static final Logger logger = LoggerFactory.getLogger(ZipFacade.class);
-	
+
+	/**
+	 * Create a {@link ZipInputStream} from the provided {@link InputStream}
+	 * @param in the provided input stream
+	 * @return the created ZipInputStream
+	 * @throws IOException
+	 */
 	public static final ZipInputStream createZipInputStream(InputStream in) throws IOException {
 		return new ZipInputStream(in);
 	}
-	
+
+	/**
+	 * Create a {@link ZipOutputStream} from the provided {@link OutputStream}
+	 * @param out the provided output stream
+	 * @return the created ZipOutputStream
+	 * @throws IOException
+	 */
 	public static final ZipOutputStream createZipOutputStream(OutputStream out) throws IOException {
 		return new ZipOutputStream(out);
 	}
-	
+
+	/**
+	 * Create a {@link ZipEntry} with the provided name
+	 * @param name the name of teh ZipEntry
+	 * @return the created ZipEntry
+	 * @throws IOException
+	 */
 	public static final ZipEntry createZipEntry(String name) throws IOException {
 		return new ZipEntry(name);
 	}
-	
+
+	/**
+	 * Write data to the provided zip output stream
+	 * @param output OutputStream to write to
+	 * @param bytes The data to be written
+	 * @throws IOException
+	 */
 	public static final void write(ZipOutputStream output, byte[] bytes) throws IOException {
 		output.write(bytes);
 	}
-	
+
+	/**
+	 * Write data to the provided zip output stream
+	 * @param output OutputStream to write to
+	 * @param data The data to be written
+	 * @throws IOException
+	 */
 	public static final void write(ZipOutputStream output, String data) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(data);
 		write(output, bytes);
 	}
-	
+
+	/**
+	 * Write text to the provided zip output stream
+	 * @param output OutputStream to write to
+	 * @param text The text to be written
+	 * @throws IOException
+	 */
 	public static final void writeText(ZipOutputStream output, String text) throws IOException {
 		write(output, text.getBytes());
 	}
-	
+
+	/**
+	 * Read data from the provided {@link InputStream}
+	 * @param input The input stream to read from
+	 * @return The read data
+	 * @throws IOException
+	 */
 	public static final String read(ZipInputStream input) throws IOException {
 		byte[] bytes = IOUtils.toByteArray(input);
 		return GsonHelper.GSON.toJson(bytes);
 	}
-	
+
+	/**
+	 * Read text from the provided {@link InputStream}
+	 * @param input The input stream to read from
+	 * @return The read text
+	 * @throws IOException
+	 */
 	public static final String readText(ZipInputStream input) throws IOException {
 		byte[] bytes = IOUtils.toByteArray(input);
 		return new String(bytes);
