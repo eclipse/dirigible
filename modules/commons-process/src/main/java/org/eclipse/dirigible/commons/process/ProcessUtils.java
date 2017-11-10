@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ProcessUtils.
  */
@@ -22,28 +21,30 @@ public class ProcessUtils {
 
 	/** The default wait time. */
 	public static int DEFAULT_WAIT_TIME = 1000;
-	
+
 	/** The default loop count. */
 	public static int DEFAULT_LOOP_COUNT = 600;
 
 	/**
 	 * Creates the process.
 	 *
-	 * @param args the args
+	 * @param args
+	 *            the args
 	 * @return the process builder
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static ProcessBuilder createProcess(String[] args) throws IOException {
-
-		ProcessBuilder processBuilder = new ProcessBuilder(args);
-		return processBuilder;
+		return new ProcessBuilder(args);
 	}
 
 	/**
 	 * Adds the environment variables.
 	 *
-	 * @param processBuilder the process builder
-	 * @param forAdding the for adding
+	 * @param processBuilder
+	 *            the process builder
+	 * @param forAdding
+	 *            the for adding
 	 */
 	public static void addEnvironmentVariables(ProcessBuilder processBuilder, Map<String, String> forAdding) {
 		if ((processBuilder != null) && (forAdding != null)) {
@@ -55,8 +56,10 @@ public class ProcessUtils {
 	/**
 	 * Removes the environment variables.
 	 *
-	 * @param processBuilder the process builder
-	 * @param forRemoving the for removing
+	 * @param processBuilder
+	 *            the process builder
+	 * @param forRemoving
+	 *            the for removing
 	 */
 	public static void removeEnvironmentVariables(ProcessBuilder processBuilder, List<String> forRemoving) {
 		if ((processBuilder != null) && (forRemoving != null)) {
@@ -70,21 +73,23 @@ public class ProcessUtils {
 	/**
 	 * Start process.
 	 *
-	 * @param args the args
-	 * @param processBuilder the process builder
+	 * @param args
+	 *            the args
+	 * @param processBuilder
+	 *            the process builder
 	 * @return the process
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static Process startProcess(String[] args, ProcessBuilder processBuilder) throws IOException {
-
-		Process process = processBuilder.start();
-		return process;
+		return processBuilder.start();
 	}
 
 	/**
 	 * Translate commandline.
 	 *
-	 * @param toProcess the to process
+	 * @param toProcess
+	 *            the to process
 	 * @return the string[]
 	 */
 	public static String[] translateCommandline(final String toProcess) {
