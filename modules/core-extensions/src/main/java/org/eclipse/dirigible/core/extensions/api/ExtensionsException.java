@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.core.extensions.api;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ExtensionsException.
  */
 public class ExtensionsException extends Exception {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**
@@ -29,10 +27,14 @@ public class ExtensionsException extends Exception {
 	/**
 	 * Instantiates a new extensions exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param enableSuppression
+	 *            the enable suppression
+	 * @param writableStackTrace
+	 *            the writable stack trace
 	 */
 	public ExtensionsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
@@ -41,8 +43,10 @@ public class ExtensionsException extends Exception {
 	/**
 	 * Instantiates a new extensions exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public ExtensionsException(String message, Throwable cause) {
 		super(message, cause);
@@ -51,7 +55,8 @@ public class ExtensionsException extends Exception {
 	/**
 	 * Instantiates a new extensions exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public ExtensionsException(String message) {
 		super(message);
@@ -60,7 +65,8 @@ public class ExtensionsException extends Exception {
 	/**
 	 * Instantiates a new extensions exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public ExtensionsException(Throwable cause) {
 		super(cause);
