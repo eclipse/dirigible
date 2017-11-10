@@ -14,62 +14,80 @@ import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface IIndexingCoreService.
  */
 public interface IIndexingCoreService extends ICoreService {
 
 	/**
-	 * Adds the.
+	 * Adds an index.
 	 *
-	 * @param index the index
-	 * @param location the location
-	 * @param contents the contents
-	 * @param lastModified the last modified
-	 * @param parameters the parameters
-	 * @throws IndexingException the indexing exception
+	 * @param index
+	 *            the index
+	 * @param location
+	 *            the location
+	 * @param contents
+	 *            the contents
+	 * @param lastModified
+	 *            the last modified
+	 * @param parameters
+	 *            the parameters
+	 * @throws IndexingException
+	 *             the indexing exception
 	 */
 	public void add(String index, String location, byte[] contents, long lastModified, Map<String, String> parameters) throws IndexingException;
 
 	/**
-	 * Search.
+	 * Search an index by term.
 	 *
-	 * @param index the index
-	 * @param term the term
-	 * @return the string
-	 * @throws IndexingException the indexing exception
+	 * @param index
+	 *            the index
+	 * @param term
+	 *            the term
+	 * @return the values as JSON
+	 * @throws IndexingException
+	 *             the indexing exception
 	 */
 	public String search(String index, String term) throws IndexingException;
 
 	/**
-	 * Before.
+	 * Search an index by date before.
 	 *
-	 * @param index the index
-	 * @param date the date
-	 * @return the string
-	 * @throws IndexingException the indexing exception
+	 * @param index
+	 *            the index
+	 * @param date
+	 *            the date
+	 * @return the values as JSON
+	 * @throws IndexingException
+	 *             the indexing exception
 	 */
 	public String before(String index, long date) throws IndexingException;
 
 	/**
-	 * After.
+	 * Search an index by date after.
 	 *
-	 * @param index the index
-	 * @param date the date
-	 * @return the string
-	 * @throws IndexingException the indexing exception
+	 * @param index
+	 *            the index
+	 * @param date
+	 *            the date
+	 * @return the values as JSON
+	 * @throws IndexingException
+	 *             the indexing exception
 	 */
 	public String after(String index, long date) throws IndexingException;
 
 	/**
-	 * Between.
+	 * Search an index by date between.
 	 *
-	 * @param index the index
-	 * @param lower the lower
-	 * @param upper the upper
-	 * @return the string
-	 * @throws IndexingException the indexing exception
+	 * @param index
+	 *            the index
+	 * @param lower
+	 *            the lower
+	 * @param upper
+	 *            the upper
+	 * @return the values as JSON
+	 * @throws IndexingException
+	 *             the indexing exception
 	 */
 	public String between(String index, long lower, long upper) throws IndexingException;
 
