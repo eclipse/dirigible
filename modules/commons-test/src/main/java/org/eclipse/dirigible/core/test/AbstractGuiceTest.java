@@ -26,7 +26,6 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.persist.UnitOfWork;
 
-// TODO: Auto-generated Javadoc
 /**
  * Test supporting class, enabling dependency injection.
  */
@@ -39,7 +38,8 @@ public abstract class AbstractGuiceTest {
 	/**
 	 * Dependency injection before execution of every test method.
 	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@Before
 	public void beforeEveryMethod() throws IOException {
@@ -50,7 +50,8 @@ public abstract class AbstractGuiceTest {
 	 * Gets the injector.
 	 *
 	 * @return the injector
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	protected Injector getInjector() throws IOException {
 		// TODO: doublecheck the logic for cleaning up the DB
@@ -69,7 +70,8 @@ public abstract class AbstractGuiceTest {
 	/**
 	 * Bind.
 	 *
-	 * @param binder the binder
+	 * @param binder
+	 *            the binder
 	 */
 	protected void bind(Binder binder) {
 		setUpMocks();

@@ -47,43 +47,31 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Xml2Json.
  */
 public class Xml2Json {
 	
-	/** The Constant CDATA_CLOSE. */
 	private static final String CDATA_CLOSE = "]]>";
 	
-	/** The Constant CDATA_OPEN. */
 	private static final String CDATA_OPEN = "<![CDATA[";
 	
-	/** The Constant ESQ. */
 	private static final String ESQ = "=\"";
 	
-	/** The Constant SPACE. */
 	private static final String SPACE = " ";
 	
-	/** The Constant EQ. */
 	private static final String EQ = "\"";
 	
-	/** The Constant EMPTY. */
 	private static final String EMPTY = "";
 	
-	/** The Constant ATTR_TEXT. */
 	private static final String ATTR_TEXT = "#text";
 	
-	/** The Constant ATTR_CDATA. */
 	private static final String ATTR_CDATA = "#cdata-section";
 	
-	/** The Constant LTS. */
 	private static final String LTS = "</";
 	
-	/** The Constant GT. */
 	private static final String GT = ">";
 	
-	/** The Constant LT. */
 	private static final String LT = "<";
 	
 	/** The added by value. */
