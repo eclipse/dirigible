@@ -12,14 +12,13 @@ package org.eclipse.dirigible.api.v3.utils;
 
 import java.util.UUID;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UuidFacade.
  */
 public class UuidFacade {
 
 	/**
-	 * Random.
+	 * Generates random UUID.
 	 *
 	 * @return the string
 	 */
@@ -28,10 +27,11 @@ public class UuidFacade {
 	}
 
 	/**
-	 * Validate.
+	 * Check if it's a valid UUID.
 	 *
-	 * @param uuid the uuid
-	 * @return true, if successful
+	 * @param uuid
+	 *            the uuid
+	 * @return true, if it's a valid UUID
 	 */
 	public static final boolean validate(String uuid) {
 		try {

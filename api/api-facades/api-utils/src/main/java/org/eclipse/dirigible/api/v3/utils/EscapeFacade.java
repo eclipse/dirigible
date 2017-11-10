@@ -12,147 +12,160 @@ package org.eclipse.dirigible.api.v3.utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class EscapeFacade.
  */
 public class EscapeFacade {
 
 	/**
-	 * Escape csv.
+	 * Escape CSV.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the escaped input
 	 */
 	public static final String escapeCsv(String input) {
 		return StringEscapeUtils.escapeCsv(input);
 	}
 
 	/**
-	 * Escape javascript.
+	 * Escape JavaScript.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the escaped input
 	 */
 	public static final String escapeJavascript(String input) {
 		return StringEscapeUtils.escapeEcmaScript(input);
 	}
 
 	/**
-	 * Escape html 3.
+	 * Escape HTML 3.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the escaped input
 	 */
 	public static final String escapeHtml3(String input) {
 		return StringEscapeUtils.escapeHtml3(input);
 	}
 
 	/**
-	 * Escape html 4.
+	 * Escape HTML 4.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the escaped input
 	 */
 	public static final String escapeHtml4(String input) {
 		return StringEscapeUtils.escapeHtml4(input);
 	}
 
 	/**
-	 * Escape java.
+	 * Escape Java.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the escaped input
 	 */
 	public static final String escapeJava(String input) {
 		return StringEscapeUtils.escapeJava(input);
 	}
 
 	/**
-	 * Escape json.
+	 * Escape JSON.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the escaped input
 	 */
 	public static final String escapeJson(String input) {
 		return StringEscapeUtils.escapeJson(input);
 	}
 
 	/**
-	 * Escape xml.
+	 * Escape XML.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the escaped input
 	 */
 	public static final String escapeXml(String input) {
 		return StringEscapeUtils.escapeXml(input);
 	}
 
 	/**
-	 * Unescape csv.
+	 * Unescape CSV.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the unescaped input
 	 */
 	public static final String unescapeCsv(String input) {
 		return StringEscapeUtils.unescapeCsv(input);
 	}
 
 	/**
-	 * Unescape javascript.
+	 * Unescape JavaScript.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the unescaped input
 	 */
 	public static final String unescapeJavascript(String input) {
 		return StringEscapeUtils.unescapeEcmaScript(input);
 	}
 
 	/**
-	 * Unescape html 3.
+	 * Unescape HTML 3.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the unescaped input
 	 */
 	public static final String unescapeHtml3(String input) {
 		return StringEscapeUtils.unescapeHtml3(input);
 	}
 
 	/**
-	 * Unescape html 4.
+	 * Unescape HTML 4.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the unescaped input
 	 */
 	public static final String unescapeHtml4(String input) {
 		return StringEscapeUtils.unescapeHtml4(input);
 	}
 
 	/**
-	 * Unescape java.
+	 * Unescape Java.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the unescaped input
 	 */
 	public static final String unescapeJava(String input) {
 		return StringEscapeUtils.unescapeJava(input);
 	}
 
 	/**
-	 * Unescape json.
+	 * Unescape JSON.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the unescaped input
 	 */
 	public static final String unescapeJson(String input) {
 		return StringEscapeUtils.unescapeJson(input);
 	}
 
 	/**
-	 * Unescape xml.
+	 * Unescape XML.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            the input
+	 * @return the unescaped input
 	 */
 	public static final String unescapeXml(String input) {
 		return StringEscapeUtils.unescapeXml(input);
