@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
@@ -23,15 +24,19 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
 
 public class PersistenceNextValueSequenceProcessor extends AbstractPersistenceProcessor {
 
+	public PersistenceNextValueSequenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		super(entityManagerInterceptor);
+	}
+
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		NextValueSequenceBuilder nextValueBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
 				.nextval(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
-		
+
 		String sql = nextValueBuilder.toString();
 		return sql;
 	}
-	
+
 	public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		long result = -1;
 		String sql = null;
@@ -45,7 +50,7 @@ public class PersistenceNextValueSequenceProcessor extends AbstractPersistencePr
 				if (resultSet.next()) {
 					result = resultSet.getLong(1);
 					return result;
-				} 
+				}
 			} finally {
 				if (resultSet != null) {
 					resultSet.close();
