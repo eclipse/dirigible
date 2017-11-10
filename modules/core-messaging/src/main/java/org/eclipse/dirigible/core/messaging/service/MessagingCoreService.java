@@ -27,32 +27,31 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.DestinationType;
+import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessagingCoreService.
  */
 @Singleton
 public class MessagingCoreService implements IMessagingCoreService {
 
-	/** The data source. */
 	@Inject
 	private DataSource dataSource;
 
-	/** The listener persistence manager. */
 	@Inject
 	private PersistenceManager<ListenerDefinition> listenerPersistenceManager;
 
 	// Listener
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#createListener(java.lang.String, java.lang.String, org.eclipse.dirigible.core.messaging.api.DestinationType, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#createListener(java.lang.String,
+	 * java.lang.String, org.eclipse.dirigible.core.messaging.api.DestinationType, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public ListenerDefinition createListener(String location, String name, DestinationType type, String module, String description)
@@ -81,7 +80,8 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#getListener(java.lang.String)
 	 */
 	@Override
@@ -100,7 +100,8 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#getListenerByName(java.lang.String)
 	 */
 	@Override
@@ -129,7 +130,8 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#removeListener(java.lang.String)
 	 */
 	@Override
@@ -148,8 +150,10 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#updateListener(java.lang.String, java.lang.String, org.eclipse.dirigible.core.messaging.api.DestinationType, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#updateListener(java.lang.String,
+	 * java.lang.String, org.eclipse.dirigible.core.messaging.api.DestinationType, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException {
@@ -172,7 +176,8 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#getListeners()
 	 */
 	@Override
@@ -191,7 +196,8 @@ public class MessagingCoreService implements IMessagingCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#existsListener(java.lang.String)
 	 */
 	@Override
@@ -199,7 +205,8 @@ public class MessagingCoreService implements IMessagingCoreService {
 		return getListener(location) != null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#parseListener(java.lang.String)
 	 */
 	@Override
@@ -207,7 +214,8 @@ public class MessagingCoreService implements IMessagingCoreService {
 		return GsonHelper.GSON.fromJson(json, ListenerDefinition.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#parseListener(byte[])
 	 */
 	@Override
@@ -215,8 +223,10 @@ public class MessagingCoreService implements IMessagingCoreService {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), ListenerDefinition.class);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#serializeListener(org.eclipse.dirigible.core.messaging.definition.ListenerDefinition)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.messaging.api.IMessagingCoreService#serializeListener(org.eclipse.dirigible.core.
+	 * messaging.definition.ListenerDefinition)
 	 */
 	@Override
 	public String serializeListener(ListenerDefinition listenerDefinition) {

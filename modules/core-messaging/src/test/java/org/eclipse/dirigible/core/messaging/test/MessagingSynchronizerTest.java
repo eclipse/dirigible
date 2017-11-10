@@ -35,32 +35,28 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessagingSynchronizerTest.
  */
 public class MessagingSynchronizerTest extends AbstractGuiceTest {
 
-	/** The messaging core service. */
 	@Inject
 	private IMessagingCoreService messagingCoreService;
 
-	/** The messaging publisher. */
 	@Inject
 	private MessagingSynchronizer messagingPublisher;
 
-	/** The messaging manager. */
 	@Inject
 	private MessagingManager messagingManager;
 
-	/** The repository. */
 	@Inject
 	private IRepository repository;
 
 	/**
-	 * Sets the up.
+	 * Setup.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -69,25 +65,29 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 		this.messagingManager = getInjector().getInstance(MessagingManager.class);
 		this.repository = getInjector().getInstance(IRepository.class);
 
-		messagingManager.initialize();
+		this.messagingManager.initialize();
 	}
 
 	/**
 	 * Tear down.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@After
 	public void tearDown() throws Exception {
-		messagingManager.shutdown();
+		MessagingManager.shutdown();
 	}
 
 	/**
 	 * Full listener test.
 	 *
-	 * @throws MessagingException the messaging exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws InterruptedException the interrupted exception
+	 * @throws MessagingException
+	 *             the messaging exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
 	@Test
 	public void fullListenerTest() throws MessagingException, IOException, InterruptedException {
@@ -109,8 +109,10 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 	/**
 	 * Creates the listener test.
 	 *
-	 * @throws MessagingException the messaging exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws MessagingException
+	 *             the messaging exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void createListenerTest() throws MessagingException, IOException {
 		messagingPublisher.registerPredeliveredListener("/control/control.listener");

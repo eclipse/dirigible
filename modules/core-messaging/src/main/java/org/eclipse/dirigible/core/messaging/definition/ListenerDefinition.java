@@ -18,39 +18,31 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ListenerDefinition.
+ * The ListenerDefinition Entity.
  */
 @Table(name = "DIRIGIBLE_LISTENERS")
 public class ListenerDefinition {
 
-	/** The location. */
 	@Id
 	@Column(name = "LISTENER_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
-	/** The name. */
 	@Column(name = "LISTENER_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
 	private String name;
 
-	/** The type. */
 	@Column(name = "LISTENER_TYPE", columnDefinition = "TINYINT", nullable = false)
 	private byte type;
 
-	/** The module. */
 	@Column(name = "LISTENER_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String module;
 
-	/** The description. */
 	@Column(name = "LISTENER_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	/** The created by. */
 	@Column(name = "LISTENER_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	/** The created at. */
 	@Column(name = "LISTENER_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -66,7 +58,8 @@ public class ListenerDefinition {
 	/**
 	 * Sets the location.
 	 *
-	 * @param location the new location
+	 * @param location
+	 *            the new location
 	 */
 	public void setLocation(String location) {
 		this.location = location;
@@ -84,7 +77,8 @@ public class ListenerDefinition {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -102,7 +96,8 @@ public class ListenerDefinition {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type the new type
+	 * @param type
+	 *            the new type
 	 */
 	public void setType(byte type) {
 		this.type = type;
@@ -120,7 +115,8 @@ public class ListenerDefinition {
 	/**
 	 * Sets the module.
 	 *
-	 * @param module the new module
+	 * @param module
+	 *            the new module
 	 */
 	public void setModule(String module) {
 		this.module = module;
@@ -138,7 +134,8 @@ public class ListenerDefinition {
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -156,7 +153,8 @@ public class ListenerDefinition {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -177,7 +175,8 @@ public class ListenerDefinition {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
@@ -188,9 +187,10 @@ public class ListenerDefinition {
 	}
 
 	/**
-	 * From json.
+	 * Creates ListenerDefinition from JSON.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the JSON
 	 * @return the listener definition
 	 */
 	public static ListenerDefinition fromJson(String json) {
@@ -198,15 +198,16 @@ public class ListenerDefinition {
 	}
 
 	/**
-	 * To json.
+	 * Converts ListenerDefinition to JSON.
 	 *
-	 * @return the string
+	 * @return the JSON
 	 */
 	public String toJson() {
 		return GsonHelper.GSON.toJson(this, ListenerDefinition.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -214,7 +215,8 @@ public class ListenerDefinition {
 		return toJson();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -229,7 +231,8 @@ public class ListenerDefinition {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

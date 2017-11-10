@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface IMessagingCoreService.
  */
@@ -29,13 +28,19 @@ public interface IMessagingCoreService extends ICoreService {
 	/**
 	 * Creates the listener.
 	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param type the type
-	 * @param module the module
-	 * @param description the description
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param module
+	 *            the module
+	 * @param description
+	 *            the description
 	 * @return the listener definition
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	public ListenerDefinition createListener(String location, String name, DestinationType type, String module, String description)
 			throws MessagingException;
@@ -43,47 +48,61 @@ public interface IMessagingCoreService extends ICoreService {
 	/**
 	 * Gets the listener.
 	 *
-	 * @param location the location
+	 * @param location
+	 *            the location
 	 * @return the listener
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	public ListenerDefinition getListener(String location) throws MessagingException;
 
 	/**
 	 * Gets the listener by name.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the listener by name
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	public ListenerDefinition getListenerByName(String name) throws MessagingException;
 
 	/**
 	 * Exists listener.
 	 *
-	 * @param location the location
-	 * @return true, if successful
-	 * @throws MessagingException the messaging exception
+	 * @param location
+	 *            the location
+	 * @return true, if listener is registered at this location
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	public boolean existsListener(String location) throws MessagingException;
 
 	/**
 	 * Removes the listener.
 	 *
-	 * @param location the location
-	 * @throws MessagingException the messaging exception
+	 * @param location
+	 *            the location
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	public void removeListener(String location) throws MessagingException;
 
 	/**
 	 * Update listener.
 	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param type the type
-	 * @param module the module
-	 * @param description the description
-	 * @throws MessagingException the messaging exception
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param module
+	 *            the module
+	 * @param description
+	 *            the description
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException;
 
@@ -91,31 +110,35 @@ public interface IMessagingCoreService extends ICoreService {
 	 * Gets the listeners.
 	 *
 	 * @return the listeners
-	 * @throws MessagingException the messaging exception
+	 * @throws MessagingException
+	 *             the messaging exception
 	 */
 	public List<ListenerDefinition> getListeners() throws MessagingException;
 
 	/**
 	 * Parses the listener.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the json
 	 * @return the listener definition
 	 */
 	public ListenerDefinition parseListener(String json);
 
 	/**
-	 * Parses the listener.
+	 * Creates ListenerDefinition from JSON.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the JSON
 	 * @return the listener definition
 	 */
 	public ListenerDefinition parseListener(byte[] json);
 
 	/**
-	 * Serialize listener.
+	 * Converts ListenerDefinition to JSON.
 	 *
-	 * @param listenerDefinition the listener definition
-	 * @return the string
+	 * @param listenerDefinition
+	 *            the listener definition
+	 * @return the JSON
 	 */
 	public String serializeListener(ListenerDefinition listenerDefinition);
 

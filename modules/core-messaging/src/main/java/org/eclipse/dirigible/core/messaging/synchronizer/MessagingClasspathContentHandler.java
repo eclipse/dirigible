@@ -18,19 +18,17 @@ import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MessagingClasspathContentHandler.
  */
 public class MessagingClasspathContentHandler extends AbstractClasspathContentHandler {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(MessagingClasspathContentHandler.class);
 
-	/** The messaging synchronizer. */
 	private MessagingSynchronizer messagingSynchronizer = StaticInjector.getInjector().getInstance(MessagingSynchronizer.class);
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
 	 */
 	@Override
@@ -49,7 +47,8 @@ public class MessagingClasspathContentHandler extends AbstractClasspathContentHa
 		return isValid;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()
 	 */
 	@Override
