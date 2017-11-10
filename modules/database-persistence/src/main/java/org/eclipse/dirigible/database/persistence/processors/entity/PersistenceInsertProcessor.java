@@ -18,6 +18,7 @@ import java.sql.SQLException;
 
 import javax.persistence.GenerationType;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
@@ -28,6 +29,10 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 
 public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
+
+	public PersistenceInsertProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		super(entityManagerInterceptor);
+	}
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
@@ -64,10 +69,12 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 			if (columnModel.isPrimaryKey() && (columnModel.getGenerated() != null)) {
 				long id = -1;
 				if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
-					PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor = new PersistenceNextValueSequenceProcessor();
+					PersistenceNextValueSequenceProcessor persistenceNextValueSequenceProcessor = new PersistenceNextValueSequenceProcessor(
+							getEntityManagerInterceptor());
 					id = persistenceNextValueSequenceProcessor.nextval(connection, tableModel);
 				} else if (GenerationType.TABLE.name().equals(columnModel.getGenerated())) {
-					PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor = new PersistenceNextValueIdentityProcessor();
+					PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor = new PersistenceNextValueIdentityProcessor(
+							getEntityManagerInterceptor());
 					id = persistenceNextValueIdentityProcessor.nextval(connection, tableModel);
 				} else {
 					throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", columnModel.getGenerated()));

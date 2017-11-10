@@ -50,6 +50,8 @@ public class PersistenceManager<T> {
 
 	private static final List<String> EXISTING_TABLES_CACHE = Collections.synchronizedList(new ArrayList<String>());
 
+	private IEntityManagerInterceptor entityManagerInterceptor;
+
 	/**
 	 * Create a table by a provided Class
 	 *
@@ -64,10 +66,12 @@ public class PersistenceManager<T> {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.getGenerated() != null) {
 				if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
-					PersistenceCreateSequenceProcessor persistenceCreateSequenceProcessor = new PersistenceCreateSequenceProcessor();
+					PersistenceCreateSequenceProcessor persistenceCreateSequenceProcessor = new PersistenceCreateSequenceProcessor(
+							getEntityManagerInterceptor());
 					persistenceCreateSequenceProcessor.create(connection, tableModel);
 				} else if (GenerationType.TABLE.name().equals(columnModel.getGenerated())) {
-					PersistenceCreateIdentityProcessor persistenceCreateIdentityProcessor = new PersistenceCreateIdentityProcessor();
+					PersistenceCreateIdentityProcessor persistenceCreateIdentityProcessor = new PersistenceCreateIdentityProcessor(
+							getEntityManagerInterceptor());
 					persistenceCreateIdentityProcessor.create(connection, tableModel);
 				} else {
 					throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", columnModel.getGenerated()));
@@ -75,7 +79,7 @@ public class PersistenceManager<T> {
 				break;
 			}
 		}
-		PersistenceCreateTableProcessor createTableProcessor = new PersistenceCreateTableProcessor();
+		PersistenceCreateTableProcessor createTableProcessor = new PersistenceCreateTableProcessor(getEntityManagerInterceptor());
 		return createTableProcessor.create(connection, tableModel);
 	}
 
@@ -92,12 +96,13 @@ public class PersistenceManager<T> {
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
-				PersistenceDropSequenceProcessor persistenceDropSequenceProcessor = new PersistenceDropSequenceProcessor();
+				PersistenceDropSequenceProcessor persistenceDropSequenceProcessor = new PersistenceDropSequenceProcessor(
+						getEntityManagerInterceptor());
 				persistenceDropSequenceProcessor.drop(connection, tableModel);
 				break;
 			}
 		}
-		PersistenceDropTableProcessor dropTableProcessor = new PersistenceDropTableProcessor();
+		PersistenceDropTableProcessor dropTableProcessor = new PersistenceDropTableProcessor(getEntityManagerInterceptor());
 		return dropTableProcessor.drop(connection, tableModel);
 	}
 
@@ -154,7 +159,7 @@ public class PersistenceManager<T> {
 	public Object insert(Connection connection, Object pojo) {
 		tableCheck(connection, pojo.getClass());
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(pojo);
-		PersistenceInsertProcessor insertProcessor = new PersistenceInsertProcessor();
+		PersistenceInsertProcessor insertProcessor = new PersistenceInsertProcessor(getEntityManagerInterceptor());
 		return insertProcessor.insert(connection, tableModel, pojo);
 	}
 
@@ -172,7 +177,7 @@ public class PersistenceManager<T> {
 	public T find(Connection connection, Class<T> clazz, Object id) {
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>(getEntityManagerInterceptor());
 		return queryProcessor.find(connection, tableModel, clazz, id);
 	}
 
@@ -190,7 +195,7 @@ public class PersistenceManager<T> {
 	public T lock(Connection connection, Class<T> clazz, Object id) {
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>(getEntityManagerInterceptor());
 		return queryProcessor.lock(connection, tableModel, clazz, id);
 	}
 
@@ -206,7 +211,7 @@ public class PersistenceManager<T> {
 	public List<T> findAll(Connection connection, Class<T> clazz) {
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>(getEntityManagerInterceptor());
 		return queryProcessor.findAll(connection, tableModel, clazz);
 	}
 
@@ -226,7 +231,7 @@ public class PersistenceManager<T> {
 	public List<T> query(Connection connection, Class<T> clazz, String sql, List<Object> values) {
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>();
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>(getEntityManagerInterceptor());
 		return queryProcessor.query(connection, tableModel, clazz, sql, values);
 	}
 
@@ -259,7 +264,7 @@ public class PersistenceManager<T> {
 	 * @return a list with the POJO instances
 	 */
 	public int execute(Connection connection, String sql, List<Object> values) {
-		PersistenceExecuteProcessor<T> executeProcessor = new PersistenceExecuteProcessor<T>();
+		PersistenceExecuteProcessor<T> executeProcessor = new PersistenceExecuteProcessor<T>(getEntityManagerInterceptor());
 		return executeProcessor.execute(connection, sql, values);
 	}
 
@@ -292,7 +297,7 @@ public class PersistenceManager<T> {
 	public int delete(Connection connection, Class<T> clazz, Object id) {
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceDeleteProcessor<T> deleteProcessor = new PersistenceDeleteProcessor<T>();
+		PersistenceDeleteProcessor<T> deleteProcessor = new PersistenceDeleteProcessor<T>(getEntityManagerInterceptor());
 		return deleteProcessor.delete(connection, tableModel, clazz, id);
 	}
 
@@ -308,8 +313,16 @@ public class PersistenceManager<T> {
 	public int update(Connection connection, Object pojo, Object id) {
 		tableCheck(connection, pojo.getClass());
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(pojo);
-		PersistenceUpdateProcessor<T> updateProcessor = new PersistenceUpdateProcessor<T>();
+		PersistenceUpdateProcessor<T> updateProcessor = new PersistenceUpdateProcessor<T>(getEntityManagerInterceptor());
 		return updateProcessor.update(connection, tableModel, pojo, id);
+	}
+
+	public IEntityManagerInterceptor getEntityManagerInterceptor() {
+		return entityManagerInterceptor;
+	}
+
+	public void setEntityManagerInterceptor(IEntityManagerInterceptor entityManagerInterceptor) {
+		this.entityManagerInterceptor = entityManagerInterceptor;
 	}
 
 }

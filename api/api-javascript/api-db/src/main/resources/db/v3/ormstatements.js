@@ -11,56 +11,64 @@
 /* eslint-env node, dirigible */
 "use strict";
 
-var Statements = require("db/v3/statements").Statements;
 var ORMStatements = function(orm, dialect){
-	Statements.call(this);
 	this.$log = require('log/logging').getLogger('db.dao.ormstatements');
 	this.orm = orm;
-	this.dialect = dialect;
+	this.dialect = dialect || require('db/v3/sql').getDialect();
 };
-
-ORMStatements.prototype = Object.create(Statements.prototype);
 ORMStatements.prototype.constructor = ORMStatements;
 
 ORMStatements.prototype.createTable = function(){
-	var stmnt = this.builder(this.dialect);
-	stmnt.createTable(this.orm.table);
-	for(var i=0; i<this.orm.properties.length;i++){
-		var fieldDef = this.orm.properties[i];
-		fieldDef["pk"] = fieldDef.id;
-		stmnt.fieldDef(fieldDef);
-	}
-	return stmnt;
+	var builder = this.dialect.create().table(this.orm.table);
+
+	this.orm.properties.forEach(function(property){
+		var column = this.orm.toColumn(property);
+		if(property.type.toUpperCase() === 'VARCHAR'){
+			if(property.length === undefined)
+				property.length = 255;
+			builder.columnVarchar(column.name, property.length, column.primaryKey === 'true', column.nullable === 'true', property.unique);
+		} else if(property.type.toUpperCase() === 'CHAR'){
+			if(property.length === undefined)
+				property.length = 1;
+			property.length = parseInt(property.length, 10);
+			builder.columnChar(column.name, property.length, column.primaryKey === 'true', column.nullable === 'true', property.unique);
+		} else {
+			builder.column(column.name, column.type, column.primaryKey === 'true', column.nullable === 'true', property.unique);
+		}
+	}.bind(this));
+	
+	return builder;
 };
 
 ORMStatements.prototype.dropTable = function(){
-	return this.builder(this.dialect).dropTable(this.orm.table);
+	return this.dialect.drop().table(this.orm.table);
 };
 
 ORMStatements.prototype.insert = function(){
-	var stmnt = this.builder(this.dialect).insert().into(this.orm.table);
- 	for(var i=0; i<this.orm.properties.length; i++){
- 		stmnt.set(this.orm.properties[i]);
- 	}
-    return stmnt;
+	var builder = this.dialect.insert().into(this.orm.table);
+	this.orm.properties.forEach(function(property){
+		builder.column(property.column).value('?', property);
+	});
+    return builder;
 };
 
 ORMStatements.prototype.update = function(entity){
 	if(!entity)
 		throw Error('Illegal argument: entity[' + entity + ']');
-	var updFieldDefs = this.orm.properties.filter(function(property){
+	
+	var builder = this.dialect.update().table(this.orm.table);
+	this.orm.properties.filter(function(property){
 		return Object.keys(entity).indexOf(property.name)>-1 && (!property.allowedOps || property.allowedOps.indexOf('update')>-1);
+	}).forEach(function(property){
+		if(!property.id)
+			builder.set(property.column, '?', property);
 	});
-	var stmnt = this.builder(this.dialect).update().table(this.orm.table);
-	for(var i=0; i<updFieldDefs.length; i++){
-		if(!updFieldDefs[i].id)
-			stmnt.set(updFieldDefs[i]);
-	}
-	stmnt.where(this.orm.getPrimaryKey().column+'=?', [this.orm.getPrimaryKey()]);
-	return stmnt;
+	var pkProperty = this.orm.getPrimaryKey();
+	builder.where(pkProperty.column+'=?', [pkProperty]);
+	return builder;
 };
 ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
-	var stmnt = this.builder(this.dialect).remove().from(this.orm.table);
+	var builder = this.dialect.delete().from(this.orm.table);
 	if(arguments[0]!==undefined){
 		var filterFieldNames = arguments[0];
 		if(filterFieldNames.constructor!==Array)
@@ -69,28 +77,28 @@ ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function(){
 			var property = this.orm.getProperty(filterFieldNames[i]);
 			if(!property)
 				throw Error('Unknown property name: ' + filterFieldNames[i]+" in $filter");
-			stmnt.where(property.column + "=?", [property]);
+			builder.where(property.column + "=?", [property]);
 		}
 	}
-	return stmnt;
+	return builder;
 };
 ORMStatements.prototype.find = function(params){
-	var stmnt = this.builder(this.dialect).select();
+	var builder = this.dialect.select();
 	if(params!==undefined && params.select!==undefined){
 		var selectedFields = params.select.constructor === Array ? params.select : [params.select];
 		for(var i=0; i<selectedFields.length; i++){
 			var property = this.orm.getProperty(selectedFields[i]);
 			if(!property)
 				throw Error('Unknown field name ['+ selectedFields[i] + '] in $select');
-			stmnt = stmnt.field(property.column);
+			builder = builder.column(property.column);
 		}
 	}
-	stmnt = stmnt.from(this.orm.table)
+	builder = builder.from(this.orm.table)
 		.where(this.orm.getPrimaryKey().column + "=?", [this.orm.getPrimaryKey()]);
-	return stmnt;
+	return builder;
 };
 ORMStatements.prototype.count = function(){
-	return this.builder(this.dialect).select().from(this.orm.table).field('COUNT(*)');
+	return this.dialect.select().column('COUNT(*)').from(this.orm.table);
 };
 ORMStatements.prototype.list= function(settings){
 	settings = settings || {};
@@ -100,7 +108,7 @@ ORMStatements.prototype.list= function(settings){
 	var order = settings.$order || settings.order;
 	var selectedFields = settings.$select || settings.select;
 
-	var stmnt = this.builder(this.dialect).select().from(this.orm.table);
+	var builder = this.dialect.select().from(this.orm.table);
 
 	//add selected fields if any
 	if(selectedFields){
@@ -108,7 +116,7 @@ ORMStatements.prototype.list= function(settings){
 			var property = this.orm.getProperty(selectedFields[i]);
 			if(!property)
 				throw Error('Unknown field name ['+ selectedFields[i] + '] in $select');
-			stmnt = stmnt.field(property.column);
+			builder.column(property.column);
 		}
 	}
 
@@ -124,18 +132,18 @@ ORMStatements.prototype.list= function(settings){
 		for(var i=0; i<propertyDefinitions.length; i++){
         	var def = propertyDefinitions[i];
 	    	if(settings.$filter && settings.$filter.indexOf(def.name)>-1){
-	    		stmnt.where(def.column + ' LIKE ?', [def]);
+	    		builder.where(def.column + ' LIKE ?', [def]);
 	   		} else {
 				var val = settings[def.name];
 	   			if(val === null || val === undefined){
-	   				stmnt.where(def.column + ' IS NULL', [def]);
+	   				builder.where(def.column + ' IS NULL', [def]);
 	   			} else {
 	   				if(val.indexOf && val.indexOf('>')>-1){
-		   				stmnt.where(def.column + ' > ?', [def]);
+		   				builder.where(def.column + ' > ?', [def]);
 		   			} else if(val.indexOf && val.indexOf('<')>-1){
-		   				stmnt.where(def.column + ' < ?', [def]);
+		   				builder.where(def.column + ' < ?', [def]);
 		   			} else{
-		   				stmnt.where(def.column + '=?', [def]);
+		   				builder.where(def.column + '=?', [def]);
 	   				}
 	   			}
         	}
@@ -145,25 +153,27 @@ ORMStatements.prototype.list= function(settings){
     if (sort !== undefined) {
         for(var i=0; i<sort.length; i++){
         	var _order = true;//ASC
-        	//TODO: change to be able order per sort property
+        	//TODO: change to be able to order per sort property
 	        if (order !== undefined) {
-	            if(['asc','desc'].indexOf((''+order).toLowerCase())>-1){
+	            if(['asc','desc'].indexOf(String(order).toLowerCase())>-1){
 	            	_order = order.toLowerCase() === 'desc' ? false : true;
 	            }
 	        }
-	      	stmnt.order(this.orm.getProperty(sort[i]).column, _order);
+	      	builder.order(this.orm.getProperty(sort[i]).column, _order);
     	}
     }
     if (limit !== undefined && offset !== undefined) {
-        stmnt.limit(limit).offset(offset);
+        builder.limit(limit).offset(offset);
     }
-    return stmnt;
+    return builder;
 };
 
 exports.ORMStatements = ORMStatements;
 
-exports.forDatasource = function(orm, databaseName){
-	var dialect = require("db/v3/dialects/dialects").get().getDialect(databaseName);
+exports.create = function(orm, connection){
+	var dialect;
+	if(connection)
+		dialect = require('db/v3/sql').getDialect(connection);
 	var stmnts = new ORMStatements(orm, dialect);
 	return stmnts;
 };

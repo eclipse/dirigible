@@ -14,11 +14,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 
 public class PersistenceExecuteProcessor<T> extends AbstractPersistenceProcessor {
+
+	public PersistenceExecuteProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		super(entityManagerInterceptor);
+	}
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {

@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.persistence.processors.table;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
@@ -21,16 +22,18 @@ import org.eclipse.dirigible.database.sql.builders.table.DropTableBuilder;
 
 public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor {
 
+	public PersistenceDropTableProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		super(entityManagerInterceptor);
+	}
+
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		DropTableBuilder dropTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
-				.drop()
-				.table(tableModel.getTableName());
-		
+		DropTableBuilder dropTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).drop().table(tableModel.getTableName());
+
 		String sql = dropTableBuilder.toString();
 		return sql;
 	}
-	
+
 	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
 		String sql = null;

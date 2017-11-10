@@ -29,7 +29,7 @@
 
 var DataProtocolDefinition = function(){
 	var rs = require('http/v3/rs');
-	var mappings = this.mappings = rs.mappings();
+	var mappings = this.mappings = new rs.ResourceMappings();
 		
 	mappings.collectionResource = mappings.resource("");
 	mappings.entityResource = mappings.resource("{id}");
@@ -78,7 +78,6 @@ var DataProtocolDefinition = function(){
 	//TODO: automate finding resource config by name and make it applicable beyond the well known mehtod names
 	mappings.disableByName = function(){
 		for(var i=0; i< arguments.length; i++){
-			var name = arguments[i];
 			if(arguments[i] === "query"){
 				this.disable("", "get", undefined, ['application/json']);
 			}
@@ -295,7 +294,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 
 		var limit = context.queryParameters.$limit || context.queryParameters.limit;
 		if (limit === undefined || limit === null) {
-			context.queryParameters.limit = 10000;//default constraint
+			//context.queryParameters.limit = 10000;//default constraint
 		}  else if(isNaN(parseIntStrict(limit)) || limit < 0) {
 			throwBadRequestError(context, "Invalid Client Input", undefined, "Invallid limit parameter: " + limit + ". Must be a positive integer.");
 			return false;
@@ -494,6 +493,29 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 	};
 };
 
+var HttpController = require('http/v3/rs').HttpController;
+
+/**
+ * Utility method to setup the prototipical inheritance chain.
+ * credits: https://stackoverflow.com/a/4389429/2134990
+ */
+function extend(base, sub) {
+  // Avoid instantiating the base class just to setup inheritance
+  // Also, do a recursive merge of two prototypes, so we don't overwrite 
+  // the existing prototype, but still maintain the inheritance chain
+  // Thanks to @ccnokes
+  var origProto = sub.prototype;
+  sub.prototype = Object.create(base.prototype);
+  for (var key in origProto)  {
+     sub.prototype[key] = origProto[key];
+  }
+  // The constructor property was set wrong, let's fix it
+  Object.defineProperty(sub.prototype, 'constructor', { 
+    enumerable: false, 
+    value: sub 
+  });
+}
+
 /**
  * Constructs new DataService instances.
  * 
@@ -510,16 +532,19 @@ var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefi
 	}
 	
 	var _mappings = _oProtocolHandlersAdapter.adapt.call(this);
+		
 	if(oConfig !== undefined){
 		Object.keys(oConfig).forEach(function(sPath){
 			_mappings.resource(sPath, oConfig[sPath]);
 		});
 	}
+	
+	HttpController.call(this, _mappings);
 
-	this.mappings = function(){
+	/*this.mappings = function(){
 		return _mappings;
 	};
-
+*/
 	//weave in methods from the oProtocolHandlersAdapter that it requires.
 	_oProtocolHandlersAdapter.api.call(this);
 	
@@ -537,13 +562,16 @@ var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefi
 	return this;
 };
 
-DataService.prototype.execute = function(oRequest, oResponse) {
-	var cfg = this.mappings().configuration();
+extend(HttpController, DataService);
+
+
+/*DataService.prototype.execute = function(oRequest, oResponse) {
+	var cfg = this.mappings();
 	var rs = require('http/v3/rs');
 	var httpSvc = rs.service(cfg);
 	return httpSvc.execute(oRequest, oResponse);
 };
-
+*/
 /**
  * Creates new DataService instances.
  * 
