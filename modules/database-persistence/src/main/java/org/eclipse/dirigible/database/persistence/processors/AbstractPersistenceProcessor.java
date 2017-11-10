@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.persistence.EnumType;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
@@ -33,6 +34,16 @@ import org.eclipse.dirigible.database.persistence.parser.PersistenceAnnotationsP
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 
 public abstract class AbstractPersistenceProcessor implements IPersistenceProcessor {
+
+	private IEntityManagerInterceptor entityManagerInterceptor;
+
+	public AbstractPersistenceProcessor() {
+		this(null);
+	}
+
+	protected AbstractPersistenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		this.entityManagerInterceptor = entityManagerInterceptor;
+	}
 
 	protected abstract String generateScript(Connection connection, PersistenceTableModel tableModel);
 
@@ -100,6 +111,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 
 	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value) throws SQLException {
 
+		if (getEntityManagerInterceptor() != null) {
+			value = getEntityManagerInterceptor().onSetValueBeforeUpdate(i, dataType, value);
+		}
+
 		if (DataTypeUtils.isVarchar(dataType)) {
 			preparedStatement.setString(i, (String) value);
 		} else if (DataTypeUtils.isChar(dataType)) {
@@ -144,7 +159,6 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 
 	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
-		// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
 		try {
@@ -169,6 +183,9 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				if (value instanceof Integer) {
 					value = ((Integer) value).byteValue();
 				}
+			}
+			if (getEntityManagerInterceptor() != null) {
+				value = getEntityManagerInterceptor().onSetValueAfterQuery(pojo, field, value);
 			}
 			field.set(pojo, value);
 		} finally {
@@ -224,6 +241,14 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			}
 		}
 		return null;
+	}
+
+	public IEntityManagerInterceptor getEntityManagerInterceptor() {
+		return entityManagerInterceptor;
+	}
+
+	public void setEntityManagerInterceptor(IEntityManagerInterceptor entityManagerInterceptor) {
+		this.entityManagerInterceptor = entityManagerInterceptor;
 	}
 
 }

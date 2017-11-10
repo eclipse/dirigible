@@ -12,48 +12,40 @@ package org.eclipse.dirigible.database.persistence.processors.entity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
-import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 
 public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor {
+
+	public PersistenceDeleteProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		super(entityManagerInterceptor);
+	}
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		throw new PersistenceException("Generate Script method cannot be invoked in Delete Processor");
 	}
-	
+
 	protected String generateScriptDelete(Connection connection, PersistenceTableModel tableModel) {
-		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
-				.delete()
-				.from(tableModel.getTableName())
-				.where(getPrimaryKey(tableModel) + new StringBuilder()
-						.append(ISqlKeywords.SPACE)
-						.append(ISqlKeywords.EQUALS)
-						.append(ISqlKeywords.SPACE)
-						.append(ISqlKeywords.QUESTION).toString());
+		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).delete().from(tableModel.getTableName())
+				.where(getPrimaryKey(tableModel) + new StringBuilder().append(ISqlKeywords.SPACE).append(ISqlKeywords.EQUALS)
+						.append(ISqlKeywords.SPACE).append(ISqlKeywords.QUESTION).toString());
 		String sql = deleteBuilder.toString();
 		return sql;
 	}
-	
+
 	protected String generateScriptDeleteAll(Connection connection, PersistenceTableModel tableModel) {
-		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
-				.delete()
-				.from(tableModel.getTableName());
+		DeleteBuilder deleteBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).delete().from(tableModel.getTableName());
 		String sql = deleteBuilder.toString();
 		return sql;
 	}
-	
+
 	public int delete(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -68,7 +60,7 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 			closePreparedStatement(preparedStatement);
 		}
 	}
-	
+
 	public int deleteAll(Connection connection, PersistenceTableModel tableModel, Class<T> clazz) throws PersistenceException {
 		String sql = null;
 		PreparedStatement preparedStatement = null;

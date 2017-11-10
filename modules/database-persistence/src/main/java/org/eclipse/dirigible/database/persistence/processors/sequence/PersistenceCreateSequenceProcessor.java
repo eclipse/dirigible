@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.persistence.processors.sequence;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
@@ -22,16 +23,19 @@ import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilde
 
 public class PersistenceCreateSequenceProcessor extends AbstractPersistenceProcessor {
 
+	public PersistenceCreateSequenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		super(entityManagerInterceptor);
+	}
+
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
-		CreateSequenceBuilder createSequenceBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection))
-				.create()
+		CreateSequenceBuilder createSequenceBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).create()
 				.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
-		
+
 		String sql = createSequenceBuilder.toString();
 		return sql;
 	}
-	
+
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;
 		String sql = null;

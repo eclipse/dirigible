@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
@@ -25,6 +26,10 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 
 public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
+
+	public PersistenceQueryProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		super(entityManagerInterceptor);
+	}
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
