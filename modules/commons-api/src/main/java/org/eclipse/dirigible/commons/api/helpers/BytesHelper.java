@@ -10,16 +10,16 @@
 
 package org.eclipse.dirigible.commons.api.helpers;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class BytesHelper.
  */
 public class BytesHelper {
 
 	/**
-	 * Json to bytes.
+	 * Transform a json string to bytes array.
 	 *
-	 * @param input the input
+	 * @param input
+	 *            the input
 	 * @return the byte[]
 	 */
 	public static byte[] jsonToBytes(String input) {
@@ -27,9 +27,10 @@ public class BytesHelper {
 	}
 
 	/**
-	 * Bytes to json.
+	 * Transform a bytes array to json string.
 	 *
-	 * @param bytes the bytes
+	 * @param bytes
+	 *            the bytes
 	 * @return the string
 	 */
 	public static String bytesToJson(byte[] bytes) {

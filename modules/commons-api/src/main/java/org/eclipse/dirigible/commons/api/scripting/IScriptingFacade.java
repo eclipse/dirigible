@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.commons.api.scripting;
 
 /**
- * The Interface IScriptingFacade.
+ * The IScriptingFacade marks all the scripting facades.
  */
 public interface IScriptingFacade {
 

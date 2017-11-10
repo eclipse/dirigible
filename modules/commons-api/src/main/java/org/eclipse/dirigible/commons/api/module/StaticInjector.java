@@ -12,15 +12,14 @@ package org.eclipse.dirigible.commons.api.module;
 
 import com.google.inject.Injector;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class StaticInjector.
+ * The StaticInjector holds a static instance of a Guice injector in cases when there is no execution context (e.g.
+ * HttpRequest/HttpResponse lacks in asynchronous tasks).
  */
 public class StaticInjector {
-	
-	/** The injector. */
+
 	private static Injector injector;
-	
+
 	/**
 	 * Gets the injector.
 	 *
@@ -29,11 +28,12 @@ public class StaticInjector {
 	public static Injector getInjector() {
 		return injector;
 	}
-	
+
 	/**
 	 * Sets the injector.
 	 *
-	 * @param injector the new injector
+	 * @param injector
+	 *            the new injector
 	 */
 	public static void setInjector(Injector injector) {
 		StaticInjector.injector = injector;

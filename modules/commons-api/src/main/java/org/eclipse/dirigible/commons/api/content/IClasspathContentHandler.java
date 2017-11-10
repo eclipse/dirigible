@@ -12,19 +12,20 @@ package org.eclipse.dirigible.commons.api.content;
 
 import java.util.Set;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface IClasspathContentHandler.
+ * The IClasspathContentHandler is the interface for all the classes used to locate and enumerate specific resources in
+ * the class path.
  */
 public interface IClasspathContentHandler {
-	
+
 	/**
 	 * Accept.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 */
 	public void accept(String path);
-	
+
 	/**
 	 * Gets the paths.
 	 *

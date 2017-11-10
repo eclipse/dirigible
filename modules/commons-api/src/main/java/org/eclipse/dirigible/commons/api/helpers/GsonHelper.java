@@ -13,16 +13,15 @@ package org.eclipse.dirigible.commons.api.helpers;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GsonHelper.
+ * The GsonHelper utility class.
  */
 public class GsonHelper {
 
-	/** The gson. */
+	/** The GSON instance. */
 	public static transient Gson GSON = new Gson();
 
-	/** The parser. */
+	/** The GSON Parser instance. */
 	public static JsonParser PARSER = new JsonParser();
 
 }

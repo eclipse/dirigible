@@ -16,9 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractRestService.
+ * The AbstractRestService is the parent of all the RESTful services in Dirigible.
  */
 public abstract class AbstractRestService implements IRestService {
 
@@ -35,8 +34,10 @@ public abstract class AbstractRestService implements IRestService {
 	/**
 	 * Send error not found.
 	 *
-	 * @param response the response
-	 * @param message the message
+	 * @param response
+	 *            the response
+	 * @param message
+	 *            the message
 	 */
 	protected void sendErrorNotFound(HttpServletResponse response, String message) {
 		try {
@@ -49,8 +50,10 @@ public abstract class AbstractRestService implements IRestService {
 	/**
 	 * Send error forbidden.
 	 *
-	 * @param response the response
-	 * @param message the message
+	 * @param response
+	 *            the response
+	 * @param message
+	 *            the message
 	 */
 	protected void sendErrorForbidden(HttpServletResponse response, String message) {
 		try {
@@ -63,8 +66,10 @@ public abstract class AbstractRestService implements IRestService {
 	/**
 	 * Send error bad request.
 	 *
-	 * @param response the response
-	 * @param message the message
+	 * @param response
+	 *            the response
+	 * @param message
+	 *            the message
 	 */
 	protected void sendErrorBadRequest(HttpServletResponse response, String message) {
 		try {
@@ -77,8 +82,10 @@ public abstract class AbstractRestService implements IRestService {
 	/**
 	 * Send error unathorized.
 	 *
-	 * @param response the response
-	 * @param message the message
+	 * @param response
+	 *            the response
+	 * @param message
+	 *            the message
 	 */
 	protected void sendErrorUnathorized(HttpServletResponse response, String message) {
 		try {
@@ -91,8 +98,10 @@ public abstract class AbstractRestService implements IRestService {
 	/**
 	 * Send error internal server error.
 	 *
-	 * @param response the response
-	 * @param message the message
+	 * @param response
+	 *            the response
+	 * @param message
+	 *            the message
 	 */
 	protected void sendErrorInternalServerError(HttpServletResponse response, String message) {
 		try {
