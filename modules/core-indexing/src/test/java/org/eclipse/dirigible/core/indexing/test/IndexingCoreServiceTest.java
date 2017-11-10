@@ -28,23 +28,21 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class IndexingCoreServiceTest.
  */
 public class IndexingCoreServiceTest extends AbstractGuiceTest {
 
-	/** The Constant TEST_INDEX. */
 	private static final String TEST_INDEX = "test_index";
 
-	/** The indexing core service. */
 	@Inject
 	private IIndexingCoreService indexingCoreService;
 
 	/**
-	 * Sets the up.
+	 * Setup.
 	 *
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -54,8 +52,10 @@ public class IndexingCoreServiceTest extends AbstractGuiceTest {
 	/**
 	 * Search test.
 	 *
-	 * @throws IndexingException the indexing exception
+	 * @throws IndexingException
+	 *             the indexing exception
 	 */
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void searchTest() throws IndexingException {
 
@@ -74,11 +74,11 @@ public class IndexingCoreServiceTest extends AbstractGuiceTest {
 		assertNotNull(matches);
 		assertEquals(1, matches.size());
 
-		matches = matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "Apache"), List.class);
+		matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "Apache"), List.class);
 		assertNotNull(matches);
 		assertEquals(2, matches.size());
 
-		matches = matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "apache"), List.class);
+		matches = GsonHelper.GSON.fromJson(indexingCoreService.search(TEST_INDEX, "apache"), List.class);
 		assertNotNull(matches);
 		assertEquals(2, matches.size());
 
@@ -90,8 +90,10 @@ public class IndexingCoreServiceTest extends AbstractGuiceTest {
 	/**
 	 * Between test.
 	 *
-	 * @throws IndexingException the indexing exception
+	 * @throws IndexingException
+	 *             the indexing exception
 	 */
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void betweenTest() throws IndexingException {
 
