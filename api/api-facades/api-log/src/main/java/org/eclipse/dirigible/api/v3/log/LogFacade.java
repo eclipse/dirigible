@@ -24,18 +24,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class LogFacade.
+ *
  * @author shturec (sthrakal@gmail.com)
  */
 public class LogFacade implements IScriptingFacade {
 
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogFacade.class);
 
+	/** The Constant APP_LOGGER_NAME_PREFX. */
 	private static final String APP_LOGGER_NAME_PREFX = "app";
+	
+	/** The Constant APP_LOGGER_NAME_SEPARATOR. */
 	private static final String APP_LOGGER_NAME_SEPARATOR = ".";
 
 	/**
-	 * @param url
+	 * Gets the logger.
+	 *
+	 * @param loggerName the logger name
 	 * @return Logger
 	 */
 	public static final Logger getLogger(final String loggerName) {
@@ -55,6 +64,12 @@ public class LogFacade implements IScriptingFacade {
 		return logger;
 	}
 
+	/**
+	 * Sets the level.
+	 *
+	 * @param loggerName the logger name
+	 * @param level the level
+	 */
 	public static final void setLevel(String loggerName, String level) {
 
 		final org.slf4j.Logger logger = getLogger(loggerName);
@@ -68,9 +83,22 @@ public class LogFacade implements IScriptingFacade {
 		logbackLogger.setLevel(ch.qos.logback.classic.Level.valueOf(level));
 	}
 
+	/** The Constant om. */
 	private static final ObjectMapper om = new ObjectMapper();
+	
+	/** The Constant objectArrayType. */
 	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
 
+	/**
+	 * Log.
+	 *
+	 * @param loggerName the logger name
+	 * @param level the level
+	 * @param message the message
+	 * @param logArguments the log arguments
+	 * @param errorJson the error json
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static final void log(String loggerName, String level, String message, String logArguments, String errorJson) throws IOException {
 
 		final Logger logger = getLogger(loggerName);
@@ -110,24 +138,51 @@ public class LogFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * The Class ErrorObject.
+	 */
 	static class ErrorObject {
+		
+		/** The message. */
 		@JsonProperty("message")
 		public String message;
+		
+		/** The stack. */
 		@JsonProperty("stack")
 		public StackTraceEl[] stack;
 	}
 
+	/**
+	 * The Class StackTraceEl.
+	 */
 	static class StackTraceEl {
+		
+		/** The file name. */
 		@JsonProperty("fileName")
 		public String fileName;
+		
+		/** The line number. */
 		@JsonProperty("lineNumber")
 		public int lineNumber;
+		
+		/** The declaring class. */
 		@JsonProperty("declaringClass")
 		public String declaringClass;
+		
+		/** The method name. */
 		@JsonProperty("methodName")
 		public String methodName;
 	}
 
+	/**
+	 * To exception.
+	 *
+	 * @param errorJson the error json
+	 * @return the JS service exception
+	 * @throws JsonParseException the json parse exception
+	 * @throws JsonMappingException the json mapping exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static JSServiceException toException(String errorJson) throws JsonParseException, JsonMappingException, IOException {
 
 		JSServiceException ex = null;

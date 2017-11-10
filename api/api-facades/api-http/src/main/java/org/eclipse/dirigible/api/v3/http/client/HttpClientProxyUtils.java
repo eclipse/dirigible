@@ -34,14 +34,28 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HttpClientProxyUtils.
+ */
 public class HttpClientProxyUtils {
 
+	/** The Constant HTTP_PROXY_HOST. */
 	public static final String HTTP_PROXY_HOST = "http.proxyHost"; //$NON-NLS-1$
+	
+	/** The Constant HTTP_PROXY_PORT. */
 	public static final String HTTP_PROXY_PORT = "http.proxyPort"; //$NON-NLS-1$
+	
+	/** The Constant HTTPS_PROXY_HOST. */
 	public static final String HTTPS_PROXY_HOST = "https.proxyHost"; //$NON-NLS-1$
+	
+	/** The Constant HTTPS_PROXY_PORT. */
 	public static final String HTTPS_PROXY_PORT = "https.proxyPort"; //$NON-NLS-1$
+	
+	/** The Constant HTTP_NON_PROXY_HOSTS. */
 	public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts"; //$NON-NLS-1$
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientProxyUtils.class);
 
 	{
@@ -52,10 +66,21 @@ public class HttpClientProxyUtils {
 		}
 	}
 
+	/**
+	 * Sets the proxy settings.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void setProxySettings() throws IOException {
 		setTrustAllSSL();
 	}
 
+	/**
+	 * Gets the http client.
+	 *
+	 * @param trustAll the trust all
+	 * @return the http client
+	 */
 	public static CloseableHttpClient getHttpClient(boolean trustAll) {
 		CloseableHttpClient httpClient = null;
 
@@ -82,6 +107,11 @@ public class HttpClientProxyUtils {
 		return httpClient;
 	}
 
+	/**
+	 * Sets the proxy if needed.
+	 *
+	 * @param httpClientBuilder the new proxy if needed
+	 */
 	private static void setProxyIfNeeded(HttpClientBuilder httpClientBuilder) {
 		String httpProxyHost = Configuration.get(HTTP_PROXY_HOST);
 		String httpProxyPort = Configuration.get(HTTP_PROXY_PORT);
@@ -92,6 +122,11 @@ public class HttpClientProxyUtils {
 		}
 	}
 
+	/**
+	 * Sets the trust all SSL.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static void setTrustAllSSL() throws IOException {
 		try {
 			HttpsURLConnection.setDefaultSSLSocketFactory(createTrustAllSSLContext().getSocketFactory());
@@ -112,6 +147,13 @@ public class HttpClientProxyUtils {
 		}
 	}
 
+	/**
+	 * Creates the trust all SSL context.
+	 *
+	 * @return the SSL context
+	 * @throws NoSuchAlgorithmException the no such algorithm exception
+	 * @throws KeyManagementException the key management exception
+	 */
 	private static SSLContext createTrustAllSSLContext() throws NoSuchAlgorithmException, KeyManagementException {
 		SSLContext sslContext = SSLContext.getInstance("SSL");
 

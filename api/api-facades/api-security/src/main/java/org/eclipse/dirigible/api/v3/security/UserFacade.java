@@ -19,14 +19,26 @@ import org.eclipse.dirigible.commons.config.TestModeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UserFacade.
+ */
 public class UserFacade implements IScriptingFacade {
 
+	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 
+	/** The Constant GUEST. */
 	private static final String GUEST = "guest";
 
+	/** The test. */
 	private static volatile String TEST = "test";
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public static final String getName() {
 		// HTTP case
 		String userName = null;
@@ -48,6 +60,13 @@ public class UserFacade implements IScriptingFacade {
 		return GUEST;
 	}
 
+	/**
+	 * Checks if is in role.
+	 *
+	 * @param role
+	 *            the role
+	 * @return true, if is in role
+	 */
 	public static final boolean isInRole(String role) {
 		if (Configuration.isTestModeEnabled()) {
 			return true;
@@ -61,6 +80,14 @@ public class UserFacade implements IScriptingFacade {
 		return false;
 	}
 
+	/**
+	 * Sets the name.
+	 *
+	 * @param userName
+	 *            the new name
+	 * @throws TestModeException
+	 *             the test mode exception
+	 */
 	public static final void setName(String userName) throws TestModeException {
 		if (Configuration.isTestModeEnabled()) {
 			TEST = userName;
