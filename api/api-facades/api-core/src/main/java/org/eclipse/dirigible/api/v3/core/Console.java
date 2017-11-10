@@ -13,66 +13,61 @@ package org.eclipse.dirigible.api.v3.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Console.
+ * Console logger class used in the {@link ConsoleFacade}
  */
 public class Console {
 
-	/**
-	 * Instantiates a new console.
-	 */
 	Console() {
 	}
 
-	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(Console.class);
 
 	/**
-	 * Error.
+	 * Prints an error message
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 * @param args
 	 */
 	public void error(String message, Object... args) {
 		logger.error(String.format(message, args));
 	}
 
 	/**
-	 * Info.
+	 * Prints an information message
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 * @param args
 	 */
 	public void info(String message, Object... args) {
 		logger.info(String.format(message, args));
 	}
 
 	/**
-	 * Warn.
+	 * Prints a warning message
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 * @param args
 	 */
 	public void warn(String message, Object... args) {
 		logger.warn(String.format(message, args));
 	}
 
 	/**
-	 * Debug.
+	 * Prints a debug message
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 * @param args
 	 */
 	public void debug(String message, Object... args) {
 		logger.debug(String.format(message, args));
 	}
 
 	/**
-	 * Trace.
+	 * Prints a trace message
 	 *
-	 * @param message the message
-	 * @param args the args
+	 * @param message
+	 * @param args
 	 */
 	public void trace(String message, Object... args) {
 		logger.error(String.format(message, args));
@@ -84,9 +79,9 @@ public class Console {
 	}
 
 	/**
-	 * Log.
+	 * Prints a raw log message
 	 *
-	 * @param message the message
+	 * @param message
 	 */
 	public void log(String message) {
 		logger.info(message);

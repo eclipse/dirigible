@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LogFacade.
  *
@@ -32,14 +31,13 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
  */
 public class LogFacade implements IScriptingFacade {
 
-	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogFacade.class);
 
-	/** The Constant APP_LOGGER_NAME_PREFX. */
 	private static final String APP_LOGGER_NAME_PREFX = "app";
-	
-	/** The Constant APP_LOGGER_NAME_SEPARATOR. */
 	private static final String APP_LOGGER_NAME_SEPARATOR = ".";
+
+	private static final ObjectMapper om = new ObjectMapper();
+	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
 
 	/**
 	 * Gets the logger.
@@ -65,7 +63,7 @@ public class LogFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Sets the level.
+	 * Sets the logging level.
 	 *
 	 * @param loggerName the logger name
 	 * @param level the level
@@ -82,12 +80,6 @@ public class LogFacade implements IScriptingFacade {
 		ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) logger;
 		logbackLogger.setLevel(ch.qos.logback.classic.Level.valueOf(level));
 	}
-
-	/** The Constant om. */
-	private static final ObjectMapper om = new ObjectMapper();
-	
-	/** The Constant objectArrayType. */
-	private static final ArrayType objectArrayType = TypeFactory.defaultInstance().constructArrayType(Object.class);
 
 	/**
 	 * Log.
@@ -143,11 +135,11 @@ public class LogFacade implements IScriptingFacade {
 	 */
 	static class ErrorObject {
 		
-		/** The message. */
+		/** The error message. */
 		@JsonProperty("message")
 		public String message;
 		
-		/** The stack. */
+		/** The error stack. */
 		@JsonProperty("stack")
 		public StackTraceEl[] stack;
 	}
@@ -175,7 +167,7 @@ public class LogFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * To exception.
+	 * Creates a JSServiceExcetion from JSON.
 	 *
 	 * @param errorJson the error json
 	 * @return the JS service exception
