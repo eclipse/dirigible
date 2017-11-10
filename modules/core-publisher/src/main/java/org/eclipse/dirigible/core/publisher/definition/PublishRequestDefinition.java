@@ -17,9 +17,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PublishRequestDefinition.
+ * The PublishRequestDefinition serialization.
  */
 @Table(name = "DIRIGIBLE_PUBLISH_REQUESTS")
 public class PublishRequestDefinition {
@@ -71,7 +70,8 @@ public class PublishRequestDefinition {
 	/**
 	 * Sets the workspace.
 	 *
-	 * @param workspace the new workspace
+	 * @param workspace
+	 *            the new workspace
 	 */
 	public void setWorkspace(String workspace) {
 		this.workspace = workspace;
@@ -89,7 +89,8 @@ public class PublishRequestDefinition {
 	/**
 	 * Sets the path.
 	 *
-	 * @param path the new path
+	 * @param path
+	 *            the new path
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -107,7 +108,8 @@ public class PublishRequestDefinition {
 	/**
 	 * Sets the registry.
 	 *
-	 * @param registry the new registry
+	 * @param registry
+	 *            the new registry
 	 */
 	public void setRegistry(String registry) {
 		this.registry = registry;
@@ -125,7 +127,8 @@ public class PublishRequestDefinition {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -146,7 +149,8 @@ public class PublishRequestDefinition {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {

@@ -31,30 +31,23 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PublisherSynchronizer.
+ * The PublisherSynchronizer takes the requests for publish and perform the needed actions on the artifacts assigned.
  */
 @Singleton
 public class PublisherSynchronizer extends AbstractSynchronizer {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(PublisherSynchronizer.class);
 
-	/** The publish core service. */
 	@Inject
 	private PublisherCoreService publishCoreService;
 
-	/** The resource locations. */
 	private Map<String, String> resourceLocations = new HashMap<String, String>();
 
-	/** The current workspace. */
 	private String currentWorkspace = null;
-	
-	/** The current registry. */
+
 	private String currentRegistry = null;
-	
-	/** The current request time. */
+
 	private Timestamp currentRequestTime = new Timestamp(0);
 
 	/**
@@ -65,7 +58,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		publisherSynchronizer.synchronize();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
 	 */
 	@Override
@@ -97,8 +91,10 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Enumerate resources for publish.
 	 *
-	 * @param publishRequestDefinitions the publish request definitions
-	 * @throws SynchronizationException the synchronization exception
+	 * @param publishRequestDefinitions
+	 *            the publish request definitions
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	private void enumerateResourcesForPublish(List<PublishRequestDefinition> publishRequestDefinitions) throws SynchronizationException {
 		resourceLocations.clear();
@@ -127,7 +123,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	 * Gets the pending published requests.
 	 *
 	 * @return the pending published requests
-	 * @throws PublisherException the publisher exception
+	 * @throws PublisherException
+	 *             the publisher exception
 	 */
 	private List<PublishRequestDefinition> getPendingPublishedRequests() throws PublisherException {
 		Timestamp timestamp = publishCoreService.getLatestPublishLog();
@@ -135,7 +132,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		return publishRequestDefinitions;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
 	 */
 	@Override
@@ -150,7 +148,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Publish resources.
 	 *
-	 * @throws SynchronizationException the synchronization exception
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	private void publishResources() throws SynchronizationException {
 		for (Map.Entry<String, String> entry : resourceLocations.entrySet()) {
@@ -167,8 +166,10 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Publish resource.
 	 *
-	 * @param entry the entry
-	 * @throws SynchronizationException the synchronization exception
+	 * @param entry
+	 *            the entry
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	private void publishResource(Map.Entry<String, String> entry) throws SynchronizationException {
 		String sourceLocation = entry.getKey();
@@ -193,8 +194,10 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Removes the processed requests.
 	 *
-	 * @param publishRequestDefinitions the publish request definitions
-	 * @throws PublisherException the publisher exception
+	 * @param publishRequestDefinitions
+	 *            the publish request definitions
+	 * @throws PublisherException
+	 *             the publisher exception
 	 */
 	private void removeProcessedRequests(List<PublishRequestDefinition> publishRequestDefinitions) throws PublisherException {
 		for (PublishRequestDefinition publishRequestDefinition : publishRequestDefinitions) {
@@ -202,8 +205,10 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.repository.api.IResource)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
+	 * repository.api.IResource)
 	 */
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
@@ -213,7 +218,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		resourceLocations.put(sourceLocation, targetLocation);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
 	 */
 	@Override
