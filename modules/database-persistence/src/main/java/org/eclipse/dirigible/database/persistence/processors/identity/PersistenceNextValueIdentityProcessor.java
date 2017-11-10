@@ -13,12 +13,17 @@ package org.eclipse.dirigible.database.persistence.processors.identity;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 
 public class PersistenceNextValueIdentityProcessor extends AbstractPersistenceProcessor {
+
+	public PersistenceNextValueIdentityProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
+		super(entityManagerInterceptor);
+	}
 
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
