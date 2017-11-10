@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.commons.api.scripting;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ScriptingException.
+ * The ScriptingException.
  */
 public class ScriptingException extends Exception {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 375339390660073390L;
 
 	/**
@@ -29,10 +27,14 @@ public class ScriptingException extends Exception {
 	/**
 	 * Instantiates a new scripting exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param enableSuppression
+	 *            the enable suppression
+	 * @param writableStackTrace
+	 *            the writable stack trace
 	 */
 	public ScriptingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
@@ -41,8 +43,10 @@ public class ScriptingException extends Exception {
 	/**
 	 * Instantiates a new scripting exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public ScriptingException(String message, Throwable cause) {
 		super(message, cause);
@@ -51,7 +55,8 @@ public class ScriptingException extends Exception {
 	/**
 	 * Instantiates a new scripting exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public ScriptingException(String message) {
 		super(message);
@@ -60,7 +65,8 @@ public class ScriptingException extends Exception {
 	/**
 	 * Instantiates a new scripting exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public ScriptingException(Throwable cause) {
 		super(cause);

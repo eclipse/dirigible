@@ -25,11 +25,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractExceptionHandler.
+ * The AbstractExceptionHandler is the parent of the exception handlers in RESTful services.
  *
- * @param <T> the generic type
+ * @param <T>
+ *            the generic type
  */
 public abstract class AbstractExceptionHandler<T extends Throwable> implements ExceptionMapper<T> {
 
@@ -43,7 +43,8 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 	/** The Constant GSON. */
 	private static final Gson GSON = new Gson();
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
 	 */
 	@Override
@@ -75,7 +76,8 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 	/**
 	 * Gets the response status.
 	 *
-	 * @param exception the exception
+	 * @param exception
+	 *            the exception
 	 * @return the response status
 	 */
 	protected abstract Status getResponseStatus(T exception);
@@ -83,7 +85,8 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 	/**
 	 * Gets the response message.
 	 *
-	 * @param exception the exception
+	 * @param exception
+	 *            the exception
 	 * @return the response message
 	 */
 	protected abstract String getResponseMessage(T exception);

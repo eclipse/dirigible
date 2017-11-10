@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.commons.api.service;
 
 /**
- * The Interface ICoreService.
+ * The ICoreService marks all the internal core services in Dirigible.
  */
 public interface ICoreService {
 

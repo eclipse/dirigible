@@ -10,7 +10,6 @@
 
 package org.eclipse.dirigible.commons.api.service;
 
-// TODO: Auto-generated Javadoc
 /**
  * The interface for all the front facing REST (sync) services.
  */

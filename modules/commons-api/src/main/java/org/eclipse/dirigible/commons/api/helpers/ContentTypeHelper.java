@@ -15,414 +15,413 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ContentTypeHelper.
+ * The ContentTypeHelper class is an utility used to map file extensions to mime types.
  */
 public class ContentTypeHelper {
 
 	/** The Constant TEXT_X_VCARD. */
 	public static final String TEXT_X_VCARD = "text/x-vcard";
-	
+
 	/** The Constant TEXT_X_COMPONENT. */
 	public static final String TEXT_X_COMPONENT = "text/x-component";
-	
+
 	/** The Constant TEXT_IULS. */
 	public static final String TEXT_IULS = "text/iuls";
-	
+
 	/** The Constant TEXT_DELIMITER_SEPARATED_VALUES. */
 	public static final String TEXT_DELIMITER_SEPARATED_VALUES = "text/delimiter-separated-values";
-	
+
 	/** The Constant TEXT_TAB_SEPARATED_VALUES. */
 	public static final String TEXT_TAB_SEPARATED_VALUES = "text/tab-separated-values";
-	
+
 	/** The Constant APPLICATION_X_SH. */
 	public static final String APPLICATION_X_SH = "application/x-sh";
-	
+
 	/** The Constant APPLICATION_RTF. */
 	public static final String APPLICATION_RTF = "application/rtf";
-	
+
 	/** The Constant TEXT_RICHTEXT. */
 	public static final String TEXT_RICHTEXT = "text/richtext";
-	
+
 	/** The Constant TEXT_SCRIPTLET. */
 	public static final String TEXT_SCRIPTLET = "text/scriptlet";
-	
+
 	/** The Constant TEXT_WEBVIEWHTML. */
 	public static final String TEXT_WEBVIEWHTML = "text/webviewhtml";
-	
+
 	/** The Constant TEXT_HTML. */
 	public static final String TEXT_HTML = "text/html";
-	
+
 	/** The Constant TEXT_X_SETEXT. */
 	public static final String TEXT_X_SETEXT = "text/x-setext";
-	
+
 	/** The Constant TEXT_CSS. */
 	public static final String TEXT_CSS = "text/css";
-	
+
 	/** The Constant APPLICATION_JAVASCRIPT. */
 	public static final String APPLICATION_JAVASCRIPT = "application/javascript";
-	
+
 	/** The Constant APPLICATION_JSON. */
 	public static final String APPLICATION_JSON = "application/json";
-	
+
 	/** The Constant TEXT_XML. */
 	public static final String TEXT_XML = "text/xml";
-	
+
 	/** The Constant TEXT_PLAIN. */
 	public static final String TEXT_PLAIN = "text/plain";
-	
+
 	/** The Constant APPLICATION_VND_MS_FONTOBJECT. */
 	public static final String APPLICATION_VND_MS_FONTOBJECT = "application/vnd.ms-fontobject";
-	
+
 	/** The Constant APPLICATION_FONT_WOFF. */
 	public static final String APPLICATION_FONT_WOFF = "application/font-woff";
-	
+
 	/** The Constant APPLICATION_X_FONT_OPENTYPE. */
 	public static final String APPLICATION_X_FONT_OPENTYPE = "application/x-font-opentype";
-	
+
 	/** The Constant APPLICATION_X_FONT_TTF. */
 	public static final String APPLICATION_X_FONT_TTF = "application/x-font-ttf";
-	
+
 	/** The Constant IMAGE_SVG_XML. */
 	public static final String IMAGE_SVG_XML = "image/svg+xml";
-	
+
 	/** The Constant APPLICATION_ZIP. */
 	public static final String APPLICATION_ZIP = "application/zip";
-	
+
 	/** The Constant APPLICATION_X_COMPRESS. */
 	public static final String APPLICATION_X_COMPRESS = "application/x-compress";
-	
+
 	/** The Constant IMAGE_X_XWINDOWDUMP. */
 	public static final String IMAGE_X_XWINDOWDUMP = "image/x-xwindowdump";
-	
+
 	/** The Constant IMAGE_X_XPIXMAP. */
 	public static final String IMAGE_X_XPIXMAP = "image/x-xpixmap";
-	
+
 	/** The Constant APPLICATION_VND_MS_EXCEL. */
 	public static final String APPLICATION_VND_MS_EXCEL = "application/vnd.ms-excel";
-	
+
 	/** The Constant IMAGE_X_XBITMAP. */
 	public static final String IMAGE_X_XBITMAP = "image/x-xbitmap";
-	
+
 	/** The Constant APPLICATION_X_MSWRITE. */
 	public static final String APPLICATION_X_MSWRITE = "application/x-mswrite";
-	
+
 	/** The Constant APPLICATION_X_MSMETAFILE. */
 	public static final String APPLICATION_X_MSMETAFILE = "application/x-msmetafile";
-	
+
 	/** The Constant APPLICATION_VND_MS_WORKS. */
 	public static final String APPLICATION_VND_MS_WORKS = "application/vnd.ms-works";
-	
+
 	/** The Constant AUDIO_X_WAV. */
 	public static final String AUDIO_X_WAV = "audio/x-wav";
-	
+
 	/** The Constant APPLICATION_X_USTAR. */
 	public static final String APPLICATION_X_USTAR = "application/x-ustar";
-	
+
 	/** The Constant APPLICATION_X_MSTERMINAL. */
 	public static final String APPLICATION_X_MSTERMINAL = "application/x-msterminal";
-	
+
 	/** The Constant IMAGE_TIFF. */
 	public static final String IMAGE_TIFF = "image/tiff";
-	
+
 	/** The Constant APPLICATION_X_COMPRESSED. */
 	public static final String APPLICATION_X_COMPRESSED = "application/x-compressed";
-	
+
 	/** The Constant APPLICATION_X_TEXINFO. */
 	public static final String APPLICATION_X_TEXINFO = "application/x-texinfo";
-	
+
 	/** The Constant APPLICATION_X_TEX. */
 	public static final String APPLICATION_X_TEX = "application/x-tex";
-	
+
 	/** The Constant APPLICATION_X_TCL. */
 	public static final String APPLICATION_X_TCL = "application/x-tcl";
-	
+
 	/** The Constant APPLICATION_X_TAR. */
 	public static final String APPLICATION_X_TAR = "application/x-tar";
-	
+
 	/** The Constant APPLICATION_X_SHOCKWAVE_FLASH. */
 	public static final String APPLICATION_X_SHOCKWAVE_FLASH = "application/x-shockwave-flash";
-	
+
 	/** The Constant APPLICATION_X_SV4CRC. */
 	public static final String APPLICATION_X_SV4CRC = "application/x-sv4crc";
-	
+
 	/** The Constant APPLICATION_X_SV4CPIO. */
 	public static final String APPLICATION_X_SV4CPIO = "application/x-sv4cpio";
-	
+
 	/** The Constant APPLICATION_VND_MS_PKISTL. */
 	public static final String APPLICATION_VND_MS_PKISTL = "application/vnd.ms-pkistl";
-	
+
 	/** The Constant APPLICATION_VND_MS_PKICERTSTORE. */
 	public static final String APPLICATION_VND_MS_PKICERTSTORE = "application/vnd.ms-pkicertstore";
-	
+
 	/** The Constant APPLICATION_X_WAIS_SOURCE. */
 	public static final String APPLICATION_X_WAIS_SOURCE = "application/x-wais-source";
-	
+
 	/** The Constant APPLICATION_FUTURESPLASH. */
 	public static final String APPLICATION_FUTURESPLASH = "application/futuresplash";
-	
+
 	/** The Constant APPLICATION_X_STUFFIT. */
 	public static final String APPLICATION_X_STUFFIT = "application/x-stuffit";
-	
+
 	/** The Constant APPLICATION_X_SHAR. */
 	public static final String APPLICATION_X_SHAR = "application/x-shar";
-	
+
 	/** The Constant APPLICATION_SET_REGISTRATION_INITIATION. */
 	public static final String APPLICATION_SET_REGISTRATION_INITIATION = "application/set-registration-initiation";
-	
+
 	/** The Constant APPLICATION_SET_PAYMENT_INITIATION. */
 	public static final String APPLICATION_SET_PAYMENT_INITIATION = "application/set-payment-initiation";
-	
+
 	/** The Constant APPLICATION_X_MSSCHEDULE. */
 	public static final String APPLICATION_X_MSSCHEDULE = "application/x-msschedule";
-	
+
 	/** The Constant APPLICATION_X_TROFF. */
 	public static final String APPLICATION_X_TROFF = "application/x-troff";
-	
+
 	/** The Constant IMAGE_X_RGB. */
 	public static final String IMAGE_X_RGB = "image/x-rgb";
-	
+
 	/** The Constant IMAGE_X_CMU_RASTER. */
 	public static final String IMAGE_X_CMU_RASTER = "image/x-cmu-raster";
-	
+
 	/** The Constant AUDIO_X_PN_REALAUDIO. */
 	public static final String AUDIO_X_PN_REALAUDIO = "audio/x-pn-realaudio";
-	
+
 	/** The Constant APPLICATION_X_MSPUBLISHER. */
 	public static final String APPLICATION_X_MSPUBLISHER = "application/x-mspublisher";
-	
+
 	/** The Constant APPLICATION_PICS_RULES. */
 	public static final String APPLICATION_PICS_RULES = "application/pics-rules";
-	
+
 	/** The Constant IMAGE_X_PORTABLE_PIXMAP. */
 	public static final String IMAGE_X_PORTABLE_PIXMAP = "image/x-portable-pixmap";
-	
+
 	/** The Constant APPLICATION_VND_MS_POWERPOINT. */
 	public static final String APPLICATION_VND_MS_POWERPOINT = "application/vnd.ms-powerpoint";
-	
+
 	/** The Constant IMAGE_X_PORTABLE_ANYMAP. */
 	public static final String IMAGE_X_PORTABLE_ANYMAP = "image/x-portable-anymap";
-	
+
 	/** The Constant IMAGE_PNG. */
 	public static final String IMAGE_PNG = "image/png";
-	
+
 	/** The Constant APPLICATION_X_PERFMON. */
 	public static final String APPLICATION_X_PERFMON = "application/x-perfmon";
-	
+
 	/** The Constant APPLICATION_YND_MS_PKIPKO. */
 	public static final String APPLICATION_YND_MS_PKIPKO = "application/ynd.ms-pkipko";
-	
+
 	/** The Constant IMAGE_X_PORTABLE_GRAYMAP. */
 	public static final String IMAGE_X_PORTABLE_GRAYMAP = "image/x-portable-graymap";
-	
+
 	/** The Constant APPLICATION_PDF. */
 	public static final String APPLICATION_PDF = "application/pdf";
-	
+
 	/** The Constant IMAGE_X_PORTABLE_BITMAP. */
 	public static final String IMAGE_X_PORTABLE_BITMAP = "image/x-portable-bitmap";
-	
+
 	/** The Constant APPLICATION_X_PKCS7_SIGNATURE. */
 	public static final String APPLICATION_X_PKCS7_SIGNATURE = "application/x-pkcs7-signature";
-	
+
 	/** The Constant APPLICATION_X_PKCS7_CERTREQRESP. */
 	public static final String APPLICATION_X_PKCS7_CERTREQRESP = "application/x-pkcs7-certreqresp";
-	
+
 	/** The Constant APPLICATION_X_PKCS7_MIME. */
 	public static final String APPLICATION_X_PKCS7_MIME = "application/x-pkcs7-mime";
-	
+
 	/** The Constant APPLICATION_X_PKCS7_CERTIFICATES. */
 	public static final String APPLICATION_X_PKCS7_CERTIFICATES = "application/x-pkcs7-certificates";
-	
+
 	/** The Constant APPLICATION_X_PKCS12. */
 	public static final String APPLICATION_X_PKCS12 = "application/x-pkcs12";
-	
+
 	/** The Constant APPLICATION_PKCS10. */
 	public static final String APPLICATION_PKCS10 = "application/pkcs10";
-	
+
 	/** The Constant APPLICATION_ODA. */
 	public static final String APPLICATION_ODA = "application/oda";
-	
+
 	/** The Constant APPLICATION_VND_MS_OUTLOOK. */
 	public static final String APPLICATION_VND_MS_OUTLOOK = "application/vnd.ms-outlook";
-	
+
 	/** The Constant APPLICATION_X_TROFF_MS. */
 	public static final String APPLICATION_X_TROFF_MS = "application/x-troff-ms";
-	
+
 	/** The Constant APPLICATION_VND_MS_PROJECT. */
 	public static final String APPLICATION_VND_MS_PROJECT = "application/vnd.ms-project";
-	
+
 	/** The Constant AUDIO_MPEG. */
 	public static final String AUDIO_MPEG = "audio/mpeg";
-	
+
 	/** The Constant VIDEO_MPEG. */
 	public static final String VIDEO_MPEG = "video/mpeg";
-	
+
 	/** The Constant VIDEO_X_SGI_MOVIE. */
 	public static final String VIDEO_X_SGI_MOVIE = "video/x-sgi-movie";
-	
+
 	/** The Constant VIDEO_QUICKTIME. */
 	public static final String VIDEO_QUICKTIME = "video/quicktime";
-	
+
 	/** The Constant APPLICATION_X_MSMONEY. */
 	public static final String APPLICATION_X_MSMONEY = "application/x-msmoney";
-	
+
 	/** The Constant AUDIO_MID. */
 	public static final String AUDIO_MID = "audio/mid";
-	
+
 	/** The Constant MESSAGE_RFC822. */
 	public static final String MESSAGE_RFC822 = "message/rfc822";
-	
+
 	/** The Constant APPLICATION_X_TROFF_ME. */
 	public static final String APPLICATION_X_TROFF_ME = "application/x-troff-me";
-	
+
 	/** The Constant APPLICATION_X_MSACCESS. */
 	public static final String APPLICATION_X_MSACCESS = "application/x-msaccess";
-	
+
 	/** The Constant APPLICATION_X_TROFF_MAN. */
 	public static final String APPLICATION_X_TROFF_MAN = "application/x-troff-man";
-	
+
 	/** The Constant AUDIO_X_MPEGURL. */
 	public static final String AUDIO_X_MPEGURL = "audio/x-mpegurl";
-	
+
 	/** The Constant APPLICATION_X_MSMEDIAVIEW. */
 	public static final String APPLICATION_X_MSMEDIAVIEW = "application/x-msmediaview";
-	
+
 	/** The Constant VIDEO_X_LA_ASF. */
 	public static final String VIDEO_X_LA_ASF = "video/x-la-asf";
-	
+
 	/** The Constant APPLICATION_X_LATEX. */
 	public static final String APPLICATION_X_LATEX = "application/x-latex";
-	
+
 	/** The Constant IMAGE_JPEG. */
 	public static final String IMAGE_JPEG = "image/jpeg";
-	
+
 	/** The Constant IMAGE_PIPEG. */
 	public static final String IMAGE_PIPEG = "image/pipeg";
-	
+
 	/** The Constant APPLICATION_X_INTERNET_SIGNUP. */
 	public static final String APPLICATION_X_INTERNET_SIGNUP = "application/x-internet-signup";
-	
+
 	/** The Constant APPLICATION_X_IPHONE. */
 	public static final String APPLICATION_X_IPHONE = "application/x-iphone";
-	
+
 	/** The Constant IMAGE_IEF. */
 	public static final String IMAGE_IEF = "image/ief";
-	
+
 	/** The Constant IMAGE_X_ICON. */
 	public static final String IMAGE_X_ICON = "image/x-icon";
-	
+
 	/** The Constant APPLICATION_HTA. */
 	public static final String APPLICATION_HTA = "application/hta";
-	
+
 	/** The Constant APPLICATION_MAC_BINHEX40. */
 	public static final String APPLICATION_MAC_BINHEX40 = "application/mac-binhex40";
-	
+
 	/** The Constant APPLICATION_WINHLP. */
 	public static final String APPLICATION_WINHLP = "application/winhlp";
-	
+
 	/** The Constant APPLICATION_X_HDF. */
 	public static final String APPLICATION_X_HDF = "application/x-hdf";
-	
+
 	/** The Constant APPLICATION_X_GZIP. */
 	public static final String APPLICATION_X_GZIP = "application/x-gzip";
-	
+
 	/** The Constant APPLICATION_X_GTAR. */
 	public static final String APPLICATION_X_GTAR = "application/x-gtar";
-	
+
 	/** The Constant IMAGE_GIF. */
 	public static final String IMAGE_GIF = "image/gif";
-	
+
 	/** The Constant X_WORLD_X_VRML. */
 	public static final String X_WORLD_X_VRML = "x-world/x-vrml";
-	
+
 	/** The Constant APPLICATION_FRACTALS. */
 	public static final String APPLICATION_FRACTALS = "application/fractals";
-	
+
 	/** The Constant APPLICATION_ENVOY. */
 	public static final String APPLICATION_ENVOY = "application/envoy";
-	
+
 	/** The Constant APPLICATION_X_DVI. */
 	public static final String APPLICATION_X_DVI = "application/x-dvi";
-	
+
 	/** The Constant APPLICATION_MSWORD. */
 	public static final String APPLICATION_MSWORD = "application/msword";
-	
+
 	/** The Constant APPLICATION_X_MSDOWNLOAD. */
 	public static final String APPLICATION_X_MSDOWNLOAD = "application/x-msdownload";
-	
+
 	/** The Constant APPLICATION_X_DIRECTOR. */
 	public static final String APPLICATION_X_DIRECTOR = "application/x-director";
-	
+
 	/** The Constant APPLICATION_X_CSH. */
 	public static final String APPLICATION_X_CSH = "application/x-csh";
-	
+
 	/** The Constant APPLICATION_PKIX_CRL. */
 	public static final String APPLICATION_PKIX_CRL = "application/pkix-crl";
-	
+
 	/** The Constant APPLICATION_X_MSCARDFILE. */
 	public static final String APPLICATION_X_MSCARDFILE = "application/x-mscardfile";
-	
+
 	/** The Constant APPLICATION_X_CPIO. */
 	public static final String APPLICATION_X_CPIO = "application/x-cpio";
-	
+
 	/** The Constant IMAGE_CIS_COD. */
 	public static final String IMAGE_CIS_COD = "image/cis-cod";
-	
+
 	/** The Constant IMAGE_X_CMX. */
 	public static final String IMAGE_X_CMX = "image/x-cmx";
-	
+
 	/** The Constant APPLICATION_X_MSCLIP. */
 	public static final String APPLICATION_X_MSCLIP = "application/x-msclip";
-	
+
 	/** The Constant APPLICATION_X_X509_CA_CERT. */
 	public static final String APPLICATION_X_X509_CA_CERT = "application/x-x509-ca-cert";
-	
+
 	/** The Constant APPLICATION_X_NETCDF. */
 	public static final String APPLICATION_X_NETCDF = "application/x-netcdf";
-	
+
 	/** The Constant APPLICATION_X_CDF. */
 	public static final String APPLICATION_X_CDF = "application/x-cdf";
-	
+
 	/** The Constant APPLICATION_VND_MS_PKISECCAT. */
 	public static final String APPLICATION_VND_MS_PKISECCAT = "application/vnd.ms-pkiseccat";
-	
+
 	/** The Constant IMAGE_BMP. */
 	public static final String IMAGE_BMP = "image/bmp";
-	
+
 	/** The Constant APPLICATION_OCTET_STREAM. */
 	public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
-	
+
 	/** The Constant APPLICATION_X_BCPIO. */
 	public static final String APPLICATION_X_BCPIO = "application/x-bcpio";
-	
+
 	/** The Constant APPLICATION_OLESCRIPT. */
 	public static final String APPLICATION_OLESCRIPT = "application/olescript";
-	
+
 	/** The Constant VIDEO_X_MSVIDEO. */
 	public static final String VIDEO_X_MSVIDEO = "video/x-msvideo";
-	
+
 	/** The Constant AUDIO_BASIC. */
 	public static final String AUDIO_BASIC = "audio/basic";
-	
+
 	/** The Constant VIDEO_X_MS_ASF. */
 	public static final String VIDEO_X_MS_ASF = "video/x-ms-asf";
-	
+
 	/** The Constant APPLICATION_VND_ANDROID_PACKAGE_ARCHIVE. */
 	public static final String APPLICATION_VND_ANDROID_PACKAGE_ARCHIVE = "application/vnd.android.package-archive";
-	
+
 	/** The Constant AUDIO_X_AIFF. */
 	public static final String AUDIO_X_AIFF = "audio/x-aiff";
-	
+
 	/** The Constant APPLICATION_POSTSCRIPT. */
 	public static final String APPLICATION_POSTSCRIPT = "application/postscript";
 
 	/** The Constant CONTENT_TYPES. */
 	private static final Map<String, String> CONTENT_TYPES = new HashMap<String, String>();
-	
+
 	/** The Constant BINARY_CONTENT_TYPES. */
 	private static final Map<String, String> BINARY_CONTENT_TYPES = new HashMap<String, String>();
-	
+
 	/** The Constant TEXT_CONTENT_TYPES. */
 	private static final Map<String, String> TEXT_CONTENT_TYPES = new HashMap<String, String>();
 
@@ -662,7 +661,8 @@ public class ContentTypeHelper {
 	/**
 	 * Gets the content type.
 	 *
-	 * @param extension the extension
+	 * @param extension
+	 *            the extension
 	 * @return the content type
 	 */
 	public static String getContentType(String extension) {
@@ -680,7 +680,8 @@ public class ContentTypeHelper {
 	/**
 	 * Checks if is binary.
 	 *
-	 * @param contentType the content type
+	 * @param contentType
+	 *            the content type
 	 * @return true, if is binary
 	 */
 	public static boolean isBinary(String contentType) {
@@ -690,7 +691,8 @@ public class ContentTypeHelper {
 	/**
 	 * Gets the extension.
 	 *
-	 * @param filename the filename
+	 * @param filename
+	 *            the filename
 	 * @return the extension
 	 */
 	public static String getExtension(String filename) {

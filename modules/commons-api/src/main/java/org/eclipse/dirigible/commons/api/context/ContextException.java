@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.commons.api.context;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ContextException.
+ * The ContextException.
  */
 public class ContextException extends Exception {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5039208772641246649L;
 
 	/**
@@ -29,10 +27,14 @@ public class ContextException extends Exception {
 	/**
 	 * Instantiates a new context exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param enableSuppression
+	 *            the enable suppression
+	 * @param writableStackTrace
+	 *            the writable stack trace
 	 */
 	public ContextException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
@@ -41,8 +43,10 @@ public class ContextException extends Exception {
 	/**
 	 * Instantiates a new context exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public ContextException(String message, Throwable cause) {
 		super(message, cause);
@@ -51,7 +55,8 @@ public class ContextException extends Exception {
 	/**
 	 * Instantiates a new context exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public ContextException(String message) {
 		super(message);
@@ -60,7 +65,8 @@ public class ContextException extends Exception {
 	/**
 	 * Instantiates a new context exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public ContextException(Throwable cause) {
 		super(cause);

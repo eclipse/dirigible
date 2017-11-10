@@ -13,17 +13,14 @@ package org.eclipse.dirigible.commons.api.helpers;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.annotation.XmlRootElement;
 
-// TODO: Auto-generated Javadoc
 /**
  * Error message that is returned if an application error occur.
  */
 @XmlRootElement
 public class AppExceptionMessage {
 
-	/** The message. */
 	private String message;
 
-	/** The status. */
 	private int status;
 
 	/**
@@ -57,7 +54,8 @@ public class AppExceptionMessage {
 	/**
 	 * Sets the error message.
 	 *
-	 * @param message the new message
+	 * @param message
+	 *            the new message
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -75,7 +73,8 @@ public class AppExceptionMessage {
 	/**
 	 * Sets the status.
 	 *
-	 * @param status            the server response status.
+	 * @param status
+	 *            the server response status.
 	 */
 	public void setStatus(int status) {
 		this.status = status;

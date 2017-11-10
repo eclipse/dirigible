@@ -10,7 +10,6 @@
 
 package org.eclipse.dirigible.commons.api.module;
 
-
 import static java.text.MessageFormat.format;
 
 import java.util.ServiceLoader;
@@ -20,16 +19,15 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.AbstractModule;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DirigibleModulesInstallerModule.
+ * The DirigibleModulesInstallerModule is the entry point of the Guice integration.
  */
 public class DirigibleModulesInstallerModule extends AbstractModule {
-	
-	/** The logger. */
+
 	private Logger logger = LoggerFactory.getLogger(DirigibleModulesInstallerModule.class);
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.google.inject.AbstractModule#configure()
 	 */
 	@Override

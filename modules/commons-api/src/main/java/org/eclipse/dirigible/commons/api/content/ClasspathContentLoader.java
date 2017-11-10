@@ -21,25 +21,22 @@ import java.util.jar.JarFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ClasspathContentLoader.
+ * The ClasspathContentLoader utility used for loading the resourced from the JAR files in the class path.
  */
 public class ClasspathContentLoader {
-	
-	/** The Constant logger. */
+
 	private static final Logger logger = LoggerFactory.getLogger(ClasspathContentLoader.class);
-	
-	/** The Constant ROOT. */
+
 	private static final String ROOT = "/";
-	
-	/** The loaded. */
+
 	private static Boolean LOADED = false;
-	
+
 	/**
-	 * Load.
+	 * Load the resources from the JAR files and give them to the {@link IClasspathContentHandler} instances}.
 	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static final void load() throws IOException {
 		synchronized (ClasspathContentLoader.class) {
@@ -53,16 +50,16 @@ public class ClasspathContentLoader {
 				while (urls.hasMoreElements()) {
 					URL url = urls.nextElement();
 					JarURLConnection urlConnection = (JarURLConnection) (url.openConnection());
-			        try (JarFile jar = urlConnection.getJarFile();) {
-			            Enumeration<JarEntry> entries = jar.entries();
-			            while (entries.hasMoreElements()) {
-			            	String entry = entries.nextElement().getName();
-			            	for (IClasspathContentHandler contentHandler : contentHandlers) {
-			            		contentHandler.accept(ROOT + entry);
-			            	}
-			                logger.trace("resource found: " + entry);
-			            }
-			        }
+					try (JarFile jar = urlConnection.getJarFile();) {
+						Enumeration<JarEntry> entries = jar.entries();
+						while (entries.hasMoreElements()) {
+							String entry = entries.nextElement().getName();
+							for (IClasspathContentHandler contentHandler : contentHandlers) {
+								contentHandler.accept(ROOT + entry);
+							}
+							logger.trace("resource found: " + entry);
+						}
+					}
 				}
 				LOADED = true;
 			}
