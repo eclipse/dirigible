@@ -21,9 +21,8 @@ import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ProjectMetadataManager.
+ * The ProjectMetadataManager is the controller of reading and writing the project.json files.
  */
 public class ProjectMetadataManager {
 
@@ -34,10 +33,14 @@ public class ProjectMetadataManager {
 	/**
 	 * Ensure project metadata.
 	 *
-	 * @param workspace the workspace
-	 * @param projectName the project name
-	 * @param repositoryURI the repository URI
-	 * @param branch the branch
+	 * @param workspace
+	 *            the workspace
+	 * @param projectName
+	 *            the project name
+	 * @param repositoryURI
+	 *            the repository URI
+	 * @param branch
+	 *            the branch
 	 */
 	public void ensureProjectMetadata(IWorkspace workspace, String projectName, String repositoryURI, String branch) {
 		IProject project = workspace.getProject(projectName);
@@ -61,9 +64,11 @@ public class ProjectMetadataManager {
 	/**
 	 * Gets the branch.
 	 *
-	 * @param selectedProject the selected project
+	 * @param selectedProject
+	 *            the selected project
 	 * @return the branch
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static String getBranch(IProject selectedProject) throws IOException {
 		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
@@ -74,9 +79,11 @@ public class ProjectMetadataManager {
 	/**
 	 * Gets the repository uri.
 	 *
-	 * @param selectedProject the selected project
+	 * @param selectedProject
+	 *            the selected project
 	 * @return the repository uri
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static String getRepositoryUri(IProject selectedProject) throws IOException {
 		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
@@ -89,9 +96,11 @@ public class ProjectMetadataManager {
 	/**
 	 * Gets the dependencies.
 	 *
-	 * @param selectedProject the selected project
+	 * @param selectedProject
+	 *            the selected project
 	 * @return the dependencies
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static ProjectMetadataDependency[] getDependencies(IProject selectedProject) throws IOException {
 		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
@@ -104,9 +113,11 @@ public class ProjectMetadataManager {
 	/**
 	 * Gets the project metadata.
 	 *
-	 * @param selectedProject the selected project
+	 * @param selectedProject
+	 *            the selected project
 	 * @return the project metadata
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private static ProjectMetadata getProjectMetadata(IProject selectedProject) throws IOException {
 		IFile projectFile = selectedProject.getFile(ProjectMetadata.PROJECT_METADATA_FILE_NAME);

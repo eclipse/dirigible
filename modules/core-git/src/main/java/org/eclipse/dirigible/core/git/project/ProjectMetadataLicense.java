@@ -10,16 +10,13 @@
 
 package org.eclipse.dirigible.core.git.project;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ProjectMetadataLicense.
+ * The ProjectMetadataLicense serialization object.
  */
 public class ProjectMetadataLicense {
 
-	/** The name. */
 	private String name;
 
-	/** The url. */
 	private String url;
 
 	/**
@@ -34,7 +31,8 @@ public class ProjectMetadataLicense {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -52,7 +50,8 @@ public class ProjectMetadataLicense {
 	/**
 	 * Sets the url.
 	 *
-	 * @param url the new url
+	 * @param url
+	 *            the new url
 	 */
 	public void setUrl(String url) {
 		this.url = url;

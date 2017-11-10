@@ -18,9 +18,8 @@ import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.IRepository;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ProjectPropertiesVerifier.
+ * Verify that the given project is Git aware.
  */
 public class ProjectPropertiesVerifier {
 
@@ -31,8 +30,10 @@ public class ProjectPropertiesVerifier {
 	/**
 	 * Verify.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
 	 * @return true, if successful
 	 */
 	public boolean verify(IWorkspace workspace, IProject project) {

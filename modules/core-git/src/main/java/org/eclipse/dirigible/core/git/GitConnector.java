@@ -46,23 +46,22 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GitConnector.
+ * The GitConnector utility is used for simplified communication with Git SCM server.
  */
 public class GitConnector implements IGitConnector {
 
-	/** The git. */
 	private final Git git;
-	
-	/** The repository. */
+
 	private Repository repository;
 
 	/**
 	 * Instantiates a new git connector.
 	 *
-	 * @param repository the repository
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param repository
+	 *            the repository
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	GitConnector(Repository repository) throws IOException {
 		this.repository = repository;
