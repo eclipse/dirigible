@@ -12,26 +12,28 @@ package org.eclipse.dirigible.repository.local;
 
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
-// TODO: Auto-generated Javadoc
 /**
  * Internal representation of a File/Resource kind of object.
  */
 public class LocalFileVersion extends LocalFile {
 
-	/** The version. */
 	private int version;
 
-	/** The bytes. */
 	private byte[] bytes;
 
 	/**
 	 * Instantiates a new local file version.
 	 *
-	 * @param repository the repository
-	 * @param isBinary the is binary
-	 * @param contentType the content type
-	 * @param version the version
-	 * @param bytes the bytes
+	 * @param repository
+	 *            the repository
+	 * @param isBinary
+	 *            the is binary
+	 * @param contentType
+	 *            the content type
+	 * @param version
+	 *            the version
+	 * @param bytes
+	 *            the bytes
 	 */
 	public LocalFileVersion(FileSystemRepository repository, boolean isBinary, String contentType, int version, byte[] bytes) {
 		super(repository, isBinary, contentType);
@@ -39,7 +41,8 @@ public class LocalFileVersion extends LocalFile {
 		this.bytes = bytes;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.local.LocalFile#getData()
 	 */
 	@Override

@@ -16,28 +16,27 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The File System based Local Repository implementation of {@link IRepository}.
  */
 public class LocalRepository extends FileSystemRepository {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepository.class);
 
 	/** The Constant TYPE. */
 	public static final String TYPE = "local";
-	
+
 	/** The Constant DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER. */
 	public static final String DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER"; //$NON-NLS-1$
-	
+
 	/** The Constant DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE. */
 	public static final String DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
 	 *
-	 * @throws LocalRepositoryException in case the repository cannot be created
+	 * @throws LocalRepositoryException
+	 *             in case the repository cannot be created
 	 */
 	public LocalRepository() throws LocalRepositoryException {
 		this(null);
@@ -46,8 +45,10 @@ public class LocalRepository extends FileSystemRepository {
 	/**
 	 * Constructor with root folder parameter.
 	 *
-	 * @param rootFolder the root folder
-	 * @throws LocalRepositoryException in case the repository cannot be created
+	 * @param rootFolder
+	 *            the root folder
+	 * @throws LocalRepositoryException
+	 *             in case the repository cannot be created
 	 */
 	public LocalRepository(String rootFolder) throws LocalRepositoryException {
 		super(rootFolder);
@@ -56,15 +57,19 @@ public class LocalRepository extends FileSystemRepository {
 	/**
 	 * Constructor with root folder parameter.
 	 *
-	 * @param rootFolder the reoot folder
-	 * @param absolute whether the root folder is absolute
-	 * @throws LocalRepositoryException in case the repository cannot be created
+	 * @param rootFolder
+	 *            the reoot folder
+	 * @param absolute
+	 *            whether the root folder is absolute
+	 * @throws LocalRepositoryException
+	 *             in case the repository cannot be created
 	 */
 	public LocalRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		super(rootFolder, absolute);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
 	 */
 	@Override

@@ -27,7 +27,6 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The file system based implementation of {@link ICollection}.
  */
@@ -36,14 +35,17 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	/**
 	 * Instantiates a new local collection.
 	 *
-	 * @param repository the repository
-	 * @param path the path
+	 * @param repository
+	 *            the repository
+	 * @param path
+	 *            the path
 	 */
 	public LocalCollection(FileSystemRepository repository, RepositoryPath path) {
 		super(repository, path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#create()
 	 */
 	@Override
@@ -55,7 +57,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		parent.createCollection(getName());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#delete()
 	 */
 	@Override
@@ -68,7 +71,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#renameTo(java.lang.String)
 	 */
 	@Override
@@ -81,7 +85,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#moveTo(java.lang.String)
 	 */
 	@Override
@@ -94,7 +99,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#copyTo(java.lang.String)
 	 */
 	@Override
@@ -107,7 +113,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#exists()
 	 */
 	@Override
@@ -120,7 +127,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return FileSystemUtils.directoryExists(localPath);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#isEmpty()
 	 */
 	@Override
@@ -128,7 +136,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return getResources().isEmpty() && getCollections().isEmpty();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollections()
 	 */
 	@Override
@@ -142,7 +151,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollectionsNames()
 	 */
 	@Override
@@ -161,7 +171,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#createCollection(java.lang.String)
 	 */
 	@Override
@@ -176,7 +187,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return getCollection(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollection(java.lang.String)
 	 */
 	@Override
@@ -185,7 +197,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return new LocalCollection(getRepository(), path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(java.lang.String)
 	 */
 	@Override
@@ -194,15 +207,18 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		collection.delete();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(org.eclipse.dirigible.repository.api.ICollection)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(org.eclipse.dirigible.repository.api.
+	 * ICollection)
 	 */
 	@Override
 	public void removeCollection(ICollection childCollection) throws RepositoryWriteException {
 		removeCollection(childCollection.getName());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getResources()
 	 */
 	@Override
@@ -215,7 +231,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getResourcesNames()
 	 */
 	@Override
@@ -234,7 +251,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getResource(java.lang.String)
 	 */
 	@Override
@@ -243,8 +261,10 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return new LocalResource(getRepository(), path);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[], boolean, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[], boolean,
+	 * java.lang.String)
 	 */
 	@Override
 	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
@@ -258,7 +278,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return getResource(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[])
 	 */
 	@Override
@@ -268,7 +289,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return createResource(name, content, isBinary, contentType);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#removeResource(java.lang.String)
 	 */
 	@Override
@@ -277,15 +299,18 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		resource.delete();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.ICollection#removeResource(org.eclipse.dirigible.repository.api.IResource)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.repository.api.ICollection#removeResource(org.eclipse.dirigible.repository.api.IResource)
 	 */
 	@Override
 	public void removeResource(IResource resource) throws RepositoryWriteException {
 		removeResource(resource.getName());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getChildren()
 	 */
 	@Override
@@ -296,7 +321,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.local.LocalEntity#equals(java.lang.Object)
 	 */
 	@Override
@@ -314,7 +340,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 		return getPath().equals(other.getPath());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.local.LocalEntity#hashCode()
 	 */
 	@Override
@@ -326,7 +353,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	 * Gets the folder.
 	 *
 	 * @return the folder
-	 * @throws RepositoryReadException the repository read exception
+	 * @throws RepositoryReadException
+	 *             the repository read exception
 	 */
 	protected LocalFolder getFolder() throws RepositoryReadException {
 		final LocalObject object = getLocalObject();
@@ -343,7 +371,8 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	 * Gets the folder safe.
 	 *
 	 * @return the folder safe
-	 * @throws RepositoryNotFoundException the repository not found exception
+	 * @throws RepositoryNotFoundException
+	 *             the repository not found exception
 	 */
 	protected LocalFolder getFolderSafe() throws RepositoryNotFoundException {
 		final LocalFolder folder = getFolder();

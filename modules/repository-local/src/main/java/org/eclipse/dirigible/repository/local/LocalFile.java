@@ -12,24 +12,24 @@ package org.eclipse.dirigible.repository.local;
 
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
-// TODO: Auto-generated Javadoc
 /**
  * Internal representation of a File/Resource kind of object.
  */
 public class LocalFile extends LocalObject {
 
-	/** The binary. */
 	private boolean binary = false;
 
-	/** The content type. */
 	private String contentType;
 
 	/**
 	 * Instantiates a new local file.
 	 *
-	 * @param repository the repository
-	 * @param isBinary the is binary
-	 * @param contentType the content type
+	 * @param repository
+	 *            the repository
+	 * @param isBinary
+	 *            the is binary
+	 * @param contentType
+	 *            the content type
 	 */
 	public LocalFile(FileSystemRepository repository, boolean isBinary, String contentType) {
 		super(repository);
@@ -40,7 +40,8 @@ public class LocalFile extends LocalObject {
 	/**
 	 * Delete.
 	 *
-	 * @throws LocalRepositoryException the local repository exception
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void delete() throws LocalRepositoryException {
 		getRepository().getRepositoryDao().removeFileByPath(getPath());
@@ -49,8 +50,10 @@ public class LocalFile extends LocalObject {
 	/**
 	 * Rename.
 	 *
-	 * @param newPath the new path
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param newPath
+	 *            the new path
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void rename(String newPath) throws LocalRepositoryException {
 		getRepository().getRepositoryDao().renameFile(getPath(), newPath);
@@ -59,8 +62,10 @@ public class LocalFile extends LocalObject {
 	/**
 	 * Copy to.
 	 *
-	 * @param newPath the new path
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param newPath
+	 *            the new path
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void copyTo(String newPath) throws LocalRepositoryException {
 		getRepository().getRepositoryDao().copyFile(getPath(), newPath);
@@ -70,7 +75,8 @@ public class LocalFile extends LocalObject {
 	 * Gets the data.
 	 *
 	 * @return the data
-	 * @throws LocalRepositoryException the local repository exception
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public byte[] getData() throws LocalRepositoryException {
 		return getRepository().getRepositoryDao().getFileContent(this);
@@ -79,8 +85,10 @@ public class LocalFile extends LocalObject {
 	/**
 	 * Sets the data.
 	 *
-	 * @param content the new data
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param content
+	 *            the new data
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void setData(byte[] content) throws LocalRepositoryException {
 		getRepository().getRepositoryDao().setFileContent(this, content);

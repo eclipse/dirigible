@@ -12,7 +12,6 @@ package org.eclipse.dirigible.repository.master;
 
 import org.eclipse.dirigible.repository.api.IRepositoryReader;
 
-// TODO: Auto-generated Javadoc
 /**
  * Represents the Master Repository, which is used as an read only image for initial load or reset.
  */
