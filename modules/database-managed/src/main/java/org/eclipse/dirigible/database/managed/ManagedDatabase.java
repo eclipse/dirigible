@@ -23,25 +23,24 @@ import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The File System based Local Repository implementation of {@link IRepository}.
  */
 public class ManagedDatabase implements IDatabase {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ManagedDatabase.class);
 
 	/** The Constant TYPE. */
 	public static final String TYPE = "managed";
-	
+
 	/** The Constant DATASOURCES. */
 	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
-	
+
 	/** The Constant JNDI_DEFAULT_PREFIX. */
 	private static final String JNDI_DEFAULT_PREFIX = "java:comp/env/jdbc/";
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
 	 */
 	@Override
@@ -50,15 +49,17 @@ public class ManagedDatabase implements IDatabase {
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource()
 	 */
 	@Override
 	public DataSource getDataSource() {
 		return getDataSource(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
 	 */
 	@Override
@@ -75,7 +76,8 @@ public class ManagedDatabase implements IDatabase {
 	/**
 	 * Lookup data source.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the data source
 	 */
 	private DataSource lookupDataSource(String name) {
@@ -91,7 +93,8 @@ public class ManagedDatabase implements IDatabase {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
 	 */
 	@Override
@@ -99,7 +102,8 @@ public class ManagedDatabase implements IDatabase {
 		return TYPE;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()
 	 */
 	@Override
