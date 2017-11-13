@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.database.api;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DatabaseException.
+ * The Database Exception.
  */
 public class DatabaseException extends RuntimeException {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2161860568272479874L;
 
 	/**
@@ -29,10 +27,14 @@ public class DatabaseException extends RuntimeException {
 	/**
 	 * Instantiates a new database exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param enableSuppression
+	 *            the enable suppression
+	 * @param writableStackTrace
+	 *            the writable stack trace
 	 */
 	public DatabaseException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
@@ -41,8 +43,10 @@ public class DatabaseException extends RuntimeException {
 	/**
 	 * Instantiates a new database exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public DatabaseException(String message, Throwable cause) {
 		super(message, cause);
@@ -51,7 +55,8 @@ public class DatabaseException extends RuntimeException {
 	/**
 	 * Instantiates a new database exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public DatabaseException(String message) {
 		super(message);
@@ -60,7 +65,8 @@ public class DatabaseException extends RuntimeException {
 	/**
 	 * Instantiates a new database exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public DatabaseException(Throwable cause) {
 		super(cause);

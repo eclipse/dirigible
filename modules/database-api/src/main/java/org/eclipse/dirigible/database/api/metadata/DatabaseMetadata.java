@@ -18,411 +18,410 @@ import java.util.List;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.Filter;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DatabaseMetadata.
+ * The Database Metadata transport object.
  */
 public class DatabaseMetadata {
 
 	/** The all procedures are callable. */
 	private boolean allProceduresAreCallable;
-	
+
 	/** The all tables are selectable. */
 	private boolean allTablesAreSelectable;
-	
+
 	/** The get URL. */
 	private String getURL;
-	
+
 	/** The get user name. */
 	private String getUserName;
-	
+
 	/** The is read only. */
 	private boolean isReadOnly;
-	
+
 	/** The nulls are sorted high. */
 	private boolean nullsAreSortedHigh;
-	
+
 	/** The nulls are sorted low. */
 	private boolean nullsAreSortedLow;
-	
+
 	/** The nulls are sorted at start. */
 	private boolean nullsAreSortedAtStart;
-	
+
 	/** The nulls are sorted at end. */
 	private boolean nullsAreSortedAtEnd;
-	
+
 	/** The database product name. */
 	private String databaseProductName;
-	
+
 	/** The database product version. */
 	private String databaseProductVersion;
-	
+
 	/** The driver name. */
 	private String driverName;
-	
+
 	/** The driver version. */
 	private String driverVersion;
-	
+
 	/** The driver major version. */
 	private int driverMajorVersion;
-	
+
 	/** The driver minor version. */
 	private int driverMinorVersion;
-	
+
 	/** The uses local files. */
 	private boolean usesLocalFiles;
-	
+
 	/** The uses local file per table. */
 	private boolean usesLocalFilePerTable;
-	
+
 	/** The supports mixed case identifiers. */
 	private boolean supportsMixedCaseIdentifiers;
-	
+
 	/** The stores upper case identifiers. */
 	private boolean storesUpperCaseIdentifiers;
-	
+
 	/** The stores lower case identifiers. */
 	private boolean storesLowerCaseIdentifiers;
-	
+
 	/** The stores mixed case identifiers. */
 	private boolean storesMixedCaseIdentifiers;
-	
+
 	/** The supports mixed case quoted identifiers. */
 	private boolean supportsMixedCaseQuotedIdentifiers;
-	
+
 	/** The stores upper case quoted identifiers. */
 	private boolean storesUpperCaseQuotedIdentifiers;
-	
+
 	/** The stores lower case quoted identifiers. */
 	private boolean storesLowerCaseQuotedIdentifiers;
-	
+
 	/** The stores mixed case quoted identifiers. */
 	private boolean storesMixedCaseQuotedIdentifiers;
-	
+
 	/** The identifier quote string. */
 	private String identifierQuoteString;
-	
+
 	/** The sql keywords. */
 	private String sqlKeywords;
-	
+
 	/** The numeric functions. */
 	private String numericFunctions;
-	
+
 	/** The string functions. */
 	private String stringFunctions;
-	
+
 	/** The system functions. */
 	private String systemFunctions;
-	
+
 	/** The time date functions. */
 	private String timeDateFunctions;
-	
+
 	/** The search string escape. */
 	private String searchStringEscape;
-	
+
 	/** The extra name characters. */
 	private String extraNameCharacters;
-	
+
 	/** The supports alter table with add column. */
 	private boolean supportsAlterTableWithAddColumn;
-	
+
 	/** The supports alter table with drop column. */
 	private boolean supportsAlterTableWithDropColumn;
-	
+
 	/** The supports column aliasing. */
 	private boolean supportsColumnAliasing;
-	
+
 	/** The null plus non null is null. */
 	private boolean nullPlusNonNullIsNull;
-	
+
 	/** The supports convert. */
 	private boolean supportsConvert;
-	
+
 	/** The supports table correlation names. */
 	private boolean supportsTableCorrelationNames;
-	
+
 	/** The supports different table correlation names. */
 	private boolean supportsDifferentTableCorrelationNames;
-	
+
 	/** The supports expressions in order by. */
 	private boolean supportsExpressionsInOrderBy;
-	
+
 	/** The supports order by unrelated. */
 	private boolean supportsOrderByUnrelated;
-	
+
 	/** The supports group by. */
 	private boolean supportsGroupBy;
-	
+
 	/** The supports group by unrelated. */
 	private boolean supportsGroupByUnrelated;
-	
+
 	/** The supports group by beyond select. */
 	private boolean supportsGroupByBeyondSelect;
-	
+
 	/** The supports like escape clause. */
 	private boolean supportsLikeEscapeClause;
-	
+
 	/** The supports multiple result sets. */
 	private boolean supportsMultipleResultSets;
-	
+
 	/** The supports multiple transactions. */
 	private boolean supportsMultipleTransactions;
-	
+
 	/** The supports non nullable columns. */
 	private boolean supportsNonNullableColumns;
-	
+
 	/** The supports minimum SQL grammar. */
 	private boolean supportsMinimumSQLGrammar;
-	
+
 	/** The supports core SQL grammar. */
 	private boolean supportsCoreSQLGrammar;
-	
+
 	/** The supports extended SQL grammar. */
 	private boolean supportsExtendedSQLGrammar;
-	
+
 	/** The supports ANSI 92 entry level SQL. */
 	private boolean supportsANSI92EntryLevelSQL;
-	
+
 	/** The supports ANSI 92 intermediate SQL. */
 	private boolean supportsANSI92IntermediateSQL;
-	
+
 	/** The supports ANSI 92 full SQL. */
 	private boolean supportsANSI92FullSQL;
-	
+
 	/** The supports integrity enhancement facility. */
 	private boolean supportsIntegrityEnhancementFacility;
-	
+
 	/** The supports outer joins. */
 	private boolean supportsOuterJoins;
-	
+
 	/** The supports full outer joins. */
 	private boolean supportsFullOuterJoins;
-	
+
 	/** The supports limited outer joins. */
 	private boolean supportsLimitedOuterJoins;
-	
+
 	/** The schema term. */
 	private String schemaTerm;
-	
+
 	/** The procedure term. */
 	private String procedureTerm;
-	
+
 	/** The catalog term. */
 	private String catalogTerm;
-	
+
 	/** The is catalog at start. */
 	private boolean isCatalogAtStart;
-	
+
 	/** The get catalog separator. */
 	private String getCatalogSeparator;
-	
+
 	/** The supports schemas in data manipulation. */
 	private boolean supportsSchemasInDataManipulation;
-	
+
 	/** The supports schemas in procedure calls. */
 	private boolean supportsSchemasInProcedureCalls;
-	
+
 	/** The supports schemas in table definitions. */
 	private boolean supportsSchemasInTableDefinitions;
-	
+
 	/** The supports schemas in index definitions. */
 	private boolean supportsSchemasInIndexDefinitions;
-	
+
 	/** The supports schemas in privilege definitions. */
 	private boolean supportsSchemasInPrivilegeDefinitions;
-	
+
 	/** The supports catalogs in data manipulation. */
 	private boolean supportsCatalogsInDataManipulation;
-	
+
 	/** The supports catalogs in procedure calls. */
 	private boolean supportsCatalogsInProcedureCalls;
-	
+
 	/** The supports catalogs in table definitions. */
 	private boolean supportsCatalogsInTableDefinitions;
-	
+
 	/** The supports catalogs in index definitions. */
 	private boolean supportsCatalogsInIndexDefinitions;
-	
+
 	/** The supports catalogs in privilege definitions. */
 	private boolean supportsCatalogsInPrivilegeDefinitions;
-	
+
 	/** The supports positioned delete. */
 	private boolean supportsPositionedDelete;
-	
+
 	/** The supports positioned update. */
 	private boolean supportsPositionedUpdate;
-	
+
 	/** The supports select for update. */
 	private boolean supportsSelectForUpdate;
-	
+
 	/** The supports stored procedures. */
 	private boolean supportsStoredProcedures;
-	
+
 	/** The supports subqueries in comparisons. */
 	private boolean supportsSubqueriesInComparisons;
-	
+
 	/** The supports subqueries in exists. */
 	private boolean supportsSubqueriesInExists;
-	
+
 	/** The supports subqueries in ins. */
 	private boolean supportsSubqueriesInIns;
-	
+
 	/** The supports subqueries in quantifieds. */
 	private boolean supportsSubqueriesInQuantifieds;
-	
+
 	/** The supports correlated subqueries. */
 	private boolean supportsCorrelatedSubqueries;
-	
+
 	/** The supports union. */
 	private boolean supportsUnion;
-	
+
 	/** The supports union all. */
 	private boolean supportsUnionAll;
-	
+
 	/** The supports open cursors across commit. */
 	private boolean supportsOpenCursorsAcrossCommit;
-	
+
 	/** The supports open cursors across rollback. */
 	private boolean supportsOpenCursorsAcrossRollback;
-	
+
 	/** The supports open statements across commit. */
 	private boolean supportsOpenStatementsAcrossCommit;
-	
+
 	/** The supports open statements across rollback. */
 	private boolean supportsOpenStatementsAcrossRollback;
-	
+
 	/** The max binary literal length. */
 	private int maxBinaryLiteralLength;
-	
+
 	/** The max char literal length. */
 	private int maxCharLiteralLength;
-	
+
 	/** The max column name length. */
 	private int maxColumnNameLength;
-	
+
 	/** The max columns in group by. */
 	private int maxColumnsInGroupBy;
-	
+
 	/** The max columns in index. */
 	private int maxColumnsInIndex;
-	
+
 	/** The max columns in order by. */
 	private int maxColumnsInOrderBy;
-	
+
 	/** The max columns in select. */
 	private int maxColumnsInSelect;
-	
+
 	/** The max columns in table. */
 	private int maxColumnsInTable;
-	
+
 	/** The max connections. */
 	private int maxConnections;
-	
+
 	/** The max cursor name length. */
 	private int maxCursorNameLength;
-	
+
 	/** The max index length. */
 	private int maxIndexLength;
-	
+
 	/** The max schema name length. */
 	private int maxSchemaNameLength;
-	
+
 	/** The max procedure name length. */
 	private int maxProcedureNameLength;
-	
+
 	/** The max catalog name length. */
 	private int maxCatalogNameLength;
-	
+
 	/** The max row size. */
 	private int maxRowSize;
-	
+
 	/** The max row size include blobs. */
 	private boolean maxRowSizeIncludeBlobs;
-	
+
 	/** The max statement length. */
 	private int maxStatementLength;
-	
+
 	/** The max statements. */
 	private int maxStatements;
-	
+
 	/** The max table name length. */
 	private int maxTableNameLength;
-	
+
 	/** The max tables in select. */
 	private int maxTablesInSelect;
-	
+
 	/** The max user name length. */
 	private int maxUserNameLength;
-	
+
 	/** The default transaction isolation. */
 	private int defaultTransactionIsolation;
-	
+
 	/** The supports transactions. */
 	private boolean supportsTransactions;
-	
+
 	/** The supports data definition and data manipulation transactions. */
 	private boolean supportsDataDefinitionAndDataManipulationTransactions;
-	
+
 	/** The supports data manipulation transactions only. */
 	private boolean supportsDataManipulationTransactionsOnly;
-	
+
 	/** The data definition causes transaction commit. */
 	private boolean dataDefinitionCausesTransactionCommit;
-	
+
 	/** The data definition ignored in transactions. */
 	private boolean dataDefinitionIgnoredInTransactions;
-	
+
 	/** The supports batch updates. */
 	private boolean supportsBatchUpdates;
-	
+
 	/** The supports savepoints. */
 	private boolean supportsSavepoints;
-	
+
 	/** The supports named parameters. */
 	private boolean supportsNamedParameters;
-	
+
 	/** The supports multiple open results. */
 	private boolean supportsMultipleOpenResults;
-	
+
 	/** The supports get generated keys. */
 	private boolean supportsGetGeneratedKeys;
-	
+
 	/** The get result set holdability. */
 	private int getResultSetHoldability;
-	
+
 	/** The get database major version. */
 	private int getDatabaseMajorVersion;
-	
+
 	/** The get database minor version. */
 	private int getDatabaseMinorVersion;
-	
+
 	/** The get JDBC major version. */
 	private int getJDBCMajorVersion;
-	
+
 	/** The get JDBC minor version. */
 	private int getJDBCMinorVersion;
-	
+
 	/** The get SQL state type. */
 	private int getSQLStateType;
-	
+
 	/** The locators update copy. */
 	private boolean locatorsUpdateCopy;
-	
+
 	/** The supports statement pooling. */
 	private boolean supportsStatementPooling;
-	
+
 	/** The supports stored functions using call syntax. */
 	private boolean supportsStoredFunctionsUsingCallSyntax;
-	
+
 	/** The auto commit failure closes all result sets. */
 	private boolean autoCommitFailureClosesAllResultSets;
-	
+
 	/** The generated key always returned. */
 	private boolean generatedKeyAlwaysReturned;
-	
+
 	/** The get max logical lob size. */
 	private long getMaxLogicalLobSize;
-	
+
 	/** The supports ref cursors. */
 	private boolean supportsRefCursors;
 
@@ -435,11 +434,16 @@ public class DatabaseMetadata {
 	/**
 	 * Instantiates a new database metadata.
 	 *
-	 * @param connection the connection
-	 * @param catalogName the catalog name
-	 * @param schemaNameFilter the schema name filter
-	 * @param tableNameFilter the table name filter
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemaNameFilter
+	 *            the schema name filter
+	 * @param tableNameFilter
+	 *            the table name filter
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public DatabaseMetadata(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> tableNameFilter)
 			throws SQLException {
@@ -595,7 +599,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the all procedures are callable.
 	 *
-	 * @param allProceduresAreCallable the new all procedures are callable
+	 * @param allProceduresAreCallable
+	 *            the new all procedures are callable
 	 */
 	public void setAllProceduresAreCallable(boolean allProceduresAreCallable) {
 		this.allProceduresAreCallable = allProceduresAreCallable;
@@ -613,7 +618,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the all tables are selectable.
 	 *
-	 * @param allTablesAreSelectable the new all tables are selectable
+	 * @param allTablesAreSelectable
+	 *            the new all tables are selectable
 	 */
 	public void setAllTablesAreSelectable(boolean allTablesAreSelectable) {
 		this.allTablesAreSelectable = allTablesAreSelectable;
@@ -631,7 +637,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the URL.
 	 *
-	 * @param getURL the new gets the URL
+	 * @param getURL
+	 *            the new gets the URL
 	 */
 	public void setGetURL(String getURL) {
 		this.getURL = getURL;
@@ -649,7 +656,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the user name.
 	 *
-	 * @param getUserName the new gets the user name
+	 * @param getUserName
+	 *            the new gets the user name
 	 */
 	public void setGetUserName(String getUserName) {
 		this.getUserName = getUserName;
@@ -667,7 +675,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the read only.
 	 *
-	 * @param isReadOnly the new read only
+	 * @param isReadOnly
+	 *            the new read only
 	 */
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
@@ -685,7 +694,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the nulls are sorted high.
 	 *
-	 * @param nullsAreSortedHigh the new nulls are sorted high
+	 * @param nullsAreSortedHigh
+	 *            the new nulls are sorted high
 	 */
 	public void setNullsAreSortedHigh(boolean nullsAreSortedHigh) {
 		this.nullsAreSortedHigh = nullsAreSortedHigh;
@@ -703,7 +713,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the nulls are sorted low.
 	 *
-	 * @param nullsAreSortedLow the new nulls are sorted low
+	 * @param nullsAreSortedLow
+	 *            the new nulls are sorted low
 	 */
 	public void setNullsAreSortedLow(boolean nullsAreSortedLow) {
 		this.nullsAreSortedLow = nullsAreSortedLow;
@@ -721,7 +732,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the nulls are sorted at start.
 	 *
-	 * @param nullsAreSortedAtStart the new nulls are sorted at start
+	 * @param nullsAreSortedAtStart
+	 *            the new nulls are sorted at start
 	 */
 	public void setNullsAreSortedAtStart(boolean nullsAreSortedAtStart) {
 		this.nullsAreSortedAtStart = nullsAreSortedAtStart;
@@ -739,7 +751,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the nulls are sorted at end.
 	 *
-	 * @param nullsAreSortedAtEnd the new nulls are sorted at end
+	 * @param nullsAreSortedAtEnd
+	 *            the new nulls are sorted at end
 	 */
 	public void setNullsAreSortedAtEnd(boolean nullsAreSortedAtEnd) {
 		this.nullsAreSortedAtEnd = nullsAreSortedAtEnd;
@@ -757,7 +770,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the database product name.
 	 *
-	 * @param databaseProductName the new database product name
+	 * @param databaseProductName
+	 *            the new database product name
 	 */
 	public void setDatabaseProductName(String databaseProductName) {
 		this.databaseProductName = databaseProductName;
@@ -775,7 +789,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the database product version.
 	 *
-	 * @param databaseProductVersion the new database product version
+	 * @param databaseProductVersion
+	 *            the new database product version
 	 */
 	public void setDatabaseProductVersion(String databaseProductVersion) {
 		this.databaseProductVersion = databaseProductVersion;
@@ -793,7 +808,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the driver name.
 	 *
-	 * @param driverName the new driver name
+	 * @param driverName
+	 *            the new driver name
 	 */
 	public void setDriverName(String driverName) {
 		this.driverName = driverName;
@@ -811,7 +827,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the driver version.
 	 *
-	 * @param driverVersion the new driver version
+	 * @param driverVersion
+	 *            the new driver version
 	 */
 	public void setDriverVersion(String driverVersion) {
 		this.driverVersion = driverVersion;
@@ -829,7 +846,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the driver major version.
 	 *
-	 * @param driverMajorVersion the new driver major version
+	 * @param driverMajorVersion
+	 *            the new driver major version
 	 */
 	public void setDriverMajorVersion(int driverMajorVersion) {
 		this.driverMajorVersion = driverMajorVersion;
@@ -847,7 +865,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the driver minor version.
 	 *
-	 * @param driverMinorVersion the new driver minor version
+	 * @param driverMinorVersion
+	 *            the new driver minor version
 	 */
 	public void setDriverMinorVersion(int driverMinorVersion) {
 		this.driverMinorVersion = driverMinorVersion;
@@ -865,7 +884,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the uses local files.
 	 *
-	 * @param usesLocalFiles the new uses local files
+	 * @param usesLocalFiles
+	 *            the new uses local files
 	 */
 	public void setUsesLocalFiles(boolean usesLocalFiles) {
 		this.usesLocalFiles = usesLocalFiles;
@@ -883,7 +903,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the uses local file per table.
 	 *
-	 * @param usesLocalFilePerTable the new uses local file per table
+	 * @param usesLocalFilePerTable
+	 *            the new uses local file per table
 	 */
 	public void setUsesLocalFilePerTable(boolean usesLocalFilePerTable) {
 		this.usesLocalFilePerTable = usesLocalFilePerTable;
@@ -901,7 +922,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports mixed case identifiers.
 	 *
-	 * @param supportsMixedCaseIdentifiers the new supports mixed case identifiers
+	 * @param supportsMixedCaseIdentifiers
+	 *            the new supports mixed case identifiers
 	 */
 	public void setSupportsMixedCaseIdentifiers(boolean supportsMixedCaseIdentifiers) {
 		this.supportsMixedCaseIdentifiers = supportsMixedCaseIdentifiers;
@@ -919,7 +941,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores upper case identifiers.
 	 *
-	 * @param storesUpperCaseIdentifiers the new stores upper case identifiers
+	 * @param storesUpperCaseIdentifiers
+	 *            the new stores upper case identifiers
 	 */
 	public void setStoresUpperCaseIdentifiers(boolean storesUpperCaseIdentifiers) {
 		this.storesUpperCaseIdentifiers = storesUpperCaseIdentifiers;
@@ -937,7 +960,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores lower case identifiers.
 	 *
-	 * @param storesLowerCaseIdentifiers the new stores lower case identifiers
+	 * @param storesLowerCaseIdentifiers
+	 *            the new stores lower case identifiers
 	 */
 	public void setStoresLowerCaseIdentifiers(boolean storesLowerCaseIdentifiers) {
 		this.storesLowerCaseIdentifiers = storesLowerCaseIdentifiers;
@@ -955,7 +979,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores mixed case identifiers.
 	 *
-	 * @param storesMixedCaseIdentifiers the new stores mixed case identifiers
+	 * @param storesMixedCaseIdentifiers
+	 *            the new stores mixed case identifiers
 	 */
 	public void setStoresMixedCaseIdentifiers(boolean storesMixedCaseIdentifiers) {
 		this.storesMixedCaseIdentifiers = storesMixedCaseIdentifiers;
@@ -973,7 +998,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports mixed case quoted identifiers.
 	 *
-	 * @param supportsMixedCaseQuotedIdentifiers the new supports mixed case quoted identifiers
+	 * @param supportsMixedCaseQuotedIdentifiers
+	 *            the new supports mixed case quoted identifiers
 	 */
 	public void setSupportsMixedCaseQuotedIdentifiers(boolean supportsMixedCaseQuotedIdentifiers) {
 		this.supportsMixedCaseQuotedIdentifiers = supportsMixedCaseQuotedIdentifiers;
@@ -991,7 +1017,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores upper case quoted identifiers.
 	 *
-	 * @param storesUpperCaseQuotedIdentifiers the new stores upper case quoted identifiers
+	 * @param storesUpperCaseQuotedIdentifiers
+	 *            the new stores upper case quoted identifiers
 	 */
 	public void setStoresUpperCaseQuotedIdentifiers(boolean storesUpperCaseQuotedIdentifiers) {
 		this.storesUpperCaseQuotedIdentifiers = storesUpperCaseQuotedIdentifiers;
@@ -1009,7 +1036,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores lower case quoted identifiers.
 	 *
-	 * @param storesLowerCaseQuotedIdentifiers the new stores lower case quoted identifiers
+	 * @param storesLowerCaseQuotedIdentifiers
+	 *            the new stores lower case quoted identifiers
 	 */
 	public void setStoresLowerCaseQuotedIdentifiers(boolean storesLowerCaseQuotedIdentifiers) {
 		this.storesLowerCaseQuotedIdentifiers = storesLowerCaseQuotedIdentifiers;
@@ -1027,7 +1055,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the stores mixed case quoted identifiers.
 	 *
-	 * @param storesMixedCaseQuotedIdentifiers the new stores mixed case quoted identifiers
+	 * @param storesMixedCaseQuotedIdentifiers
+	 *            the new stores mixed case quoted identifiers
 	 */
 	public void setStoresMixedCaseQuotedIdentifiers(boolean storesMixedCaseQuotedIdentifiers) {
 		this.storesMixedCaseQuotedIdentifiers = storesMixedCaseQuotedIdentifiers;
@@ -1045,7 +1074,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the identifier quote string.
 	 *
-	 * @param identifierQuoteString the new identifier quote string
+	 * @param identifierQuoteString
+	 *            the new identifier quote string
 	 */
 	public void setIdentifierQuoteString(String identifierQuoteString) {
 		this.identifierQuoteString = identifierQuoteString;
@@ -1063,7 +1093,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the sql keywords.
 	 *
-	 * @param sqlKeywords the new sql keywords
+	 * @param sqlKeywords
+	 *            the new sql keywords
 	 */
 	public void setSqlKeywords(String sqlKeywords) {
 		this.sqlKeywords = sqlKeywords;
@@ -1081,7 +1112,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the numeric functions.
 	 *
-	 * @param numericFunctions the new numeric functions
+	 * @param numericFunctions
+	 *            the new numeric functions
 	 */
 	public void setNumericFunctions(String numericFunctions) {
 		this.numericFunctions = numericFunctions;
@@ -1099,7 +1131,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the string functions.
 	 *
-	 * @param stringFunctions the new string functions
+	 * @param stringFunctions
+	 *            the new string functions
 	 */
 	public void setStringFunctions(String stringFunctions) {
 		this.stringFunctions = stringFunctions;
@@ -1117,7 +1150,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the system functions.
 	 *
-	 * @param systemFunctions the new system functions
+	 * @param systemFunctions
+	 *            the new system functions
 	 */
 	public void setSystemFunctions(String systemFunctions) {
 		this.systemFunctions = systemFunctions;
@@ -1135,7 +1169,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the time date functions.
 	 *
-	 * @param timeDateFunctions the new time date functions
+	 * @param timeDateFunctions
+	 *            the new time date functions
 	 */
 	public void setTimeDateFunctions(String timeDateFunctions) {
 		this.timeDateFunctions = timeDateFunctions;
@@ -1153,7 +1188,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the search string escape.
 	 *
-	 * @param searchStringEscape the new search string escape
+	 * @param searchStringEscape
+	 *            the new search string escape
 	 */
 	public void setSearchStringEscape(String searchStringEscape) {
 		this.searchStringEscape = searchStringEscape;
@@ -1171,7 +1207,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the extra name characters.
 	 *
-	 * @param extraNameCharacters the new extra name characters
+	 * @param extraNameCharacters
+	 *            the new extra name characters
 	 */
 	public void setExtraNameCharacters(String extraNameCharacters) {
 		this.extraNameCharacters = extraNameCharacters;
@@ -1189,7 +1226,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports alter table with add column.
 	 *
-	 * @param supportsAlterTableWithAddColumn the new supports alter table with add column
+	 * @param supportsAlterTableWithAddColumn
+	 *            the new supports alter table with add column
 	 */
 	public void setSupportsAlterTableWithAddColumn(boolean supportsAlterTableWithAddColumn) {
 		this.supportsAlterTableWithAddColumn = supportsAlterTableWithAddColumn;
@@ -1207,7 +1245,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports alter table with drop column.
 	 *
-	 * @param supportsAlterTableWithDropColumn the new supports alter table with drop column
+	 * @param supportsAlterTableWithDropColumn
+	 *            the new supports alter table with drop column
 	 */
 	public void setSupportsAlterTableWithDropColumn(boolean supportsAlterTableWithDropColumn) {
 		this.supportsAlterTableWithDropColumn = supportsAlterTableWithDropColumn;
@@ -1225,7 +1264,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports column aliasing.
 	 *
-	 * @param supportsColumnAliasing the new supports column aliasing
+	 * @param supportsColumnAliasing
+	 *            the new supports column aliasing
 	 */
 	public void setSupportsColumnAliasing(boolean supportsColumnAliasing) {
 		this.supportsColumnAliasing = supportsColumnAliasing;
@@ -1243,7 +1283,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the null plus non null is null.
 	 *
-	 * @param nullPlusNonNullIsNull the new null plus non null is null
+	 * @param nullPlusNonNullIsNull
+	 *            the new null plus non null is null
 	 */
 	public void setNullPlusNonNullIsNull(boolean nullPlusNonNullIsNull) {
 		this.nullPlusNonNullIsNull = nullPlusNonNullIsNull;
@@ -1261,7 +1302,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports convert.
 	 *
-	 * @param supportsConvert the new supports convert
+	 * @param supportsConvert
+	 *            the new supports convert
 	 */
 	public void setSupportsConvert(boolean supportsConvert) {
 		this.supportsConvert = supportsConvert;
@@ -1279,7 +1321,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports table correlation names.
 	 *
-	 * @param supportsTableCorrelationNames the new supports table correlation names
+	 * @param supportsTableCorrelationNames
+	 *            the new supports table correlation names
 	 */
 	public void setSupportsTableCorrelationNames(boolean supportsTableCorrelationNames) {
 		this.supportsTableCorrelationNames = supportsTableCorrelationNames;
@@ -1297,7 +1340,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports different table correlation names.
 	 *
-	 * @param supportsDifferentTableCorrelationNames the new supports different table correlation names
+	 * @param supportsDifferentTableCorrelationNames
+	 *            the new supports different table correlation names
 	 */
 	public void setSupportsDifferentTableCorrelationNames(boolean supportsDifferentTableCorrelationNames) {
 		this.supportsDifferentTableCorrelationNames = supportsDifferentTableCorrelationNames;
@@ -1315,7 +1359,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports expressions in order by.
 	 *
-	 * @param supportsExpressionsInOrderBy the new supports expressions in order by
+	 * @param supportsExpressionsInOrderBy
+	 *            the new supports expressions in order by
 	 */
 	public void setSupportsExpressionsInOrderBy(boolean supportsExpressionsInOrderBy) {
 		this.supportsExpressionsInOrderBy = supportsExpressionsInOrderBy;
@@ -1333,7 +1378,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports order by unrelated.
 	 *
-	 * @param supportsOrderByUnrelated the new supports order by unrelated
+	 * @param supportsOrderByUnrelated
+	 *            the new supports order by unrelated
 	 */
 	public void setSupportsOrderByUnrelated(boolean supportsOrderByUnrelated) {
 		this.supportsOrderByUnrelated = supportsOrderByUnrelated;
@@ -1351,7 +1397,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports group by.
 	 *
-	 * @param supportsGroupBy the new supports group by
+	 * @param supportsGroupBy
+	 *            the new supports group by
 	 */
 	public void setSupportsGroupBy(boolean supportsGroupBy) {
 		this.supportsGroupBy = supportsGroupBy;
@@ -1369,7 +1416,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports group by unrelated.
 	 *
-	 * @param supportsGroupByUnrelated the new supports group by unrelated
+	 * @param supportsGroupByUnrelated
+	 *            the new supports group by unrelated
 	 */
 	public void setSupportsGroupByUnrelated(boolean supportsGroupByUnrelated) {
 		this.supportsGroupByUnrelated = supportsGroupByUnrelated;
@@ -1387,7 +1435,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports group by beyond select.
 	 *
-	 * @param supportsGroupByBeyondSelect the new supports group by beyond select
+	 * @param supportsGroupByBeyondSelect
+	 *            the new supports group by beyond select
 	 */
 	public void setSupportsGroupByBeyondSelect(boolean supportsGroupByBeyondSelect) {
 		this.supportsGroupByBeyondSelect = supportsGroupByBeyondSelect;
@@ -1405,7 +1454,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports like escape clause.
 	 *
-	 * @param supportsLikeEscapeClause the new supports like escape clause
+	 * @param supportsLikeEscapeClause
+	 *            the new supports like escape clause
 	 */
 	public void setSupportsLikeEscapeClause(boolean supportsLikeEscapeClause) {
 		this.supportsLikeEscapeClause = supportsLikeEscapeClause;
@@ -1423,7 +1473,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports multiple result sets.
 	 *
-	 * @param supportsMultipleResultSets the new supports multiple result sets
+	 * @param supportsMultipleResultSets
+	 *            the new supports multiple result sets
 	 */
 	public void setSupportsMultipleResultSets(boolean supportsMultipleResultSets) {
 		this.supportsMultipleResultSets = supportsMultipleResultSets;
@@ -1441,7 +1492,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports multiple transactions.
 	 *
-	 * @param supportsMultipleTransactions the new supports multiple transactions
+	 * @param supportsMultipleTransactions
+	 *            the new supports multiple transactions
 	 */
 	public void setSupportsMultipleTransactions(boolean supportsMultipleTransactions) {
 		this.supportsMultipleTransactions = supportsMultipleTransactions;
@@ -1459,7 +1511,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports non nullable columns.
 	 *
-	 * @param supportsNonNullableColumns the new supports non nullable columns
+	 * @param supportsNonNullableColumns
+	 *            the new supports non nullable columns
 	 */
 	public void setSupportsNonNullableColumns(boolean supportsNonNullableColumns) {
 		this.supportsNonNullableColumns = supportsNonNullableColumns;
@@ -1477,7 +1530,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports minimum SQL grammar.
 	 *
-	 * @param supportsMinimumSQLGrammar the new supports minimum SQL grammar
+	 * @param supportsMinimumSQLGrammar
+	 *            the new supports minimum SQL grammar
 	 */
 	public void setSupportsMinimumSQLGrammar(boolean supportsMinimumSQLGrammar) {
 		this.supportsMinimumSQLGrammar = supportsMinimumSQLGrammar;
@@ -1495,7 +1549,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports core SQL grammar.
 	 *
-	 * @param supportsCoreSQLGrammar the new supports core SQL grammar
+	 * @param supportsCoreSQLGrammar
+	 *            the new supports core SQL grammar
 	 */
 	public void setSupportsCoreSQLGrammar(boolean supportsCoreSQLGrammar) {
 		this.supportsCoreSQLGrammar = supportsCoreSQLGrammar;
@@ -1513,7 +1568,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports extended SQL grammar.
 	 *
-	 * @param supportsExtendedSQLGrammar the new supports extended SQL grammar
+	 * @param supportsExtendedSQLGrammar
+	 *            the new supports extended SQL grammar
 	 */
 	public void setSupportsExtendedSQLGrammar(boolean supportsExtendedSQLGrammar) {
 		this.supportsExtendedSQLGrammar = supportsExtendedSQLGrammar;
@@ -1531,7 +1587,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports ANSI 92 entry level SQL.
 	 *
-	 * @param supportsANSI92EntryLevelSQL the new supports ANSI 92 entry level SQL
+	 * @param supportsANSI92EntryLevelSQL
+	 *            the new supports ANSI 92 entry level SQL
 	 */
 	public void setSupportsANSI92EntryLevelSQL(boolean supportsANSI92EntryLevelSQL) {
 		this.supportsANSI92EntryLevelSQL = supportsANSI92EntryLevelSQL;
@@ -1549,7 +1606,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports ANSI 92 intermediate SQL.
 	 *
-	 * @param supportsANSI92IntermediateSQL the new supports ANSI 92 intermediate SQL
+	 * @param supportsANSI92IntermediateSQL
+	 *            the new supports ANSI 92 intermediate SQL
 	 */
 	public void setSupportsANSI92IntermediateSQL(boolean supportsANSI92IntermediateSQL) {
 		this.supportsANSI92IntermediateSQL = supportsANSI92IntermediateSQL;
@@ -1567,7 +1625,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports ANSI 92 full SQL.
 	 *
-	 * @param supportsANSI92FullSQL the new supports ANSI 92 full SQL
+	 * @param supportsANSI92FullSQL
+	 *            the new supports ANSI 92 full SQL
 	 */
 	public void setSupportsANSI92FullSQL(boolean supportsANSI92FullSQL) {
 		this.supportsANSI92FullSQL = supportsANSI92FullSQL;
@@ -1585,7 +1644,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports integrity enhancement facility.
 	 *
-	 * @param supportsIntegrityEnhancementFacility the new supports integrity enhancement facility
+	 * @param supportsIntegrityEnhancementFacility
+	 *            the new supports integrity enhancement facility
 	 */
 	public void setSupportsIntegrityEnhancementFacility(boolean supportsIntegrityEnhancementFacility) {
 		this.supportsIntegrityEnhancementFacility = supportsIntegrityEnhancementFacility;
@@ -1603,7 +1663,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports outer joins.
 	 *
-	 * @param supportsOuterJoins the new supports outer joins
+	 * @param supportsOuterJoins
+	 *            the new supports outer joins
 	 */
 	public void setSupportsOuterJoins(boolean supportsOuterJoins) {
 		this.supportsOuterJoins = supportsOuterJoins;
@@ -1621,7 +1682,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports full outer joins.
 	 *
-	 * @param supportsFullOuterJoins the new supports full outer joins
+	 * @param supportsFullOuterJoins
+	 *            the new supports full outer joins
 	 */
 	public void setSupportsFullOuterJoins(boolean supportsFullOuterJoins) {
 		this.supportsFullOuterJoins = supportsFullOuterJoins;
@@ -1639,7 +1701,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports limited outer joins.
 	 *
-	 * @param supportsLimitedOuterJoins the new supports limited outer joins
+	 * @param supportsLimitedOuterJoins
+	 *            the new supports limited outer joins
 	 */
 	public void setSupportsLimitedOuterJoins(boolean supportsLimitedOuterJoins) {
 		this.supportsLimitedOuterJoins = supportsLimitedOuterJoins;
@@ -1657,7 +1720,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the schema term.
 	 *
-	 * @param schemaTerm the new schema term
+	 * @param schemaTerm
+	 *            the new schema term
 	 */
 	public void setSchemaTerm(String schemaTerm) {
 		this.schemaTerm = schemaTerm;
@@ -1675,7 +1739,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the procedure term.
 	 *
-	 * @param procedureTerm the new procedure term
+	 * @param procedureTerm
+	 *            the new procedure term
 	 */
 	public void setProcedureTerm(String procedureTerm) {
 		this.procedureTerm = procedureTerm;
@@ -1693,7 +1758,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the catalog term.
 	 *
-	 * @param catalogTerm the new catalog term
+	 * @param catalogTerm
+	 *            the new catalog term
 	 */
 	public void setCatalogTerm(String catalogTerm) {
 		this.catalogTerm = catalogTerm;
@@ -1711,7 +1777,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the catalog at start.
 	 *
-	 * @param isCatalogAtStart the new catalog at start
+	 * @param isCatalogAtStart
+	 *            the new catalog at start
 	 */
 	public void setCatalogAtStart(boolean isCatalogAtStart) {
 		this.isCatalogAtStart = isCatalogAtStart;
@@ -1729,7 +1796,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the catalog separator.
 	 *
-	 * @param getCatalogSeparator the new gets the catalog separator
+	 * @param getCatalogSeparator
+	 *            the new gets the catalog separator
 	 */
 	public void setGetCatalogSeparator(String getCatalogSeparator) {
 		this.getCatalogSeparator = getCatalogSeparator;
@@ -1747,7 +1815,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in data manipulation.
 	 *
-	 * @param supportsSchemasInDataManipulation the new supports schemas in data manipulation
+	 * @param supportsSchemasInDataManipulation
+	 *            the new supports schemas in data manipulation
 	 */
 	public void setSupportsSchemasInDataManipulation(boolean supportsSchemasInDataManipulation) {
 		this.supportsSchemasInDataManipulation = supportsSchemasInDataManipulation;
@@ -1765,7 +1834,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in procedure calls.
 	 *
-	 * @param supportsSchemasInProcedureCalls the new supports schemas in procedure calls
+	 * @param supportsSchemasInProcedureCalls
+	 *            the new supports schemas in procedure calls
 	 */
 	public void setSupportsSchemasInProcedureCalls(boolean supportsSchemasInProcedureCalls) {
 		this.supportsSchemasInProcedureCalls = supportsSchemasInProcedureCalls;
@@ -1783,7 +1853,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in table definitions.
 	 *
-	 * @param supportsSchemasInTableDefinitions the new supports schemas in table definitions
+	 * @param supportsSchemasInTableDefinitions
+	 *            the new supports schemas in table definitions
 	 */
 	public void setSupportsSchemasInTableDefinitions(boolean supportsSchemasInTableDefinitions) {
 		this.supportsSchemasInTableDefinitions = supportsSchemasInTableDefinitions;
@@ -1801,7 +1872,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in index definitions.
 	 *
-	 * @param supportsSchemasInIndexDefinitions the new supports schemas in index definitions
+	 * @param supportsSchemasInIndexDefinitions
+	 *            the new supports schemas in index definitions
 	 */
 	public void setSupportsSchemasInIndexDefinitions(boolean supportsSchemasInIndexDefinitions) {
 		this.supportsSchemasInIndexDefinitions = supportsSchemasInIndexDefinitions;
@@ -1819,7 +1891,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports schemas in privilege definitions.
 	 *
-	 * @param supportsSchemasInPrivilegeDefinitions the new supports schemas in privilege definitions
+	 * @param supportsSchemasInPrivilegeDefinitions
+	 *            the new supports schemas in privilege definitions
 	 */
 	public void setSupportsSchemasInPrivilegeDefinitions(boolean supportsSchemasInPrivilegeDefinitions) {
 		this.supportsSchemasInPrivilegeDefinitions = supportsSchemasInPrivilegeDefinitions;
@@ -1837,7 +1910,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in data manipulation.
 	 *
-	 * @param supportsCatalogsInDataManipulation the new supports catalogs in data manipulation
+	 * @param supportsCatalogsInDataManipulation
+	 *            the new supports catalogs in data manipulation
 	 */
 	public void setSupportsCatalogsInDataManipulation(boolean supportsCatalogsInDataManipulation) {
 		this.supportsCatalogsInDataManipulation = supportsCatalogsInDataManipulation;
@@ -1855,7 +1929,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in procedure calls.
 	 *
-	 * @param supportsCatalogsInProcedureCalls the new supports catalogs in procedure calls
+	 * @param supportsCatalogsInProcedureCalls
+	 *            the new supports catalogs in procedure calls
 	 */
 	public void setSupportsCatalogsInProcedureCalls(boolean supportsCatalogsInProcedureCalls) {
 		this.supportsCatalogsInProcedureCalls = supportsCatalogsInProcedureCalls;
@@ -1873,7 +1948,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in table definitions.
 	 *
-	 * @param supportsCatalogsInTableDefinitions the new supports catalogs in table definitions
+	 * @param supportsCatalogsInTableDefinitions
+	 *            the new supports catalogs in table definitions
 	 */
 	public void setSupportsCatalogsInTableDefinitions(boolean supportsCatalogsInTableDefinitions) {
 		this.supportsCatalogsInTableDefinitions = supportsCatalogsInTableDefinitions;
@@ -1891,7 +1967,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in index definitions.
 	 *
-	 * @param supportsCatalogsInIndexDefinitions the new supports catalogs in index definitions
+	 * @param supportsCatalogsInIndexDefinitions
+	 *            the new supports catalogs in index definitions
 	 */
 	public void setSupportsCatalogsInIndexDefinitions(boolean supportsCatalogsInIndexDefinitions) {
 		this.supportsCatalogsInIndexDefinitions = supportsCatalogsInIndexDefinitions;
@@ -1909,7 +1986,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports catalogs in privilege definitions.
 	 *
-	 * @param supportsCatalogsInPrivilegeDefinitions the new supports catalogs in privilege definitions
+	 * @param supportsCatalogsInPrivilegeDefinitions
+	 *            the new supports catalogs in privilege definitions
 	 */
 	public void setSupportsCatalogsInPrivilegeDefinitions(boolean supportsCatalogsInPrivilegeDefinitions) {
 		this.supportsCatalogsInPrivilegeDefinitions = supportsCatalogsInPrivilegeDefinitions;
@@ -1927,7 +2005,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports positioned delete.
 	 *
-	 * @param supportsPositionedDelete the new supports positioned delete
+	 * @param supportsPositionedDelete
+	 *            the new supports positioned delete
 	 */
 	public void setSupportsPositionedDelete(boolean supportsPositionedDelete) {
 		this.supportsPositionedDelete = supportsPositionedDelete;
@@ -1945,7 +2024,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports positioned update.
 	 *
-	 * @param supportsPositionedUpdate the new supports positioned update
+	 * @param supportsPositionedUpdate
+	 *            the new supports positioned update
 	 */
 	public void setSupportsPositionedUpdate(boolean supportsPositionedUpdate) {
 		this.supportsPositionedUpdate = supportsPositionedUpdate;
@@ -1963,7 +2043,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports select for update.
 	 *
-	 * @param supportsSelectForUpdate the new supports select for update
+	 * @param supportsSelectForUpdate
+	 *            the new supports select for update
 	 */
 	public void setSupportsSelectForUpdate(boolean supportsSelectForUpdate) {
 		this.supportsSelectForUpdate = supportsSelectForUpdate;
@@ -1981,7 +2062,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports stored procedures.
 	 *
-	 * @param supportsStoredProcedures the new supports stored procedures
+	 * @param supportsStoredProcedures
+	 *            the new supports stored procedures
 	 */
 	public void setSupportsStoredProcedures(boolean supportsStoredProcedures) {
 		this.supportsStoredProcedures = supportsStoredProcedures;
@@ -1999,7 +2081,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports subqueries in comparisons.
 	 *
-	 * @param supportsSubqueriesInComparisons the new supports subqueries in comparisons
+	 * @param supportsSubqueriesInComparisons
+	 *            the new supports subqueries in comparisons
 	 */
 	public void setSupportsSubqueriesInComparisons(boolean supportsSubqueriesInComparisons) {
 		this.supportsSubqueriesInComparisons = supportsSubqueriesInComparisons;
@@ -2017,7 +2100,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports subqueries in exists.
 	 *
-	 * @param supportsSubqueriesInExists the new supports subqueries in exists
+	 * @param supportsSubqueriesInExists
+	 *            the new supports subqueries in exists
 	 */
 	public void setSupportsSubqueriesInExists(boolean supportsSubqueriesInExists) {
 		this.supportsSubqueriesInExists = supportsSubqueriesInExists;
@@ -2035,7 +2119,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports subqueries in ins.
 	 *
-	 * @param supportsSubqueriesInIns the new supports subqueries in ins
+	 * @param supportsSubqueriesInIns
+	 *            the new supports subqueries in ins
 	 */
 	public void setSupportsSubqueriesInIns(boolean supportsSubqueriesInIns) {
 		this.supportsSubqueriesInIns = supportsSubqueriesInIns;
@@ -2053,7 +2138,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports subqueries in quantifieds.
 	 *
-	 * @param supportsSubqueriesInQuantifieds the new supports subqueries in quantifieds
+	 * @param supportsSubqueriesInQuantifieds
+	 *            the new supports subqueries in quantifieds
 	 */
 	public void setSupportsSubqueriesInQuantifieds(boolean supportsSubqueriesInQuantifieds) {
 		this.supportsSubqueriesInQuantifieds = supportsSubqueriesInQuantifieds;
@@ -2071,7 +2157,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports correlated subqueries.
 	 *
-	 * @param supportsCorrelatedSubqueries the new supports correlated subqueries
+	 * @param supportsCorrelatedSubqueries
+	 *            the new supports correlated subqueries
 	 */
 	public void setSupportsCorrelatedSubqueries(boolean supportsCorrelatedSubqueries) {
 		this.supportsCorrelatedSubqueries = supportsCorrelatedSubqueries;
@@ -2089,7 +2176,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports union.
 	 *
-	 * @param supportsUnion the new supports union
+	 * @param supportsUnion
+	 *            the new supports union
 	 */
 	public void setSupportsUnion(boolean supportsUnion) {
 		this.supportsUnion = supportsUnion;
@@ -2107,7 +2195,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports union all.
 	 *
-	 * @param supportsUnionAll the new supports union all
+	 * @param supportsUnionAll
+	 *            the new supports union all
 	 */
 	public void setSupportsUnionAll(boolean supportsUnionAll) {
 		this.supportsUnionAll = supportsUnionAll;
@@ -2125,7 +2214,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports open cursors across commit.
 	 *
-	 * @param supportsOpenCursorsAcrossCommit the new supports open cursors across commit
+	 * @param supportsOpenCursorsAcrossCommit
+	 *            the new supports open cursors across commit
 	 */
 	public void setSupportsOpenCursorsAcrossCommit(boolean supportsOpenCursorsAcrossCommit) {
 		this.supportsOpenCursorsAcrossCommit = supportsOpenCursorsAcrossCommit;
@@ -2143,7 +2233,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports open cursors across rollback.
 	 *
-	 * @param supportsOpenCursorsAcrossRollback the new supports open cursors across rollback
+	 * @param supportsOpenCursorsAcrossRollback
+	 *            the new supports open cursors across rollback
 	 */
 	public void setSupportsOpenCursorsAcrossRollback(boolean supportsOpenCursorsAcrossRollback) {
 		this.supportsOpenCursorsAcrossRollback = supportsOpenCursorsAcrossRollback;
@@ -2161,7 +2252,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports open statements across commit.
 	 *
-	 * @param supportsOpenStatementsAcrossCommit the new supports open statements across commit
+	 * @param supportsOpenStatementsAcrossCommit
+	 *            the new supports open statements across commit
 	 */
 	public void setSupportsOpenStatementsAcrossCommit(boolean supportsOpenStatementsAcrossCommit) {
 		this.supportsOpenStatementsAcrossCommit = supportsOpenStatementsAcrossCommit;
@@ -2179,7 +2271,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports open statements across rollback.
 	 *
-	 * @param supportsOpenStatementsAcrossRollback the new supports open statements across rollback
+	 * @param supportsOpenStatementsAcrossRollback
+	 *            the new supports open statements across rollback
 	 */
 	public void setSupportsOpenStatementsAcrossRollback(boolean supportsOpenStatementsAcrossRollback) {
 		this.supportsOpenStatementsAcrossRollback = supportsOpenStatementsAcrossRollback;
@@ -2197,7 +2290,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max binary literal length.
 	 *
-	 * @param maxBinaryLiteralLength the new max binary literal length
+	 * @param maxBinaryLiteralLength
+	 *            the new max binary literal length
 	 */
 	public void setMaxBinaryLiteralLength(int maxBinaryLiteralLength) {
 		this.maxBinaryLiteralLength = maxBinaryLiteralLength;
@@ -2215,7 +2309,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max char literal length.
 	 *
-	 * @param maxCharLiteralLength the new max char literal length
+	 * @param maxCharLiteralLength
+	 *            the new max char literal length
 	 */
 	public void setMaxCharLiteralLength(int maxCharLiteralLength) {
 		this.maxCharLiteralLength = maxCharLiteralLength;
@@ -2233,7 +2328,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max column name length.
 	 *
-	 * @param maxColumnNameLength the new max column name length
+	 * @param maxColumnNameLength
+	 *            the new max column name length
 	 */
 	public void setMaxColumnNameLength(int maxColumnNameLength) {
 		this.maxColumnNameLength = maxColumnNameLength;
@@ -2251,7 +2347,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in group by.
 	 *
-	 * @param maxColumnsInGroupBy the new max columns in group by
+	 * @param maxColumnsInGroupBy
+	 *            the new max columns in group by
 	 */
 	public void setMaxColumnsInGroupBy(int maxColumnsInGroupBy) {
 		this.maxColumnsInGroupBy = maxColumnsInGroupBy;
@@ -2269,7 +2366,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in index.
 	 *
-	 * @param maxColumnsInIndex the new max columns in index
+	 * @param maxColumnsInIndex
+	 *            the new max columns in index
 	 */
 	public void setMaxColumnsInIndex(int maxColumnsInIndex) {
 		this.maxColumnsInIndex = maxColumnsInIndex;
@@ -2287,7 +2385,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in order by.
 	 *
-	 * @param maxColumnsInOrderBy the new max columns in order by
+	 * @param maxColumnsInOrderBy
+	 *            the new max columns in order by
 	 */
 	public void setMaxColumnsInOrderBy(int maxColumnsInOrderBy) {
 		this.maxColumnsInOrderBy = maxColumnsInOrderBy;
@@ -2305,7 +2404,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in select.
 	 *
-	 * @param maxColumnsInSelect the new max columns in select
+	 * @param maxColumnsInSelect
+	 *            the new max columns in select
 	 */
 	public void setMaxColumnsInSelect(int maxColumnsInSelect) {
 		this.maxColumnsInSelect = maxColumnsInSelect;
@@ -2323,7 +2423,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max columns in table.
 	 *
-	 * @param maxColumnsInTable the new max columns in table
+	 * @param maxColumnsInTable
+	 *            the new max columns in table
 	 */
 	public void setMaxColumnsInTable(int maxColumnsInTable) {
 		this.maxColumnsInTable = maxColumnsInTable;
@@ -2341,7 +2442,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max connections.
 	 *
-	 * @param maxConnections the new max connections
+	 * @param maxConnections
+	 *            the new max connections
 	 */
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
@@ -2359,7 +2461,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max cursor name length.
 	 *
-	 * @param maxCursorNameLength the new max cursor name length
+	 * @param maxCursorNameLength
+	 *            the new max cursor name length
 	 */
 	public void setMaxCursorNameLength(int maxCursorNameLength) {
 		this.maxCursorNameLength = maxCursorNameLength;
@@ -2377,7 +2480,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max index length.
 	 *
-	 * @param maxIndexLength the new max index length
+	 * @param maxIndexLength
+	 *            the new max index length
 	 */
 	public void setMaxIndexLength(int maxIndexLength) {
 		this.maxIndexLength = maxIndexLength;
@@ -2395,7 +2499,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max schema name length.
 	 *
-	 * @param maxSchemaNameLength the new max schema name length
+	 * @param maxSchemaNameLength
+	 *            the new max schema name length
 	 */
 	public void setMaxSchemaNameLength(int maxSchemaNameLength) {
 		this.maxSchemaNameLength = maxSchemaNameLength;
@@ -2413,7 +2518,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max procedure name length.
 	 *
-	 * @param maxProcedureNameLength the new max procedure name length
+	 * @param maxProcedureNameLength
+	 *            the new max procedure name length
 	 */
 	public void setMaxProcedureNameLength(int maxProcedureNameLength) {
 		this.maxProcedureNameLength = maxProcedureNameLength;
@@ -2431,7 +2537,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max catalog name length.
 	 *
-	 * @param maxCatalogNameLength the new max catalog name length
+	 * @param maxCatalogNameLength
+	 *            the new max catalog name length
 	 */
 	public void setMaxCatalogNameLength(int maxCatalogNameLength) {
 		this.maxCatalogNameLength = maxCatalogNameLength;
@@ -2449,7 +2556,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max row size.
 	 *
-	 * @param maxRowSize the new max row size
+	 * @param maxRowSize
+	 *            the new max row size
 	 */
 	public void setMaxRowSize(int maxRowSize) {
 		this.maxRowSize = maxRowSize;
@@ -2467,7 +2575,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max row size include blobs.
 	 *
-	 * @param maxRowSizeIncludeBlobs the new max row size include blobs
+	 * @param maxRowSizeIncludeBlobs
+	 *            the new max row size include blobs
 	 */
 	public void setMaxRowSizeIncludeBlobs(boolean maxRowSizeIncludeBlobs) {
 		this.maxRowSizeIncludeBlobs = maxRowSizeIncludeBlobs;
@@ -2485,7 +2594,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max statement length.
 	 *
-	 * @param maxStatementLength the new max statement length
+	 * @param maxStatementLength
+	 *            the new max statement length
 	 */
 	public void setMaxStatementLength(int maxStatementLength) {
 		this.maxStatementLength = maxStatementLength;
@@ -2503,7 +2613,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max statements.
 	 *
-	 * @param maxStatements the new max statements
+	 * @param maxStatements
+	 *            the new max statements
 	 */
 	public void setMaxStatements(int maxStatements) {
 		this.maxStatements = maxStatements;
@@ -2521,7 +2632,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max table name length.
 	 *
-	 * @param maxTableNameLength the new max table name length
+	 * @param maxTableNameLength
+	 *            the new max table name length
 	 */
 	public void setMaxTableNameLength(int maxTableNameLength) {
 		this.maxTableNameLength = maxTableNameLength;
@@ -2539,7 +2651,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max tables in select.
 	 *
-	 * @param maxTablesInSelect the new max tables in select
+	 * @param maxTablesInSelect
+	 *            the new max tables in select
 	 */
 	public void setMaxTablesInSelect(int maxTablesInSelect) {
 		this.maxTablesInSelect = maxTablesInSelect;
@@ -2557,7 +2670,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the max user name length.
 	 *
-	 * @param maxUserNameLength the new max user name length
+	 * @param maxUserNameLength
+	 *            the new max user name length
 	 */
 	public void setMaxUserNameLength(int maxUserNameLength) {
 		this.maxUserNameLength = maxUserNameLength;
@@ -2575,7 +2689,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the default transaction isolation.
 	 *
-	 * @param defaultTransactionIsolation the new default transaction isolation
+	 * @param defaultTransactionIsolation
+	 *            the new default transaction isolation
 	 */
 	public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
 		this.defaultTransactionIsolation = defaultTransactionIsolation;
@@ -2593,7 +2708,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports transactions.
 	 *
-	 * @param supportsTransactions the new supports transactions
+	 * @param supportsTransactions
+	 *            the new supports transactions
 	 */
 	public void setSupportsTransactions(boolean supportsTransactions) {
 		this.supportsTransactions = supportsTransactions;
@@ -2611,7 +2727,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports data definition and data manipulation transactions.
 	 *
-	 * @param supportsDataDefinitionAndDataManipulationTransactions the new supports data definition and data manipulation transactions
+	 * @param supportsDataDefinitionAndDataManipulationTransactions
+	 *            the new supports data definition and data manipulation transactions
 	 */
 	public void setSupportsDataDefinitionAndDataManipulationTransactions(boolean supportsDataDefinitionAndDataManipulationTransactions) {
 		this.supportsDataDefinitionAndDataManipulationTransactions = supportsDataDefinitionAndDataManipulationTransactions;
@@ -2629,7 +2746,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports data manipulation transactions only.
 	 *
-	 * @param supportsDataManipulationTransactionsOnly the new supports data manipulation transactions only
+	 * @param supportsDataManipulationTransactionsOnly
+	 *            the new supports data manipulation transactions only
 	 */
 	public void setSupportsDataManipulationTransactionsOnly(boolean supportsDataManipulationTransactionsOnly) {
 		this.supportsDataManipulationTransactionsOnly = supportsDataManipulationTransactionsOnly;
@@ -2647,7 +2765,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the data definition causes transaction commit.
 	 *
-	 * @param dataDefinitionCausesTransactionCommit the new data definition causes transaction commit
+	 * @param dataDefinitionCausesTransactionCommit
+	 *            the new data definition causes transaction commit
 	 */
 	public void setDataDefinitionCausesTransactionCommit(boolean dataDefinitionCausesTransactionCommit) {
 		this.dataDefinitionCausesTransactionCommit = dataDefinitionCausesTransactionCommit;
@@ -2665,7 +2784,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the data definition ignored in transactions.
 	 *
-	 * @param dataDefinitionIgnoredInTransactions the new data definition ignored in transactions
+	 * @param dataDefinitionIgnoredInTransactions
+	 *            the new data definition ignored in transactions
 	 */
 	public void setDataDefinitionIgnoredInTransactions(boolean dataDefinitionIgnoredInTransactions) {
 		this.dataDefinitionIgnoredInTransactions = dataDefinitionIgnoredInTransactions;
@@ -2683,7 +2803,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports batch updates.
 	 *
-	 * @param supportsBatchUpdates the new supports batch updates
+	 * @param supportsBatchUpdates
+	 *            the new supports batch updates
 	 */
 	public void setSupportsBatchUpdates(boolean supportsBatchUpdates) {
 		this.supportsBatchUpdates = supportsBatchUpdates;
@@ -2701,7 +2822,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports savepoints.
 	 *
-	 * @param supportsSavepoints the new supports savepoints
+	 * @param supportsSavepoints
+	 *            the new supports savepoints
 	 */
 	public void setSupportsSavepoints(boolean supportsSavepoints) {
 		this.supportsSavepoints = supportsSavepoints;
@@ -2719,7 +2841,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports named parameters.
 	 *
-	 * @param supportsNamedParameters the new supports named parameters
+	 * @param supportsNamedParameters
+	 *            the new supports named parameters
 	 */
 	public void setSupportsNamedParameters(boolean supportsNamedParameters) {
 		this.supportsNamedParameters = supportsNamedParameters;
@@ -2737,7 +2860,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports multiple open results.
 	 *
-	 * @param supportsMultipleOpenResults the new supports multiple open results
+	 * @param supportsMultipleOpenResults
+	 *            the new supports multiple open results
 	 */
 	public void setSupportsMultipleOpenResults(boolean supportsMultipleOpenResults) {
 		this.supportsMultipleOpenResults = supportsMultipleOpenResults;
@@ -2755,7 +2879,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports get generated keys.
 	 *
-	 * @param supportsGetGeneratedKeys the new supports get generated keys
+	 * @param supportsGetGeneratedKeys
+	 *            the new supports get generated keys
 	 */
 	public void setSupportsGetGeneratedKeys(boolean supportsGetGeneratedKeys) {
 		this.supportsGetGeneratedKeys = supportsGetGeneratedKeys;
@@ -2773,7 +2898,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the result set holdability.
 	 *
-	 * @param getResultSetHoldability the new gets the result set holdability
+	 * @param getResultSetHoldability
+	 *            the new gets the result set holdability
 	 */
 	public void setGetResultSetHoldability(int getResultSetHoldability) {
 		this.getResultSetHoldability = getResultSetHoldability;
@@ -2791,7 +2917,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the database major version.
 	 *
-	 * @param getDatabaseMajorVersion the new gets the database major version
+	 * @param getDatabaseMajorVersion
+	 *            the new gets the database major version
 	 */
 	public void setGetDatabaseMajorVersion(int getDatabaseMajorVersion) {
 		this.getDatabaseMajorVersion = getDatabaseMajorVersion;
@@ -2809,7 +2936,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the database minor version.
 	 *
-	 * @param getDatabaseMinorVersion the new gets the database minor version
+	 * @param getDatabaseMinorVersion
+	 *            the new gets the database minor version
 	 */
 	public void setGetDatabaseMinorVersion(int getDatabaseMinorVersion) {
 		this.getDatabaseMinorVersion = getDatabaseMinorVersion;
@@ -2827,7 +2955,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the JDBC major version.
 	 *
-	 * @param getJDBCMajorVersion the new gets the JDBC major version
+	 * @param getJDBCMajorVersion
+	 *            the new gets the JDBC major version
 	 */
 	public void setGetJDBCMajorVersion(int getJDBCMajorVersion) {
 		this.getJDBCMajorVersion = getJDBCMajorVersion;
@@ -2845,7 +2974,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the JDBC minor version.
 	 *
-	 * @param getJDBCMinorVersion the new gets the JDBC minor version
+	 * @param getJDBCMinorVersion
+	 *            the new gets the JDBC minor version
 	 */
 	public void setGetJDBCMinorVersion(int getJDBCMinorVersion) {
 		this.getJDBCMinorVersion = getJDBCMinorVersion;
@@ -2863,7 +2993,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the SQL state type.
 	 *
-	 * @param getSQLStateType the new gets the SQL state type
+	 * @param getSQLStateType
+	 *            the new gets the SQL state type
 	 */
 	public void setGetSQLStateType(int getSQLStateType) {
 		this.getSQLStateType = getSQLStateType;
@@ -2881,7 +3012,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the locators update copy.
 	 *
-	 * @param locatorsUpdateCopy the new locators update copy
+	 * @param locatorsUpdateCopy
+	 *            the new locators update copy
 	 */
 	public void setLocatorsUpdateCopy(boolean locatorsUpdateCopy) {
 		this.locatorsUpdateCopy = locatorsUpdateCopy;
@@ -2899,7 +3031,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports statement pooling.
 	 *
-	 * @param supportsStatementPooling the new supports statement pooling
+	 * @param supportsStatementPooling
+	 *            the new supports statement pooling
 	 */
 	public void setSupportsStatementPooling(boolean supportsStatementPooling) {
 		this.supportsStatementPooling = supportsStatementPooling;
@@ -2917,7 +3050,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports stored functions using call syntax.
 	 *
-	 * @param supportsStoredFunctionsUsingCallSyntax the new supports stored functions using call syntax
+	 * @param supportsStoredFunctionsUsingCallSyntax
+	 *            the new supports stored functions using call syntax
 	 */
 	public void setSupportsStoredFunctionsUsingCallSyntax(boolean supportsStoredFunctionsUsingCallSyntax) {
 		this.supportsStoredFunctionsUsingCallSyntax = supportsStoredFunctionsUsingCallSyntax;
@@ -2935,7 +3069,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the auto commit failure closes all result sets.
 	 *
-	 * @param autoCommitFailureClosesAllResultSets the new auto commit failure closes all result sets
+	 * @param autoCommitFailureClosesAllResultSets
+	 *            the new auto commit failure closes all result sets
 	 */
 	public void setAutoCommitFailureClosesAllResultSets(boolean autoCommitFailureClosesAllResultSets) {
 		this.autoCommitFailureClosesAllResultSets = autoCommitFailureClosesAllResultSets;
@@ -2953,7 +3088,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the generated key always returned.
 	 *
-	 * @param generatedKeyAlwaysReturned the new generated key always returned
+	 * @param generatedKeyAlwaysReturned
+	 *            the new generated key always returned
 	 */
 	public void setGeneratedKeyAlwaysReturned(boolean generatedKeyAlwaysReturned) {
 		this.generatedKeyAlwaysReturned = generatedKeyAlwaysReturned;
@@ -2971,7 +3107,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the gets the max logical lob size.
 	 *
-	 * @param getMaxLogicalLobSize the new gets the max logical lob size
+	 * @param getMaxLogicalLobSize
+	 *            the new gets the max logical lob size
 	 */
 	public void setGetMaxLogicalLobSize(long getMaxLogicalLobSize) {
 		this.getMaxLogicalLobSize = getMaxLogicalLobSize;
@@ -2989,7 +3126,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the supports ref cursors.
 	 *
-	 * @param supportsRefCursors the new supports ref cursors
+	 * @param supportsRefCursors
+	 *            the new supports ref cursors
 	 */
 	public void setSupportsRefCursors(boolean supportsRefCursors) {
 		this.supportsRefCursors = supportsRefCursors;
@@ -3198,7 +3336,8 @@ public class DatabaseMetadata {
 	/**
 	 * Sets the kind.
 	 *
-	 * @param kind the new kind
+	 * @param kind
+	 *            the new kind
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;

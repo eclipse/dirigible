@@ -10,9 +10,8 @@
 
 package org.eclipse.dirigible.database.api.metadata;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class IndexMetadata.
+ * The Index Metadata transport object.
  */
 public class IndexMetadata {
 
@@ -52,16 +51,26 @@ public class IndexMetadata {
 	/**
 	 * Instantiates a new index metadata.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param column the column
-	 * @param nonUnique the non unique
-	 * @param qualifier the qualifier
-	 * @param ordinalPosition the ordinal position
-	 * @param sortOrder the sort order
-	 * @param cardinality the cardinality
-	 * @param pages the pages
-	 * @param filterCondition the filter condition
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param column
+	 *            the column
+	 * @param nonUnique
+	 *            the non unique
+	 * @param qualifier
+	 *            the qualifier
+	 * @param ordinalPosition
+	 *            the ordinal position
+	 * @param sortOrder
+	 *            the sort order
+	 * @param cardinality
+	 *            the cardinality
+	 * @param pages
+	 *            the pages
+	 * @param filterCondition
+	 *            the filter condition
 	 */
 	public IndexMetadata(String name, String type, String column, boolean nonUnique, String qualifier, String ordinalPosition, String sortOrder,
 			int cardinality, int pages, String filterCondition) {
@@ -90,7 +99,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -108,7 +118,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type the new type
+	 * @param type
+	 *            the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -126,7 +137,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the column.
 	 *
-	 * @param column the new column
+	 * @param column
+	 *            the new column
 	 */
 	public void setColumn(String column) {
 		this.column = column;
@@ -144,7 +156,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the non unique.
 	 *
-	 * @param nonUnique the new non unique
+	 * @param nonUnique
+	 *            the new non unique
 	 */
 	public void setNonUnique(boolean nonUnique) {
 		this.nonUnique = nonUnique;
@@ -162,7 +175,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the qualifier.
 	 *
-	 * @param qualifier the new qualifier
+	 * @param qualifier
+	 *            the new qualifier
 	 */
 	public void setQualifier(String qualifier) {
 		this.qualifier = qualifier;
@@ -180,7 +194,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the ordinal position.
 	 *
-	 * @param ordinalPosition the new ordinal position
+	 * @param ordinalPosition
+	 *            the new ordinal position
 	 */
 	public void setOrdinalPosition(String ordinalPosition) {
 		this.ordinalPosition = ordinalPosition;
@@ -198,7 +213,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the sort order.
 	 *
-	 * @param sortOrder the new sort order
+	 * @param sortOrder
+	 *            the new sort order
 	 */
 	public void setSortOrder(String sortOrder) {
 		this.sortOrder = sortOrder;
@@ -216,7 +232,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the cardinality.
 	 *
-	 * @param cardinality the new cardinality
+	 * @param cardinality
+	 *            the new cardinality
 	 */
 	public void setCardinality(int cardinality) {
 		this.cardinality = cardinality;
@@ -234,7 +251,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the pages.
 	 *
-	 * @param pages the new pages
+	 * @param pages
+	 *            the new pages
 	 */
 	public void setPages(int pages) {
 		this.pages = pages;
@@ -252,7 +270,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the filter condition.
 	 *
-	 * @param filterCondition the new filter condition
+	 * @param filterCondition
+	 *            the new filter condition
 	 */
 	public void setFilterCondition(String filterCondition) {
 		this.filterCondition = filterCondition;
@@ -270,7 +289,8 @@ public class IndexMetadata {
 	/**
 	 * Sets the kind.
 	 *
-	 * @param kind the new kind
+	 * @param kind
+	 *            the new kind
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;

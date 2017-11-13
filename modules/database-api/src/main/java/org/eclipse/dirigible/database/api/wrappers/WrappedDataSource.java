@@ -25,32 +25,24 @@ import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class WrappedDataSource.
+ * The WrappedDataSource of the standard JDBC {@link DataSource} object with added some additional capabilities..
  */
 public class WrappedDataSource implements DataSource {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WrappedDataSource.class);
 
-	/** The original data source. */
 	private DataSource originalDataSource;
 
-	/** The Constant connections. */
 	private static final Collection<WrappedConnection> connections = Collections.synchronizedCollection(new ArrayList<WrappedConnection>());
 
-	/** The max connections count. */
 	private static int MAX_CONNECTIONS_COUNT = 8;
-	
-	/** The wait timeout. */
+
 	// default timeout before kill the victim connection
 	private static long WAIT_TIMEOUT = 500;
-	
-	/** The wait count. */
+
 	private static int WAIT_COUNT = 5;
 
-	/** The auto commit enabled. */
 	private static boolean AUTO_COMMIT_ENABLED = false;
 
 	{
@@ -64,7 +56,8 @@ public class WrappedDataSource implements DataSource {
 	 * Wrapper of the default datasource provided by the underlying platform
 	 * It has some fault tolerance features, which are not available by default in the popular JDBC drivers.
 	 *
-	 * @param originalDataSource            the original data source
+	 * @param originalDataSource
+	 *            the original data source
 	 */
 	public WrappedDataSource(DataSource originalDataSource) {
 		super();
@@ -111,7 +104,8 @@ public class WrappedDataSource implements DataSource {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.sql.DataSource#getConnection()
 	 */
 	@Override
@@ -126,7 +120,8 @@ public class WrappedDataSource implements DataSource {
 		return wrappedConnection;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.sql.DataSource#getConnection(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -144,7 +139,8 @@ public class WrappedDataSource implements DataSource {
 	/**
 	 * Check connections.
 	 *
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	private void checkConnections() throws SQLException {
 		for (int i = 0; i < WAIT_COUNT; i++) {
@@ -169,7 +165,8 @@ public class WrappedDataSource implements DataSource {
 	/**
 	 * Force relase connection.
 	 *
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	private void forceRelaseConnection() throws SQLException {
 		logger.trace("entering - forceRelaseConnection()");
@@ -204,7 +201,8 @@ public class WrappedDataSource implements DataSource {
 	/**
 	 * Adds the connection.
 	 *
-	 * @param connection the connection
+	 * @param connection
+	 *            the connection
 	 */
 	private void addConnection(WrappedConnection connection) {
 		logger.trace("entering - addConnection()");
@@ -231,7 +229,8 @@ public class WrappedDataSource implements DataSource {
 	/**
 	 * Removes the connection.
 	 *
-	 * @param connection the connection
+	 * @param connection
+	 *            the connection
 	 */
 	private void removeConnection(WrappedConnection connection) {
 		logger.trace("entering - removeConnection()");
@@ -242,7 +241,8 @@ public class WrappedDataSource implements DataSource {
 	/**
 	 * Closed connection.
 	 *
-	 * @param wrappedConnection the wrapped connection
+	 * @param wrappedConnection
+	 *            the wrapped connection
 	 */
 	public void closedConnection(WrappedConnection wrappedConnection) {
 		logger.trace("entering - closeConnection()");
@@ -252,7 +252,8 @@ public class WrappedDataSource implements DataSource {
 		logger.trace("exiting - closeConnection()");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#getLogWriter()
 	 */
 	@Override
@@ -261,7 +262,8 @@ public class WrappedDataSource implements DataSource {
 		return originalDataSource.getLogWriter();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#getLoginTimeout()
 	 */
 	@Override
@@ -270,7 +272,8 @@ public class WrappedDataSource implements DataSource {
 		return originalDataSource.getLoginTimeout();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
 	 */
 	@Override
@@ -279,7 +282,8 @@ public class WrappedDataSource implements DataSource {
 		return originalDataSource.isWrapperFor(arg0);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#setLogWriter(java.io.PrintWriter)
 	 */
 	@Override
@@ -288,7 +292,8 @@ public class WrappedDataSource implements DataSource {
 		originalDataSource.setLogWriter(arg0);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#setLoginTimeout(int)
 	 */
 	@Override
@@ -297,7 +302,8 @@ public class WrappedDataSource implements DataSource {
 		originalDataSource.setLoginTimeout(arg0);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Wrapper#unwrap(java.lang.Class)
 	 */
 	@Override
@@ -306,7 +312,8 @@ public class WrappedDataSource implements DataSource {
 		return originalDataSource.unwrap(arg0);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.sql.CommonDataSource#getParentLogger()
 	 */
 	@Override

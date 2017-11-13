@@ -16,31 +16,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ResultSetMonospacedWriter.
+ * The ResultSet Monospaced Writer.
  */
 public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 
-	/** The Constant LIMIT. */
 	private static final int LIMIT = 100;
 
-	/** The Constant EMPTY_RESULT_SET. */
 	private static final String EMPTY_RESULT_SET = "Empty result set";
-	
-	/** The Constant DELIMITER. */
+
 	public static final String DELIMITER = "|"; //$NON-NLS-1$
-	
-	/** The Constant NEWLINE_CHARACTER. */
+
 	public static final String NEWLINE_CHARACTER = System.getProperty("line.separator"); //$NON-NLS-1$
 
-	/** The header format. */
 	private HeaderFormatter<?> headerFormat = new StringHeaderFormatter();
-	
-	/** The row format. */
+
 	private RowFormatter<?> rowFormat = new StringRowFormatter();
 
-	/** The limited. */
 	private boolean limited = true;
 
 	/**
@@ -55,13 +47,15 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 	/**
 	 * Sets the limited.
 	 *
-	 * @param limited the new limited
+	 * @param limited
+	 *            the new limited
 	 */
 	public void setLimited(boolean limited) {
 		this.limited = limited;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)
 	 */
 	@Override
@@ -101,7 +95,8 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 				}
 				columnDescriptor.setDisplaySize(displaySize);
 				if (columnDescriptor.getDisplaySize() < columnDescriptor.getName().length()) {
-					columnDescriptor.setDisplaySize(columnDescriptor.getName().length());// make sure headers never get truncated
+					columnDescriptor.setDisplaySize(columnDescriptor.getName().length());// make sure headers never get
+																							// truncated
 				}
 
 				if (!columnHeaderDescriptors.contains(columnDescriptor)) {
@@ -130,10 +125,13 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 	/**
 	 * Gets the colum index by name.
 	 *
-	 * @param columnName the column name
-	 * @param metadata the metadata
+	 * @param columnName
+	 *            the column name
+	 * @param metadata
+	 *            the metadata
 	 * @return the colum index by name
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	int getColumIndexByName(String columnName, ResultSetMetaData metadata) throws SQLException {
 		for (int i = 1; i < (metadata.getColumnCount() + 1); i++) {
@@ -147,9 +145,11 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 	/**
 	 * Gets the header.
 	 *
-	 * @param resultSetMetaData the result set meta data
+	 * @param resultSetMetaData
+	 *            the result set meta data
 	 * @return the header
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	List<String> getHeader(ResultSetMetaData resultSetMetaData) throws SQLException {
 
@@ -176,7 +176,8 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 	/**
 	 * Sets the header format.
 	 *
-	 * @param headerFormat the new header format
+	 * @param headerFormat
+	 *            the new header format
 	 */
 	public void setHeaderFormat(HeaderFormatter<?> headerFormat) {
 		this.headerFormat = headerFormat;
@@ -194,7 +195,8 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 	/**
 	 * Sets the row format.
 	 *
-	 * @param rowFormat the new row format
+	 * @param rowFormat
+	 *            the new row format
 	 */
 	public void setRowFormat(RowFormatter<?> rowFormat) {
 		this.rowFormat = rowFormat;
