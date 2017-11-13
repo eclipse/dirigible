@@ -15,26 +15,26 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class FileSystemMasterRepository.
+ * The File System Master Repository.
  */
 public class FileSystemMasterRepository extends FileSystemRepository implements IMasterRepository {
 
 	/** The Constant TYPE. */
 	public static final String TYPE = "filesystem";
-	
+
 	/** The Constant DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER. */
 	public static final String DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER = "DIRIGIBLE_MASTER_REPOSITORY_ROOT_FOLDER";
 
-	/** The Constant DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT. */
 	private static final String DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT = "dirigible_master";
 
 	/**
 	 * Instantiates a new file system master repository.
 	 *
-	 * @param rootFolder the root folder
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param rootFolder
+	 *            the root folder
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public FileSystemMasterRepository(String rootFolder) throws LocalRepositoryException {
 		super(rootFolder);
@@ -43,13 +43,15 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 	/**
 	 * Instantiates a new file system master repository.
 	 *
-	 * @throws LocalRepositoryException the local repository exception
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public FileSystemMasterRepository() throws LocalRepositoryException {
 		super();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.fs.FileSystemRepository#getRepositoryRootFolder()
 	 */
 	@Override
@@ -57,7 +59,8 @@ public class FileSystemMasterRepository extends FileSystemRepository implements 
 		return DIRIGIBLE_MASTER_ROOT_FOLDER_DEFAULT;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#initialize()
 	 */
 	@Override

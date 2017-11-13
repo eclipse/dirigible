@@ -13,36 +13,34 @@ package org.eclipse.dirigible.repository.local;
 import java.util.Date;
 
 import org.eclipse.dirigible.repository.api.IEntityInformation;
-import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 
-// TODO: Auto-generated Javadoc
 /**
  * The file system based implementation of {@link IEntityInformation}.
  */
 public class LocalEntityInformation implements IEntityInformation {
 
-	/** The wrapper path. */
 	private RepositoryPath wrapperPath;
 
-	/** The master. */
 	private LocalObject master;
 
-	/** The size. */
 	private long size;
 
 	/**
 	 * Instantiates a new local entity information.
 	 *
-	 * @param wrapperPath the wrapper path
-	 * @param master the master
+	 * @param wrapperPath
+	 *            the wrapper path
+	 * @param master
+	 *            the master
 	 */
 	public LocalEntityInformation(RepositoryPath wrapperPath, LocalObject master) {
 		this.wrapperPath = wrapperPath;
 		this.master = master;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getName()
 	 */
 	@Override
@@ -50,7 +48,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.wrapperPath.getLastSegment();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getPath()
 	 */
 	@Override
@@ -58,7 +57,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.wrapperPath.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getPermissions()
 	 */
 	@Override
@@ -66,7 +66,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getPermissions();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getSize()
 	 */
 	@Override
@@ -74,7 +75,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.size;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getCreatedBy()
 	 */
 	@Override
@@ -82,7 +84,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getCreatedBy();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getCreatedAt()
 	 */
 	@Override
@@ -90,7 +93,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getCreatedAt();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getModifiedBy()
 	 */
 	@Override
@@ -98,7 +102,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getModifiedBy();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntityInformation#getModifiedAt()
 	 */
 	@Override
@@ -106,7 +111,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return this.master.getModifiedAt();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -124,7 +130,8 @@ public class LocalEntityInformation implements IEntityInformation {
 		return getPath().equals(other.getPath());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

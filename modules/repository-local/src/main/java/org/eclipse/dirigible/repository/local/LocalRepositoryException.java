@@ -12,13 +12,11 @@ package org.eclipse.dirigible.repository.local;
 
 import org.eclipse.dirigible.repository.api.RepositoryException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Main exception for the DB repository implementation.
  */
 public class LocalRepositoryException extends RepositoryException {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 116149128529374300L;
 
 	/**
@@ -31,8 +29,10 @@ public class LocalRepositoryException extends RepositoryException {
 	/**
 	 * Instantiates a new local repository exception.
 	 *
-	 * @param arg0 the arg 0
-	 * @param arg1 the arg 1
+	 * @param arg0
+	 *            the arg 0
+	 * @param arg1
+	 *            the arg 1
 	 */
 	public LocalRepositoryException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
@@ -41,7 +41,8 @@ public class LocalRepositoryException extends RepositoryException {
 	/**
 	 * Instantiates a new local repository exception.
 	 *
-	 * @param arg0 the arg 0
+	 * @param arg0
+	 *            the arg 0
 	 */
 	public LocalRepositoryException(String arg0) {
 		super(arg0);
@@ -50,7 +51,8 @@ public class LocalRepositoryException extends RepositoryException {
 	/**
 	 * Instantiates a new local repository exception.
 	 *
-	 * @param arg0 the arg 0
+	 * @param arg0
+	 *            the arg 0
 	 */
 	public LocalRepositoryException(Throwable arg0) {
 		super(arg0);

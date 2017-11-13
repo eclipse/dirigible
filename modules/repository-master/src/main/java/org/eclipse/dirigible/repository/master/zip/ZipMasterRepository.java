@@ -13,23 +13,24 @@ package org.eclipse.dirigible.repository.master.zip;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ZipMasterRepository.
+ * The Zip Master Repository.
  */
 public class ZipMasterRepository extends ZipRepository implements IMasterRepository {
 
 	/** The Constant TYPE. */
 	public static final String TYPE = "zip";
-	
+
 	/** The Constant DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION. */
 	public static final String DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION = "DIRIGIBLE_MASTER_REPOSITORY_ZIP_LOCATION";
 
 	/**
 	 * Instantiates a new zip master repository.
 	 *
-	 * @param zip the zip
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param zip
+	 *            the zip
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public ZipMasterRepository(String zip) throws LocalRepositoryException {
 		super(zip);

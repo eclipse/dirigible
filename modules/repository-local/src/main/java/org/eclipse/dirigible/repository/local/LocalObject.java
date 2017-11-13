@@ -14,40 +14,32 @@ import java.util.Date;
 
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
-// TODO: Auto-generated Javadoc
 /**
  * The base of domain objects in the file system based implementation.
  */
 public abstract class LocalObject {
 
-	/** The repository. */
 	private FileSystemRepository repository;
 
-	/** The name. */
 	private String name;
 
-	/** The path. */
 	private String path;
 
-	/** The permissions. */
 	private int permissions;
 
-	/** The created by. */
 	private String createdBy;
 
-	/** The created at. */
 	private Date createdAt;
 
-	/** The modified by. */
 	private String modifiedBy;
 
-	/** The modified at. */
 	private Date modifiedAt;
 
 	/**
 	 * Instantiates a new local object.
 	 *
-	 * @param repository the repository
+	 * @param repository
+	 *            the repository
 	 */
 	public LocalObject(FileSystemRepository repository) {
 		this.repository = repository;
@@ -74,7 +66,8 @@ public abstract class LocalObject {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -92,7 +85,8 @@ public abstract class LocalObject {
 	/**
 	 * Sets the path.
 	 *
-	 * @param path the new path
+	 * @param path
+	 *            the new path
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -110,7 +104,8 @@ public abstract class LocalObject {
 	/**
 	 * Sets the permissions.
 	 *
-	 * @param permissions the new permissions
+	 * @param permissions
+	 *            the new permissions
 	 */
 	public void setPermissions(int permissions) {
 		this.permissions = permissions;
@@ -128,7 +123,8 @@ public abstract class LocalObject {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -146,7 +142,8 @@ public abstract class LocalObject {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
@@ -164,7 +161,8 @@ public abstract class LocalObject {
 	/**
 	 * Sets the modified by.
 	 *
-	 * @param modifiedBy the new modified by
+	 * @param modifiedBy
+	 *            the new modified by
 	 */
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
@@ -182,7 +180,8 @@ public abstract class LocalObject {
 	/**
 	 * Sets the modified at.
 	 *
-	 * @param modifiedAt the new modified at
+	 * @param modifiedAt
+	 *            the new modified at
 	 */
 	public void setModifiedAt(Date modifiedAt) {
 		this.modifiedAt = modifiedAt;

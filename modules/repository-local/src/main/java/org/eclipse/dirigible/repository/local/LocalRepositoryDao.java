@@ -34,46 +34,36 @@ import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class LocalRepositoryDao.
+ * The Local Repository Dao.
  */
 public class LocalRepositoryDao {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(LocalRepositoryDao.class);
 
-	/** The Constant LAST. */
 	private static final String LAST = "last";
 
-	/** The Constant MODIFIED_AT. */
 	private static final String MODIFIED_AT = "modifiedAt";
 
-	/** The Constant MODIFIED_BY. */
 	private static final String MODIFIED_BY = "modifiedBy";
 
-	/** The Constant CREATED_AT. */
 	private static final String CREATED_AT = "createdAt";
 
-	/** The Constant CREATED_BY. */
 	private static final String CREATED_BY = "createdBy";
 
-	/** The Constant OBJECT_TYPE_FOLDER. */
 	static final int OBJECT_TYPE_FOLDER = 0;
-	
-	/** The Constant OBJECT_TYPE_DOCUMENT. */
+
 	static final int OBJECT_TYPE_DOCUMENT = 1;
-	
-	/** The Constant OBJECT_TYPE_BINARY. */
+
 	static final int OBJECT_TYPE_BINARY = 2;
 
-	/** The repository. */
 	private FileSystemRepository repository;
 
 	/**
 	 * Instantiates a new local repository dao.
 	 *
-	 * @param repository the repository
+	 * @param repository
+	 *            the repository
 	 */
 	public LocalRepositoryDao(FileSystemRepository repository) {
 		this.repository = repository;
@@ -91,11 +81,16 @@ public class LocalRepositoryDao {
 	/**
 	 * Creates the file.
 	 *
-	 * @param path the path
-	 * @param content the content
-	 * @param isBinary the is binary
-	 * @param contentType the content type
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param isBinary
+	 *            the is binary
+	 * @param contentType
+	 *            the content type
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void createFile(String path, byte[] content, boolean isBinary, String contentType) throws LocalRepositoryException {
 		try {
@@ -112,10 +107,14 @@ public class LocalRepositoryDao {
 	/**
 	 * Creates the version.
 	 *
-	 * @param workspacePath the workspace path
-	 * @param content the content
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param workspacePath
+	 *            the workspace path
+	 * @param content
+	 *            the content
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void createVersion(String workspacePath, byte[] content) throws FileNotFoundException, IOException {
 		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
@@ -141,10 +140,14 @@ public class LocalRepositoryDao {
 	/**
 	 * Creates the initial version.
 	 *
-	 * @param content the content
-	 * @param versionsPath the versions path
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param content
+	 *            the content
+	 * @param versionsPath
+	 *            the versions path
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void createInitialVersion(byte[] content, String versionsPath) throws FileNotFoundException, IOException {
 		FileSystemUtils.saveFile(versionsPath + File.separator + "1", content);
@@ -154,9 +157,12 @@ public class LocalRepositoryDao {
 	/**
 	 * Creates the info.
 	 *
-	 * @param workspacePath the workspace path
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param workspacePath
+	 *            the workspace path
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void createInfo(String workspacePath) throws FileNotFoundException, IOException {
 		String infoPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getInfoPath());
@@ -181,8 +187,10 @@ public class LocalRepositoryDao {
 	/**
 	 * Creates the initial info.
 	 *
-	 * @param infoPath the info path
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param infoPath
+	 *            the info path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void createInitialInfo(String infoPath) throws IOException {
 		Properties info = new Properties();
@@ -199,9 +207,12 @@ public class LocalRepositoryDao {
 	/**
 	 * Removes the versions.
 	 *
-	 * @param workspacePath the workspace path
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param workspacePath
+	 *            the workspace path
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void removeVersions(String workspacePath) throws FileNotFoundException, IOException {
 		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
@@ -213,9 +224,12 @@ public class LocalRepositoryDao {
 	/**
 	 * Removes the info.
 	 *
-	 * @param workspacePath the workspace path
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param workspacePath
+	 *            the workspace path
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void removeInfo(String workspacePath) throws FileNotFoundException, IOException {
 		String infoPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getInfoPath());
@@ -235,8 +249,10 @@ public class LocalRepositoryDao {
 	/**
 	 * Sets the file content.
 	 *
-	 * @param localFile the local file
-	 * @param content the content
+	 * @param localFile
+	 *            the local file
+	 * @param content
+	 *            the content
 	 */
 	public void setFileContent(LocalFile localFile, byte[] content) {
 		try {
@@ -252,7 +268,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the file content.
 	 *
-	 * @param localFile the local file
+	 * @param localFile
+	 *            the local file
 	 * @return the file content
 	 */
 	public byte[] getFileContent(LocalFile localFile) {
@@ -267,8 +284,10 @@ public class LocalRepositoryDao {
 	/**
 	 * Rename file.
 	 *
-	 * @param path the path
-	 * @param newPath the new path
+	 * @param path
+	 *            the path
+	 * @param newPath
+	 *            the new path
 	 */
 	public void renameFile(String path, String newPath) {
 		try {
@@ -290,8 +309,10 @@ public class LocalRepositoryDao {
 	/**
 	 * Copy file.
 	 *
-	 * @param path the path
-	 * @param newPath the new path
+	 * @param path
+	 *            the path
+	 * @param newPath
+	 *            the new path
 	 */
 	public void copyFile(String path, String newPath) {
 		try {
@@ -311,7 +332,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Removes the file by path.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 */
 	public void removeFileByPath(String path) {
 		try {
@@ -327,7 +349,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Removes the folder by path.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 */
 	public void removeFolderByPath(String path) {
 		try {
@@ -343,7 +366,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Creates the folder.
 	 *
-	 * @param normalizePath the normalize path
+	 * @param normalizePath
+	 *            the normalize path
 	 */
 	public void createFolder(String normalizePath) {
 		try {
@@ -357,8 +381,10 @@ public class LocalRepositoryDao {
 	/**
 	 * Rename folder.
 	 *
-	 * @param path the path
-	 * @param newPath the new path
+	 * @param path
+	 *            the path
+	 * @param newPath
+	 *            the new path
 	 */
 	public void renameFolder(String path, String newPath) {
 		try {
@@ -376,8 +402,10 @@ public class LocalRepositoryDao {
 	/**
 	 * Copy folder.
 	 *
-	 * @param path the path
-	 * @param newPath the new path
+	 * @param path
+	 *            the path
+	 * @param newPath
+	 *            the new path
 	 */
 	public void copyFolder(String path, String newPath) {
 		try {
@@ -394,7 +422,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the object by path.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the object by path
 	 */
 	public LocalObject getObjectByPath(String path) {
@@ -453,7 +482,8 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the children by folder.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the children by folder
 	 */
 	public List<LocalObject> getChildrenByFolder(String path) {
@@ -478,9 +508,11 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the resource versions by path.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the resource versions by path
-	 * @throws RepositoryVersioningException the repository versioning exception
+	 * @throws RepositoryVersioningException
+	 *             the repository versioning exception
 	 */
 	public List<IResourceVersion> getResourceVersionsByPath(String path) throws RepositoryVersioningException {
 		List<IResourceVersion> versions = new ArrayList<IResourceVersion>();
@@ -507,10 +539,13 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the file version by path.
 	 *
-	 * @param path the path
-	 * @param version the version
+	 * @param path
+	 *            the path
+	 * @param version
+	 *            the version
 	 * @return the file version by path
-	 * @throws RepositoryVersioningException the repository versioning exception
+	 * @throws RepositoryVersioningException
+	 *             the repository versioning exception
 	 */
 	public LocalFileVersion getFileVersionByPath(String path, int version) throws RepositoryVersioningException {
 		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
@@ -520,10 +555,13 @@ public class LocalRepositoryDao {
 	/**
 	 * Gets the local file version by path.
 	 *
-	 * @param version the version
-	 * @param workspacePath the workspace path
+	 * @param version
+	 *            the version
+	 * @param workspacePath
+	 *            the workspace path
 	 * @return the local file version by path
-	 * @throws RepositoryVersioningException the repository versioning exception
+	 * @throws RepositoryVersioningException
+	 *             the repository versioning exception
 	 */
 	private LocalFileVersion getLocalFileVersionByPath(int version, String workspacePath) throws RepositoryVersioningException {
 		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());

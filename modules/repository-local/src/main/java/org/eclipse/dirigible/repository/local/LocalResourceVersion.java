@@ -10,7 +10,6 @@
 
 package org.eclipse.dirigible.repository.local;
 
-import java.io.IOException;
 import java.util.Date;
 
 import org.eclipse.dirigible.repository.api.IResourceVersion;
@@ -19,31 +18,30 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
-// TODO: Auto-generated Javadoc
 /**
  * The file system based implementation of {@link IResourceVersion}.
  */
 public class LocalResourceVersion implements IResourceVersion {
 
-	/** The repository. */
 	private final FileSystemRepository repository;
 
-	/** The path. */
 	private final RepositoryPath path;
 
-	/** The version. */
 	private int version;
 
-	/** The file version. */
 	private LocalFileVersion fileVersion;
 
 	/**
 	 * Instantiates a new local resource version.
 	 *
-	 * @param repository the repository
-	 * @param path the path
-	 * @param version the version
-	 * @throws RepositoryWriteException the repository write exception
+	 * @param repository
+	 *            the repository
+	 * @param path
+	 *            the path
+	 * @param version
+	 *            the version
+	 * @throws RepositoryWriteException
+	 *             the repository write exception
 	 */
 	public LocalResourceVersion(FileSystemRepository repository, RepositoryPath path, int version) throws RepositoryWriteException {
 		super();
@@ -62,7 +60,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return repository;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getPath()
 	 */
 	@Override
@@ -70,7 +69,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return this.path.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getVersion()
 	 */
 	@Override
@@ -78,7 +78,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return this.version;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getContent()
 	 */
 	@Override
@@ -86,7 +87,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return this.fileVersion.getData();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#isBinary()
 	 */
 	@Override
@@ -94,7 +96,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return this.fileVersion.isBinary();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getContentType()
 	 */
 	@Override
@@ -102,7 +105,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return this.fileVersion.getContentType();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getCreatedBy()
 	 */
 	@Override
@@ -110,7 +114,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return this.fileVersion.getCreatedBy();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResourceVersion#getCreatedAt()
 	 */
 	@Override
@@ -118,7 +123,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return this.fileVersion.getCreatedAt();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -136,7 +142,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return getPath().equals(other.getPath());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -144,7 +151,8 @@ public class LocalResourceVersion implements IResourceVersion {
 		return getPath().hashCode();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override

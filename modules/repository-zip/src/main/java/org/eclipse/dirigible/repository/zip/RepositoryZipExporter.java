@@ -26,7 +26,6 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryExportException;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Utility class which exports all the content under a given path.
  */
@@ -37,10 +36,13 @@ public class RepositoryZipExporter {
 	 * instance Include the last segment of the relative roots during the
 	 * archiving.
 	 *
-	 * @param repository the target {@link IRepository} instance
-	 * @param relativeRoots the relative roots
+	 * @param repository
+	 *            the target {@link IRepository} instance
+	 * @param relativeRoots
+	 *            the relative roots
 	 * @return the exported content
-	 * @throws RepositoryExportException in case the content cannot be exported
+	 * @throws RepositoryExportException
+	 *             in case the content cannot be exported
 	 */
 	public static byte[] exportZip(IRepository repository, List<String> relativeRoots) throws RepositoryExportException {
 		try {
@@ -85,12 +87,16 @@ public class RepositoryZipExporter {
 	 * instance Include or NOT the last segment of the relative root during the
 	 * archiving.
 	 *
-	 * @param repository the repository
-	 * @param relativeRoot            single root
-	 * @param inclusive            whether to include the last segment of the root or to pack its
+	 * @param repository
+	 *            the repository
+	 * @param relativeRoot
+	 *            single root
+	 * @param inclusive
+	 *            whether to include the last segment of the root or to pack its
 	 *            content directly in the archive
 	 * @return the exported content
-	 * @throws RepositoryExportException in case the content cannot be exported
+	 * @throws RepositoryExportException
+	 *             in case the content cannot be exported
 	 */
 	public static byte[] exportZip(IRepository repository, String relativeRoot, boolean inclusive) throws RepositoryExportException {
 
@@ -120,10 +126,14 @@ public class RepositoryZipExporter {
 	/**
 	 * Iterate recursively a given collection and put its content to the zip.
 	 *
-	 * @param zipOutputStream resulting output stream
-	 * @param collection the {ICollection} to be processed
-	 * @param substring the prefix size
-	 * @throws RepositoryExportException in case the processing fails
+	 * @param zipOutputStream
+	 *            resulting output stream
+	 * @param collection
+	 *            the {ICollection} to be processed
+	 * @param substring
+	 *            the prefix size
+	 * @throws RepositoryExportException
+	 *             in case the processing fails
 	 */
 	private static void traverseCollection(ZipOutputStream zipOutputStream, ICollection collection, int substring) throws RepositoryExportException {
 		try {

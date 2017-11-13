@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
-// TODO: Auto-generated Javadoc
 /**
  * Internal representation of a Folder/Collection kind of object.
  */
@@ -24,7 +23,8 @@ public class LocalFolder extends LocalObject {
 	/**
 	 * Instantiates a new local folder.
 	 *
-	 * @param repository the repository
+	 * @param repository
+	 *            the repository
 	 */
 	public LocalFolder(FileSystemRepository repository) {
 		super(repository);
@@ -33,7 +33,8 @@ public class LocalFolder extends LocalObject {
 	/**
 	 * Delete tree.
 	 *
-	 * @throws LocalRepositoryException the local repository exception
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void deleteTree() throws LocalRepositoryException {
 		getRepository().getRepositoryDao().removeFolderByPath(getPath());
@@ -43,7 +44,8 @@ public class LocalFolder extends LocalObject {
 	 * Gets the children.
 	 *
 	 * @return the children
-	 * @throws LocalRepositoryException the local repository exception
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public List<LocalObject> getChildren() throws LocalRepositoryException {
 		List<LocalObject> result = getRepository().getRepositoryDao().getChildrenByFolder(getPath());
@@ -53,8 +55,10 @@ public class LocalFolder extends LocalObject {
 	/**
 	 * Creates the folder.
 	 *
-	 * @param name the name
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param name
+	 *            the name
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void createFolder(String name) throws LocalRepositoryException {
 		getRepository().getRepositoryDao().createFolder(RepositoryPath.normalizePath(getPath(), name));
@@ -63,11 +67,16 @@ public class LocalFolder extends LocalObject {
 	/**
 	 * Creates the file.
 	 *
-	 * @param name the name
-	 * @param content the content
-	 * @param isBinary the is binary
-	 * @param contentType the content type
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param name
+	 *            the name
+	 * @param content
+	 *            the content
+	 * @param isBinary
+	 *            the is binary
+	 * @param contentType
+	 *            the content type
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void createFile(String name, byte[] content, boolean isBinary, String contentType) throws LocalRepositoryException {
 		getRepository().getRepositoryDao().createFile(RepositoryPath.normalizePath(getPath(), name), content, isBinary, contentType);
@@ -76,8 +85,10 @@ public class LocalFolder extends LocalObject {
 	/**
 	 * Rename folder.
 	 *
-	 * @param newPath the new path
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param newPath
+	 *            the new path
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void renameFolder(String newPath) throws LocalRepositoryException {
 		getRepository().getRepositoryDao().renameFolder(getPath(), newPath);
@@ -86,8 +97,10 @@ public class LocalFolder extends LocalObject {
 	/**
 	 * Copy folder.
 	 *
-	 * @param newPath the new path
-	 * @throws LocalRepositoryException the local repository exception
+	 * @param newPath
+	 *            the new path
+	 * @throws LocalRepositoryException
+	 *             the local repository exception
 	 */
 	public void copyFolder(String newPath) throws LocalRepositoryException {
 		getRepository().getRepositoryDao().copyFolder(getPath(), newPath);
