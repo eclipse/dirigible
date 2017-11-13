@@ -18,19 +18,17 @@ import org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DataStructuresClasspathContentHandler.
+ * The Data Structures Classpath Content Handler.
  */
 public class DataStructuresClasspathContentHandler extends AbstractClasspathContentHandler {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataStructuresClasspathContentHandler.class);
 
-	/** The data structures synchronizer. */
 	private DataStructuresSynchronizer dataStructuresSynchronizer = StaticInjector.getInjector().getInstance(DataStructuresSynchronizer.class);
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#isValid(java.lang.String)
 	 */
 	@Override
@@ -54,7 +52,8 @@ public class DataStructuresClasspathContentHandler extends AbstractClasspathCont
 		return isValid;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler#getLogger()
 	 */
 	@Override
