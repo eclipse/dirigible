@@ -12,50 +12,48 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HanaCreateBranchingBuilder.
+ * The HANA Create Branching Builder.
  */
 public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 
 	/**
-	 * Instantiates a new hana create branching builder.
+	 * Instantiates a new HANA create branching builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	protected HanaCreateBranchingBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#table(java.lang.String)
 	 */
 	@Override
 	public CreateTableBuilder table(String table) {
 		return new HanaCreateTableBuilder(this.getDialect(), table, false);
 	}
-	
+
 	/**
 	 * Column table.
 	 *
-	 * @param table the table
+	 * @param table
+	 *            the table
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTable(String table) {
 		return new HanaCreateTableBuilder(this.getDialect(), table, true);
 	}
-	
+
 	/**
 	 * Row table.
 	 *
-	 * @param table the table
+	 * @param table
+	 *            the table
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder rowTable(String table) {

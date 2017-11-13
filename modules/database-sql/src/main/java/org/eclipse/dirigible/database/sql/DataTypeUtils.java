@@ -20,25 +20,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DataTypeUtils.
  */
 public class DataTypeUtils {
 
-	/** The Constant VARCHAR_DEFAULT_LENGTH. */
+	/** The default length */
 	public static final int VARCHAR_DEFAULT_LENGTH = 512;
 
-	/** The Constant DATABASE_TYPE_TO_DATA_TYPE. */
 	private static final Map<Integer, DataType> DATABASE_TYPE_TO_DATA_TYPE = Collections.synchronizedMap(new HashMap<Integer, DataType>());
-	
-	/** The Constant STRING_TO_DATABASE_TYPE. */
+
 	private static final Map<String, Integer> STRING_TO_DATABASE_TYPE = Collections.synchronizedMap(new HashMap<String, Integer>());
-	
-	/** The Constant JAVA_TYPE_TO_DATABASE_TYPE. */
+
 	private static final Map<Class, Integer> JAVA_TYPE_TO_DATABASE_TYPE = Collections.synchronizedMap(new HashMap<Class, Integer>());
-	
-	/** The Constant DATABASE_TYPE_TO_JAVA_TYPE. */
+
 	private static final Map<Integer, Class> DATABASE_TYPE_TO_JAVA_TYPE = Collections.synchronizedMap(new HashMap<Integer, Class>());
 
 	static {
@@ -108,7 +103,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is database type supported.
 	 *
-	 * @param type the type
+	 * @param type
+	 *            the type
 	 * @return true, if is database type supported
 	 */
 	public static boolean isDatabaseTypeSupported(Integer type) {
@@ -118,7 +114,8 @@ public class DataTypeUtils {
 	/**
 	 * Gets the database type name.
 	 *
-	 * @param type the type
+	 * @param type
+	 *            the type
 	 * @return the database type name
 	 */
 	public static String getDatabaseTypeName(Integer type) {
@@ -131,7 +128,8 @@ public class DataTypeUtils {
 	/**
 	 * Gets the database type by java type.
 	 *
-	 * @param clazz the clazz
+	 * @param clazz
+	 *            the clazz
 	 * @return the database type by java type
 	 */
 	public static Integer getDatabaseTypeByJavaType(Class clazz) {
@@ -145,7 +143,8 @@ public class DataTypeUtils {
 	/**
 	 * Gets the java type by database type.
 	 *
-	 * @param type the type
+	 * @param type
+	 *            the type
 	 * @return the java type by database type
 	 */
 	public static Class getJavaTypeByDatabaseType(Integer type) {
@@ -159,7 +158,8 @@ public class DataTypeUtils {
 	/**
 	 * Gets the sql type by data type.
 	 *
-	 * @param type the type
+	 * @param type
+	 *            the type
 	 * @return the sql type by data type
 	 */
 	public static Integer getSqlTypeByDataType(String type) {
@@ -173,7 +173,8 @@ public class DataTypeUtils {
 	/**
 	 * Gets the database type name by java type.
 	 *
-	 * @param clazz the clazz
+	 * @param clazz
+	 *            the clazz
 	 * @return the database type name by java type
 	 */
 	public static String getDatabaseTypeNameByJavaType(Class clazz) {
@@ -184,7 +185,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is blob.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is blob
 	 */
 	public static boolean isBlob(String dataType) {
@@ -194,7 +196,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is boolean.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is boolean
 	 */
 	public static boolean isBoolean(String dataType) {
@@ -204,7 +207,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is double.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is double
 	 */
 	public static boolean isDouble(String dataType) {
@@ -214,7 +218,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is real.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is real
 	 */
 	public static boolean isReal(String dataType) {
@@ -224,7 +229,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is bigint.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is bigint
 	 */
 	public static boolean isBigint(String dataType) {
@@ -234,7 +240,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is smallint.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is smallint
 	 */
 	public static boolean isSmallint(String dataType) {
@@ -244,7 +251,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is integer.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is integer
 	 */
 	public static boolean isInteger(String dataType) {
@@ -254,7 +262,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is tinyint.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is tinyint
 	 */
 	public static boolean isTinyint(String dataType) {
@@ -264,7 +273,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is timestamp.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is timestamp
 	 */
 	public static boolean isTimestamp(String dataType) {
@@ -274,7 +284,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is time.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is time
 	 */
 	public static boolean isTime(String dataType) {
@@ -284,7 +295,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is date.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is date
 	 */
 	public static boolean isDate(String dataType) {
@@ -294,7 +306,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is char.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is char
 	 */
 	public static boolean isChar(String dataType) {
@@ -304,7 +317,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is varchar.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is varchar
 	 */
 	public static boolean isVarchar(String dataType) {
@@ -314,7 +328,8 @@ public class DataTypeUtils {
 	/**
 	 * Checks if is decimal.
 	 *
-	 * @param dataType the data type
+	 * @param dataType
+	 *            the data type
 	 * @return true, if is decimal
 	 */
 	public static boolean isDecimal(String dataType) {

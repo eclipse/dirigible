@@ -28,7 +28,7 @@ public interface IEntityManagerInterceptor {
 	 *            the value
 	 * @return the object
 	 */
-	public Object onSetValueBeforeUpdate(int index, String dataType, Object value);
+	public Object onGetValueBeforeUpdate(int index, String dataType, Object value);
 
 	/**
 	 * On set value after query.

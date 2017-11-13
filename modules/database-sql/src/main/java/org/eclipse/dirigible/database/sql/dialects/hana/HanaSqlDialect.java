@@ -15,23 +15,25 @@ import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
-import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HanaSqlDialect.
+ * The HANA SQL Dialect.
  */
-public class HanaSqlDialect extends DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, HanaCreateBranchingBuilder, DropBranchingBuilder, HanaNextValueSequenceBuilder> {
+public class HanaSqlDialect extends
+		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, HanaCreateBranchingBuilder, DropBranchingBuilder, HanaNextValueSequenceBuilder> {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
 	 */
+	@Override
 	public HanaNextValueSequenceBuilder nextval(String sequence) {
 		return new HanaNextValueSequenceBuilder(this, sequence);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
 	 */
 	@Override

@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.database.sql;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SqlException.
+ * The Sql Exception.
  */
 public class SqlException extends RuntimeException {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 4878658205810743068L;
 
 	/**
@@ -29,10 +27,14 @@ public class SqlException extends RuntimeException {
 	/**
 	 * Instantiates a new sql exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param enableSuppression
+	 *            the enable suppression
+	 * @param writableStackTrace
+	 *            the writable stack trace
 	 */
 	public SqlException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
@@ -41,8 +43,10 @@ public class SqlException extends RuntimeException {
 	/**
 	 * Instantiates a new sql exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public SqlException(String message, Throwable cause) {
 		super(message, cause);
@@ -51,7 +55,8 @@ public class SqlException extends RuntimeException {
 	/**
 	 * Instantiates a new sql exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public SqlException(String message) {
 		super(message);
@@ -60,11 +65,11 @@ public class SqlException extends RuntimeException {
 	/**
 	 * Instantiates a new sql exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public SqlException(Throwable cause) {
 		super(cause);
 	}
 
-	
 }

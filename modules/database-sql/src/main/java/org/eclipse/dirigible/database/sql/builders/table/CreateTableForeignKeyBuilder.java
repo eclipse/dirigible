@@ -15,23 +15,22 @@ import java.util.TreeSet;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CreateTableForeignKeyBuilder.
+ * The Create Table Foreign Key Builder.
  */
 public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintBuilder<CreateTableForeignKeyBuilder> {
 
-	/** The referenced table. */
 	private String referencedTable;
-	
-	/** The referenced columns. */
+
 	private Set<String> referencedColumns = new TreeSet<String>();
 
 	/**
 	 * Instantiates a new creates the table foreign key builder.
 	 *
-	 * @param dialect the dialect
-	 * @param name the name
+	 * @param dialect
+	 *            the dialect
+	 * @param name
+	 *            the name
 	 */
 	CreateTableForeignKeyBuilder(ISqlDialect dialect, String name) {
 		super(dialect, name);
@@ -58,7 +57,8 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	/**
 	 * Referenced table.
 	 *
-	 * @param referencedTable the referenced table
+	 * @param referencedTable
+	 *            the referenced table
 	 * @return the creates the table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedTable(String referencedTable) {
@@ -69,7 +69,8 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	/**
 	 * Referenced column.
 	 *
-	 * @param referencedColumn the referenced column
+	 * @param referencedColumn
+	 *            the referenced column
 	 * @return the creates the table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedColumn(String referencedColumn) {

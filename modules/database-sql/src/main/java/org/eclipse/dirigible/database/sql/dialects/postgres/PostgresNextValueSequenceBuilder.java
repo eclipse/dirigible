@@ -15,26 +15,27 @@ import static java.text.MessageFormat.format;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PostgresNextValueSequenceBuilder.
+ * The PostgreSQL Next Value Sequence Builder.
  */
 public class PostgresNextValueSequenceBuilder extends NextValueSequenceBuilder {
 
-	/** The Constant PATTERN_SELECT_NEXT_VAL_SEQUENCE. */
 	private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT nextval(''{0}'')";
 
 	/**
-	 * Instantiates a new postgres next value sequence builder.
+	 * Instantiates a new PostgreSQL next value sequence builder.
 	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
+	 * @param dialect
+	 *            the dialect
+	 * @param sequence
+	 *            the sequence
 	 */
 	public PostgresNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect, sequence);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
 	 */
 	@Override

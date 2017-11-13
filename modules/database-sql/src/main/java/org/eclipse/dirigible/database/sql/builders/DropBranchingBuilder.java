@@ -16,25 +16,26 @@ import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.DropTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.view.DropViewBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DropBranchingBuilder.
+ * The Drop Branching Builder.
  */
 public class DropBranchingBuilder extends AbstractSqlBuilder {
 
 	/**
 	 * Instantiates a new drop branching builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public DropBranchingBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
 	/**
-	 * Table.
+	 * Table branch.
 	 *
-	 * @param table the table
+	 * @param table
+	 *            the table
 	 * @return the drop table builder
 	 */
 	public DropTableBuilder table(String table) {
@@ -42,9 +43,10 @@ public class DropBranchingBuilder extends AbstractSqlBuilder {
 	}
 
 	/**
-	 * View.
+	 * View branch.
 	 *
-	 * @param view the view
+	 * @param view
+	 *            the view
 	 * @return the drop view builder
 	 */
 	public DropViewBuilder view(String view) {
@@ -52,16 +54,18 @@ public class DropBranchingBuilder extends AbstractSqlBuilder {
 	}
 
 	/**
-	 * Sequence.
+	 * Sequence branch.
 	 *
-	 * @param sequence the sequence
+	 * @param sequence
+	 *            the sequence
 	 * @return the drop sequence builder
 	 */
 	public DropSequenceBuilder sequence(String sequence) {
 		return new DropSequenceBuilder(getDialect(), sequence);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override

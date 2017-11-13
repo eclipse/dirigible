@@ -213,7 +213,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value) throws SQLException {
 
 		if (getEntityManagerInterceptor() != null) {
-			value = getEntityManagerInterceptor().onSetValueBeforeUpdate(i, dataType, value);
+			value = getEntityManagerInterceptor().onGetValueBeforeUpdate(i, dataType, value);
 		}
 
 		if (DataTypeUtils.isVarchar(dataType)) {

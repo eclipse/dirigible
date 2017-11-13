@@ -13,55 +13,54 @@ package org.eclipse.dirigible.database.sql.builders.sequence;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractDropSqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DropSequenceBuilder.
+ * The Drop Sequence Builder.
  */
 public class DropSequenceBuilder extends AbstractDropSqlBuilder {
-	
-	/** The sequence. */
+
 	private String sequence = null;
-	
+
 	/**
 	 * Instantiates a new drop sequence builder.
 	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
+	 * @param dialect
+	 *            the dialect
+	 * @param sequence
+	 *            the sequence
 	 */
 	public DropSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect);
 		this.sequence = sequence;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
 	public String generate() {
-		
+
 		StringBuilder sql = new StringBuilder();
-		
+
 		// DROP
 		generateDrop(sql);
-		
+
 		// SEQUENCE
 		generateSequence(sql);
-		
+
 		return sql.toString();
 	}
-	
+
 	/**
 	 * Generate sequence.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateSequence(StringBuilder sql) {
-		sql.append(SPACE)
-			.append(KEYWORD_SEQUENCE)
-			.append(SPACE)
-			.append(this.sequence);
+		sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(this.sequence);
 	}
-	
+
 	/**
 	 * Gets the sequence.
 	 *
@@ -70,5 +69,5 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
 	public String getSequence() {
 		return sequence;
 	}
-	
+
 }

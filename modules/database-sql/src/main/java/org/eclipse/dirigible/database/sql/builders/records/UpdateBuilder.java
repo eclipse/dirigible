@@ -19,25 +19,22 @@ import java.util.Map.Entry;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class UpdateBuilder.
+ * The Update Builder.
  */
 public class UpdateBuilder extends AbstractQuerySqlBuilder {
 
-	/** The table. */
 	private String table;
-	
-	/** The values. */
+
 	private Map<String, String> values = new LinkedHashMap<String, String>();
-	
-	/** The wheres. */
+
 	private List<String> wheres = new ArrayList<String>();
 
 	/**
 	 * Instantiates a new update builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public UpdateBuilder(ISqlDialect dialect) {
 		super(dialect);
@@ -46,7 +43,8 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Table.
 	 *
-	 * @param table the table
+	 * @param table
+	 *            the table
 	 * @return the update builder
 	 */
 	public UpdateBuilder table(String table) {
@@ -57,8 +55,10 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Sets the.
 	 *
-	 * @param column the column
-	 * @param value the value
+	 * @param column
+	 *            the column
+	 * @param value
+	 *            the value
 	 * @return the update builder
 	 */
 	public UpdateBuilder set(String column, String value) {
@@ -69,7 +69,8 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Where.
 	 *
-	 * @param condition the condition
+	 * @param condition
+	 *            the condition
 	 * @return the update builder
 	 */
 	public UpdateBuilder where(String condition) {
@@ -77,7 +78,8 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -102,7 +104,8 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate table.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
 		sql.append(SPACE).append(this.table);
@@ -111,7 +114,8 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate set values.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateSetValues(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_SET);
@@ -124,7 +128,8 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate update.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateUpdate(StringBuilder sql) {
 		sql.append(KEYWORD_UPDATE);

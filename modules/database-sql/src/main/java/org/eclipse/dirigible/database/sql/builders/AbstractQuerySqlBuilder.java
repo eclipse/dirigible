@@ -14,16 +14,16 @@ import java.util.List;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractQuerySqlBuilder.
+ * The Abstract Query SQL Builder.
  */
 public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 
 	/**
 	 * Instantiates a new abstract query sql builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	protected AbstractQuerySqlBuilder(ISqlDialect dialect) {
 		super(dialect);
@@ -32,7 +32,8 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate create.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateCreate(StringBuilder sql) {
 		sql.append(KEYWORD_CREATE);
@@ -41,8 +42,10 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate where.
 	 *
-	 * @param sql the sql
-	 * @param wheres the wheres
+	 * @param sql
+	 *            the sql
+	 * @param wheres
+	 *            the wheres
 	 */
 	protected void generateWhere(StringBuilder sql, List<String> wheres) {
 		if (!wheres.isEmpty()) {
@@ -53,8 +56,10 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate order by.
 	 *
-	 * @param sql the sql
-	 * @param orders the orders
+	 * @param sql
+	 *            the sql
+	 * @param orders
+	 *            the orders
 	 */
 	protected void generateOrderBy(StringBuilder sql, List<String> orders) {
 		if (!orders.isEmpty()) {
@@ -65,9 +70,12 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 	/**
 	 * Generate limit and offset.
 	 *
-	 * @param sql the sql
-	 * @param limit the limit
-	 * @param offset the offset
+	 * @param sql
+	 *            the sql
+	 * @param limit
+	 *            the limit
+	 * @param offset
+	 *            the offset
 	 */
 	protected void generateLimitAndOffset(StringBuilder sql, int limit, int offset) {
 		if (limit > -1) {
@@ -81,7 +89,8 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 	/**
 	 * Traverse wheres.
 	 *
-	 * @param wheres the wheres
+	 * @param wheres
+	 *            the wheres
 	 * @return the string
 	 */
 	private String traverseWheres(List<String> wheres) {
@@ -95,7 +104,8 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 	/**
 	 * Traverse orders.
 	 *
-	 * @param orders the orders
+	 * @param orders
+	 *            the orders
 	 * @return the string
 	 */
 	private String traverseOrders(List<String> orders) {
@@ -106,7 +116,8 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder#toString()
 	 */
 	@Override

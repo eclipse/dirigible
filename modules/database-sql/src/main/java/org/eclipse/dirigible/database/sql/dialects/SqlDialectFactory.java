@@ -23,7 +23,6 @@ import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.postgres.PostgresSqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.sybase.SybaseSqlDialect;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating SqlDialect objects.
  */
@@ -32,9 +31,11 @@ public class SqlDialectFactory {
 	/**
 	 * Gets the dialect.
 	 *
-	 * @param connection the connection
+	 * @param connection
+	 *            the connection
 	 * @return the dialect
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static final ISqlDialect getDialect(Connection connection) throws SQLException {
 		String productName = connection.getMetaData().getDatabaseProductName();
@@ -43,7 +44,7 @@ public class SqlDialectFactory {
 
 	/** The Constant DATABASE_TYPE_DERBY. */
 	public static final ISqlDialect DATABASE_TYPE_DERBY = new DerbySqlDialect();
-	
+
 	/** The Constant DATABASE_TYPE_H2. */
 	public static final ISqlDialect DATABASE_TYPE_H2 = new H2SqlDialect();
 	// public static final ISqlDialect DATABASE_TYPE_HSQL = "hsql";
@@ -55,7 +56,7 @@ public class SqlDialectFactory {
 	/** The Constant DATABASE_TYPE_HANA. */
 	// public static final ISqlDialect DATABASE_TYPE_DB2 = "db2";
 	public static final ISqlDialect DATABASE_TYPE_HANA = new HanaSqlDialect();
-	
+
 	/** The Constant DATABASE_TYPE_SYBASE. */
 	public static final ISqlDialect DATABASE_TYPE_SYBASE = new SybaseSqlDialect();
 

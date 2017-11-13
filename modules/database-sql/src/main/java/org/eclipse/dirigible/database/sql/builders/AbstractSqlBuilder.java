@@ -13,19 +13,18 @@ package org.eclipse.dirigible.database.sql.builders;
 import org.eclipse.dirigible.database.sql.ISqlBuilder;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractSqlBuilder.
+ * The Abstract SQL Builder.
  */
 public abstract class AbstractSqlBuilder implements ISqlBuilder {
 
-	/** The dialect. */
 	private ISqlDialect dialect;
 
 	/**
 	 * Instantiates a new abstract sql builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	protected AbstractSqlBuilder(ISqlDialect dialect) {
 		this.dialect = dialect;

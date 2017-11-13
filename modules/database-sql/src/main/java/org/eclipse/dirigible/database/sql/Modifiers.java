@@ -10,9 +10,8 @@
 
 package org.eclipse.dirigible.database.sql;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Modifiers.
+ * The Modifiers.
  */
 public class Modifiers {
 

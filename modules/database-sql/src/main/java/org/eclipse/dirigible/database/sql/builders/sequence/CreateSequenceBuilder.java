@@ -13,26 +13,24 @@ package org.eclipse.dirigible.database.sql.builders.sequence;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CreateSequenceBuilder.
+ * The Create Sequence Builder.
  */
 public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 
-	/** The sequence. */
 	private String sequence = null;
-	
-	/** The start. */
+
 	private int start = 0;
-	
-	/** The increment. */
+
 	private int increment = 1;
 
 	/**
 	 * Instantiates a new creates the sequence builder.
 	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
+	 * @param dialect
+	 *            the dialect
+	 * @param sequence
+	 *            the sequence
 	 */
 	public CreateSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect);
@@ -42,7 +40,8 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Start.
 	 *
-	 * @param start the start
+	 * @param start
+	 *            the start
 	 * @return the creates the sequence builder
 	 */
 	public CreateSequenceBuilder start(int start) {
@@ -53,7 +52,8 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Increment.
 	 *
-	 * @param increment the increment
+	 * @param increment
+	 *            the increment
 	 * @return the creates the sequence builder
 	 */
 	public CreateSequenceBuilder increment(int increment) {
@@ -61,7 +61,8 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -87,7 +88,8 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate sequence.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateSequence(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(this.sequence);
@@ -96,7 +98,8 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate start.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateStart(StringBuilder sql) {
 		// sql.append(SPACE)
@@ -108,7 +111,8 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate increment.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateIncrement(StringBuilder sql) {
 		// sql.append(SPACE)
