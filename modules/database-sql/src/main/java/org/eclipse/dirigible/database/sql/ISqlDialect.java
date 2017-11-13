@@ -110,7 +110,6 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * user is entitled to see).
 	 *
 	 * @return true if the feature is supported , false otherwise
-	 * @see IDialectSpecifier#getSchemaFilterScript()
 	 */
 	public boolean isSchemaFilterSupported();
 

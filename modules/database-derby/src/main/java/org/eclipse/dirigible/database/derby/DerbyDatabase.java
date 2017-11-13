@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The File System based Local Repository implementation of {@link IRepository}.
+ * Derby Database adapter.
  */
 public class DerbyDatabase implements IDatabase {
 
