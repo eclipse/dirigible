@@ -14,37 +14,38 @@ import java.util.Arrays;
 
 import org.eclipse.dirigible.repository.api.IEntityInformation;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Module.
+ * The Module.
  */
 public class Module {
-	
-	/** The path. */
+
 	private String path;
-	
-	/** The content. */
+
 	private byte[] content;
-	
-	/** The entity information. */
+
 	private IEntityInformation entityInformation;
 
 	/**
 	 * Instantiates a new module.
 	 *
-	 * @param path the path
-	 * @param content the content
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
 	 */
-	public Module(String path,  byte[] content) {
+	public Module(String path, byte[] content) {
 		this(path, content, null);
 	}
 
 	/**
 	 * Instantiates a new module.
 	 *
-	 * @param path the path
-	 * @param content the content
-	 * @param entityInformation the entity information
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param entityInformation
+	 *            the entity information
 	 */
 	public Module(String path, byte[] content, IEntityInformation entityInformation) {
 		this.path = path;
