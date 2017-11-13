@@ -20,13 +20,13 @@ import com.eclipsesource.v8.JavaCallback;
 import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class JavaV8NewInstance.
+ * The Java V8 New Instance.
  */
 public class JavaV8NewInstance extends JavaV8Callback implements JavaCallback {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.eclipsesource.v8.JavaCallback#invoke(com.eclipsesource.v8.V8Object, com.eclipsesource.v8.V8Array)
 	 */
 	@Override

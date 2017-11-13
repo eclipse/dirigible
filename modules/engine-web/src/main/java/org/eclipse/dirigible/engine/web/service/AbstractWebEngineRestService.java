@@ -29,30 +29,26 @@ import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * Front facing REST service serving the raw web content from the registry/public space.
  */
 public abstract class AbstractWebEngineRestService extends AbstractRestService implements IRestService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractWebEngineRestService.class);
 
-	/** The Constant INDEX_HTML. */
 	private static final String INDEX_HTML = "index.html";
 
-	/** The processor. */
 	@Inject
 	private WebEngineProcessor processor;
 
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
 	/**
 	 * Gets the resource.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the resource
 	 */
 	public Response getResource(@PathParam("path") String path) {
@@ -67,7 +63,8 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 	/**
 	 * Gets the resource by path.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the resource by path
 	 */
 	private Response getResourceByPath(String path) {
@@ -98,7 +95,8 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 		return Response.status(Status.NOT_FOUND).build();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */
 	@Override

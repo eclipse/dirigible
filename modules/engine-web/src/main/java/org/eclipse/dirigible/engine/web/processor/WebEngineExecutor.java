@@ -13,9 +13,8 @@ package org.eclipse.dirigible.engine.web.processor;
 import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
 
 /**
- * The Class WebEngineExecutor.
+ * The Web Engine Executor.
  */
 public class WebEngineExecutor extends AbstractResourceExecutor {
 
-	
 }

@@ -24,7 +24,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-// TODO: Auto-generated Javadoc
 /**
  * Front facing REST service serving the public raw web content from the registry/public space.
  */
@@ -33,7 +32,8 @@ import io.swagger.annotations.ApiResponses;
 @Api("Core - Web Engine Public")
 public class WebEnginePublicRestService extends AbstractWebEngineRestService {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.web.service.AbstractWebEngineRestService#getResource(java.lang.String)
 	 */
 	@Override
@@ -46,7 +46,8 @@ public class WebEnginePublicRestService extends AbstractWebEngineRestService {
 		return super.getResource(path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
 	@Override

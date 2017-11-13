@@ -16,25 +16,25 @@ import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class JavascriptModule.
+ * The Javascript Module.
  */
 public class JavascriptModule extends AbstractDirigibleModule {
 
-	/** The Constant MODULE_NAME. */
 	private static final String MODULE_NAME = "Javascript Module";
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.google.inject.AbstractModule#configure()
 	 */
 	@Override
 	protected void configure() {
 		ServiceLoader<IJavascriptEngineExecutor> javascriptEngineExecutors = ServiceLoader.load(IJavascriptEngineExecutor.class);
-		
+
 		Configuration.load("/dirigible-js.properties");
-		
-		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_TYPE_ENGINE_DEFAULT, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);
+
+		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_TYPE_ENGINE_DEFAULT,
+				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);
 		for (IJavascriptEngineExecutor next : javascriptEngineExecutors) {
 			if (next.getType().equals(javascriptEngineType)) {
 				bind(IJavascriptEngineExecutor.class).toInstance(next);
@@ -42,8 +42,9 @@ public class JavascriptModule extends AbstractDirigibleModule {
 		}
 
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
 	 */
 	@Override

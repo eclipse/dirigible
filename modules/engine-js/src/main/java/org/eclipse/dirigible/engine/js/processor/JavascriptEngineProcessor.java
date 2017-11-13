@@ -22,20 +22,18 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class JavascriptEngineProcessor.
+ * The Javascript Engine Processor.
  */
 public class JavascriptEngineProcessor implements IJavascriptEngineProcessor {
 
-	/** The Constant JAVASCRIPT_ENGINE_EXECUTORS. */
 	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
 
-	/** The engine executor. */
 	@Inject
 	private IJavascriptEngineExecutor engineExecutor;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
 	 */
 	@Override

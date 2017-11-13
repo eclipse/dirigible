@@ -18,18 +18,16 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * The Class RhinoJavascriptEngineProcessor.
+ * The Rhino Javascript Engine Processor.
  */
 public class RhinoJavascriptEngineProcessor implements IJavascriptEngineProcessor {
-	
-	/** The rhino engine executor. */
+
 	@Inject
 	private RhinoJavascriptEngineExecutor rhinoEngineExecutor;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
 	 */
 	@Override

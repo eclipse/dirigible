@@ -13,21 +13,20 @@ package org.eclipse.dirigible.engine.js.api;
 import org.eclipse.dirigible.api.v3.http.HttpResponseFacade;
 import org.eclipse.dirigible.engine.api.script.AbstractScriptExecutor;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractJavascriptExecutor.
+ * The Abstract Javascript Executor.
  */
 public abstract class AbstractJavascriptExecutor extends AbstractScriptExecutor implements IJavascriptEngineExecutor {
 
 	/** The Constant MODULE_EXT_JS. */
 	public static final String MODULE_EXT_JS = ".js/";
-	
+
 	/** The Constant MODULE_EXT_RHINO. */
 	public static final String MODULE_EXT_RHINO = ".rhino/";
-	
+
 	/** The Constant MODULE_EXT_NASHORN. */
 	public static final String MODULE_EXT_NASHORN = ".nashorn/";
-	
+
 	/** The Constant MODULE_EXT_V8. */
 	public static final String MODULE_EXT_V8 = ".v8/";
 
@@ -48,8 +47,10 @@ public abstract class AbstractJavascriptExecutor extends AbstractScriptExecutor 
 	/**
 	 * Gets the resource path.
 	 *
-	 * @param module the module
-	 * @param moduleExtensions the module extensions
+	 * @param module
+	 *            the module
+	 * @param moduleExtensions
+	 *            the module extensions
 	 * @return the resource path
 	 */
 	protected ResourcePath getResourcePath(String module, String... moduleExtensions) {
@@ -59,8 +60,10 @@ public abstract class AbstractJavascriptExecutor extends AbstractScriptExecutor 
 	/**
 	 * Generate resource path.
 	 *
-	 * @param module the module
-	 * @param moduleExtensions the module extensions
+	 * @param module
+	 *            the module
+	 * @param moduleExtensions
+	 *            the module extensions
 	 * @return the resource path
 	 */
 	public static ResourcePath generateResourcePath(String module, String[] moduleExtensions) {

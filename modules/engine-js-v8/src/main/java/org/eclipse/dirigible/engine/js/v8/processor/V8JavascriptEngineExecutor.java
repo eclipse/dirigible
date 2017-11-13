@@ -33,34 +33,33 @@ import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class V8JavascriptEngineExecutor.
+ * The V8 Javascript Engine Executor.
  */
 public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
-	/** The Constant J2V8_CALL_STATIC_FUNCTION_NAME. */
 	private static final String J2V8_CALL_STATIC_FUNCTION_NAME = "j2v8call";
-	
-	/** The Constant J2V8_NEW_INSTANCE_FUNCTION_NAME. */
+
 	private static final String J2V8_NEW_INSTANCE_FUNCTION_NAME = "j2v8instantiate";
-	
-	/** The Constant J2V8_CALL_INSTANCE_FUNCTION_NAME. */
+
 	private static final String J2V8_CALL_INSTANCE_FUNCTION_NAME = "j2v8invoke";
-	
-	/** The Constant logger. */
+
 	private static final Logger logger = LoggerFactory.getLogger(V8JavascriptEngineExecutor.class);
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String, java.util.Map)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String,
+	 * java.util.Map)
 	 */
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
 		return executeService(module, executionContext, true);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceCode(java.lang.String, java.util.Map)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceCode(java.lang.String,
+	 * java.util.Map)
 	 */
 	@Override
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
@@ -70,11 +69,15 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 	/**
 	 * Execute service.
 	 *
-	 * @param moduleOrCode the module or code
-	 * @param executionContext the execution context
-	 * @param isModule the is module
+	 * @param moduleOrCode
+	 *            the module or code
+	 * @param executionContext
+	 *            the execution context
+	 * @param isModule
+	 *            the is module
 	 * @return the object
-	 * @throws ScriptingException the scripting exception
+	 * @throws ScriptingException
+	 *             the scripting exception
 	 */
 	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
 
@@ -148,7 +151,8 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		return repositoryModuleSourceProvider;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#getType()
 	 */
 	@Override
