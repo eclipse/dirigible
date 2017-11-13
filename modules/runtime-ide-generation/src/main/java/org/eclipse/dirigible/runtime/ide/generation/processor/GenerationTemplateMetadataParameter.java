@@ -10,9 +10,8 @@
 
 package org.eclipse.dirigible.runtime.ide.generation.processor;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GenerationTemplateMetadataParameter.
+ * The Generation Template Metadata Parameter serialization object.
  */
 public class GenerationTemplateMetadataParameter {
 	

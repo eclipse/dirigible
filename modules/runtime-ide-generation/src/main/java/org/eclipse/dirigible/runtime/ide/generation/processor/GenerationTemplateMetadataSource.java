@@ -10,25 +10,19 @@
 
 package org.eclipse.dirigible.runtime.ide.generation.processor;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GenerationTemplateMetadataSource.
+ * The Generation Template Metadata Source serialization object.
  */
 public class GenerationTemplateMetadataSource {
 	
-	/** The location. */
 	private String location;
 	
-	/** The action. */
 	private String action;
 	
-	/** The rename. */
 	private String rename;
 	
-	/** The start. */
 	private String start;
 	
-	/** The end. */
 	private String end;
 
 	/**

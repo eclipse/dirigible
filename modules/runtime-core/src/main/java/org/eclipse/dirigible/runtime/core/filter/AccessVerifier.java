@@ -21,24 +21,27 @@ import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * Utility class that checks whether the location is secured via the *.access file
  */
 public class AccessVerifier {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AccessVerifier.class);
 
 	/**
 	 * Checks whether the URI is secured via the *.access file or not
 	 *
-	 * @param securityCoreService the security core service
-	 * @param uri the uri
-	 * @param method the method
+	 * @param securityCoreService
+	 *            the security core service
+	 * @param uri
+	 *            the uri
+	 * @param method
+	 *            the method
 	 * @return all the most specific AccessDefinition entry matching the URI if any
-	 * @throws ServletException the servlet exception
-	 * @throws AccessException the access exception
+	 * @throws ServletException
+	 *             the servlet exception
+	 * @throws AccessException
+	 *             the access exception
 	 */
 	public static List<AccessDefinition> getMatchingAccessDefinitions(ISecurityCoreService securityCoreService, String uri, String method)
 			throws ServletException, AccessException {

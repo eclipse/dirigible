@@ -21,21 +21,20 @@ import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 
-// TODO: Auto-generated Javadoc
 /**
- * Processing the Extensions Service incoming requests .
+ * Processing the Extensions Service incoming requests.
  */
 public class ExtensionsProcessor {
-	
-	/** The extensions core service. */
+
 	@Inject
 	private ExtensionsCoreService extensionsCoreService;
-	
+
 	/**
 	 * Render extension points.
 	 *
 	 * @return the string
-	 * @throws ExtensionsException the extensions exception
+	 * @throws ExtensionsException
+	 *             the extensions exception
 	 */
 	public String renderExtensionPoints() throws ExtensionsException {
 		List<ExtensionPoint> bundles = new ArrayList<ExtensionPoint>();
@@ -47,13 +46,15 @@ public class ExtensionsProcessor {
 		}
 		return GsonHelper.GSON.toJson(bundles);
 	}
-	
+
 	/**
 	 * Render extension point.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the string
-	 * @throws ExtensionsException the extensions exception
+	 * @throws ExtensionsException
+	 *             the extensions exception
 	 */
 	public String renderExtensionPoint(String name) throws ExtensionsException {
 		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.getExtensionPointByName(name);
@@ -64,5 +65,5 @@ public class ExtensionsProcessor {
 		ExtensionPoint bundle = new ExtensionPoint(extensionPointDefinition, extensions);
 		return GsonHelper.GSON.toJson(bundle);
 	}
-	
+
 }

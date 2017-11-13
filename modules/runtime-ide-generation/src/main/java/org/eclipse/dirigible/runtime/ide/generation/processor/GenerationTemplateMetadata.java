@@ -12,25 +12,19 @@ package org.eclipse.dirigible.runtime.ide.generation.processor;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GenerationTemplateMetadata.
+ * The Generation Template Metadata serialization object.
  */
 public class GenerationTemplateMetadata {
 	
-	/** The id. */
 	private String id;
 	
-	/** The name. */
 	private String name;
 	
-	/** The description. */
 	private String description;
 	
-	/** The sources. */
 	private List<GenerationTemplateMetadataSource> sources;
 	
-	/** The parameters. */
 	private List<GenerationTemplateMetadataParameter> parameters;
 
 	/**

@@ -15,30 +15,29 @@ import java.util.List;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ExtensionPoint.
+ * The Extension Point transport object.
  */
 public class ExtensionPoint {
-	
-	/** The extension point. */
+
 	private ExtensionPointDefinition extensionPoint;
-	
-	/** The extensions. */
+
 	private List<ExtensionDefinition> extensions;
 
 	/**
 	 * Instantiates a new extension point.
 	 *
-	 * @param extensionPoint the extension point
-	 * @param extensions the extensions
+	 * @param extensionPoint
+	 *            the extension point
+	 * @param extensions
+	 *            the extensions
 	 */
 	public ExtensionPoint(ExtensionPointDefinition extensionPoint, List<ExtensionDefinition> extensions) {
 		super();
 		this.extensionPoint = extensionPoint;
 		this.extensions = extensions;
 	}
-	
+
 	/**
 	 * Gets the extension point.
 	 *
@@ -47,7 +46,7 @@ public class ExtensionPoint {
 	public ExtensionPointDefinition getExtensionPoint() {
 		return extensionPoint;
 	}
-	
+
 	/**
 	 * Gets the extensions.
 	 *
@@ -56,5 +55,5 @@ public class ExtensionPoint {
 	public List<ExtensionDefinition> getExtensions() {
 		return extensions;
 	}
-	
+
 }

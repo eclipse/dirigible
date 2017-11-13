@@ -43,7 +43,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
  * Front facing REST service serving the Generation content.
  */
@@ -55,14 +54,11 @@ import io.swagger.annotations.Authorization;
 	@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class GenerationRestService extends AbstractRestService implements IRestService {
 	
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GenerationRestService.class);
 
-	/** The processor. */
 	@Inject
 	private GenerationProcessor processor;
 	
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
