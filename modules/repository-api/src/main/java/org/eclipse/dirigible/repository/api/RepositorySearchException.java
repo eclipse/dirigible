@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.repository.api;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class RepositorySearchException.
+ * The Repository Search Exception.
  */
 public class RepositorySearchException extends RepositoryException {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -163847774919514248L;
 
 	/**
@@ -29,8 +27,10 @@ public class RepositorySearchException extends RepositoryException {
 	/**
 	 * Instantiates a new repository search exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public RepositorySearchException(String message, Throwable cause) {
 		super(message, cause);
@@ -39,7 +39,8 @@ public class RepositorySearchException extends RepositoryException {
 	/**
 	 * Instantiates a new repository search exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public RepositorySearchException(String message) {
 		super(message);
@@ -48,7 +49,8 @@ public class RepositorySearchException extends RepositoryException {
 	/**
 	 * Instantiates a new repository search exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public RepositorySearchException(Throwable cause) {
 		super(cause);

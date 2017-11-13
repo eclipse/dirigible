@@ -16,16 +16,15 @@ import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RepositoryExceptionHandler.
  */
-public class RepositoryExceptionHandler extends AbstractExceptionHandler<RepositoryException>{
+public class RepositoryExceptionHandler extends AbstractExceptionHandler<RepositoryException> {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryExceptionHandler.class);
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getType()
 	 */
 	@Override
@@ -33,7 +32,8 @@ public class RepositoryExceptionHandler extends AbstractExceptionHandler<Reposit
 		return RepositoryExceptionHandler.class;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getLogger()
 	 */
 	@Override
@@ -41,7 +41,8 @@ public class RepositoryExceptionHandler extends AbstractExceptionHandler<Reposit
 		return logger;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseStatus(java.lang.Throwable)
 	 */
 	@Override
@@ -49,7 +50,8 @@ public class RepositoryExceptionHandler extends AbstractExceptionHandler<Reposit
 		return Status.INTERNAL_SERVER_ERROR;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseMessage(java.lang.Throwable)
 	 */
 	@Override

@@ -10,17 +10,16 @@
 
 package org.eclipse.dirigible.repository.api;
 
-// TODO: Auto-generated Javadoc
 /**
  * The {@link IEntity} interface is a base interface for {@link ICollection} and
  * {@link IResource}. <br>
  * It provides methods that are common for both interfaces.
- * 
  */
 public interface IEntity {
 
 	/**
 	 * Returns the repository that holds this resource.
+	 * 
 	 * @return an {@link IRepository} instance
 	 */
 	public IRepository getRepository();
@@ -29,6 +28,7 @@ public interface IEntity {
 	 * Returns the name of this entity.
 	 * <p>
 	 * This is equal to the content of the path after the last slash in it.
+	 * 
 	 * @return the name of the entity
 	 */
 	public String getName();
@@ -40,6 +40,7 @@ public interface IEntity {
 	 * <p>
 	 * Example: /repository/users/test.txt <br>
 	 * Example: /repository/articles
+	 * 
 	 * @return the location
 	 */
 	public String getPath();
@@ -49,6 +50,7 @@ public interface IEntity {
 	 * <p>
 	 * The result could be <code>null</code> should there be no parent (i.e.
 	 * this is the root).
+	 * 
 	 * @return an parent {@link ICollection}
 	 */
 	public ICollection getParent();
@@ -60,8 +62,8 @@ public interface IEntity {
 	 * This method may not return <code>null</code>, however, the contents of
 	 * the returned {@link IEntityInformation} may return <code>null</code>
 	 * indicating that a given information is not available.
-	 * @return an {@link IEntityInformation} instance with the meta-data of the entity
 	 * 
+	 * @return an {@link IEntityInformation} instance with the meta-data of the entity
 	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
@@ -73,7 +75,7 @@ public interface IEntity {
 	 * <p>
 	 * Whether the entity will be created as a resource or a collection depends
 	 * on whether it is an instance of {@link IResource} or {@link ICollection}.
-	 * 
+	 *
 	 * @throws RepositoryWriteException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved, or if an entity with this path already exists on
@@ -85,7 +87,7 @@ public interface IEntity {
 	 * Removes this entity from the repository.
 	 * <p>
 	 * If no such resource exists, this method does nothing.
-	 * 
+	 *
 	 * @throws RepositoryWriteException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
@@ -94,8 +96,11 @@ public interface IEntity {
 
 	/**
 	 * Changes the name of this entity to the specified value.
-	 * @param name the new name
-	 * @throws RepositoryWriteException if for some reason a connection to the backend could not be achieved
+	 * 
+	 * @param name
+	 *            the new name
+	 * @throws RepositoryWriteException
+	 *             if for some reason a connection to the backend could not be achieved
 	 */
 	public void renameTo(String name) throws RepositoryWriteException;
 
@@ -104,8 +109,11 @@ public interface IEntity {
 	 * <p>
 	 * If this entity is of type {@link ICollection}, then all child entities
 	 * are copied too.
-	 * @param path the new location
-	 * @throws RepositoryWriteException if for some reason a connection to the backend could not be achieved
+	 * 
+	 * @param path
+	 *            the new location
+	 * @throws RepositoryWriteException
+	 *             if for some reason a connection to the backend could not be achieved
 	 */
 	public void moveTo(String path) throws RepositoryWriteException;
 
@@ -114,15 +122,18 @@ public interface IEntity {
 	 * <p>
 	 * If this entity is of type {@link ICollection}, then all child entities
 	 * are copied too.
-	 * @param path the location ot be copied to
-	 * @throws RepositoryWriteException if for some reason a connection to the backend could not be achieved
+	 * 
+	 * @param path
+	 *            the location ot be copied to
+	 * @throws RepositoryWriteException
+	 *             if for some reason a connection to the backend could not be achieved
 	 */
 	public void copyTo(String path) throws RepositoryWriteException;
 
 	/**
 	 * Returns whether this entity is valid and exists on the backend.
-	 * @return whether this entity is already materialized
 	 * 
+	 * @return whether this entity is already materialized
 	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.
@@ -139,8 +150,8 @@ public interface IEntity {
 	 * has any content. <br>
 	 * <i><strong>Note:</strong> Calling this method on a resource can be
 	 * slow.</i>
-	 * @return whether this entity is empty
 	 * 
+	 * @return whether this entity is empty
 	 * @throws RepositoryReadException
 	 *             if for some reason a connection to the backend could not be
 	 *             achieved.

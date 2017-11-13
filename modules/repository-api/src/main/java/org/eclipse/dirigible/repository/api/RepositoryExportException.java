@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.repository.api;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RepositoryExportException.
  */
 public class RepositoryExportException extends RepositoryException {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -163847774919514248L;
 
 	/**
@@ -29,8 +27,10 @@ public class RepositoryExportException extends RepositoryException {
 	/**
 	 * Instantiates a new repository export exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public RepositoryExportException(String message, Throwable cause) {
 		super(message, cause);
@@ -39,7 +39,8 @@ public class RepositoryExportException extends RepositoryException {
 	/**
 	 * Instantiates a new repository export exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public RepositoryExportException(String message) {
 		super(message);
@@ -48,7 +49,8 @@ public class RepositoryExportException extends RepositoryException {
 	/**
 	 * Instantiates a new repository export exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public RepositoryExportException(Throwable cause) {
 		super(cause);
