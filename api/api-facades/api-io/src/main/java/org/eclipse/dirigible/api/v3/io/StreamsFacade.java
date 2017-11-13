@@ -29,7 +29,7 @@ public class StreamsFacade {
 	 * Read the next byte from the provided {@link InputStream}
 	 * @param input the input stream to read from
 	 * @return the next byte of data in the range 0-255 or -1 if end of stream is reached
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final int read(InputStream input) throws IOException {
 		return input.read();
@@ -39,7 +39,7 @@ public class StreamsFacade {
 	 * Read the content of the provided {@link InputStream} as byte array
 	 * @param input the input stream to read from
 	 * @return the input stream content
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final byte[] readBytes(InputStream input) throws IOException {
 		return IOUtils.toByteArray(input);
@@ -49,7 +49,7 @@ public class StreamsFacade {
 	 * Read the content of the {@link InputStream} as UTF-8 text
 	 * @param input the input stream to read from
 	 * @return the content of the stream as string
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String readText(InputStream input) throws IOException {
 		return IOUtils.toString(input, StandardCharsets.UTF_8);
@@ -58,7 +58,7 @@ public class StreamsFacade {
 	/**
 	 * Close the provided {@link InputStream}
 	 * @param input the input stream to close
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void close(InputStream input) throws IOException {
 		input.close();
@@ -68,7 +68,7 @@ public class StreamsFacade {
 	 * Write byte to the provided {@link OutputStream}. The 24 higher bits are ignored.
 	 * @param output the output stream to write to
 	 * @param value the byte to write
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void write(OutputStream output, int value) throws IOException {
 		output.write(value);
@@ -78,7 +78,7 @@ public class StreamsFacade {
 	 * Write data to the provided {@link OutputStream}
 	 * @param output the output stream to write to
 	 * @param input the data to write
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void writeBytes(OutputStream output, String input) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
@@ -89,7 +89,7 @@ public class StreamsFacade {
 	 * Write text to the provided {@link OutputStream} using UTF-8 encoding
 	 * @param output the output stream to write to
 	 * @param value the text to write
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void writeText(OutputStream output, String value) throws IOException {
 		output.write(value.getBytes(StandardCharsets.UTF_8));
@@ -98,7 +98,7 @@ public class StreamsFacade {
 	/**
 	 * Close the provided {@link OutputStream}
 	 * @param output the output stream that is to be closed
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void close(OutputStream output) throws IOException {
 		output.close();
@@ -108,7 +108,7 @@ public class StreamsFacade {
 	 * Write the {@link InputStream} content into the {@link OutputStream}
 	 * @param input the input stream to read from
 	 * @param output the output stream to write to
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void copy(InputStream input, OutputStream output) throws IOException {
 		IOUtils.copy(input, output);
@@ -118,7 +118,7 @@ public class StreamsFacade {
 	 * Get the byte array as {@link ByteArrayInputStream}
 	 * @param input the byte array
 	 * @return the created byte array input stream
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final ByteArrayInputStream createByteArrayInputStream(byte[] input) throws IOException {
 		return new ByteArrayInputStream(input);
@@ -128,7 +128,7 @@ public class StreamsFacade {
 	 * Get the input data as {@link ByteArrayInputStream}
 	 * @param input the input data
 	 * @return the created byte array input stream
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final ByteArrayInputStream createByteArrayInputStream(String input) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
@@ -138,7 +138,7 @@ public class StreamsFacade {
 	/**
 	 * Create empty {@link ByteArrayInputStream}
 	 * @return the created byte array input stream
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final ByteArrayInputStream createByteArrayInputStream() throws IOException {
 		return new ByteArrayInputStream(new byte[]{});
@@ -147,7 +147,7 @@ public class StreamsFacade {
 	/**
 	 * Create empty {@link ByteArrayOutputStream}
 	 * @return the created byte array output stream
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final ByteArrayOutputStream createByteArrayOutputStream() throws IOException {
 		return new ByteArrayOutputStream();
@@ -157,7 +157,7 @@ public class StreamsFacade {
 	 * Get the {@link ByteArrayOutputStream} content as byte array
 	 * @param output the byte array output stream
 	 * @return the content of the byte array output stream
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final byte[] getBytes(ByteArrayOutputStream output) throws IOException {
 		byte[] bytes = output.toByteArray();
@@ -168,7 +168,7 @@ public class StreamsFacade {
 	 * Get the {@link ByteArrayOutputStream} content as UTF-8 string
 	 * @param output the byte array output stream
 	 * @return the content of the byte array output stream
-	 * @throws IOException
+	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String getText(ByteArrayOutputStream output) throws IOException {
 		byte[] bytes = output.toByteArray();
