@@ -13,56 +13,13 @@ package org.eclipse.dirigible.database.ds.model;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The table model representation
- * {
- * "name": "CUSTOMERS",
- * "type": "TABLE",
- * "columns":
- * [
- * {
- * "name":"id",
- * "type":"INTEGER",
- * "length":"0",
- * "notNull":"true",
- * "primaryKey":"true",
- * "defaultValue":""
- * },
- * {
- * "name":"CUSTOMER_FIRST_NAME",
- * "type":"VARCHAR",
- * "length":"32",
- * "notNull":"false",
- * "primaryKey":"false",
- * "defaultValue":""
- * },
- * {
- * "name":"CUSTOMER_BALANCE",
- * "type":"VARCHAR",
- * "length":"32",
- * "notNull":"false",
- * "primaryKey":"false",
- * "defaultValue":"",
- * "precision": "5",
- * "scale": "2"
- * }
- * ],
- * "dependencies":
- * [
- * {
- * "name":"ADDRESSES",
- * "type":"TABLE"
- * }
- * ]
- * }.
+ * The table model representation.
  */
 public class DataStructureTableModel extends DataStructureModel {
 
-	/** The columns. */
 	private List<DataStructureTableColumnModel> columns = new ArrayList<DataStructureTableColumnModel>();
 
-	/** The constraints. */
 	private DataStructureTableConstraintsModel constraints = new DataStructureTableConstraintsModel();
 
 	/**

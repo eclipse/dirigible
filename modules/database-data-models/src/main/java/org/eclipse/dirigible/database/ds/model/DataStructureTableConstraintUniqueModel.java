@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.database.ds.model;
 
 /**
- * The Class DataStructureTableConstraintUniqueModel.
+ * The Data Structure Table Constraint Unique Model.
  */
 public class DataStructureTableConstraintUniqueModel extends DataStructureTableConstraintModel {
 

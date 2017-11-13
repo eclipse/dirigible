@@ -10,22 +10,17 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DataStructureTableConstraintsModel.
+ * The Data Structure Table Constraints Model.
  */
 public class DataStructureTableConstraintsModel {
 
-	/** The primary key. */
 	private DataStructureTableConstraintPrimaryKeyModel primaryKey;
 
-	/** The foreign keys. */
 	private DataStructureTableConstraintForeignKeyModel[] foreignKeys;
 
-	/** The unique indices. */
 	private DataStructureTableConstraintUniqueModel[] uniqueIndices;
 
-	/** The checks. */
 	private DataStructureTableConstraintCheckModel[] checks;
 
 	/**

@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
  * The factory for creation of the data structure models from source content.
  */

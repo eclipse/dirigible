@@ -10,16 +10,13 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * Dependency element of the DataStructureModel.
  */
 public class DataStructureDependencyModel {
 
-	/** The name. */
 	private String name;
 
-	/** The type. */
 	private String type;
 
 	/**

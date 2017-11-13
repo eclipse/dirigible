@@ -10,19 +10,15 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DataStructureTableConstraintModel.
+ * The Data Structure Table Constraint Model.
  */
 public class DataStructureTableConstraintModel {
 
-	/** The name. */
 	private String name;
 	
-	/** The modifiers. */
 	private String[] modifiers;
 	
-	/** The columns. */
 	private String[] columns;
 
 	/**

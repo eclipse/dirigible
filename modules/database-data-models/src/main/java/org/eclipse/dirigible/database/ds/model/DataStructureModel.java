@@ -20,39 +20,31 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
  * The basis for all the data structure models.
  */
 @Table(name = "DIRIGIBLE_DATA_STRUCTURES")
 public class DataStructureModel {
 
-	/** The location. */
 	@Id
 	@Column(name = "DS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
-	/** The name. */
 	@Column(name = "DS_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
 	private String name;
 
-	/** The type. */
 	@Column(name = "DS_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	private String type;
 
-	/** The hash. */
 	@Column(name = "DS_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
-	/** The created by. */
 	@Column(name = "DS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	/** The created at. */
 	@Column(name = "DS_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
-	/** The dependencies. */
 	private List<DataStructureDependencyModel> dependencies = new ArrayList<DataStructureDependencyModel>();
 
 	/**
