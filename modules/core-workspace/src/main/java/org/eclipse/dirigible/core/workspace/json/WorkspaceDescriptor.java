@@ -13,22 +13,17 @@ package org.eclipse.dirigible.core.workspace.json;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class WorkspaceDescriptor.
+ * The Workspace Descriptor transport object.
  */
 public class WorkspaceDescriptor {
 
-	/** The name. */
 	private String name;
 
-	/** The path. */
 	private String path;
 
-	/** The type. */
 	private String type = "workspace";
 
-	/** The projects. */
 	private List<ProjectDescriptor> projects = new ArrayList<ProjectDescriptor>();
 
 	/**
@@ -43,7 +38,8 @@ public class WorkspaceDescriptor {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -61,7 +57,8 @@ public class WorkspaceDescriptor {
 	/**
 	 * Sets the path.
 	 *
-	 * @param path the new path
+	 * @param path
+	 *            the new path
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -79,7 +76,8 @@ public class WorkspaceDescriptor {
 	/**
 	 * Sets the.
 	 *
-	 * @param projects the projects
+	 * @param projects
+	 *            the projects
 	 */
 	public void set(List<ProjectDescriptor> projects) {
 		this.projects = projects;
