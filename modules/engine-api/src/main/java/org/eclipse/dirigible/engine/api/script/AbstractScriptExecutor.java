@@ -12,28 +12,26 @@ package org.eclipse.dirigible.engine.api.script;
 
 import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
 import org.eclipse.dirigible.repository.api.RepositoryException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractScriptExecutor.
+ * The Abstract Script Executor.
  */
 public abstract class AbstractScriptExecutor extends AbstractResourceExecutor implements IScriptEngineExecutor {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(AbstractScriptExecutor.class);
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#retrieveModule(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#retrieveModule(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public Module retrieveModule(String root, String module) throws RepositoryException {
 		return retrieveModule(root, module, null);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#retrieveModule(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#retrieveModule(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public Module retrieveModule(String root, String module, String extension) throws RepositoryException {

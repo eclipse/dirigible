@@ -26,16 +26,13 @@ import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractResourceExecutor.
+ * The Abstract Resource Executor.
  */
 public class AbstractResourceExecutor implements IResourceExecutor {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 
-	/** The repository. */
 	@Inject
 	private IRepository repository;
 

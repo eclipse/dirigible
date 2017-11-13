@@ -18,22 +18,20 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating ScriptEngineExecutor objects.
  */
 public class ScriptEngineExecutorFactory {
 
-	/** The Constant SCRIPT_ENGINE_EXECUTORS. */
 	private static final ServiceLoader<IScriptEngineExecutor> SCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IScriptEngineExecutor.class);
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ScriptEngineExecutorFactory.class);
 
 	/**
 	 * Gets the script engine executor.
 	 *
-	 * @param type the type
+	 * @param type
+	 *            the type
 	 * @return the script engine executor
 	 */
 	public static IScriptEngineExecutor getScriptEngineExecutor(String type) {
