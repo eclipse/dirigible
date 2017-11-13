@@ -12,16 +12,13 @@ package org.eclipse.dirigible.runtime.ide.generation.processor;
 
 import java.util.Map;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GenerationTemplateParameters.
+ * The Generation Template Parameters serialization object.
  */
 public class GenerationTemplateParameters {
 	
-	/** The template. */
 	private String template;
 	
-	/** The parameters. */
 	private Map<String, Object> parameters;
 
 	/**

@@ -41,25 +41,20 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import io.swagger.models.auth.BasicAuthDefinition;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class handles the initialization of all Guice modules and all REST API
  * resources.
- *
- * @see DirigibleServletContextEvent
  */
 public class DirigibleServletContextListener extends GuiceServletContextListener {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleServletContextListener.class);
 
-	/** The Constant services. */
 	private static final HashSet<Object> services = new HashSet<Object>();
 
-	/** The injector. */
 	private Injector injector;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.google.inject.servlet.GuiceServletContextListener#getInjector()
 	 */
 	@Override
@@ -74,7 +69,8 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		return injector;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.google.inject.servlet.GuiceServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
 	 */
 	@Override
@@ -230,7 +226,8 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		return services;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.google.inject.servlet.GuiceServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
 	 */
 	@Override

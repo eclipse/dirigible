@@ -27,24 +27,22 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ConsoleWebsocketService.
+ * The Console Websocket Service.
  */
 @Singleton
 @ServerEndpoint("/websockets/v3/ide/console")
 public class ConsoleWebsocketService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ConsoleWebsocketService.class);
 
-	/** The open sessions. */
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
 
 	/**
-	 * On open.
+	 * On open callback.
 	 *
-	 * @param session the session
+	 * @param session
+	 *            the session
 	 */
 	@OnOpen
 	public void onOpen(Session session) {
@@ -53,10 +51,12 @@ public class ConsoleWebsocketService {
 	}
 
 	/**
-	 * On message.
+	 * On message callback.
 	 *
-	 * @param message the message
-	 * @param session the session
+	 * @param message
+	 *            the message
+	 * @param session
+	 *            the session
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
@@ -64,10 +64,12 @@ public class ConsoleWebsocketService {
 	}
 
 	/**
-	 * On error.
+	 * On error callback.
 	 *
-	 * @param session the session
-	 * @param throwable the throwable
+	 * @param session
+	 *            the session
+	 * @param throwable
+	 *            the throwable
 	 */
 	@OnError
 	public void onError(Session session, Throwable throwable) {
@@ -76,10 +78,12 @@ public class ConsoleWebsocketService {
 	}
 
 	/**
-	 * On close.
+	 * On close callback.
 	 *
-	 * @param session the session
-	 * @param closeReason the close reason
+	 * @param session
+	 *            the session
+	 * @param closeReason
+	 *            the close reason
 	 */
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
@@ -88,9 +92,10 @@ public class ConsoleWebsocketService {
 	}
 
 	/**
-	 * Distribute.
+	 * Distribute message to all the listeners.
 	 *
-	 * @param record the record
+	 * @param record
+	 *            the record
 	 */
 	public static void distribute(ConsoleLogRecord record) {
 		for (Session session : OPEN_SESSIONS.values()) {

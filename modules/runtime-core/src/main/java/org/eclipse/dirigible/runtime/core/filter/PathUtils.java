@@ -15,18 +15,19 @@ import javax.websocket.server.HandshakeRequest;
 
 import org.eclipse.dirigible.repository.api.IRepository;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PathUtils.
+ * The Path Utils.
  */
 public class PathUtils {
 
 	/**
 	 * Extract path.
 	 *
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the string
-	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalArgumentException
+	 *             the illegal argument exception
 	 */
 	public static String extractPath(HttpServletRequest request) throws IllegalArgumentException {
 		String requestPath = request.getPathInfo();
@@ -39,8 +40,10 @@ public class PathUtils {
 	/**
 	 * Gets the heading url.
 	 *
-	 * @param req the req
-	 * @param mapping the mapping
+	 * @param req
+	 *            the req
+	 * @param mapping
+	 *            the mapping
 	 * @return the heading url
 	 */
 	public static String getHeadingUrl(final HttpServletRequest req, String mapping) {
@@ -55,7 +58,8 @@ public class PathUtils {
 	/**
 	 * Extract path web socket.
 	 *
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the string
 	 */
 	public static String extractPathWebSocket(HandshakeRequest request) {

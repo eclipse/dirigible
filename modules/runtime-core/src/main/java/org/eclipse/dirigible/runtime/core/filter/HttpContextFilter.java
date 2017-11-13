@@ -25,14 +25,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HttpContextFilter.
+ * The HTTP Context Filter.
  */
 @WebFilter(urlPatterns = "/services/v3/*", filterName = "HttpContextFilter", description = "Set the HTTP Request and Response to the Context for all URIs")
 public class HttpContextFilter implements Filter {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
 	@Override
@@ -40,8 +40,10 @@ public class HttpContextFilter implements Filter {
 		// Not used
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	/*
+	 * (non-Javadoc)
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
+	 * javax.servlet.FilterChain)
 	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -60,7 +62,8 @@ public class HttpContextFilter implements Filter {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
 	 */
 	@Override

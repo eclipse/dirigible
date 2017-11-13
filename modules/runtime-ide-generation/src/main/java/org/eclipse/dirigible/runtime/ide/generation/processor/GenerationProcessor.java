@@ -45,28 +45,21 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * Processing the Generation Service incoming requests.
  */
 public class GenerationProcessor extends WorkspaceProcessor {
-
-	/** The Constant ACTION_COPY. */
-	private static final String ACTION_COPY = "copy";
 	
-	/** The Constant ACTION_GENERATE. */
-	private static final String ACTION_GENERATE = "generate";
-	
-	/** The Constant MUSTACHE_DEFAULT_START_SYMBOL. */
-	private static final String MUSTACHE_DEFAULT_START_SYMBOL = "{{";
-	
-	/** The Constant MUSTACHE_DEFAULT_END_SYMBOL. */
-	private static final String MUSTACHE_DEFAULT_END_SYMBOL = "}}";
-	
-	
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GenerationProcessor.class);
 
+	private static final String ACTION_COPY = "copy";
+	
+	private static final String ACTION_GENERATE = "generate";
+	
+	private static final String MUSTACHE_DEFAULT_START_SYMBOL = "{{";
+	
+	private static final String MUSTACHE_DEFAULT_END_SYMBOL = "}}";
+	
 	/**
 	 * Generate file.
 	 *

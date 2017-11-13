@@ -13,21 +13,18 @@ package org.eclipse.dirigible.runtime.ide.console.service;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ConsoleLoggingAppender.
+ * The Console Logging Appender.
  */
 public class ConsoleLoggingAppender extends AppenderBase<ILoggingEvent> {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see ch.qos.logback.core.AppenderBase#append(java.lang.Object)
 	 */
 	@Override
 	protected void append(ILoggingEvent event) {
-		ConsoleLogRecord record = new ConsoleLogRecord(
-				event.getLevel().toString(),
-				event.getFormattedMessage(),
-				event.getTimeStamp());
+		ConsoleLogRecord record = new ConsoleLogRecord(event.getLevel().toString(), event.getFormattedMessage(), event.getTimeStamp());
 		ConsoleWebsocketService.distribute(record);
 	}
 
