@@ -13,18 +13,20 @@ package org.eclipse.dirigible.core.workspace.json;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class WorkspaceJsonHelper.
+ * The Workspace Json Helper.
  */
 public class WorkspaceJsonHelper {
 
 	/**
 	 * Describe workspace.
 	 *
-	 * @param collection the collection
-	 * @param removePathPrefix the remove path prefix
-	 * @param addPathPrefix the add path prefix
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
 	 * @return the workspace descriptor
 	 */
 	public static WorkspaceDescriptor describeWorkspace(ICollection collection, String removePathPrefix, String addPathPrefix) {
@@ -41,9 +43,12 @@ public class WorkspaceJsonHelper {
 	/**
 	 * Describe project.
 	 *
-	 * @param collection the collection
-	 * @param removePathPrefix the remove path prefix
-	 * @param addPathPrefix the add path prefix
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
 	 * @return the project descriptor
 	 */
 	public static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix) {
@@ -68,9 +73,12 @@ public class WorkspaceJsonHelper {
 	/**
 	 * Describe folder.
 	 *
-	 * @param collection the collection
-	 * @param removePathPrefix the remove path prefix
-	 * @param addPathPrefix the add path prefix
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
 	 * @return the folder descriptor
 	 */
 	public static FolderDescriptor describeFolder(ICollection collection, String removePathPrefix, String addPathPrefix) {
@@ -95,9 +103,12 @@ public class WorkspaceJsonHelper {
 	/**
 	 * Describe file.
 	 *
-	 * @param resource the resource
-	 * @param removePathPrefix the remove path prefix
-	 * @param addPathPrefix the add path prefix
+	 * @param resource
+	 *            the resource
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
 	 * @return the file descriptor
 	 */
 	public static FileDescriptor describeFile(IResource resource, String removePathPrefix, String addPathPrefix) {

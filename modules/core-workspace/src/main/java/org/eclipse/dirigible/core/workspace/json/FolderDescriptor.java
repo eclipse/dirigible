@@ -13,25 +13,19 @@ package org.eclipse.dirigible.core.workspace.json;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class FolderDescriptor.
+ * The Folder Descriptor transport object.
  */
 public class FolderDescriptor {
 
-	/** The name. */
 	private String name;
 
-	/** The path. */
 	private String path;
 
-	/** The type. */
 	private String type = "folder";
 
-	/** The folders. */
 	private List<FolderDescriptor> folders = new ArrayList<FolderDescriptor>();
 
-	/** The files. */
 	private List<FileDescriptor> files = new ArrayList<FileDescriptor>();
 
 	/**
@@ -46,7 +40,8 @@ public class FolderDescriptor {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -64,7 +59,8 @@ public class FolderDescriptor {
 	/**
 	 * Sets the path.
 	 *
-	 * @param path the new path
+	 * @param path
+	 *            the new path
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -82,7 +78,8 @@ public class FolderDescriptor {
 	/**
 	 * Sets the.
 	 *
-	 * @param folders the folders
+	 * @param folders
+	 *            the folders
 	 */
 	public void set(List<FolderDescriptor> folders) {
 		this.folders = folders;
@@ -100,7 +97,8 @@ public class FolderDescriptor {
 	/**
 	 * Sets the files.
 	 *
-	 * @param files the new files
+	 * @param files
+	 *            the new files
 	 */
 	public void setFiles(List<FileDescriptor> files) {
 		this.files = files;

@@ -17,22 +17,23 @@ import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.ICollection;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Workspace.
+ * The Workspace's Workspace.
  */
 public class Workspace extends Folder implements IWorkspace {
 
 	/**
 	 * Instantiates a new workspace.
 	 *
-	 * @param workspaceCollection the workspace collection
+	 * @param workspaceCollection
+	 *            the workspace collection
 	 */
 	public Workspace(ICollection workspaceCollection) {
 		super(workspaceCollection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#createProject(java.lang.String)
 	 */
 	@Override
@@ -41,7 +42,8 @@ public class Workspace extends Folder implements IWorkspace {
 		return new Project(collection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#getProject(java.lang.String)
 	 */
 	@Override
@@ -50,7 +52,8 @@ public class Workspace extends Folder implements IWorkspace {
 		return new Project(collection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#getProjects()
 	 */
 	@Override
@@ -63,7 +66,8 @@ public class Workspace extends Folder implements IWorkspace {
 		return projects;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#deleteProject(java.lang.String)
 	 */
 	@Override
@@ -71,7 +75,8 @@ public class Workspace extends Folder implements IWorkspace {
 		this.removeCollection(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#copyProject(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -80,8 +85,10 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.copyTo(this.getCollection(targetProject).getPath());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#copyFolder(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#copyFolder(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void copyFolder(String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
@@ -89,8 +96,10 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.getCollection(sourceFolderPath).copyTo(this.getCollection(targetProject).getCollection(targetFolderPath).getPath());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#copyFile(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#copyFile(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void copyFile(String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
@@ -98,7 +107,8 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.getResource(sourceFilePath).copyTo(this.getCollection(targetProject).getResource(targetFilePath).getPath());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#moveProject(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -107,8 +117,10 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.moveTo(this.getCollection(targetProject).getPath());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#moveFolder(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#moveFolder(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void moveFolder(String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
@@ -116,8 +128,10 @@ public class Workspace extends Folder implements IWorkspace {
 		collection.getCollection(sourceFolderPath).moveTo(this.getCollection(targetProject).getCollection(targetFolderPath).getPath());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#moveFile(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#moveFile(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void moveFile(String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {

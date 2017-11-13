@@ -22,25 +22,25 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class File.
+ * The Workspace's File.
  */
 public class File implements IFile {
 
-	/** The internal. */
 	private transient IResource internal;
 
 	/**
 	 * Instantiates a new file.
 	 *
-	 * @param resource the resource
+	 * @param resource
+	 *            the resource
 	 */
 	public File(IResource resource) {
 		this.internal = resource;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFile#getInternal()
 	 */
 	@Override
@@ -48,7 +48,8 @@ public class File implements IFile {
 		return internal;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getRepository()
 	 */
 	@Override
@@ -56,7 +57,8 @@ public class File implements IFile {
 		return internal.getRepository();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#getContent()
 	 */
 	@Override
@@ -64,7 +66,8 @@ public class File implements IFile {
 		return internal.getContent();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getName()
 	 */
 	@Override
@@ -72,7 +75,8 @@ public class File implements IFile {
 		return internal.getName();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getPath()
 	 */
 	@Override
@@ -80,7 +84,8 @@ public class File implements IFile {
 		return internal.getPath();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[])
 	 */
 	@Override
@@ -88,7 +93,8 @@ public class File implements IFile {
 		internal.setContent(content);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#setContent(byte[], boolean, java.lang.String)
 	 */
 	@Override
@@ -96,7 +102,8 @@ public class File implements IFile {
 		internal.setContent(content, isBinary, contentType);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getParent()
 	 */
 	@Override
@@ -104,7 +111,8 @@ public class File implements IFile {
 		return internal.getParent();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getInformation()
 	 */
 	@Override
@@ -112,7 +120,8 @@ public class File implements IFile {
 		return internal.getInformation();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#isBinary()
 	 */
 	@Override
@@ -120,7 +129,8 @@ public class File implements IFile {
 		return internal.isBinary();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#getContentType()
 	 */
 	@Override
@@ -128,7 +138,8 @@ public class File implements IFile {
 		return internal.getContentType();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#getResourceVersions()
 	 */
 	@Override
@@ -136,7 +147,8 @@ public class File implements IFile {
 		return internal.getResourceVersions();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IResource#getResourceVersion(int)
 	 */
 	@Override
@@ -144,7 +156,8 @@ public class File implements IFile {
 		return internal.getResourceVersion(version);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#create()
 	 */
 	@Override
@@ -152,7 +165,8 @@ public class File implements IFile {
 		internal.create();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#delete()
 	 */
 	@Override
@@ -160,7 +174,8 @@ public class File implements IFile {
 		internal.delete();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#renameTo(java.lang.String)
 	 */
 	@Override
@@ -168,7 +183,8 @@ public class File implements IFile {
 		internal.renameTo(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#moveTo(java.lang.String)
 	 */
 	@Override
@@ -176,7 +192,8 @@ public class File implements IFile {
 		internal.moveTo(path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#copyTo(java.lang.String)
 	 */
 	@Override
@@ -184,7 +201,8 @@ public class File implements IFile {
 		internal.copyTo(path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#exists()
 	 */
 	@Override
@@ -192,7 +210,8 @@ public class File implements IFile {
 		return internal.exists();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#isEmpty()
 	 */
 	@Override

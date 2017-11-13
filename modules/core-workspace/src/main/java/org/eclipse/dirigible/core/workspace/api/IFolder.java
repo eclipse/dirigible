@@ -14,9 +14,8 @@ import java.util.List;
 
 import org.eclipse.dirigible.repository.api.ICollection;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface IFolder.
+ * The Workspace's Folder interface.
  */
 public interface IFolder extends ICollection {
 
@@ -30,7 +29,8 @@ public interface IFolder extends ICollection {
 	/**
 	 * Creates the folder.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the i folder
 	 */
 	public IFolder createFolder(String path);
@@ -38,7 +38,8 @@ public interface IFolder extends ICollection {
 	/**
 	 * Exists folder.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return true, if successful
 	 */
 	public boolean existsFolder(String path);
@@ -46,7 +47,8 @@ public interface IFolder extends ICollection {
 	/**
 	 * Gets the folder.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the folder
 	 */
 	public IFolder getFolder(String path);
@@ -61,15 +63,18 @@ public interface IFolder extends ICollection {
 	/**
 	 * Delete folder.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 */
 	public void deleteFolder(String path);
 
 	/**
 	 * Creates the file.
 	 *
-	 * @param path the path
-	 * @param content the content
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
 	 * @return the i file
 	 */
 	public IFile createFile(String path, byte[] content);
@@ -77,10 +82,14 @@ public interface IFolder extends ICollection {
 	/**
 	 * Creates the file.
 	 *
-	 * @param path the path
-	 * @param content the content
-	 * @param isBinary the is binary
-	 * @param contentType the content type
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param isBinary
+	 *            the is binary
+	 * @param contentType
+	 *            the content type
 	 * @return the i file
 	 */
 	public IFile createFile(String path, byte[] content, boolean isBinary, String contentType);
@@ -88,7 +97,8 @@ public interface IFolder extends ICollection {
 	/**
 	 * Gets the file.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the file
 	 */
 	public IFile getFile(String path);
@@ -96,7 +106,8 @@ public interface IFolder extends ICollection {
 	/**
 	 * Exists file.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return true, if successful
 	 */
 	public boolean existsFile(String path);
@@ -111,7 +122,8 @@ public interface IFolder extends ICollection {
 	/**
 	 * Delete file.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 */
 	public void deleteFile(String path);
 

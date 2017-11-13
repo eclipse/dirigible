@@ -24,25 +24,25 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Folder.
+ * The Workspace's Folder.
  */
 public class Folder implements IFolder {
 
-	/** The internal. */
 	private transient ICollection internal;
 
 	/**
 	 * Instantiates a new folder.
 	 *
-	 * @param collection the collection
+	 * @param collection
+	 *            the collection
 	 */
 	public Folder(ICollection collection) {
 		this.internal = collection;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getInternal()
 	 */
 	@Override
@@ -50,7 +50,8 @@ public class Folder implements IFolder {
 		return internal;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollections()
 	 */
 	@Override
@@ -58,7 +59,8 @@ public class Folder implements IFolder {
 		return internal.getCollections();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getRepository()
 	 */
 	@Override
@@ -66,7 +68,8 @@ public class Folder implements IFolder {
 		return internal.getRepository();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getName()
 	 */
 	@Override
@@ -74,7 +77,8 @@ public class Folder implements IFolder {
 		return internal.getName();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollectionsNames()
 	 */
 	@Override
@@ -82,7 +86,8 @@ public class Folder implements IFolder {
 		return internal.getCollectionsNames();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getPath()
 	 */
 	@Override
@@ -90,7 +95,8 @@ public class Folder implements IFolder {
 		return internal.getPath();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getParent()
 	 */
 	@Override
@@ -98,7 +104,8 @@ public class Folder implements IFolder {
 		return internal.getParent();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#createCollection(java.lang.String)
 	 */
 	@Override
@@ -106,7 +113,8 @@ public class Folder implements IFolder {
 		return internal.createCollection(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#getInformation()
 	 */
 	@Override
@@ -114,7 +122,8 @@ public class Folder implements IFolder {
 		return internal.getInformation();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getCollection(java.lang.String)
 	 */
 	@Override
@@ -122,7 +131,8 @@ public class Folder implements IFolder {
 		return internal.getCollection(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#create()
 	 */
 	@Override
@@ -130,7 +140,8 @@ public class Folder implements IFolder {
 		internal.create();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(java.lang.String)
 	 */
 	@Override
@@ -138,15 +149,18 @@ public class Folder implements IFolder {
 		internal.removeCollection(name);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(org.eclipse.dirigible.repository.api.ICollection)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#removeCollection(org.eclipse.dirigible.repository.api.
+	 * ICollection)
 	 */
 	@Override
 	public void removeCollection(ICollection collection) throws RepositoryWriteException {
 		collection.removeCollection(collection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#delete()
 	 */
 	@Override
@@ -154,7 +168,8 @@ public class Folder implements IFolder {
 		internal.delete();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getResources()
 	 */
 	@Override
@@ -162,7 +177,8 @@ public class Folder implements IFolder {
 		return internal.getResources();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#renameTo(java.lang.String)
 	 */
 	@Override
@@ -170,7 +186,8 @@ public class Folder implements IFolder {
 		internal.renameTo(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getResourcesNames()
 	 */
 	@Override
@@ -178,7 +195,8 @@ public class Folder implements IFolder {
 		return internal.getResourcesNames();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#moveTo(java.lang.String)
 	 */
 	@Override
@@ -186,7 +204,8 @@ public class Folder implements IFolder {
 		internal.moveTo(path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getResource(java.lang.String)
 	 */
 	@Override
@@ -194,7 +213,8 @@ public class Folder implements IFolder {
 		return internal.getResource(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#copyTo(java.lang.String)
 	 */
 	@Override
@@ -202,7 +222,8 @@ public class Folder implements IFolder {
 		internal.copyTo(path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#removeResource(java.lang.String)
 	 */
 	@Override
@@ -210,7 +231,8 @@ public class Folder implements IFolder {
 		internal.removeResource(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#exists()
 	 */
 	@Override
@@ -218,15 +240,18 @@ public class Folder implements IFolder {
 		return internal.exists();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.ICollection#removeResource(org.eclipse.dirigible.repository.api.IResource)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.repository.api.ICollection#removeResource(org.eclipse.dirigible.repository.api.IResource)
 	 */
 	@Override
 	public void removeResource(IResource resource) throws RepositoryWriteException {
 		internal.removeResource(resource);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#isEmpty()
 	 */
 	@Override
@@ -234,7 +259,8 @@ public class Folder implements IFolder {
 		return internal.isEmpty();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#getChildren()
 	 */
 	@Override
@@ -242,15 +268,18 @@ public class Folder implements IFolder {
 		return internal.getChildren();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[], boolean, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[], boolean,
+	 * java.lang.String)
 	 */
 	@Override
 	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException {
 		return internal.createResource(name, content, isBinary, contentType);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.ICollection#createResource(java.lang.String, byte[])
 	 */
 	@Override
@@ -258,7 +287,8 @@ public class Folder implements IFolder {
 		return internal.createResource(name, content);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#createFolder(java.lang.String)
 	 */
 	@Override
@@ -268,7 +298,8 @@ public class Folder implements IFolder {
 		return new Folder(collection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getFolder(java.lang.String)
 	 */
 	@Override
@@ -278,7 +309,8 @@ public class Folder implements IFolder {
 		return new Folder(collection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#existsFolder(java.lang.String)
 	 */
 	@Override
@@ -288,7 +320,8 @@ public class Folder implements IFolder {
 		return collection.exists();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getFolders()
 	 */
 	@Override
@@ -301,7 +334,8 @@ public class Folder implements IFolder {
 		return folders;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#deleteFolder(java.lang.String)
 	 */
 	@Override
@@ -310,7 +344,8 @@ public class Folder implements IFolder {
 		this.getRepository().removeCollection(fullPath);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#createFile(java.lang.String, byte[])
 	 */
 	@Override
@@ -320,8 +355,10 @@ public class Folder implements IFolder {
 		return new File(resource);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#createFile(java.lang.String, byte[], boolean, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#createFile(java.lang.String, byte[], boolean,
+	 * java.lang.String)
 	 */
 	@Override
 	public IFile createFile(String path, byte[] content, boolean isBinary, String contentType) {
@@ -330,7 +367,8 @@ public class Folder implements IFolder {
 		return new File(resource);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getFile(java.lang.String)
 	 */
 	@Override
@@ -340,7 +378,8 @@ public class Folder implements IFolder {
 		return new File(resource);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#existsFile(java.lang.String)
 	 */
 	@Override
@@ -350,7 +389,8 @@ public class Folder implements IFolder {
 		return resource.exists();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#getFiles()
 	 */
 	@Override
@@ -363,7 +403,8 @@ public class Folder implements IFolder {
 		return files;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#deleteFile(java.lang.String)
 	 */
 	@Override
@@ -375,7 +416,8 @@ public class Folder implements IFolder {
 	/**
 	 * Construct path.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the string
 	 */
 	protected String constructPath(String path) {

@@ -10,22 +10,17 @@
 
 package org.eclipse.dirigible.core.workspace.json;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class FileDescriptor.
+ * The File Descriptor transport object.
  */
 public class FileDescriptor {
 
-	/** The name. */
 	private String name;
 
-	/** The path. */
 	private String path;
 
-	/** The type. */
 	private String type = "file";
 
-	/** The content type. */
 	private String contentType;
 
 	/**
@@ -40,7 +35,8 @@ public class FileDescriptor {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -58,7 +54,8 @@ public class FileDescriptor {
 	/**
 	 * Sets the path.
 	 *
-	 * @param path the new path
+	 * @param path
+	 *            the new path
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -76,7 +73,8 @@ public class FileDescriptor {
 	/**
 	 * Sets the content type.
 	 *
-	 * @param contentType the new content type
+	 * @param contentType
+	 *            the new content type
 	 */
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
