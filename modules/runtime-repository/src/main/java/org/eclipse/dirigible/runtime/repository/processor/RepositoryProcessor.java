@@ -18,20 +18,19 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.json.Repository;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class RepositoryProcessor.
+ * The Repository Processor.
  */
 public class RepositoryProcessor {
 
-	/** The repository. */
 	@Inject
 	private IRepository repository;
 
 	/**
 	 * Gets the resource.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the resource
 	 */
 	public IResource getResource(String path) {
@@ -41,9 +40,12 @@ public class RepositoryProcessor {
 	/**
 	 * Creates the resource.
 	 *
-	 * @param path the path
-	 * @param content the content
-	 * @param contentType the content type
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param contentType
+	 *            the content type
 	 * @return the i resource
 	 */
 	public IResource createResource(String path, byte[] content, String contentType) {
@@ -53,8 +55,10 @@ public class RepositoryProcessor {
 	/**
 	 * Update resource.
 	 *
-	 * @param path the path
-	 * @param content the content
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
 	 * @return the i resource
 	 */
 	public IResource updateResource(String path, byte[] content) {
@@ -66,7 +70,8 @@ public class RepositoryProcessor {
 	/**
 	 * Delete resource.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 */
 	public void deleteResource(String path) {
 		repository.removeResource(path);
@@ -75,7 +80,8 @@ public class RepositoryProcessor {
 	/**
 	 * Gets the collection.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the collection
 	 */
 	public ICollection getCollection(String path) {
@@ -85,7 +91,8 @@ public class RepositoryProcessor {
 	/**
 	 * Render repository.
 	 *
-	 * @param collection the collection
+	 * @param collection
+	 *            the collection
 	 * @return the repository
 	 */
 	public Repository renderRepository(ICollection collection) {

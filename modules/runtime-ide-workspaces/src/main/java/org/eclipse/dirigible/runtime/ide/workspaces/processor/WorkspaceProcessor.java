@@ -30,22 +30,14 @@ import org.eclipse.dirigible.core.workspace.json.WorkspaceDescriptor;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceJsonHelper;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * Processing the Workspace Service incoming requests.
  */
 public class WorkspaceProcessor {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(WorkspaceProcessor.class);
-
-	/** The Constant WORKSPACES_SERVICE_PREFIX. */
 	private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
 
-	/** The workspaces core service. */
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
 
@@ -72,7 +64,8 @@ public class WorkspaceProcessor {
 	/**
 	 * Gets the workspace.
 	 *
-	 * @param workspace the workspace
+	 * @param workspace
+	 *            the workspace
 	 * @return the workspace
 	 */
 	public IWorkspace getWorkspace(String workspace) {
@@ -83,7 +76,8 @@ public class WorkspaceProcessor {
 	/**
 	 * Creates the workspace.
 	 *
-	 * @param workspace the workspace
+	 * @param workspace
+	 *            the workspace
 	 * @return the i workspace
 	 */
 	public IWorkspace createWorkspace(String workspace) {
@@ -94,7 +88,8 @@ public class WorkspaceProcessor {
 	/**
 	 * Delete workspace.
 	 *
-	 * @param workspace the workspace
+	 * @param workspace
+	 *            the workspace
 	 */
 	public void deleteWorkspace(String workspace) {
 		workspacesCoreService.deleteWorkspace(workspace);
@@ -103,7 +98,8 @@ public class WorkspaceProcessor {
 	/**
 	 * Exists workspace.
 	 *
-	 * @param workspace the workspace
+	 * @param workspace
+	 *            the workspace
 	 * @return true, if successful
 	 */
 	public boolean existsWorkspace(String workspace) {
@@ -116,8 +112,10 @@ public class WorkspaceProcessor {
 	/**
 	 * Gets the project.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
 	 * @return the project
 	 */
 	public IProject getProject(String workspace, String project) {
@@ -129,8 +127,10 @@ public class WorkspaceProcessor {
 	/**
 	 * Creates the project.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
 	 * @return the i project
 	 */
 	public IProject createProject(String workspace, String project) {
@@ -142,8 +142,10 @@ public class WorkspaceProcessor {
 	/**
 	 * Delete project.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
 	 */
 	public void deleteProject(String workspace, String project) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
@@ -153,8 +155,10 @@ public class WorkspaceProcessor {
 	/**
 	 * Exists project.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
 	 * @return true, if successful
 	 */
 	public boolean existsProject(String workspace, String project) {
@@ -168,9 +172,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Gets the folder.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 * @return the folder
 	 */
 	public IFolder getFolder(String workspace, String project, String path) {
@@ -183,9 +190,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Exists folder.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 * @return true, if successful
 	 */
 	public boolean existsFolder(String workspace, String project, String path) {
@@ -197,9 +207,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Creates the folder.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 * @return the i folder
 	 */
 	public IFolder createFolder(String workspace, String project, String path) {
@@ -212,9 +225,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Delete folder.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 */
 	public void deleteFolder(String workspace, String project, String path) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
@@ -227,9 +243,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Gets the file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 * @return the file
 	 */
 	public IFile getFile(String workspace, String project, String path) {
@@ -242,9 +261,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Exists file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 * @return true, if successful
 	 */
 	public boolean existsFile(String workspace, String project, String path) {
@@ -256,11 +278,16 @@ public class WorkspaceProcessor {
 	/**
 	 * Creates the file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param content the content
-	 * @param contentType the content type
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param contentType
+	 *            the content type
 	 * @return the i file
 	 */
 	public IFile createFile(String workspace, String project, String path, byte[] content, String contentType) {
@@ -277,10 +304,14 @@ public class WorkspaceProcessor {
 	/**
 	 * Update file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param content the content
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
 	 * @return the i file
 	 */
 	public IFile updateFile(String workspace, String project, String path, byte[] content) {
@@ -294,9 +325,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Delete file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 */
 	public void deleteFile(String workspace, String project, String path) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
@@ -307,11 +341,15 @@ public class WorkspaceProcessor {
 	/**
 	 * Gets the uri.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 * @return the uri
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	public URI getURI(String workspace, String project, String path) throws URISyntaxException {
 		StringBuilder relativePath = new StringBuilder(WORKSPACES_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR).append(workspace);
@@ -327,7 +365,8 @@ public class WorkspaceProcessor {
 	/**
 	 * Render workspace tree.
 	 *
-	 * @param workspace the workspace
+	 * @param workspace
+	 *            the workspace
 	 * @return the workspace descriptor
 	 */
 	public WorkspaceDescriptor renderWorkspaceTree(IWorkspace workspace) {
@@ -338,7 +377,8 @@ public class WorkspaceProcessor {
 	/**
 	 * Render project tree.
 	 *
-	 * @param project the project
+	 * @param project
+	 *            the project
 	 * @return the project descriptor
 	 */
 	public ProjectDescriptor renderProjectTree(IProject project) {
@@ -349,7 +389,8 @@ public class WorkspaceProcessor {
 	/**
 	 * Render folder tree.
 	 *
-	 * @param folder the folder
+	 * @param folder
+	 *            the folder
 	 * @return the folder descriptor
 	 */
 	public FolderDescriptor renderFolderTree(IFolder folder) {
@@ -360,7 +401,8 @@ public class WorkspaceProcessor {
 	/**
 	 * Render file description.
 	 *
-	 * @param file the file
+	 * @param file
+	 *            the file
 	 * @return the file descriptor
 	 */
 	public FileDescriptor renderFileDescription(IFile file) {
@@ -370,9 +412,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Copy project.
 	 *
-	 * @param workspace the workspace
-	 * @param sourceProject the source project
-	 * @param targetProject the target project
+	 * @param workspace
+	 *            the workspace
+	 * @param sourceProject
+	 *            the source project
+	 * @param targetProject
+	 *            the target project
 	 */
 	public void copyProject(String workspace, String sourceProject, String targetProject) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
@@ -382,11 +427,16 @@ public class WorkspaceProcessor {
 	/**
 	 * Copy folder.
 	 *
-	 * @param workspace the workspace
-	 * @param sourceProject the source project
-	 * @param sourceFolderPath the source folder path
-	 * @param targetProject the target project
-	 * @param targetFolderPath the target folder path
+	 * @param workspace
+	 *            the workspace
+	 * @param sourceProject
+	 *            the source project
+	 * @param sourceFolderPath
+	 *            the source folder path
+	 * @param targetProject
+	 *            the target project
+	 * @param targetFolderPath
+	 *            the target folder path
 	 */
 	public void copyFolder(String workspace, String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
@@ -396,11 +446,16 @@ public class WorkspaceProcessor {
 	/**
 	 * Copy file.
 	 *
-	 * @param workspace the workspace
-	 * @param sourceProject the source project
-	 * @param sourceFilePath the source file path
-	 * @param targetProject the target project
-	 * @param targetFilePath the target file path
+	 * @param workspace
+	 *            the workspace
+	 * @param sourceProject
+	 *            the source project
+	 * @param sourceFilePath
+	 *            the source file path
+	 * @param targetProject
+	 *            the target project
+	 * @param targetFilePath
+	 *            the target file path
 	 */
 	public void copyFile(String workspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
@@ -410,9 +465,12 @@ public class WorkspaceProcessor {
 	/**
 	 * Move project.
 	 *
-	 * @param workspace the workspace
-	 * @param sourceProject the source project
-	 * @param targetProject the target project
+	 * @param workspace
+	 *            the workspace
+	 * @param sourceProject
+	 *            the source project
+	 * @param targetProject
+	 *            the target project
 	 */
 	public void moveProject(String workspace, String sourceProject, String targetProject) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
@@ -422,11 +480,16 @@ public class WorkspaceProcessor {
 	/**
 	 * Move folder.
 	 *
-	 * @param workspace the workspace
-	 * @param sourceProject the source project
-	 * @param sourceFolderPath the source folder path
-	 * @param targetProject the target project
-	 * @param targetFolderPath the target folder path
+	 * @param workspace
+	 *            the workspace
+	 * @param sourceProject
+	 *            the source project
+	 * @param sourceFolderPath
+	 *            the source folder path
+	 * @param targetProject
+	 *            the target project
+	 * @param targetFolderPath
+	 *            the target folder path
 	 */
 	public void moveFolder(String workspace, String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
@@ -436,11 +499,16 @@ public class WorkspaceProcessor {
 	/**
 	 * Move file.
 	 *
-	 * @param workspace the workspace
-	 * @param sourceProject the source project
-	 * @param sourceFilePath the source file path
-	 * @param targetProject the target project
-	 * @param targetFilePath the target file path
+	 * @param workspace
+	 *            the workspace
+	 * @param sourceProject
+	 *            the source project
+	 * @param sourceFilePath
+	 *            the source file path
+	 * @param targetProject
+	 *            the target project
+	 * @param targetFilePath
+	 *            the target file path
 	 */
 	public void moveFile(String workspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);

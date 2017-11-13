@@ -13,31 +13,25 @@ package org.eclipse.dirigible.runtime.repository.json;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Registry.
+ * The Registry transport object.
  */
 public class Registry extends Collection {
 
-	/** The Constant TYPE_REGISTRY. */
 	private static final String TYPE_REGISTRY = "registry";
 
-	/** The name. */
 	private String name;
 
-	/** The path. */
 	private String path;
 
-	/** The type. */
 	private static String type = TYPE_REGISTRY;
 
-	/** The collections. */
 	private List<Collection> collections = new ArrayList<Collection>();
 
-	/** The resources. */
 	private List<Resource> resources = new ArrayList<Resource>();
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getName()
 	 */
 	@Override
@@ -45,7 +39,8 @@ public class Registry extends Collection {
 		return name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#setName(java.lang.String)
 	 */
 	@Override
@@ -53,7 +48,8 @@ public class Registry extends Collection {
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getPath()
 	 */
 	@Override
@@ -61,7 +57,8 @@ public class Registry extends Collection {
 		return path;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#setPath(java.lang.String)
 	 */
 	@Override
@@ -69,7 +66,8 @@ public class Registry extends Collection {
 		this.path = path;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getCollections()
 	 */
 	@Override
@@ -77,7 +75,8 @@ public class Registry extends Collection {
 		return collections;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#setCollections(java.util.List)
 	 */
 	@Override
@@ -85,7 +84,8 @@ public class Registry extends Collection {
 		this.collections = collections;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getResources()
 	 */
 	@Override
@@ -93,7 +93,8 @@ public class Registry extends Collection {
 		return resources;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#setResources(java.util.List)
 	 */
 	@Override
@@ -101,7 +102,8 @@ public class Registry extends Collection {
 		this.resources = resources;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getType()
 	 */
 	@Override

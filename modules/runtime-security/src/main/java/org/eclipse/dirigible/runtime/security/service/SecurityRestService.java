@@ -33,9 +33,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content.
+ * Front facing REST service serving the Security related content.
  */
 @Singleton
 @Path("/core/security")
@@ -43,14 +42,11 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class SecurityRestService extends AbstractRestService implements IRestService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SecurityRestService.class);
 
-	/** The processor. */
 	@Inject
 	private SecurityProcessor processor;
 
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -58,7 +54,8 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 	 * List access.
 	 *
 	 * @return the response
-	 * @throws AccessException the access exception
+	 * @throws AccessException
+	 *             the access exception
 	 */
 	@GET
 	@Path("/access")
@@ -76,7 +73,8 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 	 * List roles.
 	 *
 	 * @return the response
-	 * @throws AccessException the access exception
+	 * @throws AccessException
+	 *             the access exception
 	 */
 	@GET
 	@Path("/roles")
@@ -90,7 +88,8 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(processor.renderRoles()).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
 	@Override
@@ -98,7 +97,8 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 		return SecurityRestService.class;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */
 	@Override

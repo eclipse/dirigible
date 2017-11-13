@@ -25,31 +25,31 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * Processing the Registry Service incoming requests.
+ * Processing the Publisher Service incoming requests.
  */
 public class PublisherProcessor {
 
-	/** The logger. */
 	private Logger logger = LoggerFactory.getLogger(PublisherProcessor.class);
 
-	/** The publish core service. */
 	@Inject
 	private PublisherCoreService publishCoreService;
 
-	/** The repository. */
 	@Inject
 	private IRepository repository;
 
 	/**
 	 * Request publishing.
 	 *
-	 * @param user the user
-	 * @param workspace the workspace
-	 * @param path the path
+	 * @param user
+	 *            the user
+	 * @param workspace
+	 *            the workspace
+	 * @param path
+	 *            the path
 	 * @return the long
-	 * @throws PublisherException the publisher exception
+	 * @throws PublisherException
+	 *             the publisher exception
 	 */
 	public long requestPublishing(String user, String workspace, String path) throws PublisherException {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
@@ -67,9 +67,11 @@ public class PublisherProcessor {
 	/**
 	 * Gets the publishing request.
 	 *
-	 * @param id the id
+	 * @param id
+	 *            the id
 	 * @return the publishing request
-	 * @throws PublisherException the publisher exception
+	 * @throws PublisherException
+	 *             the publisher exception
 	 */
 	public PublishRequestDefinition getPublishingRequest(long id) throws PublisherException {
 		PublishRequestDefinition publishRequestDefinition = publishCoreService.getPublishRequest(id);
@@ -80,7 +82,8 @@ public class PublisherProcessor {
 	 * List publishing log.
 	 *
 	 * @return the list
-	 * @throws PublisherException the publisher exception
+	 * @throws PublisherException
+	 *             the publisher exception
 	 */
 	public List<PublishLogDefinition> listPublishingLog() throws PublisherException {
 		List<PublishLogDefinition> publishLogDefinitions = publishCoreService.getPublishLogs();
@@ -90,7 +93,8 @@ public class PublisherProcessor {
 	/**
 	 * Clear publishing log.
 	 *
-	 * @throws PublisherException the publisher exception
+	 * @throws PublisherException
+	 *             the publisher exception
 	 */
 	public void clearPublishingLog() throws PublisherException {
 		List<PublishLogDefinition> publishLogDefinitions = publishCoreService.getPublishLogs();
@@ -102,8 +106,10 @@ public class PublisherProcessor {
 	/**
 	 * Exists workspace.
 	 *
-	 * @param user the user
-	 * @param workspace the workspace
+	 * @param user
+	 *            the user
+	 * @param workspace
+	 *            the workspace
 	 * @return true, if successful
 	 */
 	public boolean existsWorkspace(String user, String workspace) {
@@ -115,10 +121,14 @@ public class PublisherProcessor {
 	/**
 	 * Generate workspace path.
 	 *
-	 * @param user the user
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
+	 * @param user
+	 *            the user
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
 	 * @return the string builder
 	 */
 	private StringBuilder generateWorkspacePath(String user, String workspace, String project, String path) {

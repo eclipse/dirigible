@@ -45,7 +45,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
  * Front facing REST service serving the transport requests for projects.
  */
@@ -55,14 +54,11 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class TransportProjectRestService extends AbstractRestService implements IRestService {
 	
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TransportProjectRestService.class);
 
-	/** The processor. */
 	@Inject
 	private TransportProcessor processor;
 	
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 

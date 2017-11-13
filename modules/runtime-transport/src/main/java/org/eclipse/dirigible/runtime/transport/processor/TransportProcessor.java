@@ -10,8 +10,6 @@
 
 package org.eclipse.dirigible.runtime.transport.processor;
 
-import java.util.Arrays;
-
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.workspace.api.IProject;
@@ -19,23 +17,15 @@ import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * Processing the Database SQL Queries Service incoming requests.
+ * Processing the Transport Service incoming requests.
  */
 public class TransportProcessor {
 
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(TransportProcessor.class);
-
-	/** The workspaces core service. */
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
 	
-	/** The repository. */
 	@Inject
 	private IRepository repository;
 

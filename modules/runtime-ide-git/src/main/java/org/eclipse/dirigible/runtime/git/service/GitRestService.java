@@ -32,7 +32,7 @@ import org.eclipse.dirigible.runtime.git.model.GitPullModel;
 import org.eclipse.dirigible.runtime.git.model.GitPushModel;
 import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
-import org.eclipse.dirigible.runtime.git.model.GitUpdateDepenciesModel;
+import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
 import org.eclipse.dirigible.runtime.git.processor.GitProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +44,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content.
+ * Front facing REST service serving the Git commands.
  */
 @Singleton
 @Path("/ide/git/{workspace}")
@@ -54,14 +53,11 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class GitRestService extends AbstractRestService implements IRestService {
 	
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitRestService.class);
 
-	/** The processor. */
 	@Inject
 	private GitProcessor processor;
 	
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
@@ -272,7 +268,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Update Git Projects Dependencies")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Projects Dependencies Updated") })
 	public Response updateProjectsDependencies(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			GitUpdateDepenciesModel model) throws GitConnectorException {
+			GitUpdateDependenciesModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);
@@ -297,7 +293,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Update Git Project Dependencies")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Dependencies Updated") })
 	public Response updateProjectDependencies(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitUpdateDepenciesModel model)
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitUpdateDependenciesModel model)
 			throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {

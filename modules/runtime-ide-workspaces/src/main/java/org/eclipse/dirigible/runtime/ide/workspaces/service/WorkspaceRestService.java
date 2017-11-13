@@ -51,7 +51,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
  * Front facing REST service serving the Workspace content.
  */
@@ -62,18 +61,16 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class WorkspaceRestService extends AbstractRestService implements IRestService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceRestService.class);
 
-	/** The processor. */
 	@Inject
 	private WorkspaceProcessor processor;
 
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
 	@Override
@@ -86,7 +83,8 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * List workspaces.
 	 *
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the response
 	 */
 	@GET
@@ -109,8 +107,10 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Gets the workspace.
 	 *
-	 * @param workspace the workspace
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param request
+	 *            the request
 	 * @return the workspace
 	 */
 	@GET
@@ -139,10 +139,13 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Creates the workspace.
 	 *
-	 * @param workspace the workspace
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param request
+	 *            the request
 	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	@POST
 	@Path("{workspace}")
@@ -169,8 +172,10 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Delete workspace.
 	 *
-	 * @param workspace the workspace
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param request
+	 *            the request
 	 * @return the response
 	 */
 	@DELETE
@@ -195,9 +200,12 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Gets the project.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param request
+	 *            the request
 	 * @return the project
 	 */
 	@GET
@@ -232,11 +240,15 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Creates the project.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param request
+	 *            the request
 	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	@POST
 	@Path("{workspace}/{project}")
@@ -270,9 +282,12 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Delete project.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param request
+	 *            the request
 	 * @return the response
 	 */
 	@DELETE
@@ -304,10 +319,14 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Gets the file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param request
+	 *            the request
 	 * @return the file
 	 */
 	@GET
@@ -354,13 +373,19 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Creates the file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param content the content
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param request
+	 *            the request
 	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	@POST
 	@Path("{workspace}/{project}/{path:.*}")
@@ -410,13 +435,19 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Creates the file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param content the content
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param request
+	 *            the request
 	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	@POST
 	@Path("{workspace}/{project}/{path:.*}")
@@ -428,13 +459,19 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Update file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param content the content
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param request
+	 *            the request
 	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	@PUT
 	@Path("{workspace}/{project}/{path:.*}")
@@ -472,13 +509,19 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Update file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param content the content
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param request
+	 *            the request
 	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	@PUT
 	@Path("{workspace}/{project}/{path:.*}")
@@ -490,13 +533,19 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	/**
 	 * Delete file.
 	 *
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @param path the path
-	 * @param content the content
-	 * @param request the request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param request
+	 *            the request
 	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	@DELETE
 	@Path("{workspace}/{project}/{path:.*}")
@@ -534,7 +583,8 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		return Response.noContent().build();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */
 	@Override

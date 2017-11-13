@@ -45,9 +45,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content.
+ * Front facing REST service serving the raw Repository content.
  */
 @Singleton
 @Path("/core/repository")
@@ -56,21 +55,19 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class RepositoryRestService extends AbstractRestService implements IRestService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryRestService.class);
 
-	/** The processor. */
 	@Inject
 	private RepositoryProcessor processor;
 
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
 	/**
 	 * Gets the resource.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the resource
 	 */
 	@GET
@@ -100,11 +97,15 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 	/**
 	 * Creates the resource.
 	 *
-	 * @param path the path
-	 * @param content the content
-	 * @param request the request
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param request
+	 *            the request
 	 * @return the response
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	@POST
 	@Path("/{path:.*}")
@@ -128,8 +129,10 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 	/**
 	 * Update resource.
 	 *
-	 * @param path the path
-	 * @param content the content
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
 	 * @return the response
 	 */
 	@PUT
@@ -154,7 +157,8 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 	/**
 	 * Delete resource.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the response
 	 */
 	@DELETE
@@ -176,7 +180,8 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		return Response.noContent().build();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
 	@Override
@@ -184,7 +189,8 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		return RepositoryRestService.class;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */
 	@Override

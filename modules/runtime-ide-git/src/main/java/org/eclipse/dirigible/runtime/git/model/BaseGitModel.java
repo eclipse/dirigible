@@ -12,21 +12,17 @@ package org.eclipse.dirigible.runtime.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class BaseGitModel.
+ * The Base Git Model.
  */
 public class BaseGitModel {
 
-	/** The username. */
 	@ApiModelProperty(value = "The User Name", required = true, example = "dirigible")
 	private String username;
 
-	/** The password. */
 	@ApiModelProperty(value = "Base64 Encoded Password", required = true, example = "ZGlyaWdpYmxl")
 	private String password;
 
-	/** The email. */
 	@ApiModelProperty(value = "The E-mail Address", example = "dirigible@gmail.com")
 	private String email;
 

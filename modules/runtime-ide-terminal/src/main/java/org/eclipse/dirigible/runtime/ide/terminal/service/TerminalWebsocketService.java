@@ -33,30 +33,26 @@ import org.eclipse.dirigible.commons.process.ProcessUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class TerminalWebsocketService.
+ * The Terminal Websocket Service.
  */
 @Singleton
 @ServerEndpoint("/websockets/v3/ide/terminal")
 public class TerminalWebsocketService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TerminalWebsocketService.class);
 
-	/** The Constant Ctrl_C. */
 	private static final String Ctrl_C = "^C";
 
-	/** The open sessions. */
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
-	
-	/** The session to process. */
+
 	private static Map<String, ProcessRunnable> SESSION_TO_PROCESS = new ConcurrentHashMap<String, ProcessRunnable>();
 
 	/**
-	 * On open.
+	 * On open callback.
 	 *
-	 * @param session the session
+	 * @param session
+	 *            the session
 	 */
 	@OnOpen
 	public void onOpen(Session session) {
@@ -66,10 +62,12 @@ public class TerminalWebsocketService {
 	}
 
 	/**
-	 * On message.
+	 * On message callback.
 	 *
-	 * @param message the message
-	 * @param session the session
+	 * @param message
+	 *            the message
+	 * @param session
+	 *            the session
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
@@ -102,10 +100,12 @@ public class TerminalWebsocketService {
 	}
 
 	/**
-	 * On error.
+	 * On error callback.
 	 *
-	 * @param session the session
-	 * @param throwable the throwable
+	 * @param session
+	 *            the session
+	 * @param throwable
+	 *            the throwable
 	 */
 	@OnError
 	public void onError(Session session, Throwable throwable) {
@@ -114,10 +114,12 @@ public class TerminalWebsocketService {
 	}
 
 	/**
-	 * On close.
+	 * On close callback.
 	 *
-	 * @param session the session
-	 * @param closeReason the close reason
+	 * @param session
+	 *            the session
+	 * @param closeReason
+	 *            the close reason
 	 */
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
@@ -132,8 +134,10 @@ public class TerminalWebsocketService {
 	/**
 	 * Terminate process.
 	 *
-	 * @param session the session
-	 * @param process the process
+	 * @param session
+	 *            the session
+	 * @param process
+	 *            the process
 	 */
 	private void terminateProcess(Session session, Process process) {
 		process.destroy();
@@ -144,7 +148,8 @@ public class TerminalWebsocketService {
 	/**
 	 * Start process runnable.
 	 *
-	 * @param session the session
+	 * @param session
+	 *            the session
 	 */
 	protected void startProcessRunnable(Session session) {
 		try {
@@ -158,23 +163,18 @@ public class TerminalWebsocketService {
 	}
 
 	/**
-	 * The Class ProcessRunnable.
+	 * The Process Runnable.
 	 */
 	class ProcessRunnable implements Runnable {
 
-		/** The Constant BASH_COMMAND. */
 		private static final String BASH_COMMAND = "bash";
-		
-		/** The Constant CMD_COMMAND. */
+
 		private static final String CMD_COMMAND = "cmd";
 
-		/** The session. */
 		private Session session;
 
-		/** The process. */
 		private Process process;
 
-		/** The keep replying. */
 		private boolean keepReplying = true;
 
 		/**
@@ -189,13 +189,15 @@ public class TerminalWebsocketService {
 		/**
 		 * Instantiates a new process runnable.
 		 *
-		 * @param session the session
+		 * @param session
+		 *            the session
 		 */
 		public ProcessRunnable(Session session) {
 			this.session = session;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
@@ -262,8 +264,10 @@ public class TerminalWebsocketService {
 		/**
 		 * Send line.
 		 *
-		 * @param line the line
-		 * @throws IOException Signals that an I/O exception has occurred.
+		 * @param line
+		 *            the line
+		 * @throws IOException
+		 *             Signals that an I/O exception has occurred.
 		 */
 		private void sendLine(String line) throws IOException {
 			if (session.isOpen()) {
@@ -282,10 +286,13 @@ public class TerminalWebsocketService {
 	/**
 	 * Start process.
 	 *
-	 * @param message the message
-	 * @param session the session
+	 * @param message
+	 *            the message
+	 * @param session
+	 *            the session
 	 * @return the process
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private Process startProcess(final String message, final Session session) throws IOException {
 

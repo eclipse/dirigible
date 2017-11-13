@@ -10,16 +10,13 @@
 
 package org.eclipse.dirigible.runtime.ide.workspaces.processor;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class WorkspaceSourceTargetPair.
+ * The Workspace Source Target Pair.
  */
 public class WorkspaceSourceTargetPair {
 
-	/** The source. */
 	private String source;
 
-	/** The target. */
 	private String target;
 
 	/**
@@ -34,7 +31,8 @@ public class WorkspaceSourceTargetPair {
 	/**
 	 * Sets the source.
 	 *
-	 * @param source the new source
+	 * @param source
+	 *            the new source
 	 */
 	public void setSource(String source) {
 		this.source = source;
@@ -52,7 +50,8 @@ public class WorkspaceSourceTargetPair {
 	/**
 	 * Sets the target.
 	 *
-	 * @param target the new target
+	 * @param target
+	 *            the new target
 	 */
 	public void setTarget(String target) {
 		this.target = target;

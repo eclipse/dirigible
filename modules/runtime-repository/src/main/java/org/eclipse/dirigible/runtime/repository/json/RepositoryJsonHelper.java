@@ -13,18 +13,20 @@ package org.eclipse.dirigible.runtime.repository.json;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class RepositoryJsonHelper.
+ * The Repository JSON Helper.
  */
 public class RepositoryJsonHelper {
 
 	/**
 	 * Traverse repository.
 	 *
-	 * @param collection the collection
-	 * @param removePathPrefix the remove path prefix
-	 * @param addPathPrefix the add path prefix
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
 	 * @return the repository
 	 */
 	public static Repository traverseRepository(ICollection collection, String removePathPrefix, String addPathPrefix) {
@@ -49,9 +51,12 @@ public class RepositoryJsonHelper {
 	/**
 	 * Traverse registry.
 	 *
-	 * @param collection the collection
-	 * @param removePathPrefix the remove path prefix
-	 * @param addPathPrefix the add path prefix
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
 	 * @return the registry
 	 */
 	public static Registry traverseRegistry(ICollection collection, String removePathPrefix, String addPathPrefix) {
@@ -76,9 +81,12 @@ public class RepositoryJsonHelper {
 	/**
 	 * Traverse collection.
 	 *
-	 * @param collection the collection
-	 * @param removePathPrefix the remove path prefix
-	 * @param addPathPrefix the add path prefix
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
 	 * @return the collection
 	 */
 	public static Collection traverseCollection(ICollection collection, String removePathPrefix, String addPathPrefix) {

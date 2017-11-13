@@ -13,28 +13,21 @@ package org.eclipse.dirigible.runtime.repository.json;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Collection.
+ * The Collection transport object.
  */
 public class Collection {
 
-	/** The Constant TYPE_COLLECTION. */
 	private static final String TYPE_COLLECTION = "collection";
 
-	/** The name. */
 	private String name;
 
-	/** The path. */
 	private String path;
 
-	/** The type. */
 	private String type = TYPE_COLLECTION;
 
-	/** The collections. */
 	private List<Collection> collections = new ArrayList<Collection>();
 
-	/** The resources. */
 	private List<Resource> resources = new ArrayList<Resource>();
 
 	/**
@@ -49,7 +42,8 @@ public class Collection {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -67,7 +61,8 @@ public class Collection {
 	/**
 	 * Sets the path.
 	 *
-	 * @param path the new path
+	 * @param path
+	 *            the new path
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -85,7 +80,8 @@ public class Collection {
 	/**
 	 * Sets the collections.
 	 *
-	 * @param collections the new collections
+	 * @param collections
+	 *            the new collections
 	 */
 	public void setCollections(List<Collection> collections) {
 		this.collections = collections;
@@ -103,7 +99,8 @@ public class Collection {
 	/**
 	 * Sets the resources.
 	 *
-	 * @param resources the new resources
+	 * @param resources
+	 *            the new resources
 	 */
 	public void setResources(List<Resource> resources) {
 		this.resources = resources;
