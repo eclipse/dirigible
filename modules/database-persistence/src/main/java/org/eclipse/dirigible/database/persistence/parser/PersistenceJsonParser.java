@@ -15,33 +15,35 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 
 import com.google.gson.Gson;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PersistenceJsonParser.
+ * The Persistence Json Parser.
  *
- * @param <T> the generic type
+ * @param <T>
+ *            the generic type
  */
 public class PersistenceJsonParser<T> {
-	
-	/** The Constant gson. */
+
 	private static final Gson gson = new Gson();
-	
+
 	/**
 	 * Parses the model.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the json
 	 * @return the persistence table model
-	 * @throws PersistenceException the persistence exception
+	 * @throws PersistenceException
+	 *             the persistence exception
 	 */
 	public PersistenceTableModel parseModel(String json) throws PersistenceException {
 		PersistenceTableModel persistenceTableModel = gson.fromJson(json, PersistenceTableModel.class);
 		return persistenceTableModel;
 	}
-	
+
 	/**
 	 * Serialize model.
 	 *
-	 * @param persistenceTableModel the persistence table model
+	 * @param persistenceTableModel
+	 *            the persistence table model
 	 * @return the string
 	 */
 	public String serializeModel(PersistenceTableModel persistenceTableModel) {

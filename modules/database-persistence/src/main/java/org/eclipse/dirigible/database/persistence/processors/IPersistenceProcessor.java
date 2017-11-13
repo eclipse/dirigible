@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.database.persistence.processors;
 
 /**
- * The Interface IPersistenceProcessor.
+ * The Persistence Processor interface.
  */
 public interface IPersistenceProcessor {
-	
+
 }
