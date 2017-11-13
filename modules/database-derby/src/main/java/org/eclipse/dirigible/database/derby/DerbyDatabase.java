@@ -27,21 +27,19 @@ import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The File System based Local Repository implementation of {@link IRepository}.
  */
 public class DerbyDatabase implements IDatabase {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DerbyDatabase.class);
 
 	/** The Constant TYPE. */
 	public static final String TYPE = "derby";
-	
+
 	/** The Constant DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER. */
 	public static final String DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER = "DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER"; //$NON-NLS-1$
-	
+
 	/** The Constant DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT. */
 	public static final String DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT = DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER + "_DEFAULT"; //$NON-NLS-1$
 
@@ -61,8 +59,10 @@ public class DerbyDatabase implements IDatabase {
 	/**
 	 * Constructor with root folder parameter.
 	 *
-	 * @param rootFolder            the root folder
-	 * @throws DerbyDatabaseException             in case the database cannot be created
+	 * @param rootFolder
+	 *            the root folder
+	 * @throws DerbyDatabaseException
+	 *             in case the database cannot be created
 	 */
 	public DerbyDatabase(String rootFolder) throws DerbyDatabaseException {
 		logger.debug("Initializing the embedded Derby datasource...");
@@ -72,7 +72,8 @@ public class DerbyDatabase implements IDatabase {
 		logger.debug("Embedded Derby datasource initialized.");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#initialize()
 	 */
 	@Override
@@ -81,7 +82,8 @@ public class DerbyDatabase implements IDatabase {
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource()
 	 */
 	@Override
@@ -89,7 +91,8 @@ public class DerbyDatabase implements IDatabase {
 		return getDataSource(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
 	 */
 	@Override
@@ -105,7 +108,8 @@ public class DerbyDatabase implements IDatabase {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getType()
 	 */
 	@Override
@@ -116,7 +120,8 @@ public class DerbyDatabase implements IDatabase {
 	/**
 	 * Creates the data source.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the data source
 	 */
 	protected DataSource createDataSource(String name) {
@@ -143,13 +148,15 @@ public class DerbyDatabase implements IDatabase {
 	/**
 	 * Prepare root folder.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private String prepareRootFolder(String name) throws IOException {
 		// TODO validate name parameter
-		// TODO get by name form Configuration
+		// TODO get by name from Configuration
 
 		String rootFolder = (IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name)) ? DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT
 				: DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER + name;
@@ -164,7 +171,8 @@ public class DerbyDatabase implements IDatabase {
 		return derbyRoot;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSources()
 	 */
 	@Override
