@@ -49,38 +49,29 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DataStructuresSynchronizer.
+ * The Data Structures Synchronizer.
  */
 @Singleton
 public class DataStructuresSynchronizer extends AbstractSynchronizer {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DataStructuresSynchronizer.class);
 
-	/** The Constant TABLES_PREDELIVERED. */
 	private static final Map<String, DataStructureTableModel> TABLES_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureTableModel>());
 
-	/** The Constant VIEWS_PREDELIVERED. */
 	private static final Map<String, DataStructureViewModel> VIEWS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureViewModel>());
 
-	/** The Constant TABLES_SYNCHRONIZED. */
 	private static final List<String> TABLES_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
-	/** The Constant VIEWS_SYNCHRONIZED. */
 	private static final List<String> VIEWS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
-	/** The Constant DATA_STRUCTURE_MODELS. */
 	private static final Map<String, DataStructureModel> DATA_STRUCTURE_MODELS = new LinkedHashMap<String, DataStructureModel>();
 
-	/** The data structures core service. */
 	@Inject
 	private DataStructureCoreService dataStructuresCoreService;
 
-	/** The data source. */
 	@Inject
 	private DataSource dataSource;
 
@@ -95,8 +86,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Register predelivered table.
 	 *
-	 * @param tableModelPath the table model path
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param tableModelPath
+	 *            the table model path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredTable(String tableModelPath) throws IOException {
 		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(tableModelPath);
@@ -109,8 +102,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Register predelivered view.
 	 *
-	 * @param viewModelPath the view model path
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param viewModelPath
+	 *            the view model path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredView(String viewModelPath) throws IOException {
 		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(viewModelPath);
@@ -120,7 +115,8 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		VIEWS_PREDELIVERED.put(viewModelPath, viewModel);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
 	 */
 	@Override
@@ -153,7 +149,8 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Synchronize predelivered.
 	 *
-	 * @throws SynchronizationException the synchronization exception
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Data Structures...");
@@ -179,8 +176,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Synchronize table.
 	 *
-	 * @param tableModel the table model
-	 * @throws SynchronizationException the synchronization exception
+	 * @param tableModel
+	 *            the table model
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	private void synchronizeTable(DataStructureTableModel tableModel) throws SynchronizationException {
 		try {
@@ -211,8 +210,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Synchronize view.
 	 *
-	 * @param viewModel the view model
-	 * @throws SynchronizationException the synchronization exception
+	 * @param viewModel
+	 *            the view model
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	private void synchronizeView(DataStructureViewModel viewModel) throws SynchronizationException {
 		try {
@@ -240,7 +241,8 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
 	 */
 	@Override
@@ -252,8 +254,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done synchronizing Data Structures from Registry.");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.repository.api.IResource)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
+	 * repository.api.IResource)
 	 */
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
@@ -271,7 +275,8 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
 	 */
 	@Override
@@ -392,9 +397,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Execute table update.
 	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	private void executeTableUpdate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		logger.info("Processing Update Table: " + tableModel.getName());
@@ -413,9 +421,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Execute table create.
 	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	private void executeTableCreate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		TableCreateProcessor.execute(connection, tableModel);
@@ -424,8 +435,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Execute table alter.
 	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
 	 */
 	private void executeTableAlter(Connection connection, DataStructureTableModel tableModel) {
 		throw new NotImplementedException("Altering a non-empty table is not implemented yet.");
@@ -434,9 +447,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Execute table drop.
 	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	private void executeTableDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		TableDropProcessor.execute(connection, tableModel);
@@ -445,9 +461,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Execute view create.
 	 *
-	 * @param connection the connection
-	 * @param viewModel the view model
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param viewModel
+	 *            the view model
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	private void executeViewCreate(Connection connection, DataStructureViewModel viewModel) throws SQLException {
 		ViewCreateProcessor.execute(connection, viewModel);
@@ -456,9 +475,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Execute view drop.
 	 *
-	 * @param connection the connection
-	 * @param viewModel the view model
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param viewModel
+	 *            the view model
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	private void executeViewDrop(Connection connection, DataStructureViewModel viewModel) throws SQLException {
 		ViewDropProcessor.execute(connection, viewModel);
@@ -467,8 +489,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Concatenate list of strings.
 	 *
-	 * @param list the list
-	 * @param separator the separator
+	 * @param list
+	 *            the list
+	 * @param separator
+	 *            the separator
 	 * @return the string
 	 */
 	private static String concatenateListOfStrings(List<String> list, String separator) {

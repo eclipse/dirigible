@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.database.ds.api;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DataStructuresException.
+ * The Data Structures Exception.
  */
 public class DataStructuresException extends Exception {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5800180600419241248L;
 
 	/**
@@ -29,10 +27,14 @@ public class DataStructuresException extends Exception {
 	/**
 	 * Instantiates a new data structures exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
-	 * @param enableSuppression the enable suppression
-	 * @param writableStackTrace the writable stack trace
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 * @param enableSuppression
+	 *            the enable suppression
+	 * @param writableStackTrace
+	 *            the writable stack trace
 	 */
 	public DataStructuresException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
@@ -41,8 +43,10 @@ public class DataStructuresException extends Exception {
 	/**
 	 * Instantiates a new data structures exception.
 	 *
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public DataStructuresException(String message, Throwable cause) {
 		super(message, cause);
@@ -51,7 +55,8 @@ public class DataStructuresException extends Exception {
 	/**
 	 * Instantiates a new data structures exception.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public DataStructuresException(String message) {
 		super(message);
@@ -60,7 +65,8 @@ public class DataStructuresException extends Exception {
 	/**
 	 * Instantiates a new data structures exception.
 	 *
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public DataStructuresException(Throwable cause) {
 		super(cause);
