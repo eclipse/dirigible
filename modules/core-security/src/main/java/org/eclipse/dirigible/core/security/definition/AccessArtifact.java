@@ -18,15 +18,13 @@ import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AccessArtifact.
+ * The Access Artifact.
  */
 public class AccessArtifact {
-	
-	/** The constraints. */
+
 	private List<AccessArtifactConstraint> constraints = new ArrayList<AccessArtifactConstraint>();
-	
+
 	/**
 	 * Gets the constraints.
 	 *
@@ -35,7 +33,7 @@ public class AccessArtifact {
 	public List<AccessArtifactConstraint> getConstraints() {
 		return constraints;
 	}
-	
+
 	/**
 	 * Serialize.
 	 *
@@ -44,11 +42,12 @@ public class AccessArtifact {
 	public String serialize() {
 		return GsonHelper.GSON.toJson(this);
 	}
-	
+
 	/**
 	 * Parses the.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the json
 	 * @return the access artifact
 	 */
 	public static AccessArtifact parse(String json) {
@@ -58,36 +57,40 @@ public class AccessArtifact {
 	/**
 	 * Gets the constraint.
 	 *
-	 * @param uri the uri
-	 * @param method the method
+	 * @param uri
+	 *            the uri
+	 * @param method
+	 *            the method
 	 * @return the constraint
 	 */
 	public AccessArtifactConstraint getConstraint(String uri, String method) {
-		if (uri == null || method == null) {
+		if ((uri == null) || (method == null)) {
 			return null;
 		}
 		for (AccessArtifactConstraint constraint : constraints) {
-			if (uri.equals(constraint.getUri()) && method.equals(constraint.getMethod()) ) {
+			if (uri.equals(constraint.getUri()) && method.equals(constraint.getMethod())) {
 				return constraint;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Parses the.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the json
 	 * @return the access artifact
 	 */
 	public static AccessArtifact parse(byte[] json) {
 		return GsonHelper.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), AccessArtifact.class);
 	}
-	
+
 	/**
 	 * Combine.
 	 *
-	 * @param accessDefinitions the access definitions
+	 * @param accessDefinitions
+	 *            the access definitions
 	 * @return the access artifact
 	 */
 	public static AccessArtifact combine(List<AccessDefinition> accessDefinitions) {
@@ -109,7 +112,7 @@ public class AccessArtifact {
 		}
 		return accessArtifact;
 	}
-	
+
 	/**
 	 * Divide.
 	 *
@@ -128,7 +131,5 @@ public class AccessArtifact {
 		}
 		return accessDefinitions;
 	}
-	
-	
 
 }
