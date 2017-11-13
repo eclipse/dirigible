@@ -17,47 +17,37 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AccessDefinition.
+ * The Access Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_SECURITY_ACCESS")
 public class AccessDefinition {
 
-	/** The Constant METHOD_ANY. */
 	public static final transient String METHOD_ANY = "*";
 
-	/** The id. */
 	@Id
 	@GeneratedValue
 	@Column(name = "ACCESS_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
 
-	/** The location. */
 	@Column(name = "ACCESS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
-	/** The uri. */
 	@Column(name = "ACCESS_URI", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String uri;
 
-	/** The method. */
 	@Column(name = "ACCESS_METHOD", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	private String method = METHOD_ANY;
 
-	/** The role. */
 	@Column(name = "ACCESS_ROLE", columnDefinition = "VARCHAR", nullable = false, length = 64)
 	private String role;
 
-	/** The description. */
 	@Column(name = "ACCESS_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	/** The created by. */
 	@Column(name = "ACCESS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	/** The created at. */
 	@Column(name = "ACCESS_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -82,7 +72,8 @@ public class AccessDefinition {
 	/**
 	 * Sets the location.
 	 *
-	 * @param location the new location
+	 * @param location
+	 *            the new location
 	 */
 	public void setLocation(String location) {
 		this.location = location;
@@ -100,7 +91,8 @@ public class AccessDefinition {
 	/**
 	 * Sets the uri.
 	 *
-	 * @param uri the new uri
+	 * @param uri
+	 *            the new uri
 	 */
 	public void setUri(String uri) {
 		this.uri = uri;
@@ -118,7 +110,8 @@ public class AccessDefinition {
 	/**
 	 * Sets the method.
 	 *
-	 * @param method the new method
+	 * @param method
+	 *            the new method
 	 */
 	public void setMethod(String method) {
 		this.method = method;
@@ -136,7 +129,8 @@ public class AccessDefinition {
 	/**
 	 * Sets the role.
 	 *
-	 * @param role the new role
+	 * @param role
+	 *            the new role
 	 */
 	public void setRole(String role) {
 		this.role = role;
@@ -154,7 +148,8 @@ public class AccessDefinition {
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -172,7 +167,8 @@ public class AccessDefinition {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -193,7 +189,8 @@ public class AccessDefinition {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
@@ -203,7 +200,8 @@ public class AccessDefinition {
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -218,7 +216,8 @@ public class AccessDefinition {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

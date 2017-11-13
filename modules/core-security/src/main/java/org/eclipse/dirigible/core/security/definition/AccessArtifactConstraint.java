@@ -13,19 +13,15 @@ package org.eclipse.dirigible.core.security.definition;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AccessArtifactConstraint.
+ * The Access Artifact Constraint.
  */
 public class AccessArtifactConstraint {
-	
-	/** The uri. */
+
 	private String uri;
-	
-	/** The method. */
+
 	private String method;
-	
-	/** The roles. */
+
 	private List<String> roles = new ArrayList<String>();
 
 	/**
@@ -40,7 +36,8 @@ public class AccessArtifactConstraint {
 	/**
 	 * Sets the uri.
 	 *
-	 * @param uri the new uri
+	 * @param uri
+	 *            the new uri
 	 */
 	public void setUri(String uri) {
 		this.uri = uri;
@@ -58,7 +55,8 @@ public class AccessArtifactConstraint {
 	/**
 	 * Sets the method.
 	 *
-	 * @param method the new method
+	 * @param method
+	 *            the new method
 	 */
 	public void setMethod(String method) {
 		this.method = method;
@@ -73,5 +71,4 @@ public class AccessArtifactConstraint {
 		return roles;
 	}
 
-	
 }

@@ -13,13 +13,13 @@ package org.eclipse.dirigible.core.security.synchronizer;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SecuritySynchronizerJobDefinitionProvider.
+ * The Security Synchronizer Job Definition Provider.
  */
 public class SecuritySynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider#getJobDefinition()
 	 */
 	@Override

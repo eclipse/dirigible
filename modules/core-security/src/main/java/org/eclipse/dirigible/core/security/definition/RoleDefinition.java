@@ -16,31 +16,25 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class RoleDefinition.
+ * The Role Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_SECURITY_ROLES")
 public class RoleDefinition {
 
-	/** The name. */
 	@Id
 	@Column(name = "ROLE_NAME", columnDefinition = "VARCHAR", nullable = false, length = 64)
 	private String name;
 
-	/** The location. */
 	@Column(name = "ROLE_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
-	/** The description. */
 	@Column(name = "ROLE_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	/** The created by. */
 	@Column(name = "ROLE_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	/** The created at. */
 	@Column(name = "ROLE_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -56,7 +50,8 @@ public class RoleDefinition {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -74,7 +69,8 @@ public class RoleDefinition {
 	/**
 	 * Sets the location.
 	 *
-	 * @param location the new location
+	 * @param location
+	 *            the new location
 	 */
 	public void setLocation(String location) {
 		this.location = location;
@@ -92,7 +88,8 @@ public class RoleDefinition {
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -110,7 +107,8 @@ public class RoleDefinition {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -131,7 +129,8 @@ public class RoleDefinition {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
@@ -141,7 +140,8 @@ public class RoleDefinition {
 		this.createdAt = new Timestamp(createdAt.getTime());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -154,7 +154,8 @@ public class RoleDefinition {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

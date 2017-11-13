@@ -14,16 +14,16 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SecuritySynchronizerJob.
+ * The SecuritySynchronizerJob.
  */
 public class SecuritySynchronizerJob extends AbstractSynchronizerJob {
-	
+
 	/** The extensions synchronizer. */
 	private SecuritySynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
 	 */
 	@Override
