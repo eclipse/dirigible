@@ -22,17 +22,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class TableDropProcessor.
+ * The Table Drop Processor.
  */
 public class TableDropProcessor {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableDropProcessor.class);
 
 	/**
-	 * Execute.
+	 * Execute the corresponding statement.
 	 *
 	 * @param connection the connection
 	 * @param tableModel the table model

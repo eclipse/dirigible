@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * Specialized exception for the data models.
  */
 public class DataStructureModelException extends Exception {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 8008932847050301958L;
 
 	/**

@@ -19,17 +19,15 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ViewDropProcessor.
+ * The View Drop Processor.
  */
 public class ViewDropProcessor {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ViewDropProcessor.class);
 
 	/**
-	 * Execute.
+	 * Execute the corresponding statement.
 	 *
 	 * @param connection the connection
 	 * @param viewModel the view model

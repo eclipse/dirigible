@@ -10,16 +10,13 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DataStructureTableConstraintForeignKeyModel.
+ * The Data Structure Table Constraint Foreign Key Model.
  */
 public class DataStructureTableConstraintForeignKeyModel extends DataStructureTableConstraintModel {
 
-	/** The referenced table. */
 	private String referencedTable;
 	
-	/** The referenced columns. */
 	private String[] referencedColumns;
 
 	/**

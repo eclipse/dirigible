@@ -10,30 +10,11 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
-// TODO: Auto-generated Javadoc
 /**
- * The view model representation
- * {
- * "name":"CUSTOMER_ORDERS",
- * "type":"VIEW",
- * "query":"SELECT * FROM CUSTOMERS, ORDERS WHERE ORDER_CUSTOMER_ID=CUSTOMER_ID",
- * "dependencies":
- * [
- * {
- * "name":"CUSTOMERS",
- * "type":"TABLE"
- * }
- * ,
- * {
- * "name":"ORDERS",
- * "type":"TABLE"
- * }
- * ]
- * }.
+ * The view model representation.
  */
 public class DataStructureViewModel extends DataStructureModel {
 
-	/** The query. */
 	private String query;
 
 	/**

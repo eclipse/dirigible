@@ -10,13 +10,11 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DataStructureTableConstraintCheckModel.
+ * The Data Structure Table Constraint Check Model.
  */
 public class DataStructureTableConstraintCheckModel extends DataStructureTableConstraintModel {
 
-	/** The expression. */
 	private String expression;
 
 	/**

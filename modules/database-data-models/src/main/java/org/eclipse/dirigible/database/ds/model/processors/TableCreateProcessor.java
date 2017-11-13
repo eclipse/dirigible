@@ -27,17 +27,15 @@ import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class TableCreateProcessor.
+ * The Table Create Processor.
  */
 public class TableCreateProcessor {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(TableCreateProcessor.class);
 
 	/**
-	 * Execute.
+	 * Execute the corresponding statement.
 	 *
 	 * @param connection the connection
 	 * @param tableModel the table model
