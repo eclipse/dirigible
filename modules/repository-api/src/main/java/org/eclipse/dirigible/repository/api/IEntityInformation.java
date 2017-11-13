@@ -12,14 +12,12 @@ package org.eclipse.dirigible.repository.api;
 
 import java.util.Date;
 
-// TODO: Auto-generated Javadoc
 /**
  * Through this interface the user can obtain information on a particular
  * repository entity.
  * <p>
  * Help methods are available in the <code>
  * PermissionsHelper</code> class.
- * 
  */
 public interface IEntityInformation {
 
@@ -93,6 +91,7 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 * 
 	 * @return the name of the {@link IEntity}
 	 */
 	public String getName();
@@ -103,6 +102,7 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 * 
 	 * @return the path of the {@link IEntity}
 	 */
 	public String getPath();
@@ -113,8 +113,8 @@ public interface IEntityInformation {
 	 * <p>
 	 * If the implementation cannot find the requested information, then a value
 	 * of {@link #PERMISSION_UNKNOWN} is returned.
-	 * @return the permission mask
 	 * 
+	 * @return the permission mask
 	 * @see #PERMISSION_OWNER_READ
 	 * @see #PERMISSION_OWNER_WRITE
 	 * @see #PERMISSION_OWNER_UPDATE
@@ -133,6 +133,7 @@ public interface IEntityInformation {
 	 * If the implementation cannot find the requested information, then a value
 	 * of <code>
 	 * null</code> is returned.
+	 * 
 	 * @return the size prperty of the {@link IEntity}
 	 */
 	public Long getSize();

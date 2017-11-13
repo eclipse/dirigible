@@ -10,10 +10,8 @@
 
 package org.eclipse.dirigible.repository.api;
 
-import java.io.IOException;
 import java.util.Date;
 
-// TODO: Auto-generated Javadoc
 /**
  * The interface representing a version instance of an {@link IResource}.
  */
@@ -26,6 +24,7 @@ public interface IResourceVersion extends Comparable<IResourceVersion> {
 	 * <p>
 	 * Example: /db/users/test.txt <br>
 	 * Example: /db/articles
+	 * 
 	 * @return the location of the {@link IResource}
 	 */
 	public String getPath();
@@ -41,7 +40,8 @@ public interface IResourceVersion extends Comparable<IResourceVersion> {
 	 * Returns the content of the resource version as a byte array.
 	 *
 	 * @return the raw content
-	 * @throws RepositoryReadException the repository read exception
+	 * @throws RepositoryReadException
+	 *             the repository read exception
 	 */
 	public byte[] getContent() throws RepositoryReadException;
 

@@ -12,7 +12,6 @@ package org.eclipse.dirigible.repository.api;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The <code>ICollection</code> interface represents a collection in the
  * repository.
@@ -21,7 +20,7 @@ public interface ICollection extends IEntity {
 
 	/**
 	 * Returns a list of all the child collections held by this collection.
-	 * 
+	 *
 	 * @return a list of {@link ICollection} instances
 	 * @throws RepositoryReadException
 	 *             in case the list of {@link ICollection} cannot be retreived
@@ -31,7 +30,7 @@ public interface ICollection extends IEntity {
 	/**
 	 * Returns a list containing the names of all the child collections directly
 	 * contained within this collection.
-	 * 
+	 *
 	 * @return a list of {@link ICollection} instances names
 	 * @throws RepositoryReadException
 	 *             in case the names cannot be retreived
@@ -44,7 +43,7 @@ public interface ICollection extends IEntity {
 	 * The name should not contain any slashes.
 	 * <p>
 	 * The change is persisted to the backend.
-	 * 
+	 *
 	 * @param name
 	 *            the {@link ICollection} name
 	 * @return an {@link ICollection} instance
@@ -59,7 +58,7 @@ public interface ICollection extends IEntity {
 	 * <p>
 	 * The returned collection is just a representation. It may not exist on the
 	 * backend.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the collection
 	 * @return an {@link ICollection} instance.
@@ -75,7 +74,7 @@ public interface ICollection extends IEntity {
 	 * The name should not contain any slashes.
 	 * <p>
 	 * The change is persisted to the backend.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the {@link ICollection} to be removed
 	 * @throws RepositoryWriteException
@@ -85,7 +84,7 @@ public interface ICollection extends IEntity {
 
 	/**
 	 * Removes the child collection represented by the parameter.
-	 * 
+	 *
 	 * @param collection
 	 *            the {@link ICollection} instance to be removed
 	 * @throws RepositoryWriteException
@@ -95,7 +94,7 @@ public interface ICollection extends IEntity {
 
 	/**
 	 * Returns a list of all the resources held by this collection.
-	 * 
+	 *
 	 * @return a list of {@link IResource} instances
 	 * @throws RepositoryReadException
 	 *             in case the list of {@link IResource} cannot be retreived
@@ -105,7 +104,7 @@ public interface ICollection extends IEntity {
 	/**
 	 * Returns a list containing the names of all the resources directly
 	 * contained in this collection.
-	 * 
+	 *
 	 * @return a list of {@link IResource} instances names
 	 * @throws RepositoryReadException
 	 *             in case the list of {@link IResource} names cannot be retreived
@@ -118,7 +117,7 @@ public interface ICollection extends IEntity {
 	 * <p>
 	 * The returned resource is just a representation. It may not exist on the
 	 * backend.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the {@link IResource}
 	 * @return a {@link IResource} instance
@@ -131,7 +130,7 @@ public interface ICollection extends IEntity {
 	 * Removes the resource with the specified name from this collection.
 	 * <p>
 	 * Changes are persisted to the backend.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the {@link IResource} inatance to be removed
 	 * @throws RepositoryWriteException
@@ -143,7 +142,7 @@ public interface ICollection extends IEntity {
 	 * Removes the child resource represented by the parameter.
 	 * <p>
 	 * Changes are persisted to the backend.
-	 * 
+	 *
 	 * @param resource
 	 *            the {@link IResource} to be removed
 	 * @throws RepositoryWriteException
@@ -155,29 +154,38 @@ public interface ICollection extends IEntity {
 	 * List the children of this collection.
 	 *
 	 * @return a list of {@link IEntity} instances
-	 * @throws RepositoryReadException             in case the list of the {@link IEntity} cannot be retreived
+	 * @throws RepositoryReadException
+	 *             in case the list of the {@link IEntity} cannot be retreived
 	 */
 	public List<IEntity> getChildren() throws RepositoryReadException;
 
 	/**
 	 * Create resource under this collection by specifying the binary flag.
 	 *
-	 * @param name            the name of the {@link IResource}
-	 * @param content            the raw content
-	 * @param isBinary            whether it is binary
-	 * @param contentType            the type of the content
+	 * @param name
+	 *            the name of the {@link IResource}
+	 * @param content
+	 *            the raw content
+	 * @param isBinary
+	 *            whether it is binary
+	 * @param contentType
+	 *            the type of the content
 	 * @return an {@link IResource} instance
-	 * @throws RepositoryWriteException             in case the {@link IResource} cannot be created
+	 * @throws RepositoryWriteException
+	 *             in case the {@link IResource} cannot be created
 	 */
 	public IResource createResource(String name, byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException;
 
 	/**
 	 * Create resource under this collection by recognizing the content type and binary flag by its file extension.
 	 *
-	 * @param name            the name of the {@link IResource}
-	 * @param content            the raw content
+	 * @param name
+	 *            the name of the {@link IResource}
+	 * @param content
+	 *            the raw content
 	 * @return an {@link IResource} instance
-	 * @throws RepositoryWriteException             in case the {@link IResource} cannot be created
+	 * @throws RepositoryWriteException
+	 *             in case the {@link IResource} cannot be created
 	 */
 	public IResource createResource(String name, byte[] content) throws RepositoryWriteException;
 

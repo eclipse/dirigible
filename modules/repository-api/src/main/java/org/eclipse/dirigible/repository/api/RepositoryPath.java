@@ -15,22 +15,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-// TODO: Auto-generated Javadoc
 /**
  * Utility class representing the path object in the Repository.
  */
 public class RepositoryPath {
 
-	/** The path. */
 	private String path;
 
-	/** The segments. */
 	private final String[] segments;
 
 	/**
 	 * Instantiates a new repository path.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 */
 	public RepositoryPath(String path) {
 		this.path = path;
@@ -44,7 +42,8 @@ public class RepositoryPath {
 	/**
 	 * Instantiates a new repository path.
 	 *
-	 * @param repositoryPath the repository path
+	 * @param repositoryPath
+	 *            the repository path
 	 */
 	public RepositoryPath(RepositoryPath repositoryPath) {
 		this(repositoryPath.segments);
@@ -53,7 +52,8 @@ public class RepositoryPath {
 	/**
 	 * Instantiates a new repository path.
 	 *
-	 * @param input the input
+	 * @param input
+	 *            the input
 	 */
 	public RepositoryPath(String... input) {
 		List<String> allSegments = new ArrayList<String>();
@@ -96,7 +96,8 @@ public class RepositoryPath {
 	/**
 	 * Add new segment after the last position.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the repository path
 	 */
 	public RepositoryPath append(String name) {
@@ -109,7 +110,8 @@ public class RepositoryPath {
 		return new RepositoryPath(newSegments);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -145,7 +147,8 @@ public class RepositoryPath {
 		return path;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -163,7 +166,8 @@ public class RepositoryPath {
 		return getPath().equals(other.getPath());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -183,7 +187,8 @@ public class RepositoryPath {
 	/**
 	 * Construct path to.
 	 *
-	 * @param number the number
+	 * @param number
+	 *            the number
 	 * @return the string
 	 */
 	public String constructPathTo(int number) {
@@ -204,7 +209,8 @@ public class RepositoryPath {
 	/**
 	 * Construct path from.
 	 *
-	 * @param number the number
+	 * @param number
+	 *            the number
 	 * @return the string
 	 */
 	public String constructPathFrom(int number) {
@@ -225,8 +231,10 @@ public class RepositoryPath {
 	/**
 	 * Normalize path.
 	 *
-	 * @param path the path
-	 * @param name the name
+	 * @param path
+	 *            the path
+	 * @param name
+	 *            the name
 	 * @return the string
 	 */
 	public static String normalizePath(String path, String name) {
@@ -244,7 +252,8 @@ public class RepositoryPath {
 	/**
 	 * Normalize name.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the string
 	 */
 	public static String normalizeName(String name) {

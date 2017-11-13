@@ -10,14 +10,11 @@
 
 package org.eclipse.dirigible.repository.api;
 
-import java.io.IOException;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The <code>IResource</code> interface represents a resource located in the
  * repository.
- * 
  */
 public interface IResource extends IEntity {
 
@@ -26,29 +23,36 @@ public interface IResource extends IEntity {
 
 	/**
 	 * Returns the content of the resource as a byte array.
+	 * 
 	 * @return the raw content
-	 * @throws RepositoryReadException in case the content cannot be retreived
+	 * @throws RepositoryReadException
+	 *             in case the content cannot be retreived
 	 */
 	public byte[] getContent() throws RepositoryReadException;
 
 	/**
 	 * Sets this resource's content.
 	 *
-	 * @param content the raw content
-	 * @throws RepositoryWriteException the repository write exception
+	 * @param content
+	 *            the raw content
+	 * @throws RepositoryWriteException
+	 *             the repository write exception
 	 */
 	public void setContent(byte[] content) throws RepositoryWriteException;
 
 	/**
 	 * Sets this resource's content.
-	 * 
-	 * @param content the raw content
-	 * @param isBinary whether it is binary
-	 * @param contentType the type of the content
-	 * @throws RepositoryWriteException in case the content of the {@link IResource} cannot be retreived
+	 *
+	 * @param content
+	 *            the raw content
+	 * @param isBinary
+	 *            whether it is binary
+	 * @param contentType
+	 *            the type of the content
+	 * @throws RepositoryWriteException
+	 *             in case the content of the {@link IResource} cannot be retreived
 	 */
-	public void setContent(byte[] content, boolean isBinary, String contentType)
-			throws RepositoryWriteException;
+	public void setContent(byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException;
 
 	/**
 	 * Getter for binary flag.
@@ -68,16 +72,19 @@ public interface IResource extends IEntity {
 	 * Retrieve all the kept versions of a given resource.
 	 *
 	 * @return the list of the {@link IResourceVersion} for this {link IResource}
-	 * @throws RepositoryVersioningException the repository versioning exception
+	 * @throws RepositoryVersioningException
+	 *             the repository versioning exception
 	 */
 	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException;
 
 	/**
 	 * Retrieve a particular version of a given resource.
 	 *
-	 * @param version the exact version
+	 * @param version
+	 *            the exact version
 	 * @return the {@link IResourceVersion} for this {link IResource} for this version
-	 * @throws RepositoryVersioningException the repository versioning exception
+	 * @throws RepositoryVersioningException
+	 *             the repository versioning exception
 	 */
 	public IResourceVersion getResourceVersion(int version) throws RepositoryVersioningException;
 

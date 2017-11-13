@@ -10,10 +10,8 @@
 
 package org.eclipse.dirigible.repository.api;
 
-// TODO: Auto-generated Javadoc
 /**
  * Utility class for handling Resource objects.
- * 
  */
 public final class ResourceUtil {
 
@@ -29,7 +27,7 @@ public final class ResourceUtil {
 	 * <li><b>sample.</b> yields <b><code>""</code></b></li>
 	 * <li><b>sample</b> yields <b><code>null</code></b></li>
 	 * </ul>
-	 * 
+	 *
 	 * @param resource
 	 *            resource who's name extension will be returned.
 	 * @return the extension of a resource name
@@ -53,7 +51,7 @@ public final class ResourceUtil {
 	 * <li><b>sample.</b> yields <b><code>"sample"</code></b></li>
 	 * <li><b>sample</b> yields <b><code>"sample"</code></b></li>
 	 * </ul>
-	 * 
+	 *
 	 * @param resource
 	 *            resource who's pure name will be returned.
 	 * @return the name of a resource without the extension at the end.
