@@ -13,47 +13,48 @@ package org.eclipse.dirigible.database.sql.builders.sequence;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class NextValueSequenceBuilder.
+ * The Next Value Sequence Builder.
  */
 public class NextValueSequenceBuilder extends AbstractQuerySqlBuilder {
-	
-	/** The sequence. */
+
 	private String sequence = null;
-	
+
 	/**
 	 * Instantiates a new next value sequence builder.
 	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
+	 * @param dialect
+	 *            the dialect
+	 * @param sequence
+	 *            the sequence
 	 */
 	public NextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect);
 		this.sequence = sequence;
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
 	public String generate() {
 		StringBuilder sql = new StringBuilder();
-		
+
 		// SELECT
 		generateSelect(sql);
-		
+
 		// NEXTVAL
 		generateNextValue(sql);
-		
+
 		return sql.toString();
 	}
 
 	/**
 	 * Generate select.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateSelect(StringBuilder sql) {
 		sql.append(KEYWORD_SELECT);
@@ -62,15 +63,13 @@ public class NextValueSequenceBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate next value.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateNextValue(StringBuilder sql) {
-			sql.append(SPACE)
-				.append(KEYWORD_NEXT_VALUE_FOR)
-				.append(SPACE)
-				.append(sequence);
+		sql.append(SPACE).append(KEYWORD_NEXT_VALUE_FOR).append(SPACE).append(sequence);
 	}
-	
+
 	/**
 	 * Gets the sequence.
 	 *

@@ -13,53 +13,52 @@ package org.eclipse.dirigible.database.sql.builders.table;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractDropSqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DropTableBuilder.
+ * The Drop Table Builder.
  */
 public class DropTableBuilder extends AbstractDropSqlBuilder {
-	
-	/** The table. */
+
 	private String table = null;
-	
+
 	/**
 	 * Instantiates a new drop table builder.
 	 *
-	 * @param dialect the dialect
-	 * @param table the table
+	 * @param dialect
+	 *            the dialect
+	 * @param table
+	 *            the table
 	 */
 	public DropTableBuilder(ISqlDialect dialect, String table) {
 		super(dialect);
 		this.table = table;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
 	public String generate() {
-		
+
 		StringBuilder sql = new StringBuilder();
-		
+
 		// DROP
 		generateDrop(sql);
-		
+
 		// TABLE
 		generateTable(sql);
-		
+
 		return sql.toString();
 	}
-	
+
 	/**
 	 * Generate table.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
-		sql.append(SPACE)
-			.append(KEYWORD_TABLE)
-			.append(SPACE)
-			.append(this.table);
+		sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(this.table);
 	}
-	
+
 }

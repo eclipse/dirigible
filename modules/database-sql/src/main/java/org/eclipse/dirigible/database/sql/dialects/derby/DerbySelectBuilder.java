@@ -13,23 +13,25 @@ package org.eclipse.dirigible.database.sql.dialects.derby;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DerbySelectBuilder.
+ * The Derby Select Builder.
  */
 public class DerbySelectBuilder extends SelectBuilder {
 
 	/**
 	 * Instantiates a new derby select builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public DerbySelectBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder#generateLimitAndOffset(java.lang.StringBuilder, int, int)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder#generateLimitAndOffset(java.lang.
+	 * StringBuilder, int, int)
 	 */
 	@Override
 	protected void generateLimitAndOffset(StringBuilder sql, int limit, int offset) {

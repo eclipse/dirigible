@@ -12,25 +12,26 @@ package org.eclipse.dirigible.database.sql.builders;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractDropSqlBuilder.
+ * The Abstract Drop SQL Builder.
  */
 public abstract class AbstractDropSqlBuilder extends AbstractSqlBuilder {
 
 	/**
 	 * Instantiates a new abstract drop sql builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	protected AbstractDropSqlBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
-	
+
 	/**
 	 * Generate drop.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateDrop(StringBuilder sql) {
 		sql.append(KEYWORD_DROP);

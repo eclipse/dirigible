@@ -10,21 +10,20 @@
 
 package org.eclipse.dirigible.database.sql;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface ISqlBuilder.
+ * The main SQL Builder interface.
  */
 public interface ISqlBuilder extends ISqlKeywords {
 
 	/**
-	 * Generate.
+	 * Generate the result script.
 	 *
 	 * @return the string
 	 */
 	public String generate();
 
 	/**
-	 * Builds the.
+	 * Builds the result script.
 	 *
 	 * @return the string
 	 */

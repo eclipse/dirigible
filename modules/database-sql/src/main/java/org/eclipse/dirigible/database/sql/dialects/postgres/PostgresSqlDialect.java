@@ -17,23 +17,23 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PostgresSqlDialect.
+ * The PostgreSQL SQL Dialect.
  */
 public class PostgresSqlDialect extends
 		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, PostgresCreateBranchingBuilder, DropBranchingBuilder, PostgresNextValueSequenceBuilder> {
 
 	/** The Constant FUNCTION_CURRENT_DATE. */
 	public static final String FUNCTION_CURRENT_DATE = "current_date"; //$NON-NLS-1$
-	
+
 	/** The Constant FUNCTION_CURRENT_TIME. */
 	public static final String FUNCTION_CURRENT_TIME = "current_time"; //$NON-NLS-1$
-	
+
 	/** The Constant FUNCTION_CURRENT_TIMESTAMP. */
 	public static final String FUNCTION_CURRENT_TIMESTAMP = "current_timestamp"; //$NON-NLS-1$
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#create()
 	 */
 	@Override
@@ -41,7 +41,8 @@ public class PostgresSqlDialect extends
 		return new PostgresCreateBranchingBuilder(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
 	 */
 	@Override
@@ -49,7 +50,8 @@ public class PostgresSqlDialect extends
 		return new PostgresNextValueSequenceBuilder(this, sequence);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentDate()
 	 */
 	@Override
@@ -57,7 +59,8 @@ public class PostgresSqlDialect extends
 		return FUNCTION_CURRENT_DATE;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTime()
 	 */
 	@Override
@@ -65,7 +68,8 @@ public class PostgresSqlDialect extends
 		return FUNCTION_CURRENT_TIME;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTimestamp()
 	 */
 	@Override

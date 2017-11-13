@@ -17,37 +17,41 @@ import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SybaseSqlDialect.
+ * The Sybase SQL Dialect.
  */
-public class SybaseSqlDialect extends DefaultSqlDialect<SybaseSelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, SybaseNextValueSequenceBuilder> {
-	
+public class SybaseSqlDialect extends
+		DefaultSqlDialect<SybaseSelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, SybaseNextValueSequenceBuilder> {
+
 	/** The Constant FUNCTION_CURRENT_DATE. */
 	public static final String FUNCTION_CURRENT_DATE = "current_date"; //$NON-NLS-1$
-	
+
 	/** The Constant FUNCTION_CURRENT_TIME. */
 	public static final String FUNCTION_CURRENT_TIME = "current_time"; //$NON-NLS-1$
-	
+
 	/** The Constant FUNCTION_CURRENT_TIMESTAMP. */
 	public static final String FUNCTION_CURRENT_TIMESTAMP = "getdate()"; //$NON-NLS-1$
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
 	 */
+	@Override
 	public SybaseNextValueSequenceBuilder nextval(String sequence) {
 		return new SybaseNextValueSequenceBuilder(this, sequence);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#select()
 	 */
 	@Override
 	public SybaseSelectBuilder select() {
 		return new SybaseSelectBuilder(this);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentDate()
 	 */
 	@Override
@@ -55,7 +59,8 @@ public class SybaseSqlDialect extends DefaultSqlDialect<SybaseSelectBuilder, Ins
 		return FUNCTION_CURRENT_DATE;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTime()
 	 */
 	@Override
@@ -63,7 +68,8 @@ public class SybaseSqlDialect extends DefaultSqlDialect<SybaseSelectBuilder, Ins
 		return FUNCTION_CURRENT_TIME;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#functionCurrentTimestamp()
 	 */
 	@Override

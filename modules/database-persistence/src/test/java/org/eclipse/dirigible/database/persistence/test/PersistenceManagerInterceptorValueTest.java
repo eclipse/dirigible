@@ -42,7 +42,7 @@ public class PersistenceManagerInterceptorValueTest extends AbstractPersistenceM
 		persistenceManager.setEntityManagerInterceptor(new IEntityManagerInterceptor() {
 
 			@Override
-			public Object onSetValueBeforeUpdate(int index, String dataType, Object value) {
+			public Object onGetValueBeforeUpdate(int index, String dataType, Object value) {
 				return value;
 			}
 

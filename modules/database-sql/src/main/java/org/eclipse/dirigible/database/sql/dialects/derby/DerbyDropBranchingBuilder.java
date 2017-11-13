@@ -14,26 +14,28 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DerbyDropBranchingBuilder.
+ * The Derby Drop Branching Builder.
  */
 public class DerbyDropBranchingBuilder extends DropBranchingBuilder {
-	
+
 	/**
 	 * Instantiates a new derby drop branching builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public DerbyDropBranchingBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder#sequence(java.lang.String)
 	 */
+	@Override
 	public DropSequenceBuilder sequence(String sequence) {
 		return new DerbyDropSequenceBuilder(this.getDialect(), sequence);
 	}
-	
+
 }

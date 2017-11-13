@@ -16,26 +16,24 @@ import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CreateViewBuilder.
+ * The Create View Builder.
  */
 public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 
-	/** The view. */
 	private String view = null;
-	
-	/** The columns. */
+
 	private List<String> columns = new ArrayList<String>();
-	
-	/** The select. */
+
 	private String select = null;
 
 	/**
 	 * Instantiates a new creates the view builder.
 	 *
-	 * @param dialect the dialect
-	 * @param view the view
+	 * @param dialect
+	 *            the dialect
+	 * @param view
+	 *            the view
 	 */
 	public CreateViewBuilder(ISqlDialect dialect, String view) {
 		super(dialect);
@@ -72,7 +70,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Sets the select.
 	 *
-	 * @param select the new select
+	 * @param select
+	 *            the new select
 	 */
 	protected void setSelect(String select) {
 		this.select = select;
@@ -81,7 +80,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder column(String name) {
@@ -92,7 +92,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * As select.
 	 *
-	 * @param select the select
+	 * @param select
+	 *            the select
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder asSelect(String select) {
@@ -100,7 +101,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -126,7 +128,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate view.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateView(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(this.view);
@@ -135,7 +138,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate columns.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
@@ -161,7 +165,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate as select.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateAsSelect(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(this.select);

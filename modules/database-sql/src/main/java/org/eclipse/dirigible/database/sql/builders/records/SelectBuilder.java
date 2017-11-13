@@ -16,52 +16,40 @@ import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SelectBuilder.
+ * The Select Builder.
  */
 public class SelectBuilder extends AbstractQuerySqlBuilder {
 
-	/** The columns. */
 	private List<String> columns = new ArrayList<String>();
-	
-	/** The tables. */
+
 	private List<String> tables = new ArrayList<String>();
-	
-	/** The joins. */
+
 	private List<String> joins = new ArrayList<String>();
-	
-	/** The wheres. */
+
 	private List<String> wheres = new ArrayList<String>();
-	
-	/** The orders. */
+
 	private List<String> orders = new ArrayList<String>();
-	
-	/** The groups. */
+
 	private List<String> groups = new ArrayList<String>();
-	
-	/** The unions. */
+
 	private List<String> unions = new ArrayList<String>();
-	
-	/** The distinct. */
+
 	private boolean distinct = false;
-	
-	/** The having. */
+
 	private String having = null;
-	
-	/** The limit. */
+
 	private int limit = -1;
-	
-	/** The offset. */
+
 	private int offset = -1;
-	
-	/** The for update. */
+
 	private boolean forUpdate = false;
 
 	/**
 	 * Instantiates a new select builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public SelectBuilder(ISqlDialect dialect) {
 		super(dialect);
@@ -90,7 +78,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param column the column
+	 * @param column
+	 *            the column
 	 * @return the select builder
 	 */
 	public SelectBuilder column(String column) {
@@ -101,7 +90,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * From.
 	 *
-	 * @param table the table
+	 * @param table
+	 *            the table
 	 * @return the select builder
 	 */
 	public SelectBuilder from(String table) {
@@ -111,8 +101,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * From.
 	 *
-	 * @param table the table
-	 * @param alias the alias
+	 * @param table
+	 *            the table
+	 * @param alias
+	 *            the alias
 	 * @return the select builder
 	 */
 	public SelectBuilder from(String table, String alias) {
@@ -128,8 +120,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Join.
 	 *
-	 * @param table the table
-	 * @param on the on
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
 	 * @return the select builder
 	 */
 	public SelectBuilder join(String table, String on) {
@@ -139,9 +133,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Join.
 	 *
-	 * @param table the table
-	 * @param on the on
-	 * @param alias the alias
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
+	 * @param alias
+	 *            the alias
 	 * @return the select builder
 	 */
 	public SelectBuilder join(String table, String on, String alias) {
@@ -151,8 +148,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Inner join.
 	 *
-	 * @param table the table
-	 * @param on the on
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
 	 * @return the select builder
 	 */
 	public SelectBuilder innerJoin(String table, String on) {
@@ -162,9 +161,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Inner join.
 	 *
-	 * @param table the table
-	 * @param on the on
-	 * @param alias the alias
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
+	 * @param alias
+	 *            the alias
 	 * @return the select builder
 	 */
 	public SelectBuilder innerJoin(String table, String on, String alias) {
@@ -174,8 +176,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Outer join.
 	 *
-	 * @param table the table
-	 * @param on the on
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
 	 * @return the select builder
 	 */
 	public SelectBuilder outerJoin(String table, String on) {
@@ -185,9 +189,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Outer join.
 	 *
-	 * @param table the table
-	 * @param on the on
-	 * @param alias the alias
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
+	 * @param alias
+	 *            the alias
 	 * @return the select builder
 	 */
 	public SelectBuilder outerJoin(String table, String on, String alias) {
@@ -197,8 +204,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Left join.
 	 *
-	 * @param table the table
-	 * @param on the on
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
 	 * @return the select builder
 	 */
 	public SelectBuilder leftJoin(String table, String on) {
@@ -208,9 +217,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Left join.
 	 *
-	 * @param table the table
-	 * @param on the on
-	 * @param alias the alias
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
+	 * @param alias
+	 *            the alias
 	 * @return the select builder
 	 */
 	public SelectBuilder leftJoin(String table, String on, String alias) {
@@ -220,8 +232,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Right join.
 	 *
-	 * @param table the table
-	 * @param on the on
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
 	 * @return the select builder
 	 */
 	public SelectBuilder rightJoin(String table, String on) {
@@ -231,9 +245,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Right join.
 	 *
-	 * @param table the table
-	 * @param on the on
-	 * @param alias the alias
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
+	 * @param alias
+	 *            the alias
 	 * @return the select builder
 	 */
 	public SelectBuilder rightJoin(String table, String on, String alias) {
@@ -243,8 +260,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Full join.
 	 *
-	 * @param table the table
-	 * @param on the on
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
 	 * @return the select builder
 	 */
 	public SelectBuilder fullJoin(String table, String on) {
@@ -254,9 +273,12 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Full join.
 	 *
-	 * @param table the table
-	 * @param on the on
-	 * @param alias the alias
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
+	 * @param alias
+	 *            the alias
 	 * @return the select builder
 	 */
 	public SelectBuilder fullJoin(String table, String on, String alias) {
@@ -266,10 +288,14 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generic join.
 	 *
-	 * @param type the type
-	 * @param table the table
-	 * @param on the on
-	 * @param alias the alias
+	 * @param type
+	 *            the type
+	 * @param table
+	 *            the table
+	 * @param on
+	 *            the on
+	 * @param alias
+	 *            the alias
 	 * @return the select builder
 	 */
 	public SelectBuilder genericJoin(String type, String table, String on, String alias) {
@@ -286,7 +312,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Where.
 	 *
-	 * @param condition the condition
+	 * @param condition
+	 *            the condition
 	 * @return the select builder
 	 */
 	public SelectBuilder where(String condition) {
@@ -297,7 +324,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Order.
 	 *
-	 * @param column the column
+	 * @param column
+	 *            the column
 	 * @return the select builder
 	 */
 	public SelectBuilder order(String column) {
@@ -307,8 +335,10 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Order.
 	 *
-	 * @param column the column
-	 * @param asc the asc
+	 * @param column
+	 *            the column
+	 * @param asc
+	 *            the asc
 	 * @return the select builder
 	 */
 	public SelectBuilder order(String column, boolean asc) {
@@ -324,7 +354,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Group.
 	 *
-	 * @param column the column
+	 * @param column
+	 *            the column
 	 * @return the select builder
 	 */
 	public SelectBuilder group(String column) {
@@ -335,7 +366,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Limit.
 	 *
-	 * @param limit the limit
+	 * @param limit
+	 *            the limit
 	 * @return the select builder
 	 */
 	public SelectBuilder limit(int limit) {
@@ -346,7 +378,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Limit.
 	 *
-	 * @param limit the limit
+	 * @param limit
+	 *            the limit
 	 * @return the select builder
 	 */
 	public SelectBuilder limit(Double limit) {
@@ -356,7 +389,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Offset.
 	 *
-	 * @param offset the offset
+	 * @param offset
+	 *            the offset
 	 * @return the select builder
 	 */
 	public SelectBuilder offset(int offset) {
@@ -367,7 +401,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Offset.
 	 *
-	 * @param offset the offset
+	 * @param offset
+	 *            the offset
 	 * @return the select builder
 	 */
 	public SelectBuilder offset(Double offset) {
@@ -377,7 +412,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Having.
 	 *
-	 * @param having the having
+	 * @param having
+	 *            the having
 	 * @return the select builder
 	 */
 	public SelectBuilder having(String having) {
@@ -388,7 +424,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Union.
 	 *
-	 * @param select the select
+	 * @param select
+	 *            the select
 	 * @return the select builder
 	 */
 	public SelectBuilder union(String select) {
@@ -396,7 +433,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -445,7 +483,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate union.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateUnion(StringBuilder sql) {
 		if (!unions.isEmpty()) {
@@ -456,7 +495,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate having.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateHaving(StringBuilder sql) {
 		if (having != null) {
@@ -467,7 +507,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate group by.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateGroupBy(StringBuilder sql) {
 		if (!groups.isEmpty()) {
@@ -478,7 +519,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate joins.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateJoins(StringBuilder sql) {
 		if (!joins.isEmpty()) {
@@ -489,7 +531,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate tables.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateTables(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_FROM).append(SPACE).append(traverseTables());
@@ -498,7 +541,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate columns.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateColumns(StringBuilder sql) {
 		sql.append(SPACE).append(traverseColumns());
@@ -507,7 +551,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate distinct.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateDistinct(StringBuilder sql) {
 		if (distinct) {
@@ -518,7 +563,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate for update.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateForUpdate(StringBuilder sql) {
 		if (forUpdate) {
@@ -597,7 +643,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Generate select.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateSelect(StringBuilder sql) {
 		sql.append(KEYWORD_SELECT);

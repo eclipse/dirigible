@@ -16,25 +16,26 @@ import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilde
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CreateBranchingBuilder.
+ * The Create Branching Builder.
  */
 public class CreateBranchingBuilder extends AbstractSqlBuilder {
 
 	/**
 	 * Instantiates a new creates the branching builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public CreateBranchingBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
 	/**
-	 * Table.
+	 * Table branch.
 	 *
-	 * @param table the table
+	 * @param table
+	 *            the table
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder table(String table) {
@@ -42,9 +43,10 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
 	}
 
 	/**
-	 * View.
+	 * View branch.
 	 *
-	 * @param view the view
+	 * @param view
+	 *            the view
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder view(String view) {
@@ -52,16 +54,18 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
 	}
 
 	/**
-	 * Sequence.
+	 * Sequence branch.
 	 *
-	 * @param sequence the sequence
+	 * @param sequence
+	 *            the sequence
 	 * @return the creates the sequence builder
 	 */
 	public CreateSequenceBuilder sequence(String sequence) {
 		return new CreateSequenceBuilder(getDialect(), sequence);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override

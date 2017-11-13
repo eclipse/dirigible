@@ -14,22 +14,23 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DerbyCreateBranchingBuilder.
+ * The Derby Create Branching Builder.
  */
 public class DerbyCreateBranchingBuilder extends CreateBranchingBuilder {
 
 	/**
 	 * Instantiates a new derby create branching builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public DerbyCreateBranchingBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
 	 */
 	@Override
@@ -37,7 +38,8 @@ public class DerbyCreateBranchingBuilder extends CreateBranchingBuilder {
 		return new DerbyCreateViewBuilder(this.getDialect(), view);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#sequence(java.lang.String)
 	 */
 	@Override

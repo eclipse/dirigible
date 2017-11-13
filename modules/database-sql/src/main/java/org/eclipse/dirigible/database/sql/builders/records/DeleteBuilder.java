@@ -16,31 +16,30 @@ import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DeleteBuilder.
+ * The Delete Builder.
  */
 public class DeleteBuilder extends AbstractQuerySqlBuilder {
 
-	/** The table. */
 	private String table;
-	
-	/** The wheres. */
+
 	private List<String> wheres = new ArrayList<String>();
 
 	/**
 	 * Instantiates a new delete builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public DeleteBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
-	
+
 	/**
 	 * From.
 	 *
-	 * @param table the table
+	 * @param table
+	 *            the table
 	 * @return the delete builder
 	 */
 	public DeleteBuilder from(String table) {
@@ -51,7 +50,8 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 	/**
 	 * Where.
 	 *
-	 * @param condition the condition
+	 * @param condition
+	 *            the condition
 	 * @return the delete builder
 	 */
 	public DeleteBuilder where(String condition) {
@@ -59,7 +59,8 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -74,26 +75,25 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 
 		// WHERE
 		generateWhere(sql, wheres);
-	
+
 		return sql.toString();
 	}
 
 	/**
 	 * Generate table.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
-		sql.append(SPACE)
-			.append(KEYWORD_FROM)
-			.append(SPACE)
-			.append(this.table);
+		sql.append(SPACE).append(KEYWORD_FROM).append(SPACE).append(this.table);
 	}
-	
+
 	/**
 	 * Generate delete.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateDelete(StringBuilder sql) {
 		sql.append(KEYWORD_DELETE);
@@ -116,6 +116,5 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 	public List<String> getWheres() {
 		return wheres;
 	}
-	
-	
+
 }

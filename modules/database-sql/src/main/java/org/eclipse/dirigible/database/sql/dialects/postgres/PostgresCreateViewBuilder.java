@@ -13,26 +13,27 @@ package org.eclipse.dirigible.database.sql.dialects.postgres;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PostgresCreateViewBuilder.
+ * The PostgreSQL Create View Builder.
  */
 public class PostgresCreateViewBuilder extends CreateViewBuilder {
 
-	/** The values. */
 	private String values = null;
 
 	/**
-	 * Instantiates a new postgres create view builder.
+	 * Instantiates a new PostgreSQL create view builder.
 	 *
-	 * @param dialect the dialect
-	 * @param view the view
+	 * @param dialect
+	 *            the dialect
+	 * @param view
+	 *            the view
 	 */
 	public PostgresCreateViewBuilder(ISqlDialect dialect, String view) {
 		super(dialect, view);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(java.lang.String)
 	 */
 	@Override
@@ -41,7 +42,8 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
 	 */
 	@Override
@@ -56,8 +58,9 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 	/**
 	 * As values.
 	 *
-	 * @param values the values
-	 * @return the postgres create view builder
+	 * @param values
+	 *            the values
+	 * @return the PostgreSQL create view builder
 	 */
 	public PostgresCreateViewBuilder asValues(String values) {
 		if (getSelect() != null) {
@@ -67,7 +70,8 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()
 	 */
 	@Override
@@ -99,7 +103,8 @@ public class PostgresCreateViewBuilder extends CreateViewBuilder {
 	/**
 	 * Generate as values.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateAsValues(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(this.values);

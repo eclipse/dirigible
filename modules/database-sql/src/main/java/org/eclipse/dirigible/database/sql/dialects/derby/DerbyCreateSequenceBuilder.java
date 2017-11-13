@@ -13,24 +13,27 @@ package org.eclipse.dirigible.database.sql.dialects.derby;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DerbyCreateSequenceBuilder.
+ * The Derby Create Sequence Builder.
  */
 public class DerbyCreateSequenceBuilder extends CreateSequenceBuilder {
 
 	/**
 	 * Instantiates a new derby create sequence builder.
 	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
+	 * @param dialect
+	 *            the dialect
+	 * @param sequence
+	 *            the sequence
 	 */
 	public DerbyCreateSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect, sequence);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder#generateStart(java.lang.StringBuilder)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder#generateStart(java.lang.StringBuilder)
 	 */
 	@Override
 	protected void generateStart(StringBuilder sql) {

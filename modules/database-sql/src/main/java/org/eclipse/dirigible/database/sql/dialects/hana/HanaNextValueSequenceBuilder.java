@@ -15,26 +15,27 @@ import static java.text.MessageFormat.format;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HanaNextValueSequenceBuilder.
+ * The HANA Next Value Sequence Builder.
  */
 public class HanaNextValueSequenceBuilder extends NextValueSequenceBuilder {
 
-	/** The Constant PATTERN_SELECT_NEXT_VAL_SEQUENCE. */
 	private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT {0}.NEXTVAL FROM DUMMY";
 
 	/**
 	 * Instantiates a new hana next value sequence builder.
 	 *
-	 * @param dialect the dialect
-	 * @param sequence the sequence
+	 * @param dialect
+	 *            the dialect
+	 * @param sequence
+	 *            the sequence
 	 */
 	public HanaNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect, sequence);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
 	 */
 	@Override

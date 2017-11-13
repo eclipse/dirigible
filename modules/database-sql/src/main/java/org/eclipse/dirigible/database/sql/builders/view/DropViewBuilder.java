@@ -13,27 +13,28 @@ package org.eclipse.dirigible.database.sql.builders.view;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractDropSqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DropViewBuilder.
+ * The Drop View Builder.
  */
 public class DropViewBuilder extends AbstractDropSqlBuilder {
 
-	/** The view. */
 	private String view = null;
 
 	/**
 	 * Instantiates a new drop view builder.
 	 *
-	 * @param dialect the dialect
-	 * @param view the view
+	 * @param dialect
+	 *            the dialect
+	 * @param view
+	 *            the view
 	 */
 	public DropViewBuilder(ISqlDialect dialect, String view) {
 		super(dialect);
 		this.view = view;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -53,7 +54,8 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 	/**
 	 * Generate view.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateView(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(this.view);

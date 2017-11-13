@@ -20,35 +20,30 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CreateTableBuilder.
+ * The Create Table Builder.
  */
 public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 
-	/** The table. */
 	private String table = null;
-	
-	/** The columns. */
+
 	private List<String[]> columns = new ArrayList<String[]>();
-	
-	/** The primary key. */
+
 	private CreateTablePrimaryKeyBuilder primaryKey;
-	
-	/** The foreign keys. */
+
 	private List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<CreateTableForeignKeyBuilder>();
-	
-	/** The unique indices. */
+
 	private List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<CreateTableUniqueIndexBuilder>();
-	
-	/** The checks. */
+
 	private List<CreateTableCheckBuilder> checks = new ArrayList<CreateTableCheckBuilder>();
 
 	/**
 	 * Instantiates a new creates the table builder.
 	 *
-	 * @param dialect the dialect
-	 * @param table the table
+	 * @param dialect
+	 *            the dialect
+	 * @param table
+	 *            the table
 	 */
 	public CreateTableBuilder(ISqlDialect dialect, String table) {
 		super(dialect);
@@ -76,12 +71,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -106,11 +107,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -120,10 +126,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable) {
@@ -133,9 +143,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey) {
@@ -145,8 +158,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, DataType type) {
@@ -156,12 +171,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, int type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -171,11 +192,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, int type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -185,10 +211,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, int type, Boolean isPrimaryKey, Boolean isNullable) {
@@ -198,9 +228,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, int type, Boolean isPrimaryKey) {
@@ -210,8 +243,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, int type) {
@@ -221,12 +256,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, int type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -236,12 +277,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, Double type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -251,11 +298,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, Double type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -265,10 +317,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, Double type, Boolean isPrimaryKey, Boolean isNullable) {
@@ -278,9 +334,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, Double type, Boolean isPrimaryKey) {
@@ -290,8 +349,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, Double type) {
@@ -301,12 +362,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, Double type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -316,12 +383,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -331,11 +404,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -345,10 +423,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, String type, Boolean isPrimaryKey, Boolean isNullable) {
@@ -358,9 +440,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, String type, Boolean isPrimaryKey) {
@@ -370,8 +455,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, String type) {
@@ -381,12 +468,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -396,12 +489,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -413,12 +512,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -428,11 +533,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -442,10 +552,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable) {
@@ -455,9 +569,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, int length, Boolean isPrimaryKey) {
@@ -467,8 +584,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, int length) {
@@ -478,11 +597,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, Double length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -492,10 +616,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, Double length, Boolean isPrimaryKey, Boolean isNullable) {
@@ -505,9 +633,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, Double length, Boolean isPrimaryKey) {
@@ -517,8 +648,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column varchar.
 	 *
-	 * @param name the name
-	 * @param length the length
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnVarchar(String name, Double length) {
@@ -528,12 +661,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -545,12 +684,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -560,11 +705,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -574,10 +724,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable) {
@@ -587,9 +741,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, int length, Boolean isPrimaryKey) {
@@ -599,8 +756,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, int length) {
@@ -610,11 +769,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, Double length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -624,10 +788,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, Double length, Boolean isPrimaryKey, Boolean isNullable) {
@@ -637,9 +805,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, Double length, Boolean isPrimaryKey) {
@@ -649,8 +820,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column char.
 	 *
-	 * @param name the name
-	 * @param length the length
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnChar(String name, Double length) {
@@ -660,11 +833,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column date.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDate(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -674,11 +852,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column date.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDate(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -688,10 +871,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column date.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDate(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -701,9 +888,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column date.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDate(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -713,8 +903,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column date.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDate(String name, Boolean isPrimaryKey) {
@@ -724,7 +916,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column date.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDate(String name) {
@@ -734,11 +927,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column time.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTime(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -748,11 +946,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column time.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTime(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -762,10 +965,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column time.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTime(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -775,9 +982,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column time.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTime(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -787,8 +997,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column time.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTime(String name, Boolean isPrimaryKey) {
@@ -798,7 +1010,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column time.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTime(String name) {
@@ -808,11 +1021,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column timestamp.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTimestamp(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -822,11 +1040,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column timestamp.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTimestamp(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -836,10 +1059,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column timestamp.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTimestamp(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -849,9 +1076,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column timestamp.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTimestamp(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -861,8 +1091,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column timestamp.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTimestamp(String name, Boolean isPrimaryKey) {
@@ -872,7 +1104,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column timestamp.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTimestamp(String name) {
@@ -882,11 +1115,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column integer.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -896,11 +1134,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column integer.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -910,10 +1153,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column integer.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -923,9 +1170,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column integer.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -935,8 +1185,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column integer.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnInteger(String name, Boolean isPrimaryKey) {
@@ -946,7 +1198,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column integer.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnInteger(String name) {
@@ -956,11 +1209,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column tinyint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTinyint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -970,11 +1228,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column tinyint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTinyint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -984,10 +1247,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column tinyint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTinyint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -997,9 +1264,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column tinyint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTinyint(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1009,8 +1279,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column tinyint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTinyint(String name, Boolean isPrimaryKey) {
@@ -1020,7 +1292,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column tinyint.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnTinyint(String name) {
@@ -1030,11 +1303,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column bigint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1044,11 +1322,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column bigint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1058,10 +1341,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column bigint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1071,9 +1358,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column bigint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1083,8 +1373,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column bigint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBigint(String name, Boolean isPrimaryKey) {
@@ -1094,7 +1386,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column bigint.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBigint(String name) {
@@ -1104,11 +1397,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column smallint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnSmallint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1118,11 +1416,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column smallint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnSmallint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1132,10 +1435,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column smallint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnSmallint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1145,9 +1452,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column smallint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnSmallint(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1157,8 +1467,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column smallint.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnSmallint(String name, Boolean isPrimaryKey) {
@@ -1168,7 +1480,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column smallint.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnSmallint(String name) {
@@ -1178,11 +1491,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column real.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnReal(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1192,11 +1510,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column real.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnReal(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1206,10 +1529,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column real.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnReal(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1219,9 +1546,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column real.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnReal(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1231,8 +1561,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column real.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnReal(String name, Boolean isPrimaryKey) {
@@ -1242,7 +1574,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column real.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnReal(String name) {
@@ -1252,11 +1585,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column double.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDouble(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1266,11 +1604,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column double.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDouble(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1280,10 +1623,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column double.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDouble(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1293,9 +1640,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column double.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDouble(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1305,8 +1655,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column double.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDouble(String name, Boolean isPrimaryKey) {
@@ -1316,7 +1668,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column double.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDouble(String name) {
@@ -1326,11 +1679,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column boolean.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBoolean(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
@@ -1340,11 +1698,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column boolean.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBoolean(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
@@ -1354,10 +1717,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column boolean.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBoolean(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1367,9 +1734,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column boolean.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBoolean(String name, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1379,8 +1749,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column boolean.
 	 *
-	 * @param name the name
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBoolean(String name, Boolean isPrimaryKey) {
@@ -1390,7 +1762,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column boolean.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBoolean(String name) {
@@ -1400,9 +1773,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column blob.
 	 *
-	 * @param name the name
-	 * @param isNullable the is nullable
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isNullable
+	 *            the is nullable
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBlob(String name, Boolean isNullable, String... args) {
@@ -1412,9 +1788,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column blob.
 	 *
-	 * @param name the name
-	 * @param isNullable the is nullable
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param isNullable
+	 *            the is nullable
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBlob(String name, Boolean isNullable, String args) {
@@ -1424,8 +1803,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column blob.
 	 *
-	 * @param name the name
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBlob(String name, Boolean isNullable) {
@@ -1435,7 +1816,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column blob.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnBlob(String name) {
@@ -1445,13 +1827,20 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column decimal.
 	 *
-	 * @param name the name
-	 * @param precision the precision
-	 * @param scale the scale
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param precision
+	 *            the precision
+	 * @param scale
+	 *            the scale
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
@@ -1464,13 +1853,20 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column decimal.
 	 *
-	 * @param name the name
-	 * @param precision the precision
-	 * @param scale the scale
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
-	 * @param args the args
+	 * @param name
+	 *            the name
+	 * @param precision
+	 *            the precision
+	 * @param scale
+	 *            the scale
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
@@ -1481,12 +1877,18 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column decimal.
 	 *
-	 * @param name the name
-	 * @param precision the precision
-	 * @param scale the scale
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
-	 * @param isUnique the is unique
+	 * @param name
+	 *            the name
+	 * @param precision
+	 *            the precision
+	 * @param scale
+	 *            the scale
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
@@ -1496,11 +1898,16 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column decimal.
 	 *
-	 * @param name the name
-	 * @param precision the precision
-	 * @param scale the scale
-	 * @param isPrimaryKey the is primary key
-	 * @param isNullable the is nullable
+	 * @param name
+	 *            the name
+	 * @param precision
+	 *            the precision
+	 * @param scale
+	 *            the scale
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable) {
@@ -1510,10 +1917,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column decimal.
 	 *
-	 * @param name the name
-	 * @param precision the precision
-	 * @param scale the scale
-	 * @param isPrimaryKey the is primary key
+	 * @param name
+	 *            the name
+	 * @param precision
+	 *            the precision
+	 * @param scale
+	 *            the scale
+	 * @param isPrimaryKey
+	 *            the is primary key
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey) {
@@ -1523,9 +1934,12 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Column decimal.
 	 *
-	 * @param name the name
-	 * @param precision the precision
-	 * @param scale the scale
+	 * @param name
+	 *            the name
+	 * @param precision
+	 *            the precision
+	 * @param scale
+	 *            the scale
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder columnDecimal(String name, int precision, int scale) {
@@ -1535,8 +1949,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Primary key.
 	 *
-	 * @param name the name
-	 * @param columns the columns
+	 * @param name
+	 *            the name
+	 * @param columns
+	 *            the columns
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder primaryKey(String name, String[] columns) {
@@ -1553,8 +1969,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Primary key.
 	 *
-	 * @param name the name
-	 * @param columns the columns
+	 * @param name
+	 *            the name
+	 * @param columns
+	 *            the columns
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder primaryKey(String name, String columns) {
@@ -1565,7 +1983,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Primary key.
 	 *
-	 * @param columns the columns
+	 * @param columns
+	 *            the columns
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder primaryKey(String[] columns) {
@@ -1575,7 +1994,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Primary key.
 	 *
-	 * @param columns the columns
+	 * @param columns
+	 *            the columns
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder primaryKey(String columns) {
@@ -1585,10 +2005,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Foreign key.
 	 *
-	 * @param name the name
-	 * @param columns the columns
-	 * @param referencedTable the referenced table
-	 * @param referencedColumns the referenced columns
+	 * @param name
+	 *            the name
+	 * @param columns
+	 *            the columns
+	 * @param referencedTable
+	 *            the referenced table
+	 * @param referencedColumns
+	 *            the referenced columns
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
@@ -1607,10 +2031,14 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Foreign key.
 	 *
-	 * @param name the name
-	 * @param columns the columns
-	 * @param referencedTable the referenced table
-	 * @param referencedColumns the referenced columns
+	 * @param name
+	 *            the name
+	 * @param columns
+	 *            the columns
+	 * @param referencedTable
+	 *            the referenced table
+	 * @param referencedColumns
+	 *            the referenced columns
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder foreignKey(String name, String columns, String referencedTable, String referencedColumns) {
@@ -1620,8 +2048,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Unique.
 	 *
-	 * @param name the name
-	 * @param columns the columns
+	 * @param name
+	 *            the name
+	 * @param columns
+	 *            the columns
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder unique(String name, String[] columns) {
@@ -1636,8 +2066,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Unique.
 	 *
-	 * @param name the name
-	 * @param columns the columns
+	 * @param name
+	 *            the name
+	 * @param columns
+	 *            the columns
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder unique(String name, String columns) {
@@ -1647,8 +2079,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Check.
 	 *
-	 * @param name the name
-	 * @param expression the expression
+	 * @param name
+	 *            the name
+	 * @param expression
+	 *            the expression
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder check(String name, String expression) {
@@ -1658,7 +2092,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override
@@ -1697,7 +2132,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate table.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(this.table);
@@ -1706,7 +2142,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate columns.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateColumns(StringBuilder sql) {
 		if (!this.columns.isEmpty()) {
@@ -1717,7 +2154,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate primary key.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generatePrimaryKey(StringBuilder sql) {
 		if (this.primaryKey != null) {
@@ -1733,7 +2171,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate foreign keys.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateForeignKeys(StringBuilder sql) {
 		for (CreateTableForeignKeyBuilder foreignKey : this.foreignKeys) {
@@ -1744,8 +2183,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate foreign key.
 	 *
-	 * @param sql the sql
-	 * @param foreignKey the foreign key
+	 * @param sql
+	 *            the sql
+	 * @param foreignKey
+	 *            the foreign key
 	 */
 	protected void generateForeignKey(StringBuilder sql, CreateTableForeignKeyBuilder foreignKey) {
 		if (foreignKey != null) {
@@ -1763,7 +2204,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate unique indices.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateUniqueIndices(StringBuilder sql) {
 		for (CreateTableUniqueIndexBuilder uniqueIndex : this.uniqueIndices) {
@@ -1774,8 +2216,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate unique index.
 	 *
-	 * @param sql the sql
-	 * @param uniqueIndex the unique index
+	 * @param sql
+	 *            the sql
+	 * @param uniqueIndex
+	 *            the unique index
 	 */
 	protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
 		if (uniqueIndex != null) {
@@ -1790,7 +2234,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate checks.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateChecks(StringBuilder sql) {
 		for (CreateTableCheckBuilder index : this.checks) {
@@ -1801,8 +2246,10 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Generate check.
 	 *
-	 * @param sql the sql
-	 * @param check the check
+	 * @param sql
+	 *            the sql
+	 * @param check
+	 *            the check
 	 */
 	protected void generateCheck(StringBuilder sql, CreateTableCheckBuilder check) {
 		if (check != null) {
@@ -1834,7 +2281,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Traverse column names.
 	 *
-	 * @param columns the columns
+	 * @param columns
+	 *            the columns
 	 * @return the string
 	 */
 	protected String traverseColumnNames(Set<String> columns) {
@@ -1849,7 +2297,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	/**
 	 * Split values.
 	 *
-	 * @param columns the columns
+	 * @param columns
+	 *            the columns
 	 * @return the string[]
 	 */
 	private String[] splitValues(String columns) {

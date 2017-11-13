@@ -16,28 +16,27 @@ import java.util.TreeSet;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractCreateTableConstraintBuilder.
+ * The Abstract Create Table Constraint Builder.
  *
- * @param <CONSTRAINT> the generic type
+ * @param <CONSTRAINT>
+ *            the generic type
  */
 public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends AbstractCreateTableConstraintBuilder> extends AbstractSqlBuilder {
 
-	/** The name. */
 	private String name;
-	
-	/** The modifiers. */
+
 	private Set<String> modifiers = new TreeSet<String>();
-	
-	/** The columns. */
+
 	private Set<String> columns = new TreeSet<String>();
 
 	/**
 	 * Instantiates a new abstract create table constraint builder.
 	 *
-	 * @param dialect the dialect
-	 * @param name the name
+	 * @param dialect
+	 *            the dialect
+	 * @param name
+	 *            the name
 	 */
 	AbstractCreateTableConstraintBuilder(ISqlDialect dialect, String name) {
 		super(dialect);
@@ -74,7 +73,8 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	/**
 	 * Modifier.
 	 *
-	 * @param modifier the modifier
+	 * @param modifier
+	 *            the modifier
 	 * @return the constraint
 	 */
 	public CONSTRAINT modifier(String modifier) {
@@ -85,7 +85,8 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	/**
 	 * Column.
 	 *
-	 * @param column the column
+	 * @param column
+	 *            the column
 	 * @return the constraint
 	 */
 	public CONSTRAINT column(String column) {
@@ -93,7 +94,8 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 		return (CONSTRAINT) this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
 	 */
 	@Override

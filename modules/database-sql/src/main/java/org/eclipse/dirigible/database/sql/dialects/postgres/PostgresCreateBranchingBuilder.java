@@ -13,22 +13,23 @@ package org.eclipse.dirigible.database.sql.dialects.postgres;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PostgresCreateBranchingBuilder.
+ * The PostgreSQL Create Branching Builder.
  */
 public class PostgresCreateBranchingBuilder extends CreateBranchingBuilder {
 
 	/**
-	 * Instantiates a new postgres create branching builder.
+	 * Instantiates a new PostgreSQL create branching builder.
 	 *
-	 * @param dialect the dialect
+	 * @param dialect
+	 *            the dialect
 	 */
 	public PostgresCreateBranchingBuilder(ISqlDialect dialect) {
 		super(dialect);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#view(java.lang.String)
 	 */
 	@Override

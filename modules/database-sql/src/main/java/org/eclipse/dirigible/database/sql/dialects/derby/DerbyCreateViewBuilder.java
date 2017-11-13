@@ -13,26 +13,27 @@ package org.eclipse.dirigible.database.sql.dialects.derby;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DerbyCreateViewBuilder.
+ * The Derby Create View Builder.
  */
 public class DerbyCreateViewBuilder extends CreateViewBuilder {
 
-	/** The values. */
 	private String values = null;
 
 	/**
 	 * Instantiates a new derby create view builder.
 	 *
-	 * @param dialect the dialect
-	 * @param view the view
+	 * @param dialect
+	 *            the dialect
+	 * @param view
+	 *            the view
 	 */
 	public DerbyCreateViewBuilder(ISqlDialect dialect, String view) {
 		super(dialect, view);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(java.lang.String)
 	 */
 	@Override
@@ -41,7 +42,8 @@ public class DerbyCreateViewBuilder extends CreateViewBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
 	 */
 	@Override
@@ -56,7 +58,8 @@ public class DerbyCreateViewBuilder extends CreateViewBuilder {
 	/**
 	 * As values.
 	 *
-	 * @param values the values
+	 * @param values
+	 *            the values
 	 * @return the derby create view builder
 	 */
 	public DerbyCreateViewBuilder asValues(String values) {
@@ -67,7 +70,8 @@ public class DerbyCreateViewBuilder extends CreateViewBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()
 	 */
 	@Override
@@ -99,7 +103,8 @@ public class DerbyCreateViewBuilder extends CreateViewBuilder {
 	/**
 	 * Generate as values.
 	 *
-	 * @param sql the sql
+	 * @param sql
+	 *            the sql
 	 */
 	protected void generateAsValues(StringBuilder sql) {
 		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(this.values);
