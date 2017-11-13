@@ -13,9 +13,8 @@ package org.eclipse.dirigible.engine.wiki.processor;
 import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
 
 /**
- * The Class WikiEngineExecutor.
+ * The Wiki Engine Executor.
  */
 public class WikiEngineExecutor extends AbstractResourceExecutor {
 
-	
 }

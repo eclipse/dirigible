@@ -42,7 +42,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
  * Front facing REST service serving the wiki pages.
  */
@@ -53,21 +52,19 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found") })
 public class WikiEngineRestService extends AbstractRestService implements IRestService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WikiEngineRestService.class);
 
-	/** The processor. */
 	@Inject
 	private WikiEngineProcessor processor;
 
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
 	/**
 	 * Gets the wiki page.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the wiki page
 	 */
 	@GET
@@ -82,7 +79,8 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 	/**
 	 * Render.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the response
 	 */
 	protected Response render(@PathParam("path") String path) {
@@ -120,7 +118,8 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 	/**
 	 * Render content.
 	 *
-	 * @param content the content
+	 * @param content
+	 *            the content
 	 * @return the string
 	 */
 	private String renderContent(String content) {
@@ -136,7 +135,8 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 		return htmlContent;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
 	@Override
@@ -144,7 +144,8 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 		return WikiEngineRestService.class;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */
 	@Override

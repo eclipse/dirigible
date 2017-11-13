@@ -18,18 +18,17 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * The Class V8JavascriptEngineProcessor.
+ * The V8 Javascript Engine Processor.
  */
 public class V8JavascriptEngineProcessor implements IJavascriptEngineProcessor {
-	
-	/** The v 8 engine executor. */
+
+	/** The V8 engine executor. */
 	@Inject
 	private V8JavascriptEngineExecutor v8EngineExecutor;
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
 	 */
 	@Override

@@ -10,7 +10,6 @@
 
 package org.eclipse.dirigible.engine.js.nashorn.processor;
 
-// TODO: Auto-generated Javadoc
 /**
  * This class contains the source code of the require() function (by CommonJS specification), added to the JavaScript
  * scripting service execution with Nashorn engine, where it is not included by default.

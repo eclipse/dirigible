@@ -36,7 +36,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
  * Front facing REST service serving the Mozilla Rhino based Javascript backend services.
  */
@@ -47,21 +46,19 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class RhinoJavascriptEngineRestService extends AbstractRestService implements IRestService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineRestService.class);
 
-	/** The processor. */
 	@Inject
 	private RhinoJavascriptEngineProcessor processor;
 
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
 	/**
 	 * Execute service.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return result of the execution of the service
 	 */
 	@GET
@@ -86,7 +83,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	/**
 	 * Execute service post.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return result of the execution of the service
 	 */
 	@POST
@@ -100,7 +98,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	/**
 	 * Execute service put.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return result of the execution of the service
 	 */
 	@PUT
@@ -114,7 +113,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	/**
 	 * Execute service delete.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return result of the execution of the service
 	 */
 	@DELETE
@@ -128,7 +128,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	/**
 	 * Execute service head.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return result of the execution of the service
 	 */
 	@HEAD
@@ -139,7 +140,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 		return executeService(path);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
 	@Override
@@ -147,7 +149,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 		return RhinoJavascriptEngineRestService.class;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */
 	@Override

@@ -18,18 +18,16 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * The Class NashornJavascriptEngineProcessor.
+ * The Nashorn Javascript Engine Processor.
  */
-public class NashornJavascriptEngineProcessor implements IJavascriptEngineProcessor{
-	
-	/** The nashorn engine executor. */
+public class NashornJavascriptEngineProcessor implements IJavascriptEngineProcessor {
+
 	@Inject
 	private NashornJavascriptEngineExecutor nashornEngineExecutor;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
 	 */
 	@Override

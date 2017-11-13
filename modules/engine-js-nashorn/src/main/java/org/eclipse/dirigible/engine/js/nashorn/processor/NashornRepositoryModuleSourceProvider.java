@@ -16,39 +16,40 @@ import java.nio.charset.StandardCharsets;
 
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class NashornRepositoryModuleSourceProvider.
+ * The Nashorn Repository Module Source Provider.
  */
 public class NashornRepositoryModuleSourceProvider {
 
-	/** The Constant JS_EXTENSION. */
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
-	/** The executor. */
 	private IScriptEngineExecutor executor;
-	
-	/** The root path. */
+
 	private String rootPath;
-	
+
 	/**
 	 * Instantiates a new nashorn repository module source provider.
 	 *
-	 * @param executor the executor
-	 * @param rootPath the root path
+	 * @param executor
+	 *            the executor
+	 * @param rootPath
+	 *            the root path
 	 */
 	public NashornRepositoryModuleSourceProvider(IScriptEngineExecutor executor, String rootPath) {
 		this.executor = executor;
 		this.rootPath = rootPath;
 	}
-	
+
 	/**
 	 * Load source.
 	 *
-	 * @param module the module
+	 * @param module
+	 *            the module
 	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws URISyntaxException the URI syntax exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
 	 */
 	public String loadSource(String module) throws IOException, URISyntaxException {
 
