@@ -13,22 +13,17 @@ package org.eclipse.dirigible.database.persistence.model;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PersistenceTableModel.
+ * The Persistence Table Model transport object.
  */
 public class PersistenceTableModel {
-	
-	/** The class name. */
+
 	private String className;
-	
-	/** The table name. */
+
 	private String tableName;
-	
-	/** The schema name. */
+
 	private String schemaName;
-	
-	/** The columns. */
+
 	private List<PersistenceTableColumnModel> columns = new ArrayList<PersistenceTableColumnModel>();
 
 	/**
@@ -39,16 +34,17 @@ public class PersistenceTableModel {
 	public String getClassName() {
 		return className;
 	}
-	
+
 	/**
 	 * Sets the class name.
 	 *
-	 * @param className the new class name
+	 * @param className
+	 *            the new class name
 	 */
 	public void setClassName(String className) {
 		this.className = className;
 	}
-	
+
 	/**
 	 * Gets the table name.
 	 *
@@ -61,7 +57,8 @@ public class PersistenceTableModel {
 	/**
 	 * Sets the table name.
 	 *
-	 * @param tableName the new table name
+	 * @param tableName
+	 *            the new table name
 	 */
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
@@ -79,7 +76,8 @@ public class PersistenceTableModel {
 	/**
 	 * Sets the schema name.
 	 *
-	 * @param schemaName the new schema name
+	 * @param schemaName
+	 *            the new schema name
 	 */
 	public void setSchemaName(String schemaName) {
 		this.schemaName = schemaName;
@@ -97,10 +95,11 @@ public class PersistenceTableModel {
 	/**
 	 * Sets the columns.
 	 *
-	 * @param columns the new columns
+	 * @param columns
+	 *            the new columns
 	 */
 	public void setColumns(List<PersistenceTableColumnModel> columns) {
 		this.columns = columns;
 	}
-	
+
 }

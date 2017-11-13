@@ -22,23 +22,25 @@ import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PersistenceCreateTableProcessor.
+ * The Persistence Create Table Processor.
  */
 public class PersistenceCreateTableProcessor extends AbstractPersistenceProcessor {
 
 	/**
 	 * Instantiates a new persistence create table processor.
 	 *
-	 * @param entityManagerInterceptor the entity manager interceptor
+	 * @param entityManagerInterceptor
+	 *            the entity manager interceptor
 	 */
 	public PersistenceCreateTableProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		super(entityManagerInterceptor);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor#generateScript(java.sql.
+	 * Connection, org.eclipse.dirigible.database.persistence.model.PersistenceTableModel)
 	 */
 	@Override
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
@@ -108,12 +110,15 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 	}
 
 	/**
-	 * Creates the.
+	 * Creates the table.
 	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
 	 * @return the int
-	 * @throws PersistenceException the persistence exception
+	 * @throws PersistenceException
+	 *             the persistence exception
 	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		int result = 0;

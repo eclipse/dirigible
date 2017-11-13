@@ -14,19 +14,16 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Identity.
+ * The Identity transport object.
  */
 @Table(name = "DIRIGIBLE_IDENTITY")
 public class Identity {
 
-	/** The table. */
 	@Id
 	@Column(name = "IDENTITY_TABLE", columnDefinition = "VARCHAR", nullable = false, length = 512)
 	private String table;
 
-	/** The value. */
 	@Column(name = "IDENTITY_VALUE", columnDefinition = "BIGINT", nullable = false)
 	private long value;
 
@@ -42,7 +39,8 @@ public class Identity {
 	/**
 	 * Sets the table.
 	 *
-	 * @param table the new table
+	 * @param table
+	 *            the new table
 	 */
 	public void setTable(String table) {
 		this.table = table;
@@ -60,7 +58,8 @@ public class Identity {
 	/**
 	 * Sets the value.
 	 *
-	 * @param value the new value
+	 * @param value
+	 *            the new value
 	 */
 	public void setValue(long value) {
 		this.value = value;

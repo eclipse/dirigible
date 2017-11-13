@@ -34,7 +34,6 @@ import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCr
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceDropTableProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * PersistenceManager is a simple transport mechanism to store and retrieve
  * POJO object to/from underlying JDBC compliant database.
@@ -58,8 +57,10 @@ public class PersistenceManager<T> {
 	/**
 	 * Create a table by a provided Class.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
 	 * @return the result status of the create statement execution
 	 */
 	public int tableCreate(Connection connection, Class<T> clazz) {
@@ -87,8 +88,10 @@ public class PersistenceManager<T> {
 	/**
 	 * Drop a table by a provided Class.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
 	 * @return the result status of the drop statement execution
 	 */
 	public int tableDrop(Connection connection, Class<T> clazz) {
@@ -108,8 +111,10 @@ public class PersistenceManager<T> {
 	/**
 	 * Check whether a table by a provided Class already exists.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
 	 * @return true if exists and false otherwise
 	 */
 	public boolean tableExists(Connection connection, Class<T> clazz) {
@@ -124,8 +129,10 @@ public class PersistenceManager<T> {
 	/**
 	 * Check whether the table already exists in the database and create it if needed.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz the clazz
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the clazz
 	 */
 	public void tableCheck(Connection connection, Class clazz) {
 		if (!EXISTING_TABLES_CACHE.contains(clazz.getCanonicalName())) {
@@ -146,8 +153,10 @@ public class PersistenceManager<T> {
 	/**
 	 * Insert a single record in the table representing the POJO instance.
 	 *
-	 * @param connection            the database connection
-	 * @param pojo            the POJO instance
+	 * @param connection
+	 *            the database connection
+	 * @param pojo
+	 *            the POJO instance
 	 * @return the id of the pojo just inserted
 	 */
 	public Object insert(Connection connection, Object pojo) {
@@ -160,9 +169,12 @@ public class PersistenceManager<T> {
 	/**
 	 * Getter for the single POJO instance.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
-	 * @param id            the primary key field's value
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
+	 * @param id
+	 *            the primary key field's value
 	 * @return a POJO instance
 	 */
 	public T find(Connection connection, Class<T> clazz, Object id) {
@@ -175,9 +187,12 @@ public class PersistenceManager<T> {
 	/**
 	 * Getter for the single POJO instance and locks it for update.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
-	 * @param id            the primary key field's value
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
+	 * @param id
+	 *            the primary key field's value
 	 * @return a POJO instance
 	 */
 	public T lock(Connection connection, Class<T> clazz, Object id) {
@@ -190,8 +205,10 @@ public class PersistenceManager<T> {
 	/**
 	 * Getter for all the POJO instances.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
 	 * @return a list with the POJO instances
 	 */
 	public List<T> findAll(Connection connection, Class<T> clazz) {
@@ -204,10 +221,14 @@ public class PersistenceManager<T> {
 	/**
 	 * Custom query for narrow the search.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
-	 * @param sql            the custom SQL script
-	 * @param values            ordered parameters values
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
+	 * @param sql
+	 *            the custom SQL script
+	 * @param values
+	 *            ordered parameters values
 	 * @return a list with the POJO instances
 	 */
 	public List<T> query(Connection connection, Class<T> clazz, String sql, List<Object> values) {
@@ -220,10 +241,14 @@ public class PersistenceManager<T> {
 	/**
 	 * Custom query for narrow the search.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
-	 * @param sql            the custom SQL script
-	 * @param values            ordered parameters values
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
+	 * @param sql
+	 *            the custom SQL script
+	 * @param values
+	 *            ordered parameters values
 	 * @return a list with the POJO instances
 	 */
 	public List<T> query(Connection connection, Class<T> clazz, String sql, Object... values) {
@@ -233,9 +258,12 @@ public class PersistenceManager<T> {
 	/**
 	 * Custom update statement.
 	 *
-	 * @param connection            the database connection
-	 * @param sql            the custom SQL script
-	 * @param values            ordered parameters values
+	 * @param connection
+	 *            the database connection
+	 * @param sql
+	 *            the custom SQL script
+	 * @param values
+	 *            ordered parameters values
 	 * @return a list with the POJO instances
 	 */
 	public int execute(Connection connection, String sql, List<Object> values) {
@@ -246,9 +274,12 @@ public class PersistenceManager<T> {
 	/**
 	 * Custom update statement.
 	 *
-	 * @param connection            the database connection
-	 * @param sql            the custom SQL script
-	 * @param values            ordered parameters values
+	 * @param connection
+	 *            the database connection
+	 * @param sql
+	 *            the custom SQL script
+	 * @param values
+	 *            ordered parameters values
 	 * @return a list with the POJO instances
 	 */
 	public int execute(Connection connection, String sql, Object... values) {
@@ -258,9 +289,12 @@ public class PersistenceManager<T> {
 	/**
 	 * Delete a single record representing a single POJO instance.
 	 *
-	 * @param connection            the database connection
-	 * @param clazz            the POJO's Class
-	 * @param id            the primary key field's value
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
+	 * @param id
+	 *            the primary key field's value
 	 * @return the result status of the delete statement execution
 	 */
 	public int delete(Connection connection, Class<T> clazz, Object id) {
@@ -273,9 +307,12 @@ public class PersistenceManager<T> {
 	/**
 	 * Update.
 	 *
-	 * @param connection            the database connection
-	 * @param pojo            the POJO instance
-	 * @param id            the primary key field's value
+	 * @param connection
+	 *            the database connection
+	 * @param pojo
+	 *            the POJO instance
+	 * @param id
+	 *            the primary key field's value
 	 * @return the result status of the update statement execution
 	 */
 	public int update(Connection connection, Object pojo, Object id) {
@@ -297,7 +334,8 @@ public class PersistenceManager<T> {
 	/**
 	 * Sets the entity manager interceptor.
 	 *
-	 * @param entityManagerInterceptor the new entity manager interceptor
+	 * @param entityManagerInterceptor
+	 *            the new entity manager interceptor
 	 */
 	public void setEntityManagerInterceptor(IEntityManagerInterceptor entityManagerInterceptor) {
 		this.entityManagerInterceptor = entityManagerInterceptor;

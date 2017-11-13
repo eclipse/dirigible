@@ -33,13 +33,11 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.parser.PersistenceAnnotationsParser;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractPersistenceProcessor.
+ * The Abstract Persistence Processor.
  */
 public abstract class AbstractPersistenceProcessor implements IPersistenceProcessor {
 
-	/** The entity manager interceptor. */
 	private IEntityManagerInterceptor entityManagerInterceptor;
 
 	/**
@@ -52,7 +50,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Instantiates a new abstract persistence processor.
 	 *
-	 * @param entityManagerInterceptor the entity manager interceptor
+	 * @param entityManagerInterceptor
+	 *            the entity manager interceptor
 	 */
 	protected AbstractPersistenceProcessor(IEntityManagerInterceptor entityManagerInterceptor) {
 		this.entityManagerInterceptor = entityManagerInterceptor;
@@ -61,8 +60,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Generate script.
 	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
 	 * @return the string
 	 */
 	protected abstract String generateScript(Connection connection, PersistenceTableModel tableModel);
@@ -70,12 +71,18 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the values from pojo.
 	 *
-	 * @param tableModel the table model
-	 * @param pojo the pojo
-	 * @param preparedStatement the prepared statement
-	 * @throws SQLException the SQL exception
-	 * @throws NoSuchFieldException the no such field exception
-	 * @throws IllegalAccessException the illegal access exception
+	 * @param tableModel
+	 *            the table model
+	 * @param pojo
+	 *            the pojo
+	 * @param preparedStatement
+	 *            the prepared statement
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws NoSuchFieldException
+	 *             the no such field exception
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
 	 */
 	protected void setValuesFromPojo(PersistenceTableModel tableModel, Object pojo, PreparedStatement preparedStatement)
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
@@ -113,7 +120,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Should set column value.
 	 *
-	 * @param columnModel the column model
+	 * @param columnModel
+	 *            the column model
 	 * @return true, if successful
 	 */
 	protected boolean shouldSetColumnValue(PersistenceTableColumnModel columnModel) {
@@ -123,8 +131,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Reset accesible.
 	 *
-	 * @param field the field
-	 * @param oldAccessible the old accessible
+	 * @param field
+	 *            the field
+	 * @param oldAccessible
+	 *            the old accessible
 	 */
 	private void resetAccesible(Field field, boolean oldAccessible) {
 		field.setAccessible(oldAccessible);
@@ -133,7 +143,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the accessible.
 	 *
-	 * @param field the field
+	 * @param field
+	 *            the field
 	 * @return true, if successful
 	 */
 	private boolean setAccessible(Field field) {
@@ -145,12 +156,18 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value primary key.
 	 *
-	 * @param tableModel the table model
-	 * @param id the id
-	 * @param preparedStatement the prepared statement
-	 * @throws SQLException the SQL exception
-	 * @throws NoSuchFieldException the no such field exception
-	 * @throws IllegalAccessException the illegal access exception
+	 * @param tableModel
+	 *            the table model
+	 * @param id
+	 *            the id
+	 * @param preparedStatement
+	 *            the prepared statement
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws NoSuchFieldException
+	 *             the no such field exception
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
 	 */
 	protected void setValuePrimaryKey(PersistenceTableModel tableModel, Object id, PreparedStatement preparedStatement)
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
@@ -166,10 +183,14 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value.
 	 *
-	 * @param preparedStatement the prepared statement
-	 * @param i the i
-	 * @param value the value
-	 * @throws SQLException the SQL exception
+	 * @param preparedStatement
+	 *            the prepared statement
+	 * @param i
+	 *            the i
+	 * @param value
+	 *            the value
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	protected void setValue(PreparedStatement preparedStatement, int i, Object value) throws SQLException {
 		setValue(preparedStatement, i, DataTypeUtils.getDatabaseTypeNameByJavaType(value.getClass()), value);
@@ -178,11 +199,16 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value.
 	 *
-	 * @param preparedStatement the prepared statement
-	 * @param i the i
-	 * @param dataType the data type
-	 * @param value the value
-	 * @throws SQLException the SQL exception
+	 * @param preparedStatement
+	 *            the prepared statement
+	 * @param i
+	 *            the i
+	 * @param dataType
+	 *            the data type
+	 * @param value
+	 *            the value
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value) throws SQLException {
 
@@ -229,12 +255,18 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value to pojo.
 	 *
-	 * @param pojo the pojo
-	 * @param resultSet the result set
-	 * @param columnModel the column model
-	 * @throws NoSuchFieldException the no such field exception
-	 * @throws SQLException the SQL exception
-	 * @throws IllegalAccessException the illegal access exception
+	 * @param pojo
+	 *            the pojo
+	 * @param resultSet
+	 *            the result set
+	 * @param columnModel
+	 *            the column model
+	 * @throws NoSuchFieldException
+	 *             the no such field exception
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
 	 */
 	protected void setValueToPojo(Object pojo, ResultSet resultSet, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
@@ -245,12 +277,18 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the value to pojo.
 	 *
-	 * @param pojo the pojo
-	 * @param value the value
-	 * @param columnModel the column model
-	 * @throws NoSuchFieldException the no such field exception
-	 * @throws SQLException the SQL exception
-	 * @throws IllegalAccessException the illegal access exception
+	 * @param pojo
+	 *            the pojo
+	 * @param value
+	 *            the value
+	 * @param columnModel
+	 *            the column model
+	 * @throws NoSuchFieldException
+	 *             the no such field exception
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
 	 */
 	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
@@ -291,12 +329,17 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Gets the value from pojo.
 	 *
-	 * @param pojo the pojo
-	 * @param columnModel the column model
+	 * @param pojo
+	 *            the pojo
+	 * @param columnModel
+	 *            the column model
 	 * @return the value from pojo
-	 * @throws NoSuchFieldException the no such field exception
-	 * @throws SQLException the SQL exception
-	 * @throws IllegalAccessException the illegal access exception
+	 * @throws NoSuchFieldException
+	 *             the no such field exception
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws IllegalAccessException
+	 *             the illegal access exception
 	 */
 	protected Object getValueFromPojo(Object pojo, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
@@ -313,10 +356,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Gets the field from class.
 	 *
-	 * @param clazz the clazz
-	 * @param fieldName the field name
+	 * @param clazz
+	 *            the clazz
+	 * @param fieldName
+	 *            the field name
 	 * @return the field from class
-	 * @throws NoSuchFieldException the no such field exception
+	 * @throws NoSuchFieldException
+	 *             the no such field exception
 	 */
 	private Field getFieldFromClass(Class clazz, String fieldName) throws NoSuchFieldException {
 		Field field = null;
@@ -336,10 +382,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Open prepared statement.
 	 *
-	 * @param connection the connection
-	 * @param sql the sql
+	 * @param connection
+	 *            the connection
+	 * @param sql
+	 *            the sql
 	 * @return the prepared statement
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	protected PreparedStatement openPreparedStatement(Connection connection, String sql) throws SQLException {
 		return connection.prepareStatement(sql);
@@ -348,7 +397,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Close prepared statement.
 	 *
-	 * @param preparedStatement the prepared statement
+	 * @param preparedStatement
+	 *            the prepared statement
 	 */
 	protected void closePreparedStatement(PreparedStatement preparedStatement) {
 		try {
@@ -363,7 +413,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Gets the primary key.
 	 *
-	 * @param tableModel the table model
+	 * @param tableModel
+	 *            the table model
 	 * @return the primary key
 	 */
 	protected String getPrimaryKey(PersistenceTableModel tableModel) {
@@ -387,7 +438,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	/**
 	 * Sets the entity manager interceptor.
 	 *
-	 * @param entityManagerInterceptor the new entity manager interceptor
+	 * @param entityManagerInterceptor
+	 *            the new entity manager interceptor
 	 */
 	public void setEntityManagerInterceptor(IEntityManagerInterceptor entityManagerInterceptor) {
 		this.entityManagerInterceptor = entityManagerInterceptor;
