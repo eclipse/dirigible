@@ -18,47 +18,37 @@ import javax.persistence.Table;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class JobDefinition.
+ * The Job Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_JOBS")
 public class JobDefinition {
 
-	/** The name. */
 	@Id
 	@Column(name = "JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 
-	/** The group. */
 	@Column(name = "JOB_GROUP", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String group;
 
-	/** The clazz. */
 	@Column(name = "JOB_CLASS", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String clazz;
 
-	/** The description. */
 	@Column(name = "JOB_DESCRIPTION", columnDefinition = "VARCHAR", nullable = false, length = 1024)
 	private String description;
 
-	/** The expression. */
 	@Column(name = "JOB_EXPRESSION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String expression;
 
-	/** The singleton. */
 	@Column(name = "JOB_SINGLETON", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean singleton = false;
 
-	/** The enabled. */
 	@Column(name = "JOB_ENABLED", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean enabled = true;
 
-	/** The created by. */
 	@Column(name = "JOB_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	/** The created at. */
 	@Column(name = "JOBT_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
@@ -74,7 +64,8 @@ public class JobDefinition {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -92,7 +83,8 @@ public class JobDefinition {
 	/**
 	 * Sets the group.
 	 *
-	 * @param group the new group
+	 * @param group
+	 *            the new group
 	 */
 	public void setGroup(String group) {
 		this.group = group;
@@ -110,7 +102,8 @@ public class JobDefinition {
 	/**
 	 * Sets the clazz.
 	 *
-	 * @param clazz the new clazz
+	 * @param clazz
+	 *            the new clazz
 	 */
 	public void setClazz(String clazz) {
 		this.clazz = clazz;
@@ -128,7 +121,8 @@ public class JobDefinition {
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -146,7 +140,8 @@ public class JobDefinition {
 	/**
 	 * Sets the expression.
 	 *
-	 * @param expression the new expression
+	 * @param expression
+	 *            the new expression
 	 */
 	public void setExpression(String expression) {
 		this.expression = expression;
@@ -164,7 +159,8 @@ public class JobDefinition {
 	/**
 	 * Sets the singleton.
 	 *
-	 * @param singleton the new singleton
+	 * @param singleton
+	 *            the new singleton
 	 */
 	public void setSingleton(boolean singleton) {
 		this.singleton = singleton;
@@ -182,7 +178,8 @@ public class JobDefinition {
 	/**
 	 * Sets the enabled.
 	 *
-	 * @param enabled the new enabled
+	 * @param enabled
+	 *            the new enabled
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
@@ -200,7 +197,8 @@ public class JobDefinition {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -221,7 +219,8 @@ public class JobDefinition {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
@@ -234,7 +233,8 @@ public class JobDefinition {
 	/**
 	 * From json.
 	 *
-	 * @param json the json
+	 * @param json
+	 *            the json
 	 * @return the job definition
 	 */
 	public static JobDefinition fromJson(String json) {
@@ -250,7 +250,8 @@ public class JobDefinition {
 		return GsonHelper.GSON.toJson(this, JobDefinition.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

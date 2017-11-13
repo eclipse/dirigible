@@ -26,24 +26,23 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class QuartzDatabaseLayoutInitializer.
+ * The Quartz Database Layout Initializer.
  */
 public class QuartzDatabaseLayoutInitializer {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(QuartzDatabaseLayoutInitializer.class);
 
-	/** The datasource. */
 	@Inject
 	private DataSource datasource;
 
 	/**
-	 * Initialize.
+	 * Initialize the database schema for Quartz.
 	 *
-	 * @throws SQLException the SQL exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void initialize() throws SQLException, IOException {
 		Connection connection = datasource.getConnection();
@@ -95,12 +94,16 @@ public class QuartzDatabaseLayoutInitializer {
 	}
 
 	/**
-	 * Creates the table.
+	 * Creates a table.
 	 *
-	 * @param connection the connection
-	 * @param model the model
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param model
+	 *            the model
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	private void createTable(Connection connection, String model) throws IOException, SQLException {
 		String tableFile = IOUtils.toString(QuartzDatabaseLayoutInitializer.class.getResourceAsStream(model), StandardCharsets.UTF_8);

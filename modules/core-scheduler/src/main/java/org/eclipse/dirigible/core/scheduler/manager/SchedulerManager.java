@@ -35,19 +35,15 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SchedulerManager.
+ * The Scheduler Manager.
  */
 public class SchedulerManager {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerManager.class);
 
-	/** The scheduler factory. */
 	private static SchedulerFactory schedulerFactory = null;
-	
-	/** The scheduler. */
+
 	private static Scheduler scheduler = null;
 
 	/**
@@ -62,7 +58,8 @@ public class SchedulerManager {
 	/**
 	 * Creates the scheduler.
 	 *
-	 * @throws SchedulerException the scheduler exception
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	public static void createScheduler() throws SchedulerException {
 		try {
@@ -93,16 +90,18 @@ public class SchedulerManager {
 	/**
 	 * Removes the scheduler.
 	 *
-	 * @throws SchedulerException the scheduler exception
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	public static void removeScheduler() throws SchedulerException {
 		shutdownScheduler();
 	}
 
 	/**
-	 * Shutdown scheduler.
+	 * Shutdown the scheduler.
 	 *
-	 * @throws SchedulerException the scheduler exception
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	public static void shutdownScheduler() throws SchedulerException {
 		synchronized (SchedulerInitializer.class) {
@@ -121,9 +120,10 @@ public class SchedulerManager {
 	}
 
 	/**
-	 * Start scheduler.
+	 * Start the scheduler.
 	 *
-	 * @throws SchedulerException the scheduler exception
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	public static void startScheduler() throws SchedulerException {
 		synchronized (SchedulerInitializer.class) {
@@ -140,10 +140,12 @@ public class SchedulerManager {
 	}
 
 	/**
-	 * Schedule job.
+	 * Schedule a job.
 	 *
-	 * @param jobDefinition the job definition
-	 * @throws SchedulerException the scheduler exception
+	 * @param jobDefinition
+	 *            the job definition
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	public static void scheduleJob(JobDefinition jobDefinition) throws SchedulerException {
 		try {
@@ -170,11 +172,14 @@ public class SchedulerManager {
 	}
 
 	/**
-	 * Unschedule job.
+	 * Unschedule a job.
 	 *
-	 * @param name the name
-	 * @param group the group
-	 * @throws SchedulerException the scheduler exception
+	 * @param name
+	 *            the name
+	 * @param group
+	 *            the group
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	public static void unscheduleJob(String name, String group) throws SchedulerException {
 		try {
@@ -193,10 +198,11 @@ public class SchedulerManager {
 	}
 
 	/**
-	 * List jobs.
+	 * List all the jobs.
 	 *
 	 * @return the sets the
-	 * @throws SchedulerException the scheduler exception
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	public static Set<TriggerKey> listJobs() throws SchedulerException {
 		try {

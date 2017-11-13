@@ -26,29 +26,28 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SchedulerInitializer.
+ * The Scheduler Initializer.
  */
 public class SchedulerInitializer {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerInitializer.class);
 
-	/** The scheduler core service. */
 	@Inject
 	private SchedulerCoreService schedulerCoreService;
 
-	/** The quartz database layout initializer. */
 	@Inject
 	private QuartzDatabaseLayoutInitializer quartzDatabaseLayoutInitializer;
 
 	/**
-	 * Initialize.
+	 * Initialize the scheduler.
 	 *
-	 * @throws SchedulerException the scheduler exception
-	 * @throws SQLException the SQL exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws SchedulerException
+	 *             the scheduler exception
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void initialize() throws SchedulerException, SQLException, IOException {
 
@@ -94,7 +93,8 @@ public class SchedulerInitializer {
 	/**
 	 * Schedule system job.
 	 *
-	 * @throws SchedulerException the scheduler exception
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	private void scheduleSystemJob() throws SchedulerException {
 		logger.info(format("Initializing the System Job ..."));
@@ -106,8 +106,10 @@ public class SchedulerInitializer {
 	/**
 	 * Schedule job.
 	 *
-	 * @param jobDefinition the job definition
-	 * @throws SchedulerException the scheduler exception
+	 * @param jobDefinition
+	 *            the job definition
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	private void scheduleJob(JobDefinition jobDefinition) throws SchedulerException {
 		SchedulerManager.scheduleJob(jobDefinition);
@@ -116,7 +118,8 @@ public class SchedulerInitializer {
 	/**
 	 * Start scheduler.
 	 *
-	 * @throws SchedulerException the scheduler exception
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	private void startScheduler() throws SchedulerException {
 		SchedulerManager.startScheduler();
@@ -125,9 +128,12 @@ public class SchedulerInitializer {
 	/**
 	 * Initialize scheduler.
 	 *
-	 * @throws SchedulerException the scheduler exception
-	 * @throws SQLException the SQL exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws SchedulerException
+	 *             the scheduler exception
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void initializeScheduler() throws SchedulerException, SQLException, IOException {
 		quartzDatabaseLayoutInitializer.initialize();
@@ -135,9 +141,10 @@ public class SchedulerInitializer {
 	}
 
 	/**
-	 * Shutdown.
+	 * Shutdown the scheduler.
 	 *
-	 * @throws SchedulerException the scheduler exception
+	 * @throws SchedulerException
+	 *             the scheduler exception
 	 */
 	public static void shutdown() throws SchedulerException {
 		SchedulerManager.shutdownScheduler();
