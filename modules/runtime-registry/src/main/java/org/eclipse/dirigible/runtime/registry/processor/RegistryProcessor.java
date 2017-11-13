@@ -19,23 +19,21 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.json.Registry;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
 
-// TODO: Auto-generated Javadoc
 /**
  * Processing the Registry Service incoming requests.
  */
 public class RegistryProcessor {
 
-	/** The Constant REGISTRY. */
 	private static final String REGISTRY = "/registry";
 
-	/** The repository. */
 	@Inject
 	private IRepository repository;
 
 	/**
 	 * Gets the resource.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the resource
 	 */
 	public IResource getResource(String path) {
@@ -46,7 +44,8 @@ public class RegistryProcessor {
 	/**
 	 * Gets the collection.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the collection
 	 */
 	public ICollection getCollection(String path) {
@@ -57,7 +56,8 @@ public class RegistryProcessor {
 	/**
 	 * Render registry.
 	 *
-	 * @param collection the collection
+	 * @param collection
+	 *            the collection
 	 * @return the registry
 	 */
 	public Registry renderRegistry(ICollection collection) {
@@ -67,7 +67,8 @@ public class RegistryProcessor {
 	/**
 	 * Generate registry path.
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the string builder
 	 */
 	private StringBuilder generateRegistryPath(String path) {

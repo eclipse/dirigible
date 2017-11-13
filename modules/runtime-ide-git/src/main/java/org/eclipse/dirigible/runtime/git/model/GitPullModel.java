@@ -12,13 +12,11 @@ package org.eclipse.dirigible.runtime.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GitPullModel.
+ * The Git Pull Model.
  */
 public class GitPullModel extends BaseGitProjectModel {
 
-	/** The publish. */
 	@ApiModelProperty(value = "Whether to publish the project(s) after update of dependencies", example = "true")
 	private boolean publish;
 

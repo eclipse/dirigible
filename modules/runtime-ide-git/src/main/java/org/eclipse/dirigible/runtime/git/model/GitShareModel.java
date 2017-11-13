@@ -12,25 +12,20 @@ package org.eclipse.dirigible.runtime.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GitShareModel.
+ * The Git Share Model.
  */
 public class GitShareModel extends BaseGitModel {
 
-	/** The project. */
 	@ApiModelProperty(hidden = true)
 	private String project;
 
-	/** The repository. */
 	@ApiModelProperty(value = "The Git Repository URL", example = "https://github.com/dirigiblelabs/sample_git_test.git", required = true)
 	private String repository;
 
-	/** The branch. */
 	@ApiModelProperty(value = "The Git Branch", example = "master", required = true)
 	private String branch;
 
-	/** The commit message. */
 	@ApiModelProperty(value = "The Commit Message", example = "Initial Commit", required = true)
 	private String commitMessage;
 

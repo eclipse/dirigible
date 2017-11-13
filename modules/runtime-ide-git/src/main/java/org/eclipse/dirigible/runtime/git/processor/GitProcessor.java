@@ -33,44 +33,35 @@ import org.eclipse.dirigible.runtime.git.model.GitPullModel;
 import org.eclipse.dirigible.runtime.git.model.GitPushModel;
 import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
-import org.eclipse.dirigible.runtime.git.model.GitUpdateDepenciesModel;
+import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * Processing the Database SQL Queries Service incoming requests.
+ * Processing the Git Service incoming requests.
  */
 public class GitProcessor {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(GitProcessor.class);
 
-	/** The workspaces core service. */
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
 
-	/** The clone command. */
 	@Inject
 	private CloneCommand cloneCommand;
 
-	/** The pull command. */
 	@Inject
 	private PullCommand pullCommand;
 
-	/** The push command. */
 	@Inject
 	private PushCommand pushCommand;
 
-	/** The reset command. */
 	@Inject
 	private ResetCommand resetCommand;
 
-	/** The share command. */
 	@Inject
 	private ShareCommand shareCommand;
 
-	/** The update dependencies command. */
 	@Inject
 	private UpdateDependenciesCommand updateDependenciesCommand;
 
@@ -141,7 +132,7 @@ public class GitProcessor {
 	 * @param model the model
 	 * @throws GitConnectorException the git connector exception
 	 */
-	public void updateDependencies(String workspace, GitUpdateDepenciesModel model) throws GitConnectorException {
+	public void updateDependencies(String workspace, GitUpdateDependenciesModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
 		updateDependenciesCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model), model.isPublish());

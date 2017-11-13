@@ -43,9 +43,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-// TODO: Auto-generated Javadoc
 /**
- * Front facing REST service serving the raw repository content.
+ * Front facing REST service serving the Theme related content.
  */
 @Singleton
 @Path("/core/theme")
@@ -53,39 +52,34 @@ import io.swagger.annotations.Authorization;
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class ThemeRestService extends AbstractRestService implements IRestService {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(ThemeRestService.class);
 
-	/** The Constant NAME_PARAM. */
 	private static final String NAME_PARAM = "name"; //$NON-NLS-1$
-	
-	/** The Constant DEFAULT_THEME. */
+
 	private static final String DEFAULT_THEME = "default"; //$NON-NLS-1$
-	
-	/** The Constant INIT_PARAM_DEFAULT_THEME. */
+
 	private static final String INIT_PARAM_DEFAULT_THEME = "DIRIGIBLE_THEME_DEFAULT"; //$NON-NLS-1$
-	
-	/** The Constant COOKIE_THEME. */
+
 	private static final String COOKIE_THEME = "dirigible-theme"; //$NON-NLS-1$
 
-	/** The repository. */
 	@Inject
 	private IRepository repository;
 
-	/** The response. */
 	@Context
 	private HttpServletResponse response;
 
-	/** The Constant THEMES_PATH. */
 	private static final String THEMES_PATH = "/resources/themes/";
 
 	/**
 	 * Gets the theme.
 	 *
-	 * @param request the request
-	 * @param response the response
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
 	 * @return the theme
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@GET
 	@Path("/")
@@ -97,8 +91,10 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 	/**
 	 * Gets the current theme.
 	 *
-	 * @param request the request
-	 * @param response the response
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
 	 * @return the current theme
 	 */
 	private String getCurrentTheme(HttpServletRequest request, HttpServletResponse response) {
@@ -134,8 +130,10 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 	/**
 	 * Sets the cookie user.
 	 *
-	 * @param resp the resp
-	 * @param themeName the theme name
+	 * @param resp
+	 *            the resp
+	 * @param themeName
+	 *            the theme name
 	 */
 	private void setCookieUser(HttpServletResponse resp, String themeName) {
 		Cookie cookie = new Cookie(COOKIE_THEME, themeName);
@@ -147,11 +145,15 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 	/**
 	 * Gets the style.
 	 *
-	 * @param path the path
-	 * @param request the request
-	 * @param response the response
+	 * @param path
+	 *            the path
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
 	 * @return the style
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@GET
 	@Path("/{path:.*}")
@@ -186,7 +188,8 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 		throw new RepositoryNotFoundException(message);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
 	@Override
@@ -194,7 +197,8 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 		return ThemeRestService.class;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
 	 */
 	@Override
