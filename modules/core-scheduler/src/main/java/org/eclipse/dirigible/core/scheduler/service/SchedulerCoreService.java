@@ -25,25 +25,24 @@ import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SchedulerCoreService.
+ * The Scheduler Core Service.
  */
 @Singleton
 public class SchedulerCoreService implements ISchedulerCoreService {
 
-	/** The data source. */
 	@Inject
 	private DataSource dataSource;
 
-	/** The job persistence manager. */
 	@Inject
 	private PersistenceManager<JobDefinition> jobPersistenceManager;
 
 	// Jobs
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#createJob(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#createJob(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	public JobDefinition createJob(String name, String group, String clazz, String description, String expression, boolean singleton)
@@ -61,8 +60,11 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		return createJob(jobDefinition);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#createJob(org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#createJob(org.eclipse.dirigible.core.scheduler.
+	 * service.definition.JobDefinition)
 	 */
 	@Override
 	public JobDefinition createJob(JobDefinition jobDefinition) throws SchedulerException {
@@ -87,7 +89,8 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJob(java.lang.String)
 	 */
 	@Override
@@ -106,7 +109,8 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#removeJob(java.lang.String)
 	 */
 	@Override
@@ -125,8 +129,10 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#updateJob(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#updateJob(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	public void updateJob(String name, String group, String clazz, String description, String expression, boolean singleton)
@@ -151,7 +157,8 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJobs()
 	 */
 	@Override

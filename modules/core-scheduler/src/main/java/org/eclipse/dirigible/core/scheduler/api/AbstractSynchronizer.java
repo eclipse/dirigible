@@ -23,16 +23,13 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AbstractSynchronizer.
+ * The AbstractSynchronizer.
  */
 public abstract class AbstractSynchronizer implements ISynchronizer {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(AbstractSynchronizer.class);
 
-	/** The repository. */
 	@Inject
 	private IRepository repository;
 
@@ -48,7 +45,8 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	/**
 	 * Synchronize registry.
 	 *
-	 * @throws SynchronizationException the synchronization exception
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	protected void synchronizeRegistry() throws SynchronizationException {
 		ICollection collection = getRepository().getCollection(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
@@ -60,8 +58,10 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	/**
 	 * Synchronize collection.
 	 *
-	 * @param collection the collection
-	 * @throws SynchronizationException the synchronization exception
+	 * @param collection
+	 *            the collection
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	protected void synchronizeCollection(ICollection collection) throws SynchronizationException {
 		List<IResource> resources = collection.getResources();
@@ -81,9 +81,11 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	/**
 	 * Gets the registry path.
 	 *
-	 * @param resource the resource
+	 * @param resource
+	 *            the resource
 	 * @return the registry path
-	 * @throws SynchronizationException the synchronization exception
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	protected String getRegistryPath(IResource resource) throws SynchronizationException {
 		String resourcePath = resource.getPath();
@@ -96,15 +98,18 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	/**
 	 * Synchronize resource.
 	 *
-	 * @param resource the resource
-	 * @throws SynchronizationException the synchronization exception
+	 * @param resource
+	 *            the resource
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	protected abstract void synchronizeResource(IResource resource) throws SynchronizationException;
 
 	/**
 	 * Cleanup.
 	 *
-	 * @throws SynchronizationException the synchronization exception
+	 * @throws SynchronizationException
+	 *             the synchronization exception
 	 */
 	protected abstract void cleanup() throws SynchronizationException;
 

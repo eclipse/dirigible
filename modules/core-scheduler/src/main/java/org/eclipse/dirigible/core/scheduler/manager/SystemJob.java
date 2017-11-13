@@ -24,22 +24,19 @@ import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.quartz.TriggerKey;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SystemJob.
+ * The System Job.
  */
 public class SystemJob implements Job {
 
-	/** The Constant SYSTEM_JOB_NAME. */
 	private static final String SYSTEM_JOB_NAME = "dirigible-system-job";
-	
-	/** The Constant SYSTEM_GROUP. */
+
 	private static final String SYSTEM_GROUP = "dirigible-system";
-	
-	/** The scheduler core service. */
+
 	private SchedulerCoreService schedulerCoreService = StaticInjector.getInjector().getInstance(SchedulerCoreService.class);
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
 	 */
 	@Override
@@ -48,7 +45,7 @@ public class SystemJob implements Job {
 			// take all the jobs from the database and schedule them
 			List<JobKey> jobs = new ArrayList<JobKey>();
 			jobs.add(new JobKey(SYSTEM_JOB_NAME, SYSTEM_GROUP));
-			
+
 			List<JobDefinition> jobDefinitions = schedulerCoreService.getJobs();
 			for (JobDefinition jobDefinition : jobDefinitions) {
 				if (jobDefinition.isEnabled()) {
@@ -68,21 +65,21 @@ public class SystemJob implements Job {
 		} catch (SchedulerException e) {
 			throw new JobExecutionException(e);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Gets the system job definition.
 	 *
 	 * @return the system job definition
 	 */
 	public static JobDefinition getSystemJobDefinition() {
-		JobDefinition jobDefinition = new JobDefinition(); 
+		JobDefinition jobDefinition = new JobDefinition();
 		jobDefinition.setName(SYSTEM_JOB_NAME);
 		jobDefinition.setGroup(SYSTEM_GROUP);
 		jobDefinition.setClazz(SystemJob.class.getCanonicalName());
 		jobDefinition.setDescription("System Job");
-		jobDefinition.setExpression("0/30 * * * * ?");
+		jobDefinition.setExpression("0/10 * * * * ?");
 		jobDefinition.setSingleton(false);
 		return jobDefinition;
 	}

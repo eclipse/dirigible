@@ -10,15 +10,14 @@
 
 package org.eclipse.dirigible.core.scheduler.api;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface ISynchronizer.
+ * The Synchronizer interface.
  */
 public interface ISynchronizer {
-	
+
 	/**
 	 * Synchronize.
 	 */
 	public void synchronize();
-	
+
 }
