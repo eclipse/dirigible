@@ -10,22 +10,17 @@
 
 package org.eclipse.dirigible.databases.processor.format;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ColumnDescriptor.
+ * The Column Descriptor transport object.
  */
 public class ColumnDescriptor {
 
-	/** The name. */
 	private String name;
-	
-	/** The label. */
+
 	private String label;
-	
-	/** The sql type. */
+
 	private int sqlType;
-	
-	/** The display size. */
+
 	private int displaySize;
 
 	/**
@@ -36,16 +31,17 @@ public class ColumnDescriptor {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Gets the label.
 	 *
@@ -54,16 +50,17 @@ public class ColumnDescriptor {
 	public String getLabel() {
 		return label;
 	}
-	
+
 	/**
 	 * Sets the label.
 	 *
-	 * @param label the new label
+	 * @param label
+	 *            the new label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	
+
 	/**
 	 * Gets the sql type.
 	 *
@@ -72,16 +69,17 @@ public class ColumnDescriptor {
 	public int getSqlType() {
 		return sqlType;
 	}
-	
+
 	/**
 	 * Sets the sql type.
 	 *
-	 * @param sqlType the new sql type
+	 * @param sqlType
+	 *            the new sql type
 	 */
 	public void setSqlType(int sqlType) {
 		this.sqlType = sqlType;
 	}
-	
+
 	/**
 	 * Gets the display size.
 	 *
@@ -90,56 +88,68 @@ public class ColumnDescriptor {
 	public int getDisplaySize() {
 		return displaySize;
 	}
-	
+
 	/**
 	 * Sets the display size.
 	 *
-	 * @param displaySize the new display size
+	 * @param displaySize
+	 *            the new display size
 	 */
 	public void setDisplaySize(int displaySize) {
 		this.displaySize = displaySize;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + displaySize;
-		result = prime * result + ((label == null) ? 0 : label.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + sqlType;
+		result = (prime * result) + displaySize;
+		result = (prime * result) + ((label == null) ? 0 : label.hashCode());
+		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
+		result = (prime * result) + sqlType;
 		return result;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof ColumnDescriptor))
+		}
+		if (!(obj instanceof ColumnDescriptor)) {
 			return false;
+		}
 		ColumnDescriptor other = (ColumnDescriptor) obj;
-		if (displaySize != other.displaySize)
+		if (displaySize != other.displaySize) {
 			return false;
+		}
 		if (label == null) {
-			if (other.label != null)
+			if (other.label != null) {
 				return false;
-		} else if (!label.equals(other.label))
+			}
+		} else if (!label.equals(other.label)) {
 			return false;
+		}
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
-		if (sqlType != other.sqlType)
+		}
+		if (sqlType != other.sqlType) {
 			return false;
+		}
 		return true;
 	}
 

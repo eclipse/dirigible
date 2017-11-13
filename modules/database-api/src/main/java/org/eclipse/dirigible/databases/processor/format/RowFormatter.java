@@ -15,22 +15,26 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface RowFormatter.
+ * The Row Formatter.
  *
- * @param <T> the generic type
+ * @param <T>
+ *            the generic type
  */
 public interface RowFormatter<T> {
-	
+
 	/**
-	 * Write.
+	 * Write formatted row.
 	 *
-	 * @param columnDescriptors the column descriptors
-	 * @param resultSetMetaData the result set meta data
-	 * @param resultSet the result set
+	 * @param columnDescriptors
+	 *            the column descriptors
+	 * @param resultSetMetaData
+	 *            the result set meta data
+	 * @param resultSet
+	 *            the result set
 	 * @return the t
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	T write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException;
 }

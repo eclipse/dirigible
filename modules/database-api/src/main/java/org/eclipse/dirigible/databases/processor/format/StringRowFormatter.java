@@ -15,26 +15,25 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class StringRowFormatter.
+ * The String Row Formatter.
  */
 public class StringRowFormatter implements RowFormatter<String> {
 
-	/** The Constant VALUE_NULL. */
 	private static final String VALUE_NULL = "[NULL]";
-	
-	/** The Constant VALUE_BINARY. */
+
 	private static final String VALUE_BINARY = "[BINARY]";
-	
+
 	/** The Constant BINARY_TYPES. */
 	public static final int[] BINARY_TYPES = new int[] { java.sql.Types.ARRAY, java.sql.Types.BINARY, java.sql.Types.BIT, java.sql.Types.BIT,
 			java.sql.Types.BLOB, java.sql.Types.CLOB, java.sql.Types.DATALINK, java.sql.Types.DISTINCT, java.sql.Types.JAVA_OBJECT,
 			java.sql.Types.LONGVARBINARY, java.sql.Types.NCLOB, java.sql.Types.NULL, java.sql.Types.OTHER, java.sql.Types.REF, java.sql.Types.SQLXML,
 			java.sql.Types.STRUCT, java.sql.Types.VARBINARY };
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.databases.processor.format.RowFormatter#write(java.util.List, java.sql.ResultSetMetaData, java.sql.ResultSet)
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.databases.processor.format.RowFormatter#write(java.util.List,
+	 * java.sql.ResultSetMetaData, java.sql.ResultSet)
 	 */
 	@Override
 	public String write(List<ColumnDescriptor> columnDescriptors, ResultSetMetaData resultSetMetaData, ResultSet resultSet) throws SQLException {
@@ -84,7 +83,8 @@ public class StringRowFormatter implements RowFormatter<String> {
 	/**
 	 * Checks if is binary type.
 	 *
-	 * @param columnType the column type
+	 * @param columnType
+	 *            the column type
 	 * @return true, if is binary type
 	 */
 	boolean isBinaryType(int columnType) {

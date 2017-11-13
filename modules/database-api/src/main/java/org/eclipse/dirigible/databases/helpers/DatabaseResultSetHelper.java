@@ -16,19 +16,21 @@ import java.sql.SQLException;
 import org.eclipse.dirigible.databases.processor.format.ResultSetJsonWriter;
 import org.eclipse.dirigible.databases.processor.format.ResultSetMonospacedWriter;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DatabaseResultSetHelper.
+ * The Database Result SetHelper.
  */
 public class DatabaseResultSetHelper {
 
 	/**
-	 * Prints the.
+	 * Prints the provided ResultSet to the {@link ResultSetMonospacedWriter} writer.
 	 *
-	 * @param resultSet the result set
-	 * @param limited the limited
+	 * @param resultSet
+	 *            the result set
+	 * @param limited
+	 *            the limited
 	 * @return the string
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static String print(ResultSet resultSet, boolean limited) throws SQLException {
 		ResultSetMonospacedWriter writer = new ResultSetMonospacedWriter();
@@ -38,12 +40,15 @@ public class DatabaseResultSetHelper {
 	}
 
 	/**
-	 * To json.
+	 * Prints the provided ResultSet to the {@link ResultSetJsonWriter} writer.
 	 *
-	 * @param resultSet the result set
-	 * @param limited the limited
+	 * @param resultSet
+	 *            the result set
+	 * @param limited
+	 *            the limited
 	 * @return the string
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static String toJson(ResultSet resultSet, boolean limited) throws SQLException {
 		ResultSetJsonWriter writer = new ResultSetJsonWriter();

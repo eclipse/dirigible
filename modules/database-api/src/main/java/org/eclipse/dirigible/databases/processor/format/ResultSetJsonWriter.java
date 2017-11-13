@@ -19,16 +19,13 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ResultSetJsonWriter.
+ * The ResultSet Json Writer.
  */
 public class ResultSetJsonWriter implements ResultSetWriter<String> {
 
-	/** The Constant LIMIT. */
 	private static final int LIMIT = 100;
 
-	/** The limited. */
 	private boolean limited = true;
 
 	/**
@@ -43,13 +40,15 @@ public class ResultSetJsonWriter implements ResultSetWriter<String> {
 	/**
 	 * Sets the limited.
 	 *
-	 * @param limited the new limited
+	 * @param limited
+	 *            the new limited
 	 */
 	public void setLimited(boolean limited) {
 		this.limited = limited;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.databases.processor.format.ResultSetWriter#write(java.sql.ResultSet)
 	 */
 	@Override

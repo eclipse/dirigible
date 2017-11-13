@@ -33,32 +33,28 @@ import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class WrappedConnection.
+ * The Wrapped Connection of the standard JDBC {@link Connection} object with added some additional capabilities.
  */
 public class WrappedConnection implements Connection {
 
-	/** The Constant logger. */
 	private static final Logger logger = LoggerFactory.getLogger(WrappedConnection.class);
 
-	/** The original connection. */
 	private Connection originalConnection;
 
-	/** The data source. */
 	private WrappedDataSource dataSource;
 
-	/** The time acquired. */
 	private long timeAcquired;
 
-	/** The operational info. */
 	private String operationalInfo;
 
 	/**
 	 * Instantiates a new wrapped connection.
 	 *
-	 * @param originalConnection the original connection
-	 * @param dataSource the data source
+	 * @param originalConnection
+	 *            the original connection
+	 * @param dataSource
+	 *            the data source
 	 */
 	public WrappedConnection(Connection originalConnection, WrappedDataSource dataSource) {
 		super();
@@ -88,7 +84,8 @@ public class WrappedConnection implements Connection {
 		return timeUsed;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#clearWarnings()
 	 */
 	@Override
@@ -98,7 +95,8 @@ public class WrappedConnection implements Connection {
 		logger.trace("exiting - clearWarnings()");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#close()
 	 */
 	@Override
@@ -112,7 +110,8 @@ public class WrappedConnection implements Connection {
 		logger.trace("exiting - close()");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#commit()
 	 */
 	@Override
@@ -124,7 +123,8 @@ public class WrappedConnection implements Connection {
 		logger.trace("exiting - commit()");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createArrayOf(java.lang.String, java.lang.Object[])
 	 */
 	@Override
@@ -133,7 +133,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createArrayOf(typeName, elements);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createBlob()
 	 */
 	@Override
@@ -142,7 +143,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createBlob();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createClob()
 	 */
 	@Override
@@ -151,7 +153,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createClob();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createNClob()
 	 */
 	@Override
@@ -160,7 +163,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createNClob();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createSQLXML()
 	 */
 	@Override
@@ -169,7 +173,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createSQLXML();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createStatement()
 	 */
 	@Override
@@ -178,7 +183,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createStatement();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createStatement(int, int, int)
 	 */
 	@Override
@@ -187,7 +193,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createStatement(int, int)
 	 */
 	@Override
@@ -196,7 +203,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createStatement(resultSetType, resultSetConcurrency);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#createStruct(java.lang.String, java.lang.Object[])
 	 */
 	@Override
@@ -205,7 +213,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.createStruct(typeName, attributes);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getAutoCommit()
 	 */
 	@Override
@@ -214,7 +223,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getAutoCommit();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getCatalog()
 	 */
 	@Override
@@ -223,7 +233,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getCatalog();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getClientInfo()
 	 */
 	@Override
@@ -232,7 +243,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getClientInfo();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getClientInfo(java.lang.String)
 	 */
 	@Override
@@ -241,7 +253,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getClientInfo(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getHoldability()
 	 */
 	@Override
@@ -250,7 +263,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getHoldability();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getMetaData()
 	 */
 	@Override
@@ -259,7 +273,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getMetaData();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getTransactionIsolation()
 	 */
 	@Override
@@ -268,7 +283,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getTransactionIsolation();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getTypeMap()
 	 */
 	@Override
@@ -277,7 +293,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getTypeMap();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getWarnings()
 	 */
 	@Override
@@ -286,7 +303,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.getWarnings();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#isClosed()
 	 */
 	@Override
@@ -295,7 +313,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.isClosed();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#isReadOnly()
 	 */
 	@Override
@@ -304,7 +323,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.isReadOnly();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#isValid(int)
 	 */
 	@Override
@@ -313,7 +333,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.isValid(timeout);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
 	 */
 	@Override
@@ -322,7 +343,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.isWrapperFor(iface);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#nativeSQL(java.lang.String)
 	 */
 	@Override
@@ -331,7 +353,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.nativeSQL(sql);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareCall(java.lang.String, int, int, int)
 	 */
 	@Override
@@ -340,7 +363,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareCall(java.lang.String, int, int)
 	 */
 	@Override
@@ -349,7 +373,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareCall(sql, resultSetType, resultSetConcurrency);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareCall(java.lang.String)
 	 */
 	@Override
@@ -358,7 +383,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareCall(sql);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareStatement(java.lang.String, int, int, int)
 	 */
 	@Override
@@ -367,7 +393,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareStatement(java.lang.String, int, int)
 	 */
 	@Override
@@ -376,7 +403,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareStatement(sql, resultSetType, resultSetConcurrency);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareStatement(java.lang.String, int)
 	 */
 	@Override
@@ -385,7 +413,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareStatement(sql, autoGeneratedKeys);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareStatement(java.lang.String, int[])
 	 */
 	@Override
@@ -394,7 +423,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareStatement(sql, columnIndexes);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareStatement(java.lang.String, java.lang.String[])
 	 */
 	@Override
@@ -403,7 +433,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareStatement(sql, columnNames);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#prepareStatement(java.lang.String)
 	 */
 	@Override
@@ -412,7 +443,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.prepareStatement(sql);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#releaseSavepoint(java.sql.Savepoint)
 	 */
 	@Override
@@ -421,7 +453,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.releaseSavepoint(savepoint);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#rollback()
 	 */
 	@Override
@@ -432,7 +465,8 @@ public class WrappedConnection implements Connection {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#rollback(java.sql.Savepoint)
 	 */
 	@Override
@@ -443,7 +477,8 @@ public class WrappedConnection implements Connection {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setAutoCommit(boolean)
 	 */
 	@Override
@@ -452,7 +487,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.setAutoCommit(autoCommit);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setCatalog(java.lang.String)
 	 */
 	@Override
@@ -461,7 +497,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.setCatalog(catalog);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setClientInfo(java.util.Properties)
 	 */
 	@Override
@@ -470,7 +507,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.setClientInfo(properties);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setClientInfo(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -479,7 +517,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.setClientInfo(name, value);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setHoldability(int)
 	 */
 	@Override
@@ -488,7 +527,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.setHoldability(holdability);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setReadOnly(boolean)
 	 */
 	@Override
@@ -497,7 +537,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.setReadOnly(readOnly);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setSavepoint()
 	 */
 	@Override
@@ -506,7 +547,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.setSavepoint();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setSavepoint(java.lang.String)
 	 */
 	@Override
@@ -515,7 +557,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.setSavepoint(name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setTransactionIsolation(int)
 	 */
 	@Override
@@ -524,7 +567,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.setTransactionIsolation(level);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setTypeMap(java.util.Map)
 	 */
 	@Override
@@ -533,7 +577,8 @@ public class WrappedConnection implements Connection {
 		originalConnection.setTypeMap(map);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Wrapper#unwrap(java.lang.Class)
 	 */
 	@Override
@@ -542,7 +587,8 @@ public class WrappedConnection implements Connection {
 		return originalConnection.unwrap(iface);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#abort(java.util.concurrent.Executor)
 	 */
 	@Override
@@ -550,7 +596,8 @@ public class WrappedConnection implements Connection {
 		logger.warn("called - abort()");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getNetworkTimeout()
 	 */
 	@Override
@@ -559,7 +606,8 @@ public class WrappedConnection implements Connection {
 		return 0;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#getSchema()
 	 */
 	@Override
@@ -568,7 +616,8 @@ public class WrappedConnection implements Connection {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setSchema(java.lang.String)
 	 */
 	@Override
@@ -576,7 +625,8 @@ public class WrappedConnection implements Connection {
 		logger.warn("called - setSchema()");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see java.sql.Connection#setNetworkTimeout(java.util.concurrent.Executor, int)
 	 */
 	@Override
@@ -596,7 +646,8 @@ public class WrappedConnection implements Connection {
 	/**
 	 * Sets the operational info.
 	 *
-	 * @param operationalInfo the new operational info
+	 * @param operationalInfo
+	 *            the new operational info
 	 */
 	public void setOperationalInfo(String operationalInfo) {
 		this.operationalInfo = operationalInfo;

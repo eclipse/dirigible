@@ -10,38 +10,36 @@
 
 package org.eclipse.dirigible.database.api.metadata;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ColumnMetadata.
+ * The Column Metadata transport object.
  */
 public class ColumnMetadata {
 
-	/** The name. */
 	private String name;
 
-	/** The type. */
 	private String type;
 
-	/** The size. */
 	private int size;
 
-	/** The nullable. */
 	private boolean nullable;
 
-	/** The key. */
 	private boolean key;
 
-	/** The kind. */
 	private String kind = "column";
 
 	/**
 	 * Instantiates a new column metadata.
 	 *
-	 * @param name the name
-	 * @param type the type
-	 * @param size the size
-	 * @param nullable the nullable
-	 * @param key the key
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param size
+	 *            the size
+	 * @param nullable
+	 *            the nullable
+	 * @param key
+	 *            the key
 	 */
 	public ColumnMetadata(String name, String type, int size, boolean nullable, boolean key) {
 		super();
@@ -64,7 +62,8 @@ public class ColumnMetadata {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -82,7 +81,8 @@ public class ColumnMetadata {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type the new type
+	 * @param type
+	 *            the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -100,7 +100,8 @@ public class ColumnMetadata {
 	/**
 	 * Sets the size.
 	 *
-	 * @param size the new size
+	 * @param size
+	 *            the new size
 	 */
 	public void setSize(int size) {
 		this.size = size;
@@ -118,7 +119,8 @@ public class ColumnMetadata {
 	/**
 	 * Sets the nullable.
 	 *
-	 * @param nullable the new nullable
+	 * @param nullable
+	 *            the new nullable
 	 */
 	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
@@ -136,7 +138,8 @@ public class ColumnMetadata {
 	/**
 	 * Sets the key.
 	 *
-	 * @param key the new key
+	 * @param key
+	 *            the new key
 	 */
 	public void setKey(boolean key) {
 		this.key = key;
@@ -154,7 +157,8 @@ public class ColumnMetadata {
 	/**
 	 * Sets the kind.
 	 *
-	 * @param kind the new kind
+	 * @param kind
+	 *            the new kind
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;
