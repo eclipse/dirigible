@@ -130,7 +130,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						if (message == null) {
 							continue;
 						}
-						logger.debug(format("Start processing a received message in [{0}] by [{1}] ..."), this.name, this.handler);
+						logger.debug(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));
 						if (message instanceof TextMessage) {
 							TextMessage textMessage = (TextMessage) message;
 							String text = textMessage.getText();
@@ -139,11 +139,11 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						} else {
 							throw new MessagingException(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
 						}
-						logger.debug(format("Done processing the received message in [{0}] by [{1}]"), this.name, this.handler);
+						logger.debug(format("Done processing the received message in [{0}] by [{1}]", this.name, this.handler));
 					}
 				} else {
 					message = consumer.receive(this.timeout);
-					logger.debug(format("Received message in [{0}] by synchronous consumer."), this.name);
+					logger.debug(format("Received message in [{0}] by synchronous consumer.", this.name));
 					if (message instanceof TextMessage) {
 						TextMessage textMessage = (TextMessage) message;
 						String text = textMessage.getText();
