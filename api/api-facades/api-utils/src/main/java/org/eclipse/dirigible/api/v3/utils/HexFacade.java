@@ -24,6 +24,7 @@ public class HexFacade {
 	 * String will be double the length of the passed array, as it takes two characters to represent any given byte.
 	 *
 	 * @param input
+	 *            the input byte array
 	 * @return the hexadecimal value
 	 */
 	public static final String encode(byte[] input) {
@@ -35,6 +36,7 @@ public class HexFacade {
 	 * String will be double the length of the passed array, as it takes two characters to represent any given byte.
 	 *
 	 * @param input
+	 *            the input string
 	 * @return the hexadecimal value
 	 */
 	public static final String encode(String input) {
@@ -48,8 +50,10 @@ public class HexFacade {
 	 * byte. An exception is thrown if the passed char array has an odd number of elements.
 	 *
 	 * @param input
+	 *            the input string
 	 * @return the input decoded
 	 * @throws DecoderException
+	 *             in case of decoding failure
 	 */
 	public static final byte[] decode(String input) throws DecoderException {
 		return Hex.decodeHex(input.toCharArray());

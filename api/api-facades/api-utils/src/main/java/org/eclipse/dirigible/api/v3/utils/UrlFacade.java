@@ -29,9 +29,12 @@ public class UrlFacade {
 	 * uses the supplied encoding scheme to obtain the bytes for unsafe characters.
 	 *
 	 * @param input
+	 *            the input string
 	 * @param charset
+	 *            the input charset
 	 * @return the translated input
 	 * @throws UnsupportedEncodingException
+	 *             in case of problem with encoding
 	 */
 	public static final String encode(String input, String charset) throws UnsupportedEncodingException {
 		if (charset == null) {
@@ -45,8 +48,10 @@ public class UrlFacade {
 	 * uses the supplied encoding scheme to obtain the bytes for unsafe characters.
 	 *
 	 * @param input
+	 *            the input string
 	 * @return the translated input
 	 * @throws UnsupportedEncodingException
+	 *             in case of problem with encoding
 	 */
 	public static final String encode(String input) throws UnsupportedEncodingException {
 		return encode(input, null);
@@ -57,10 +62,14 @@ public class UrlFacade {
 	 * used to determine what characters are represented by any consecutive sequences of the form "%xy".
 	 *
 	 * @param input
+	 *            the input string
 	 * @param charset
+	 *            the input charset
 	 * @return the decoded input
 	 * @throws DecoderException
+	 *             in case of decoding failure
 	 * @throws UnsupportedEncodingException
+	 *             in case of problem with encoding
 	 */
 	public static final String decode(String input, String charset) throws DecoderException, UnsupportedEncodingException {
 		if (charset == null) {
@@ -74,9 +83,12 @@ public class UrlFacade {
 	 * used to determine what characters are represented by any consecutive sequences of the form "%xy".
 	 *
 	 * @param input
+	 *            the input string
 	 * @return the decoded input
 	 * @throws DecoderException
+	 *             in case of decoding failure
 	 * @throws UnsupportedEncodingException
+	 *             in case of problem with encoding
 	 */
 	public static final String decode(String input) throws DecoderException, UnsupportedEncodingException {
 		return decode(input, null);
@@ -84,8 +96,9 @@ public class UrlFacade {
 
 	/**
 	 * Escape URL fragments
-	 * 
+	 *
 	 * @param input
+	 *            the input string
 	 * @return escaped input
 	 */
 	public static final String escape(String input) {
