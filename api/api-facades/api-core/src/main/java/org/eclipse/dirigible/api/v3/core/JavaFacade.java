@@ -150,12 +150,10 @@ public class JavaFacade {
 						}
 					} else {
 						if (NullType.class.equals(parameterTypes[i])) {
-							matching = true;
-							break;
+							continue;
 						}
 						if (nextClass.isAssignableFrom(parameterTypes[i])) {
-							matching = true;
-							break;
+							continue;
 						}
 					}
 					matching = false;
