@@ -8,10 +8,28 @@
  * SAP - initial API and implementation
  */
 
+
+/**
+ * @module http/v3/rs
+ * @example
+ * ```js
+ * var rs = require("http/v3/rs")
+ * ```
+ */
+
 /************************************
- * 	ResourceMappings builder API	*
+ *   ResourceMappings builder API   *
  ************************************/
 
+/**
+ * Compares two arrays for equality by inspecting if they are arrays, refer to the same instance, 
+ * have same length and contain equal components in the same order. 
+ * 
+ * @param {array} source The source array to compare to 
+ * @param {array} target The target array to compare with
+ * @return {Boolean} true if the arrays are equal, false otherwise
+ * @private
+ */
 var arrayEquals = function(source, target){
 	if(source===target)
 		return true;
@@ -27,23 +45,33 @@ var arrayEquals = function(source, target){
 }
 
 /**
- * Commmon function for initializng the callback functions in the resource verb handler specification
+ * Commmon function for initializng the callback functions in the ResourceMethod instances.
+ * 
+ * @param {String} sHandlerFuncName The name of the function that will be attached to the resource mappings configuration
+ * @param {Function} fHandler The handler function that will be attached to the resource mappings configuration
+ * @returns {ResourceMethod} The ResourceMethod instance to which the function is bound.
+ * @private
  */
-var handlerFunction = function(sHandlerFuncName, fHandler, sHandlerCfgName){
+var handlerFunction = function(sHandlerFuncName, fHandler){
 	if(fHandler !== undefined){
 		if(typeof fHandler !== 'function'){
 			throw Error('Invalid argument: ' + sHandlerFuncName + ' method argument must be valid javascript function, but instead is ' + (typeof fHandler));
 		}
-		if(!sHandlerCfgName)
-			sHandlerCfgName = sHandlerFuncName;
-		this.configuration()[sHandlerCfgName] = fHandler;
+		this.configuration()[sHandlerFuncName] = fHandler;
 	}
 	
 	return this;
 };
 
 /**
- * Commmon function for initializng the 'consumes' and 'produces' arrays in the resource verb handler specification
+ * Commmon function for initializng the 'consumes' and 'produces' arrays in the ResourceMethod instances.
+ * Before finalizing the configuration setup the function will remove duplicates with exact match filtering. 
+ * 
+ * @param {String} mimeSettingName must be either 'consumes' or 'produces' depending on 
+ * 				   which configuraiton property is being set with this method.
+ * @param {String[]} mimeTypes An array of strings formatted as mime types (type/subtype)
+ * @returns {ResourceMethod} The ResourceMethod instance to which the function is bound.
+ * @private
  */
 var mimeSetting = function(mimeSettingName, mimeTypes){
 	
@@ -82,20 +110,78 @@ var mimeSetting = function(mimeSettingName, mimeTypes){
 
 /**
  * Constructor function for ResourceMethod instances. 
+ * All parameters of the funciton are optional. 
  * 
+ * Providing oConfiguration will initialize this instance with some configuration so the setup does not start 
+ * entirely from scratch. Note that the configuration object schema must be compliant with the one produced by
+ * the ResourceMethod itself. If this parameter is mited, setup will start from scratch.
+ * 
+ * Provisioning controller, will inject a reference ot the execute method of the controller so that it can be 
+ * fluently invoked in the scope of this ResourceMehtod instance as part of the method chaining flow. The function 
+ * is bound to the controller instance for this ResourceMethod. 
+ * 
+ * @example
+ * ```js
+ * rs.service()
+ *  .resource('')
+ * 		.get()
+ * 	.execute();
+ * ```
+ * 
+ * Provisioning resource, will inject a reference ot the HTTP method functions of the Resource class (get, post,
+ * put, delete, remove, method) so that they can be fluently invoked in the scope of this ResourceMethod instance 
+ * as part of the method chaining flow. The functions are bound to the resource instance for this ResourceMethod. 
+ * 
+ * @example
+ * ```js
+ * rs.service()
+ *  .resource('')
+ * 		.get(function(){})
+ * 		.post(function(){})
+ * 		.put(function(){})
+ * 		.remove(function(){})
+ * .execute();
+ * ```
+ * 
+ * Provisioning mappings, will inject a reference ot the resource method of the ResourceMappings class so that 
+ * it can be fluently invoked in the scope of this ResourceMethod instance as part of the method chaining flow. 
+ * The function is bound to the mappings instance for this ResourceMethod. 
+ * 
+ * @example
+ * ```js
+ * rs.service()
+ *  .resource('')
+ * 		.get(function(){})
+ * 	.resource('{id}')
+ * 		.get(function(){})
+ * .execute();
+ * ```
+ * 
+ * @class
  * @param {Object} [oConfiguration]
+ * @param {HttpController} [controller] The controller instance, for which this ResourceMethod handles configuration
+ * @param {Resource} [resource] The resource instance, for which this ResourceMethod handles configuration
+ * @param {ResourceMappings} [mappings] The mappings instance, for which this ResourceMethod handles configuration
  * @returns {ResourceMethod} 
  */
-var ResourceMethod = function(oConfiguration, controller){
+var ResourceMethod = function(oConfiguration, controller, resource, mappings){
 	this.cfg = oConfiguration;
-		
+	this._resource = resource;
 	if(controller)
 		this.execute = controller.execute.bind(controller);
+	if(resource){
+		['get','post','put','delete','remove','method'].forEach(function(methodName){
+			this[methodName] = this._resource[methodName].bind(this._resource);
+		}.bind(this));
+	}
+	if(mappings){
+		this.resource = mappings.resource.bind(mappings);
+	}
 	return this;
 };
 
 /**
- * Returns the configuration for this resource verb handler.
+ * Returns the configuration for this ResourceMethod instance.
  * 
  * @returns {Object} 
  */
@@ -104,11 +190,29 @@ ResourceMethod.prototype.configuration = function(){
 };
 
 /**
- * Defines the MIME types that this resource verb handler consumes. Together with the definition of those that it will produce, they constitute
- * the target against which requests with this verb will be matched to enact handler specification.
+ * Defines the content MIME type(s), which this ResourceMethod request processing function expects as input from the 
+ * client request, i.e. those that it 'consumes'. At runtime, the Content-Type request header will be matched for 
+ * compatibility with this setting to elicit request processing functions.
+ * Note that the matching is performed by compatibility, not strict equality, i.e. the MIME type format wildcards are
+ * considered too. For example, a request Content-Type header "text\/json" will match a consumes setting "*\/json".
  * 
- * @param {Function} Callback function for the finally phase of procesing matched resource requests
- * @returns {ResourceMethod} the verb handler instance for method chaning
+ * @example
+ * ```js
+ * rs.service()
+ *	.resource("")
+ * 		.post(function(){})
+ * 			.consumes(["*\/json"])
+ * .execute();
+ * 	.
+ * ```
+ * 
+ * Although it's likely that most implementations will resort to single, or a range of compatible input MIME types, it is 
+ * entirely up to the request processing function implementation. For example it may be capable of processing content with 
+ * various, possibly incompatible MIME types. Take care to make sure that the consumes constraint will constrain the requests
+ * only to those that the request processing function can really process. 
+ * 
+ * @param {String[]} mimeTypes Sets the mime types that this ResourceMethod request processing function is capable to consume.
+ * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
  */
 
 ResourceMethod.prototype.consumes = function(mimeTypes){
@@ -116,56 +220,99 @@ ResourceMethod.prototype.consumes = function(mimeTypes){
 };
 
 /**
- * Defines the MIME types that this resource verb handler produces. Together with the definition of those that it will consume, they constitute
- * the target against which requests with this verb will be matched to enact handler specification.
+ * Defines the HTTP response payload MIME type(s), which this ResourceMethod request processing function outputs, i.e. 
+ * those that it 'produces'. At runtime, the Accept request header will be matched for compatibility with this setting 
+ * to elicit request processing functions.
+ * Note that the matching is performed by compatibility, not strict equality, i.e. the MIME type format wildcards are
+ * considered too. For example, a request Accept header "*\/json" will match a produces setting "application\/json".
  * 
- * A note about method argument multiplicity (stirng vs array of strings). 
- * The argument of the produce method will translate to the response Content-Type property, which is knwon to be a 
- * single value header by [specification](https://tools.ietf.org/html/rfc7231#section-3.1.1.5). However, this method accepts also array of stirngs as argument.
- * The reason is because produces has sligtly different semantics than a value for Content-Type. It is a declaration for the content types of the 
- * response payload that a handler may produce. Though in most cases a handler function will produce payload in single format (media type), it is 
- * quite possible to desgin it also as a controller that procudes alternative payload in different formats. In these cases you need produces that declares
- * all supported media types so that the request with accept header matching any of them can land in this handler. That makes the routing a bit less transparent
- * but may prove valuable for certian cases.
+ * @example
+ * ```js
+ * rs.service()
+ *	.resource("")
+ * 		.get(function(){})
+ * 			.produces(["application\/json"])
+ * .execute();
+ * 	.
+ * ```
  * 
- * @param {Function} Callback function for the finally phase of procesing matched resource requests
- * @returns {ResourceMethod} the verb handler instance for method chaining
+ * Take care to make sure that the produces constraint correctly describes the response contenty MIME types that the request 
+ * processing function can produce so that only client request that can accept them land there.
+ * 
+ * A note about method argument multiplicity (string vs array of strings). 
+ * One of the arguments of the produce method will translate to the response Content-Type property, which is known to be a 
+ * single value header by [specification](https://tools.ietf.org/html/rfc7231#section-3.1.1.5). There are two reasons why 
+ * the method accepts array and not a single value only:
+ * 
+ * 1. Normally, when matched, content types are evaluated for semantic compatibility and not strict equality on both sides
+ *  - client and server. Providing a range of compatible MIME types instead of single value, increases the range of acceptable 
+ * requests for procesing, while reducing the stricness of the requirements on the client making the request. For example, 
+ * declaring ["text/json,"application/json"] as produced types makes requests with any of these accept headers (or a combination
+ * of them) acceptable for processing: "*\/json", "text/json", "application/json", "*\/*".  
+ * 
+ * 2. Although in most cases a handler function will produce payload in single format (media type), it is quite possible to 
+ * desgin it also as a controller that produces alternative payload in different formats. In these cases you need produces 
+ * that declares all supported media types so that the request with a relaxed Accept header matching any of them can land 
+ * in this function. That makes the routing a bit less transparent and dependent on the client, but may prove valuable for 
+ * certian cases.
+ * 
+ * In any case it is responsibility of the request processing function to set the correct Content-Type header.
+ * 
+ * @param {String[]} mimeTypes Sets the mime type(s) that this ResourceMethod request processing function may produce.
+ * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
  */
 ResourceMethod.prototype.produces = function(mimeTypes){
 	return mimeSetting.apply(this, ['produces', mimeTypes]);
 };
 /**
- * Applies a callback function for the before phase of processing a matched resource request.
+ * Applies a callback function for the before phase of processing a matched resource request. If a callback function
+ * is supplied, it is executed right before the serve function. The before function may throw errors, which will move
+ * the processing flow to the catch and then the finally functions (if any). The before function is suitable for processing 
+ * pre-conditions to the serve. They could be euqally well implemented also in the serve function, but using before gives
+ * a chance for clear spearation of concerns in the code and easier to maintain.
+ * 
+ * @example
+ * ```js
+ * rs.service()
+ * 	.resource('')
+ * 		.get(function(){})
+ * 			.before(function(){
+ *				if(request.getHeader('X-developer-key').value()===null)
+ * 					this.controller.sendError(response.FORBIDDEN, undefined, response.HttpCodeReason.getReason(response.FORBIDDEN), "X-developer-key is missing from request headers"); 
+ *			})
+ *	.execute();
+ * ```
  * 
  * @param {Function} Callback function for the before phase of procesing matched resource requests
- * @returns {ResourceMethod} the verb handler instance for method chaning
+ * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
  */
 ResourceMethod.prototype.before = function(fHandler){
-	return handlerFunction.apply(this, ['before', fHandler, 'before']);
+	return handlerFunction.apply(this, ['before', fHandler]);
 };
 /**
- * Applies a callback function for the serve phase of processing a matched resource request. Mandatory for valid resource handling specifications.
+ * Applies a callback function for processing a matched resource request. Mandatory for valid resource handling specifications.
  * 
  * @param {Function} Callback function for the serve phase of procesing matched resource requests
- * @returns {ResourceMethod} the verb handler instance for method chaning
+ * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
  */
 ResourceMethod.prototype.serve = function(fHandler){
-	return handlerFunction.apply(this, ['serve', fHandler, 'serve']);
+	return handlerFunction.apply(this, ['serve', fHandler]);
 };
 /**
  * Applies a callback function for the catch errors phase of processing a matched resource request.
  * 
  * @param {Function} Callback function for the catch errors phase of procesing matched resource requests
- * @returns {ResourceMethod} the verb handler instance for method chaning
+ * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
  */
 ResourceMethod.prototype.catch = function(fHandler){
 	return handlerFunction.apply(this, ['catch', fHandler]);
 };
 /**
- * Applies a callback function for the finally phase of processing a matched resource request.
+ * Applies a callback function for the finally phase of processing a matched resource request. This function (if supplied) is always invoked
+ * regardles if the request processing yielded error or not.
  * 
  * @param {Function} Callback function for the finally phase of procesing matched resource requests
- * @returns {ResourceMethod} the verb handler instance for method chaning
+ * @returns {ResourceMethod} The ResourceMethod instance to which the function invocation is bound, for mehtod chaining.
  */
 ResourceMethod.prototype.finally = function(fHandler){
 	return handlerFunction.apply(this, ['finally', fHandler]);
@@ -185,20 +332,26 @@ ResourceMethod.prototype.finally = function(fHandler){
  * @param {Object} [oConfiguration]
  * @returns {Resource} the resource instance for method chaining
  */
-var Resource = function(sPath, oConfiguration, controller){
+var Resource = function(sPath, oConfiguration, controller, mappings){
 	this.sPath = sPath;
 	this.cfg = oConfiguration || {};
 	if(controller){
 		this.controller = controller;
 		this.execute = controller.execute.bind(controller);
 	}
+	if(mappings){
+		this.mappings = mappings;
+	}
 	return this;
 };
 
 /**
- * Sets the URL path for this resource, overriding the one specified upon its construction.
+ * Sets the URL path for this resource, overriding the one specified upon its construction, 
+ * if a path string is provided as argument ot the method (i.e. acts as setter), 
+ * or returns the path set for this resource, if the method is invoked without arguments (i.e. acts as getter).
  * 
- * @returns {Resource} the resource instance for method chaining
+ * @param {string} [sPath] the path property to be set for this resource
+ * @returns {Resource|string} the resource instance for method chaining, or the path set for this resource
  */
 Resource.prototype.path = function(sPath){
 	if(arguments.length === 0)
@@ -208,22 +361,22 @@ Resource.prototype.path = function(sPath){
 }
 
 /**
- * Creates a new HTTP verb handling specification.
+ * Creates a new HTTP method handling specification.
  * The second, optional argument is a specification object or array of such specification objects. It allows to initialize 
- * the verb handlers before manually setting up specifications and to setup multiple handler specifications in one call.
+ * the method handlers before manually setting up specifications and to setup multiple handler specifications in one call.
  * 
- * @param {String} sHttpVerb - the HTTP verb (method)
- * @param {Object|Array} oConfiguration - the handler specification(s) for this HTTP verb. Can be a single object or array.
- * @returns {ResourceMethod|Array} 
+ * @param {String} sHttpMethod - the HTTP method (method)
+ * @param {Object|Object[]} oConfiguration - the handler specification(s) for this HTTP method. Can be a single object or array.
+ * @returns {ResourceMethod|Object[]} 
  */
-Resource.prototype.method = Resource.prototype.verb = function(sHttpVerb, oConfiguration){
-	if(sHttpVerb===undefined)
-		throw new Error('Illegal sHttpVerb argument: ' + sHttpVerb);	
+Resource.prototype.method = Resource.prototype.method = function(sHttpMethod, oConfiguration){
+	if(sHttpMethod===undefined)
+		throw new Error('Illegal sHttpMethod argument: ' + sHttpMethod);	
 
-	var verb = sHttpVerb.toLowerCase();	
+	var method = sHttpMethod.toLowerCase();	
 	
-	if(!this.cfg[verb])
-		this.cfg[verb] = [];
+	if(!this.cfg[method])
+		this.cfg[method] = [];
 	
 	var arrConfig = oConfiguration || {};
 	if(!Array.isArray(arrConfig)){
@@ -231,16 +384,16 @@ Resource.prototype.method = Resource.prototype.verb = function(sHttpVerb, oConfi
 	}
 	var handlers = [];
 	arrConfig.forEach(function(handlerSpec){
-		var _h = this.find(sHttpVerb, handlerSpec.consumes, handlerSpec.produces);
+		var _h = this.find(sHttpMethod, handlerSpec.consumes, handlerSpec.produces);
 		if(!_h) {
 			//create new
-			this.cfg[verb].push(handlerSpec);
+			this.cfg[method].push(handlerSpec);
 		} else {
 			//update
 			for(var propName in handlerSpec)
 				_h[propName] = handlerSpec[propName];
 		}
-		handlers.push(new ResourceMethod(handlerSpec, this.controller));
+		handlers.push(new ResourceMethod(handlerSpec, this.controller, this, this.mappings));
 	}.bind(this));
 	
 	return handlers.length > 1 ? handlers : handlers[0];
@@ -260,7 +413,7 @@ var buildMethod = function(sMethodName, args){
 };
 
 /**
- * Creates a handling specification for the HTTP verb "GET".
+ * Creates a handling specification for the HTTP method "GET".
  * 
  * Same as invoking method("get") on a resource.
  * 
@@ -270,7 +423,7 @@ Resource.prototype.get = function(){
 	return buildMethod.call(this, 'get', arguments);
 };
 /**
- * Creates a handling specification for the HTTP verb "POST".
+ * Creates a handling specification for the HTTP method "POST".
  * 
  * Same as invoking method("post") on a resource.
  * 
@@ -280,7 +433,7 @@ Resource.prototype.post = function(){
 	return buildMethod.call(this, 'post', arguments);
 };
 /**
- * Creates a handling specification for the HTTP verb "PUT".
+ * Creates a handling specification for the HTTP method "PUT".
  * 
  * Same as invoking method("put") on a resource.
  * 
@@ -290,7 +443,7 @@ Resource.prototype.put = function(){
 	return buildMethod.call(this, 'put', arguments);
 };
 /**
- * Creates a handling specification for the HTTP verb "DELETE".
+ * Creates a handling specification for the HTTP method "DELETE".
  * 
  * Same as invoking method("delete") on a resource.
  * 
@@ -303,7 +456,7 @@ Resource.prototype["delete"] = Resource.prototype.remove = function(){
 /**
  * Finds a ResourceMethod with the given constraints.
  * 
- * @param {String} sVerb the name of the method property of the ResourceMethod in search
+ * @param {String} sMethod the name of the method property of the ResourceMethod in search
  * @param {Array} arrConsumesMimeTypeStrings the consumes constraint property of the ResourceMethod in search
  * @param {Array} arrProducesMimeTypeStrings the produces constraint property of the ResourceMethod in search
  */
@@ -314,7 +467,7 @@ Resource.prototype.find = function(sVerb, arrConsumesMimeTypeStrings, arrProduce
 	}).forEach(function(sVerbName){
 		this.cfg[sVerbName].forEach(function(verbHandlerSpec){
 			if(arrayEquals(verbHandlerSpec.consumes, arrConsumesMimeTypeStrings) && arrayEquals(verbHandlerSpec.produces, arrProducesMimeTypeStrings)){
-				hit  =  new ResourceMethod(verbHandlerSpec);
+				hit  =  new ResourceMethod(verbHandlerSpec, this.controller, this, this.mappings);
 				return;
 			}
 		});
@@ -334,7 +487,7 @@ Resource.prototype.configuration = function(){
 
 /**
  * Instructs redirection of the request base don the parameter. If it is a stirng representing URI, the request will be
- * redirected to this URI for any verb. If it's a function it will be invoked and epxected to return a URI string to redirect to.
+ * redirected to this URI for any method. If it's a function it will be invoked and epxected to return a URI string to redirect to.
  * 
  * @param {Function|String} 
  */
@@ -372,13 +525,18 @@ Resource.prototype.readonly = function(){
 
 
 /****************************
- * 	ResourceMappings API	*
+ *   ResourceMappings API   *
  ****************************/
+
 
 /**
  * Constructor function for ResourceMappings instances.
  * 
+ * @class
  * @param {Object} [oConfiguration]
+ * @param {HttpController} [controller] The controller instance, for which this ResourceMappings handles configuration
+ * @returns {ResourceMappings} 
+ * @static
  */
 var ResourceMappings = exports.ResourceMappings = function(oConfiguration, controller){
 	this.resources = {};
@@ -404,7 +562,7 @@ var ResourceMappings = exports.ResourceMappings = function(oConfiguration, contr
  */
 ResourceMappings.prototype.path = ResourceMappings.prototype.resourcePath = ResourceMappings.prototype.resource = function(sPath, oConfiguration){
 	if(this.resources[sPath] === undefined)
-		this.resources[sPath] = new Resource(sPath, oConfiguration, this.controller);
+		this.resources[sPath] = new Resource(sPath, oConfiguration, this.controller, this);
 	return this.resources[sPath];
 };
 
@@ -455,14 +613,16 @@ ResourceMappings.prototype.find = function(sPath, sVerb, arrConsumes, arrProduce
 
 
 
-/************************
- * 	HttpController API	*
- ************************/
+/**************************
+ *   HttpController API   *
+ **************************/
 
 /**
  * Constructor function for HttpController instances.
  * 
+ * @class
  * @param {ResourceMappings|Object} [oMappings] the mappings configuration for this controller.
+ * 
  */
 var HttpController = exports.HttpController = function(oMappings){
 	this.logger = require('log/logging').getLogger('http.rs.controller');
@@ -492,8 +652,9 @@ var HttpController = exports.HttpController = function(oMappings){
 						var pathParams = {};
 						var resolvedPathDefSegments = pathDefSegments.map(function(pSeg, i){
 							pSeg = pSeg.trim();
-							if(pSeg.indexOf('{') === 0 && pSeg.indexOf('}') === pSeg.length-1) {
-								var param = pSeg.substring(pSeg.indexOf('{')+1, pSeg.indexOf('}'));
+							var matcher = pSeg.match(/{(.*?)}/);
+							if(matcher!==null) {
+								var param = matcher[1];
 								pathParams[param] = reqPathSegments[i];
 								return reqPathSegments[i];
 							} else {
@@ -517,12 +678,10 @@ var HttpController = exports.HttpController = function(oMappings){
 		matches = matches.sort(function(p, n){
 			if(n.w === p.w){
 				//the one with less placeholders wins
-				var placeholdersCount1 = p.d.split('/').filter(function(segment){
-					return String(segment).startsWith('{');
-				}).length;
-				var placeholdersCount2 = n.d.split('/').filter(function(segment){
-					return String(segment).startsWith('{');
-				}).length;
+				var m1= p.d.match(/{(.*?)}/g);
+				var placeholdersCount1 = m1!==null?m1.length:0;
+				var m2= n.d.match(/{(.*?)}/g);
+				var placeholdersCount2 = m2!==null?m2.length:0;
 				if(placeholdersCount1 > placeholdersCount2){
 					n.w = n.w+1;
 				} else if(placeholdersCount1 < placeholdersCount2){
@@ -642,7 +801,7 @@ var HttpController = exports.HttpController = function(oMappings){
 						
 			var noop = function(){};
 			var _before, _serve, _catch, _finally;
-			_before = resourceHandler.beforeHandle || noop;
+			_before = resourceHandler.before || noop;
 			_serve = resourceHandler.handler || resourceHandler.serve || noop;
 			_catch = resourceHandler.catch || catchErrorHandler.bind(self, {
 				path: resourcePath,
@@ -653,17 +812,19 @@ var HttpController = exports.HttpController = function(oMappings){
 			_finally = resourceHandler.finally || noop;
 			var callbackArgs = [ctx, request, response, resourceHandler, this];
 		 	try{
-		 		self.logger.trace('Before serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}]', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
+		 		self.logger.trace('Before serving request for Resource[{}], Method[{}], Content-Type[{}], Accept[{}]', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
 				_before.apply(self, callbackArgs);
-				self.logger.trace('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}]', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
-				_serve.apply(this, callbackArgs);
-				self.logger.trace('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}] finished', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
+				if(!response.isCommitted()){
+					self.logger.trace('Serving request for Resource[{}], Method[{}], Content-Type[{}], Accept[{}]', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);
+					_serve.apply(this, callbackArgs);
+					self.logger.trace('Serving request for Resource[{}], Method[{}], Content-Type[{}], Accept[{}] finished', resourcePath, method.toUpperCase(), contentTypeHeader, acceptsHeader);					
+				}
 			} catch(err){
 				try{
 					callbackArgs.splice(1, 0, err);
 					_catch.apply(self, callbackArgs);	
 				} catch(_catchErr){
-					self.logger.error('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}] error handler threw error', _catchErr);
+					self.logger.error('Serving request for Resource[{}], Method[{}], Content-Type[{}], Accept[{}] error handler threw error', _catchErr);
 					throw _catchErr;
 				}
 			} finally{
@@ -671,11 +832,11 @@ var HttpController = exports.HttpController = function(oMappings){
 				try{
 					_finally.apply(self, []);
 				} catch(_finallyErr){
-					self.logger.error('Serving request for resource [{}], Verb[{}], Content-Type[{}], Accept[{}] post handler threw error', _finallyErr);
+					self.logger.error('Serving request for Resource[{}], Method[{}], Content-Type[{}], Accept[{}] post handler threw error', _finallyErr);
 				}
 			}
 		} else {
-			self.logger.error('No suitable resource handler for resource [' + resourcePath + '], Verb['+method.toUpperCase()+'], Content-Type['+contentTypeHeader+'], Accept['+acceptsHeader+'] found');
+			self.logger.error('No suitable resource handler for Resource[' + resourcePath + '], Method['+method.toUpperCase()+'], Content-Type['+contentTypeHeader+'], Accept['+acceptsHeader+'] found');
 			self.sendError(response.BAD_REQUEST, undefined, 'Bad Request', 'No suitable processor for this request.');
 		}
   	};
@@ -687,7 +848,7 @@ var HttpController = exports.HttpController = function(oMappings){
 		 this.resourceMappings = new ResourceMappings(oMappings, this);
 	}
 	
-	this.resourcePath = this.resourceMappings.resourcePath.bind(this.resourceMappings);
+	this.resource = this.resourcePath = this.resourceMappings.resourcePath.bind(this.resourceMappings);
 		
 };
 
@@ -705,8 +866,7 @@ HttpController.prototype.sendError = function(httpErrorCode, applicationErrorCod
 	response.setStatus(httpErrorCode || response.INTERNAL_SERVER_ERROR);
 	if(isHtml){
 		var message = errorName + (applicationErrorCode!==undefined ? '['+applicationErrorCode+']' : '') + (errorDetails ? ': ' + errorDetails : '');
-		response.print(message);
-		//response.sendError(httpCode, errMessage);
+		response.sendError(httpErrorCode || response.INTERNAL_SERVER_ERROR, message);
 	} else {
 	    var body = {
 	    	"code": applicationErrorCode,
@@ -729,11 +889,11 @@ HttpController.prototype.closeResponse = function(){
 
 
 /****************************
- * 	http/v3/rs Module API	*
+ *   http/v3/rs Module API   *
  ****************************/
 
 /**
- * Creates a service, optionally initialized wiht oMappings
+ * Creates a service, optionally initialized with oMappings
  * 
  * @param {Object|ResourceMappings} [oMappings] configuration object or configuration builder with configuration() getter function
  *
