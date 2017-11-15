@@ -236,6 +236,7 @@ public class FilesFacade {
 	/**
 	 * Set the file owner
 	 * @param path path to file
+	 * @param owner the owner
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void setOwner(String path, String owner) throws IOException {
@@ -256,6 +257,7 @@ public class FilesFacade {
 	/**
 	 * Set the file permissions
 	 * @param path path to the file
+	 * @param permissions the permissions string
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void setPermissions(String path, String permissions) throws IOException {

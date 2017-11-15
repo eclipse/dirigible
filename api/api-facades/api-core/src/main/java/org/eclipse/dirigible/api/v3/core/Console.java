@@ -27,7 +27,9 @@ public class Console {
 	 * Prints an error message
 	 *
 	 * @param message
+	 *            the log message
 	 * @param args
+	 *            the message arguments
 	 */
 	public void error(String message, Object... args) {
 		logger.error(String.format(message, args));
@@ -37,7 +39,9 @@ public class Console {
 	 * Prints an information message
 	 *
 	 * @param message
+	 *            the log message
 	 * @param args
+	 *            the message arguments
 	 */
 	public void info(String message, Object... args) {
 		logger.info(String.format(message, args));
@@ -47,7 +51,9 @@ public class Console {
 	 * Prints a warning message
 	 *
 	 * @param message
+	 *            the log message
 	 * @param args
+	 *            the message arguments
 	 */
 	public void warn(String message, Object... args) {
 		logger.warn(String.format(message, args));
@@ -57,7 +63,9 @@ public class Console {
 	 * Prints a debug message
 	 *
 	 * @param message
+	 *            the log message
 	 * @param args
+	 *            the message arguments
 	 */
 	public void debug(String message, Object... args) {
 		logger.debug(String.format(message, args));
@@ -67,7 +75,9 @@ public class Console {
 	 * Prints a trace message
 	 *
 	 * @param message
+	 *            the log message
 	 * @param args
+	 *            the message arguments
 	 */
 	public void trace(String message, Object... args) {
 		logger.error(String.format(message, args));
@@ -82,6 +92,7 @@ public class Console {
 	 * Prints a raw log message
 	 *
 	 * @param message
+	 *            the log message
 	 */
 	public void log(String message) {
 		logger.info(message);

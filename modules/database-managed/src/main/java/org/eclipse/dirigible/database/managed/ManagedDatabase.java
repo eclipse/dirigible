@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The File System based Local Repository implementation of {@link IRepository}.
+ * The Managed Database
  */
 public class ManagedDatabase implements IDatabase {
 
@@ -33,10 +33,8 @@ public class ManagedDatabase implements IDatabase {
 	/** The Constant TYPE. */
 	public static final String TYPE = "managed";
 
-	/** The Constant DATASOURCES. */
 	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
 
-	/** The Constant JNDI_DEFAULT_PREFIX. */
 	private static final String JNDI_DEFAULT_PREFIX = "java:comp/env/jdbc/";
 
 	/*
