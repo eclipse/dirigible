@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>${dirigible.version}</version>
+		<version>3.0.1</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -32,47 +32,47 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-workspace</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-runtime-core</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-runtime-repository</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-utils</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-runtime-ide-workspaces</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-api</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-js</artifactId>
-            <version>${dirigible.version}</version>
+            <version>3.0.1</version>
         </dependency>
         
         <dependency>

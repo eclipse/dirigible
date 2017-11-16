@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>${dirigible.version}</version>
+		<version>3.0.1</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -70,314 +70,314 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-commons-config</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 	
 		<!-- API Facades -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-security</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-core</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-http</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-utils</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-db</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-io</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-messaging</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-indexing</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-log</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		
 		<!-- Repository -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-api</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-zip</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-local</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-master</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		
 		<!-- Database -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-api</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-sql</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-persistence</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-data-models</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-data-structures</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-derby</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-managed</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		
 		<!-- Core Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core-extensions</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core-git</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core-security</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core-scheduler</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core-publisher</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core-messaging</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core-indexing</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		
 		<!-- Runtime Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-core</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-repository</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-registry</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-extensions</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-security</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-transport</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-runtime-theme</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 
 		<!-- Engines Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-api</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-web</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-js</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-js-rhino</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-js-nashorn</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-js-v8</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-wiki</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		
 		<!-- API - Javascript -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-core</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-http</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-utils</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-security</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-db</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-io</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-messaging</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-indexing</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-log</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-test</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>		
 		
 		<!-- Resources Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources-themes</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources-angular</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources-bootstrap</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources-goldenlayout</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources-jquery</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources-jstree</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources-fonts</artifactId>
-		 	<version>${dirigible.version}</version>
+		 	<version>3.0.1</version>
 		</dependency>
 
 		<!-- External -->

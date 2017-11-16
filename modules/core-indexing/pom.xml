@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>${dirigible.version}</version>
+		<version>3.0.1</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -32,7 +32,7 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>${dirigible.version}</version>
+			<version>3.0.1</version>
     	</dependency>
     	<dependency>
 		    <groupId>org.apache.lucene</groupId>
@@ -48,7 +48,7 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>${dirigible.version}</version>
+			<version>3.0.1</version>
     	</dependency>
     </dependencies>
     
