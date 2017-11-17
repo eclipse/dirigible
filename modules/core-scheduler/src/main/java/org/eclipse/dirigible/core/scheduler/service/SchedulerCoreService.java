@@ -75,8 +75,9 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 			jobDefinition.setCreatedBy(UserFacade.getName());
 		}
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				jobPersistenceManager.insert(connection, jobDefinition);
 				return jobDefinition;
 			} finally {
@@ -96,8 +97,9 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 	@Override
 	public JobDefinition getJob(String name) throws SchedulerException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return jobPersistenceManager.find(connection, JobDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -116,8 +118,9 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 	@Override
 	public void removeJob(String name) throws SchedulerException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				jobPersistenceManager.delete(connection, JobDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -138,8 +141,9 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 	public void updateJob(String name, String group, String clazz, String description, String expression, boolean singleton)
 			throws SchedulerException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				JobDefinition jobDefinition = getJob(name);
 				jobDefinition.setGroup(group);
 				jobDefinition.setClazz(clazz);
@@ -164,8 +168,9 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 	@Override
 	public List<JobDefinition> getJobs() throws SchedulerException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return jobPersistenceManager.findAll(connection, JobDefinition.class);
 			} finally {
 				if (connection != null) {

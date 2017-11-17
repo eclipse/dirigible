@@ -11,12 +11,10 @@
 package org.eclipse.dirigible.database.api.metadata.test;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -35,10 +33,10 @@ import org.junit.Test;
  * The Class DatabaseMetadataHelperTest.
  */
 public class DatabaseMetadataHelperTest {
-	
+
 	/** The data srouce. */
-	private DataSource dataSrouce = null;
-	
+	private DataSource dataSource = null;
+
 	/**
 	 * Sets the up.
 	 */
@@ -46,30 +44,31 @@ public class DatabaseMetadataHelperTest {
 	public void setUp() {
 		try {
 			DerbyDatabase derbyDatabase = new DerbyDatabase();
-			this.dataSrouce = derbyDatabase.getDataSource("target/tests/derby");
+			this.dataSource = derbyDatabase.getDataSource("target/tests/derby");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Gets the data srouce.
 	 *
 	 * @return the data srouce
 	 */
 	public DataSource getDataSrouce() {
-		return dataSrouce;
+		return dataSource;
 	}
-	
+
 	/**
 	 * List schema names test.
 	 *
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	@Test
 	public void listSchemaNamesTest() throws SQLException {
-		Connection connection = dataSrouce.getConnection();
+		Connection connection = dataSource.getConnection();
 		try {
 			List<SchemaMetadata> schemas = DatabaseMetadataHelper.listSchemas(connection, null, null, null);
 			for (SchemaMetadata schema : schemas) {
@@ -84,16 +83,18 @@ public class DatabaseMetadataHelperTest {
 			}
 		}
 	}
-	
+
 	/**
 	 * List table names test.
 	 *
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	@Test
 	public void listTableNamesTest() throws SQLException {
-		Connection connection = dataSrouce.getConnection();
+		Connection connection = null;
 		try {
+			connection = dataSource.getConnection();
 			List<TableMetadata> tables = DatabaseMetadataHelper.listTables(connection, null, "SYS", null);
 			for (TableMetadata table : tables) {
 				if ("SYSKEYS".equals(table.getName())) {
@@ -107,16 +108,18 @@ public class DatabaseMetadataHelperTest {
 			}
 		}
 	}
-	
+
 	/**
 	 * Iterate table definition test.
 	 *
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	@Test
 	public void iterateTableDefinitionTest() throws SQLException {
-		Connection connection = dataSrouce.getConnection();
+		Connection connection = null;
 		try {
+			connection = dataSource.getConnection();
 			DatabaseMetadataHelper.iterateTableDefinition(connection, null, "SYS", "SYSKEYS", new ColumnsIteratorCallback() {
 				@Override
 				public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
@@ -135,5 +138,5 @@ public class DatabaseMetadataHelperTest {
 			}
 		}
 	}
-	
+
 }

@@ -25,16 +25,16 @@ import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class PersistenceManagerInterceptorValueTest.
+ * The Persistence Manager Interceptor Value Test.
  */
 public class PersistenceManagerInterceptorValueTest extends AbstractPersistenceManagerTest {
 
 	/**
-	 * Ordered crud tests.
+	 * Ordered CRUD tests.
 	 *
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	@Test
 	public void orderedCrudTests() throws SQLException {
@@ -54,8 +54,9 @@ public class PersistenceManagerInterceptorValueTest extends AbstractPersistenceM
 				return value;
 			}
 		});
-		Connection connection = getDataSrouce().getConnection();
+		Connection connection = null;
 		try {
+			connection = getDataSource().getConnection();
 			// create table
 			createTableForPojo(connection, persistenceManager);
 			// check whether it is created successfully
@@ -74,9 +75,12 @@ public class PersistenceManagerInterceptorValueTest extends AbstractPersistenceM
 	/**
 	 * Creates the table for pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void createTableForPojo(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
 		persistenceManager.tableCreate(connection, Task.class);
@@ -85,10 +89,13 @@ public class PersistenceManagerInterceptorValueTest extends AbstractPersistenceM
 	/**
 	 * Exists table.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
 	 * @return true, if successful
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public boolean existsTable(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
 		return persistenceManager.tableExists(connection, Task.class);
@@ -97,9 +104,12 @@ public class PersistenceManagerInterceptorValueTest extends AbstractPersistenceM
 	/**
 	 * Insert pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void insertPojo(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
 		Task task = new Task();
@@ -113,9 +123,12 @@ public class PersistenceManagerInterceptorValueTest extends AbstractPersistenceM
 	/**
 	 * Find all pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void findAllPojo(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
 		List<Task> list = persistenceManager.findAll(connection, Task.class);
@@ -134,9 +147,12 @@ public class PersistenceManagerInterceptorValueTest extends AbstractPersistenceM
 	/**
 	 * Drop table for pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void dropTableForPojo(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
 		persistenceManager.tableDrop(connection, Task.class);

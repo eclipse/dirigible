@@ -28,10 +28,10 @@ import org.junit.Test;
  * The Class DatabaseMetadataSerializerTest.
  */
 public class DatabaseMetadataSerializerTest {
-	
+
 	/** The data source. */
 	private DataSource dataSource = null;
-	
+
 	/**
 	 * Sets the up.
 	 */
@@ -45,16 +45,18 @@ public class DatabaseMetadataSerializerTest {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Serialize to json.
 	 *
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	@Test
 	public void serializeToJson() throws SQLException {
-		Connection connection = dataSource.getConnection();
+		Connection connection = null;
 		try {
+			connection = dataSource.getConnection();
 			DatabaseMetadata database = new DatabaseMetadata(connection, null, null, null);
 			String json = GsonHelper.GSON.toJson(database);
 			System.out.println(json);

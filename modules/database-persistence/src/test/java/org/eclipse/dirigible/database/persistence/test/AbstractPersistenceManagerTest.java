@@ -45,20 +45,22 @@ public class AbstractPersistenceManagerTest {
 	}
 
 	/**
-	 * Gets the data srouce.
+	 * Gets the data source.
 	 *
-	 * @return the data srouce
+	 * @return the data source
 	 */
-	public DataSource getDataSrouce() {
+	public DataSource getDataSource() {
 		return dataSource;
 	}
 
 	/**
 	 * Creates the data source.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the data source
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	protected DataSource createDataSource(String name) throws Exception {
 		try {
@@ -75,17 +77,18 @@ public class AbstractPersistenceManagerTest {
 	/**
 	 * Prepare root folder.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 * @return the string
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private String prepareRootFolder(String name) throws IOException {
 		File rootFile = new File(name);
 		File parentFile = rootFile.getCanonicalFile().getParentFile();
 		if (!parentFile.exists()) {
 			if (!parentFile.mkdirs()) {
-				throw new IOException(
-						format("Creation of the root folder [{0}] of the embedded Derby database failed.", name));
+				throw new IOException(format("Creation of the root folder [{0}] of the embedded Derby database failed.", name));
 			}
 		}
 		return name;

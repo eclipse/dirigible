@@ -239,7 +239,16 @@
         <dependent-module archiveName="dirigible-template-database-view-3.0.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Database View/Template - Database View">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-resources-themes-3.0.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Themes/Resources - Themes">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-resources-angular-3.0.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Angular/Resources - Angular">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-bootstrap-3.0.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Bootstrap/Resources - Bootstrap">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-goldenlayout-3.0.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - GoldenLayout/Resources - GoldenLayout">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>

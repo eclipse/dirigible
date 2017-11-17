@@ -66,8 +66,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		extensionPointDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				extensionPointPersistenceManager.insert(connection, extensionPointDefinition);
 				return extensionPointDefinition;
 			} finally {
@@ -87,8 +88,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public ExtensionPointDefinition getExtensionPoint(String location) throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return extensionPointPersistenceManager.find(connection, ExtensionPointDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -107,8 +109,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public ExtensionPointDefinition getExtensionPointByName(String name) throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_EXTENSION_POINTS").where("EXTENSIONPOINT_NAME = ?")
 						.toString();
 				List<ExtensionPointDefinition> extensionPointDefinitions = extensionPointPersistenceManager.query(connection,
@@ -139,8 +142,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public void removeExtensionPoint(String location) throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				extensionPointPersistenceManager.delete(connection, ExtensionPointDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -160,8 +164,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public void updateExtensionPoint(String location, String name, String description) throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				ExtensionPointDefinition extensionPointDefinition = getExtensionPoint(location);
 				extensionPointDefinition.setName(name);
 				extensionPointDefinition.setDescription(description);
@@ -183,8 +188,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public List<ExtensionPointDefinition> getExtensionPoints() throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return extensionPointPersistenceManager.findAll(connection, ExtensionPointDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -214,8 +220,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		extensionDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				extensionPersistenceManager.insert(connection, extensionDefinition);
 				return extensionDefinition;
 			} finally {
@@ -235,8 +242,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public ExtensionDefinition getExtension(String location) throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return extensionPersistenceManager.find(connection, ExtensionDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -255,8 +263,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public void removeExtension(String location) throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				extensionPersistenceManager.delete(connection, ExtensionDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -276,8 +285,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public void updateExtension(String location, String module, String extensionPoint, String description) throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				ExtensionDefinition extensionDefinition = getExtension(location);
 				extensionDefinition.setModule(module);
 				extensionDefinition.setExtensionPoint(extensionPoint);
@@ -300,8 +310,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public List<ExtensionDefinition> getExtensions() throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return extensionPersistenceManager.findAll(connection, ExtensionDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -321,8 +332,9 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 	@Override
 	public List<ExtensionDefinition> getExtensionsByExtensionPoint(String extensionPoint) throws ExtensionsException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_EXTENSIONS")
 						.where("EXTENSION_EXTENSIONPOINT_NAME = ?").toString();
 				List<ExtensionDefinition> extensions = extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql,
