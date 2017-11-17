@@ -45,9 +45,11 @@ public class QuartzDatabaseLayoutInitializer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void initialize() throws SQLException, IOException {
-		Connection connection = datasource.getConnection();
+		Connection connection = null;
 		try {
+			connection = datasource.getConnection();
 			logger.debug("Starting to create the database layout for Quartz...");
+			@SuppressWarnings("rawtypes")
 			SqlFactory sqlFactory = SqlFactory.getNative(connection);
 			if (!sqlFactory.exists(connection, "QUARTZ_JOB_DETAILS")) {
 				createTable(connection, "/quartz/QUARTZ_JOB_DETAILS.json");

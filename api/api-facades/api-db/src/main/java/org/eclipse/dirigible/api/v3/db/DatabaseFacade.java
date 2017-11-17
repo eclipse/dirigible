@@ -168,8 +168,9 @@ public class DatabaseFacade implements IScriptingFacade {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
 			throw new IllegalArgumentException(error);
 		}
-		Connection connection = dataSource.getConnection();
+		Connection connection = null;
 		try {
+			connection = dataSource.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			try {
 				if (parameters != null) {
@@ -243,8 +244,9 @@ public class DatabaseFacade implements IScriptingFacade {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
 			throw new IllegalArgumentException(error);
 		}
-		Connection connection = dataSource.getConnection();
+		Connection connection = null;
 		try {
+			connection = dataSource.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			try {
 				if (parameters != null) {
@@ -501,8 +503,9 @@ public class DatabaseFacade implements IScriptingFacade {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
 			throw new IllegalArgumentException(error);
 		}
-		Connection connection = dataSource.getConnection();
+		Connection connection = null;
 		try {
+			connection = dataSource.getConnection();
 			try {
 				return getNextVal(sequence, connection);
 			} catch (SQLException e) {
@@ -598,8 +601,9 @@ public class DatabaseFacade implements IScriptingFacade {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
 			throw new IllegalArgumentException(error);
 		}
-		Connection connection = dataSource.getConnection();
+		Connection connection = null;
 		try {
+			connection = dataSource.getConnection();
 			createSequenceInternal(sequence, connection);
 		} finally {
 			if (connection != null) {
@@ -643,8 +647,9 @@ public class DatabaseFacade implements IScriptingFacade {
 			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
 			throw new IllegalArgumentException(error);
 		}
-		Connection connection = dataSource.getConnection();
+		Connection connection = null;
 		try {
+			connection = dataSource.getConnection();
 			String sql = SqlFactory.getNative(connection).drop().sequence(sequence).build();
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			try {

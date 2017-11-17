@@ -22,22 +22,23 @@ import java.util.List;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PersistenceManagerGeneratedValueSequenceTest.
  */
 public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersistenceManagerTest {
 
 	/**
-	 * Inquiryed crud tests.
+	 * Inquiry CRUD tests.
 	 *
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	@Test
-	public void inquiryedCrudTests() throws SQLException {
+	public void inquiryCrudTests() throws SQLException {
 		PersistenceManager<Inquiry> persistenceManager = new PersistenceManager<Inquiry>();
-		Connection connection = getDataSrouce().getConnection();
+		Connection connection = null;
 		try {
+			connection = getDataSource().getConnection();
 			// create table
 			createTableForPojo(connection, persistenceManager);
 			// check whether it is created successfully
@@ -58,9 +59,12 @@ public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersis
 	/**
 	 * Creates the table for pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void createTableForPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
 		persistenceManager.tableCreate(connection, Inquiry.class);
@@ -69,10 +73,13 @@ public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersis
 	/**
 	 * Exists table.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
 	 * @return true, if successful
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public boolean existsTable(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
 		return persistenceManager.tableExists(connection, Inquiry.class);
@@ -81,9 +88,12 @@ public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersis
 	/**
 	 * Insert pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void insertPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
 		Inquiry inquiry = new Inquiry();
@@ -94,9 +104,12 @@ public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersis
 	/**
 	 * Insert second pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void insertSecondPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
 		Inquiry inquiry = new Inquiry();
@@ -107,9 +120,12 @@ public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersis
 	/**
 	 * Find all pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void findAllPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
 		List<Inquiry> list = persistenceManager.findAll(connection, Inquiry.class);
@@ -127,9 +143,12 @@ public class PersistenceManagerGeneratedValueSequenceTest extends AbstractPersis
 	/**
 	 * Drop table for pojo.
 	 *
-	 * @param connection the connection
-	 * @param persistenceManager the persistence manager
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public void dropTableForPojo(Connection connection, PersistenceManager<Inquiry> persistenceManager) throws SQLException {
 		persistenceManager.tableDrop(connection, Inquiry.class);

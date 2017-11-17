@@ -65,8 +65,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		tableModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				tablePersistenceManager.insert(connection, tableModel);
 				return tableModel;
 			} finally {
@@ -86,8 +87,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public DataStructureTableModel getTable(String location) throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return tablePersistenceManager.find(connection, DataStructureTableModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -106,8 +108,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public DataStructureTableModel getTableByName(String name) throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES")
 						.where("DS_NAME = ? AND DS_TYPE = ?").toString();
 				List<DataStructureTableModel> tableModels = tablePersistenceManager.query(connection, DataStructureTableModel.class, sql,
@@ -137,8 +140,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public void removeTable(String location) throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				tablePersistenceManager.delete(connection, DataStructureTableModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -158,8 +162,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public void updateTable(String location, String name, String hash) throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				DataStructureTableModel tableModel = getTable(location);
 				tableModel.setName(name);
 				tableModel.setHash(hash);
@@ -181,8 +186,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public List<DataStructureTableModel> getTables() throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureTableModel> tableModels = tablePersistenceManager.query(connection, DataStructureTableModel.class, sql,
 						Arrays.asList(IDataStructuresCoreService.TYPE_TABLE));
@@ -215,8 +221,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 		viewModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				viewPersistenceManager.insert(connection, viewModel);
 				return viewModel;
 			} finally {
@@ -236,8 +243,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public DataStructureViewModel getView(String location) throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return viewPersistenceManager.find(connection, DataStructureViewModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -256,8 +264,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public DataStructureViewModel getViewByName(String name) throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES")
 						.where("DS_NAME = ? AND DS_TYPE = ?").toString();
 				List<DataStructureViewModel> viewModels = viewPersistenceManager.query(connection, DataStructureViewModel.class, sql,
@@ -287,8 +296,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public void removeView(String location) throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				viewPersistenceManager.delete(connection, DataStructureViewModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -308,8 +318,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public void updateView(String location, String name, String hash) throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				DataStructureViewModel viewModel = getView(location);
 				viewModel.setName(name);
 				viewModel.setHash(hash);
@@ -331,8 +342,9 @@ public class DataStructureCoreService implements IDataStructuresCoreService {
 	@Override
 	public List<DataStructureViewModel> getViews() throws DataStructuresException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureViewModel> viewModels = viewPersistenceManager.query(connection, DataStructureViewModel.class, sql,
 						Arrays.asList(IDataStructuresCoreService.TYPE_VIEW));

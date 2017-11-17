@@ -65,8 +65,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		publishRequestDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				publishRequestPersistenceManager.insert(connection, publishRequestDefinition);
 				return publishRequestDefinition;
 			} finally {
@@ -96,8 +97,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 	@Override
 	public PublishRequestDefinition getPublishRequest(long id) throws PublisherException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return publishRequestPersistenceManager.find(connection, PublishRequestDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -116,8 +118,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 	@Override
 	public void removePublishRequest(long id) throws PublisherException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				publishRequestPersistenceManager.delete(connection, PublishRequestDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -136,8 +139,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 	@Override
 	public List<PublishRequestDefinition> getPublishRequests() throws PublisherException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return publishRequestPersistenceManager.findAll(connection, PublishRequestDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -165,8 +169,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 		publishLogDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				publishLogPersistenceManager.insert(connection, publishLogDefinition);
 				return publishLogDefinition;
 			} finally {
@@ -186,8 +191,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 	@Override
 	public PublishLogDefinition getPublishLog(long id) throws PublisherException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return publishLogPersistenceManager.find(connection, PublishLogDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -206,8 +212,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 	@Override
 	public void removePublishLog(long id) throws PublisherException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				publishLogPersistenceManager.delete(connection, PublishLogDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -226,8 +233,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 	@Override
 	public List<PublishLogDefinition> getPublishLogs() throws PublisherException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return publishLogPersistenceManager.findAll(connection, PublishLogDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -246,9 +254,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 	@Override
 	public List<PublishRequestDefinition> getPublishRequestsAfter(Timestamp timestamp) throws PublisherException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
-
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PUBLISH_REQUESTS").where("PUBREQ_CREATED_AT > ?")
 						.toString();
 				Timestamp latest = (timestamp == null) ? new Timestamp(0) : timestamp;
@@ -270,8 +278,9 @@ public class PublisherCoreService implements IPublisherCoreService {
 	@Override
 	public Timestamp getLatestPublishLog() throws PublisherException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				publishRequestPersistenceManager.tableCheck(connection, PublishLogDefinition.class);
 				Timestamp date = new Timestamp(new java.util.Date().getTime());
 				String sql = SqlFactory.getNative(connection).select().column("MAX(PUBLOG_CREATED_AT)").from("DIRIGIBLE_PUBLISH_LOGS").toString();

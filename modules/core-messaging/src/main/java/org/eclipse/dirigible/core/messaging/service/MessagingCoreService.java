@@ -66,8 +66,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 		listenerDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				listenerPersistenceManager.insert(connection, listenerDefinition);
 				return listenerDefinition;
 			} finally {
@@ -87,8 +88,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 	@Override
 	public ListenerDefinition getListener(String location) throws MessagingException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return listenerPersistenceManager.find(connection, ListenerDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -107,8 +109,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 	@Override
 	public ListenerDefinition getListenerByName(String name) throws MessagingException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_LISTENERS").where("LISTENER_NAME = ?").toString();
 				List<ListenerDefinition> listenerDefinitions = listenerPersistenceManager.query(connection, ListenerDefinition.class, sql,
 						Arrays.asList(name));
@@ -137,8 +140,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 	@Override
 	public void removeListener(String location) throws MessagingException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				listenerPersistenceManager.delete(connection, ListenerDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -158,8 +162,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 	@Override
 	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				ListenerDefinition listenerDefinition = getListener(location);
 				listenerDefinition.setName(name);
 				listenerDefinition.setType(new Integer(type.ordinal()).byteValue());
@@ -183,8 +188,9 @@ public class MessagingCoreService implements IMessagingCoreService {
 	@Override
 	public List<ListenerDefinition> getListeners() throws MessagingException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return listenerPersistenceManager.findAll(connection, ListenerDefinition.class);
 			} finally {
 				if (connection != null) {

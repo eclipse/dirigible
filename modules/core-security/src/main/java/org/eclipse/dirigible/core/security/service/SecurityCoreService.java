@@ -72,8 +72,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		roleDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				rolesPersistenceManager.insert(connection, roleDefinition);
 				return roleDefinition;
 			} finally {
@@ -93,8 +94,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public RoleDefinition getRole(String name) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return rolesPersistenceManager.find(connection, RoleDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -122,8 +124,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public void removeRole(String name) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				rolesPersistenceManager.delete(connection, RoleDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -143,8 +146,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public void updateRole(String name, String location, String description) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				RoleDefinition roleDefinition = getRole(name);
 				roleDefinition.setLocation(location);
 				roleDefinition.setDescription(description);
@@ -166,8 +170,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public List<RoleDefinition> getRoles() throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return rolesPersistenceManager.findAll(connection, RoleDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -228,8 +233,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 		accessDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				accessPersistenceManager.insert(connection, accessDefinition);
 				clearCache();
 				return accessDefinition;
@@ -250,8 +256,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public AccessDefinition getAccessDefinition(long id) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				return accessPersistenceManager.find(connection, AccessDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -271,8 +278,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public AccessDefinition getAccessDefinition(String uri, String method, String role) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
 						.where("ACCESS_ROLE = ?").where("ACCESS_METHOD = ?").toString();
 				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method);
@@ -312,8 +320,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public void removeAccessDefinition(long id) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				accessPersistenceManager.delete(connection, AccessDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -333,8 +342,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public void updateAccessDefinition(long id, String location, String uri, String method, String role, String description) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				AccessDefinition accessDefinition = getAccessDefinition(id);
 				accessDefinition.setLocation(location);
 				accessDefinition.setUri(uri);
@@ -363,8 +373,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 			return Collections.unmodifiableList(CACHE);
 		}
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				List<AccessDefinition> accessDefinitions = accessPersistenceManager.findAll(connection, AccessDefinition.class);
 				CACHE.addAll(accessDefinitions);
 				return Collections.unmodifiableList(accessDefinitions);
@@ -385,8 +396,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public List<AccessDefinition> getAccessDefinitionsByUri(String uri) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
 						.toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(uri));
@@ -409,8 +421,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public List<AccessDefinition> getAccessDefinitionsByUriAndMethod(String uri, String method) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
 						.where(SqlFactory.getNative(connection).expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString()).toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, method, AccessDefinition.METHOD_ANY);
@@ -432,8 +445,9 @@ public class SecurityCoreService implements ISecurityCoreService {
 	@Override
 	public boolean isAccessAllowed(String uri, String method, String role) throws AccessException {
 		try {
-			Connection connection = dataSource.getConnection();
+			Connection connection = null;
 			try {
+				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
 						.where("ACCESS_ROLE = ?")
 						.where(SqlFactory.getNative(connection).expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString()).toString();
