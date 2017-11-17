@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Repository - API - Test</name>
-	<artifactId>dirigible-repository-api-test</artifactId>
+	<name>Runtime - Anonymous</name>
+	<artifactId>dirigible-runtime-anonymous</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -31,22 +31,7 @@
     <dependencies>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-api</artifactId>
-            <version>3.0.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
-            <version>3.0.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-security</artifactId>
-            <version>3.0.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-anonymous</artifactId>
             <version>3.0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>

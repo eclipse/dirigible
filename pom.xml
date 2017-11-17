@@ -422,6 +422,7 @@
 		<module>modules/runtime-transport</module>
 		<module>modules/runtime-security</module>
 		<module>modules/runtime-theme</module>
+		<module>modules/runtime-anonymous</module>
 
 		<module>modules/runtime-ide-workspaces</module>
 		<module>modules/runtime-ide-terminal</module>

@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
 import java.util.Date;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
@@ -32,10 +32,10 @@ public class RepositoryGenericModifiedTest {
 
 	/** The repository 1. */
 	protected IRepository repository1;
-	
+
 	/** The repository 2. */
 	protected IRepository repository2;
-	
+
 	/** The repository 3. */
 	protected IRepository repository3;
 
@@ -50,7 +50,7 @@ public class RepositoryGenericModifiedTest {
 
 		try {
 
-			Configuration.enableTestMode();
+			ThreadContextFacade.setUp();
 
 			UserFacade.setName("guest1");
 			IResource resource = repository1.createResource("/testCollection/toBeModified.txt", //$NON-NLS-1$
@@ -77,7 +77,7 @@ public class RepositoryGenericModifiedTest {
 			// assertEquals("nobody", resource.getInformation().getModifiedBy());
 			assertTrue(resource.getInformation().getModifiedAt().after(firstModified));
 
-			Configuration.disableTestMode();
+			ThreadContextFacade.tearDown();
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -41,7 +41,9 @@ public class HttpSessionFacade implements IScriptingFacade {
 		}
 		try {
 			HttpServletRequest request = (HttpServletRequest) ThreadContextFacade.get(HttpServletRequest.class.getCanonicalName());
-			return request.getSession(true);
+			if (request != null) {
+				return request.getSession(true);
+			}
 		} catch (ContextException e) {
 			logger.error(e.getMessage(), e);
 		}
