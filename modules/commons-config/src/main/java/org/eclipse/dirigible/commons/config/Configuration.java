@@ -37,9 +37,6 @@ public class Configuration {
 
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-	/** The Constant DIRIGIBLE_TEST_MODE_ENABLED. */
-	public static final String DIRIGIBLE_TEST_MODE_ENABLED = "DIRIGIBLE_TEST_MODE_ENABLED";
-
 	private static Configuration INSTANCE;
 
 	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<String, String>());
@@ -76,14 +73,7 @@ public class Configuration {
 	 *            the custom
 	 */
 	public static void add(Properties custom) {
-		try {
-			if (custom.containsKey(DIRIGIBLE_TEST_MODE_ENABLED)) {
-				throw new TestModeException("Setting the test mode programmatically as a parameter is forbidden.");
-			}
-			getInstance().putAll(custom);
-		} catch (TestModeException e) {
-			throw new IllegalArgumentException(e);
-		}
+		getInstance().putAll(custom);
 	}
 
 	/**
@@ -120,14 +110,7 @@ public class Configuration {
 	 *            the value
 	 */
 	public static void set(String key, String value) {
-		try {
-			if (DIRIGIBLE_TEST_MODE_ENABLED.equals(key)) {
-				throw new TestModeException("Setting the test mode programmatically as a parameter is forbidden.");
-			}
-			getInstance().parameters.put(key, value);
-		} catch (TestModeException e) {
-			throw new IllegalArgumentException(e);
-		}
+		getInstance().parameters.put(key, value);
 	}
 
 	/**
@@ -162,30 +145,17 @@ public class Configuration {
 	}
 
 	/**
-	 * Checks if is test mode enabled.
+	 * Checks if is anonymous mode enabled.
 	 *
-	 * @return true, if is test mode enabled
+	 * @return true, if is anonymous mode enabled
 	 */
-	public static boolean isTestModeEnabled() {
-		String testMode = Configuration.get(DIRIGIBLE_TEST_MODE_ENABLED);
-		if ((testMode != null) || Boolean.parseBoolean(testMode)) {
-			return true;
+	public static boolean isAnonymousModeEnabled() {
+		try {
+			Class.forName("org.eclipse.dirigible.runtime.anonymous.AnonymousAccess");
+		} catch (ClassNotFoundException e) {
+			return false;
 		}
-		return false;
-	}
-
-	/**
-	 * Enable test mode.
-	 */
-	public static void enableTestMode() {
-		getInstance().parameters.put(DIRIGIBLE_TEST_MODE_ENABLED, "true");
-	}
-
-	/**
-	 * Disable test mode.
-	 */
-	public static void disableTestMode() {
-		getInstance().parameters.put(DIRIGIBLE_TEST_MODE_ENABLED, "false");
+		return true;
 	}
 
 	/**

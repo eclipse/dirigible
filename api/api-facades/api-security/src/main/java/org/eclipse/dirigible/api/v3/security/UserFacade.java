@@ -13,9 +13,11 @@ package org.eclipse.dirigible.api.v3.security;
 import static java.text.MessageFormat.format;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
+import org.eclipse.dirigible.api.v3.http.HttpSessionFacade;
+import org.eclipse.dirigible.commons.api.context.ContextException;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.commons.config.TestModeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +26,11 @@ import org.slf4j.LoggerFactory;
  */
 public class UserFacade implements IScriptingFacade {
 
+	private static final String DIRIGIBLE_ANONYMOUS_IDENTIFIER = "dirigible-anonymous-identifier";
+
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 
 	private static final String GUEST = "guest";
-	private static volatile String TEST = "test";
 
 	/**
 	 * Gets the user name.
@@ -47,11 +50,27 @@ public class UserFacade implements IScriptingFacade {
 		if (userName != null) {
 			return userName;
 		}
-		// TEST case
-		if (Configuration.isTestModeEnabled()) {
-			return TEST;
+		// Anonymous case
+		if (Configuration.isAnonymousModeEnabled()) {
+			if (HttpSessionFacade.isValid()) {
+				userName = HttpSessionFacade.getAttribute(DIRIGIBLE_ANONYMOUS_IDENTIFIER);
+			} else {
+				if (ThreadContextFacade.isValid()) {
+					try {
+						Object value = ThreadContextFacade.get(DIRIGIBLE_ANONYMOUS_IDENTIFIER);
+						if ((value != null) && (value instanceof String)) {
+							userName = (String) value;
+						}
+					} catch (ContextException e) {
+						logger.error(e.getMessage());
+					}
+				}
+			}
 		}
-		// Anonymous Case
+		if (userName != null) {
+			return userName;
+		}
+		// Local Case
 		return GUEST;
 	}
 
@@ -63,7 +82,7 @@ public class UserFacade implements IScriptingFacade {
 	 * @return true, if the user is in role
 	 */
 	public static final boolean isInRole(String role) {
-		if (Configuration.isTestModeEnabled()) {
+		if (Configuration.isAnonymousModeEnabled()) {
 			return true;
 		}
 		try {
@@ -80,15 +99,21 @@ public class UserFacade implements IScriptingFacade {
 	 *
 	 * @param userName
 	 *            the user name
-	 * @throws TestModeException
-	 *             the test mode exception
+	 * @throws ContextException
+	 *             in case of not initialized ThreadContext
 	 */
-	public static final void setName(String userName) throws TestModeException {
-		if (Configuration.isTestModeEnabled()) {
-			TEST = userName;
-			logger.warn(format("User name set programmatically {0}", userName));
+	public static final void setName(String userName) throws ContextException {
+		if (Configuration.isAnonymousModeEnabled()) {
+			if (HttpSessionFacade.isValid()) {
+				HttpSessionFacade.setAttribute(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
+				logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			} else {
+				if (ThreadContextFacade.isValid()) {
+					ThreadContextFacade.set(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
+				}
+			}
 		} else {
-			throw new TestModeException("Setting the user name programmatically is supported only when the test mode is enabled");
+			throw new SecurityException("Setting the user name programmatically is supported only when the anonymous mode is enabled");
 		}
 	}
 

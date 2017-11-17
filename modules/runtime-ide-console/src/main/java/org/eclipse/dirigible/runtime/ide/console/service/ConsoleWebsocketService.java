@@ -101,7 +101,9 @@ public class ConsoleWebsocketService {
 		for (Session session : OPEN_SESSIONS.values()) {
 			synchronized (session) {
 				try {
-					session.getBasicRemote().sendText(GsonHelper.GSON.toJson(record));
+					if (session.isOpen()) {
+						session.getBasicRemote().sendText(GsonHelper.GSON.toJson(record));
+					}
 				} catch (IOException e) {
 					System.err.println(e.getMessage());
 				}

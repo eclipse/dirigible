@@ -417,6 +417,11 @@
 		 	<artifactId>dirigible-runtime-theme</artifactId>
 		 	<version>3.0.2-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-runtime-anonymous</artifactId>
+		 	<version>3.0.2-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- Runtime IDE Services -->
 		<dependency>
