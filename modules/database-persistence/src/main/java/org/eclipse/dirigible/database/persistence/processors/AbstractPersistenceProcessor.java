@@ -219,7 +219,9 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			value = getEntityManagerInterceptor().onGetValueBeforeUpdate(i, dataType, value);
 		}
 
-		if (DataTypeUtils.isVarchar(dataType)) {
+		if (value == null) {
+			preparedStatement.setObject(i, null);
+		} else if (DataTypeUtils.isVarchar(dataType)) {
 			preparedStatement.setString(i, (String) value);
 		} else if (DataTypeUtils.isChar(dataType)) {
 			preparedStatement.setString(i, (String) value);

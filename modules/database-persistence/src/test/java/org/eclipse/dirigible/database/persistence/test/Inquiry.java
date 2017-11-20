@@ -16,20 +16,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Inquiry.
  */
 @Table(name = "INQUIRIES")
 public class Inquiry {
 
-	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "INQUIRY_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
 
-	/** The subject. */
 	@Column(name = "INQUIRY_SUBJECT", columnDefinition = "VARCHAR", nullable = false, length = 512)
 	private String subject;
 
@@ -45,7 +42,8 @@ public class Inquiry {
 	/**
 	 * Sets the id.
 	 *
-	 * @param id the new id
+	 * @param id
+	 *            the new id
 	 */
 	public void setId(long id) {
 		this.id = id;
@@ -63,7 +61,8 @@ public class Inquiry {
 	/**
 	 * Sets the subject.
 	 *
-	 * @param subject the new subject
+	 * @param subject
+	 *            the new subject
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
