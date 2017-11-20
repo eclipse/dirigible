@@ -169,14 +169,24 @@ public class PersistenceAnnotationsParser {
 			boolean primaryKey = annotationId != null;
 			// @GeneratedValue
 			String generated = null;
+			boolean identity = false;
 			Annotation annotationGeneratedValue = field.getAnnotation(GeneratedValue.class);
 			if (annotationGeneratedValue != null) {
 				GeneratedValue generatedValue = (GeneratedValue) annotationGeneratedValue;
 				if ((generatedValue.strategy() == null) || GenerationType.AUTO.equals(generatedValue.strategy())) {
 					generated = GenerationType.TABLE.name();
 				} else {
-					if (!GenerationType.SEQUENCE.equals(generatedValue.strategy()) && !GenerationType.TABLE.equals(generatedValue.strategy())) {
+					if (!GenerationType.SEQUENCE.equals(generatedValue.strategy()) && !GenerationType.TABLE.equals(generatedValue.strategy())
+							&& !GenerationType.IDENTITY.equals(generatedValue.strategy())) {
 						throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", generatedValue.strategy().name()));
+					}
+					if (GenerationType.IDENTITY.equals(generatedValue.strategy())) {
+						if (DataTypeUtils.isBigint(type) || DataTypeUtils.isVarchar(type) || DataTypeUtils.isChar(type)
+								|| DataTypeUtils.isInteger(type) || DataTypeUtils.isDecimal(type)) {
+							identity = true;
+						} else {
+							throw new IllegalArgumentException("Identity columns must of type CHAR, VARCHAR, INTEGER, BIGINT or DECIMAL");
+						}
 					}
 					generated = generatedValue.strategy().name();
 				}
@@ -198,7 +208,7 @@ public class PersistenceAnnotationsParser {
 			}
 
 			PersistenceTableColumnModel persistenceTableColumnModel = new PersistenceTableColumnModel(field.getName(), column.name(), type, length,
-					column.nullable(), primaryKey, column.precision(), column.scale(), generated, unique, enumerated);
+					column.nullable(), primaryKey, column.precision(), column.scale(), generated, unique, identity, enumerated);
 			persistenceModel.getColumns().add(persistenceTableColumnModel);
 		}
 

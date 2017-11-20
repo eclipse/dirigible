@@ -15,13 +15,14 @@ import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 /**
  * The PostgreSQL SQL Dialect.
  */
 public class PostgresSqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, PostgresCreateBranchingBuilder, DropBranchingBuilder, PostgresNextValueSequenceBuilder> {
+		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, PostgresCreateBranchingBuilder, DropBranchingBuilder, PostgresNextValueSequenceBuilder, LastValueIdentityBuilder> {
 
 	/** The Constant FUNCTION_CURRENT_DATE. */
 	public static final String FUNCTION_CURRENT_DATE = "current_date"; //$NON-NLS-1$

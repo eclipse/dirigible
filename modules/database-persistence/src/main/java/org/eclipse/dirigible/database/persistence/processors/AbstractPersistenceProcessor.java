@@ -91,6 +91,9 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			if (!shouldSetColumnValue(columnModel)) {
 				continue;
 			}
+			if (columnModel.isIdentity()) {
+				continue;
+			}
 			// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 			Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 			String dataType = columnModel.getType();

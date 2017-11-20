@@ -35,6 +35,8 @@ public class PersistenceTableColumnModel {
 
 	private boolean unique;
 
+	private boolean identity;
+
 	private String enumerated;
 
 	/**
@@ -60,11 +62,13 @@ public class PersistenceTableColumnModel {
 	 *            whether it is a generated value
 	 * @param unique
 	 *            whether it is unique
+	 * @param identity
+	 *            whether it is identity
 	 * @param enumerated
 	 *            whether it is enumerated
 	 */
 	public PersistenceTableColumnModel(String field, String name, String type, int length, boolean nullable, boolean primaryKey, int precision,
-			int scale, String generated, boolean unique, String enumerated) {
+			int scale, String generated, boolean unique, boolean identity, String enumerated) {
 		this.field = field;
 		this.name = name;
 		this.type = type;
@@ -75,6 +79,7 @@ public class PersistenceTableColumnModel {
 		this.scale = scale;
 		this.generated = generated;
 		this.unique = unique;
+		this.identity = identity;
 		this.enumerated = enumerated;
 	}
 
@@ -266,6 +271,25 @@ public class PersistenceTableColumnModel {
 	 */
 	public void setUnique(boolean unique) {
 		this.unique = unique;
+	}
+
+	/**
+	 * Check whether it is identity value.
+	 *
+	 * @return true if identity
+	 */
+	public boolean isIdentity() {
+		return identity;
+	}
+
+	/**
+	 * Setter for the identity.
+	 *
+	 * @param identity
+	 *            whether it is identity
+	 */
+	public void setIdentity(boolean identity) {
+		this.identity = identity;
 	}
 
 	/**

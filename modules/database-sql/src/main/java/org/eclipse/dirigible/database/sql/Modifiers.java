@@ -33,4 +33,7 @@ public class Modifiers {
 	/** The Constant NON_UNIQUE. */
 	public static final boolean NON_UNIQUE = false;
 
+	/** The Constant IDENTITY. */
+	public static final boolean IDENTITY = true;
+
 }

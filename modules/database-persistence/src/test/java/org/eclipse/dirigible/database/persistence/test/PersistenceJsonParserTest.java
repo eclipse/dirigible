@@ -28,8 +28,10 @@ public class PersistenceJsonParserTest {
 	/**
 	 * Model from json.
 	 *
-	 * @throws JsonSyntaxException the json syntax exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @throws JsonSyntaxException
+	 *             the json syntax exception
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
 	 */
 	@Test
 	public void modelFromJson() throws JsonSyntaxException, ClassNotFoundException {
@@ -49,7 +51,7 @@ public class PersistenceJsonParserTest {
 		PersistenceJsonParser<?> parser = new PersistenceJsonParser<>();
 		String json = parser.serializeModel(persistenceModel);
 		assertEquals(
-				"{\"className\":\"org.eclipse.dirigible.database.persistence.test.Customer\",\"tableName\":\"CUSTOMERS\",\"schemaName\":\"FACTORY\",\"columns\":[{\"field\":\"id\",\"name\":\"CUSTOMER_ID\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":true,\"precision\":0,\"scale\":0,\"unique\":false},{\"field\":\"firstName\",\"name\":\"CUSTOMER_FIRST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"unique\":false},{\"field\":\"lastName\",\"name\":\"CUSTOMER_LAST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"unique\":false},{\"field\":\"age\",\"name\":\"CUSTOMER_AGE\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"unique\":false}]}",
+				"{\"className\":\"org.eclipse.dirigible.database.persistence.test.Customer\",\"tableName\":\"CUSTOMERS\",\"schemaName\":\"FACTORY\",\"columns\":[{\"field\":\"id\",\"name\":\"CUSTOMER_ID\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":true,\"precision\":0,\"scale\":0,\"unique\":false,\"identity\":false},{\"field\":\"firstName\",\"name\":\"CUSTOMER_FIRST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"unique\":false,\"identity\":false},{\"field\":\"lastName\",\"name\":\"CUSTOMER_LAST_NAME\",\"type\":\"VARCHAR\",\"length\":512,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"unique\":false,\"identity\":false},{\"field\":\"age\",\"name\":\"CUSTOMER_AGE\",\"type\":\"INTEGER\",\"length\":255,\"nullable\":false,\"primaryKey\":false,\"precision\":0,\"scale\":0,\"unique\":false,\"identity\":false}]}",
 				json);
 	}
 

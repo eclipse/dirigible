@@ -75,6 +75,8 @@ public class PersistenceManager<T> {
 					PersistenceCreateIdentityProcessor persistenceCreateIdentityProcessor = new PersistenceCreateIdentityProcessor(
 							getEntityManagerInterceptor());
 					persistenceCreateIdentityProcessor.create(connection, tableModel);
+				} else if (GenerationType.IDENTITY.name().equals(columnModel.getGenerated())) {
+					// nothing in advance
 				} else {
 					throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", columnModel.getGenerated()));
 				}

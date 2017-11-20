@@ -14,6 +14,7 @@ import static java.text.MessageFormat.format;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.persistence.GenerationType;
@@ -27,6 +28,7 @@ import org.eclipse.dirigible.database.persistence.processors.identity.Persistenc
 import org.eclipse.dirigible.database.persistence.processors.sequence.PersistenceNextValueSequenceProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 
 /**
  * The Persistence Insert Processor.
@@ -52,9 +54,12 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		InsertBuilder insertBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).insert().into(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
+			if (columnModel.isIdentity()) {
+				continue;
+			}
 			insertBuilder.column(columnModel.getName());
 		}
-		String sql = insertBuilder.toString();
+		String sql = insertBuilder.build();
 		return sql;
 	}
 
@@ -76,18 +81,39 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
-			setGeneratedValues(connection, tableModel, pojo);
+			boolean identified = setGeneratedValues(connection, tableModel, pojo);
 			sql = generateScript(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			setValuesFromPojo(tableModel, pojo, preparedStatement);
 			preparedStatement.executeUpdate();
-			result = getPrimaryKeyValue(tableModel, pojo);
+			if (identified) {
+				result = getPrimaryKeyValue(tableModel, pojo);
+			} else {
+				result = getLastInserted(connection, tableModel, pojo);
+			}
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
 		}
 		return result;
+	}
+
+	private Object getLastInserted(Connection connection, PersistenceTableModel tableModel, Object pojo) throws SQLException {
+		LastValueIdentityBuilder identityBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).lastval();
+		String sql = identityBuilder.build();
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = openPreparedStatement(connection, sql);
+			ResultSet rs = preparedStatement.executeQuery();
+			if (rs.next()) {
+				long id = rs.getLong(1);
+				return id;
+			}
+		} finally {
+			closePreparedStatement(preparedStatement);
+		}
+		return -1;
 	}
 
 	/**
@@ -106,7 +132,7 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	private void setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
+	private boolean setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey() && (columnModel.getGenerated() != null)) {
@@ -119,12 +145,15 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 					PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor = new PersistenceNextValueIdentityProcessor(
 							getEntityManagerInterceptor());
 					id = persistenceNextValueIdentityProcessor.nextval(connection, tableModel);
+				} else if (GenerationType.IDENTITY.name().equals(columnModel.getGenerated())) {
+					return false;
 				} else {
 					throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", columnModel.getGenerated()));
 				}
 				setValueToPojo(pojo, id, columnModel);
 			}
 		}
+		return true;
 	}
 
 	/**
