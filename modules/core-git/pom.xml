@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>3.0.2</version>
+		<version>3.0.3-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -32,17 +32,17 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-workspace</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3-SNAPSHOT</version>
         </dependency>
          <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-publisher</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3-SNAPSHOT</version>
         </dependency>
     	<dependency>
 		    <groupId>org.eclipse.jgit</groupId>
@@ -53,19 +53,19 @@
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-local</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
