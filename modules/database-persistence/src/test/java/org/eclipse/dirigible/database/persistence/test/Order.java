@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Order.
  */
@@ -44,7 +43,8 @@ public class Order {
 	/**
 	 * Sets the id.
 	 *
-	 * @param id the new id
+	 * @param id
+	 *            the new id
 	 */
 	public void setId(long id) {
 		this.id = id;
@@ -62,7 +62,8 @@ public class Order {
 	/**
 	 * Sets the subject.
 	 *
-	 * @param subject the new subject
+	 * @param subject
+	 *            the new subject
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;

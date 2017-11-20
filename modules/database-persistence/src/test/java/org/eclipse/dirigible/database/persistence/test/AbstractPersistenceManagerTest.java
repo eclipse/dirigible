@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.junit.Before;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractPersistenceManagerTest.
  */
