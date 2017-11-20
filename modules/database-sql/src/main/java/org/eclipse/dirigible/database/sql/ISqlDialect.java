@@ -19,6 +19,7 @@ import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
 /**
@@ -39,8 +40,8 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  * @param <NEXT>
  *            the generic type
  */
-public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder>
-		extends ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT>, ISqlKeywords {
+public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
+		extends ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST>, ISqlKeywords {
 
 	/**
 	 * Default implementation returns the direct toString() conversion. It may
@@ -59,6 +60,14 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @return the primary key argument
 	 */
 	public String getPrimaryKeyArgument();
+
+	/**
+	 * Identity argument for a column for the create table script Default is
+	 * "IDENTITY".
+	 *
+	 * @return the primary key argument
+	 */
+	public String getIdentityArgument();
 
 	/**
 	 * NOT NULL argument for a column for the create table script Default is

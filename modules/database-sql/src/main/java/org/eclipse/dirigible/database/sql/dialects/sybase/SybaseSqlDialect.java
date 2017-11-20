@@ -21,7 +21,7 @@ import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
  * The Sybase SQL Dialect.
  */
 public class SybaseSqlDialect extends
-		DefaultSqlDialect<SybaseSelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, SybaseNextValueSequenceBuilder> {
+		DefaultSqlDialect<SybaseSelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, SybaseNextValueSequenceBuilder, SybaseLastValueIdentityBuilder> {
 
 	/** The Constant FUNCTION_CURRENT_DATE. */
 	public static final String FUNCTION_CURRENT_DATE = "current_date"; //$NON-NLS-1$
@@ -39,6 +39,15 @@ public class SybaseSqlDialect extends
 	@Override
 	public SybaseNextValueSequenceBuilder nextval(String sequence) {
 		return new SybaseNextValueSequenceBuilder(this, sequence);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+	 */
+	@Override
+	public SybaseLastValueIdentityBuilder lastval() {
+		return new SybaseLastValueIdentityBuilder(this);
 	}
 
 	/*

@@ -16,13 +16,14 @@ import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 /**
  * The H2 SQL Dialect.
  */
 public class H2SqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, H2NextValueSequenceBuilder> {
+		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, H2NextValueSequenceBuilder, LastValueIdentityBuilder> {
 
 	/*
 	 * (non-Javadoc)

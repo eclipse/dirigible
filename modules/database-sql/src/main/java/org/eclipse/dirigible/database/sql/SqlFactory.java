@@ -20,6 +20,7 @@ import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
@@ -42,11 +43,11 @@ import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
  * @param <NEXT>
  *            the generic type
  */
-public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder>
-		implements ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> {
+public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
+		implements ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> {
 
 	/** The dialect. */
-	private ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> dialect;
+	private ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> dialect;
 
 	/**
 	 * Gets the default.
@@ -78,9 +79,9 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	 *            the dialect
 	 * @return the native
 	 */
-	public static <SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder> SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> getNative(
-			ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> dialect) {
-		return new SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT>(dialect);
+	public static <SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> getNative(
+			ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> dialect) {
+		return new SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST>(dialect);
 	}
 
 	/**
@@ -215,6 +216,11 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	@Override
 	public int count(Connection connection, String table) throws SQLException {
 		return this.dialect.count(connection, table);
+	}
+
+	@Override
+	public LAST lastval() {
+		return this.dialect.lastval();
 	}
 
 }

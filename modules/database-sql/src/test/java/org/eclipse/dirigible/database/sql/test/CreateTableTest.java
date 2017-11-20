@@ -141,5 +141,22 @@ public class CreateTableTest {
 		assertEquals("CREATE TABLE CUSTOMERS ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) , CONSTRAINT LAST_NAME_CHECK CHECK (LAST_NAME = 'Smith'))",
 				sql);
 	}
+	
+	/**
+	 * Creates the table type constraint check.
+	 */
+	@Test
+	public void createTableWithIdentity() {
+		String sql = SqlFactory.getDefault().create()
+				.table("CUSTOMERS")
+				.column("ID", DataType.BIGINT, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, Modifiers.IDENTITY)
+				.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
+				.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+				.build();
+
+		assertNotNull(sql);
+		assertEquals("CREATE TABLE CUSTOMERS ( ID BIGINT IDENTITY , FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )",
+				sql);
+	}
 
 }

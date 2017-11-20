@@ -26,6 +26,7 @@ import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
 /**
@@ -45,9 +46,11 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  *            the generic type
  * @param <NEXT>
  *            the generic type
+ * @param <LAST>
+ *            the generic type
  */
-public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder>
-		implements ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT> {
+public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
+		implements ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> {
 
 	/*
 	 * (non-Javadoc)
@@ -137,6 +140,15 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	@Override
 	public String getPrimaryKeyArgument() {
 		return KEYWORD_PRIMARY + SPACE + KEYWORD_KEY;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getPrimaryKeyArgument()
+	 */
+	@Override
+	public String getIdentityArgument() {
+		return KEYWORD_IDENTITY;
 	}
 
 	/*
@@ -238,6 +250,11 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	@Override
 	public String functionCurrentTimestamp() {
 		return ISqlKeywords.FUNCTION_CURRENT_TIMESTAMP;
+	}
+
+	@Override
+	public LAST lastval() {
+		return (LAST) new LastValueIdentityBuilder(this);
 	}
 
 }

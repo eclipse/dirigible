@@ -50,11 +50,11 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 			switch (dataType) {
 				case VARCHAR:
 					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
-							columnModel.isNullable(), columnModel.isUnique());
+							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case CHAR:
 					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
-							columnModel.isNullable(), columnModel.isUnique());
+							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case DATE:
 					createTableBuilder.columnDate(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
@@ -70,7 +70,7 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					break;
 				case INTEGER:
 					createTableBuilder.columnInteger(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
-							columnModel.isUnique());
+							columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case TINYINT:
 					createTableBuilder.columnInteger(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
@@ -78,7 +78,7 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					break;
 				case BIGINT:
 					createTableBuilder.columnBigint(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
-							columnModel.isUnique());
+							columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case SMALLINT:
 					createTableBuilder.columnSmallint(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
@@ -101,11 +101,11 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					break;
 				case DECIMAL:
 					createTableBuilder.columnDecimal(columnModel.getName(), columnModel.getPrecision(), columnModel.getScale(),
-							columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique());
+							columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
 			}
 		}
-		String sql = createTableBuilder.toString();
+		String sql = createTableBuilder.build();
 		return sql;
 	}
 

@@ -20,6 +20,7 @@ import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
 
 /**
@@ -39,8 +40,10 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  *            the generic type
  * @param <NEXT>
  *            the generic type
+ * @param <LAST>
+ *            the generic type
  */
-public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder> {
+public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> {
 
 	/**
 	 * Select.
@@ -125,5 +128,12 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @return the next
 	 */
 	public NEXT nextval(String sequence);
+
+	/**
+	 * Lastval.
+	 *
+	 * @return the last
+	 */
+	public LAST lastval();
 
 }
