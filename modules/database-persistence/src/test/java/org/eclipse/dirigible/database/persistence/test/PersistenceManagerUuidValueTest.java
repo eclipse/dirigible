@@ -51,7 +51,9 @@ public class PersistenceManagerUuidValueTest extends AbstractPersistenceManagerT
 			// drop the table
 			dropTableForPojo(connection, persistenceManager);
 		} finally {
-			connection.close();
+			if (connection != null) {
+				connection.close();
+			}
 		}
 	}
 

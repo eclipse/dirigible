@@ -144,6 +144,9 @@ public class DatabaseMetadataHelper {
 					// low level filtering for schema
 					rs = connection.createStatement().executeQuery(sqlDialect.getSchemaFilterScript());
 				} catch (Exception e) {
+					if (rs != null) {
+						rs.close();
+					}
 					// backup in case of wrong product recognition
 					rs = dmd.getSchemas(catalogName, null);
 				} finally {
@@ -201,12 +204,13 @@ public class DatabaseMetadataHelper {
 		List<TableMetadata> result = new ArrayList<TableMetadata>();
 
 		ResultSet rs = null;
-		if (sqlDialect.isCatalogForSchema()) {
-			rs = dmd.getTables(schemeName, null, PRCNT, TABLE_TYPES);
-		} else {
-			rs = dmd.getTables(catalogName, schemeName, PRCNT, TABLE_TYPES);
-		}
 		try {
+			if (sqlDialect.isCatalogForSchema()) {
+				rs = dmd.getTables(schemeName, null, PRCNT, TABLE_TYPES);
+			} else {
+				rs = dmd.getTables(catalogName, schemeName, PRCNT, TABLE_TYPES);
+			}
+
 			while (rs.next()) {
 				String tableName = rs.getString("TABLE_NAME");
 				String tableType = rs.getString("TABLE_TYPE");
@@ -217,7 +221,9 @@ public class DatabaseMetadataHelper {
 				result.add(new TableMetadata(tableName, tableType, tableRemarks, connection, catalogName, schemeName));
 			}
 		} finally {
-			rs.close();
+			if (rs != null) {
+				rs.close();
+			}
 		}
 
 		return result;

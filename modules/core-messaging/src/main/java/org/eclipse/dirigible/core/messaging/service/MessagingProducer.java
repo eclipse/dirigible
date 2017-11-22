@@ -65,26 +65,27 @@ public class MessagingProducer implements Runnable {
 			connection.start();
 
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			try {
+				Destination destination = null;
+				if (type.equals(DestinationType.QUEUE)) {
+					destination = session.createQueue(this.name);
+				} else if (type.equals(DestinationType.TOPIC)) {
+					destination = session.createTopic(this.name);
+				} else {
+					throw new MessagingException(format("Invalid Destination Type [{0}] for destination [{1}]", this.type.name(), this.name));
+				}
 
-			Destination destination = null;
-			if (type.equals(DestinationType.QUEUE)) {
-				destination = session.createQueue(this.name);
-			} else if (type.equals(DestinationType.TOPIC)) {
-				destination = session.createTopic(this.name);
-			} else {
-				throw new MessagingException(format("Invalid Destination Type [{0}] for destination [{1}]", this.type.name(), this.name));
+				MessageProducer producer = session.createProducer(destination);
+				producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+
+				TextMessage textMessage = session.createTextMessage(this.message);
+
+				producer.send(textMessage);
+				logger.trace(format("Message sent in [{0}]", this.name));
+			} finally {
+				session.close();
+				connection.close();
 			}
-
-			MessageProducer producer = session.createProducer(destination);
-			producer.setDeliveryMode(DeliveryMode.PERSISTENT);
-
-			TextMessage textMessage = session.createTextMessage(this.message);
-
-			producer.send(textMessage);
-			logger.trace(format("Message sent in [{0}]", this.name));
-
-			session.close();
-			connection.close();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

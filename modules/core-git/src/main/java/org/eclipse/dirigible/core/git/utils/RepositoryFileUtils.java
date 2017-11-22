@@ -119,15 +119,24 @@ public class RepositoryFileUtils {
 						break;
 					}
 				}
-				InputStream in = new ByteArrayInputStream(((IResource) entity).getContent());
-				File outputFile = new File(tempDirectory, resourcePath);
 
-				FileOutputStream out = new FileOutputStream(outputFile);
-				IOUtils.copy(in, out);
+				InputStream in = null;
+				FileOutputStream out = null;
+				try {
+					in = new ByteArrayInputStream(((IResource) entity).getContent());
+					File outputFile = new File(tempDirectory, resourcePath);
 
-				in.close();
-				out.flush();
-				out.close();
+					out = new FileOutputStream(outputFile);
+					IOUtils.copy(in, out);
+				} finally {
+					if (in != null) {
+						in.close();
+					}
+					if (out != null) {
+						out.flush();
+						out.close();
+					}
+				}
 			}
 		}
 	}

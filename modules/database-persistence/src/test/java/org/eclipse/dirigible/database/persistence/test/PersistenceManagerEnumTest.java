@@ -52,7 +52,9 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 			// drop the table
 			dropTableForPojo(connection, persistenceManager);
 		} finally {
-			connection.close();
+			if (connection != null) {
+				connection.close();
+			}
 		}
 	}
 

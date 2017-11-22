@@ -93,8 +93,9 @@ public class IndexingCoreService implements IIndexingCoreService {
 			Analyzer analyzer = new StandardAnalyzer();
 			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 			iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
-			IndexWriter writer = new IndexWriter(dir, iwc);
+			IndexWriter writer = null;
 			try {
+				writer = new IndexWriter(dir, iwc);
 				Document doc = new Document();
 				Field pathField = new StringField(FIELD_LOCATION, location, Field.Store.YES);
 				doc.add(pathField);
@@ -108,7 +109,9 @@ public class IndexingCoreService implements IIndexingCoreService {
 						new BufferedReader(new InputStreamReader(new ByteArrayInputStream(contents), StandardCharsets.UTF_8))));
 				writer.updateDocument(new Term(FIELD_LOCATION, location), doc);
 			} finally {
-				writer.close();
+				if (writer != null) {
+					writer.close();
+				}
 			}
 		} catch (IOException e) {
 			throw new IndexingException(e);
@@ -130,8 +133,9 @@ public class IndexingCoreService implements IIndexingCoreService {
 		}
 		try {
 			Directory dir = FSDirectory.open(Paths.get(ROOT_FOLDER + File.separator + indexName));
-			IndexReader reader = DirectoryReader.open(dir);
+			IndexReader reader = null;
 			try {
+				reader = DirectoryReader.open(dir);
 				IndexSearcher searcher = new IndexSearcher(reader);
 				Analyzer analyzer = new StandardAnalyzer();
 				String field = FIELD_CONTENTS;
@@ -147,7 +151,9 @@ public class IndexingCoreService implements IIndexingCoreService {
 					results.add(map);
 				}
 			} finally {
-				reader.close();
+				if (reader != null) {
+					reader.close();
+				}
 			}
 			return GsonHelper.GSON.toJson(results);
 		} catch (IOException | ParseException e) {
@@ -188,8 +194,9 @@ public class IndexingCoreService implements IIndexingCoreService {
 		}
 		try {
 			Directory dir = FSDirectory.open(Paths.get(ROOT_FOLDER + File.separator + indexName));
-			IndexReader reader = DirectoryReader.open(dir);
+			IndexReader reader = null;
 			try {
+				reader = DirectoryReader.open(dir);
 				IndexSearcher searcher = new IndexSearcher(reader);
 				Query query = LongPoint.newRangeQuery(FIELD_MODIFIED, lower, upper);
 				TopDocs topDocs = searcher.search(query, MAX_RESULTS);
@@ -202,7 +209,9 @@ public class IndexingCoreService implements IIndexingCoreService {
 					results.add(map);
 				}
 			} finally {
-				reader.close();
+				if (reader != null) {
+					reader.close();
+				}
 			}
 			return GsonHelper.GSON.toJson(results);
 		} catch (IOException e) {
