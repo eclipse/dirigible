@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.database.ds.model.processors;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import org.eclipse.dirigible.database.ds.model.DataStructureTableColumnModel;
@@ -100,10 +100,10 @@ public class TableCreateProcessor {
 		}
 
 		final String sql = createTableBuilder.build();
-		Statement statement = connection.createStatement();
+		PreparedStatement statement = connection.prepareStatement(sql);
 		try {
 			logger.info(sql);
-			statement.executeUpdate(sql);
+			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(sql);
 			logger.error(e.getMessage(), e);

@@ -11,8 +11,8 @@
 package org.eclipse.dirigible.database.ds.model.processors;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -37,10 +37,10 @@ public class ViewDropProcessor {
 		logger.info("Processing Drop View: " + viewModel.getName());
 		if (SqlFactory.getNative(connection).exists(connection, viewModel.getName())) {
 			String sql = SqlFactory.getNative(connection).drop().view(viewModel.getName()).build();
-			Statement statement = connection.createStatement();
+			PreparedStatement statement = connection.prepareStatement(sql);
 			try {
 				logger.info(sql);
-				statement.executeUpdate(sql);
+				statement.executeUpdate();
 			} catch (SQLException e) {
 				logger.error(sql);
 				logger.error(e.getMessage(), e);
