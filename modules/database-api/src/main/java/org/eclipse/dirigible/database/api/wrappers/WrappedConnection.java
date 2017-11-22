@@ -179,7 +179,7 @@ public class WrappedConnection implements Connection {
 	 */
 	@Override
 	public Statement createStatement() throws SQLException {
-		logger.trace("called - createStatement()");
+		logger.warn("called unsecured [createStatement()]");
 		return originalConnection.createStatement();
 	}
 
@@ -189,7 +189,7 @@ public class WrappedConnection implements Connection {
 	 */
 	@Override
 	public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-		logger.trace("called - createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)");
+		logger.warn("called unsecured [createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)]");
 		return originalConnection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
 	}
 
@@ -199,7 +199,7 @@ public class WrappedConnection implements Connection {
 	 */
 	@Override
 	public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-		logger.trace("called - createStatement(int resultSetType, int resultSetConcurrency)");
+		logger.warn("called unsecured [createStatement(int resultSetType, int resultSetConcurrency)]");
 		return originalConnection.createStatement(resultSetType, resultSetConcurrency);
 	}
 

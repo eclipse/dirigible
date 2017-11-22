@@ -11,9 +11,9 @@
 package org.eclipse.dirigible.core.publisher.service;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -285,8 +285,8 @@ public class PublisherCoreService implements IPublisherCoreService {
 				Timestamp date = new Timestamp(new java.util.Date().getTime());
 				String sql = SqlFactory.getNative(connection).select().column("MAX(PUBLOG_CREATED_AT)").from("DIRIGIBLE_PUBLISH_LOGS").toString();
 
-				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery(sql);
+				PreparedStatement statement = connection.prepareStatement(sql);
+				ResultSet resultSet = statement.executeQuery();
 				if (resultSet.next()) {
 					date = resultSet.getTimestamp(1);
 				}

@@ -12,9 +12,9 @@ package org.eclipse.dirigible.database.sql.dialects;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
@@ -190,8 +190,8 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	@Override
 	public int count(Connection connection, String table) throws SQLException {
 		String sql = new SelectBuilder(this).column("COUNT(*)").from(table).build();
-		Statement statement = connection.createStatement();
-		ResultSet resultSet = statement.executeQuery(sql);
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultSet = statement.executeQuery();
 		if (resultSet.next()) {
 			return resultSet.getInt(1);
 		}
