@@ -181,11 +181,14 @@ public class GitFileUtils {
 	 */
 	public static byte[] readFile(File file) throws IOException {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		final InputStream in = new FileInputStream(file);
+		InputStream in = null;
 		try {
+			in = new FileInputStream(file);
 			IOUtils.copy(in, out);
 		} finally {
-			in.close();
+			if (in != null) {
+				in.close();
+			}
 		}
 		return out.toByteArray();
 	}
@@ -312,17 +315,23 @@ public class GitFileUtils {
 			new File(tempGitDirectory, resourceDirectory.toString()).mkdirs();
 			String resourcePath = resourceDirectory + file.getPath().substring(path.getParentPath().getPath().length() + 1);
 
-			InputStream in = new ByteArrayInputStream(file.getContent());
-			File outputFile = new File(tempGitDirectory, resourcePath);
-			outputFile.getParentFile().mkdirs();
-			outputFile.createNewFile();
-			FileOutputStream out = new FileOutputStream(outputFile);
+			InputStream in = null;
+			FileOutputStream out = null;
 			try {
+				in = new ByteArrayInputStream(file.getContent());
+				File outputFile = new File(tempGitDirectory, resourcePath);
+				outputFile.getParentFile().mkdirs();
+				outputFile.createNewFile();
+				out = new FileOutputStream(outputFile);
 				IOUtils.copy(in, out);
 			} finally {
-				in.close();
-				out.flush();
-				out.close();
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.flush();
+					out.close();
+				}
 			}
 		}
 		for (IFolder folder : source.getFolders()) {

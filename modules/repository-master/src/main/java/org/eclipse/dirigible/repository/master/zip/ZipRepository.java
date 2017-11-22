@@ -79,9 +79,16 @@ public class ZipRepository extends FileSystemRepository {
 					entryDestination.mkdirs();
 				} else {
 					entryDestination.getParentFile().mkdirs();
-					OutputStream out = new FileOutputStream(entryDestination);
-					IOUtils.copy(zipInputStream, out);
-					out.close();
+					OutputStream out = null;
+					try {
+						out = new FileOutputStream(entryDestination);
+						IOUtils.copy(zipInputStream, out);
+					} finally {
+						if (out != null) {
+							out.close();
+						}
+					}
+
 				}
 			}
 		} finally {
