@@ -26,6 +26,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
@@ -126,6 +127,8 @@ public class SecurityFilter implements Filter {
 	private void forbidden(String uri, String message, HttpServletResponse response) throws IOException {
 		String error = String.format("Requested URI [%s] is forbidden: %s", uri, message);
 		logger.warn(error);
+		error = EscapeFacade.escapeHtml4(error);
+		error = EscapeFacade.escapeJavascript(error);
 		response.sendError(HttpServletResponse.SC_FORBIDDEN, error);
 	}
 
