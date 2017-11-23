@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -74,7 +75,9 @@ public class ZipRepository extends FileSystemRepository {
 		try {
 			ZipEntry entry;
 			while ((entry = zipInputStream.getNextEntry()) != null) {
-				File entryDestination = new File(folder, entry.getName());
+				String name = entry.getName();
+				name = Paths.get(name).normalize().toString();
+				File entryDestination = new File(folder, name);
 				if (entry.isDirectory()) {
 					entryDestination.mkdirs();
 				} else {

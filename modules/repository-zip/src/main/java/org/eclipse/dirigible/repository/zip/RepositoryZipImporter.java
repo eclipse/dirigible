@@ -12,6 +12,7 @@ package org.eclipse.dirigible.repository.zip;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -119,13 +120,16 @@ public class RepositoryZipImporter {
 				String parentFolder = null;
 				while ((entry = zipInputStream.getNextEntry()) != null) {
 
+					String name = entry.getName();
+					name = Paths.get(name).normalize().toString();
 					if (excludeRootFolderName && (parentFolder == null)) {
-						parentFolder = entry.getName();
+						parentFolder = name;
 						logger.debug("importZip parentFolder: " + parentFolder);
 						continue;
 					}
 
 					String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
+					entryName = Paths.get(entryName).normalize().toString();
 					logger.debug("importZip entryName: " + entryName);
 					String outpath = relativeRoot + ((relativeRoot.endsWith(IRepository.SEPARATOR)) ? "" : IRepository.SEPARATOR) + entryName;
 					logger.debug("importZip outpath: " + outpath);
@@ -144,7 +148,7 @@ public class RepositoryZipImporter {
 							if (output.toByteArray().length > 0) {
 								// TODO filter for binary extensions
 
-								String extension = ContentTypeHelper.getExtension(entry.getName());
+								String extension = ContentTypeHelper.getExtension(name);
 								String mimeType = ContentTypeHelper.getContentType(extension);
 								boolean isBinary = ContentTypeHelper.isBinary(mimeType);
 								if (mimeType != null) {
