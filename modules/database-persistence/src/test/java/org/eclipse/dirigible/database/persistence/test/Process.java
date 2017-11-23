@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Process.
  */
@@ -28,15 +27,15 @@ public class Process {
 	 * The Enum ProcessType.
 	 */
 	enum ProcessType {
-		
+
 		/** The started. */
-		STARTED, 
- /** The stopped. */
- STOPPED, 
- /** The failed. */
- FAILED, 
- /** The inprogress. */
- INPROGRESS
+		STARTED,
+		/** The stopped. */
+		STOPPED,
+		/** The failed. */
+		FAILED,
+		/** The inprogress. */
+		INPROGRESS
 	}
 
 	/** The id. */
@@ -71,7 +70,8 @@ public class Process {
 	/**
 	 * Sets the id.
 	 *
-	 * @param id the new id
+	 * @param id
+	 *            the new id
 	 */
 	public void setId(long id) {
 		this.id = id;
@@ -89,7 +89,8 @@ public class Process {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -107,7 +108,8 @@ public class Process {
 	/**
 	 * Sets the type as string.
 	 *
-	 * @param typeAsString the new type as string
+	 * @param typeAsString
+	 *            the new type as string
 	 */
 	public void setTypeAsString(ProcessType typeAsString) {
 		this.typeAsString = typeAsString;
@@ -125,7 +127,8 @@ public class Process {
 	/**
 	 * Sets the type as int.
 	 *
-	 * @param typeAsInt the new type as int
+	 * @param typeAsInt
+	 *            the new type as int
 	 */
 	public void setTypeAsInt(ProcessType typeAsInt) {
 		this.typeAsInt = typeAsInt;

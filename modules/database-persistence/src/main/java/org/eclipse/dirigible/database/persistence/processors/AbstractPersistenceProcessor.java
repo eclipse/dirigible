@@ -105,7 +105,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				resetAccesible(field, oldAccessible);
 			}
 			try {
-				if (columnModel.getEnumerated() != null) {
+				if ((columnModel.getEnumerated() != null) && (valueObject != null)) {
 					if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL)) {
 						valueObject = ((Enum) valueObject).ordinal();
 					} else {
@@ -313,7 +313,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 					} else {
 						throw new IllegalStateException("The annotation @Enumerated is set to a field with a type, which is not an enum type.");
 					}
-				} else {
+				} else if (value != null) {
 					throw new IllegalStateException("The annotation @Enumerated is missused, the value is unknown.");
 				}
 			}
