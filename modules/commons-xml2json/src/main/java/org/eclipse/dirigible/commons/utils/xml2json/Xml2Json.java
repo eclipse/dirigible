@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -91,8 +92,10 @@ public class Xml2Json {
 	 */
 	public static String toJson(String xml) throws ParserConfigurationException, SAXException, IOException {
 		JsonObject rootJson = new JsonObject();
-		DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document doc = dBuilder.parse(new InputSource(new StringReader(xml)));
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document doc = documentBuilder.parse(new InputSource(new StringReader(xml)));
 		if (doc.hasChildNodes()) {
 			traverseNode(doc, rootJson, null);
 		}
@@ -453,8 +456,10 @@ public class Xml2Json {
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		StreamResult result = new StreamResult(new StringWriter());
-		DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document doc = dBuilder.parse(new InputSource(new StringReader(xml)));
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document doc = documentBuilder.parse(new InputSource(new StringReader(xml)));
 		DOMSource source = new DOMSource(doc);
 		transformer.transform(source, result);
 		return result.getWriter().toString();
