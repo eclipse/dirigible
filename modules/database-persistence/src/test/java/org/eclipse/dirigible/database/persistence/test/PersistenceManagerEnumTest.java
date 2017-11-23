@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.persistence.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
@@ -47,6 +48,8 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 			assertTrue(existsTable(connection, persistenceManager));
 			// insert a record in the table for a pojo
 			insertPojo(connection, persistenceManager);
+			// insert a nullable record in the table for a pojo
+			insertNullablePojo(connection, persistenceManager);
 			// get the list of all the records
 			findAllPojo(connection, persistenceManager);
 			// drop the table
@@ -117,6 +120,24 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 	}
 
 	/**
+	 * Insert nullable pojo.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param persistenceManager
+	 *            the persistence manager
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void insertNullablePojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
+		Process process = new Process();
+		process.setName("Process2");
+		process.setTypeAsInt(null);
+		process.setTypeAsString(null);
+		persistenceManager.insert(connection, process);
+	}
+
+	/**
 	 * Find all pojo.
 	 *
 	 * @param connection
@@ -131,11 +152,16 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 
 		assertNotNull(list);
 		assertFalse(list.isEmpty());
-		assertEquals(1, list.size());
-		Process pojo = list.get(0);
-		Process order = pojo;
+		assertEquals(2, list.size());
+
+		Process order = list.get(0);
 		assertEquals(Process.ProcessType.STARTED, order.getTypeAsInt());
 		assertEquals(Process.ProcessType.STARTED, order.getTypeAsString());
+		System.out.println(order.getId());
+
+		order = list.get(1);
+		assertNull(order.getTypeAsInt());
+		assertNull(order.getTypeAsString());
 
 		System.out.println(order.getId());
 
