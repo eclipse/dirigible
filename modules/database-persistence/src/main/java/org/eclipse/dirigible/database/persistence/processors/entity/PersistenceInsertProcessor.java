@@ -90,6 +90,12 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 				result = getPrimaryKeyValue(tableModel, pojo);
 			} else {
 				result = getLastInserted(connection, tableModel, pojo);
+				for (PersistenceTableColumnModel column : tableModel.getColumns()) {
+					if (column.isPrimaryKey() && column.isIdentity()) {
+						setValueToPojo(pojo, result, column);
+						break;
+					}
+				}
 			}
 		} catch (Exception e) {
 			throw new PersistenceException(sql, e);
