@@ -285,12 +285,19 @@ public class PublisherCoreService implements IPublisherCoreService {
 				Timestamp date = new Timestamp(new java.util.Date().getTime());
 				String sql = SqlFactory.getNative(connection).select().column("MAX(PUBLOG_CREATED_AT)").from("DIRIGIBLE_PUBLISH_LOGS").toString();
 
-				PreparedStatement statement = connection.prepareStatement(sql);
-				ResultSet resultSet = statement.executeQuery();
-				if (resultSet.next()) {
-					date = resultSet.getTimestamp(1);
+				PreparedStatement statement = null;
+				try {
+					statement = connection.prepareStatement(sql);
+					ResultSet resultSet = statement.executeQuery();
+					if (resultSet.next()) {
+						date = resultSet.getTimestamp(1);
+					}
+					return (date != null ? date : new Timestamp(0));
+				} finally {
+					if (statement != null) {
+						statement.close();
+					}
 				}
-				return (date != null ? date : new Timestamp(0));
 			} finally {
 				if (connection != null) {
 					connection.close();

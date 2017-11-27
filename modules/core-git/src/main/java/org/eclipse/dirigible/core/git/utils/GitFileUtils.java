@@ -312,7 +312,11 @@ public class GitFileUtils {
 				resourceDirectory.append(File.separator + path.getSegments()[i]);
 			}
 			resourceDirectory.append(File.separator);
-			new File(tempGitDirectory, resourceDirectory.toString()).mkdirs();
+			File fileResource = new File(tempGitDirectory, resourceDirectory.toString());
+			boolean dirsMade = fileResource.mkdirs();
+			if (!dirsMade) {
+				throw new IOException("Error in creating directories for the file: " + fileResource.getCanonicalPath());
+			}
 			String resourcePath = resourceDirectory + file.getPath().substring(path.getParentPath().getPath().length() + 1);
 
 			InputStream in = null;
@@ -320,8 +324,14 @@ public class GitFileUtils {
 			try {
 				in = new ByteArrayInputStream(file.getContent());
 				File outputFile = new File(tempGitDirectory, resourcePath);
-				outputFile.getParentFile().mkdirs();
-				outputFile.createNewFile();
+				dirsMade = outputFile.getParentFile().mkdirs();
+				if (!dirsMade) {
+					throw new IOException("Error in creating directories for the file: " + outputFile.getCanonicalPath());
+				}
+				boolean fileCreated = outputFile.createNewFile();
+				if (!fileCreated) {
+					throw new IOException("Error in creating the file: " + outputFile.getCanonicalPath());
+				}
 				out = new FileOutputStream(outputFile);
 				IOUtils.copy(in, out);
 			} finally {

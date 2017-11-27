@@ -110,7 +110,11 @@ public class RepositoryFileUtils {
 						break;
 					}
 				}
-				new File(tempDirectory, directoryPath).mkdirs();
+				File baseDirectory = new File(tempDirectory, directoryPath);
+				boolean dirsCreated = baseDirectory.mkdirs();
+				if (!dirsCreated) {
+					throw new IOException("Error in creating directories for the file: " + baseDirectory.getCanonicalPath());
+				}
 
 				String resourcePath = entity.getPath();
 				for (String root : roots) {

@@ -16,6 +16,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
@@ -69,9 +70,25 @@ public class SchedulerManager {
 					Properties quartzProperties = new Properties();
 					String quartzConfig = Configuration.get("DIRIGIBLE_SCHEDULER_QUARTZ_PROPERTIES");
 					if ((quartzConfig != null) && "".equals(quartzConfig.trim()) && !quartzConfig.startsWith("classpath")) {
-						quartzProperties.load(new FileReader(quartzConfig));
+						FileReader reader = null;
+						try {
+							reader = new FileReader(quartzConfig);
+							quartzProperties.load(reader);
+						} finally {
+							if (reader != null) {
+								reader.close();
+							}
+						}
 					} else {
-						quartzProperties.load(SchedulerManager.class.getResourceAsStream("/quartz.properties"));
+						InputStream in = null;
+						try {
+							in = SchedulerManager.class.getResourceAsStream("/quartz.properties");
+							quartzProperties.load(in);
+						} finally {
+							if (in != null) {
+								in.close();
+							}
+						}
 					}
 					schedulerFactory = new StdSchedulerFactory(quartzProperties);
 					scheduler = schedulerFactory.getScheduler();
@@ -82,8 +99,7 @@ public class SchedulerManager {
 		} catch (org.quartz.SchedulerException e) {
 			throw new SchedulerException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
