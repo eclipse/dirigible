@@ -15,9 +15,12 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.junit.Before;
 
@@ -35,7 +38,6 @@ public class AbstractPersistenceManagerTest {
 	@Before
 	public void setUp() {
 		try {
-
 			this.dataSource = createDataSource("target/tests/derby");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,11 +65,36 @@ public class AbstractPersistenceManagerTest {
 	 */
 	protected DataSource createDataSource(String name) throws Exception {
 		try {
-			DataSource dataSource = new EmbeddedDataSource();
-			String derbyRoot = prepareRootFolder(name);
-			((EmbeddedDataSource) dataSource).setDatabaseName(derbyRoot);
-			((EmbeddedDataSource) dataSource).setCreateDatabase("create");
-			return dataSource;
+			Properties databaseProperties = new Properties();
+			InputStream in = AbstractPersistenceManagerTest.class.getResourceAsStream("/database.properties");
+			if (in != null) {
+				databaseProperties.load(in);
+			}
+			String database = System.getProperty("database");
+			if (database == null) {
+				database = "derby";
+			}
+
+			if ("derby".equals(database)) {
+				DataSource embeddedDataSource = new EmbeddedDataSource();
+				String derbyRoot = prepareRootFolder(name);
+				((EmbeddedDataSource) embeddedDataSource).setDatabaseName(derbyRoot);
+				((EmbeddedDataSource) embeddedDataSource).setCreateDatabase("create");
+				return embeddedDataSource;
+			}
+			BasicDataSource basicDataSource = new BasicDataSource();
+			String databaseDriver = databaseProperties.getProperty(database + ".driver");
+			basicDataSource.setDriverClassName(databaseDriver);
+			String databaseUrl = databaseProperties.getProperty(database + ".url");
+			basicDataSource.setUrl(databaseUrl);
+			String databaseUsername = databaseProperties.getProperty(database + ".udername");
+			basicDataSource.setUsername(databaseUsername);
+			String databasePassword = databaseProperties.getProperty(database + ".password");
+			basicDataSource.setPassword(databasePassword);
+			basicDataSource.setDefaultAutoCommit(true);
+
+			return basicDataSource;
+
 		} catch (IOException e) {
 			throw new Exception(e);
 		}

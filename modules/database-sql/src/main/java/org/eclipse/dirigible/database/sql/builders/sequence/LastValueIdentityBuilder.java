@@ -18,8 +18,6 @@ import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
  */
 public class LastValueIdentityBuilder extends AbstractQuerySqlBuilder {
 
-	private String sequence = null;
-
 	/**
 	 * Instantiates a new last value identity builder.
 	 *

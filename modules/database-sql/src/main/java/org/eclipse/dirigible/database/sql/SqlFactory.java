@@ -219,8 +219,8 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	}
 
 	@Override
-	public LAST lastval() {
-		return this.dialect.lastval();
+	public LAST lastval(String... args) {
+		return this.dialect.lastval(args);
 	}
 
 }

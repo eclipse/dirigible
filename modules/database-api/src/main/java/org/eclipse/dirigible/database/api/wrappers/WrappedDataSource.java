@@ -187,12 +187,14 @@ public class WrappedDataSource implements DataSource {
 	 */
 	protected WrappedConnection getOldestConnection() {
 		WrappedConnection oldestConnection = null;
-		for (WrappedConnection connection : connections) {
-			if (oldestConnection == null) {
-				oldestConnection = connection;
-			}
-			if (oldestConnection.getTimeAcquired() < connection.getTimeAcquired()) {
-				oldestConnection = connection;
+		synchronized (connections) {
+			for (WrappedConnection connection : connections) {
+				if (oldestConnection == null) {
+					oldestConnection = connection;
+				}
+				if (oldestConnection.getTimeAcquired() < connection.getTimeAcquired()) {
+					oldestConnection = connection;
+				}
 			}
 		}
 		return oldestConnection;

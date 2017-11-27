@@ -46,7 +46,7 @@ public class SybaseSqlDialect extends
 	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
 	 */
 	@Override
-	public SybaseLastValueIdentityBuilder lastval() {
+	public SybaseLastValueIdentityBuilder lastval(String... args) {
 		return new SybaseLastValueIdentityBuilder(this);
 	}
 

@@ -131,9 +131,11 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 
 	/**
 	 * Lastval.
-	 *
+	 * 
+	 * @param args
+	 *            the arguments
 	 * @return the last
 	 */
-	public LAST lastval();
+	public LAST lastval(String... args);
 
 }

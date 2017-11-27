@@ -13,14 +13,15 @@ package org.eclipse.dirigible.database.sql.dialects.derby;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
-import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 /**
  * The Derby SQL Dialect.
  */
 public class DerbySqlDialect extends
-		DefaultSqlDialect<DerbySelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, DerbyCreateBranchingBuilder, DerbyDropBranchingBuilder, DerbyNextValueSequenceBuilder, LastValueIdentityBuilder> {
+		DefaultSqlDialect<DerbySelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, DerbyCreateBranchingBuilder, DerbyDropBranchingBuilder, DerbyNextValueSequenceBuilder, DerbyLastValueIdentityBuilder> {
+
+	private static final String IDENTITY_ARGUMENT = "GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)";
 
 	/*
 	 * (non-Javadoc)
@@ -56,6 +57,20 @@ public class DerbySqlDialect extends
 	@Override
 	public DerbySelectBuilder select() {
 		return new DerbySelectBuilder(this);
+	}
+
+	@Override
+	public String getIdentityArgument() {
+		return IDENTITY_ARGUMENT;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+	 */
+	@Override
+	public DerbyLastValueIdentityBuilder lastval(String... args) {
+		return new DerbyLastValueIdentityBuilder(this, args);
 	}
 
 }
