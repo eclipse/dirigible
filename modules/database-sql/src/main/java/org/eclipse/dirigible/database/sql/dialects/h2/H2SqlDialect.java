@@ -16,14 +16,13 @@ import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
-import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 /**
  * The H2 SQL Dialect.
  */
 public class H2SqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, H2NextValueSequenceBuilder, LastValueIdentityBuilder> {
+		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, H2NextValueSequenceBuilder, H2LastValueIdentityBuilder> {
 
 	/*
 	 * (non-Javadoc)
@@ -32,6 +31,15 @@ public class H2SqlDialect extends
 	@Override
 	public H2NextValueSequenceBuilder nextval(String sequence) {
 		return new H2NextValueSequenceBuilder(this, sequence);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect#nextval(java.lang.String)
+	 */
+	@Override
+	public H2LastValueIdentityBuilder lastval(String... args) {
+		return new H2LastValueIdentityBuilder(this);
 	}
 
 }

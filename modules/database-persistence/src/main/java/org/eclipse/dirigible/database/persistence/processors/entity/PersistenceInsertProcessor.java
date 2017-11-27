@@ -106,7 +106,7 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	}
 
 	private Object getLastInserted(Connection connection, PersistenceTableModel tableModel, Object pojo) throws SQLException {
-		LastValueIdentityBuilder identityBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).lastval();
+		LastValueIdentityBuilder identityBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).lastval(tableModel.getTableName());
 		String sql = identityBuilder.build();
 		PreparedStatement preparedStatement = null;
 		try {
