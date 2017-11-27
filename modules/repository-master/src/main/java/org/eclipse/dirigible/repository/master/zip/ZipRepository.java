@@ -26,11 +26,15 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Zip Repository.
  */
 public class ZipRepository extends FileSystemRepository {
+
+	private static Logger logger = LoggerFactory.getLogger(ZipRepository.class);
 
 	private String zipRepositoryRootFolder;
 
@@ -79,7 +83,10 @@ public class ZipRepository extends FileSystemRepository {
 				name = Paths.get(name).normalize().toString();
 				File entryDestination = new File(folder, name);
 				if (entry.isDirectory()) {
-					entryDestination.mkdirs();
+					boolean dirsMade = entryDestination.mkdirs();
+					if (!dirsMade) {
+						logger.error("Error on creating directories for the file: " + entryDestination.getCanonicalPath());
+					}
 				} else {
 					entryDestination.getParentFile().mkdirs();
 					OutputStream out = null;

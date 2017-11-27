@@ -43,7 +43,7 @@ public class DataStructureTableConstraintForeignKeyModel extends DataStructureTa
 	 * @return the referenced columns
 	 */
 	public String[] getReferencedColumns() {
-		return referencedColumns;
+		return referencedColumns.clone();
 	}
 
 	/**

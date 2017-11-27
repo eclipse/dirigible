@@ -591,7 +591,11 @@ public abstract class FileSystemRepository implements IRepository {
 			GregorianCalendar last = new GregorianCalendar();
 			last.add(Calendar.WEEK_OF_YEAR, -1);
 			thresholdDate = last.getTime();
-			cleanOlderFiles(new File(versionsRoot));
+			try {
+				cleanOlderFiles(new File(versionsRoot));
+			} catch (IOException e) {
+				throw new RepositoryWriteException(e);
+			}
 		}
 	}
 
@@ -603,12 +607,16 @@ public abstract class FileSystemRepository implements IRepository {
 	 *
 	 * @param file
 	 *            the file
+	 * @throws IOException
 	 */
-	private void cleanOlderFiles(File file) {
+	private void cleanOlderFiles(File file) throws IOException {
 		Iterator<File> filesToBeDeleted = FileUtils.iterateFiles(file, new AgeFileFilter(thresholdDate), TRUE);
 		while (filesToBeDeleted.hasNext()) {
 			File toBeDeleted = filesToBeDeleted.next();
-			toBeDeleted.delete();
+			boolean deleted = toBeDeleted.delete();
+			if (!deleted) {
+				logger.error("Error on deleting the file: " + toBeDeleted.getCanonicalPath());
+			}
 		}
 	}
 
