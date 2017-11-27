@@ -207,9 +207,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	private byte[] generateContent(GenerationTemplateParameters parameters, String location,
 			byte[] input, String sm, String em) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Writer writer = new OutputStreamWriter(baos);
+		Writer writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
 		DefaultMustacheFactory defaultMustacheFactory = new DefaultMustacheFactory();
-		Mustache mustache = defaultMustacheFactory.compile(new InputStreamReader(new ByteArrayInputStream(input)), location, sm, em);
+		Mustache mustache = defaultMustacheFactory.compile(new InputStreamReader(new ByteArrayInputStream(input), StandardCharsets.UTF_8), location, sm, em);
 		mustache.execute(writer, parameters.getParameters());
 		writer.flush();
 		return baos.toByteArray();
@@ -227,7 +227,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	private String generateName(GenerationTemplateParameters parameters, String location,
 			String input) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Writer writer = new OutputStreamWriter(baos);
+		Writer writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
 		DefaultMustacheFactory defaultMustacheFactory = new DefaultMustacheFactory();
 		Mustache mustache = defaultMustacheFactory.compile(new StringReader(input), location);
 		mustache.execute(writer, parameters.getParameters());

@@ -13,7 +13,6 @@ package org.eclipse.dirigible.api.v3.http.client;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class HttpClientResponse.
  */
@@ -52,7 +51,8 @@ public class HttpClientResponse {
 	/**
 	 * Sets the status code.
 	 *
-	 * @param statusCode the new status code
+	 * @param statusCode
+	 *            the new status code
 	 */
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
@@ -70,7 +70,8 @@ public class HttpClientResponse {
 	/**
 	 * Sets the status message.
 	 *
-	 * @param statusMessage the new status message
+	 * @param statusMessage
+	 *            the new status message
 	 */
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
@@ -82,13 +83,14 @@ public class HttpClientResponse {
 	 * @return the data
 	 */
 	public byte[] getData() {
-		return data;
+		return data.clone();
 	}
 
 	/**
 	 * Sets the data.
 	 *
-	 * @param data the new data
+	 * @param data
+	 *            the new data
 	 */
 	public void setData(byte[] data) {
 		this.data = data;
@@ -106,7 +108,8 @@ public class HttpClientResponse {
 	/**
 	 * Sets the text.
 	 *
-	 * @param text the new text
+	 * @param text
+	 *            the new text
 	 */
 	public void setText(String text) {
 		this.text = text;
@@ -124,7 +127,8 @@ public class HttpClientResponse {
 	/**
 	 * Sets the protocol.
 	 *
-	 * @param protocol the new protocol
+	 * @param protocol
+	 *            the new protocol
 	 */
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
@@ -142,7 +146,8 @@ public class HttpClientResponse {
 	/**
 	 * Sets the headers.
 	 *
-	 * @param headers the new headers
+	 * @param headers
+	 *            the new headers
 	 */
 	public void setHeaders(List<HttpClientHeader> headers) {
 		this.headers = headers;
@@ -160,7 +165,8 @@ public class HttpClientResponse {
 	/**
 	 * Sets the binary.
 	 *
-	 * @param binary the new binary
+	 * @param binary
+	 *            the new binary
 	 */
 	public void setBinary(boolean binary) {
 		this.binary = binary;

@@ -35,21 +35,21 @@ public class DatabaseMetadataHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadataHelper.class);
 
-	public static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
+	static final String SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
 
-	public static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
+	static final String LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
 
-	public static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
+	static final String GLOBAL_TEMPORARY = "GLOBAL TEMPORARY"; //$NON-NLS-1$
 
-	public static final String SYNONYM = "SYNONYM"; //$NON-NLS-1$
+	static final String SYNONYM = "SYNONYM"; //$NON-NLS-1$
 
-	public static final String ALIAS = "ALIAS"; //$NON-NLS-1$
+	static final String ALIAS = "ALIAS"; //$NON-NLS-1$
 
-	public static final String VIEW = "VIEW"; //$NON-NLS-1$
+	static final String VIEW = "VIEW"; //$NON-NLS-1$
 
-	public static final String TABLE = "TABLE"; //$NON-NLS-1$
+	static final String TABLE = "TABLE"; //$NON-NLS-1$
 
-	public static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
+	static final String[] TABLE_TYPES = { TABLE, VIEW, ALIAS, SYNONYM, GLOBAL_TEMPORARY, LOCAL_TEMPORARY, SYSTEM_TABLE };
 
 	private static final String PRCNT = "%"; //$NON-NLS-1$
 

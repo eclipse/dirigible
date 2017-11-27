@@ -19,9 +19,9 @@ import com.google.gson.JsonParser;
 public class GsonHelper {
 
 	/** The GSON instance. */
-	public static transient Gson GSON = new Gson();
+	public static final transient Gson GSON = new Gson();
 
 	/** The GSON Parser instance. */
-	public static JsonParser PARSER = new JsonParser();
+	public static final transient JsonParser PARSER = new JsonParser();
 
 }
