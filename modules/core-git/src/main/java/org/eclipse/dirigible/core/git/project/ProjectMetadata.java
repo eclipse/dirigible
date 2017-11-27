@@ -144,7 +144,11 @@ public class ProjectMetadata {
 	 *            the new licenses
 	 */
 	public void setLicenses(ProjectMetadataLicense[] licenses) {
-		this.licenses = licenses;
+		if (licenses != null) {
+			this.licenses = licenses.clone();
+		} else {
+			this.licenses = null;
+		}
 	}
 
 	/**
@@ -182,7 +186,11 @@ public class ProjectMetadata {
 	 *            the new dependencies
 	 */
 	public void setDependencies(ProjectMetadataDependency[] dependencies) {
-		this.dependencies = dependencies;
+		if (dependencies != null) {
+			this.dependencies = dependencies.clone();
+		} else {
+			this.dependencies = null;
+		}
 	}
 
 }

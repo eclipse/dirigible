@@ -45,7 +45,7 @@ public class DataStructureTableConstraintModel {
 	 * @return the modifiers
 	 */
 	public String[] getModifiers() {
-		return modifiers.clone();
+		return (modifiers != null) ? modifiers.clone() : null;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class DataStructureTableConstraintModel {
 	 * @return the columns
 	 */
 	public String[] getColumns() {
-		return columns.clone();
+		return (columns != null) ? columns.clone() : null;
 	}
 
 	/**

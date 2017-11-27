@@ -221,7 +221,8 @@ public class TerminalWebsocketService {
 					do {
 						Thread.sleep(ProcessUtils.DEFAULT_WAIT_TIME);
 						try {
-							BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(out.toByteArray())));
+							BufferedReader reader = new BufferedReader(
+									new InputStreamReader(new ByteArrayInputStream(out.toByteArray()), StandardCharsets.UTF_8));
 							String line = null;
 							while ((line = reader.readLine()) != null) {
 								logger.debug("sending process data: " + line);

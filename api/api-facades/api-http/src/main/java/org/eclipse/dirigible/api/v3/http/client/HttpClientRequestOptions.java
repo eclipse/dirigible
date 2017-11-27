@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class HttpClientRequestOptions.
  */
@@ -26,46 +25,46 @@ public class HttpClientRequestOptions {
 
 	/** The expect continue enabled. */
 	private boolean expectContinueEnabled;
-	
+
 	/** The proxy host. */
 	private String proxyHost;
-	
+
 	/** The proxy port. */
 	private int proxyPort;
-	
+
 	/** The cookie spec. */
 	private String cookieSpec;
-	
+
 	/** The redirects enabled. */
 	private boolean redirectsEnabled;
-	
+
 	/** The relative redirects allowed. */
 	private boolean relativeRedirectsAllowed;
-	
+
 	/** The circular redirects allowed. */
 	private boolean circularRedirectsAllowed;
-	
+
 	/** The max redirects. */
 	private int maxRedirects;
-	
+
 	/** The authentication enabled. */
 	private boolean authenticationEnabled;
-	
+
 	/** The target preferred auth schemes. */
 	private Collection<String> targetPreferredAuthSchemes;
-	
+
 	/** The proxy preferred auth schemes. */
 	private Collection<String> proxyPreferredAuthSchemes;
-	
+
 	/** The connection request timeout. */
 	private int connectionRequestTimeout;
-	
+
 	/** The connect timeout. */
 	private int connectTimeout;
-	
+
 	/** The socket timeout. */
 	private int socketTimeout;
-	
+
 	/** The content compression enabled. */
 	private boolean contentCompressionEnabled;
 
@@ -75,31 +74,31 @@ public class HttpClientRequestOptions {
 	/** The data. */
 	// binary content for POST and PUT
 	private byte[] data;
-	
+
 	/** The text. */
 	// text content for POST and PUT
 	private String text;
-	
+
 	/** The files. */
 	// file content for POST and PUT
 	private String[] files;
-	
+
 	/** The character encoding. */
 	// encoding for POST
 	private String characterEncoding = StandardCharsets.UTF_8.name();
-	
+
 	/** The content type. */
 	// content type for POST
 	private String contentType = "text/plain";
-	
+
 	/** The headers. */
 	// headers
 	private List<HttpClientHeader> headers = new ArrayList<HttpClientHeader>();
-	
+
 	/** The params. */
 	// params
 	private List<HttpClientParam> params = new ArrayList<HttpClientParam>();
-	
+
 	/** The binary. */
 	// whether to request as binary or text
 	private boolean binary;
@@ -116,7 +115,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the expect continue enabled.
 	 *
-	 * @param expectContinueEnabled the new expect continue enabled
+	 * @param expectContinueEnabled
+	 *            the new expect continue enabled
 	 */
 	public void setExpectContinueEnabled(boolean expectContinueEnabled) {
 		this.expectContinueEnabled = expectContinueEnabled;
@@ -134,7 +134,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the proxy host.
 	 *
-	 * @param proxyHost the new proxy host
+	 * @param proxyHost
+	 *            the new proxy host
 	 */
 	public void setProxyHost(String proxyHost) {
 		this.proxyHost = proxyHost;
@@ -152,7 +153,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the proxy port.
 	 *
-	 * @param proxyPort the new proxy port
+	 * @param proxyPort
+	 *            the new proxy port
 	 */
 	public void setProxyPort(int proxyPort) {
 		this.proxyPort = proxyPort;
@@ -170,7 +172,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the cookie spec.
 	 *
-	 * @param cookieSpec the new cookie spec
+	 * @param cookieSpec
+	 *            the new cookie spec
 	 */
 	public void setCookieSpec(String cookieSpec) {
 		this.cookieSpec = cookieSpec;
@@ -188,7 +191,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the redirects enabled.
 	 *
-	 * @param redirectsEnabled the new redirects enabled
+	 * @param redirectsEnabled
+	 *            the new redirects enabled
 	 */
 	public void setRedirectsEnabled(boolean redirectsEnabled) {
 		this.redirectsEnabled = redirectsEnabled;
@@ -206,7 +210,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the relative redirects allowed.
 	 *
-	 * @param relativeRedirectsAllowed the new relative redirects allowed
+	 * @param relativeRedirectsAllowed
+	 *            the new relative redirects allowed
 	 */
 	public void setRelativeRedirectsAllowed(boolean relativeRedirectsAllowed) {
 		this.relativeRedirectsAllowed = relativeRedirectsAllowed;
@@ -224,7 +229,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the circular redirects allowed.
 	 *
-	 * @param circularRedirectsAllowed the new circular redirects allowed
+	 * @param circularRedirectsAllowed
+	 *            the new circular redirects allowed
 	 */
 	public void setCircularRedirectsAllowed(boolean circularRedirectsAllowed) {
 		this.circularRedirectsAllowed = circularRedirectsAllowed;
@@ -242,7 +248,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the max redirects.
 	 *
-	 * @param maxRedirects the new max redirects
+	 * @param maxRedirects
+	 *            the new max redirects
 	 */
 	public void setMaxRedirects(int maxRedirects) {
 		this.maxRedirects = maxRedirects;
@@ -260,7 +267,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the authentication enabled.
 	 *
-	 * @param authenticationEnabled the new authentication enabled
+	 * @param authenticationEnabled
+	 *            the new authentication enabled
 	 */
 	public void setAuthenticationEnabled(boolean authenticationEnabled) {
 		this.authenticationEnabled = authenticationEnabled;
@@ -278,7 +286,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the target preferred auth schemes.
 	 *
-	 * @param targetPreferredAuthSchemes the new target preferred auth schemes
+	 * @param targetPreferredAuthSchemes
+	 *            the new target preferred auth schemes
 	 */
 	public void setTargetPreferredAuthSchemes(Collection<String> targetPreferredAuthSchemes) {
 		this.targetPreferredAuthSchemes = targetPreferredAuthSchemes;
@@ -296,7 +305,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the proxy preferred auth schemes.
 	 *
-	 * @param proxyPreferredAuthSchemes the new proxy preferred auth schemes
+	 * @param proxyPreferredAuthSchemes
+	 *            the new proxy preferred auth schemes
 	 */
 	public void setProxyPreferredAuthSchemes(Collection<String> proxyPreferredAuthSchemes) {
 		this.proxyPreferredAuthSchemes = proxyPreferredAuthSchemes;
@@ -314,7 +324,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the connection request timeout.
 	 *
-	 * @param connectionRequestTimeout the new connection request timeout
+	 * @param connectionRequestTimeout
+	 *            the new connection request timeout
 	 */
 	public void setConnectionRequestTimeout(int connectionRequestTimeout) {
 		this.connectionRequestTimeout = connectionRequestTimeout;
@@ -332,7 +343,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the connect timeout.
 	 *
-	 * @param connectTimeout the new connect timeout
+	 * @param connectTimeout
+	 *            the new connect timeout
 	 */
 	public void setConnectTimeout(int connectTimeout) {
 		this.connectTimeout = connectTimeout;
@@ -350,7 +362,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the socket timeout.
 	 *
-	 * @param socketTimeout the new socket timeout
+	 * @param socketTimeout
+	 *            the new socket timeout
 	 */
 	public void setSocketTimeout(int socketTimeout) {
 		this.socketTimeout = socketTimeout;
@@ -368,7 +381,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the content compression enabled.
 	 *
-	 * @param contentCompressionEnabled the new content compression enabled
+	 * @param contentCompressionEnabled
+	 *            the new content compression enabled
 	 */
 	public void setContentCompressionEnabled(boolean contentCompressionEnabled) {
 		this.contentCompressionEnabled = contentCompressionEnabled;
@@ -386,7 +400,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the ssl trust all enabled.
 	 *
-	 * @param sslTrustAllEnabled the new ssl trust all enabled
+	 * @param sslTrustAllEnabled
+	 *            the new ssl trust all enabled
 	 */
 	public void setSslTrustAllEnabled(boolean sslTrustAllEnabled) {
 		this.sslTrustAllEnabled = sslTrustAllEnabled;
@@ -398,13 +413,14 @@ public class HttpClientRequestOptions {
 	 * @return the data
 	 */
 	public byte[] getData() {
-		return data;
+		return data.clone();
 	}
 
 	/**
 	 * Sets the data.
 	 *
-	 * @param data the new data
+	 * @param data
+	 *            the new data
 	 */
 	public void setData(byte[] data) {
 		this.data = data;
@@ -422,7 +438,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the text.
 	 *
-	 * @param text the new text
+	 * @param text
+	 *            the new text
 	 */
 	public void setText(String text) {
 		this.text = text;
@@ -434,13 +451,14 @@ public class HttpClientRequestOptions {
 	 * @return the files
 	 */
 	public String[] getFiles() {
-		return files;
+		return files.clone();
 	}
 
 	/**
 	 * Sets the files.
 	 *
-	 * @param files the new files
+	 * @param files
+	 *            the new files
 	 */
 	public void setFiles(String[] files) {
 		this.files = files;
@@ -458,7 +476,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the character encoding.
 	 *
-	 * @param characterEncoding the new character encoding
+	 * @param characterEncoding
+	 *            the new character encoding
 	 */
 	public void setCharacterEncoding(String characterEncoding) {
 		this.characterEncoding = characterEncoding;
@@ -476,7 +495,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the content type.
 	 *
-	 * @param contentType the new content type
+	 * @param contentType
+	 *            the new content type
 	 */
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
@@ -494,7 +514,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the headers.
 	 *
-	 * @param headers the new headers
+	 * @param headers
+	 *            the new headers
 	 */
 	public void setHeaders(List<HttpClientHeader> headers) {
 		this.headers = headers;
@@ -512,7 +533,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the params.
 	 *
-	 * @param params the new params
+	 * @param params
+	 *            the new params
 	 */
 	public void setParams(List<HttpClientParam> params) {
 		this.params = params;
@@ -530,7 +552,8 @@ public class HttpClientRequestOptions {
 	/**
 	 * Sets the binary.
 	 *
-	 * @param binary the new binary
+	 * @param binary
+	 *            the new binary
 	 */
 	public void setBinary(boolean binary) {
 		this.binary = binary;

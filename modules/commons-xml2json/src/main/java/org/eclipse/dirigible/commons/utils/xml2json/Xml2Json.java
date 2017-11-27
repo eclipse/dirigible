@@ -13,6 +13,7 @@ package org.eclipse.dirigible.commons.utils.xml2json;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -184,7 +185,7 @@ public class Xml2Json {
 				}
 			} else if (childNode.getNodeType() == Node.CDATA_SECTION_NODE) {
 				// processTextNode(parentNode, upperJson, childJson, childNode);
-				String base64 = Base64.getEncoder().encodeToString(childNode.getNodeValue().getBytes());
+				String base64 = Base64.getEncoder().encodeToString(childNode.getNodeValue().getBytes(StandardCharsets.UTF_8));
 				parentJson.addProperty(childNode.getNodeName(), base64);
 			} else {
 				System.err.println("ERROR: unsupported node type: " + childNode.getNodeType());
@@ -369,7 +370,7 @@ public class Xml2Json {
 				if (ATTR_TEXT.equals(key)) {
 					buff.append(value.toString().replace(EQ, EMPTY));
 				} else if (ATTR_CDATA.equals(key)) {
-					buff.append(CDATA_OPEN).append(new String(Base64.getDecoder().decode(value.toString().replace(EQ, EMPTY)))).append(CDATA_CLOSE);
+					buff.append(CDATA_OPEN).append(new String(Base64.getDecoder().decode(value.toString().replace(EQ, EMPTY)), StandardCharsets.UTF_8)).append(CDATA_CLOSE);
 				} else {
 					if (!key.toString().startsWith("-")) {
 						buff.append(LT).append(key.toString()).append(GT).append(value.toString().replace(EQ, EMPTY)).append(LTS)
@@ -426,7 +427,7 @@ public class Xml2Json {
 				if (ATTR_TEXT.equals(key)) {
 					buff.append(elementPrimitive.toString().replace(EQ, EMPTY));
 				} else if (ATTR_CDATA.equals(key)) {
-					buff.append(CDATA_OPEN).append(new String(Base64.getDecoder().decode(elementPrimitive.toString().replace(EQ, EMPTY))))
+					buff.append(CDATA_OPEN).append(new String(Base64.getDecoder().decode(elementPrimitive.toString().replace(EQ, EMPTY)), StandardCharsets.UTF_8))
 							.append(CDATA_CLOSE);
 				} else {
 					// System.err.println("ERROR: content attributes must be #text");

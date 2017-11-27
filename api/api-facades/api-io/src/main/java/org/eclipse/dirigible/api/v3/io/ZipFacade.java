@@ -13,6 +13,7 @@ package org.eclipse.dirigible.api.v3.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -84,7 +85,7 @@ public class ZipFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void writeText(ZipOutputStream output, String text) throws IOException {
-		write(output, text.getBytes());
+		write(output, text.getBytes(StandardCharsets.UTF_8));
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class ZipFacade {
 	 */
 	public static final String readText(ZipInputStream input) throws IOException {
 		byte[] bytes = IOUtils.toByteArray(input);
-		return new String(bytes);
+		return new String(bytes, StandardCharsets.UTF_8);
 	}
 
 }

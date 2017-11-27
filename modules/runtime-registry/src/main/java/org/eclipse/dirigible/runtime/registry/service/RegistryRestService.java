@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.runtime.registry.service;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
@@ -81,7 +83,7 @@ public class RegistryRestService extends AbstractRestService implements IRestSer
 		if (resource.isBinary()) {
 			return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();
 		}
-		return Response.ok(new String(resource.getContent())).type(resource.getContentType()).build();
+		return Response.ok(new String(resource.getContent(), StandardCharsets.UTF_8)).type(resource.getContentType()).build();
 	}
 
 	/*

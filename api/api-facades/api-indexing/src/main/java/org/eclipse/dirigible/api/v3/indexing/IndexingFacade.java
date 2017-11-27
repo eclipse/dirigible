@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.api.v3.indexing;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -42,7 +43,7 @@ public class IndexingFacade implements IScriptingFacade {
 	 */
 	public static final void add(String index, String location, String contents, String lastModified, String parameters) throws IndexingException {
 		Map map = GsonHelper.GSON.fromJson(parameters, Map.class);
-		indexingCoreService.add(index, location, contents.getBytes(), Long.parseLong(lastModified), map);
+		indexingCoreService.add(index, location, contents.getBytes(StandardCharsets.UTF_8), Long.parseLong(lastModified), map);
 	}
 
 	/**

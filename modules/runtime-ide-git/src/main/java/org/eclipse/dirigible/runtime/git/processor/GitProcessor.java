@@ -184,6 +184,6 @@ public class GitProcessor {
 		if (model.getPassword() == null) {
 			return null;
 		}
-		return new String(Base64.getDecoder().decode(model.getPassword().getBytes()), StandardCharsets.UTF_8);
+		return new String(Base64.getDecoder().decode(model.getPassword().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 	}
 }

@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.ide.workspaces.service;
 import static java.text.MessageFormat.format;
 
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -367,7 +368,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		if (file.isBinary()) {
 			return Response.ok().entity(file.getContent()).type(file.getContentType()).build();
 		}
-		return Response.ok(new String(file.getContent())).type(ContentTypeHelper.TEXT_PLAIN).build();
+		return Response.ok(new String(file.getContent(), StandardCharsets.UTF_8)).type(ContentTypeHelper.TEXT_PLAIN).build();
 	}
 
 	/**
@@ -453,7 +454,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
 			String content, @Context HttpServletRequest request) throws URISyntaxException {
-		return createFile(workspace, project, path, content.getBytes(), request);
+		return createFile(workspace, project, path, content.getBytes(StandardCharsets.UTF_8), request);
 	}
 
 	/**
@@ -527,7 +528,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	@Path("{workspace}/{project}/{path:.*}")
 	public Response updateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
 			String content, @Context HttpServletRequest request) throws URISyntaxException {
-		return updateFile(workspace, project, path, content.getBytes(), request);
+		return updateFile(workspace, project, path, content.getBytes(StandardCharsets.UTF_8), request);
 	}
 
 	/**

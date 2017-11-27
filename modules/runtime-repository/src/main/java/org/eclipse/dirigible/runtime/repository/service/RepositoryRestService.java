@@ -14,6 +14,7 @@ import static java.text.MessageFormat.format;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -91,7 +92,7 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		if (resource.isBinary()) {
 			return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();
 		}
-		return Response.ok(new String(resource.getContent())).type(resource.getContentType()).build();
+		return Response.ok(new String(resource.getContent(), StandardCharsets.UTF_8)).type(resource.getContentType()).build();
 	}
 
 	/**
