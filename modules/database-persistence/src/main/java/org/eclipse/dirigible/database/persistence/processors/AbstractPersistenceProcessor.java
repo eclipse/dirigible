@@ -220,7 +220,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		}
 
 		if (value == null) {
-			preparedStatement.setObject(i, null);
+			preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));
 		} else if (DataTypeUtils.isVarchar(dataType)) {
 			preparedStatement.setString(i, (String) value);
 		} else if (DataTypeUtils.isChar(dataType)) {
