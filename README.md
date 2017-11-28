@@ -4,7 +4,7 @@
 [![Build Status](https://secure.travis-ci.org/eclipse/dirigible.png)](http://travis-ci.org/eclipse/dirigible)
 [![Eclipse License](http://img.shields.io/badge/license-Eclipse-brightgreen.svg)](https://github.com/eclipse/dirigible/blob/master/LICENSE)
 [![Download Dirigible](https://img.shields.io/badge/download-releases-green.svg)](http://download.eclipse.org/dirigible/)
-[![Maven Central](https://img.shields.io/maven-central/v/org.eclipse.dirigible.releng/allinone.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.eclipse.dirigible.releng%22)
+[![Maven Central](https://img.shields.io/maven-central/v/org.eclipse.dirigible/dirigible-server-all.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.eclipse.dirigible%22)
 [![GitHub contributors](https://img.shields.io/github/contributors/eclipse/dirigible.svg)](https://github.com/eclipse/dirigible/graphs/contributors)
 
 
