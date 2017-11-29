@@ -33,6 +33,10 @@
 
 - `DIRIGIBLE_DATABASE_DERBY_DEFAULT_ROOT_FOLDER`: (default: .)
 
+#### Persistence
+
+- `DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE`: (true : false)
+
 ### Runtime
 
 #### Core
