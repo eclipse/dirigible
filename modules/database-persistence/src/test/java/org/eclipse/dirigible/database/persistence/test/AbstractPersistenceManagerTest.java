@@ -87,7 +87,7 @@ public class AbstractPersistenceManagerTest {
 			basicDataSource.setDriverClassName(databaseDriver);
 			String databaseUrl = databaseProperties.getProperty(database + ".url");
 			basicDataSource.setUrl(databaseUrl);
-			String databaseUsername = databaseProperties.getProperty(database + ".udername");
+			String databaseUsername = databaseProperties.getProperty(database + ".username");
 			basicDataSource.setUsername(databaseUsername);
 			String databasePassword = databaseProperties.getProperty(database + ".password");
 			basicDataSource.setPassword(databasePassword);

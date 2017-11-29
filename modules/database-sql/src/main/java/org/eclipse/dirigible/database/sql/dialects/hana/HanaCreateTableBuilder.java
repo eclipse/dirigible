@@ -18,7 +18,7 @@ import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
  */
 public class HanaCreateTableBuilder extends CreateTableBuilder {
 
-	private boolean isColumnTable;
+	private boolean isColumnTable = true;
 
 	/**
 	 * Instantiates a new hana create table builder.

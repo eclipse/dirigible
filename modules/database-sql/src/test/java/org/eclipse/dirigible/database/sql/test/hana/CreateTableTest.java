@@ -18,7 +18,6 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CreateTableTest.
  */
@@ -38,7 +37,7 @@ public class CreateTableTest {
 			.build();
 		
 		assertNotNull(sql);
-		assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
+		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
 	}
 	
 	/**
