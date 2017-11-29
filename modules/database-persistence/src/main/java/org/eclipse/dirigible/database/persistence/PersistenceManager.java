@@ -139,6 +139,12 @@ public class PersistenceManager<T> {
 	public void tableCheck(Connection connection, Class clazz) {
 		if (!EXISTING_TABLES_CACHE.contains(clazz.getCanonicalName())) {
 			if (!tableExists(connection, clazz)) {
+				String auto = System.getProperty("DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE");
+				if ((auto != null) && !"true".equals(auto.toLowerCase())) {
+					throw new IllegalStateException(
+							"The parameter DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE is off, but the table for the POJO has not been previousely created: "
+									+ clazz.getCanonicalName());
+				}
 				tableCreate(connection, clazz);
 			}
 			EXISTING_TABLES_CACHE.add(clazz.getCanonicalName());
