@@ -35,7 +35,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 */
 	@Override
 	public CreateTableBuilder table(String table) {
-		return new HanaCreateTableBuilder(this.getDialect(), table, false);
+		return new HanaCreateTableBuilder(this.getDialect(), table, true);
 	}
 
 	/**

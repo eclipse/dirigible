@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -29,6 +30,8 @@ import org.slf4j.LoggerFactory;
  * The Persistence Manager Generated Value Table Test.
  */
 public class PersistenceManagerGeneratedValueIdentityTest extends AbstractPersistenceManagerTest {
+
+	static final List<String> SUPPORTED_DIALECTS = Arrays.asList("sybase", "h2", "derby", "hana");
 
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceManagerGeneratedValueIdentityTest.class);
 
@@ -44,7 +47,7 @@ public class PersistenceManagerGeneratedValueIdentityTest extends AbstractPersis
 		if (database == null) {
 			database = "derby";
 		}
-		if (!"sybase".equals(database) && !"h2".equals(database) && !"derby".equals(database)) {
+		if (!SUPPORTED_DIALECTS.contains(database)) {
 			logger.warn("Skipped IDENTITY test for database: " + database);
 			return;
 		}

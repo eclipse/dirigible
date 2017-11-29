@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.database.sql.dialects.derby;
+package org.eclipse.dirigible.database.sql.dialects.hana;
 
 import static java.text.MessageFormat.format;
 
@@ -16,24 +16,24 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
 
 /**
- * The Derby Next Value Sequence Builder.
+ * The HANA Next Value Sequence Builder.
  */
-public class DerbyLastValueIdentityBuilder extends LastValueIdentityBuilder {
+public class HanaLastValueIdentityBuilder extends LastValueIdentityBuilder {
 
-	private static final String PATTERN_SELECT_LAST_VALUE_IDENTITY = "SELECT IDENTITY_VAL_LOCAL() FROM ";
+	private static final String PATTERN_SELECT_LAST_VALUE_IDENTITY = "SELECT CURRENT_IDENTITY_VALUE() FROM ";
 
 	private String[] args = null;
 
 	/**
-	 * Instantiates a new Derby last value identity builder.
+	 * Instantiates a new HANA last value identity builder.
 	 *
 	 * @param dialect
 	 *            the dialect
 	 */
-	public DerbyLastValueIdentityBuilder(ISqlDialect dialect, String... args) {
+	public HanaLastValueIdentityBuilder(ISqlDialect dialect, String... args) {
 		super(dialect);
 		if ((args == null) || (args.length < 1)) {
-			throw new IllegalArgumentException("Derby does not support identity value local without a table specified");
+			throw new IllegalArgumentException("HANA does not support current identity value without a table specified");
 		}
 		this.args = args;
 	}
