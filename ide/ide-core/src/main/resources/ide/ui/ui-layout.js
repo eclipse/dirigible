@@ -303,14 +303,16 @@ function LayoutController(viewRegistry, messageHub){
 		}
 	};
 	
-	this.openEditor = function(resourcePath, resourceLabel){
+	this.openEditor = function(resourcePath, resourceLabel, contentType, editorId){
 		var newItemConfig = {
 			id: resourcePath,
 			title: resourceLabel,
 			type: 'component',
 			componentName: 'editor',
 			componentState:{ 
-				path: resourcePath
+				path: resourcePath,
+				editorId: editorId,
+				contentType: contentType
 			}
 		};
 		//is an editor available to stack new children to it?
@@ -319,7 +321,7 @@ function LayoutController(viewRegistry, messageHub){
 			if(this.layout.root.getItemsById(newItemConfig.id).length){
 				//replace content
 				var panel = this.layout.root.getItemsById(newItemConfig.id)[0];
-				panel.instance.setContent(newItemConfig.id)
+				//panel.instance.setContent(newItemConfig.id)
 				panel.parent.setActiveContentItem(panel);
 			} else {
 				// open new tab

@@ -67,12 +67,12 @@
 			messageHubProvider.evtNamePrefix = 'workbench';
 		}])	
 		.controller('WorkbenchController', ['Layouts', function (Layouts) {
-			
+
 			this.layoutModel = {
 				views: ['workspace', 'import', 'editor', 'properties', 'console', 'preview'],
 				events: {
 					'workspace.file.open': function(msg){
-						Layouts.manager.openEditor(msg.data.path, msg.data.label);
+						Layouts.manager.openEditor(msg.data.file.path, msg.data.file.label, msg.data.file.contentType, msg.data.editor);
 					},
 					'workspace.file.deleted': function(msg){
 						//TODO: check if deleted file is currently open in editor and close the editor window

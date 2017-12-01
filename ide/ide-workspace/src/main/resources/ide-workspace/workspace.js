@@ -338,6 +338,9 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController,
 	.on('jstree.workspace.generate', function (e, data) {		
 		this.generateFile(data, scope);
 	}.bind(this))
+	.on('jstree.workspace.openWith', function (e, data, editor) {		
+		this.openWith(data, editor);
+	}.bind(this))
 //	.on('jstree.workspace.file.properties', function (e, data) {
 //	 	var url = data.path + '/' + data.name;
 // 		this.openNodeProperties(url);
@@ -459,6 +462,9 @@ WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
 	if(['folder','project'].indexOf(type)<0)
 		this.messageHub.announceFileOpen(node.original._file);
 }
+WorkspaceTreeAdapter.prototype.openWith = function(node, editor){
+	this.messageHub.announceFileOpen(node, editor);
+}
 WorkspaceTreeAdapter.prototype.clickNode = function(node){
 	var type = node.original.type;
 	this.messageHub.announceFileSelected(node.original._file);
@@ -545,7 +551,7 @@ angular.module('workspace.config', [])
 	.constant('TEMPLATES_SVC_URL','/services/v3/js/ide/services/templates.js')
 	.constant('GENERATION_SVC_URL','/services/v3/ide/generation');
 	
-angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
 	//check if response is error. errors currently are non-json formatted and fail too early
 	$httpProvider.defaults.transformResponse.unshift(function(data, headersGetter, status){
@@ -569,8 +575,11 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	var announceFileCreated = function(fileDescriptor){
 		this.send('file.created', fileDescriptor);
 	};
-	var announceFileOpen = function(fileDescriptor){
-		this.send('file.open', fileDescriptor);
+	var announceFileOpen = function(fileDescriptor, editor){
+		this.send('file.open', {
+			file: fileDescriptor, 
+			editor: editor
+		});
 	};
 	var announceFileDeleted = function(fileDescriptor){
 		this.send('file.deleted', fileDescriptor);
@@ -625,7 +634,66 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		}
 	};
 }])
-.factory('$treeConfig', [function(){
+.factory('$treeConfig.openmenuitem', ['Editors', function(Editors){
+	var OpenMenuItemFactory = function(Editors){
+		var openWithEventName = this.openWithEventName = 'jstree.workspace.openWith';
+		var editorsForContentType = Editors.editorsForContentType;
+		
+		var getEditorsForContentType = function(contentType){
+			if(Object.keys(editorsForContentType).indexOf(contentType) > -1){
+				return editorsForContentType[contentType];
+			} else 
+				return editorsForContentType[""];
+		};
+		
+		var onOpenWithEditorAction = function (editor, data) {
+			var tree = $.jstree.reference(data.reference);
+			var node = tree.get_node(data.reference);
+			tree.element.trigger(openWithEventName, [node.original._file, editor]);
+		};
+		
+		var createOpenEditorMenuItem = function(editorId, label){
+			return {
+				"label": label || editorId.charAt(0).toUpperCase() + editorId.slice(1),
+				"action": onOpenWithEditorAction.bind(this, editorId)
+			};
+		};
+		
+		var createOpenWithSubmenu = function(contentType){
+			editorsSubmenu = {};
+			var editors = getEditorsForContentType(contentType);
+			if(editors){
+				editors.forEach(function(editorId){
+					editorsSubmenu[editorId] = createOpenEditorMenuItem(editorId);
+				}.bind(this));
+			}
+			return editorsSubmenu;
+		};
+		
+		/**
+		 * Depending on the number of assignable editors for the file content type, this mehtod
+		 * will create Open (singular eidtor) or Open with... choice dropdown for multiple editors.
+		 */
+		this.createOpenFileMenuItem = function(ctxmenu, node){
+			var contentType = node.original._file.contentType;
+			var editors = getEditorsForContentType(contentType || "");
+			if(editors.length > 1){
+				ctxmenu.openWith =  {
+					"label": "Open with...",
+					"submenu": createOpenWithSubmenu.call(this, contentType)
+				};			
+			} else {
+				ctxmenu.open = createOpenEditorMenuItem(editors[0], 'Open');
+			}
+		}		
+	};
+	
+	var openMenuItemFactory = new OpenMenuItemFactory(Editors);
+	
+	return openMenuItemFactory;
+}])
+.factory('$treeConfig', ['$treeConfig.openmenuitem', function(openmenuitem){
+	
 	return {
 		'core' : {
 			'themes': {
@@ -696,13 +764,18 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		},
 		"contextmenu": {
 			"items" : function(node) {
-				var ctxmenu = $.jstree.defaults.contextmenu.items();
+				var _ctxmenu = $.jstree.defaults.contextmenu.items();
+				var ctxmenu = {};
 				if(this.get_type(node) === "file") {
-					delete ctxmenu.create;
+					/*Open/Open with...*/
+					openmenuitem.createOpenFileMenuItem(ctxmenu, node);
 				} else {
+					/*New*/
+					ctxmenu.create = _ctxmenu.create;
 					delete ctxmenu.create.action;
 					ctxmenu.create.label = "New";
 					ctxmenu.create.submenu = {
+						/*Folder*/
 						"create_folder" : {
 							"label"				: "Folder",
 							"action"			: function (data) {
@@ -716,6 +789,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 									});
 							}
 						},
+						/*File*/
 						"create_file" : {
 							"separator_after"	: true,
 							"label"				: "File",
@@ -729,6 +803,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 									});
 							}.bind(self, this)
 						},
+						/*Generate*/
 						"generate_file" : {
 							"label"				: "Generate",
 							"action"			: function (tree, data) {
@@ -740,13 +815,20 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 							}.bind(self, this)
 						}
 					};
-				}										
+				}
+				
+				/*Rename*/
+				ctxmenu.rename = _ctxmenu.rename;
+				ctxmenu.rename.shortcut = 113;
+				ctxmenu.rename.shortcut_label = 'F2';
+				ctxmenu.rename.separator_before = true;
+				
+				/*Remove*/
+				ctxmenu.remove = _ctxmenu.remove;
 				ctxmenu.remove.shortcut = 46;
 				ctxmenu.remove.shortcut_label = 'Del';
 				
-				ctxmenu.rename.shortcut = 113;
-				ctxmenu.rename.shortcut_label = 'F2';
-				
+				/*Publish*/
 				ctxmenu.publish = {
 					"separator_before": true,
 					"label": "Publish",
@@ -757,6 +839,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 					}.bind(this)
 				}
 				
+				/*Export*/
 				ctxmenu.exportProject = {
 					"separator_before": true,
 					"label": "Export",
