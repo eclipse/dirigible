@@ -433,6 +433,8 @@ public class DatabaseFacade implements IScriptingFacade {
 								byte[] bytes = BytesHelper.jsonToBytes(valueElement.getAsJsonArray().toString());
 								preparedStatement.setBinaryStream(i, new ByteArrayInputStream(bytes), bytes.length);
 							}
+						} else {
+							throw new IllegalArgumentException("Parameter 'type'["+dataType+"] must be a string representing a valid database type name");
 						}
 					} else {
 						throw new IllegalArgumentException("Parameter 'type' must be a string representing the database type name");
