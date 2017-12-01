@@ -77,30 +77,63 @@ angular.module('ideUiCore', ['ngResource'])
 		}
 	};
 }])
+.provider('Editors', function(){
+	var editorProviders = this.editorProviders = {
+				"orion":  "../ide-orion/editor.html"
+			}
+	var editorsForContentType = this.editorsForContentType = {
+			"": ['orion'],
+			"application/javascript": ['orion'],
+			"application/json": ['orion'],
+			"text/plain": ['orion'],
+			"text/html": ['orion']
+		};			
+	var defaultEditorId = this.defaultEditorId = "orion";
+	this.$get = [function editorsFactory() {
+		return {
+			defaultEditorId: defaultEditorId,
+			editorProviders: editorProviders,
+			editorsForContentType: editorsForContentType
+		};
+	}];
+})
 /**
  * Creates a map object associating a view factory function with a name (id)
  */
 .provider('ViewFactories', function(){
+	var editors = this.editors;
+	var self = this;
 	this.factories = {
 			"frame": function(container, componentState){
 				container.setTitle(componentState.label || 'View');
 					$('<iframe>').attr('src', componentState.path).appendTo(container.getElement().empty());
 			},
 			"editor": function(container, componentState){
-				this.setContent = function(path){
-					var src;
-					if (path) {
-						src = '../ide-orion/editor.html?file='+path;
+				/* Improvement hint: Instead of hardcoding ?file=.. use URL template for the editor provider values 
+				 * and then replace the placeholders in the template with matching properties from the componentState.
+				 * This will make it easy to replace the query string property if needed or provide additional 
+				 * (editor-specific) parameters easily.
+				 */
+				(function(componentState){
+					var src, editorPath;
+					if(!componentState.editorId || Object.keys(self.editors.editorProviders).indexOf(componentState.editorId) < 0)
+						editorPath = self.editors.editorProviders[self.editors.defaultEditorId];
+					else
+						editorPath = self.editors.editorProviders[componentState.editorId];
+					if (componentState.path) {
+						src = editorPath + '?file='+componentState.path;
+						if(componentState.contentType)
+							src += "&contentType="+componentState.contentType;
 					} else {
 						container.setTitle("Welcome");
 						src = '/services/v3/web/ide/welcome.html';
 					}
 					$('<iframe>').attr('src', src).appendTo(container.getElement().empty());
-				};
-				this.setContent(componentState.path);
-			}
+				})(componentState, this);
+			}.bind(self)
 	};
-	this.$get = [function viewFactoriesFactory() {
+	this.$get = ['Editors', function viewFactoriesFactory(Editors) {
+		this.editors = Editors;
 		return this.factories;
 	}];
 })
