@@ -31,4 +31,7 @@ public interface IRepository
 	/** The Constant DIRIGIBLE_REPOSITORY_PROVIDER_LOCAL. */
 	public static final String DIRIGIBLE_REPOSITORY_PROVIDER_LOCAL = "local"; //$NON-NLS-1$
 
+	/** The Constant DIRIGIBLE_REPOSITORY_PROVIDER_DATABASE. */
+	public static final String DIRIGIBLE_REPOSITORY_PROVIDER_DATABASE = "database"; //$NON-NLS-1$
+
 }

@@ -13,7 +13,9 @@ package org.eclipse.dirigible.database.persistence.processors;
 import static java.text.MessageFormat.format;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import javax.persistence.EnumType;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
@@ -272,9 +275,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 *             the SQL exception
 	 * @throws IllegalAccessException
 	 *             the illegal access exception
+	 * @throws IOException
 	 */
 	protected void setValueToPojo(Object pojo, ResultSet resultSet, PersistenceTableColumnModel columnModel)
-			throws NoSuchFieldException, SQLException, IllegalAccessException {
+			throws NoSuchFieldException, SQLException, IllegalAccessException, IOException {
 		Object value = resultSet.getObject(columnModel.getName());
 		setValueToPojo(pojo, value, columnModel);
 	}
@@ -294,9 +298,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 *             the SQL exception
 	 * @throws IllegalAccessException
 	 *             the illegal access exception
+	 * @throws IOException
 	 */
 	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
-			throws NoSuchFieldException, SQLException, IllegalAccessException {
+			throws NoSuchFieldException, SQLException, IllegalAccessException, IOException {
 		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
 		try {
@@ -324,6 +329,9 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			}
 			if (getEntityManagerInterceptor() != null) {
 				value = getEntityManagerInterceptor().onSetValueAfterQuery(pojo, field, value);
+			}
+			if (value instanceof Blob) {
+				value = IOUtils.toByteArray(((Blob) value).getBinaryStream());
 			}
 			field.set(pojo, value);
 		} finally {
