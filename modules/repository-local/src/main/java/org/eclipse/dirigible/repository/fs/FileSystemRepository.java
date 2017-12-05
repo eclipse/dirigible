@@ -212,9 +212,9 @@ public abstract class FileSystemRepository implements IRepository {
 	public ICollection getRoot() {
 		logger.trace("entering getRoot"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(IRepository.SEPARATOR);
-		LocalCollection dbCollection = new LocalCollection(this, wrapperPath);
+		LocalCollection localCollection = new LocalCollection(this, wrapperPath);
 		logger.trace("exiting getRoot"); //$NON-NLS-1$
-		return dbCollection;
+		return localCollection;
 	}
 
 	/*
@@ -225,10 +225,10 @@ public abstract class FileSystemRepository implements IRepository {
 	public ICollection createCollection(String path) throws RepositoryWriteException {
 		logger.trace("entering createCollection"); //$NON-NLS-1$
 		final RepositoryPath wrapperPath = new RepositoryPath(path);
-		final LocalCollection collection = new LocalCollection(this, wrapperPath);
-		collection.create();
+		final LocalCollection localCollection = new LocalCollection(this, wrapperPath);
+		localCollection.create();
 		logger.trace("exiting createCollection"); //$NON-NLS-1$
-		return collection;
+		return localCollection;
 	}
 
 	/*

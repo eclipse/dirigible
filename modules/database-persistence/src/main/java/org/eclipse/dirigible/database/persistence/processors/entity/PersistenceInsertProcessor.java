@@ -12,6 +12,7 @@ package org.eclipse.dirigible.database.persistence.processors.entity;
 
 import static java.text.MessageFormat.format;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -137,9 +138,10 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	 *             the illegal access exception
 	 * @throws SQLException
 	 *             the SQL exception
+	 * @throws IOException
 	 */
 	private boolean setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
-			throws NoSuchFieldException, IllegalAccessException, SQLException {
+			throws NoSuchFieldException, IllegalAccessException, SQLException, IOException {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey() && (columnModel.getGenerated() != null)) {
 				long id = -1;
