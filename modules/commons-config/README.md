@@ -4,9 +4,9 @@
 
 ### Local Repository
 
-- `DIRIGIBLE_REPOSITORY_PROVIDER`: (local | db)
-- `DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER`: (e.g. '.')
-- `DIRIGIBLE_LOCAL_REPOSITORY_ROOT_FOLDER_IS_ABSOLUTE`: (true | false)
+- `DIRIGIBLE_REPOSITORY_PROVIDER`: (local | database)
+- `DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER`: (e.g. '.')
+- `DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE`: (true | false)
 
 ### Master Repository
 
@@ -23,11 +23,13 @@
 
 ### Database
 
-- `DIRIGIBLE_DATABASE_PROVIDER`: (local : managed : unmanaged)
+- `DIRIGIBLE_DATABASE_PROVIDER`: (local : managed : custom)
 - `DIRIGIBLE_DATABASE_DEFAULT_SET_AUTO_COMMIT`: (true : false);
 - `DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT`: (default: 8)
 - `DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT`: (default: 500)
 - `DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT`: (default: 5)
+- `DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES`: (default: {empty})
+
 
 #### Database Derby
 

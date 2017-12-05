@@ -8,48 +8,45 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.database.managed;
+package org.eclipse.dirigible.database.custom;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Managed Database
+ * The Custom Database
  */
-public class ManagedDatabase implements IDatabase {
+public class CustomDatabase implements IDatabase {
 
-	private static final Logger logger = LoggerFactory.getLogger(ManagedDatabase.class);
+	private static final Logger logger = LoggerFactory.getLogger(CustomDatabase.class);
 
 	/** The Constant NAME. */
-	public static final String NAME = "managed";
+	public static final String NAME = "basic";
 
 	/** The Constant TYPE. */
-	public static final String TYPE = "managed";
+	public static final String TYPE = "custom";
 
 	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
-
-	private static final String JNDI_DEFAULT_PREFIX = "java:comp/env/jdbc/";
 
 	/**
 	 * The default constructor
 	 */
-	public ManagedDatabase() {
-		logger.debug("Initializing the managed datasources...");
+	public CustomDatabase() {
+		logger.debug("Initializing the custom datasources...");
 
 		initialize();
 
-		logger.debug("Managed datasources initialized.");
+		logger.debug("Custom datasources initialized.");
 	}
 
 	/*
@@ -58,19 +55,19 @@ public class ManagedDatabase implements IDatabase {
 	 */
 	@Override
 	public void initialize() {
-		Configuration.load("/dirigible-database-managed.properties");
-		String managedDataSourcesList = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_MANAGED_DATASOURCES);
-		if ((managedDataSourcesList != null) && !"".equals(managedDataSourcesList)) {
-			logger.trace("Managed datasources list: " + managedDataSourcesList);
-			StringTokenizer tokens = new StringTokenizer(managedDataSourcesList, ",");
+		Configuration.load("/dirigible-database-custom.properties");
+		String customDataSourcesList = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES);
+		if ((customDataSourcesList != null) && !"".equals(customDataSourcesList)) {
+			logger.trace("Custom datasources list: " + customDataSourcesList);
+			StringTokenizer tokens = new StringTokenizer(customDataSourcesList, ",");
 			while (tokens.hasMoreTokens()) {
 				String name = tokens.nextToken();
-				logger.info("Lookup a managed datasource with name: " + name);
-				DataSource dataSource = lookupDataSource(name);
+				logger.info("Initializing a custom datasource with name: " + name);
+				DataSource dataSource = initializeDataSource(name);
 				DATASOURCES.put(name, dataSource);
 			}
 		} else {
-			logger.trace("No managed datasources configured");
+			logger.trace("No custom datasources configured");
 		}
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
@@ -94,29 +91,33 @@ public class ManagedDatabase implements IDatabase {
 		if (dataSource != null) {
 			return dataSource;
 		}
-		dataSource = lookupDataSource(name);
+		dataSource = initializeDataSource(name);
 		DATASOURCES.put(name, dataSource);
 		return dataSource;
 	}
 
 	/**
-	 * Lookup data source.
+	 * Initialize data source.
 	 *
 	 * @param name
 	 *            the name
 	 * @return the data source
 	 */
-	private DataSource lookupDataSource(String name) {
-		try {
-			final InitialContext ctx = new InitialContext();
-			if (name != null) {
-				return (DataSource) ctx.lookup(JNDI_DEFAULT_PREFIX + name);
-			}
-			return null;
-		} catch (NamingException e) {
-			logger.error(e.getMessage(), e);
-			throw new ManagedDatabaseException(e);
+	private DataSource initializeDataSource(String name) {
+		String databaseDriver = Configuration.get(name + "_DRIVER");
+		String databaseUrl = Configuration.get(name + "_URL");
+		String databaseUsername = Configuration.get(name + "_USERNAME");
+		String databasePassword = Configuration.get(name + "_PASSWORD");
+		if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
+			BasicDataSource basicDataSource = new BasicDataSource();
+			basicDataSource.setDriverClassName(databaseDriver);
+			basicDataSource.setUrl(databaseUrl);
+			basicDataSource.setUsername(databaseUsername);
+			basicDataSource.setPassword(databasePassword);
+			basicDataSource.setDefaultAutoCommit(true);
+			return basicDataSource;
 		}
+		throw new IllegalArgumentException("Invalid configuration for the custom datasource: " + name);
 	}
 
 	/*

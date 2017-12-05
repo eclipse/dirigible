@@ -74,6 +74,9 @@
         <dependent-module archiveName="dirigible-database-managed-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Managed/Database - Managed">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-database-custom-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Custom/Database - Custom">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-core-extensions-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Extensions/Core - Extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
