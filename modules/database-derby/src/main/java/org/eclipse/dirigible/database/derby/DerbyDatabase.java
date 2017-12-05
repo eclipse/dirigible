@@ -35,7 +35,10 @@ public class DerbyDatabase implements IDatabase {
 	private static final Logger logger = LoggerFactory.getLogger(DerbyDatabase.class);
 
 	/** The Constant TYPE. */
-	public static final String TYPE = "derby";
+	public static final String NAME = "derby";
+
+	/** The Constant TYPE. */
+	public static final String TYPE = "local";
 
 	/** The Constant DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER. */
 	public static final String DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER = "DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER"; //$NON-NLS-1$
@@ -106,6 +109,15 @@ public class DerbyDatabase implements IDatabase {
 			return dataSource;
 		}
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.api.IDatabase#getName()
+	 */
+	@Override
+	public String getName() {
+		return NAME;
 	}
 
 	/*

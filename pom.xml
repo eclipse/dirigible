@@ -405,6 +405,7 @@
 		<module>modules/database-data-structures</module>
 		<module>modules/database-derby</module>
 		<module>modules/database-managed</module>
+		<module>modules/database-custom</module>
 
 		<module>modules/core-extensions</module>
 		<module>modules/core-security</module>

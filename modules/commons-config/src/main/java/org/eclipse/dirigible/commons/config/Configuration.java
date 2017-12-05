@@ -97,7 +97,14 @@ public class Configuration {
 	 * @return the string
 	 */
 	public static String get(String key, String defaultValue) {
-		String value = getInstance().parameters.get(key);
+		String value;
+		if (getInstance().parameters.containsKey(key)) {
+			value = getInstance().parameters.get(key);
+		} else if (System.getProperties().containsKey(key)) {
+			value = System.getProperty(key);
+		} else {
+			value = System.getenv(key);
+		}
 		return (value != null) ? value : defaultValue;
 	}
 

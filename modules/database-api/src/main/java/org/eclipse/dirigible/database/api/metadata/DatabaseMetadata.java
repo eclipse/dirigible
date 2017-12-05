@@ -580,7 +580,11 @@ public class DatabaseMetadata {
 		this.supportsStatementPooling = databaseMetaData.supportsStatementPooling();
 		this.supportsStoredFunctionsUsingCallSyntax = databaseMetaData.supportsStoredFunctionsUsingCallSyntax();
 		this.autoCommitFailureClosesAllResultSets = databaseMetaData.autoCommitFailureClosesAllResultSets();
-		this.generatedKeyAlwaysReturned = databaseMetaData.generatedKeyAlwaysReturned();
+		try {
+			this.generatedKeyAlwaysReturned = databaseMetaData.generatedKeyAlwaysReturned();
+		} catch (Throwable e) {
+			this.generatedKeyAlwaysReturned = false;
+		}
 		this.getMaxLogicalLobSize = databaseMetaData.getMaxLogicalLobSize();
 		this.supportsRefCursors = databaseMetaData.supportsRefCursors();
 

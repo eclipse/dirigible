@@ -45,21 +45,21 @@ public class DatabaseModule extends AbstractDirigibleModule {
 
 		String databaseProvider = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, IDatabase.DIRIGIBLE_DATABASE_PROVIDER_LOCAL);
 		for (IDatabase next : DATABASES) {
-			logger.trace(format("Installing Database Provider [{0}] ...", next.getType()));
+			logger.trace(format("Installing Database Provider [{0}:{1}] ...", next.getType(), next.getName()));
 			if (next.getType().equals(databaseProvider)) {
 				bind(IDatabase.class).toInstance(next);
-				logger.trace(format("Binding Database - [{0}].", next.getType()));
+				logger.trace(format("Binding Database - [{0}:{1}].", next.getType(), next.getName()));
 				try {
-					logger.trace(format("Creating Datasource - [{0}] ...", next.getType()));
+					logger.trace(format("Creating Datasource - [{0}:{1}] ...", next.getType(), next.getName()));
 					bind(DataSource.class).toInstance(next.getDataSource());
-					logger.info(format("Bound Datasource - [{0}].", next.getType()));
-					logger.trace(format("Done creating Datasource - [{0}].", next.getType()));
+					logger.info(format("Bound Datasource - [{0}:{1}].", next.getType(), next.getName()));
+					logger.trace(format("Done creating Datasource - [{0}:{1}].", next.getType(), next.getName()));
 				} catch (Exception e) {
-					logger.error(format("Failed creating Datasource - [{0}].", next.getType()), e);
+					logger.error(format("Failed creating Datasource - [{0}:{1}].", next.getType(), next.getName()), e);
 				}
-				logger.trace(format("Done binding Datasource - [{0}].", next.getType()));
+				logger.trace(format("Done binding Datasource - [{0}:{1}].", next.getType(), next.getName()));
 			}
-			logger.trace(format("Done installing Database Provider [{0}].", next.getType()));
+			logger.trace(format("Done installing Database Provider [{0}:{1}].", next.getType(), next.getName()));
 		}
 	}
 
