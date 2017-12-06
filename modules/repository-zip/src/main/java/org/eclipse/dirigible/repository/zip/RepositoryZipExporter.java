@@ -120,7 +120,7 @@ public class RepositoryZipExporter {
 			relativeRoots.add(resource.getPath());
 			return exportZip(repository, relativeRoots);
 		}
-		throw new RepositoryExportException(format("Relative Root: {0} doesn't exist", relativeRoot));
+		throw new RepositoryExportException(format("Relative Root: {0} does not exist", relativeRoot));
 	}
 
 	/**

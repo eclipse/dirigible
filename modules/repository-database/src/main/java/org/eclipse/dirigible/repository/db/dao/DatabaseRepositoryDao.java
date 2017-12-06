@@ -10,15 +10,14 @@
 
 package org.eclipse.dirigible.repository.db.dao;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -28,14 +27,20 @@ import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.RepositorySearchException;
 import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
+import org.eclipse.dirigible.repository.db.DatabaseCollection;
+import org.eclipse.dirigible.repository.db.DatabaseEntity;
 import org.eclipse.dirigible.repository.db.DatabaseFile;
 import org.eclipse.dirigible.repository.db.DatabaseFileVersion;
 import org.eclipse.dirigible.repository.db.DatabaseFolder;
 import org.eclipse.dirigible.repository.db.DatabaseObject;
 import org.eclipse.dirigible.repository.db.DatabaseRepository;
 import org.eclipse.dirigible.repository.db.DatabaseRepositoryException;
+import org.eclipse.dirigible.repository.db.DatabaseResource;
+import org.eclipse.dirigible.repository.db.DatabaseResourceVersion;
 import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,15 +143,24 @@ public class DatabaseRepositoryDao {
 				Connection connection = null;
 				try {
 					connection = openConnection();
+					ensureFoldersCreated(path);
 					DatabaseRepositoryUtils.saveFile(connection, path, content, isBinary, contentType);
 				} finally {
 					closeConnection(connection);
 				}
 				createVersion(path, content);
-				createInfo(path);
 			}
 		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
+		}
+	}
+
+	private void ensureFoldersCreated(String path) throws SQLException {
+		RepositoryPath fullPath = new RepositoryPath(path).getParentPath();
+		StringBuilder buff = new StringBuilder();
+		for (String segment : fullPath.getSegments()) {
+			buff.append(IRepository.SEPARATOR).append(segment);
+			createFolder(buff.toString());
 		}
 	}
 
@@ -163,101 +177,24 @@ public class DatabaseRepositoryDao {
 	/**
 	 * Creates the version.
 	 *
-	 * @param workspacePath
+	 * @param path
 	 *            the workspace path
 	 * @param content
 	 *            the content
 	 * @throws FileNotFoundException
 	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws SQLException
+	 *             on sql error
 	 */
-	private void createVersion(String workspacePath, byte[] content) throws IOException {
-		// String versionsPath = workspacePath;
-		// if (directoryExists(versionsPath)) {
-		// String versionsLastPath = versionsPath + File.separator + LAST;
-		// byte[] bytes = DatabaseRepositoryUtils.loadFile(versionsLastPath);
-		// if (bytes != null) {
-		// Integer index;
-		// try {
-		// index = Integer.parseInt(new String(bytes, IRepository.UTF8));
-		// DatabaseRepositoryUtils.saveFile(versionsPath + File.separator + (++index), content);
-		// DatabaseRepositoryUtils.saveFile(versionsLastPath, index.toString().getBytes(IRepository.UTF8));
-		// } catch (NumberFormatException e) {
-		// logger.error(String.format("Invalid versions file: %s", versionsLastPath));
-		// createInitialVersion(content, versionsPath);
-		// }
-		// }
-		// } else {
-		// createInitialVersion(content, versionsPath);
-		// }
-	}
-
-	/**
-	 * Creates the initial version.
-	 *
-	 * @param content
-	 *            the content
-	 * @param versionsPath
-	 *            the versions path
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	private void createInitialVersion(byte[] content, String versionsPath) throws IOException {
-		// DatabaseRepositoryUtils.saveFile(versionsPath + File.separator + "1", content);
-		// DatabaseRepositoryUtils.saveFile(versionsPath + File.separator + LAST, "1".getBytes(IRepository.UTF8));
-	}
-
-	/**
-	 * Creates the info.
-	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	private void createInfo(String workspacePath) throws IOException {
-		// String infoPath = workspacePath;
-		// if (fileExists(infoPath)) {
-		// byte[] bytes = DatabaseRepositoryUtils.loadFile(infoPath);
-		// if (bytes != null) {
-		// Properties info = new Properties();
-		// info.load(new ByteArrayInputStream(bytes));
-		// info.setProperty(MODIFIED_BY, getUser());
-		// info.setProperty(MODIFIED_AT, new Date().getTime() + "");
-		//
-		// ByteArrayOutputStream out = new ByteArrayOutputStream();
-		// info.store(out, "");
-		// DatabaseRepositoryUtils.saveFile(infoPath, out.toByteArray());
-		// }
-		// } else {
-		// createInitialInfo(infoPath);
-		// }
-
-	}
-
-	/**
-	 * Creates the initial info.
-	 *
-	 * @param infoPath
-	 *            the info path
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	private void createInitialInfo(String infoPath) throws IOException {
-		// Properties info = new Properties();
-		// info.setProperty(CREATED_BY, getUser());
-		// info.setProperty(CREATED_AT, new Date().getTime() + "");
-		// info.setProperty(MODIFIED_BY, getUser());
-		// info.setProperty(MODIFIED_AT, new Date().getTime() + "");
-		//
-		// ByteArrayOutputStream out = new ByteArrayOutputStream();
-		// info.store(out, "");
-		// DatabaseRepositoryUtils.saveFile(infoPath, out.toByteArray());
+	private void createVersion(String path, byte[] content) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = openConnection();
+			int version = DatabaseRepositoryUtils.getLastFileVersion(connection, path);
+			DatabaseRepositoryUtils.saveFileVersion(connection, path, ++version, content);
+		} finally {
+			closeConnection(connection);
+		}
 	}
 
 	/**
@@ -267,31 +204,17 @@ public class DatabaseRepositoryDao {
 	 *            the workspace path
 	 * @throws FileNotFoundException
 	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @throws SQLException
+	 *             sql error
 	 */
-	private void removeVersions(String workspacePath) throws IOException {
-		// String versionsPath = workspacePath;
-		// if (DatabaseRepositoryUtils.directoryExists(versionsPath)) {
-		// DatabaseRepositoryUtils.removeFile(versionsPath);
-		// }
-	}
-
-	/**
-	 * Removes the info.
-	 *
-	 * @param workspacePath
-	 *            the workspace path
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	private void removeInfo(String workspacePath) throws IOException {
-		// String infoPath = workspacePath;
-		// if (fileExists(infoPath)) {
-		// DatabaseRepositoryUtils.removeFile(infoPath);
-		// }
+	private void removeVersions(String path) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = openConnection();
+			DatabaseRepositoryUtils.removeFileVersions(connection, path);
+		} finally {
+			closeConnection(connection);
+		}
 	}
 
 	/**
@@ -322,8 +245,7 @@ public class DatabaseRepositoryDao {
 				closeConnection(connection);
 			}
 			createVersion(workspacePath, content);
-			createInfo(workspacePath);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
 	}
@@ -362,27 +284,20 @@ public class DatabaseRepositoryDao {
 	public void renameFile(String path, String newPath) throws SQLException {
 		try {
 			Connection connection = null;
-			try {
-				connection = openConnection();
-				DatabaseRepositoryUtils.moveFile(connection, path, newPath);
-			} finally {
-				closeConnection(connection);
-			}
 			byte[] content = null;
 			try {
 				connection = openConnection();
+				DatabaseRepositoryUtils.moveFile(connection, path, newPath);
 				content = DatabaseRepositoryUtils.loadFile(connection, newPath);
 			} finally {
 				closeConnection(connection);
 			}
 			if (content != null) {
 				createVersion(newPath, content);
-				createInfo(newPath);
 				removeVersions(path);
-				removeInfo(path);
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
 	}
@@ -398,25 +313,19 @@ public class DatabaseRepositoryDao {
 	 */
 	public void copyFile(String path, String newPath) throws SQLException {
 		try {
+			byte[] content = null;
 			Connection connection = null;
 			try {
 				connection = openConnection();
 				DatabaseRepositoryUtils.copyFile(connection, path, newPath);
-			} finally {
-				closeConnection(connection);
-			}
-			byte[] content = null;
-			try {
-				connection = openConnection();
 				content = DatabaseRepositoryUtils.loadFile(connection, newPath);
 			} finally {
 				closeConnection(connection);
 			}
 			if (content != null) {
 				createVersion(newPath, content);
-				createInfo(newPath);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
 	}
@@ -438,8 +347,7 @@ public class DatabaseRepositoryDao {
 				closeConnection(connection);
 			}
 			removeVersions(path);
-			removeInfo(path);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
 	}
@@ -461,8 +369,7 @@ public class DatabaseRepositoryDao {
 				closeConnection(connection);
 			}
 			removeVersions(path);
-			removeInfo(path);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
 	}
@@ -507,8 +414,7 @@ public class DatabaseRepositoryDao {
 				closeConnection(connection);
 			}
 			removeVersions(newPath);
-			removeInfo(newPath);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
 
@@ -518,12 +424,13 @@ public class DatabaseRepositoryDao {
 	 * Copy folder.
 	 *
 	 * @param path
-	 *            the path
+	 *            the source path
 	 * @param newPath
-	 *            the new path
-	 * @throws SQLException
+	 *            the target path
+	 * @throws DatabaseRepositoryException
+	 *             in case of error
 	 */
-	public void copyFolder(String path, String newPath) throws SQLException {
+	public void copyFolder(String path, String newPath) throws DatabaseRepositoryException {
 		try {
 			Connection connection = null;
 			try {
@@ -532,8 +439,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
-			createInfo(newPath);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
 
@@ -548,17 +454,8 @@ public class DatabaseRepositoryDao {
 	 * @throws SQLException
 	 */
 	public DatabaseObject getObjectByPath(String path) throws SQLException {
-
 		DatabaseObject databaseObject = null;
-
 		try {
-			// if (!fileExists(path)) {
-			// // This is folder, that was not created
-			// if (ContentTypeHelper.getExtension(path).isEmpty() && !path.endsWith(".")) {
-			// // DatabaseRepositoryUtils.createFolder(workspacePath);
-			// return null;
-			// }
-			// }
 			if (fileExists(path)) {
 				String contentType = ContentTypeHelper.getContentType(FileSystemUtils.getExtension(path));
 				databaseObject = new DatabaseFile(repository, ContentTypeHelper.isBinary(contentType), contentType);
@@ -569,30 +466,24 @@ public class DatabaseRepositoryDao {
 			databaseObject.setName(name);
 			databaseObject.setPath(path);
 
-			String infoPath = path;
-			if (fileExists(infoPath)) {
+			if (fileExists(path)) {
 				try {
-					byte[] bytes = null;
 					Connection connection = null;
 					try {
 						connection = openConnection();
-						bytes = DatabaseRepositoryUtils.loadFile(connection, infoPath);
+						DatabaseFileDefinition fileDefinition = DatabaseRepositoryUtils.getFile(connection, path);
+						databaseObject.setCreatedBy(fileDefinition.getCreatedBy());
+						long prop = fileDefinition.getCreatedAt();
+						if (prop != 0) {
+							databaseObject.setCreatedAt(new Date(prop));
+						}
+						databaseObject.setModifiedBy(fileDefinition.getModifiedBy());
+						prop = fileDefinition.getModifiedAt();
+						if (prop != 0) {
+							databaseObject.setModifiedAt(new Date(prop));
+						}
 					} finally {
 						closeConnection(connection);
-					}
-					if (bytes != null) {
-						Properties info = new Properties();
-						info.load(new ByteArrayInputStream(bytes));
-						databaseObject.setCreatedBy(info.getProperty(CREATED_BY));
-						String prop = info.getProperty(CREATED_AT);
-						if (prop != null) {
-							databaseObject.setCreatedAt(new Date(Long.parseLong(prop)));
-						}
-						databaseObject.setModifiedBy(info.getProperty(MODIFIED_BY));
-						prop = info.getProperty(MODIFIED_AT);
-						if (prop != null) {
-							databaseObject.setModifiedAt(new Date(Long.parseLong(prop)));
-						}
 					}
 				} catch (Throwable e) {
 					throw new DatabaseRepositoryException(e);
@@ -642,28 +533,27 @@ public class DatabaseRepositoryDao {
 	 * @return the resource versions by path
 	 * @throws RepositoryVersioningException
 	 *             the repository versioning exception
+	 * @throws SQLException
 	 */
 	public List<IResourceVersion> getResourceVersionsByPath(String path) throws RepositoryVersioningException {
 		List<IResourceVersion> versions = new ArrayList<IResourceVersion>();
-		// String workspacePath = path;
-		// String versionsPath = workspacePath;
-		// DatabaseFile versionsDir = new File(versionsPath);
-		// if (versionsDir.isDirectory()) {
-		// File[] children = versionsDir.listFiles();
-		//
-		// if (children != null) {
-		// for (File file : children) {
-		// if (!LAST.equals(file.getName())) {
-		// int version = Integer.parseInt(file.getName());
-		// DatabaseResourceVersion databaseResourceVersion = new DatabaseResourceVersion(getRepository(), new
-		// RepositoryPath(path),
-		// version);
-		// versions.add(databaseResourceVersion);
-		// }
-		// }
-		// Collections.sort(versions);
-		// }
-		// }
+		try {
+			Connection connection = null;
+			try {
+				connection = openConnection();
+				List<DatabaseFileVersionDefinition> definitions = DatabaseRepositoryUtils.findFileVersions(connection, path);
+				for (DatabaseFileVersionDefinition definition : definitions) {
+					DatabaseResourceVersion databaseResourceVersion = new DatabaseResourceVersion(getRepository(), new RepositoryPath(path),
+							definition.getVersion());
+					versions.add(databaseResourceVersion);
+				}
+			} finally {
+				closeConnection(connection);
+			}
+		} catch (Exception e) {
+			throw new RepositoryVersioningException(e);
+		}
+		Collections.sort(versions);
 		return versions;
 	}
 
@@ -679,8 +569,11 @@ public class DatabaseRepositoryDao {
 	 *             the repository versioning exception
 	 */
 	public DatabaseFileVersion getFileVersionByPath(String path, int version) throws RepositoryVersioningException {
-		String workspacePath = path;
-		return getLocalFileVersionByPath(version, workspacePath);
+		try {
+			return getLocalFileVersionByPath(version, path);
+		} catch (SQLException e) {
+			throw new RepositoryVersioningException(e);
+		}
 	}
 
 	/**
@@ -688,34 +581,32 @@ public class DatabaseRepositoryDao {
 	 *
 	 * @param version
 	 *            the version
-	 * @param workspacePath
+	 * @param path
 	 *            the workspace path
 	 * @return the database file version by path
 	 * @throws RepositoryVersioningException
 	 *             the repository versioning exception
+	 * @throws SQLException
 	 */
-	private DatabaseFileVersion getLocalFileVersionByPath(int version, String workspacePath) throws RepositoryVersioningException {
-		// String versionsPath = workspacePath;
-		// String versionPath = versionsPath + File.separator + version;
-		// try {
-		// if (fileExists(versionPath)) {
-		// byte[] bytes = DatabaseRepositoryUtils.loadFile(versionPath);
-		// if (bytes != null) {
-		// String ext = FilenameUtils.getExtension(workspacePath);
-		// String contentType = ContentTypeHelper.getContentType(ext);
-		// boolean isBinary = ContentTypeHelper.isBinary(contentType);
-		// DatabaseFileVersion databaseFileVersion = new DatabaseFileVersion(getRepository(), isBinary, contentType,
-		// version, bytes);
-		// databaseFileVersion.setCreatedBy(DatabaseRepositoryUtils.getOwner(workspacePath));
-		// databaseFileVersion.setCreatedAt(DatabaseRepositoryUtils.getModifiedAt(workspacePath));
-		// return databaseFileVersion;
-		// }
-		// }
-		// } catch (Exception e) {
-		// throw new RepositoryVersioningException(e);
-		// }
-
-		return null;
+	private DatabaseFileVersion getLocalFileVersionByPath(int version, String path) throws RepositoryVersioningException, SQLException {
+		Connection connection = null;
+		try {
+			connection = openConnection();
+			DatabaseFileVersionDefinition versionDefinition = DatabaseRepositoryUtils.getFileVersion(connection, path, version);
+			DatabaseFileDefinition fileDefinition = DatabaseRepositoryUtils.getFile(connection, path);
+			DatabaseFileVersion fileVersion = new DatabaseFileVersion(repository,
+					fileDefinition.getType() == DatabaseFileDefinition.OBJECT_TYPE_BINARY, fileDefinition.getContentType(), version,
+					versionDefinition.getContent());
+			fileVersion.setName(versionDefinition.getName());
+			fileVersion.setPath(versionDefinition.getPath());
+			fileVersion.setCreatedAt(new Date(versionDefinition.getCreatedAt()));
+			fileVersion.setCreatedBy(versionDefinition.getCreatedBy());
+			fileVersion.setModifiedAt(new Date(versionDefinition.getModifiedAt()));
+			fileVersion.setModifiedBy(versionDefinition.getModifiedBy());
+			return fileVersion;
+		} finally {
+			closeConnection(connection);
+		}
 	}
 
 	/**
@@ -737,14 +628,64 @@ public class DatabaseRepositoryDao {
 
 	}
 
-	public List<IEntity> searchName(String parameter, boolean caseInsensitive) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
+		return searchName(null, parameter, caseInsensitive);
+	}
+
+	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) {
+		List<IEntity> results = new ArrayList<IEntity>();
+		try {
+			Connection connection = null;
+			try {
+				connection = openConnection();
+				List<DatabaseFileDefinition> databaseFileDefinitions = null;
+				if (root != null) {
+					databaseFileDefinitions = DatabaseRepositoryUtils.searchName(connection, root, parameter, caseInsensitive);
+				} else {
+					databaseFileDefinitions = DatabaseRepositoryUtils.searchName(connection, parameter, caseInsensitive);
+				}
+
+				for (DatabaseFileDefinition databaseFileDefinition : databaseFileDefinitions) {
+					DatabaseEntity databaseEntity = null;
+					if (databaseFileDefinition.getType() == DatabaseFileDefinition.OBJECT_TYPE_FOLDER) {
+						databaseEntity = new DatabaseCollection(repository, new RepositoryPath(databaseFileDefinition.getPath()));
+					} else {
+						databaseEntity = new DatabaseResource(repository, new RepositoryPath(databaseFileDefinition.getPath()));
+					}
+					results.add(databaseEntity);
+				}
+				return results;
+			} finally {
+				closeConnection(connection);
+			}
+		} catch (SQLException e) {
+			throw new RepositorySearchException(e);
+		}
 	}
 
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) {
-		// TODO Auto-generated method stub
-		return null;
+		List<IEntity> results = new ArrayList<IEntity>();
+		try {
+			Connection connection = null;
+			try {
+				connection = openConnection();
+				List<DatabaseFileDefinition> databaseFileDefinitions = DatabaseRepositoryUtils.searchPath(connection, parameter, caseInsensitive);
+				for (DatabaseFileDefinition databaseFileDefinition : databaseFileDefinitions) {
+					DatabaseEntity databaseEntity = null;
+					if (databaseFileDefinition.getType() == DatabaseFileDefinition.OBJECT_TYPE_FOLDER) {
+						databaseEntity = new DatabaseCollection(repository, new RepositoryPath(databaseFileDefinition.getPath()));
+					} else {
+						databaseEntity = new DatabaseResource(repository, new RepositoryPath(databaseFileDefinition.getPath()));
+					}
+					results.add(databaseEntity);
+				}
+				return results;
+			} finally {
+				closeConnection(connection);
+			}
+		} catch (SQLException e) {
+			throw new RepositorySearchException(e);
+		}
 	}
 
 	public List<IEntity> searchText(String parameter, boolean caseInsensitive) {

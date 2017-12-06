@@ -120,11 +120,7 @@ public class DatabaseFolder extends DatabaseObject {
 	 *             the local repository exception
 	 */
 	public void copyFolder(String newPath) throws DatabaseRepositoryException {
-		try {
-			getRepository().getRepositoryDao().copyFolder(getPath(), newPath);
-		} catch (SQLException e) {
-			throw new DatabaseRepositoryException(e);
-		}
+		getRepository().getRepositoryDao().copyFolder(getPath(), newPath);
 	}
 
 }
