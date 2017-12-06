@@ -61,46 +61,15 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		}
 	}
 
-	/**
-	 * Creates the table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void createTableForPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
+	private void createTableForPojo(Connection connection, PersistenceManager<Process> persistenceManager) {
 		persistenceManager.tableCreate(connection, Process.class);
 	}
 
-	/**
-	 * Exists table.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @return true, if successful
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public boolean existsTable(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
+	private boolean existsTable(Connection connection, PersistenceManager<Process> persistenceManager) {
 		return persistenceManager.tableExists(connection, Process.class);
 	}
 
-	/**
-	 * Insert pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
+	private void insertPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
 		Process process = new Process();
 		process.setName("Process1");
 		process.setTypeAsInt(Process.ProcessType.STARTED);
@@ -119,17 +88,7 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		}
 	}
 
-	/**
-	 * Insert nullable pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertNullablePojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
+	private void insertNullablePojo(Connection connection, PersistenceManager<Process> persistenceManager) {
 		Process process = new Process();
 		process.setName("Process2");
 		process.setTypeAsInt(null);
@@ -137,17 +96,7 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 		persistenceManager.insert(connection, process);
 	}
 
-	/**
-	 * Find all pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void findAllPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
+	private void findAllPojo(Connection connection, PersistenceManager<Process> persistenceManager) {
 		List<Process> list = persistenceManager.findAll(connection, Process.class);
 
 		assertNotNull(list);
@@ -167,17 +116,7 @@ public class PersistenceManagerEnumTest extends AbstractPersistenceManagerTest {
 
 	}
 
-	/**
-	 * Drop table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void dropTableForPojo(Connection connection, PersistenceManager<Process> persistenceManager) throws SQLException {
+	private void dropTableForPojo(Connection connection, PersistenceManager<Process> persistenceManager) {
 		persistenceManager.tableDrop(connection, Process.class);
 	}
 

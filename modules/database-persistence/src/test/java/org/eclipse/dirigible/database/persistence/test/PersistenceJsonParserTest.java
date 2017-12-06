@@ -19,7 +19,6 @@ import org.junit.Test;
 
 import com.google.gson.JsonSyntaxException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PersistenceJsonParserTest.
  */

@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.junit.Test;
 
@@ -50,6 +51,10 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 			insertSecondPojo(connection, persistenceManager);
 			// get the list of all the records
 			findAllPojo(connection, persistenceManager);
+			// update a record in the table for a pojo
+			updatePojo(connection, persistenceManager);
+			// update a record in the table for a pojo with null key
+			updatePojoWithNullKey(connection, persistenceManager);
 			// drop the table
 			dropTableForPojo(connection, persistenceManager);
 		} finally {
@@ -59,62 +64,21 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 		}
 	}
 
-	/**
-	 * Creates the table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void createTableForPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) throws SQLException {
+	private void createTableForPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		persistenceManager.tableCreate(connection, MultiOrder.class);
 	}
 
-	/**
-	 * Exists table.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @return true, if successful
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public boolean existsTable(Connection connection, PersistenceManager<MultiOrder> persistenceManager) throws SQLException {
+	private boolean existsTable(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		return persistenceManager.tableExists(connection, MultiOrder.class);
 	}
 
-	/**
-	 * Insert pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) throws SQLException {
+	private void insertPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		MultiOrder order = new MultiOrder();
 		order.setSubject("Subject 1");
 		persistenceManager.insert(connection, order);
 	}
 
-	/**
-	 * Insert second pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertSecondPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) throws SQLException {
+	private void insertSecondPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		MultiOrder order = new MultiOrder();
 		order.setSubject("Subject 2");
 		order.setAmount(100L);
@@ -122,17 +86,7 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 		persistenceManager.insert(connection, order);
 	}
 
-	/**
-	 * Find all pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void findAllPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) throws SQLException {
+	private void findAllPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		List<MultiOrder> list = persistenceManager.findAll(connection, MultiOrder.class);
 
 		assertNotNull(list);
@@ -152,17 +106,30 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 
 	}
 
-	/**
-	 * Drop table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void dropTableForPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) throws SQLException {
+	private void updatePojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
+		List<MultiOrder> list = persistenceManager.findAll(connection, MultiOrder.class);
+		MultiOrder order = list.get(0);
+		order.setDescription("New description");
+		persistenceManager.update(connection, order, order.getId());
+
+		order = persistenceManager.find(connection, MultiOrder.class, order.getId());
+		assertNotNull(order);
+		assertEquals("New description", order.getDescription());
+	}
+
+	private void updatePojoWithNullKey(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
+		try {
+			List<MultiOrder> list = persistenceManager.findAll(connection, MultiOrder.class);
+			MultiOrder order = list.get(0);
+			order.setDescription("New description");
+			persistenceManager.update(connection, order, null);
+		} catch (Exception e) {
+			assertEquals(PersistenceException.class, e.getClass());
+			assertEquals("The key for update cannot be null.", e.getMessage());
+		}
+	}
+
+	private void dropTableForPojo(Connection connection, PersistenceManager<MultiOrder> persistenceManager) {
 		persistenceManager.tableDrop(connection, MultiOrder.class);
 	}
 

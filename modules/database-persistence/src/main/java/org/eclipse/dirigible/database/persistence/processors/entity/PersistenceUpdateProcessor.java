@@ -83,6 +83,9 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 	 *             the persistence exception
 	 */
 	public int update(Connection connection, PersistenceTableModel tableModel, Object pojo, Object id) throws PersistenceException {
+		if (id == null) {
+			throw new PersistenceException("The key for update cannot be null.");
+		}
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {

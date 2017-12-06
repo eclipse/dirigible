@@ -58,78 +58,27 @@ public class PersistenceManagerGeneratedValueTableTest extends AbstractPersisten
 		}
 	}
 
-	/**
-	 * Creates the table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void createTableForPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
+	private void createTableForPojo(Connection connection, PersistenceManager<Order> persistenceManager) {
 		persistenceManager.tableCreate(connection, Order.class);
 	}
 
-	/**
-	 * Exists table.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @return true, if successful
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public boolean existsTable(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
+	private boolean existsTable(Connection connection, PersistenceManager<Order> persistenceManager) {
 		return persistenceManager.tableExists(connection, Order.class);
 	}
 
-	/**
-	 * Insert pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
+	private void insertPojo(Connection connection, PersistenceManager<Order> persistenceManager) {
 		Order order = new Order();
 		order.setSubject("Subject 1");
 		persistenceManager.insert(connection, order);
 	}
 
-	/**
-	 * Insert second pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertSecondPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
+	private void insertSecondPojo(Connection connection, PersistenceManager<Order> persistenceManager) {
 		Order order = new Order();
 		order.setSubject("Subject 2");
 		persistenceManager.insert(connection, order);
 	}
 
-	/**
-	 * Find all pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void findAllPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
+	private void findAllPojo(Connection connection, PersistenceManager<Order> persistenceManager) {
 		List<Order> list = persistenceManager.findAll(connection, Order.class);
 
 		assertNotNull(list);
@@ -142,17 +91,7 @@ public class PersistenceManagerGeneratedValueTableTest extends AbstractPersisten
 
 	}
 
-	/**
-	 * Drop table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void dropTableForPojo(Connection connection, PersistenceManager<Order> persistenceManager) throws SQLException {
+	private void dropTableForPojo(Connection connection, PersistenceManager<Order> persistenceManager) {
 		persistenceManager.tableDrop(connection, Order.class);
 	}
 
