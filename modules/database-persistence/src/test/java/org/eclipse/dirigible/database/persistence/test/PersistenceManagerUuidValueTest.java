@@ -57,46 +57,15 @@ public class PersistenceManagerUuidValueTest extends AbstractPersistenceManagerT
 		}
 	}
 
-	/**
-	 * Creates the table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void createTableForPojo(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
+	private void createTableForPojo(Connection connection, PersistenceManager<Task> persistenceManager) {
 		persistenceManager.tableCreate(connection, Task.class);
 	}
 
-	/**
-	 * Exists table.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @return true, if successful
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public boolean existsTable(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
+	private boolean existsTable(Connection connection, PersistenceManager<Task> persistenceManager) {
 		return persistenceManager.tableExists(connection, Task.class);
 	}
 
-	/**
-	 * Insert pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertPojo(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
+	private void insertPojo(Connection connection, PersistenceManager<Task> persistenceManager) {
 		Task task = new Task();
 		String uuid = UUID.randomUUID().toString();
 		task.setId(uuid);
@@ -105,17 +74,7 @@ public class PersistenceManagerUuidValueTest extends AbstractPersistenceManagerT
 		assertEquals(uuid, uuidInserted);
 	}
 
-	/**
-	 * Find all pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void findAllPojo(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
+	private void findAllPojo(Connection connection, PersistenceManager<Task> persistenceManager) {
 		List<Task> list = persistenceManager.findAll(connection, Task.class);
 
 		assertNotNull(list);
@@ -129,17 +88,7 @@ public class PersistenceManagerUuidValueTest extends AbstractPersistenceManagerT
 
 	}
 
-	/**
-	 * Drop table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void dropTableForPojo(Connection connection, PersistenceManager<Task> persistenceManager) throws SQLException {
+	private void dropTableForPojo(Connection connection, PersistenceManager<Task> persistenceManager) {
 		persistenceManager.tableDrop(connection, Task.class);
 	}
 
