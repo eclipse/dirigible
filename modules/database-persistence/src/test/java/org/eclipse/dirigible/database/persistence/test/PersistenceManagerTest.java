@@ -73,46 +73,15 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		}
 	}
 
-	/**
-	 * Creates the table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void createTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void createTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		persistenceManager.tableCreate(connection, Customer.class);
 	}
 
-	/**
-	 * Exists table.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @return true, if successful
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public boolean existsTable(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private boolean existsTable(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		return persistenceManager.tableExists(connection, Customer.class);
 	}
 
-	/**
-	 * Insert pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void insertPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = new Customer();
 		customer.setId(1);
 		customer.setFirstName("John");
@@ -121,17 +90,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		persistenceManager.insert(connection, customer);
 	}
 
-	/**
-	 * Insert second pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void insertSecondPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void insertSecondPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = new Customer();
 		customer.setId(2);
 		customer.setFirstName("Jane");
@@ -140,32 +99,12 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		persistenceManager.insert(connection, customer);
 	}
 
-	/**
-	 * Find pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void findPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void findPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = persistenceManager.find(connection, Customer.class, 1);
 		assertEquals("John", customer.getFirstName());
 	}
 
-	/**
-	 * Find all pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void findAllPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void findAllPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		List<Customer> list = persistenceManager.findAll(connection, Customer.class);
 
 		assertNotNull(list);
@@ -186,17 +125,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	}
 
-	/**
-	 * Query all.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void queryAll(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void queryAll(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
 		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").build();
 
@@ -216,17 +145,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	}
 
-	/**
-	 * Query by name.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void queryByName(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void queryByName(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
 		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
 
@@ -243,17 +162,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	}
 
-	/**
-	 * Query by name var args.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void queryByNameVarArgs(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void queryByNameVarArgs(Connection connection, PersistenceManager<Customer> persistenceManager) {
 
 		String sql = SqlFactory.getNative(connection).select().column("*").from("CUSTOMERS").where("CUSTOMER_FIRST_NAME = ?").build();
 
@@ -267,17 +176,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 
 	}
 
-	/**
-	 * Update pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void updatePojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void updatePojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = persistenceManager.find(connection, Customer.class, 1);
 
 		assertEquals("John", customer.getFirstName());
@@ -295,17 +194,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		assertEquals("Wayne", customer.getLastName());
 	}
 
-	/**
-	 * Delete pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void deletePojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void deletePojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = persistenceManager.find(connection, Customer.class, 1);
 
 		assertEquals("John", customer.getFirstName());
@@ -315,17 +204,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		assertEquals(1, result);
 	}
 
-	/**
-	 * Delete custom.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void deleteCustom(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void deleteCustom(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		Customer customer = new Customer();
 		customer.setId(3);
 		customer.setFirstName("James");
@@ -348,17 +227,7 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		assertNull(customer);
 	}
 
-	/**
-	 * Drop table for pojo.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param persistenceManager
-	 *            the persistence manager
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void dropTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) throws SQLException {
+	private void dropTableForPojo(Connection connection, PersistenceManager<Customer> persistenceManager) {
 		persistenceManager.tableDrop(connection, Customer.class);
 	}
 
