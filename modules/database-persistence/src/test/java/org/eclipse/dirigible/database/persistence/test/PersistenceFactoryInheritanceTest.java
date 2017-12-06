@@ -19,7 +19,6 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnMo
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PersistenceFactoryInheritanceTest.
  */
