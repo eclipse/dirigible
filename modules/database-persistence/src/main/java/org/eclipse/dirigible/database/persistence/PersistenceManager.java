@@ -137,25 +137,26 @@ public class PersistenceManager<T> {
 	 *            the clazz
 	 */
 	public void tableCheck(Connection connection, Class clazz) {
-		if (!EXISTING_TABLES_CACHE.contains(clazz.getCanonicalName())) {
-			if (!tableExists(connection, clazz)) {
-				String auto = System.getProperty("DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE");
-				if ((auto != null) && !"true".equals(auto.toLowerCase())) {
-					throw new IllegalStateException(
-							"The parameter DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE is off, but the table for the POJO has not been previousely created: "
-									+ clazz.getCanonicalName());
-				}
-				tableCreate(connection, clazz);
+		// handling multiple data sources!
+		// if (!EXISTING_TABLES_CACHE.contains(clazz.getCanonicalName())) {
+		if (!tableExists(connection, clazz)) {
+			String auto = System.getProperty("DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE");
+			if ((auto != null) && !"true".equals(auto.toLowerCase())) {
+				throw new IllegalStateException(
+						"The parameter DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE is off, but the table for the POJO has not been previousely created: "
+								+ clazz.getCanonicalName());
 			}
-			EXISTING_TABLES_CACHE.add(clazz.getCanonicalName());
+			tableCreate(connection, clazz);
 		}
+		// EXISTING_TABLES_CACHE.add(clazz.getCanonicalName());
+		// }
 	}
 
 	/**
 	 * Clean up the existing tables cache.
 	 */
 	public void reset() {
-		EXISTING_TABLES_CACHE.clear();
+		// EXISTING_TABLES_CACHE.clear();
 	}
 
 	/**

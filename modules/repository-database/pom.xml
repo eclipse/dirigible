@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Repository - Database</name>
-	<artifactId>dirigible-repository-db</artifactId>
+	<artifactId>dirigible-repository-database</artifactId>
     <packaging>jar</packaging>
     
     <build>

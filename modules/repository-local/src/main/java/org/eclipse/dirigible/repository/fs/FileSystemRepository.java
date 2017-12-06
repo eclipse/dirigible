@@ -480,8 +480,7 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
-		// return repositoryDAO.searchName(parameter, caseInsensitive);
-		return null;
+		return searchName(IRepository.SEPARATOR, parameter, caseInsensitive);
 	}
 
 	/*
@@ -491,7 +490,6 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) throws RepositorySearchException {
-
 		try {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(this, root);
 

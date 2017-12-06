@@ -397,6 +397,7 @@
 		<module>modules/repository-zip</module>
 		<module>modules/repository-local</module>
 		<module>modules/repository-master</module>
+		<module>modules/repository-database</module>
 
 		<module>modules/database-api</module>
 		<module>modules/database-sql</module>

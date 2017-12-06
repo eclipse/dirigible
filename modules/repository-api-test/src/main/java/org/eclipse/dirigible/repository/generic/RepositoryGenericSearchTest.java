@@ -23,7 +23,6 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RepositoryGenericSearchTest.
  */
@@ -42,22 +41,31 @@ public class RepositoryGenericSearchTest {
 		}
 
 		try {
-			IResource resource = repository.createResource("/testCollectionSearch/param1.txt", "param1".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			if (repository.hasCollection("/testCollectionSearch")) {
+				repository.removeCollection("/testCollectionSearch");
+			}
+			IResource resource = repository.createResource("/testCollectionSearch/param1.test", "param1".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource("/testCollectionSearch/param2.txt", "param2".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/param2.test", "param2".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
-			resource = repository.createResource("/testCollectionSearch/param12.txt", "param12".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
+			resource = repository.createResource("/testCollectionSearch/param12.test", "param12".getBytes()); //$NON-NLS-1$ //$NON-NLS-2$
 			assertNotNull(resource);
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
 
-			repository.removeResource("/testCollectionSearch/param1.txt"); //$NON-NLS-1$
-			repository.removeResource("/testCollectionSearch/param2.txt"); //$NON-NLS-1$
-			repository.removeResource("/testCollectionSearch/param12.txt"); //$NON-NLS-1$
+			List<IEntity> entities = repository.searchName(".test", false); //$NON-NLS-1$
+			try {
+				assertNotNull(entities);
+				assertEquals(3, entities.size());
+			} finally {
+				repository.removeResource("/testCollectionSearch/param1.test"); //$NON-NLS-1$
+				repository.removeResource("/testCollectionSearch/param2.test"); //$NON-NLS-1$
+				repository.removeResource("/testCollectionSearch/param12.test"); //$NON-NLS-1$
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,11 +97,14 @@ public class RepositoryGenericSearchTest {
 			assertFalse(resource.isBinary());
 
 			List<IEntity> entities = repository.searchName("/dddd/", ".txt", false); //$NON-NLS-1$
-			assertEquals(3, entities.size());
-
-			repository.removeResource("/dddd/file1.txt"); //$NON-NLS-1$
-			repository.removeResource("/dddd/file2.txt"); //$NON-NLS-1$
-			repository.removeResource("/dddd/file3.txt"); //$NON-NLS-1$
+			try {
+				assertNotNull(entities);
+				assertEquals(3, entities.size());
+			} finally {
+				repository.removeResource("/dddd/file1.txt"); //$NON-NLS-1$
+				repository.removeResource("/dddd/file2.txt"); //$NON-NLS-1$
+				repository.removeResource("/dddd/file3.txt"); //$NON-NLS-1$
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,6 +136,7 @@ public class RepositoryGenericSearchTest {
 			assertFalse(resource.isBinary());
 
 			List<IEntity> entities = repository.searchPath("param1", false); //$NON-NLS-1$
+			assertNotNull(entities);
 			assertEquals(2, entities.size());
 
 			entities = repository.searchPath("param", false); //$NON-NLS-1$
