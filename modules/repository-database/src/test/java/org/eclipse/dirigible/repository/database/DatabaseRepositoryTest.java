@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericRepositoryTest;
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryTest.
+ * The Class DatabaseRepositoryTest.
  */
 public class DatabaseRepositoryTest extends RepositoryGenericRepositoryTest {
 

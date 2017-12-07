@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericFileRenameTest;
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryFileRenameTest.
+ * The Class DatabaseRepositoryFileRenameTest.
  */
 public class DatabaseRepositoryFileRenameTest extends RepositoryGenericFileRenameTest {
 

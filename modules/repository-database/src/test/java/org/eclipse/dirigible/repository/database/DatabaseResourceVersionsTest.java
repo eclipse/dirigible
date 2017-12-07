@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericResourceVersion
 import org.junit.Before;
 
 /**
- * The Class LocalResourceVersionsTest.
+ * The Class DatabaseResourceVersionsTest.
  */
 public class DatabaseResourceVersionsTest extends RepositoryGenericResourceVersionsTest {
 

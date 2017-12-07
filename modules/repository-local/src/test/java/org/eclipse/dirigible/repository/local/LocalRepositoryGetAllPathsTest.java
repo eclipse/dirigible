@@ -8,20 +8,17 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.repository.database;
+package org.eclipse.dirigible.repository.local;
 
 import static org.junit.Assert.fail;
 
-import javax.sql.DataSource;
-
-import org.eclipse.dirigible.repository.db.DatabaseRepository;
-import org.eclipse.dirigible.repository.generic.RepositoryGenericBigTextTest;
+import org.eclipse.dirigible.repository.generic.RepositoryGenericGetAllPathsTest;
 import org.junit.Before;
 
 /**
- * The Class DatabaseRepositoryBigTextTest.
+ * The Class LocalRepositoryGetAllPathsTest.
  */
-public class DatabaseRepositoryBigTextTest extends RepositoryGenericBigTextTest {
+public class LocalRepositoryGetAllPathsTest extends RepositoryGenericGetAllPathsTest {
 
 	/**
 	 * Sets the up.
@@ -29,8 +26,7 @@ public class DatabaseRepositoryBigTextTest extends RepositoryGenericBigTextTest 
 	@Before
 	public void setUp() {
 		try {
-			DataSource dataSource = DatabaseTestHelper.createDataSource("target/tests/derby");
-			repository = new DatabaseRepository(dataSource);
+			repository = new LocalRepository("target/test");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

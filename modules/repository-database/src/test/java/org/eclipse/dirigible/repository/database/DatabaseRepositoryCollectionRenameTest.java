@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericCollectionRenam
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryCollectionRenameTest.
+ * The Class DatabaseRepositoryCollectionRenameTest.
  */
 public class DatabaseRepositoryCollectionRenameTest extends RepositoryGenericCollectionRenameTest {
 

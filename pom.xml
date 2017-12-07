@@ -378,6 +378,7 @@
 		<derby.version>10.12.1.1</derby.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.5.v20170502</jetty.version>
+		<lucene.version>7.0.1</lucene.version>
 		
 		<skip.tests>true</skip.tests>
 	</properties>
@@ -398,6 +399,7 @@
 		<module>modules/repository-local</module>
 		<module>modules/repository-master</module>
 		<module>modules/repository-database</module>
+		<module>modules/repository-search</module>
 
 		<module>modules/database-api</module>
 		<module>modules/database-sql</module>

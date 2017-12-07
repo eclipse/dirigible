@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericBinaryTest;
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryBinaryTest.
+ * The Class DatabaseRepositoryBinaryTest.
  */
 public class DatabaseRepositoryBinaryTest extends RepositoryGenericBinaryTest {
 

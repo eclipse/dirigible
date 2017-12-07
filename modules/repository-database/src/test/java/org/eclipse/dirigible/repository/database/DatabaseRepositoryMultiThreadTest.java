@@ -14,11 +14,12 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest;
 
 /**
- * The Class LocalRepositoryMultiThreadTest.
+ * The Class DatabaseRepositoryMultiThreadTest.
  */
 public class DatabaseRepositoryMultiThreadTest extends RepositoryGenericMultiThreadTest {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest#getNewRepository(java.lang.String)
 	 */
 	@Override
@@ -31,7 +32,8 @@ public class DatabaseRepositoryMultiThreadTest extends RepositoryGenericMultiThr
 	/**
 	 * The main method.
 	 *
-	 * @param args the arguments
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
 		DatabaseRepositoryMultiThreadTest localMultiThreadTest = new DatabaseRepositoryMultiThreadTest();

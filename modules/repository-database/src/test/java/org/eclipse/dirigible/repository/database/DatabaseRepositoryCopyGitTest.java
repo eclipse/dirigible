@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.repository.database;
 
 /**
- * The Class LocalRepositoryCopyGitTest.
+ * The Class DatabaseRepositoryCopyGitTest.
  */
 public class DatabaseRepositoryCopyGitTest {
 

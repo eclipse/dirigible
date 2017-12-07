@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -311,6 +312,26 @@ public class DatabaseRepositoryUtils {
 			return null;
 		}
 		return list.get(0);
+	}
+
+	public static List<String> getAllResourcePaths(Connection connection) throws SQLException {
+		List<String> results = new ArrayList<String>();
+		persistenceManagerFiles.tableCheck(connection, DatabaseFileDefinition.class);
+		String sql = SqlFactory.getNative(connection).select().column("FILE_PATH").from("DIRIGIBLE_FILES").where("FILE_TYPE <> 0").order("FILE_PATH")
+				.build();
+		PreparedStatement statement = null;
+		try {
+			statement = connection.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				results.add(rs.getString(1));
+			}
+			return results;
+		} finally {
+			if (statement != null) {
+				statement.close();
+			}
+		}
 	}
 
 }

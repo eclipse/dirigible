@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericPathTest;
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryPathTest.
+ * The Class DatabaseRepositoryPathTest.
  */
 public class DatabaseRepositoryPathTest extends RepositoryGenericPathTest {
 
