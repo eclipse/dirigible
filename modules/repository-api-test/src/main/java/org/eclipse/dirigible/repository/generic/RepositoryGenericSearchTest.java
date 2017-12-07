@@ -185,17 +185,19 @@ public class RepositoryGenericSearchTest {
 			assertTrue(resource.exists());
 			assertFalse(resource.isBinary());
 
-			List<IEntity> entities = repository.searchText("abc", false); //$NON-NLS-1$
-			assertEquals(3, entities.size());
+			repository.searchRefresh();
 
-			entities = repository.searchText("jkl", false); //$NON-NLS-1$
+			List<IEntity> entities = repository.searchText("abc"); //$NON-NLS-1$
 			assertEquals(2, entities.size());
 
-			entities = repository.searchText("Ghi", false); //$NON-NLS-1$
-			assertEquals(0, entities.size());
+			entities = repository.searchText("jkl"); //$NON-NLS-1$
+			assertEquals(2, entities.size());
 
-			entities = repository.searchText("Ghi", true); //$NON-NLS-1$
+			entities = repository.searchText("Ghi"); //$NON-NLS-1$
 			assertEquals(1, entities.size());
+
+			entities = repository.searchText("abc "); //$NON-NLS-1$
+			assertEquals(2, entities.size());
 
 			repository.removeResource("/testCollectionSearch/abc1.txt"); //$NON-NLS-1$
 			repository.removeResource("/testCollectionSearch/abc2.txt"); //$NON-NLS-1$

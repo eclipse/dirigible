@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericCollectionCopyT
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryCollectionCopyTest.
+ * The Class DatabaseRepositoryCollectionCopyTest.
  */
 public class DatabaseRepositoryCollectionCopyTest extends RepositoryGenericCollectionCopyTest {
 

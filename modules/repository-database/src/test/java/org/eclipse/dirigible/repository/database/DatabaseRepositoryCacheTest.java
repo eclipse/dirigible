@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericCacheTest;
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryCacheTest.
+ * The Class DatabaseRepositoryCacheTest.
  */
 public class DatabaseRepositoryCacheTest extends RepositoryGenericCacheTest {
 

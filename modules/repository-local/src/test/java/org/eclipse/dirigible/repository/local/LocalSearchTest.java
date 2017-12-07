@@ -13,10 +13,8 @@ package org.eclipse.dirigible.repository.local;
 import static org.junit.Assert.fail;
 
 import org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest;
-import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LocalSearchTest.
  */
@@ -28,14 +26,15 @@ public class LocalSearchTest extends RepositoryGenericSearchTest {
 	@Before
 	public void setUp() {
 		try {
-			repository = new LocalRepository("target/test");
+			repository = new LocalRepository("target");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
 	 */
 	@Override
@@ -43,13 +42,13 @@ public class LocalSearchTest extends RepositoryGenericSearchTest {
 		super.testSearchPath();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()
 	 */
 	@Override
 	public void testSearchText() {
-		// TODO to be implemented
-		// super.testSearchText();
+		super.testSearchText();
 	}
 
 }

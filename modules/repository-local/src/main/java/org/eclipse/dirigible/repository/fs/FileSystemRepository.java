@@ -45,6 +45,7 @@ import org.eclipse.dirigible.repository.local.LocalRepositoryDao;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.local.LocalResource;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
+import org.eclipse.dirigible.repository.search.RepositorySearcher;
 import org.eclipse.dirigible.repository.zip.RepositoryZipExporter;
 import org.eclipse.dirigible.repository.zip.RepositoryZipImporter;
 import org.slf4j.Logger;
@@ -74,6 +75,8 @@ public abstract class FileSystemRepository implements IRepository {
 	private String infoPath = IRepository.SEPARATOR;
 
 	private LocalRepositoryDao repositoryDao;
+
+	private RepositorySearcher repositorySearcher;
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -139,6 +142,7 @@ public abstract class FileSystemRepository implements IRepository {
 		logger.debug(String.format("Creating File-based Repository Client for: %s ...", root));
 		try {
 			initializeRepository(root);
+			this.repositorySearcher = new RepositorySearcher(this);
 		} catch (IOException e) {
 			throw new LocalRepositoryException();
 		}
@@ -549,9 +553,18 @@ public abstract class FileSystemRepository implements IRepository {
 	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#searchText(java.lang.String, boolean)
 	 */
 	@Override
-	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws RepositorySearchException {
-		// return repositoryDAO.searchText(parameter, caseInsensitive);
-		return null;
+	public List<IEntity> searchText(String parameter) throws RepositorySearchException {
+		List<IEntity> entities = new ArrayList<IEntity>();
+		List<String> paths = repositorySearcher.search(parameter);
+		for (String path : paths) {
+			entities.add(new LocalResource(this, new RepositoryPath(path)));
+		}
+		return entities;
+	}
+
+	@Override
+	public void searchRefresh() throws RepositorySearchException {
+		repositorySearcher.forceReindex();
 	}
 
 	/*
@@ -615,6 +628,28 @@ public abstract class FileSystemRepository implements IRepository {
 			if (!deleted) {
 				logger.error("Error on deleting the file: " + toBeDeleted.getCanonicalPath());
 			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositoryReader#getAllResourcePaths()
+	 */
+	@Override
+	public List<String> getAllResourcePaths() throws RepositoryReadException {
+		try {
+			String rootRepositoryPath = getRepositoryPath();
+			List<String> paths = new ArrayList<String>();
+			Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath), new WildcardFileFilter("*.*", INSENSITIVE), TRUE);
+			while (foundFiles.hasNext()) {
+				File foundFile = foundFiles.next();
+				String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
+				RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
+				paths.add(localRepositoryPath.toString());
+			}
+			return paths;
+		} catch (IOException e) {
+			throw new RepositorySearchException(e);
 		}
 	}
 

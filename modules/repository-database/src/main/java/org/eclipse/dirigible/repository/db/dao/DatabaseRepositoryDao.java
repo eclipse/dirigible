@@ -688,11 +688,6 @@ public class DatabaseRepositoryDao {
 		}
 	}
 
-	public List<IEntity> searchText(String parameter, boolean caseInsensitive) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean folderExists(String path) throws SQLException {
 		Connection connection = null;
 		try {
@@ -708,6 +703,16 @@ public class DatabaseRepositoryDao {
 		try {
 			connection = openConnection();
 			return DatabaseRepositoryUtils.existsFile(connection, path);
+		} finally {
+			closeConnection(connection);
+		}
+	}
+
+	public List<String> getAllResourcePaths() throws SQLException {
+		Connection connection = null;
+		try {
+			connection = openConnection();
+			return DatabaseRepositoryUtils.getAllResourcePaths(connection);
 		} finally {
 			closeConnection(connection);
 		}

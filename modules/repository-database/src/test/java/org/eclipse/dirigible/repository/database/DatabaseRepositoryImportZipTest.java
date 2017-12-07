@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericImportZipTest;
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryImportZipTest.
+ * The Class DatabaseRepositoryImportZipTest.
  */
 public class DatabaseRepositoryImportZipTest extends RepositoryGenericImportZipTest {
 

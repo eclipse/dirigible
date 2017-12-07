@@ -11,11 +11,12 @@
 package org.eclipse.dirigible.repository.db;
 
 import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -32,13 +33,14 @@ import org.eclipse.dirigible.repository.api.RepositorySearchException;
 import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.db.dao.DatabaseRepositoryDao;
+import org.eclipse.dirigible.repository.search.RepositorySearcher;
 import org.eclipse.dirigible.repository.zip.RepositoryZipExporter;
 import org.eclipse.dirigible.repository.zip.RepositoryZipImporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The File System based Local Repository implementation of {@link IRepository}.
+ * The Database based Repository implementation of {@link IRepository}.
  */
 public class DatabaseRepository implements IRepository {
 
@@ -51,17 +53,9 @@ public class DatabaseRepository implements IRepository {
 
 	private static final String PROVIDED_ZIP_DATA_CANNOT_BE_NULL = "Provided Zip Data cannot be null.";
 
-	@Inject
 	private DatabaseRepositoryDao databaseRepositoryDao;
 
-	/**
-	 * Constructor with default root folder - user.dir and without database initialization
-	 *
-	 * @throws DatabaseRepositoryException
-	 *             in case the repository cannot be created
-	 */
-	public DatabaseRepository() throws DatabaseRepositoryException {
-	}
+	private RepositorySearcher repositorySearcher;
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -73,6 +67,11 @@ public class DatabaseRepository implements IRepository {
 	 */
 	public DatabaseRepository(DataSource datasource) throws DatabaseRepositoryException {
 		this.databaseRepositoryDao = new DatabaseRepositoryDao(this, datasource);
+		this.repositorySearcher = new RepositorySearcher(this);
+	}
+
+	public DatabaseRepositoryDao getRepositoryDao() {
+		return this.databaseRepositoryDao;
 	}
 
 	/**
@@ -275,8 +274,18 @@ public class DatabaseRepository implements IRepository {
 	}
 
 	@Override
-	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws RepositorySearchException {
-		return databaseRepositoryDao.searchText(parameter, caseInsensitive);
+	public List<IEntity> searchText(String parameter) throws RepositorySearchException {
+		List<IEntity> entities = new ArrayList<IEntity>();
+		List<String> paths = repositorySearcher.search(parameter);
+		for (String path : paths) {
+			entities.add(new DatabaseResource(this, new RepositoryPath(path)));
+		}
+		return entities;
+	}
+
+	@Override
+	public void searchRefresh() throws RepositorySearchException {
+		repositorySearcher.forceReindex();
 	}
 
 	@Override
@@ -289,8 +298,13 @@ public class DatabaseRepository implements IRepository {
 		return new DatabaseResourceVersion(this, new RepositoryPath(path), version);
 	}
 
-	public DatabaseRepositoryDao getRepositoryDao() {
-		return this.databaseRepositoryDao;
+	@Override
+	public List<String> getAllResourcePaths() throws RepositoryReadException {
+		try {
+			return databaseRepositoryDao.getAllResourcePaths();
+		} catch (SQLException e) {
+			throw new RepositoryReadException(e);
+		}
 	}
 
 }

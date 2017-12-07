@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest;
 import org.junit.Before;
 
 /**
- * The Class LocalSearchTest.
+ * The Class DatabaseSearchTest.
  */
 public class DatabaseSearchTest extends RepositoryGenericSearchTest {
 
@@ -37,7 +37,8 @@ public class DatabaseSearchTest extends RepositoryGenericSearchTest {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchPath()
 	 */
 	@Override
@@ -45,13 +46,13 @@ public class DatabaseSearchTest extends RepositoryGenericSearchTest {
 		super.testSearchPath();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.generic.RepositoryGenericSearchTest#testSearchText()
 	 */
 	@Override
 	public void testSearchText() {
-		// TODO to be implemented
-		// super.testSearchText();
+		super.testSearchText();
 	}
 
 }

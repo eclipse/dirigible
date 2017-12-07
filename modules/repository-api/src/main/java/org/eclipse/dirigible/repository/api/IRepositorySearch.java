@@ -65,14 +65,19 @@ public interface IRepositorySearch {
 	 * Search the given given parameter in the names of the files and folders as
 	 * well as in the content of the text files.
 	 *
-	 * @param parameter
+	 * @param term
 	 *            the search text
-	 * @param caseInsensitive
-	 *            whether to be case insensitive
 	 * @return a list of {@link IEntity} instances
 	 * @throws RepositorySearchException
 	 *             in case the search fails
 	 */
-	public List<IEntity> searchText(String parameter, boolean caseInsensitive) throws RepositorySearchException;
+	public List<IEntity> searchText(String term) throws RepositorySearchException;
+
+	/**
+	 * Re-index the content
+	 *
+	 * @throws RepositorySearchException
+	 */
+	public void searchRefresh() throws RepositorySearchException;
 
 }

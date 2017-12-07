@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericTextTest;
 import org.junit.Before;
 
 /**
- * The Class LocalTextTest.
+ * The Class DatabaseTextTest.
  */
 public class DatabaseTextTest extends RepositoryGenericTextTest {
 

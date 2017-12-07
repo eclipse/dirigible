@@ -19,7 +19,7 @@ import org.eclipse.dirigible.repository.generic.RepositoryGenericCollectionMoveT
 import org.junit.Before;
 
 /**
- * The Class LocalRepositoryCollectionMoveTest.
+ * The Class DatabaseRepositoryCollectionMoveTest.
  */
 public class DatabaseRepositoryCollectionMoveTest extends RepositoryGenericCollectionMoveTest {
 

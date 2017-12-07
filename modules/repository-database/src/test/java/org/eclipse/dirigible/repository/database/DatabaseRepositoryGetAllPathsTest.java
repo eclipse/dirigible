@@ -15,13 +15,13 @@ import static org.junit.Assert.fail;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.repository.db.DatabaseRepository;
-import org.eclipse.dirigible.repository.generic.RepositoryGenericModifiedTest;
+import org.eclipse.dirigible.repository.generic.RepositoryGenericGetAllPathsTest;
 import org.junit.Before;
 
 /**
- * The Class DatabaseRepositoryModifiedTest.
+ * The Class DatabaseRepositoryGetAllPathsTest.
  */
-public class DatabaseRepositoryModifiedTest extends RepositoryGenericModifiedTest {
+public class DatabaseRepositoryGetAllPathsTest extends RepositoryGenericGetAllPathsTest {
 
 	/**
 	 * Sets the up.
@@ -30,9 +30,7 @@ public class DatabaseRepositoryModifiedTest extends RepositoryGenericModifiedTes
 	public void setUp() {
 		try {
 			DataSource dataSource = DatabaseTestHelper.createDataSource("target/tests/derby");
-			repository1 = new DatabaseRepository(dataSource);
-			repository2 = new DatabaseRepository(dataSource);
-			repository3 = new DatabaseRepository(dataSource);
+			repository = new DatabaseRepository(dataSource);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

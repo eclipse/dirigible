@@ -17,6 +17,12 @@
 
   > Note: The JAR path is absolute inside the class path
 
+### Repository Search
+
+- `DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER`: (e.g. '.')
+- `DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE`: (true | false)
+- `DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION`: (e.g. 'dirigible/repository/index')
+
 ### Tests
 
 - `DIRIGIBLE_TEST_MODE_ENABLED`: (true | false)

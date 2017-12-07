@@ -29,15 +29,14 @@ import org.eclipse.dirigible.repository.db.DatabaseRepository;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class LocalRepositoryCopyTest.
+ * The Class DatabaseRepositoryCopyTest.
  */
 public class DatabaseRepositoryCopyTest {
 
 	/** The repository src. */
 	IRepository repositorySrc;
-	
+
 	/** The repository dst. */
 	IRepository repositoryDst;
 
@@ -111,9 +110,12 @@ public class DatabaseRepositoryCopyTest {
 	/**
 	 * Copy repository.
 	 *
-	 * @param sourceRepository the source repository
-	 * @param targetRepository the target repository
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param sourceRepository
+	 *            the source repository
+	 * @param targetRepository
+	 *            the target repository
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void copyRepository(IRepository sourceRepository, IRepository targetRepository) throws IOException {
 		ICollection root = sourceRepository.getRoot();
@@ -123,9 +125,12 @@ public class DatabaseRepositoryCopyTest {
 	/**
 	 * Copy collection.
 	 *
-	 * @param parent the parent
-	 * @param targetRepository the target repository
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param parent
+	 *            the parent
+	 * @param targetRepository
+	 *            the target repository
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	private void copyCollection(ICollection parent, IRepository targetRepository) throws IOException {
 		List<IEntity> entities = parent.getChildren();
