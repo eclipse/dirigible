@@ -18,13 +18,13 @@ public class CmsProviderInternal implements ICmsProvider {
 	/** The Constant DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE. */
 	public static final String DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
 
-	private static final String CMIS = "cmis";
+	private static final String CMIS = "cmis"; //$NON-NLS-1$
 
 	/** The Constant NAME. */
-	public static final String NAME = "repository";
+	public static final String NAME = "repository"; //$NON-NLS-1$
 
 	/** The Constant TYPE. */
-	public static final String TYPE = "internal";
+	public static final String TYPE = "internal"; //$NON-NLS-1$
 
 	private static final Map<String, CmisSession> SESSIONS = Collections
 			.synchronizedMap(new HashMap<String, CmisSession>());
@@ -40,7 +40,7 @@ public class CmsProviderInternal implements ICmsProvider {
 		String repositoryFolder = rootFolder + File.separator + CMIS;
 
 		IRepository repository = new LocalRepository(repositoryFolder, absolute);
-		CmisRepository cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
+		this.cmisRepository = CmisRepositoryFactory.createCmisRepository(repository);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class CmsProviderInternal implements ICmsProvider {
 
 	@Override
 	public Object getSession() {
-		CmisSession cmisSession = cmisRepository.getSession();
+		CmisSession cmisSession = this.cmisRepository.getSession();
 		return cmisSession;
 	}
 

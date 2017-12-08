@@ -446,6 +446,7 @@
 		
 		<module>modules/cms-api</module>
 		<module>modules/cms-internal</module>
+		<module>modules/cms-managed</module>
 
 		<module>ide</module>
 		<module>templates</module>
