@@ -10,9 +10,11 @@
 
 package org.eclipse.dirigible.repository.db.module;
 
+import java.util.ServiceLoader;
+
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.db.DatabaseRepository;
 import org.slf4j.Logger;
@@ -47,12 +49,18 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 	/**
 	 * Creates the instance.
 	 *
-	 * @return the i repository
+	 * @return the repository
 	 */
 	private DatabaseRepository createInstance() {
 		logger.debug("creating Database Repository...");
-		DatabaseRepository databaseRepository = StaticInjector.getInjector().getInstance(DatabaseRepository.class);
-		logger.debug("Database Database created.");
+		DatabaseRepository databaseRepository = null;
+		ServiceLoader<IDatabase> DATABASES = ServiceLoader.load(IDatabase.class);
+		for (IDatabase next : DATABASES) {
+			if (IDatabase.DIRIGIBLE_DATABASE_PROVIDER_MANAGED.equals(next.getType())) {
+				databaseRepository = new DatabaseRepository(next.getDataSource());
+			}
+		}
+		logger.debug("Database Repository created.");
 		return databaseRepository;
 	}
 
