@@ -443,6 +443,9 @@
 		<module>modules/engine-js-nashorn</module>
 		<module>modules/engine-js-v8</module>
 		<module>modules/engine-wiki</module>
+		
+		<module>modules/cms-api</module>
+		<module>modules/cms-internal</module>
 
 		<module>ide</module>
 		<module>templates</module>

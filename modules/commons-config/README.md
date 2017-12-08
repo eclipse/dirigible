@@ -51,6 +51,13 @@
 
 - `DIRIGIBLE_HOME_URL`: (default: /services/v3/web/ide/index.html)
 
+### CMS
 
+- `DIRIGIBLE_CMS_PROVIDER`: (internal | managed | remote)
+
+#### Internal
+
+- `DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER`: (e.g. target)
+- `DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE`: (true | false)
 
  

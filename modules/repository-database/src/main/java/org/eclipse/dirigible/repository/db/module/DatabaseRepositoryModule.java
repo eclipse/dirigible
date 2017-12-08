@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Module for managing Local Repository instantiation and binding.
+ * Module for managing Database Repository instantiation and binding.
  */
 public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 
