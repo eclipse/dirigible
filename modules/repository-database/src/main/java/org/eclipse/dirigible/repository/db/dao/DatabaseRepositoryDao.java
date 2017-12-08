@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.repository.db.dao;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IEntity;
@@ -41,7 +41,6 @@ import org.eclipse.dirigible.repository.db.DatabaseRepository;
 import org.eclipse.dirigible.repository.db.DatabaseRepositoryException;
 import org.eclipse.dirigible.repository.db.DatabaseResource;
 import org.eclipse.dirigible.repository.db.DatabaseResourceVersion;
-import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -457,7 +456,7 @@ public class DatabaseRepositoryDao {
 		DatabaseObject databaseObject = null;
 		try {
 			if (fileExists(path)) {
-				String contentType = ContentTypeHelper.getContentType(FileSystemUtils.getExtension(path));
+				String contentType = ContentTypeHelper.getContentType(FilenameUtils.getExtension(path));
 				databaseObject = new DatabaseFile(repository, ContentTypeHelper.isBinary(contentType), contentType);
 			} else {
 				databaseObject = new DatabaseFolder(repository);
@@ -490,7 +489,7 @@ public class DatabaseRepositoryDao {
 				}
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
 		return databaseObject;

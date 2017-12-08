@@ -16,7 +16,6 @@ import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
-import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 
 /**
  * The file system based implementation of {@link IResourceVersion}.

@@ -24,7 +24,7 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CmisProviderManaged implements ICmsProvider {
+public class CmsProviderManaged implements ICmsProvider {
 	
 	/** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME. */
 	public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME = "java:comp/env/EcmService"; //$NON-NLS-1$
@@ -59,11 +59,11 @@ public class CmisProviderManaged implements ICmsProvider {
 	private static final String PARAM_USER = "User"; //$NON-NLS-1$
 	private static final String PARAM_PASSWORD = "Password"; //$NON-NLS-1$
 
-	private static final Logger logger = LoggerFactory.getLogger(CmisProviderManaged.class);
+	private static final Logger logger = LoggerFactory.getLogger(CmsProviderManaged.class);
 	
 	private Object cmisSession;
 	
-	public CmisProviderManaged() {
+	public CmsProviderManaged() {
 		try {
 			this.cmisSession = lookupCmisSession();
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
