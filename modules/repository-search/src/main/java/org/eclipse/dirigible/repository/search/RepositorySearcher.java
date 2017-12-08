@@ -75,7 +75,7 @@ public class RepositorySearcher {
 
 	private Timer timer;
 
-	private int seconds = 10;
+	private int seconds = 30;
 
 	private List<String> synchronizedPaths = new ArrayList<String>();
 
