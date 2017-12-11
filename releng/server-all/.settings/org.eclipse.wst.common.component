@@ -41,6 +41,9 @@
         <dependent-module archiveName="dirigible-api-log-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - log/API - Facade - log">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-api-cms-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - cms/API - Facade - cms">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-repository-api-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - API/Repository - API">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -204,6 +207,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-test-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - test/API - Javascript - test">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-api-javascript-cms-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - cms/API - Javascript - cms">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-ide-core-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Core/IDE - Core">

@@ -144,7 +144,7 @@ ORM.prototype.getAssociation = function(associationName){
 	if(this.associations){
 		return this.associations
 				.filter(function(assoc){
-					return assoc.name !== associationName;
+					return assoc.name === associationName;
 				})[0];
 	}
 	return;
@@ -186,7 +186,7 @@ ORM.prototype.validate = function(){
 			if(ORM.prototype.ASSOCIATION_TYPES_VALUES.indexOf(association.type)<0)
 				throw new Error("Illegal configuration: Association " + association.name + " property type["+association.type+"] must be one of " + ORM.prototype.ASSOCIATION_TYPES_VALUES);
 			if(!association.joinKey && 'many-to-one'!==association.type)
-				throw new Error('Illegal configuration: invalid association joinKey['+association.joinKey+']');				
+				throw new Error('Illegal configuration: invalid association joinKey['+association.joinKey+']');			
 			if(association.targetDao && association.targetDao.constructor !== Function)
 				throw new Error('Invalid configuration: Association ' + association.name + ' targetDao property is expected to be function. Instead, it is: ' + (typeof association.targetDao));
 			if(association.type===ORM.prototype.ASSOCIATION_TYPES['MANY-TO-MANY']){

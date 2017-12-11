@@ -1,9 +1,6 @@
 package org.eclipse.dirigible.cms.internal;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -26,13 +23,10 @@ public class CmsProviderInternal implements ICmsProvider {
 	/** The Constant TYPE. */
 	public static final String TYPE = "internal"; //$NON-NLS-1$
 
-	private static final Map<String, CmisSession> SESSIONS = Collections
-			.synchronizedMap(new HashMap<String, CmisSession>());
-
 	private CmisRepository cmisRepository;
 
 	public CmsProviderInternal() {
-		Configuration.load("/dirigible-cms-internal.properties");
+		Configuration.load("/dirigible-cms.properties");
 
 		String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER);
 		boolean absolute = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE));

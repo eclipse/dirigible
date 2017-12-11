@@ -162,7 +162,7 @@ ORMStatements.prototype.list= function(settings){
     	}
     }
     if (limit !== undefined && offset !== undefined) {
-        builder.limit(limit).offset(offset);
+        builder.limit(parseInt(limit,10)).offset(parseInt(offset,10));
     }
     return builder;
 };

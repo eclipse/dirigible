@@ -119,6 +119,11 @@
 		 	<artifactId>dirigible-api-log</artifactId>
 		 	<version>3.1.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-cms</artifactId>
+		 	<version>3.1.0-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- Repository -->
 		<dependency>
@@ -358,7 +363,12 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-javascript-test</artifactId>
 		 	<version>3.1.0-SNAPSHOT</version>
-		</dependency>		
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-javascript-cms</artifactId>
+		 	<version>3.1.0-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- Resources Plugins -->
 		<dependency>
