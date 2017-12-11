@@ -218,7 +218,7 @@ DAO.prototype.insert = function(_entity){
 
 			this.notify('afterInsert', dbEntity);
 			this.notify('beforeInsertAssociationSets', dbEntity);
-			if(this.orm.associations && Object.keys(this.orm.associations).length){
+			if(updatedRecordCount > 0 && this.orm.associations && Object.keys(this.orm.associations).length){
 				//Insert dependencies if any are provided inline with this entity
 				this.$log.info('Inserting association sets for {}[{}]', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 				for(var idx in Object.keys(this.orm.associations)){
@@ -417,7 +417,7 @@ DAO.prototype.expand = function(expansionPath, context){
 	if(!context){
 		throw new Error('Illegal argument: context['+context+']');
 	}
-	var associationName = expansionPath.splice?expansionPath.splice(0,1):expansionPath;
+	var associationName = expansionPath.splice?expansionPath.splice(0,1)[0]:expansionPath;
 	var association = this.orm.getAssociation(associationName);
 	if(!associationName || !association)
 		throw new Error('Illegal argument: Unknown association for this DAO [' + associationName + ']');
@@ -711,12 +711,12 @@ DAO.prototype.list = function(settings) {
       var entity = this.createEntity(rsEntry, settings.$select);
       if(expand){
         var associationNames = this.orm.getAssociationNames();
-				for(var idx in associationNames){
-					var associationName = associationNames[idx];
-					if(expand.indexOf(associationName)>-1){
-						entity[associationName] = this.expand([associationName], entity);
-					}
-				}
+		for(var idx = 0; idx < associationNames.length; idx++){
+			var associationName = associationNames[idx];
+			if(expand.indexOf(associationName)>-1){
+				entity[associationName] = this.expand([associationName], entity);
+			}
+		}
       }
       this.notify('afterFound', entity, settings);
       entities.push(entity);

@@ -46,6 +46,7 @@
 		<module>api-indexing</module>
 		<module>api-log</module>
 		<module>api-test</module>
+		<module>api-cms</module>
 	</modules>
 
 	<profiles>

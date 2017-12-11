@@ -25,6 +25,7 @@
 		<module>api-messaging</module>
 		<module>api-indexing</module>
 		<module>api-log</module>
+		<module>api-cms</module>
 	</modules>
 
 </project>
