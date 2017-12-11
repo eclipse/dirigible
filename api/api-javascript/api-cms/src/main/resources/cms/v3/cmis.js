@@ -135,7 +135,7 @@ function Folder() {
 		var children = [];
 		var childrenInstance = java.invoke(this.uuid, 'getChildren', [], true);
 		var childrenInstanceIterator = java.invoke(childrenInstance.uuid, 'iterator', [], true);
-		while (java.invoke(childrenInstanceIterator.uuid, 'hasNext', [], true)) {
+		while (java.invoke(childrenInstanceIterator.uuid, 'hasNext', [])) {
 			var cmisObjectInstance = java.invoke(childrenInstanceIterator.uuid, 'next', [], true)
 			var cmisObject = new CmisObject();
 			cmisObject.uuid = cmisObjectInstance.uuid;
