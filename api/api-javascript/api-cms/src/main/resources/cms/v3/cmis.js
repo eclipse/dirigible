@@ -46,33 +46,33 @@ function Session() {
 	this.getObject = function(objectId) {
 		var objectInstance = java.invoke(this.uuid, 'getObject', [objectId], true);
 		var objectInstanceType = java.invoke(objectInstance.uuid, 'getType', [], true);
-		var objectInstanceTypeId = java.invoke(objectInstanceType.uuid, 'getId', [], true);
-		if (type === exports.OBJECT_TYPE_DOCUMENT) {
+		var objectInstanceTypeId = java.invoke(objectInstanceType.uuid, 'getId', []);
+		if (objectInstanceTypeId === exports.OBJECT_TYPE_DOCUMENT) {
 			var object = new Document();
 			object.uuid = objectInstance.uuid;
 			return object;
-		} else if (type === exports.OBJECT_TYPE_FOLDER) {
+		} else if (objectInstanceTypeId === exports.OBJECT_TYPE_FOLDER) {
 			var object = new Folder();
 			object.uuid = objectInstance.uuid;
 			return object;
 		}
-		throw new Error("Unsupported CMIS object type: " + type);
+		throw new Error("Unsupported CMIS object type: " + objectInstanceTypeId);
 	};
 
 	this.getObjectByPath = function(path) {
 		var objectInstance = java.invoke(this.uuid, 'getObjectByPath', [path], true);
 		var objectInstanceType = java.invoke(objectInstance.uuid, 'getType', [], true);
-		var objectInstanceTypeId = java.invoke(objectInstanceType.uuid, 'getId', [], true);
-		if (type === exports.OBJECT_TYPE_DOCUMENT) {
+		var objectInstanceTypeId = java.invoke(objectInstanceType.uuid, 'getId', []);
+		if (objectInstanceTypeId === exports.OBJECT_TYPE_DOCUMENT) {
 			var object = new Document();
 			object.uuid = objectInstance.uuid;
 			return object;
-		} else if (type === exports.OBJECT_TYPE_FOLDER) {
+		} else if (objectInstanceTypeId === exports.OBJECT_TYPE_FOLDER) {
 			var object = new Folder();
 			object.uuid = objectInstance.uuid;
 			return object;
 		}
-		throw new Error("Unsupported CMIS object type: " + type);
+		throw new Error("Unsupported CMIS object type: " + objectInstanceTypeId);
 	};
 }
 
@@ -82,11 +82,11 @@ function Session() {
 function RepositoryInfo() {
 
 	this.getId = function() {
-		return java.invoke(this.uuid, 'getId', [], true);
+		return java.invoke(this.uuid, 'getId', []);
 	};
 
 	this.getName = function() {
-		return java.invoke(this.uuid, 'getName', [], true);
+		return java.invoke(this.uuid, 'getName', []);
 	};
 }
 
@@ -96,18 +96,18 @@ function RepositoryInfo() {
 function Folder() {
 	
 	this.getId = function() {
-		return java.invoke(this.uuid, 'getId', [], true);
+		return java.invoke(this.uuid, 'getId', []);
 	};
 
 	this.getName = function() {
-		return java.invoke(this.uuid, 'getName', [], true);
+		return java.invoke(this.uuid, 'getName', []);
 	};
 
 	this.createFolder = function(properties) {
-		var mapInstance = java.instantiate(this.uuid, 'java.util.HashMap', [], true);
+		var mapInstance = java.instantiate('java.util.HashMap', []);
 		for (var property in properties) {
 		    if (properties.hasOwnProperty(property)) {
-		    	java.invoke(mapInstance.uuid, 'put', [property, properties[property]], true);
+		    	java.invoke(mapInstance.uuid, 'put', [property, properties[property]]);
 		    }
 		}
 		var folderInstance = java.invoke(this.uuid, 'createFolder', [mapInstance.uuid], true);
@@ -117,10 +117,10 @@ function Folder() {
 	};
 
 	this.createDocument = function(properties, contentStream, versioningState) {
-		var mapInstance = java.instantiate(this.uuid, 'java.util.HashMap', [], true);
+		var mapInstance = java.instantiate('java.util.HashMap', []);
 		for (var property in properties) {
 		    if (properties.hasOwnProperty(property)) {
-		    	java.invoke(mapInstance.uuid, 'put', [property, properties[property]], true);
+		    	java.invoke(mapInstance.uuid, 'put', [property, properties[property]]);
 		    }
 		}
 		var state = java.call('org.eclipse.dirigible.api.v3.cms.CmisFacade', 'getVersioningState', [versioningState], true);
@@ -145,11 +145,11 @@ function Folder() {
 	};
 
 	this.getPath = function() {
-		return java.invoke(this.uuid, 'getPath', [], true);
+		return java.invoke(this.uuid, 'getPath', []);
 	};
 
 	this.isRootFolder = function() {
-		return java.invoke(this.uuid, 'isRootFolder', [], true);
+		return java.invoke(this.uuid, 'isRootFolder', []);
 	};
 
 	this.getFolderParent = function() {
@@ -160,16 +160,16 @@ function Folder() {
 	};
 
 	this.delete = function() {
-		return java.invoke(this.uuid, 'delete', [true], true);
+		return java.invoke(this.uuid, 'delete', [true]);
 	};
 
 	this.rename = function(newName) {
-		return java.invoke(this.uuid, 'rename', [newName, true], true);
+		return java.invoke(this.uuid, 'rename', [newName, true]);
 	};
 	
 	this.deleteTree = function() {
 		var unifiedObjectDelete = java.call('org.eclipse.dirigible.api.v3.cms.CmisFacade', 'getUnifiedObjectDelete', [], true);
-		return java.invoke(this.uuid, 'deleteTree', [true, unifiedObjectDelete.uuid, true], true);
+		return java.invoke(this.uuid, 'deleteTree', [true, unifiedObjectDelete.uuid, true]);
 	};
 }
 
@@ -179,23 +179,23 @@ function Folder() {
 function CmisObject() {
 
 	this.getId = function() {
-		return java.invoke(this.uuid, 'getId', [], true);
+		return java.invoke(this.uuid, 'getId', []);
 	};
 
 	this.getName = function() {
-		return java.invoke(this.uuid, 'getName', [], true);
+		return java.invoke(this.uuid, 'getName', []);
 	};
 
 	this.getType = function() {
-		return java.invoke(this.uuid, 'getType', [], true);
+		return java.invoke(this.uuid, 'getType', []);
 	};
 
 	this.delete = function() {
-		return java.invoke(this.uuid, 'delete', [], true);
+		return java.invoke(this.uuid, 'delete', []);
 	};
 
 	this.rename = function(newName) {
-		return java.invoke(this.uuid, 'rename', [newName], true);
+		return java.invoke(this.uuid, 'rename', [newName]);
 	};
 }
 
@@ -231,15 +231,15 @@ function ContentStream() {
 function Document() {
 
 	this.getId = function() {
-		return java.invoke(this.uuid, 'getId', [], true);
+		return java.invoke(this.uuid, 'getId', []);
 	};
 
 	this.getName = function() {
-		return java.invoke(this.uuid, 'getName', [], true);
+		return java.invoke(this.uuid, 'getName', []);
 	};
 
 	this.delete = function() {
-		return java.invoke(this.uuid, 'delete', [true], true);
+		return java.invoke(this.uuid, 'delete', [true]);
 	};
 
 	this.getContentStream = function() {
@@ -253,7 +253,7 @@ function Document() {
 	};
 
 	this.rename = function(newName) {
-		return java.invoke(this.uuid, 'rename', [newName, true], true);
+		return java.invoke(this.uuid, 'rename', [newName, true]);
 	};
 }
 
