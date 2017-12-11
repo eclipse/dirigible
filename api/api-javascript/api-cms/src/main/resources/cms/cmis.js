@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-var cmis = require('db/v3/cmis');
+var cmis = require('cms/v3/cmis');
 for(var propertyName in cmis) {
 	exports[propertyName] = cmis[propertyName];
 }
