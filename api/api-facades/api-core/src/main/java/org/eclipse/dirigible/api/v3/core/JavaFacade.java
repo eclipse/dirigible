@@ -249,7 +249,19 @@ public class JavaFacade {
 		Class<?> clazz = instance.getClass();
 		List<Object> params = normalizeParameters(parameters);
 		Class<?>[] parameterTypes = enumerateTypes(params);
-		Method method = findMethod(methodName, clazz, parameterTypes, params);
+		Method method = null;
+		if (Modifier.isPublic(clazz.getModifiers())) {
+			method = findMethod(methodName, clazz, parameterTypes, params);
+		} else {
+			Class[] interfaces = clazz.getInterfaces();
+			for (Class i : interfaces) {
+				method = findMethod(methodName, i, parameterTypes, params);
+				if (method != null) {
+					break;
+				}
+			}
+		}
+
 		if (method != null) {
 			Object result;
 			try {

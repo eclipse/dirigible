@@ -57,63 +57,64 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	@Before
 	public void registerModules() {
 
-		TEST_MODULES.add("core/v3/java/call.js");
-		TEST_MODULES.add("core/v3/java/invoke.js");
-		TEST_MODULES.add("core/v3/java/deep.js");
-		TEST_MODULES.add("core/v3/java/null.js");
-		
-		TEST_MODULES.add("core/v3/console/log.js");
-
-		TEST_MODULES.add("security/v3/user/getName.js");
-
-		TEST_MODULES.add("core/v3/env/get.js");
-		TEST_MODULES.add("core/v3/env/list.js");
-		TEST_MODULES.add("core/v3/globals/get.js");
-		TEST_MODULES.add("core/v3/globals/list.js");
-		TEST_MODULES.add("core/v3/context/get.js");
-		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
-		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
-
-		TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
-		TEST_MODULES.add("db/v3/database/getDataSources.js");
-		TEST_MODULES.add("db/v3/database/getMetadata.js");
-		TEST_MODULES.add("db/v3/database/getConnection.js");
-		TEST_MODULES.add("db/v3/query/query.js");
-		TEST_MODULES.add("db/v3/update/update.js");
-
-		TEST_MODULES.add("http/v3/request/getMethod.js");
-		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
-		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
-		TEST_MODULES.add("http/v3/request/getServerName.js");
-		TEST_MODULES.add("http/v3/response/getHeaderNames.js");
-		TEST_MODULES.add("http/v3/client/get.js");
-		TEST_MODULES.add("http/v3/client/get-binary.js");
-		TEST_MODULES.add("http/v3/session/getAttributeNames.js");
-		
-		TEST_MODULES.add("io/v3/streams/copy.js");
-		TEST_MODULES.add("io/v3/streams/text.js");
-		TEST_MODULES.add("io/v3/files/createTempFile.js");
-		TEST_MODULES.add("io/v3/files/fileStreams.js");
-
-		TEST_MODULES.add("utils/v3/base64/encode.js");
-		TEST_MODULES.add("utils/v3/base64/decode.js");
-		TEST_MODULES.add("utils/v3/hex/encode.js");
-		TEST_MODULES.add("utils/v3/hex/decode.js");
-		TEST_MODULES.add("utils/v3/digest/sha1.js");
-		TEST_MODULES.add("utils/v3/xml/fromJson.js");
-		TEST_MODULES.add("utils/v3/xml/toJson.js");
-		TEST_MODULES.add("utils/v3/uuid/validate.js");
-		TEST_MODULES.add("utils/v3/uuid/alias.js");
-		TEST_MODULES.add("utils/v3/uuid/alias-modules.js");
-		TEST_MODULES.add("utils/v3/url/encode.js");
-		TEST_MODULES.add("utils/v3/url/decode.js");
-		
-		TEST_MODULES.add("indexing/v3/writer/add.js");
-		TEST_MODULES.add("indexing/v3/searcher/search.js");
-		TEST_MODULES.add("indexing/v3/searcher/between.js");
-		
-		TEST_MODULES.add("cms/v3/cmis/getSession.js");
-		TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
+//		TEST_MODULES.add("core/v3/java/call.js");
+//		TEST_MODULES.add("core/v3/java/invoke.js");
+//		TEST_MODULES.add("core/v3/java/deep.js");
+//		TEST_MODULES.add("core/v3/java/null.js");
+//		
+//		TEST_MODULES.add("core/v3/console/log.js");
+//
+//		TEST_MODULES.add("security/v3/user/getName.js");
+//
+//		TEST_MODULES.add("core/v3/env/get.js");
+//		TEST_MODULES.add("core/v3/env/list.js");
+//		TEST_MODULES.add("core/v3/globals/get.js");
+//		TEST_MODULES.add("core/v3/globals/list.js");
+//		TEST_MODULES.add("core/v3/context/get.js");
+//		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
+//		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
+//
+//		TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
+//		TEST_MODULES.add("db/v3/database/getDataSources.js");
+//		TEST_MODULES.add("db/v3/database/getMetadata.js");
+//		TEST_MODULES.add("db/v3/database/getConnection.js");
+//		TEST_MODULES.add("db/v3/query/query.js");
+//		TEST_MODULES.add("db/v3/update/update.js");
+//
+//		TEST_MODULES.add("http/v3/request/getMethod.js");
+//		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
+//		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
+//		TEST_MODULES.add("http/v3/request/getServerName.js");
+//		TEST_MODULES.add("http/v3/response/getHeaderNames.js");
+//		TEST_MODULES.add("http/v3/client/get.js");
+//		TEST_MODULES.add("http/v3/client/get-binary.js");
+//		TEST_MODULES.add("http/v3/session/getAttributeNames.js");
+//		
+//		TEST_MODULES.add("io/v3/streams/copy.js");
+//		TEST_MODULES.add("io/v3/streams/text.js");
+//		TEST_MODULES.add("io/v3/files/createTempFile.js");
+//		TEST_MODULES.add("io/v3/files/fileStreams.js");
+//
+//		TEST_MODULES.add("utils/v3/base64/encode.js");
+//		TEST_MODULES.add("utils/v3/base64/decode.js");
+//		TEST_MODULES.add("utils/v3/hex/encode.js");
+//		TEST_MODULES.add("utils/v3/hex/decode.js");
+//		TEST_MODULES.add("utils/v3/digest/sha1.js");
+//		TEST_MODULES.add("utils/v3/xml/fromJson.js");
+//		TEST_MODULES.add("utils/v3/xml/toJson.js");
+//		TEST_MODULES.add("utils/v3/uuid/validate.js");
+//		TEST_MODULES.add("utils/v3/uuid/alias.js");
+//		TEST_MODULES.add("utils/v3/uuid/alias-modules.js");
+//		TEST_MODULES.add("utils/v3/url/encode.js");
+//		TEST_MODULES.add("utils/v3/url/decode.js");
+//		
+//		TEST_MODULES.add("indexing/v3/writer/add.js");
+//		TEST_MODULES.add("indexing/v3/searcher/search.js");
+//		TEST_MODULES.add("indexing/v3/searcher/between.js");
+//		
+//		TEST_MODULES.add("cms/v3/cmis/getSession.js");
+//		TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
+		TEST_MODULES.add("cms/v3/cmis/getChildren.js");
 
 	}
 
