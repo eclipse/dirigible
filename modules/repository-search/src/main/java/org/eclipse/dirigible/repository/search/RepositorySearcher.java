@@ -77,8 +77,6 @@ public class RepositorySearcher {
 
 	private int seconds = 30;
 
-	private List<String> synchronizedPaths = new ArrayList<String>();
-
 	private Date lastUpdated = new Date(0);
 
 	private volatile int countUpdated = 0;
@@ -117,7 +115,7 @@ public class RepositorySearcher {
 	class ReindexTask extends TimerTask {
 		@Override
 		public void run() {
-			synchronized (synchronizedPaths) {
+			synchronized (RepositorySearcher.class) {
 				if (countUpdated > 30) {
 					countUpdated = 0;
 					lastUpdated = new Date(0);
@@ -203,25 +201,29 @@ public class RepositorySearcher {
 	}
 
 	private void reindex() {
-		long start = System.currentTimeMillis();
-		List<String> paths = repository.getAllResourcePaths();
-		for (String path : paths) {
-			IResource resource = repository.getResource(path);
-			if ((resource != null) && (resource.getInformation() != null)
-					&& (resource.getInformation().getModifiedAt() != null)) {
-				if (lastUpdated.before(resource.getInformation().getModifiedAt())) {
-					add(path, resource.getContent(), resource.getInformation().getModifiedAt().getTime(), null);
+		synchronized (RepositorySearcher.class) {
+			long start = System.currentTimeMillis();
+			List<String> paths = repository.getAllResourcePaths();
+			for (String path : paths) {
+				IResource resource = repository.getResource(path);
+				if ((resource != null) && (resource.getInformation() != null)
+						&& (resource.getInformation().getModifiedAt() != null)) {
+					if (lastUpdated.before(resource.getInformation().getModifiedAt())) {
+						add(path, resource.getContent(), resource.getInformation().getModifiedAt().getTime(), null);
+					}
 				}
 			}
+			long end = System.currentTimeMillis();
+			logger.trace("Reindexing of the Repository Content finished in: " + (end - start) + "ms");
 		}
-		long end = System.currentTimeMillis();
-		logger.trace("Reindexing of the Repository Content finished in: " + (end - start) + "ms");
 	}
 
 	public void forceReindex() {
-		this.lastUpdated = new Date(0);
-		this.countUpdated = 0;
-		reindex();
+		synchronized (RepositorySearcher.class) {
+			this.lastUpdated = new Date(0);
+			this.countUpdated = 0;
+			reindex();
+		}
 	}
 
 }
