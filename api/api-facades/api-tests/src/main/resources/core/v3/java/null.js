@@ -8,7 +8,7 @@ _java.invoke(arrayList.uuid, 'add', [null]);
 
 var result = _java.invoke(arrayList.uuid, 'get', [0]);
 
-console.log('>>>>>>>>>>> ' + result);
+console.log(result);
 
 result == null;
 
