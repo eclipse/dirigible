@@ -13,7 +13,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 
 public class DatabaseTestHelper {
-	
+
 	/**
 	 * Creates the data source.
 	 *
@@ -40,6 +40,7 @@ public class DatabaseTestHelper {
 				String derbyRoot = prepareRootFolder(name);
 				((EmbeddedDataSource) embeddedDataSource).setDatabaseName(derbyRoot);
 				((EmbeddedDataSource) embeddedDataSource).setCreateDatabase("create");
+				((EmbeddedDataSource) embeddedDataSource).setConnectionAttributes("name=" + name);
 				return embeddedDataSource;
 			}
 			BasicDataSource basicDataSource = new BasicDataSource();
@@ -59,25 +60,25 @@ public class DatabaseTestHelper {
 			throw new Exception(e);
 		}
 	}
-		
-		/**
-		 * Prepare root folder.
-		 *
-		 * @param name
-		 *            the name
-		 * @return the string
-		 * @throws IOException
-		 *             Signals that an I/O exception has occurred.
-		 */
-		private static String prepareRootFolder(String name) throws IOException {
-			File rootFile = new File(name);
-			File parentFile = rootFile.getCanonicalFile().getParentFile();
-			if (!parentFile.exists()) {
-				if (!parentFile.mkdirs()) {
-					throw new IOException(format("Creation of the root folder [{0}] of the embedded Derby database failed.", name));
-				}
+
+	/**
+	 * Prepare root folder.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the string
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private static String prepareRootFolder(String name) throws IOException {
+		File rootFile = new File(name);
+		File parentFile = rootFile.getCanonicalFile().getParentFile();
+		if (!parentFile.exists()) {
+			if (!parentFile.mkdirs()) {
+				throw new IOException(format("Creation of the root folder [{0}] of the embedded Derby database failed.", name));
 			}
-			return name;
 		}
+		return name;
+	}
 
 }

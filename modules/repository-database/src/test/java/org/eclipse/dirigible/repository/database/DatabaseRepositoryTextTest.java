@@ -21,7 +21,7 @@ import org.junit.Before;
 /**
  * The Class DatabaseTextTest.
  */
-public class DatabaseTextTest extends RepositoryGenericTextTest {
+public class DatabaseRepositoryTextTest extends RepositoryGenericTextTest {
 
 	/**
 	 * Sets the up.
