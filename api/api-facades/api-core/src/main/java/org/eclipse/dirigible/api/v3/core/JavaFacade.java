@@ -12,16 +12,19 @@ package org.eclipse.dirigible.api.v3.core;
 
 import static java.text.MessageFormat.format;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.lang.model.type.NullType;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -36,6 +39,15 @@ import com.google.gson.internal.Primitives;
 public class JavaFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(JavaFacade.class);
+
+	private static List<String> blacklist;
+	static {
+		try {
+			blacklist = IOUtils.readLines(JavaFacade.class.getResourceAsStream("/.blacklist"), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			blacklist = new ArrayList<String>();
+		}
+	}
 
 	/**
 	 * Call a static method of the given class.
@@ -64,6 +76,7 @@ public class JavaFacade {
 	 */
 	public static final Object call(String className, String methodName, Object[] parameters) throws ClassNotFoundException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ContextException {
+		checkBlacklist(className, methodName);
 		logger.trace("API - JavaFacade.call() -> begin");
 		Class<?> clazz = Class.forName(className);
 		List<Object> params = normalizeParameters(parameters);
@@ -93,6 +106,13 @@ public class JavaFacade {
 		logger.error(message);
 		logger.trace("API - JavaFacade.call() -> end");
 		throw new NoSuchMethodException(message);
+	}
+
+	private static void checkBlacklist(String className, String methodName) throws IllegalAccessException {
+		String find = className + ":" + methodName;
+		if (blacklist.contains(find)) {
+			throw new IllegalAccessException(format("Calling of method [{0}] from the class [{1}] is forbidden.", methodName, className));
+		}
 	}
 
 	/**
@@ -263,6 +283,7 @@ public class JavaFacade {
 		}
 
 		if (method != null) {
+			checkBlacklist(method.getDeclaringClass().getCanonicalName(), methodName);
 			Object result;
 			try {
 				result = method.invoke(instance, params.toArray(new Object[] {}));
