@@ -146,7 +146,13 @@ public class PersistenceManager<T> {
 						"The parameter DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE is off, but the table for the POJO has not been previousely created: "
 								+ clazz.getCanonicalName());
 			}
-			tableCreate(connection, clazz);
+			try {
+				tableCreate(connection, clazz);
+			} catch (Exception e) {
+				if (!tableExists(connection, clazz)) {
+					throw e;
+				}
+			}
 		}
 		// EXISTING_TABLES_CACHE.add(clazz.getCanonicalName());
 		// }
