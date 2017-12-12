@@ -21,7 +21,7 @@ import org.junit.Before;
 /**
  * The Class DatabaseSearchTest.
  */
-public class DatabaseSearchTest extends RepositoryGenericSearchTest {
+public class DatabaseRepositorySearchTest extends RepositoryGenericSearchTest {
 
 	/**
 	 * Sets the up.

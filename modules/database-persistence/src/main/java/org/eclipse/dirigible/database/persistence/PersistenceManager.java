@@ -33,6 +33,8 @@ import org.eclipse.dirigible.database.persistence.processors.sequence.Persistenc
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCreateTableProcessor;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceDropTableProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PersistenceManager is a simple transport mechanism to store and retrieve
@@ -47,6 +49,10 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  *            type safety for a PersistenceManager instance
  */
 public class PersistenceManager<T> {
+
+	private static final String CONNECTION_ID_SEPARATOR = ":";
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceManager.class);
 
 	/** The Constant EXISTING_TABLES_CACHE. */
 	private static final List<String> EXISTING_TABLES_CACHE = Collections.synchronizedList(new ArrayList<String>());
@@ -137,32 +143,42 @@ public class PersistenceManager<T> {
 	 *            the clazz
 	 */
 	public void tableCheck(Connection connection, Class clazz) {
-		// handling multiple data sources!
-		// if (!EXISTING_TABLES_CACHE.contains(clazz.getCanonicalName())) {
-		if (!tableExists(connection, clazz)) {
-			String auto = System.getProperty("DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE");
-			if ((auto != null) && !"true".equals(auto.toLowerCase())) {
-				throw new IllegalStateException(
-						"The parameter DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE is off, but the table for the POJO has not been previousely created: "
-								+ clazz.getCanonicalName());
-			}
-			try {
-				tableCreate(connection, clazz);
-			} catch (Exception e) {
-				if (!tableExists(connection, clazz)) {
-					throw e;
+		String id = getConnectionIdentity(connection);
+		if (!EXISTING_TABLES_CACHE.contains(id + CONNECTION_ID_SEPARATOR + clazz.getCanonicalName())) {
+			if (!tableExists(connection, clazz)) {
+				String auto = System.getProperty("DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE");
+				if ((auto != null) && !"true".equals(auto.toLowerCase())) {
+					throw new IllegalStateException(
+							"The parameter DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE is off, but the table for the POJO has not been previousely created: "
+									+ clazz.getCanonicalName());
+				}
+				try {
+					tableCreate(connection, clazz);
+				} catch (Exception e) {
+					if (!tableExists(connection, clazz)) {
+						throw e;
+					}
 				}
 			}
+			EXISTING_TABLES_CACHE.add(id + CONNECTION_ID_SEPARATOR + clazz.getCanonicalName());
 		}
-		// EXISTING_TABLES_CACHE.add(clazz.getCanonicalName());
-		// }
+	}
+
+	private String getConnectionIdentity(Connection connection) {
+		try {
+			String url = connection.getMetaData().getURL();
+			return url.hashCode() + "";
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return "";
 	}
 
 	/**
 	 * Clean up the existing tables cache.
 	 */
 	public void reset() {
-		// EXISTING_TABLES_CACHE.clear();
+		EXISTING_TABLES_CACHE.clear();
 	}
 
 	/**
