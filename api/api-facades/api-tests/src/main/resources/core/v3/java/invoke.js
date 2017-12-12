@@ -8,6 +8,6 @@ _java.invoke(arrayList.uuid, 'add', ['some text']);
 
 var result = _java.invoke(arrayList.uuid, 'get', [0]);
 
-console.log('>>>>>>>>>>> ' + result);
+console.log(result);
 
 result == 'some text';

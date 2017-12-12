@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * The Class DataStructureTopologySorter.
  */
-public class DataStructureTopologySorter {
+public class DataStructureTopologySorterTest {
 
 	/**
 	 * Test sort.
@@ -159,7 +159,7 @@ public class DataStructureTopologySorter {
 			DataStructureTopologicalSorter.sort(models, output, external);
 		} catch (DataStructureModelException e) {
 			assertTrue(e.getMessage().startsWith("Cyclic"));
-			System.out.println(">>> Sort Cyclic Dependencies - caught!");
+			System.out.println("Sort Cyclic Dependencies - caught!");
 			return;
 		}
 
