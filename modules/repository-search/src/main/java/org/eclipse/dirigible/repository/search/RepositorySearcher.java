@@ -128,7 +128,7 @@ public class RepositorySearcher {
 		}
 	}
 
-	public void add(String location, byte[] contents, long lastModified, Map<String, String> parameters)
+	private void add(String location, byte[] contents, long lastModified, Map<String, String> parameters)
 			throws RepositoryWriteException {
 		String indexName = index;
 
@@ -162,6 +162,16 @@ public class RepositorySearcher {
 		}
 	}
 
+	/**
+	 * Search for a given term in the text files content
+	 * 
+	 * @param term
+	 *            the term
+	 * @return the list of the paths of resources which content matching the
+	 *         search term
+	 * @throws RepositoryReadException
+	 *             in case of an error
+	 */
 	public List<String> search(String term) throws RepositoryReadException {
 		List<String> results = new ArrayList<String>();
 		String indexName = index;
