@@ -184,13 +184,13 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		String fileNameExt = FilenameUtils.getExtension(fileName);
 		String fileNameBase = FilenameUtils.getBaseName(fileName);
 		
-		parameters.getParameters().put("workspaceName", workspace);
-		parameters.getParameters().put("projectName", project);
-		parameters.getParameters().put("fileName", fileName);
-		parameters.getParameters().put("fileNameExt", fileNameExt);
-		parameters.getParameters().put("fileNameBase", fileNameBase);
-		parameters.getParameters().put("filePath", filePath.build());
-		parameters.getParameters().put("packagePath", packagePath.build());
+		parameters.getParameters().put(GenerationParameters.PARAMETER_WORKSPACE_NAME, workspace);
+		parameters.getParameters().put(GenerationParameters.PARAMETER_PROJECT_NAME, project);
+		parameters.getParameters().put(GenerationParameters.PARAMETER_FILE_NAME, fileName);
+		parameters.getParameters().put(GenerationParameters.PARAMETER_FILE_NAME_EXT, fileNameExt);
+		parameters.getParameters().put(GenerationParameters.PARAMETER_FILE_NAME_BASE, fileNameBase);
+		parameters.getParameters().put(GenerationParameters.PARAMETER_FILE_PATH, filePath.build());
+		parameters.getParameters().put(GenerationParameters.PARAMETER_PACKAGE_PATH, packagePath.build());
 	}
 
 	/**

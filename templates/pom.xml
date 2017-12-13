@@ -41,6 +41,7 @@
 		<module>template-database-access</module>
 		<module>template-database-table</module>
 		<module>template-database-view</module>
+		<module>template-bookstore</module>
 	</modules>
 
 	<profiles>

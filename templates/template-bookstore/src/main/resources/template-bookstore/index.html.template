@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="page">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+    <script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+  </head>
+
+  <body ng-controller="PageController">
+
+    <div>
+      <div class="page-header">
+        <h1>[[fileName]] Books</h1>
+      </div>
+      <div class="container">
+        <table class="table table-hover">
+          <thead>
+            <th>#</th>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Editor</th>
+            <th>Publisher</th>
+            <th>Format</th>
+            <th>Publication Date</th>
+            <th>Price</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="book in books">
+              <td>{{book.id}}</td>
+              <td>{{book.isbn}}</td>
+              <td>{{book.title}}</td>
+              <td>{{book.author}}</td>
+              <td>{{book.editor}}</td>
+              <td>{{book.publisher}}</td>
+              <td>{{book.format}}</td>
+              <td>{{book.publication_date}}</td>
+              <td>{{book.price}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      angular.module('page', []);
+      angular.module('page').controller('PageController', function ($scope, $http) {
+
+        $http.get('../../js/[[projectName]]/[[fileName]].js')
+        .success(function(data) {
+        	$scope.books = data;
+        });
+
+  	  });
+    </script>
+  </body>
+</html>
