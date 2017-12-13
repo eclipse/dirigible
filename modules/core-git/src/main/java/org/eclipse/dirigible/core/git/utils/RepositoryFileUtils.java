@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
@@ -111,10 +112,7 @@ public class RepositoryFileUtils {
 					}
 				}
 				File baseDirectory = new File(tempDirectory, directoryPath);
-				boolean dirsCreated = baseDirectory.mkdirs();
-				if (!dirsCreated) {
-					throw new IOException("Error in creating directories for the file: " + baseDirectory.getCanonicalPath());
-				}
+				FileUtils.forceMkdir(baseDirectory.getCanonicalFile());
 
 				String resourcePath = entity.getPath();
 				for (String root : roots) {
