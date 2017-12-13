@@ -200,7 +200,13 @@ public class FileSystemUtils {
 	public static boolean createFolder(String workspacePath) {
 		File folder = new File(workspacePath);
 		if (!folder.exists()) {
-			return folder.mkdirs();
+			try {
+				FileUtils.forceMkdir(folder.getCanonicalFile());
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+				return false;
+			}
+			return true;
 		}
 		return true;
 	}

@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -83,12 +84,9 @@ public class ZipRepository extends FileSystemRepository {
 				name = Paths.get(name).normalize().toString();
 				File entryDestination = new File(folder, name);
 				if (entry.isDirectory()) {
-					boolean dirsMade = entryDestination.mkdirs();
-					if (!dirsMade) {
-						logger.error("Error on creating directories for the file: " + entryDestination.getCanonicalPath());
-					}
+					FileUtils.forceMkdir(entryDestination.getCanonicalFile());
 				} else {
-					entryDestination.getParentFile().mkdirs();
+					FileUtils.forceMkdir(entryDestination.getParentFile().getCanonicalFile());
 					OutputStream out = null;
 					try {
 						out = new FileOutputStream(entryDestination);
@@ -98,7 +96,6 @@ public class ZipRepository extends FileSystemRepository {
 							out.close();
 						}
 					}
-
 				}
 			}
 		} finally {

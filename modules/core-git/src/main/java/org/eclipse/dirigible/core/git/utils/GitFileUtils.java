@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
@@ -313,10 +314,7 @@ public class GitFileUtils {
 			}
 			resourceDirectory.append(File.separator);
 			File fileResource = new File(tempGitDirectory, resourceDirectory.toString());
-			boolean dirsMade = fileResource.mkdirs();
-			if (!dirsMade) {
-				throw new IOException("Error in creating directories for the file: " + fileResource.getCanonicalPath());
-			}
+			FileUtils.forceMkdir(fileResource.getCanonicalFile());
 			String resourcePath = resourceDirectory + file.getPath().substring(path.getParentPath().getPath().length() + 1);
 
 			InputStream in = null;
@@ -324,10 +322,7 @@ public class GitFileUtils {
 			try {
 				in = new ByteArrayInputStream(file.getContent());
 				File outputFile = new File(tempGitDirectory, resourcePath);
-				dirsMade = outputFile.getParentFile().mkdirs();
-				if (!dirsMade) {
-					throw new IOException("Error in creating directories for the file: " + outputFile.getCanonicalPath());
-				}
+				FileUtils.forceMkdir(outputFile.getParentFile().getCanonicalFile());
 				boolean fileCreated = outputFile.createNewFile();
 				if (!fileCreated) {
 					throw new IOException("Error in creating the file: " + outputFile.getCanonicalPath());
