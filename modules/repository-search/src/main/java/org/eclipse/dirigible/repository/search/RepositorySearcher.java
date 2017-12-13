@@ -119,7 +119,7 @@ public class RepositorySearcher {
 				if (countUpdated > 30) {
 					countUpdated = 0;
 					lastUpdated = new Date(0);
-					logger.debug("Full reindexing of the Repository Content...");
+					logger.trace("Full reindexing of the Repository Content...");
 				}
 				reindex();
 				lastUpdated = new Date();
