@@ -16,12 +16,10 @@ import static org.junit.Assert.fail;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DataStructureViewTest.
  */

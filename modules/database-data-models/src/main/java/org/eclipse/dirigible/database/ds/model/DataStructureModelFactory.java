@@ -13,8 +13,11 @@ package org.eclipse.dirigible.database.ds.model;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
@@ -35,18 +38,6 @@ public class DataStructureModelFactory {
 	}
 
 	/**
-	 * Creates a view model from the raw content.
-	 *
-	 * @param content            the view definition
-	 * @return the view model instance
-	 */
-	public static DataStructureViewModel parseView(String content) {
-		DataStructureViewModel result = GsonHelper.GSON.fromJson(content, DataStructureViewModel.class);
-		result.setHash(DigestUtils.md5Hex(content));
-		return result;
-	}
-
-	/**
 	 * Creates a table model from the raw content.
 	 *
 	 * @param bytes            the table definition
@@ -62,6 +53,18 @@ public class DataStructureModelFactory {
 	/**
 	 * Creates a view model from the raw content.
 	 *
+	 * @param content            the view definition
+	 * @return the view model instance
+	 */
+	public static DataStructureViewModel parseView(String content) {
+		DataStructureViewModel result = GsonHelper.GSON.fromJson(content, DataStructureViewModel.class);
+		result.setHash(DigestUtils.md5Hex(content));
+		return result;
+	}
+	
+	/**
+	 * Creates a view model from the raw content.
+	 *
 	 * @param bytes            the view definition
 	 * @return the view model instance
 	 */
@@ -71,5 +74,67 @@ public class DataStructureModelFactory {
 		result.setHash(DigestUtils.md5Hex(bytes));
 		return result;
 	}
+	
+	
+	
+	/**
+	 * Creates a data model from the raw content.
+	 *
+	 * @param content            the data definition
+	 * @return the data model instance
+	 */
+	public static DataStructureDataReplaceModel parseReplace(String location, String content) {
+		DataStructureDataReplaceModel result = new DataStructureDataReplaceModel();
+		setDataModelAttributes(location, content, result);
+		return result;
+	}
 
+	/**
+	 * Creates a data model from the raw content.
+	 *
+	 * @param content            the data definition
+	 * @return the data model instance
+	 */
+	public static DataStructureDataAppendModel parseAppend(String location, String content) {
+		DataStructureDataAppendModel result = new DataStructureDataAppendModel();
+		setDataModelAttributes(location, content, result);
+		return result;
+	}
+	
+	/**
+	 * Creates a data model from the raw content.
+	 *
+	 * @param content            the data definition
+	 * @return the data model instance
+	 */
+	public static DataStructureDataDeleteModel parseDelete(String location, String content) {
+		DataStructureDataDeleteModel result = new DataStructureDataDeleteModel();
+		setDataModelAttributes(location, content, result);
+		return result;
+	}
+	
+	/**
+	 * Creates a data model from the raw content.
+	 *
+	 * @param content            the data definition
+	 * @return the data model instance
+	 */
+	public static DataStructureDataUpdateModel parseUpdate(String location, String content) {
+		DataStructureDataUpdateModel result = new DataStructureDataUpdateModel();
+		setDataModelAttributes(location, content, result);
+		return result;
+	}
+	
+	
+	private static void setDataModelAttributes(String location, String content,
+			DataStructureDataModel dataModel) {
+		dataModel.setLocation(location);
+		dataModel.setName(FilenameUtils.getBaseName(location));
+		dataModel.setType(IDataStructureModel.TYPE_REPLACE);
+		dataModel.setContent(content);
+		dataModel.setCreatedBy(UserFacade.getName());
+		dataModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));;
+		dataModel.setHash(DigestUtils.md5Hex(content));
+	}
+	
 }
