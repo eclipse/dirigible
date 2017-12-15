@@ -12,10 +12,15 @@ package org.eclipse.dirigible.database.ds.synchronizer;
 
 import static java.text.MessageFormat.format;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,16 +39,26 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;
-import org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTopologicalSorter;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.TableDropProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.ViewCreateProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.ViewDropProcessor;
-import org.eclipse.dirigible.database.ds.service.DataStructureCoreService;
+import org.eclipse.dirigible.database.ds.model.transfer.TableDataReader;
+import org.eclipse.dirigible.database.ds.model.transfer.TableExporter;
+import org.eclipse.dirigible.database.ds.model.transfer.TableImporter;
+import org.eclipse.dirigible.database.ds.service.DataStructuresCoreService;
+import org.eclipse.dirigible.database.persistence.PersistenceException;
+import org.eclipse.dirigible.database.persistence.PersistenceManager;
+import org.eclipse.dirigible.database.persistence.processors.identity.Identity;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
@@ -63,14 +78,42 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	private static final Map<String, DataStructureViewModel> VIEWS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureViewModel>());
 
+	private static final Map<String, DataStructureDataReplaceModel> REPLACE_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, DataStructureDataReplaceModel>());
+
+	private static final Map<String, DataStructureDataAppendModel> APPEND_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, DataStructureDataAppendModel>());
+
+	private static final Map<String, DataStructureDataDeleteModel> DELETE_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, DataStructureDataDeleteModel>());
+
+	private static final Map<String, DataStructureDataUpdateModel> UPDATE_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, DataStructureDataUpdateModel>());
+
 	private static final List<String> TABLES_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
 	private static final List<String> VIEWS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
+	private static final List<String> REPLACE_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+
+	private static final List<String> APPEND_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+
+	private static final List<String> DELETE_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+
+	private static final List<String> UPDATE_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+
 	private static final Map<String, DataStructureModel> DATA_STRUCTURE_MODELS = new LinkedHashMap<String, DataStructureModel>();
 
+	private static final Map<String, DataStructureDataReplaceModel> DATA_STRUCTURE_REPLACE_MODELS = new LinkedHashMap<String, DataStructureDataReplaceModel>();
+
+	private static final Map<String, DataStructureDataAppendModel> DATA_STRUCTURE_APPEND_MODELS = new LinkedHashMap<String, DataStructureDataAppendModel>();
+
+	private static final Map<String, DataStructureDataDeleteModel> DATA_STRUCTURE_DELETE_MODELS = new LinkedHashMap<String, DataStructureDataDeleteModel>();
+
+	private static final Map<String, DataStructureDataUpdateModel> DATA_STRUCTURE_UPDATE_MODELS = new LinkedHashMap<String, DataStructureDataUpdateModel>();
+
 	@Inject
-	private DataStructureCoreService dataStructuresCoreService;
+	private DataStructuresCoreService dataStructuresCoreService;
 
 	@Inject
 	private DataSource dataSource;
@@ -92,8 +135,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredTable(String tableModelPath) throws IOException {
-		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(tableModelPath);
-		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+		String json = loadResourceContent(tableModelPath);
 		DataStructureTableModel tableModel = dataStructuresCoreService.parseTable(json);
 		tableModel.setLocation(tableModelPath);
 		TABLES_PREDELIVERED.put(tableModelPath, tableModel);
@@ -108,11 +150,72 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredView(String viewModelPath) throws IOException {
-		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(viewModelPath);
-		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+		String json = loadResourceContent(viewModelPath);
 		DataStructureViewModel viewModel = dataStructuresCoreService.parseView(json);
 		viewModel.setLocation(viewModelPath);
 		VIEWS_PREDELIVERED.put(viewModelPath, viewModel);
+	}
+
+	/**
+	 * Register predelivered replace files.
+	 *
+	 * @param contentPath
+	 *            the data path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void registerPredeliveredReplace(String contentPath) throws IOException {
+		String data = loadResourceContent(contentPath);
+		DataStructureDataReplaceModel model = dataStructuresCoreService.parseReplace(contentPath, data);
+		REPLACE_PREDELIVERED.put(contentPath, model);
+	}
+
+	/**
+	 * Register predelivered append files.
+	 *
+	 * @param contentPath
+	 *            the data path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void registerPredeliveredAppend(String contentPath) throws IOException {
+		String data = loadResourceContent(contentPath);
+		DataStructureDataAppendModel model = dataStructuresCoreService.parseAppend(contentPath, data);
+		APPEND_PREDELIVERED.put(contentPath, model);
+	}
+
+	/**
+	 * Register predelivered delete files.
+	 *
+	 * @param contentPath
+	 *            the data path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void registerPredeliveredDelete(String contentPath) throws IOException {
+		String data = loadResourceContent(contentPath);
+		DataStructureDataDeleteModel model = dataStructuresCoreService.parseDelete(contentPath, data);
+		DELETE_PREDELIVERED.put(contentPath, model);
+	}
+
+	/**
+	 * Register predelivered update files.
+	 *
+	 * @param contentPath
+	 *            the data path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void registerPredeliveredUpdate(String contentPath) throws IOException {
+		String data = loadResourceContent(contentPath);
+		DataStructureDataUpdateModel model = dataStructuresCoreService.parseUpdate(contentPath, data);
+		UPDATE_PREDELIVERED.put(contentPath, model);
+	}
+
+	private String loadResourceContent(String modelPath) throws IOException {
+		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(modelPath);
+		String content = IOUtils.toString(in, StandardCharsets.UTF_8);
+		return content;
 	}
 
 	/*
@@ -127,7 +230,8 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				clearCache();
 				synchronizePredelivered();
 				synchronizeRegistry();
-				updateDatabase();
+				updateDatabaseSchema();
+				updateDatabaseContent();
 				cleanup(); // TODO drop tables and views for non-existing models
 				clearCache();
 			} catch (Exception e) {
@@ -144,6 +248,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		TABLES_SYNCHRONIZED.clear();
 		VIEWS_SYNCHRONIZED.clear();
 		DATA_STRUCTURE_MODELS.clear();
+		DATA_STRUCTURE_REPLACE_MODELS.clear();
+		DATA_STRUCTURE_APPEND_MODELS.clear();
+		DATA_STRUCTURE_DELETE_MODELS.clear();
+		DATA_STRUCTURE_UPDATE_MODELS.clear();
 	}
 
 	/**
@@ -168,6 +276,38 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				synchronizeView(viewModel);
 			} catch (Exception e) {
 				logger.error(format("View [{0}] skipped due to an error: {1}", viewModel.getLocation(), e.getMessage()), e);
+			}
+		}
+		// Replace
+		for (DataStructureDataReplaceModel data : REPLACE_PREDELIVERED.values()) {
+			try {
+				synchronizeReplace(data);
+			} catch (Exception e) {
+				logger.error(format("Replace data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
+			}
+		}
+		// Append
+		for (DataStructureDataAppendModel data : APPEND_PREDELIVERED.values()) {
+			try {
+				synchronizeAppend(data);
+			} catch (Exception e) {
+				logger.error(format("Append data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
+			}
+		}
+		// Delete
+		for (DataStructureDataDeleteModel data : DELETE_PREDELIVERED.values()) {
+			try {
+				synchronizeDelete(data);
+			} catch (Exception e) {
+				logger.error(format("Delete data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
+			}
+		}
+		// Update
+		for (DataStructureDataUpdateModel data : UPDATE_PREDELIVERED.values()) {
+			try {
+				synchronizeUpdate(data);
+			} catch (Exception e) {
+				logger.error(format("Update data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
 			}
 		}
 		logger.trace("Done synchronizing predelivered Data Structures.");
@@ -241,6 +381,118 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		}
 	}
 
+	/**
+	 * Synchronize replace.
+	 *
+	 * @param dateModel
+	 *            the data model
+	 * @throws SynchronizationException
+	 *             the synchronization exception
+	 */
+	private void synchronizeReplace(DataStructureDataReplaceModel dataModel) throws SynchronizationException {
+		try {
+			if (!dataStructuresCoreService.existsReplace(dataModel.getLocation())) {
+				dataStructuresCoreService.createReplace(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
+				DATA_STRUCTURE_REPLACE_MODELS.put(dataModel.getName(), dataModel);
+				logger.info("Synchronized a new Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+			} else {
+				DataStructureDataReplaceModel existing = dataStructuresCoreService.getReplace(dataModel.getLocation());
+				if (!dataModel.equals(existing)) {
+					dataStructuresCoreService.updateReplace(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
+					DATA_STRUCTURE_REPLACE_MODELS.put(dataModel.getName(), dataModel);
+					logger.info("Synchronized a modified Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+				}
+			}
+			REPLACE_SYNCHRONIZED.add(dataModel.getLocation());
+		} catch (DataStructuresException e) {
+			throw new SynchronizationException(e);
+		}
+	}
+
+	/**
+	 * Synchronize append.
+	 *
+	 * @param dateModel
+	 *            the data model
+	 * @throws SynchronizationException
+	 *             the synchronization exception
+	 */
+	private void synchronizeAppend(DataStructureDataAppendModel dataModel) throws SynchronizationException {
+		try {
+			if (!dataStructuresCoreService.existsAppend(dataModel.getLocation())) {
+				dataStructuresCoreService.createAppend(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
+				DATA_STRUCTURE_APPEND_MODELS.put(dataModel.getName(), dataModel);
+				logger.info("Synchronized a new Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+			} else {
+				DataStructureDataAppendModel existing = dataStructuresCoreService.getAppend(dataModel.getLocation());
+				if (!dataModel.equals(existing)) {
+					dataStructuresCoreService.updateAppend(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
+					DATA_STRUCTURE_APPEND_MODELS.put(dataModel.getName(), dataModel);
+					logger.info("Synchronized a modified Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+				}
+			}
+			APPEND_SYNCHRONIZED.add(dataModel.getLocation());
+		} catch (DataStructuresException e) {
+			throw new SynchronizationException(e);
+		}
+	}
+
+	/**
+	 * Synchronize delete.
+	 *
+	 * @param dateModel
+	 *            the data model
+	 * @throws SynchronizationException
+	 *             the synchronization exception
+	 */
+	private void synchronizeDelete(DataStructureDataDeleteModel dataModel) throws SynchronizationException {
+		try {
+			if (!dataStructuresCoreService.existsDelete(dataModel.getLocation())) {
+				dataStructuresCoreService.createDelete(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
+				DATA_STRUCTURE_DELETE_MODELS.put(dataModel.getName(), dataModel);
+				logger.info("Synchronized a new Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+			} else {
+				DataStructureDataDeleteModel existing = dataStructuresCoreService.getDelete(dataModel.getLocation());
+				if (!dataModel.equals(existing)) {
+					dataStructuresCoreService.updateDelete(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
+					DATA_STRUCTURE_DELETE_MODELS.put(dataModel.getName(), dataModel);
+					logger.info("Synchronized a modified Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+				}
+			}
+			DELETE_SYNCHRONIZED.add(dataModel.getLocation());
+		} catch (DataStructuresException e) {
+			throw new SynchronizationException(e);
+		}
+	}
+
+	/**
+	 * Synchronize update.
+	 *
+	 * @param dateModel
+	 *            the data model
+	 * @throws SynchronizationException
+	 *             the synchronization exception
+	 */
+	private void synchronizeUpdate(DataStructureDataUpdateModel dataModel) throws SynchronizationException {
+		try {
+			if (!dataStructuresCoreService.existsUpdate(dataModel.getLocation())) {
+				dataStructuresCoreService.createUpdate(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
+				DATA_STRUCTURE_UPDATE_MODELS.put(dataModel.getName(), dataModel);
+				logger.info("Synchronized a new Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+			} else {
+				DataStructureDataUpdateModel existing = dataStructuresCoreService.getUpdate(dataModel.getLocation());
+				if (!dataModel.equals(existing)) {
+					dataStructuresCoreService.updateUpdate(dataModel.getLocation(), dataModel.getName(), dataModel.getHash());
+					DATA_STRUCTURE_UPDATE_MODELS.put(dataModel.getName(), dataModel);
+					logger.info("Synchronized a modified Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+				}
+			}
+			UPDATE_SYNCHRONIZED.add(dataModel.getLocation());
+		} catch (DataStructuresException e) {
+			throw new SynchronizationException(e);
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
@@ -262,16 +514,54 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
 		String resourceName = resource.getName();
-		if (resourceName.endsWith(IDataStructuresCoreService.FILE_EXTENSION_TABLE)) {
-			DataStructureTableModel tableModel = dataStructuresCoreService.parseTable(resource.getContent());
-			tableModel.setLocation(getRegistryPath(resource));
+		String registryPath = getRegistryPath(resource);
+		byte[] content = resource.getContent();
+		String contentAsString;
+		try {
+			contentAsString = IOUtils.toString(new InputStreamReader(new ByteArrayInputStream(content), StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			throw new SynchronizationException(e);
+		}
+		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_TABLE)) {
+			DataStructureTableModel tableModel = dataStructuresCoreService.parseTable(content);
+			tableModel.setLocation(registryPath);
 			synchronizeTable(tableModel);
+			return;
 		}
 
-		if (resourceName.endsWith(IDataStructuresCoreService.FILE_EXTENSION_VIEW)) {
-			DataStructureViewModel viewModel = dataStructuresCoreService.parseView(resource.getContent());
-			viewModel.setLocation(getRegistryPath(resource));
+		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_VIEW)) {
+			DataStructureViewModel viewModel = dataStructuresCoreService.parseView(content);
+			viewModel.setLocation(registryPath);
 			synchronizeView(viewModel);
+			return;
+		}
+
+		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_REPLACE)) {
+			DataStructureDataReplaceModel dataModel = dataStructuresCoreService.parseReplace(registryPath, contentAsString);
+			dataModel.setLocation(registryPath);
+			synchronizeReplace(dataModel);
+			return;
+		}
+
+		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_APPEND)) {
+			DataStructureDataAppendModel dataModel = dataStructuresCoreService.parseAppend(registryPath, contentAsString);
+			dataModel.setLocation(registryPath);
+			synchronizeAppend(dataModel);
+			return;
+		}
+
+		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_DELETE)) {
+			DataStructureDataDeleteModel dataModel = dataStructuresCoreService.parseDelete(registryPath, contentAsString);
+			dataModel.setLocation(registryPath);
+			synchronizeDelete(dataModel);
+			return;
+		}
+
+		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_UPDATE)) {
+			DataStructureDataUpdateModel dataModel = dataStructuresCoreService.parseUpdate(registryPath, contentAsString);
+			dataModel.setLocation(registryPath);
+			synchronizeUpdate(dataModel);
+			return;
 		}
 	}
 
@@ -304,6 +594,38 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 						logger.warn("Cleaned up View [{}] from location: {}", viewModel.getName(), viewModel.getLocation());
 					}
 				}
+
+				List<DataStructureDataReplaceModel> dataReplaceModels = dataStructuresCoreService.getReplaces();
+				for (DataStructureDataReplaceModel dataModel : dataReplaceModels) {
+					if (!REPLACE_SYNCHRONIZED.contains(dataModel.getLocation())) {
+						dataStructuresCoreService.removeReplace(dataModel.getLocation());
+						logger.warn("Cleaned up Replace Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					}
+				}
+
+				List<DataStructureDataAppendModel> dataAppendModels = dataStructuresCoreService.getAppends();
+				for (DataStructureDataAppendModel dataModel : dataAppendModels) {
+					if (!APPEND_SYNCHRONIZED.contains(dataModel.getLocation())) {
+						dataStructuresCoreService.removeAppend(dataModel.getLocation());
+						logger.warn("Cleaned up Append Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					}
+				}
+
+				List<DataStructureDataDeleteModel> dataDeleteModels = dataStructuresCoreService.getDeletes();
+				for (DataStructureDataDeleteModel dataModel : dataDeleteModels) {
+					if (!DELETE_SYNCHRONIZED.contains(dataModel.getLocation())) {
+						dataStructuresCoreService.removeDelete(dataModel.getLocation());
+						logger.warn("Cleaned up Delete Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					}
+				}
+
+				List<DataStructureDataUpdateModel> dataUpdateModels = dataStructuresCoreService.getUpdates();
+				for (DataStructureDataUpdateModel dataModel : dataUpdateModels) {
+					if (!UPDATE_SYNCHRONIZED.contains(dataModel.getLocation())) {
+						dataStructuresCoreService.removeUpdate(dataModel.getLocation());
+						logger.warn("Cleaned up Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					}
+				}
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -317,9 +639,9 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	}
 
 	/**
-	 * Update database.
+	 * Update database schema.
 	 */
-	private void updateDatabase() {
+	private void updateDatabaseSchema() {
 
 		if (DATA_STRUCTURE_MODELS.isEmpty()) {
 			logger.trace("No Data Structures to update.");
@@ -332,32 +654,32 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			try {
 				connection = dataSource.getConnection();
 				// topology sort of dependencies
-				List<String> output = new ArrayList<String>();
+				List<String> sorted = new ArrayList<String>();
 				List<String> external = new ArrayList<String>();
 				try {
-					DataStructureTopologicalSorter.sort(DATA_STRUCTURE_MODELS, output, external);
+					DataStructureTopologicalSorter.sort(DATA_STRUCTURE_MODELS, sorted, external);
 
 					logger.trace("topological sorting");
 
-					for (String location : output) {
+					for (String location : sorted) {
 						logger.trace("location: " + location);
 					}
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					errors.add(e.getMessage());
-					output.clear();
+					sorted.clear();
 				}
 
-				if (output.isEmpty()) {
+				if (sorted.isEmpty()) {
 					// something wrong happened with the sorting - probably cyclic dependencies
 					// we go for the back-up list and try to apply what would succeed
 					logger.warn("Probably there are cyclic dependencies!");
-					output.addAll(DATA_STRUCTURE_MODELS.keySet());
+					sorted.addAll(DATA_STRUCTURE_MODELS.keySet());
 				}
 
 				// drop view in a reverse order
-				for (int i = output.size() - 1; i >= 0; i--) {
-					String dsName = output.get(i);
+				for (int i = sorted.size() - 1; i >= 0; i--) {
+					String dsName = sorted.get(i);
 					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
 					try {
 						if (model instanceof DataStructureViewModel) {
@@ -370,7 +692,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				}
 
 				// process models in the proper order
-				for (String dsName : output) {
+				for (String dsName : sorted) {
 					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
 					try {
 						if (model instanceof DataStructureTableModel) {
@@ -404,7 +726,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	private void executeTableUpdate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+	public void executeTableUpdate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		logger.info("Processing Update Table: " + tableModel.getName());
 		if (SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
 			if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
@@ -454,7 +776,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	private void executeTableDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+	public void executeTableDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		TableDropProcessor.execute(connection, tableModel);
 	}
 
@@ -468,7 +790,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	private void executeViewCreate(Connection connection, DataStructureViewModel viewModel) throws SQLException {
+	public void executeViewCreate(Connection connection, DataStructureViewModel viewModel) throws SQLException {
 		ViewCreateProcessor.execute(connection, viewModel);
 	}
 
@@ -482,7 +804,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	private void executeViewDrop(Connection connection, DataStructureViewModel viewModel) throws SQLException {
+	public void executeViewDrop(Connection connection, DataStructureViewModel viewModel) throws SQLException {
 		ViewDropProcessor.execute(connection, viewModel);
 	}
 
@@ -502,4 +824,291 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		}
 		return buff.toString();
 	}
+
+	// Content
+
+	private static final String COLUMN_NAME = "COLUMN_NAME";
+
+	private void updateDatabaseContent() {
+
+		// Replace
+		for (String dsName : DATA_STRUCTURE_REPLACE_MODELS.keySet()) {
+			DataStructureDataReplaceModel model = DATA_STRUCTURE_REPLACE_MODELS.get(dsName);
+			try {
+				executeReplaceUpdate(model);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+
+		// Append
+		for (String dsName : DATA_STRUCTURE_APPEND_MODELS.keySet()) {
+			DataStructureDataAppendModel model = DATA_STRUCTURE_APPEND_MODELS.get(dsName);
+			try {
+				executeAppendUpdate(model);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+
+		// Delete
+		for (String dsName : DATA_STRUCTURE_DELETE_MODELS.keySet()) {
+			DataStructureDataDeleteModel model = DATA_STRUCTURE_DELETE_MODELS.get(dsName);
+			try {
+				executeDeleteUpdate(model);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+
+		// Update
+		for (String dsName : DATA_STRUCTURE_UPDATE_MODELS.keySet()) {
+			DataStructureDataUpdateModel model = DATA_STRUCTURE_UPDATE_MODELS.get(dsName);
+			try {
+				executeUpdateUpdate(model);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+
+	}
+
+	/**
+	 * Process the data rows in the 'replace' mode
+	 *
+	 * @param model
+	 *            the model
+	 * @throws Exception
+	 *             in case of databse error
+	 */
+	public void executeReplaceUpdate(DataStructureDataReplaceModel model) throws Exception {
+		logger.info("Processing rows in mode 'replace': " + model.getLocation());
+		String tableName = model.getName();
+		deleteAllDataFromTable(tableName);
+
+		byte[] content = model.getContent().getBytes();
+
+		if (content.length != 0) {
+			TableImporter tableDataInserter = new TableImporter(dataSource, content, tableName);
+			tableDataInserter.insert();
+			moveSequence(tableName); // move the sequence just in case
+		}
+	}
+
+	/**
+	 * Process the data rows in the 'append' mode
+	 *
+	 * @param model
+	 *            the model
+	 * @throws Exception
+	 *             in case of databse error
+	 */
+	public void executeAppendUpdate(DataStructureDataAppendModel model) throws Exception {
+		logger.info("Processing rows in mode 'append': " + model.getLocation());
+		String tableName = model.getName();
+		int tableRowsCount = getTableRowsCount(tableName);
+		if (tableRowsCount == 0) {
+			byte[] content = model.getContent().getBytes();
+			if (content.length != 0) {
+				TableImporter tableDataInserter = new TableImporter(dataSource, content, tableName);
+				tableDataInserter.insert();
+				moveSequence(tableName); // move the sequence, to be able to add more records after the initial import
+			}
+		}
+	}
+
+	/**
+	 * Process the data rows in the 'delete' mode
+	 *
+	 * @param model
+	 *            the model
+	 * @throws Exception
+	 *             in case of databse error
+	 */
+	public void executeDeleteUpdate(DataStructureDataDeleteModel model) throws Exception {
+		logger.info("Processing rows in mode 'delete': " + model.getLocation());
+		String tableName = model.getName();
+		String primaryKey = getPrimaryKey(tableName);
+		byte[] content = model.getContent().getBytes();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content), StandardCharsets.UTF_8));
+		String firstLine = reader.readLine();
+		if ((firstLine != null) && firstLine.trim().equals("*")) {
+			deleteAllDataFromTable(tableName);
+		} else {
+			deleteRowsDataFromTable(tableName, primaryKey, content);
+		}
+	}
+
+	/**
+	 * Process the data rows in the 'update' mode
+	 *
+	 * @param model
+	 *            the model
+	 * @throws Exception
+	 *             in case of databse error
+	 */
+	public void executeUpdateUpdate(DataStructureDataUpdateModel model) throws Exception {
+		logger.info("Processing rows in mode 'delete': " + model.getLocation());
+		String tableName = model.getName();
+		String primaryKey = getPrimaryKey(tableName);
+		byte[] content = model.getContent().getBytes();
+		updateRowsDataInTable(tableName, primaryKey, content);
+	}
+
+	private void deleteAllDataFromTable(String tableName) throws Exception {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			String sql = SqlFactory.getNative(connection).delete().from(tableName).build();
+			PreparedStatement deleteStatement = connection.prepareStatement(sql);
+			deleteStatement.execute();
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	private int getTableRowsCount(String tableName) throws Exception {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			String sql = SqlFactory.getNative(connection).select().column("COUNT(*)").from(tableName).build();
+			PreparedStatement countStatement = connection.prepareStatement(sql);
+			ResultSet rs = countStatement.executeQuery();
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				return count;
+			}
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+		return -1;
+	}
+
+	private String getPrimaryKey(String tableName) throws Exception {
+		String result = null;
+		Connection connection = null;
+		try {
+			connection = this.dataSource.getConnection();
+			ResultSet primaryKeys = TableExporter.getPrimaryKeys(connection, tableName);
+			List<String> primaryKeysList = new ArrayList<String>();
+			while (primaryKeys.next()) {
+				String columnName = primaryKeys.getString(COLUMN_NAME);
+				primaryKeysList.add(columnName);
+			}
+			if (primaryKeysList.size() == 0) {
+				throw new Exception(String.format("Trying to manipulate data records for a table without a primary key: %s", tableName));
+			}
+			if (primaryKeysList.size() > 1) {
+				throw new Exception(
+						String.format("Trying to manipulate data records for a table with more than one columns in the primary key: %s", tableName));
+			}
+			result = primaryKeysList.get(0);
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+		return result;
+	}
+
+	private void deleteRowsDataFromTable(String tableName, String primaryKey, byte[] fileContent) throws Exception {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			List<String[]> records = TableDataReader.readRecords(new ByteArrayInputStream(fileContent));
+			for (String[] record : records) {
+				if (record.length > 0) {
+					String sql = SqlFactory.getNative(connection).delete().from(tableName).where(primaryKey + " = ?").build();
+					PreparedStatement deleteStatement = connection.prepareStatement(sql);
+					deleteStatement.setObject(1, record[0]);
+					deleteStatement.execute();
+				} else {
+					logger.error(String.format("Skipping deletion of an empty data row for table: %s", tableName));
+				}
+			}
+
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	private void updateRowsDataInTable(String tableName, String primaryKey, byte[] fileContent) throws Exception {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			List<String[]> records = TableDataReader.readRecords(new ByteArrayInputStream(fileContent));
+			for (String[] record : records) {
+				if (record.length > 0) {
+					String sql = SqlFactory.getNative(connection).select().column("*").from(tableName).where(primaryKey + " = ?").build();
+					PreparedStatement stmt = connection.prepareStatement(sql);
+					stmt.setObject(1, record[0]);
+					ResultSet rs = stmt.executeQuery();
+					if (!rs.next()) {
+						StringBuffer buff = new StringBuffer();
+						for (String value : record) {
+							buff.append(value).append(TableExporter.DATA_DELIMETER);
+						}
+						buff.deleteCharAt(buff.length() - 1);
+						buff.append("\n");
+						TableImporter tableDataInserter = new TableImporter(dataSource, buff.toString().getBytes(), tableName);
+						tableDataInserter.insert();
+					}
+				} else {
+					logger.error(String.format("Skipping update of an empty data row for table: %s", tableName));
+				}
+			}
+
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
+	protected void moveSequence(String tableName) throws Exception, SQLException {
+
+		int tableRowsCount;
+		tableRowsCount = getTableRowsCount(tableName);
+
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			connection.setAutoCommit(false);
+
+			PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();
+			if (!persistenceManager.tableExists(connection, Identity.class)) {
+				persistenceManager.tableCreate(connection, Identity.class);
+			}
+			Identity identity = persistenceManager.find(connection, Identity.class, tableName);
+			if (identity == null) {
+				identity = new Identity();
+				identity.setTable(tableName);
+				identity.setValue(++tableRowsCount);
+				persistenceManager.insert(connection, identity);
+				return;
+			}
+			try {
+				try {
+					identity = persistenceManager.lock(connection, Identity.class, tableName);
+					identity.setValue(++tableRowsCount);
+					persistenceManager.update(connection, identity, tableName);
+				} finally {
+					connection.commit();
+				}
+			} catch (SQLException e) {
+				throw new PersistenceException(e);
+			}
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+
 }

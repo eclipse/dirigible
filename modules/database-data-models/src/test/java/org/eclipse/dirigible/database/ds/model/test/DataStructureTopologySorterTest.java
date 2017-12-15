@@ -26,7 +26,6 @@ import org.eclipse.dirigible.database.ds.model.DataStructureModelException;
 import org.eclipse.dirigible.database.ds.model.DataStructureTopologicalSorter;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DataStructureTopologySorter.
  */
@@ -97,22 +96,9 @@ public class DataStructureTopologySorterTest {
 		assertEquals(external.get(0), "external");
 
 		/*
-		 * ======= Unsorted =======
-		 * customers_view
-		 * address
-		 * city
-		 * users_view
-		 * user
-		 * customer
-		 * ======= Sorted =======
-		 * city
-		 * address
-		 * customer
-		 * customers_view
-		 * user
-		 * users_view
-		 * ======= External =======
-		 * external
+		 * ======= Unsorted ======= customers_view address city users_view user
+		 * customer ======= Sorted ======= city address customer customers_view
+		 * user users_view ======= External ======= external
 		 */
 
 	}

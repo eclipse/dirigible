@@ -13,6 +13,10 @@ package org.eclipse.dirigible.database.ds.api;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 
@@ -20,14 +24,6 @@ import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
  * The Data Structures Core Service interface.
  */
 public interface IDataStructuresCoreService extends ICoreService {
-
-	public static final String FILE_EXTENSION_TABLE = ".table";
-
-	public static final String FILE_EXTENSION_VIEW = ".view";
-
-	public static final String TYPE_TABLE = "TABLE";
-
-	public static final String TYPE_VIEW = "VIEW";
 
 	// Tables
 
@@ -248,5 +244,337 @@ public interface IDataStructuresCoreService extends ICoreService {
 	 * @return the string
 	 */
 	public String serializeView(DataStructureViewModel viewModel);
+
+	// Replace
+
+	/**
+	 * Creates the replace.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @return the data structure replace model
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureDataReplaceModel createReplace(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the replace.
+	 *
+	 * @param location
+	 *            the location
+	 * @return the replace
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureDataReplaceModel getReplace(String location) throws DataStructuresException;
+
+	/**
+	 * Exists replace.
+	 *
+	 * @param location
+	 *            the location
+	 * @return true, if successful
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public boolean existsReplace(String location) throws DataStructuresException;
+
+	/**
+	 * Removes the replace.
+	 *
+	 * @param location
+	 *            the location
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void removeReplace(String location) throws DataStructuresException;
+
+	/**
+	 * Update replace.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void updateReplace(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the replaces.
+	 *
+	 * @return the replaces
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public List<DataStructureDataReplaceModel> getReplaces() throws DataStructuresException;
+
+	/**
+	 * Parses the replace data.
+	 *
+	 * @param location
+	 *            the location
+	 * @param data
+	 *            the date
+	 * @return the data structure replace model
+	 */
+	public DataStructureDataReplaceModel parseReplace(String location, String data);
+
+	// Append
+
+	/**
+	 * Creates the append.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @return the data structure append model
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureDataAppendModel createAppend(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the append.
+	 *
+	 * @param location
+	 *            the location
+	 * @return the append
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureDataAppendModel getAppend(String location) throws DataStructuresException;
+
+	/**
+	 * Exists append.
+	 *
+	 * @param location
+	 *            the location
+	 * @return true, if successful
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public boolean existsAppend(String location) throws DataStructuresException;
+
+	/**
+	 * Removes the append.
+	 *
+	 * @param location
+	 *            the location
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void removeAppend(String location) throws DataStructuresException;
+
+	/**
+	 * Update append.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void updateAppend(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the appends.
+	 *
+	 * @return the appends
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public List<DataStructureDataAppendModel> getAppends() throws DataStructuresException;
+
+	/**
+	 * Parses the append data.
+	 *
+	 * @param location
+	 *            the location
+	 * @param data
+	 *            the date
+	 * @return the data structure append model
+	 */
+	public DataStructureDataAppendModel parseAppend(String location, String data);
+
+	// Delete
+
+	/**
+	 * Creates the delete.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @return the data structure delete model
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureDataDeleteModel createDelete(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the delete.
+	 *
+	 * @param location
+	 *            the location
+	 * @return the delete
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureDataDeleteModel getDelete(String location) throws DataStructuresException;
+
+	/**
+	 * Exists delete.
+	 *
+	 * @param location
+	 *            the location
+	 * @return true, if successful
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public boolean existsDelete(String location) throws DataStructuresException;
+
+	/**
+	 * Removes the delete.
+	 *
+	 * @param location
+	 *            the location
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void removeDelete(String location) throws DataStructuresException;
+
+	/**
+	 * Update delete.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void updateDelete(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the deletes.
+	 *
+	 * @return the deletes
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public List<DataStructureDataDeleteModel> getDeletes() throws DataStructuresException;
+
+	/**
+	 * Parses the delete data.
+	 *
+	 * @param location
+	 *            the location
+	 * @param data
+	 *            the date
+	 * @return the data structure delete model
+	 */
+	public DataStructureDataDeleteModel parseDelete(String location, String data);
+
+	// Update
+
+	/**
+	 * Creates the update.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @return the data structure update model
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureDataUpdateModel createUpdate(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the update.
+	 *
+	 * @param location
+	 *            the location
+	 * @return the update
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureDataUpdateModel getUpdate(String location) throws DataStructuresException;
+
+	/**
+	 * Exists update.
+	 *
+	 * @param location
+	 *            the location
+	 * @return true, if successful
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public boolean existsUpdate(String location) throws DataStructuresException;
+
+	/**
+	 * Removes the update.
+	 *
+	 * @param location
+	 *            the location
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void removeUpdate(String location) throws DataStructuresException;
+
+	/**
+	 * Update update.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void updateUpdate(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the updates.
+	 *
+	 * @return the updates
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public List<DataStructureDataUpdateModel> getUpdates() throws DataStructuresException;
+
+	/**
+	 * Parses the update data.
+	 *
+	 * @param location
+	 *            the location
+	 * @param data
+	 *            the date
+	 * @return the data structure update model
+	 */
+	public DataStructureDataUpdateModel parseUpdate(String location, String data);
 
 }

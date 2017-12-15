@@ -4,7 +4,7 @@
 	"columns":
 		[
 			{
-				"name":"id",
+				"name":"ORDER_ID",
 				"type":"INTEGER",
 				"length":"0",
 				"nullable":"false",
@@ -12,7 +12,15 @@
 				"defaultValue":""
 			},
 			{
-				"name":"amount",
+				"name":"ORDER_SUBJECT",
+				"type":"VARCHAR",
+				"length":"20",
+				"nullable":"false",
+				"primaryKey":"false",
+				"defaultValue":""
+			},
+			{
+				"name":"ORDER_AMOUNT",
 				"type":"DOUBLE",
 				"length":"0",
 				"nullable":"true",

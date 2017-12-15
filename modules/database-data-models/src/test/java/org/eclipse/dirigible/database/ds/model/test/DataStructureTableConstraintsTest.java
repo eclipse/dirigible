@@ -21,7 +21,6 @@ import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DataStructureTableConstraintsTest.
  */
@@ -33,7 +32,8 @@ public class DataStructureTableConstraintsTest {
 	@Test
 	public void parseTable() {
 		try {
-			String tableFile = IOUtils.toString(DataStructureTableConstraintsTest.class.getResourceAsStream("/persons.table"),
+			String tableFile = IOUtils.toString(
+					DataStructureTableConstraintsTest.class.getResourceAsStream("/persons.table"),
 					StandardCharsets.UTF_8);
 			DataStructureTableModel table = DataStructureModelFactory.parseTable(tableFile);
 			assertEquals("PERSONS", table.getName());

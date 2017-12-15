@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
-import org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,23 +33,42 @@ public class DataStructuresClasspathContentHandler extends AbstractClasspathCont
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
 
 		try {
-			if (path.endsWith(IDataStructuresCoreService.FILE_EXTENSION_TABLE)) {
-				isValid = true;
+			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_TABLE)) {
 				dataStructuresSynchronizer.registerPredeliveredTable(path);
+				return true;
 			}
 
-			if (path.endsWith(IDataStructuresCoreService.FILE_EXTENSION_VIEW)) {
-				isValid = true;
+			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_VIEW)) {
 				dataStructuresSynchronizer.registerPredeliveredView(path);
+				return true;
+			}
+
+			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_REPLACE)) {
+				dataStructuresSynchronizer.registerPredeliveredReplace(path);
+				return true;
+			}
+
+			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_APPEND)) {
+				dataStructuresSynchronizer.registerPredeliveredAppend(path);
+				return true;
+			}
+
+			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_DELETE)) {
+				dataStructuresSynchronizer.registerPredeliveredDelete(path);
+				return true;
+			}
+
+			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_UPDATE)) {
+				dataStructuresSynchronizer.registerPredeliveredUpdate(path);
+				return true;
 			}
 		} catch (IOException e) {
 			logger.error("Predelivered Table or View is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*
