@@ -1014,7 +1014,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	 */
 	@Override
 	public boolean existsUpdate(String location) throws DataStructuresException {
-		return getTable(location) != null;
+		return getUpdate(location) != null;
 	}
 
 	/*

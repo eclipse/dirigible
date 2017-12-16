@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
-import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -30,9 +30,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * The Class DataStructureDataReplaceTest.
+ * The Class DataStructureDataAppendTest.
  */
-public class DataStructureDataReplaceTest extends AbstractGuiceTest {
+public class DataStructureDataAppendTest extends AbstractGuiceTest {
 
 	/** The data structure core service. */
 	@Inject
@@ -55,13 +55,13 @@ public class DataStructureDataReplaceTest extends AbstractGuiceTest {
 	}
 
 	/**
-	 * Replace data
+	 * Append data
 	 */
 	@Test
-	public void replaceData() {
+	public void appendData() {
 		try {
-			String dataFile = IOUtils.toString(DataStructureDataReplaceTest.class.getResourceAsStream("/orders.replace"), StandardCharsets.UTF_8);
-			DataStructureDataReplaceModel data = DataStructureModelFactory.parseReplace("/orders.replace", dataFile);
+			String dataFile = IOUtils.toString(DataStructureDataAppendTest.class.getResourceAsStream("/orders.append"), StandardCharsets.UTF_8);
+			DataStructureDataAppendModel data = DataStructureModelFactory.parseAppend("/orders.append", dataFile);
 			assertEquals("1|Order 1|11.11", data.getContent());
 			Connection connection = null;
 			try {
@@ -72,7 +72,7 @@ public class DataStructureDataReplaceTest extends AbstractGuiceTest {
 					persistenceManager.tableCreate(connection, Order.class);
 				}
 
-				dataStructuresSynchronizer.executeReplaceUpdate(data);
+				dataStructuresSynchronizer.executeAppendUpdate(data);
 
 				Order order = persistenceManager.find(connection, Order.class, 1);
 
