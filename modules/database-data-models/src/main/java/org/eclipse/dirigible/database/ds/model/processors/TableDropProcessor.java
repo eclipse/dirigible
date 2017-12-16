@@ -32,18 +32,22 @@ public class TableDropProcessor {
 	/**
 	 * Execute the corresponding statement.
 	 *
-	 * @param connection the connection
-	 * @param tableModel the table model
-	 * @throws SQLException the SQL exception
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static void execute(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		logger.info("Processing Drop Table: " + tableModel.getName());
 		if (SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
-			String sql = SqlFactory.getNative(connection).select().column("COUNT(*)").from(tableModel.getName()).build();
+			String sql = SqlFactory.getNative(connection).select().column("COUNT(*)").from(tableModel.getName())
+					.build();
 			PreparedStatement statement = connection.prepareStatement(sql);
 			try {
 				logger.info(sql);
-				ResultSet resultSet = statement.executeQuery(sql);
+				ResultSet resultSet = statement.executeQuery();
 				if (resultSet.next()) {
 					int count = resultSet.getInt(1);
 					if (count > 0) {

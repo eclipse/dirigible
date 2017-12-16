@@ -948,7 +948,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 *             in case of databse error
 	 */
 	public void executeUpdateUpdate(DataStructureDataUpdateModel model) throws Exception {
-		logger.info("Processing rows in mode 'delete': " + model.getLocation());
+		logger.info("Processing rows in mode 'update': " + model.getLocation());
 		String tableName = model.getName();
 		String primaryKey = getPrimaryKey(tableName);
 		byte[] content = model.getContent().getBytes();

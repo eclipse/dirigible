@@ -30,7 +30,7 @@ public class DataStructureModel {
 	@Column(name = "DS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
-	@Column(name = "DS_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
+	@Column(name = "DS_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String name;
 
 	@Column(name = "DS_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 20)
@@ -59,7 +59,8 @@ public class DataStructureModel {
 	/**
 	 * Sets the location.
 	 *
-	 * @param location the new location
+	 * @param location
+	 *            the new location
 	 */
 	public void setLocation(String location) {
 		this.location = location;
@@ -77,7 +78,8 @@ public class DataStructureModel {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -95,7 +97,8 @@ public class DataStructureModel {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type the new type
+	 * @param type
+	 *            the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -113,7 +116,8 @@ public class DataStructureModel {
 	/**
 	 * Sets the hash.
 	 *
-	 * @param hash the new hash
+	 * @param hash
+	 *            the new hash
 	 */
 	public void setHash(String hash) {
 		this.hash = hash;
@@ -140,7 +144,8 @@ public class DataStructureModel {
 	/**
 	 * Sets the created by.
 	 *
-	 * @param createdBy the new created by
+	 * @param createdBy
+	 *            the new created by
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -161,7 +166,8 @@ public class DataStructureModel {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt the new created at
+	 * @param createdAt
+	 *            the new created at
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		if (createdAt == null) {
@@ -180,7 +186,9 @@ public class DataStructureModel {
 		return GsonHelper.GSON.toJson(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -188,7 +196,9 @@ public class DataStructureModel {
 		return toJson();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -202,7 +212,9 @@ public class DataStructureModel {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

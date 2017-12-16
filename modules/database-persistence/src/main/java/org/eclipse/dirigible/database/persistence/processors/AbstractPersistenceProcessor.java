@@ -327,6 +327,11 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 					value = ((Integer) value).byteValue();
 				}
 			}
+			if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
+				if (value instanceof Long) {
+					value = ((Long) value).intValue();
+				}
+			}
 			if (getEntityManagerInterceptor() != null) {
 				value = getEntityManagerInterceptor().onSetValueAfterQuery(pojo, field, value);
 			}

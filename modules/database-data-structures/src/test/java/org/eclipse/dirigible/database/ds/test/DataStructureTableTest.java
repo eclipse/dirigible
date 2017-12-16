@@ -67,9 +67,15 @@ public class DataStructureTableTest extends AbstractGuiceTest {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				dataStructuresSynchronizer.executeTableUpdate(connection, table);
 
 				PersistenceManager<Order> persistenceManager = new PersistenceManager<Order>();
+
+				if (persistenceManager.tableExists(connection, Order.class)) {
+					persistenceManager.tableDrop(connection, Order.class);
+				}
+
+				dataStructuresSynchronizer.executeTableUpdate(connection, table);
+
 				boolean exists = persistenceManager.tableExists(connection, Order.class);
 				assertTrue(exists);
 
