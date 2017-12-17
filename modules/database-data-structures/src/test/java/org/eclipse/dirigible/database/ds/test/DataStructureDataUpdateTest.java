@@ -27,6 +27,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
+import org.eclipse.dirigible.database.persistence.processors.identity.Identity;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,6 +75,14 @@ public class DataStructureDataUpdateTest extends AbstractGuiceTest {
 				} else {
 					persistenceManager.tableDrop(connection, Order.class);
 					persistenceManager.tableCreate(connection, Order.class);
+				}
+
+				PersistenceManager<Identity> identityPersistenceManager = new PersistenceManager<Identity>();
+				if (!identityPersistenceManager.tableExists(connection, Identity.class)) {
+					identityPersistenceManager.tableCreate(connection, Identity.class);
+				} else {
+					identityPersistenceManager.tableDrop(connection, Identity.class);
+					identityPersistenceManager.tableCreate(connection, Identity.class);
 				}
 
 				Order order = new Order();
