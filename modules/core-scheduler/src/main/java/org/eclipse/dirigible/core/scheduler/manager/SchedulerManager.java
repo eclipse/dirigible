@@ -21,7 +21,9 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
+import org.eclipse.dirigible.core.scheduler.handler.JobHandler;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
@@ -168,8 +170,17 @@ public class SchedulerManager {
 			JobKey jobKey = new JobKey(jobDefinition.getName(), jobDefinition.getGroup());
 			TriggerKey triggerKey = new TriggerKey(jobDefinition.getName(), jobDefinition.getGroup());
 			if (!scheduler.checkExists(jobKey) && (!scheduler.checkExists(triggerKey))) {
-				Class<Job> jobClass = (Class<Job>) Class.forName(jobDefinition.getClazz());
-				JobDetail job = newJob(jobClass).withIdentity(jobKey).withDescription(jobDefinition.getDescription()).build();
+				JobDetail job;
+				if (!ISchedulerCoreService.JOB_GROUP_DEFINED.equals(jobDefinition.getGroup())) {
+					// internal jobs
+					Class<Job> jobClass = (Class<Job>) Class.forName(jobDefinition.getClazz());
+					job = newJob(jobClass).withIdentity(jobKey).withDescription(jobDefinition.getDescription()).build();
+				} else {
+					// user defined jobs
+					job = newJob(JobHandler.class).withIdentity(jobKey).withDescription(jobDefinition.getDescription()).build();
+					job.getJobDataMap().put(ISchedulerCoreService.JOB_PARAMETER_HANDLER, jobDefinition.getHandler());
+					job.getJobDataMap().put(ISchedulerCoreService.JOB_PARAMETER_ENGINE, jobDefinition.getEngine());
+				}
 
 				CronTrigger trigger = newTrigger().withIdentity(triggerKey).withSchedule(cronSchedule(jobDefinition.getExpression())).build();
 
@@ -227,6 +238,25 @@ public class SchedulerManager {
 		} catch (org.quartz.SchedulerException e) {
 			throw new SchedulerException(e);
 		}
+	}
+
+	/**
+	 * Checks whether the job with a given name is already scheduled
+	 *
+	 * @param name
+	 *            the name of the job
+	 * @return true if registered
+	 * @throws SchedulerException
+	 *             in case of error
+	 */
+	public static boolean existsJob(String name) throws SchedulerException {
+		Set<TriggerKey> triggerKeys = listJobs();
+		for (TriggerKey triggerKey : triggerKeys) {
+			if (triggerKey.getName().equals(name) && ISchedulerCoreService.JOB_GROUP_DEFINED.equals(triggerKey.getGroup())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

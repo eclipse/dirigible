@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.core.messaging.synchronizer;
+package org.eclipse.dirigible.engine.messaging.synchronizer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +29,7 @@ import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.core.messaging.service.MessagingCoreService;
-import org.eclipse.dirigible.core.messaging.service.MessagingManager;
+import org.eclipse.dirigible.core.messaging.service.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -53,7 +53,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	private MessagingCoreService messagingCoreService;
 
 	@Inject
-	private MessagingManager messagingManager;
+	private SchedulerManager messagingManager;
 
 	/**
 	 * Force synchronization.

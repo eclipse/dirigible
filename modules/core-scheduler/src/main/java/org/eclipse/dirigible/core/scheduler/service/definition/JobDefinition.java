@@ -32,13 +32,19 @@ public class JobDefinition {
 	private String group;
 
 	@Column(name = "JOB_CLASS", columnDefinition = "VARCHAR", nullable = false, length = 255)
-	private String clazz;
+	private String clazz = "";
 
 	@Column(name = "JOB_DESCRIPTION", columnDefinition = "VARCHAR", nullable = false, length = 1024)
 	private String description;
 
 	@Column(name = "JOB_EXPRESSION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String expression;
+
+	@Column(name = "JOB_HANDLER", columnDefinition = "VARCHAR", nullable = true, length = 255)
+	private String handler;
+
+	@Column(name = "JOB_ENGINE", columnDefinition = "VARCHAR", nullable = true, length = 100)
+	private String engine;
 
 	@Column(name = "JOB_SINGLETON", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean singleton = false;
@@ -145,6 +151,44 @@ public class JobDefinition {
 	 */
 	public void setExpression(String expression) {
 		this.expression = expression;
+	}
+
+	/**
+	 * Gets the handler
+	 *
+	 * @return the handler
+	 */
+	public String getHandler() {
+		return handler;
+	}
+
+	/**
+	 * Sets the handler
+	 *
+	 * @param handler
+	 *            the handler
+	 */
+	public void setHandler(String handler) {
+		this.handler = handler;
+	}
+
+	/**
+	 * Gets the engine type
+	 *
+	 * @return the engine type
+	 */
+	public String getEngine() {
+		return engine;
+	}
+
+	/**
+	 * Sets the engine type
+	 *
+	 * @param engine
+	 *            the engine type
+	 */
+	public void setEngine(String engine) {
+		this.engine = engine;
 	}
 
 	/**

@@ -8,18 +8,18 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.core.messaging.synchronizer;
+package org.eclipse.dirigible.engine.job.synchronizer;
 
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
 /**
- * The Class MessagingSynchronizerJob.
+ * The Class JobSynchronizerJob.
  */
-public class MessagingSynchronizerJob extends AbstractSynchronizerJob {
+public class JobSynchronizerJob extends AbstractSynchronizerJob {
 
-	private MessagingSynchronizer messagingSynchronizer = StaticInjector.getInjector().getInstance(MessagingSynchronizer.class);
+	private JobSynchronizer jobSynchronizer = StaticInjector.getInjector().getInstance(JobSynchronizer.class);
 
 	/*
 	 * (non-Javadoc)
@@ -27,7 +27,7 @@ public class MessagingSynchronizerJob extends AbstractSynchronizerJob {
 	 */
 	@Override
 	public ISynchronizer getSynchronizer() {
-		return messagingSynchronizer;
+		return jobSynchronizer;
 	}
 
 }

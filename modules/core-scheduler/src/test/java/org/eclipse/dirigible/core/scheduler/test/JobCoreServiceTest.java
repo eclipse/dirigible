@@ -54,7 +54,7 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void createJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
-		jobCoreService.createJob("test_job1", "test_group", "org....", "Test", "expr...", false);
+		jobCoreService.createJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
 		List<JobDefinition> list = jobCoreService.getJobs();
 		assertEquals(1, list.size());
 		JobDefinition jobDefinition = list.get(0);
@@ -74,7 +74,7 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void getJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
-		jobCoreService.createJob("test_job1", "test_group", "org....", "Test", "expr...", false);
+		jobCoreService.createJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
 		JobDefinition extensionPointDefinition = jobCoreService.getJob("test_job1");
 		assertEquals("test_job1", extensionPointDefinition.getName());
 		assertEquals("Test", extensionPointDefinition.getDescription());
@@ -90,11 +90,11 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void updatetJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
-		jobCoreService.createJob("test_job1", "test_group", "org....", "Test", "expr...", false);
+		jobCoreService.createJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
 		JobDefinition extensionPointDefinition = jobCoreService.getJob("test_job1");
 		assertEquals("test_job1", extensionPointDefinition.getName());
 		assertEquals("Test", extensionPointDefinition.getDescription());
-		jobCoreService.updateJob("test_job1", "test_group", "org....", "Test 2", "expr...", false);
+		jobCoreService.updateJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test 2", "expr...", false);
 		extensionPointDefinition = jobCoreService.getJob("test_job1");
 		assertEquals("test_job1", extensionPointDefinition.getName());
 		assertEquals("Test 2", extensionPointDefinition.getDescription());
@@ -110,7 +110,7 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void removeJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
-		jobCoreService.createJob("test_job1", "test_group", "org....", "Test", "expr...", false);
+		jobCoreService.createJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
 		JobDefinition extensionPointDefinition = jobCoreService.getJob("test_job1");
 		assertEquals("test_job1", extensionPointDefinition.getName());
 		assertEquals("Test", extensionPointDefinition.getDescription());
