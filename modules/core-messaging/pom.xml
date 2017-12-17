@@ -64,11 +64,6 @@
 			<artifactId>dirigible-engine-js</artifactId>
 			<version>3.1.0-SNAPSHOT</version>
     	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-js-rhino</artifactId>
-			<version>3.1.0-SNAPSHOT</version>
-    	</dependency>
 
 		<dependency>
 		    <groupId>org.apache.geronimo.specs</groupId>
@@ -111,6 +106,13 @@
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>3.1.0-SNAPSHOT</version>
+			<scope>test</scope>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-engine-js-rhino</artifactId>
+			<version>3.1.0-SNAPSHOT</version>
+			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
@@ -126,8 +128,4 @@
         </dependency>    	
     </dependencies>
     
-    <properties>
-    	<activemq.version>5.14.5</activemq.version>
-    </properties>
-
 </project>

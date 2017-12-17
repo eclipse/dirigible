@@ -103,7 +103,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 		try {
 			logger.info("Starting a message listener for " + this.name);
 
-			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(MessagingManager.CONNECTOR_URL_ATTACH);
+			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(SchedulerManager.CONNECTOR_URL_ATTACH);
 
 			Connection connection = connectionFactory.createConnection();
 			connection.start();

@@ -104,10 +104,10 @@
         <dependent-module archiveName="dirigible-core-messaging-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Messaging/Core - Messaging">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-test-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Test/Commons - Test">
+        <dependent-module archiveName="dirigible-core-indexing-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Indexing/Core - Indexing">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-indexing-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Indexing/Core - Indexing">
+        <dependent-module archiveName="dirigible-commons-test-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Test/Commons - Test">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-core-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Core/Runtime - Core">
@@ -174,6 +174,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-engine-wiki-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Wiki/Engine - Wiki">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-engine-job-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Job/Engine - Job">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-cms-internal-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/CMS - Internal/CMS - Internal">

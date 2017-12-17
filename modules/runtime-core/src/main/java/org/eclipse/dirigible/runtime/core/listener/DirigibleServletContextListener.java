@@ -27,7 +27,7 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.core.messaging.service.MessagingManager;
+import org.eclipse.dirigible.core.messaging.service.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
 import org.eclipse.dirigible.runtime.core.services.GsonMessageBodyHandler;
@@ -197,7 +197,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	private void startupMessaging() {
 		logger.info("Starting Message Broker...");
 		try {
-			injector.getInstance(MessagingManager.class).initialize();
+			injector.getInstance(SchedulerManager.class).initialize();
 		} catch (Exception e) {
 			logger.error("Failed starting Messaging", e);
 		}
@@ -210,7 +210,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	private void shutdownMessaging() {
 		logger.trace("Shutting down Message Broker...");
 		try {
-			MessagingManager.shutdown();
+			SchedulerManager.shutdown();
 		} catch (Exception e) {
 			logger.error("Failed shutting down Message Broker", e);
 		}

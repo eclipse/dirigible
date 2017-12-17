@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.core.messaging.test;
+package org.eclipse.dirigible.engine.messaging.test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -25,10 +25,10 @@ import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.core.messaging.service.MessagingCoreService;
-import org.eclipse.dirigible.core.messaging.service.MessagingManager;
 import org.eclipse.dirigible.core.messaging.service.MessagingProducer;
-import org.eclipse.dirigible.core.messaging.synchronizer.MessagingSynchronizer;
+import org.eclipse.dirigible.core.messaging.service.SchedulerManager;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.engine.messaging.synchronizer.MessagingSynchronizer;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.After;
@@ -44,10 +44,10 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 	private IMessagingCoreService messagingCoreService;
 
 	@Inject
-	private MessagingSynchronizer messagingPublisher;
+	private MessagingSynchronizer messagingSynchronizer;
 
 	@Inject
-	private MessagingManager messagingManager;
+	private SchedulerManager messagingManager;
 
 	@Inject
 	private IRepository repository;
@@ -61,8 +61,8 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 	@Before
 	public void setUp() throws Exception {
 		this.messagingCoreService = getInjector().getInstance(MessagingCoreService.class);
-		this.messagingPublisher = getInjector().getInstance(MessagingSynchronizer.class);
-		this.messagingManager = getInjector().getInstance(MessagingManager.class);
+		this.messagingSynchronizer = getInjector().getInstance(MessagingSynchronizer.class);
+		this.messagingManager = getInjector().getInstance(SchedulerManager.class);
 		this.repository = getInjector().getInstance(IRepository.class);
 
 		this.messagingManager.initialize();
@@ -76,7 +76,7 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		MessagingManager.shutdown();
+		SchedulerManager.shutdown();
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 
 		repository.removeResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/custom/custom.listener");
 
-		messagingPublisher.synchronize();
+		messagingSynchronizer.synchronize();
 
 		ListenerDefinition listenerDefinition = messagingCoreService.getListener("/custom/custom.listener");
 		assertNull(listenerDefinition);
@@ -115,7 +115,7 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void createListenerTest() throws MessagingException, IOException {
-		messagingPublisher.registerPredeliveredListener("/control/control.listener");
+		messagingSynchronizer.registerPredeliveredListener("/control/control.listener");
 
 		ListenerDefinition listenerDefinitionCustom = new ListenerDefinition();
 		listenerDefinitionCustom.setLocation("/custom/custom.listener");
@@ -129,7 +129,7 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 		String json = messagingCoreService.serializeListener(listenerDefinitionCustom);
 		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/custom/custom.listener", json.getBytes());
 
-		messagingPublisher.synchronize();
+		messagingSynchronizer.synchronize();
 
 		ListenerDefinition listenerDefinition = messagingCoreService.getListener("/control/control.listener");
 		assertNotNull(listenerDefinition);

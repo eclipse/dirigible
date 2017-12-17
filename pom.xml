@@ -379,6 +379,7 @@
 		<logback.version>1.2.3</logback.version>
 		<com.h2database.version>1.4.193</com.h2database.version>
 		<derby.version>10.12.1.1</derby.version>
+		<activemq.version>5.14.5</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.5.v20170502</jetty.version>
 		<lucene.version>7.0.1</lucene.version>
@@ -447,6 +448,8 @@
 		<module>modules/engine-js-nashorn</module>
 		<module>modules/engine-js-v8</module>
 		<module>modules/engine-wiki</module>
+		<module>modules/engine-listener</module>
+		<module>modules/engine-job</module>
 		
 		<module>modules/cms-api</module>
 		<module>modules/cms-internal</module>

@@ -8,15 +8,16 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.core.messaging.synchronizer;
+package org.eclipse.dirigible.engine.job.synchronizer;
 
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
+import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 
 /**
- * The Class MessagingSynchronizerJobDefinitionProvider.
+ * The Class JobSynchronizerJobDefinitionProvider.
  */
-public class MessagingSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
+public class JobSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
 	/*
 	 * (non-Javadoc)
@@ -25,10 +26,10 @@ public class MessagingSynchronizerJobDefinitionProvider implements IJobDefinitio
 	@Override
 	public JobDefinition getJobDefinition() {
 		JobDefinition jobDefinition = new JobDefinition();
-		jobDefinition.setName("dirigible-internal-messaging-synchronizer-job");
-		jobDefinition.setGroup("dirigible-internal");
-		jobDefinition.setClazz(MessagingSynchronizerJob.class.getCanonicalName());
-		jobDefinition.setDescription("Messaging Synchronizer Job");
+		jobDefinition.setName("dirigible-internal-job-synchronizer-job");
+		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_INTERNAL);
+		jobDefinition.setClazz(JobSynchronizerJob.class.getCanonicalName());
+		jobDefinition.setDescription("Job Synchronizer Job");
 		jobDefinition.setExpression("0/20 * * * * ?");
 		jobDefinition.setSingleton(true);
 		return jobDefinition;

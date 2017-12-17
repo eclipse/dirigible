@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.core.messaging.synchronizer;
+package org.eclipse.dirigible.engine.messaging.synchronizer;
 
 import java.io.IOException;
 

@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class MessagingManager.
  */
-public class MessagingManager {
+public class SchedulerManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(MessagingManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(SchedulerManager.class);
 
 	/** The Constant CONNECTOR_URL_ATTACH. */
 	static final String CONNECTOR_URL_ATTACH = "vm://localhost?create=false";
@@ -63,7 +63,7 @@ public class MessagingManager {
 	 *             the exception
 	 */
 	public void initialize() throws Exception {
-		synchronized (MessagingManager.class) {
+		synchronized (SchedulerManager.class) {
 			if (broker == null) {
 				broker = new BrokerService();
 				PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
