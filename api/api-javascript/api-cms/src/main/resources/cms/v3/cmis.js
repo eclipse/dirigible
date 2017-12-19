@@ -9,6 +9,7 @@
  */
 
 var java = require('core/v3/java');
+var streams = require('io/v3/streams');
 
 exports.getSession = function() {
 	var sessionInstance = java.call('org.eclipse.dirigible.api.v3.cms.CmisFacade', 'getSession', [], true);
@@ -48,13 +49,13 @@ function Session() {
 		var objectInstanceType = java.invoke(objectInstance.uuid, 'getType', [], true);
 		var objectInstanceTypeId = java.invoke(objectInstanceType.uuid, 'getId', []);
 		if (objectInstanceTypeId === exports.OBJECT_TYPE_DOCUMENT) {
-			var object = new Document();
-			object.uuid = objectInstance.uuid;
-			return object;
+			var document = new Document();
+			document.uuid = objectInstance.uuid;
+			return document;
 		} else if (objectInstanceTypeId === exports.OBJECT_TYPE_FOLDER) {
-			var object = new Folder();
-			object.uuid = objectInstance.uuid;
-			return object;
+			var folder = new Folder();
+			folder.uuid = objectInstance.uuid;
+			return folder;
 		}
 		throw new Error("Unsupported CMIS object type: " + objectInstanceTypeId);
 	};
@@ -64,13 +65,13 @@ function Session() {
 		var objectInstanceType = java.invoke(objectInstance.uuid, 'getType', [], true);
 		var objectInstanceTypeId = java.invoke(objectInstanceType.uuid, 'getId', []);
 		if (objectInstanceTypeId === exports.OBJECT_TYPE_DOCUMENT) {
-			var object = new Document();
-			object.uuid = objectInstance.uuid;
-			return object;
+			var document = new Document();
+			document.uuid = objectInstance.uuid;
+			return document;
 		} else if (objectInstanceTypeId === exports.OBJECT_TYPE_FOLDER) {
-			var object = new Folder();
-			object.uuid = objectInstance.uuid;
-			return object;
+			var folder = new Folder();
+			folder.uuid = objectInstance.uuid;
+			return folder;
 		}
 		throw new Error("Unsupported CMIS object type: " + objectInstanceTypeId);
 	};
@@ -136,7 +137,7 @@ function Folder() {
 		var childrenInstance = java.invoke(this.uuid, 'getChildren', [], true);
 		var childrenInstanceIterator = java.invoke(childrenInstance.uuid, 'iterator', [], true);
 		while (java.invoke(childrenInstanceIterator.uuid, 'hasNext', [])) {
-			var cmisObjectInstance = java.invoke(childrenInstanceIterator.uuid, 'next', [], true)
+			var cmisObjectInstance = java.invoke(childrenInstanceIterator.uuid, 'next', [], true);
 			var cmisObject = new CmisObject();
 			cmisObject.uuid = cmisObjectInstance.uuid;
 			children.push(cmisObject);
@@ -164,12 +165,19 @@ function Folder() {
 	};
 
 	this.rename = function(newName) {
-		return java.invoke(this.uuid, 'rename', [newName, true]);
+		return java.invoke(this.uuid, 'rename', [newName]);
 	};
 	
 	this.deleteTree = function() {
 		var unifiedObjectDelete = java.call('org.eclipse.dirigible.api.v3.cms.CmisFacade', 'getUnifiedObjectDelete', [], true);
 		return java.invoke(this.uuid, 'deleteTree', [true, unifiedObjectDelete.uuid, true]);
+	};
+
+	this.getType = function() {
+		var typeInstance = java.invoke(this.uuid, 'getType', [], true);
+		var type = new TypeDefinition();
+		type.uuid = typeInstance.uuid;
+		return type;
 	};
 }
 
@@ -187,7 +195,10 @@ function CmisObject() {
 	};
 
 	this.getType = function() {
-		return java.invoke(this.uuid, 'getType', []);
+		var typeInstance = java.invoke(this.uuid, 'getType', [], true);
+		var type = new TypeDefinition();
+		type.uuid = typeInstance.uuid;
+		return type;
 	};
 
 	this.delete = function() {
@@ -197,6 +208,7 @@ function CmisObject() {
 	this.rename = function(newName) {
 		return java.invoke(this.uuid, 'rename', [newName]);
 	};
+
 }
 
 /**
@@ -205,6 +217,9 @@ function CmisObject() {
 function ObjectFactory() {
 
 	this.createContentStream = function(filename, length, mimetype, inputStream) {
+		console.warn('File name: ' + filename);
+		console.warn('Length: ' + length);
+		console.warn('Mime Type: ' + mimetype);
 		var contentStreamInstance = java.invoke(this.uuid, 'createContentStream', [filename, length, mimetype, inputStream.uuid], true);
 		var contentStream = new ContentStream();
 		contentStream.uuid = contentStreamInstance.uuid;
@@ -223,6 +238,10 @@ function ContentStream() {
 		inputStream.uuid = streamInstance.uuid;
 		return inputStream;
 	};
+
+	this.getMimeType = function() {
+		return java.invoke(this.uuid, 'getMimeType', []);
+	};
 }
 
 /**
@@ -236,6 +255,13 @@ function Document() {
 
 	this.getName = function() {
 		return java.invoke(this.uuid, 'getName', []);
+	};
+
+	this.getType = function() {
+		var typeInstance = java.invoke(this.uuid, 'getType', [], true);
+		var type = new TypeDefinition();
+		type.uuid = typeInstance.uuid;
+		return type;
 	};
 
 	this.delete = function() {
@@ -252,12 +278,21 @@ function Document() {
 		return null;
 	};
 
+	this.getSize = function() {
+		return java.invoke(this.uuid, 'getSize', []);
+	};
+
 	this.rename = function(newName) {
-		return java.invoke(this.uuid, 'rename', [newName, true]);
+		return java.invoke(this.uuid, 'rename', [newName]);
 	};
 }
 
+function TypeDefinition() {
 
+	this.getId = function() {
+		return java.invoke(this.uuid, 'getId', []);
+	};
+}
 // CONSTANTS
 
 // ---- Base ----

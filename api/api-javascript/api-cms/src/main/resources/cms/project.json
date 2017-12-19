@@ -1,0 +1,8 @@
+{
+	"guid": "cms",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/api-v3-cms.git"
+	}
+}
