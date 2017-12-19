@@ -48,7 +48,7 @@ function FileItem() {
 	this.getInputStream = function() {
 		var fileItemInstance = java.invoke(this.uuid, 'getInputStream', [], true);
 		var inputStream = new streams.InputStream();
-		 inputStream.uuid = inputStreamInstance.uuid;
+		 inputStream.uuid = fileItemInstance.uuid;
 		 return inputStream;
 	};
 
