@@ -46,6 +46,7 @@
 		<module>ide-database</module>
 		<module>ide-git</module>
 		<module>ide-repository</module>
+		<module>ide-documents</module>
 	</modules>
 
 	<profiles>
