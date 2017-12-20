@@ -12,11 +12,15 @@ package org.eclipse.dirigible.database.sql.builders.sequence;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Last Value Identity Builder.
  */
 public class LastValueIdentityBuilder extends AbstractQuerySqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(LastValueIdentityBuilder.class);
 
 	/**
 	 * Instantiates a new last value identity builder.
@@ -42,7 +46,11 @@ public class LastValueIdentityBuilder extends AbstractQuerySqlBuilder {
 		// LAST VALUE
 		generateLastValue(sql);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**

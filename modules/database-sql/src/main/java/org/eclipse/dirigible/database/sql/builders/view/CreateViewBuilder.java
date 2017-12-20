@@ -15,11 +15,15 @@ import java.util.List;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Create View Builder.
  */
 public class CreateViewBuilder extends AbstractCreateSqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(CreateViewBuilder.class);
 
 	private String view = null;
 
@@ -74,6 +78,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 *            the new select
 	 */
 	protected void setSelect(String select) {
+		logger.trace("setSelect: " + select);
 		this.select = select;
 	}
 
@@ -85,6 +90,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder column(String name) {
+		logger.trace("column: " + name);
 		this.columns.add(name);
 		return this;
 	}
@@ -97,6 +103,7 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the view builder
 	 */
 	public CreateViewBuilder asSelect(String select) {
+		logger.trace("asSelect: " + select);
 		this.select = select;
 		return this;
 	}
@@ -122,7 +129,11 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		// SELECT
 		generateAsSelect(sql);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**

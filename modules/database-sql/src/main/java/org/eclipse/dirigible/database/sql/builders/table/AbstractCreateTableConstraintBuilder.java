@@ -15,6 +15,8 @@ import java.util.TreeSet;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Abstract Create Table Constraint Builder.
@@ -23,6 +25,8 @@ import org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder;
  *            the generic type
  */
 public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends AbstractCreateTableConstraintBuilder> extends AbstractSqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(AbstractCreateTableConstraintBuilder.class);
 
 	private String name;
 
@@ -90,6 +94,7 @@ public abstract class AbstractCreateTableConstraintBuilder<CONSTRAINT extends Ab
 	 * @return the constraint
 	 */
 	public CONSTRAINT column(String column) {
+		logger.trace("column: " + column);
 		this.columns.add(column);
 		return (CONSTRAINT) this;
 	}

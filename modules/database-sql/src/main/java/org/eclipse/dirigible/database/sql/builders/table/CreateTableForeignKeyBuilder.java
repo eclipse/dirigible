@@ -14,11 +14,15 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Create Table Foreign Key Builder.
  */
 public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintBuilder<CreateTableForeignKeyBuilder> {
+
+	private static final Logger logger = LoggerFactory.getLogger(CreateTableForeignKeyBuilder.class);
 
 	private String referencedTable;
 
@@ -62,6 +66,7 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	 * @return the creates the table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedTable(String referencedTable) {
+		logger.trace("referencedTable: " + referencedTable);
 		this.referencedTable = referencedTable;
 		return this;
 	}
@@ -74,6 +79,7 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	 * @return the creates the table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedColumn(String referencedColumn) {
+		logger.trace("referencedColumn: " + referencedColumn);
 		this.referencedColumns.add(referencedColumn);
 		return this;
 	}

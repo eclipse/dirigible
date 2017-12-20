@@ -15,11 +15,15 @@ import java.util.List;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Delete Builder.
  */
 public class DeleteBuilder extends AbstractQuerySqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(DeleteBuilder.class);
 
 	private String table;
 
@@ -43,6 +47,7 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 	 * @return the delete builder
 	 */
 	public DeleteBuilder from(String table) {
+		logger.trace("from: " + table);
 		this.table = table;
 		return this;
 	}
@@ -55,6 +60,7 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 	 * @return the delete builder
 	 */
 	public DeleteBuilder where(String condition) {
+		logger.trace("where: " + condition);
 		wheres.add(OPEN + condition + CLOSE);
 		return this;
 	}
@@ -76,7 +82,11 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 		// WHERE
 		generateWhere(sql, wheres);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**

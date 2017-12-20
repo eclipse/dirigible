@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.database.sql.builders.table;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -19,11 +20,15 @@ import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Create Table Builder.
  */
 public class CreateTableBuilder extends AbstractCreateSqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(CreateTableBuilder.class);
 
 	private String table = null;
 
@@ -89,6 +94,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 */
 	public CreateTableBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
 			String... args) {
+		logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
+				+ isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: " + Arrays.toString(args));
 		String[] definition = new String[] { name, getDialect().getDataTypeName(type) };
 		String[] column = null;
 		if (isIdentity) {
@@ -1900,6 +1907,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder primaryKey(String name, String[] columns) {
+		logger.trace("primaryKey: " + name + ", columns" + Arrays.toString(columns));
 		if (this.primaryKey != null) {
 			throw new SqlException("Setting of primary key must be called only once");
 		}
@@ -1920,6 +1928,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder primaryKey(String name, String columns) {
+		logger.trace("primaryKey: " + name + ", columns" + columns);
 		String[] array = splitValues(columns);
 		return primaryKey(name, array);
 	}
@@ -1932,6 +1941,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder primaryKey(String[] columns) {
+		logger.trace("primaryKey: <unnamed>, columns" + Arrays.toString(columns));
 		return primaryKey(null, columns);
 	}
 
@@ -1943,6 +1953,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder primaryKey(String columns) {
+		logger.trace("primaryKey: <unnamed>, columns" + columns);
 		return primaryKey(null, splitValues(columns));
 	}
 
@@ -1960,6 +1971,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
+		logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
+				+ ", referencedColumns: " + Arrays.toString(referencedColumns));
 		CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
 		for (String column : columns) {
 			foreignKey.column(column);
@@ -1986,6 +1999,8 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder foreignKey(String name, String columns, String referencedTable, String referencedColumns) {
+		logger.trace("foreignKey: " + name + ", columns" + columns + ", referencedTable: " + referencedTable + ", referencedColumns: "
+				+ referencedColumns);
 		return foreignKey(name, splitValues(columns), referencedTable, splitValues(referencedColumns));
 	}
 
@@ -1999,6 +2014,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder unique(String name, String[] columns) {
+		logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));
 		CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
 		for (String column : columns) {
 			uniqueIndex.column(column);
@@ -2017,6 +2033,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder unique(String name, String columns) {
+		logger.trace("unique: " + name + ", columns" + columns);
 		return unique(name, splitValues(columns));
 	}
 
@@ -2030,6 +2047,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the table builder
 	 */
 	public CreateTableBuilder check(String name, String expression) {
+		logger.trace("check: " + name + ", expression" + expression);
 		CreateTableCheckBuilder check = new CreateTableCheckBuilder(this.getDialect(), name);
 		check.expression(expression);
 		this.checks.add(check);
@@ -2070,7 +2088,11 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 
 		sql.append(CLOSE);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**

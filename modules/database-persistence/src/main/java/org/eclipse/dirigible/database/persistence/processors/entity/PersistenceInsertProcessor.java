@@ -24,17 +24,22 @@ import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.persistence.processors.sequence.PersistenceNextValueSequenceProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.LastValueIdentityBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Insert Processor.
  */
 public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceInsertProcessor.class);
 
 	/**
 	 * Instantiates a new persistence insert processor.
@@ -61,6 +66,7 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 			insertBuilder.column(columnModel.getName());
 		}
 		String sql = insertBuilder.build();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -78,6 +84,8 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	public Object insert(Connection connection, PersistenceTableModel tableModel, Object pojo) throws PersistenceException {
+		logger.trace("insert -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
+				+ Serializer.serializePojo(pojo));
 		Object result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -107,6 +115,8 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	}
 
 	private Object getLastInserted(Connection connection, PersistenceTableModel tableModel, Object pojo) throws SQLException {
+		logger.trace("getLastInserted -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+				+ ", pojo: " + Serializer.serializePojo(pojo));
 		LastValueIdentityBuilder identityBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).lastval(tableModel.getTableName());
 		String sql = identityBuilder.build();
 		PreparedStatement preparedStatement = null;
@@ -142,6 +152,8 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	 */
 	private boolean setGeneratedValues(Connection connection, PersistenceTableModel tableModel, Object pojo)
 			throws NoSuchFieldException, IllegalAccessException, SQLException, IOException {
+		logger.trace("setGeneratedValues -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel)
+				+ ", pojo: " + Serializer.serializePojo(pojo));
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey() && (columnModel.getGenerated() != null)) {
 				long id = -1;

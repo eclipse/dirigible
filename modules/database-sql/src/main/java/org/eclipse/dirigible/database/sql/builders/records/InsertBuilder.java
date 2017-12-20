@@ -15,11 +15,15 @@ import java.util.List;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractSqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Insert Builder.
  */
 public class InsertBuilder extends AbstractSqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(InsertBuilder.class);
 
 	private String table = null;
 
@@ -47,6 +51,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 * @return the insert builder
 	 */
 	public InsertBuilder into(String table) {
+		logger.trace("into: " + table);
 		this.table = table;
 		return this;
 	}
@@ -59,6 +64,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 * @return the insert builder
 	 */
 	public InsertBuilder column(String name) {
+		logger.trace("column: " + name);
 		this.columns.add(name);
 		return this;
 	}
@@ -71,6 +77,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 * @return the insert builder
 	 */
 	public InsertBuilder value(String value) {
+		logger.trace("value: " + value);
 		this.values.add(value);
 		return this;
 	}
@@ -83,6 +90,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 * @return the insert builder
 	 */
 	public InsertBuilder select(String select) {
+		logger.trace("select: " + select);
 		this.select = select;
 		return this;
 	}
@@ -111,7 +119,11 @@ public class InsertBuilder extends AbstractSqlBuilder {
 		// SELECT
 		generateSelect(sql);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**

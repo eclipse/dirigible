@@ -17,10 +17,13 @@ import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Update Processor.
@@ -29,6 +32,8 @@ import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
  *            the generic type
  */
 public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceUpdateProcessor.class);
 
 	/**
 	 * Instantiates a new persistence update processor.
@@ -64,6 +69,7 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 				.toString());
 
 		String sql = updateBuilder.toString();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -83,6 +89,8 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 	 *             the persistence exception
 	 */
 	public int update(Connection connection, PersistenceTableModel tableModel, Object pojo, Object id) throws PersistenceException {
+		logger.trace("update -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
+				+ Serializer.serializePojo(pojo) + ", id: " + id);
 		if (id == null) {
 			throw new PersistenceException("The key for update cannot be null.");
 		}

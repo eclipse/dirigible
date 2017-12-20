@@ -18,11 +18,15 @@ import java.util.Map.Entry;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Update Builder.
  */
 public class UpdateBuilder extends AbstractQuerySqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(UpdateBuilder.class);
 
 	private String table;
 
@@ -48,6 +52,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 * @return the update builder
 	 */
 	public UpdateBuilder table(String table) {
+		logger.trace("table: " + table);
 		this.table = table;
 		return this;
 	}
@@ -62,6 +67,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 * @return the update builder
 	 */
 	public UpdateBuilder set(String column, String value) {
+		logger.trace("set: " + column + ", value: " + value);
 		values.put(column, value);
 		return this;
 	}
@@ -74,6 +80,7 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 	 * @return the update builder
 	 */
 	public UpdateBuilder where(String condition) {
+		logger.trace("where: " + condition);
 		wheres.add(OPEN + condition + CLOSE);
 		return this;
 	}
@@ -98,7 +105,11 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 		// WHERE
 		generateWhere(sql, wheres);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**
