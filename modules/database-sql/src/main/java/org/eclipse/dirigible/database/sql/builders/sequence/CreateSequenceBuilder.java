@@ -12,11 +12,15 @@ package org.eclipse.dirigible.database.sql.builders.sequence;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Create Sequence Builder.
  */
 public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(CreateSequenceBuilder.class);
 
 	private String sequence = null;
 
@@ -45,6 +49,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the sequence builder
 	 */
 	public CreateSequenceBuilder start(int start) {
+		logger.trace("start: " + start);
 		this.start = start;
 		return this;
 	}
@@ -57,6 +62,7 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	 * @return the creates the sequence builder
 	 */
 	public CreateSequenceBuilder increment(int increment) {
+		logger.trace("increment: " + increment);
 		this.increment = increment;
 		return this;
 	}
@@ -82,7 +88,11 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 		// // INCREMENT
 		generateIncrement(sql);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**

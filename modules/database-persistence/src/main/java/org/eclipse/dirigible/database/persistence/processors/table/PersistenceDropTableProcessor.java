@@ -16,14 +16,19 @@ import java.sql.PreparedStatement;
 import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.DropTableBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Drop Table Processor.
  */
 public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceDropTableProcessor.class);
 
 	/**
 	 * Instantiates a new persistence drop table processor.
@@ -45,6 +50,7 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 		DropTableBuilder dropTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).drop().table(tableModel.getTableName());
 
 		String sql = dropTableBuilder.toString();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -60,6 +66,7 @@ public class PersistenceDropTableProcessor extends AbstractPersistenceProcessor 
 	 *             the persistence exception
 	 */
 	public int drop(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
+		logger.trace("drop -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
 		int result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;

@@ -34,12 +34,17 @@ import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.parser.PersistenceAnnotationsParser;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Abstract Persistence Processor.
  */
 public abstract class AbstractPersistenceProcessor implements IPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(AbstractPersistenceProcessor.class);
 
 	private IEntityManagerInterceptor entityManagerInterceptor;
 
@@ -89,6 +94,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 */
 	protected void setValuesFromPojo(PersistenceTableModel tableModel, Object pojo, PreparedStatement preparedStatement)
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
+		logger.trace("setValuesFromPojo -> tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: " + Serializer.serializePojo(pojo));
 		int i = 1;
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (!shouldSetColumnValue(columnModel)) {
@@ -177,6 +183,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 */
 	protected void setValuePrimaryKey(PersistenceTableModel tableModel, Object id, PreparedStatement preparedStatement)
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
+		logger.trace("setValuePrimaryKey -> tableModel: " + Serializer.serializeTableModel(tableModel) + ", id: " + id);
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.isPrimaryKey()) {
 				String dataType = columnModel.getType();
@@ -199,6 +206,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 *             the SQL exception
 	 */
 	protected void setValue(PreparedStatement preparedStatement, int i, Object value) throws SQLException {
+		logger.trace("setValue -> i: " + i + ", value: " + value);
 		setValue(preparedStatement, i, DataTypeUtils.getDatabaseTypeNameByJavaType(value.getClass()), value);
 	}
 
@@ -217,7 +225,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 *             the SQL exception
 	 */
 	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value) throws SQLException {
-
+		logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);
 		if (getEntityManagerInterceptor() != null) {
 			value = getEntityManagerInterceptor().onGetValueBeforeUpdate(i, dataType, value);
 		}
@@ -302,6 +310,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 */
 	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException, IOException {
+		logger.trace("setValueToPojo -> pojo: " + Serializer.serializePojo(pojo) + ", value: " + value + ", columnModel: "
+				+ Serializer.serializeColumnModel(columnModel));
 		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
 		try {
@@ -361,6 +371,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 */
 	protected Object getValueFromPojo(Object pojo, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
+		logger.trace(
+				"getValueFromPojo -> pojo: " + Serializer.serializePojo(pojo) + ", columnModel: " + Serializer.serializeColumnModel(columnModel));
 		// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);

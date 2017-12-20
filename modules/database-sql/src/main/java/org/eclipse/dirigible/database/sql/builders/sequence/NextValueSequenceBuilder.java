@@ -12,11 +12,15 @@ package org.eclipse.dirigible.database.sql.builders.sequence;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractQuerySqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Next Value Sequence Builder.
  */
 public class NextValueSequenceBuilder extends AbstractQuerySqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(NextValueSequenceBuilder.class);
 
 	private String sequence = null;
 
@@ -47,7 +51,11 @@ public class NextValueSequenceBuilder extends AbstractQuerySqlBuilder {
 		// NEXTVAL
 		generateNextValue(sql);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**

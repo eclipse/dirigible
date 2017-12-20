@@ -11,11 +11,15 @@
 package org.eclipse.dirigible.database.sql.builders.table;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Create Table Check Builder.
  */
 public class CreateTableCheckBuilder extends AbstractCreateTableConstraintBuilder<CreateTableCheckBuilder> {
+
+	private static final Logger logger = LoggerFactory.getLogger(CreateTableCheckBuilder.class);
 
 	private String expression;
 
@@ -48,6 +52,7 @@ public class CreateTableCheckBuilder extends AbstractCreateTableConstraintBuilde
 	 * @return the creates the table check builder
 	 */
 	public CreateTableCheckBuilder expression(String expression) {
+		logger.trace("expression: " + expression);
 		this.expression = expression;
 		return this;
 	}

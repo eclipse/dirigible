@@ -16,15 +16,20 @@ import java.sql.PreparedStatement;
 import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Create Sequence Processor.
  */
 public class PersistenceCreateSequenceProcessor extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceCreateSequenceProcessor.class);
 
 	/**
 	 * Instantiates a new persistence create sequence processor.
@@ -47,6 +52,7 @@ public class PersistenceCreateSequenceProcessor extends AbstractPersistenceProce
 				.sequence(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
 
 		String sql = createSequenceBuilder.toString();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -62,6 +68,7 @@ public class PersistenceCreateSequenceProcessor extends AbstractPersistenceProce
 	 *             the persistence exception
 	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
+		logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
 		int result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;

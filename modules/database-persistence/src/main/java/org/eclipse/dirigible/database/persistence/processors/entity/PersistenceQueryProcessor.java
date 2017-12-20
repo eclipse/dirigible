@@ -20,10 +20,13 @@ import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Query Processor.
@@ -32,6 +35,8 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
  *            the generic type
  */
 public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceQueryProcessor.class);
 
 	/**
 	 * Instantiates a new persistence query processor.
@@ -72,6 +77,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 			}
 		}
 		String sql = selectBuilder.toString();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -95,6 +101,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 		}
 		selectBuilder.forUpdate();
 		String sql = selectBuilder.build();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -110,6 +117,7 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	protected String generateScriptFindAll(Connection connection, PersistenceTableModel tableModel) {
 		SelectBuilder selectBuilder = SqlFactory.getNative(connection).select().column("*").from(tableModel.getTableName());
 		String sql = selectBuilder.toString();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -129,6 +137,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	public T find(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
+		logger.trace("find -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", id: " + id);
 		String sql = generateScriptFind(connection, tableModel);
 		return get(connection, tableModel, clazz, id, sql);
 	}
@@ -149,6 +159,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	public T lock(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id) throws PersistenceException {
+		logger.trace("lock -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", id: " + id);
 		String sql = generateScriptLock(connection, tableModel);
 		return get(connection, tableModel, clazz, id, sql);
 	}
@@ -171,6 +183,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	protected T get(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, Object id, String sql) throws PersistenceException {
+		logger.trace("get -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", id: " + id + ", sql: " + sql);
 		T result = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -214,6 +228,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 *             the persistence exception
 	 */
 	public List<T> findAll(Connection connection, PersistenceTableModel tableModel, Class<T> clazz) throws PersistenceException {
+		logger.trace("findAll -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName());
 		List<T> result = new ArrayList<T>();
 		String sql = null;
 		PreparedStatement preparedStatement = null;
@@ -259,6 +275,8 @@ public class PersistenceQueryProcessor<T> extends AbstractPersistenceProcessor {
 	 * @return the list
 	 */
 	public List<T> query(Connection connection, PersistenceTableModel tableModel, Class<T> clazz, String sql, List<Object> values) {
+		logger.trace("query -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", class: "
+				+ clazz.getCanonicalName() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));
 		List<T> result = new ArrayList<T>();
 		PreparedStatement preparedStatement = null;
 		try {

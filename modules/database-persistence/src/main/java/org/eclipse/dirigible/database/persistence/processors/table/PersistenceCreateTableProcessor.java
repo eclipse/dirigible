@@ -17,15 +17,20 @@ import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Create Table Processor.
  */
 public class PersistenceCreateTableProcessor extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceCreateTableProcessor.class);
 
 	/**
 	 * Instantiates a new persistence create table processor.
@@ -105,7 +110,9 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					break;
 			}
 		}
+
 		String sql = createTableBuilder.build();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -121,6 +128,7 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 	 *             the persistence exception
 	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
+		logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
 		int result = 0;
 		String sql = null;
 		PreparedStatement preparedStatement = null;

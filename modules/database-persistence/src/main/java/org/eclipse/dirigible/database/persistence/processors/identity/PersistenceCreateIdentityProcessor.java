@@ -16,12 +16,17 @@ import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Create Identity Processor.
  */
 public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceCreateIdentityProcessor.class);
 
 	/**
 	 * Instantiates a new persistence create identity processor.
@@ -55,6 +60,7 @@ public class PersistenceCreateIdentityProcessor extends AbstractPersistenceProce
 	 *             the persistence exception
 	 */
 	public int create(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
+		logger.trace("create -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
 		PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();
 		if (!persistenceManager.tableExists(connection, Identity.class)) {
 			persistenceManager.tableCreate(connection, Identity.class);

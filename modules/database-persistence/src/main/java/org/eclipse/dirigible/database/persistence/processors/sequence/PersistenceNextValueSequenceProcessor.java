@@ -17,15 +17,20 @@ import java.sql.ResultSet;
 import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Next Value Sequence Processor.
  */
 public class PersistenceNextValueSequenceProcessor extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceNextValueSequenceProcessor.class);
 
 	/**
 	 * Instantiates a new persistence next value sequence processor.
@@ -48,6 +53,7 @@ public class PersistenceNextValueSequenceProcessor extends AbstractPersistencePr
 				.nextval(tableModel.getTableName() + ISqlKeywords.UNDERSCROE + ISqlKeywords.KEYWORD_SEQUENCE);
 
 		String sql = nextValueBuilder.toString();
+		logger.trace(sql);
 		return sql;
 	}
 
@@ -63,6 +69,7 @@ public class PersistenceNextValueSequenceProcessor extends AbstractPersistencePr
 	 *             the persistence exception
 	 */
 	public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
+		logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
 		long result = -1;
 		String sql = null;
 		PreparedStatement preparedStatement = null;

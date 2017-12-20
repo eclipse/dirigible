@@ -12,11 +12,15 @@ package org.eclipse.dirigible.database.sql.builders.view;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.AbstractDropSqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Drop View Builder.
  */
 public class DropViewBuilder extends AbstractDropSqlBuilder {
+
+	private static final Logger logger = LoggerFactory.getLogger(DropViewBuilder.class);
 
 	private String view = null;
 
@@ -48,7 +52,11 @@ public class DropViewBuilder extends AbstractDropSqlBuilder {
 		// VIEW
 		generateView(sql);
 
-		return sql.toString();
+		String generated = sql.toString();
+
+		logger.trace("generated: " + generated);
+
+		return generated;
 	}
 
 	/**

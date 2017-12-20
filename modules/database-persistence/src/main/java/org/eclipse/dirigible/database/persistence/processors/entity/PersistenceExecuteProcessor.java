@@ -17,7 +17,10 @@ import java.util.List;
 import org.eclipse.dirigible.database.persistence.IEntityManagerInterceptor;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.parser.Serializer;
 import org.eclipse.dirigible.database.persistence.processors.AbstractPersistenceProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Execute Processor.
@@ -26,6 +29,8 @@ import org.eclipse.dirigible.database.persistence.processors.AbstractPersistence
  *            the generic type
  */
 public class PersistenceExecuteProcessor<T> extends AbstractPersistenceProcessor {
+
+	private static final Logger logger = LoggerFactory.getLogger(PersistenceExecuteProcessor.class);
 
 	/**
 	 * Instantiates a new persistence execute processor.
@@ -59,6 +64,7 @@ public class PersistenceExecuteProcessor<T> extends AbstractPersistenceProcessor
 	 * @return the int
 	 */
 	public int execute(Connection connection, String sql, List<Object> values) {
+		logger.trace("execute -> connection: " + connection.hashCode() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = openPreparedStatement(connection, sql);
