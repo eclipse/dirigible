@@ -80,9 +80,6 @@
         <dependent-module archiveName="dirigible-database-managed-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Managed/Database - Managed">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-custom-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Custom/Database - Custom">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="dirigible-core-extensions-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Extensions/Core - Extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -174,6 +171,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-engine-wiki-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Wiki/Engine - Wiki">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-engine-listener-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Listener/Engine - Listener">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-engine-job-3.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Job/Engine - Job">

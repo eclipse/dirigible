@@ -1,0 +1,33 @@
+{
+  "constraints":[  
+   {  
+      "uri": "/ide-documents/manage",
+      "method":"*",
+      "roles": [
+      	"Administrator",
+        "Operator"
+      ]
+   }, {  
+      "uri": "/ide-documents/read/folder",
+      "method":"*",
+      "roles":[
+        "ReadOnly",
+	    "Operator"
+	  ]
+   }, {  
+      "uri": "/ide-documents/read/document",
+      "method":"*",
+      "roles":[  
+         "ReadOnly",
+         "Operator"
+      ]
+   }, {  
+      "uri":"/ide-documents/web",
+      "method":"*",
+      "roles":[
+         "ReadOnly",
+         "Operator"
+      ]
+   }
+  ]
+}

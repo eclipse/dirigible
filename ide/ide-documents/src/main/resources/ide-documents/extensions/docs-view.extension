@@ -1,0 +1,5 @@
+{
+	'module': 'ide-documents/services/docs-view.js',
+	'extensionPoint': 'ide-view',
+	'description': 'Documents View'
+}
