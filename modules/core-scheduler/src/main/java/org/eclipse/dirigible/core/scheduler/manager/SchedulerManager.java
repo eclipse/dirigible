@@ -209,6 +209,9 @@ public class SchedulerManager {
 	 *             the scheduler exception
 	 */
 	public static void unscheduleJob(String name, String group) throws SchedulerException {
+		if (!ISchedulerCoreService.JOB_GROUP_DEFINED.equals(group)) {
+			return;
+		}
 		try {
 			JobKey jobKey = new JobKey(name, group);
 			TriggerKey triggerKey = new TriggerKey(name, group);
