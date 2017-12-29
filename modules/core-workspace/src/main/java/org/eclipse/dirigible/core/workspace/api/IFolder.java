@@ -127,4 +127,12 @@ public interface IFolder extends ICollection {
 	 */
 	public void deleteFile(String path);
 
+	/**
+	 * Free-text serach
+	 *
+	 * @param term
+	 *            the term
+	 * @return the list of files
+	 */
+	public List<IFile> search(String term);
 }
