@@ -170,10 +170,8 @@ public class JobSynchronizer extends AbstractSynchronizer {
 		Set<TriggerKey> runningJobs = SchedulerManager.listJobs();
 		for (TriggerKey jobKey : runningJobs) {
 			try {
-				if (ISchedulerCoreService.JOB_GROUP_DEFINED.equals(jobKey.getGroup())) {
-					if (!JOBS_SYNCHRONIZED.contains(jobKey.getName())) {
-						SchedulerManager.unscheduleJob(jobKey.getName(), jobKey.getGroup());
-					}
+				if (!JOBS_SYNCHRONIZED.contains(jobKey.getName())) {
+					SchedulerManager.unscheduleJob(jobKey.getName(), jobKey.getGroup());
 				}
 			} catch (SchedulerException e) {
 				logger.error(e.getMessage(), e);
