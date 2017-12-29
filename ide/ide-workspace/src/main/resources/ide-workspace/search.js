@@ -75,8 +75,9 @@ var WorkspaceTreeAdapter = function(treeConfig, workspaceService, messageHub){
 
 	this._buildTreeNode = function(files){
 		var children = files.map(function(f) {
+			f.label = f.name;
 			return {
-				"text": f.name,
+				"text": f.path.substring(f.path.indexOf('/', 1)),
 				"children": children,
 				"type": f.type,
 				"_file": f

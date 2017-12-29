@@ -57,13 +57,12 @@
 			
 			<div class="col-lg-6">
 			    <div class="input-group">
-			      <input type="text" ng-model="workspace.searchTerm" class="form-control" placeholder="Search for..."/>
+			      <input type="text" ng-model="workspace.searchTerm" class="form-control" placeholder="Search for..." onkeydown = "if (event.keyCode == 13) document.getElementById('btn-search').click()"/>
 			      <span class="input-group-btn">
-			        <button type="button" class="btn btn-default" title="Search" ng-click="workspace.search()"><i class="fa fa-search"></i></button>
+			        <button id="btn-search" type="button" class="btn btn-default" title="Search" ng-click="workspace.search()"><i class="fa fa-search"></i></button>
 			      </span>
 			    </div>
 			</div>
-			
 				
 			
 			
