@@ -51,16 +51,6 @@ import io.swagger.annotations.Authorization;
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
 public class WorkspaceSearchService extends AbstractRestService implements IRestService {
 
-	private static final String ERROR_PATH_DOES_NOT_EXISTS = "Path does not exists.";
-
-	private static final String ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER = "Target path points to a non-existing folder";
-
-	private static final String ERROR_TARGET_PATH_IS_EMPTY = "Target path is empty";
-
-	private static final String ERROR_SOURCE_PATH_IS_EMPTY = "Source path is empty";
-
-	private static final String ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST = "Source and Target paths have to be present in the body of the request";
-
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceSearchService.class);
 
 	@Inject
@@ -79,7 +69,7 @@ public class WorkspaceSearchService extends AbstractRestService implements IRest
 	}
 
 	/**
-	 * Copy.
+	 * Search.
 	 *
 	 * @param workspace
 	 *            the workspace
