@@ -424,4 +424,25 @@ public class Folder implements IFolder {
 		return new RepositoryPath(new String[] { this.getPath(), path }).build();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#search(java.lang.String)
+	 */
+	@Override
+	public List<IFile> search(String term) {
+		List<IEntity> entities = this.getRepository().searchText(term);
+		List<IFile> files = new ArrayList<IFile>();
+		for (IEntity entity : entities) {
+			if (entity instanceof IResource) {
+				IResource resource = (IResource) entity;
+				if (resource.getPath().startsWith(this.getPath())) {
+					if (resource.exists()) {
+						files.add(new File(resource));
+					}
+				}
+			}
+		}
+		return files;
+	}
+
 }

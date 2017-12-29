@@ -12,6 +12,7 @@ package org.eclipse.dirigible.runtime.ide.workspaces.processor;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -410,6 +411,21 @@ public class WorkspaceProcessor {
 	}
 
 	/**
+	 * Render file descriptions.
+	 *
+	 * @param files
+	 *            the files
+	 * @return the file descriptors
+	 */
+	public List<FileDescriptor> renderFileDescriptions(List<IFile> files) {
+		List<FileDescriptor> fileDescriptors = new ArrayList<>();
+		for (IFile file : files) {
+			fileDescriptors.add(renderFileDescription(file));
+		}
+		return fileDescriptors;
+	}
+
+	/**
 	 * Copy project.
 	 *
 	 * @param workspace
@@ -513,6 +529,23 @@ public class WorkspaceProcessor {
 	public void moveFile(String workspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
 		workspaceObject.moveFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
+	}
+
+	// Search
+
+	/**
+	 * Free-text search in the files content.
+	 *
+	 * @param workspace
+	 *            the workspace
+	 * @param term
+	 *            the term
+	 * @return the files list
+	 */
+	public List<IFile> search(String workspace, String term) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		List<IFile> files = workspaceObject.search(term);
+		return files;
 	}
 
 }
