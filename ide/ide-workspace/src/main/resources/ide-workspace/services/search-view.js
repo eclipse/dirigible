@@ -10,12 +10,12 @@
 
 exports.getView = function() {
 	var view = {
-			"id":"search",
-			"name":"Search",
+			"id":"import",
+			"name":"Import",
 			"factory":"frame",
 			"region":"left-top",
-			"label":"Search",
-			"link":"../ide-workspace/search.html"
+			"label":"Import",
+			"link":"../ide-workspace/import.html"
 	};
 	return view;
 }
