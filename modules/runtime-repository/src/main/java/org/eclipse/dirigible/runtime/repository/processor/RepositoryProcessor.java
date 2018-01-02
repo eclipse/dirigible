@@ -10,10 +10,15 @@
 
 package org.eclipse.dirigible.runtime.repository.processor;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.inject.Inject;
 
+import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.json.Repository;
 import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
@@ -22,6 +27,8 @@ import org.eclipse.dirigible.runtime.repository.json.RepositoryJsonHelper;
  * The Repository Processor.
  */
 public class RepositoryProcessor {
+
+	private static final String REPOSITORY_SERVICE_PREFIX = "core/repository";
 
 	@Inject
 	private IRepository repository;
@@ -68,7 +75,7 @@ public class RepositoryProcessor {
 	}
 
 	/**
-	 * Delete resource.
+	 * Deletes a resource.
 	 *
 	 * @param path
 	 *            the path
@@ -97,6 +104,44 @@ public class RepositoryProcessor {
 	 */
 	public Repository renderRepository(ICollection collection) {
 		return RepositoryJsonHelper.traverseRepository(collection, "", "");
+	}
+
+	/**
+	 * Creates a new collection.
+	 *
+	 * @param path
+	 *            the path
+	 * @return the collection
+	 */
+	public ICollection createCollection(String path) {
+		return repository.createCollection(path);
+	}
+
+	/**
+	 * Deletes a collection.
+	 *
+	 * @param path
+	 *            the path
+	 */
+	public void deleteCollection(String path) {
+		repository.removeCollection(path);
+	}
+
+	/**
+	 * Gets the uri.
+	 *
+	 * @param path
+	 *            the path
+	 * @return the uri
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
+	 */
+	public URI getURI(String path) throws URISyntaxException {
+		StringBuilder relativePath = new StringBuilder(REPOSITORY_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR);
+		if (path != null) {
+			relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
+		}
+		return new URI(UrlFacade.escape(relativePath.toString()));
 	}
 
 }
