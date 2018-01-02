@@ -79,7 +79,8 @@ angular.module('ideUiCore', ['ngResource'])
 }])
 .provider('Editors', function(){
 	var editorProviders = this.editorProviders = {
-				"orion":  "../ide-orion/editor.html"
+				"orion":  "../ide-orion/editor.html",
+				"repository":  "../ide-orion/repository.html"
 			}
 	var editorsForContentType = this.editorsForContentType = {
 			"": ['orion'],

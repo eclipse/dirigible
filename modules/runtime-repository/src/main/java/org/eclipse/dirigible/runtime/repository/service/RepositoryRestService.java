@@ -12,7 +12,6 @@ package org.eclipse.dirigible.runtime.repository.service;
 
 import static java.text.MessageFormat.format;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
@@ -36,6 +35,7 @@ import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.runtime.repository.processor.RepositoryProcessor;
 import org.slf4j.Logger;
@@ -117,6 +117,11 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 			return Response.status(Status.FORBIDDEN).build();
 		}
 
+		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
+			ICollection collection = processor.createCollection(path);
+			return Response.created(processor.getURI(UrlFacade.escape(collection.getPath() + IRepositoryStructure.SEPARATOR))).build();
+		}
+
 		IResource resource = processor.getResource(path);
 		if (resource.exists()) {
 			String message = format("Resource at location {0} already exists", path);
@@ -124,7 +129,7 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 			return Response.status(Status.BAD_REQUEST).entity(message).build();
 		}
 		resource = processor.createResource(path, content, request.getContentType());
-		return Response.created(new URI(UrlFacade.escape(resource.getPath()))).build();
+		return Response.created(processor.getURI(UrlFacade.escape(resource.getPath()))).build();
 	}
 
 	/**
@@ -169,6 +174,11 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		if (user == null) {
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);
 			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
+			processor.deleteCollection(path);
+			Response.noContent().build();
 		}
 
 		IResource resource = processor.getResource(path);
