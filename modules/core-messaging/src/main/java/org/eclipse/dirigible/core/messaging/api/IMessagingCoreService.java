@@ -23,6 +23,9 @@ public interface IMessagingCoreService extends ICoreService {
 	/** The Constant FILE_EXTENSION_LISTENER. */
 	public static final String FILE_EXTENSION_LISTENER = ".listener";
 
+	public static final char QUEUE = 'Q';
+	public static final char TOPIC = 'T';
+
 	// Listener
 
 	/**
@@ -34,16 +37,15 @@ public interface IMessagingCoreService extends ICoreService {
 	 *            the name
 	 * @param type
 	 *            the type
-	 * @param module
-	 *            the module
+	 * @param handler
+	 *            the handler
 	 * @param description
 	 *            the description
 	 * @return the listener definition
 	 * @throws MessagingException
 	 *             the messaging exception
 	 */
-	public ListenerDefinition createListener(String location, String name, DestinationType type, String module, String description)
-			throws MessagingException;
+	public ListenerDefinition createListener(String location, String name, char type, String handler, String description) throws MessagingException;
 
 	/**
 	 * Gets the listener.
@@ -97,14 +99,14 @@ public interface IMessagingCoreService extends ICoreService {
 	 *            the name
 	 * @param type
 	 *            the type
-	 * @param module
-	 *            the module
+	 * @param handler
+	 *            the handler
 	 * @param description
 	 *            the description
 	 * @throws MessagingException
 	 *             the messaging exception
 	 */
-	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException;
+	public void updateListener(String location, String name, char type, String handler, String description) throws MessagingException;
 
 	/**
 	 * Gets the listeners.

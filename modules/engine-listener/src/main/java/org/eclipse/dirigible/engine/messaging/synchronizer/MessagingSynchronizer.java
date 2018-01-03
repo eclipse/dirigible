@@ -24,7 +24,6 @@ import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
-import org.eclipse.dirigible.core.messaging.api.DestinationType;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
@@ -199,15 +198,14 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	private void synchronizeListener(ListenerDefinition listenerDefinition) throws SynchronizationException {
 		try {
 			if (!messagingCoreService.existsListener(listenerDefinition.getLocation())) {
-				messagingCoreService.createListener(listenerDefinition.getLocation(), listenerDefinition.getName(),
-						DestinationType.values()[listenerDefinition.getType()], listenerDefinition.getModule(), listenerDefinition.getDescription());
+				messagingCoreService.createListener(listenerDefinition.getLocation(), listenerDefinition.getName(), listenerDefinition.getType(),
+						listenerDefinition.getHandler(), listenerDefinition.getDescription());
 				logger.info("Synchronized a new Listener [{}] from location: {}", listenerDefinition.getName(), listenerDefinition.getLocation());
 			} else {
 				ListenerDefinition existing = messagingCoreService.getListener(listenerDefinition.getLocation());
 				if (!listenerDefinition.equals(existing)) {
-					messagingCoreService.updateListener(listenerDefinition.getLocation(), listenerDefinition.getName(),
-							DestinationType.values()[listenerDefinition.getType()], listenerDefinition.getModule(),
-							listenerDefinition.getDescription());
+					messagingCoreService.updateListener(listenerDefinition.getLocation(), listenerDefinition.getName(), listenerDefinition.getType(),
+							listenerDefinition.getHandler(), listenerDefinition.getDescription());
 					logger.info("Synchronized a modified Listener [{}] from location: {}", listenerDefinition.getName(),
 							listenerDefinition.getLocation());
 				}

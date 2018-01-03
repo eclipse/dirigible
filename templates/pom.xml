@@ -43,6 +43,7 @@
 		<module>template-database-view</module>
 		<module>template-bookstore</module>
 		<module>template-job</module>
+		<module>template-listener</module>
 	</modules>
 
 	<profiles>
