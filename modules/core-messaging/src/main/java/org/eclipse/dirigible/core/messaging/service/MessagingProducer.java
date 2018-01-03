@@ -20,7 +20,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.eclipse.dirigible.core.messaging.api.DestinationType;
+import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class MessagingProducer implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(MessagingProducer.class);
 
 	private String name;
-	private DestinationType type;
+	private char type;
 	private String message;
 
 	/**
@@ -46,7 +46,7 @@ public class MessagingProducer implements Runnable {
 	 * @param message
 	 *            the message
 	 */
-	public MessagingProducer(String name, DestinationType type, String message) {
+	public MessagingProducer(String name, char type, String message) {
 		this.name = name;
 		this.type = type;
 		this.message = message;
@@ -67,12 +67,12 @@ public class MessagingProducer implements Runnable {
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			try {
 				Destination destination = null;
-				if (type.equals(DestinationType.QUEUE)) {
+				if (type == IMessagingCoreService.QUEUE) {
 					destination = session.createQueue(this.name);
-				} else if (type.equals(DestinationType.TOPIC)) {
+				} else if (type == IMessagingCoreService.TOPIC) {
 					destination = session.createTopic(this.name);
 				} else {
-					throw new MessagingException(format("Invalid Destination Type [{0}] for destination [{1}]", this.type.name(), this.name));
+					throw new MessagingException(format("Invalid Destination Type [{0}] for destination [{1}]", this.type, this.name));
 				}
 
 				MessageProducer producer = session.createProducer(destination);

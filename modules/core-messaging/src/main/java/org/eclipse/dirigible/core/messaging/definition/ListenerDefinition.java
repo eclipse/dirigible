@@ -31,11 +31,11 @@ public class ListenerDefinition {
 	@Column(name = "LISTENER_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255, unique = true)
 	private String name;
 
-	@Column(name = "LISTENER_TYPE", columnDefinition = "TINYINT", nullable = false)
-	private byte type;
+	@Column(name = "LISTENER_TYPE", columnDefinition = "CHAR", nullable = false, length = 1)
+	private char type;
 
-	@Column(name = "LISTENER_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 255)
-	private String module;
+	@Column(name = "LISTENER_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	private String handler;
 
 	@Column(name = "LISTENER_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
@@ -89,7 +89,7 @@ public class ListenerDefinition {
 	 *
 	 * @return the type
 	 */
-	public byte getType() {
+	public char getType() {
 		return type;
 	}
 
@@ -99,27 +99,27 @@ public class ListenerDefinition {
 	 * @param type
 	 *            the new type
 	 */
-	public void setType(byte type) {
+	public void setType(char type) {
 		this.type = type;
 	}
 
 	/**
-	 * Gets the module.
+	 * Gets the handler.
 	 *
-	 * @return the module
+	 * @return the handler
 	 */
-	public String getModule() {
-		return module;
+	public String getHandler() {
+		return handler;
 	}
 
 	/**
-	 * Sets the module.
+	 * Sets the handler.
 	 *
-	 * @param module
-	 *            the new module
+	 * @param handler
+	 *            the new handler
 	 */
-	public void setModule(String module) {
-		this.module = module;
+	public void setHandler(String handler) {
+		this.handler = handler;
 	}
 
 	/**
@@ -225,7 +225,7 @@ public class ListenerDefinition {
 		int result = 1;
 		result = (prime * result) + ((description == null) ? 0 : description.hashCode());
 		result = (prime * result) + ((location == null) ? 0 : location.hashCode());
-		result = (prime * result) + ((module == null) ? 0 : module.hashCode());
+		result = (prime * result) + ((handler == null) ? 0 : handler.hashCode());
 		result = (prime * result) + ((name == null) ? 0 : name.hashCode());
 		result = (prime * result) + type;
 		return result;
@@ -261,11 +261,11 @@ public class ListenerDefinition {
 		} else if (!location.equals(other.location)) {
 			return false;
 		}
-		if (module == null) {
-			if (other.module != null) {
+		if (handler == null) {
+			if (other.handler != null) {
 				return false;
 			}
-		} else if (!module.equals(other.module)) {
+		} else if (!handler.equals(other.handler)) {
 			return false;
 		}
 		if (name == null) {

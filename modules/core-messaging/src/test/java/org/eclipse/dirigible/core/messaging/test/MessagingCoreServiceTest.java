@@ -18,7 +18,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.core.messaging.api.DestinationType;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
@@ -55,7 +54,7 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void createListenerTest() throws MessagingException {
 		messagingCoreService.removeListener("/test_listener1");
-		messagingCoreService.createListener("/test_listener1", "test_listener1", DestinationType.QUEUE, "test_handler1", "Test");
+		messagingCoreService.createListener("/test_listener1", "test_listener1", IMessagingCoreService.QUEUE, "test_handler1", "Test");
 		ListenerDefinition listenerDefinition = messagingCoreService.getListener("/test_listener1");
 		assertEquals("test_listener1", listenerDefinition.getName());
 		assertEquals("Test", listenerDefinition.getDescription());
@@ -71,7 +70,7 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void getListenerTest() throws MessagingException {
 		messagingCoreService.removeListener("/test_listener1");
-		messagingCoreService.createListener("/test_listener1", "test_listener1", DestinationType.QUEUE, "test_handler1", "Test");
+		messagingCoreService.createListener("/test_listener1", "test_listener1", IMessagingCoreService.QUEUE, "test_handler1", "Test");
 		ListenerDefinition listenerDefinition = messagingCoreService.getListener("/test_listener1");
 		assertEquals("test_listener1", listenerDefinition.getName());
 		assertEquals("Test", listenerDefinition.getDescription());
@@ -87,11 +86,11 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void updatetListenerTest() throws MessagingException {
 		messagingCoreService.removeListener("/test_listener1");
-		messagingCoreService.createListener("/test_listener1", "test_listener1", DestinationType.QUEUE, "test_handler1", "Test");
+		messagingCoreService.createListener("/test_listener1", "test_listener1", IMessagingCoreService.QUEUE, "test_handler1", "Test");
 		ListenerDefinition listenerDefinition = messagingCoreService.getListener("/test_listener1");
 		assertEquals("test_listener1", listenerDefinition.getName());
 		assertEquals("Test", listenerDefinition.getDescription());
-		messagingCoreService.updateListener("/test_listener1", "test_listener1", DestinationType.QUEUE, "test_handler1", "Test 2");
+		messagingCoreService.updateListener("/test_listener1", "test_listener1", IMessagingCoreService.QUEUE, "test_handler1", "Test 2");
 		listenerDefinition = messagingCoreService.getListener("/test_listener1");
 		assertEquals("test_listener1", listenerDefinition.getName());
 		assertEquals("Test 2", listenerDefinition.getDescription());
@@ -107,7 +106,7 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	@Test
 	public void removeListenerTest() throws MessagingException {
 		messagingCoreService.removeListener("/test_listener1");
-		messagingCoreService.createListener("/test_listener1", "test_listener1", DestinationType.QUEUE, "test_handler1", "Test");
+		messagingCoreService.createListener("/test_listener1", "test_listener1", IMessagingCoreService.QUEUE, "test_handler1", "Test");
 		ListenerDefinition listenerDefinition = messagingCoreService.getListener("/test_listener1");
 		assertEquals("test_listener1", listenerDefinition.getName());
 		assertEquals("Test", listenerDefinition.getDescription());

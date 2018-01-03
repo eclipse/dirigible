@@ -20,7 +20,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.core.messaging.api.DestinationType;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
@@ -120,8 +119,8 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 		ListenerDefinition listenerDefinitionCustom = new ListenerDefinition();
 		listenerDefinitionCustom.setLocation("/custom/custom.listener");
 		listenerDefinitionCustom.setName("/custom/custom");
-		listenerDefinitionCustom.setType(new Integer(DestinationType.TOPIC.ordinal()).byteValue());
-		listenerDefinitionCustom.setModule("custom/custom");
+		listenerDefinitionCustom.setType(IMessagingCoreService.TOPIC);
+		listenerDefinitionCustom.setHandler("custom/custom");
 		listenerDefinitionCustom.setDescription("Test");
 		listenerDefinitionCustom.setCreatedAt(new Timestamp(new Date().getTime()));
 		listenerDefinitionCustom.setCreatedBy("test_user");
@@ -136,7 +135,7 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 		listenerDefinition = messagingCoreService.getListener("/custom/custom.listener");
 		assertNotNull(listenerDefinition);
 
-		MessagingProducer messagingProducer = new MessagingProducer("/control/control", DestinationType.QUEUE, "Test Message");
+		MessagingProducer messagingProducer = new MessagingProducer("/control/control", IMessagingCoreService.QUEUE, "Test Message");
 		new Thread(messagingProducer).start();
 	}
 

@@ -23,7 +23,7 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.core.messaging.api.DestinationType;
+import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
@@ -38,7 +38,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	private static final Logger logger = LoggerFactory.getLogger(MessagingConsumer.class);
 
 	private String name;
-	private DestinationType type;
+	private char type;
 	private String handler;
 	private int timeout = 1000;
 	private boolean stopped;
@@ -55,7 +55,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	 * @param timeout
 	 *            the timeout
 	 */
-	public MessagingConsumer(String name, DestinationType type, String handler, int timeout) {
+	public MessagingConsumer(String name, char type, String handler, int timeout) {
 		this.name = name;
 		this.type = type;
 		this.handler = handler;
@@ -72,7 +72,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	 * @param timeout
 	 *            the timeout
 	 */
-	public MessagingConsumer(String name, DestinationType type, int timeout) {
+	public MessagingConsumer(String name, char type, int timeout) {
 		this.name = name;
 		this.type = type;
 		this.timeout = timeout;
@@ -113,12 +113,12 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			Destination destination = null;
-			if (type.equals(DestinationType.QUEUE)) {
+			if (type == IMessagingCoreService.QUEUE) {
 				destination = session.createQueue(this.name);
-			} else if (type.equals(DestinationType.TOPIC)) {
+			} else if (type == IMessagingCoreService.TOPIC) {
 				destination = session.createTopic(this.name);
 			} else {
-				throw new MessagingException("Invalid Destination Type: " + this.type.name());
+				throw new MessagingException("Invalid Destination Type: " + this.type);
 			}
 
 			MessageConsumer consumer = session.createConsumer(destination);
@@ -130,7 +130,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						if (message == null) {
 							continue;
 						}
-						logger.debug(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));
+						logger.trace(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));
 						if (message instanceof TextMessage) {
 							TextMessage textMessage = (TextMessage) message;
 							String text = textMessage.getText();
@@ -139,7 +139,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						} else {
 							throw new MessagingException(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
 						}
-						logger.debug(format("Done processing the received message in [{0}] by [{1}]", this.name, this.handler));
+						logger.trace(format("Done processing the received message in [{0}] by [{1}]", this.name, this.handler));
 					}
 				} else {
 					message = consumer.receive(this.timeout);

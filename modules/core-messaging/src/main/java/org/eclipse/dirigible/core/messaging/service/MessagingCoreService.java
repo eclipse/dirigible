@@ -27,7 +27,6 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.core.messaging.api.DestinationType;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
@@ -54,13 +53,12 @@ public class MessagingCoreService implements IMessagingCoreService {
 	 * java.lang.String, org.eclipse.dirigible.core.messaging.api.DestinationType, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ListenerDefinition createListener(String location, String name, DestinationType type, String module, String description)
-			throws MessagingException {
+	public ListenerDefinition createListener(String location, String name, char type, String handler, String description) throws MessagingException {
 		ListenerDefinition listenerDefinition = new ListenerDefinition();
 		listenerDefinition.setLocation(location);
 		listenerDefinition.setName(name);
-		listenerDefinition.setType(new Integer(type.ordinal()).byteValue());
-		listenerDefinition.setModule(module);
+		listenerDefinition.setType(type);
+		listenerDefinition.setHandler(handler);
 		listenerDefinition.setDescription(description);
 		listenerDefinition.setCreatedBy(UserFacade.getName());
 		listenerDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
@@ -160,15 +158,15 @@ public class MessagingCoreService implements IMessagingCoreService {
 	 * java.lang.String, org.eclipse.dirigible.core.messaging.api.DestinationType, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateListener(String location, String name, DestinationType type, String module, String description) throws MessagingException {
+	public void updateListener(String location, String name, char type, String handler, String description) throws MessagingException {
 		try {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
 				ListenerDefinition listenerDefinition = getListener(location);
 				listenerDefinition.setName(name);
-				listenerDefinition.setType(new Integer(type.ordinal()).byteValue());
-				listenerDefinition.setModule(module);
+				listenerDefinition.setType(type);
+				listenerDefinition.setHandler(handler);
 				listenerDefinition.setDescription(description);
 				listenerPersistenceManager.update(connection, listenerDefinition, location);
 			} finally {

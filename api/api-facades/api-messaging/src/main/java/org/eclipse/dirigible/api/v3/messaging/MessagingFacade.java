@@ -11,7 +11,7 @@
 package org.eclipse.dirigible.api.v3.messaging;
 
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
-import org.eclipse.dirigible.core.messaging.api.DestinationType;
+import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.service.MessagingConsumer;
 import org.eclipse.dirigible.core.messaging.service.MessagingProducer;
 
@@ -27,7 +27,7 @@ public class MessagingFacade implements IScriptingFacade {
 	 * @param message the message
 	 */
 	public static final void sendToQueue(String destination, String message) {
-		MessagingProducer producer = new MessagingProducer(destination, DestinationType.QUEUE, message);
+		MessagingProducer producer = new MessagingProducer(destination, IMessagingCoreService.QUEUE, message);
 		new Thread(producer).start();
 	}
 	
@@ -38,7 +38,7 @@ public class MessagingFacade implements IScriptingFacade {
 	 * @param message the message
 	 */
 	public static final void sendToTopic(String destination, String message) {
-		MessagingProducer producer = new MessagingProducer(destination, DestinationType.TOPIC, message);
+		MessagingProducer producer = new MessagingProducer(destination, IMessagingCoreService.TOPIC, message);
 		new Thread(producer).start();
 	}
 	
@@ -50,7 +50,7 @@ public class MessagingFacade implements IScriptingFacade {
 	 * @return the message as JSON
 	 */
 	public static final String receiveFromQueue(String destination, int timeout) {
-		MessagingConsumer consumer = new MessagingConsumer(destination, DestinationType.QUEUE, timeout);
+		MessagingConsumer consumer = new MessagingConsumer(destination, IMessagingCoreService.QUEUE, timeout);
 		return consumer.receiveMessage();
 	}
 	
@@ -62,7 +62,7 @@ public class MessagingFacade implements IScriptingFacade {
 	 * @return the the message as JSON
 	 */
 	public static final String receiveFromTopic(String destination, int timeout) {
-		MessagingConsumer consumer = new MessagingConsumer(destination, DestinationType.TOPIC, timeout);
+		MessagingConsumer consumer = new MessagingConsumer(destination, IMessagingCoreService.TOPIC, timeout);
 		return consumer.receiveMessage();
 	}
 	

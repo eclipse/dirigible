@@ -235,7 +235,11 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		} else if (DataTypeUtils.isVarchar(dataType)) {
 			preparedStatement.setString(i, (String) value);
 		} else if (DataTypeUtils.isChar(dataType)) {
-			preparedStatement.setString(i, (String) value);
+			if (value instanceof String) {
+				preparedStatement.setString(i, (String) value);
+			} else if ((value instanceof Character) || char.class.getCanonicalName().equals(value.getClass().getCanonicalName())) {
+				preparedStatement.setString(i, new String(new char[] { (char) value }));
+			}
 		} else if (DataTypeUtils.isDate(dataType)) {
 			preparedStatement.setDate(i, (Date) value);
 		} else if (DataTypeUtils.isTime(dataType)) {
@@ -347,6 +351,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			}
 			if (value instanceof Blob) {
 				value = IOUtils.toByteArray(((Blob) value).getBinaryStream());
+			}
+			if (field.getType().equals(char.class) || field.getType().equals(Character.class)) {
+				if ((value instanceof String) && (((String) value).length() <= 1)) {
+					value = new Character(((String) value).charAt(0));
+				} else {
+					throw new IllegalStateException("Trying to set a multi-character string to a single character field.");
+				}
 			}
 			field.set(pojo, value);
 		} finally {

@@ -28,7 +28,6 @@ import org.apache.activemq.store.PListStore;
 import org.apache.activemq.store.PersistenceAdapter;
 import org.apache.activemq.store.jdbc.JDBCPersistenceAdapter;
 import org.apache.activemq.store.kahadb.plist.PListStoreImpl;
-import org.eclipse.dirigible.core.messaging.api.DestinationType;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,8 +111,7 @@ public class SchedulerManager {
 	 */
 	public void startListener(ListenerDefinition listener) {
 		if (!LISTENERS.keySet().contains(listener.getLocation())) {
-			MessagingConsumer consumer = new MessagingConsumer(listener.getName(), DestinationType.values()[listener.getType()], listener.getModule(),
-					1000);
+			MessagingConsumer consumer = new MessagingConsumer(listener.getName(), listener.getType(), listener.getHandler(), 1000);
 			Thread consumerThread = new Thread(consumer);
 			consumerThread.setDaemon(false);
 			consumerThread.start();
