@@ -685,6 +685,11 @@
 		 	<artifactId>dirigible-template-bookstore</artifactId>
 		 	<version>3.1.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-template-job</artifactId>
+		 	<version>3.1.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Resources Plugins -->
 		<dependency>

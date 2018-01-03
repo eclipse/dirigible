@@ -42,6 +42,7 @@
 		<module>template-database-table</module>
 		<module>template-database-view</module>
 		<module>template-bookstore</module>
+		<module>template-job</module>
 	</modules>
 
 	<profiles>
