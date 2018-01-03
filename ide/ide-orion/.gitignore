@@ -4,6 +4,8 @@ dist/
 target/
 derby/
 dirigible_local/
+/bin/
+/target/
 
 # files
 .DS_Store
@@ -13,6 +15,3 @@ dirigible_local/
 *.class
 *.jar
 derby.log
-/bin/
-/target/
-
