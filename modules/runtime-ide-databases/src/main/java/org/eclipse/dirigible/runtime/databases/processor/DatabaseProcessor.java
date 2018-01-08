@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.databases.helpers.DatabaseErrorHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseQueryHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseQueryHelper.RequestExecutionCallback;
 import org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper;
@@ -234,9 +235,14 @@ public class DatabaseProcessor {
 				}
 			}
 		}
+
 		if (!errors.isEmpty()) {
-			return String.join("\n", errors);
+			if (isJson) {
+				return DatabaseErrorHelper.toJson(String.join("\n", errors));
+			}
+			return DatabaseErrorHelper.print(String.join("\n", errors));
 		}
+
 		return String.join("\n", results);
 	}
 

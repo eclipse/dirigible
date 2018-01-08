@@ -90,17 +90,19 @@
 						url: url + "/query",
 						data: command.data,
 						headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-					}).success(function(rows) {
+					}).success(function(result) {
 						cleanScope();
-						if (rows != null && rows.length > 0) {
-							$scope.rows = rows;
+						if (result != null && result.length > 0) {
+							$scope.rows = result;
 							$scope.columns = [];
-							for (var i = 0 ; i < rows.length; i ++) {
-								for (var column in rows[i]) {
+							for (var i = 0 ; i < result.length; i ++) {
+								for (var column in result[i]) {
 									$scope.columns.push(column);
 								}
 								break;
 							}
+						} else if (result != null && result.errorMessage != null) {
+							$scope.result = result.errorMessage;
 						} else {
 							$scope.result = 'No result';
 						}
