@@ -51,75 +51,81 @@
 </head>
 
 <body ng-app="database-table" ng-controller="DatabaseTableController">
-        <h4 ng-show="result">{{result}}</h4>
-        <table class="table table-striped" ng-show="columns">
-                <thead>
-                  <tr>
-                    <th ng-repeat="column in columns">{{column}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="row in rows">
-                    <td ng-repeat="cell in row">{{cell}}</td>
-                  </tr>
-                </tbody>
-            </table>
-<script>
-    angular.module('database-table', []);
-    angular.module('database-table').controller('DatabaseTableController', function ($scope, $http) {
+	<h4 ng-show="result">{{result}}</h4>
+	<table class="table table-striped" ng-show="columns">
+		<thead>
+			<tr>
+				<th ng-repeat="column in columns">{{column}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="row in rows">
+				<td ng-repeat="cell in row">{{cell}}</td>
+			</tr>
+		</tbody>
+	</table>
 
-    var messageHub = new FramesMessageHub();
-    
-    $scope.database = "derby";
-    $scope.datasource = "DefaultDB";
-    
-    messageHub.subscribe(function(evt){
-    		$scope.database = evt.data;
-        }, "database.database.selection.changed");
-    messageHub.subscribe(function(evt){
-			$scope.datasource = evt.data;
-	    }, "database.datasource.selection.changed");
+	<script>
+		angular.module('database-table', []);
+		angular.module('database-table').controller('DatabaseTableController', function ($scope, $http) {
 
-    messageHub.subscribe(function(command){
-    		var url = "/services/v3/ide/databases/" + $scope.database + "/" + $scope.datasource;
-            if (command.data.toLowerCase().startsWith('select')) {
-                $http({
-                    method: 'POST',
-                    url: url + "/query",
-                    data: command.data,
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-                }).success(function(rows) {
-                    cleanScope();
-                    $scope.rows = rows;
-                    $scope.columns = [];
-                    for (var i = 0 ; i < rows.length; i ++) {
-                        for (var column in rows[i]) {
-                            $scope.columns.push(column);
-                        }
-                        break;
-                    }
-                });
-            } else {
-                $http({
-                    method: 'POST',
-                    url: url + "/update",
-                    data: command.data,
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain'}
-                }).success(function(result) {
-                    cleanScope();
-                    if (!isNaN(result)) {
-                        result = 'Rows updated: ' + result;
-                    }
-                    $scope.result = result;
-                });
-            }
-        }, "database.sql.execute");
+			var messageHub = new FramesMessageHub();
 
-        function cleanScope() {
-            $scope.result = null;
-            $scope.columns = null;
-            $scope.rows = null;
-        }
-    });
-</script>
+			$scope.database = "derby";
+			$scope.datasource = "DefaultDB";
+
+			messageHub.subscribe(function(evt) {
+				$scope.database = evt.data;
+	        }, "database.database.selection.changed");
+
+	    	messageHub.subscribe(function(evt) {
+				$scope.datasource = evt.data;
+		    }, "database.datasource.selection.changed");
+
+			messageHub.subscribe(function(command) {
+				var url = "/services/v3/ide/databases/" + $scope.database + "/" + $scope.datasource;
+				if (command.data.toLowerCase().startsWith('select')) {
+					$http({
+						method: 'POST',
+						url: url + "/query",
+						data: command.data,
+						headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+					}).success(function(rows) {
+						cleanScope();
+						if (rows != null && rows.length > 0) {
+							$scope.rows = rows;
+							$scope.columns = [];
+							for (var i = 0 ; i < rows.length; i ++) {
+								for (var column in rows[i]) {
+									$scope.columns.push(column);
+								}
+								break;
+							}
+						} else {
+							$scope.result = 'No result';
+						}
+					});
+				} else {
+					$http({
+						method: 'POST',
+						url: url + "/update",
+						data: command.data,
+						headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain'}
+					}).success(function(result) {
+						cleanScope();
+						if (!isNaN(result)) {
+							result = 'Rows updated: ' + result;
+						}
+						$scope.result = result;
+					});
+				}
+			}, "database.sql.execute");
+
+			function cleanScope() {
+				$scope.result = null;
+				$scope.columns = null;
+				$scope.rows = null;
+			}
+		});
+	</script>
 </body>
