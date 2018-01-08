@@ -10,30 +10,9 @@
 
 package org.eclipse.dirigible.commons.utils.xml2json;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
+import com.google.gson.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -41,18 +20,25 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * The Class Xml2Json.
  */
 public class Xml2Json {
+	private static final Logger logger = LoggerFactory.getLogger(Xml2Json.class);
 	
 	private static final String CDATA_CLOSE = "]]>";
 	
@@ -159,10 +145,10 @@ public class Xml2Json {
 									reorganizeAddAttributes(childNode, attrs);
 								}
 							} else if (existing instanceof JsonObject) {
-								System.err.println("ERROR: found object, but expected primitive or array");
+								logger.error("Found object, but expected primitive or array");
 							}
 						} else {
-							System.err.println("ERROR: expected element, but it does not exist");
+							logger.error("Expected element, but it does not exist");
 						}
 						// remove it from the list
 						ADDED_BY_VALUE.remove(childNode);
@@ -188,7 +174,7 @@ public class Xml2Json {
 				String base64 = Base64.getEncoder().encodeToString(childNode.getNodeValue().getBytes(StandardCharsets.UTF_8));
 				parentJson.addProperty(childNode.getNodeName(), base64);
 			} else {
-				System.err.println("ERROR: unsupported node type: " + childNode.getNodeType());
+				logger.error("Unsupported node type: {}", childNode.getNodeType());
 			}
 		}
 	}
@@ -294,7 +280,7 @@ public class Xml2Json {
 				objectJson.addProperty(entry.getKey().toString(), entry.getValue().toString().replace(EQ, EMPTY));
 			}
 		} else {
-			System.err.println("ERROR: expected object, found element or null");
+			logger.error("Expected object, found element or null");
 		}
 		REORGANIZED.remove(childNode.hashCode() + EMPTY);
 	}
@@ -378,7 +364,7 @@ public class Xml2Json {
 					}
 				}
 			} else {
-				System.err.println("ERROR: unhandled element");
+				logger.error("Unhandled element");
 			}
 		}
 	}
