@@ -22,7 +22,7 @@ angular.module('preview', [])
 		on: on
 	};
 }])
-.controller('PreviewController', ['$scope', '$http', '$messageHub', function ($scope, $http, $messageHub) {
+.controller('PreviewController', ['$scope', '$messageHub', function ($scope, $messageHub) {
 
 	this.refresh = function() {
 		var url = this.previewUrl;
@@ -31,7 +31,7 @@ angular.module('preview', [])
 	};
 
 	$messageHub.on('workspace.file.selected', function(msg) {
-		var resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1))
+		var resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1));
 		var url = window.top.location.protocol + '//' + window.top.location.host + '/services/v3';
 		var type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
 		switch(type) {
@@ -58,10 +58,16 @@ angular.module('preview', [])
 		$scope.$apply();
 	}.bind(this));
 	
-	$messageHub.on('workspace.file.published', function(msg){
+	$messageHub.on('workspace.file.published', function(msg) {
 		this.refresh();
 		$scope.$apply();
 	}.bind(this));
+
+	$scope.cancel = function(e) {
+		if (e.keyCode === 27) {
+			$scope.previewForm.preview.$rollbackViewValue();
+		}
+	};
 
 }]).config(function($sceProvider) {
     $sceProvider.enabled(false);
