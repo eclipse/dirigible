@@ -43,8 +43,8 @@ public class DatabaseErrorHelper {
 	 * @param t
 	 * @return the error as plain text
 	 */
-	public static String print(String errrorMessage) {
-		return errrorMessage;
+	public static String print(String errorMessage) {
+		return errorMessage;
 	}
 
 	private static class ErrorMessage {

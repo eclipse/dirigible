@@ -23,7 +23,7 @@ public interface ICollection extends IEntity {
 	 *
 	 * @return a list of {@link ICollection} instances
 	 * @throws RepositoryReadException
-	 *             in case the list of {@link ICollection} cannot be retreived
+	 *             in case the list of {@link ICollection} cannot be retrieved
 	 */
 	public List<ICollection> getCollections() throws RepositoryReadException;
 
@@ -33,7 +33,7 @@ public interface ICollection extends IEntity {
 	 *
 	 * @return a list of {@link ICollection} instances names
 	 * @throws RepositoryReadException
-	 *             in case the names cannot be retreived
+	 *             in case the names cannot be retrieved
 	 */
 	public List<String> getCollectionsNames() throws RepositoryReadException;
 
@@ -97,7 +97,7 @@ public interface ICollection extends IEntity {
 	 *
 	 * @return a list of {@link IResource} instances
 	 * @throws RepositoryReadException
-	 *             in case the list of {@link IResource} cannot be retreived
+	 *             in case the list of {@link IResource} cannot be retrieved
 	 */
 	public List<IResource> getResources() throws RepositoryReadException;
 
@@ -107,7 +107,7 @@ public interface ICollection extends IEntity {
 	 *
 	 * @return a list of {@link IResource} instances names
 	 * @throws RepositoryReadException
-	 *             in case the list of {@link IResource} names cannot be retreived
+	 *             in case the list of {@link IResource} names cannot be retrieved
 	 */
 	public List<String> getResourcesNames() throws RepositoryReadException;
 
@@ -122,7 +122,7 @@ public interface ICollection extends IEntity {
 	 *            the name of the {@link IResource}
 	 * @return a {@link IResource} instance
 	 * @throws RepositoryReadException
-	 *             in case the {@link IResource} cannot be retreived
+	 *             in case the {@link IResource} cannot be retrieved
 	 */
 	public IResource getResource(String name) throws RepositoryReadException;
 
@@ -132,7 +132,7 @@ public interface ICollection extends IEntity {
 	 * Changes are persisted to the backend.
 	 *
 	 * @param name
-	 *            the name of the {@link IResource} inatance to be removed
+	 *            the name of the {@link IResource} instance to be removed
 	 * @throws RepositoryWriteException
 	 *             in case the {@link IResource} cannot be removed
 	 */
@@ -155,7 +155,7 @@ public interface ICollection extends IEntity {
 	 *
 	 * @return a list of {@link IEntity} instances
 	 * @throws RepositoryReadException
-	 *             in case the list of the {@link IEntity} cannot be retreived
+	 *             in case the list of the {@link IEntity} cannot be retrieved
 	 */
 	public List<IEntity> getChildren() throws RepositoryReadException;
 
