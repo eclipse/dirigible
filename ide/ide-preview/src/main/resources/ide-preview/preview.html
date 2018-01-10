@@ -38,12 +38,17 @@
 </head>
 
 <body ng-app="preview" ng-controller="PreviewController as preview" class="view">
-	<div class="input-group">
-		<span class="input-group-btn">
+	<form class="input-group" name="previewForm">
+	  	<span class="input-group-btn">
 			<button class="btn btn-default" type="button" ng-click="preview.refresh()"><i class="fa fa-refresh"></i></button>
 		</span>
-		<input type="text" class="form-control" type="text" ng-model="preview.previewUrl" placeholder="Preview ..." >
-	</div>
+	  	<input type="text" name="preview" class="form-control"
+			ng-model="preview.previewUrl"
+			ng-model-options="{ updateOn: 'blur' }"
+			ng-keyup="cancel($event)"
+			placeholder="Preview ..."
+		>
+	  </form>
 	<div class="fluidMedia">
 	    <iframe ng-src="{{preview.previewUrl}}" frameborder="0"> </iframe>
 	</div>
