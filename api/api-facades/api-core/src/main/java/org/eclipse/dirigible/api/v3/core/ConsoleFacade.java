@@ -131,7 +131,7 @@ public class ConsoleFacade {
 	}
 
 	/**
-	 * Prints a waringing message.
+	 * Prints a warning message.
 	 *
 	 * @param message
 	 *            the message

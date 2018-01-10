@@ -80,7 +80,7 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 
 				columnDescriptor.setName(headerForRow);
 
-				int columnIndex = this.getColumIndexByName(columnDescriptor.getName(), resultSetMetaData);
+				int columnIndex = this.getColumnIndexByName(columnDescriptor.getName(), resultSetMetaData);
 
 				columnDescriptor.setLabel(resultSetMetaData.getColumnLabel(columnIndex));
 				if (columnDescriptor.getLabel() == null) {
@@ -129,11 +129,11 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 	 *            the column name
 	 * @param metadata
 	 *            the metadata
-	 * @return the colum index by name
+	 * @return the column index by name
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	int getColumIndexByName(String columnName, ResultSetMetaData metadata) throws SQLException {
+	int getColumnIndexByName(String columnName, ResultSetMetaData metadata) throws SQLException {
 		for (int i = 1; i < (metadata.getColumnCount() + 1); i++) {
 			if (columnName.equals(metadata.getColumnName(i))) {
 				return i;
@@ -153,15 +153,15 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 	 */
 	List<String> getHeader(ResultSetMetaData resultSetMetaData) throws SQLException {
 
-		List<String> columHeaderLables = new ArrayList<String>();
+		List<String> columnHeaderLabels = new ArrayList<String>();
 
 		for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 
 			String columnHeaderLabel = resultSetMetaData.getColumnLabel(i);
-			columHeaderLables.add(columnHeaderLabel);
+			columnHeaderLabels.add(columnHeaderLabel);
 		}
 
-		return columHeaderLables;
+		return columnHeaderLabels;
 	}
 
 	/**

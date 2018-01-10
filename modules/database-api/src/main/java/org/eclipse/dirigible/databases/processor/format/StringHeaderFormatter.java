@@ -33,10 +33,10 @@ public class StringHeaderFormatter implements HeaderFormatter<String> {
 			headerSb.append(ResultSetMonospacedWriter.DELIMITER);
 			lbl = "";
 		}
-		int headerlength = headerSb.length();
+		int headerLength = headerSb.length();
 		headerSb.append(ResultSetMonospacedWriter.NEWLINE_CHARACTER);
 
-		for (int i = 0; i < headerlength; i++) {
+		for (int i = 0; i < headerLength; i++) {
 			headerSb.append("-");
 		}
 		headerSb.append(ResultSetMonospacedWriter.NEWLINE_CHARACTER);

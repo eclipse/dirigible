@@ -26,7 +26,7 @@ public interface IResource extends IEntity {
 	 * 
 	 * @return the raw content
 	 * @throws RepositoryReadException
-	 *             in case the content cannot be retreived
+	 *             in case the content cannot be retrieved
 	 */
 	public byte[] getContent() throws RepositoryReadException;
 
@@ -50,7 +50,7 @@ public interface IResource extends IEntity {
 	 * @param contentType
 	 *            the type of the content
 	 * @throws RepositoryWriteException
-	 *             in case the content of the {@link IResource} cannot be retreived
+	 *             in case the content of the {@link IResource} cannot be retrieved
 	 */
 	public void setContent(byte[] content, boolean isBinary, String contentType) throws RepositoryWriteException;
 

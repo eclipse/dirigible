@@ -111,7 +111,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			try {
 				valueObject = field.get(pojo);
 			} finally {
-				resetAccesible(field, oldAccessible);
+				resetAccessible(field, oldAccessible);
 			}
 			try {
 				if ((columnModel.getEnumerated() != null) && (valueObject != null)) {
@@ -141,14 +141,14 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	}
 
 	/**
-	 * Reset accesible.
+	 * Reset accessible.
 	 *
 	 * @param field
 	 *            the field
 	 * @param oldAccessible
 	 *            the old accessible
 	 */
-	private void resetAccesible(Field field, boolean oldAccessible) {
+	private void resetAccessible(Field field, boolean oldAccessible) {
 		field.setAccessible(oldAccessible);
 	}
 
@@ -333,7 +333,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 						throw new IllegalStateException("The annotation @Enumerated is set to a field with a type, which is not an enum type.");
 					}
 				} else if (value != null) {
-					throw new IllegalStateException("The annotation @Enumerated is missused, the value is unknown.");
+					throw new IllegalStateException("The annotation @Enumerated is misused, the value is unknown.");
 				}
 			}
 			if (field.getType().equals(byte.class) || field.getType().equals(Byte.class)) {
@@ -361,7 +361,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			}
 			field.set(pojo, value);
 		} finally {
-			resetAccesible(field, oldAccessible);
+			resetAccessible(field, oldAccessible);
 		}
 	}
 
@@ -390,7 +390,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		try {
 			return field.get(pojo);
 		} finally {
-			resetAccesible(field, oldAccessible);
+			resetAccessible(field, oldAccessible);
 		}
 	}
 

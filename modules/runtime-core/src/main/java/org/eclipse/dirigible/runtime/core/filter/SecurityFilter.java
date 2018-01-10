@@ -99,7 +99,7 @@ public class SecurityFilter implements Filter {
 					}
 				}
 				if (!isInRole) {
-					forbidden(uri, "The loogged in user does not have any of the required roles for the requested URI", httpServletResponse);
+					forbidden(uri, "The logged in user does not have any of the required roles for the requested URI", httpServletResponse);
 					return;
 				}
 			}

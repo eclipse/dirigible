@@ -58,7 +58,7 @@ public class LocalRepository extends FileSystemRepository {
 	 * Constructor with root folder parameter.
 	 *
 	 * @param rootFolder
-	 *            the reoot folder
+	 *            the root folder
 	 * @param absolute
 	 *            whether the root folder is absolute
 	 * @throws LocalRepositoryException

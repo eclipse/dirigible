@@ -167,7 +167,7 @@ public class LogFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Creates a JSServiceExcetion from JSON.
+	 * Creates a JSServiceException from JSON.
 	 *
 	 * @param errorJson the error json
 	 * @return the JS service exception

@@ -29,7 +29,7 @@ public class TableExporter {
 	private static final String COLUMN_NAME = "COLUMN_NAME";
 	private static final String SELECT_FROM = "SELECT * FROM ";
 	private static final String THERE_IS_NO_DATA_IN_TABLE = "There is no data in table ";
-	private static final String COULD_NOT_RETRIEVE_TABLE_DATA = "Could not rettrieve table data reason: Table name is null";
+	private static final String COULD_NOT_RETRIEVE_TABLE_DATA = "Could not retrieve table data reason: Table name is null";
 	private static final String ERROR_ON_LOADING_TABLE_COLUMNS_FROM_DATABASE_FOR_TABLE = "Error on loading table columns from the Database for Table: ";
 
 	public static final String DATA_DELIMETER = "|";
