@@ -79,7 +79,7 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	}
 
 	/**
-	 * Stops to recieve messages.
+	 * Stops to receive messages.
 	 */
 	public void stop() {
 		this.stopped = true;

@@ -118,9 +118,9 @@ public class CmsProviderManaged implements ICmsProvider {
 					secretKey = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY);
 				} else if (DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD_DEST.equals(authMethod)) {
 					String destinationName = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION);
-					Properties destinationPropeties = initializeFromDestination(destinationName);
-					uniqueName = destinationPropeties.getProperty(PARAM_USER);
-					secretKey = destinationPropeties.getProperty(PARAM_PASSWORD);
+					Properties destinationProperties = initializeFromDestination(destinationName);
+					uniqueName = destinationProperties.getProperty(PARAM_USER);
+					secretKey = destinationProperties.getProperty(PARAM_PASSWORD);
 				} else {
 					logger.error(String.format("Connection to CMIS Repository was failed. Invalid Authentication Method: %s", authMethod));
 					return null;
@@ -152,9 +152,9 @@ public class CmsProviderManaged implements ICmsProvider {
 		Method configurationMethod = configuration.getClass().getMethod("getConfiguration", String.class);
 		Object destinationConfiguration = configurationMethod.invoke(configuration, destinationName);
 		Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
-		Properties destinationPropeties = (Properties) propertiesMethod.invoke(destinationConfiguration);
-		logger.debug(String.format("CMIS Destination Properties: %s", getPropertiesAsString(destinationPropeties)));
-		return destinationPropeties;
+		Properties destinationProperties = (Properties) propertiesMethod.invoke(destinationConfiguration);
+		logger.debug(String.format("CMIS Destination Properties: %s", getPropertiesAsString(destinationProperties)));
+		return destinationProperties;
 	}
 	
 	/**

@@ -102,7 +102,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	}
 
 	/**
-	 * Prints the double primitev as text
+	 * Prints the double primitive as text
 	 *
 	 * @param d
 	 *            the double to be printed

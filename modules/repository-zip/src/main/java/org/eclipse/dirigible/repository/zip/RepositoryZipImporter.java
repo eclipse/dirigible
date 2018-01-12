@@ -141,11 +141,11 @@ public class RepositoryZipImporter {
 					}
 					logger.debug("importZip outpath replaced: " + outpath);
 
-					ByteArrayOutputStream output = new ByteArrayOutputStream();
-					try {
+					try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
 						IOUtils.copy(zipInputStream, output);
 						try {
-							if (output.toByteArray().length > 0) {
+							final byte[] content = output.toByteArray();
+							if (content.length > 0) {
 								// TODO filter for binary extensions
 
 								String extension = ContentTypeHelper.getExtension(name);
@@ -154,11 +154,11 @@ public class RepositoryZipImporter {
 								if (mimeType != null) {
 									logger.debug("importZip creating resource: " + outpath);
 									logger.debug("importZip creating resource is binary?: " + isBinary);
-									repository.createResource(outpath, output.toByteArray(), isBinary, mimeType, override);
+									repository.createResource(outpath, content, isBinary, mimeType, override);
 
 								} else {
 									logger.debug("importZip creating resource: " + outpath);
-									repository.createResource(outpath, output.toByteArray(), true, ContentTypeHelper.APPLICATION_OCTET_STREAM,
+									repository.createResource(outpath, content, true, ContentTypeHelper.APPLICATION_OCTET_STREAM,
 											override);
 								}
 							} else {
@@ -170,8 +170,6 @@ public class RepositoryZipImporter {
 						} catch (Exception e) {
 							logger.error(String.format("Error importing %s", outpath), e);
 						}
-					} finally {
-						output.close();
 					}
 				}
 			} finally {

@@ -103,7 +103,7 @@ public interface IRepositoryWriter {
 	 * @param content
 	 *            the raw content
 	 * @param isBinary
-	 *            whther it is binary
+	 *            whether it is binary
 	 * @param contentType
 	 *            the type of the content
 	 * @param override

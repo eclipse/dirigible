@@ -124,11 +124,11 @@ public class SchedulerManager {
 	public static void shutdownScheduler() throws SchedulerException {
 		synchronized (SchedulerInitializer.class) {
 			if (scheduler == null) {
-				throw new SchedulerException("Scheduler has not been initialized and strated.");
+				throw new SchedulerException("Scheduler has not been initialized and started.");
 			}
 			try {
 				scheduler.shutdown(true);
-				String message = "Scheduler has been shutted down.";
+				String message = "Scheduler has been shut down.";
 				logger.info(message);
 				scheduler = null;
 			} catch (org.quartz.SchedulerException e) {
