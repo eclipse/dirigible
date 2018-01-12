@@ -328,7 +328,8 @@ function LayoutController(viewRegistry, messageHub){
 				this.layout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
 			}
 		} else {
-			this.openView('editor')
+			this.openView('editor');
+			this.layout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
 		}		
 	}
 	
