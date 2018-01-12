@@ -78,7 +78,7 @@ public class ResetCommand {
 				hardReset(workspace, selectedProject, username, password);
 				logger.debug(String.format("Reset of the project [%s] finished.", selectedProject.getName()));
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Reset operation.", selectedProject));
+				logger.warn(String.format("Project [%s] is local only. Select a previously cloned project for Reset operation.", selectedProject));
 			}
 		}
 
@@ -145,7 +145,7 @@ public class ResetCommand {
 				if (rootCause instanceof UnknownHostException) {
 					logger.error("Please check if proxy settings are set properly");
 				} else {
-					logger.error("Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]");
+					logger.error("Double-check the correctness of the [Username] and/or [Password] or [Git Repository URI]");
 				}
 			}
 		} catch (GitAPIException e) {

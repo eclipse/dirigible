@@ -218,7 +218,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 	}
 
 	/**
-	 * Get singleton services registred to this application.
+	 * Get singleton services registered to this application.
 	 *
 	 * @return all singleton services.
 	 */
@@ -240,7 +240,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 		super.contextDestroyed(servletContextEvent);
 
-		logger.info("Eclipse Dirigible Platform shutted down.");
+		logger.info("Eclipse Dirigible Platform shut down.");
 	}
 
 }

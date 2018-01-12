@@ -879,7 +879,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * @param model
 	 *            the model
 	 * @throws Exception
-	 *             in case of databse error
+	 *             in case of database error
 	 */
 	public void executeReplaceUpdate(DataStructureDataReplaceModel model) throws Exception {
 		logger.info("Processing rows in mode 'replace': " + model.getLocation());
@@ -901,7 +901,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * @param model
 	 *            the model
 	 * @throws Exception
-	 *             in case of databse error
+	 *             in case of database error
 	 */
 	public void executeAppendUpdate(DataStructureDataAppendModel model) throws Exception {
 		logger.info("Processing rows in mode 'append': " + model.getLocation());
@@ -923,7 +923,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * @param model
 	 *            the model
 	 * @throws Exception
-	 *             in case of databse error
+	 *             in case of database error
 	 */
 	public void executeDeleteUpdate(DataStructureDataDeleteModel model) throws Exception {
 		logger.info("Processing rows in mode 'delete': " + model.getLocation());
@@ -945,7 +945,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * @param model
 	 *            the model
 	 * @throws Exception
-	 *             in case of databse error
+	 *             in case of database error
 	 */
 	public void executeUpdateUpdate(DataStructureDataUpdateModel model) throws Exception {
 		logger.info("Processing rows in mode 'update': " + model.getLocation());

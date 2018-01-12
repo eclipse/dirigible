@@ -92,7 +92,7 @@ public class PullCommand {
 				logger.debug(String.format("Pull of the Project %s finished.", selectedProject.getName()));
 				pulledProjects.add(selectedProject);
 			} else {
-				logger.warn(String.format("Project %s is local only. Select a previously clonned project for Pull operation.", selectedProject));
+				logger.warn(String.format("Project %s is local only. Select a previously cloned project for Pull operation.", selectedProject));
 			}
 		}
 

@@ -138,7 +138,7 @@ public class ShareCommand {
 				if (rootCause instanceof UnknownHostException) {
 					logger.error("Please check if proxy settings are set properly");
 				} else {
-					logger.error("Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]");
+					logger.error("Double-check the correctness of the [Username] and/or [Password] or [Git Repository URI]");
 				}
 			}
 		} catch (GitAPIException e) {

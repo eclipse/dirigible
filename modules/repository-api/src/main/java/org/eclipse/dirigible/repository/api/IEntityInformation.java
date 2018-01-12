@@ -134,7 +134,7 @@ public interface IEntityInformation {
 	 * of <code>
 	 * null</code> is returned.
 	 * 
-	 * @return the size prperty of the {@link IEntity}
+	 * @return the size property of the {@link IEntity}
 	 */
 	public Long getSize();
 
