@@ -44,6 +44,7 @@
 		<module>template-bookstore</module>
 		<module>template-job</module>
 		<module>template-listener</module>
+		<module>template-extension-view</module>
 	</modules>
 
 	<profiles>
