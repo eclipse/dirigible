@@ -45,6 +45,7 @@
 		<module>template-job</module>
 		<module>template-listener</module>
 		<module>template-extension-view</module>
+		<module>template-extension-perspective</module>
 	</modules>
 
 	<profiles>
