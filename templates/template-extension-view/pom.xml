@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Template - Listener</name>
+	<name>Template - Extension View</name>
 	<artifactId>dirigible-template-extension-view</artifactId>
     <packaging>jar</packaging>
 
