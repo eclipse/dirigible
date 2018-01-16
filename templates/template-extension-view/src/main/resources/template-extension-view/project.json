@@ -1,0 +1,8 @@
+{
+	"guid": "template-extension-view",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/template-v3-extension-view.git"
+	}
+}

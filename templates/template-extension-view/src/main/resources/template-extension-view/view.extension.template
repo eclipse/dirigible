@@ -1,0 +1,5 @@
+{
+	"module": "{{projectName}}/{{fileName}}.js",
+	"extensionPoint": "ide-view",
+	"description": "{{viewName}} View"
+}
