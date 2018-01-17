@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -71,9 +72,11 @@ public class Folder extends CmisObject {
 	/**
 	 * Creates a new folder under this Folder
 	 *
-	 * @param properties the properties
+	 * @param properties
+	 *            the properties
 	 * @return Folder
-	 * @throws IOException IO Exception
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	public Folder createFolder(Map<String, String> properties) throws IOException {
 		String name = properties.get(CmisConstants.NAME);
@@ -83,17 +86,23 @@ public class Folder extends CmisObject {
 	/**
 	 * Creates a new document under this Folder
 	 *
-	 * @param properties the properties
-	 * @param contentStream the content stream
-	 * @param versioningState the version state
+	 * @param properties
+	 *            the properties
+	 * @param contentStream
+	 *            the content stream
+	 * @param versioningState
+	 *            the version state
 	 * @return Document
-	 * @throws IOException IO Exception
+	 * @throws IOException
+	 *             IO Exception
 	 */
-	public Document createDocument(Map<String, String> properties, ContentStream contentStream, String versioningState) throws IOException {
+	public Document createDocument(Map<String, String> properties, ContentStream contentStream,
+			VersioningState versioningState) throws IOException {
 		String name = properties.get(CmisConstants.NAME);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		IOUtils.copy(contentStream.getStream(), out);
-		return new Document(this.session, this.internalFolder.createResource(name, out.toByteArray(), true, contentStream.getMimeType()));
+		return new Document(this.session,
+				this.internalFolder.createResource(name, out.toByteArray(), true, contentStream.getMimeType()));
 	}
 
 	public List<CmisObject> getChildren() throws IOException {
@@ -122,7 +131,8 @@ public class Folder extends CmisObject {
 	 * Returns the parent Folder of this Folder
 	 *
 	 * @return Folder
-	 * @throws IOException IO Exception
+	 * @throws IOException
+	 *             IO Exception
 	 */
 	public Folder getFolderParent() throws IOException {
 		if (this.internalFolder.getParent() != null) {
