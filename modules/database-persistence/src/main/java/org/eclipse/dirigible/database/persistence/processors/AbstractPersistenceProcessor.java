@@ -258,10 +258,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			preparedStatement.setFloat(i, (Float) value);
 		} else if (DataTypeUtils.isDouble(dataType)) {
 			preparedStatement.setDouble(i, (Double) value);
-		} else if (DataTypeUtils.isDecimal(dataType)) {
-			preparedStatement.setDouble(i, (Double) value);
 		} else if (DataTypeUtils.isBoolean(dataType)) {
 			preparedStatement.setBoolean(i, (Boolean) value);
+		} else if (DataTypeUtils.isDecimal(dataType)) {
+			preparedStatement.setDouble(i, (Double) value);
 		} else if (DataTypeUtils.isBlob(dataType)) {
 			byte[] bytes = (byte[]) value;
 			preparedStatement.setBinaryStream(i, new ByteArrayInputStream(bytes), bytes.length);
@@ -357,6 +357,11 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 					value = new Character(((String) value).charAt(0));
 				} else {
 					throw new IllegalStateException("Trying to set a multi-character string to a single character field.");
+				}
+			}
+			if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
+				if (value instanceof Short) {
+					value = Boolean.valueOf(((Short) value) != 0);
 				}
 			}
 			field.set(pojo, value);
