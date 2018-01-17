@@ -131,9 +131,10 @@ public class JavaFacade {
 	 * @throws NoSuchMethodException
 	 *             the no such method exception
 	 */
-	private static Method findMethod(String methodName, Class<?> clazz, Class<?>[] parameterTypes, List<Object> params) throws NoSuchMethodException {
+	public static Method findMethod(String methodName, Class<?> clazz, Class<?>[] parameterTypes, List<Object> params) throws NoSuchMethodException {
 		Method method = null;
 		try {
+			// exact match
 			method = clazz.getMethod(methodName, parameterTypes);
 		} catch (NoSuchMethodException e) {
 			// no method matching the exact parameters classes - try to find more generic one
@@ -146,6 +147,7 @@ public class JavaFacade {
 				if (nextParameterTypes.length != parameterTypes.length) {
 					break;
 				}
+				// iterates over the methods with the same name and parameters number
 				boolean matching = true;
 				for (int i = 0; i < nextParameterTypes.length; i++) {
 					Class nextClass = nextParameterTypes[i];
@@ -184,6 +186,10 @@ public class JavaFacade {
 				}
 			}
 		}
+		// if (method == null) {
+		// logger.warn("Called method could not be found in:\n" +
+		// ReflectionToStringBuilder.toString((clazz.getMethods())));
+		// }
 		return method;
 	}
 
