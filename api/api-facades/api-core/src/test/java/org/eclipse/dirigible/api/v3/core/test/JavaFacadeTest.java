@@ -106,7 +106,7 @@ public class JavaFacadeTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void testInheritedMethod() throws NoSuchMethodException {
-		Method method = JavaFacade.findMethod("doSomething1", ExtendedObject.class,
+		Method method = JavaFacade.findMethod("doSomething", ExtendedObject.class,
 				new Class[] { HashMap.class, BaseParameter.class, ExactParameter.class },
 				Arrays.asList(new Object[] { new HashMap<>(), new BaseParameter(), new ExactParameter() }));
 		assertNotNull(method);
