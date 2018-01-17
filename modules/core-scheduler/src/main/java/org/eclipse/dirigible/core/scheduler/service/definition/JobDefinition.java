@@ -55,7 +55,7 @@ public class JobDefinition {
 	@Column(name = "JOB_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	@Column(name = "JOBT_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
+	@Column(name = "JOB_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
 	/**

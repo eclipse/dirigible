@@ -32,18 +32,18 @@ public class DirigibleModulesInstallerModule extends AbstractModule {
 	 */
 	@Override
 	protected void configure() {
-		logger.trace("Initializing Dirigible Modules...");
+		logger.debug("Initializing Dirigible Modules...");
 		ServiceLoader<AbstractDirigibleModule> dirigibleModules = ServiceLoader.load(AbstractDirigibleModule.class);
 		for (AbstractDirigibleModule next : dirigibleModules) {
-			logger.trace(format("Installing Dirigible Module [{0}] ...", next.getName()));
+			logger.debug(format("Installing Dirigible Module [{0}] ...", next.getName()));
 			try {
 				install(next);
 			} catch (Throwable e) {
 				logger.error(format("Failed installing Dirigible Module [{0}].", next.getName()), e);
 			}
-			logger.trace(format("Done installing Dirigible Module [{0}].", next.getName()));
+			logger.debug(format("Done installing Dirigible Module [{0}].", next.getName()));
 		}
-		logger.trace("Done initializing Dirigible Modules.");
+		logger.debug("Done initializing Dirigible Modules.");
 	}
 
 }

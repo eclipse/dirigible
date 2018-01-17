@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class CmsProviderManaged implements ICmsProvider {
 	
 	/** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME. */
-	public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME = "java:comp/env/EcmService"; //$NON-NLS-1$
+	public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME = "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME"; //$NON-NLS-1$
 	
 	/** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD. */
 	public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD = "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD"; //$NON-NLS-1$
@@ -63,15 +63,6 @@ public class CmsProviderManaged implements ICmsProvider {
 	
 	private Object cmisSession;
 	
-	public CmsProviderManaged() {
-		try {
-			this.cmisSession = lookupCmisSession();
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException | NamingException e) {
-			logger.error("Error in initializing the managed CMIS session", e);
-		}
-	}
-
 	@Override
 	public String getName() {
 		return NAME;
@@ -85,7 +76,14 @@ public class CmsProviderManaged implements ICmsProvider {
 	@Override
 	public Object getSession() {
 		if (this.cmisSession == null) {
-			throw new IllegalStateException("Managed CMIS Session has not been initialized properly.");
+			try {
+				this.cmisSession = lookupCmisSession();
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NamingException e) {
+				String message = "Error in initializing the managed CMIS session";
+				logger.error(message, e);
+				throw new IllegalStateException(message, e);
+			}
 		}
 		return this.cmisSession;
 	}
@@ -101,7 +99,7 @@ public class CmsProviderManaged implements ICmsProvider {
 	 * @throws SecurityException
 	 * @throws NoSuchMethodException
 	 */
-	private Object lookupCmisSession() throws NamingException, NoSuchMethodException, SecurityException, IllegalAccessException,
+	public Object lookupCmisSession() throws NamingException, NoSuchMethodException, SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 		final InitialContext ctx = new InitialContext();
 		Configuration.load("/dirigible-cms.properties");
@@ -118,12 +116,13 @@ public class CmsProviderManaged implements ICmsProvider {
 					secretKey = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY);
 				} else if (DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD_DEST.equals(authMethod)) {
 					String destinationName = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION);
-					Properties destinationProperties = initializeFromDestination(destinationName);
-					uniqueName = destinationProperties.getProperty(PARAM_USER);
-					secretKey = destinationProperties.getProperty(PARAM_PASSWORD);
+					Properties destinationPropeties = initializeFromDestination(destinationName);
+					uniqueName = destinationPropeties.getProperty(PARAM_USER);
+					secretKey = destinationPropeties.getProperty(PARAM_PASSWORD);
 				} else {
-					logger.error(String.format("Connection to CMIS Repository was failed. Invalid Authentication Method: %s", authMethod));
-					return null;
+					String message = String.format("Connection to CMIS Repository was failed. Invalid Authentication Method: %s", authMethod);
+					logger.error(message);
+					throw new SecurityException(message);
 				}
 				logger.debug("Connecting to CMIS Repository with name: %s and key: %s", uniqueName, secretKey);
 				try {
@@ -133,14 +132,24 @@ public class CmsProviderManaged implements ICmsProvider {
 						logger.debug("Connection to CMIS Repository was successful.");
 						return openCmisSession;
 					}
-				} catch (Exception e) {
-					logger.error("Connection to CMIS Repository was failed.", e);
+				} catch (Throwable t) {
+					String message = "Connection to CMIS Repository was failed.";
+					logger.error(message, t);
+					throw new IllegalStateException(message, t);
 				}
 			} else {
-				logger.error("ECM Service is requested, but not available");
+				String message = "ECM is requested as CMIS service, but it is not available.";
+				logger.error(message);
+				throw new IllegalStateException(message);
 			}
+		} else {
+			String message = "CMIS service JNDI name has not been provided.";
+			logger.error(message);
+			throw new IllegalArgumentException(message);
 		}
-		return null;
+		String message = "Initializing the managed CMIS session failed.";
+		logger.error(message);
+		throw new IllegalStateException(message);
 	}
 
 	private Properties initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException, SecurityException,
@@ -152,9 +161,9 @@ public class CmsProviderManaged implements ICmsProvider {
 		Method configurationMethod = configuration.getClass().getMethod("getConfiguration", String.class);
 		Object destinationConfiguration = configurationMethod.invoke(configuration, destinationName);
 		Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
-		Properties destinationProperties = (Properties) propertiesMethod.invoke(destinationConfiguration);
-		logger.debug(String.format("CMIS Destination Properties: %s", getPropertiesAsString(destinationProperties)));
-		return destinationProperties;
+		Properties destinationPropeties = (Properties) propertiesMethod.invoke(destinationConfiguration);
+		logger.debug(String.format("CMIS Destination Properties: %s", getPropertiesAsString(destinationPropeties)));
+		return destinationPropeties;
 	}
 	
 	/**

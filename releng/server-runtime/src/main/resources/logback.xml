@@ -50,7 +50,7 @@
     	<appender-ref ref="ConsoleLoggingAppender" />
 	</logger>
 	
-	<logger name="apps" level="ALL" additivity="false">
+	<logger name="app" level="ALL" additivity="false">
     	<appender-ref ref="STDOUT" />
     	<appender-ref ref="FILE_APPS" />
     	<appender-ref ref="ConsoleLoggingAppender" />

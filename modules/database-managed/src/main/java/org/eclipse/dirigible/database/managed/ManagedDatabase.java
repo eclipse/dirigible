@@ -70,7 +70,7 @@ public class ManagedDatabase implements IDatabase {
 				DATASOURCES.put(name, dataSource);
 			}
 		} else {
-			logger.trace("No managed datasources configured");
+			logger.warn("No managed datasources configured");
 		}
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
