@@ -124,7 +124,7 @@ public class CmsProviderManaged implements ICmsProvider {
 					logger.error(message);
 					throw new SecurityException(message);
 				}
-				logger.debug("Connecting to CMIS Repository with name: %s and key: %s", uniqueName, secretKey);
+				logger.debug(String.format("Connecting to CMIS Repository with name: %s and key: %s", uniqueName, secretKey));
 				try {
 					Method connectMethod = ecmService.getClass().getMethod("connect", String.class, String.class);
 					Object openCmisSession = connectMethod.invoke(ecmService, uniqueName, secretKey);

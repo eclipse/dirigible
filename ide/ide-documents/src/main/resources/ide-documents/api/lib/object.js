@@ -5,7 +5,15 @@ var cmis = require('cms/v3/cmis');
 var cmisSession = cmis.getSession();
 
 exports.getObject = function(path){
-	return cmisSession.getObjectByPath(path);
+	try {
+		if (path === null || path === undefined) {
+			return null;
+		}		
+		return cmisSession.getObjectByPath(path);
+	} catch(e) {
+		console.error('Error [%s] in getting an object by path [%s]', e.message, path);
+	}
+	return null;
 };
 
 exports.getById = function(id) {

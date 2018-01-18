@@ -13,15 +13,18 @@ function ChildSerializer(cmisObject){
 }
 
 function FolderSerializer(cmisFolder){
+	
 	this.name = cmisFolder.getName();
 	this.id = cmisFolder.getId();
 	this.path = cmisFolder.getPath();
 	this.parentId = null;
 	this.children = [];
-	
-	var parent = cmisFolder.getFolderParent();
-	if (parent !== null){
-		this.parentId = parent.getId();
+
+	if (!cmisFolder.isRootFolder())	{
+		var parent = cmisFolder.getFolderParent();
+		if (parent !== null){
+			this.parentId = parent.getId();
+		}
 	}
 
 	var children = cmisFolder.getChildren();
@@ -45,6 +48,10 @@ exports.createFolder = function(parentFolder, name){
 };
 
 exports.getFolderOrRoot = function(folderPath){
+	if (folderPath === null) {
+		var rootFolder = cmisSession.getRootFolder();
+		return rootFolder;
+	}
 	var folder = null;
 	try {
 		folder = exports.getFolder(folderPath);
