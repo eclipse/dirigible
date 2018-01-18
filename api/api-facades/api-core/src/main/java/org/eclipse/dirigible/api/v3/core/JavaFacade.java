@@ -25,6 +25,7 @@ import java.util.List;
 import javax.lang.model.type.NullType;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -145,7 +146,7 @@ public class JavaFacade {
 				}
 				Class[] nextParameterTypes = next.getParameterTypes();
 				if (nextParameterTypes.length != parameterTypes.length) {
-					break;
+					continue;
 				}
 				// iterates over the methods with the same name and parameters number
 				boolean matching = true;
@@ -232,7 +233,8 @@ public class JavaFacade {
 				logger.error(t.getMessage(), t);
 			}
 		}
-		String message = format("No such constructor [{0}] in class [{1}]", Arrays.toString(parameterTypes), className);
+		String message = format("No such constructor [{0}] in class [{1}]. Available ones are: [{2}]", Arrays.toString(parameterTypes), className,
+				ReflectionToStringBuilder.toString((clazz.getConstructors())));
 		logger.error(message);
 		logger.trace("API - JavaFacade.instantiate() -> end");
 		throw new NoSuchMethodException(message);
@@ -294,8 +296,10 @@ public class JavaFacade {
 			try {
 				result = method.invoke(instance, params.toArray(new Object[] {}));
 			} catch (Throwable t) {
-				logger.error(t.getMessage(), t);
-				return null;
+				String message = format("Error in invoking the method [{0}] of the instance [{1}] with parameters [{2}]", method.getName(),
+						ReflectionToStringBuilder.toString(instance), ReflectionToStringBuilder.toString(params.toArray(new Object[] {})));
+				logger.error(message, t);
+				throw new IllegalStateException(message, t);
 			}
 			if ((result != null) && !isPrimitive(result.getClass())) {
 				if (isArrayOfPrimitives(result.getClass())) {
@@ -308,8 +312,8 @@ public class JavaFacade {
 
 			return result;
 		}
-		String message = format("No such method [{0}] in class [{1}] with parameters of types [{2}]", methodName, clazz.getName(),
-				Arrays.toString(parameterTypes));
+		String message = format("No such method [{0}] in class [{1}] with parameters of types [{2}]. Available ones are: [{3}]", methodName,
+				clazz.getName(), Arrays.toString(parameterTypes), ReflectionToStringBuilder.toString((clazz.getMethods())));
 		logger.error(message);
 		logger.trace("API - JavaFacade.invoke() -> end");
 		throw new NoSuchMethodException(message);

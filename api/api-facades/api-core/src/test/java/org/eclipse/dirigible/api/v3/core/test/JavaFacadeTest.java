@@ -12,6 +12,7 @@ package org.eclipse.dirigible.api.v3.core.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -110,6 +111,11 @@ public class JavaFacadeTest extends AbstractGuiceTest {
 				new Class[] { HashMap.class, BaseParameter.class, ExactParameter.class },
 				Arrays.asList(new Object[] { new HashMap<>(), new BaseParameter(), new ExactParameter() }));
 		assertNotNull(method);
+
+		method = JavaFacade.findMethod("doSomethingElse", ExtendedObject.class,
+				new Class[] { HashMap.class, BaseParameter.class, ExactParameter.class },
+				Arrays.asList(new Object[] { new HashMap<>(), new BaseParameter(), new ExactParameter() }));
+		assertNull(method);
 	}
 
 }
