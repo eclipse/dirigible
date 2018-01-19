@@ -532,7 +532,8 @@ public class DatabaseRepositoryDao {
 	 * @return the resource versions by path
 	 * @throws RepositoryVersioningException
 	 *             the repository versioning exception
-	 * @throws SQLException
+	 * @throws RepositoryVersioningException
+	 *             in case of error
 	 */
 	public List<IResourceVersion> getResourceVersionsByPath(String path) throws RepositoryVersioningException {
 		List<IResourceVersion> versions = new ArrayList<IResourceVersion>();
@@ -617,20 +618,48 @@ public class DatabaseRepositoryDao {
 		return UserFacade.getName();
 	}
 
+	/**
+	 * Discposing resources if needed
+	 */
 	public void dispose() {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * Clean-up versions older than the given period
+	 */
 	public void cleanupOldVersions() {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * Search by name of the resource
+	 *
+	 * @param parameter
+	 *            the search term
+	 * @param caseInsensitive
+	 *            whether to be case sensitive
+	 * @return list of entities
+	 * @throws RepositorySearchException
+	 *             in case of an error
+	 */
 	public List<IEntity> searchName(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		return searchName(null, parameter, caseInsensitive);
 	}
 
+	/**
+	 * Search by name of the resource
+	 *
+	 * @param root
+	 *            the relative root
+	 * @param parameter
+	 *            the search term
+	 * @param caseInsensitive
+	 *            whether to be case sensitive
+	 * @return list of entities
+	 */
 	public List<IEntity> searchName(String root, String parameter, boolean caseInsensitive) {
 		List<IEntity> results = new ArrayList<IEntity>();
 		try {
@@ -662,6 +691,15 @@ public class DatabaseRepositoryDao {
 		}
 	}
 
+	/**
+	 * Search by the full path of a resource
+	 *
+	 * @param parameter
+	 *            the search term
+	 * @param caseInsensitive
+	 *            whether to be case sensitive
+	 * @return list of entities
+	 */
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) {
 		List<IEntity> results = new ArrayList<IEntity>();
 		try {
@@ -687,6 +725,15 @@ public class DatabaseRepositoryDao {
 		}
 	}
 
+	/**
+	 * Whether the folder exists
+	 *
+	 * @param path
+	 *            the path
+	 * @return true if exists and false otherwise
+	 * @throws SQLException
+	 *             in case of an error
+	 */
 	public boolean folderExists(String path) throws SQLException {
 		Connection connection = null;
 		try {
@@ -697,6 +744,15 @@ public class DatabaseRepositoryDao {
 		}
 	}
 
+	/**
+	 * Whether the file exists
+	 * 
+	 * @param path
+	 *            the path
+	 * @return true if exists and false otherwise
+	 * @throws SQLException
+	 *             in case of an error
+	 */
 	public boolean fileExists(String path) throws SQLException {
 		Connection connection = null;
 		try {
@@ -707,6 +763,13 @@ public class DatabaseRepositoryDao {
 		}
 	}
 
+	/**
+	 * List all the resources paths
+	 * 
+	 * @return the list
+	 * @throws SQLException
+	 *             in case of an error
+	 */
 	public List<String> getAllResourcePaths() throws SQLException {
 		Connection connection = null;
 		try {

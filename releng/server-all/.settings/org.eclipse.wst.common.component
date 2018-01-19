@@ -62,6 +62,12 @@
         <dependent-module archiveName="dirigible-database-api-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - API/Database - API">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-database-sql-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - SQL Builders/Database - SQL Builders">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-database-persistence-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Persistence/Database - Persistence">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-database-data-models-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Data Models/Database - Data Models">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -207,6 +213,78 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-cms-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Javascript - cms/API - Javascript - cms">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-core-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Core/IDE - Core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-terminal-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Terminal/IDE - Terminal">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-console-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Console/IDE - Console">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-orion-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Orion/IDE - Orion">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-swagger-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Swagger/IDE - Swagger">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-workspace-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Workspace/IDE - Workspace">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-preview-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Preview/IDE - Preview">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-database-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Database/IDE - Database">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-repository-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Repository/IDE - Repository">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-documents-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Documents/IDE - Documents">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-hello-world-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Hello World/Template - Hello World">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-http-client-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - HTTP Client/Template - HTTP Client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-database-access-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Database Access/Template - Database Access">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-database-table-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Database Table/Template - Database Table">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-database-view-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Database View/Template - Database View">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-html-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - HTML/Template - HTML">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-job-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Job/Template - Job">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-listener-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Listener/Template - Listener">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-extension-view-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Extension View/Template - Extension View">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-extension-perspective-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Extension Perspective/Template - Extension Perspective">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-themes-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Themes/Resources - Themes">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-angular-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Angular/Resources - Angular">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-bootstrap-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Bootstrap/Resources - Bootstrap">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-goldenlayout-3.1.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - GoldenLayout/Resources - GoldenLayout">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>
