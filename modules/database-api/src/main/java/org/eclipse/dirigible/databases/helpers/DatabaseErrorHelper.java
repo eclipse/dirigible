@@ -11,6 +11,7 @@ public class DatabaseErrorHelper {
 	 * Serialize the error as JSON
 	 *
 	 * @param t
+	 *            the error
 	 * @return the error as JSON
 	 */
 	public static String toJson(Throwable t) {
@@ -21,6 +22,7 @@ public class DatabaseErrorHelper {
 	 * Serialize the error as JSON
 	 *
 	 * @param errorMessage
+	 *            the error message
 	 * @return the error as JSON
 	 */
 	public static String toJson(String errorMessage) {
@@ -31,6 +33,7 @@ public class DatabaseErrorHelper {
 	 * Return the error as plain text
 	 *
 	 * @param t
+	 *            the error
 	 * @return the error as plain text
 	 */
 	public static String print(Throwable t) {
@@ -40,7 +43,8 @@ public class DatabaseErrorHelper {
 	/**
 	 * Return the error as plain text
 	 *
-	 * @param t
+	 * @param errorMessage
+	 *            the error message
 	 * @return the error as plain text
 	 */
 	public static String print(String errorMessage) {
