@@ -66,6 +66,9 @@ function createFile(rootPath, zipEntry, zipInputStream){
 }
 
 function getFullPathAndName(rootPath, fileFullName){
+	if (fileFullName.endsWith(SEPARATOR)) {
+		fileFullName = fileFullName.substring(0, fileFullName.length - 1);
+	}
 	var splittedFullName = fileFullName.split(SEPARATOR);
 	var innerPath = SEPARATOR + splittedFullName.slice(0, -1).join(SEPARATOR);
 	var fullPath = rootPath + innerPath;
