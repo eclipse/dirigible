@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.runtime.core.filter;
+package org.eclipse.dirigible.runtime.security.filter;
 
 import java.util.ArrayList;
 import java.util.List;

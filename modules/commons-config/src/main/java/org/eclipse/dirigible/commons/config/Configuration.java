@@ -200,6 +200,10 @@ public class Configuration {
 		try {
 			Properties properties = new Properties();
 			InputStream in = Configuration.class.getResourceAsStream("/dirigible.properties");
+			if (in == null) {
+				logger.warn("No default configuration dirigible.properties present in the classpath");
+				return;
+			}
 			try {
 				properties.load(in);
 				this.parameters.putAll((Map) properties);
