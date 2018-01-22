@@ -413,7 +413,7 @@ public class HttpClientRequestOptions {
 	 * @return the data
 	 */
 	public byte[] getData() {
-		return data.clone();
+		return data != null ? data.clone() : null;
 	}
 
 	/**
