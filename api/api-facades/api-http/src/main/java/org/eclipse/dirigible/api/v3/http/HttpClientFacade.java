@@ -12,6 +12,8 @@ package org.eclipse.dirigible.api.v3.http;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -385,7 +387,8 @@ public class HttpClientFacade implements IScriptingFacade {
 						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.APPLICATION_ATOM_XML.getMimeType())
 						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.APPLICATION_XML.getMimeType())
 						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.APPLICATION_XHTML_XML.getMimeType())) && (!binary)) {
-					String text = new String(content, ContentType.getOrDefault(entity).getCharset());
+					Charset charset = ContentType.getOrDefault(entity).getCharset();
+					String text = new String(content, charset != null ? charset : StandardCharsets.UTF_8);
 					httpClientResponse.setText(text);
 				} else {
 					httpClientResponse.setData(content);
