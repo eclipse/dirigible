@@ -123,13 +123,9 @@ public class Configuration {
 	/**
 	 * Getter for all the keys.
 	 *
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
 	 * @return the keys
 	 */
-	public static String[] getKeys(String key, String value) {
+	public static String[] getKeys() {
 		return getInstance().parameters.keySet().toArray(new String[] {});
 	}
 
