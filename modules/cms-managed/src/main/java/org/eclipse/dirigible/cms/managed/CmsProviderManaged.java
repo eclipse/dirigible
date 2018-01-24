@@ -10,10 +10,9 @@
 
 package org.eclipse.dirigible.cms.managed;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.naming.InitialContext;
@@ -116,20 +115,24 @@ public class CmsProviderManaged implements ICmsProvider {
 					secretKey = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY);
 				} else if (DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD_DEST.equals(authMethod)) {
 					String destinationName = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION);
-					Properties destinationPropeties = initializeFromDestination(destinationName);
-					uniqueName = destinationPropeties.getProperty(PARAM_USER);
-					secretKey = destinationPropeties.getProperty(PARAM_PASSWORD);
+					Map destinationPropeties = initializeFromDestination(destinationName);
+					if (destinationPropeties.get(PARAM_USER) != null) {
+						uniqueName = (String) destinationPropeties.get(PARAM_USER);
+					}
+					if (destinationPropeties.get(PARAM_PASSWORD) != null) {
+						secretKey = (String) destinationPropeties.get(PARAM_PASSWORD);
+					}
 				} else {
 					String message = String.format("Connection to CMIS Repository was failed. Invalid Authentication Method: %s", authMethod);
 					logger.error(message);
 					throw new SecurityException(message);
 				}
-				logger.debug(String.format("Connecting to CMIS Repository with name: %s and key: %s", uniqueName, secretKey));
+				logger.info(String.format("Connecting to CMIS Repository with name: %s for type: %s", uniqueName, authMethod));
 				try {
 					Method connectMethod = ecmService.getClass().getMethod("connect", String.class, String.class);
 					Object openCmisSession = connectMethod.invoke(ecmService, uniqueName, secretKey);
 					if (openCmisSession != null) {
-						logger.debug("Connection to CMIS Repository was successful.");
+						logger.info(String.format("Connection to CMIS Repository with name: %s was successful.", uniqueName));
 						return openCmisSession;
 					}
 				} catch (Throwable t) {
@@ -152,17 +155,15 @@ public class CmsProviderManaged implements ICmsProvider {
 		throw new IllegalStateException(message);
 	}
 
-	private Properties initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException, SecurityException,
+	private Map initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		logger.debug(String.format("CMIS Lookup Destination: %s", destinationName));
 		Object connectivityService = lookupConnectivityConfiguration();
-		Method connectivityMethod = connectivityService.getClass().getMethod("getConnectivityConfiguration");
-		Object configuration = connectivityMethod.invoke(connectivityService);
-		Method configurationMethod = configuration.getClass().getMethod("getConfiguration", String.class);
-		Object destinationConfiguration = configurationMethod.invoke(configuration, destinationName);
+		Method configurationMethod = connectivityService.getClass().getMethod("getConfiguration", String.class);
+		Object destinationConfiguration = configurationMethod.invoke(connectivityService, destinationName);
 		Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
-		Properties destinationPropeties = (Properties) propertiesMethod.invoke(destinationConfiguration);
-		logger.debug(String.format("CMIS Destination Properties: %s", getPropertiesAsString(destinationPropeties)));
+		Map destinationPropeties = (Map) propertiesMethod.invoke(destinationConfiguration);
+		logger.debug(String.format("CMIS Destination Properties: %s", destinationPropeties.toString()));
 		return destinationPropeties;
 	}
 	
@@ -179,19 +180,6 @@ public class CmsProviderManaged implements ICmsProvider {
 			return ctx.lookup(key);
 		}
 		return null;
-	}
-
-	private static String getPropertiesAsString(Properties prop) {
-		if (prop == null) {
-			return "null properties";
-		}
-		StringWriter writer = new StringWriter();
-		try {
-			prop.store(writer, "");
-		} catch (IOException e) {
-			logger.error("Connection to CMIS Repository was failed.", e);
-		}
-		return writer.getBuffer().toString();
 	}
 
 }
