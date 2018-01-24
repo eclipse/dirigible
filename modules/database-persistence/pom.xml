@@ -68,7 +68,15 @@
 			<artifactId>com.sap.db.ngdbc</artifactId>
 			<version>1.50.00.511933</version>
 			<scope>test</scope>
-		</dependency> -->
+		</dependency>
+		<dependency>
+            <groupId>com.sybase.jdbc4</groupId>
+            <artifactId>jconn4</artifactId>
+            <version>7.07.138.26368</version>
+            <scope>test</scope>
+       </dependency>
+       -->
+		
     </dependencies>
 
 </project>
