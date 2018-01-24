@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-api-facades</artifactId>
-		<version>3.1.1-SNAPSHOT</version>
+		<version>3.1.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,17 +32,17 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>3.1.1-SNAPSHOT</version>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-config</artifactId>
-            <version>3.1.1-SNAPSHOT</version>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-indexing</artifactId>
-            <version>3.1.1-SNAPSHOT</version>
+            <version>3.1.1</version>
         </dependency>
 
     </dependencies>

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>3.1.1-SNAPSHOT</version>
+		<version>3.1.1</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -32,35 +32,35 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>3.1.1-SNAPSHOT</version>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-security</artifactId>
-            <version>3.1.1-SNAPSHOT</version>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-utils</artifactId>
-            <version>3.1.1-SNAPSHOT</version>
+            <version>3.1.1</version>
         </dependency>
         
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>3.1.1-SNAPSHOT</version>
+			<version>3.1.1</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
-			<version>3.1.1-SNAPSHOT</version>
+			<version>3.1.1</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
-			<version>3.1.1-SNAPSHOT</version>
+			<version>3.1.1</version>
 			<scope>test</scope>
     	</dependency>
     </dependencies>
