@@ -88,7 +88,7 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 	 * @throws PersistenceException
 	 *             the persistence exception
 	 */
-	public int update(Connection connection, PersistenceTableModel tableModel, Object pojo, Object id) throws PersistenceException {
+	public int update(Connection connection, PersistenceTableModel tableModel, T pojo, Object id) throws PersistenceException {
 		logger.trace("update -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
 				+ Serializer.serializePojo(pojo) + ", id: " + id);
 		if (id == null) {

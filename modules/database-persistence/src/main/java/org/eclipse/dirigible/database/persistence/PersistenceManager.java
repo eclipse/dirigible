@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * The POJO supported by this manager must have a single mandatory Id (PRIMARY KEY) field
  *
  * @param <T>
- *            type safety for a PersistenceManager instance
+ *            the entity type
  */
 public class PersistenceManager<T> {
 
@@ -195,11 +195,11 @@ public class PersistenceManager<T> {
 	 *            the POJO instance
 	 * @return the id of the pojo just inserted
 	 */
-	public Object insert(Connection connection, Object pojo) {
+	public Object insert(Connection connection, T pojo) {
 		logger.trace("tableCheck -> connection: " + connection.hashCode() + ", pojo: " + Serializer.serializePojo(pojo));
 		tableCheck(connection, pojo.getClass());
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(pojo);
-		PersistenceInsertProcessor insertProcessor = new PersistenceInsertProcessor(getEntityManagerInterceptor());
+		PersistenceInsertProcessor<T> insertProcessor = new PersistenceInsertProcessor<>(getEntityManagerInterceptor());
 		return insertProcessor.insert(connection, tableModel, pojo);
 	}
 
@@ -218,7 +218,7 @@ public class PersistenceManager<T> {
 		logger.trace("find -> connection: " + connection.hashCode() + ", class: " + clazz.getCanonicalName() + ", id: " + id);
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>(getEntityManagerInterceptor());
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<>(getEntityManagerInterceptor());
 		return queryProcessor.find(connection, tableModel, clazz, id);
 	}
 
@@ -237,7 +237,7 @@ public class PersistenceManager<T> {
 		logger.trace("lock -> connection: " + connection.hashCode() + ", class: " + clazz.getCanonicalName() + ", id: " + id);
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>(getEntityManagerInterceptor());
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<>(getEntityManagerInterceptor());
 		return queryProcessor.lock(connection, tableModel, clazz, id);
 	}
 
@@ -254,7 +254,7 @@ public class PersistenceManager<T> {
 		logger.trace("findAll -> connection: " + connection.hashCode() + ", class: " + clazz.getCanonicalName());
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>(getEntityManagerInterceptor());
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<>(getEntityManagerInterceptor());
 		return queryProcessor.findAll(connection, tableModel, clazz);
 	}
 
@@ -276,7 +276,7 @@ public class PersistenceManager<T> {
 				+ Serializer.serializeListOfObjects(values));
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<T>(getEntityManagerInterceptor());
+		PersistenceQueryProcessor<T> queryProcessor = new PersistenceQueryProcessor<>(getEntityManagerInterceptor());
 		return queryProcessor.query(connection, tableModel, clazz, sql, values);
 	}
 
@@ -310,7 +310,7 @@ public class PersistenceManager<T> {
 	 */
 	public int execute(Connection connection, String sql, List<Object> values) {
 		logger.trace("execute -> connection: " + connection.hashCode() + ", sql: " + sql + ", values: " + Serializer.serializeListOfObjects(values));
-		PersistenceExecuteProcessor<T> executeProcessor = new PersistenceExecuteProcessor<T>(getEntityManagerInterceptor());
+		PersistenceExecuteProcessor<T> executeProcessor = new PersistenceExecuteProcessor<>(getEntityManagerInterceptor());
 		return executeProcessor.execute(connection, sql, values);
 	}
 
@@ -344,7 +344,7 @@ public class PersistenceManager<T> {
 		logger.trace("delete -> connection: " + connection.hashCode() + ", class: " + clazz.getCanonicalName() + ", id: " + id);
 		tableCheck(connection, clazz);
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
-		PersistenceDeleteProcessor<T> deleteProcessor = new PersistenceDeleteProcessor<T>(getEntityManagerInterceptor());
+		PersistenceDeleteProcessor<T> deleteProcessor = new PersistenceDeleteProcessor<>(getEntityManagerInterceptor());
 		return deleteProcessor.delete(connection, tableModel, clazz, id);
 	}
 
@@ -359,11 +359,11 @@ public class PersistenceManager<T> {
 	 *            the primary key field's value
 	 * @return the result status of the update statement execution
 	 */
-	public int update(Connection connection, Object pojo, Object id) {
+	public int update(Connection connection, T pojo, Object id) {
 		logger.trace("update -> connection: " + connection.hashCode() + ", pojo: " + Serializer.serializePojo(pojo) + ", id: " + id);
 		tableCheck(connection, pojo.getClass());
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(pojo);
-		PersistenceUpdateProcessor<T> updateProcessor = new PersistenceUpdateProcessor<T>(getEntityManagerInterceptor());
+		PersistenceUpdateProcessor<T> updateProcessor = new PersistenceUpdateProcessor<>(getEntityManagerInterceptor());
 		return updateProcessor.update(connection, tableModel, pojo, id);
 	}
 
