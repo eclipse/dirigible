@@ -36,8 +36,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Persistence Insert Processor.
+ *
+ * @param <T>
+ *            the entity type
  */
-public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
+public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor {
 
 	private static final Logger logger = LoggerFactory.getLogger(PersistenceInsertProcessor.class);
 
@@ -79,11 +82,11 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 	 *            the table model
 	 * @param pojo
 	 *            the pojo
-	 * @return the object
+	 * @return the identifier of the inserted pojo
 	 * @throws PersistenceException
 	 *             the persistence exception
 	 */
-	public Object insert(Connection connection, PersistenceTableModel tableModel, Object pojo) throws PersistenceException {
+	public Object insert(Connection connection, PersistenceTableModel tableModel, T pojo) throws PersistenceException {
 		logger.trace("insert -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
 				+ Serializer.serializePojo(pojo));
 		Object result = 0;
@@ -110,7 +113,7 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 
 				try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
 					if (generatedKeys.next()) {
-						result = generatedKeys.getLong(1);// getLastInserted(connection, tableModel, pojo);
+						result = generatedKeys.getLong(1);
 						for (PersistenceTableColumnModel column : tableModel.getColumns()) {
 							if (column.isPrimaryKey() && column.isIdentity()) {
 								setValueToPojo(pojo, result, column);
@@ -129,28 +132,6 @@ public class PersistenceInsertProcessor extends AbstractPersistenceProcessor {
 		}
 		return result;
 	}
-
-	// private Object getLastInserted(Connection connection, PersistenceTableModel tableModel, Object pojo) throws
-	// SQLException {
-	// logger.trace("getLastInserted -> connection: " + connection.hashCode() + ", tableModel: " +
-	// Serializer.serializeTableModel(tableModel)
-	// + ", pojo: " + Serializer.serializePojo(pojo));
-	// LastValueIdentityBuilder identityBuilder =
-	// SqlFactory.getNative(SqlFactory.deriveDialect(connection)).lastval(tableModel.getTableName());
-	// String sql = identityBuilder.build();
-	// PreparedStatement preparedStatement = null;
-	// try {
-	// preparedStatement = openPreparedStatement(connection, sql);
-	// ResultSet rs = preparedStatement.executeQuery();
-	// if (rs.next()) {
-	// long id = rs.getLong(1);
-	// return id;
-	// }
-	// } finally {
-	// closePreparedStatement(preparedStatement);
-	// }
-	// return -1;
-	// }
 
 	/**
 	 * Sets the generated values.
