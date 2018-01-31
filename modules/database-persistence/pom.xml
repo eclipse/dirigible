@@ -11,72 +11,54 @@
 
 	<name>Database - Persistence</name>
 	<artifactId>dirigible-database-persistence</artifactId>
-    <packaging>jar</packaging>
-    
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    
-    <dependencies>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
+	<packaging>jar</packaging>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+	</build>
+
+	<properties>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-sql</artifactId>
 			<version>3.1.2-SNAPSHOT</version>
-    	</dependency>
-    	<dependency>
-		    <groupId>javax.persistence</groupId>
-		    <artifactId>persistence-api</artifactId>
-		    <version>1.0</version>
-		</dependency>
-    	<dependency>
-		    <groupId>org.apache.derby</groupId>
-		    <artifactId>derby</artifactId>
-		    <version>10.12.1.1</version>
-		    <scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.4</version>
-		    <scope>test</scope>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0</version>
 		</dependency>
+
+		<!-- Test dependencies -->
 		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		    <version>42.0.0</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <version>1.4.193</version>
-		    <scope>test</scope>
-		</dependency>
-		<!-- <dependency>
-			<groupId>com.sap.db.hdb</groupId>
-			<artifactId>com.sap.db.ngdbc</artifactId>
-			<version>1.50.00.511933</version>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.12.1.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-            <groupId>com.sybase.jdbc4</groupId>
-            <artifactId>jconn4</artifactId>
-            <version>7.07.138.26368</version>
-            <scope>test</scope>
-       </dependency>
-       -->
-		
-    </dependencies>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.193</version>
+			<scope>test</scope>
+		</dependency>
 
+	</dependencies>
 </project>
