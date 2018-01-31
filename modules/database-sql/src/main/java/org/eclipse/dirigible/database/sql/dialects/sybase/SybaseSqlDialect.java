@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.database.sql.dialects.sybase;
 
+import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
@@ -39,6 +40,19 @@ public class SybaseSqlDialect extends
 	@Override
 	public SybaseNextValueSequenceBuilder nextval(String sequence) {
 		return new SybaseNextValueSequenceBuilder(this, sequence);
+
+	}
+
+	@Override
+	public String getDataTypeName(DataType dataType) {
+		switch (dataType) {
+			case TIMESTAMP:
+				return "DATETIME";
+			case BLOB:
+				return "IMAGE";
+			default:
+				return super.getDataTypeName(dataType);
+		}
 	}
 
 	/*

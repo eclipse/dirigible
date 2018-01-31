@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -35,6 +36,7 @@ import org.quartz.SchedulerFactory;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.utils.PoolingConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +45,21 @@ import org.slf4j.LoggerFactory;
  */
 public class SchedulerManager {
 
+	private static final String PROPERTY_KEY_DATABASE_DATA_SOURCE = "org.quartz.jobStore.dataSource";
+
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerManager.class);
 
 	private static SchedulerFactory schedulerFactory = null;
 
 	private static Scheduler scheduler = null;
+
+	private static SchedulerManager INSTANCE = null;
+
+	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DRIVER = "DIRIGIBLE_SCHEDULER_DATABASE_DRIVER";
+	private static final String DIRIGIBLE_SCHEDULER_DATABASE_URL = "DIRIGIBLE_SCHEDULER_DATABASE_URL";
+	private static final String DIRIGIBLE_SCHEDULER_DATABASE_USER = "DIRIGIBLE_SCHEDULER_DATABASE_USER";
+	private static final String DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD = "DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD";
+	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME";
 
 	/**
 	 * Gets the scheduler.
@@ -86,6 +98,7 @@ public class SchedulerManager {
 						try {
 							in = SchedulerManager.class.getResourceAsStream("/quartz.properties");
 							quartzProperties.load(in);
+							setSchedulerConnectionProperties(quartzProperties);
 						} finally {
 							if (in != null) {
 								in.close();
@@ -262,4 +275,23 @@ public class SchedulerManager {
 		return false;
 	}
 
+	private static void setSchedulerConnectionProperties(Properties properties) {
+		String dataSourceName = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME);
+		String driver = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_DRIVER);
+		String url = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_URL);
+		String user = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_USER);
+		String password = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD);
+
+		setProperty(properties, PROPERTY_KEY_DATABASE_DATA_SOURCE, dataSourceName);
+		setProperty(properties, PoolingConnectionProvider.DB_DRIVER, driver);
+		setProperty(properties, PoolingConnectionProvider.DB_URL, url);
+		setProperty(properties, PoolingConnectionProvider.DB_USER, user);
+		setProperty(properties, PoolingConnectionProvider.DB_PASSWORD, password);
+	}
+
+	private static void setProperty(Properties properties, String key, String value) {
+		if (!StringUtils.isEmpty(value)) {
+			properties.setProperty(key, value);
+		}
+	}
 }

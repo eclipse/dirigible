@@ -36,6 +36,8 @@ public interface IDatabase {
 
 	public static final String DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT = "DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT"; //$NON-NLS-1$
 
+	public static final String DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT = "DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT"; //$NON-NLS-1$
+
 	public static final String DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT = "DefaultDB"; //$NON-NLS-1$
 
 	public static final String DIRIGIBLE_DATABASE_DATASOURCE_TEST = "target/tests/derby"; //$NON-NLS-1$
@@ -62,6 +64,13 @@ public interface IDatabase {
 	 * @return the type
 	 */
 	public String getType();
+
+	/**
+	 * Gets the default data source name
+	 * 
+	 * @return the default data source name
+	 */
+	public String getDefaultDataSourceName();
 
 	/**
 	 * Gets the data source.

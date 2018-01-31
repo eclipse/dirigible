@@ -2,6 +2,8 @@
 
 ## Repository
 
+- `DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME`: (default: DefaultDB)
+
 ### Local Repository
 
 - `DIRIGIBLE_REPOSITORY_PROVIDER`: (local | database)
@@ -35,7 +37,14 @@
 - `DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT`: (default: 500)
 - `DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT`: (default: 5)
 - `DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES`: (default: {empty})
+- `DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT`: (default: DefaultDB)
 
+### Scheduler
+- `DIRIGIBLE_SCHEDULER_DATABASE_DRIVER`: (default: {empty})
+- `DIRIGIBLE_SCHEDULER_DATABASE_URL`: (default: {empty})
+- `DIRIGIBLE_SCHEDULER_DATABASE_USER`: (default: {empty})
+- `DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD`: (default: {empty})
+- `DIRIGIBLE_SCHEDULER_DATASOURCE_NAME`: (default: DefaultDB)
 
 #### Database Derby
 
