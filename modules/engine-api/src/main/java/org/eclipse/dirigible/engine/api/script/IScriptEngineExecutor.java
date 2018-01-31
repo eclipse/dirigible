@@ -16,7 +16,7 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 
 /**
- * The Script Engine Executor интерфаце.
+ * The Script Engine Executor interface.
  */
 public interface IScriptEngineExecutor {
 

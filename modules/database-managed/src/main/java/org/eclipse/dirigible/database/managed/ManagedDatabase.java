@@ -81,7 +81,7 @@ public class ManagedDatabase implements IDatabase {
 	 */
 	@Override
 	public DataSource getDataSource() {
-		return getDataSource(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
+		return getDataSource(getDefaultDataSourceName());
 	}
 
 	/*
@@ -135,6 +135,15 @@ public class ManagedDatabase implements IDatabase {
 	@Override
 	public String getType() {
 		return TYPE;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.api.IDatabase#getDefaultDataSourceName()
+	 */
+	@Override
+	public String getDefaultDataSourceName() {
+		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
 
 	/*

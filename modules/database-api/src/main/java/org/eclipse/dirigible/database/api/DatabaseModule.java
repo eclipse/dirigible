@@ -45,6 +45,8 @@ public class DatabaseModule extends AbstractDirigibleModule {
 
 		boolean databaseProviderIsSelected = false;
 		String databaseProvider = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER);
+		String dataSourceName = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,
+				IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 		if (databaseProvider == null) {
 			databaseProvider = IDatabase.DIRIGIBLE_DATABASE_PROVIDER_LOCAL;
 		} else {
@@ -54,28 +56,28 @@ public class DatabaseModule extends AbstractDirigibleModule {
 			logger.trace(format("Installing Database Provider [{0}:{1}] ...", next.getType(), next.getName()));
 			if (databaseProviderIsSelected && next.getType().equals(databaseProvider)) {
 				// bind the selected if any
-				bindDatasource(next);
+				bindDatasource(next, dataSourceName);
 			} else {
 				// bind the first present, because there is no selected one
-				bindDatasource(next);
+				bindDatasource(next, dataSourceName);
 				break;
 			}
 			logger.trace(format("Done installing Database Provider [{0}:{1}].", next.getType(), next.getName()));
 		}
 	}
 
-	private void bindDatasource(IDatabase next) {
+	private void bindDatasource(IDatabase next, String dataSourceName) {
 		bind(IDatabase.class).toInstance(next);
-		logger.trace(format("Binding Database - [{0}:{1}].", next.getType(), next.getName()));
+		logger.trace(format("Binding Database - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		try {
-			logger.trace(format("Creating Datasource - [{0}:{1}] ...", next.getType(), next.getName()));
-			bind(DataSource.class).toInstance(next.getDataSource());
-			logger.info(format("Bound Datasource - [{0}:{1}].", next.getType(), next.getName()));
-			logger.trace(format("Done creating Datasource - [{0}:{1}].", next.getType(), next.getName()));
+			logger.trace(format("Creating Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
+			bind(DataSource.class).toInstance(next.getDataSource(dataSourceName));
+			logger.info(format("Bound Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
+			logger.trace(format("Done creating Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		} catch (Exception e) {
-			logger.error(format("Failed creating Datasource - [{0}:{1}].", next.getType(), next.getName()), e);
+			logger.error(format("Failed creating Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName), e);
 		}
-		logger.trace(format("Done binding Datasource - [{0}:{1}].", next.getType(), next.getName()));
+		logger.trace(format("Done binding Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 	}
 
 	/*
