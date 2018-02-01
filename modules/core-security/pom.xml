@@ -51,7 +51,7 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-security</artifactId>
+			<artifactId>dirigible-api-facade-security</artifactId>
 			<version>3.1.2-SNAPSHOT</version>
     	</dependency>
     	

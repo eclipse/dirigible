@@ -30,7 +30,7 @@
     <dependencies>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-core</artifactId>
+			<artifactId>dirigible-api-facade-core</artifactId>
 			<version>3.1.2-SNAPSHOT</version>
     	</dependency>
     	<dependency>

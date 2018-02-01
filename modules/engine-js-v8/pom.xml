@@ -41,12 +41,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-http</artifactId>
+			<artifactId>dirigible-api-facade-http</artifactId>
 			<version>3.1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-core</artifactId>
+			<artifactId>dirigible-api-facade-core</artifactId>
 			<version>3.1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -94,7 +94,7 @@
     	</dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-tests</artifactId>
+            <artifactId>dirigible-api-facade-tests</artifactId>
             <version>3.1.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>

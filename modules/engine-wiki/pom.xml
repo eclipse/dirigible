@@ -46,7 +46,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-http</artifactId>
+            <artifactId>dirigible-api-facade-http</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -55,12 +55,6 @@
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         
-        <!-- <dependency>
-		    <groupId>com.vladsch.flexmark</groupId>
-		    <artifactId>flexmark-all</artifactId>
-		    <version>0.26.4</version>
-		</dependency> -->
-		
 		<dependency>
 		    <groupId>org.eclipse.mylyn.docs</groupId>
 		    <artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
