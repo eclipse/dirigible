@@ -12,7 +12,6 @@
     <name>Releng - Server - Runtime</name>
 	<artifactId>dirigible-server-runtime</artifactId>
 	<packaging>war</packaging>
-	
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
