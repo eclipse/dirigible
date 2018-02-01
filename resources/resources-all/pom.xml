@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-resources-parent</artifactId>
+		<version>3.1.2-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<name>Resources</name>
+	<artifactId>dirigible-resources</artifactId>
+    <packaging>jar</packaging>
+
+	<scm>
+		<url>${content.scm.url}</url>
+		<connection>${content.scm.connection}</connection>
+		<developerConnection>${content.scm.developerConnection}</developerConnection>
+	</scm>
+	
+	<properties>
+		<content.repository.name>dirigiblelabs</content.repository.name>
+		<content.project.name>dirigiblelabs</content.project.name>
+
+		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
+		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
+		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+	</properties>
+
+	<dependencies>
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-angular</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-bootstrap</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-fonts</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-goldenlayout</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-jquery</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-jstree</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-themes</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+	</dependencies>
+</project>
