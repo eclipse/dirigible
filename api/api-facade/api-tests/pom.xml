@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Facade - JavaScript Compatibility Test Suite</name>
+	<name>API - Facade - Tests</name>
 	<artifactId>dirigible-api-facade-tests</artifactId>
     <packaging>jar</packaging>
     
@@ -62,42 +62,42 @@
         
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-security</artifactId>
+            <artifactId>dirigible-api-facade-security</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-core</artifactId>
+            <artifactId>dirigible-api-facade-core</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-http</artifactId>
+            <artifactId>dirigible-api-facade-http</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-utils</artifactId>
+            <artifactId>dirigible-api-facade-utils</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-db</artifactId>
+            <artifactId>dirigible-api-facade-database</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-io</artifactId>
+            <artifactId>dirigible-api-facade-io</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-indexing</artifactId>
+            <artifactId>dirigible-api-facade-indexing</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-cms</artifactId>
+            <artifactId>dirigible-api-facade-cms</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -128,7 +128,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-javascript-db</artifactId>
+            <artifactId>dirigible-api-javascript-database</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>

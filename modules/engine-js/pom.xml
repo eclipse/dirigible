@@ -51,7 +51,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-http</artifactId>
+            <artifactId>dirigible-api-facade-http</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
     </dependencies>

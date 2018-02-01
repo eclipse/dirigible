@@ -50,6 +50,8 @@ public class SybaseSqlDialect extends
 				return "DATETIME";
 			case BLOB:
 				return "IMAGE";
+			case BOOLEAN:
+				return "BIT";
 			default:
 				return super.getDataTypeName(dataType);
 		}

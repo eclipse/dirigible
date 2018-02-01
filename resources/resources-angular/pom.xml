@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Resources - Angular</name>
-	<artifactId>dirigible-resource-angular</artifactId>
+	<artifactId>dirigible-resources-angular</artifactId>
     <packaging>jar</packaging>
 
 	<scm>

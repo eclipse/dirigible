@@ -56,12 +56,12 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-utils</artifactId>
+            <artifactId>dirigible-api-facade-utils</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-ide-workspaces</artifactId>
+            <artifactId>dirigible-ide-service-workspaces</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
