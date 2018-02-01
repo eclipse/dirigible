@@ -340,18 +340,4 @@
 		</dependency> -->
 		
 	</dependencies>
-
-	<!-- default properties -->
-	<properties>
-		<argLine>-Dorg.slf4j.simpleLogger.defaultLogLevel=debug -DwaitForAsyncTasks=true</argLine>
-
-		<!-- integration server ports. Override them in maven with -D.... -->
-		<local.server.http.port>8888</local.server.http.port>
-		<local.server.ajp.port>8889</local.server.ajp.port>
-		<local.server.config.port>8890</local.server.config.port>
-		<local.server.jmx.port>8891</local.server.jmx.port>
-		<local.server.shutdown.port>8892</local.server.shutdown.port>
-		<!-- end integration server ports -->
-
-	</properties>
 </project>

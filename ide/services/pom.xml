@@ -4,20 +4,24 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-ide-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - Parent</name>
-	<artifactId>dirigible-ide-parent</artifactId>
+	<name>IDE - Service - Parent</name>
+	<artifactId>dirigible-ide-service-parent</artifactId>
 	<description>WebIDE Plugins</description>
     <packaging>pom</packaging>
 
 	<modules>
-        <module>ide-all</module>
-		<module>services</module>
-		<module>ui</module>
+		<module>ide-all</module>
+		<module>ide-console</module>
+		<module>ide-databases</module>
+		<module>ide-generation</module>
+		<module>ide-git</module>
+		<module>ide-publisher</module>
+		<module>ide-terminal</module>
+		<module>ide-workspaces</module>
 	</modules>
-
 </project>

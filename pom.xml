@@ -430,14 +430,6 @@
 		<module>modules/runtime-theme</module>
 		<module>modules/runtime-anonymous</module>
 
-		<module>modules/runtime-ide-workspaces</module>
-		<module>modules/runtime-ide-terminal</module>
-		<module>modules/runtime-ide-git</module>
-		<module>modules/runtime-ide-console</module>
-		<module>modules/runtime-ide-publisher</module>
-		<module>modules/runtime-ide-databases</module>
-		<module>modules/runtime-ide-generation</module>
-
 		<module>modules/engine-api</module>
 		<module>modules/engine-web</module>
 		<module>modules/engine-js</module>
