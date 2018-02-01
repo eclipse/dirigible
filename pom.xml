@@ -385,7 +385,8 @@
 	</properties>
 
 	<modules>
-		<module>api/api-facades</module>
+		<module>api/api-all</module>
+		<module>api/api-facade</module>
 		<module>api/api-javascript</module>
 
 		<module>modules/commons-api</module>

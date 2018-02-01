@@ -4,12 +4,12 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-api-javascript</artifactId>
+		<artifactId>dirigible-api-javascript-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Javascript - core</name>
+	<name>API - JavaScript - Core</name>
 	<artifactId>dirigible-api-javascript-core</artifactId>
 	<description>Core Modules</description>
     <packaging>jar</packaging>

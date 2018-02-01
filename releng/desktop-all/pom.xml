@@ -257,55 +257,10 @@
 		 	<version>3.1.2-SNAPSHOT</version>
 		</dependency>
 	
-		<!-- API Facades -->
+		<!-- API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-security</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-core</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-http</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-utils</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-db</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-io</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-messaging</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-indexing</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-log</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-cms</artifactId>
+		 	<artifactId>dirigible-api</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
 		</dependency>
 		
@@ -549,64 +504,7 @@
 		 	<artifactId>dirigible-cms-internal</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
 		</dependency>
-		
-		<!-- API - Javascript -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-core</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-http</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-utils</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-security</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-db</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-io</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-messaging</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-indexing</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-log</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-test</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-javascript-cms</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		
+
 		<!-- IDE Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
