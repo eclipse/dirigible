@@ -46,7 +46,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-anonymous</artifactId>
+            <artifactId>dirigible-service-anonymous</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>

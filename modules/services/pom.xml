@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-parent</artifactId>
+		<version>3.1.2-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<name>Service - Parent</name>
+	<artifactId>dirigible-service-parent</artifactId>
+    <packaging>pom</packaging>
+
+	<modules>
+		<module>service-all</module>
+		<module>service-anonymous</module>
+        <module>service-core</module>
+		<module>service-extensions</module>
+		<module>service-registry</module>
+		<module>service-repository</module>
+		<module>service-security</module>
+		<module>service-theme</module>
+		<module>service-transport</module>
+	</modules>
+
+</project>
