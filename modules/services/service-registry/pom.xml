@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-engine-parent</artifactId>
+		<artifactId>dirigible-service-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Engine - Wiki</name>
-	<artifactId>dirigible-engine-wiki</artifactId>
+	<name>Service - Registry</name>
+	<artifactId>dirigible-service-registry</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -41,26 +41,9 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-api</artifactId>
+            <artifactId>dirigible-service-repository</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-facade-http</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-core</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        
-		<dependency>
-		    <groupId>org.eclipse.mylyn.docs</groupId>
-		    <artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
-		    <version>3.0.18</version>
-		</dependency>
-
     </dependencies>
 
 </project>

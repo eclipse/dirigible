@@ -46,12 +46,12 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-core</artifactId>
+            <artifactId>dirigible-service-core</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-repository</artifactId>
+            <artifactId>dirigible-service-repository</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>

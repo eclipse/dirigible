@@ -392,6 +392,7 @@
 		<module>ext</module>
 
 		<module>modules/engines</module>
+		<module>modules/services</module>
 
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
@@ -424,15 +425,6 @@
 		<module>modules/core-workspace</module>
 		<module>modules/core-messaging</module>
 		<module>modules/core-indexing</module>
-
-		<module>modules/runtime-core</module>
-		<module>modules/runtime-repository</module>
-		<module>modules/runtime-registry</module>
-		<module>modules/runtime-extensions</module>
-		<module>modules/runtime-transport</module>
-		<module>modules/runtime-security</module>
-		<module>modules/runtime-theme</module>
-		<module>modules/runtime-anonymous</module>
 
 		<module>modules/cms-api</module>
 		<module>modules/cms-internal</module>

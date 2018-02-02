@@ -365,46 +365,17 @@
 		 	<version>3.1.2-SNAPSHOT</version>
 		</dependency>
 		
-		<!-- Runtime Services -->
+		<!-- Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-core</artifactId>
+		 	<artifactId>dirigible-services</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-repository</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-registry</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-extensions</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<!-- <dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-security</artifactId>
-		 	<version>3.1.1-SNAPSHOT</version>
-		</dependency> -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-transport</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-theme</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-runtime-anonymous</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>dirigible-service-security</groupId>
+					<artifactId>3.1.2-SNAPSHOT</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
