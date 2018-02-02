@@ -64,28 +64,6 @@
 	</build>
 
 	<dependencies>
-	
-		<!-- Platform 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-		    <groupId>ch.qos.logback</groupId>
-		    <artifactId>logback-core</artifactId>
-		    <version>${logback.version}</version>
-		    <scope>compile</scope>
-		</dependency>
-		<dependency>
-		    <groupId>ch.qos.logback</groupId>
-		    <artifactId>logback-classic</artifactId>
-		    <version>${logback.version}</version>
-		    <scope>compile</scope>
-		</dependency>
-		-->
-	
 		<!-- Commons -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -139,50 +117,20 @@
 		 	<artifactId>dirigible-database-data-structures</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-managed</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- Core Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-core-extensions</artifactId>
+		 	<artifactId>dirigible-core</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-core-git</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-core-security</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-core-scheduler</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-core-publisher</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-core-messaging</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-core-indexing</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		
+
 		<!-- Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
