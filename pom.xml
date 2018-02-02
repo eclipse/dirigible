@@ -394,6 +394,7 @@
 		<module>modules/engines</module>
 		<module>modules/services</module>
 		<module>modules/repository</module>
+		<module>modules/core</module>
 
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
@@ -409,15 +410,6 @@
 		<module>modules/database-derby</module>
 		<module>modules/database-managed</module>
 		<module>modules/database-custom</module>
-
-		<module>modules/core-extensions</module>
-		<module>modules/core-security</module>
-		<module>modules/core-git</module>
-		<module>modules/core-scheduler</module>
-		<module>modules/core-publisher</module>
-		<module>modules/core-workspace</module>
-		<module>modules/core-messaging</module>
-		<module>modules/core-indexing</module>
 
 		<module>modules/cms-api</module>
 		<module>modules/cms-internal</module>
