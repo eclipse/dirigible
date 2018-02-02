@@ -4,15 +4,15 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-cms-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>CMS - API</name>
-	<artifactId>dirigible-cms-api</artifactId>
+	<name>CMS</name>
+	<artifactId>dirigible-cms</artifactId>
     <packaging>jar</packaging>
-    
+
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -20,6 +20,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
+                <inherited>true</inherited>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -27,18 +28,23 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-config</artifactId>
+            <artifactId>dirigible-cms-api</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-api</artifactId>
-			<version>3.1.2-SNAPSHOT</version>
-    	</dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-cms-internal</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-cms-managed</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

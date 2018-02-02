@@ -397,10 +397,7 @@
 		<module>modules/core</module>
 		<module>modules/database</module>
 		<module>modules/commons</module>
-
-		<module>modules/cms-api</module>
-		<module>modules/cms-internal</module>
-		<module>modules/cms-managed</module>
+		<module>modules/cms</module>
 
 		<module>releng/desktop-all</module>
 		<module>releng/sap-all</module>
