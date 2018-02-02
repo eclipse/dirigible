@@ -285,13 +285,14 @@
 		<!-- CMS -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms-api</artifactId>
+		 	<artifactId>dirigible-cms</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms-internal</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-cms-managed</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- IDE Plugins -->

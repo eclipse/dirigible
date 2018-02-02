@@ -2,7 +2,7 @@
 dist/
 .settings/
 target/
-derby/
+# derby/
 dirigible_local/
 
 # files

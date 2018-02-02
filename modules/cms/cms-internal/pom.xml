@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-cms-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>CMS - Managed</name>
-	<artifactId>dirigible-cms-managed</artifactId>
+	<name>CMS - Internal</name>
+	<artifactId>dirigible-cms-internal</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -44,6 +44,22 @@
 			<artifactId>dirigible-cms-api</artifactId>
 			<version>3.1.2-SNAPSHOT</version>
     	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-repository-api</artifactId>
+			<version>3.1.2-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-repository-local</artifactId>
+			<version>3.1.2-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+		    <groupId>org.apache.chemistry.opencmis</groupId>
+		    <artifactId>chemistry-opencmis-commons-api</artifactId>
+		    <version>${chemistry.version}</version>
+		    <scope>compile</scope>
+		</dependency>
     </dependencies>
 
 </project>
