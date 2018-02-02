@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-ide-service-parent</artifactId>
+		<artifactId>dirigible-engine-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - Service - Generation</name>
-	<artifactId>dirigible-ide-service-generation</artifactId>
+	<name>Engine - JavaScript - Nashorn</name>
+	<artifactId>dirigible-engine-javascript-nashorn</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -41,32 +41,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-workspace</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-core</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-repository</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-workspaces</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-api</artifactId>
+            <artifactId>dirigible-api-facade-core</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -76,10 +51,28 @@
         </dependency>
         
         <dependency>
-		    <groupId>com.github.spullara.mustache.java</groupId>
-		    <artifactId>compiler</artifactId>
-		    <version>0.9.5</version>
-		</dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-test</artifactId>
+			<version>3.1.2-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-local</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-derby</artifactId>
+			<version>3.1.2-SNAPSHOT</version>
+			<scope>test</scope>
+    	</dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-tests</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

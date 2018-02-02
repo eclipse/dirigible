@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-ide-service-parent</artifactId>
+		<artifactId>dirigible-engine-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - Service - Generation</name>
-	<artifactId>dirigible-ide-service-generation</artifactId>
+	<name>Engine</name>
+	<artifactId>dirigible-engine</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -20,6 +20,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
+                <inherited>true</inherited>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -29,41 +30,6 @@
     </build>
     
     <dependencies>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-api</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-workspace</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-core</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-runtime-repository</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-workspaces</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-api</artifactId>
@@ -74,12 +40,41 @@
             <artifactId>dirigible-engine-javascript</artifactId>
             <version>3.1.2-SNAPSHOT</version>
         </dependency>
-        
         <dependency>
-		    <groupId>com.github.spullara.mustache.java</groupId>
-		    <artifactId>compiler</artifactId>
-		    <version>0.9.5</version>
-		</dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-javascript-nashorn</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-javascript-rhino</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-javascript-v8</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-job</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-listener</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-web</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-wiki</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

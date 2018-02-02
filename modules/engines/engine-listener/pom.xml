@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-engine-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Messaging</name>
-	<artifactId>dirigible-core-messaging</artifactId>
+	<name>Engine - Listener</name>
+	<artifactId>dirigible-engine-listener</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -56,6 +56,11 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-core-messaging</artifactId>
+			<version>3.1.2-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-api</artifactId>
 			<version>3.1.2-SNAPSHOT</version>
     	</dependency>
@@ -65,43 +70,6 @@
 			<version>3.1.2-SNAPSHOT</version>
     	</dependency>
 
-		<dependency>
-		    <groupId>org.apache.geronimo.specs</groupId>
-		    <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
-		    <version>1.0.1</version>
-		</dependency>
-
-    	<dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-broker</artifactId>
-		    <version>${activemq.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-client</artifactId>
-		    <version>${activemq.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-jdbc-store</artifactId>
-		    <version>${activemq.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-kahadb-store</artifactId>
-		    <version>${activemq.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.activemq</groupId>
-		    <artifactId>activemq-openwire-legacy</artifactId>
-		    <version>${activemq.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.fusesource.hawtbuf</groupId>
-		    <artifactId>hawtbuf</artifactId>
-		    <version>1.11</version>
-		</dependency>
-		
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
@@ -127,5 +95,5 @@
             <scope>test</scope>
         </dependency>    	
     </dependencies>
-    
+
 </project>
