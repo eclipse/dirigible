@@ -80,28 +80,10 @@
         <dependent-module archiveName="dirigible-api-javascript-utils-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Utils/API - JavaScript - Utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - API/Repository - API">
+        <dependent-module archiveName="dirigible-database-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - API/Database - API">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-commons-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - API/Commons - API">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-repository-zip-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - ZIP/Repository - ZIP">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-repository-local-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - Local/Repository - Local">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-repository-search-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - Search/Repository - Search">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Security/API - Facade - Security">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-repository-master-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - Master/Repository - Master">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-database-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - API/Database - API">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-database-sql-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - SQL Builders/Database - SQL Builders">
@@ -111,6 +93,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-database-data-models-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Data Models/Database - Data Models">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-api-facade-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Security/API - Facade - Security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-database-data-structures-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Data Structures/Database - Data Structures">

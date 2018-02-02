@@ -99,22 +99,18 @@
 		 	<artifactId>dirigible-api</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- Repository -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-repository-api</artifactId>
+		 	<artifactId>dirigible-repository</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-repository-zip</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-repository-database</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-repository-local</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<!-- Database -->
