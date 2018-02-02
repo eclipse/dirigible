@@ -393,20 +393,13 @@
 
 		<module>modules/engines</module>
 		<module>modules/services</module>
+		<module>modules/repository</module>
 
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
 		<module>modules/commons-process</module>
 		<module>modules/commons-test</module>
 		<module>modules/commons-xml2json</module>
-
-		<module>modules/repository-api</module>
-		<module>modules/repository-api-test</module>
-		<module>modules/repository-zip</module>
-		<module>modules/repository-local</module>
-		<module>modules/repository-master</module>
-		<module>modules/repository-database</module>
-		<module>modules/repository-search</module>
 
 		<module>modules/database-api</module>
 		<module>modules/database-sql</module>
