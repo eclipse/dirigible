@@ -4,15 +4,15 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-commons-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Commons - XML to JSON</name>
-	<artifactId>dirigible-commons-xml2json</artifactId>
+	<name>Commons - Configurations</name>
+	<artifactId>dirigible-commons-config</artifactId>
     <packaging>jar</packaging>
-    
+
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
