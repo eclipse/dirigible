@@ -17,7 +17,13 @@
         <dependent-module archiveName="dirigible-api-facade-cms-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - CMS/API - Facade - CMS">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-api-facade-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Core/API - Facade - Core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-api-facade-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Database/API - Facade - Database">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-api-facade-http-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - HTTP/API - Facade - HTTP">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-facade-indexing-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Indexing/API - Facade - Indexing">
@@ -159,39 +165,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-runtime-theme-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Runtime - Theme/Runtime - Theme">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - API/Engine - API">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-web-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Web/Engine - Web">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-http-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - HTTP/API - Facade - HTTP">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-js-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript/Engine - Javascript">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-js-rhino-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript - Rhino/Engine - Javascript - Rhino">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Core/API - Facade - Core">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-js-nashorn-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript - Nashorn/Engine - Javascript - Nashorn">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-js-v8-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Javascript - V8/Engine - Javascript - V8">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-wiki-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Wiki/Engine - Wiki">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-listener-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Listener/Engine - Listener">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-engine-job-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Job/Engine - Job">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-cms-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/CMS - API/CMS - API">

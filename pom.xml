@@ -391,6 +391,8 @@
 		<module>resources</module>
 		<module>ext</module>
 
+		<module>modules/engines</module>
+
 		<module>modules/commons-api</module>
 		<module>modules/commons-config</module>
 		<module>modules/commons-process</module>
@@ -432,16 +434,6 @@
 		<module>modules/runtime-theme</module>
 		<module>modules/runtime-anonymous</module>
 
-		<module>modules/engine-api</module>
-		<module>modules/engine-web</module>
-		<module>modules/engine-js</module>
-		<module>modules/engine-js-rhino</module>
-		<module>modules/engine-js-nashorn</module>
-		<module>modules/engine-js-v8</module>
-		<module>modules/engine-wiki</module>
-		<module>modules/engine-listener</module>
-		<module>modules/engine-job</module>
-		
 		<module>modules/cms-api</module>
 		<module>modules/cms-internal</module>
 		<module>modules/cms-managed</module>
