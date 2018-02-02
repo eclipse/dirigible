@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Templates</name>
-	<artifactId>dirigible-templates</artifactId>
+	<name>Template - Parent</name>
+	<artifactId>dirigible-template-parent</artifactId>
 	<description>Templates Plugins</description>
     <packaging>pom</packaging>
 
@@ -35,6 +35,7 @@
 	</properties>
 
 	<modules>
+		<module>template-all</module>
 		<module>template-hello-world</module>
 		<module>template-http-client</module>
 		<module>template-html</module>

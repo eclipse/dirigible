@@ -4,13 +4,13 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-api-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Javascript</name>
-	<artifactId>dirigible-api-javascript</artifactId>
+	<name>API - JavaScript - Parent</name>
+	<artifactId>dirigible-api-javascript-parent</artifactId>
 	<description>Javascript API Modules</description>
     <packaging>pom</packaging>
 
@@ -36,11 +36,12 @@
 
 	<modules>
 		<!-- Content - API -->
+		<module>api-all</module>
 		<module>api-core</module>
 		<module>api-http</module>
 		<module>api-utils</module>
 		<module>api-security</module>
-		<module>api-db</module>
+		<module>api-database</module>
 		<module>api-io</module>
 		<module>api-messaging</module>
 		<module>api-indexing</module>
