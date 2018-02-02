@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-commons-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Commons - API</name>
-	<artifactId>dirigible-commons-api</artifactId>
+	<name>Commons - Process</name>
+	<artifactId>dirigible-commons-process</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -27,5 +27,19 @@
             </plugin>
         </plugins>
     </build>
+    
+    <dependencies>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-api</artifactId>
+			<version>3.1.2-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-config</artifactId>
+			<version>3.1.2-SNAPSHOT</version>
+    	</dependency>
+    	
+    </dependencies>
 
 </project>

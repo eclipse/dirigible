@@ -396,12 +396,7 @@
 		<module>modules/repository</module>
 		<module>modules/core</module>
 		<module>modules/database</module>
-
-		<module>modules/commons-api</module>
-		<module>modules/commons-config</module>
-		<module>modules/commons-process</module>
-		<module>modules/commons-test</module>
-		<module>modules/commons-xml2json</module>
+		<module>modules/commons</module>
 
 		<module>modules/cms-api</module>
 		<module>modules/cms-internal</module>
