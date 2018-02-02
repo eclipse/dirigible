@@ -35,31 +35,6 @@
 					<warName>ROOT</warName>
 				</configuration>
 			</plugin>
-
-			<!-- Include only unit tests for maven-surefire-plugin that is run in -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<!-- Do not define argLine here, it will overwrite the JaCoCo settings!
-						argLine should be defined as property in the properties section. -->
-					<skipTests>${skip.tests}</skipTests>
-					<excludes>
-						<exclude>**/integration/**/*Test.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<skipTests>${skip.tests}</skipTests>
-					<includes>
-						<include>**/integration/**/*Test.java</include>
-					</includes>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -94,34 +69,18 @@
 		<!-- Database -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-api</artifactId>
+		 	<artifactId>dirigible-database</artifactId>
 		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-sql</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-persistence</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-data-models</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-data-structures</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-managed</artifactId>
-		 	<version>3.1.2-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-database-derby</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-database-custom</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Core Services -->
@@ -204,17 +163,5 @@
 			<artifactId>jetty-servlets</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>
-
-		<!-- <dependency>
-		 	<groupId>org.activiti</groupId>
-		 	<artifactId>activiti-engine</artifactId>
-		 	<version>${activiti.version}</version>
-		</dependency>
-	  	<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>${com.h2database.version}</version>
-		</dependency> -->
-		
 	</dependencies>
 </project>
