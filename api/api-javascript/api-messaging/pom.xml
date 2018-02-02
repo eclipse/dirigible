@@ -4,14 +4,14 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-api-javascript</artifactId>
+		<artifactId>dirigible-api-javascript-parent</artifactId>
 		<version>3.1.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Javascript - messaging</name>
+	<name>API - JavaScript - Messaging</name>
 	<artifactId>dirigible-api-javascript-messaging</artifactId>
-	<description>Security Modules</description>
+	<description>Messaging Modules</description>
     <packaging>jar</packaging>
 
 	<scm>

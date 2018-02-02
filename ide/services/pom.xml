@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-ide-parent</artifactId>
+		<version>3.1.2-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<name>IDE - Service - Parent</name>
+	<artifactId>dirigible-ide-service-parent</artifactId>
+	<description>WebIDE Plugins</description>
+    <packaging>pom</packaging>
+
+	<modules>
+		<module>ide-all</module>
+		<module>ide-console</module>
+		<module>ide-databases</module>
+		<module>ide-generation</module>
+		<module>ide-git</module>
+		<module>ide-publisher</module>
+		<module>ide-terminal</module>
+		<module>ide-workspaces</module>
+	</modules>
+</project>
