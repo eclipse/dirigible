@@ -21,7 +21,7 @@ From the end user's perspective (developer), Dirigible runs directly in the brow
 
 From the service provider's perspective (PaaS/SaaS), Dirigible packs all required components in a self-contained software bundle that can be deployed in any Java-based web server, such as Tomcat, Jetty, JBoss.
 
-Dirigible supports access to RDBMS via  JDBC. Currently supported versions for RDBMS are HANA 1.x, MaxDB, Sybase ASE (experimental), and PostgreSQL (experimental).
+Dirigible supports access to RDBMS via JDBC. Currently supported versions for RDBMS are HANA, MaxDB, Sybase ASE, PostgreSQL, H2, and Derby.
 
 The project started as an internal SAP initiative to address the extension and adaption use-cases related to SOA and Enterprise Services.
 
