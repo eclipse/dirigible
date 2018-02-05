@@ -1,6 +1,6 @@
 # Eclipse Dirigible™ 
 
-[![Build Status](https://img.shields.io/jenkins/s/https/hudson.eclipse.org/dirigible/dirigible-nightly.svg?maxAge=2592000)](https://hudson.eclipse.org/dirigible/)
+[![Build Status](https://img.shields.io/jenkins/s/https/ci.eclipse.org/dirigible/dirigible-nightly.svg?maxAge=2592000)](https://ci.eclipse.org/dirigible/)
 [![Build Status](https://secure.travis-ci.org/eclipse/dirigible.png)](http://travis-ci.org/eclipse/dirigible)
 [![Eclipse License](http://img.shields.io/badge/license-Eclipse-brightgreen.svg)](https://github.com/eclipse/dirigible/blob/master/LICENSE)
 [![Download Dirigible](https://img.shields.io/badge/download-releases-green.svg)](http://download.eclipse.org/dirigible/)
