@@ -125,6 +125,8 @@ public class DatabaseQueryHelper {
 				callback.updateDone(preparedStatement.getUpdateCount());
 			}
 		} catch (Exception e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
 			callback.error(e);
 		} finally {
 			try {

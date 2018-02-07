@@ -58,7 +58,7 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case CHAR:
-					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
+					createTableBuilder.columnChar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
 							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case DATE:
@@ -78,7 +78,7 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 							columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case TINYINT:
-					createTableBuilder.columnInteger(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+					createTableBuilder.columnTinyint(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
 							columnModel.isUnique());
 					break;
 				case BIGINT:
@@ -107,6 +107,9 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 				case DECIMAL:
 					createTableBuilder.columnDecimal(columnModel.getName(), columnModel.getPrecision(), columnModel.getScale(),
 							columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
+					break;
+				case BIT:
+					createTableBuilder.columnBit(columnModel.getName(), columnModel.isNullable());
 					break;
 			}
 		}
@@ -137,6 +140,8 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

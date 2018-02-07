@@ -14,6 +14,10 @@ It aims at achieving:
 
 It is purely text generation and formating library without a requirement for an active JDBC connection. The only exception is the *getNative(connection)* method below for deriving the actual dialect based on the Product Name for the JDBC meta-data.
 
+## Supported Data Types
+
+VARCHAR, CHAR, DATE, TIME, TIMESTAMP, INTEGER, TINYINT, BIGINT, SMALLINT, REAL, DOUBLE, BOOLEAN, BLOB, DECIMAL, BIT
+
 ## Samples
 
 ### Basic Sample

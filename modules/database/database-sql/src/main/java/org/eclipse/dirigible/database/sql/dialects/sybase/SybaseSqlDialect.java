@@ -52,6 +52,8 @@ public class SybaseSqlDialect extends
 				return "IMAGE";
 			case BOOLEAN:
 				return "BIT";
+			case DOUBLE:
+				return "DOUBLE PRECISION";
 			default:
 				return super.getDataTypeName(dataType);
 		}

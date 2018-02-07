@@ -59,6 +59,13 @@
 			<version>1.4.193</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- <dependency>
+			<groupId>com.sybase.jdbc4</groupId>
+			<artifactId>jconn4</artifactId>
+			<version>7.07.138.26368</version>
+			<scope>test</scope>
+		</dependency> -->
 
 	</dependencies>
 </project>

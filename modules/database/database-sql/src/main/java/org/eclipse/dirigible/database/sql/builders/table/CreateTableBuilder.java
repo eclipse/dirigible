@@ -1796,7 +1796,7 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 			Boolean isIdentity, String... args) {
 		String[] definition = new String[] { OPEN + precision + "," + scale + CLOSE };
 		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
-		return this.column(name, DataType.CHAR, isPrimaryKey, isNullable, isUnique, isIdentity, coulmn);
+		return this.column(name, DataType.DECIMAL, isPrimaryKey, isNullable, isUnique, isIdentity, coulmn);
 	}
 
 	/**
@@ -1895,6 +1895,60 @@ public class CreateTableBuilder extends AbstractCreateSqlBuilder {
 	 */
 	public CreateTableBuilder columnDecimal(String name, int precision, int scale) {
 		return columnDecimal(name, precision, scale, false);
+	}
+	
+	/**
+	 * Column bit.
+	 *
+	 * @param name
+	 *            the name
+	 * @param isNullable
+	 *            the is nullable
+	 * @param args
+	 *            the args
+	 * @return the creates the table builder
+	 */
+	public CreateTableBuilder columnBit(String name, Boolean isNullable, String... args) {
+		return this.column(name, DataType.BIT, false, isNullable, false, args);
+	}
+
+	/**
+	 * Column bit.
+	 *
+	 * @param name
+	 *            the name
+	 * @param isNullable
+	 *            the is nullable
+	 * @param args
+	 *            the args
+	 * @return the creates the table builder
+	 */
+	public CreateTableBuilder columnBit(String name, Boolean isNullable, String args) {
+		return columnBit(name, isNullable, splitValues(args));
+	}
+
+	/**
+	 * Column bit.
+	 *
+	 * @param name
+	 *            the name
+	 * @param isNullable
+	 *            the is nullable
+	 * @return the creates the table builder
+	 */
+	public CreateTableBuilder columnBit(String name, Boolean isNullable) {
+		return columnBit(name, isNullable, new String[] {});
+	}
+
+	/**
+	 * Column bit.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the creates the table builder
+	 */
+	public CreateTableBuilder columnBit(String name) {
+		return columnBit(name, false, new String[] {});
 	}
 
 	/**
