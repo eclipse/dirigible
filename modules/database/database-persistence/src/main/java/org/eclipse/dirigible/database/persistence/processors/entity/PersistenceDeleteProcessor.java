@@ -114,6 +114,8 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 			setValue(preparedStatement, 1, id);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
@@ -143,6 +145,8 @@ public class PersistenceDeleteProcessor<T> extends AbstractPersistenceProcessor 
 			preparedStatement = openPreparedStatement(connection, sql);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

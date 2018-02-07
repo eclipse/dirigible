@@ -50,6 +50,7 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BOOLEAN, DataType.BOOLEAN);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BLOB, DataType.BLOB);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.DECIMAL, DataType.DECIMAL);
+		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BIT, DataType.BIT);
 
 		STRING_TO_DATABASE_TYPE.put("VARCHAR", Types.VARCHAR);
 		STRING_TO_DATABASE_TYPE.put("CHAR", Types.CHAR);
@@ -64,6 +65,7 @@ public class DataTypeUtils {
 		STRING_TO_DATABASE_TYPE.put("BOOLEAN", Types.BOOLEAN);
 		STRING_TO_DATABASE_TYPE.put("BLOB", Types.BLOB);
 		STRING_TO_DATABASE_TYPE.put("DECIMAL", Types.DECIMAL);
+		STRING_TO_DATABASE_TYPE.put("BIT", Types.BIT);
 
 		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.VARCHAR);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Integer.class, Types.INTEGER);
@@ -80,7 +82,6 @@ public class DataTypeUtils {
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Time.class, Types.TIME);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Timestamp.class, Types.TIMESTAMP);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(byte[].class, Types.BLOB);
-		JAVA_TYPE_TO_DATABASE_TYPE.put(Double.class, Types.DECIMAL);
 
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.VARCHAR, String.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.CHAR, String.class);
@@ -97,6 +98,7 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.BOOLEAN, boolean.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.BLOB, byte[].class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.DECIMAL, Double.class);
+		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.BIT, boolean.class);
 
 	}
 
@@ -334,6 +336,17 @@ public class DataTypeUtils {
 	 */
 	public static boolean isDecimal(String dataType) {
 		return DataType.DECIMAL.toString().equals(dataType);
+	}
+	
+	/**
+	 * Checks if is bit.
+	 *
+	 * @param dataType
+	 *            the data type
+	 * @return true, if is bit
+	 */
+	public static boolean isBit(String dataType) {
+		return DataType.BIT.toString().equals(dataType);
 	}
 
 }

@@ -103,6 +103,8 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 			setValue(preparedStatement, tableModel.getColumns().size(), id);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

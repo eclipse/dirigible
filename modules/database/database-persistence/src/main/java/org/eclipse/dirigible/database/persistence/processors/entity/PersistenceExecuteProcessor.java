@@ -76,6 +76,8 @@ public class PersistenceExecuteProcessor<T> extends AbstractPersistenceProcessor
 			}
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
 			throw new PersistenceException(e);
 		} finally {
 			closePreparedStatement(preparedStatement);

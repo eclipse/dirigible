@@ -15,6 +15,8 @@ import static java.text.MessageFormat.format;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
@@ -124,6 +126,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				}
 				setValue(preparedStatement, i++, dataType, valueObject);
 			} catch (PersistenceException e) {
+				logger.error(e.getMessage(), e);
 				throw new PersistenceException(format("Database type [{0}] not supported (Class: [{1}])", dataType, pojo.getClass()));
 			}
 		}
@@ -239,6 +242,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				preparedStatement.setString(i, (String) value);
 			} else if ((value instanceof Character) || char.class.getCanonicalName().equals(value.getClass().getCanonicalName())) {
 				preparedStatement.setString(i, new String(new char[] { (char) value }));
+			} else {
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		} else if (DataTypeUtils.isDate(dataType)) {
 			preparedStatement.setDate(i, (Date) value);
@@ -253,7 +258,13 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		} else if (DataTypeUtils.isSmallint(dataType)) {
 			preparedStatement.setShort(i, (Short) value);
 		} else if (DataTypeUtils.isBigint(dataType)) {
-			preparedStatement.setLong(i, (Long) value);
+			if (value instanceof Long) {
+				preparedStatement.setLong(i, (Long) value);
+			} else if (value instanceof BigInteger) {
+				preparedStatement.setLong(i, ((BigInteger) value).longValueExact());
+			} else {
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+			}
 		} else if (DataTypeUtils.isReal(dataType)) {
 			preparedStatement.setFloat(i, (Float) value);
 		} else if (DataTypeUtils.isDouble(dataType)) {
@@ -261,10 +272,26 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		} else if (DataTypeUtils.isBoolean(dataType)) {
 			preparedStatement.setBoolean(i, (Boolean) value);
 		} else if (DataTypeUtils.isDecimal(dataType)) {
-			preparedStatement.setDouble(i, (Double) value);
+			if (value instanceof Double) {
+				preparedStatement.setDouble(i, (Double) value);
+			} else if (value instanceof BigDecimal) {
+				preparedStatement.setBigDecimal(i, ((BigDecimal) value));
+			} else {
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+			}
 		} else if (DataTypeUtils.isBlob(dataType)) {
 			byte[] bytes = (byte[]) value;
 			preparedStatement.setBinaryStream(i, new ByteArrayInputStream(bytes), bytes.length);
+		} else if (DataTypeUtils.isBit(dataType)) {
+			if ((value instanceof Boolean) || Boolean.TYPE.isInstance(value)) {
+				preparedStatement.setBoolean(i, (Boolean) value);
+			} else if (value instanceof Byte || Byte.TYPE.isInstance(value)) {
+				preparedStatement.setBoolean(i, ((Byte) value == 1));
+			} else if (value instanceof Integer || Integer.TYPE.isInstance(value)) {
+				preparedStatement.setBoolean(i, ((Integer) value == 1));
+			} else {
+				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+			}
 		}
 
 		else {
@@ -336,38 +363,89 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 					throw new IllegalStateException("The annotation @Enumerated is misused, the value is unknown.");
 				}
 			}
-			if (field.getType().equals(byte.class) || field.getType().equals(Byte.class)) {
-				if (value instanceof Integer) {
-					value = ((Integer) value).byteValue();
-				}
-			}
-			if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
-				if (value instanceof Long) {
-					value = ((Long) value).intValue();
-				}
-			}
+			value = byteAdaptation(value, field);
+			value = intAdaptation(value, field);
+			value = blobAdaptation(value);
+			value = charAdaptation(value, field);
+			value = booleanAdaptation(value, field);
+			value = bigIntegerAdaptation(value, field);
+			value = shortAdaptation(value, field);
+			
 			if (getEntityManagerInterceptor() != null) {
 				value = getEntityManagerInterceptor().onSetValueAfterQuery(pojo, field, value);
 			}
-			if (value instanceof Blob) {
-				value = IOUtils.toByteArray(((Blob) value).getBinaryStream());
-			}
-			if (field.getType().equals(char.class) || field.getType().equals(Character.class)) {
-				if ((value instanceof String) && (((String) value).length() <= 1)) {
-					value = new Character(((String) value).charAt(0));
-				} else {
-					throw new IllegalStateException("Trying to set a multi-character string to a single character field.");
-				}
-			}
-			if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
-				if (value instanceof Short) {
-					value = Boolean.valueOf(((Short) value) != 0);
-				}
-			}
+			
 			field.set(pojo, value);
 		} finally {
 			resetAccessible(field, oldAccessible);
 		}
+	}
+
+	private Object shortAdaptation(Object value, Field field) {
+		if (field.getType().equals(short.class) || field.getType().equals(Short.class)) {
+			if (value instanceof Long) {
+				value = ((Long) value).shortValue();
+			} else if (value instanceof Integer) {
+				value = ((Integer) value).shortValue();
+			} else if (value instanceof Byte) {
+				value = ((Byte) value).shortValue();
+			}
+		}
+		return value;
+	}
+	
+	private Object bigIntegerAdaptation(Object value, Field field) {
+		if (field.getType().equals(BigInteger.class)) {
+			if (value instanceof Long) {
+				value = BigInteger.valueOf(((Long) value));
+			}
+		}
+		return value;
+	}
+
+	private Object booleanAdaptation(Object value, Field field) {
+		if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
+			if (value instanceof Short) {
+				value = Boolean.valueOf(((Short) value) != 0);
+			}
+		}
+		return value;
+	}
+
+	private Object charAdaptation(Object value, Field field) {
+		if (field.getType().equals(char.class) || field.getType().equals(Character.class)) {
+			if ((value instanceof String) && (((String) value).length() <= 1)) {
+				value = new Character(((String) value).charAt(0));
+			} else {
+				throw new IllegalStateException("Trying to set a multi-character string to a single character field.");
+			}
+		}
+		return value;
+	}
+
+	private Object blobAdaptation(Object value) throws IOException, SQLException {
+		if (value instanceof Blob) {
+			value = IOUtils.toByteArray(((Blob) value).getBinaryStream());
+		}
+		return value;
+	}
+
+	private Object intAdaptation(Object value, Field field) {
+		if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
+			if (value instanceof Long) {
+				value = ((Long) value).intValue();
+			}
+		}
+		return value;
+	}
+
+	private Object byteAdaptation(Object value, Field field) {
+		if (field.getType().equals(byte.class) || field.getType().equals(Byte.class)) {
+			if (value instanceof Integer) {
+				value = ((Integer) value).byteValue();
+			}
+		}
+		return value;
 	}
 
 	/**

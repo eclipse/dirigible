@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.database.sql.dialects.derby;
 
+import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
@@ -71,6 +72,18 @@ public class DerbySqlDialect extends
 	@Override
 	public DerbyLastValueIdentityBuilder lastval(String... args) {
 		return new DerbyLastValueIdentityBuilder(this, args);
+	}
+	
+	@Override
+	public String getDataTypeName(DataType dataType) {
+		switch (dataType) {
+			case BIT:
+				return "BOOLEAN";
+			case TINYINT:
+				return "SMALLINT";
+			default:
+				return super.getDataTypeName(dataType);
+		}
 	}
 
 }

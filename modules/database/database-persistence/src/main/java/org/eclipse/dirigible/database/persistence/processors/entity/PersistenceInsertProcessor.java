@@ -126,6 +126,8 @@ public class PersistenceInsertProcessor<T> extends AbstractPersistenceProcessor 
 				}
 			}
 		} catch (Exception e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);

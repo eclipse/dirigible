@@ -5,349 +5,355 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="dirigible-commons-config-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Configurations/Commons - Configurations">
+        <dependent-module archiveName="dirigible-commons-config-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-config/dirigible-commons-config">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API/API">
+        <dependent-module archiveName="dirigible-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api/dirigible-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-all-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - All/API - Facade - All">
+        <dependent-module archiveName="dirigible-api-facade-all-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-all/dirigible-api-facade-all">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-cms-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - CMS/API - Facade - CMS">
+        <dependent-module archiveName="dirigible-api-facade-cms-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-cms/dirigible-api-facade-cms">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Core/API - Facade - Core">
+        <dependent-module archiveName="dirigible-api-facade-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-core/dirigible-api-facade-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Database/API - Facade - Database">
+        <dependent-module archiveName="dirigible-api-facade-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-database/dirigible-api-facade-database">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-http-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - HTTP/API - Facade - HTTP">
+        <dependent-module archiveName="dirigible-api-facade-http-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-http/dirigible-api-facade-http">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-indexing-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Indexing/API - Facade - Indexing">
+        <dependent-module archiveName="dirigible-api-facade-indexing-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-indexing/dirigible-api-facade-indexing">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-io-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - IO/API - Facade - IO">
+        <dependent-module archiveName="dirigible-api-facade-io-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-io/dirigible-api-facade-io">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-log-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Log/API - Facade - Log">
+        <dependent-module archiveName="dirigible-api-facade-log-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-log/dirigible-api-facade-log">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-messaging-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Messaging/API - Facade - Messaging">
+        <dependent-module archiveName="dirigible-api-facade-messaging-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-messaging/dirigible-api-facade-messaging">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Security/API - Facade - Security">
+        <dependent-module archiveName="dirigible-api-facade-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-security/dirigible-api-facade-security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-utils-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - Facade - Utils/API - Facade - Utils">
+        <dependent-module archiveName="dirigible-api-facade-utils-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-utils/dirigible-api-facade-utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-xml2json-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - XML to JSON/Commons - XML to JSON">
+        <dependent-module archiveName="dirigible-commons-xml2json-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-xml2json/dirigible-commons-xml2json">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-all-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - All/API - JavaScript - All">
+        <dependent-module archiveName="dirigible-api-javascript-all-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-all/dirigible-api-javascript-all">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-cms-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - CMS/API - JavaScript - CMS">
+        <dependent-module archiveName="dirigible-api-javascript-cms-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-cms/dirigible-api-javascript-cms">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Core/API - JavaScript - Core">
+        <dependent-module archiveName="dirigible-api-javascript-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-core/dirigible-api-javascript-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Database/API - JavaScript - Database">
+        <dependent-module archiveName="dirigible-api-javascript-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-database/dirigible-api-javascript-database">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-http-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - HTTP/API - JavaScript - HTTP">
+        <dependent-module archiveName="dirigible-api-javascript-http-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-http/dirigible-api-javascript-http">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-indexing-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Indexing/API - JavaScript - Indexing">
+        <dependent-module archiveName="dirigible-api-javascript-indexing-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-indexing/dirigible-api-javascript-indexing">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-io-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - IO/API - JavaScript - IO">
+        <dependent-module archiveName="dirigible-api-javascript-io-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-io/dirigible-api-javascript-io">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-log-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Log/API - JavaScript - Log">
+        <dependent-module archiveName="dirigible-api-javascript-log-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-log/dirigible-api-javascript-log">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-messaging-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Messaging/API - JavaScript - Messaging">
+        <dependent-module archiveName="dirigible-api-javascript-messaging-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-messaging/dirigible-api-javascript-messaging">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Security/API - JavaScript - Security">
+        <dependent-module archiveName="dirigible-api-javascript-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-security/dirigible-api-javascript-security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-test-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Test/API - JavaScript - Test">
+        <dependent-module archiveName="dirigible-api-javascript-test-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-test/dirigible-api-javascript-test">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-utils-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/API - JavaScript - Utils/API - JavaScript - Utils">
+        <dependent-module archiveName="dirigible-api-javascript-utils-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-utils/dirigible-api-javascript-utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository/Repository">
+        <dependent-module archiveName="dirigible-repository-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository/dirigible-repository">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - API/Repository - API">
+        <dependent-module archiveName="dirigible-repository-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-api/dirigible-repository-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-local-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - Local/Repository - Local">
+        <dependent-module archiveName="dirigible-commons-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-api/dirigible-commons-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-master-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - Master/Repository - Master">
+        <dependent-module archiveName="dirigible-repository-local-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-local/dirigible-repository-local">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-search-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - Search/Repository - Search">
+        <dependent-module archiveName="dirigible-repository-master-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-master/dirigible-repository-master">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-repository-zip-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Repository - ZIP/Repository - ZIP">
+        <dependent-module archiveName="dirigible-repository-search-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-search/dirigible-repository-search">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database/Database">
+        <dependent-module archiveName="dirigible-repository-zip-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository-zip/dirigible-repository-zip">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - API/Database - API">
+        <dependent-module archiveName="dirigible-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database/dirigible-database">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-data-models-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Data Models/Database - Data Models">
+        <dependent-module archiveName="dirigible-database-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-api/dirigible-database-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-data-structures-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Data Structures/Database - Data Structures">
+        <dependent-module archiveName="dirigible-database-data-models-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-data-models/dirigible-database-data-models">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-derby-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Derby/Database - Derby">
+        <dependent-module archiveName="dirigible-database-data-structures-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-data-structures/dirigible-database-data-structures">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-persistence-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - Persistence/Database - Persistence">
+        <dependent-module archiveName="dirigible-database-derby-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-derby/dirigible-database-derby">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-database-sql-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Database - SQL Builders/Database - SQL Builders">
+        <dependent-module archiveName="dirigible-database-persistence-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-persistence/dirigible-database-persistence">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core/Core">
+        <dependent-module archiveName="dirigible-database-sql-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-database-sql/dirigible-database-sql">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-extensions-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Extensions/Core - Extensions">
+        <dependent-module archiveName="dirigible-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core/dirigible-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-git-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Git/Core - Git">
+        <dependent-module archiveName="dirigible-core-extensions-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-extensions/dirigible-core-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-indexing-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Indexing/Core - Indexing">
+        <dependent-module archiveName="dirigible-core-git-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-git/dirigible-core-git">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-test-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Test/Commons - Test">
+        <dependent-module archiveName="dirigible-core-indexing-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-indexing/dirigible-core-indexing">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-messaging-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Messaging/Core - Messaging">
+        <dependent-module archiveName="dirigible-commons-test-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-test/dirigible-commons-test">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-publisher-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Publisher/Core - Publisher">
+        <dependent-module archiveName="dirigible-core-messaging-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-messaging/dirigible-core-messaging">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-scheduler-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Scheduler/Core - Scheduler">
+        <dependent-module archiveName="dirigible-core-publisher-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-publisher/dirigible-core-publisher">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Security/Core - Security">
+        <dependent-module archiveName="dirigible-core-scheduler-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-scheduler/dirigible-core-scheduler">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-core-workspace-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Core - Workspace/Core - Workspace">
+        <dependent-module archiveName="dirigible-core-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-security/dirigible-core-security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-services-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Services/Services">
+        <dependent-module archiveName="dirigible-core-workspace-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-workspace/dirigible-core-workspace">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-service-anonymous-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Service - Anonymous/Service - Anonymous">
+        <dependent-module archiveName="dirigible-services-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-services/dirigible-services">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-service-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Service - Core/Service - Core">
+        <dependent-module archiveName="dirigible-service-anonymous-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-anonymous/dirigible-service-anonymous">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-service-extensions-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Service - Extensions/Service - Extensions">
+        <dependent-module archiveName="dirigible-service-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-core/dirigible-service-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-service-registry-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Service - Registry/Service - Registry">
+        <dependent-module archiveName="dirigible-service-extensions-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-extensions/dirigible-service-extensions">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-service-repository-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Service - Repository/Service - Repository">
+        <dependent-module archiveName="dirigible-service-registry-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-registry/dirigible-service-registry">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-service-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Service - Security/Service - Security">
+        <dependent-module archiveName="dirigible-service-repository-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-repository/dirigible-service-repository">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-service-theme-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Service - Theme/Service - Theme">
+        <dependent-module archiveName="dirigible-service-security-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-security/dirigible-service-security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-service-transport-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Service - Transport/Service - Transport">
+        <dependent-module archiveName="dirigible-service-theme-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-theme/dirigible-service-theme">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine/Engine">
+        <dependent-module archiveName="dirigible-service-transport-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-transport/dirigible-service-transport">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - API/Engine - API">
+        <dependent-module archiveName="dirigible-engine-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine/dirigible-engine">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-javascript-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - JavaScript/Engine - JavaScript">
+        <dependent-module archiveName="dirigible-engine-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-api/dirigible-engine-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-javascript-nashorn-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - JavaScript - Nashorn/Engine - JavaScript - Nashorn">
+        <dependent-module archiveName="dirigible-engine-javascript-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-javascript/dirigible-engine-javascript">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-javascript-rhino-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - JavaScript - Rhino/Engine - JavaScript - Rhino">
+        <dependent-module archiveName="dirigible-engine-javascript-nashorn-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-javascript-nashorn/dirigible-engine-javascript-nashorn">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-javascript-v8-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - JavaScript - V8/Engine - JavaScript - V8">
+        <dependent-module archiveName="dirigible-engine-javascript-rhino-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-javascript-rhino/dirigible-engine-javascript-rhino">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-job-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Job/Engine - Job">
+        <dependent-module archiveName="dirigible-engine-javascript-v8-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-javascript-v8/dirigible-engine-javascript-v8">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-listener-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Listener/Engine - Listener">
+        <dependent-module archiveName="dirigible-engine-job-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-job/dirigible-engine-job">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-web-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Web/Engine - Web">
+        <dependent-module archiveName="dirigible-engine-listener-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-listener/dirigible-engine-listener">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-engine-wiki-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Wiki/Engine - Wiki">
+        <dependent-module archiveName="dirigible-engine-web-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-web/dirigible-engine-web">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-cms-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/CMS - API/CMS - API">
+        <dependent-module archiveName="dirigible-engine-wiki-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine-wiki/dirigible-engine-wiki">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - API/Commons - API">
+        <dependent-module archiveName="dirigible-cms-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-cms/dirigible-cms">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-cms-internal-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/CMS - Internal/CMS - Internal">
+        <dependent-module archiveName="dirigible-cms-api-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-cms-api/dirigible-cms-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE/IDE">
+        <dependent-module archiveName="dirigible-cms-internal-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-cms-internal/dirigible-cms-internal">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI/IDE - UI">
+        <dependent-module archiveName="dirigible-cms-managed-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-cms-managed/dirigible-cms-managed">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Core/IDE - UI - Core">
+        <dependent-module archiveName="dirigible-ide-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide/dirigible-ide">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-terminal-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Terminal/IDE - UI - Terminal">
+        <dependent-module archiveName="dirigible-ide-ui-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui/dirigible-ide-ui">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-console-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Console/IDE - UI - Console">
+        <dependent-module archiveName="dirigible-ide-ui-core-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-core/dirigible-ide-ui-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-orion-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Orion/IDE - UI - Orion">
+        <dependent-module archiveName="dirigible-ide-ui-terminal-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-terminal/dirigible-ide-ui-terminal">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-swagger-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Swagger/IDE - UI - Swagger">
+        <dependent-module archiveName="dirigible-ide-ui-console-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-console/dirigible-ide-ui-console">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-workspace-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Workspace/IDE - UI - Workspace">
+        <dependent-module archiveName="dirigible-ide-ui-orion-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-orion/dirigible-ide-ui-orion">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-preview-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Preview/IDE - UI - Preview">
+        <dependent-module archiveName="dirigible-ide-ui-swagger-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-swagger/dirigible-ide-ui-swagger">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-help-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Help/IDE - UI - Help">
+        <dependent-module archiveName="dirigible-ide-ui-workspace-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-workspace/dirigible-ide-ui-workspace">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Database/IDE - UI - Database">
+        <dependent-module archiveName="dirigible-ide-ui-preview-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-preview/dirigible-ide-ui-preview">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-git-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Git/IDE - UI - Git">
+        <dependent-module archiveName="dirigible-ide-ui-help-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-help/dirigible-ide-ui-help">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-repository-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Repository/IDE - UI - Repository">
+        <dependent-module archiveName="dirigible-ide-ui-database-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-database/dirigible-ide-ui-database">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-ui-documents-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - UI - Documents/IDE - UI - Documents">
+        <dependent-module archiveName="dirigible-ide-ui-git-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-git/dirigible-ide-ui-git">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-services-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Services/IDE - Services">
+        <dependent-module archiveName="dirigible-ide-ui-repository-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-repository/dirigible-ide-ui-repository">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-service-console-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Console/IDE - Service - Console">
+        <dependent-module archiveName="dirigible-ide-ui-documents-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-documents/dirigible-ide-ui-documents">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-service-databases-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Databases/IDE - Service - Databases">
+        <dependent-module archiveName="dirigible-ide-services-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-services/dirigible-ide-services">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-service-generation-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Generation/IDE - Service - Generation">
+        <dependent-module archiveName="dirigible-ide-service-console-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-console/dirigible-ide-service-console">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-service-git-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Git/IDE - Service - Git">
+        <dependent-module archiveName="dirigible-ide-service-databases-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-databases/dirigible-ide-service-databases">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-service-publisher-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Publisher/IDE - Service - Publisher">
+        <dependent-module archiveName="dirigible-ide-service-generation-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-generation/dirigible-ide-service-generation">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-service-terminal-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Terminal/IDE - Service - Terminal">
+        <dependent-module archiveName="dirigible-ide-service-git-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-git/dirigible-ide-service-git">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-commons-process-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Process/Commons - Process">
+        <dependent-module archiveName="dirigible-ide-service-publisher-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-publisher/dirigible-ide-service-publisher">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ide-service-workspaces-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Workspaces/IDE - Service - Workspaces">
+        <dependent-module archiveName="dirigible-ide-service-terminal-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-terminal/dirigible-ide-service-terminal">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-templates-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Templates/Templates">
+        <dependent-module archiveName="dirigible-commons-process-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-commons-process/dirigible-commons-process">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-hello-world-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Hello World/Template - Hello World">
+        <dependent-module archiveName="dirigible-ide-service-workspaces-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-workspaces/dirigible-ide-service-workspaces">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-http-client-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - HTTP Client/Template - HTTP Client">
+        <dependent-module archiveName="dirigible-templates-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-templates/dirigible-templates">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-database-access-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Database Access/Template - Database Access">
+        <dependent-module archiveName="dirigible-template-hello-world-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-hello-world/dirigible-template-hello-world">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-database-table-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Database Table/Template - Database Table">
+        <dependent-module archiveName="dirigible-template-http-client-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-http-client/dirigible-template-http-client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-database-view-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Database View/Template - Database View">
+        <dependent-module archiveName="dirigible-template-database-access-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-database-access/dirigible-template-database-access">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-html-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - HTML/Template - HTML">
+        <dependent-module archiveName="dirigible-template-database-table-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-database-table/dirigible-template-database-table">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-bookstore-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Bookstore/Template - Bookstore">
+        <dependent-module archiveName="dirigible-template-database-view-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-database-view/dirigible-template-database-view">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-job-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Job/Template - Job">
+        <dependent-module archiveName="dirigible-template-html-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-html/dirigible-template-html">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-listener-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Listener/Template - Listener">
+        <dependent-module archiveName="dirigible-template-bookstore-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-bookstore/dirigible-template-bookstore">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-extension-view-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Extension View/Template - Extension View">
+        <dependent-module archiveName="dirigible-template-job-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-job/dirigible-template-job">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-template-extension-perspective-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Template - Extension Perspective/Template - Extension Perspective">
+        <dependent-module archiveName="dirigible-template-listener-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-listener/dirigible-template-listener">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-resources-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources/Resources">
+        <dependent-module archiveName="dirigible-template-extension-view-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-extension-view/dirigible-template-extension-view">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-resources-angular-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Angular/Resources - Angular">
+        <dependent-module archiveName="dirigible-template-extension-perspective-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-extension-perspective/dirigible-template-extension-perspective">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-resources-bootstrap-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Bootstrap/Resources - Bootstrap">
+        <dependent-module archiveName="dirigible-resources-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources/dirigible-resources">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-resources-fonts-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Fonts/Resources - Fonts">
+        <dependent-module archiveName="dirigible-resources-angular-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-angular/dirigible-resources-angular">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-resources-goldenlayout-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - GoldenLayout/Resources - GoldenLayout">
+        <dependent-module archiveName="dirigible-resources-bootstrap-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-bootstrap/dirigible-resources-bootstrap">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-resources-jquery-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - jQuery/Resources - jQuery">
+        <dependent-module archiveName="dirigible-resources-fonts-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-fonts/dirigible-resources-fonts">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-resources-jstree-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - jsTree/Resources - jsTree">
+        <dependent-module archiveName="dirigible-resources-goldenlayout-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-goldenlayout/dirigible-resources-goldenlayout">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-resources-themes-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Resources - Themes/Resources - Themes">
+        <dependent-module archiveName="dirigible-resources-jquery-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-jquery/dirigible-resources-jquery">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-ext-qunit-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Ext - QUnit/Ext - QUnit">
+        <dependent-module archiveName="dirigible-resources-jstree-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-jstree/dirigible-resources-jstree">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-themes-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-themes/dirigible-resources-themes">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ext-qunit-3.1.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ext-qunit/dirigible-ext-qunit">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>

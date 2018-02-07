@@ -77,6 +77,8 @@ public class PersistenceCreateSequenceProcessor extends AbstractPersistenceProce
 			preparedStatement = openPreparedStatement(connection, sql);
 			result = preparedStatement.executeUpdate();
 		} catch (Exception e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
 			throw new PersistenceException(sql, e);
 		} finally {
 			closePreparedStatement(preparedStatement);
