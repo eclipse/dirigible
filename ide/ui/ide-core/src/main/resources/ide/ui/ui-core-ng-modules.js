@@ -80,14 +80,16 @@ angular.module('ideUiCore', ['ngResource'])
 .provider('Editors', function(){
 	var editorProviders = this.editorProviders = {
 				"orion":  "../ide-orion/editor.html",
-				"repository":  "../ide-orion/repository.html"
+				"repository":  "../ide-orion/repository.html",
+				"flowable": "../ide-bpm/index.html#/editor"
 			}
 	var editorsForContentType = this.editorsForContentType = {
 			"": ['orion'],
 			"application/javascript": ['orion'],
 			"application/json": ['orion'],
 			"text/plain": ['orion'],
-			"text/html": ['orion']
+			"text/html": ['orion'],
+			"application/bpmn+xml": ['flowable']
 		};			
 	var defaultEditorId = this.defaultEditorId = "orion";
 	this.$get = [function editorsFactory() {
@@ -117,13 +119,22 @@ angular.module('ideUiCore', ['ngResource'])
 				 */
 				(function(componentState){
 					var src, editorPath;
-					if(!componentState.editorId || Object.keys(self.editors.editorProviders).indexOf(componentState.editorId) < 0)
-						editorPath = self.editors.editorProviders[self.editors.defaultEditorId];
+					if(!componentState.editorId || Object.keys(self.editors.editorProviders).indexOf(componentState.editorId) < 0) {
+						if (Object.keys(self.editors.editorsForContentType).indexOf(componentState.contentType) < 0) {
+							editorPath = self.editors.editorProviders[self.editors.defaultEditorId];
+						} else {
+							componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0];
+							editorPath = self.editors.editorProviders[componentState.editorId];
+						}
+					}
 					else
 						editorPath = self.editors.editorProviders[componentState.editorId];
 					if (componentState.path) {
-						src = editorPath + '?file='+componentState.path;
-						if(componentState.contentType)
+						if (componentState.editorId === 'flowable')
+							src = editorPath + componentState.path;
+						else 
+							src = editorPath + '?file=' + componentState.path;
+						if(componentState.contentType && componentState.editorId !== 'flowable')
 							src += "&contentType="+componentState.contentType;
 					} else {
 						container.setTitle("Welcome");
