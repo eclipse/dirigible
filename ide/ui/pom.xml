@@ -48,6 +48,7 @@
 		<module>ide-swagger</module>
 		<module>ide-terminal</module>
 		<module>ide-workspace</module>
+		<module>ide-bpm</module>
 	</modules>
 
 	<profiles>

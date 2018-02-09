@@ -380,6 +380,7 @@
 		<jetty.version>9.4.5.v20170502</jetty.version>
 		<lucene.version>7.0.1</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
+		<flowable.version>6.2.1</flowable.version>
 		
 		<skip.tests>true</skip.tests>
 	</properties>
@@ -398,6 +399,7 @@
 		<module>modules/database</module>
 		<module>modules/commons</module>
 		<module>modules/cms</module>
+		<module>modules/bpm</module>
 
 		<module>releng/desktop-all</module>
 		<module>releng/sap-all</module>
