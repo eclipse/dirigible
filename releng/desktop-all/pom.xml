@@ -294,6 +294,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- BPM -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-bpm</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- IDE Plugins -->
 		<dependency>
