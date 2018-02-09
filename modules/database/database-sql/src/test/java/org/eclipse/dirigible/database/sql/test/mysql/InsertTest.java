@@ -8,16 +8,15 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.database.sql.test.h2;
+package org.eclipse.dirigible.database.sql.test.mysql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.h2.H2SqlDialect;
+import org.eclipse.dirigible.database.sql.dialects.mysql.MySQLSqlDialect;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class InsertTest.
  */
@@ -28,7 +27,7 @@ public class InsertTest {
 	 */
 	@Test
 	public void insertSimple() {
-		String sql = SqlFactory.getNative(new H2SqlDialect())
+		String sql = SqlFactory.getNative(new MySQLSqlDialect())
 			.insert()
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
@@ -44,7 +43,7 @@ public class InsertTest {
 	 */
 	@Test
 	public void insertValues() {
-		String sql = SqlFactory.getNative(new H2SqlDialect())
+		String sql = SqlFactory.getNative(new MySQLSqlDialect())
 			.insert()
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
@@ -62,12 +61,12 @@ public class InsertTest {
 	 */
 	@Test
 	public void insertSelect() {
-		String sql = SqlFactory.getNative(new H2SqlDialect())
+		String sql = SqlFactory.getNative(new MySQLSqlDialect())
 			.insert()
 			.into("CUSTOMERS")
 			.column("FIRST_NAME")
 			.column("LAST_NAME")
-			.select(SqlFactory.getNative(new H2SqlDialect()).select().column("*").from("SUPPLIERS").build())
+			.select(SqlFactory.getNative(new MySQLSqlDialect()).select().column("*").from("SUPPLIERS").build())
 			.toString();
 
 		assertNotNull(sql);
