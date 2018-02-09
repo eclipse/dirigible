@@ -33,6 +33,7 @@ import org.eclipse.dirigible.database.persistence.processors.sequence.Persistenc
 import org.eclipse.dirigible.database.persistence.processors.sequence.PersistenceDropSequenceProcessor;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCreateTableProcessor;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceDropTableProcessor;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,9 +77,14 @@ public class PersistenceManager<T> {
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (columnModel.getGenerated() != null) {
 				if (GenerationType.SEQUENCE.name().equals(columnModel.getGenerated())) {
-					PersistenceCreateSequenceProcessor persistenceCreateSequenceProcessor = new PersistenceCreateSequenceProcessor(
-							getEntityManagerInterceptor());
-					persistenceCreateSequenceProcessor.create(connection, tableModel);
+					ISqlDialect dialect = SqlFactory.deriveDialect(connection);
+					if (dialect.isSequenceSupported()) {
+						PersistenceCreateSequenceProcessor persistenceCreateSequenceProcessor = new PersistenceCreateSequenceProcessor(
+								getEntityManagerInterceptor());
+						persistenceCreateSequenceProcessor.create(connection, tableModel);
+					} else {
+						throw new IllegalArgumentException(format("Generation Type: [{0}] not supported for database: [{1}] by using the dialect: [{2}].", columnModel.getGenerated(), dialect.getDatabaseName(connection), dialect.getClass().getSimpleName()));
+					}
 				} else if (GenerationType.TABLE.name().equals(columnModel.getGenerated())) {
 					PersistenceCreateIdentityProcessor persistenceCreateIdentityProcessor = new PersistenceCreateIdentityProcessor(
 							getEntityManagerInterceptor());

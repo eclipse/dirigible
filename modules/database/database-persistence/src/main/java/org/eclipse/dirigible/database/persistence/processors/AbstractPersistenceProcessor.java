@@ -370,6 +370,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			value = booleanAdaptation(value, field);
 			value = bigIntegerAdaptation(value, field);
 			value = shortAdaptation(value, field);
+			value = floatAdaptation(value, field);
 			
 			if (getEntityManagerInterceptor() != null) {
 				value = getEntityManagerInterceptor().onSetValueAfterQuery(pojo, field, value);
@@ -381,6 +382,17 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		}
 	}
 
+	private Object floatAdaptation(Object value, Field field) {
+		if (field.getType().equals(float.class) || field.getType().equals(Float.class)) {
+			if (value instanceof Double) {
+				value = ((Double) value).floatValue();
+			} else if (value instanceof Float) {
+				value = (Float) value;
+			}
+		}
+		return value;
+	}
+	
 	private Object shortAdaptation(Object value, Field field) {
 		if (field.getType().equals(short.class) || field.getType().equals(Short.class)) {
 			if (value instanceof Long) {

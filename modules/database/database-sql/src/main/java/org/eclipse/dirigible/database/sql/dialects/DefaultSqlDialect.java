@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.ExpressionBuilder;
@@ -259,6 +260,20 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	@Override
 	public LAST lastval(String... args) {
 		return (LAST) new LastValueIdentityBuilder(this);
+	}
+
+	@Override
+	public boolean isSequenceSupported() {
+		return true;
+	}
+
+	@Override
+	public String getDatabaseName(Connection connection) {
+		try {
+			return connection.getMetaData().getDatabaseProductName();
+		} catch (Exception e) {
+			throw new SqlException("Cannot retrieve the database name", e);
+		}
 	}
 
 }

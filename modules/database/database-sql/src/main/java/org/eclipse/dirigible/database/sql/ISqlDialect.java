@@ -159,4 +159,18 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 */
 	String functionCurrentTimestamp();
 
+	/**
+	 * Checks if the database is capable to create and use Sequences.
+	 *
+	 * @return true if the feature is supported , false otherwise
+	 */
+	public boolean isSequenceSupported();
+	
+	/**
+	 * Returns the database name
+	 * 
+	 * @param connection the active database connection 
+	 * @return the database name
+	 */
+	public String getDatabaseName(Connection connection);
 }
