@@ -182,9 +182,10 @@ public class PersistenceManagerTest extends AbstractPersistenceManagerTest {
 		assertEquals("John", customer.getFirstName());
 		assertEquals("Smith", customer.getLastName());
 
+		customer.setId(1);
 		customer.setLastName("Wayne");
 
-		int result = persistenceManager.update(connection, customer, 1);
+		int result = persistenceManager.update(connection, customer);
 
 		assertEquals(1, result);
 

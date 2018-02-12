@@ -43,7 +43,7 @@ public class DatabaseRepositoryUtils {
 		if ((file != null) && (file.getType() != DatabaseFileDefinition.OBJECT_TYPE_FOLDER)) {
 			file.setModifiedAt(System.currentTimeMillis());
 			file.setModifiedBy(username);
-			persistenceManagerFiles.update(connection, file, path);
+			persistenceManagerFiles.update(connection, file);
 		} else {
 			if (file != null) {
 				throw new IllegalArgumentException("Cannot save the file, because a folder with the same name already exists: " + path);
@@ -64,7 +64,7 @@ public class DatabaseRepositoryUtils {
 				DatabaseFileContentDefinition.class, path);
 		if (databaseFileContentDefinition != null) {
 			databaseFileContentDefinition.setContent(content);
-			persistenceManagerFilesContent.update(connection, databaseFileContentDefinition, path);
+			persistenceManagerFilesContent.update(connection, databaseFileContentDefinition);
 		} else {
 			databaseFileContentDefinition = new DatabaseFileContentDefinition();
 			databaseFileContentDefinition.setPath(path);
