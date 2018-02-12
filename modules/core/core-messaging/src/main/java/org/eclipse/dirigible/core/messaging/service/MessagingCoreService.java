@@ -168,7 +168,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 				listenerDefinition.setType(type);
 				listenerDefinition.setHandler(handler);
 				listenerDefinition.setDescription(description);
-				listenerPersistenceManager.update(connection, listenerDefinition, location);
+				listenerPersistenceManager.update(connection, listenerDefinition);
 			} finally {
 				if (connection != null) {
 					connection.close();

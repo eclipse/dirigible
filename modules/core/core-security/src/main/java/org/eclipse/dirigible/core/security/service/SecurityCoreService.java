@@ -152,7 +152,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 				RoleDefinition roleDefinition = getRole(name);
 				roleDefinition.setLocation(location);
 				roleDefinition.setDescription(description);
-				rolesPersistenceManager.update(connection, roleDefinition, name);
+				rolesPersistenceManager.update(connection, roleDefinition);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -351,7 +351,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 				accessDefinition.setMethod(method);
 				accessDefinition.setRole(role);
 				accessDefinition.setDescription(description);
-				accessPersistenceManager.update(connection, accessDefinition, id);
+				accessPersistenceManager.update(connection, accessDefinition);
 				clearCache();
 			} finally {
 				if (connection != null) {

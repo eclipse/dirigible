@@ -185,7 +185,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 				DataStructureTableModel tableModel = getTable(location);
 				tableModel.setName(name);
 				tableModel.setHash(hash);
-				tablePersistenceManager.update(connection, tableModel, location);
+				tablePersistenceManager.update(connection, tableModel);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -368,7 +368,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 				DataStructureViewModel viewModel = getView(location);
 				viewModel.setName(name);
 				viewModel.setHash(hash);
-				viewPersistenceManager.update(connection, viewModel, location);
+				viewPersistenceManager.update(connection, viewModel);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -541,7 +541,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 				DataStructureDataReplaceModel dataModel = getReplace(location);
 				dataModel.setName(name);
 				dataModel.setHash(hash);
-				replacePersistenceManager.update(connection, dataModel, location);
+				replacePersistenceManager.update(connection, dataModel);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -685,7 +685,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 				DataStructureDataAppendModel dataModel = getAppend(location);
 				dataModel.setName(name);
 				dataModel.setHash(hash);
-				appendPersistenceManager.update(connection, dataModel, location);
+				appendPersistenceManager.update(connection, dataModel);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -829,7 +829,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 				DataStructureDataDeleteModel dataModel = getDelete(location);
 				dataModel.setName(name);
 				dataModel.setHash(hash);
-				deletePersistenceManager.update(connection, dataModel, location);
+				deletePersistenceManager.update(connection, dataModel);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -973,7 +973,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 				DataStructureDataUpdateModel dataModel = getUpdate(location);
 				dataModel.setName(name);
 				dataModel.setHash(hash);
-				updatePersistenceManager.update(connection, dataModel, location);
+				updatePersistenceManager.update(connection, dataModel);
 			} finally {
 				if (connection != null) {
 					connection.close();
