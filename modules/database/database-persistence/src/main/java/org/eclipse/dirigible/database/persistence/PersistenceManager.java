@@ -361,16 +361,14 @@ public class PersistenceManager<T> {
 	 *            the database connection
 	 * @param pojo
 	 *            the POJO instance
-	 * @param id
-	 *            the primary key field's value
 	 * @return the result status of the update statement execution
 	 */
-	public int update(Connection connection, T pojo, Object id) {
-		logger.trace("update -> connection: " + connection.hashCode() + ", pojo: " + Serializer.serializePojo(pojo) + ", id: " + id);
+	public int update(Connection connection, T pojo) {
+		logger.trace("update -> connection: " + connection.hashCode() + ", pojo: " + Serializer.serializePojo(pojo));
 		tableCheck(connection, pojo.getClass());
 		PersistenceTableModel tableModel = PersistenceFactory.createModel(pojo);
 		PersistenceUpdateProcessor<T> updateProcessor = new PersistenceUpdateProcessor<>(getEntityManagerInterceptor());
-		return updateProcessor.update(connection, tableModel, pojo, id);
+		return updateProcessor.update(connection, tableModel, pojo);
 	}
 
 	/**

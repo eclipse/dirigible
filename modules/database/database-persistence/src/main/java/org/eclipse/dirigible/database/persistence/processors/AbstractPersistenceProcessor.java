@@ -27,6 +27,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EnumType;
 
@@ -96,7 +97,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 */
 	protected void setValuesFromPojo(PersistenceTableModel tableModel, Object pojo, PreparedStatement preparedStatement)
 			throws SQLException, NoSuchFieldException, IllegalAccessException {
-		logger.trace("setValuesFromPojo -> tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: " + Serializer.serializePojo(pojo));
+		logger.trace("setValuesFromPojo -> tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
+				+ Serializer.serializePojo(pojo));
 		int i = 1;
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			if (!shouldSetColumnValue(columnModel)) {
@@ -127,7 +129,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				setValue(preparedStatement, i++, dataType, valueObject);
 			} catch (PersistenceException e) {
 				logger.error(e.getMessage(), e);
-				throw new PersistenceException(format("Database type [{0}] not supported (Class: [{1}])", dataType, pojo.getClass()));
+				throw new PersistenceException(
+						format("Database type [{0}] not supported (Class: [{1}])", dataType, pojo.getClass()));
 			}
 		}
 	}
@@ -227,7 +230,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value) throws SQLException {
+	protected void setValue(PreparedStatement preparedStatement, int i, String dataType, Object value)
+			throws SQLException {
 		logger.trace("setValue -> i: " + i + ", dataType: " + dataType + ", value: " + value);
 		if (getEntityManagerInterceptor() != null) {
 			value = getEntityManagerInterceptor().onGetValueBeforeUpdate(i, dataType, value);
@@ -240,10 +244,12 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		} else if (DataTypeUtils.isChar(dataType)) {
 			if (value instanceof String) {
 				preparedStatement.setString(i, (String) value);
-			} else if ((value instanceof Character) || char.class.getCanonicalName().equals(value.getClass().getCanonicalName())) {
+			} else if ((value instanceof Character)
+					|| char.class.getCanonicalName().equals(value.getClass().getCanonicalName())) {
 				preparedStatement.setString(i, new String(new char[] { (char) value }));
 			} else {
-				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(
+						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		} else if (DataTypeUtils.isDate(dataType)) {
 			preparedStatement.setDate(i, (Date) value);
@@ -263,7 +269,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof BigInteger) {
 				preparedStatement.setLong(i, ((BigInteger) value).longValueExact());
 			} else {
-				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(
+						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		} else if (DataTypeUtils.isReal(dataType)) {
 			preparedStatement.setFloat(i, (Float) value);
@@ -277,7 +284,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof BigDecimal) {
 				preparedStatement.setBigDecimal(i, ((BigDecimal) value));
 			} else {
-				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(
+						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		} else if (DataTypeUtils.isBlob(dataType)) {
 			byte[] bytes = (byte[]) value;
@@ -290,7 +298,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			} else if (value instanceof Integer || Integer.TYPE.isInstance(value)) {
 				preparedStatement.setBoolean(i, ((Integer) value == 1));
 			} else {
-				throw new PersistenceException(format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
+				throw new PersistenceException(
+						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
 		}
 
@@ -341,23 +350,27 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 */
 	protected void setValueToPojo(Object pojo, Object value, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException, IOException {
-		logger.trace("setValueToPojo -> pojo: " + Serializer.serializePojo(pojo) + ", value: " + value + ", columnModel: "
-				+ Serializer.serializeColumnModel(columnModel));
+		logger.trace("setValueToPojo -> pojo: " + Serializer.serializePojo(pojo) + ", value: " + value
+				+ ", columnModel: " + Serializer.serializeColumnModel(columnModel));
 		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
 		try {
 			if (columnModel.getEnumerated() != null) {
-				if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL) && (value instanceof Integer)) {
+				if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.ORDINAL)
+						&& (value instanceof Integer)) {
 					if (field.getType().isEnum()) {
 						value = field.getType().getEnumConstants()[(Integer) value];
 					} else {
-						throw new IllegalStateException("The annotation @Enumerated is set to a field with a type, which is not an enum type.");
+						throw new IllegalStateException(
+								"The annotation @Enumerated is set to a field with a type, which is not an enum type.");
 					}
-				} else if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.STRING) && (value instanceof String)) {
+				} else if (EnumType.valueOf(columnModel.getEnumerated()).equals(EnumType.STRING)
+						&& (value instanceof String)) {
 					if (field.getType().isEnum()) {
 						value = Enum.valueOf((Class<Enum>) field.getType(), (String) value);
 					} else {
-						throw new IllegalStateException("The annotation @Enumerated is set to a field with a type, which is not an enum type.");
+						throw new IllegalStateException(
+								"The annotation @Enumerated is set to a field with a type, which is not an enum type.");
 					}
 				} else if (value != null) {
 					throw new IllegalStateException("The annotation @Enumerated is misused, the value is unknown.");
@@ -371,11 +384,11 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			value = bigIntegerAdaptation(value, field);
 			value = shortAdaptation(value, field);
 			value = floatAdaptation(value, field);
-			
+
 			if (getEntityManagerInterceptor() != null) {
 				value = getEntityManagerInterceptor().onSetValueAfterQuery(pojo, field, value);
 			}
-			
+
 			field.set(pojo, value);
 		} finally {
 			resetAccessible(field, oldAccessible);
@@ -392,7 +405,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		}
 		return value;
 	}
-	
+
 	private Object shortAdaptation(Object value, Field field) {
 		if (field.getType().equals(short.class) || field.getType().equals(Short.class)) {
 			if (value instanceof Long) {
@@ -405,7 +418,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		}
 		return value;
 	}
-	
+
 	private Object bigIntegerAdaptation(Object value, Field field) {
 		if (field.getType().equals(BigInteger.class)) {
 			if (value instanceof Long) {
@@ -477,8 +490,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 */
 	protected Object getValueFromPojo(Object pojo, PersistenceTableColumnModel columnModel)
 			throws NoSuchFieldException, SQLException, IllegalAccessException {
-		logger.trace(
-				"getValueFromPojo -> pojo: " + Serializer.serializePojo(pojo) + ", columnModel: " + Serializer.serializeColumnModel(columnModel));
+		logger.trace("getValueFromPojo -> pojo: " + Serializer.serializePojo(pojo) + ", columnModel: "
+				+ Serializer.serializeColumnModel(columnModel));
 		// Field field = pojo.getClass().getDeclaredField(columnModel.getField());
 		Field field = getFieldFromClass(pojo.getClass(), columnModel.getField());
 		boolean oldAccessible = setAccessible(field);
@@ -510,7 +523,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			}
 		}
 		if (field == null) {
-			throw new NoSuchFieldException(format("There is no a Field named [{0}] in the POJO of Class [{1}]", fieldName, clazz.getCanonicalName()));
+			throw new NoSuchFieldException(format("There is no a Field named [{0}] in the POJO of Class [{1}]",
+					fieldName, clazz.getCanonicalName()));
 		}
 		return field;
 	}
@@ -554,12 +568,21 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 * @return the primary key
 	 */
 	protected String getPrimaryKey(PersistenceTableModel tableModel) {
-		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			if (columnModel.isPrimaryKey()) {
-				return columnModel.getName();
-			}
-		}
-		return null;
+		PersistenceTableColumnModel columnModel = getPrimaryKeyModel(tableModel);
+		return columnModel == null ? null : columnModel.getName();
+	}
+
+	/**
+	 * Gets the primary key model.
+	 * 
+	 * @param tableModel
+	 *            the table model
+	 * @return the primary key model
+	 */
+	protected PersistenceTableColumnModel getPrimaryKeyModel(PersistenceTableModel tableModel) {
+		Optional<PersistenceTableColumnModel> optional = tableModel.getColumns().stream()
+				.filter(model -> model.isPrimaryKey()).findFirst();
+		return optional.orElse(null);
 	}
 
 	/**
