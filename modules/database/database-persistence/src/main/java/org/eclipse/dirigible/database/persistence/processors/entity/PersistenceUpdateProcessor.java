@@ -82,21 +82,21 @@ public class PersistenceUpdateProcessor<T> extends AbstractPersistenceProcessor 
 	 *            the table model
 	 * @param pojo
 	 *            the pojo
-	 * @param id
-	 *            the id
 	 * @return the int
 	 * @throws PersistenceException
 	 *             the persistence exception
 	 */
-	public int update(Connection connection, PersistenceTableModel tableModel, T pojo, Object id) throws PersistenceException {
+	public int update(Connection connection, PersistenceTableModel tableModel, T pojo) throws PersistenceException {
 		logger.trace("update -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel) + ", pojo: "
-				+ Serializer.serializePojo(pojo) + ", id: " + id);
-		if (id == null) {
-			throw new PersistenceException("The key for update cannot be null.");
-		}
+				+ Serializer.serializePojo(pojo));
 		String sql = null;
 		PreparedStatement preparedStatement = null;
 		try {
+			PersistenceTableColumnModel primaryKeyColumnModel = getPrimaryKeyModel(tableModel);
+			Object id = getValueFromPojo(pojo, primaryKeyColumnModel);
+			if (id == null) {
+				throw new PersistenceException("The key for update cannot be null.");
+			}
 			sql = generateScript(connection, tableModel);
 			preparedStatement = openPreparedStatement(connection, sql);
 			setValuesFromPojo(tableModel, pojo, preparedStatement);

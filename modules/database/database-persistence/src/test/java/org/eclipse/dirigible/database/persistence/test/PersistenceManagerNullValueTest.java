@@ -110,7 +110,7 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 		List<MultiOrder> list = persistenceManager.findAll(connection, MultiOrder.class);
 		MultiOrder order = list.get(0);
 		order.setDescription("New description");
-		persistenceManager.update(connection, order, order.getId());
+		persistenceManager.update(connection, order);
 
 		order = persistenceManager.find(connection, MultiOrder.class, order.getId());
 		assertNotNull(order);
@@ -122,7 +122,7 @@ public class PersistenceManagerNullValueTest extends AbstractPersistenceManagerT
 			List<MultiOrder> list = persistenceManager.findAll(connection, MultiOrder.class);
 			MultiOrder order = list.get(0);
 			order.setDescription("New description");
-			persistenceManager.update(connection, order, null);
+			persistenceManager.update(connection, order);
 		} catch (Exception e) {
 			assertEquals(PersistenceException.class, e.getClass());
 			assertEquals("The key for update cannot be null.", e.getMessage());

@@ -85,7 +85,8 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 					}
 					identity = persistenceManager.lock(connection, Identity.class, tableModel.getTableName());
 					identity.setValue(identity.getValue() + 1);
-					persistenceManager.update(connection, identity, tableModel.getTableName());
+					identity.setTable(tableModel.getTableName());
+					persistenceManager.update(connection, identity);
 				} finally {
 					connection.commit();
 				}
