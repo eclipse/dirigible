@@ -1097,7 +1097,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				try {
 					identity = persistenceManager.lock(connection, Identity.class, tableName);
 					identity.setValue(++tableRowsCount);
-					persistenceManager.update(connection, identity, tableName);
+					persistenceManager.update(connection, identity);
 				} finally {
 					connection.commit();
 				}

@@ -158,7 +158,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 				jobDefinition.setDescription(description);
 				jobDefinition.setExpression(expression);
 				jobDefinition.setSingleton(singleton);
-				jobPersistenceManager.update(connection, jobDefinition, name);
+				jobPersistenceManager.update(connection, jobDefinition);
 			} finally {
 				if (connection != null) {
 					connection.close();

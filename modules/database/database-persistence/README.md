@@ -154,7 +154,7 @@ It uses some of the standard JPA annotations, but it is different in some aspect
 	try {
 		Customer customer = persistenceManager.find(connection, Customer.class, 1);
 		customer.setLastName("Wayne");
-		int result = persistenceManager.update(connection, customer, 1);
+		int result = persistenceManager.update(connection, customer);
 	} finally {
 		connection.close();
 	}

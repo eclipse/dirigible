@@ -170,7 +170,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 				ExtensionPointDefinition extensionPointDefinition = getExtensionPoint(location);
 				extensionPointDefinition.setName(name);
 				extensionPointDefinition.setDescription(description);
-				extensionPointPersistenceManager.update(connection, extensionPointDefinition, location);
+				extensionPointPersistenceManager.update(connection, extensionPointDefinition);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -292,7 +292,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 				extensionDefinition.setModule(module);
 				extensionDefinition.setExtensionPoint(extensionPoint);
 				extensionDefinition.setDescription(description);
-				extensionPersistenceManager.update(connection, extensionDefinition, location);
+				extensionPersistenceManager.update(connection, extensionDefinition);
 			} finally {
 				if (connection != null) {
 					connection.close();
