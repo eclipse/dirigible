@@ -99,7 +99,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>dirigible-service-anonymous</groupId>
-					<artifactId>3.1.2-SNAPSHOT</artifactId>
+					<artifactId>3.2.0-SNAPSHOT</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -118,7 +118,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>dirigible-cms-managed</groupId>
-					<artifactId>3.1.2-SNAPSHOT</artifactId>
+					<artifactId>3.2.0-SNAPSHOT</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
