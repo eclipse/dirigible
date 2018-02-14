@@ -23,12 +23,18 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
@@ -117,9 +123,38 @@ public class HttpClientProxyUtils {
 		String httpProxyHost = Configuration.get(HTTP_PROXY_HOST);
 		String httpProxyPort = Configuration.get(HTTP_PROXY_PORT);
 
-		if ((httpProxyHost != null) && (httpProxyPort != null) && !"".equals(httpProxyHost.trim()) && !"".equals(httpProxyPort.trim())) {
+		if (!StringUtils.isEmpty(httpProxyHost) && !StringUtils.isEmpty(httpProxyPort)) {
 			HttpHost httpProxy = new HttpHost(httpProxyHost, Integer.parseInt(httpProxyPort));
 			httpClientBuilder.setProxy(httpProxy);
+			setNonProxyHostsIfNeeded(httpClientBuilder, httpProxy);
+		}
+	}
+
+	private static void setNonProxyHostsIfNeeded(HttpClientBuilder httpClientBuilder, HttpHost httpProxy) {
+		String httpNonProxyHosts = Configuration.get(HTTP_NON_PROXY_HOSTS);
+
+		if (!StringUtils.isEmpty(httpNonProxyHosts)) {
+			String[] nonProxyHosts = httpNonProxyHosts.split("\\|");
+			httpClientBuilder.setRoutePlanner(new DefaultProxyRoutePlanner(httpProxy) {
+
+				@Override
+				public HttpRoute determineRoute(HttpHost target, HttpRequest request, HttpContext context) throws HttpException {
+					String hostname = target.getHostName();
+					for (String nonProxyHost : nonProxyHosts) {
+						if (isNonProxyHost(hostname, nonProxyHost)) {
+							// Return direct route
+							return new HttpRoute(target);
+						}
+					}
+					return super.determineRoute(target, request, context);
+
+				}
+
+				private boolean isNonProxyHost(String hostname, String nonProxyHost) {
+					return (nonProxyHost.startsWith("*.") && hostname.endsWith(nonProxyHost.substring(nonProxyHost.indexOf("*.") + 2)))
+							|| nonProxyHost.equalsIgnoreCase(hostname);
+				}
+			});
 		}
 	}
 
