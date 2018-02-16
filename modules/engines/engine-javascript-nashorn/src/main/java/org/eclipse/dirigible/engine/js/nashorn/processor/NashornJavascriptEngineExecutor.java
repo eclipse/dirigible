@@ -97,6 +97,7 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 			bindings.put(IJavascriptEngineExecutor.JAVASCRIPT_ENGINE_TYPE, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_NASHORN);
 			bindings.put(IJavascriptEngineExecutor.CONSOLE, ConsoleFacade.getConsole());
+			bindings.put(IJavascriptEngineExecutor.CONTEXT, executionContext);
 
 			String code = (isModule ? sourceProvider.loadSource(moduleOrCode) : moduleOrCode);
 

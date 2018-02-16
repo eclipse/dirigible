@@ -43,6 +43,9 @@ public interface IJavascriptEngineExecutor extends IScriptEngineExecutor {
 
 	/** The Constant CONSOLE. */
 	public static final String CONSOLE = "console";
+	
+	/** The Constant CONTEXT. */
+	public static final String CONTEXT = "context";
 
 	/*
 	 * (non-Javadoc)

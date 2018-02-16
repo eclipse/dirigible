@@ -48,6 +48,7 @@
 		<module>api-log</module>
 		<module>api-test</module>
 		<module>api-cms</module>
+		<module>api-bpm</module>
 	</modules>
 
 	<profiles>

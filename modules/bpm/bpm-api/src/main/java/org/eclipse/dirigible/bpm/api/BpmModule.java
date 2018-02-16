@@ -50,6 +50,7 @@ public class BpmModule extends AbstractDirigibleModule {
 			if (next.getType().equals(bpmProvider)) {
 				bind(IBpmProvider.class).toInstance(next);
 				provider = next;
+				break;
 			}
 			logger.trace(format("Done installing BPM Provider [{0}:{1}].", next.getType(), next.getName()));
 		}
@@ -75,6 +76,18 @@ public class BpmModule extends AbstractDirigibleModule {
 	public static Object getProcessEngine() {
 		if (provider != null) {
 			return provider.getProcessEngine();
+		}
+		throw new IllegalStateException("BPM Provider has not been initialized.");
+	}
+	
+	/**
+	 * The bound process engine provider
+	 *
+	 * @return the process engine provider
+	 */
+	public static IBpmProvider getProcessEngineProvider() {
+		if (provider != null) {
+			return provider;
 		}
 		throw new IllegalStateException("BPM Provider has not been initialized.");
 	}
