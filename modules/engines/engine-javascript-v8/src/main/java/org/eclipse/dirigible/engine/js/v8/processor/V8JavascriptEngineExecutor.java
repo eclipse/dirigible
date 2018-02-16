@@ -12,6 +12,7 @@ package org.eclipse.dirigible.engine.js.v8.processor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
@@ -32,6 +33,9 @@ import com.eclipsesource.v8.Releasable;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
+import com.eclipsesource.v8.V8Value;
+import com.eclipsesource.v8.utils.V8Map;
+import com.eclipsesource.v8.utils.V8ObjectUtils;
 
 /**
  * The V8 Javascript Engine Executor.
@@ -101,7 +105,14 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		V8RepositoryModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 		V8 v8 = V8.createV8Runtime();
 		try {
-			v8.add("engine", IJavascriptEngineExecutor.JAVASCRIPT_TYPE_V8);
+			v8.add(IJavascriptEngineExecutor.JAVASCRIPT_ENGINE_TYPE, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_V8);
+			Map<String, Object> preparedMap = new HashMap<>();
+			for (Map.Entry<Object, Object> entry : executionContext.entrySet()) {
+				preparedMap.put(entry.getKey().toString(), entry.getValue());
+			}
+			V8Object v8Map = V8ObjectUtils.toV8Object(v8, preparedMap);
+			v8.add(IJavascriptEngineExecutor.CONTEXT, v8Map);
+			
 			v8.registerJavaMethod(new JavaV8CallStatic(), J2V8_CALL_STATIC_FUNCTION_NAME);
 			v8.registerJavaMethod(new JavaV8NewInstance(), J2V8_NEW_INSTANCE_FUNCTION_NAME);
 			v8.registerJavaMethod(new JavaV8CallInstance(), J2V8_CALL_INSTANCE_FUNCTION_NAME);
@@ -126,6 +137,8 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 				result = v8.executeScript(source, moduleOrCode, 0);
 			}
 			forceFlush();
+			executionContext.putAll(V8ObjectUtils.toMap(v8Map));
+			v8Map.release();
 		} catch (Exception e) {
 			throw new ScriptingException(e);
 		} finally {

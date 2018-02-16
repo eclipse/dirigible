@@ -123,6 +123,7 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 			topLevelScope.put(IJavascriptEngineExecutor.JAVASCRIPT_ENGINE_TYPE, topLevelScope, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);
 			topLevelScope.put(IJavascriptEngineExecutor.CONSOLE, topLevelScope, ConsoleFacade.getConsole());
+			topLevelScope.put(IJavascriptEngineExecutor.CONTEXT, topLevelScope, executionContext);
 
 			try {
 				ModuleSource moduleSource = (isModule ? sourceProvider.loadSource(moduleOrCode, null, null) : null);
