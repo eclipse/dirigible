@@ -43,6 +43,7 @@
 		<module>resources-jquery</module>
 		<module>resources-jstree</module>
 		<module>resources-fonts</module>
+		<module>resources-flowable-libs</module>
 	</modules>
 
 	<profiles>
@@ -88,7 +89,7 @@
 									<resources>
 										<resource>
 											<directory>${content.source.directory}</directory>
-											<filtering>true</filtering>
+											<filtering>false</filtering>
 										</resource>
 									</resources>
 								</configuration>
