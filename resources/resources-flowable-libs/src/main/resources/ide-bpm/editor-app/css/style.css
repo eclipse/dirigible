@@ -75,8 +75,8 @@
 }
 
 .editor-toolbar .btn.btn-inverse.disabled, .editor-toolbar .btn.btn-inverse[disabled], .editor-toolbar .btn.btn-inverse[disabled]:active, .editor-toolbar .btn.btn-inverse[disabled]:hover {
-    background-color: #668b94;
-    border-color: #668b94;
+    background-color: #6d6d6d;
+    border-color: #6d6d6d;
 }
 
 .editor-toolbar .btn.btn-inverse.separator {
@@ -232,7 +232,7 @@ div.canvas-wrapper {
 
 div.propertySection {
     height: 250px;
-    background-color: #e8edf1;
+    background-color: #f3f3f3;
     margin-bottom: 0px;
 }
 
@@ -589,7 +589,7 @@ li.x-menu-list-item.x-menu-item-active a {
     background: rgb(54, 167, 196);
     /* RGBa with 0.6 opacity */
     background: rgba(54, 167, 196, 0.6);
-    /*background-color: #668b94;*/
+    /*background-color: #6d6d6d;*/
     color: #ffffff;
     font-size: 14px;
 }
@@ -684,7 +684,7 @@ li.x-menu-list-item.x-menu-item-active a {
     background: rgb(54, 167, 196);
     /* RGBa with 0.6 opacity */
     background: rgba(54, 167, 196, 0.6);
-    /*background-color: #668b94;*/
+    /*background-color: #6d6d6d;*/
     color: #ffffff;
     font-size: 14px;
 
@@ -1101,7 +1101,7 @@ hot-table .column-header.label {
 #paletteSectionFooter {
     height: 50px;
     text-align: center;
-    background-color: #e8edf1;
+    background-color: #f3f3f3;
     border-top: 1px solid #a4acb9;
     border-right: 1px solid #a4acb9;
     cursor: pointer;
@@ -1115,7 +1115,7 @@ hot-table .column-header.label {
 #paletteSectionOpen {
     width: 30px;
     height: 50px;
-    background-color: #e8edf1;
+    background-color: #f3f3f3;
     text-align: center;
     bottom: 1px;
     position: fixed;
@@ -1162,7 +1162,7 @@ hot-table .column-header.label {
 }
 
 .process-treeview-header {
-    background: #36a7c4;
+    background: #868686;
     color: white;
     border: 1px solid #bbbbbb;
     padding: 2px;

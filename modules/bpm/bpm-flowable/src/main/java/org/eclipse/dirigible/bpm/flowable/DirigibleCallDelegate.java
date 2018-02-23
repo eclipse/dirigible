@@ -1,12 +1,9 @@
 package org.eclipse.dirigible.bpm.flowable;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dirigible.bpm.flowable.dto.ExecutionData;
-import org.eclipse.dirigible.bpm.flowable.dto.TaskData;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
@@ -21,7 +18,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
 	
 	private FixedValue handler;
 	
-	private FixedValue engine;
+	private FixedValue type;
 	
 	/**
 	 * Getter for the handler attribute
@@ -43,16 +40,16 @@ public class DirigibleCallDelegate implements JavaDelegate {
 	 * Getter for the engine attribute
 	 * @return the engine
 	 */
-	public FixedValue getEngine() {
-		return engine;
+	public FixedValue getType() {
+		return type;
 	}
 	
 	/**
 	 * Setter of the engine attribute
 	 * @param handler the engine
 	 */
-	public void setEngine(FixedValue engine) {
-		this.engine = engine;
+	public void setType(FixedValue type) {
+		this.type = type;
 	}
 	
 	@Override
@@ -63,10 +60,10 @@ public class DirigibleCallDelegate implements JavaDelegate {
 			ExecutionData executionData = new ExecutionData();
 			BeanUtils.copyProperties(execution, executionData);
 			context.put("execution", GsonHelper.GSON.toJson(executionData));
-			if (engine == null) {
-				engine = new FixedValue(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT);
+			if (type == null) {
+				type = new FixedValue(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT);
 			}
-			ScriptEngineExecutorsManager.executeServiceModule(this.engine.getExpressionText(), this.handler.getExpressionText(), context);
+			ScriptEngineExecutorsManager.executeServiceModule(this.type.getExpressionText(), this.handler.getExpressionText(), context);
 		} catch (ScriptingException e) {
 			throw new BpmnError(e.getMessage());
 		}		
