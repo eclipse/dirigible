@@ -49,6 +49,7 @@
 		<module>ide-terminal</module>
 		<module>ide-workspace</module>
 		<module>ide-bpm</module>
+		<module>ide-schema</module>
 	</modules>
 
 	<profiles>
