@@ -2,9 +2,9 @@
 <head>
 <title>Schema Modeler</title>
 
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+<!-- FontAwesome icon set -->
+<link type="text/css" href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
 <!-- Sets the basepath for the library if not in same directory -->
 <script type="text/javascript">
 		mxBasePath = '../ide-schema/src';
@@ -12,12 +12,61 @@
 <!-- Loads and initializes the library -->
 <script type="text/javascript" src="src/js/mxClient.js"></script>
 
+<script src="../ide/ui/message-hub.js"></script>
+
 <!-- Example code -->
 <script type="text/javascript">
 		// Program starts here. Creates a sample graph in the
 		// DOM node with the specified ID. This function is invoked
 		// from the onLoad event handler of the document (see below).
 		function main(container, outline, toolbar, sidebar, status) {
+			
+			// Load schema file
+			function getResource(resourcePath) {
+		        var xhr = new XMLHttpRequest();
+		        xhr.open('GET', resourcePath, false);
+		        xhr.send();
+		        if (xhr.status === 200) {
+		        	return xhr.responseText;
+		        }
+			}
+			
+			function loadContents(file) {
+				if (file) {
+					return getResource('/services/v3/ide/workspaces' + file);
+				}
+				console.error('file parameter is not present in the URL');
+			}
+		
+			var searchParams = new URLSearchParams(window.location.search);
+			var file = searchParams.get('file');
+			var contents = loadContents(file);
+			
+			var messageHub = new FramesMessageHub();
+		
+			function saveContents(text) {
+				console.log('Save called...');
+				if (file) {
+					var xhr = new XMLHttpRequest();
+					xhr.open('PUT', '/services/v3/ide/workspaces' + file);
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState === 4) {
+							console.log('file saved: ' + file);
+						}
+					}
+					xhr.send(text);
+					messageHub.post({data: file}, 'editor.file.saved');
+				} else {
+					console.error('file parameter is not present in the request');
+				}
+			}
+			
+			messageHub.subscribe(function(graph) {
+				var schema = createSchema(graph);
+				saveContents(schema);
+			}, 'workbench.editor.save');
+			
+			
 			// Checks if the browser is supported
 			if (!mxClient.isBrowserSupported()) {
 				// Displays an error message if the browser is not supported.
@@ -110,11 +159,10 @@
 				graph.model.valueForCellChanged = function(cell, value) {
 					if (value.name != null) {
 						return mxGraphModel.prototype.valueForCellChanged.apply(this, arguments);
-					} else {
-						var old = cell.value.name;
-						cell.value.name = value;
-						return old;
 					}
+					var old = cell.value.name;
+					cell.value.name = value;
+					return old;
 				};
 				
 				// Columns are dynamically created HTML labels
@@ -248,7 +296,7 @@
 						}
 					}
 					
-					if (primaryKey == null) {
+					if (primaryKey === null) {
 						showAlert('Drop', 'Target table must have a primary key');
 						return;
 					}
@@ -284,14 +332,14 @@
 				editor.addAction('save', function(editor, cell) {
 					var schema = createSchema(graph);
 					console.info(schema);
-					showAlert('Save', 'Save...');
+					saveContents(schema);
 				});
 				
 				addToolbarButton(editor, toolbar, 'properties', 'Properties', 'list-ul', true);
 
 				// Defines a new export action
 				editor.addAction('properties', function(editor, cell) {
-					if (cell == null) {
+					if (cell === null) {
 						cell = graph.getSelectionCell();
 					}
 					
@@ -390,8 +438,8 @@
 			'<mxCell id="7" edge="1" parent="1" source="6" target="5"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel>';
 			 */
 			
-			var content = '<schema>  <structure name="TABLE1" type="table">    <column name="TABLE1_ID" type="INTEGER" length="" primaryKey="true" identity="true" precision="" scale="" widget="TEXT"></column>    <column name="TABLE2_ID" type="INTEGER" length="" precision="" scale="" widget="TEXT"></column>  </structure>  <structure name="TABLE2" type="table">    <column name="TABLE2_ID" type="INTEGER" length="" primaryKey="true" identity="true" precision="" scale="" widget="TEXT"></column>  </structure><mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" style="table" parent="1" vertex="1"><Table name="TABLE1" as="value"/><mxGeometry x="220" y="70" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry></mxCell><mxCell id="3" parent="2" vertex="1" connectable="0"><Column name="TABLE1_ID" type="INTEGER" columnLength="" primaryKey="1" autoIncrement="1" as="value"/><mxGeometry y="28" width="200" height="26" as="geometry"/></mxCell><mxCell id="6" parent="2" vertex="1" connectable="0"><Column name="TABLE2_ID" type="INTEGER" columnLength="" as="value"/><mxGeometry y="54" width="200" height="26" as="geometry"/></mxCell><mxCell id="4" style="table" parent="1" vertex="1"><Table name="TABLE2" as="value"/><mxGeometry x="360" y="180" width="200" height="54" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry></mxCell><mxCell id="5" parent="4" vertex="1" connectable="0"><Column name="TABLE2_ID" type="INTEGER" columnLength="" primaryKey="1" autoIncrement="1" as="value"/><mxGeometry y="28" width="200" height="26" as="geometry"/></mxCell><mxCell id="7" parent="1" source="6" target="5" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel></schema>';
-			var doc = mxUtils.parseXml(content);
+			//var content = '<schema>  <structure name="TABLE1" type="table">    <column name="TABLE1_ID" type="INTEGER" length="" primaryKey="true" identity="true" precision="" scale="" widget="TEXT"></column>    <column name="TABLE2_ID" type="INTEGER" length="" precision="" scale="" widget="TEXT"></column>  </structure>  <structure name="TABLE2" type="table">    <column name="TABLE2_ID" type="INTEGER" length="" primaryKey="true" identity="true" precision="" scale="" widget="TEXT"></column>  </structure><mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" style="table" parent="1" vertex="1"><Table name="TABLE1" as="value"/><mxGeometry x="220" y="70" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry></mxCell><mxCell id="3" parent="2" vertex="1" connectable="0"><Column name="TABLE1_ID" type="INTEGER" columnLength="" primaryKey="1" autoIncrement="1" as="value"/><mxGeometry y="28" width="200" height="26" as="geometry"/></mxCell><mxCell id="6" parent="2" vertex="1" connectable="0"><Column name="TABLE2_ID" type="INTEGER" columnLength="" as="value"/><mxGeometry y="54" width="200" height="26" as="geometry"/></mxCell><mxCell id="4" style="table" parent="1" vertex="1"><Table name="TABLE2" as="value"/><mxGeometry x="360" y="180" width="200" height="54" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry></mxCell><mxCell id="5" parent="4" vertex="1" connectable="0"><Column name="TABLE2_ID" type="INTEGER" columnLength="" primaryKey="1" autoIncrement="1" as="value"/><mxGeometry y="28" width="200" height="26" as="geometry"/></mxCell><mxCell id="7" parent="1" source="6" target="5" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel></schema>';
+			var doc = mxUtils.parseXml(contents);
 			var codec = new mxCodec(doc.mxGraphModel);
 			codec.decode(doc.documentElement.getElementsByTagName('mxGraphModel')[0], graph.getModel());
 		}
