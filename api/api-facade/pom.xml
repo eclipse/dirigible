@@ -28,6 +28,7 @@
 		<module>api-log</module>
 		<module>api-cms</module>
 		<module>api-bpm</module>
+		<module>api-workspace</module>
 	</modules>
 
 </project>

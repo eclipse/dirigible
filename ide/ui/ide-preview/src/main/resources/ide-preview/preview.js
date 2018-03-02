@@ -26,8 +26,10 @@ angular.module('preview', [])
 
 	this.refresh = function() {
 		var url = this.previewUrl;
-		url = url.indexOf('?refreshToken') > 0 ? url.substring(0, url.indexOf('?refreshToken')) : url;
-		this.previewUrl = url + '?refreshToken=' + new Date().getTime();
+		if (url) {
+			url = url.indexOf('?refreshToken') > 0 ? url.substring(0, url.indexOf('?refreshToken')) : url;
+			this.previewUrl = url + '?refreshToken=' + new Date().getTime();
+		}
 	};
 
 	$messageHub.on('workspace.file.selected', function(msg) {
