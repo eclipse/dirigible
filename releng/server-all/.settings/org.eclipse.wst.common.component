@@ -50,6 +50,9 @@
         <dependent-module archiveName="dirigible-api-facade-bpm-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-bpm/dirigible-api-facade-bpm">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-api-facade-workspace-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-workspace/dirigible-api-facade-workspace">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-all-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-all/dirigible-api-javascript-all">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -87,6 +90,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-bpm-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-bpm/dirigible-api-javascript-bpm">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-api-javascript-workspace-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-workspace/dirigible-api-javascript-workspace">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-repository-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository/dirigible-repository">

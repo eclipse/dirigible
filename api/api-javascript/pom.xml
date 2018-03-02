@@ -49,6 +49,7 @@
 		<module>api-test</module>
 		<module>api-cms</module>
 		<module>api-bpm</module>
+		<module>api-workspace</module>
 	</modules>
 
 	<profiles>

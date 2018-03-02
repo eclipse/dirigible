@@ -316,8 +316,6 @@
 					} finally {
 						this.model.endUpdate();
 					}
-					
-					return null;
 				};
 
 				// Creates a new DIV that is used as a toolbar and adds
@@ -331,11 +329,10 @@
 				// Defines a new export action
 				editor.addAction('save', function(editor, cell) {
 					var schema = createSchema(graph);
-					console.info(schema);
 					saveContents(schema);
 				});
 				
-				addToolbarButton(editor, toolbar, 'properties', 'Properties', 'list-ul', true);
+//				addToolbarButton(editor, toolbar, 'properties', 'Properties', 'list-ul', true);
 
 				// Defines a new export action
 				editor.addAction('properties', function(editor, cell) {
@@ -382,7 +379,7 @@
 					}
 				});
 
-				addToolbarButton(editor, toolbar, 'showSql', 'Show SQL', 'database', true);
+				//addToolbarButton(editor, toolbar, 'showSql', 'Show SQL', 'database', true);
 
 				// Defines export XML action
 				editor.addAction('export', function(editor, cell) {
@@ -395,7 +392,7 @@
 					showModalWindow('XML', textarea, 410, 440);
 				});
 
-				addToolbarButton(editor, toolbar, 'export', 'Export XML', 'download', true);
+				//addToolbarButton(editor, toolbar, 'export', 'Export XML', 'download', true);
 				
 				// Adds toolbar buttons into the status bar at the bottom
 				// of the window.
@@ -427,18 +424,6 @@
 				}
 			}
 			
-			//var content = loadSchema(location);
-			/* var content = '<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" style="table" vertex="1" parent="1"><Table name="TABLE1" as="value"/>' +
-			'<mxGeometry x="220" y="70" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry></mxCell>' +
-			'<mxCell id="3" vertex="1" connectable="0" parent="2"><Column name="TABLE1_ID" type="INTEGER" columnLength="" primaryKey="1" autoIncrement="1" as="value"/><mxGeometry y="28" width="200" height="26" as="geometry"/>' +
-			'</mxCell><mxCell id="6" vertex="1" connectable="0" parent="2"><Column name="TABLE2_ID" type="INTEGER" columnLength="" as="value"/><mxGeometry y="54" width="200" height="26" as="geometry"/></mxCell>'+
-			'<mxCell id="4" style="table" vertex="1" parent="1"><Table name="TABLE2" as="value"/><mxGeometry x="360" y="180" width="200" height="54" as="geometry">'+
-			'<mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry></mxCell><mxCell id="5" vertex="1" connectable="0" parent="4">'+
-			'<Column name="TABLE2_ID" type="INTEGER" columnLength="" primaryKey="1" autoIncrement="1" as="value"/><mxGeometry y="28" width="200" height="26" as="geometry"/></mxCell>'+
-			'<mxCell id="7" edge="1" parent="1" source="6" target="5"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel>';
-			 */
-			
-			//var content = '<schema>  <structure name="TABLE1" type="table">    <column name="TABLE1_ID" type="INTEGER" length="" primaryKey="true" identity="true" precision="" scale="" widget="TEXT"></column>    <column name="TABLE2_ID" type="INTEGER" length="" precision="" scale="" widget="TEXT"></column>  </structure>  <structure name="TABLE2" type="table">    <column name="TABLE2_ID" type="INTEGER" length="" primaryKey="true" identity="true" precision="" scale="" widget="TEXT"></column>  </structure><mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" style="table" parent="1" vertex="1"><Table name="TABLE1" as="value"/><mxGeometry x="220" y="70" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry></mxCell><mxCell id="3" parent="2" vertex="1" connectable="0"><Column name="TABLE1_ID" type="INTEGER" columnLength="" primaryKey="1" autoIncrement="1" as="value"/><mxGeometry y="28" width="200" height="26" as="geometry"/></mxCell><mxCell id="6" parent="2" vertex="1" connectable="0"><Column name="TABLE2_ID" type="INTEGER" columnLength="" as="value"/><mxGeometry y="54" width="200" height="26" as="geometry"/></mxCell><mxCell id="4" style="table" parent="1" vertex="1"><Table name="TABLE2" as="value"/><mxGeometry x="360" y="180" width="200" height="54" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry></mxCell><mxCell id="5" parent="4" vertex="1" connectable="0"><Column name="TABLE2_ID" type="INTEGER" columnLength="" primaryKey="1" autoIncrement="1" as="value"/><mxGeometry y="28" width="200" height="26" as="geometry"/></mxCell><mxCell id="7" parent="1" source="6" target="5" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell></root></mxGraphModel></schema>';
 			var doc = mxUtils.parseXml(contents);
 			var codec = new mxCodec(doc.mxGraphModel);
 			codec.decode(doc.documentElement.getElementsByTagName('mxGraphModel')[0], graph.getModel());
@@ -466,7 +451,7 @@
 			});
 			//mxUtils.write(button, label);
 			toolbar.appendChild(button);
-		};
+		}
 
 		function showModalWindow(title, content, width, height) {
 			var background = document.createElement('div');
@@ -498,7 +483,7 @@
 			wnd.setVisible(true);
 			
 			return wnd;
-		};
+		}
 		
 		function showAlert(title, message) {
 			var width = 410;
@@ -526,7 +511,46 @@
 			panel.appendChild(button);
 			
 			wnd = showModalWindow(title, panel, width, height + 70);
-		};
+		}
+		
+		function showPrompt(title, message, callback) {
+			var width = 410;
+			var height = 20;
+			
+			var panel = document.createElement('div');
+			panel.setAttribute('align', 'center');
+			panel.setAttribute('height', '70px');
+			
+			var text = document.createElement('input');
+			text.style.width = width + 'px';
+			text.style.height = height + 'px';
+			//text.disabled = 'true';
+			text.value = message;
+			//mxUtils.write(text, message);
+			
+			wnd = null;
+			
+			var buttonOK = document.createElement('button');
+			mxUtils.write(buttonOK, "OK");
+			mxEvent.addListener(buttonOK, 'click', function(evt) {
+				wnd.destroy();
+				callback(text.value);
+			});
+			
+			var buttonCancel = document.createElement('button');
+			mxUtils.write(buttonCancel, "Cancel");
+			mxEvent.addListener(buttonCancel, 'click', function(evt) {
+				wnd.destroy();
+			});
+			
+			panel.appendChild(text);
+			panel.appendChild(buttonOK);
+			panel.appendChild(buttonCancel);
+			
+			wnd = showModalWindow(title, panel, width, height + 50);
+			
+			
+		}
 		
 		function addSidebarIcon(graph, sidebar, prototype, image) {
 			// Function that is executed when the image is dropped on
@@ -547,7 +571,7 @@
 					parent = cell;
 					var pstate = graph.getView().getState(parent);
 					
-					if (parent == null || pstate == null) {
+					if (parent === null || pstate === null) {
 						showAlert('Drop', 'Drop target must be a table');
 						return;
 					}
@@ -556,7 +580,8 @@
 					pt.y -= pstate.y;
 
 					var columnCount = graph.model.getChildCount(parent)+1;
-					name = mxUtils.prompt('Enter name for new column', 'COLUMN'+columnCount);
+					//name = mxUtils.prompt('Enter name for new column', 'COLUMN'+columnCount);
+					showPrompt('Enter name for new column', 'COLUMN'+columnCount, createNode);
 				} else {
 					var tableCount = 0;
 					var childCount = graph.model.getChildCount(parent);
@@ -567,31 +592,35 @@
 						}
 					}
 					
-					var name = mxUtils.prompt('Enter name for new table', 'TABLE'+(tableCount+1));
+					//name = mxUtils.prompt('Enter name for new table', 'TABLE'+(tableCount+1));
+					showPrompt('Enter name for new table', 'TABLE'+(tableCount+1), createNode);
 				}
 				
-				if (name != null) {
-					var v1 = model.cloneCell(prototype);
-					
-					model.beginUpdate();
-					try {
-						v1.value.name = name;
-						v1.geometry.x = pt.x;
-						v1.geometry.y = pt.y;
+				function createNode(name) {
+					if (name !== null) {
+						var v1 = model.cloneCell(prototype);
 						
-						graph.addCell(v1, parent);
-						
-						if (isTable) {
-							v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
-							v1.children[0].value.name = name + '_ID';
+						model.beginUpdate();
+						try {
+							v1.value.name = name;
+							v1.geometry.x = pt.x;
+							v1.geometry.y = pt.y;
+							
+							graph.addCell(v1, parent);
+							
+							if (isTable) {
+								v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
+								v1.children[0].value.name = name + '_ID';
+							}
+						} finally {
+							model.endUpdate();
 						}
-					} finally {
-						model.endUpdate();
+						
+						graph.setSelectionCell(v1);
 					}
-					
-					graph.setSelectionCell(v1);
-				}
-			}
+				};
+
+			};
 			
 			var img = document.createElement('i');
 			img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
@@ -608,21 +637,19 @@
 			ds.getDropTarget = function(graph, x, y) {
 				if (graph.isSwimlane(prototype)) {
 					return null;
-				} else {
-					var cell = graph.getCellAt(x, y);
-					
-					if (graph.isSwimlane(cell)) {
-						return cell;
-					} else {
-						var parent = graph.getModel().getParent(cell);
-						
-						if (graph.isSwimlane(parent)) {
-							return parent;
-						}
-					}
+				} 
+				var cell = graph.getCellAt(x, y);
+				
+				if (graph.isSwimlane(cell)) {
+					return cell;
+				} 
+				var parent = graph.getModel().getParent(cell);
+				
+				if (graph.isSwimlane(parent)) {
+					return parent;
 				}
 			};
-		};
+		}
 		
 		function configureStylesheet(graph) {
 			var style = new Object();
@@ -663,7 +690,7 @@
 			style[mxConstants.STYLE_STROKEWIDTH] = '2';
 			style[mxConstants.STYLE_ROUNDED] = true;
 			style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
-		};
+		}
 		
 		// Function to create the entries in the popupmenu
 		function createPopupMenu(editor, graph, menu, cell, evt) {
@@ -691,13 +718,12 @@
 				editor.execute('redo', cell);
 			});
 			
-			menu.addSeparator();
+//			menu.addSeparator();
 			
-			
-			menu.addItem('Show SQL', 'database', function() {
-				editor.execute('showSql', cell);
-			});	
-		};
+//			menu.addItem('Show SQL', 'database', function() {
+//				editor.execute('showSql', cell);
+//			});	
+		}
 		
 		function showProperties(graph, cell) {
 			// Creates a form for the user object inside
@@ -843,6 +869,7 @@
 		function createSchema(graph) {
 			var schema = [];
 			schema.push('<schema>');
+			schema.push(' <structures>');
 			var parent = graph.getDefaultParent();
 			var childCount = graph.model.getChildCount(parent);
 
@@ -858,7 +885,7 @@
 						for (var j=0; j<columnCount; j++) {
 							var column = graph.model.getChildAt(child, j).value;
 							schema.push('    <column name="'+column.name+'" type="'+column.type+'"');
-							if (column.columnLength != null) {
+							if (column.columnLength !== null) {
 								schema.push(' length="'+column.columnLength+'"');
 							}
 							if (column.notNull) {
@@ -873,16 +900,16 @@
 							if (column.unique) {
 								schema.push(' unique="true"');
 							}
-							if (column.defaultValue != null) {
+							if (column.defaultValue !== null) {
 								schema.push(' defaultValue="'+column.defaultValue+'"');
 							}
-							if (column.precision != null) {
+							if (column.precision !== null) {
 								schema.push(' precision="'+column.precision+'"');
 							}
-							if (column.scale != null) {
+							if (column.scale !== null) {
 								schema.push(' scale="'+column.scale+'"');
 							}
-							if (column.widget != null) {
+							if (column.widget !== null) {
 								schema.push(' widget="'+column.widget+'"');
 							}
 							schema.push('></column>');
@@ -894,24 +921,21 @@
 					schema.push('  </structure>');
 				}
 			}
+			schema.push(' </structures>');
 			
 			var enc = new mxCodec(mxUtils.createXmlDocument());
 			var node = enc.encode(graph.getModel());
 			var model = mxUtils.getXml(node);
-			schema.push('' + model + '');
+			schema.push(model);
 			schema.push('</schema>');
 			
 			return schema.join('');
-		};
-		
-		function loadSchema(location) {
-			return '';
 		}
 		
 		// Defines the column user object
 		function Column(name) {
 			this.name = name;
-		};
+		}
 
 		Column.prototype.type = 'VARCHAR';
 		Column.prototype.columnLength = '20';
