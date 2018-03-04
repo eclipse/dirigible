@@ -15,3 +15,5 @@ dirigible_local/
 derby.log
 /bin/
 /target/
+/target/
+/target/
