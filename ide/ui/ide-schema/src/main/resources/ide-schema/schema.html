@@ -33,7 +33,7 @@
 			
 			function loadContents(file) {
 				if (file) {
-					return getResource('/services/v3/ide/workspaces' + file);
+					return getResource('/services/v3/ide/workspaces'+file);
 				}
 				console.error('file parameter is not present in the URL');
 			}
@@ -48,10 +48,10 @@
 				console.log('Save called...');
 				if (file) {
 					var xhr = new XMLHttpRequest();
-					xhr.open('PUT', '/services/v3/ide/workspaces' + file);
+					xhr.open('PUT', '/services/v3/ide/workspaces'+file);
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState === 4) {
-							console.log('file saved: ' + file);
+							console.log('file saved: '+file);
 						}
 					}
 					xhr.send(text);
@@ -75,8 +75,8 @@
 				// Specifies shadow opacity, color and offset
 				mxConstants.SHADOW_OPACITY = 0.5;
 				mxConstants.SHADOWCOLOR = '#C0C0C0';
-				mxConstants.SHADOW_OFFSET_X = 5;
-				mxConstants.SHADOW_OFFSET_Y = 6;
+				mxConstants.SHADOW_OFFSET_X = 0;
+				mxConstants.SHADOW_OFFSET_Y = 0;
 				
 				// Table icon dimensions and position
 				mxSwimlane.prototype.imageSize = 20;
@@ -85,12 +85,12 @@
 				
 				// Changes swimlane icon bounds
 				mxSwimlane.prototype.getImageBounds = function(x, y, w, h) {
-					return new mxRectangle(x + this.imageDx, y + this.imageDy, this.imageSize, this.imageSize);
+					return new mxRectangle(x+this.imageDx, y+this.imageDy, this.imageSize, this.imageSize);
 				};
 				
 				// Defines an icon for creating new connections in the connection handler.
 				// This will automatically disable the highlighting of the source vertex.
-				mxConnectionHandler.prototype.connectImage = new mxImage('images/connector.gif', 16, 16);
+				mxConnectionHandler.prototype.connectImage = new mxImage('../resources/mxgraph/3.9.1/images/connector.gif', 16, 16);
 				
 				// Workaround for Internet Explorer ignoring certain CSS directives
 				if (mxClient.IS_QUIRKS) {
@@ -218,9 +218,10 @@
 							label += '<img src="../resources/mxgraph/3.9.1/images/spacer.gif" width="9" height="1">&nbsp;';
 						}
 
-						return label + mxUtils.htmlEntities(cell.value.name, false) + ': ' +
-							mxUtils.htmlEntities(cell.value.type, false) + ((cell.value.columnLength) ? 
-									'(' + cell.value.columnLength + ')' : '');
+						var suffix = ': '+mxUtils.htmlEntities(cell.value.type, false)+((cell.value.columnLength) ? 
+									'('+cell.value.columnLength+')' : '');
+						var suffix = (cell.value.isSQL) ? '' : suffix;
+						return label+mxUtils.htmlEntities(cell.value.name, false)+suffix;
 					}
 					
 					return mxGraph.prototype.getLabel.apply(this, arguments); // "supercall"
@@ -259,7 +260,7 @@
 				var table = new mxCell(tableObject, new mxGeometry(0, 0, 200, 28), 'table');
 				
 				table.setVertex(true);
-				addSidebarIcon(graph, sidebar, 	table, 'table');
+				addSidebarIcon(graph, sidebar, 	table, 'table', 'Drag this to the diagram to create a new table');
 				
 				// Adds sidebar icon for the column object
 				var columnObject = new Column('COLUMNNAME');
@@ -268,7 +269,14 @@
 				column.setVertex(true);
 				column.setConnectable(false);
 
-				addSidebarIcon(graph, sidebar, 	column, 'columns');
+				addSidebarIcon(graph, sidebar, 	column, 'columns', 'Drag this to a table to create a new column');
+				
+				// Adds sidebar icon for the view object
+				var viewObject = new View('VIEWENAME');
+				var view = new mxCell(viewObject, new mxGeometry(0, 0, 200, 28), 'table');
+				
+				view.setVertex(true);
+				addSidebarIcon(graph, sidebar, 	view, 'th-large', 'Drag this to the diagram to create a new view');
 				
 				// Adds primary key field into table
 				var firstColumn = column.clone();
@@ -280,7 +288,15 @@
 				firstColumn.value.autoIncrement = true;
 				
 				table.insert(firstColumn);
-
+				
+				// Adds sql field into view
+				var sqlColumn = column.clone();
+				
+				sqlColumn.value.name = 'SELECT ...';
+				sqlColumn.value.isSQL = true;
+				
+				view.insert(sqlColumn);
+				
 				// Adds child columns for new connections between tables
 				graph.addEdge = function(edge, parent, source, target, index) {
 					// Finds the primary key child of the target table
@@ -342,7 +358,11 @@
 					
 					if (graph.isHtmlLabel(cell)) {
 						if (cell) {
-							showProperties(graph, cell);
+							if (cell.value.isSQL) {
+								showViewProperties(graph, cell);
+							} else {
+								showProperties(graph, cell);
+							}
 						} else {
 							showAlert('Error', 'Select a column');
 						}
@@ -379,7 +399,7 @@
 					}
 				});
 
-				//addToolbarButton(editor, toolbar, 'showSql', 'Show SQL', 'database', true);
+				addToolbarButton(editor, toolbar, 'showSql', 'Show SQL', 'database', true);
 
 				// Defines export XML action
 				editor.addAction('export', function(editor, cell) {
@@ -434,7 +454,7 @@
 			// button.style.fontSize = '10';
 			if (image != null) {
 				var img = document.createElement('i');
-				img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
+				img.setAttribute('class', 'fa fa-'+image+' fa-2x');
 				// img.style.width = '16px';
 				// img.style.height = '16px';
 				img.style.verticalAlign = 'middle';
@@ -494,8 +514,8 @@
 			panel.setAttribute('height', '70px');
 			
 			var text = document.createElement('p');
-			text.style.width = width + 'px';
-			text.style.height = height + 'px';
+			text.style.width = width+'px';
+			text.style.height = height+'px';
 			//text.disabled = 'true';
 			//text.value = message;
 			mxUtils.write(text, message);
@@ -510,7 +530,7 @@
 			panel.appendChild(text);
 			panel.appendChild(button);
 			
-			wnd = showModalWindow(title, panel, width, height + 70);
+			wnd = showModalWindow(title, panel, width, height+70);
 		}
 		
 		function showPrompt(title, message, callback) {
@@ -522,8 +542,8 @@
 			panel.setAttribute('height', '70px');
 			
 			var text = document.createElement('input');
-			text.style.width = width + 'px';
-			text.style.height = height + 'px';
+			text.style.width = width+'px';
+			text.style.height = height+'px';
 			//text.disabled = 'true';
 			text.value = message;
 			//mxUtils.write(text, message);
@@ -547,12 +567,12 @@
 			panel.appendChild(buttonOK);
 			panel.appendChild(buttonCancel);
 			
-			wnd = showModalWindow(title, panel, width, height + 50);
+			wnd = showModalWindow(title, panel, width, height+50);
 			
 			
 		}
 		
-		function addSidebarIcon(graph, sidebar, prototype, image) {
+		function addSidebarIcon(graph, sidebar, prototype, image, hint) {
 			// Function that is executed when the image is dropped on
 			// the graph. The cell argument points to the cell under
 			// the mousepointer if there is one.
@@ -563,7 +583,7 @@
 				
 				var parent = graph.getDefaultParent();
 				var model = graph.getModel();
-				
+
 				var isTable = graph.isSwimlane(prototype);
 				var name = null;				
 
@@ -573,6 +593,11 @@
 					
 					if (parent === null || pstate === null) {
 						showAlert('Drop', 'Drop target must be a table');
+						return;
+					}
+					
+					if (pstate.cell.value.type === "VIEW") {
+						showAlert('Drop', 'Drop target must be a table not a view');
 						return;
 					}
 					
@@ -591,15 +616,14 @@
 							tableCount++;
 						}
 					}
-					
-					//name = mxUtils.prompt('Enter name for new table', 'TABLE'+(tableCount+1));
-					showPrompt('Enter name for new table', 'TABLE'+(tableCount+1), createNode);
+					var prefix = prototype.value.name === "TABLENAME" ? "TABLE" : "VIEW";
+					showPrompt('Enter name for new table', prefix+(tableCount+1), createNode);
 				}
 				
 				function createNode(name) {
 					if (name !== null) {
 						var v1 = model.cloneCell(prototype);
-						
+
 						model.beginUpdate();
 						try {
 							v1.value.name = name;
@@ -610,7 +634,10 @@
 							
 							if (isTable) {
 								v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
-								v1.children[0].value.name = name + '_ID';
+								if (!v1.children[0].value.isSQL) {
+									v1.children[0].value.name = name+'_ID';
+								}
+								v1.value.type = prefix;
 							}
 						} finally {
 							model.endUpdate();
@@ -623,9 +650,9 @@
 			};
 			
 			var img = document.createElement('i');
-			img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
+			img.setAttribute('class', 'fa fa-'+image+' fa-2x');
 			img.color = '#999999';
-			img.title = 'Drag this to the diagram to create a new table';
+			img.title = hint;
 			sidebar.appendChild(img);
 			  					
 			// Creates the image which is used as the drag icon (preview)
@@ -733,21 +760,21 @@
 			// Adds a field for the columnname
 			var nameField = form.addText('Name', cell.value.name);
 			var typeField = form.addCombo('Type', false, 1);
-			form.addOption(typeField, "VARCHAR", "VARCHAR", cell.value.widget === "VARCHAR");
-			form.addOption(typeField, "CHAR", "CHAR", cell.value.widget === "CHAR");
-			form.addOption(typeField, "DATE", "DATE", cell.value.widget === "DATE");
-			form.addOption(typeField, "TIME", "TIME", cell.value.widget === "TIME");
-			form.addOption(typeField, "TIMESTAMP", "TIMESTAMP", cell.value.widget === "TIMESTAMP");
-			form.addOption(typeField, "INTEGER", "INTEGER", cell.value.widget === "INTEGER");
-			form.addOption(typeField, "TINYINT", "TINYINT", cell.value.widget === "TINYINT");
-			form.addOption(typeField, "BIGINT", "BIGINT", cell.value.widget === "BIGINT");
-			form.addOption(typeField, "SMALLINT", "SMALLINT", cell.value.widget === "SMALLINT");
-			form.addOption(typeField, "REAL", "REAL", cell.value.widget === "REAL");
-			form.addOption(typeField, "DOUBLE", "DOUBLE", cell.value.widget === "DOUBLE");
-			form.addOption(typeField, "BOOLEAN", "BOOLEAN", cell.value.widget === "BOOLEAN");
-			form.addOption(typeField, "BLOB", "BLOB", cell.value.widget === "BLOB");
-			form.addOption(typeField, "DECIMAL", "DECIMAL", cell.value.widget === "DECIMAL");
-			form.addOption(typeField, "BIT", "BIT", cell.value.widget === "BIT");
+			form.addOption(typeField, "VARCHAR", "VARCHAR", cell.value.type === "VARCHAR");
+			form.addOption(typeField, "CHAR", "CHAR", cell.value.type === "CHAR");
+			form.addOption(typeField, "DATE", "DATE", cell.value.type === "DATE");
+			form.addOption(typeField, "TIME", "TIME", cell.value.type === "TIME");
+			form.addOption(typeField, "TIMESTAMP", "TIMESTAMP", cell.value.type === "TIMESTAMP");
+			form.addOption(typeField, "INTEGER", "INTEGER", cell.value.type === "INTEGER");
+			form.addOption(typeField, "TINYINT", "TINYINT", cell.value.type === "TINYINT");
+			form.addOption(typeField, "BIGINT", "BIGINT", cell.value.type === "BIGINT");
+			form.addOption(typeField, "SMALLINT", "SMALLINT", cell.value.type === "SMALLINT");
+			form.addOption(typeField, "REAL", "REAL", cell.value.type === "REAL");
+			form.addOption(typeField, "DOUBLE", "DOUBLE", cell.value.type === "DOUBLE");
+			form.addOption(typeField, "BOOLEAN", "BOOLEAN", cell.value.type === "BOOLEAN");
+			form.addOption(typeField, "BLOB", "BLOB", cell.value.type === "BLOB");
+			form.addOption(typeField, "DECIMAL", "DECIMAL", cell.value.type === "DECIMAL");
+			form.addOption(typeField, "BIT", "BIT", cell.value.type === "BIT");
 			
 			var lengthField = form.addText('Length', cell.value.columnLength);
 			
@@ -760,12 +787,7 @@
 			var scaleField = form.addText('Scale', cell.value.scale);
 			
 			var defaultField = form.addText('Default', cell.value.defaultValue || '');
-			var useDefaultField = form.addCheckbox('Use Default', (cell.value.defaultValue != null));
-			//var widgetField = form.addText('Widget', cell.value.widget);
-			var widgetField = form.addCombo('Widget', false, 1);
-			form.addOption(widgetField, "Text", "TEXT", cell.value.widget === "TEXT");
-			form.addOption(widgetField, "Checkbox", "CHECKBOX", cell.value.widget === "CHECKBOX");
-			
+			var useDefaultField = form.addCheckbox('Use Default', cell.value.defaultValue !== null);		
 			
 
 			var wnd = null;
@@ -794,7 +816,39 @@
 				clone.precision = precisionField.value;
 				clone.scale = scaleField.value;
 				
-				clone.widget = widgetField.value;
+				graph.model.setValue(cell, clone);
+			
+				wnd.destroy();
+			}
+			
+			// Defines the function to be executed when the
+			// Cancel button is pressed in the dialog
+			var cancelFunction = function() {
+				wnd.destroy();
+			}
+			form.addButtons(okFunction, cancelFunction);
+
+			var parent = graph.model.getParent(cell);
+			var name = parent.value.name+'.'+cell.value.name;
+			wnd = showModalWindow(name, form.table, 240, 310);
+		};
+		
+		function showViewProperties(graph, cell) {
+			// Creates a form for the user object inside
+			// the cell
+			var form = new mxForm('properties');
+
+			// Adds a field for the columnname
+			var nameField = form.addTextarea('SQL', cell.value.name, 5);
+
+			var wnd = null;
+
+			// Defines the function to be executed when the
+			// OK button is pressed in the dialog
+			var okFunction = function() {
+				var clone = cell.value.clone();
+				
+				clone.name = nameField.value;
 				
 				graph.model.setValue(cell, clone);
 			
@@ -809,8 +863,8 @@
 			form.addButtons(okFunction, cancelFunction);
 
 			var parent = graph.model.getParent(cell);
-			var name = parent.value.name + '.' + cell.value.name;
-			wnd = showModalWindow(name, form.table, 240, 310);
+			var name = parent.value.name+'.'+cell.value.name;
+			wnd = showModalWindow(name, form.table, 240, 110);
 		};
 		
 		function createSql(graph) {
@@ -822,44 +876,59 @@
 				var child = graph.model.getChildAt(parent, i);
 				
 				if (!graph.model.isEdge(child)) {
-					sql.push('CREATE TABLE IF NOT EXISTS '+child.value.name+' (');
+					if (child.value.type === 'TABLE') {
+						sql.push('CREATE TABLE IF NOT EXISTS '+child.value.name+' (');
 					
-					var columnCount = graph.model.getChildCount(child);
-
-					if (columnCount > 0) {
-						for (var j=0; j<columnCount; j++) {
-							var column = graph.model.getChildAt(child, j).value;
-							
-							sql.push('\n    '+column.name+' '+column.type);
-							
-							if (column.notNull) {
-								sql.push(' NOT NULL');
-							}
-													
-							if (column.primaryKey) {
-								sql.push(' PRIMARY KEY');
-							}
-							
-							if (column.autoIncrement) {
-								sql.push(' AUTOINCREMENT');
-							}
-							
-							if (column.unique) {
-								sql.push(' UNIQUE');
-							}
+						var columnCount = graph.model.getChildCount(child);
 	
-							if (column.defaultValue != null) {
-								sql.push(' DEFAULT '+column.defaultValue);
+						if (columnCount > 0) {
+							for (var j=0; j<columnCount; j++) {
+								var column = graph.model.getChildAt(child, j).value;
+								
+								sql.push('\n    '+column.name+' '+column.type);
+								
+								if (column.notNull) {
+									sql.push(' NOT NULL');
+								}
+														
+								if (column.primaryKey) {
+									sql.push(' PRIMARY KEY');
+								}
+								
+								if (column.autoIncrement) {
+									sql.push(' AUTOINCREMENT');
+								}
+								
+								if (column.unique) {
+									sql.push(' UNIQUE');
+								}
+		
+								if (column.defaultValue != null) {
+									sql.push(' DEFAULT '+column.defaultValue);
+								}
+								
+								sql.push(',');
 							}
 							
-							sql.push(',');
+							sql.splice(sql.length-1, 1);
+							sql.push('\n);');
 						}
-						
-						sql.splice(sql.length-1, 1);
-						sql.push('\n);');
+					} else {
+						sql.push('DROP VIEW '+child.value.name+';\n');
+						sql.push('CREATE VIEW '+child.value.name+' AS ');
+						var column = graph.model.getChildAt(child, 0).value;
+						sql.push(column.name + ';\n');
 					}
 					
+					
 					sql.push('\n');
+				} else {
+					sql.push('ALTER TABLE '+child.source.parent.value.name+'\n');
+					sql.push('ADD CONSTRAINT '+child.source.parent.value.name+'_' 
+						+child.target.parent.value.name+'\n');
+					sql.push('FOREIGN KEY ('+child.source.value.name+') REFERENCES ' 
+						+child.target.parent.value.name+'('+child.target.value.name+');\n');
+					
 				}
 			}
 
@@ -868,8 +937,8 @@
 		
 		function createSchema(graph) {
 			var schema = [];
-			schema.push('<schema>');
-			schema.push(' <structures>');
+			schema.push('<schema>\n');
+			schema.push(' <structures>\n');
 			var parent = graph.getDefaultParent();
 			var childCount = graph.model.getChildCount(parent);
 
@@ -877,57 +946,70 @@
 				var child = graph.model.getChildAt(parent, i);
 				
 				if (!graph.model.isEdge(child)) {
-					schema.push('  <structure name="'+child.value.name+'" type="table">');
+					schema.push('  <structure name="'+child.value.name+'" type="'+child.value.type.toLowerCase()+'">\n');
 					
 					var columnCount = graph.model.getChildCount(child);
 
 					if (columnCount > 0) {
 						for (var j=0; j<columnCount; j++) {
 							var column = graph.model.getChildAt(child, j).value;
-							schema.push('    <column name="'+column.name+'" type="'+column.type+'"');
-							if (column.columnLength !== null) {
-								schema.push(' length="'+column.columnLength+'"');
+							
+							if (column.isSQL) {
+								schema.push('    <sql value="'+column.name+'"/>\n');
+							} else {
+								schema.push('    <column name="'+column.name+'" type="'+column.type+'"');
+								if (column.columnLength !== null) {
+									schema.push(' length="'+column.columnLength+'"');
+								}
+								if (column.notNull) {
+									schema.push(' nullable="false"');
+								}
+								if (column.primaryKey) {
+									schema.push(' primaryKey="true"');
+								}
+								if (column.autoIncrement) {
+									schema.push(' identity="true"');
+								}
+								if (column.unique) {
+									schema.push(' unique="true"');
+								}
+								if (column.defaultValue !== null) {
+									schema.push(' defaultValue="'+column.defaultValue+'"');
+								}
+								if (column.precision !== null) {
+									schema.push(' precision="'+column.precision+'"');
+								}
+								if (column.scale !== null) {
+									schema.push(' scale="'+column.scale+'"');
+								}
+								schema.push('></column>\n');
 							}
-							if (column.notNull) {
-								schema.push(' nullable="false"');
-							}
-							if (column.primaryKey) {
-								schema.push(' primaryKey="true"');
-							}
-							if (column.autoIncrement) {
-								schema.push(' identity="true"');
-							}
-							if (column.unique) {
-								schema.push(' unique="true"');
-							}
-							if (column.defaultValue !== null) {
-								schema.push(' defaultValue="'+column.defaultValue+'"');
-							}
-							if (column.precision !== null) {
-								schema.push(' precision="'+column.precision+'"');
-							}
-							if (column.scale !== null) {
-								schema.push(' scale="'+column.scale+'"');
-							}
-							if (column.widget !== null) {
-								schema.push(' widget="'+column.widget+'"');
-							}
-							schema.push('></column>');
+							
 						}
 						
-						schema.splice(schema.length-1, 1);
-						schema.push('></column>');
+//						schema.splice(schema.length-1, 1);
+//						schema.push('></column>\n');
 					}
-					schema.push('  </structure>');
+					schema.push('  </structure>\n');
+				} else {
+					schema.push('  <structure name="'+child.source.parent.value.name+'_' 
+						+child.target.parent.value.name+'" type="foreignKey" ');
+					schema.push('alteredTable="'+child.source.parent.value.name+'" ');
+					schema.push('constraintName="'+child.source.parent.value.name+'_' 
+						+ child.target.parent.value.name+'" ');
+					schema.push('foreignKeyColumns="'+child.source.value.name+'" '+
+						'referencedTable="'+child.target.parent.value.name+'" '+
+						'referencedColumns="'+child.target.value.name+'">\n');
+					schema.push('  </structure>\n');
 				}
 			}
-			schema.push(' </structures>');
+			schema.push(' </structures>\n');
 			
 			var enc = new mxCodec(mxUtils.createXmlDocument());
 			var node = enc.encode(graph.getModel());
 			var model = mxUtils.getXml(node);
 			schema.push(model);
-			schema.push('</schema>');
+			schema.push('\n</schema>');
 			
 			return schema.join('');
 		}
@@ -946,7 +1028,6 @@
 		Column.prototype.unique = false;
 		Column.prototype.precision = '';
 		Column.prototype.scale = '';
-		Column.prototype.widget = 'TEXT';
 		
 		Column.prototype.clone = function() {
 			return mxUtils.clone(this);
@@ -958,6 +1039,14 @@
 		};
 		
 		Table.prototype.clone = function() {
+			return mxUtils.clone(this);
+		};
+		// Defines the view user object
+		function View(name) {
+			this.name = name;
+		};
+		
+		View.prototype.clone = function() {
 			return mxUtils.clone(this);
 		};
 	</script>
