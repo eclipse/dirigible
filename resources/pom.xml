@@ -44,6 +44,7 @@
 		<module>resources-jstree</module>
 		<module>resources-fonts</module>
 		<module>resources-flowable-libs</module>
+		<module>resources-mxgraph</module>
 	</modules>
 
 	<profiles>
