@@ -761,12 +761,20 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 					sorted.addAll(DATA_STRUCTURE_MODELS.keySet());
 				}
 
-				// drop view in a reverse order
+				// drop view and tables in a reverse order
 				for (int i = sorted.size() - 1; i >= 0; i--) {
 					String dsName = sorted.get(i);
 					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
 					try {
-						if (model instanceof DataStructureViewModel) {
+						if (model instanceof DataStructureTableModel) {
+							if (SqlFactory.getNative(connection).exists(connection, model.getName())) {
+								if (SqlFactory.getNative(connection).count(connection, model.getName()) == 0) {
+									executeTableDrop(connection, (DataStructureTableModel) model);
+								} else {
+									logger.warn(format("Table [{0}] cannot be deleted during the update process, because it is not empty", dsName));
+								}
+							}
+						} else if (model instanceof DataStructureViewModel) {
 							executeViewDrop(connection, (DataStructureViewModel) model);
 						}
 					} catch (Exception e) {
@@ -774,15 +782,20 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 						errors.add(e.getMessage());
 					}
 				}
-
+				
+				
 				// process models in the proper order
 				for (String dsName : sorted) {
 					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
 					try {
-						if (model instanceof DataStructureTableModel) {
-							executeTableUpdate(connection, (DataStructureTableModel) model);
-						} else if (model instanceof DataStructureViewModel) {
-							executeViewCreate(connection, (DataStructureViewModel) model);
+						if (!SqlFactory.getNative(connection).exists(connection, model.getName())) {
+							if (model instanceof DataStructureTableModel) {
+								executeTableCreate(connection, (DataStructureTableModel) model);
+							} else if (model instanceof DataStructureViewModel) {
+								executeViewCreate(connection, (DataStructureViewModel) model);
+							}
+						} else {
+							logger.warn(format("Table or View [{0}] already exists during the update process", dsName));
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);

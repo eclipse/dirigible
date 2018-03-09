@@ -69,7 +69,7 @@ public class TableDropProcessor {
 			
 			if (tableModel.getConstraints().getForeignKeys() != null) {
 				for (DataStructureTableConstraintForeignKeyModel foreignKeyModel : tableModel.getConstraints().getForeignKeys()) {
-					sql = SqlFactory.getNative(connection).drop().constraint(foreignKeyModel.getName()).build();
+					sql = SqlFactory.getNative(connection).drop().constraint(foreignKeyModel.getName()).fromTable(tableModel.getName()).build();
 					executeUpdate(connection, sql);
 				}
 			}
