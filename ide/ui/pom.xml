@@ -50,6 +50,7 @@
 		<module>ide-workspace</module>
 		<module>ide-bpm</module>
 		<module>ide-schema</module>
+		<module>ide-entity</module>
 	</modules>
 
 	<profiles>

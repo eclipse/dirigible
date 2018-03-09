@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>Entity Data Modeler</title>
+
+<!-- FontAwesome icon set -->
+<link type="text/css" href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+<!-- Sets the basepath for the library if not in same directory -->
+<script type="text/javascript">
+	mxBasePath = '../resources/mxgraph/3.9.1/src';
+</script>
+<!-- Loads and initializes the library -->
+<script type="text/javascript" src="../resources/mxgraph/3.9.1/src/js/mxClient.js"></script>
+
+<script type="text/javascript" src="../ide/ui/message-hub.js"></script>
+
+<script type="text/javascript" src="js/model.js"></script>
+<script type="text/javascript" src="js/dialogs.js"></script>
+<script type="text/javascript" src="js/widgets.js"></script>
+<script type="text/javascript" src="js/serializer.js"></script>
+<script type="text/javascript" src="js/controller.js"></script>
+
+<style>
+	.button:hover {
+		background: #333333 !important;
+	} 
+</style>
+
+<!-- Page passes the container for the graph to the program -->
+<body
+	onload="main(document.getElementById('graphContainer'),
+			document.getElementById('outlineContainer'),
+		 	document.getElementById('toolbarContainer'),
+			document.getElementById('sidebarContainer'),
+			document.getElementById('statusContainer'));">
+
+	<!-- Creates a container for the splash screen -->
+	<div id="splash"
+		style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background: white; z-index: 1;">
+		<center id="splash" style="padding-top: 230px;">
+			<img src="../resources/mxgraph/3.9.1/images/loading.gif">
+		</center>
+	</div>
+
+	<!-- Creates a container for the sidebar -->
+	<div id="toolbarContainer" class="toolbarContainer"></div>
+
+	<!-- Creates a container for the toolboox -->
+	<div id="sidebarContainer" class="sidebarContainer"></div>
+
+	<!-- Creates a container for the graph -->
+	<div id="graphContainer" class="graphContainer"></div>
+
+	<!-- Creates a container for the outline -->
+	<div id="outlineContainer" class="outlineContainer"></div>
+
+	<!-- Creates a container for the statusbar -->
+	<div id="statusContainer" class="statusContainer">
+	</div>
+</body>
+</html>
