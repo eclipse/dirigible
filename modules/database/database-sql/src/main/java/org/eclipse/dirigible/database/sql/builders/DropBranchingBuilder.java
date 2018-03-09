@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql.builders;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
+import org.eclipse.dirigible.database.sql.builders.table.DropConstraintBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.DropTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.view.DropViewBuilder;
 
@@ -62,6 +63,17 @@ public class DropBranchingBuilder extends AbstractSqlBuilder {
 	 */
 	public DropSequenceBuilder sequence(String sequence) {
 		return new DropSequenceBuilder(getDialect(), sequence);
+	}
+	
+	/**
+	 * Constraint branch.
+	 *
+	 * @param constraint
+	 *            the constraint
+	 * @return the drop constraint builder
+	 */
+	public DropConstraintBuilder constraint(String constraint) {
+		return new DropConstraintBuilder(getDialect(), constraint);
 	}
 
 	/*

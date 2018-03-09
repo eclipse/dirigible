@@ -35,7 +35,7 @@
     </sequenceFlow>
 
     <serviceTask id="externalSystemCall" name="Enter holidays in external system"
-        flowable:class="org.eclipse.dirigible.bpm.flowable.EngineCall">
+        flowable:class="org.eclipse.dirigible.bpm.flowable.DirigibleCallDelegate">
     	<extensionElements>
         <flowable:field name="handler">
           <flowable:string><![CDATA[project1/handler1.js]]></flowable:string>

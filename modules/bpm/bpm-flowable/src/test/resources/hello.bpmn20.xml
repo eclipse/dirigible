@@ -13,7 +13,7 @@
     <startEvent id="startEvent"/>
     <sequenceFlow sourceRef="startEvent" targetRef="externalSystemCall"/>
     <serviceTask id="externalSystemCall" name="Javascript Call"
-        flowable:class="org.eclipse.dirigible.bpm.flowable.EngineCall">
+        flowable:class="org.eclipse.dirigible.bpm.flowable.DirigibleCallDelegate">
     	<extensionElements>
         <flowable:field name="handler">
           <flowable:string><![CDATA[project1/handler1.js]]></flowable:string>

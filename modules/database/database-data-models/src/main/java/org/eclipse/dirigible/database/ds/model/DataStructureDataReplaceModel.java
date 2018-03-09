@@ -13,6 +13,6 @@ package org.eclipse.dirigible.database.ds.model;
 /**
  * The data model representation for *.replace files.
  */
-public class DataStructureDataReplaceModel extends DataStructureDataModel {
+public class DataStructureDataReplaceModel extends DataStructureContentModel {
 
 }

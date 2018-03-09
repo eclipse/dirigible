@@ -13,6 +13,6 @@ package org.eclipse.dirigible.database.ds.model;
 /**
  * The data model representation for *.update files.
  */
-public class DataStructureDataUpdateModel extends DataStructureDataModel {
+public class DataStructureDataUpdateModel extends DataStructureContentModel {
 
 }

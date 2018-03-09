@@ -14,7 +14,8 @@ public interface IDataStructureModel {
 	public static final String FILE_EXTENSION_DELETE = ".delete";
 	/** File extension for *.update files */
 	public static final String FILE_EXTENSION_UPDATE = ".update";
-
+	/** File extension for *.schema files */
+	public static final String FILE_EXTENSION_SCHEMA = ".schema";
 	
 	/** Type table */
 	public static final String TYPE_TABLE = "TABLE";
@@ -28,5 +29,7 @@ public interface IDataStructureModel {
 	public static final String TYPE_DELETE = "DELETE";
 	/** Type update */
 	public static final String TYPE_UPDATE = "UPDATE";
+	/** Type schema */
+	public static final String TYPE_SCHEMA = "SCHEMA";
 
 }

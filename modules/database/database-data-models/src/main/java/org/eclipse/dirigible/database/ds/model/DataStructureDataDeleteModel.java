@@ -13,6 +13,6 @@ package org.eclipse.dirigible.database.ds.model;
 /**
  * The data model representation for *.delete files.
  */
-public class DataStructureDataDeleteModel extends DataStructureDataModel {
+public class DataStructureDataDeleteModel extends DataStructureContentModel {
 
 }

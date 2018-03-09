@@ -13,6 +13,6 @@ package org.eclipse.dirigible.database.ds.model;
 /**
  * The data model representation for *.append files.
  */
-public class DataStructureDataAppendModel extends DataStructureDataModel {
+public class DataStructureDataAppendModel extends DataStructureContentModel {
 
 }

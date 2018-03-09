@@ -31,6 +31,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
+import org.eclipse.dirigible.database.ds.model.DataStructureSchemaModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
@@ -63,6 +64,9 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 
 	@Inject
 	private PersistenceManager<DataStructureDataUpdateModel> updatePersistenceManager;
+	
+	@Inject
+	private PersistenceManager<DataStructureSchemaModel> schemaPersistenceManager;
 
 	// Tables
 
@@ -1020,12 +1024,164 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseUpdate(org.eclipse.dirigible.database.ds.
-	 * model.DataStructureUpdateModel)
+	 * org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseUpdate(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public DataStructureDataUpdateModel parseUpdate(String location, String data) {
 		return DataStructureModelFactory.parseUpdate(location, data);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// Schemas
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createSchema(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public DataStructureSchemaModel createSchema(String location, String name, String hash) throws DataStructuresException {
+		DataStructureSchemaModel schemaModel = new DataStructureSchemaModel();
+		schemaModel.setLocation(location);
+		schemaModel.setName(name);
+		schemaModel.setType(IDataStructureModel.TYPE_SCHEMA);
+		schemaModel.setHash(hash);
+		schemaModel.setCreatedBy(UserFacade.getName());
+		schemaModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				schemaPersistenceManager.insert(connection, schemaModel);
+				return schemaModel;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new DataStructuresException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getSchema(java.lang.String)
+	 */
+	@Override
+	public DataStructureSchemaModel getSchema(String location) throws DataStructuresException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				return schemaPersistenceManager.find(connection, DataStructureSchemaModel.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new DataStructuresException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeSchema(java.lang.String)
+	 */
+	@Override
+	public void removeSchema(String location) throws DataStructuresException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				schemaPersistenceManager.delete(connection, DataStructureSchemaModel.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new DataStructuresException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#updateSchema(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void updateSchema(String location, String name, String hash) throws DataStructuresException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				DataStructureSchemaModel schemaModel = getSchema(location);
+				schemaModel.setName(name);
+				schemaModel.setHash(hash);
+				schemaPersistenceManager.update(connection, schemaModel);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new DataStructuresException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getSchemas()
+	 */
+	@Override
+	public List<DataStructureSchemaModel> getSchemas() throws DataStructuresException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
+				List<DataStructureSchemaModel> dataModels = schemaPersistenceManager.query(connection, DataStructureSchemaModel.class, sql,
+						Arrays.asList(IDataStructureModel.TYPE_SCHEMA));
+				return dataModels;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new DataStructuresException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsSchema(java.lang.String)
+	 */
+	@Override
+	public boolean existsSchema(String location) throws DataStructuresException {
+		return getSchema(location) != null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseSchema(java.lang.String, java.lang.String)
+	 */
+	public DataStructureSchemaModel parseSchema(String location, String content) {
+		return DataStructureModelFactory.parseSchema(location, content);
 	}
 
 }

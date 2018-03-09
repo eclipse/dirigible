@@ -44,6 +44,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureSchemaModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTopologicalSorter;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
@@ -89,6 +90,9 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 
 	private static final Map<String, DataStructureDataUpdateModel> UPDATE_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, DataStructureDataUpdateModel>());
+	
+	private static final Map<String, DataStructureSchemaModel> SCHEMA_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, DataStructureSchemaModel>());
 
 	private static final List<String> TABLES_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
@@ -101,6 +105,8 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	private static final List<String> DELETE_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
 	private static final List<String> UPDATE_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+	
+	private static final List<String> SCHEMA_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
 	private static final Map<String, DataStructureModel> DATA_STRUCTURE_MODELS = new LinkedHashMap<String, DataStructureModel>();
 
@@ -111,6 +117,8 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	private static final Map<String, DataStructureDataDeleteModel> DATA_STRUCTURE_DELETE_MODELS = new LinkedHashMap<String, DataStructureDataDeleteModel>();
 
 	private static final Map<String, DataStructureDataUpdateModel> DATA_STRUCTURE_UPDATE_MODELS = new LinkedHashMap<String, DataStructureDataUpdateModel>();
+	
+	private static final Map<String, DataStructureSchemaModel> DATA_STRUCTURE_SCHEMA_MODELS = new LinkedHashMap<String, DataStructureSchemaModel>();
 
 	@Inject
 	private DataStructuresCoreService dataStructuresCoreService;
@@ -211,6 +219,20 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		DataStructureDataUpdateModel model = dataStructuresCoreService.parseUpdate(contentPath, data);
 		UPDATE_PREDELIVERED.put(contentPath, model);
 	}
+	
+	/**
+	 * Register predelivered schema files.
+	 *
+	 * @param contentPath
+	 *            the data path
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void registerPredeliveredSchema(String contentPath) throws IOException {
+		String data = loadResourceContent(contentPath);
+		DataStructureSchemaModel model = dataStructuresCoreService.parseSchema(contentPath, data);
+		SCHEMA_PREDELIVERED.put(contentPath, model);
+	}
 
 	private String loadResourceContent(String modelPath) throws IOException {
 		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(modelPath);
@@ -252,6 +274,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		DATA_STRUCTURE_APPEND_MODELS.clear();
 		DATA_STRUCTURE_DELETE_MODELS.clear();
 		DATA_STRUCTURE_UPDATE_MODELS.clear();
+		DATA_STRUCTURE_SCHEMA_MODELS.clear();
 	}
 
 	/**
@@ -308,6 +331,14 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				synchronizeUpdate(data);
 			} catch (Exception e) {
 				logger.error(format("Update data [{0}] skipped due to an error: {1}", data, e.getMessage()), e);
+			}
+		}
+		// Schema
+		for (DataStructureSchemaModel schema : SCHEMA_PREDELIVERED.values()) {
+			try {
+				synchronizeSchema(schema);
+			} catch (Exception e) {
+				logger.error(format("Update schema [{0}] skipped due to an error: {1}", schema, e.getMessage()), e);
 			}
 		}
 		logger.trace("Done synchronizing predelivered Data Structures.");
@@ -384,7 +415,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Synchronize replace.
 	 *
-	 * @param dateModel
+	 * @param dataModel
 	 *            the data model
 	 * @throws SynchronizationException
 	 *             the synchronization exception
@@ -412,7 +443,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Synchronize append.
 	 *
-	 * @param dateModel
+	 * @param dataModel
 	 *            the data model
 	 * @throws SynchronizationException
 	 *             the synchronization exception
@@ -440,7 +471,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Synchronize delete.
 	 *
-	 * @param dateModel
+	 * @param dataModel
 	 *            the data model
 	 * @throws SynchronizationException
 	 *             the synchronization exception
@@ -468,7 +499,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Synchronize update.
 	 *
-	 * @param dateModel
+	 * @param dataModel
 	 *            the data model
 	 * @throws SynchronizationException
 	 *             the synchronization exception
@@ -490,6 +521,45 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			UPDATE_SYNCHRONIZED.add(dataModel.getLocation());
 		} catch (DataStructuresException e) {
 			throw new SynchronizationException(e);
+		}
+	}
+	
+	/**
+	 * Synchronize schema.
+	 *
+	 * @param schemaModel
+	 *            the schema model
+	 * @throws SynchronizationException
+	 *             the synchronization exception
+	 */
+	private void synchronizeSchema(DataStructureSchemaModel schemaModel) throws SynchronizationException {
+		try {
+			if (!dataStructuresCoreService.existsSchema(schemaModel.getLocation())) {
+				dataStructuresCoreService.createSchema(schemaModel.getLocation(), schemaModel.getName(), schemaModel.getHash());
+				DATA_STRUCTURE_SCHEMA_MODELS.put(schemaModel.getName(), schemaModel);
+				addDataStructureModelsFromSchema(schemaModel);
+				logger.info("Synchronized a new Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+			} else {
+				DataStructureSchemaModel existing = dataStructuresCoreService.getSchema(schemaModel.getLocation());
+				if (!schemaModel.equals(existing)) {
+					dataStructuresCoreService.updateSchema(schemaModel.getLocation(), schemaModel.getName(), schemaModel.getHash());
+					DATA_STRUCTURE_SCHEMA_MODELS.put(schemaModel.getName(), schemaModel);
+					addDataStructureModelsFromSchema(schemaModel);
+					logger.info("Synchronized a modified Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+				}
+			}
+			SCHEMA_SYNCHRONIZED.add(schemaModel.getLocation());
+		} catch (DataStructuresException e) {
+			throw new SynchronizationException(e);
+		}
+	}
+
+	private void addDataStructureModelsFromSchema(DataStructureSchemaModel schemaModel) {
+		for (DataStructureTableModel tableModel : schemaModel.getTables()) {
+			DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
+		}
+		for (DataStructureViewModel viewModel : schemaModel.getViews()) {
+			DATA_STRUCTURE_MODELS.put(viewModel.getName(), viewModel);
 		}
 	}
 
@@ -563,6 +633,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			synchronizeUpdate(dataModel);
 			return;
 		}
+		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_SCHEMA)) {
+			DataStructureSchemaModel schemaModel = dataStructuresCoreService.parseSchema(registryPath, contentAsString);
+			schemaModel.setLocation(registryPath);
+			synchronizeSchema(schemaModel);
+			return;
+		}
 	}
 
 	/*
@@ -624,6 +700,14 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 					if (!UPDATE_SYNCHRONIZED.contains(dataModel.getLocation())) {
 						dataStructuresCoreService.removeUpdate(dataModel.getLocation());
 						logger.warn("Cleaned up Update Data file [{}] from location: {}", dataModel.getName(), dataModel.getLocation());
+					}
+				}
+				
+				List<DataStructureSchemaModel> schemaModels = dataStructuresCoreService.getSchemas();
+				for (DataStructureSchemaModel schemaModel : schemaModels) {
+					if (!SCHEMA_SYNCHRONIZED.contains(schemaModel.getLocation())) {
+						dataStructuresCoreService.removeSchema(schemaModel.getLocation());
+						logger.warn("Cleaned up Schema Data file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
 					}
 				}
 			} finally {

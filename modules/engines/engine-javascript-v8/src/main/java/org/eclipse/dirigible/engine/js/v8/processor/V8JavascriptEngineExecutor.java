@@ -107,8 +107,10 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		try {
 			v8.add(IJavascriptEngineExecutor.JAVASCRIPT_ENGINE_TYPE, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_V8);
 			Map<String, Object> preparedMap = new HashMap<>();
-			for (Map.Entry<Object, Object> entry : executionContext.entrySet()) {
-				preparedMap.put(entry.getKey().toString(), entry.getValue());
+			if (executionContext != null) {
+				for (Map.Entry<Object, Object> entry : executionContext.entrySet()) {
+					preparedMap.put(entry.getKey().toString(), entry.getValue());
+				}
 			}
 			V8Object v8Map = V8ObjectUtils.toV8Object(v8, preparedMap);
 			v8.add(IJavascriptEngineExecutor.CONTEXT, v8Map);
@@ -137,7 +139,9 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 				result = v8.executeScript(source, moduleOrCode, 0);
 			}
 			forceFlush();
-			executionContext.putAll(V8ObjectUtils.toMap(v8Map));
+			if (executionContext != null) {
+				executionContext.putAll(V8ObjectUtils.toMap(v8Map));
+			}
 			v8Map.release();
 		} catch (Exception e) {
 			throw new ScriptingException(e);
