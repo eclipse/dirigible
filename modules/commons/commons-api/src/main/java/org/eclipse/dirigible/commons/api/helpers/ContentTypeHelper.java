@@ -420,7 +420,10 @@ public class ContentTypeHelper {
 	public static final String APPLICATION_BPMN = "application/bpmn+xml";
 	
 	/** The Constant APPLICATION_SCHEMA. */
-	public static final String APPLICATION_SCHEMA = "application/schema+xml";
+	public static final String APPLICATION_SCHEMA = "application/database-schema-model+xml";
+	
+	/** The Constant APPLICATION_ENTITY_DATA_MODEL. */
+	public static final String APPLICATION_ENTITY_DATA_MODEL = "application/entity-data-model+xml";
 
 	/** The Constant CONTENT_TYPES. */
 	private static final Map<String, String> CONTENT_TYPES = new HashMap<String, String>();
@@ -656,7 +659,8 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("tracwiki", TEXT_HTML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("twiki", TEXT_HTML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("bpmn", APPLICATION_BPMN); //$NON-NLS-1$
-		TEXT_CONTENT_TYPES.put("schema", APPLICATION_SCHEMA); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("dsm", APPLICATION_SCHEMA); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("edm", APPLICATION_ENTITY_DATA_MODEL); //$NON-NLS-1$
 
 		CONTENT_TYPES.putAll(BINARY_CONTENT_TYPES);
 		CONTENT_TYPES.putAll(TEXT_CONTENT_TYPES);
