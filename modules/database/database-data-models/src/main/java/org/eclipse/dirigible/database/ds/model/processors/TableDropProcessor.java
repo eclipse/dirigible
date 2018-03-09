@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
@@ -65,19 +66,31 @@ public class TableDropProcessor {
 					statement.close();
 				}
 			}
+			
+			if (tableModel.getConstraints().getForeignKeys() != null) {
+				for (DataStructureTableConstraintForeignKeyModel foreignKeyModel : tableModel.getConstraints().getForeignKeys()) {
+					sql = SqlFactory.getNative(connection).drop().constraint(foreignKeyModel.getName()).build();
+					executeUpdate(connection, sql);
+				}
+			}
 
 			sql = SqlFactory.getNative(connection).drop().table(tableModel.getName()).build();
-			statement = connection.prepareStatement(sql);
-			try {
-				logger.info(sql);
-				statement.executeUpdate();
-			} catch (SQLException e) {
-				logger.error(sql);
-				logger.error(e.getMessage(), e);
-			} finally {
-				if (statement != null) {
-					statement.close();
-				}
+			executeUpdate(connection, sql);
+		}
+	}
+
+	private static void executeUpdate(Connection connection, String sql) throws SQLException {
+		PreparedStatement statement;
+		statement = connection.prepareStatement(sql);
+		try {
+			logger.info(sql);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.error(sql);
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (statement != null) {
+				statement.close();
 			}
 		}
 	}

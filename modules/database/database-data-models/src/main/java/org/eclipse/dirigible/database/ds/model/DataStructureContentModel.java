@@ -13,7 +13,7 @@ package org.eclipse.dirigible.database.ds.model;
 /**
  * The data model representation for *.append files.
  */
-public class DataStructureDataModel extends DataStructureModel {
+public class DataStructureContentModel extends DataStructureModel {
 
 	private transient String content;
 

@@ -17,6 +17,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureSchemaModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 
@@ -572,9 +573,92 @@ public interface IDataStructuresCoreService extends ICoreService {
 	 * @param location
 	 *            the location
 	 * @param data
-	 *            the date
+	 *            the data
 	 * @return the data structure update model
 	 */
 	public DataStructureDataUpdateModel parseUpdate(String location, String data);
+	
+	// Schema
+
+	/**
+	 * Creates the schema.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @return the data structure schema model
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureSchemaModel createSchema(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the schema.
+	 *
+	 * @param location
+	 *            the location
+	 * @return the schema
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureSchemaModel getSchema(String location) throws DataStructuresException;
+
+	/**
+	 * Exists schema.
+	 *
+	 * @param location
+	 *            the location
+	 * @return true, if successful
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public boolean existsSchema(String location) throws DataStructuresException;
+
+	/**
+	 * Removes the schema.
+	 *
+	 * @param location
+	 *            the location
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void removeSchema(String location) throws DataStructuresException;
+
+	/**
+	 * Update schema.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void updateSchema(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the schemas.
+	 *
+	 * @return the schemas
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public List<DataStructureSchemaModel> getSchemas() throws DataStructuresException;
+
+	/**
+	 * Parses the schema data.
+	 *
+	 * @param location
+	 *            the location
+	 * @param data
+	 *            the schema content
+	 * @return the data structure schema model
+	 */
+	public DataStructureSchemaModel parseSchema(String location, String content);
 
 }

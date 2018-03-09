@@ -10,15 +10,29 @@
 
 package org.eclipse.dirigible.database.ds.model;
 
+import static java.text.MessageFormat.format;
+
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.utils.xml2json.Xml2Json;
+import org.xml.sax.SAXException;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * The factory for creation of the data structure models from source content.
@@ -90,7 +104,7 @@ public class DataStructureModelFactory {
 	 */
 	public static DataStructureDataReplaceModel parseReplace(String location, String content) {
 		DataStructureDataReplaceModel result = new DataStructureDataReplaceModel();
-		setDataModelAttributes(location, content, result, IDataStructureModel.TYPE_REPLACE);
+		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_REPLACE);
 		return result;
 	}
 
@@ -103,7 +117,7 @@ public class DataStructureModelFactory {
 	 */
 	public static DataStructureDataAppendModel parseAppend(String location, String content) {
 		DataStructureDataAppendModel result = new DataStructureDataAppendModel();
-		setDataModelAttributes(location, content, result, IDataStructureModel.TYPE_APPEND);
+		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_APPEND);
 		return result;
 	}
 
@@ -116,7 +130,7 @@ public class DataStructureModelFactory {
 	 */
 	public static DataStructureDataDeleteModel parseDelete(String location, String content) {
 		DataStructureDataDeleteModel result = new DataStructureDataDeleteModel();
-		setDataModelAttributes(location, content, result, IDataStructureModel.TYPE_DELETE);
+		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_DELETE);
 		return result;
 	}
 
@@ -129,11 +143,11 @@ public class DataStructureModelFactory {
 	 */
 	public static DataStructureDataUpdateModel parseUpdate(String location, String content) {
 		DataStructureDataUpdateModel result = new DataStructureDataUpdateModel();
-		setDataModelAttributes(location, content, result, IDataStructureModel.TYPE_UPDATE);
+		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_UPDATE);
 		return result;
 	}
 
-	private static void setDataModelAttributes(String location, String content, DataStructureDataModel dataModel,
+	private static void setContentModelAttributes(String location, String content, DataStructureContentModel dataModel,
 			String type) {
 		dataModel.setLocation(location);
 		dataModel.setName(FilenameUtils.getBaseName(location));
@@ -142,6 +156,122 @@ public class DataStructureModelFactory {
 		dataModel.setCreatedBy(UserFacade.getName());
 		dataModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 		dataModel.setHash(DigestUtils.md5Hex(content));
+	}
+	
+	/**
+	 * Creates a schema model from the raw content.
+	 *
+	 * @param content
+	 *            the schema definition
+	 * @return the schema model instance
+	 */
+	public static DataStructureSchemaModel parseSchema(String location, String content) {
+		DataStructureSchemaModel result = new DataStructureSchemaModel();
+		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_SCHEMA);
+		
+		try {
+			String json = Xml2Json.toJson(content);
+			JsonElement root = GsonHelper.PARSER.parse(json);
+			JsonArray structures = root.getAsJsonObject().get("schema").getAsJsonObject().get("structures").getAsJsonObject().get("structure").getAsJsonArray();
+			for (int i=0; i<structures.size(); i++) {
+				JsonObject structure = structures.get(i).getAsJsonObject();
+				String type = structure.get("-type").getAsString();
+				if ("table".equals(type)) {
+					DataStructureTableModel table = new DataStructureTableModel();
+					setTableAttributes(location, result, structure, type, table);
+					result.getTables().add(table);
+				} else if ("view".equals(type)) {
+					DataStructureViewModel view = new DataStructureViewModel();
+					setViewAttributes(location, result, structure, type, view);
+					result.getViews().add(view);
+				} else if ("foreignKey".equals(type)) {
+					// skip for now
+				} else {
+					throw new IllegalArgumentException(format("Unknown data structure type [{0}] loaded from schema [{1}]", type, location));
+				}
+			}
+			for (int i=0; i<structures.size(); i++) {
+				JsonObject structure = structures.get(i).getAsJsonObject();
+				String type = structure.get("-type").getAsString();
+				if ("foreignKey".equals(type)) {
+					DataStructureTableConstraintForeignKeyModel foreignKey = new DataStructureTableConstraintForeignKeyModel();
+					foreignKey.setName(structure.get("-name").getAsString());
+					foreignKey.setColumns(structure.get("-columns").getAsString().split(","));
+					foreignKey.setReferencedTable(structure.get("-referencedTable").getAsString());
+					foreignKey.setReferencedColumns(structure.get("-referencedColumns").getAsString().split(","));
+					String tableName = structure.get("-table").getAsString();
+					for (DataStructureTableModel table : result.getTables()) {
+						if (table.getName().equals(tableName)) {
+							// add the foreign key
+							List<DataStructureTableConstraintForeignKeyModel> list = new ArrayList<DataStructureTableConstraintForeignKeyModel>(); 
+							if (table.getConstraints().getForeignKeys() != null ) { 
+								list.addAll(Arrays.asList(table.getConstraints().getForeignKeys()));
+							}
+							list.add(foreignKey);
+							table.getConstraints().setForeignKeys(list.toArray(new DataStructureTableConstraintForeignKeyModel[]{}));
+							// add the dependency for the topological sorting later
+							DataStructureDependencyModel dependencyModel = new DataStructureDependencyModel(foreignKey.getReferencedTable(), "TABLE");
+							table.getDependencies().add(dependencyModel);
+							break;
+						}
+					}
+				}
+			}
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			throw new IllegalArgumentException(format("Error in parsing schema {0}", location), e);
+		}
+		
+		return result;
+	}
+
+	private static void setViewAttributes(String location, DataStructureSchemaModel result, JsonObject structure,
+			String type, DataStructureViewModel view) {
+		view.setLocation(location);
+		view.setName(structure.get("-name").getAsString());
+		view.setType(type);
+		view.setQuery(structure.get("sql").getAsJsonObject().get("-value").getAsString());
+		view.setCreatedAt(result.getCreatedAt());
+		view.setCreatedBy(result.getCreatedBy());
+		view.setHash(result.getHash());
+	}
+
+	private static void setTableAttributes(String location, DataStructureSchemaModel result, JsonObject structure,
+			String type, DataStructureTableModel table) {
+		table.setLocation(location);
+		table.setName(structure.get("-name").getAsString());
+		table.setType(type);
+		table.setCreatedAt(result.getCreatedAt());
+		table.setCreatedBy(result.getCreatedBy());
+		table.setHash(result.getHash());
+		JsonElement columnElement = structure.get("column");
+		if (columnElement.isJsonObject()) {
+			JsonObject column = columnElement.getAsJsonObject();
+			DataStructureTableColumnModel columnModel = new DataStructureTableColumnModel();
+			setColumnAttributes(column, columnModel);
+			table.getColumns().add(columnModel);
+		} else if (columnElement.isJsonArray()) {
+			JsonArray columns = columnElement.getAsJsonArray();
+			for (int j=0; j<columns.size(); j++) {
+				JsonObject column = columns.get(j).getAsJsonObject();
+				DataStructureTableColumnModel columnModel = new DataStructureTableColumnModel();
+				setColumnAttributes(column, columnModel);
+				table.getColumns().add(columnModel);
+			}
+		} else {
+			throw new IllegalArgumentException(format("Error in parsing columns of table [{0}] in schema [{1}]", table.getName(), location));
+		}
+	}
+
+	private static void setColumnAttributes(JsonObject column, DataStructureTableColumnModel columnModel) {
+		columnModel.setName(column.get("-name") != null ? column.get("-name").getAsString() : "unknown");
+		columnModel.setType(column.get("-type") != null ? column.get("-type").getAsString() : "unknown");
+		columnModel.setLength(column.get("-length") != null ? column.get("-length").getAsString() : null);
+		columnModel.setPrimaryKey(column.get("-primaryKey") != null ? column.get("-primaryKey").getAsBoolean() : false);
+		columnModel.setUnique(column.get("-unique") != null ? column.get("-unique").getAsBoolean() : false);
+		columnModel.setNullable(column.get("-nullable") != null ? column.get("-nullable").getAsBoolean() : false);
+		columnModel.setDefaultValue(column.get("-defaultValue") != null ? column.get("-defaultValue").getAsString() : null);
+		columnModel.setPrecision(column.get("-precision") != null ? column.get("-precision").getAsString() : null);
+		columnModel.setScale(column.get("-scale") != null ? column.get("-scale").getAsString() : null);
 	}
 
 }
