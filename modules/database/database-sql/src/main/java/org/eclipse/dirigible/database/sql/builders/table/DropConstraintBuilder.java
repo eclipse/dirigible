@@ -23,6 +23,8 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 	private static final Logger logger = LoggerFactory.getLogger(DropConstraintBuilder.class);
 
 	private String constraint = null;
+	
+	private String table = null;
 
 	/**
 	 * Instantiates a new drop constraint builder.
@@ -36,6 +38,24 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 		super(dialect);
 		this.constraint = constraint;
 	}
+	
+	/**
+	 * Specify the table
+	 * @param table the table name
+	 * @return the builder itself
+	 */
+	public DropConstraintBuilder fromTable(String table) {
+		this.table = table;
+		return this;
+	}
+	
+	/**
+	 * Getter for the table field
+	 * @return the table
+	 */
+	public String getTable() {
+		return table;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -46,6 +66,9 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 
 		StringBuilder sql = new StringBuilder();
 
+		// ALTER
+		generateAlter(sql);
+				
 		// DROP
 		generateDrop(sql);
 
@@ -59,6 +82,16 @@ public class DropConstraintBuilder extends AbstractDropSqlBuilder {
 		return generated;
 	}
 
+	/**
+	 * Generate alter table.
+	 *
+	 * @param sql
+	 *            the sql
+	 */
+	protected void generateAlter(StringBuilder sql) {
+		sql.append(ALTER).append(SPACE).append(TABLE).append(SPACE).append(this.table).append(SPACE);
+	}
+	
 	/**
 	 * Generate constraint.
 	 *

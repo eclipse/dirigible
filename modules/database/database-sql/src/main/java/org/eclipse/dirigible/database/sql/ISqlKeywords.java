@@ -210,6 +210,15 @@ public interface ISqlKeywords {
 
 	/** The Constant STAR. */
 	public static final String STAR = "*"; //$NON-NLS-1$
+	
+	/** The Constant ALTER. */
+	public static final String ALTER = "ALTER"; //$NON-NLS-1$
+	
+	/** The Constant TABLE. */
+	public static final String TABLE = "TABLE"; //$NON-NLS-1$
+	
+	
+	
 
 	/** The Constant METADATA_SYSTEM_TABLE. */
 	public static final String METADATA_SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
