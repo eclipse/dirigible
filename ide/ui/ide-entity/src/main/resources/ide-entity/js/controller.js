@@ -25,8 +25,10 @@ function main(container, outline, toolbar, sidebar, status) {
 	var contents = loadContents(file);
 
 	var messageHub = new FramesMessageHub();
+	
+	initializeModelJson(file.substring(0, file.lastIndexOf('.')) + '.entities');
 
-	function saveContents(text) {
+	function saveContents(text, file) {
 		console.log('Save called...');
 		if (file) {
 			var xhr = new XMLHttpRequest();
@@ -35,17 +37,40 @@ function main(container, outline, toolbar, sidebar, status) {
 				if (xhr.readyState === 4) {
 					console.log('file saved: '+file);
 				}
-			}
+			};
 			xhr.send(text);
 			messageHub.post({data: file}, 'editor.file.saved');
 		} else {
 			console.error('file parameter is not present in the request');
 		}
 	}
+	
+	function initializeModelJson(file) {
+		console.log('Save called...');
+		if (file) {
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', '/services/v3/ide/workspaces'+file);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4) {
+					console.log('file saved: '+file);
+				}
+			};
+			xhr.send('');
+			messageHub.post({data: file}, 'editor.file.saved');
+		} else {
+			console.error('file parameter is not present in the request');
+		}
+	}
+	
+	function saveModel(graph) {
+		var model = createModel(graph);
+		saveContents(model, file);
+		var modelJson = createModelJson(graph);
+		saveContents(modelJson, file.substring(0, file.lastIndexOf('.')) + '.entities');
+	}
 			
 	messageHub.subscribe(function(graph) {
-		var model = createModel(graph);
-		saveContents(model);
+		saveModel(graph);
 	}, 'workbench.editor.save');
 	
 	
@@ -311,8 +336,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Defines a new save action
 		editor.addAction('save', function(editor, cell) {
-			var model = createModel(graph);
-			saveContents(model);
+			saveModel(graph);
 		});
 		
 		addToolbarButton(editor, toolbar, 'properties', 'Properties', 'list-ul', true);
