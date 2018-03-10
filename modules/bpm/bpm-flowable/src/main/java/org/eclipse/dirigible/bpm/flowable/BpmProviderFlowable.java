@@ -37,6 +37,8 @@ import org.springframework.beans.BeanUtils;
 
 public class BpmProviderFlowable implements IBpmProvider {
 	
+	public static final String FILE_EXTENSION_BPMN = ".bpmn";
+	
 	private static final String EXTENSION_BPMN20_XML = "bpmn20.xml";
 
 	private static final Logger logger = LoggerFactory.getLogger(BpmProviderFlowable.class);

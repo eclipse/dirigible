@@ -290,6 +290,12 @@
         <dependent-module archiveName="dirigible-ide-ui-bpm-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-bpm/dirigible-ide-ui-bpm">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-ide-ui-schema-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-schema/dirigible-ide-ui-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-ide-ui-entity-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-entity/dirigible-ide-ui-entity">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-ide-services-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-services/dirigible-ide-services">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -378,6 +384,12 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-resources-themes-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-themes/dirigible-resources-themes">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-flowable-libs-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-flowable-libs/dirigible-resources-flowable-libs">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-resources-mxgraph-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-resources-mxgraph/dirigible-resources-mxgraph">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-ext-qunit-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ext-qunit/dirigible-ext-qunit">
