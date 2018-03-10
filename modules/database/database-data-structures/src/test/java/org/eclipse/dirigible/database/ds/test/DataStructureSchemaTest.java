@@ -77,14 +77,7 @@ public class DataStructureSchemaTest extends AbstractGuiceTest {
 				}
 
 				for (DataStructureTableModel table : schema.getTables()) {
-					if ("TABLE3".equals(table.getName())) {
-						dataStructuresSynchronizer.executeTableUpdate(connection, table);
-						break;
-					}
-				}
-				
-				for (DataStructureTableModel table : schema.getTables()) {
-					if ("TABLE4".equals(table.getName())) {
+					if ("TABLE2".equals(table.getName())) {
 						dataStructuresSynchronizer.executeTableUpdate(connection, table);
 						break;
 					}

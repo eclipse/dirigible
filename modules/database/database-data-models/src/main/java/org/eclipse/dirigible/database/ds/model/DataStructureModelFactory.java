@@ -169,13 +169,12 @@ public class DataStructureModelFactory {
 		DataStructureSchemaModel result = new DataStructureSchemaModel();
 		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_SCHEMA);
 		
-		try {
-			String json = Xml2Json.toJson(content);
-			JsonElement root = GsonHelper.PARSER.parse(json);
-			JsonArray structures = root.getAsJsonObject().get("schema").getAsJsonObject().get("structures").getAsJsonObject().get("structure").getAsJsonArray();
+//			String json = Xml2Json.toJson(content);
+			JsonElement root = GsonHelper.PARSER.parse(content);
+			JsonArray structures = root.getAsJsonObject().get("schema").getAsJsonObject().get("structures").getAsJsonArray();
 			for (int i=0; i<structures.size(); i++) {
 				JsonObject structure = structures.get(i).getAsJsonObject();
-				String type = structure.get("-type").getAsString();
+				String type = structure.get("type").getAsString();
 				if ("table".equals(type)) {
 					DataStructureTableModel table = new DataStructureTableModel();
 					setTableAttributes(location, result, structure, type, table);
@@ -192,14 +191,14 @@ public class DataStructureModelFactory {
 			}
 			for (int i=0; i<structures.size(); i++) {
 				JsonObject structure = structures.get(i).getAsJsonObject();
-				String type = structure.get("-type").getAsString();
+				String type = structure.get("type").getAsString();
 				if ("foreignKey".equals(type)) {
 					DataStructureTableConstraintForeignKeyModel foreignKey = new DataStructureTableConstraintForeignKeyModel();
-					foreignKey.setName(structure.get("-name").getAsString());
-					foreignKey.setColumns(structure.get("-columns").getAsString().split(","));
-					foreignKey.setReferencedTable(structure.get("-referencedTable").getAsString());
-					foreignKey.setReferencedColumns(structure.get("-referencedColumns").getAsString().split(","));
-					String tableName = structure.get("-table").getAsString();
+					foreignKey.setName(structure.get("name").getAsString());
+					foreignKey.setColumns(structure.get("columns").getAsString().split(","));
+					foreignKey.setReferencedTable(structure.get("referencedTable").getAsString());
+					foreignKey.setReferencedColumns(structure.get("referencedColumns").getAsString().split(","));
+					String tableName = structure.get("table").getAsString();
 					for (DataStructureTableModel table : result.getTables()) {
 						if (table.getName().equals(tableName)) {
 							// add the foreign key
@@ -217,9 +216,7 @@ public class DataStructureModelFactory {
 					}
 				}
 			}
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			throw new IllegalArgumentException(format("Error in parsing schema {0}", location), e);
-		}
+		
 		
 		return result;
 	}
@@ -227,9 +224,9 @@ public class DataStructureModelFactory {
 	private static void setViewAttributes(String location, DataStructureSchemaModel result, JsonObject structure,
 			String type, DataStructureViewModel view) {
 		view.setLocation(location);
-		view.setName(structure.get("-name").getAsString());
+		view.setName(structure.get("name").getAsString());
 		view.setType(type);
-		view.setQuery(structure.get("sql").getAsJsonObject().get("-value").getAsString());
+		view.setQuery(structure.get("columns").getAsJsonArray().get(0).getAsJsonObject().get("query").getAsString());
 		view.setCreatedAt(result.getCreatedAt());
 		view.setCreatedBy(result.getCreatedBy());
 		view.setHash(result.getHash());
@@ -238,12 +235,12 @@ public class DataStructureModelFactory {
 	private static void setTableAttributes(String location, DataStructureSchemaModel result, JsonObject structure,
 			String type, DataStructureTableModel table) {
 		table.setLocation(location);
-		table.setName(structure.get("-name").getAsString());
+		table.setName(structure.get("name").getAsString());
 		table.setType(type);
 		table.setCreatedAt(result.getCreatedAt());
 		table.setCreatedBy(result.getCreatedBy());
 		table.setHash(result.getHash());
-		JsonElement columnElement = structure.get("column");
+		JsonElement columnElement = structure.get("columns");
 		if (columnElement.isJsonObject()) {
 			JsonObject column = columnElement.getAsJsonObject();
 			DataStructureTableColumnModel columnModel = new DataStructureTableColumnModel();
@@ -263,15 +260,15 @@ public class DataStructureModelFactory {
 	}
 
 	private static void setColumnAttributes(JsonObject column, DataStructureTableColumnModel columnModel) {
-		columnModel.setName(column.get("-name") != null ? column.get("-name").getAsString() : "unknown");
-		columnModel.setType(column.get("-type") != null ? column.get("-type").getAsString() : "unknown");
-		columnModel.setLength(column.get("-length") != null ? column.get("-length").getAsString() : null);
-		columnModel.setPrimaryKey(column.get("-primaryKey") != null ? column.get("-primaryKey").getAsBoolean() : false);
-		columnModel.setUnique(column.get("-unique") != null ? column.get("-unique").getAsBoolean() : false);
-		columnModel.setNullable(column.get("-nullable") != null ? column.get("-nullable").getAsBoolean() : false);
-		columnModel.setDefaultValue(column.get("-defaultValue") != null ? column.get("-defaultValue").getAsString() : null);
-		columnModel.setPrecision(column.get("-precision") != null ? column.get("-precision").getAsString() : null);
-		columnModel.setScale(column.get("-scale") != null ? column.get("-scale").getAsString() : null);
+		columnModel.setName(column.get("name") != null ? column.get("name").getAsString() : "unknown");
+		columnModel.setType(column.get("type") != null ? column.get("type").getAsString() : "unknown");
+		columnModel.setLength(column.get("length") != null ? column.get("length").getAsString() : null);
+		columnModel.setPrimaryKey(column.get("primaryKey") != null ? column.get("primaryKey").getAsBoolean() : false);
+		columnModel.setUnique(column.get("unique") != null ? column.get("unique").getAsBoolean() : false);
+		columnModel.setNullable(column.get("nullable") != null ? column.get("nullable").getAsBoolean() : false);
+		columnModel.setDefaultValue(column.get("defaultValue") != null ? column.get("defaultValue").getAsString() : null);
+		columnModel.setPrecision(column.get("precision") != null ? column.get("precision").getAsString() : null);
+		columnModel.setScale(column.get("scale") != null ? column.get("scale").getAsString() : null);
 	}
 
 }
