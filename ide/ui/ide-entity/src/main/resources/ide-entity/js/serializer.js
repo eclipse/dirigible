@@ -68,3 +68,77 @@ function createModel(graph) {
 	
 	return model.join('');
 }
+
+function createModelJson(graph) {
+	var model = [];
+	model.push('{"model":{\n');
+	model.push(' "entities":[\n');
+	var parent = graph.getDefaultParent();
+	var childCount = graph.model.getChildCount(parent);
+
+	for (var i=0; i<childCount; i++) {
+		if (i>0) {
+			model.push(',');
+		}
+		var child = graph.model.getChildAt(parent, i);
+		
+		if (!graph.model.isEdge(child)) {
+			model.push('  {"name":"'+child.value.name+'", "type":"'+child.value.type.toLowerCase()+'", "properties":[\n');
+			
+			var propertyCount = graph.model.getChildCount(child);
+
+			if (propertyCount > 0) {
+				for (var j=0; j<propertyCount; j++) {
+					if (j>0) {
+						model.push(',');
+					}
+					var property = graph.model.getChildAt(child, j).value;
+					
+					model.push('    {"name":"'+property.name+'", "type":"'+property.type+'"');
+					if (property.propertyLength !== null) {
+						model.push(', "length":"'+property.propertyLength+'"');
+					}
+					if (property.notNull) {
+						model.push(', "nullable":"false"');
+					}
+					if (property.primaryKey) {
+						model.push(', "primaryKey":"true"');
+					}
+					if (property.autoIncrement) {
+						model.push(', "identity":"true"');
+					}
+					if (property.unique) {
+						model.push(', "unique":"true"');
+					}
+					if (property.defaultValue !== null) {
+						model.push(', "defaultValue":"'+property.defaultValue+'"');
+					}
+					if (property.precision !== null) {
+						model.push(', "precision":"'+property.precision+'"');
+					}
+					if (property.scale !== null) {
+						model.push(', "scale":"'+property.scale+'"');
+					}
+					model.push('}\n');
+				}
+			}
+			model.push('  ]}\n');
+		} else {
+			model.push('  {"name":"'+child.source.parent.value.name+'_' 
+				+child.target.parent.value.name+'", "type":"relation", ');
+			model.push('"entity":"'+child.source.parent.value.name+'", ');
+			model.push('"relationName":"'+child.source.parent.value.name+'_' 
+				+ child.target.parent.value.name+'", ');
+			model.push('"property":"'+child.source.value.name+'", '+
+				'"referenced":"'+child.target.parent.value.name+'", '+
+				'"referencedProperty":"'+child.target.value.name+'"}\n');
+		}
+	}
+	model.push(' ]\n');
+	model.push('}}');
+	
+	var serialized = model.join('');
+	serialized = JSON.stringify(JSON.parse(serialized), null, 4);
+	
+	return serialized;
+}
