@@ -43,37 +43,7 @@
 </head>
 <body ng-app="flowableModeler" ng-cloak>
 
-    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation" id="main-header">
-        <div class="fixed-container">
-            <div class="navbar-header">
-                <a ng-click="backToLanding()" class="landing-logo" ng-if="account != null && account != undefined" title="{{'GENERAL.MAIN-TITLE' | translate}}">
-                    <img ng-src="{{appResourceRoot}}images/flowable-logo.png" ng-srcset="{{appResourceRoot}}images/flowable-logo.png 1x, {{appResourceRoot}}images/flowable-logo@2x.png 2x">
-                </a>
-                <ul class="nav navbar-nav" id="main-nav" ng-show="authenticated">
-                    <li ng-class="{'active' : item.id == mainPage.id}" ng-repeat="item in mainNavigation">
-                        <a ng-click="setMainPage(item)">{{item.title | translate}}</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="pull-right {{currentAppDefinition.definition.theme}}"
-                 ng-class="{'app-indicator': currentAppDefinition}" ng-if="authenticated" ng-cloack>
-                <span ng-if="currentAppDefinition.definition.theme">
-                    {{currentAppDefinition.name}}
-                </span>
-                <i class="glyphicon {{currentAppDefinition.definition.icon}}"></i>
-
-                <div class="dropdown btn-group btn-group-sm" activiti-fix-dropdown-bug>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    	{{account.firstName && account.firstName != 'null' ? account.firstName : ''}} {{account.lastName && account.lastName != 'null' ? account.lastName : ''}}
-                        <span class="glyphicon glyphicon-chevron-down" style="font-size: 10px" aria-hidden="true"></span>
-                    </button>
-                    <ul class="dropdown-menu pull-right">
-                        <li><a href="" ng-click="logout()" translate>GENERAL.ACTION.LOGOUT</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!--[if lt IE 9]>
     <div class="unsupported-browser">

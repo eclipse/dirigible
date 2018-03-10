@@ -20,13 +20,13 @@ FLOWABLE.APP_URL = {
 
     /* ACCOUNT URLS */
 
-    getAccountUrl: function () {
-        return FLOWABLE.CONFIG.contextRoot + '/account';
-    },
-
-    getLogoutUrl: function () {
-        return FLOWABLE.CONFIG.contextRoot + '/logout';
-    },
+//    getAccountUrl: function () {
+//        return FLOWABLE.CONFIG.contextRoot + '/account';
+//    },
+//
+//    getLogoutUrl: function () {
+//        return FLOWABLE.CONFIG.contextRoot + '/logout';
+//    },
 
     /* MODEL URLS */
 
