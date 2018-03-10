@@ -169,7 +169,6 @@ public class DataStructureModelFactory {
 		DataStructureSchemaModel result = new DataStructureSchemaModel();
 		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_SCHEMA);
 		
-//			String json = Xml2Json.toJson(content);
 			JsonElement root = GsonHelper.PARSER.parse(content);
 			JsonArray structures = root.getAsJsonObject().get("schema").getAsJsonObject().get("structures").getAsJsonArray();
 			for (int i=0; i<structures.size(); i++) {
