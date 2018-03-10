@@ -326,24 +326,24 @@ flowableModeler
                 }
             };
 
-            $http.get(FLOWABLE.APP_URL.getAccountUrl())
-	        	.success(function (data, status, headers, config) {
-	              	$rootScope.account = data;
-	               	$rootScope.invalidCredentials = false;
-	 				$rootScope.authenticated = true;
-	          	});
+//            $http.get(FLOWABLE.APP_URL.getAccountUrl())
+//	        	.success(function (data, status, headers, config) {
+//	              	$rootScope.account = data;
+//	               	$rootScope.invalidCredentials = false;
+//	 				$rootScope.authenticated = true;
+//	          	});
 
-	        $rootScope.logout = function () {
-                $rootScope.authenticated = false;
-                $rootScope.authenticationError = false;
-                $http.get(FLOWABLE.APP_URL.getLogoutUrl())
-                    .success(function (data, status, headers, config) {
-                        $rootScope.login = null;
-                        $rootScope.authenticated = false;
-                        $window.location.href = '/';
-                        $window.location.reload();
-                    });
-            };
+//	        $rootScope.logout = function () {
+//                $rootScope.authenticated = false;
+//                $rootScope.authenticationError = false;
+//                $http.get(FLOWABLE.APP_URL.getLogoutUrl())
+//                    .success(function (data, status, headers, config) {
+//                        $rootScope.login = null;
+//                        $rootScope.authenticated = false;
+//                        $window.location.href = '/';
+//                        $window.location.reload();
+//                    });
+//            };
         }
   ])
   .run(['$rootScope', '$location', '$translate', '$window', '$modal',
