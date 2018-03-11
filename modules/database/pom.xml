@@ -23,6 +23,7 @@
 		<module>database-managed</module>
 		<module>database-persistence</module>
 		<module>database-sql</module>
+		<module>database-h2</module>
 	</modules>
 
 </project>
