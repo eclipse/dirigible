@@ -159,8 +159,9 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		String resourceName = resource.getName();
 		if (resourceName.endsWith(IBpmCoreService.FILE_EXTENSION_BPMN)) {
 			BpmDefinition bpmDefinition = new BpmDefinition();
-			String content = getRegistryPath(resource);
-			bpmDefinition.setLocation(content);
+			String path = getRegistryPath(resource);
+			String content = new String(resource.getContent(), StandardCharsets.UTF_8);
+			bpmDefinition.setLocation(path);
 			bpmDefinition.setHash(DigestUtils.md5Hex(content));
 			bpmDefinition.setContent(content);
 			synchronizeBpm(bpmDefinition);
@@ -201,9 +202,13 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		RepositoryService repositoryService = processEngine.getRepositoryService();
 		
 		for (Map.Entry<String, BpmDefinition> bpmDefinition : BPMN_SYNCHRONIZED.entrySet()) {
-			Deployment deployment = repositoryService.createDeployment()
-			  .addString(bpmDefinition.getValue().getLocation(), bpmDefinition.getValue().getContent())
-			  .deploy();
+			try {
+				Deployment deployment = repositoryService.createDeployment()
+				  .addBytes(bpmDefinition.getValue().getLocation(), bpmDefinition.getValue().getContent().getBytes(StandardCharsets.UTF_8))
+				  .deploy();
+			} catch (Exception e) {
+				logger.error("Error on deploying a BPMN file from location: {}", bpmDefinition.getValue().getLocation(), e);
+			}
 		}
 		
 		// TODO undeploy removed BPMN files
