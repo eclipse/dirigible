@@ -22,6 +22,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class FileSystemUtils {
 	 */
 	public static void saveFile(String workspacePath, byte[] content) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(workspacePath);
-		Path path = FileSystems.getDefault().getPath(workspacePath);
+		Path path = FileSystems.getDefault().getPath(FilenameUtils.normalize(workspacePath));
 		if (content == null) {
 			content = new byte[] {};
 		}
@@ -198,7 +199,7 @@ public class FileSystemUtils {
 	 * @return true, if successful
 	 */
 	public static boolean createFolder(String workspacePath) {
-		File folder = new File(workspacePath);
+		File folder = new File(FilenameUtils.normalize(workspacePath));
 		if (!folder.exists()) {
 			try {
 				FileUtils.forceMkdir(folder.getCanonicalFile());
@@ -333,7 +334,7 @@ public class FileSystemUtils {
 		}
 		Path path;
 		try {
-			path = FileSystems.getDefault().getPath(location);
+			path = FileSystems.getDefault().getPath(FilenameUtils.normalize(location));
 		} catch (java.nio.file.InvalidPathException e) {
 			return false;
 		}
@@ -373,7 +374,7 @@ public class FileSystemUtils {
 	public static boolean isDirectory(String location) {
 		Path path;
 		try {
-			path = FileSystems.getDefault().getPath(location);
+			path = FileSystems.getDefault().getPath(FilenameUtils.normalize(location));
 		} catch (java.nio.file.InvalidPathException e) {
 			return false;
 		}

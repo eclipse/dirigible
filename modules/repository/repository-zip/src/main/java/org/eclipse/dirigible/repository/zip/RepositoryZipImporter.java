@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -121,7 +122,7 @@ public class RepositoryZipImporter {
 				while ((entry = zipInputStream.getNextEntry()) != null) {
 
 					String name = entry.getName();
-					name = Paths.get(name).normalize().toString();
+					name = Paths.get(FilenameUtils.normalize(name)).normalize().toString();
 					if (excludeRootFolderName && (parentFolder == null)) {
 						parentFolder = name;
 						logger.debug("importZip parentFolder: " + parentFolder);
@@ -129,7 +130,7 @@ public class RepositoryZipImporter {
 					}
 
 					String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
-					entryName = Paths.get(entryName).normalize().toString();
+					entryName = Paths.get(FilenameUtils.normalize(entryName)).normalize().toString();
 					logger.debug("importZip entryName: " + entryName);
 					String outpath = relativeRoot + ((relativeRoot.endsWith(IRepository.SEPARATOR)) ? "" : IRepository.SEPARATOR) + entryName;
 					logger.debug("importZip outpath: " + outpath);

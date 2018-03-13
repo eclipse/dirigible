@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Language" content="en-us">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Embedded Monaco Editor</title>
+        <link data-name="monaco-editor/dev/vs/editor/editor.main" rel="stylesheet" href="monaco-editor/dev/vs/editor/editor.main.css">
+        <style>
+        body {
+            overflow: hidden;
+            height: 100%
+        }
+        #embeddedEditor {
+            margin: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+		</style>
+	
+    </head>
+    <body id="monaco-browser" spellcheck="false">
+        
+		<div  id="embeddedEditor"></div>
+		
+		<script src="monaco-editor/dev/vs/loader.js"></script>
+		<script>			
+			function FileIO(){
+				var __URL = URL;
+				this.workspaceApiUrl = '/services/v3/ide/workspaces';
+				this.resolveFileName = function() {
+					var url = new __URL(window.location.href);
+					var fileName = url.searchParams.get('file');
+					return fileName;
+				};
+				this.resolveFileType = function(fileName) {
+					var fileName = fileName || this.resolveFileName();
+					if(fileName){
+						if (fileName.endsWith('.js')) {
+							return 'javascript';
+						} else if (fileName.endsWith('.html')) {
+							return 'html';
+						} else if (fileName.endsWith('.css')) {
+							return 'css';
+						} else if (fileName.endsWith('.json')) {
+							return 'json';
+						}
+					}
+					return 'text';
+				};				
+				this.loadText = function(fileName){
+					return new Promise((resolve, reject) => {
+						const xhr = new XMLHttpRequest();
+						fileName = fileName || this.resolveFileName();
+						xhr.open('GET', this.workspaceApiUrl + fileName);
+						xhr.onload = () => resolve(xhr.responseText);
+						xhr.onerror = () => reject(xhr.statusText);
+						xhr.send();
+					});
+				};
+				this.saveText = function(text, fileName){
+					return new Promise((resolve, reject) => {
+						fileName = fileName || this.resolveFileName();
+						if (fileName) {
+							const xhr = new XMLHttpRequest();
+							xhr.open('PUT', this.workspaceApiUrl + fileName);
+							xhr.onload = () => resolve(fileName);
+							xhr.onerror = () => reject(xhr.statusText);
+							xhr.send(text);
+						} else {
+							reject('file query parameter is not present in the URL');
+						}
+					});
+				};
+			};
+			
+			function createEditorInstance(){
+				return new Promise((resolve, reject) => {
+					setTimeout(function(){
+						try{
+							var containerEl = document.getElementById('embeddedEditor');
+							if(containerEl.childElementCount > 0){
+								for(var i = 0; i < containerEl.childElementCount; i++)
+									containerEl.removeChild(containerEl.children.item(i));
+							}
+							var editor = monaco.editor.create(containerEl);
+							resolve(editor);
+						} catch (err){
+							reject(err);
+						}
+					});
+				});
+			};
+			
+			function createSaveAction(){
+				var fileIO = new FileIO();
+				return {
+					// An unique identifier of the contributed action.
+					id: 'dirigible-files-save',
+
+					// A label of the action that will be presented to the user.
+					label: 'Save',
+
+					// An optional array of keybindings for the action.
+					keybindings: [
+						monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S
+					],
+
+					// A precondition for this action.
+					precondition: null,
+
+					// A rule to evaluate on top of the precondition in order to dispatch the keybindings.
+					keybindingContext: null,
+
+					contextMenuGroupId: 'fileIO',
+
+					contextMenuOrder: 1.5,
+
+					// Method that will be executed when the action is triggered.
+					// @param editor The editor instance is passed in as a convinience
+					run: function(editor) {
+						fileIO.saveText(editor.getModel().getValue());
+						return null;
+					}
+				};
+			};
+			
+			(function init(){
+				require.config({ paths: { 'vs': 'monaco-editor/dev/vs' }});
+				require(['vs/editor/editor.main'], function() {
+					var fileIO = new FileIO();
+					var fileName = fileIO.resolveFileName();
+					var _editor;
+					createEditorInstance()
+						.then((editor) => {
+							_editor = editor;
+							return fileIO.loadText(fileName);
+						})
+						.then((fileText) => {
+							var fileType = fileIO.resolveFileType(fileName);
+							//TODO: var mode = monaco.languages.getLanguages().find(function(oLang){return oLang.extensions.indexOf('.js')>-1}).id
+							var model = monaco.editor.createModel(fileText, fileType || 'text');
+							_editor.setModel(model);
+							_editor.addAction(createSaveAction());
+						});
+					monaco.editor.setTheme("vs-dark");
+				});	
+			})();
+
+		</script>
+    </body>
+</html>
