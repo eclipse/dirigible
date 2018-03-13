@@ -51,6 +51,8 @@
 		<module>ide-bpm</module>
 		<module>ide-schema</module>
 		<module>ide-entity</module>
+		<module>ide-monaco</module>
+		<module>ide-ace</module>
 	</modules>
 
 	<profiles>

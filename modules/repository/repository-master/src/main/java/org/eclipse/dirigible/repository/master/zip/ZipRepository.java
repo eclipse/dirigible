@@ -23,6 +23,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -81,7 +82,7 @@ public class ZipRepository extends FileSystemRepository {
 			ZipEntry entry;
 			while ((entry = zipInputStream.getNextEntry()) != null) {
 				String name = entry.getName();
-				name = Paths.get(name).normalize().toString();
+				name = Paths.get(FilenameUtils.normalize(name)).normalize().toString();
 				File entryDestination = new File(folder, name);
 				if (entry.isDirectory()) {
 					FileUtils.forceMkdir(entryDestination.getCanonicalFile());
