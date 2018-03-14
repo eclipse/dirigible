@@ -74,10 +74,16 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	 */
 	public void registerPredeliveredExtensionPoint(String extensionPointPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPointPath);
-		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-		ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(json);
-		extensionPointDefinition.setLocation(extensionPointPath);
-		EXTENSION_POINTS_PREDELIVERED.put(extensionPointPath, extensionPointDefinition);
+		try {
+			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+			ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(json);
+			extensionPointDefinition.setLocation(extensionPointPath);
+			EXTENSION_POINTS_PREDELIVERED.put(extensionPointPath, extensionPointDefinition);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 	/**
@@ -90,10 +96,16 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	 */
 	public void registerPredeliveredExtension(String extensionPath) throws IOException {
 		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPath);
-		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-		ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(json);
-		extensionDefinition.setLocation(extensionPath);
-		EXTENSIONS_PREDELIVERED.put(extensionPath, extensionDefinition);
+		try {
+			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+			ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(json);
+			extensionDefinition.setLocation(extensionPath);
+			EXTENSIONS_PREDELIVERED.put(extensionPath, extensionDefinition);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 	/*

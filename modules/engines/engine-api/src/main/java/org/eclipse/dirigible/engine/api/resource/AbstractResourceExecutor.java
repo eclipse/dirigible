@@ -78,8 +78,14 @@ public class AbstractResourceExecutor implements IResourceExecutor {
 		try {
 			String location = IRepository.SEPARATOR + module + (extension != null ? extension : "");
 			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(location);
-			if (bundled != null) {
-				return IOUtils.toByteArray(bundled);
+			try {
+				if (bundled != null) {
+					return IOUtils.toByteArray(bundled);
+				} 
+			} finally {
+				if (bundled != null) {
+					bundled.close();
+				}
 			}
 		} catch (IOException e) {
 			throw new RepositoryException(e);

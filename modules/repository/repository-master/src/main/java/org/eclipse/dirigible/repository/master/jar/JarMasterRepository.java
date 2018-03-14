@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.repository.master.jar;
 
+import java.io.IOException;
+
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
 
@@ -30,8 +32,9 @@ public class JarMasterRepository extends JarRepository implements IMasterReposit
 	 *            the zip
 	 * @throws LocalRepositoryException
 	 *             the local repository exception
+	 * @throws IOException 
 	 */
-	public JarMasterRepository(String zip) throws LocalRepositoryException {
+	public JarMasterRepository(String zip) throws LocalRepositoryException, IOException {
 		super(zip);
 	}
 

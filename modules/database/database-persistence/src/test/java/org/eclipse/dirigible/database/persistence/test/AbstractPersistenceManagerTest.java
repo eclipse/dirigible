@@ -68,7 +68,13 @@ public class AbstractPersistenceManagerTest {
 			Properties databaseProperties = new Properties();
 			InputStream in = AbstractPersistenceManagerTest.class.getResourceAsStream("/database.properties");
 			if (in != null) {
-				databaseProperties.load(in);
+				try {
+					databaseProperties.load(in);
+				} finally {
+					if (in != null) {
+						in.close();
+					}
+				}
 			}
 			String database = System.getProperty("database");
 			if (database == null) {

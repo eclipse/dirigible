@@ -15,6 +15,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.database.persistence.PersistenceFactory;
@@ -55,19 +56,26 @@ public class PersistenceFactoryTest {
 	 */
 	@Test
 	public void createModelFromJson() throws IOException {
-		String json = IOUtils.toString(PersistenceFactoryTest.class.getResourceAsStream("/Customer.json"));
-		PersistenceTableModel persistenceModel = PersistenceFactory.createModel(json);
-		assertEquals("CUSTOMERS", persistenceModel.getTableName());
-		assertEquals("FACTORY", persistenceModel.getSchemaName());
-		assertTrue(persistenceModel.getColumns().size() == 4);
-		PersistenceTableColumnModel persistenceCoulmnModelCustomerId = null;
-		for (PersistenceTableColumnModel persistenceCoulmnModel : persistenceModel.getColumns()) {
-			if ("CUSTOMER_ID".equals(persistenceCoulmnModel.getName())) {
-				persistenceCoulmnModelCustomerId = persistenceCoulmnModel;
+		InputStream in = PersistenceFactoryTest.class.getResourceAsStream("/Customer.json");
+		try {
+			String json = IOUtils.toString(in);
+			PersistenceTableModel persistenceModel = PersistenceFactory.createModel(json);
+			assertEquals("CUSTOMERS", persistenceModel.getTableName());
+			assertEquals("FACTORY", persistenceModel.getSchemaName());
+			assertTrue(persistenceModel.getColumns().size() == 4);
+			PersistenceTableColumnModel persistenceCoulmnModelCustomerId = null;
+			for (PersistenceTableColumnModel persistenceCoulmnModel : persistenceModel.getColumns()) {
+				if ("CUSTOMER_ID".equals(persistenceCoulmnModel.getName())) {
+					persistenceCoulmnModelCustomerId = persistenceCoulmnModel;
+				}
+			}
+			assertNotNull(persistenceCoulmnModelCustomerId);
+			assertEquals("INTEGER", persistenceCoulmnModelCustomerId.getType());
+		} finally {
+			if (in != null) {
+				in.close();
 			}
 		}
-		assertNotNull(persistenceCoulmnModelCustomerId);
-		assertEquals("INTEGER", persistenceCoulmnModelCustomerId.getType());
 	}
 
 }

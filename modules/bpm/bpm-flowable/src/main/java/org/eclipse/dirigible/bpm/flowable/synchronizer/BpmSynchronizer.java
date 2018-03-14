@@ -75,12 +75,18 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	 */
 	public void registerPredeliveredBpmnFiles(String bpmnPath) throws IOException {
 		InputStream in = BpmSynchronizer.class.getResourceAsStream(bpmnPath);
-		String content = IOUtils.toString(in, StandardCharsets.UTF_8);
-		BpmDefinition bpmDefinition = new BpmDefinition();
-		bpmDefinition.setLocation(bpmnPath);
-		bpmDefinition.setHash(DigestUtils.md5Hex(content));
-		bpmDefinition.setContent(content);
-		BPMN_PREDELIVERED.put(bpmnPath, bpmDefinition);
+		try {
+			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
+			BpmDefinition bpmDefinition = new BpmDefinition();
+			bpmDefinition.setLocation(bpmnPath);
+			bpmDefinition.setHash(DigestUtils.md5Hex(content));
+			bpmDefinition.setContent(content);
+			BPMN_PREDELIVERED.put(bpmnPath, bpmDefinition);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 	/*

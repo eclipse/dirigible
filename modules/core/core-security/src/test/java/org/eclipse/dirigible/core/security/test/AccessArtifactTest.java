@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +58,16 @@ public class AccessArtifactTest {
 	 */
 	@Test
 	public void parseTest() throws IOException {
-		String json = IOUtils.toString(AccessArtifactTest.class.getResourceAsStream("/access/test.access"), StandardCharsets.UTF_8);
-		AccessArtifact access = AccessArtifact.parse(json);
-		assertEquals("*", access.getConstraints().get(0).getMethod());
+		InputStream in = AccessArtifactTest.class.getResourceAsStream("/access/test.access");
+		try {
+			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+			AccessArtifact access = AccessArtifact.parse(json);
+			assertEquals("*", access.getConstraints().get(0).getMethod());
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 	
 	/**

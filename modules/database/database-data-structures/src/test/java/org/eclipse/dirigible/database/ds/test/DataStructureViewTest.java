@@ -15,6 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 
@@ -61,32 +62,39 @@ public class DataStructureViewTest extends AbstractGuiceTest {
 	@Test
 	public void updateTable() {
 		try {
-			String viewFile = IOUtils.toString(DataStructureViewTest.class.getResourceAsStream("/orders.view"), StandardCharsets.UTF_8);
-			DataStructureViewModel view = DataStructureModelFactory.parseView(viewFile);
-			assertEquals("ORDERS_VIEW", view.getName());
-			Connection connection = null;
+			InputStream in = DataStructureViewTest.class.getResourceAsStream("/orders.view");
 			try {
-				connection = dataSource.getConnection();
+				String viewFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+				DataStructureViewModel view = DataStructureModelFactory.parseView(viewFile);
+				assertEquals("ORDERS_VIEW", view.getName());
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
 
-				PersistenceManager<Order> tablePersistenceManager = new PersistenceManager<Order>();
-				tablePersistenceManager.tableCreate(connection, Order.class);
+					PersistenceManager<Order> tablePersistenceManager = new PersistenceManager<Order>();
+					tablePersistenceManager.tableCreate(connection, Order.class);
 
-				dataStructuresSynchronizer.executeViewCreate(connection, view);
+					dataStructuresSynchronizer.executeViewCreate(connection, view);
 
-				PersistenceManager<OrderRO> persistenceManager = new PersistenceManager<OrderRO>();
-				boolean exists = persistenceManager.tableExists(connection, OrderRO.class);
-				assertTrue(exists);
+					PersistenceManager<OrderRO> persistenceManager = new PersistenceManager<OrderRO>();
+					boolean exists = persistenceManager.tableExists(connection, OrderRO.class);
+					assertTrue(exists);
 
-				dataStructuresSynchronizer.executeViewDrop(connection, view);
+					dataStructuresSynchronizer.executeViewDrop(connection, view);
 
-				exists = persistenceManager.tableExists(connection, OrderRO.class);
-				assertFalse(exists);
+					exists = persistenceManager.tableExists(connection, OrderRO.class);
+					assertFalse(exists);
 
-				tablePersistenceManager.tableDrop(connection, Order.class);
+					tablePersistenceManager.tableDrop(connection, Order.class);
 
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				} 
 			} finally {
-				if (connection != null) {
-					connection.close();
+				if (in != null) {
+					in.close();
 				}
 			}
 

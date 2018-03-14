@@ -176,7 +176,14 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 		try {
 			InputStream bundled = ThemeRestService.class.getResourceAsStream(THEMES_PATH + cookieValue + IRepository.SEPARATOR + path);
 			if (bundled != null) {
-				return Response.ok().entity(IOUtils.toByteArray(bundled)).type(ContentTypeHelper.TEXT_CSS).build();
+				try {
+					return Response.ok().entity(IOUtils.toByteArray(bundled)).type(ContentTypeHelper.TEXT_CSS)
+							.build();
+				} finally {
+					if (bundled != null) {
+						bundled.close();
+					}
+				}
 			}
 		} catch (IOException e) {
 			throw new RepositoryException(e);

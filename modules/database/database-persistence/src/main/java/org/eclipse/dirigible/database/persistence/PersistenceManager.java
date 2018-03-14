@@ -13,10 +13,12 @@ package org.eclipse.dirigible.database.persistence;
 import static java.text.MessageFormat.format;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.GenerationType;
 
@@ -158,7 +160,7 @@ public class PersistenceManager<T> {
 		if (!EXISTING_TABLES_CACHE.contains(id + CONNECTION_ID_SEPARATOR + clazz.getCanonicalName())) {
 			if (!tableExists(connection, clazz)) {
 				String auto = System.getProperty("DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE");
-				if ((auto != null) && !"true".equals(auto.toLowerCase())) {
+				if ((auto != null) && !"true".equals(auto.toLowerCase(Locale.getDefault()))) {
 					throw new IllegalStateException(
 							"The parameter DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE is off, but the table for the POJO has not been previousely created: "
 									+ clazz.getCanonicalName());
@@ -179,7 +181,7 @@ public class PersistenceManager<T> {
 		try {
 			String url = connection.getMetaData().getURL();
 			return url.hashCode() + "";
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}
 		return "";

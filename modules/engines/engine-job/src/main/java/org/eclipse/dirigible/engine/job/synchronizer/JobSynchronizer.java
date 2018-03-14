@@ -73,10 +73,16 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	 */
 	public void registerPredeliveredJob(String jobPath) throws IOException {
 		InputStream in = JobSynchronizer.class.getResourceAsStream(jobPath);
-		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-		JobDefinition jobDefinition = schedulerCoreService.parseJob(json);
-		jobDefinition.setName(jobPath);
-		JOBS_PREDELIVERED.put(jobPath, jobDefinition);
+		try {
+			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+			JobDefinition jobDefinition = schedulerCoreService.parseJob(json);
+			jobDefinition.setName(jobPath);
+			JOBS_PREDELIVERED.put(jobPath, jobDefinition);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 	/*

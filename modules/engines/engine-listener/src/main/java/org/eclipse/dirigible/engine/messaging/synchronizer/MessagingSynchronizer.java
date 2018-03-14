@@ -72,10 +72,16 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	 */
 	public void registerPredeliveredListener(String listenerPath) throws IOException {
 		InputStream in = MessagingSynchronizer.class.getResourceAsStream(listenerPath);
-		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-		ListenerDefinition listenerDefinition = messagingCoreService.parseListener(json);
-		listenerDefinition.setLocation(listenerPath);
-		LISTENERS_PREDELIVERED.put(listenerPath, listenerDefinition);
+		try {
+			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+			ListenerDefinition listenerDefinition = messagingCoreService.parseListener(json);
+			listenerDefinition.setLocation(listenerPath);
+			LISTENERS_PREDELIVERED.put(listenerPath, listenerDefinition);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 	/*

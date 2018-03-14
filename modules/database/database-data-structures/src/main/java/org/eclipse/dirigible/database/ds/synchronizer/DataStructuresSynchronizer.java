@@ -236,8 +236,14 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 
 	private String loadResourceContent(String modelPath) throws IOException {
 		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(modelPath);
-		String content = IOUtils.toString(in, StandardCharsets.UTF_8);
-		return content;
+		try {
+			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
+			return content;
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 	/*

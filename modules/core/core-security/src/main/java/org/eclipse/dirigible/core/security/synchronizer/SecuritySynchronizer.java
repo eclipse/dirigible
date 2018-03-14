@@ -76,12 +76,18 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 */
 	public void registerPredeliveredRoles(String rolesPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(rolesPath);
-		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-		RoleDefinition[] roleDefinitions = securityCoreService.parseRoles(json);
-		for (RoleDefinition roleDefinition : roleDefinitions) {
-			roleDefinition.setLocation(rolesPath);
+		try {
+			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+			RoleDefinition[] roleDefinitions = securityCoreService.parseRoles(json);
+			for (RoleDefinition roleDefinition : roleDefinitions) {
+				roleDefinition.setLocation(rolesPath);
+			}
+			ROLES_PREDELIVERED.put(rolesPath, roleDefinitions);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
 		}
-		ROLES_PREDELIVERED.put(rolesPath, roleDefinitions);
 	}
 
 	/**
@@ -94,12 +100,18 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 */
 	public void registerPredeliveredAccess(String accessPath) throws IOException {
 		InputStream in = SecuritySynchronizer.class.getResourceAsStream(accessPath);
-		String json = IOUtils.toString(in, StandardCharsets.UTF_8);
-		List<AccessDefinition> accessDefinitions = securityCoreService.parseAccessDefinitions(json);
-		for (AccessDefinition accessDefinition : accessDefinitions) {
-			accessDefinition.setLocation(accessPath);
+		try {
+			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
+			List<AccessDefinition> accessDefinitions = securityCoreService.parseAccessDefinitions(json);
+			for (AccessDefinition accessDefinition : accessDefinitions) {
+				accessDefinition.setLocation(accessPath);
+			}
+			ACCESS_PREDELIVERED.put(accessPath, accessDefinitions);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
 		}
-		ACCESS_PREDELIVERED.put(accessPath, accessDefinitions);
 	}
 
 	/*

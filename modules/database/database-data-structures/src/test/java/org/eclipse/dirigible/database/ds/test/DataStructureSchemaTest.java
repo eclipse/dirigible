@@ -15,6 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 
@@ -62,54 +63,60 @@ public class DataStructureSchemaTest extends AbstractGuiceTest {
 	@Test
 	public void updateSchema() {
 		try {
-			String schemaFile = IOUtils.toString(DataStructureSchemaTest.class.getResourceAsStream("/test.schema"), StandardCharsets.UTF_8);
-			DataStructureSchemaModel schema = DataStructureModelFactory.parseSchema("test.schema", schemaFile);
-			
-			assertEquals("test", schema.getName());
-			Connection connection = null;
+			InputStream in = DataStructureSchemaTest.class.getResourceAsStream("/test.schema");
 			try {
-				connection = dataSource.getConnection();
+				String schemaFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+				DataStructureSchemaModel schema = DataStructureModelFactory.parseSchema("test.schema", schemaFile);
+				assertEquals("test", schema.getName());
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
 
-				PersistenceManager<Table1> persistenceManager = new PersistenceManager<Table1>();
+					PersistenceManager<Table1> persistenceManager = new PersistenceManager<Table1>();
 
-				if (persistenceManager.tableExists(connection, Table1.class)) {
-					persistenceManager.tableDrop(connection, Table1.class);
-				}
-
-				for (DataStructureTableModel table : schema.getTables()) {
-					if ("TABLE2".equals(table.getName())) {
-						dataStructuresSynchronizer.executeTableUpdate(connection, table);
-						break;
+					if (persistenceManager.tableExists(connection, Table1.class)) {
+						persistenceManager.tableDrop(connection, Table1.class);
 					}
-				}
-				
-				for (DataStructureTableModel table : schema.getTables()) {
-					if ("TABLE1".equals(table.getName())) {
-						dataStructuresSynchronizer.executeTableUpdate(connection, table);
-						break;
+
+					for (DataStructureTableModel table : schema.getTables()) {
+						if ("TABLE2".equals(table.getName())) {
+							dataStructuresSynchronizer.executeTableUpdate(connection, table);
+							break;
+						}
 					}
-				}
 
-				boolean exists = persistenceManager.tableExists(connection, Table1.class);
-				assertTrue(exists);
+					for (DataStructureTableModel table : schema.getTables()) {
+						if ("TABLE1".equals(table.getName())) {
+							dataStructuresSynchronizer.executeTableUpdate(connection, table);
+							break;
+						}
+					}
 
-				for (DataStructureTableModel table : schema.getTables()) {
-					if ("TABLE1".equals(table.getName())) {
+					boolean exists = persistenceManager.tableExists(connection, Table1.class);
+					assertTrue(exists);
+
+					for (DataStructureTableModel table : schema.getTables()) {
+						if ("TABLE1".equals(table.getName())) {
+							dataStructuresSynchronizer.executeTableDrop(connection, table);
+							break;
+						}
+					}
+
+					for (DataStructureTableModel table : schema.getTables()) {
 						dataStructuresSynchronizer.executeTableDrop(connection, table);
-						break;
 					}
-				}
-				
-				for (DataStructureTableModel table : schema.getTables()) {
-					dataStructuresSynchronizer.executeTableDrop(connection, table);
-				}
 
-				exists = persistenceManager.tableExists(connection, Table1.class);
-				assertFalse(exists);
+					exists = persistenceManager.tableExists(connection, Table1.class);
+					assertFalse(exists);
 
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				} 
 			} finally {
-				if (connection != null) {
-					connection.close();
+				if (in != null) {
+					in.close();
 				}
 			}
 

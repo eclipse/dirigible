@@ -15,6 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.List;
@@ -62,46 +63,53 @@ public class DataStructureDataDeleteTest extends AbstractGuiceTest {
 	@Test
 	public void deleteData() {
 		try {
-			String dataFile = IOUtils.toString(DataStructureDataDeleteTest.class.getResourceAsStream("/orders.delete"), StandardCharsets.UTF_8);
-			DataStructureDataDeleteModel data = DataStructureModelFactory.parseDelete("/orders.delete", dataFile);
-			assertEquals("1|Order 1|11.11", data.getContent()); // only the first column matters anyway
-			Connection connection = null;
+			InputStream in = DataStructureDataDeleteTest.class.getResourceAsStream("/orders.delete");
 			try {
-				connection = dataSource.getConnection();
+				String dataFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+				DataStructureDataDeleteModel data = DataStructureModelFactory.parseDelete("/orders.delete", dataFile);
+				assertEquals("1|Order 1|11.11", data.getContent()); // only the first column matters anyway
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
 
-				PersistenceManager<Order> persistenceManager = new PersistenceManager<Order>();
-				if (!persistenceManager.tableExists(connection, Order.class)) {
-					persistenceManager.tableCreate(connection, Order.class);
-				} else {
+					PersistenceManager<Order> persistenceManager = new PersistenceManager<Order>();
+					if (!persistenceManager.tableExists(connection, Order.class)) {
+						persistenceManager.tableCreate(connection, Order.class);
+					} else {
+						persistenceManager.tableDrop(connection, Order.class);
+						persistenceManager.tableCreate(connection, Order.class);
+					}
+
+					Order order = new Order();
+					order.setId(1);
+					order.setSubject("Subject 1");
+					order.setAmount(54.54);
+					persistenceManager.insert(connection, order);
+
+					List<Order> orders = persistenceManager.query(connection, Order.class, "SELECT * FROM ORDERS");
+					assertEquals(1, orders.size());
+					Order orderFind = orders.get(0);
+
+					assertEquals("Subject 1", orderFind.getSubject());
+
+					dataStructuresSynchronizer.executeDeleteUpdate(data);
+
+					Order orderDelete = persistenceManager.find(connection, Order.class, 1);
+
+					assertNull(orderDelete);
+
 					persistenceManager.tableDrop(connection, Order.class);
-					persistenceManager.tableCreate(connection, Order.class);
-				}
+					boolean exists = persistenceManager.tableExists(connection, Order.class);
+					assertFalse(exists);
 
-				Order order = new Order();
-				order.setId(1);
-				order.setSubject("Subject 1");
-				order.setAmount(54.54);
-				persistenceManager.insert(connection, order);
-
-				List<Order> orders = persistenceManager.query(connection, Order.class, "SELECT * FROM ORDERS");
-				assertEquals(1, orders.size());
-				Order orderFind = orders.get(0);
-
-				assertEquals("Subject 1", orderFind.getSubject());
-
-				dataStructuresSynchronizer.executeDeleteUpdate(data);
-
-				Order orderDelete = persistenceManager.find(connection, Order.class, 1);
-
-				assertNull(orderDelete);
-
-				persistenceManager.tableDrop(connection, Order.class);
-				boolean exists = persistenceManager.tableExists(connection, Order.class);
-				assertFalse(exists);
-
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				} 
 			} finally {
-				if (connection != null) {
-					connection.close();
+				if (in != null) {
+					in.close();
 				}
 			}
 

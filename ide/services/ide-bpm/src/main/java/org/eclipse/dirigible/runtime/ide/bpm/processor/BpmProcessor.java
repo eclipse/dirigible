@@ -14,6 +14,7 @@ import static java.text.MessageFormat.format;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import javax.inject.Inject;
@@ -84,8 +85,15 @@ public class BpmProcessor {
 	}
 	
 	public String getStencilSet() throws IOException {
-		byte[] content = IOUtils.toByteArray(BpmProcessor.class.getResourceAsStream("/stencilset_bpmn.json"));
-		return new String(content, StandardCharsets.UTF_8);
+		InputStream in = BpmProcessor.class.getResourceAsStream("/stencilset_bpmn.json");
+		try {
+			byte[] content = IOUtils.toByteArray(in);
+			return new String(content, StandardCharsets.UTF_8);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 }

@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.ds.model.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
@@ -31,10 +32,16 @@ public class DataStructureTableTest {
 	@Test
 	public void parseTable() {
 		try {
-			String tableFile = IOUtils.toString(DataStructureTableTest.class.getResourceAsStream("/customers.table"),
-					StandardCharsets.UTF_8);
-			DataStructureTableModel table = DataStructureModelFactory.parseTable(tableFile);
-			assertEquals("CUSTOMERS", table.getName());
+			InputStream in = DataStructureTableTest.class.getResourceAsStream("/customers.table");
+			try {
+				String tableFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+				DataStructureTableModel table = DataStructureModelFactory.parseTable(tableFile);
+				assertEquals("CUSTOMERS", table.getName());
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
