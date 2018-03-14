@@ -91,12 +91,20 @@ public class GenerationProcessor extends WorkspaceProcessor {
 					generateWithTemplate(parameters, projectObject, generatedFiles, source, input);
 				} else {
 					InputStream in = GenerationProcessor.class.getResourceAsStream(source.getLocation());
-					if (in != null) {
-						byte[] input = IOUtils.toByteArray(in);
-						logger.trace("Generating using built-in template: " + source.getLocation());
-						generateWithTemplate(parameters, projectObject, generatedFiles, source, input);
-					} else {
-						throw new ScriptingException(format("Invalid source location of [{0}] in template definition file: [{1}] or the resource does not exist", source.getLocation(), parameters.getTemplate()));
+					try {
+						if (in != null) {
+							byte[] input = IOUtils.toByteArray(in);
+							logger.trace("Generating using built-in template: " + source.getLocation());
+							generateWithTemplate(parameters, projectObject, generatedFiles, source, input);
+						} else {
+							throw new ScriptingException(
+									format("Invalid source location of [{0}] in template definition file: [{1}] or the resource does not exist",
+											source.getLocation(), parameters.getTemplate()));
+						} 
+					} finally {
+						if (in != null) {
+							in.close();
+						}
 					}
 				}
 			}

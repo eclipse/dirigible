@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.List;
@@ -62,50 +63,57 @@ public class DataStructureDataUpdateTest extends AbstractGuiceTest {
 	@Test
 	public void updateData() {
 		try {
-			String dataFile = IOUtils.toString(DataStructureDataUpdateTest.class.getResourceAsStream("/orders.update"), StandardCharsets.UTF_8);
-			DataStructureDataUpdateModel data = DataStructureModelFactory.parseUpdate("/orders.update", dataFile);
-			assertEquals("1|Order 1|11.11", data.getContent());
-			Connection connection = null;
+			InputStream in = DataStructureDataUpdateTest.class.getResourceAsStream("/orders.update");
 			try {
-				connection = dataSource.getConnection();
+				String dataFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+				DataStructureDataUpdateModel data = DataStructureModelFactory.parseUpdate("/orders.update", dataFile);
+				assertEquals("1|Order 1|11.11", data.getContent());
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
 
-				PersistenceManager<Order> persistenceManager = new PersistenceManager<Order>();
-				if (!persistenceManager.tableExists(connection, Order.class)) {
-					persistenceManager.tableCreate(connection, Order.class);
-				} else {
+					PersistenceManager<Order> persistenceManager = new PersistenceManager<Order>();
+					if (!persistenceManager.tableExists(connection, Order.class)) {
+						persistenceManager.tableCreate(connection, Order.class);
+					} else {
+						persistenceManager.tableDrop(connection, Order.class);
+						persistenceManager.tableCreate(connection, Order.class);
+					}
+
+					PersistenceManager<Identity> identityPersistenceManager = new PersistenceManager<Identity>();
+					if (!identityPersistenceManager.tableExists(connection, Identity.class)) {
+						identityPersistenceManager.tableCreate(connection, Identity.class);
+					} else {
+						identityPersistenceManager.tableDrop(connection, Identity.class);
+						identityPersistenceManager.tableCreate(connection, Identity.class);
+					}
+
+					Order order = new Order();
+					order.setId(1);
+					order.setSubject("Subject 1");
+					order.setAmount(54.54);
+					persistenceManager.insert(connection, order);
+
+					dataStructuresSynchronizer.executeUpdateUpdate(data);
+
+					List<Order> orders = persistenceManager.query(connection, Order.class, "SELECT * FROM ORDERS");
+					assertEquals(1, orders.size());
+					order = orders.get(0);
+
+					assertEquals("Subject 1", order.getSubject());
+
 					persistenceManager.tableDrop(connection, Order.class);
-					persistenceManager.tableCreate(connection, Order.class);
-				}
+					boolean exists = persistenceManager.tableExists(connection, Order.class);
+					assertFalse(exists);
 
-				PersistenceManager<Identity> identityPersistenceManager = new PersistenceManager<Identity>();
-				if (!identityPersistenceManager.tableExists(connection, Identity.class)) {
-					identityPersistenceManager.tableCreate(connection, Identity.class);
-				} else {
-					identityPersistenceManager.tableDrop(connection, Identity.class);
-					identityPersistenceManager.tableCreate(connection, Identity.class);
-				}
-
-				Order order = new Order();
-				order.setId(1);
-				order.setSubject("Subject 1");
-				order.setAmount(54.54);
-				persistenceManager.insert(connection, order);
-
-				dataStructuresSynchronizer.executeUpdateUpdate(data);
-
-				List<Order> orders = persistenceManager.query(connection, Order.class, "SELECT * FROM ORDERS");
-				assertEquals(1, orders.size());
-				order = orders.get(0);
-
-				assertEquals("Subject 1", order.getSubject());
-
-				persistenceManager.tableDrop(connection, Order.class);
-				boolean exists = persistenceManager.tableExists(connection, Order.class);
-				assertFalse(exists);
-
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				} 
 			} finally {
-				if (connection != null) {
-					connection.close();
+				if (in != null) {
+					in.close();
 				}
 			}
 

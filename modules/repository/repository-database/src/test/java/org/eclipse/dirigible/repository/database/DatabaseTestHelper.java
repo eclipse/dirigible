@@ -28,7 +28,13 @@ public class DatabaseTestHelper {
 			Properties databaseProperties = new Properties();
 			InputStream in = DatabaseTestHelper.class.getResourceAsStream("/database.properties");
 			if (in != null) {
-				databaseProperties.load(in);
+				try {
+					databaseProperties.load(in);
+				} finally {
+					if (in != null) {
+						in.close();
+					}
+				}
 			}
 			String database = System.getProperty("database");
 			if (database == null) {

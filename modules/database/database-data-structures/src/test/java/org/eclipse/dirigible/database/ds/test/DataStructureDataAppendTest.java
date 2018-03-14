@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 
@@ -60,31 +61,38 @@ public class DataStructureDataAppendTest extends AbstractGuiceTest {
 	@Test
 	public void appendData() {
 		try {
-			String dataFile = IOUtils.toString(DataStructureDataAppendTest.class.getResourceAsStream("/orders.append"), StandardCharsets.UTF_8);
-			DataStructureDataAppendModel data = DataStructureModelFactory.parseAppend("/orders.append", dataFile);
-			assertEquals("1|Order 1|11.11", data.getContent());
-			Connection connection = null;
+			InputStream in = DataStructureDataAppendTest.class.getResourceAsStream("/orders.append");
 			try {
-				connection = dataSource.getConnection();
+				String dataFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+				DataStructureDataAppendModel data = DataStructureModelFactory.parseAppend("/orders.append", dataFile);
+				assertEquals("1|Order 1|11.11", data.getContent());
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
 
-				PersistenceManager<Order> persistenceManager = new PersistenceManager<Order>();
-				if (!persistenceManager.tableExists(connection, Order.class)) {
-					persistenceManager.tableCreate(connection, Order.class);
-				}
+					PersistenceManager<Order> persistenceManager = new PersistenceManager<Order>();
+					if (!persistenceManager.tableExists(connection, Order.class)) {
+						persistenceManager.tableCreate(connection, Order.class);
+					}
 
-				dataStructuresSynchronizer.executeAppendUpdate(data);
+					dataStructuresSynchronizer.executeAppendUpdate(data);
 
-				Order order = persistenceManager.find(connection, Order.class, 1);
+					Order order = persistenceManager.find(connection, Order.class, 1);
 
-				assertEquals("Order 1", order.getSubject());
+					assertEquals("Order 1", order.getSubject());
 
-				persistenceManager.tableDrop(connection, Order.class);
-				boolean exists = persistenceManager.tableExists(connection, Order.class);
-				assertFalse(exists);
+					persistenceManager.tableDrop(connection, Order.class);
+					boolean exists = persistenceManager.tableExists(connection, Order.class);
+					assertFalse(exists);
 
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				} 
 			} finally {
-				if (connection != null) {
-					connection.close();
+				if (in != null) {
+					in.close();
 				}
 			}
 

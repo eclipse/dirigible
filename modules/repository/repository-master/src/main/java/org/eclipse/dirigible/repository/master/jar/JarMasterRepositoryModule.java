@@ -10,8 +10,11 @@
 
 package org.eclipse.dirigible.repository.master.jar;
 
+import java.io.IOException;
+
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.repository.local.LocalRepositoryException;
 import org.eclipse.dirigible.repository.master.IMasterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +51,13 @@ public class JarMasterRepositoryModule extends AbstractDirigibleModule {
 	private IMasterRepository createInstance() {
 		logger.debug("creating Jar Master Repository...");
 		String jar = Configuration.get(JarMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_JAR_PATH);
-		JarMasterRepository jarMasterRepository = new JarMasterRepository(jar);
+		JarMasterRepository jarMasterRepository;
+		try {
+			jarMasterRepository = new JarMasterRepository(jar);
+		} catch (LocalRepositoryException | IOException e) {
+			logger.error("Jar Mater Repository failed", e);
+			throw new IllegalStateException(e);
+		}
 		logger.debug("Jar Mater Repository created.");
 		return jarMasterRepository;
 	}

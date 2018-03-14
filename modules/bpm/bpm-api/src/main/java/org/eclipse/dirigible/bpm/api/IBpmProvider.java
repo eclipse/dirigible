@@ -1,5 +1,7 @@
 package org.eclipse.dirigible.bpm.api;
 
+import java.io.IOException;
+
 /**
  * The Business Process Management interface implemented by all the BPM providers
  *
@@ -35,6 +37,7 @@ public interface IBpmProvider {
 	 * @param location the process definition location
 	 * 
 	 * @return the deployment id
+	 * @throws IOException 
 	 */
 	public String deployProcess(String location);
 	

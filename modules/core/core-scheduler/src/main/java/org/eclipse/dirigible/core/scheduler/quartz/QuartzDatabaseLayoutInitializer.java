@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.core.scheduler.quartz;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -108,9 +109,16 @@ public class QuartzDatabaseLayoutInitializer {
 	 *             the SQL exception
 	 */
 	private void createTable(Connection connection, String model) throws IOException, SQLException {
-		String tableFile = IOUtils.toString(QuartzDatabaseLayoutInitializer.class.getResourceAsStream(model), StandardCharsets.UTF_8);
-		DataStructureTableModel tableModel = DataStructureModelFactory.parseTable(tableFile);
-		TableCreateProcessor.execute(connection, tableModel);
+		InputStream in = QuartzDatabaseLayoutInitializer.class.getResourceAsStream(model);
+		try {
+			String tableFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+			DataStructureTableModel tableModel = DataStructureModelFactory.parseTable(tableFile);
+			TableCreateProcessor.execute(connection, tableModel);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 }

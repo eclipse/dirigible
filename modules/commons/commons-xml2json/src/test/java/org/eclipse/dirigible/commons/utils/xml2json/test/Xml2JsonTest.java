@@ -19,7 +19,6 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.utils.xml2json.Xml2Json;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Xml2JsonTest.
  */
@@ -33,17 +32,30 @@ public class Xml2JsonTest {
 	 */
 	private void toJson(String xmlFile, String jsonFile) {
 		try {
+			String json = null;
 			InputStream inXml = Xml2JsonTest.class.getResourceAsStream(xmlFile);
-			String xml = IOUtils.toString(inXml);
-			Xml2Json xml2json = new Xml2Json();
-			String json = xml2json.toJson(xml);
-			System.out.println(xml);
-			System.out.println(json);
+			try {
+				String xml = IOUtils.toString(inXml);
+				Xml2Json xml2json = new Xml2Json();
+				json = xml2json.toJson(xml);
+				System.out.println(xml);
+				System.out.println(json);
+			} finally {
+				if (inXml != null) {
+					inXml.close();
+				}
+			}
 			InputStream inJson = Xml2JsonTest.class.getResourceAsStream(jsonFile);
-			String jsonExpected = IOUtils.toString(inJson);
-			normalizeLineEndings(jsonExpected);
-			normalizeLineEndings(json);
-			assertEquals(jsonExpected, json);
+			try {
+				String jsonExpected = IOUtils.toString(inJson);
+				normalizeLineEndings(jsonExpected);
+				normalizeLineEndings(json);
+				assertEquals(jsonExpected, json);
+			} finally {
+				if (inJson != null) {
+					inJson.close();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -59,17 +71,30 @@ public class Xml2JsonTest {
 	private void toXml(String jsonFile, String xmlFile) {
 		try {
 			InputStream inJson = Xml2JsonTest.class.getResourceAsStream(jsonFile);
-			String json = IOUtils.toString(inJson);
-			Xml2Json xml2json = new Xml2Json();
-			String xml = xml2json.toXml(json);
-			xml = xml2json.prettyPrintXml(xml);
-			System.out.println(json);
-			System.out.println(xml);
+			String xml = null;
+			try {
+				String json = IOUtils.toString(inJson);
+				Xml2Json xml2json = new Xml2Json();
+				xml = xml2json.toXml(json);
+				xml = xml2json.prettyPrintXml(xml);
+				System.out.println(json);
+				System.out.println(xml);
+			} finally {
+				if (inJson != null) {
+					inJson.close();
+				}
+			}
 			InputStream inXml = Xml2JsonTest.class.getResourceAsStream(xmlFile);
-			String xmlExpected = IOUtils.toString(inXml);
-			xmlExpected = normalizeLineEndings(xmlExpected);
-			xml = normalizeLineEndings(xml);
-			assertEquals(xmlExpected, xml);
+			try {
+				String xmlExpected = IOUtils.toString(inXml);
+				xmlExpected = normalizeLineEndings(xmlExpected);
+				xml = normalizeLineEndings(xml);
+				assertEquals(xmlExpected, xml);
+			} finally {
+				if (inXml != null) {
+					inXml.close();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

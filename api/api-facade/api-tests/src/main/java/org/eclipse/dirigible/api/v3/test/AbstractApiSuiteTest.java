@@ -174,11 +174,18 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		try {
 			InputStream in = AbstractApiSuiteTest.class.getResourceAsStream(IRepositoryStructure.SEPARATOR + testModule);
-			if (in == null) {
-				throw new IOException(IRepositoryStructure.SEPARATOR + testModule + " does not exist");
+			try {
+				if (in == null) {
+					throw new IOException(IRepositoryStructure.SEPARATOR + testModule + " does not exist");
+				}
+				repository.createResource(
+						IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + testModule,
+						IOUtils.readBytesFromStream(in));
+			} finally {
+				if (in != null) {
+					in.close();
+				}
 			}
-			repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + testModule,
-					IOUtils.readBytesFromStream(in));
 		} catch (RepositoryWriteException e) {
 			throw new IOException(IRepositoryStructure.SEPARATOR + testModule, e);
 		}

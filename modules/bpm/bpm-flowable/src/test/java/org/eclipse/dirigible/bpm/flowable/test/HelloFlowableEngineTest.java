@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,33 +71,29 @@ public class HelloFlowableEngineTest extends AbstractGuiceTest {
 	public void deployProcessTest() throws Exception {
 		ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
 		
-		byte[] bytes = IOUtils.toByteArray(HelloFlowableEngineTest.class.getResourceAsStream("/hello.bpmn20.xml"));
-		
-		RepositoryService repositoryService = processEngine.getRepositoryService();
-		Deployment deployment = repositoryService.createDeployment()
-		  .addBytes("hello.bpmn20.xml", bytes) // must ends with *.bpmn20.xml
-		  .deploy();
-		
-		String deploymentId = deployment.getId();
-		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-				  .deploymentId(deploymentId)
-				  .singleResult();
-		
-		assertNotNull(processDefinition);
-		assertEquals("Hello", processDefinition.getName());
-		
-		RuntimeService runtimeService = processEngine.getRuntimeService();
-		
-		Map<String, Object> variables = new HashMap<String, Object>();
-		ProcessInstance processInstance =
-				runtimeService.startProcessInstanceByKey("hello", variables);
-		
-		repositoryService.deleteDeployment(deploymentId);
-		
-		processDefinition = repositoryService.createProcessDefinitionQuery()
-				  .deploymentId(deploymentId)
-				  .singleResult();
-		assertNull(processDefinition);
+		InputStream in = HelloFlowableEngineTest.class.getResourceAsStream("/hello.bpmn20.xml");
+		try {
+			byte[] bytes = IOUtils.toByteArray(in);
+			RepositoryService repositoryService = processEngine.getRepositoryService();
+			Deployment deployment = repositoryService.createDeployment().addBytes("hello.bpmn20.xml", bytes) // must ends with *.bpmn20.xml
+					.deploy();
+			String deploymentId = deployment.getId();
+			ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+					.deploymentId(deploymentId).singleResult();
+			assertNotNull(processDefinition);
+			assertEquals("Hello", processDefinition.getName());
+			RuntimeService runtimeService = processEngine.getRuntimeService();
+			Map<String, Object> variables = new HashMap<String, Object>();
+			ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("hello", variables);
+			repositoryService.deleteDeployment(deploymentId);
+			processDefinition = repositoryService.createProcessDefinitionQuery().deploymentId(deploymentId)
+					.singleResult();
+			assertNull(processDefinition);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}	
 
 }

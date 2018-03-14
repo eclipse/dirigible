@@ -33,28 +33,36 @@ public class JarRepository extends ZipRepository {
 	 *            the zip
 	 * @throws LocalRepositoryException
 	 *             the local repository exception
+	 * @throws IOException 
 	 */
-	public JarRepository(String zip) throws LocalRepositoryException {
+	public JarRepository(String zip) throws LocalRepositoryException, IOException {
 
 		InputStream in = JarRepository.class.getClassLoader().getSystemResourceAsStream(zip);
-		if (in == null) {
-			in = JarRepository.class.getClassLoader().getParent().getResourceAsStream(zip);
-		}
-		if (in == null) {
-			in = JarRepository.class.getResourceAsStream(zip);
-		}
-		if (in != null) {
-			try {
-				Path rootFolder = Files.createTempDirectory("jar_repository");
-				unpackZip(in, rootFolder.toString());
-				String zipFileName = zip.substring(zip.lastIndexOf(IRepository.SEPARATOR) + 1);
-				jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf("."));
-				createRepository(rootFolder.toString(), true);
-			} catch (IOException e) {
-				throw new LocalRepositoryException(e);
+		try {
+			if (in == null) {
+				in = JarRepository.class.getClassLoader().getParent().getResourceAsStream(zip);
 			}
-		} else {
-			throw new LocalRepositoryException(String.format("Zip file containing Repository content does not exist at path: %s", zip));
+			if (in == null) {
+				in = JarRepository.class.getResourceAsStream(zip);
+			}
+			if (in != null) {
+				try {
+					Path rootFolder = Files.createTempDirectory("jar_repository");
+					unpackZip(in, rootFolder.toString());
+					String zipFileName = zip.substring(zip.lastIndexOf(IRepository.SEPARATOR) + 1);
+					jarRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf("."));
+					createRepository(rootFolder.toString(), true);
+				} catch (IOException e) {
+					throw new LocalRepositoryException(e);
+				}
+			} else {
+				throw new LocalRepositoryException(
+						String.format("Zip file containing Repository content does not exist at path: %s", zip));
+			} 
+		} finally {
+			if (in != null) {
+				in.close();
+			}
 		}
 	}
 

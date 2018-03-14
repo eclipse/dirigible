@@ -13,6 +13,7 @@ package org.eclipse.dirigible.api.v3.core;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -44,7 +45,14 @@ public class JavaFacade {
 	private static List<String> blacklist;
 	static {
 		try {
-			blacklist = IOUtils.readLines(JavaFacade.class.getResourceAsStream("/.blacklist"), StandardCharsets.UTF_8);
+			InputStream in = JavaFacade.class.getResourceAsStream("/.blacklist");
+			try {
+				blacklist = IOUtils.readLines(in, StandardCharsets.UTF_8);
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+			}
 		} catch (IOException e) {
 			blacklist = new ArrayList<String>();
 		}

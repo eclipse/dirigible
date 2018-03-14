@@ -3,6 +3,7 @@ package org.eclipse.dirigible.bpm.flowable;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,17 +133,29 @@ public class BpmProviderFlowable implements IBpmProvider {
 			deployment = repositoryService.createDeployment()
 					.addBytes(location + EXTENSION_BPMN20_XML, resource.getContent())
 					.deploy();
-		} else if (BpmProviderFlowable.class.getResourceAsStream(location) != null) {
-			try {
-				byte[] bytes = IOUtils.toByteArray(BpmProviderFlowable.class.getResourceAsStream(location));
-				deployment = repositoryService.createDeployment()
-						.addBytes(location + EXTENSION_BPMN20_XML, bytes)
-						.deploy();
-			} catch (IOException e) {
-				throw new IllegalArgumentException(e);
-			}
 		} else {
-			throw new IllegalArgumentException("No BPMN resource found at location: " + location);
+			InputStream in = BpmProviderFlowable.class.getResourceAsStream(location);
+			try {
+				if (in != null) {
+					try {
+						byte[] bytes = IOUtils.toByteArray(in);
+						deployment = repositoryService.createDeployment()
+								.addBytes(location + EXTENSION_BPMN20_XML, bytes).deploy();
+					} catch (IOException e) {
+						throw new IllegalArgumentException(e);
+					}
+				} else {
+					throw new IllegalArgumentException("No BPMN resource found at location: " + location);
+				} 
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException e) {
+						throw new IllegalArgumentException("Error closing the BPMN resource at location: " + location, e);
+					}
+				}
+			}
 		}
 		logger.info(format("Process deployed with deployment id: [{0}] and process key: [{1}]", deployment.getId(), deployment.getKey()));
 		logger.debug("Done deploying a BPMN process from location: " + location);

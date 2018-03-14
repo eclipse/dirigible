@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
@@ -32,16 +33,21 @@ public class DataStructureTableConstraintsTest {
 	@Test
 	public void parseTable() {
 		try {
-			String tableFile = IOUtils.toString(
-					DataStructureTableConstraintsTest.class.getResourceAsStream("/persons.table"),
-					StandardCharsets.UTF_8);
-			DataStructureTableModel table = DataStructureModelFactory.parseTable(tableFile);
-			assertEquals("PERSONS", table.getName());
-			assertNotNull(table.getConstraints());
-			assertNotNull(table.getConstraints().getPrimaryKey());
-			assertNotNull(table.getConstraints().getForeignKeys());
-			assertNotNull(table.getConstraints().getUniqueIndices());
-			assertNotNull(table.getConstraints().getChecks());
+			InputStream in = DataStructureTableConstraintsTest.class.getResourceAsStream("/persons.table");
+			try {
+				String tableFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+				DataStructureTableModel table = DataStructureModelFactory.parseTable(tableFile);
+				assertEquals("PERSONS", table.getName());
+				assertNotNull(table.getConstraints());
+				assertNotNull(table.getConstraints().getPrimaryKey());
+				assertNotNull(table.getConstraints().getForeignKeys());
+				assertNotNull(table.getConstraints().getUniqueIndices());
+				assertNotNull(table.getConstraints().getChecks());
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
