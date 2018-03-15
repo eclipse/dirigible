@@ -9,6 +9,6 @@
  */
 
 var process = require('bpm/v3/process');
-for(var propertyName in ) {
+for(var propertyName in process) {
 	exports[propertyName] = process[propertyName];
 }
