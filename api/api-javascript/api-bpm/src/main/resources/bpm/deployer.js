@@ -9,6 +9,6 @@
  */
 
 var deployer = require('bpm/v3/deployer');
-for(var propertyName in ) {
+for(var propertyName in deployer) {
 	exports[propertyName] = deployer[propertyName];
 }

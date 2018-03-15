@@ -9,6 +9,6 @@
  */
 
 var tasks = require('bpm/v3/tasks');
-for(var propertyName in ) {
+for(var propertyName in tasks) {
 	exports[propertyName] = tasks[propertyName];
 }
