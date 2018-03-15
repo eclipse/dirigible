@@ -418,7 +418,7 @@
 	color: blue;
 }
 .entity {
-	color: #3f7f7f;
+	color: #649292;
 }
 .invalid {
 	color: red;
@@ -435,7 +435,7 @@
 	color: #314dce;
 }
 .support {
-	color: #21439c;
+	color: #b8caf7;
 }
 .variable {
 	color: #0000c0;
@@ -483,7 +483,7 @@
 	background-color: #EAF2FE;
 }
 .meta.tag {
-	color: #3f7f7f;
+	color: #649292;
 }
 .punctuation-definition-comment {
 	color: #3f5fbf;
@@ -500,7 +500,7 @@
 }
 .cm-meta { color: #00008F; }
 .cm-keyword { font-weight: bold; color: #7F0055; }
-.cm-atom { color: #21439c; }
+.cm-atom { color: #b8caf7; }
 .cm-number { color: black; }
 .cm-def { color: green; }
 .cm-variable { color: black; }
@@ -514,7 +514,7 @@
 .cm-qualifier { color: gray; }
 .cm-builtin { color: #7F0055; }
 .cm-bracket { color: white; background-color: gray; }
-.cm-tag { color: #3f7f7f; }
+.cm-tag { color: #649292; }
 .cm-attribute { color: #7f007f; }
 
 .annotation {
@@ -728,11 +728,11 @@
 	border: 1px solid black;
 }
 .annotationOverview.matchingSearch {
-	background-color: #C3E1FF;
+	background-color: #717273;
 	border: 1px solid #afcae5;
 }
 .annotationOverview.currentSearch {
-	background-color: #53D1FF;
+	background-color: #035e80;
 	border: 1px solid #42a7cc;
 }
 .annotationOverview.readOccurrence {
@@ -795,13 +795,13 @@
 	background-color: #CACACA;
 }
 .annotationRange.writeOccurrence {
-	background-color: #996600;
+	background-color: #5a5038;
 }
 .annotationRange.matchingSearch {
-	background-color: #C3E1FF;
+	background-color: #717273;
 }
 .annotationRange.currentSearch {
-	background-color: #53D1FF;
+	background-color: #035e80;
 }
 .annotationRange.linkedGroup {
 	outline: 1px dashed #707070;
@@ -810,7 +810,7 @@
 	background-color: #3399cc;
 }
 .annotationRange.selectedLinkedGroup {
-	background-color: #53D1FF;
+	background-color: #035e80;
 }
 .annotationLine {
 }
@@ -4085,7 +4085,7 @@ html[dir="rtl"] .fileExplorerProgressDiv {
 	color: #8888c8;
 }
 .constant {
-	color: #aaaafa;
+	color: #ece9e9;
 }
 .entity {
 	color: lightcoral;

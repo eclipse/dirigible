@@ -80,6 +80,8 @@ angular.module('ideUiCore', ['ngResource'])
 .provider('Editors', function(){
 	var editorProviders = this.editorProviders = {
 				"orion":  "../ide-orion/editor.html",
+				"ace":  "../ide-ace/editor.html",
+				"monaco":  "../ide-monaco/editor.html",
 				"repository":  "../ide-orion/repository.html",
 				"flowable": "../ide-bpm/index.html#/editor",
 				"dsm": "../ide-schema/modeler.html",
@@ -87,10 +89,10 @@ angular.module('ideUiCore', ['ngResource'])
 			}
 	var editorsForContentType = this.editorsForContentType = {
 			"": ['orion'],
-			"application/javascript": ['orion'],
-			"application/json": ['orion'],
-			"text/plain": ['orion'],
-			"text/html": ['orion'],
+			"application/javascript": ['orion', 'ace', 'monaco'],
+			"application/json": ['orion', 'ace', 'monaco'],
+			"text/plain": ['orion', 'ace', 'monaco'],
+			"text/html": ['orion', 'ace', 'monaco'],
 			"application/bpmn+xml": ['flowable'],
 			"application/database-schema-model+xml": ['dsm'],
 			"application/entity-data-model+xml": ['edm']

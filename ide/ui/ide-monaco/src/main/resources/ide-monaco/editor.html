@@ -22,6 +22,8 @@
 	
     </head>
     <body id="monaco-browser" spellcheck="false">
+    
+    	<script src="/services/v3/core/theme/monaco.js"></script>
         
 		<div  id="embeddedEditor"></div>
 		
@@ -145,7 +147,7 @@
 							_editor.setModel(model);
 							_editor.addAction(createSaveAction());
 						});
-					monaco.editor.setTheme("vs-dark");
+					monaco.editor.setTheme(monacoTheme);
 				});	
 			})();
 
