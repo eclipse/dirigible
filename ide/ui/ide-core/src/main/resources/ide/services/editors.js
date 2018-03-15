@@ -15,7 +15,7 @@ var editors = [];
 var editorExtensions = extensions.getExtensions('ide-editor');
 for (var i=0; i<editorExtensions.length; i++) {
     var module = editorExtensions[i];
-    editorExtension = require(module);
+    var editorExtension = require(module);
     var editor = editorExtension.getEditor();
     editors.push(editor);
 }

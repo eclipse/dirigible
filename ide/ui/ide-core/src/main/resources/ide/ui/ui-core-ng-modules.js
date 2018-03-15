@@ -78,28 +78,51 @@ angular.module('ideUiCore', ['ngResource'])
 	};
 }])
 .provider('Editors', function(){
-	var editorProviders = this.editorProviders = {
-				"orion":  "../ide-orion/editor.html",
-				"ace":  "../ide-ace/editor.html",
-				"monaco":  "../ide-monaco/editor.html",
-				"repository":  "../ide-orion/repository.html",
-				"flowable": "../ide-bpm/index.html#/editor",
-				"dsm": "../ide-schema/modeler.html",
-				"edm": "../ide-entity/modeler.html"
+	function getEditors(resourcePath) {
+	    var xhr = new XMLHttpRequest();
+	    xhr.open('GET', '../../js/ide/services/editors.js', false);
+	    xhr.send();
+	    if (xhr.status === 200) {
+	       	return JSON.parse(xhr.responseText);
+	    }
+	};
+	var editorProviders = {};
+	var editorsForContentType = {};
+	var editorsList = getEditors();
+	editorsList.forEach(function(editor){
+		editorProviders[editor.id] = editor.link;
+		editor.contentTypes.forEach(function(contentType){
+			if (!editorsForContentType[contentType]) {
+				editorsForContentType[contentType] = [editor.id];
+			} else {
+				editorsForContentType[contentType].push(editor.id);
 			}
-	var editorsForContentType = this.editorsForContentType = {
-			"": ['orion'],
-			"application/javascript": ['orion', 'ace', 'monaco'],
-			"application/json": ['orion', 'ace', 'monaco'],
-			"text/plain": ['orion', 'ace', 'monaco'],
-			"text/html": ['orion', 'ace', 'monaco'],
-			"application/bpmn+xml": ['flowable'],
-			"application/database-schema-model+xml": ['dsm'],
-			"application/entity-data-model+xml": ['edm']
-		};			
+		});
+	});
+	
+	// var editorProviders = this.editorProviders = {
+// 				"orion":  "../ide-orion/editor.html",
+// 				"ace":  "../ide-ace/editor.html",
+// 				"monaco":  "../ide-monaco/editor.html",
+// 				"repository":  "../ide-orion/repository.html",
+// 				"flowable": "../ide-bpm/index.html#/editor",
+// 				"dsm": "../ide-schema/modeler.html",
+// 				"edm": "../ide-entity/modeler.html"
+// 			}
+	// var editorsForContentType = this.editorsForContentType = {
+// 			"": ['orion'],
+// 			"application/javascript": ['orion', 'ace', 'monaco'],
+// 			"application/json": ['orion', 'ace', 'monaco'],
+// 			"text/plain": ['orion', 'ace', 'monaco'],
+// 			"text/html": ['orion', 'ace', 'monaco'],
+// 			"application/bpmn+xml": ['flowable'],
+// 			"application/database-schema-model+xml": ['dsm'],
+// 			"application/entity-data-model+xml": ['edm']
+// 		};			
 	var defaultEditorId = this.defaultEditorId = "orion";
 	this.$get = [function editorsFactory() {
-		return {
+ 		
+ 		return {
 			defaultEditorId: defaultEditorId,
 			editorProviders: editorProviders,
 			editorsForContentType: editorsForContentType
