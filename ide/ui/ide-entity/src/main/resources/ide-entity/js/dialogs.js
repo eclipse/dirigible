@@ -115,8 +115,13 @@ function showEntityProperties(graph, cell) {
 	var form = new mxForm('properties');
 
 	// Adds a field for the entity name
-	var name = cell.value.name;
-	var nameField = form.addText('Name', name);
+	var nameField = form.addText('Name', cell.value.name);
+	var isPrimaryField = form.addCheckbox('Primary Entity', cell.value.isPrimary);
+	var menuLabelField = form.addText('Menu Label', cell.value.menuLabel ? cell.value.menuLabel : cell.value.name);
+	var templateTypeField = form.addCombo('Template Type', false, 1);
+	form.addOption(templateTypeField, "Manage", "MANAGE", cell.value.templateType === "MANAGE");
+	form.addOption(templateTypeField, "List", "LIST", cell.value.templateType === "LIST");
+	form.addOption(templateTypeField, "Display", "DISPLAY", cell.value.templateType === "DISPLAY");
 
 	var wnd = null;
 
@@ -126,6 +131,9 @@ function showEntityProperties(graph, cell) {
 		var clone = cell.value.clone();
 		
 		clone.name = nameField.value;
+		clone.isPrimary = isPrimaryField.checked;
+		clone.menuLabel = menuLabelField.value;
+		clone.templateType = templateTypeField.value;		
 		
 		graph.model.setValue(cell, clone);
 	
@@ -139,7 +147,7 @@ function showEntityProperties(graph, cell) {
 	};
 	form.addButtons(okFunction, cancelFunction);
 
-	wnd = showModalWindow(name, form.table, 240, 110);
+	wnd = showModalWindow(cell.value.name, form.table, 240, 210);
 }
 
 function showConnectorProperties(graph, cell) {
@@ -147,20 +155,34 @@ function showConnectorProperties(graph, cell) {
 	var form = new mxForm('properties');
 
 	// Adds a field for the columnname
-	var name = cell.source.value.name+':'+cell.target.value.name;
-	var nameField = form.addText('Name', name);
-	nameField.readOnly = true;
+	var name = cell.value ? cell.value.name : cell.source.value.name+':'+cell.target.value.name;
+	var relationshipNameField = form.addText('Name', name);
+	//nameField.readOnly = true;
+	var relationshipTypeField = form.addCombo('Type', false, 1);
+	form.addOption(relationshipTypeField, "Association", "ASSOCIATION", cell.source.value.relationshipType === "ASSOCIATION");
+	form.addOption(relationshipTypeField, "Aggregation", "AGGREGATION", cell.source.value.relationshipType === "AGGREGATION");
+	form.addOption(relationshipTypeField, "Composition", "COMPOSITION", cell.source.value.relationshipType === "COMPOSITION");
+	var relationshipRatioField = form.addCombo('Ratio', false, 1);
+	form.addOption(relationshipRatioField, "one-to-one", "1_1", cell.source.value.relationshipRatio === "1_1");
+	form.addOption(relationshipRatioField, "one-to-many", "1_n", cell.source.value.relationshipRatio === "1_n");
 
 	var wnd = null;
 
 	// Defines the function to be executed when the
 	// OK button is pressed in the dialog
 	var okFunction = function() {
-		var clone = cell.value.clone();
+		var clone = cell.source.value.clone();
 		
-		clone.name = nameField.value;
+		//clone.name = nameField.value;
+		clone.relationshipName = relationshipNameField.value;
+		clone.relationshipType = relationshipTypeField.value;
+		clone.relationshipRatio = relationshipRatioField.value;
 		
-		graph.model.setValue(cell, clone);
+		graph.model.setValue(cell.source, clone);
+		
+		var connector = new Connector();
+		connector.name = relationshipNameField.value;
+		graph.model.setValue(cell, connector);
 	
 		wnd.destroy();
 	};
@@ -172,7 +194,7 @@ function showConnectorProperties(graph, cell) {
 	};
 	form.addButtons(okFunction, cancelFunction);
 
-	wnd = showModalWindow(name, form.table, 240, 110);
+	wnd = showModalWindow(name, form.table, 240, 140);
 }
 
 function showAlert(title, message) {
