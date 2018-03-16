@@ -350,20 +350,14 @@ function main(container, outline, toolbar, sidebar, status) {
 			
 			if (graph.isHtmlLabel(cell)) {
 				if (cell) {
-					// assume property
-					if (cell.value.isSQL) {
-						// assume View's (the only) property
-						showQueryProperties(graph, cell);
-					} else {
-						// assume Entity's property
-						showProperties(graph, cell);
-					}
+					// assume Entity's property
+					showProperties(graph, cell);					
 				} else {
 					showAlert('Error', 'Select a property');
 				}
 			} else {
 				// assume Entity or Connector
-				if (cell.value) {
+				if (cell.value && Entity.prototype.isPrototypeOf(cell.value)) {
 					// assume Entity
 					showEntityProperties(graph, cell);
 				} else {
