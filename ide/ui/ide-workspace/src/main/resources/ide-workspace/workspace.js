@@ -152,11 +152,14 @@ WorkspaceService.prototype.createFolder = function(type){
 	});
 };
 
-WorkspaceService.prototype.createFile = function(name, path, isDirectory){
+WorkspaceService.prototype.createFile = function(name, path, node){
+	var isDirectory = node.type === 'folder';
 	var url = new UriBuilder().path((this.workspacesServiceUrl+path).split('/')).path(name).build();
 	if(isDirectory)
 		url+="/";
-	return this.$http.post(url)
+	if (!node.data)
+		node.data = '';
+	return this.$http.post(url, JSON.stringify(node.data))
 			.then(function(response){
 				var filePath = response.headers('location');
 				return this.$http.get(filePath, {headers: { 'describe': 'application/json'}})
@@ -399,7 +402,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 	if(!node.original._file){
 		var parentNode = this.jstree.get_node(node.parent);
 		var fpath = parentNode.original._file.path;
-		this.workspaceService.createFile.apply(this.workspaceService, [newName, fpath, node.type=='folder'])
+		this.workspaceService.createFile.apply(this.workspaceService, [newName, fpath, node])
 			.then(function(f){
 				node.original._file = f;
 				node.original._file.label = node.original._file.name;
@@ -693,7 +696,19 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	return openMenuItemFactory;
 }])
 .factory('$treeConfig', ['$treeConfig.openmenuitem', function(openmenuitem){
-	
+
+	var specificFileTemplates = [];
+	specificFileTemplates.push({'name':'table', 'label':'Database Table', 'extension':'table', 'data':JSON.stringify(JSON.parse('{"name":"MYTABLE","type":"TABLE","columns":[{"name":"ID","type":"INTEGER","length":"0","nullable":"false","primaryKey":"true","defaultValue":""}],"dependencies":[]}'), null, 2)});
+	specificFileTemplates.push({'name':'view', 'label':'Database View', 'extension':'view', 'data':JSON.stringify(JSON.parse('{"name":"MYVIEW","type":"VIEW","query":"SELECT * FROM MYTABLE","dependencies":[{"name":"MYTABLE","type":"TABLE"}]}'), null, 2)});
+	specificFileTemplates.push({'name':'schema', 'label':'Database Schema Model', 'extension':'dsm', 'data':'<schema><structures></structures><mxGraphModel><root></root></mxGraphModel></schema>'});
+	specificFileTemplates.push({'name':'js', 'label':'JavaScript Service', 'extension':'js', 'data':'var response = require("http/v3/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();'});
+	specificFileTemplates.push({'name':'html', 'label':'HTML5 Page', 'extension':'html', 'data':'<!DOCTYPE html>\n<head>\n</head>\n<body>\n</body>\n</html>'});
+	specificFileTemplates.push({'name':'job', 'label':'Scheduled Job', 'extension':'job', 'data':JSON.stringify(JSON.parse('{"expression":"0/10 * * * * ?","group":"dirigible-defined","handler":"myproject/myhandler.js","description":"My Job"}'), null, 2)});
+	specificFileTemplates.push({'name':'listener', 'label':'Message Listener', 'extension':'listener', 'data':JSON.stringify(JSON.parse('{"name":"/myproject/mylistener","type":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'), null, 2)});
+	specificFileTemplates.push({'name':'bpmn', 'label':'Business Process Model', 'extension':'bpmn', 'data':'<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">\n\t<process id="myprocess" name="MyProcess" isExecutable="true">\n\t\t<startEvent id="sid-3334E861-7999-4B89-B8B0-11724BA17A3E"/>\n\t\t<serviceTask id="sayHello" name="MyServiceTask" flowable:class="org.eclipse.dirigible.bpm.flowable.DirigibleCallDelegate">\n\t\t\t<extensionElements>\n\t\t\t\t<flowable:field name="handler">\n\t\t\t\t\t<flowable:string><![CDATA[myproject/mydelegate.js]]></flowable:string>\n\t\t\t\t</flowable:field>\n\t\t\t</extensionElements>\n\t\t</serviceTask>\n\t\t<sequenceFlow id="sid-797626AE-B2F6-4C00-ABEE-FB30ADC177E4" sourceRef="sid-3334E861-7999-4B89-B8B0-11724BA17A3E" targetRef="sayHello"/>\n\t\t<endEvent id="sid-70B488C1-384A-4E19-8091-1B12D1AEC7FD"/>\n\t\t<sequenceFlow id="sid-645847E8-C959-48BD-816B-2E9CC4A2F08A" sourceRef="sayHello" targetRef="sid-70B488C1-384A-4E19-8091-1B12D1AEC7FD"/>\n\t</process>\n\t<bpmndi:BPMNDiagram id="BPMNDiagram_myprocess">\n\t\t<bpmndi:BPMNPlane bpmnElement="myprocess" id="BPMNPlane_myprocess">\n\t\t\t<bpmndi:BPMNShape bpmnElement="sid-3334E861-7999-4B89-B8B0-11724BA17A3E" id="BPMNShape_sid-3334E861-7999-4B89-B8B0-11724BA17A3E">\n\t\t\t\t<omgdc:Bounds height="30.0" width="30.0" x="103.0" y="78.0"/>\n\t\t\t</bpmndi:BPMNShape>\n\t\t\t<bpmndi:BPMNShape bpmnElement="sayHello" id="BPMNShape_sayHello">\n\t\t\t\t<omgdc:Bounds height="80.0" width="100.0" x="300.0" y="53.0"/>\n\t\t\t</bpmndi:BPMNShape>\n\t\t\t<bpmndi:BPMNShape bpmnElement="sid-70B488C1-384A-4E19-8091-1B12D1AEC7FD" id="BPMNShape_sid-70B488C1-384A-4E19-8091-1B12D1AEC7FD">\n\t\t\t\t<omgdc:Bounds height="28.0" width="28.0" x="562.0" y="78.0"/>\n\t\t\t</bpmndi:BPMNShape>\n\t\t\t<bpmndi:BPMNEdge bpmnElement="sid-797626AE-B2F6-4C00-ABEE-FB30ADC177E4" id="BPMNEdge_sid-797626AE-B2F6-4C00-ABEE-FB30ADC177E4">\n\t\t\t\t<omgdi:waypoint x="133.0" y="93.0"/>\n\t\t\t\t<omgdi:waypoint x="300.0" y="93.0"/>\n\t\t\t</bpmndi:BPMNEdge>\n\t\t\t<bpmndi:BPMNEdge bpmnElement="sid-645847E8-C959-48BD-816B-2E9CC4A2F08A" id="BPMNEdge_sid-645847E8-C959-48BD-816B-2E9CC4A2F08A">\n\t\t\t\t<omgdi:waypoint x="400.0" y="92.77876106194691"/>\n\t\t\t\t<omgdi:waypoint x="562.0001370486572" y="92.06194629624488"/>\n\t\t\t</bpmndi:BPMNEdge>\n\t\t</bpmndi:BPMNPlane>\n\t</bpmndi:BPMNDiagram>\n</definitions>'});
+	specificFileTemplates.push({'name':'access', 'label':'Access Constraints', 'extension':'access', 'data':JSON.stringify(JSON.parse('{"constraints":[{"uri":"/myproject/myfolder/myservice.js","method":"GET","roles":["administrator","operator"]}]}'), null, 2)});
+	specificFileTemplates.push({'name':'roles', 'label':'Roles Definitions', 'extension':'roles', 'data':JSON.stringify(JSON.parse('[{"name":"administrator","description":"Administrator Role"},{"name":"Operator","description":"Operator Role"}]'), null, 2)});
+
 	return {
 		'core' : {
 			'themes': {
@@ -785,8 +800,8 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 									type: 'folder'
 								};
 								tree.create_node(parentNode, folderNode, "last", function (new_node) {
-										tree.edit(new_node); 
-									});
+									tree.edit(new_node); 
+								});
 							}
 						},
 						/*File*/
@@ -799,22 +814,31 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 									type: 'file'
 								};
 								tree.create_node(parentNode, fileNode, "last", function (new_node) {
-										tree.edit(new_node); 
-									});
-							}.bind(self, this)
-						},
-						/*Generate*/
-						"generate_file" : {
-							"label"				: "Generate",
-							"action"			: function (tree, data) {
-								var parentNode = tree.get_node(data.reference);
-								var fileNode = {
-									type: 'file'
-								};
-								tree.element.trigger('jstree.workspace.generate', [parentNode.original._file]);
+									tree.edit(new_node); 
+								});
 							}.bind(self, this)
 						}
 					};
+				}
+				
+				if (ctxmenu.create) {
+					specificFileTemplates.forEach(function(fileTemplate){
+						ctxmenu.create.submenu[fileTemplate.name] = {
+								"label"				: fileTemplate.label,
+								"action"			: function (wnd, data) {
+									var tree = $.jstree.reference(data.reference);
+									var parentNode = tree.get_node(data.reference);
+									var fileNode = {
+										type: 'file'
+									};
+									fileNode.text = 'file.'+fileTemplate.extension;
+									fileNode.data = fileTemplate.data;
+									tree.create_node(parentNode, fileNode, "last", function (new_node) {
+										tree.edit(new_node);
+									});
+								}.bind(self, this)
+							};
+					});
 				}
 				
 				/*Rename*/
@@ -828,26 +852,40 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 				ctxmenu.remove.shortcut = 46;
 				ctxmenu.remove.shortcut_label = 'Del';
 				
-				/*Publish*/
-				ctxmenu.publish = {
-					"separator_before": true,
-					"label": "Publish",
-					"action": function(data){
-						var tree = $.jstree.reference(data.reference);
-						var node = tree.get_node(data.reference);
-						tree.element.trigger('jstree.workspace.publish', [node.original._file]);
-					}.bind(this)
+				if (this.get_type(node) !== "file") {
+					/*Generate*/
+					ctxmenu.generate = {
+						"separator_before": true,
+						"label": "Generate",
+						"action": function(data){
+							var tree = $.jstree.reference(data.reference);
+							var node = tree.get_node(data.reference);
+							tree.element.trigger('jstree.workspace.generate', [node.original._file]);
+						}.bind(this)
+					}
+					
+					/*Publish*/
+					ctxmenu.publish = {
+						"separator_before": true,
+						"label": "Publish",
+						"action": function(data){
+							var tree = $.jstree.reference(data.reference);
+							var node = tree.get_node(data.reference);
+							tree.element.trigger('jstree.workspace.publish', [node.original._file]);
+						}.bind(this)
+					}
 				}
-				
-				/*Export*/
-				ctxmenu.exportProject = {
-					"separator_before": true,
-					"label": "Export",
-					"action": function(data){
-						var tree = $.jstree.reference(data.reference);
-						var node = tree.get_node(data.reference);
-						tree.element.trigger('jstree.workspace.export', [node.original._file]);
-					}.bind(this)
+				if (this.get_type(node) === "project") {
+					/*Export*/
+					ctxmenu.exportProject = {
+						"separator_before": true,
+						"label": "Export",
+						"action": function(data){
+							var tree = $.jstree.reference(data.reference);
+							var node = tree.get_node(data.reference);
+							tree.element.trigger('jstree.workspace.export', [node.original._file]);
+						}.bind(this)
+					};
 				}
 
 				return ctxmenu;
