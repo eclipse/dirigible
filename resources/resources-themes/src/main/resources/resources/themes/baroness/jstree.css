@@ -119,9 +119,9 @@
   margin: 0;
   padding: 2px;
   position: absolute;
-  background: #f5f5f5;
+  background: #4a4a4a;
   border: 1px solid #979797;
-  box-shadow: 2px 2px 2px #999999;
+  /*box-shadow: 2px 2px 2px #999999;*/
 }
 .vakata-context ul {
   list-style: none;
@@ -143,15 +143,15 @@
   padding: 0 2em 0 2em;
   text-decoration: none;
   width: auto;
-  color: black;
+  color: white;
   white-space: nowrap;
   line-height: 2.4em;
-  text-shadow: 1px 1px 0 white;
+  /*text-shadow: 1px 1px 0 white;*/
   border-radius: 1px;
 }
 .vakata-context li > a:hover {
   position: relative;
-  background-color: #e8eff7;
+  background-color: #5a5a5a;
   box-shadow: 0 0 2px #0a6aa1;
 }
 .vakata-context li > a.vakata-context-parent {
@@ -164,7 +164,7 @@
 }
 .vakata-context .vakata-context-hover > a {
   position: relative;
-  background-color: #e8eff7;
+  background-color: #5a5a5a;
   box-shadow: 0 0 2px #0a6aa1;
 }
 .vakata-context .vakata-context-separator > a,
