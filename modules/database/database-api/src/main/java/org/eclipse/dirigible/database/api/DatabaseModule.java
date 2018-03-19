@@ -57,7 +57,7 @@ public class DatabaseModule extends AbstractDirigibleModule {
 			if (databaseProviderIsSelected && next.getType().equals(databaseProvider)) {
 				// bind the selected if any
 				bindDatasource(next, dataSourceName);
-			} else {
+			} else if (!databaseProviderIsSelected) {
 				// bind the first present, because there is no selected one
 				bindDatasource(next, dataSourceName);
 				break;
