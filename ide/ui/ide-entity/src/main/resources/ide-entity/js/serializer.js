@@ -9,7 +9,12 @@ function createModel(graph) {
 		var child = graph.model.getChildAt(parent, i);
 		
 		if (!graph.model.isEdge(child)) {
-			model.push('  <entity name="'+child.value.name+'" type="'+child.value.type.toLowerCase()+'">\n');
+			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
+			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
+			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
+			model.push('  <entity name="'+child.value.name+'" dataName="'+child.value.dataName+'" isPrimary="'+child.value.isPrimary+'"'
+				+' menuKey="'+child.value.menuKey+'" menuLabel="'+child.value.menuLabel+'"'+' layoutType="'+child.value.layoutType+'"'
+				+'>\n');
 			
 			var propertyCount = graph.model.getChildCount(child);
 
@@ -17,41 +22,65 @@ function createModel(graph) {
 				for (var j=0; j<propertyCount; j++) {
 					var property = graph.model.getChildAt(child, j).value;
 					
-					model.push('    <property name="'+property.name+'" type="'+property.type+'"');
-					if (property.propertyLength !== null) {
-						model.push(' length="'+property.propertyLength+'"');
+					property.dataName = property.dataName ? property.dataName : JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
+					
+					model.push('    <property name="'+property.name+'" dataName="'+property.dataName+'" dataType="'+property.dataType+'"');
+					if (property.dataLength !== null) {
+						model.push(' dataLength="'+property.dataLength+'"');
 					}
-					if (property.notNull) {
-						model.push(' nullable="false"');
+					if (property.dataNotNull) {
+						model.push(' dataNullable="false"');
 					}
-					if (property.primaryKey) {
-						model.push(' primaryKey="true"');
+					if (property.dataPrimaryKey) {
+						model.push(' dataPrimaryKey="true"');
 					}
-					if (property.autoIncrement) {
-						model.push(' identity="true"');
+					if (property.dataAutoIncrement) {
+						model.push(' dataIdentity="true"');
 					}
-					if (property.unique) {
-						model.push(' unique="true"');
+					if (property.dataUnique) {
+						model.push(' dataUnique="true"');
 					}
-					if (property.defaultValue !== null) {
-						model.push(' defaultValue="'+property.defaultValue+'"');
+					if (property.dataDefaultValue !== null) {
+						model.push(' dataDefaultValue="'+property.dataDefaultValue+'"');
 					}
-					if (property.precision !== null) {
-						model.push(' precision="'+property.precision+'"');
+					if (property.dataPrecision !== null) {
+						model.push(' dataPrecision="'+property.dataPrecision+'"');
 					}
-					if (property.scale !== null) {
-						model.push(' scale="'+property.scale+'"');
+					if (property.dataScale !== null) {
+						model.push(' dataScale="'+property.dataScale+'"');
 					}
+					if (property.relationshipType !== null) {
+						model.push(' relationshipType="'+property.relationshipType+'"');
+					}
+					if (property.relationshipRatio !== null) {
+						model.push(' relationshipRatio="'+property.relationshipRatio+'"');
+					}
+					if (property.relationshipName !== null) {
+						model.push(' relationshipName="'+property.relationshipName+'"');
+					}
+					if (property.widgetType !== null) {
+						model.push(' widgetType="'+property.widgetType+'"');
+					}
+					if (property.widgetLength !== null) {
+						model.push(' widgetLength="'+property.widgetLength+'"');
+					}
+					if (property.widgetPattern !== null) {
+						model.push(' widgetPattern="'+property.widgetPattern+'"');
+					}
+					if (property.widgetService !== null) {
+						model.push(' widgetService="'+property.widgetService+'"');
+					}
+					
 					model.push('></property>\n');
 				}
 			}
 			model.push('  </entity>\n');
 		} else {
+			var relationName = child.name ? child.name : child.source.parent.value.name+'_'+ child.target.parent.value.name;
 			model.push('  <relation name="'+child.source.parent.value.name+'_' 
 				+child.target.parent.value.name+'" type="relation" ');
 			model.push('entity="'+child.source.parent.value.name+'" ');
-			model.push('relationName="'+child.source.parent.value.name+'_' 
-				+ child.target.parent.value.name+'" ');
+			model.push('relationName="'+relationName+'" ');
 			model.push('property="'+child.source.value.name+'" '+
 				'referenced="'+child.target.parent.value.name+'" '+
 				'referencedProperty="'+child.target.value.name+'">\n');
@@ -70,75 +99,57 @@ function createModel(graph) {
 }
 
 function createModelJson(graph) {
-	var model = [];
-	model.push('{"model":{\n');
-	model.push(' "entities":[\n');
+	var root = {};
+	root.model = {};
+	root.model.entities = [];
 	var parent = graph.getDefaultParent();
 	var childCount = graph.model.getChildCount(parent);
 
 	for (var i=0; i<childCount; i++) {
-		if (i>0) {
-			model.push(',');
-		}
 		var child = graph.model.getChildAt(parent, i);
-		
 		if (!graph.model.isEdge(child)) {
-			model.push('  {"name":"'+child.value.name+'", "type":"'+child.value.type.toLowerCase()+'", "properties":[\n');
+			var entity = {};
+			entity.name = child.value.name;
+			entity.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
+			entity.isPrimary = child.value.isPrimary;
+			entity.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
+			entity.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
+			entity.layoutType = child.value.layoutType;
+			entity.properties = [];
 			
 			var propertyCount = graph.model.getChildCount(child);
-
 			if (propertyCount > 0) {
 				for (var j=0; j<propertyCount; j++) {
-					if (j>0) {
-						model.push(',');
-					}
-					var property = graph.model.getChildAt(child, j).value;
-					
-					model.push('    {"name":"'+property.name+'", "type":"'+property.type+'"');
-					if (property.propertyLength !== null) {
-						model.push(', "length":"'+property.propertyLength+'"');
-					}
-					if (property.notNull) {
-						model.push(', "nullable":"false"');
-					}
-					if (property.primaryKey) {
-						model.push(', "primaryKey":"true"');
-					}
-					if (property.autoIncrement) {
-						model.push(', "identity":"true"');
-					}
-					if (property.unique) {
-						model.push(', "unique":"true"');
-					}
-					if (property.defaultValue !== null) {
-						model.push(', "defaultValue":"'+property.defaultValue+'"');
-					}
-					if (property.precision !== null) {
-						model.push(', "precision":"'+property.precision+'"');
-					}
-					if (property.scale !== null) {
-						model.push(', "scale":"'+property.scale+'"');
-					}
-					model.push('}\n');
+					var childProperty = graph.model.getChildAt(child, j).value;
+					var property = {};
+					property.dataName = childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase();
+					property.name = childProperty.name;
+					property.dataName = childProperty.dataName;
+					property.dataType = childProperty.dataType;
+					property.dataLength = childProperty.dataLength;
+					property.dataDefaultValue = childProperty.dataDefaultValue;
+					property.dataPrimaryKey = childProperty.dataPrimaryKey;
+					property.dataAutoIncrement = childProperty.dataAutoIncrement;
+					property.dataNotNull = childProperty.dataNotNull;
+					property.dataUnique = childProperty.dataUnique;
+					property.dataPrecision = childProperty.dataPrecision;
+					property.dataScale = childProperty.dataScale;
+					property.relationshipType = childProperty.relationshipType;
+					property.relationshipRatio = childProperty.relationshipRatio;
+					property.relationshipName = childProperty.relationshipName;
+					property.widgetType = childProperty.widgetType;
+					property.widgetLength = childProperty.widgetLength;
+					property.widgetPattern = childProperty.widgetPattern;
+					property.widgetService = childProperty.widgetService;
+					entity.properties.push(property);
 				}
 			}
-			model.push('  ]}\n');
-		} else {
-			model.push('  {"name":"'+child.source.parent.value.name+'_' 
-				+child.target.parent.value.name+'", "type":"relation", ');
-			model.push('"entity":"'+child.source.parent.value.name+'", ');
-			model.push('"relationName":"'+child.source.parent.value.name+'_' 
-				+ child.target.parent.value.name+'", ');
-			model.push('"property":"'+child.source.value.name+'", '+
-				'"referenced":"'+child.target.parent.value.name+'", '+
-				'"referencedProperty":"'+child.target.value.name+'"}\n');
+
+			root.model.entities.push(entity);
 		}
 	}
-	model.push(' ]\n');
-	model.push('}}');
 	
-	var serialized = model.join('');
-	serialized = JSON.stringify(JSON.parse(serialized), null, 4);
+	var serialized = JSON.stringify(root, null, 4);
 	
 	return serialized;
 }
