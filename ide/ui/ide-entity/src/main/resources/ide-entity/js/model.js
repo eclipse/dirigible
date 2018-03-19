@@ -1,35 +1,42 @@
-// Defines the property user object
-function Property(name) {
-	this.name = name;
-}
-
-Property.prototype.type = 'VARCHAR';
-Property.prototype.columnLength = '20';
-Property.prototype.defaultValue = null;
-Property.prototype.primaryKey = false;
-Property.prototype.autoIncrement = false;
-Property.prototype.notNull = false;
-Property.prototype.unique = false;
-Property.prototype.precision = '';
-Property.prototype.scale = '';
-Property.prototype.relationshipType = 'NONE';
-Property.prototype.relationshipRatio = '0';
-Property.prototype.relationshipName = '';
-
-Property.prototype.clone = function() {
-	return mxUtils.clone(this);
-};
-
 // Defines the entity user object
 function Entity(name) {
 	this.name = name;
 }
 
+Entity.prototype.dataName = null;
 Entity.prototype.isPrimary = true;
+Entity.prototype.menuKey = '';
 Entity.prototype.menuLabel = '';
-Entity.prototype.templateType = 'MASTER';
+Entity.prototype.layoutType = 'MASTER';
 
 Entity.prototype.clone = function() {
+	return mxUtils.clone(this);
+};
+
+// Defines the property user object
+function Property(name) {
+	this.name = name;
+}
+
+Property.prototype.dataName = null;
+Property.prototype.dataType = 'VARCHAR';
+Property.prototype.dataLength = '20';
+Property.prototype.dataDefaultValue = null;
+Property.prototype.dataPrimaryKey = false;
+Property.prototype.dataAutoIncrement = false;
+Property.prototype.dataNotNull = false;
+Property.prototype.dataUnique = false;
+Property.prototype.dataPrecision = null;
+Property.prototype.dataScale = null;
+Property.prototype.relationshipType = null;
+Property.prototype.relationshipRatio = null;
+Property.prototype.relationshipName = null;
+Property.prototype.widgetType = 'TEXTBOX';
+Property.prototype.widgetLength = '20';
+Property.prototype.widgetPattern = null;
+Property.prototype.widgetService = null;
+
+Property.prototype.clone = function() {
 	return mxUtils.clone(this);
 };
 
