@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.runtime.ide.generation.processor;
+package org.eclipse.dirigible.runtime.ide.generation.model.template;
 
 /**
  * The Generation Template Metadata Parameter serialization object.

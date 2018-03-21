@@ -526,13 +526,17 @@ WorkspaceTreeAdapter.prototype.exportProject = function(resource){
 	}
 };
 WorkspaceTreeAdapter.prototype.generateFile = function(resource, scope){
-	if (resource.type === 'project' || resource.type === 'folder') {
-		var segments = resource.path.split('/');
-		this.workspaceController.projectName = segments[2];
+	var segments = resource.path.split('/');
+	this.workspaceController.projectName = segments[2];
+	if (resource.type === 'project' || resource.type === 'folder') {	
 		segments = segments.splice(3, segments.length);
 		this.workspaceController.fileName = new UriBuilder().path(segments).path("fileName").build();
 		scope.$apply();
 		$('#generateFromTemplate').click();
+	} else {
+		this.workspaceController.fileName = segments[segments.length-1];
+		scope.$apply();
+		$('#generateFromModel').click();
 	}
 };
 
@@ -552,7 +556,7 @@ angular.module('workspace.config', [])
 	.constant('PUBLISH_SVC_URL','/services/v3/ide/publisher/request')
 	.constant('EXPORT_SVC_URL','/services/v3/transport/project')
 	.constant('TEMPLATES_SVC_URL','/services/v3/js/ide/services/templates.js')
-	.constant('GENERATION_SVC_URL','/services/v3/ide/generation');
+	.constant('GENERATION_SVC_URL','/services/v3/ide/generate');
 	
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
@@ -862,7 +866,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 							var node = tree.get_node(data.reference);
 							tree.element.trigger('jstree.workspace.generate', [node.original._file]);
 						}.bind(this)
-					}
+					};
 					
 					/*Publish*/
 					ctxmenu.publish = {
@@ -873,8 +877,22 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 							var node = tree.get_node(data.reference);
 							tree.element.trigger('jstree.workspace.publish', [node.original._file]);
 						}.bind(this)
+					};
+				}
+				
+				if (this.get_type(node) === "file" && node.original._file.path.endsWith('.model')) {
+					/*Generate Model*/
+					ctxmenu.generate = {
+						"separator_before": true,
+						"label": "Generate",
+						"action": function(data){
+							var tree = $.jstree.reference(data.reference);
+							var node = tree.get_node(data.reference);
+							tree.element.trigger('jstree.workspace.generate', [node.original._file]);
+						}.bind(this)
 					}
 				}
+
 				if (this.get_type(node) === "project") {
 					/*Export*/
 					ctxmenu.exportProject = {
@@ -912,9 +930,18 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 .factory('generationService', ['$http', 'GENERATION_SVC_URL', function($http, GENERATION_SVC_URL){
 	return {
 		generateFromTemplate : function(workspace, project, file, template, parameters, wsTree) {
-			var url = new UriBuilder().path(GENERATION_SVC_URL.split('/')).path(workspace).path(project).path(file.split('/')).build();
+			var url = new UriBuilder().path(GENERATION_SVC_URL.split('/')).path('file').path(workspace).path(project).path(file.split('/')).build();
 			parameters = parameters === undefined || parameters === null ? [] : parameters;
 			return $http.post(url, {"template":template, "parameters":parameters})
+					.then(function(response){
+						wsTree.refresh();
+						return response.data;
+					});
+		},
+		generateFromModel : function(workspace, project, file, template, parameters, wsTree) {
+			var url = new UriBuilder().path(GENERATION_SVC_URL.split('/')).path('model').path(workspace).path(project).path(file.split('/')).build();
+			parameters = parameters === undefined || parameters === null ? [] : parameters;
+			return $http.post(url, {"template":template, "parameters":parameters, "model":file})
 					.then(function(response){
 						wsTree.refresh();
 						return response.data;
@@ -942,9 +969,13 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		templatesService.listTemplates()
 			.then(function(data) {
 				this.templates = data;
+				this.modelTemplates = [];
 				this.templateParameters = [];
-				for (var i = 0 ; i < data.length; i++) {
-					this.templateParameters[data[i].id] = data[i].parameters;
+				for (var i = 0 ; i < this.templates.length; i++) {
+					this.templateParameters[this.templates[i].id] = this.templates[i].parameters;
+					if (this.templates[i].model) {
+						this.modelTemplates.push(this.templates[i]);
+					}
 				}
 			}.bind(this));
 	};
@@ -956,10 +987,10 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 				this.workspaces = workspaceNames;
 				if(this.workspaceName) {
 					this.selectedWorkspace = this.workspaceName;
-					this.workspaceSelected()
+					this.workspaceSelected();
 				} else if(this.workspaces[0]) {
 					this.selectedWorkspace = this.workspaces[0];
-					this.workspaceSelected()					
+					this.workspaceSelected();
 				} 
 			}.bind(this));
 	};
@@ -1002,6 +1033,15 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	this.okGenerateFromTemplate = function() {
 		if (this.projectName) {
 			generationService.generateFromTemplate(this.selectedWorkspace, this.projectName, this.fileName, this.selectedTemplate, this.parameters, this.wsTree);
+		}
+	};
+	
+	this.generateFromModel = function(){
+		$('#generateFromModel').click();
+	};
+	this.okGenerateFromModel = function() {
+		if (this.projectName) {
+			generationService.generateFromModel(this.selectedWorkspace, this.projectName, this.fileName, this.selectedTemplate, this.parameters, this.wsTree);
 		}
 	};
 	

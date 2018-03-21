@@ -26,7 +26,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 	var messageHub = new FramesMessageHub();
 	
-	initializeModelJson(file.substring(0, file.lastIndexOf('.')) + '.entities');
+	initializeModelJson(file.substring(0, file.lastIndexOf('.')) + '.model');
 
 	function saveContents(text, file) {
 		console.log('Save called...');
@@ -66,7 +66,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		var model = createModel(graph);
 		saveContents(model, file);
 		var modelJson = createModelJson(graph);
-		saveContents(modelJson, file.substring(0, file.lastIndexOf('.')) + '.entities');
+		saveContents(modelJson, file.substring(0, file.lastIndexOf('.')) + '.model');
 	}
 			
 	messageHub.subscribe(function(graph) {
