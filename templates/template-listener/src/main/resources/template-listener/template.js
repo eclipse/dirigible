@@ -1,6 +1,6 @@
 exports.getTemplate = function() {
 	return {
-		"name": "Listener Template",
+		"name": "Message Listener",
 		"description": "Listener for a message with a simple Javascript handler",
 		"sources": [
 		{

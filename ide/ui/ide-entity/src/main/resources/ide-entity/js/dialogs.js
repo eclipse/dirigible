@@ -180,13 +180,13 @@ function showConnectorProperties(graph, cell) {
 	var name = cell.value ? cell.value.name : cell.source.value.name+':'+cell.target.value.name;
 	var relationshipNameField = form.addText('Name', name);
 	//nameField.readOnly = true;
-	var relationshipdataTypeField = form.addCombo('Type', false, 1);
+	var relationshipdataTypeField = form.addCombo('Relationship', false, 1);
 	form.addOption(relationshipdataTypeField, "Association", "ASSOCIATION", cell.source.value.relationshipType === "ASSOCIATION");
 	form.addOption(relationshipdataTypeField, "Aggregation", "AGGREGATION", cell.source.value.relationshipType === "AGGREGATION");
 	form.addOption(relationshipdataTypeField, "Composition", "COMPOSITION", cell.source.value.relationshipType === "COMPOSITION");
-	var relationshipRatioField = form.addCombo('Ratio', false, 1);
-	form.addOption(relationshipRatioField, "one-to-one", "1_1", cell.source.value.relationshipRatio === "1_1");
-	form.addOption(relationshipRatioField, "one-to-many", "1_n", cell.source.value.relationshipRatio === "1_n");
+	var relationshipCardinalityField = form.addCombo('Cardinality', false, 1);
+	form.addOption(relationshipCardinalityField, "one-to-one", "1_1", cell.source.value.relationshipCardinality === "1_1");
+	form.addOption(relationshipCardinalityField, "one-to-many", "1_n", cell.source.value.relationshipCardinality === "1_n");
 
 	var wnd = null;
 
@@ -198,7 +198,7 @@ function showConnectorProperties(graph, cell) {
 		//clone.name = nameField.value;
 		clone.relationshipName = relationshipNameField.value;
 		clone.relationshipType = relationshipdataTypeField.value;
-		clone.relationshipRatio = relationshipRatioField.value;
+		clone.relationshipCardinality = relationshipCardinalityField.value;
 		
 		graph.model.setValue(cell.source, clone);
 		
@@ -216,7 +216,7 @@ function showConnectorProperties(graph, cell) {
 	};
 	form.addButtons(okFunction, cancelFunction);
 
-	wnd = showModalWindow(name, form.table, 240, 140);
+	wnd = showModalWindow(name, form.table, 240, 110);
 }
 
 function showAlert(title, message) {

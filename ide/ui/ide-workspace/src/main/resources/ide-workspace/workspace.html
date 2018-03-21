@@ -64,6 +64,7 @@
 			<button type="button" id="createWorkspace" ng-show=false data-toggle="modal" data-target="#dialogCreateWorkspace"></button>
 			<button type="button" id="createProject" ng-show=false data-toggle="modal" data-target="#dialogCreateProject"></button>
 			<button type="button" id="generateFromTemplate" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromTemplate"></button>
+			<button type="button" id="generateFromModel" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromModel"></button>
 			
 			<button type="button" class="btn btn-default" title="Save All" ng-click="workspace.saveAll()"><i class="fa fa-floppy-o"></i></button>
 			<button type="button" class="btn btn-default" title="Publish All" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
@@ -154,6 +155,39 @@
 	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
 	    </div>
 	</div>
+	
+	<!-- Generate From Model -->
+	<div class="modal fade" id="dialogGenerateFromModel" tabindex="-1" role="dialog" aria-labelledby="dialogGenerateFromModelLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Generate From Model</h4>
+	    </div>
+	    <div class="modal-body">
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Template</label>
+				<div class="col-xs-9">
+					<select ng-model="workspace.selectedTemplate" ng-options="o.id as o.name for o in workspace.modelTemplates"
+						class="dropdown btn btn-default dropdown-toggle form-control" title="Templates"></select>
+				</div>
+			</div>
+	        <div class="form-group row">
+				<label class="col-xs-3 col-form-label">Project</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Model</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="file name" ng-model="workspace.fileName" required="required" readonly='true'>
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okGenerateFromModel()" data-toggle="modal" data-target="#dialogGenerateFromModel">Generate</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
 	<script src="workspace.js"></script>
 </body>
 </html>

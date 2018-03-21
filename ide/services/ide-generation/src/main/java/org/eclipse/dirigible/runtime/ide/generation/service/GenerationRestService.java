@@ -33,8 +33,9 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.workspace.api.IFile;
+import org.eclipse.dirigible.runtime.ide.generation.model.template.GenerationTemplateModelParameters;
+import org.eclipse.dirigible.runtime.ide.generation.model.template.GenerationTemplateParameters;
 import org.eclipse.dirigible.runtime.ide.generation.processor.GenerationProcessor;
-import org.eclipse.dirigible.runtime.ide.generation.processor.GenerationTemplateParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ import io.swagger.annotations.Authorization;
  * Front facing REST service serving the Generation content.
  */
 @Singleton
-@Path("/ide/generation")
+@Path("/ide/generate")
 @RolesAllowed({ "Developer" })
 @Api(value = "IDE - Generation", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
@@ -84,7 +85,7 @@ public class GenerationRestService extends AbstractRestService implements IRestS
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@POST
-	@Path("{workspace}/{project}/{path:.*}")
+	@Path("/file/{workspace}/{project}/{path:.*}")
 	public Response generateFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
 			GenerationTemplateParameters parameters, @Context HttpServletRequest request) throws URISyntaxException, ScriptingException, IOException {
 		String user = UserFacade.getName();
@@ -115,6 +116,53 @@ public class GenerationRestService extends AbstractRestService implements IRestS
 		List<IFile> files = processor.generateFile(workspace, project, path, parameters);
 		return Response.created(processor.getURI(workspace, project, path)).build();
 	}
+	
+	/**
+	 * Generate file.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @param parameters the parameters
+	 * @param request the request
+	 * @return the response
+	 * @throws URISyntaxException the URI syntax exception
+	 * @throws ScriptingException the scripting exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@POST
+	@Path("/model/{workspace}/{project}/{path:.*}")
+	public Response generateModel(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
+			GenerationTemplateModelParameters parameters, @Context HttpServletRequest request) throws URISyntaxException, ScriptingException, IOException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if (!processor.existsWorkspace(workspace)) {
+			String error = format("Workspace {0} does not exist.", workspace);
+			sendErrorNotFound(response, error);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		if (!processor.existsProject(workspace, project)) {
+			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
+			sendErrorNotFound(response, error);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		IFile model = processor.getFile(workspace, project, parameters.getModel());
+		if (!model.exists()) {
+			String error = format("Model file {0} does not exist in Project {1} in Workspace {2}.", parameters.getModel(), project, workspace);
+			sendErrorBadRequest(response, error);
+			return Response.status(Status.BAD_REQUEST).entity(error).build();
+		}
+
+		List<IFile> files = processor.generateModel(model, workspace, project, path, parameters);
+		return Response.created(processor.getURI(workspace, project, path)).build();
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()

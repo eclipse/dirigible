@@ -52,8 +52,8 @@ function createModel(graph) {
 					if (property.relationshipType !== null) {
 						model.push(' relationshipType="'+property.relationshipType+'"');
 					}
-					if (property.relationshipRatio !== null) {
-						model.push(' relationshipRatio="'+property.relationshipRatio+'"');
+					if (property.relationshipCardinality !== null) {
+						model.push(' relationshipCardinality="'+property.relationshipCardinality+'"');
 					}
 					if (property.relationshipName !== null) {
 						model.push(' relationshipName="'+property.relationshipName+'"');
@@ -135,7 +135,7 @@ function createModelJson(graph) {
 					property.dataPrecision = childProperty.dataPrecision;
 					property.dataScale = childProperty.dataScale;
 					property.relationshipType = childProperty.relationshipType;
-					property.relationshipRatio = childProperty.relationshipRatio;
+					property.relationshipCardinality = childProperty.relationshipCardinality;
 					property.relationshipName = childProperty.relationshipName;
 					property.widgetType = childProperty.widgetType;
 					property.widgetLength = childProperty.widgetLength;

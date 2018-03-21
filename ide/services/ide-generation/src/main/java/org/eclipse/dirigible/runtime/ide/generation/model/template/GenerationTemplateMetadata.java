@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.runtime.ide.generation.processor;
+package org.eclipse.dirigible.runtime.ide.generation.model.template;
 
 import java.util.List;
 
@@ -22,6 +22,8 @@ public class GenerationTemplateMetadata {
 	private String name;
 	
 	private String description;
+	
+	private boolean model;
 	
 	private List<GenerationTemplateMetadataSource> sources;
 	
@@ -79,6 +81,24 @@ public class GenerationTemplateMetadata {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	/**
+	 * Getter for the model flag
+	 * 
+	 * @return true if it is model based
+	 */
+	public boolean isModel() {
+		return model;
+	}
+	
+	/**
+	 * Sets the model flag
+	 * 
+	 * @param model the flag
+	 */
+	public void setModel(boolean model) {
+		this.model = model;
 	}
 
 	/**

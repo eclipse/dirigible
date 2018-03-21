@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.runtime.ide.generation.processor;
+package org.eclipse.dirigible.runtime.ide.generation.model.template;
 
 /**
  * The Generation Template Metadata Source serialization object.
@@ -24,6 +24,10 @@ public class GenerationTemplateMetadataSource {
 	private String start;
 	
 	private String end;
+	
+	private String collection;
+	
+	private String type;
 
 	/**
 	 * Gets the location.
@@ -113,6 +117,42 @@ public class GenerationTemplateMetadataSource {
 	 */
 	public void setEnd(String end) {
 		this.end = end;
+	}
+	
+	/**
+	 * Gets the collection element
+	 * 
+	 * @return collection
+	 */
+	public String getCollection() {
+		return collection;
+	}
+	
+	/**
+	 * Sets the collection element
+	 * 
+	 * @param collection the collection element
+	 */
+	public void setCollection(String collection) {
+		this.collection = collection;
+	}
+	
+	/**
+	 * Gets the named type
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+	
+	/**
+	 * Sets the named type
+	 * 
+	 * @param type
+	 */
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

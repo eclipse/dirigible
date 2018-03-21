@@ -1,6 +1,6 @@
 exports.getTemplate = function() {
 	return {
-		"name": "Job Template",
+		"name": "Scheduled Job",
 		"description": "Scheduled Job definition with a simple Javascript handler",
 		"sources": [
 		{
