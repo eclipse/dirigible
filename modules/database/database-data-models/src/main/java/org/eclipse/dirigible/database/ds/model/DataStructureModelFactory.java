@@ -169,15 +169,15 @@ public class DataStructureModelFactory {
 			for (int i=0; i<structures.size(); i++) {
 				JsonObject structure = structures.get(i).getAsJsonObject();
 				String type = structure.get("type").getAsString();
-				if ("table".equals(type)) {
+				if ("table".equalsIgnoreCase(type)) {
 					DataStructureTableModel table = new DataStructureTableModel();
 					setTableAttributes(location, result, structure, type, table);
 					result.getTables().add(table);
-				} else if ("view".equals(type)) {
+				} else if ("view".equalsIgnoreCase(type)) {
 					DataStructureViewModel view = new DataStructureViewModel();
 					setViewAttributes(location, result, structure, type, view);
 					result.getViews().add(view);
-				} else if ("foreignKey".equals(type)) {
+				} else if ("foreignKey".equalsIgnoreCase(type)) {
 					// skip for now
 				} else {
 					throw new IllegalArgumentException(format("Unknown data structure type [{0}] loaded from schema [{1}]", type, location));

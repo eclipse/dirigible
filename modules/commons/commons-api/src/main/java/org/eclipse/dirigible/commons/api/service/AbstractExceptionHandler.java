@@ -98,7 +98,7 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 		try {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			logger.warn(e.getMessage());
 		}
 	}
 }

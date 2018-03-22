@@ -299,7 +299,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			List<Map<String, Object>> uiManageModels = new ArrayList<>();
 			List<Map<String, Object>> uiListModels = new ArrayList<>();
 			List<Map<String, Object>> uiDisplayModels = new ArrayList<>();
-			distributeByLayoutType(uiManageModels, uiListModels, uiDisplayModels);
+			distributeByLayoutType(uiModels, uiManageModels, uiListModels, uiDisplayModels);
 			parameters.getParameters().put("uiManageModels", uiManageModels);
 			parameters.getParameters().put("uiListModels", uiListModels);
 			parameters.getParameters().put("uiDisplayModels", uiDisplayModels);
@@ -336,9 +336,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		throw new ScriptingException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
 	}
 
-	private void distributeByLayoutType(List<Map<String, Object>> uiManageModels,
+	private void distributeByLayoutType(List<Map<String, Object>> uiModels, List<Map<String, Object>> uiManageModels,
 			List<Map<String, Object>> uiListModels, List<Map<String, Object>> uiDisplayModels) {
-		for (Map<String, Object> uiModel : uiManageModels) {
+		for (Map<String, Object> uiModel : uiModels) {
 			Object layoutType = uiModel.get("layoutType");
 			if ("MANAGE".equals(layoutType)) {
 				uiManageModels.add(uiModel);
@@ -363,6 +363,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();
 				propertyModel.put("name", property.getName());
 				propertyModel.put("dataName", property.getDataName());
+				propertyModel.put("dataPrimaryKey", property.getDataPrimaryKey());
 				propertyModel.put("dataIdentity", property.getDataAutoIncrement());
 				propertyModel.put("dataDefaultValue", property.getDataDefaultValue());
 				propertyModel.put("dataLength", property.getDataLength());

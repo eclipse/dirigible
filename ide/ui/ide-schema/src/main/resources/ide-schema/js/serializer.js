@@ -9,7 +9,7 @@ function createSchema(graph) {
 		var child = graph.model.getChildAt(parent, i);
 		
 		if (!graph.model.isEdge(child)) {
-			schema.push('  <structure name="'+child.value.name+'" type="'+child.value.type.toLowerCase()+'">\n');
+			schema.push('  <structure name="'+child.value.name+'" type="'+child.value.type.toUpperCase()+'">\n');
 			
 			var columnCount = graph.model.getChildCount(child);
 
@@ -87,7 +87,7 @@ function createSchemaJson(graph) {
 		var child = graph.model.getChildAt(parent, i);
 		
 		if (!graph.model.isEdge(child)) {
-			schema.push('  {"name":"'+child.value.name+'", "type":"'+child.value.type.toLowerCase()+'", "columns":[\n');
+			schema.push('  {"name":"'+child.value.name+'", "type":"'+child.value.type.toUpperCase()+'", "columns":[\n');
 			
 			var columnCount = graph.model.getChildCount(child);
 
