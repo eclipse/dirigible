@@ -38,21 +38,21 @@ function showProperties(graph, cell) {
 	var nameField = form.addText('Name', cell.value.name);
 	var dataNameField = form.addText('Data Name', cell.value.dataName ? cell.value.dataName : JSON.stringify(cell.value.name).replace(/\W/g, '').toUpperCase());
 	var dataTypeField = form.addCombo('Data Type', false, 1);
-	form.addOption(dataTypeField, "VARCHAR", "VARCHAR", cell.value.type === "VARCHAR");
-	form.addOption(dataTypeField, "CHAR", "CHAR", cell.value.type === "CHAR");
-	form.addOption(dataTypeField, "DATE", "DATE", cell.value.type === "DATE");
-	form.addOption(dataTypeField, "TIME", "TIME", cell.value.type === "TIME");
-	form.addOption(dataTypeField, "TIMESTAMP", "TIMESTAMP", cell.value.type === "TIMESTAMP");
-	form.addOption(dataTypeField, "INTEGER", "INTEGER", cell.value.type === "INTEGER");
-	form.addOption(dataTypeField, "TINYINT", "TINYINT", cell.value.type === "TINYINT");
-	form.addOption(dataTypeField, "BIGINT", "BIGINT", cell.value.type === "BIGINT");
-	form.addOption(dataTypeField, "SMALLINT", "SMALLINT", cell.value.type === "SMALLINT");
-	form.addOption(dataTypeField, "REAL", "REAL", cell.value.type === "REAL");
-	form.addOption(dataTypeField, "DOUBLE", "DOUBLE", cell.value.type === "DOUBLE");
-	form.addOption(dataTypeField, "BOOLEAN", "BOOLEAN", cell.value.type === "BOOLEAN");
-	form.addOption(dataTypeField, "BLOB", "BLOB", cell.value.type === "BLOB");
-	form.addOption(dataTypeField, "DECIMAL", "DECIMAL", cell.value.type === "DECIMAL");
-	form.addOption(dataTypeField, "BIT", "BIT", cell.value.type === "BIT");
+	form.addOption(dataTypeField, "VARCHAR", "VARCHAR", cell.value.dataType === "VARCHAR");
+	form.addOption(dataTypeField, "CHAR", "CHAR", cell.value.dataType === "CHAR");
+	form.addOption(dataTypeField, "DATE", "DATE", cell.value.dataType === "DATE");
+	form.addOption(dataTypeField, "TIME", "TIME", cell.value.dataType === "TIME");
+	form.addOption(dataTypeField, "TIMESTAMP", "TIMESTAMP", cell.value.dataType === "TIMESTAMP");
+	form.addOption(dataTypeField, "INTEGER", "INTEGER", cell.value.dataType === "INTEGER");
+	form.addOption(dataTypeField, "TINYINT", "TINYINT", cell.value.dataType === "TINYINT");
+	form.addOption(dataTypeField, "BIGINT", "BIGINT", cell.value.dataType === "BIGINT");
+	form.addOption(dataTypeField, "SMALLINT", "SMALLINT", cell.value.dataType === "SMALLINT");
+	form.addOption(dataTypeField, "REAL", "REAL", cell.value.dataType === "REAL");
+	form.addOption(dataTypeField, "DOUBLE", "DOUBLE", cell.value.dataType === "DOUBLE");
+	form.addOption(dataTypeField, "BOOLEAN", "BOOLEAN", cell.value.dataType === "BOOLEAN");
+	form.addOption(dataTypeField, "BLOB", "BLOB", cell.value.dataType === "BLOB");
+	form.addOption(dataTypeField, "DECIMAL", "DECIMAL", cell.value.dataType === "DECIMAL");
+	form.addOption(dataTypeField, "BIT", "BIT", cell.value.dataType === "BIT");
 	
 	var dataLengthField = form.addText('Data Length', cell.value.dataLength);
 	
@@ -84,16 +84,16 @@ function showProperties(graph, cell) {
 	// OK button is pressed in the dialog
 	var okFunction = function() {
 		var clone = cell.value.clone();
-		
+
 		clone.name = nameField.value;
 		
 		clone.dataName = dataNameField.value;
 		clone.dataType = dataTypeField.value;
 
 		if (useDefaultField.checked) {
-			clone.defaultValue = defaultField.value;
+			clone.dataDefaultValue = defaultField.value;
 		} else {
-			clone.defaultValue = null;
+			clone.dataDefaultValue = null;
 		}
 		
 		clone.dataLength = dataLengthField.value;

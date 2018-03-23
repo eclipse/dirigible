@@ -53,4 +53,4 @@ exports.getMenu = function() {
 			]
 		};
 	return menu;
-}
+};
