@@ -52,6 +52,12 @@ angular.module('preview', [])
 			case 'md':
 				url += '/wiki';
 				break;
+			case 'edm':
+				return;
+			case 'dsm':
+				return;
+			case 'bpmn':
+				return;
 			default:
 				url += '/web';
 		}

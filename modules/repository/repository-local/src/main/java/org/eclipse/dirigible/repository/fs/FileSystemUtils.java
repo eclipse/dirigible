@@ -335,10 +335,13 @@ public class FileSystemUtils {
 		Path path;
 		try {
 			path = FileSystems.getDefault().getPath(FilenameUtils.normalize(location));
-		} catch (java.nio.file.InvalidPathException e) {
+			File file = path.toFile();
+			return file.exists() && file.getCanonicalFile().getName().equals(file.getName());
+		} catch (java.nio.file.InvalidPathException | IOException e) {
+			logger.warn(e.getMessage());
 			return false;
 		}
-		return path.toFile().exists();
+		
 		// return Files.exists(path);
 	}
 
