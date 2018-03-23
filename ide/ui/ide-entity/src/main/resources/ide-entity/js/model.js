@@ -7,7 +7,7 @@ Entity.prototype.dataName = null;
 Entity.prototype.isPrimary = true;
 Entity.prototype.menuKey = '';
 Entity.prototype.menuLabel = '';
-Entity.prototype.layoutType = 'MASTER';
+Entity.prototype.layoutType = 'MANAGE';
 
 Entity.prototype.clone = function() {
 	return mxUtils.clone(this);
