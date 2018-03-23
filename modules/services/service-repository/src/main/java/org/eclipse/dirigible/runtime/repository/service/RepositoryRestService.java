@@ -183,7 +183,12 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
-			String message = format("Resource at location {0} does not exist", path);
+			ICollection collection = processor.getCollection(path);
+			if (collection.exists()) {
+				processor.deleteCollection(path);
+				return Response.noContent().build();
+			}
+			String message = format("Collection or Resource at location {0} does not exist", path);
 			sendErrorNotFound(response, message);
 			return Response.status(Status.NOT_FOUND).entity(message).build();
 		}
