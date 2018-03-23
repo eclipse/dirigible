@@ -100,25 +100,6 @@ angular.module('ideUiCore', ['ngResource'])
 		});
 	});
 	
-	// var editorProviders = this.editorProviders = {
-// 				"orion":  "../ide-orion/editor.html",
-// 				"ace":  "../ide-ace/editor.html",
-// 				"monaco":  "../ide-monaco/editor.html",
-// 				"repository":  "../ide-orion/repository.html",
-// 				"flowable": "../ide-bpm/index.html#/editor",
-// 				"dsm": "../ide-schema/modeler.html",
-// 				"edm": "../ide-entity/modeler.html"
-// 			}
-	// var editorsForContentType = this.editorsForContentType = {
-// 			"": ['orion'],
-// 			"application/javascript": ['orion', 'ace', 'monaco'],
-// 			"application/json": ['orion', 'ace', 'monaco'],
-// 			"text/plain": ['orion', 'ace', 'monaco'],
-// 			"text/html": ['orion', 'ace', 'monaco'],
-// 			"application/bpmn+xml": ['flowable'],
-// 			"application/database-schema-model+xml": ['dsm'],
-// 			"application/entity-data-model+xml": ['edm']
-// 		};			
 	var defaultEditorId = this.defaultEditorId = "orion";
 	this.$get = [function editorsFactory() {
  		
@@ -249,8 +230,12 @@ angular.module('ideUiCore', ['ngResource'])
 					// open perspective`
 					window.open(subItem.onClick.substring(subItem.onClick.indexOf('(')+2, subItem.onClick.indexOf(',')-1));//TODO: change the menu service ot provide paths instead
 				} else {
-					//eval(item.onClick);
-					messageHub.send(item.event, item.data, true);
+					if (item.event === 'open') {
+						window.open(item.data, '_blank');
+					} else {
+						//eval(item.onClick);
+						messageHub.send(item.event, item.data, true);	
+					}
 				}
 			};
 			scope.selectTheme = function(themeName){
