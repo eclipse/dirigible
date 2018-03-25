@@ -435,7 +435,7 @@
 	color: #314dce;
 }
 .support {
-	color: #b8caf7;
+	color: #d41;
 }
 .variable {
 	color: #0000c0;
@@ -4067,7 +4067,7 @@ html[dir="rtl"] .fileExplorerProgressDiv {
 	background-color: lightcyan;
 }
 .keyword {
-	color: cornFlowerBlue;
+	color: #d41;
 }
 .string {
 	color: lightsalmon;

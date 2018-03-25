@@ -42,8 +42,8 @@ body {
 .statusbar {
 	width: 100%;
 	height: 2em;
-	background: #555;
-	color: #ccc;
+	background: #d41;
+	color: #fff;
 	position: relative;
 }
 .list-group-item {
