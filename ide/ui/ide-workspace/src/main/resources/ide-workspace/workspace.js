@@ -779,7 +779,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 				'icon': "fa fa-folder-o"
 			},
 			"project": {
-				"icon": "fa fa-pencil-square-o"
+				"icon": "fa fa-clone"
 			}
 		},
 		"contextmenu": {
