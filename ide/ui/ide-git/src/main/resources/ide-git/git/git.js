@@ -486,7 +486,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 				'icon': "fa fa-folder-o"
 			},
 			"project": {
-				"icon": "fa fa-pencil-square-o"
+				"icon": "fa fa-clone"
 			}
 		},
 		"contextmenu": {
