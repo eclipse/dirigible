@@ -28,6 +28,8 @@ public class GenerationTemplateMetadataSource {
 	private String collection;
 	
 	private String type;
+	
+	private String engine;
 
 	/**
 	 * Gets the location.
@@ -153,6 +155,24 @@ public class GenerationTemplateMetadataSource {
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	/**
+	 * Gets the named engine
+	 * 
+	 * @return the engine
+	 */
+	public String getEngine() {
+		return engine;
+	}
+	
+	/**
+	 * Sets the named engine
+	 * 
+	 * @param engine
+	 */
+	public void setEngine(String engine) {
+		this.engine = engine;
 	}
 	
 }

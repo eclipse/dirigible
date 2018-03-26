@@ -12,19 +12,14 @@ package org.eclipse.dirigible.runtime.ide.generation.processor;
 
 import static java.text.MessageFormat.format;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -39,6 +34,8 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.runtime.ide.generation.api.GenerationException;
+import org.eclipse.dirigible.runtime.ide.generation.api.IGenerationEngine;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModel;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelEntity;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelProperty;
@@ -50,24 +47,15 @@ import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-
 /**
  * Processing the Generation Service incoming requests.
  */
 public class GenerationProcessor extends WorkspaceProcessor {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GenerationProcessor.class);
+	
+	private static final ServiceLoader<IGenerationEngine> GENERATION_ENGINES = ServiceLoader.load(IGenerationEngine.class);
 
-	private static final String ACTION_COPY = "copy";
-	
-	private static final String ACTION_GENERATE = "generate";
-	
-	private static final String MUSTACHE_DEFAULT_START_SYMBOL = "{{";
-	
-	private static final String MUSTACHE_DEFAULT_END_SYMBOL = "}}";
-	
 	/**
 	 * Generate file.
 	 *
@@ -156,15 +144,19 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		byte[] output = null;
 		String action = source.getAction();
 		if (action != null) {
-			if (ACTION_GENERATE.equals(action)) {
-				String sm = MUSTACHE_DEFAULT_START_SYMBOL;
-				String em = MUSTACHE_DEFAULT_END_SYMBOL;
+			if (IGenerationEngine.ACTION_GENERATE.equals(action)) {
+				String sm = null;//MUSTACHE_DEFAULT_START_SYMBOL;
+				String em = null;//MUSTACHE_DEFAULT_END_SYMBOL;
 				if (source.getStart() != null && source.getEnd() != null) {
 					sm = source.getStart();
 					em = source.getEnd();
 				}
-				output = generateContent(parameters, source.getLocation(), input, sm, em);
-			} else if (ACTION_COPY.equals(action)) {
+				String engine = IGenerationEngine.GENERATION_ENGINE_DEFAULT;
+				if (source.getEngine() != null) {
+					engine = source.getEngine();
+				}
+				output = generateContent(parameters, source.getLocation(), input, sm, em, engine);
+			} else if (IGenerationEngine.ACTION_COPY.equals(action)) {
 				output = input;
 			} else {
 				throw new ScriptingException(format("Invalid action in template definition: [{0}]", action));
@@ -237,15 +229,14 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	 * @return the byte[]
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private byte[] generateContent(Map<String, Object> parameters, String location,
-			byte[] input, String sm, String em) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Writer writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
-		DefaultMustacheFactory defaultMustacheFactory = new DefaultMustacheFactory();
-		Mustache mustache = defaultMustacheFactory.compile(new InputStreamReader(new ByteArrayInputStream(input), StandardCharsets.UTF_8), location, sm, em);
-		mustache.execute(writer, parameters);
-		writer.flush();
-		return baos.toByteArray();
+	public byte[] generateContent(Map<String, Object> parameters, String location,
+			byte[] input, String sm, String em, String engine) throws IOException {
+		for (IGenerationEngine next : GENERATION_ENGINES) {
+			if (next.getName().equals(engine)) {
+				return next.generate(parameters, location, input, sm, em);
+			}
+		}
+		throw new GenerationException("Generation Engine not available: " + engine);
 	}
 	
 	/**
@@ -257,15 +248,13 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	 * @return the string
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private String generateName(Map<String, Object> parameters, String location,
-			String input) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Writer writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
-		DefaultMustacheFactory defaultMustacheFactory = new DefaultMustacheFactory();
-		Mustache mustache = defaultMustacheFactory.compile(new StringReader(input), location);
-		mustache.execute(writer, parameters);
-		writer.flush();
-		return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+	private String generateName(Map<String, Object> parameters, String location, String input) throws IOException {
+		for (IGenerationEngine next : GENERATION_ENGINES) {
+			if (next.getName().equals(IGenerationEngine.GENERATION_ENGINE_DEFAULT)) {
+				return new String(next.generate(parameters, location, input.getBytes()));
+			}
+		}
+		throw new GenerationException("Generation Engine not available: " + IGenerationEngine.GENERATION_ENGINE_DEFAULT);
 	}
 
 	/**
