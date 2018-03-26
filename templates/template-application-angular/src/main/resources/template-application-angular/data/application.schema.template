@@ -1,0 +1,26 @@
+{
+    "schema": {
+        "structures": [
+        {{#dataModels}}
+            {
+                "name": "{{dataName}}",
+                "type": "TABLE",
+                "columns": 
+                [
+                {{#properties}}
+                    {
+                        "name": "{{dataName}}",
+                        "type": "{{dataType}}",
+                        "length": "{{dataLength}}",
+                        "primaryKey": "{{dataPrimaryKey}}",
+                        "identity": "{{dataAutoIncrement}}",
+                        "precision": "{{dataPrecision}}",
+                        "scale": "{{dataScale}}"
+                    },
+                {{/properties}}
+                ]
+            },
+        {{/dataModels}}
+        ]
+    }
+}

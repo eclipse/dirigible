@@ -1,0 +1,5 @@
+{
+    "extensionPoint": "ide-template",
+    "module": "template-application-angular/template.js",
+    "description": "Application Template (with Angular UI)"
+}
