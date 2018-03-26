@@ -14,7 +14,7 @@
 var UriBuilder = function UriBuilder(){
 	this.pathSegments = [];
 	return this;
-}
+};
 UriBuilder.prototype.path = function(_pathSegments){
 	if(!Array.isArray(_pathSegments))
 		_pathSegments = [_pathSegments];
@@ -31,11 +31,11 @@ UriBuilder.prototype.path = function(_pathSegments){
 		});
 	this.pathSegments = this.pathSegments.concat(_pathSegments);
 	return this;
-}
+};
 UriBuilder.prototype.build = function(){
 	var uriPath = '/'+this.pathSegments.join('/');
 	return uriPath;
-}
+};
 
 /**
  * Workspace Service API delegate
@@ -69,19 +69,19 @@ var WorkspaceService = function($http, $window, workspaceManagerServiceUrl, work
 			name = fName.trim();
 		} 
 		return name;
-	}
+	};
 			
 	var startsWith = function (stringToTest, prefixToTest){
 		var startsWithRegEx = new RegExp('^'+prefixToTest);
 		var matches = stringToTest.match(startsWithRegEx);
 		return matches != null && matches.length > 0;
-	}
+	};
 	
 	var strictInt = function(value) {
 	  if (/^(\-|\+)?([0-9]+|Infinity)$/.test(value))
 		return Number(value);
 	  return NaN;
-	}
+	};
 	
 	var toInt = function(value){
 		if(value ===undefined)
@@ -91,7 +91,7 @@ var WorkspaceService = function($http, $window, workspaceManagerServiceUrl, work
 		if(isNaN(_result))
 			_result = undefined;
 		return _result;
-	}
+	};
 	
 	//processes an array of sibling string filenames to calculate the next incrmeent suffix segment
 	var nextIncrementSegment = function(filenames, filenameToMatch, nameIncrementRegex){
@@ -486,9 +486,9 @@ WorkspaceTreeAdapter.prototype.refresh = function(node, keepState){
 	return this.workspaceService.load(resourcepath)
 			.then(function(_data){
 				var data = [];
-				if(_data.type == 'workspace'){
+				if(_data.type === 'workspace'){
 					data = _data.projects;
-				} else if(_data.type == 'folder' || _data.type == 'project'){
+				} else if(_data.type === 'folder' || _data.type === 'project'){
 					data = [_data];
 				}
 				
@@ -649,8 +649,8 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		var getEditorsForContentType = function(contentType){
 			if(Object.keys(editorsForContentType).indexOf(contentType) > -1){
 				return editorsForContentType[contentType];
-			} else 
-				return editorsForContentType[""];
+			}
+			return editorsForContentType[""];
 		};
 		
 		var onOpenWithEditorAction = function (editor, data) {
@@ -1082,5 +1082,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 			return messageHub.announcePublish();
 		}.bind(this));
 	}.bind(this), true);
+	
+	//$.jstree.defaults.unique.case_sensitive = true;
 
 }]);
