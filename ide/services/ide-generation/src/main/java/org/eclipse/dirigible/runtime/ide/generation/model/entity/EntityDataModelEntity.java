@@ -18,6 +18,8 @@ public class EntityDataModelEntity {
 	
 	private String menuLabel;
 	
+	private String menuIndex;
+	
 	private String layoutType;
 	
 	private List<EntityDataModelProperty> properties;
@@ -90,6 +92,20 @@ public class EntityDataModelEntity {
 	 */
 	public void setMenuLabel(String menuLabel) {
 		this.menuLabel = menuLabel;
+	}
+	
+	/**
+	 * @return the menuIndex
+	 */
+	public String getMenuIndex() {
+		return menuIndex;
+	}
+
+	/**
+	 * @param menuIndex the menuIndex to set
+	 */
+	public void setMenuIndex(String menuIndex) {
+		this.menuIndex = menuIndex;
 	}
 
 	/**

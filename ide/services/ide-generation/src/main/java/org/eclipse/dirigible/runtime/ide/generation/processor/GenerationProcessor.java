@@ -394,6 +394,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			uiModel.put("layoutType", entity.getLayoutType());
 			uiModel.put("menuKey", entity.getMenuKey());
 			uiModel.put("menuLabel", entity.getMenuLabel());
+			uiModel.put("menuIndex", entity.getMenuIndex());
 			List<Map<String, Object>> propertiesModels = new ArrayList<>();
 			for (EntityDataModelProperty property : entity.getProperties()) {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();
