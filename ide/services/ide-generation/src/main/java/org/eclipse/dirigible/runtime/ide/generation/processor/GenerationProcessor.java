@@ -131,6 +131,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			if (elements == null) {
 				throw new ScriptingException(format("Invalid template definition file: [{0}]. Multiplicity element is set, but no actual parameter provided.", parameters.getTemplate()));
 			}
+			//addStandardParameters(workspace, project, path, elements);
 			for (Map<String, Object> elementParameters : elements) {
 				generateWithTemplate(elementParameters, projectObject, generatedFiles, source, input);
 			}
@@ -294,7 +295,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			
 			List<Map<String, Object>> dataModels = mapDataModels(entityDataModel, parameters, workspace, project, path);
 			parameters.getParameters().put("dataModels", dataModels);
-			List<Map<String, Object>> uiModels = mapUiModels(entityDataModel, workspace, project, path);
+			List<Map<String, Object>> uiModels = mapUiModels(entityDataModel, parameters, workspace, project, path);
 			parameters.getParameters().put("uiModels", uiModels);
 			List<Map<String, Object>> uiManageModels = new ArrayList<>();
 			List<Map<String, Object>> uiListModels = new ArrayList<>();
@@ -338,9 +339,6 @@ public class GenerationProcessor extends WorkspaceProcessor {
 
 	private void distributeByLayoutType(List<Map<String, Object>> uiModels, GenerationTemplateModelParameters parameters, List<Map<String, Object>> uiManageModels,
 			List<Map<String, Object>> uiListModels, List<Map<String, Object>> uiDisplayModels) {
-		uiManageModels.add(parameters.getParameters());
-		uiListModels.add(parameters.getParameters());
-		uiDisplayModels.add(parameters.getParameters());
 		for (Map<String, Object> uiModel : uiModels) {
 			Object layoutType = uiModel.get("layoutType");
 			if ("MANAGE".equals(layoutType)) {
@@ -358,8 +356,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		for (EntityDataModelEntity entity : entityDataModel.getModel().getEntities()) {
 			Map<String, Object> dataModel = new HashMap<String, Object>();
 			RepositoryPath localPath = new RepositoryPath().append(path).getParentPath().append(entity.getName());
-			addStandardParameters(workspace, project, localPath.build(), dataModel);
 			dataModel.putAll(parameters.getParameters());
+			addStandardParameters(workspace, project, localPath.build(), dataModel);
 			dataModel.put("name", entity.getName());
 			dataModel.put("dataName", entity.getDataName());
 			List<Map<String, Object>> propertiesModels = new ArrayList<>();
@@ -384,11 +382,12 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		return dataModels;
 	}
 	
-	private List<Map<String, Object>> mapUiModels(EntityDataModel entityDataModel, String workspace, String project, String path) {
+	private List<Map<String, Object>> mapUiModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
 		List<Map<String, Object>> dataModels = new ArrayList<>();
 		for (EntityDataModelEntity entity : entityDataModel.getModel().getEntities()) {
 			Map<String, Object> uiModel = new HashMap<String, Object>();
 			RepositoryPath localPath = new RepositoryPath().append(path).getParentPath().append(entity.getName());
+			uiModel.putAll(parameters.getParameters());
 			addStandardParameters(workspace, project, localPath.build(), uiModel);
 			uiModel.put("name", entity.getName());
 			uiModel.put("layoutType", entity.getLayoutType());

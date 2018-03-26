@@ -13,7 +13,7 @@ function createModel(graph) {
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
 			model.push('  <entity name="'+child.value.name+'" dataName="'+child.value.dataName+'" isPrimary="'+child.value.isPrimary+'"'
-				+' menuKey="'+child.value.menuKey+'" menuLabel="'+child.value.menuLabel+'"'+'" menuIndex="'+child.value.menuIndex+'"'+' layoutType="'+child.value.layoutType+'"'
+				+' menuKey="'+child.value.menuKey+'" menuLabel="'+child.value.menuLabel+'" menuIndex="'+child.value.menuIndex+'" layoutType="'+child.value.layoutType+'"'
 				+'>\n');
 			
 			var propertyCount = graph.model.getChildCount(child);
@@ -129,10 +129,10 @@ function createModelJson(graph) {
 					property.dataType = childProperty.dataType;
 					property.dataLength = childProperty.dataLength;
 					property.dataDefaultValue = childProperty.dataDefaultValue;
-					property.dataPrimaryKey = childProperty.dataPrimaryKey;
-					property.dataAutoIncrement = childProperty.dataAutoIncrement;
-					property.dataNotNull = childProperty.dataNotNull;
-					property.dataUnique = childProperty.dataUnique;
+					property.dataPrimaryKey = childProperty.dataPrimaryKey ? childProperty.dataPrimaryKey : false;
+					property.dataAutoIncrement = childProperty.dataAutoIncrement ? childProperty.dataAutoIncrement : false;
+					property.dataNotNull = childProperty.dataNotNull ? childProperty.dataNotNull : false;
+					property.dataUnique = childProperty.dataUnique ? childProperty.dataUnique : false;
 					property.dataPrecision = childProperty.dataPrecision;
 					property.dataScale = childProperty.dataScale;
 					property.relationshipType = childProperty.relationshipType;
