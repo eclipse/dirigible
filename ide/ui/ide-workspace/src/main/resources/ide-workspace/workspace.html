@@ -181,6 +181,12 @@
 					<input class="form-control" type="text" placeholder="file name" ng-model="workspace.fileName" required="required" readonly='true'>
 				</div>
 			</div>
+			<div class="form-group row" ng-repeat="parameter in workspace.templateParameters[workspace.selectedTemplate]">
+				<label class="col-xs-3 col-form-label">{{parameter.label}}</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="{{parameter.label}}" ng-model="workspace.parameters[parameter.name]" required="required">
+				</div>
+			</div>
 	    </div>
 	    <div class="modal-footer">
 	      <button class="btn btn-primary" ng-click="workspace.okGenerateFromModel()" data-toggle="modal" data-target="#dialogGenerateFromModel">Generate</button>
