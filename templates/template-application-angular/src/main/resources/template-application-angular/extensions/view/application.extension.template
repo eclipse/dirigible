@@ -1,0 +1,5 @@
+{
+	'description': '{{name}} view',
+	'extensionPoint': 'shell-{{extensionName}}-view',
+	'module': '{{projectName}}/extensions/view/{{name}}.js'
+}

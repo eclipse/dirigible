@@ -47,6 +47,7 @@
 		<module>template-listener</module>
 		<module>template-extension-view</module>
 		<module>template-extension-perspective</module>
+		<module>template-application-angular</module>
 	</modules>
 
 	<profiles>
