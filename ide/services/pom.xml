@@ -24,5 +24,6 @@
 		<module>ide-terminal</module>
 		<module>ide-workspaces</module>
 		<module>ide-bpm</module>
+		<module>ide-generation-mustache</module>
 	</modules>
 </project>
