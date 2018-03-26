@@ -7,6 +7,7 @@ Entity.prototype.dataName = null;
 Entity.prototype.isPrimary = true;
 Entity.prototype.menuKey = '';
 Entity.prototype.menuLabel = '';
+Entity.prototype.menuIndex = 100;
 Entity.prototype.layoutType = 'MANAGE';
 
 Entity.prototype.clone = function() {

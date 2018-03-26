@@ -138,6 +138,7 @@ function showEntityProperties(graph, cell) {
 	var isPrimaryField = form.addCheckbox('Primary Entity', cell.value.isPrimary);
 	var menuKeyField = form.addText('Menu Key', cell.value.menuKey ? cell.value.menuKey : JSON.stringify(cell.value.name).replace(/\W/g, '').toLowerCase());
 	var menuLabelField = form.addText('Menu Label', cell.value.menuLabel ? cell.value.menuLabel : cell.value.name);
+	var menuIndexField = form.addText('Menu Index', cell.value.menuIndex ? cell.value.menuIndex : 100);
 	var layoutdataTypeField = form.addCombo('Layout Type', false, 1);
 	form.addOption(layoutdataTypeField, "Manage", "MANAGE", cell.value.layoutType === "MANAGE");
 	form.addOption(layoutdataTypeField, "List", "LIST", cell.value.layoutType === "LIST");
@@ -155,6 +156,7 @@ function showEntityProperties(graph, cell) {
 		clone.isPrimary = isPrimaryField.checked;
 		clone.menuKey = menuKeyField.value;
 		clone.menuLabel = menuLabelField.value;
+		clone.menuIndex = menuIndexField.value;
 		clone.layoutType = layoutdataTypeField.value;
 		
 		graph.model.setValue(cell, clone);
@@ -169,7 +171,7 @@ function showEntityProperties(graph, cell) {
 	};
 	form.addButtons(okFunction, cancelFunction);
 
-	wnd = showModalWindow(cell.value.name, form.table, 240, 180);
+	wnd = showModalWindow(cell.value.name, form.table, 240, 190);
 }
 
 function showConnectorProperties(graph, cell) {
