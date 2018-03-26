@@ -326,6 +326,9 @@
         <dependent-module archiveName="dirigible-ide-service-bpm-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-bpm/dirigible-ide-service-bpm">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-ide-service-generation-velocity-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-service-generation-velocity/dirigible-ide-service-generation-velocity">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-templates-3.2.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-templates/dirigible-templates">
             <dependency-type>uses</dependency-type>
         </dependent-module>
