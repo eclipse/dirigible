@@ -64,11 +64,26 @@ function createModel(graph) {
 					if (property.widgetLength !== null) {
 						model.push(' widgetLength="'+property.widgetLength+'"');
 					}
+					if (property.widgetLabel !== null) {
+						model.push(' widgetLabel="'+property.widgetLabel+'"');
+					}
+					if (property.widgetShortLabel !== null) {
+						model.push(' widgetShortLabel="'+property.widgetShortLabel+'"');
+					}
 					if (property.widgetPattern !== null) {
 						model.push(' widgetPattern="'+property.widgetPattern+'"');
 					}
+					if (property.widgetFormat !== null) {
+						model.push(' widgetFormat="'+property.widgetFormat+'"');
+					}
+					if (property.widgetSection !== null) {
+						model.push(' widgetSection="'+property.widgetSection+'"');
+					}
 					if (property.widgetService !== null) {
 						model.push(' widgetService="'+property.widgetService+'"');
+					}
+					if (property.isMajor) {
+						model.push(' isMajor="true"');
 					}
 					
 					model.push('></property>\n');
@@ -125,6 +140,7 @@ function createModelJson(graph) {
 					var property = {};
 					property.dataName = childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase();
 					property.name = childProperty.name;
+					property.isMajor = childProperty.isMajor ? childProperty.isMajor : true;
 					property.dataName = childProperty.dataName;
 					property.dataType = childProperty.dataType;
 					property.dataLength = childProperty.dataLength;
@@ -140,7 +156,11 @@ function createModelJson(graph) {
 					property.relationshipName = childProperty.relationshipName;
 					property.widgetType = childProperty.widgetType;
 					property.widgetLength = childProperty.widgetLength;
+					property.widgetLabel = childProperty.widgetLabel;
+					property.widgetShortLabel = childProperty.widgetShortLabel;
 					property.widgetPattern = childProperty.widgetPattern;
+					property.widgetFormat = childProperty.widgetFormat;
+					property.widgetSection = childProperty.widgetSection;
 					property.widgetService = childProperty.widgetService;
 					entity.properties.push(property);
 				}

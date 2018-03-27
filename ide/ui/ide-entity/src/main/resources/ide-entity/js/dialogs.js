@@ -67,16 +67,22 @@ function showProperties(graph, cell) {
 	var defaultField = form.addText('Data Default', cell.value.DataDefaultValue || '');
 	var useDefaultField = form.addCheckbox('Use Default', cell.value.dataDefaultValue !== null);		
 	
-	var widgetdataTypeField = form.addCombo('Widget Type', false, 1);
-	form.addOption(widgetdataTypeField, "Text Box", "TEXTBOX", cell.value.widgetType === "TEXTBOX");
-	form.addOption(widgetdataTypeField, "Text Area", "TEXTAREA", cell.value.widgetType === "TEXTAREA");
-	form.addOption(widgetdataTypeField, "Date Picker", "DATEPICKER", cell.value.widgetType === "DATEPICKER");
-	form.addOption(widgetdataTypeField, "Drop Down", "DROPDOWN", cell.value.widgetType === "DROPDOWN");
-	form.addOption(widgetdataTypeField, "Lookup Dialog", "LOOKUPDIALOG", cell.value.widgetType === "LOOKUPDIALOG");
+	var widgetTypeField = form.addCombo('Widget Type', false, 1);
+	form.addOption(widgetTypeField, "Text Box", "TEXTBOX", cell.value.widgetType === "TEXTBOX");
+	form.addOption(widgetTypeField, "Text Area", "TEXTAREA", cell.value.widgetType === "TEXTAREA");
+	form.addOption(widgetTypeField, "Date Picker", "DATEPICKER", cell.value.widgetType === "DATEPICKER");
+	form.addOption(widgetTypeField, "Drop Down", "DROPDOWN", cell.value.widgetType === "DROPDOWN");
+	form.addOption(widgetTypeField, "Lookup Dialog", "LOOKUPDIALOG", cell.value.widgetType === "LOOKUPDIALOG");
 	
-	var widgetdataLengthField = form.addText('Widget Length', cell.value.widgetLength);
-	var widgetdataPatternField = form.addText('Widget Pattern', cell.value.widgetPattern);
-	var widgetdataServiceField = form.addText('Widget Service', cell.value.widgetService);
+	var widgetLengthField = form.addText('Widget Length', cell.value.widgetLength);
+	var widgetLabelField = form.addText('Widget Label', cell.value.widgetLabel);
+	var widgetShortLabelField = form.addText('Widget Short Label', cell.value.widgetShortLabel);
+	var widgetPatternField = form.addText('Widget Pattern', cell.value.widgetPattern);
+	var widgetFormatField = form.addText('Widget Format', cell.value.widgetFormat);
+	var widgetServiceField = form.addText('Widget Service', cell.value.widgetService);
+	var widgetSectionField = form.addText('Widget Section', cell.value.widgetSection);
+	
+	var isMajorField = form.addCheckbox('Major Property', cell.value.isMajor);
 
 	var wnd = null;
 
@@ -106,10 +112,16 @@ function showProperties(graph, cell) {
 		clone.dataPrecision = precisionField.value;
 		clone.dataScale = scaleField.value;
 		
-		clone.widgetType = widgetdataTypeField.value;
-		clone.widgetLength = widgetdataLengthField.value;
-		clone.widgetPattern = widgetdataPatternField.value;
-		clone.widgetService = widgetdataServiceField.value;
+		clone.widgetType = widgetTypeField.value;
+		clone.widgetLength = widgetLengthField.value;
+		clone.widgetLabel = widgetLabelField.value;
+		clone.widgetShortLabel = widgetShortLabelField.value;
+		clone.widgetPattern = widgetPatternField.value;
+		clone.widgetFormat = widgetFormatField.value;
+		clone.widgetService = widgetServiceField.value;
+		clone.widgetSection = widgetSectionField.value;
+		
+		clone.isMajor = isMajorField.checked;
 		
 		graph.model.setValue(cell, clone);
 	
@@ -125,7 +137,7 @@ function showProperties(graph, cell) {
 
 	var parent = graph.model.getParent(cell);
 	var name = parent.value.name+'.'+cell.value.name;
-	wnd = showModalWindow(name, form.table, 240, 380);
+	wnd = showModalWindow(name, form.table, 240, 480);
 }
 
 function showEntityProperties(graph, cell) {
