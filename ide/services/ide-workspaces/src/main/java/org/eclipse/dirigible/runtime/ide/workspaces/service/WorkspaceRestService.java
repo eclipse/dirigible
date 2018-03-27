@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -390,6 +391,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	 */
 	@POST
 	@Path("{workspace}/{project}/{path:.*}")
+	@Consumes({ "application/octet-stream" })
 	public Response createFile(@PathParam("workspace") String workspace, @PathParam("project") String project, @PathParam("path") String path,
 			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = UserFacade.getName();
