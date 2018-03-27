@@ -37,13 +37,11 @@ exports.getTemplate = function() {
 		}, {
 			'location': '/template-application-angular/extensions/perspective/application.extension.template', 
 			'action': 'generate',
-			'rename': 'extensions/perspective/{{fileName}}.extension',
-			'collection': 'dataModels'
+			'rename': 'extensions/perspective/home.extension'
 		}, {
 			'location': '/template-application-angular/extensions/perspective/application.js.template', 
 			'action': 'generate',
-			'rename': 'extensions/perspective/{{fileName}}.js',
-			'collection': 'dataModels'
+			'rename': 'extensions/perspective/home.js'
 		}, {
 			'location': '/template-application-angular/extensions/point/menu.extensionpoint.template', 
 			'action': 'generate',
@@ -101,6 +99,8 @@ exports.getTemplate = function() {
 		}, {
 			'location': '/template-application-angular/ui/shell/tmpl/menu.html.template', 
 			'action': 'generate',
+			'start' : '[[',
+			'end' : ']]',
 			'rename': 'ui/shell/tmpl/menu.html'
 		}, {
 			'location': '/template-application-angular/ui/shell/tmpl/sidebar.html.template', 

@@ -16,7 +16,7 @@
                         "identity": "{{dataAutoIncrement}}",
                         "precision": "{{dataPrecision}}",
                         "scale": "{{dataScale}}"
-                    },
+                    }{{^last}},{{/last}}
                 {{/properties}}
                 ]
             },

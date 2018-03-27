@@ -10,8 +10,8 @@
 
 exports.getPerspective = function() {
 	return {
-		'name': '{{name}}',
-		'link': '../{{projectName}}/ui/{{name}}/index.html',
+		'name': '{{brand}}',
+		'link': '../{{projectName}}/index.html',
 		'order': '999',
 		'image': 'life-ring'
 	};
