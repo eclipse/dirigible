@@ -4,9 +4,9 @@ function Entity(name) {
 }
 
 Entity.prototype.dataName = null;
-Entity.prototype.isPrimary = true;
-Entity.prototype.menuKey = '';
-Entity.prototype.menuLabel = '';
+Entity.prototype.isPrimary = true; // whether the entity is a major one to be shown in the e.g. main menu
+Entity.prototype.menuKey = ''; // the hidden key for the menu
+Entity.prototype.menuLabel = ''; // the visible name of the menu
 Entity.prototype.menuIndex = 100;
 Entity.prototype.layoutType = 'MANAGE';
 
@@ -34,8 +34,13 @@ Property.prototype.relationshipCardinality = null;
 Property.prototype.relationshipName = null;
 Property.prototype.widgetType = 'TEXTBOX';
 Property.prototype.widgetLength = '20';
-Property.prototype.widgetPattern = null;
-Property.prototype.widgetService = null;
+Property.prototype.widgetPattern = null; // the input validation patern
+Property.prototype.widgetService = null; // the service used to fill in the widget if any
+Property.prototype.widgetIsMajor = true; // whether this property will be shown in e.g. a list of entities table
+Property.prototype.widgetSection = null; // the name of the grouping section
+Property.prototype.widgetLabel = null; // the regular form label
+Property.prototype.widgetShortLabel = null; // a short label for limited character places e.g. table headers
+Property.prototype.widgetFormat = null; // the format for rendering
 
 Property.prototype.clone = function() {
 	return mxUtils.clone(this);

@@ -47,18 +47,15 @@ exports.getTemplate = function() {
 		}, {
 			'location': '/template-application-angular/extensions/point/menu.extensionpoint.template', 
 			'action': 'generate',
-			'rename': 'extensions/point/{{fileName}}.extensionpoint',
-			'collection': 'dataModels'
+			'rename': 'extensions/point/menu.extensionpoint'
 		}, {
 			'location': '/template-application-angular/extensions/point/perspective.extensionpoint.template', 
 			'action': 'generate',
-			'rename': 'extensions/point/{{fileName}}.extensionpoint',
-			'collection': 'dataModels'
+			'rename': 'extensions/point/perspective.extensionpoint'
 		}, {
 			'location': '/template-application-angular/extensions/point/view.extensionpoint.template', 
 			'action': 'generate',
-			'rename': 'extensions/point/{{fileName}}.extensionpoint',
-			'collection': 'dataModels'
+			'rename': 'extensions/point/view.extensionpoint'
 		}, {
 			'location': '/template-application-angular/extensions/view/application.extension.template', 
 			'action': 'generate',
@@ -69,13 +66,6 @@ exports.getTemplate = function() {
 			'action': 'generate',
 			'rename': 'extensions/view/{{fileName}}.js',
 			'collection': 'dataModels'
-		}, {
-			'location': '/template-application-angular/ui/index.html.template', 
-			'action': 'generate',
-			'rename': 'ui/index.html',
-			'start' : '[[',
-			'end' : ']]',
-			'type': 'ui-index'
 		}, {
 			'location': '/template-application-angular/ui/manage/index.html.template', 
 			'action': 'generate',
@@ -104,10 +94,41 @@ exports.getTemplate = function() {
 			'start' : '[[',
 			'end' : ']]',
 			'collection': 'uiDisplayModels'
+		}, {
+			'location': '/template-application-angular/ui/shell/message-hub.js.template', 
+			'action': 'copy',
+			'rename': 'ui/shell/message-hub.js'
+		}, {
+			'location': '/template-application-angular/ui/shell/tmpl/menu.html.template', 
+			'action': 'generate',
+			'rename': 'ui/shell/tmpl/menu.html'
+		}, {
+			'location': '/template-application-angular/ui/shell/tmpl/sidebar.html.template', 
+			'action': 'copy',
+			'rename': 'ui/shell/tmpl/sidebar.html'
+		}, {
+			'location': '/template-application-angular/ui/shell/ui-bootstrap-tpls-0.14.3.min.js.template', 
+			'action': 'copy',
+			'rename': 'ui/shell/tmpl/ui-bootstrap-tpls-0.14.3.min.js'
+		}, {
+			'location': '/template-application-angular/ui/shell/ui-core-ng-modules.js.template', 
+			'action': 'generate',
+			'rename': 'ui/shell/ui-core-ng-modules.js'
+		}, {
+			'location': '/template-application-angular/ui/shell/ui-layout.js.template', 
+			'action': 'generate',
+			'rename': 'ui/shell/ui-layout.js'
+		}, {
+			'location': '/template-application-angular/index.html.template', 
+			'action': 'generate',
+			'rename': 'index.html'
 		}],
 		'parameters': [{
 			'name': 'extensionName',
 			'label': 'Extension Name'
+		}, {
+			'name': 'brand',
+			'label': 'Brand'
 		}]
 	};
 };
