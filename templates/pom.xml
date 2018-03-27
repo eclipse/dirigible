@@ -48,6 +48,7 @@
 		<module>template-extension-view</module>
 		<module>template-extension-perspective</module>
 		<module>template-application-angular</module>
+		<module>template-application-openui5</module>
 	</modules>
 
 	<profiles>
