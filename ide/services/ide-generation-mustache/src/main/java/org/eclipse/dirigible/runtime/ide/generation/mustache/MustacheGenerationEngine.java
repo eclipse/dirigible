@@ -16,11 +16,9 @@ import com.github.mustachejava.Mustache;
 
 public class MustacheGenerationEngine implements IGenerationEngine {
 	
-	public static final String ENGINE_NAME = "mustache";
-	
-	public static final String MUSTACHE_DEFAULT_START_SYMBOL = "{{";
-	
-	public static final String MUSTACHE_DEFAULT_END_SYMBOL = "}}";
+	private static final String ENGINE_NAME = "mustache";
+	private static final String MUSTACHE_DEFAULT_START_SYMBOL = "{{";
+	private static final String MUSTACHE_DEFAULT_END_SYMBOL = "}}";
 	
 	@Override
 	public String getName() {
@@ -35,6 +33,8 @@ public class MustacheGenerationEngine implements IGenerationEngine {
 	@Override
 	public byte[] generate(Map<String, Object> parameters, String location, byte[] input, String sm, String em)
 			throws IOException {
+		sm = sm == null ? MUSTACHE_DEFAULT_START_SYMBOL : sm;
+		em = em == null ? MUSTACHE_DEFAULT_END_SYMBOL : em;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Writer writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
 		DefaultMustacheFactory defaultMustacheFactory = new DefaultMustacheFactory();
