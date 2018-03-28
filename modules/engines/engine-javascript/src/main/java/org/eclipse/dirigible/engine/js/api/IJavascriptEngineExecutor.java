@@ -21,7 +21,7 @@ import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 public interface IJavascriptEngineExecutor extends IScriptEngineExecutor {
 
 	/** The Constant DIRIGIBLE_JAVASCRIPT_TYPE_ENGINE_DEFAULT. */
-	public static final String DIRIGIBLE_JAVASCRIPT_TYPE_ENGINE_DEFAULT = "DIRIGIBLE_JS_ENGINE_TYPE_DEFAULT";
+	public static final String DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT = "DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT";
 
 	/** The Constant DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER. */
 	public static final String DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER = "dirigible-js-engine";

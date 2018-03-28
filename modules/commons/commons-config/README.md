@@ -79,3 +79,10 @@
 
 - `DIRIGIBLE_CONNECTIVITY_CONFIGURATION_JNDI_NAME`: (e.g. java:comp/env/connectivity/Configuration)
  
+
+## Engines
+
+### JavaScript
+
+ - `DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT`: rhino/nashorn/v8 (default is rhino)
+ 
