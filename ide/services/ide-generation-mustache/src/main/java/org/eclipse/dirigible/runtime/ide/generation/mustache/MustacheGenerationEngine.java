@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.runtime.ide.generation.api.IGenerationEngine;
@@ -49,23 +50,26 @@ public class MustacheGenerationEngine implements IGenerationEngine {
 	}
 
 	private void decorateParameters(Map<String, Object> parameters) {
-		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-			if (entry.getValue() instanceof Map) {
-				decorateParameters((Map) entry.getValue());
-			} else if (entry.getValue() instanceof Collection) {
-				if (entry.getValue() instanceof DecoratedCollection) {
-					parameters.put(entry.getKey() + DECORATION, (Collection) entry.getValue());
-				} else {
-					parameters.put(entry.getKey() + DECORATION, new DecoratedCollection<>((Collection) entry.getValue()));
-				}
-				for (Object item : (Collection) entry.getValue()) {
-					if (item instanceof Map) {
-						decorateParameters((Map) item);
+		if (parameters != null) {
+			Map<String, Object> newParameters = new HashMap<String, Object>();
+			for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+				if (entry.getValue() != null && entry.getValue() instanceof Map) {
+					decorateParameters((Map) entry.getValue());
+				} else if (entry.getValue() != null && entry.getValue() instanceof Collection) {
+					if (entry.getValue() != null && entry.getValue() instanceof DecoratedCollection) {
+						newParameters.put(entry.getKey() + DECORATION, (Collection) entry.getValue());
+					} else {
+						newParameters.put(entry.getKey() + DECORATION, new DecoratedCollection<>((Collection) entry.getValue()));
+					}
+					for (Object item : (Collection) entry.getValue()) {
+						if (item != null && item instanceof Map) {
+							decorateParameters((Map) item);
+						}
 					}
 				}
 			}
+			parameters.putAll(newParameters);
 		}
-		
 	}
 
 }
