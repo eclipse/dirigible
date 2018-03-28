@@ -35,6 +35,8 @@ var arrayEquals = function(source, target){
 		return true;
 	if(!Array.isArray(source) || !Array.isArray(source))
 		return false;
+	if(source!==undefined && target===undefined || source===undefined && target!==undefined)
+		return false;
 	if(source.length !== target.length)
 		return false;
 	for(var i=0; i<source.length; i++){
@@ -171,7 +173,8 @@ var ResourceMethod = function(oConfiguration, controller, resource, mappings){
 		this.execute = controller.execute.bind(controller);
 	if(resource){
 		['get','post','put','delete','remove','method'].forEach(function(methodName){
-			this[methodName] = this._resource[methodName].bind(this._resource);
+			if(this._resource[methodName])
+				this[methodName] = this._resource[methodName].bind(this._resource);
 		}.bind(this));
 	}
 	if(mappings){
@@ -519,7 +522,10 @@ Resource.prototype.disable = function(sVerb, arrConsumesTypeStrings, arrProduces
  * Disables all but 'read' HTTP methods in this resource.
  */
 Resource.prototype.readonly = function(){
-	delete this.cfg['get']
+	Object.keys(this.cfg).forEach(function(method){
+		if(['get','head','trace'].indexOf(method)<0)
+			delete this.cfg[method];
+	}.bind(this));
 	return this;
 };
 
@@ -582,9 +588,7 @@ ResourceMappings.prototype.configuration = function(){
  */
 ResourceMappings.prototype.readonly = function(){
 	Object.keys(this.resources).forEach(function(sPath){
-		Object.keys(this.resources[sPath]).forEach(function(resource){
-			resource.readonly();
-		}.bind(this));
+		this.resources[sPath].readonly();
 	}.bind(this));
 	return this;
 };

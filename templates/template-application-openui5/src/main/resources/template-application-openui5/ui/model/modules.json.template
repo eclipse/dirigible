@@ -1,0 +1,31 @@
+{
+	"navigation":[{
+		"title":"Products",
+		"icon":"sap-icon://employee",
+		"expanded":true,
+		"key":"root1",
+		"items":[{
+			"title":"Products",
+			"key":"page1"
+		}, {
+			"title":"Recepies",
+			"key":"page2"
+		}]
+	}, {
+		"title":"Staff",
+		"icon":"sap-icon://building",
+		"key":"root2"
+	}],
+	"fixedNavigation":[{
+		"title":"Fixed Item 1",
+		"icon":"sap-icon://employee"
+	}, {
+		"title":"Fixed Item 2",
+		"icon":"sap-icon://building"
+	}],
+	"headerItems":[{
+		"text":"File"
+	}, {
+		"text":"Didi"
+	}]
+}
