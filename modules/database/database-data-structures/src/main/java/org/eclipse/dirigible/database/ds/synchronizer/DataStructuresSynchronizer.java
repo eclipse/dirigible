@@ -767,7 +767,21 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 					sorted.addAll(DATA_STRUCTURE_MODELS.keySet());
 				}
 
-				// drop view and tables in a reverse order
+				// drop views first in a reverse order
+				for (int i = sorted.size() - 1; i >= 0; i--) {
+					String dsName = sorted.get(i);
+					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
+					try {
+						if (model instanceof DataStructureViewModel) {
+							executeViewDrop(connection, (DataStructureViewModel) model);
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						errors.add(e.getMessage());
+					}
+				}
+				
+				// drop tables in a reverse order
 				for (int i = sorted.size() - 1; i >= 0; i--) {
 					String dsName = sorted.get(i);
 					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
@@ -780,8 +794,6 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 									logger.warn(format("Table [{0}] cannot be deleted during the update process, because it is not empty", dsName));
 								}
 							}
-						} else if (model instanceof DataStructureViewModel) {
-							executeViewDrop(connection, (DataStructureViewModel) model);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -790,18 +802,33 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				}
 				
 				
-				// process models in the proper order
+				// process tables in the proper order
 				for (String dsName : sorted) {
 					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
 					try {
 						if (!SqlFactory.getNative(connection).exists(connection, model.getName())) {
 							if (model instanceof DataStructureTableModel) {
 								executeTableCreate(connection, (DataStructureTableModel) model);
-							} else if (model instanceof DataStructureViewModel) {
+							}
+						} else {
+							logger.warn(format("Table [{0}] already exists during the update process", dsName));
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						errors.add(e.getMessage());
+					}
+				}
+				
+				// process views in the proper order
+				for (String dsName : sorted) {
+					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
+					try {
+						if (!SqlFactory.getNative(connection).exists(connection, model.getName())) {
+							if (model instanceof DataStructureViewModel) {
 								executeViewCreate(connection, (DataStructureViewModel) model);
 							}
 						} else {
-							logger.warn(format("Table or View [{0}] already exists during the update process", dsName));
+							logger.warn(format("View [{0}] already exists during the update process", dsName));
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
