@@ -7,15 +7,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.dirigible.runtime.ide.generation.api.IGenerationEngine;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
+import com.github.mustachejava.util.DecoratedCollection;
 
 public class MustacheGenerationEngine implements IGenerationEngine {
 	
+	private static final String DECORATION = "_";
 	private static final String ENGINE_NAME = "mustache";
 	private static final String MUSTACHE_DEFAULT_START_SYMBOL = "{{";
 	private static final String MUSTACHE_DEFAULT_END_SYMBOL = "}}";
@@ -35,6 +38,7 @@ public class MustacheGenerationEngine implements IGenerationEngine {
 			throws IOException {
 		sm = sm == null ? MUSTACHE_DEFAULT_START_SYMBOL : sm;
 		em = em == null ? MUSTACHE_DEFAULT_END_SYMBOL : em;
+		decorateParameters(parameters);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Writer writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
 		DefaultMustacheFactory defaultMustacheFactory = new DefaultMustacheFactory();
@@ -42,6 +46,21 @@ public class MustacheGenerationEngine implements IGenerationEngine {
 		mustache.execute(writer, parameters);
 		writer.flush();
 		return baos.toByteArray();
+	}
+
+	private void decorateParameters(Map<String, Object> parameters) {
+		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+			if (entry.getValue() instanceof Map) {
+				decorateParameters((Map) entry.getValue());
+			} else if (entry.getValue() instanceof Collection) {
+				if (entry.getValue() instanceof DecoratedCollection) {
+					parameters.put(entry.getKey() + DECORATION, (Collection) entry.getValue());
+				} else {
+					parameters.put(entry.getKey() + DECORATION, new DecoratedCollection<>((Collection) entry.getValue()));
+				}
+			}
+		}
+		
 	}
 
 }
