@@ -58,6 +58,11 @@ public class MustacheGenerationEngine implements IGenerationEngine {
 				} else {
 					parameters.put(entry.getKey() + DECORATION, new DecoratedCollection<>((Collection) entry.getValue()));
 				}
+				for (Object item : (Collection) entry.getValue()) {
+					if (item instanceof Map) {
+						decorateParameters((Map) item);
+					}
+				}
 			}
 		}
 		
