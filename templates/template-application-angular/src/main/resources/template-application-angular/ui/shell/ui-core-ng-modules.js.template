@@ -215,7 +215,7 @@ angular.module('ideUiCore', ['ngResource'])
 			if(!scope.menu && url)
 				loadMenu.call(scope);
 			scope.menuClick = function(item) {
-				Layouts.manager.openView(item.name.toLowerCase());
+				Layouts.manager.openView(item.id);
 //			scope.menuClick = function(item, subItem) {
 //				if(item.name === 'Show View'){
 //					// open view

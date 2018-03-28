@@ -135,12 +135,15 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 	var daos = require('db/v3/dao');
 	//functions deifned on the api prototype will be weaved in the using class
 	this.api = function(){
-		this.dao = function(orm){
+		this.dao = function(orm, loggerName){
 			//check if accessor requested
-			if(arguments< 1){
+			if(arguments.length < 1){
 				return this._dao;
 			}
-			this._dao = daos.create(orm);
+			if(arguments[0] instanceof daos.DAO)
+				this._dao = arguments[0];
+			else
+				this._dao = daos.create(orm, loggerName);
 			return this;
 		};
 	};	
@@ -182,12 +185,18 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 				throwBadRequestError(context, "Invalid Client Input", undefined, "Invalid JSON in create entity request payload", err);
 			}
 			notify.call(this, 'onEntityInsert', entity, context);
+			if(typeof handlerDef["onEntityInsert"] === 'function')
+				handlerDef["onEntityInsert"].call(_this, entity, context);
+				
 			var ids = this._dao.insert(entity, context.queryParameters.$cascaded || true);
 			notify.call(this, 'onAfterEntityInsert', entity, ids, context);
+			if(typeof handlerDef["onAfterEntityInsert"] === 'function')
+				handlerDef["onAfterEntityInsert"].call(_this, entity, ids, context);
+			
 			if(ids && ids.constructor!== Array)	{
 				response.setHeader('Location', request.getRequestURL().toString() + '/' + ids);
 				response.setStatus(response.NO_CONTENT);
-			} else {				
+			} else {
 				var responseBodyJson = JSON.stringify(ids, null, 2);
 				response.println(responseBodyJson);
 	        	response.setContentType(handlerDef.produces[0]);
@@ -197,15 +206,18 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 		//expose specific callback setup methods
 		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "onEntityInsert");
 		installCallbackInVerbHandlerConfig(oResourceVerbHandler, "onAfterEntityInsert");
-		
 	};
 	
 	this.remove = function(oResourceVerbHandler, _this){
-		oResourceVerbHandler.serve(function(context, request, response){
+		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
 			var id = context.pathParameters.id;	
 			notify.call(this, 'onBeforeRemove', id, context);
+			if(typeof handlerDef["onBeforeRemove"] === 'function')
+				handlerDef["onBeforeRemove"].call(_this, id, context);
 			this._dao.remove(id);
 			notify.call(this, 'onAfterRemove', id, context);
+			if(typeof handlerDef["onAfterRemove"] === 'function')
+				handlerDef["onAfterRemove"].call(_this, id, context);			
 			response.setStatus(response.NO_CONTENT);
 		}.bind(_this));
 		//expose specific callback setup methods
@@ -214,7 +226,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 	};
 	
 	this.update = function(oResourceVerbHandler, _this){
-		oResourceVerbHandler.serve(function(context, request, response){
+		oResourceVerbHandler.serve(function(context, request, response, handlerDef){
 			var id = context.pathParameters.id;
 			var entity;
 			try{
@@ -232,6 +244,8 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
     	   		entity[entityIdName] = parseInt(entity[entityIdName], 10);
 
 	    	notify.call(this, 'onEntityUpdate', entity, id);
+			if(typeof handlerDef["onEntityUpdate"] === 'function')
+				handlerDef["onEntityUpdate"].call(_this, entity, id);				    	
 			entity[this._dao.orm.getPrimaryKey()] = this._dao.update(entity);
 			response.setStatus(response.NO_CONTENT);
 		}.bind(_this));
@@ -271,6 +285,8 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 
 			var entity = this._dao.find.apply(this._dao, [id, $expand, $select]);
 			notify.call(this, 'onAfterFind', entity, context);
+			if(typeof handlerDef["onAfterFind"] === 'function')
+				handlerDef["onAfterFind"].call(_this, entity, context);			
 			if(!entity){
 				_this.logger.error("Record with id: " + id + " does not exist.");
 				context.httpErrorCode = response.NOT_FOUND;
@@ -529,7 +545,7 @@ var DataService  = function(oConfig, oProtocolHandlersAdapter, oDataProtocolDefi
 	}
 	
 	var _mappings = _oProtocolHandlersAdapter.adapt.call(this);
-		
+	
 	if(oConfig !== undefined){
 		Object.keys(oConfig).forEach(function(sPath){
 			_mappings.resource(sPath, oConfig[sPath]);
