@@ -68,20 +68,41 @@ public class MustacheGeneratorTest {
 	@Test
 	public void generateCollectionDecoratedDefault() throws IOException {
 		GenerationProcessor generationProcessor = new GenerationProcessor();
-		Map<String, Object> parameters = new HashMap<>();
-		List<Object> elements = new ArrayList<>();
-		Map<String, Object> element = new HashMap<>();
-		element.put("name", "name1");
-		elements.add(element);
-		element = new HashMap<>();
-		element.put("name", "name2");
-		elements.add(element);
-		element = new HashMap<>();
-		element.put("name", "name3");
-		elements.add(element);
-		parameters.put("elements", elements);
+		Map<String, Object> parameters = new HashMap<String, Object>() {{
+			put("elements", Arrays.asList(
+					new HashMap<String, Object>() {{
+						put("name", "name1");
+					}},
+					new HashMap<String, Object>() {{
+						put("name", "name2");
+					}},
+					new HashMap<String, Object>() {{
+						put("name", "name3");
+					}}
+				));
+		}};
+
 		byte[] result = generationProcessor.generateContent(parameters, "/location", "test {{#elements_}}{{value.name}}{{^last}}, {{/last}}{{/elements_}}".getBytes(), "{{", "}}", "mustache");
 		assertEquals("test name1, name2, name3", new String(result));
 	}
 
+	@Test
+	public void generateCollectionDecoratedNested() throws IOException {
+		GenerationProcessor generationProcessor = new GenerationProcessor();
+		Map<String, Object> parameters = new HashMap<String, Object>() {{
+			put("elements", Arrays.asList(
+					new HashMap<String, Object>() {{
+						put("properties", Arrays.asList(
+								new HashMap<String, Object>() {{
+									put("table", "table1");
+								}},
+								new HashMap<String, Object>() {{
+									put("table", "table2");
+								}}));
+					}})
+			);
+		}};
+		byte[] result = generationProcessor.generateContent(parameters, "/location", "test {{#elements_}}{{#value.properties_}}{{value.table}}{{^last}}, {{/last}}{{/value.properties_}}{{/elements_}}".getBytes(), "{{", "}}", "mustache");
+		assertEquals("test table1, table2", new String(result));
+	}
 }
