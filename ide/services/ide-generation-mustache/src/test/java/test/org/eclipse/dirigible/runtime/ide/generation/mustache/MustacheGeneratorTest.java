@@ -29,19 +29,20 @@ public class MustacheGeneratorTest {
 	@Test
 	public void generateCollectionDecorated() throws IOException {
 		GenerationProcessor generationProcessor = new GenerationProcessor();
-		Map<String, Object> parameters = new HashMap<>();
-		List<Object> elements = new ArrayList<>();
-		Map<String, Object> element = new HashMap<>();
-		element.put("name", "name1");
-		elements.add(element);
-		element = new HashMap<>();
-		element.put("name", "name2");
-		elements.add(element);
-		element = new HashMap<>();
-		element.put("name", "name3");
-		elements.add(element);
-		Collection<List<Object>> decoratedElements = new DecoratedCollection(elements);
-		parameters.put("elements", decoratedElements);
+		Map<String, Object> parameters = new HashMap<String, Object>() {{
+			put("elements", new DecoratedCollection(Arrays.asList(
+					new HashMap<String, Object>() {{
+						put("name", "name1");
+					}},
+					new HashMap<String, Object>() {{
+						put("name", "name2");
+					}},
+					new HashMap<String, Object>() {{
+						put("name", "name3");
+					}}
+				)));
+		}};
+
 		byte[] result = generationProcessor.generateContent(parameters, "/location", "test {{#elements}}{{value.name}}{{^last}}, {{/last}}{{/elements}}".getBytes(), "{{", "}}", "mustache");
 		assertEquals("test name1, name2, name3", new String(result));
 	}
@@ -49,18 +50,20 @@ public class MustacheGeneratorTest {
 	@Test
 	public void generateCollectionSimple() throws IOException {
 		GenerationProcessor generationProcessor = new GenerationProcessor();
-		Map<String, Object> parameters = new HashMap<>();
-		List<Object> elements = new ArrayList<>();
-		Map<String, Object> element = new HashMap<>();
-		element.put("name", "name1");
-		elements.add(element);
-		element = new HashMap<>();
-		element.put("name", "name2");
-		elements.add(element);
-		element = new HashMap<>();
-		element.put("name", "name3");
-		elements.add(element);
-		parameters.put("elements", elements);
+		Map<String, Object> parameters = new HashMap<String, Object>() {{
+			put("elements", Arrays.asList(
+					new HashMap<String, Object>() {{
+						put("name", "name1");
+					}},
+					new HashMap<String, Object>() {{
+						put("name", "name2");
+					}},
+					new HashMap<String, Object>() {{
+						put("name", "name3");
+					}}
+				));
+		}};
+
 		byte[] result = generationProcessor.generateContent(parameters, "/location", "test {{#elements}}{{name}} {{/elements}}".getBytes(), "{{", "}}", "mustache");
 		assertEquals("test name1 name2 name3 ", new String(result));
 	}
