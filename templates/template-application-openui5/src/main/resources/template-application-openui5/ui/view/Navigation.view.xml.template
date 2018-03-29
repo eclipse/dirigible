@@ -18,8 +18,7 @@
 					</layoutData>
 				</Button>
 				<ToolbarSpacer width="20px" />
-				<IconTabHeader id="iconTabHeader"
-        			selectedKey="invalidKey"
+				<IconTabHeader id="entitiesMenu"
         			select="onSelectTab"
         			showOverflowSelectList="true"
         			backgroundDesign="Transparent"
@@ -40,17 +39,12 @@
 		<tnt:sideContent>
 			<tnt:SideNavigation expanded="true"
 								itemSelect="onItemSelect">
-				<tnt:NavigationList items="{path: '/navigation'}">
-					<tnt:NavigationListItem text="{title}"
+				<tnt:NavigationList items="{path: '/'}">
+					<tnt:NavigationListItem 
+											select="onNavigationListSelect"
+											text="{name}"
 											icon="{icon}"
-											enabled="{enabled}"
-											expanded="{expanded}"
-											items="{items}"
-											key="{key}">
-						<tnt:NavigationListItem text="{title}"
-												key="{key}"
-												enabled="{enabled}">
-						</tnt:NavigationListItem>
+											key="{url}">
 					</tnt:NavigationListItem>
 				</tnt:NavigationList>
 				<tnt:fixedItem>

@@ -23,7 +23,7 @@ exports.getTemplate = function() {
 		}, {
 			'location': '/template-application-angular/data/application.schema.template', 
 			'action': 'generate',
-			'rename': 'data/{{fileName}}.schema'
+			'rename': 'data/{{fileNameBase}}.schema'
 		}, {
 			'location': '/template-application-angular/extensions/menu/application.extension.template', 
 			'action': 'generate',
@@ -68,13 +68,6 @@ exports.getTemplate = function() {
 			'location': '/template-application-angular/ui/manage/index.html.template', 
 			'action': 'generate',
 			'rename': 'ui/{{fileName}}/index.html',
-			'start' : '[[',
-			'end' : ']]',
-			'collection': 'uiManageModels'
-		}, {
-			'location': '/template-application-angular/ui/manage/manage.html.template', 
-			'action': 'generate',
-			'rename': 'ui/{{fileName}}/manage.html',
 			'start' : '[[',
 			'end' : ']]',
 			'collection': 'uiManageModels'

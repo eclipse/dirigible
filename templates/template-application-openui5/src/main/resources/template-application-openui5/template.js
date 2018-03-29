@@ -11,7 +11,7 @@ exports.getTemplate = function() {
 		}, {
 			'location': '/template-application-openui5/data/application.schema.template', 
 			'action': 'generate',
-			'rename': 'data/{{fileName}}.schema'
+			'rename': 'data/{{fileNameBase}}.schema'
 		}, {
 			'location': '/template-application-openui5/index.html.template', 
 			'action': 'generate',
@@ -30,7 +30,10 @@ exports.getTemplate = function() {
 		},  {
 			'location': '/template-application-openui5/ui/view/AddEditDialog.fragment.xml.template', 
 			'action': 'generate',
-			'rename': 'ui/view/AddEditDialog.fragment.xml'
+			'rename': 'ui/view/AddEditDialog{{fileName}}.fragment.xml',
+			'start': '[[',
+			'end': ']]',
+			'collection': 'uiManageModels'
 		}, {
 			'location': '/template-application-openui5/ui/controller/Navigation.controller.js.template', 
 			'action': 'generate',
@@ -39,6 +42,8 @@ exports.getTemplate = function() {
 			'location': '/template-application-openui5/ui/controller/View.controller.js.template', 
 			'action': 'generate',
 			'rename': 'ui/controller/{{fileName}}.controller.js',
+			'start': '[[',
+			'end': ']]',
 			'collection': 'uiManageModels'
 		}, {
 			'location': '/template-application-openui5/ui/Component.js.template', 

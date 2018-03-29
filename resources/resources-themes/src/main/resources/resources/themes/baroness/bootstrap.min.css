@@ -355,7 +355,7 @@ dt,kbd kbd,label{font-weight:700}
 .text-uppercase{text-transform:uppercase}
 .text-capitalize{text-transform:capitalize}
 .text-muted{color:#777}
-.text-primary{color:#1f4a6f}
+.text-primary{color:#6495ed}
 a.text-primary:focus,a.text-primary:hover{color:#142f47}
 .text-success{color:#3c763d}
 a.text-success:focus,a.text-success:hover{color:#2b542c}
@@ -881,7 +881,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .nav>li,.nav>li>a{position:relative;display:block}
 .input-group .form-control:not(:first-child):not(:last-child),.input-group-addon:not(:first-child):not(:last-child),.input-group-btn:not(:first-child):not(:last-child){border-radius:0}
 .input-group-addon,.input-group-btn{width:1%;white-space:nowrap;vertical-align:middle}
-.input-group-addon{padding:2px 4px;font-size:12px;font-weight:400;line-height:1;color:#eee;text-align:center;background-color:#eee;border:1px solid #222;border-radius:3px}
+.input-group-addon{padding:2px 4px;font-size:12px;font-weight:400;line-height:1;color:#eee;text-align:center;background-color:#222;border:1px solid #222;border-radius:3px}
 .input-group-addon.input-sm{padding:2px;font-size:11px;border-radius:3px}
 .input-group-addon.input-lg{padding:4px;font-size:15px;border-radius:3px}
 .input-group-addon input[type=checkbox],.input-group-addon input[type=radio]{margin-top:0}

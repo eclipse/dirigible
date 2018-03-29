@@ -11,26 +11,31 @@ sap.ui.define([
 	var CController = Controller.extend("{{projectName}}.controller.Navigation", {
 		onInit : function() {
 			var oModel = new sap.ui.model.json.JSONModel(),
-				oViewModel = new sap.ui.model.json.JSONModel({
-					"name": "{{projectName}}.view.View2"
-				}),
 				oEntitiesModel = new sap.ui.model.json.JSONModel([
 					{{#uiManageModels_}}
 					{
-						"displayName": "{{value.name}}",
-						"entityName": "{{value.name}}"
+						"displayName": "{{value.menuLabel}}",
+						"entityName": "{{value.menuKey}}"
 					}{{^last}},{{/last}}
 					{{/uiManageModels_}}
 				]),
 
-				myView = this.getView();
+				myView = this.getView(),
+				toolPage = myView.byId("toolPage");
+			
+			toolPage.setSideExpanded(false);
 
 			oModel.loadData("ui/model/modules.json"); // to load data to the model
 			myView.setModel(oModel);
-			myView.setModel(oViewModel, "viewModel");
 			myView.setModel(oEntitiesModel, "entities");
 
 			this._setToggleButtonTooltip(sap.ui.Device.system.desktop);
+			
+			var oRouter = this.getOwnerComponent().getRouter();
+            oRouter.getRoute("home").attachPatternMatched(this._onRouteMatchedDefault, this);
+            {{#uiManageModels_}}
+            oRouter.getRoute("{{value.menuKey}}").attachPatternMatched(this._onRouteMatched, this);
+            {{/uiManageModels_}}
 		},
 
 		onSelectTab: function(oEvent) {
@@ -40,48 +45,9 @@ sap.ui.define([
 			
 		},
 
-		onItemSelect : function(oEvent) {
-			// 			var item = oEvent.getParameter('item');
-		//	debugger;
-			//var oViewModel = this.getView().getModel("viewModel");
-			// debugger;
-			//oViewModel.setProperty("/name", "{{projectName}}.view.View2");
-			var view = this.getView().byId("view");
-			view.setViewName("{{projectName}}.view.View2");
-			
-			view.rerender();
-			
-			// var item = oEvent.getParameter('item');
-			// var viewId = this.getView().getId();
-			// sap.ui.getCore().byId(viewId + "--pageContainer").to(viewId + "--" + item.getKey());
-		},
-
-		handleUserNamePress: function (event) {
-			var popover = new Popover({
-				showHeader: false,
-				placement: sap.m.PlacementType.Bottom,
-				content:[
-					new Button({
-						text: 'Feedback',
-						type: sap.m.ButtonType.Transparent
-					}),
-					new Button({
-						text: 'Help',
-						type: sap.m.ButtonType.Transparent
-					}),
-					new Button({
-						text: 'Logout',
-						type: sap.m.ButtonType.Transparent
-					})
-				]
-			}).addStyleClass('sapMOTAPopover sapTntToolHeaderPopover');
-
-			popover.openBy(event.getSource());
-		},
-
 		onSideNavButtonPress : function() {
-			var viewId = this.getView().getId();
-			var toolPage = sap.ui.getCore().byId(viewId + "--toolPage");
+			var oView = this.getView();
+			var toolPage = oView.byId("toolPage");
 			var sideExpanded = toolPage.getSideExpanded();
 
 			this._setToggleButtonTooltip(sideExpanded);
@@ -96,7 +62,24 @@ sap.ui.define([
 			} else {
 				toggleButton.setTooltip('Small Size Navigation');
 			}
-		}
+		},
+		
+		onNavigationListSelect: function(oEvent) {
+			var url = oEvent.getParameter("item").getKey();
+			window.open(url, '_blank');
+		},
+		
+		_onRouteMatchedDefault: function (oEvent) {
+        	{{#uiManageModels_}}
+        	{{#first}}
+            this.getOwnerComponent().getRouter().navTo("{{value.menuKey}}");
+            {{/first}}
+            {{/uiManageModels_}}
+        },
+
+        _onRouteMatched: function (oEvent) {
+            this.getView().byId("entitiesMenu").setSelectedKey(oEvent.getParameter("name"));
+        }
 
 	});
 
