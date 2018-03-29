@@ -7,7 +7,7 @@
                 "type": "TABLE",
                 "columns": 
                 [
-                {{#properties_}}
+                {{#value.properties_}}
                     {
                         "name": "{{value.dataName}}",
                         "type": "{{value.dataType}}",
@@ -17,7 +17,7 @@
                         "precision": "{{value.dataPrecision}}",
                         "scale": "{{value.dataScale}}"
                     }{{^last}},{{/last}}
-                {{/properties_}}
+                {{/value.properties_}}
                 ]
             }{{^last}},{{/last}}
         {{/dataModels_}}

@@ -7,18 +7,17 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/css/mdb.min.css" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+	<link type="text/css" rel="stylesheet" href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link type="image/png" rel="shortcut icon" href="/services/v3/web/resources/images/favicon.png" />
 </head>
 
 <body ng-controller="PageController">
-	<nav class="navbar sticky-top navbar-expand-lg navbar-dark primary-color">
-		<a class="navbar-brand text-center" href="#">Manage [[name]]</a>
-	</nav>
-
-	<div class="jumbotron" style="margin-left: 10%; margin-right: 10%;">
-		<button type="button" ng-click="new()" class="btn btn-primary btn-md waves-effect waves-light pull-right">New</button>
+	<div class="page-header">
+		<h1>Manage [[name]]</h1>
+	</div>
+	<div class="container">
+		<button type="button" ng-click="new()" class="btn btn-lg btn-primary pull-right">New</button>
 		<table class="table product-table">
 			<thead>
 				<tr>
@@ -60,10 +59,8 @@
 		</nav>
 	</div>
 
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/js/mdb.min.js"></script>
+	<script type="text/javascript" src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js" async></script>
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 

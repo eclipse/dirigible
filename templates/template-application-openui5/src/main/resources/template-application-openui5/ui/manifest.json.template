@@ -68,10 +68,14 @@
             },
 
             "routes": [
+                {
+                    "pattern": "",
+                    "name": "home"
+                },
             {{#uiManageModels_}}
                 {
-                    "pattern": "{{value.name}}",
-                    "name": "{{value.name}}",
+                    "pattern": "{{value.menuKey}}",
+                    "name": "{{value.menuKey}}",
                     "target": "{{value.name}}"
                 }{{^last}},{{/last}}
 			{{/uiManageModels_}}
@@ -82,7 +86,7 @@
                 "{{value.name}}": {
                 	"viewName": "{{value.name}}",
                 	"viewId": "{{value.name}}",
-                    "viewLevel": 1
+                    "viewLevel": {{index}}
                 }{{^last}},{{/last}}
             	{{/uiManageModels_}}
             }

@@ -8,7 +8,7 @@
 						<headerToolbar>
 							<Toolbar>
 								<content>
-									<Title text="[[fileName]]" level="H2"/>
+									<Title text="[[menuLabel]]" level="H2"/>
 										<ToolbarSpacer />
 										<Button id="addBtn"
 											press="onAddItem"
@@ -19,7 +19,7 @@
 						<columns>
 						[[#properties]]
 							<Column vAlign="Middle">
-								<Text text="[[name]]" />
+								<Text text="[[widgetLabel]]" />
 							</Column>
 						[[/properties]]
 							<Column hAlign="End"/>
@@ -27,10 +27,6 @@
 						<items>
 							<ColumnListItem>
 								<cells>
-									<!--
-									<ObjectIdentifier
-										title="{id}"/>
-									-->
 									[[#properties]]
 									<Text text="{[[name]]}" />
 									[[/properties]]

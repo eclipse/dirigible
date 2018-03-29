@@ -3,14 +3,14 @@ sap.ui.define([
 ], function(Controller) {
 	"use strict";
 
-	return Controller.extend("{{projectName}}.controller.{{fileName}}", {
+	return Controller.extend("[[projectName]].controller.[[fileName]]", {
 		onInit : function(){
 			// instantiate the View
 			var myView = this.getView(); 
 			
 			// create a Model and assign it to the View
 			var oModel = new sap.ui.model.json.JSONModel();
-			oModel.loadData("../../js/{{projectName}}/api/{{fileName}}.js"); // to load data to the model
+			oModel.loadData("../../js/[[projectName]]/api/[[fileName]].js"); // to load data to the model
 			myView.setModel(oModel);
 			
 			//identificate if this is add or edit
@@ -47,7 +47,7 @@ sap.ui.define([
 			this.getView().setModel(oModel, "dialog");
 
 			if (!this._oDialog) {
-				this._oDialog = new sap.ui.xmlfragment("{{projectName}}.view.AddEditDialog", this);
+				this._oDialog = new sap.ui.xmlfragment("[[projectName]].view.AddEditDialog[[fileName]]", this);
 				this.getView().addDependent(this._oDialog);
 			}
 			this._oDialog.open();	
@@ -55,17 +55,21 @@ sap.ui.define([
 		handleSaveDialog: function(){
 			var oView = this.getView(),
 				oDialogModel = oView.getModel("dialog"),
-				sName = oDialogModel.getProperty("/name"),
-				sDescription = oDialogModel.getProperty("/description"),
-				iPrice = oDialogModel.getProperty("/price"),
-				oModel = oView.getModel(),
+				oModel,
+				aProducts;
+				
+				[[#properties]]
+				var [[name]] = oDialogModel.getProperty("/[[name]]");
+				[[/properties]]
+
+				oModel = oView.getModel();
 				aProducts = oModel.getProperty("/");
 				
 			if (this.bAdd) {
 				aProducts.push({
-				name: sName,
-				description: sDescription,
-				price: iPrice
+				[[#properties]]
+					[[name]]: [[name]][[^last]],[[/last]]	
+				[[/properties]]
 			});	
 			}	
 
