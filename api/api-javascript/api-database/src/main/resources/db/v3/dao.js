@@ -695,11 +695,15 @@ DAO.prototype.list = function(settings) {
 
 	var parametericStatement = this.ormstatements.list.apply(this.ormstatements, [settings]);
 
-	//cleanup filtering value expressions if any
+	//cleanup filtering value expressions if any and convert to Number
 	for(var key in settings){
 		var s = settings[key];
-		if(String(s).startsWith('>') || String(s).startsWith('<'))
+		if(String(s).startsWith('>') || String(s).startsWith('<'))//TODO: improve
 			settings[key] = s.substring(1,s.length).trim();
+		var p = this.orm.getProperty(key)
+		if(p && p.type!=='VARCHAR' && !isNaN(s)){
+			settings[key] = +s;
+		}
 	}
   
   try {
