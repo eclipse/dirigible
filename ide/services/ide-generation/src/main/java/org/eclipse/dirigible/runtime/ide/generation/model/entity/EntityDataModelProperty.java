@@ -3,40 +3,27 @@ package org.eclipse.dirigible.runtime.ide.generation.model.entity;
 public class EntityDataModelProperty {
 	
 	private String name;
-	
+
 	private String dataName;
-	
 	private String dataType;
-	
 	private String dataLength;
-	
 	private String dataDefaultValue;
-	
 	private Boolean dataPrimaryKey;
-	
 	private Boolean dataAutoIncrement;
-	
 	private Boolean dataNotNull;
-	
 	private Boolean dataUnique;
-	
 	private String dataPrecision;
-	
 	private String dataScale;
-	
+
 	private String relationshipType;
-	
 	private String relationshipCardinality;
-	
 	private String relationshipName;
 	
 	private String widgetType;
-	
 	private String widgetLength;
-	
 	private String widgetPattern;
-	
 	private String widgetService;
+	private String widgetLabel;
 
 	/**
 	 * @return the name
@@ -290,4 +277,17 @@ public class EntityDataModelProperty {
 		this.widgetService = widgetService;
 	}
 
+	/**
+	 * @return the widgetLabel
+	 */
+	public String getWidgetLabel() {
+		return widgetLabel;
+	}
+
+	/**
+	 * @param widgetLabel the widgetLabel to set
+	 */
+	public void setWidgetLabel(String widgetLabel) {
+		this.widgetLabel = widgetLabel;
+	}
 }
