@@ -236,7 +236,9 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 			}
 		    //check for potential mismatch in path id and id in input
 		    var entityIdName = this._dao.orm.getPrimaryKey().name;
-		    if(entity[entityIdName]!==null && entity[entityIdName]!==undefined && id !== entity[entityIdName])
+		    if(entity[entityIdName]===null || entity[entityIdName]===undefined)
+		    	throwBadRequestError(context, "Invalid Client Input", undefined, "The JSON entity payload in the request does include a primary key property");
+		    if(id != entity[entityIdName])
 		    	throwBadRequestError(context, "Invalid Client Input", undefined, "The id parameter in the request path["+id+"] and the id in the payload["+entity[entityIdName]+"] do not match.");
 		    entity[entityIdName] = id;
 		    //prevent implicit type convertion
@@ -405,7 +407,7 @@ var ProtocolHandlerAdapter = function(oDataProtocolMappings){
 		
 			var entities;
 			if($count > 0){
-				entities = this._dao.list.apply(this._dao, args) || [];					
+				entities = this._dao.list.apply(this._dao, args) || [];
 				if(typeof handlerDef["afterQuery"] ==='function')
 					handlerDef["afterQuery"].call(_this, entities, context);
 				notify.call(this, 'postQuery', entities, context);								
