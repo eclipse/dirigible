@@ -61,7 +61,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-repository-database</artifactId>
+					<artifactId>dirigible-repository-local</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
