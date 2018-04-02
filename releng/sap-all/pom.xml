@@ -61,7 +61,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-repository-local</artifactId>
+					<artifactId>dirigible-repository-database</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -75,6 +75,10 @@
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
 					<artifactId>dirigible-database-derby</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-database-h2</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
