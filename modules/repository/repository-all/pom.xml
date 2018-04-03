@@ -37,6 +37,18 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-search</artifactId>
+            <version>3.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-zip</artifactId>
+            <version>3.2.0-SNAPSHOT</version>
+        </dependency>
+        <!--  Repository Implementations -->
+        <!-- 
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-database</artifactId>
             <version>3.2.0-SNAPSHOT</version>
         </dependency>
@@ -50,16 +62,7 @@
             <artifactId>dirigible-repository-master</artifactId>
             <version>3.2.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-search</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-zip</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
-        </dependency>
+         -->
     </dependencies>
 
 </project>

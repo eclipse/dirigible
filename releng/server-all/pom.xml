@@ -79,12 +79,11 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-repository-database</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-local</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Database -->
@@ -92,16 +91,11 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-database-managed</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-database-custom</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-h2</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Core Services -->
@@ -116,12 +110,6 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-services</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>dirigible-service-anonymous</groupId>
-					<artifactId>3.2.0-SNAPSHOT</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -133,14 +121,13 @@
 		<!-- CMS -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms</artifactId>
+		 	<artifactId>dirigible-cms-api</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>dirigible-cms-managed</groupId>
-					<artifactId>3.2.0-SNAPSHOT</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-cms-internal</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- BPM -->

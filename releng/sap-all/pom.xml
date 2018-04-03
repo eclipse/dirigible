@@ -58,12 +58,11 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-repository-local</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-database</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Database -->
@@ -71,20 +70,11 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-database-derby</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-database-h2</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-database-custom</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-managed</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Core Services -->
@@ -99,12 +89,6 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-services</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>dirigible-service-anonymous</groupId>
-					<artifactId>3.2.0-SNAPSHOT</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -116,14 +100,13 @@
 		<!-- CMS -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms</artifactId>
+		 	<artifactId>dirigible-cms-api</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>dirigible-cms-internal</groupId>
-					<artifactId>3.2.0-SNAPSHOT</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-cms-managed</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- BPM -->
