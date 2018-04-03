@@ -1,9 +1,0 @@
-[{
-	"name" : "veui5",
-	"icon" : "sap-icon://building",
-	"url" : "http://veui5infra.dhcp.wdf.sap.corp:8080/demokit/#/sample/sap.tnt.sample.ToolPage/preview"
-}, {
-	"name" : "again veui5",
-	"icon" : "sap-icon://employee",
-	"url" : "http://google.com"
-} ]

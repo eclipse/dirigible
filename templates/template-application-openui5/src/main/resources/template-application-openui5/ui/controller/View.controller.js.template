@@ -4,13 +4,15 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("[[projectName]].controller.[[fileName]]", {
+		sUrl: "../../js/[[projectName]]/api/[[fileName]].js",
+		
 		onInit : function(){
 			// instantiate the View
 			var myView = this.getView(); 
 			
 			// create a Model and assign it to the View
 			var oModel = new sap.ui.model.json.JSONModel();
-			oModel.loadData("../../js/[[projectName]]/api/[[fileName]].js"); // to load data to the model
+			oModel.loadData(this.sUrl); // to load data to the model
 			myView.setModel(oModel);
 			
 			//identificate if this is add or edit
@@ -56,25 +58,60 @@ sap.ui.define([
 			var oView = this.getView(),
 				oDialogModel = oView.getModel("dialog"),
 				oModel,
-				aProducts;
+				aProducts,
+				sType,
+				oEntity;
 				
-				[[#properties]]
-				var [[name]] = oDialogModel.getProperty("/[[name]]");
-				[[/properties]]
+			[[#properties]]
+			var [[name]] = oDialogModel.getProperty("/[[name]]");
+			[[/properties]]
 
-				oModel = oView.getModel();
-				aProducts = oModel.getProperty("/");
-				
-			if (this.bAdd) {
-				aProducts.push({
+			oModel = oView.getModel();
+			aProducts = oModel.getProperty("/");
+			
+			oEntity = {
 				[[#properties]]
 					[[name]]: [[name]][[^last]],[[/last]]	
-				[[/properties]]
-			});	
-			}	
+				[[/properties]]					
+			};
+			if (this.bAdd) {
+				sType = "POST";
+				this.sendAjax(sType, oEntity, null, function (data) {
+//					oEntity.productsId = data.id;
+					aProducts.push(oEntity);
+					oModel.refresh();
+				});
+			} else {
+				sType = "PUT";
+				this.sendAjax(sType, oEntity, productsId, function (data) {
+					oModel.refresh();
+				});
+			}
 
-			oModel.refresh();
 			this._oDialog.close();
+		},
+		sendAjax: function (sType, oData, iId, onSuccess, onError) {
+			var sUrl = this.sUrl;
+			if (iId) {
+				sUrl += "/" + iId;
+			}
+			jQuery.ajax({
+                type: sType,
+                url: sUrl,
+                contentType: "application/json",
+                async: true,
+                data: JSON.stringify(oData),
+                success: function (data, textStatus, jqXHR) {
+                    onSuccess(data, textStatus, jqXHR);
+                },
+                error: function (jqXHR) {
+                    if (onError) {
+                        onError(jqXHR);
+                    } else {
+                        this.defaultErrorFunction(jqXHR);
+                    }
+                }.bind(this)
+            });
 		},
 		handleCloseDialog: function(){
 			this._oDialog.close();
