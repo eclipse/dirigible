@@ -133,7 +133,9 @@ public class UpdateBuilder extends AbstractQuerySqlBuilder {
 		for (Entry<String, String> next : values.entrySet()) {
 			sql.append(SPACE).append(next.getKey()).append(SPACE).append(EQUALS).append(SPACE).append(next.getValue()).append(COMMA);
 		}
-		sql.delete(sql.length() - 1, sql.length());
+		if (values.entrySet().size() > 0) {
+			sql.delete(sql.length() - 1, sql.length());
+		}
 	}
 
 	/**
