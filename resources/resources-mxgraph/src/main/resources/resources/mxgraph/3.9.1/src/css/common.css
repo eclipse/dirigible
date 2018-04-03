@@ -171,7 +171,7 @@ td.mxPopupMenuIcon {
 	overflow:hidden;
 	top:0px;
 	left:0px;
-	max-height:24px;
+	/*max-height:24px;*/
 	height:36px;
 	right:0px;
 	padding:6px;
@@ -219,7 +219,7 @@ td.mxPopupMenuIcon {
 	overflow:hidden;
 	bottom:0px;
 	left:0px;
-	max-height:24px;
+	/*max-height:24px;*/
 	height:36px;
 	right:0px;
 	color:white;
