@@ -2,6 +2,7 @@
 // DOM node with the specified ID. This function is invoked
 // from the onLoad event handler of the document (see below).
 function main(container, outline, toolbar, sidebar, status) {
+	var $scope = $('#ModelerCtrl').scope();
 
 	// Load model file
 	function getResource(resourcePath) {
@@ -117,6 +118,9 @@ function main(container, outline, toolbar, sidebar, status) {
 		var graph = editor.graph;
 		var model = graph.model;
 		
+		$scope.$parent.editor = editor;
+		$scope.$parent.graph = graph;
+		
 		// Disables some global features
 		graph.setConnectable(true);
 		graph.setCellsDisconnectable(false);
@@ -211,15 +215,15 @@ function main(container, outline, toolbar, sidebar, status) {
 			if (this.isHtmlLabel(cell)) {
 				var label = '';
 				
-				if (cell.value.dataPrimaryKey) {
+				if (cell.value.dataPrimaryKey === 'true') {
 					label += '<i title="Primary Key" class="fa fa-key" width="16" height="16" align="top"></i>&nbsp;';
 				} else {
 					label += '<img src="../resources/mxgraph/3.9.1/images/spacer.gif" width="9" height="1">&nbsp;';
 				}
 										
-				if (cell.value.dataAutoIncrement) {
+				if (cell.value.dataAutoIncrement === 'true') {
 					label += '<i title="Auto Increment" class="fa fa-plus" width="16" height="16" align="top"></i>&nbsp;';
-				} else if (cell.value.dataUnique) {
+				} else if (cell.value.dataUnique === 'true') {
 					label += '<i title="Unique" class="fa fa-check" width="16" height="16" align="top"></i>&nbsp;';
 				} else {
 					label += '<img src="../resources/mxgraph/3.9.1/images/spacer.gif" width="9" height="1">&nbsp;';
@@ -283,8 +287,8 @@ function main(container, outline, toolbar, sidebar, status) {
 		firstProperty.value.name = 'entityNameId';
 		firstProperty.value.dataType = 'INTEGER';
 		firstProperty.value.dataLength = 0;
-		firstProperty.value.dataPrimaryKey = true;
-		firstProperty.value.dataAutoIncrement = true;
+		firstProperty.value.dataPrimaryKey = 'true';
+		firstProperty.value.dataAutoIncrement = 'true';
 		
 		entity.insert(firstProperty);
 		
@@ -297,14 +301,14 @@ function main(container, outline, toolbar, sidebar, status) {
 			for (var i=0; i < childCount; i++) {
 				var child = this.model.getChildAt(target, i);
 				
-				if (child.value.dataPrimaryKey) {
+				if (child.value.dataPrimaryKey === 'true') {
 					primaryKey = child;
 					break;
 				}
 			}
 			
 			if (primaryKey === null) {
-				showAlert('Drop', 'Target Entity must have a Primary Key');
+				showAlert('Drop', 'Target Entity must have a Primary Key', $scope);
 				return;
 			}
 		
@@ -330,6 +334,19 @@ function main(container, outline, toolbar, sidebar, status) {
 		var spacer = document.createElement('div');
 		spacer.style.display = 'inline';
 		spacer.style.padding = '8px';
+		
+		
+//		addToolbarButton(editor, toolbar, 'test', 'Test', 'wrench', true);
+//		// Defines a new test action
+//		editor.addAction('test', function(editor, cell) {
+//			if (!cell) {
+//				cell = graph.getSelectionCell();
+//			}
+//			$scope.$parent.cell = cell;
+//			$scope.$apply();
+//			$('#entityPropertiesOpen').click();
+//		});
+		
 
 		addToolbarButton(editor, toolbar, 'save', 'Save', 'save', true);
 
@@ -346,22 +363,27 @@ function main(container, outline, toolbar, sidebar, status) {
 			if (!cell) {
 				cell = graph.getSelectionCell();
 			}
+			$scope.$parent.cell = cell;
+			$scope.$apply();
 			
 			if (graph.isHtmlLabel(cell)) {
 				if (cell) {
 					// assume Entity's property
-					showProperties(graph, cell);					
+					//showProperties(graph, cell);
+					$('#propertyPropertiesOpen').click();
 				} else {
-					showAlert('Error', 'Select a property');
+					showAlert('Error', 'Select a property', $scope);
 				}
 			} else {
 				// assume Entity or Connector
 				if (cell.value && Entity.prototype.isPrototypeOf(cell.value)) {
 					// assume Entity
-					showEntityProperties(graph, cell);
+					//showEntityProperties(graph, cell);
+					$('#entityPropertiesOpen').click();
 				} else {
 					// assume Connector
-					showConnectorProperties(graph, cell);
+					//showConnectorProperties(graph, cell);
+					$('#connectorPropertiesOpen').click();
 				}
 				
 			}

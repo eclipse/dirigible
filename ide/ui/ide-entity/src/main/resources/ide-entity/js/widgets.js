@@ -52,7 +52,8 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint) {
 			pt.y -= pstate.y;
 
 			var columnCount = graph.model.getChildCount(parent)+1;
-			showPrompt('Enter name for new property', 'property'+columnCount, createNode);
+			//showPrompt('Enter name for new property', 'property'+columnCount, createNode);
+			createNode('property'+columnCount);
 		} else {
 			var entitiesCount = 0;
 			var childCount = graph.model.getChildCount(parent);
@@ -62,7 +63,8 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint) {
 					entitiesCount++;
 				}
 			}
-			showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
+			//showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
+			createNode('Entity'+(entitiesCount+1));
 		}
 		
 		function createNode(name) {
