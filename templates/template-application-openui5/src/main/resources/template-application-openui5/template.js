@@ -9,9 +9,21 @@ exports.getTemplate = function() {
 			'rename': 'api/{{fileName}}.js',
 			'collection': 'dataModels'
 		}, {
+			'location': '/template-application-openui5/api/shell/perspectives.js.template', 
+			'action': 'generate',
+			'rename': 'api/shell/perspectives.js'
+		}, {
 			'location': '/template-application-openui5/data/application.schema.template', 
 			'action': 'generate',
 			'rename': 'data/{{fileNameBase}}.schema'
+		}, {
+			'location': '/template-application-openui5/extensions/perspective/application.extension.template', 
+			'action': 'generate',
+			'rename': 'extensions/perspective/home.extension'
+		}, {
+			'location': '/template-application-openui5/extensions/perspective/application.js.template', 
+			'action': 'generate',
+			'rename': 'extensions/perspective/home.js'
 		}, {
 			'location': '/template-application-openui5/index.html.template', 
 			'action': 'generate',
@@ -61,11 +73,13 @@ exports.getTemplate = function() {
 			'location': '/template-application-openui5/ui/model/entity.json.template', 
 			'action': 'generate',
 			'rename': 'ui/model/entity.json'
-		}, {
-			'location': '/template-application-openui5/ui/model/modules.json.template', 
-			'action': 'generate',
-			'rename': 'ui/model/modules.json'
 		}],
-		'parameters': []
+		'parameters': [{
+			'name': 'extensionName',
+			'label': 'Extension Name'
+		}, {
+			'name': 'brand',
+			'label': 'Brand'
+		}]
 	};
 };

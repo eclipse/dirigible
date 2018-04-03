@@ -4,7 +4,7 @@
 		<pages>
 			<Page showHeader="false">
 				<content>
-					<Table items="{/}" growing="true" growingThreshold="2">
+					<Table items="{/}" growing="true" growingThreshold="5">
 						<headerToolbar>
 							<Toolbar>
 								<content>
