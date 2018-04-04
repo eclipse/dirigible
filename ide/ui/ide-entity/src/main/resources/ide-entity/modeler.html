@@ -38,6 +38,12 @@
 
 <script type="text/javascript" src="js/angular-dialogs.js"></script>
 
+<style>
+	.button:hover {
+		background: #333333 !important;
+	} 
+</style>
+
 </head>
 
 <body
@@ -146,9 +152,11 @@
 					</div>
 					<div class="row">
 					    <label class="col-xs-3 col-form-label" for="entityLayout">Layout Type: </label>
-					    <select class="col-xs-4" name="entityLayout" id="entityLayout" ng-model="ctrl.$scope.$parent.cell.value.layoutType">
-					    	<option ng-repeat="option in ctrl.layoutTypes" value="{{option.key}}">{{option.label}}</option>
-					    </select>
+					    <div class="col-xs-4">
+						    <select class="form-control" name="entityLayout" id="entityLayout" ng-model="ctrl.$scope.$parent.cell.value.layoutType">
+						    	<option ng-repeat="option in ctrl.layoutTypes" value="{{option.key}}">{{option.label}}</option>
+						    </select>
+						</div>
 					</div>
   
 				  </div>
@@ -200,9 +208,11 @@
 					</div>
 					<div class="row">
 					    <label class="col-xs-3 col-form-label" for="dataType">Data Type: </label>
-					    <select class="col-xs-4" name="d" id="dataType" ng-model="ctrl.$scope.$parent.cell.value.dataType">
-					    	<option ng-repeat="option in ctrl.dataTypes" value="{{option.key}}">{{option.label}}</option>
-					    </select>
+					    <div class="col-xs-4">
+						    <select class="form-control" name="dataType" id="dataType" ng-model="ctrl.$scope.$parent.cell.value.dataType">
+						    	<option ng-repeat="option in ctrl.dataTypes" value="{{option.key}}">{{option.label}}</option>
+						    </select>
+						</div>
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Length: </label>
@@ -253,9 +263,11 @@
 			      <div class="form-group row">
 			      	<div class="row">
 					    <label class="col-xs-3 col-form-label" for="widgetType">Widget Type: </label>
-					    <select class="col-xs-4" name="d" id="widgetType" ng-model="ctrl.$scope.$parent.cell.value.widgetType">
-					    	<option ng-repeat="option in ctrl.widgetTypes" value="{{option.key}}">{{option.label}}</option>
-					    </select>
+					    <div class="col-xs-4">
+						    <select class="col-xs-4" name="d" id="widgetType" ng-model="ctrl.$scope.$parent.cell.value.widgetType">
+						    	<option ng-repeat="option in ctrl.widgetTypes" value="{{option.key}}">{{option.label}}</option>
+						    </select>
+						</div>
 					</div>
 			      	<div class="row">
 						<label class="col-xs-3 col-form-label">Length: </label>
@@ -341,15 +353,19 @@
 					</div>
 					<div class="row">
 					    <label class="col-xs-3 col-form-label" for="relationshipType">Relationship Type: </label>
-					    <select class="col-xs-4" name="d" id="relationshipType" ng-model="ctrl.$scope.$parent.cell.source.value.relationshipType">
-					    	<option ng-repeat="option in ctrl.relationshipTypes" value="{{option.key}}">{{option.label}}</option>
-					    </select>
+					    <div class="col-xs-4">
+						    <select class="col-xs-4" name="d" id="relationshipType" ng-model="ctrl.$scope.$parent.cell.source.value.relationshipType">
+						    	<option ng-repeat="option in ctrl.relationshipTypes" value="{{option.key}}">{{option.label}}</option>
+						    </select>
+						</div>
 					</div>
 					<div class="row">
 					    <label class="col-xs-3 col-form-label" for="relationshipCardinality">Relationship Cardinality: </label>
-					    <select class="col-xs-4" name="d" id="relationshipCardinality" ng-model="ctrl.$scope.$parent.cell.value.relationshipCardinality">
-					    	<option ng-repeat="option in ctrl.relationshipCardinalities" value="{{option.key}}">{{option.label}}</option>
-					    </select>
+					    <div class="col-xs-4">
+						    <select class="col-xs-4" name="d" id="relationshipCardinality" ng-model="ctrl.$scope.$parent.cell.value.relationshipCardinality">
+						    	<option ng-repeat="option in ctrl.relationshipCardinalities" value="{{option.key}}">{{option.label}}</option>
+						    </select>
+						</div>
 					</div>
 				  </div>
 			    </div>

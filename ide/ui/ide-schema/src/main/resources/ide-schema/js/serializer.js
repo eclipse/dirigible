@@ -24,16 +24,16 @@ function createSchema(graph) {
 						if (column.columnLength !== null) {
 							schema.push(' length="'+column.columnLength+'"');
 						}
-						if (column.notNull) {
+						if (column.notNull === 'true') {
 							schema.push(' nullable="false"');
 						}
-						if (column.primaryKey) {
+						if (column.primaryKey === 'true') {
 							schema.push(' primaryKey="true"');
 						}
-						if (column.autoIncrement) {
+						if (column.autoIncrement === 'true') {
 							schema.push(' identity="true"');
 						}
-						if (column.unique) {
+						if (column.unique === 'true') {
 							schema.push(' unique="true"');
 						}
 						if (column.defaultValue !== null) {
@@ -99,13 +99,13 @@ function createSchemaJson(graph) {
 						column.name = childColumn.name;
 						column.type = childColumn.type;
 						column.length = childColumn.columnLength;
-						column.nullable = childColumn.notNull ? !childColumn.notNull : true;
-						column.primaryKey = childColumn.primaryKey ? childColumn.primaryKey : false;
-						column.identity = childColumn.autoIncrement ? childColumn.autoIncrement : false;
-						column.unique = childColumn.unique ? childColumn.unique : false;
-						column.defaultValue = childColumn.defaultValue ? childColumn.defaultValue : null;
-						column.precision = childColumn.precision ? childColumn.precision : null;
-						column.scale = childColumn.scale ? childColumn.scale : null;
+						column.nullable = childColumn.notNull  === 'true' ? !childColumn.notNull : true;
+						column.primaryKey = childColumn.primaryKey  === 'true' ? childColumn.primaryKey : false;
+						column.identity = childColumn.autoIncrement  === 'true' ? childColumn.autoIncrement : false;
+						column.unique = childColumn.unique  === 'true' ? childColumn.unique : false;
+						column.defaultValue = childColumn.defaultValue  === 'true' ? childColumn.defaultValue : null;
+						column.precision = childColumn.precision  === 'true' ? childColumn.precision : null;
+						column.scale = childColumn.scale  === 'true' ? childColumn.scale : null;
 					}
 					structure.columns.push(column);
 				}
