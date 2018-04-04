@@ -254,15 +254,15 @@ public class DataStructureModelFactory {
 	}
 
 	private static void setColumnAttributes(JsonObject column, DataStructureTableColumnModel columnModel) {
-		columnModel.setName(column.get("name") != null ? column.get("name").getAsString() : "unknown");
-		columnModel.setType(column.get("type") != null ? column.get("type").getAsString() : "unknown");
-		columnModel.setLength(column.get("length") != null ? column.get("length").getAsString() : null);
-		columnModel.setPrimaryKey(column.get("primaryKey") != null ? column.get("primaryKey").getAsBoolean() : false);
-		columnModel.setUnique(column.get("unique") != null ? column.get("unique").getAsBoolean() : false);
-		columnModel.setNullable(column.get("nullable") != null ? column.get("nullable").getAsBoolean() : false);
-		columnModel.setDefaultValue(column.get("defaultValue") != null ? column.get("defaultValue").getAsString() : null);
-		columnModel.setPrecision(column.get("precision") != null ? column.get("precision").getAsString() : null);
-		columnModel.setScale(column.get("scale") != null ? column.get("scale").getAsString() : null);
+		columnModel.setName(column.get("name") != null && !column.get("name").isJsonNull() ? column.get("name").getAsString() : "unknown");
+		columnModel.setType(column.get("type") != null && !column.get("type").isJsonNull()  ? column.get("type").getAsString() : "unknown");
+		columnModel.setLength(column.get("length") != null && !column.get("length").isJsonNull()  ? column.get("length").getAsString() : null);
+		columnModel.setPrimaryKey(column.get("primaryKey") != null && !column.get("primaryKey").isJsonNull()  ? column.get("primaryKey").getAsBoolean() : false);
+		columnModel.setUnique(column.get("unique") != null && !column.get("unique").isJsonNull()  ? column.get("unique").getAsBoolean() : false);
+		columnModel.setNullable(column.get("nullable") != null && !column.get("nullable").isJsonNull()  ? column.get("nullable").getAsBoolean() : false);
+		columnModel.setDefaultValue(column.get("defaultValue") != null && !column.get("defaultValue").isJsonNull()  ? column.get("defaultValue").getAsString() : null);
+		columnModel.setPrecision(column.get("precision") != null && !column.get("precision").isJsonNull()  ? column.get("precision").getAsString() : null);
+		columnModel.setScale(column.get("scale") != null && !column.get("scale").isJsonNull() ? column.get("scale").getAsString() : null);
 	}
 
 }
