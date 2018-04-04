@@ -2,6 +2,7 @@
 // DOM node with the specified ID. This function is invoked
 // from the onLoad event handler of the document (see below).
 function main(container, outline, toolbar, sidebar, status) {
+	var $scope = $('#ModelerCtrl').scope();
 	
 	// Load schema file
 	function getResource(resourcePath) {
@@ -117,6 +118,9 @@ function main(container, outline, toolbar, sidebar, status) {
 		var graph = editor.graph;
 		var model = graph.model;
 		
+		$scope.$parent.editor = editor;
+		$scope.$parent.graph = graph;
+		
 		// Disables some global features
 		graph.setConnectable(true);
 		graph.setCellsDisconnectable(false);
@@ -211,15 +215,15 @@ function main(container, outline, toolbar, sidebar, status) {
 			if (this.isHtmlLabel(cell)) {
 				var label = '';
 				
-				if (cell.value.primaryKey) {
+				if (cell.value.primaryKey === 'true') {
 					label += '<i title="Primary Key" class="fa fa-key" width="16" height="16" align="top"></i>&nbsp;';
 				} else {
 					label += '<img src="../resources/mxgraph/3.9.1/images/spacer.gif" width="9" height="1">&nbsp;';
 				}
 										
-				if (cell.value.autoIncrement) {
+				if (cell.value.autoIncrement === 'true') {
 					label += '<i title="Auto Increment" class="fa fa-plus" width="16" height="16" align="top"></i>&nbsp;';
-				} else if (cell.value.unique) {
+				} else if (cell.value.unique === 'true') {
 					label += '<i title="Unique" class="fa fa-check" width="16" height="16" align="top"></i>&nbsp;';
 				} else {
 					label += '<img src="../resources/mxgraph/3.9.1/images/spacer.gif" width="9" height="1">&nbsp;';
@@ -267,7 +271,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		var table = new mxCell(tableObject, new mxGeometry(0, 0, 200, 28), 'table');
 		
 		table.setVertex(true);
-		addSidebarIcon(graph, sidebar, 	table, 'table', 'Drag this to the diagram to create a new Table');
+		addSidebarIcon(graph, sidebar, 	table, 'table', 'Drag this to the diagram to create a new Table', $scope);
 		
 		// Adds sidebar icon for the column object
 		var columnObject = new Column('COLUMNNAME');
@@ -276,14 +280,14 @@ function main(container, outline, toolbar, sidebar, status) {
 		column.setVertex(true);
 		column.setConnectable(false);
 
-		addSidebarIcon(graph, sidebar, 	column, 'columns', 'Drag this to a Table to create a new Column');
+		addSidebarIcon(graph, sidebar, 	column, 'columns', 'Drag this to a Table to create a new Column', $scope);
 		
 		// Adds sidebar icon for the view object
 		var viewObject = new View('VIEWENAME');
 		var view = new mxCell(viewObject, new mxGeometry(0, 0, 200, 28), 'table');
 		
 		view.setVertex(true);
-		addSidebarIcon(graph, sidebar, 	view, 'th-large', 'Drag this to the diagram to create a new View');
+		addSidebarIcon(graph, sidebar, 	view, 'th-large', 'Drag this to the diagram to create a new View', $scope);
 		
 		// Adds primary key field into table
 		var firstColumn = column.clone();
@@ -291,8 +295,8 @@ function main(container, outline, toolbar, sidebar, status) {
 		firstColumn.value.name = 'TABLENAME_ID';
 		firstColumn.value.type = 'INTEGER';
 		firstColumn.value.columnLength = 0;
-		firstColumn.value.primaryKey = true;
-		firstColumn.value.autoIncrement = true;
+		firstColumn.value.primaryKey = 'true';
+		firstColumn.value.autoIncrement = 'true';
 		
 		table.insert(firstColumn);
 		
@@ -308,7 +312,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		graph.addEdge = function(edge, parent, source, target, index) {
 			// check whether the source is view
 			if (source.value.type === 'VIEW') {
-				showAlert('Drop', 'Source must be a Table not a View');
+				showAlert('Drop', 'Source must be a Table not a View', $scope);
 				return;
 			}
 			
@@ -325,8 +329,8 @@ function main(container, outline, toolbar, sidebar, status) {
 				}
 			}
 			
-			if (primaryKey === null) {
-				showAlert('Drop', 'Target Table must have a Primary Key');
+			if (primaryKey !== 'true') {
+				showAlert('Drop', 'Target Table must have a Primary Key', $scope);
 				return;
 			}
 		
@@ -368,28 +372,34 @@ function main(container, outline, toolbar, sidebar, status) {
 			if (!cell) {
 				cell = graph.getSelectionCell();
 			}
+			$scope.$parent.cell = cell;
+			$scope.$apply();
 			
 			if (graph.isHtmlLabel(cell)) {
 				if (cell) {
 					// assume column
 					if (cell.value.isSQL) {
 						// assume View's (the only) column
-						showQueryProperties(graph, cell);
+						//showQueryProperties(graph, cell);
+						$('#columnSQLPropertiesOpen').click();
 					} else {
 						// assume Table's column
-						showProperties(graph, cell);
+						//showProperties(graph, cell);
+						$('#columnPropertiesOpen').click();
 					}
 				} else {
-					showAlert('Error', 'Select a column');
+					showAlert('Error', 'Select a column', $scope);
 				}
 			} else {
 				// assume Table, View or Connector
 				if (cell.value) {
 					// assume Table or View
-					showStructureProperties(graph, cell);
+					//showStructureProperties(graph, cell);
+					$('#tablePropertiesOpen').click();
 				} else {
 					// assume connector
-					showConnectorProperties(graph, cell);
+					//showConnectorProperties(graph, cell);
+					$('#connectorPropertiesOpen').click();
 				}
 				
 			}
@@ -409,34 +419,37 @@ function main(container, outline, toolbar, sidebar, status) {
 		
 		toolbar.appendChild(spacer.cloneNode(true));
 
-		// Defines a create SQK action
+		// Defines a create SQL action
 		editor.addAction('showSql', function(editor, cell) {
 			var sql = createSql(graph);
 			
 			if (sql.length > 0) {
-				var textarea = document.createElement('textarea');
-				textarea.style.width = '410px';
-				textarea.style.height = '420px';
+//				var textarea = document.createElement('textarea');
+//				textarea.style.width = '410px';
+//				textarea.style.height = '420px';
+//				
+//				textarea.value = sql;
+//				showModalWindow('SQL', textarea, 410, 440);
 				
-				textarea.value = sql;
-				showModalWindow('SQL', textarea, 410, 440);
+				showInfo('Schema SQL', sql, $scope);
+				
 			} else {
-				showAlert('Warning', 'Schema is empty');
+				showAlert('Warning', 'Schema is empty', $scope);
 			}
 		});
 
 		addToolbarButton(editor, toolbar, 'showSql', 'Show SQL', 'database', true);
 
-		// Defines export XML action
-		editor.addAction('export', function(editor, cell) {
-			var textarea = document.createElement('textarea');
-			textarea.style.width = '410px';
-			textarea.style.height = '420px';
-			var enc = new mxCodec(mxUtils.createXmlDocument());
-			var node = enc.encode(editor.graph.getModel());
-			textarea.value = mxUtils.getPrettyXml(node);
-			showModalWindow('XML', textarea, 410, 440);
-		});
+//		// Defines export XML action
+//		editor.addAction('export', function(editor, cell) {
+//			var textarea = document.createElement('textarea');
+//			textarea.style.width = '410px';
+//			textarea.style.height = '420px';
+//			var enc = new mxCodec(mxUtils.createXmlDocument());
+//			var node = enc.encode(editor.graph.getModel());
+//			textarea.value = mxUtils.getPrettyXml(node);
+//			showModalWindow('XML', textarea, 410, 440);
+//		});
 
 		//addToolbarButton(editor, toolbar, 'export', 'Export XML', 'download', true);
 		

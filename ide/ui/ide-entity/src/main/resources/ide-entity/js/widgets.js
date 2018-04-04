@@ -24,7 +24,7 @@ function addToolbarButton(editor, toolbar, action, label, image, isTransparent) 
 	toolbar.appendChild(button);
 }
 
-function addSidebarIcon(graph, sidebar, prototype, image, hint) {
+function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	// Function that is executed when the image is dropped on
 	// the graph. The cell argument points to the cell under
 	// the mousepointer if there is one.
@@ -44,7 +44,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint) {
 			var pstate = graph.getView().getState(parent);
 			
 			if (parent === null || pstate === null) {
-				showAlert('Drop', 'Drop target must be a table');
+				showAlert('Drop', 'Drop target must be a table', $scope);
 				return;
 			}
 			

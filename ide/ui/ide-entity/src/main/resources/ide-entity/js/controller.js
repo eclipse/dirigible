@@ -270,7 +270,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		var entity = new mxCell(entityObject, new mxGeometry(0, 0, 200, 28), 'entity');
 		
 		entity.setVertex(true);
-		addSidebarIcon(graph, sidebar, 	entity, 'square-o', 'Drag this to the diagram to create a new Entity');
+		addSidebarIcon(graph, sidebar, 	entity, 'list-alt', 'Drag this to the diagram to create a new Entity', $scope);
 		
 		// Adds sidebar icon for the property object
 		var propertyObject = new Property('propertyName');
@@ -279,7 +279,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		property.setVertex(true);
 		property.setConnectable(false);
 
-		addSidebarIcon(graph, sidebar, 	property, 'minus-square-o', 'Drag this to a Entity to create a new Property');
+		addSidebarIcon(graph, sidebar, 	property, 'align-justify', 'Drag this to a Entity to create a new Property', $scope);
 		
 		// Adds primary key field into entity
 		var firstProperty = property.clone();

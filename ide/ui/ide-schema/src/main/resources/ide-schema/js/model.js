@@ -6,12 +6,12 @@ function Column(name) {
 Column.prototype.type = 'VARCHAR';
 Column.prototype.columnLength = '20';
 Column.prototype.defaultValue = null;
-Column.prototype.primaryKey = false;
-Column.prototype.autoIncrement = false;
-Column.prototype.notNull = false;
-Column.prototype.unique = false;
-Column.prototype.precision = '';
-Column.prototype.scale = '';
+Column.prototype.primaryKey = 'false';
+Column.prototype.autoIncrement = 'false';
+Column.prototype.notNull = 'false';
+Column.prototype.unique = 'false';
+Column.prototype.precision = null;
+Column.prototype.scale = null;
 
 Column.prototype.clone = function() {
 	return mxUtils.clone(this);

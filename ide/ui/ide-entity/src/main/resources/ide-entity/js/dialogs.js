@@ -1,8 +1,8 @@
 
 function showAlert(title, message, $scope) {
-	$scope.$parent.alertTitle = 'Drop';
+	$scope.$parent.alertTitle = title;
 	$scope.$parent.alertStatus = 'warning';
-	$scope.$parent.alertMessage = 'Target Entity must have a Primary Key';
+	$scope.$parent.alertMessage = message;
 	$scope.$apply();
 	$('#alertOpen').click();
 }

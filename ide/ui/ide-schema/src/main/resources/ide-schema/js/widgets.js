@@ -24,7 +24,7 @@ function addToolbarButton(editor, toolbar, action, label, image, isTransparent) 
 	toolbar.appendChild(button);
 }
 
-function addSidebarIcon(graph, sidebar, prototype, image, hint) {
+function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	// Function that is executed when the image is dropped on
 	// the graph. The cell argument points to the cell under
 	// the mousepointer if there is one.
@@ -44,12 +44,12 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint) {
 			var pstate = graph.getView().getState(parent);
 			
 			if (parent === null || pstate === null) {
-				showAlert('Drop', 'Drop target must be a table');
+				showAlert('Drop', 'Drop target must be a table', $scope);
 				return;
 			}
 			
 			if (pstate.cell.value.type === "VIEW") {
-				showAlert('Drop', 'Drop target must be a table not a view');
+				showAlert('Drop', 'Drop target must be a table not a view', $scope);
 				return;
 			}
 			
@@ -58,7 +58,8 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint) {
 
 			var columnCount = graph.model.getChildCount(parent)+1;
 			//name = mxUtils.prompt('Enter name for new column', 'COLUMN'+columnCount);
-			showPrompt('Enter name for new column', 'COLUMN'+columnCount, createNode);
+			//showPrompt('Enter name for new column', 'COLUMN'+columnCount, createNode);
+			createNode('COLUMN'+columnCount);
 		} else {
 			var tableCount = 0;
 			var childCount = graph.model.getChildCount(parent);
@@ -69,7 +70,8 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint) {
 				}
 			}
 			var prefix = prototype.value.name === "TABLENAME" ? "TABLE" : "VIEW";
-			showPrompt('Enter name for new table', prefix+(tableCount+1), createNode);
+			//showPrompt('Enter name for new table', prefix+(tableCount+1), createNode);
+			createNode(prefix+(tableCount+1));
 		}
 		
 		function createNode(name) {
@@ -153,7 +155,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_GRADIENTCOLOR] = '#111';//'#337ab7';
 	style[mxConstants.STYLE_FILLCOLOR] = '#111';//'#337ab7';
 	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#000';//'#006292';
+	style[mxConstants.STYLE_STROKECOLOR] = '#999';//'#006292';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
@@ -167,7 +169,7 @@ function configureStylesheet(graph) {
 
 	style = graph.stylesheet.getDefaultEdgeStyle();
 	style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-	style[mxConstants.STYLE_STROKECOLOR] = '#111';//'#337ab7';
+	style[mxConstants.STYLE_STROKECOLOR] = '#999';//'#337ab7';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
