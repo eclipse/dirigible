@@ -112,15 +112,15 @@ var mimeSetting = function(mimeSettingName, mimeTypes){
 
 /**
  * Constructor function for ResourceMethod instances. 
- * All parameters of the funciton are optional. 
+ * All parameters of the function are optional. 
  * 
- * Providing oConfiguration will initialize this instance with some configuration so the setup does not start 
+ * Providing oConfiguration will initialize this instance with some initial configuration instead of starting
  * entirely from scratch. Note that the configuration object schema must be compliant with the one produced by
- * the ResourceMethod itself. If this parameter is mited, setup will start from scratch.
+ * the ResourceMethod itself. If this parameter is omited, setup will start from scratch.
  * 
- * Provisioning controller, will inject a reference ot the execute method of the controller so that it can be 
- * fluently invoked in the scope of this ResourceMehtod instance as part of the method chaining flow. The function 
- * is bound to the controller instance for this ResourceMethod. 
+ * Provisioning controller, will inject a reference to the execute method of the controller so that it can be 
+ * fluently invoked in the scope of this ResourceMehtod instance as part of the method chaining flow. The execute 
+ * function scope is bound to the controller instance for this ResourceMethod. 
  * 
  * @example
  * ```js
@@ -179,6 +179,7 @@ var ResourceMethod = function(oConfiguration, controller, resource, mappings){
 	}
 	if(mappings){
 		this.resource = mappings.resource.bind(mappings);
+		this.resourcePath = this.path = this.resource;//aliases
 	}
 	return this;
 };
@@ -209,7 +210,7 @@ ResourceMethod.prototype.configuration = function(){
  * 	.
  * ```
  * 
- * Although it's likely that most implementations will resort to single, or a range of compatible input MIME types, it is 
+ * Although it's likely that most implementations will resort to single, or a range of compatible input MIME types, this is 
  * entirely up to the request processing function implementation. For example it may be capable of processing content with 
  * various, possibly incompatible MIME types. Take care to make sure that the consumes constraint will constrain the requests
  * only to those that the request processing function can really process. 
@@ -271,8 +272,8 @@ ResourceMethod.prototype.produces = function(mimeTypes){
  * Applies a callback function for the before phase of processing a matched resource request. If a callback function
  * is supplied, it is executed right before the serve function. The before function may throw errors, which will move
  * the processing flow to the catch and then the finally functions (if any). The before function is suitable for processing 
- * pre-conditions to the serve. They could be euqally well implemented also in the serve function, but using before gives
- * a chance for clear spearation of concerns in the code and easier to maintain.
+ * pre-conditions to the serve operation. They could implemented in the serve function just as well, but using before gives
+ * a chance for clear spearation of concerns in the code and is easier to maintain.
  * 
  * @example
  * ```js
@@ -372,7 +373,7 @@ Resource.prototype.path = function(sPath){
  * @param {Object|Object[]} oConfiguration - the handler specification(s) for this HTTP method. Can be a single object or array.
  * @returns {ResourceMethod|Object[]} 
  */
-Resource.prototype.method = Resource.prototype.method = function(sHttpMethod, oConfiguration){
+Resource.prototype.method = function(sHttpMethod, oConfiguration){
 	if(sHttpMethod===undefined)
 		throw new Error('Illegal sHttpMethod argument: ' + sHttpMethod);	
 
@@ -407,8 +408,10 @@ var buildMethod = function(sMethodName, args){
 	if(args.length>0){
 		if(typeof args[0] === 'function')
 			return this.method(sMethodName).serve(args[0]);
-		else (typeof args[0] === 'object')
+		else if(typeof args[0] === 'object')
 			return this.method(sMethodName, args[0]);
+		else
+			throw Error('Invalid argument: Resource.' + sMethodName + ' method first argument must be valid javascript function or configuration object, but instead is ' + (typeof args[0]) + ' ' + args[0]);
 	} else {
 		return this.method(sMethodName);
 	}
@@ -537,6 +540,10 @@ Resource.prototype.readonly = function(){
 
 /**
  * Constructor function for ResourceMappings instances.
+ * A ResourceMapping abstracts the mappings between resource URL path templates and their corresponding resource handler
+ * specifications. Generally, it's used internally by the HttpController exposed by the service factory function adn it is 
+ * where all settings provided by the fluent API ultimately end up. Another utilization of it is as initial configuration, 
+ * which is less error prone and config changes-friendly than constructing JSON manually for the same purpose.
  * 
  * @class
  * @param {Object} [oConfiguration]
@@ -704,9 +711,9 @@ var HttpController = exports.HttpController = function(oMappings){
 			return true;
 		var targetM = target.split('/');
 		var sourceM = source.split('/');
-		if(targetM[0] === '*' && targetM[1] === sourceM[1])
+		if((targetM[0] === '*' && targetM[1] === sourceM[1]) || (source[0] === '*' && targetM[1] === sourceM[1]) )
 			return true;
-		if(targetM[1] === '*' && targetM[0] === sourceM[0])
+		if((targetM[1] === '*' && targetM[0] === sourceM[0]) || (sourceM[1] === '*' && targetM[0] === sourceM[0]))
 			return true;		
 	};
 	
@@ -740,7 +747,7 @@ var HttpController = exports.HttpController = function(oMappings){
 		
 		var isConsumeMatched = false;
 		var contentTypeMediaTypes = normalizeMediaTypeHeaderValue(request.getContentType());
-		if(!consumesMediaTypes || consumesMediaTypes.indexOf('*/*')>-1){ //input media type is not restricted
+		if(!consumesMediaTypes || consumesMediaTypes.indexOf('*')>-1){ //input media type is not restricted
 			isConsumeMatched = true;
 		} else  {
 			var matchedConsumesMIME;
@@ -853,7 +860,20 @@ var HttpController = exports.HttpController = function(oMappings){
 	}
 	
 	this.resource = this.resourcePath = this.resourceMappings.resourcePath.bind(this.resourceMappings);
-		
+	
+	//weave-in HTTP method-based factory functions - shortcut for service().resource(sPath).method
+	['get','post','put','delete','remove','method'].forEach(function(sMethodName){
+			this[sMethodName] = function(sPath, sVerb, arrConsumes, arrProduces){
+				if(arguments.length < 1)
+					throw Error('Insufficient arguments provided to HttpController method ' + sMethodName + '.');
+				if(sPath === undefined)
+					sPath = "";
+				var resource = this.resourceMappings.find(sPath, sVerb, arrConsumes, arrProduces) || this.resourceMappings.resource(sPath);	
+				resource[sMethodName]['apply'](resource, Array.prototype.slice.call(arguments, 1));
+				return this;
+			}.bind(this);
+		}.bind(this));
+			
 };
 
 HttpController.prototype.mappings = function() {
