@@ -1,0 +1,35 @@
+var daoApi = require('db/v3/dao');
+var dao = daoApi.create({
+	"table": "${dataName}",
+	"properties": [
+#foreach ($property in $properties) 
+		{
+			"name": #if($property.dataPrimaryKey)"id"#else"${property.name}"#end,
+			"column": "${property.dataName}",
+			"type":"${property.dataType}",
+			"id": ${property.dataPrimaryKey},
+			"required": ${property.dataNullable}
+	}#if($foreach.hasNext),#end
+#end
+	]
+});
+
+exports.list = function(settings) {
+	return dao.list(settings);
+};
+
+exports.get = function(id) {
+	return dao.find(id);
+};
+
+exports.create = function(entity) {
+	return dao.insert(entity);
+};
+
+exports.update = function(entity) {
+	return dao.update(entity);
+};
+
+exports.delete = function(id) {
+	dao.remove(id);
+};

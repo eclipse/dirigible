@@ -1,19 +1,46 @@
-var rsdata = require('http/v3/rs-data'); 
+var rs = require('http/v3/rs');
+var dao = require('Template - Full-stack Application (Angular)/data/dao/Template - Full-stack Application (Angular)');
+var http = require('Template - Full-stack Application (Angular)/api/http');
 
-rsdata
-  .service()
-    .dao({
-	  "table": "{{dataName}}",
-	  "properties": [
-	  {{#properties_}}
-	  	{
-		  	"name": "{{value.name}}",
-			"column": "{{value.dataName}}",
-			"type":"{{value.dataType}}",
-			"id": "{{value.dataPrimaryKey}}",
-			"required": "{{value.dataNullable}}"
-		}{{^last}},{{/last}}
-	  {{/properties_}}
-	  ]
-    })
-  .execute();
+rs.service()
+	.resource('')
+		.get(function() {
+			var entities = dao.list();
+			http.sendResponseOk(entities);
+		})
+	.resource('{id}')
+		.get(function(ctx) {
+			var id = ctx.pathParameters.id;
+			var entity = dao.get(id);
+			if (entity) {
+			    http.sendResponseOk(entity);
+			} else {
+				http.sendResponseNotFound('Template - Full-stack Application (Angular) not found');
+			}
+		})
+	.resource('')
+		.post(function(ctx, request, response) {
+			var entity = request.getJSON();
+			entity.id = dao.create(entity);
+			response.setHeader('Content-Location', '/services/v3/js/Template - Full-stack Application (Angular)/api/Template - Full-stack Application (Angular).js/' + entity.id);
+			http.sendResponseCreated(entity);
+		})
+	.resource('{id}')
+		.put(function(ctx, request) {
+			var entity = request.getJSON();
+			entity.id = ctx.pathParameters.id;
+			dao.update(entity);
+			http.sendResponseOk(entity);
+		})
+	.resource('{id}')
+		.delete(function(ctx) {
+			var id = ctx.pathParameters.id;
+			var entity = dao.get(id);
+			if (entity) {
+				dao.delete(id);
+				http.sendResponseNoContent();
+			} else {
+				http.sendResponseNotFound('Template - Full-stack Application (Angular) not found');
+			}
+		})
+.execute();

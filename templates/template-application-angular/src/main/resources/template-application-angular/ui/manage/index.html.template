@@ -14,26 +14,30 @@
 
 <body ng-controller="PageController">
 	<div class="page-header">
-		<h1>Manage [[name]]</h1>
+		<h1>Manage Template - Full-stack Application (Angular)</h1>
 	</div>
 	<div class="container">
 		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-primary pull-right">New</button>
 		<table class="table product-table">
 			<thead>
 				<tr>
-					<th></th>
-					[[#properties]]
-					<th class="text-capitalize">[[name]]</th>
-					[[/properties]]
+					<th>#</th>
+#foreach ($property in $properties) 
+#if(!$property.dataPrimaryKey)
+					<th class="text-capitalize">${property.name}</th>
+#end
+#end
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="next in data">
 					<td>{{$index + 1}}</td>
-					[[#properties]]
-					<td>{{next.[[name]]}}</td>
-					[[/properties]]
+#foreach ($property in $properties) 
+#if(!$property.dataPrimaryKey)
+					<td>{{next.${property.name}}}</td>
+#end
+#end
 					<td>
 						<i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
 						<i class="close fa fa-2x fa-pencil" ng-click="openEditDialog(next)" style="margin-right: 0.5em"></i>
@@ -66,24 +70,32 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+					<h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create entity</h3>
+					<h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update entity</h3>
+					<h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete entity</h3>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<form>
-						[[#properties]]
+					<form ng-hide="actionType === 'delete'">
+#foreach ($property in $properties)
+#if(!$property.dataPrimaryKey)
 						<div class="form-group">
-							<label>[[widgetLabel]]</label>
-							<input type="[[widgetType]]" class="form-control" placeholder="Enter [[widgetLabel]]" ng-model="entity.[[name]]">
+							<label>${property.widgetLabel}</label>
+							<input type="${property.widgetType}" class="form-control" placeholder="Enter ${property.widgetLabel.toLowerCase()}" ng-model="entity.${property.name}">
 						</div>
-						[[/properties]]
+#end
+#end
 					</form>
+					<div ng-show="actionType === 'delete'">
+						You are going to delete Template - Full-stack Application (Angular) with <b>Id = {{entity.id}}</b>.
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" ng-show="actionType === 'new'" ng-click="create()">Save</button>
 					<button type="button" class="btn btn-primary" ng-show="actionType === 'update'" ng-click="update()">Update</button>
+					<button type="button" class="btn btn-primary" ng-show="actionType === 'delete'" ng-click="delete()">Delete</button>
 					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 				</div>
 			</div>
@@ -96,11 +108,12 @@
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 
+#set($dollar = '$' )
 	<script type="text/javascript">
 		angular.module('page', []);
 		angular.module('page').controller('PageController', function ($scope, $http) {
 
-			var api = '../../../../js/[[projectName]]/api/[[name]].js';
+			var api = '/services/v3/js/Template - Full-stack Application (Angular)/api/Template - Full-stack Application (Angular).js';
 
 			function load() {
 				$http.get(api)
@@ -123,11 +136,18 @@
 			};
 
 			$scope.openDeleteDialog = function(entity) {
-				toggleDeleteModal();
+				$scope.actionType = 'delete';
+				$scope.entity = entity;
+				toggleEntityModal();
+			};
+
+			$scope.close = function() {
+				load();
+				toggleEntityModal();
 			};
 
 			$scope.create = function() {
-				$http.post(api, JSON.stringify($scope.entity))
+				${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
 				.success(function(data) {
 					load();
 					toggleEntityModal();
@@ -138,7 +158,7 @@
 			};
 
 			$scope.update = function() {
-				$http.put(api, JSON.stringify($scope.entity))
+				${dollar}http.put(api + '/' + ${dollar}scope.entity.id, JSON.stringify(${dollar}scope.entity))
 				.success(function(data) {
 					load();
 					toggleEntityModal();
@@ -148,10 +168,10 @@
 			};
 
 			$scope.delete = function() {
-				$http.delete(api)
+				${dollar}http.delete(api + '/' + ${dollar}scope.entity.id)
 				.success(function(data) {
 					load();
-					toggleDeleteModal();
+					toggleEntityModal();
 				}).error(function(data) {
 					alert(JSON.stringify(data));
 				});
@@ -159,10 +179,6 @@
 
 			function toggleEntityModal() {
 				$('#entityModal').modal('toggle');
-			}
-
-			function toggleDeleteModal() {
-				$('#deleteModal').modal('toggle');
 			}
   	  });
 	</script>
