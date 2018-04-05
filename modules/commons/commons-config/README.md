@@ -28,10 +28,6 @@
 - `DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE`: (true | false)
 - `DIRIGIBLE_REPOSITORY_SEARCH_INDEX_LOCATION`: (e.g. 'dirigible/repository/index')
 
-### Tests
-
-- `DIRIGIBLE_TEST_MODE_ENABLED`: (true | false)
-
 ### Database
 
 - `DIRIGIBLE_DATABASE_PROVIDER`: (local : managed : custom)
