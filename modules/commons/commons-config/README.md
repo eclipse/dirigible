@@ -2,11 +2,14 @@
 
 ## Repository
 
+- `DIRIGIBLE_REPOSITORY_PROVIDER`: (local | database)
+
+### Database Repository
+
 - `DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME`: (default: DefaultDB)
 
 ### Local Repository
 
-- `DIRIGIBLE_REPOSITORY_PROVIDER`: (local | database)
 - `DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER`: (e.g. '.')
 - `DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE`: (true | false)
 
