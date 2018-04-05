@@ -70,7 +70,7 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 		 		this.$log.info('Binding to parameter[{}]: {}', index, val);
 		 		_parameterBindings.push({
 		 			"type": parameters[i].type,
-		 			"value": val
+		 			"value": parseValue(parameters[i].type, val)
 		 		});
 		 	} 
 	 	}
@@ -85,7 +85,18 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 	 	
 	 	return result !== null ? result : [];
 	};
-	
+
+	function parseValue(type, value) {
+		switch (type.toUpperCase()) {
+			case 'INTEGER':
+				return parseInt(value);
+			case 'DOUBLE':
+			case 'FLOAT':
+				return parseFloat(value);
+			default:
+				return value;
+		}
+	}
 };
 
 DAO.prototype.notify = function(event){
