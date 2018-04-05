@@ -387,6 +387,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			for (EntityDataModelProperty property : entity.getProperties()) {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();
 				propertyModel.put("name", property.getName());
+				propertyModel.put("dataAutoIncrement", property.getDataAutoIncrement());
+				propertyModel.put("widgetLength", property.getWidgetLength());
 				propertyModel.put("widgetLength", property.getWidgetLength());
 				propertyModel.put("widgetPattern", property.getWidgetPattern());
 				propertyModel.put("widgetService", property.getWidgetService());
