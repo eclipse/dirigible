@@ -11,7 +11,7 @@
 exports.getPerspective = function() {
 	return {
 		'name': '{{brand}}',
-		'link': '../{{projectName}}/index.html',
+		'link': '/services/v3/web/{{projectName}}/index.html',
 		'order': '999',
 		'image': 'life-ring'
 	};

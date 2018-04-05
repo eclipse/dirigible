@@ -4,10 +4,15 @@ exports.getTemplate = function() {
 		'description': 'Full-stack Application with a Database Schema, a set of REST Services and an AngularJS User Interfaces',
 		'model':'true',
 		'sources': [{
+			'location': '/template-application-angular/api/http.js.template', 
+			'action': 'copy',
+			'rename': 'api/http.js',
+		}, {
 			'location': '/template-application-angular/api/application.js.template', 
 			'action': 'generate',
 			'rename': 'api/{{fileName}}.js',
-			'collection': 'dataModels'
+			'collection': 'dataModels',
+			'engine': 'velocity'
 		}, {
 			'location': '/template-application-angular/api/shell/menu.js.template', 
 			'action': 'generate',
@@ -24,6 +29,12 @@ exports.getTemplate = function() {
 			'location': '/template-application-angular/data/application.schema.template', 
 			'action': 'generate',
 			'rename': 'data/{{fileNameBase}}.schema'
+		}, {
+			'location': '/template-application-angular/data/dao/application.js.template', 
+			'action': 'generate',
+			'rename': 'data/dao/{{fileName}}.js',
+			'collection': 'dataModels',
+			'engine': 'velocity'
 		}, {
 			'location': '/template-application-angular/extensions/menu/application.extension.template', 
 			'action': 'generate',
@@ -68,9 +79,8 @@ exports.getTemplate = function() {
 			'location': '/template-application-angular/ui/manage/index.html.template', 
 			'action': 'generate',
 			'rename': 'ui/{{fileName}}/index.html',
-			'start' : '[[',
-			'end' : ']]',
-			'collection': 'uiManageModels'
+			'collection': 'uiManageModels',
+			'engine': 'velocity'
 		}, {
 			'location': '/template-application-angular/ui/list.html.template', 
 			'action': 'generate',

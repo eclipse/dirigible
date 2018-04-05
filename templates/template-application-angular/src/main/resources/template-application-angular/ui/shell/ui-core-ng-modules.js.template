@@ -58,17 +58,17 @@ angular.module('ideUiCore', ['ngResource'])
 	}
 }])
 .service('Perspectives', ['$resource', function($resource){
-	return $resource('../../js/{{projectName}}/api/shell/perspectives.js');
+	return $resource('/services/v3/js/{{projectName}}/api/shell/perspectives.js');
 }])
 .service('Menu', ['$resource', function($resource){
-	return $resource('../../js/{{projectName}}/api/shell/menu.js');
+	return $resource('/services/v3/js/{{projectName}}/api/shell/menu.js');
 }])
 .service('User', ['$http', function($http){
 	return {
 		get: function(){
 			var user = {};
 			$http({
-				url: '../../js/ide/services/user-name.js',
+				url: '/services/v3/js/ide/services/user-name.js',
 				method: 'GET'
 			}).success(function(data){
 				user.name = data;
@@ -163,7 +163,7 @@ angular.module('ideUiCore', ['ngResource'])
 		ViewRegistrySvc.factory(factoryName, ViewFactories[factoryName]);
 	});		
 	var get = function(){
-		return $resource('../../js/{{projectName}}/api/shell/views.js').query().$promise
+		return $resource('/services/v3/js/{{projectName}}/api/shell/views.js').query().$promise
 				.then(function(data){
 					data = data.map(function(v){
 						v.id = v.id || v.name.toLowerCase();
@@ -175,12 +175,6 @@ angular.module('ideUiCore', ['ngResource'])
 						v.region = v.region || 'left-top';
 						return v;
 					});
-					//no extension point. provisioned "manually"
-					data.push({ "id": "editor", "factory": "editor", "region": "center-middle", "label":"Editor", "settings": {}});
-					//no extension point yet
-					data.push({ "id": "result", "factory": "frame", "region": "center-bottom", "label":"Result", "settings": {"path":  "../ide-database/sql/result.html"}});
-					data.push({ "id": "properties", "factory": "frame", "region": "center-bottom", "label":"Properties", "settings": {"path":  "../ide/properties.html"}});
-					data.push({ "id": "sql", "factory": "frame", "region": "center-middle", "label":"SQL", "settings": {"path":  "../ide-database/sql/editor.html"}});
 					//register views
 					data.forEach(function(viewDef){
 						ViewRegistrySvc.view(viewDef.id, viewDef.factory, viewDef.region, viewDef.label,  viewDef.settings);
@@ -216,21 +210,6 @@ angular.module('ideUiCore', ['ngResource'])
 				loadMenu.call(scope);
 			scope.menuClick = function(item) {
 				Layouts.manager.openView(item.id);
-//			scope.menuClick = function(item, subItem) {
-//				if(item.name === 'Show View'){
-//					// open view
-//					Layouts.manager.openView(subItem.name.toLowerCase());
-//				} else if(item.name === 'Open Perspective'){
-//					// open perspective`
-//					window.open(subItem.onClick.substring(subItem.onClick.indexOf('(')+2, subItem.onClick.indexOf(',')-1));//TODO: change the menu service ot provide paths instead
-//				} else {
-//					if (item.event === 'open') {
-//						window.open(item.data, '_blank');
-//					} else {
-//						//eval(item.onClick);
-//						messageHub.send(item.event, item.data, true);	
-//					}
-//				}
 			};
 			scope.selectTheme = function(themeName){
 				Theme.changeTheme(themeName);
