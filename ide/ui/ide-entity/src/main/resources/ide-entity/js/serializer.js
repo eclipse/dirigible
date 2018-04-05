@@ -82,8 +82,8 @@ function createModel(graph) {
 					if (property.widgetService !== null) {
 						model.push(' widgetService="'+property.widgetService+'"');
 					}
-					if (property.isMajor) {
-						model.push(' isMajor="true"');
+					if (property.widgetIsMajor) {
+						model.push(' widgetIsMajor="true"');
 					}
 					
 					model.push('></property>\n');
@@ -140,7 +140,6 @@ function createModelJson(graph) {
 					var property = {};
 					property.dataName = childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase();
 					property.name = childProperty.name;
-					property.isMajor = childProperty.isMajor ? childProperty.isMajor : true;
 					property.dataName = childProperty.dataName;
 					property.dataType = childProperty.dataType;
 					property.dataLength = childProperty.dataLength;
@@ -162,6 +161,7 @@ function createModelJson(graph) {
 					property.widgetFormat = childProperty.widgetFormat;
 					property.widgetSection = childProperty.widgetSection;
 					property.widgetService = childProperty.widgetService;
+					property.widgetIsMajor = childProperty.widgetIsMajor ? childProperty.widgetIsMajor : false;
 					entity.properties.push(property);
 				}
 			}
