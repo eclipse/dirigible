@@ -24,6 +24,7 @@ public class EntityDataModelProperty {
 	private String widgetPattern;
 	private String widgetService;
 	private String widgetLabel;
+	private Boolean widgetIsMajor;
 
 	/**
 	 * @return the name
@@ -37,6 +38,20 @@ public class EntityDataModelProperty {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the widgetIsMajor
+	 */
+	public Boolean getWidgetIsMajor() {
+		return widgetIsMajor;
+	}
+
+	/**
+	 * @param widgetIsMajor the widgetIsMajor to set
+	 */
+	public void setWidgetIsMajor(Boolean widgetIsMajor) {
+		this.widgetIsMajor = widgetIsMajor;
 	}
 
 	/**

@@ -394,6 +394,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				propertyModel.put("widgetService", property.getWidgetService());
 				propertyModel.put("widgetType", property.getWidgetType());
 				propertyModel.put("widgetLabel", property.getWidgetLabel());
+				propertyModel.put("widgetIsMajor", property.getWidgetIsMajor());
 				propertiesModels.add(propertyModel);
 			}
 			uiModel.put("properties", propertiesModels);
