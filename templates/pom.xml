@@ -106,7 +106,6 @@
 									<resources>
 										<resource>
 											<directory>${content.source.directory}</directory>
-											<filtering>true</filtering>
 										</resource>
 									</resources>
 								</configuration>
