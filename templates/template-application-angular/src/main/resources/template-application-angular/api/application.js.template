@@ -1,6 +1,6 @@
 var rs = require('http/v3/rs');
-var dao = require('Template - Full-stack Application (Angular)/data/dao/Template - Full-stack Application (Angular)');
-var http = require('Template - Full-stack Application (Angular)/api/http');
+var dao = require('${projectName}/data/dao/${name}');
+var http = require('${projectName}/api/http');
 
 rs.service()
 	.resource('')
@@ -15,14 +15,14 @@ rs.service()
 			if (entity) {
 			    http.sendResponseOk(entity);
 			} else {
-				http.sendResponseNotFound('Template - Full-stack Application (Angular) not found');
+				http.sendResponseNotFound('${name} not found');
 			}
 		})
 	.resource('')
 		.post(function(ctx, request, response) {
 			var entity = request.getJSON();
 			entity.id = dao.create(entity);
-			response.setHeader('Content-Location', '/services/v3/js/Template - Full-stack Application (Angular)/api/Template - Full-stack Application (Angular).js/' + entity.id);
+			response.setHeader('Content-Location', '/services/v3/js/${projectName}/api/${name}.js/' + entity.id);
 			http.sendResponseCreated(entity);
 		})
 	.resource('{id}')
@@ -40,7 +40,7 @@ rs.service()
 				dao.delete(id);
 				http.sendResponseNoContent();
 			} else {
-				http.sendResponseNotFound('Template - Full-stack Application (Angular) not found');
+				http.sendResponseNotFound('${name} not found');
 			}
 		})
 .execute();
