@@ -90,7 +90,6 @@
 									<resources>
 										<resource>
 											<directory>${content.source.directory}</directory>
-											<filtering>false</filtering>
 										</resource>
 									</resources>
 								</configuration>
