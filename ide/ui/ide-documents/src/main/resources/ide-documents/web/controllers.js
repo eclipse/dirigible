@@ -68,6 +68,9 @@ angular
 			getFolder($scope.getFullPath(cmisObject.name))
 			.success(function(data){
 				setCurrentFolder(data);
+			})
+			.error(function(data){
+				openErrorModal("Failed to open folder", data.err.message);
 			});
 		}
 	};

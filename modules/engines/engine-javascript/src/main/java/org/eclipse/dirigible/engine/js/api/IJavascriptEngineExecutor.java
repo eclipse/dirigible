@@ -12,6 +12,9 @@ package org.eclipse.dirigible.engine.js.api;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 
@@ -22,6 +25,9 @@ public interface IJavascriptEngineExecutor extends IScriptEngineExecutor {
 
 	/** The Constant DIRIGIBLE_JAVASCRIPT_TYPE_ENGINE_DEFAULT. */
 	public static final String DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT = "DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT";
+	
+	/** The Constant DIRIGIBLE_JAVASCRIPT_DEBUG_ENABLED. */
+	public static final String DIRIGIBLE_JAVASCRIPT_DEBUG_ENABLED = "DIRIGIBLE_JAVASCRIPT_DEBUG_ENABLED";
 
 	/** The Constant DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER. */
 	public static final String DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER = "dirigible-js-engine";

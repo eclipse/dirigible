@@ -1,1 +1,2 @@
-org.eclipse.dirigible.engine.js.rhino.service.RhinoJavascriptEngineRestService	# Mozilla Rhino base Javascript Engine Service
+org.eclipse.dirigible.engine.js.rhino.service.RhinoJavascriptEngineRestService	# Mozilla Rhino based Javascript Engine Service
+org.eclipse.dirigible.engine.js.rhino.service.RhinoJavascriptEngineDebugRestService	# Mozilla Rhino based Javascript Engine Debug Service

@@ -39,7 +39,7 @@ public class HttpResponseFacade implements IScriptingFacade {
 	 *
 	 * @return the response
 	 */
-	private static final HttpServletResponse getResponse() {
+	public static final HttpServletResponse getResponse() {
 		if (!ThreadContextFacade.isValid()) {
 			return null;
 		}
