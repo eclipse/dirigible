@@ -1,7 +1,8 @@
 {  
    "constraints":[  
       {  
-         "uri":"/myproject/myfolder/myartifact1.txt",
+         "scope":"HTTP",
+         "path":"/myproject/myfolder/myartifact1.txt",
          "method":"*",
          "roles":[  
             "myrole1",
@@ -9,7 +10,8 @@
          ]
       },
       {  
-         "uri":"/myproject/myfolder/myartifact2.txt",
+         "scope":"HTTP",
+         "path":"/myproject/myfolder/myartifact2.txt",
          "method":"GET",
          "roles":[  
             "myrole3",

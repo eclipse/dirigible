@@ -62,6 +62,7 @@
 ### CMS
 
 - `DIRIGIBLE_CMS_PROVIDER`: (internal | managed | remote)
+- `DIRIGIBLE_CMS_ROLES_ENABLED`: (true | false)
 
 #### Internal
 

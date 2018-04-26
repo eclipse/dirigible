@@ -53,6 +53,7 @@
 		<module>ide-entity</module>
 		<module>ide-monaco</module>
 		<module>ide-ace</module>
+		<module>ide-debugger</module>
 	</modules>
 
 	<profiles>

@@ -12,6 +12,9 @@ package org.eclipse.dirigible.api.v3.security;
 
 import static java.text.MessageFormat.format;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.websocket.Session;
+
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.http.HttpSessionFacade;
 import org.eclipse.dirigible.commons.api.context.ContextException;
@@ -115,6 +118,50 @@ public class UserFacade implements IScriptingFacade {
 		} else {
 			throw new SecurityException("Setting the user name programmatically is supported only when the anonymous mode is enabled");
 		}
+	}
+	
+	/**
+	 * Gets the user name by a given request as parameter.
+	 *
+	 * @return the user name
+	 */
+	public static final String getName(HttpServletRequest request) {
+		if (request == null) {
+			return getName();
+		}
+		// HTTP case
+		String userName = null;
+		try {
+			userName = request.getRemoteUser();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		if (userName != null) {
+			return userName;
+		}
+		return getName();
+	}
+	
+	/**
+	 * Gets the user name by a given request as parameter.
+	 *
+	 * @return the user name
+	 */
+	public static final String getName(Session session) {
+		if (session == null) {
+			return getName();
+		}
+		// WebSockets case
+		String userName = null;
+		try {
+			userName = session.getUserPrincipal().getName();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		if (userName != null) {
+			return userName;
+		}
+		return getName();
 	}
 
 }
