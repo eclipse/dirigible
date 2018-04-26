@@ -221,11 +221,12 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public AccessDefinition createAccessDefinition(String location, String uri, String method, String role, String description)
+	public AccessDefinition createAccessDefinition(String location, String scope, String path, String method, String role, String description)
 			throws AccessException {
 		AccessDefinition accessDefinition = new AccessDefinition();
 		accessDefinition.setLocation(location);
-		accessDefinition.setUri(uri);
+		accessDefinition.setScope(scope != null ? scope : ISecurityCoreService.CONSTRAINT_SCOPE_DEFAULT);
+		accessDefinition.setPath(path);
 		accessDefinition.setMethod(method);
 		accessDefinition.setRole(role);
 		accessDefinition.setDescription(description);
@@ -276,20 +277,21 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public AccessDefinition getAccessDefinition(String uri, String method, String role) throws AccessException {
+	public AccessDefinition getAccessDefinition(String scope, String path, String method, String role) throws AccessException {
 		try {
 			Connection connection = null;
 			try {
+				scope = scope != null ? scope : ISecurityCoreService.CONSTRAINT_SCOPE_DEFAULT;
 				connection = dataSource.getConnection();
-				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_SCOPE = ?").where("ACCESS_PATH = ?")
 						.where("ACCESS_ROLE = ?").where("ACCESS_METHOD = ?").toString();
-				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method);
+				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, scope, path, role, method);
 				if (access.isEmpty()) {
 					return null;
 				}
 				if (access.size() > 1) {
 					throw new AccessException(
-							format("Security Access duplication for URI [{0}] and Method [{1}] with Role [{2}]", uri, method, role));
+							format("Security Access duplication for Scope: [{0}], Path: [{1}] and Method: [{2}] with Role: [{3}]", scope, path, method, role));
 				}
 				return access.get(0);
 			} finally {
@@ -309,8 +311,8 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean existsAccessDefinition(String uri, String method, String role) throws AccessException {
-		return getAccessDefinition(uri, method, role) != null;
+	public boolean existsAccessDefinition(String scope, String path, String method, String role) throws AccessException {
+		return getAccessDefinition(scope, path, method, role) != null;
 	}
 
 	/*
@@ -340,14 +342,15 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateAccessDefinition(long id, String location, String uri, String method, String role, String description) throws AccessException {
+	public void updateAccessDefinition(long id, String location, String scope, String path, String method, String role, String description) throws AccessException {
 		try {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
 				AccessDefinition accessDefinition = getAccessDefinition(id);
 				accessDefinition.setLocation(location);
-				accessDefinition.setUri(uri);
+				accessDefinition.setScope(scope != null ? scope : ISecurityCoreService.CONSTRAINT_SCOPE_DEFAULT);
+				accessDefinition.setPath(path);
 				accessDefinition.setMethod(method);
 				accessDefinition.setRole(role);
 				accessDefinition.setDescription(description);
@@ -394,14 +397,14 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#getAccessDefinitionsByUri(java.lang.String)
 	 */
 	@Override
-	public List<AccessDefinition> getAccessDefinitionsByUri(String uri) throws AccessException {
+	public List<AccessDefinition> getAccessDefinitionsByPath(String scope, String path) throws AccessException {
 		try {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_SCOPE = ?").where("ACCESS_PATH = ?")
 						.toString();
-				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, Arrays.asList(uri));
+				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, scope, path);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -419,14 +422,14 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * java.lang.String)
 	 */
 	@Override
-	public List<AccessDefinition> getAccessDefinitionsByUriAndMethod(String uri, String method) throws AccessException {
+	public List<AccessDefinition> getAccessDefinitionsByPathAndMethod(String scope, String path, String method) throws AccessException {
 		try {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_SCOPE = ?").where("ACCESS_PATH = ?")
 						.where(SqlFactory.getNative(connection).expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString()).toString();
-				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, method, AccessDefinition.METHOD_ANY);
+				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, scope, path, method, AccessDefinition.METHOD_ANY);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -443,15 +446,15 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean isAccessAllowed(String uri, String method, String role) throws AccessException {
+	public boolean isAccessAllowed(String scope, String path, String method, String role) throws AccessException {
 		try {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_URI = ?")
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_SCOPE = ?").where("ACCESS_PATH = ?")
 						.where("ACCESS_ROLE = ?")
 						.where(SqlFactory.getNative(connection).expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString()).toString();
-				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, uri, role, method,
+				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, scope, path, role, method,
 						AccessDefinition.METHOD_ANY);
 				return !access.isEmpty();
 			} finally {

@@ -24,6 +24,13 @@ public interface ISecurityCoreService extends ICoreService {
 	public static final String FILE_EXTENSION_ACCESS = ".access";
 
 	public static final String FILE_EXTENSION_ROLES = ".roles";
+	
+	public static final String CONSTRAINT_SCOPE_HTTP = "HTTP";
+	
+	public static final String CONSTRAINT_SCOPE_CMIS = "CMIS";
+	
+	public static final String CONSTRAINT_SCOPE_DEFAULT = "HTTP";
+	
 
 	// Roles
 
@@ -104,8 +111,10 @@ public interface ISecurityCoreService extends ICoreService {
 	 *
 	 * @param location
 	 *            the location
-	 * @param uri
-	 *            the uri
+	 * @param scope
+	 *            the scope
+	 * @param path
+	 *            the path
 	 * @param method
 	 *            the method
 	 * @param role
@@ -116,7 +125,7 @@ public interface ISecurityCoreService extends ICoreService {
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public AccessDefinition createAccessDefinition(String location, String uri, String method, String role, String description)
+	public AccessDefinition createAccessDefinition(String location, String scope, String path, String method, String role, String description)
 			throws AccessException;
 
 	/**
@@ -133,8 +142,10 @@ public interface ISecurityCoreService extends ICoreService {
 	/**
 	 * Gets the access definition.
 	 *
-	 * @param uri
-	 *            the uri
+	 * @param scope
+	 *            the scope
+	 * @param path
+	 *            the path
 	 * @param method
 	 *            the method
 	 * @param role
@@ -143,13 +154,15 @@ public interface ISecurityCoreService extends ICoreService {
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public AccessDefinition getAccessDefinition(String uri, String method, String role) throws AccessException;
+	public AccessDefinition getAccessDefinition(String scope, String path, String method, String role) throws AccessException;
 
 	/**
 	 * Exists access definition.
 	 *
-	 * @param uri
-	 *            the uri
+	 * @param scope
+	 *            the scope
+	 * @param path
+	 *            the path
 	 * @param method
 	 *            the method
 	 * @param role
@@ -158,7 +171,7 @@ public interface ISecurityCoreService extends ICoreService {
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public boolean existsAccessDefinition(String uri, String method, String role) throws AccessException;
+	public boolean existsAccessDefinition(String scope, String path, String method, String role) throws AccessException;
 
 	/**
 	 * Removes the access definition.
@@ -177,8 +190,10 @@ public interface ISecurityCoreService extends ICoreService {
 	 *            the id
 	 * @param location
 	 *            the location
-	 * @param uri
-	 *            the uri
+	 * @param scope
+	 *            the scope
+	 * @param path
+	 *            the path
 	 * @param method
 	 *            the method
 	 * @param role
@@ -188,7 +203,7 @@ public interface ISecurityCoreService extends ICoreService {
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public void updateAccessDefinition(long id, String location, String uri, String method, String role, String description) throws AccessException;
+	public void updateAccessDefinition(long id, String location, String scope, String path, String method, String role, String description) throws AccessException;
 
 	/**
 	 * Gets the access definitions.
@@ -200,34 +215,40 @@ public interface ISecurityCoreService extends ICoreService {
 	public List<AccessDefinition> getAccessDefinitions() throws AccessException;
 
 	/**
-	 * Gets the access definitions by uri.
+	 * Gets the access definitions by path.
 	 *
-	 * @param uri
-	 *            the uri
-	 * @return the access definitions by uri
+	 * @param scope
+	 *            the scope
+	 * @param path
+	 *            the path
+	 * @return the access definitions by path
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public List<AccessDefinition> getAccessDefinitionsByUri(String uri) throws AccessException;
+	public List<AccessDefinition> getAccessDefinitionsByPath(String scope, String path) throws AccessException;
 
 	/**
-	 * Gets the access definitions by uri and method.
+	 * Gets the access definitions by path and method.
 	 *
-	 * @param uri
-	 *            the uri
+	 * @param scope
+	 *            the scope
+	 * @param path
+	 *            the path
 	 * @param method
 	 *            the method
-	 * @return the access definitions by uri and method
+	 * @return the access definitions by path and method
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public List<AccessDefinition> getAccessDefinitionsByUriAndMethod(String uri, String method) throws AccessException;
+	public List<AccessDefinition> getAccessDefinitionsByPathAndMethod(String scope, String path, String method) throws AccessException;
 
 	/**
 	 * Checks if is access allowed.
 	 *
-	 * @param uri
-	 *            the uri
+	 * @param scope
+	 *            the scope
+	 * @param path
+	 *            the path
 	 * @param method
 	 *            the method
 	 * @param role
@@ -236,7 +257,7 @@ public interface ISecurityCoreService extends ICoreService {
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public boolean isAccessAllowed(String uri, String method, String role) throws AccessException;
+	public boolean isAccessAllowed(String scope, String path, String method, String role) throws AccessException;
 
 	/**
 	 * Parses the roles.

@@ -1,28 +1,32 @@
 {
   "constraints":[  
    {  
-      "uri": "/ide-documents/manage",
+      "scope": "HTTP",
+      "path": "/ide-documents/manage",
       "method":"*",
       "roles": [
       	"Administrator",
         "Operator"
       ]
-   }, {  
-      "uri": "/ide-documents/read/folder",
+   }, {
+      "scope": "HTTP",
+      "path": "/ide-documents/read/folder",
       "method":"*",
       "roles":[
         "ReadOnly",
 	    "Operator"
 	  ]
-   }, {  
-      "uri": "/ide-documents/read/document",
+   }, {
+      "scope": "HTTP",
+      "path": "/ide-documents/read/document",
       "method":"*",
       "roles":[  
          "ReadOnly",
          "Operator"
       ]
-   }, {  
-      "uri":"/ide-documents/web",
+   }, {
+      "scope": "HTTP",
+      "path":"/ide-documents/web",
       "method":"*",
       "roles":[
          "ReadOnly",

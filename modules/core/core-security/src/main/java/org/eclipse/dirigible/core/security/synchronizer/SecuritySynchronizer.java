@@ -211,24 +211,24 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 */
 	private void synchronizeAccess(AccessDefinition accessDefinition) throws SynchronizationException {
 		try {
-			if (!securityCoreService.existsAccessDefinition(accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole())) {
-				securityCoreService.createAccessDefinition(accessDefinition.getLocation(), accessDefinition.getUri(), accessDefinition.getMethod(),
+			if (!securityCoreService.existsAccessDefinition(accessDefinition.getScope(), accessDefinition.getPath(), accessDefinition.getMethod(), accessDefinition.getRole())) {
+				securityCoreService.createAccessDefinition(accessDefinition.getLocation(), accessDefinition.getScope(), accessDefinition.getPath(), accessDefinition.getMethod(),
 						accessDefinition.getRole(), accessDefinition.getDescription());
-				logger.info("Synchronized a new Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(),
+				logger.info("Synchronized a new Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
 						accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
 			} else {
-				AccessDefinition existing = securityCoreService.getAccessDefinition(accessDefinition.getUri(), accessDefinition.getMethod(),
+				AccessDefinition existing = securityCoreService.getAccessDefinition(accessDefinition.getScope(), accessDefinition.getPath(), accessDefinition.getMethod(),
 						accessDefinition.getRole());
 				if (!accessDefinition.equals(existing)) {
 					if (!accessDefinition.getLocation().equals(existing.getLocation())) {
 						throw new SynchronizationException(
 								format("Trying to update the Access definition for [{0}-{1}-{2}] already set from location [{3}] with a location [{4}]",
-										accessDefinition.getUri(), accessDefinition.getMethod(), accessDefinition.getRole(), existing.getLocation(),
+										accessDefinition.getPath(), accessDefinition.getMethod(), accessDefinition.getRole(), existing.getLocation(),
 										accessDefinition.getLocation()));
 					}
-					securityCoreService.updateAccessDefinition(existing.getId(), accessDefinition.getLocation(), accessDefinition.getUri(),
+					securityCoreService.updateAccessDefinition(existing.getId(), accessDefinition.getLocation(), accessDefinition.getScope(), accessDefinition.getPath(),
 							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getDescription());
-					logger.info("Synchronized a modified Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(),
+					logger.info("Synchronized a modified Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
 							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
 				}
 			}
@@ -298,7 +298,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			for (AccessDefinition accessDefinition : accessDefinitions) {
 				if (!ACCESS_SYNCHRONIZED.contains(accessDefinition.getLocation())) {
 					securityCoreService.removeAccessDefinition(accessDefinition.getId());
-					logger.warn("Cleaned up Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getUri(),
+					logger.warn("Cleaned up Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
 							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
 				}
 			}

@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.runtime.security.filter;
+package org.eclipse.dirigible.core.security.verifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +33,10 @@ public class AccessVerifier {
 	 *
 	 * @param securityCoreService
 	 *            the security core service
-	 * @param uri
-	 *            the uri
+	 * @param scope
+	 *            the scope
+	 * @param path
+	 *            the path
 	 * @param method
 	 *            the method
 	 * @return all the most specific AccessDefinition entry matching the URI if any
@@ -43,26 +45,26 @@ public class AccessVerifier {
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public static List<AccessDefinition> getMatchingAccessDefinitions(ISecurityCoreService securityCoreService, String uri, String method)
+	public static List<AccessDefinition> getMatchingAccessDefinitions(ISecurityCoreService securityCoreService, String scope, String path, String method)
 			throws ServletException, AccessException {
 		List<AccessDefinition> accessDefinitions = new ArrayList<AccessDefinition>();
 		AccessDefinition current = null;
 		for (AccessDefinition accessDefinition : securityCoreService.getAccessDefinitions()) {
-			if (uri.startsWith(accessDefinition.getUri())
+			if (scope.equalsIgnoreCase(accessDefinition.getScope()) && path.startsWith(accessDefinition.getPath())
 					&& (accessDefinition.getMethod().equals("*") || method.equals(accessDefinition.getMethod()))) {
-				logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", uri, method,
+				logger.debug(String.format("URI [%s] with HTTP method [%s] is secured because of definition: %s", path, method,
 						accessDefinition.getLocation()));
-				if ((current == null) || (accessDefinition.getUri().length() > current.getUri().length())) {
+				if ((current == null) || (accessDefinition.getPath().length() > current.getPath().length())) {
 					current = accessDefinition;
 					accessDefinitions.clear();
 					accessDefinitions.add(accessDefinition);
-				} else if (accessDefinition.getUri().length() == current.getUri().length()) {
+				} else if (accessDefinition.getPath().length() == current.getPath().length()) {
 					accessDefinitions.add(accessDefinition);
 				}
 			}
 		}
 		if (accessDefinitions.isEmpty()) {
-			logger.trace(String.format("URI [%s] with HTTP method [%s] is NOT secured", uri, method));
+			logger.trace(String.format("URI [%s] with HTTP method [%s] is NOT secured", path, method));
 		}
 		return accessDefinitions;
 	}

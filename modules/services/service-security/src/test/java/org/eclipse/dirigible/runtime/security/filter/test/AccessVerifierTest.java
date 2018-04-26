@@ -23,8 +23,8 @@ import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
+import org.eclipse.dirigible.core.security.verifier.AccessVerifier;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
-import org.eclipse.dirigible.runtime.security.filter.AccessVerifier;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,33 +65,33 @@ public class AccessVerifierTest extends AbstractGuiceTest {
 		securityCoreService.createRole("test_role2", "/abc/my.roles", "Test 2");
 		securityCoreService.createRole("test_role3", "/abc/my.roles", "Test 3");
 
-		securityCoreService.createAccessDefinition("/abc/my.access", "/a/b/c/d", "GET", "test_role1", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "/a/b/c/d", "GET", "test_role2", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "/a/b/c/d/", "GET", "test_role1", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "/a/b/c/d/", "*", "test_role2", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "/a/b/c/d/e/f", "*", "test_role3", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "/a/b/c/x", "*", "test_role3", "Test");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d", "GET", "test_role1", "Test");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d", "GET", "test_role2", "Test");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/", "GET", "test_role1", "Test");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/", "*", "test_role2", "Test");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/e/f", "*", "test_role3", "Test");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/x", "*", "test_role3", "Test");
 
-		List<AccessDefinition> matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "/a/b", "GET");
+		List<AccessDefinition> matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "HTTP", "/a/b", "GET");
 		assertTrue(matchingAccessDefinitions.isEmpty());
 
-		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "/a/b/c/d", "GET");
+		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "HTTP", "/a/b/c/d", "GET");
 		assertFalse(matchingAccessDefinitions.isEmpty());
 		assertEquals(2, matchingAccessDefinitions.size());
 
-		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "/a/b/c/d/", "GET");
+		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "HTTP", "/a/b/c/d/", "GET");
 		assertFalse(matchingAccessDefinitions.isEmpty());
 		assertEquals(2, matchingAccessDefinitions.size());
 
-		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "/a/b/c/d/e", "GET");
+		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "HTTP", "/a/b/c/d/e", "GET");
 		assertFalse(matchingAccessDefinitions.isEmpty());
 		assertEquals(2, matchingAccessDefinitions.size());
 
-		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "/a/b/c/d/e/f", "GET");
+		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "HTTP", "/a/b/c/d/e/f", "GET");
 		assertFalse(matchingAccessDefinitions.isEmpty());
 		assertEquals(1, matchingAccessDefinitions.size());
 
-		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "/a/b/c/x", "GET");
+		matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "HTTP", "/a/b/c/x", "GET");
 		assertFalse(matchingAccessDefinitions.isEmpty());
 		assertEquals(1, matchingAccessDefinitions.size());
 

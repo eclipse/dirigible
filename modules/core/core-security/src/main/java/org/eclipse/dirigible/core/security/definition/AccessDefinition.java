@@ -32,9 +32,12 @@ public class AccessDefinition {
 
 	@Column(name = "ACCESS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
+	
+	@Column(name = "ACCESS_SCOPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	private String scope;
 
-	@Column(name = "ACCESS_URI", columnDefinition = "VARCHAR", nullable = false, length = 255)
-	private String uri;
+	@Column(name = "ACCESS_PATH", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	private String path;
 
 	@Column(name = "ACCESS_METHOD", columnDefinition = "VARCHAR", nullable = false, length = 20)
 	private String method = METHOD_ANY;
@@ -78,24 +81,43 @@ public class AccessDefinition {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-
+	
 	/**
-	 * Gets the uri.
+	 * Gets the scope.
 	 *
-	 * @return the uri
+	 * @return the scope
 	 */
-	public String getUri() {
-		return uri;
+	public String getScope() {
+		return scope;
 	}
 
 	/**
-	 * Sets the uri.
+	 * Sets the scope.
 	 *
-	 * @param uri
-	 *            the new uri
+	 * @param scope
+	 *            the new scope
 	 */
-	public void setUri(String uri) {
-		this.uri = uri;
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
+
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	/**
+	 * Sets the path.
+	 *
+	 * @param path
+	 *            the new path
+	 */
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	/**
@@ -212,7 +234,7 @@ public class AccessDefinition {
 		result = (prime * result) + ((location == null) ? 0 : location.hashCode());
 		result = (prime * result) + ((method == null) ? 0 : method.hashCode());
 		result = (prime * result) + ((role == null) ? 0 : role.hashCode());
-		result = (prime * result) + ((uri == null) ? 0 : uri.hashCode());
+		result = (prime * result) + ((path == null) ? 0 : path.hashCode());
 		return result;
 	}
 
@@ -260,11 +282,11 @@ public class AccessDefinition {
 		} else if (!role.equals(other.role)) {
 			return false;
 		}
-		if (uri == null) {
-			if (other.uri != null) {
+		if (path == null) {
+			if (other.path != null) {
 				return false;
 			}
-		} else if (!uri.equals(other.uri)) {
+		} else if (!path.equals(other.path)) {
 			return false;
 		}
 		return true;
