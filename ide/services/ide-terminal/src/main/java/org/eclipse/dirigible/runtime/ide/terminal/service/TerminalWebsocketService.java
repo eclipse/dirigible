@@ -28,6 +28,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
 import org.slf4j.Logger;
@@ -72,6 +73,15 @@ public class TerminalWebsocketService {
 	@OnMessage
 	public void onMessage(String message, Session session) {
 		logger.trace("[ws:terminal] onMessage: " + message);
+		
+		if (Configuration.isAnonymousModeEnabled()) {
+			try {
+				session.getBasicRemote().sendText("Feature 'Terminal' is disabled in this mode.", true);
+			} catch (IOException e) {
+				logger.error("[ws:terminal] " + e.getMessage(), e);
+			}
+			return;
+		}
 
 		ProcessRunnable processRunnable = SESSION_TO_PROCESS.get(session.getId());
 		Process process = processRunnable.getProcess();
