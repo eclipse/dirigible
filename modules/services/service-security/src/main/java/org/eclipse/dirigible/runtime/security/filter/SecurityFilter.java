@@ -32,6 +32,7 @@ import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
+import org.eclipse.dirigible.core.security.verifier.AccessVerifier;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,20 +77,20 @@ public class SecurityFilter implements Filter {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-			String uri = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : IRepositoryStructure.SEPARATOR;
+			String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : IRepositoryStructure.SEPARATOR;
 			for (String prefix : SECURED_PREFIXES) {
-				if (uri.startsWith(prefix)) {
-					uri = uri.substring(prefix.length());
+				if (path.startsWith(prefix)) {
+					path = path.substring(prefix.length());
 					break;
 				}
 			}
 			String method = httpServletRequest.getMethod();
 
-			List<AccessDefinition> accessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, uri, method);
+			List<AccessDefinition> accessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, ISecurityCoreService.CONSTRAINT_SCOPE_HTTP, path, method);
 			if (!accessDefinitions.isEmpty()) {
 				Principal principal = httpServletRequest.getUserPrincipal();
 				if (principal == null) {
-					forbidden(uri, "No logged in user", httpServletResponse);
+					forbidden(path, "No logged in user", httpServletResponse);
 					return;
 				}
 				boolean isInRole = false;
@@ -100,7 +101,7 @@ public class SecurityFilter implements Filter {
 					}
 				}
 				if (!isInRole) {
-					forbidden(uri, "The logged in user does not have any of the required roles for the requested URI", httpServletResponse);
+					forbidden(path, "The logged in user does not have any of the required roles for the requested URI", httpServletResponse);
 					return;
 				}
 			}

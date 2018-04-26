@@ -18,29 +18,50 @@ import java.util.List;
  */
 public class AccessArtifactConstraint {
 
-	private String uri;
+	private String scope;
+	
+	private String path;
 
 	private String method;
 
 	private List<String> roles = new ArrayList<String>();
 
 	/**
-	 * Gets the uri.
+	 * Gets the scope.
 	 *
-	 * @return the uri
+	 * @return the scope
 	 */
-	public String getUri() {
-		return uri;
+	public String getScope() {
+		return scope;
 	}
 
 	/**
-	 * Sets the uri.
+	 * Sets the scope.
 	 *
-	 * @param uri
-	 *            the new uri
+	 * @param scope
+	 *            the new scope
 	 */
-	public void setUri(String uri) {
-		this.uri = uri;
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
+	
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	/**
+	 * Sets the path.
+	 *
+	 * @param path
+	 *            the new path
+	 */
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	/**

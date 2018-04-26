@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 
 /**
  * The Access Artifact.
@@ -57,19 +58,24 @@ public class AccessArtifact {
 	/**
 	 * Gets the constraint.
 	 *
-	 * @param uri
-	 *            the uri
+	 * @param path
+	 *            the path
 	 * @param method
 	 *            the method
 	 * @return the constraint
 	 */
-	public AccessArtifactConstraint getConstraint(String uri, String method) {
-		if ((uri == null) || (method == null)) {
+	public AccessArtifactConstraint getConstraint(String scope, String path, String method) {
+		if ((path == null) || (method == null)) {
 			return null;
 		}
+		if (scope == null) {
+			scope = ISecurityCoreService.CONSTRAINT_SCOPE_DEFAULT;
+		}
 		for (AccessArtifactConstraint constraint : constraints) {
-			if (uri.equals(constraint.getUri()) && method.equals(constraint.getMethod())) {
-				return constraint;
+			if (path.equals(constraint.getPath()) && method.equals(constraint.getMethod())) {
+				if (constraint.getScope() == null || scope.equals(constraint.getScope())) {
+					return constraint;
+				}
 			}
 		}
 		return null;
@@ -96,13 +102,14 @@ public class AccessArtifact {
 	public static AccessArtifact combine(List<AccessDefinition> accessDefinitions) {
 		AccessArtifact accessArtifact = new AccessArtifact();
 		for (AccessDefinition accessDefinition : accessDefinitions) {
-			String uri = accessDefinition.getUri();
+			String scope = accessDefinition.getScope();
+			String path = accessDefinition.getPath();
 			String method = accessDefinition.getMethod();
 			String role = accessDefinition.getRole();
-			AccessArtifactConstraint accessArtifactConstraint = accessArtifact.getConstraint(uri, method);
+			AccessArtifactConstraint accessArtifactConstraint = accessArtifact.getConstraint(scope, path, method);
 			if (accessArtifactConstraint == null) {
 				accessArtifactConstraint = new AccessArtifactConstraint();
-				accessArtifactConstraint.setUri(uri);
+				accessArtifactConstraint.setPath(path);
 				accessArtifactConstraint.setMethod(method);
 				accessArtifact.getConstraints().add(accessArtifactConstraint);
 			}
@@ -123,7 +130,8 @@ public class AccessArtifact {
 		for (AccessArtifactConstraint constraint : constraints) {
 			for (String role : constraint.getRoles()) {
 				AccessDefinition accessDefinition = new AccessDefinition();
-				accessDefinition.setUri(constraint.getUri());
+				accessDefinition.setScope(constraint.getScope());
+				accessDefinition.setPath(constraint.getPath());
 				accessDefinition.setMethod(constraint.getMethod());
 				accessDefinition.setRole(role);
 				accessDefinitions.add(accessDefinition);

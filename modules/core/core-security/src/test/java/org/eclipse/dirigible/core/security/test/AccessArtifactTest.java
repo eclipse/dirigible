@@ -26,7 +26,6 @@ import org.eclipse.dirigible.core.security.definition.AccessArtifactConstraint;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AccessArtifactTest.
  */
@@ -39,12 +38,12 @@ public class AccessArtifactTest {
 	public void serializeTest() {
 		AccessArtifact access = new AccessArtifact();
 		access.getConstraints().add(new AccessArtifactConstraint());
-		access.getConstraints().get(0).setUri("/myproject/myfolder/myartifact1.txt");
+		access.getConstraints().get(0).setPath("/myproject/myfolder/myartifact1.txt");
 		access.getConstraints().get(0).setMethod("*");
 		access.getConstraints().get(0).getRoles().add("myrole1");
 		access.getConstraints().get(0).getRoles().add("myrole2");
 		access.getConstraints().add(new AccessArtifactConstraint());
-		access.getConstraints().get(1).setUri("/myproject/myfolder/myartifact2.txt");
+		access.getConstraints().get(1).setPath("/myproject/myfolder/myartifact2.txt");
 		access.getConstraints().get(1).setMethod("GET");
 		access.getConstraints().get(1).getRoles().add("myrole3");
 		access.getConstraints().get(1).getRoles().add("myrole4");
@@ -79,22 +78,22 @@ public class AccessArtifactTest {
 	public void combineTest() throws IOException {
 		List<AccessDefinition> accessDefinitions = new ArrayList<AccessDefinition>();
 		AccessDefinition accessDefinition = new AccessDefinition();
-		accessDefinition.setUri("/myproject/myfolder/myartifact1.txt");
+		accessDefinition.setPath("/myproject/myfolder/myartifact1.txt");
 		accessDefinition.setMethod("*");
 		accessDefinition.setRole("myrole1");
 		accessDefinitions.add(accessDefinition);
 		accessDefinition = new AccessDefinition();
-		accessDefinition.setUri("/myproject/myfolder/myartifact1.txt");
+		accessDefinition.setPath("/myproject/myfolder/myartifact1.txt");
 		accessDefinition.setMethod("*");
 		accessDefinition.setRole("myrole2");
 		accessDefinitions.add(accessDefinition);
 		accessDefinition = new AccessDefinition();
-		accessDefinition.setUri("/myproject/myfolder/myartifact2.txt");
+		accessDefinition.setPath("/myproject/myfolder/myartifact2.txt");
 		accessDefinition.setMethod("GET");
 		accessDefinition.setRole("myrole3");
 		accessDefinitions.add(accessDefinition);
 		accessDefinition = new AccessDefinition();
-		accessDefinition.setUri("/myproject/myfolder/myartifact2.txt");
+		accessDefinition.setPath("/myproject/myfolder/myartifact2.txt");
 		accessDefinition.setMethod("GET");
 		accessDefinition.setRole("myrole4");
 		accessDefinitions.add(accessDefinition);

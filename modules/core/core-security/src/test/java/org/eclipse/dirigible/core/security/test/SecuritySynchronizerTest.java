@@ -31,7 +31,6 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SecuritySynchronizerTest.
  */
@@ -74,12 +73,12 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 
 		AccessArtifact access = new AccessArtifact();
 		access.getConstraints().add(new AccessArtifactConstraint());
-		access.getConstraints().get(0).setUri("/myproject/myfolder/myartifact3.txt");
+		access.getConstraints().get(0).setPath("/myproject/myfolder/myartifact3.txt");
 		access.getConstraints().get(0).setMethod("*");
 		access.getConstraints().get(0).getRoles().add("myrole1");
 		access.getConstraints().get(0).getRoles().add("myrole2");
 		access.getConstraints().add(new AccessArtifactConstraint());
-		access.getConstraints().get(1).setUri("/myproject/myfolder/myartifact4.txt");
+		access.getConstraints().get(1).setPath("/myproject/myfolder/myartifact4.txt");
 		access.getConstraints().get(1).setMethod("GET");
 		access.getConstraints().get(1).getRoles().add("myrole3");
 		access.getConstraints().get(1).getRoles().add("myrole4");
@@ -89,9 +88,9 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 
 		securityPublisher.synchronize();
 
-		AccessDefinition accessDefinition = securityCoreService.getAccessDefinition("/myproject/myfolder/myartifact3.txt", "*", "myrole1");
+		AccessDefinition accessDefinition = securityCoreService.getAccessDefinition("HTTP", "/myproject/myfolder/myartifact3.txt", "*", "myrole1");
 		assertNotNull(accessDefinition);
-		assertTrue(securityCoreService.isAccessAllowed("/myproject/myfolder/myartifact3.txt", "GET", "myrole1"));
+		assertTrue(securityCoreService.isAccessAllowed("HTTP", "/myproject/myfolder/myartifact3.txt", "GET", "myrole1"));
 	}
 
 	/**
@@ -109,9 +108,9 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 
 		securityPublisher.synchronize();
 
-		AccessDefinition accessDefinition = securityCoreService.getAccessDefinition("/myproject/myfolder/myartifact3.txt", "GET", "myrole1");
+		AccessDefinition accessDefinition = securityCoreService.getAccessDefinition("HTTP", "/myproject/myfolder/myartifact3.txt", "GET", "myrole1");
 		assertNull(accessDefinition);
-		assertTrue(securityCoreService.isAccessAllowed("/myproject/myfolder/myartifact3.txt", "GET", "myrole1"));
+		assertTrue(securityCoreService.isAccessAllowed("HTTP", "/myproject/myfolder/myartifact3.txt", "GET", "myrole1"));
 	}
 
 }

@@ -26,7 +26,6 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SecurityCoreServiceTest.
  */
@@ -128,11 +127,11 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		
-		securityCoreService.createAccessDefinition("/abc/my.access", "test_access1", "GET", "test_role1", "Test");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "GET", "test_role1", "Test");
 		List<AccessDefinition> list = securityCoreService.getAccessDefinitions();
 		assertEquals(1, list.size());
 		AccessDefinition accessDefinition = list.get(0);
-		assertEquals("test_access1", accessDefinition.getUri());
+		assertEquals("test_access1", accessDefinition.getPath());
 		assertEquals("test_role1", accessDefinition.getRole());
 		
 		securityCoreService.removeAccessDefinition(accessDefinition.getId());
@@ -150,9 +149,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 
-		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "test_access1", "GET", "test_role1", "Test access");
+		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "GET", "test_role1", "Test access");
 		accessDefinition = securityCoreService.getAccessDefinition(accessDefinition.getId());
-		assertEquals("test_access1", accessDefinition.getUri());
+		assertEquals("test_access1", accessDefinition.getPath());
 		assertEquals("test_role1", accessDefinition.getRole());
 		assertEquals("Test access", accessDefinition.getDescription());
 		
@@ -174,10 +173,10 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role2");
 		securityCoreService.createRole("test_role2", "/abc/my.roles", "Test");
 
-		securityCoreService.createAccessDefinition("/abc/my.access", "test_access1", "GET", "test_role1", "Test access 1");
-		securityCoreService.createAccessDefinition("/abc/my.access", "test_access1", "POST", "test_role11", "Test access 11");
-		securityCoreService.createAccessDefinition("/abc/my.access", "test_access2", "PUT", "test_role2", "Test access 2");
-		securityCoreService.createAccessDefinition("/abc/my.access", "test_access2", "DELETE", "test_role22", "Test access 22");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "GET", "test_role1", "Test access 1");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "POST", "test_role11", "Test access 11");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access2", "PUT", "test_role2", "Test access 2");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access2", "DELETE", "test_role22", "Test access 22");
 		
 		List<AccessDefinition> list = securityCoreService.getAccessDefinitions();
 		assertEquals(4, list.size());
@@ -185,15 +184,15 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		assertEquals("test_role1", AccessDefinition.getRole());
 		assertEquals("Test access 1", AccessDefinition.getDescription());
 		
-		list = securityCoreService.getAccessDefinitionsByUri("test_access1");
+		list = securityCoreService.getAccessDefinitionsByPath("HTTP", "test_access1");
 		assertEquals(2, list.size());
-		list = securityCoreService.getAccessDefinitionsByUri("test_access2");
+		list = securityCoreService.getAccessDefinitionsByPath("HTTP", "test_access2");
 		assertEquals(2, list.size());
 		AccessDefinition = list.get(0);
 		assertEquals("test_role2", AccessDefinition.getRole());
 		assertEquals("Test access 2", AccessDefinition.getDescription());
 		
-		list = securityCoreService.getAccessDefinitionsByUriAndMethod("test_access2", "PUT");
+		list = securityCoreService.getAccessDefinitionsByPathAndMethod("HTTP", "test_access2", "PUT");
 		assertEquals(1, list.size());
 		AccessDefinition = list.get(0);
 		assertEquals("test_role2", AccessDefinition.getRole());
@@ -218,15 +217,15 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		
-		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "test_access1", "GET", "test_role1", "Test access");
+		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "GET", "test_role1", "Test access");
 		accessDefinition = securityCoreService.getAccessDefinition(accessDefinition.getId());
 		
-		assertEquals("test_access1", accessDefinition.getUri());
+		assertEquals("test_access1", accessDefinition.getPath());
 		assertEquals("test_role1", accessDefinition.getRole());
 		assertEquals("Test access", accessDefinition.getDescription());
-		securityCoreService.updateAccessDefinition(accessDefinition.getId(), "/abc/my.access", "test_access2", "*", "test_role1", "Test access 2");
+		securityCoreService.updateAccessDefinition(accessDefinition.getId(), "/abc/my.access", "HTTP", "test_access2", "*", "test_role1", "Test access 2");
 		accessDefinition = securityCoreService.getAccessDefinition(accessDefinition.getId());
-		assertEquals("test_access2", accessDefinition.getUri());
+		assertEquals("test_access2", accessDefinition.getPath());
 		assertEquals("Test access 2", accessDefinition.getDescription());
 		
 		securityCoreService.removeAccessDefinition(accessDefinition.getId());
@@ -243,7 +242,7 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 		securityCoreService.removeRole("test_role1");
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		
-		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "test_access1", AccessDefinition.METHOD_ANY, "test_role1", "Test access");
+		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", AccessDefinition.METHOD_ANY, "test_role1", "Test access");
 		accessDefinition = securityCoreService.getAccessDefinition(accessDefinition.getId());
 		securityCoreService.removeAccessDefinition(accessDefinition.getId());
 		accessDefinition = securityCoreService.getAccessDefinition(accessDefinition.getId());
