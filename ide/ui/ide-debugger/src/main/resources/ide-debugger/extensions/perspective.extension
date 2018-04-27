@@ -1,0 +1,5 @@
+{
+	"module": "ide-debugger/perspective/debugger.js",
+	"extensionPoint": "ide-perspective",
+	"description": "Debugger Perspective"
+}

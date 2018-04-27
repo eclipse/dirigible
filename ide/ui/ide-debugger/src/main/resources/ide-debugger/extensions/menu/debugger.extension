@@ -1,1 +1,5 @@
-{"module":"ide-debugger/services/menu/debugger","extensionPoint":"ide-debugger-menu","description":"Debugger Menu"}
+{
+	"module": "ide-debugger/perspective/menu/debugger",
+	"extensionPoint": "ide-debugger-menu",
+	"description": "Debugger Menu"
+}
