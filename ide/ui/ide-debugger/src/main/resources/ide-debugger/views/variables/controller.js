@@ -31,35 +31,43 @@ angular.module('variables', ['variables.config', 'ngAnimate', 'ngSanitize', 'ui.
 	var message = function(evtName, data) {
 		messageHub.post({data: data}, 'variables.' + evtName);
 	};
-	var announceFileSelected = function(fileDescriptor) {
-		this.message('file.selected', fileDescriptor);
+	var on = function(topic, callback) {
+		messageHub.subscribe(callback, topic);
 	};
-	var announceFileCreated = function(fileDescriptor) {
-		this.message('file.created', fileDescriptor);
+	var onDebugRefresh = function(callback) {
+		this.on('debugger.debug.enabled', callback);
 	};
-	var announceFileOpen = function(fileDescriptor) {
-		this.message('file.open', fileDescriptor);
+	var onDebugContinue = function(callback) {
+		this.on('debugger.debug.continue', callback);
 	};
-	var announcePull = function(fileDescriptor) {
-		this.message('file.pull', fileDescriptor);
+	var onDebugStepInto = function(callback) {
+		this.on('debugger.debug.stepInto', callback);
 	};
-
+	var onDebugStepOver = function(callback) {
+		this.on('debugger.debug.stepOver', callback);
+	};
 	return {
 		message: message,
-		announceFileSelected: announceFileSelected,
-		announceFileCreated: announceFileCreated,
-		announceFileOpen: announceFileOpen,
-		announcePull: announcePull
+		on: on,
+		onDebugRefresh: onDebugRefresh,
+		onDebugContinue: onDebugContinue,
+		onDebugStepInto: onDebugStepInto,
+		onDebugStepOver: onDebugStepOver
 	};
 }])
 .factory('variablesService', ['$http', 'VARIABLES_SVC_URL', function($http, VARIABLES_SVC_URL){
 	return new VariablesService($http, VARIABLES_SVC_URL);
 }])
-.controller('VariablesController', ['$scope', 'variablesService', function ($scope, variablesService) {
+.controller('VariablesController', ['$scope', '$messageHub', 'variablesService', function ($scope, $messageHub, variablesService) {
 
 	$scope.refresh = function() {
 		variablesService.refresh().success(function(data) {
 			$scope.variables = data.variableValueList;
 		});
 	};
+
+	$messageHub.onDebugRefresh($scope.refresh);
+	$messageHub.onDebugContinue($scope.refresh);
+	$messageHub.onDebugStepInto($scope.refresh);
+	$messageHub.onDebugStepOver($scope.refresh);
 }]);
