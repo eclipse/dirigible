@@ -35,7 +35,7 @@
 
 	<div>
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
-			<button type="button" class="btn btn-default" title="Enable/Disable" data-toggle="button" aria-pressed="false" autocomplete="off" ng-click="enable()"><i class="fa fa-power-off"></i></button>
+			<button type="button" class="btn btn-default" title="Enable/Disable" data-toggle="button" aria-pressed="false" autocomplete="off" ng-click="enable()"><i class="fa fa-bug"></i></button>
 			<button type="button" class="btn btn-default ng-class:{disabled: !debugEnabled};" title="Refresh" ng-click="refresh()"><i class="fa fa-refresh"></i></button>
 			<button type="button" class="btn btn-default ng-class:{disabled: !debugEnabled};" title="Continue" ng-click="continue()"><i class="fa fa-play"></i></button>
 			<button type="button" class="btn btn-default ng-class:{disabled: !debugEnabled};" title="Pause" ng-click="pause()"><i class="fa fa-pause"></i></button>
@@ -49,11 +49,12 @@
 		<tbody>
 			<tr ng-repeat="next in sessions">
 				<td>
-				  <blockquote>
-					  <p>Debug Session #{{$index + 1}}</p>
-					  <footer>session - <cite>{{next.sessionId}}</cite></footer>
-					  <footer>execution - <cite>{{next.executionId}}</cite></footer>
-					  <footer>user - <cite>{{next.userId}}</cite></footer>
+					<blockquote>
+						<button class="btn btn-default pull-right" data-toggle="button" aria-pressed="false" autocomplete="off" ng-click="activateSession(next)"> <i class="fa fa-power-off"></i></button>
+						<p>Debug Session #{{$index + 1}}</p>
+						<footer>session - <cite>{{next.sessionId}}</cite></footer>
+						<footer>execution - <cite>{{next.executionId}}</cite></footer>
+						<footer>user - <cite>{{next.userId}}</cite></footer>
 					</blockquote>
 				</td>
 			</tr>
