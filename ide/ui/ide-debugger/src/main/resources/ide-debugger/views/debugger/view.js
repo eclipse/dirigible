@@ -5,7 +5,7 @@ exports.getView = function() {
 			"factory":"frame",
 			"region":"left-top",
 			"label":"Debugger",
-			"link":"../ide-debugger/debugger/debugger.html"
+			"link":"../ide-debugger/views/debugger/index.html"
 	};
 	return view;
-}
+};

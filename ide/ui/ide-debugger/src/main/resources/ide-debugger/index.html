@@ -58,7 +58,7 @@
 		.controller('DebuggerController', ['Layouts', function (Layouts) {
 			
 			this.layoutModel = {
-				views: ['debugger', 'console'],
+				views: ['debugger', 'editor', 'variables', 'breakpoints', 'console'],
 				events: {
 					'fileselected': function(msg){
 						Layouts.manager.openEditor(msg.data.path, msg.data.label);

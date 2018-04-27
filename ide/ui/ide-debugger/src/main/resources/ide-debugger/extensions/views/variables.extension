@@ -1,0 +1,5 @@
+{
+	"module": "ide-debugger/views/variables/view.js",
+	"extensionPoint": "ide-view",
+	"description": "Variables View"
+}
