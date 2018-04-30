@@ -18,11 +18,18 @@ public class DebugSessionMetadata {
 	
 	private String userId;
 	
+	private boolean active = false;
+	
 	public DebugSessionMetadata(String sessionId, String executionId, String userId) {
+		this(sessionId, executionId, userId, false);
+	}
+	
+	public DebugSessionMetadata(String sessionId, String executionId, String userId, boolean active) {
 		super();
 		this.sessionId = sessionId;
 		this.executionId = executionId;
 		this.userId = userId;
+		this.active = active;
 	}
 
 	public String getSessionId() {
@@ -47,6 +54,14 @@ public class DebugSessionMetadata {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 }

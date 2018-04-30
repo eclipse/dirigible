@@ -66,7 +66,7 @@ DebuggerService.prototype.stepOver = function() {
 };
 DebuggerService.prototype.activateSession = function(sessionId) {
 	var url = new UriBuilder().path(this.debuggerServiceUrl.split('/')).path('session').path('activate').path(sessionId).build();
-	this.$http.get(url).then();
+	return this.$http.get(url);
 };
 DebuggerService.prototype.listWorkspaces = function() {
 	return this.$http.get(this.workspacesServiceUrl);
@@ -278,8 +278,9 @@ angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bo
 
 	$scope.activateSession = function(session) {
 		if ($scope.debugEnabled) {
-			debuggerService.activateSession(session.sessionId).success(function() {
+			debuggerService.activateSession(session.executionId).success(function() {
 				$scope.refresh();
+				$messageHub.announceDebugVariables();
 			});
 		}
 	};

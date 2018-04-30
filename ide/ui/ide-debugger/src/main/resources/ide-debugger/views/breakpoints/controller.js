@@ -2,16 +2,26 @@
 /**
  * Breakpoints Service API delegate
  */
-var BreakpointsService = function($http, breakpointsServiceUrl) {
+var BreakpointsService = function($http, breakpointsServiceUrl, breakpointServiceUrl) {
 	this.breakpointsServiceUrl = breakpointsServiceUrl;
+	this.breakpointServiceUrl = breakpointServiceUrl;
 	this.$http = $http;
 };
 BreakpointsService.prototype.refresh = function() {
 	return this.$http.get(this.breakpointsServiceUrl);
 };
+BreakpointsService.prototype.setBreakpoint = function(file, row) {
+	var a = file.split('/');a.shift();a.shift();file = a.join('/');
+	return this.$http.get(this.breakpointServiceUrl + "/set/" + row + '/' + file);
+};
+BreakpointsService.prototype.clearBreakpoint = function(file, row) {
+	var a = file.split('/');a.shift();a.shift();file = a.join('/');
+	return this.$http.get(this.breakpointServiceUrl + "/remove/" + row+ '/' + file);
+};
 
 angular.module('breakpoints.config', [])
-	.constant('BREAKPOINTS_SVC_URL','/services/v3/ide/debug/rhino/breakpoints');
+	.constant('BREAKPOINTS_SVC_URL','/services/v3/ide/debug/rhino/breakpoints')
+	.constant('BREAKPOINT_SVC_URL','/services/v3/ide/debug/rhino/breakpoint');
 	
 angular.module('breakpoints', ['breakpoints.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
@@ -31,35 +41,40 @@ angular.module('breakpoints', ['breakpoints.config', 'ngAnimate', 'ngSanitize', 
 	var message = function(evtName, data) {
 		messageHub.post({data: data}, 'breakpoints.' + evtName);
 	};
-	var announceFileSelected = function(fileDescriptor) {
-		this.message('file.selected', fileDescriptor);
+	var on = function(topic, callback) {
+		messageHub.subscribe(callback, topic);
 	};
-	var announceFileCreated = function(fileDescriptor) {
-		this.message('file.created', fileDescriptor);
+	var onDebugBreakpointSet = function(callback) {
+		this.on('debugger.editor.breakpoint.set', callback);
 	};
-	var announceFileOpen = function(fileDescriptor) {
-		this.message('file.open', fileDescriptor);
-	};
-	var announcePull = function(fileDescriptor) {
-		this.message('file.pull', fileDescriptor);
+	var onDebugBreakpointClear = function(callback) {
+		this.on('debugger.editor.breakpoint.clear', callback);
 	};
 
 	return {
 		message: message,
-		announceFileSelected: announceFileSelected,
-		announceFileCreated: announceFileCreated,
-		announceFileOpen: announceFileOpen,
-		announcePull: announcePull
+		on: on,
+		onDebugBreakpointSet: onDebugBreakpointSet,
+		onDebugBreakpointClear: onDebugBreakpointClear
 	};
 }])
-.factory('breakpointsService', ['$http', 'BREAKPOINTS_SVC_URL', function($http, BREAKPOINTS_SVC_URL){
-	return new BreakpointsService($http, BREAKPOINTS_SVC_URL);
+.factory('breakpointsService', ['$http', 'BREAKPOINTS_SVC_URL', 'BREAKPOINT_SVC_URL', function($http, BREAKPOINTS_SVC_URL, BREAKPOINT_SVC_URL){
+	return new BreakpointsService($http, BREAKPOINTS_SVC_URL, BREAKPOINT_SVC_URL);
 }])
-.controller('BreakpointsController', ['$scope', 'breakpointsService', function ($scope, breakpointsService) {
+.controller('BreakpointsController', ['$scope', '$messageHub', 'breakpointsService', function ($scope, $messageHub, breakpointsService) {
 
 	$scope.refresh = function() {
 		breakpointsService.refresh().success(function(data) {
 			$scope.breakpoints = data.breakpointsList;
 		});
 	};
+	
+	$messageHub.onDebugBreakpointSet(function(data) {
+		breakpointsService.setBreakpoint(data.file, data.row).success($scope.refresh);
+	});
+	
+	$messageHub.onDebugBreakpointClear(function(data) {
+		breakpointsService.clearBreakpoint(data.file, data.row).success($scope.refresh);
+	});
+	
 }]);

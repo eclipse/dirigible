@@ -50,12 +50,8 @@
 		<tbody>
 			<tr ng-repeat="next in sessions">
 				<td>
-					<blockquote>
-						<button class="btn btn-default pull-right" data-toggle="button" aria-pressed="false" autocomplete="off" ng-click="activateSession(next)"> <i class="fa fa-power-off"></i></button>
-						<p>Debug Session #{{$index + 1}}</p>
-						<footer>session - <cite>{{next.sessionId}}</cite></footer>
-						<footer>execution - <cite>{{next.executionId}}</cite></footer>
-						<footer>user - <cite>{{next.userId}}</cite></footer>
+					<blockquote class="{{next.active ? 'btn-primary' : 'btn-default'}}" ng-click="activateSession(next)" style="margin: 0 0 0 !important">
+						<p>{{next.userId}} - {{next.executionId}}</p>
 					</blockquote>
 				</td>
 			</tr>

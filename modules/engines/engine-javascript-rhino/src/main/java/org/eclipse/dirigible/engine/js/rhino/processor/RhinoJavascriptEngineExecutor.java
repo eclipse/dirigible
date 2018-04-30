@@ -137,7 +137,8 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 		
 		List<Session> userSessions = RhinoJavascriptDebugProcessor.getUserSessions(UserFacade.getName());
 		if (userSessions != null && !userSessions.isEmpty() 
-				&& Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_RHINO_DEBUGGER_ENABLED, "false"))) {
+				&& Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_RHINO_DEBUGGER_ENABLED, "false"))
+				&& !moduleOrCode.startsWith("ide")) {
 			enableDebugger(HttpRequestFacade.getRequest(), HttpResponseFacade.getResponse(), moduleOrCode, context);
 		}
 		

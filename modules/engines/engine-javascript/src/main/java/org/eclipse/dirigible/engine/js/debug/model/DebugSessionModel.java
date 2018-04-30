@@ -25,12 +25,6 @@ public class DebugSessionModel {
 	
 	private LinebreakMetadata currentLineBreak;
 	
-//	private String sessionId;
-//	
-//	private String executionId;
-//	
-//	private String userId;
-	
 	private boolean updated = true;
 
 	
@@ -55,22 +49,6 @@ public class DebugSessionModel {
 		this.debugExecutor = debugExecutor;
 	}
 
-//	public void setBreakpoint(String path, int row) {
-//		this.model.getDebugController().setBreakpoint(path, row);
-//	}
-//
-//	public void clearBreakpoint(String path, int row) {
-//		this.model.getDebugController().clearBreakpoint(path, row);
-//	}
-//
-//	public void clearAllBreakpoints() {
-//		this.model.getDebugController().clearAllBreakpoints();
-//	}
-
-//	public void clearAllBreakpoints(String path) {
-//		debugController.clearAllBreakpoints(this, path);
-//	}
-
 	public VariableValuesMetadata getVariableValuesMetadata() {
 		return variableValuesMetadata;
 	}
@@ -89,7 +67,6 @@ public class DebugSessionModel {
 	}
 
 	public String getSessionId() {
-//		return sessionId;
 		if (getDebugExecutor() == null) {
 			logger.error("getSessionId() - Debug executor not assigned");
 			return "none";
@@ -97,25 +74,14 @@ public class DebugSessionModel {
 		return getDebugExecutor().getSessionId();
 	}
 
-//	public void setSessionId(String sessionId) {
-//		this.sessionId = sessionId;
-//	}
-
 	public String getExecutionId() {
-//		return executionId;
 		if (getDebugExecutor() == null) {
 			logger.error("getExecutionId() - Debug executor not assigned");
 			return "none";
 		}
 		return getDebugExecutor().getExecutionId();
 	}
-
-//	public void setExecutionId(String executionId) {
-//		this.executionId = executionId;
-//	}
-
 	public String getUserId() {
-//		return userId;
 		if (getDebugExecutor() == null) {
 			logger.error("getUserId() - Debug executor not assigned");
 			return "none";
@@ -123,10 +89,6 @@ public class DebugSessionModel {
 		return getDebugExecutor().getUserId();
 	}
 
-//	public void setUserId(String userId) {
-//		this.userId = userId;
-//	}
-	
 	public boolean isUpdated() {
 		return updated;
 	}
@@ -141,7 +103,7 @@ public class DebugSessionModel {
 	}
 	
 	public DebugSessionMetadata getMetadata() {
-		DebugSessionMetadata metadata = new DebugSessionMetadata(this.getSessionId(), this.getExecutionId(), this.getUserId());
+		DebugSessionMetadata metadata = new DebugSessionMetadata(this.getSessionId(), this.getExecutionId(), this.getUserId(), this.getExecutionId() == this.model.getActiveSession().getExecutionId());
 		return  metadata;
 	}
 	
