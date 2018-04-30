@@ -34,25 +34,16 @@ angular.module('variables', ['variables.config', 'ngAnimate', 'ngSanitize', 'ui.
 	var on = function(topic, callback) {
 		messageHub.subscribe(callback, topic);
 	};
-	var onDebugRefresh = function(callback) {
-		this.on('debugger.debug.enabled', callback);
+	var onDebugVariables = function(callback) {
+		this.on('debugger.debug.variables', callback);
 	};
-	var onDebugContinue = function(callback) {
-		this.on('debugger.debug.continue', callback);
-	};
-	var onDebugStepInto = function(callback) {
-		this.on('debugger.debug.stepInto', callback);
-	};
-	var onDebugStepOver = function(callback) {
-		this.on('debugger.debug.stepOver', callback);
+	var onDebugDisabled = function(callback) {
+		this.on('debugger.debug.disabled', callback);
 	};
 	return {
 		message: message,
 		on: on,
-		onDebugRefresh: onDebugRefresh,
-		onDebugContinue: onDebugContinue,
-		onDebugStepInto: onDebugStepInto,
-		onDebugStepOver: onDebugStepOver
+		onDebugVariables: onDebugVariables
 	};
 }])
 .factory('variablesService', ['$http', 'VARIABLES_SVC_URL', function($http, VARIABLES_SVC_URL){
@@ -66,8 +57,10 @@ angular.module('variables', ['variables.config', 'ngAnimate', 'ngSanitize', 'ui.
 		});
 	};
 
-	$messageHub.onDebugRefresh($scope.refresh);
-	$messageHub.onDebugContinue($scope.refresh);
-	$messageHub.onDebugStepInto($scope.refresh);
-	$messageHub.onDebugStepOver($scope.refresh);
+	$messageHub.onDebugVariables($scope.refresh);
+
+	$messageHub.onDebugDisabled(function() {
+		$scope.variables = [];
+	});
+
 }]);

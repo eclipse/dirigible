@@ -1,5 +1,5 @@
 {
 	"module": "ide/services/menu/window",
-	"extensionPoint": "ide-git-menu",
+	"extensionPoint": "ide-debugger-menu",
 	"description": "Window Menu"
 }

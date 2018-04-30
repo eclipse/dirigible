@@ -3,7 +3,7 @@ exports.getView = function() {
 			"id":"variables",
 			"name":"Variables",
 			"factory":"frame",
-			"region":"center-bottom",
+			"region":"center-top",
 			"label":"Variables",
 			"link":"../ide-debugger/views/variables/index.html"
 	};

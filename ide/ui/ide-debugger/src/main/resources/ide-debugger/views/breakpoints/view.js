@@ -3,7 +3,7 @@ exports.getView = function() {
 			"id":"breakpoints",
 			"name":"Breakpoints",
 			"factory":"frame",
-			"region":"center-bottom",
+			"region":"center-top",
 			"label":"Breakpoints",
 			"link":"../ide-debugger/views/breakpoints/index.html"
 	};
