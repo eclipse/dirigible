@@ -31,16 +31,14 @@ UriBuilder.prototype.build = function(){
 /**
  * Debugger Service API delegate
  */
-var DebuggerService = function($http, debuggerServiceUrl) {
+var DebuggerService = function($http, debuggerServiceUrl, workspacesServiceUrl) {
 	this.debuggerServiceUrl = debuggerServiceUrl;
 	this.$http = $http;
+	this.workspacesServiceUrl = workspacesServiceUrl;
 };
 DebuggerService.prototype.enable = function() {
 	var url = new UriBuilder().path(this.debuggerServiceUrl.split('/')).path("enable").build();
-	this.$http.get(url).then(function() {
-		var wsUrl = window.location.protocol === 'https:' ? 'wss' : 'ws' + '://' + window.location.host + '/websockets/v3/ide/debug/sessions';
-		new WebSocket(wsUrl);
-	});
+	return this.$http.get(url);
 };
 DebuggerService.prototype.disable = function() {
 	var url = new UriBuilder().path(this.debuggerServiceUrl.split('/')).path('disable').build();
@@ -70,9 +68,14 @@ DebuggerService.prototype.activateSession = function(sessionId) {
 	var url = new UriBuilder().path(this.debuggerServiceUrl.split('/')).path('session').path('activate').path(sessionId).build();
 	this.$http.get(url).then();
 };
+DebuggerService.prototype.listWorkspaces = function() {
+	return this.$http.get(this.workspacesServiceUrl);
+};
 
 angular.module('debugger.config', [])
-	.constant('DEBUGGER_SVC_URL','/services/v3/ide/debug/rhino');
+	.constant('DEBUGGER_SVC_URL','/services/v3/ide/debug/rhino')
+	.constant('WORKSPACES_SVC_URL','/services/v3/ide/workspaces');
+
 	
 angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
@@ -92,12 +95,44 @@ angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bo
 	var message = function(evtName, data) {
 		messageHub.post({data: data}, 'debugger.' + evtName);
 	};
+	var on = function(topic, callback) {
+		messageHub.subscribe(callback, topic);
+	};
 	var announceDebugEnabled = function() {
 		this.message('debug.enabled');
 	};
 	var announceDebugDisabled = function() {
 		this.message('debug.disabled');
 	};
+	var announceDebugRegistered = function() {
+		this.message('debug.registered');
+	};
+	var announceDebugFinished = function() {
+		this.message('debug.finished');
+	};
+	var announceDebugSessions = function(sessions) {
+		this.message('debug.sessions', sessions);
+	};
+	var announceDebugVariables = function(variables) {
+		this.message('debug.variables', variables);
+	};
+	var announceDebugLinebreak = function(linebreak, workspace) {
+		this.message('debug.linebreak', linebreak);
+		var filePath = '/' + workspace + '/' + linebreak.breakpoint.fullPath;
+		this.message('editor.open', {
+			'path': filePath,
+			'label': filePath.split('/').pop()
+		});
+		this.message('editor.line.set', {
+			'file': filePath,
+			'row': linebreak.breakpoint.row
+		});
+	};
+
+	var onDebugSessions = function(callback) {
+		this.on('debugger.debug.sessions', callback);
+	};
+
 	var announceDebugRefresh = function() {
 		this.message('debug.refresh');
 	};
@@ -115,8 +150,15 @@ angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bo
 	};
 	return {
 		message: message,
+		on: on,
 		announceDebugEnabled: announceDebugEnabled,
 		announceDebugDisabled: announceDebugDisabled,
+		announceDebugRegistered: announceDebugRegistered,
+		announceDebugFinished: announceDebugFinished,
+		announceDebugSessions: announceDebugSessions,
+		announceDebugVariables: announceDebugVariables,
+		announceDebugLinebreak: announceDebugLinebreak,
+		onDebugSessions: onDebugSessions,
 		announceDebugRefresh: announceDebugRefresh,
 		announceDebugContinue: announceDebugContinue,
 		announceDebugPause: announceDebugPause,
@@ -124,17 +166,62 @@ angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bo
 		announceDebugStepOver: announceDebugStepOver
 	};
 }])
-.factory('debuggerService', ['$http', 'DEBUGGER_SVC_URL', function($http, DEBUGGER_SVC_URL){
-	return new DebuggerService($http, DEBUGGER_SVC_URL);
+.factory('debuggerService', ['$http', 'DEBUGGER_SVC_URL', 'WORKSPACES_SVC_URL', function($http, DEBUGGER_SVC_URL, WORKSPACES_SVC_URL){
+	return new DebuggerService($http, DEBUGGER_SVC_URL, WORKSPACES_SVC_URL);
 }])
 .controller('DebuggerController', ['$scope', '$messageHub', 'debuggerService', function ($scope, $messageHub, debuggerService) {
 
 	$scope.debugEnabled = false;
 
+	$scope.selectedWorkspace = null;
+
+	debuggerService.listWorkspaces().success(function(data) {
+		$scope.workspaces = data;
+		if ($scope.workspaces[0]) {
+			$scope.selectedWorkspace = $scope.workspaces[0];
+		}
+	});
+
 	$scope.enable = function() {
 		$scope.debugEnabled = !$scope.debugEnabled;
 		if ($scope.debugEnabled) {
-			debuggerService.enable();
+			debuggerService.enable().then(function() {
+				var wsUrl = window.location.protocol === 'https:' ? 'wss' : 'ws' + '://' + window.location.host + '/websockets/v3/ide/debug/sessions';
+				var webSocket = new WebSocket(wsUrl);
+				webSocket.onmessage = function(event) {
+					var data = JSON.parse(event.data);
+					if (!data.type) {
+						return;
+					}
+
+					switch(data.type) {
+						case 'register':
+							$messageHub.announceDebugRegistered();
+							break;
+						case 'finished':
+							$messageHub.announceDebugFinished();
+							break;
+						case 'sessions':
+							$messageHub.announceDebugSessions(data.sessions);
+							break;
+						case 'variables':
+							$messageHub.announceDebugVariables(data.variables);
+							break;
+						case 'linebreak':
+							$messageHub.announceDebugLinebreak(data.linebreak, $scope.selectedWorkspace);
+							break;
+					}
+
+				};
+		
+				webSocket.onclose = function(event) {
+					console.error(JSON.stringify(event));
+				};
+		
+				webSocket.onerror = function(event) {
+					console.error(JSON.stringify(event));
+				};
+			});
 			$messageHub.announceDebugEnabled();
 		} else {
 			debuggerService.disable();
@@ -142,6 +229,11 @@ angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bo
 			$scope.sessions = [];
 		}
 	};
+
+	$messageHub.onDebugSessions(function(event) {
+		$scope.sessions = event.data;
+		$scope.$apply();
+	});
 
 	$scope.refresh = function() {
 		if ($scope.debugEnabled) {

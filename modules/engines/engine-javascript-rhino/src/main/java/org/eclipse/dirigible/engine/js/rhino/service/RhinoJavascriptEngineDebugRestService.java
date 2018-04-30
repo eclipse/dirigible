@@ -368,7 +368,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		try {
 			DebugModel debugModel = DebugModelFacade.getDebugModel(user);
 			if (debugModel != null) {
-				debugModel.getActiveSession().getDebugController().setBreakpoint(path, row);
+				debugModel.getDebugController().setBreakpoint(path, row);
 				return Response.ok().build();
 			}
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No debug model present").build();
@@ -401,7 +401,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		try {
 			DebugModel debugModel = DebugModelFacade.getDebugModel(user);
 			if (debugModel != null) {
-				debugModel.getActiveSession().getDebugController().removeBreakpoint(path, row);
+				debugModel.getDebugController().removeBreakpoint(path, row);
 				return Response.ok().build();
 			}
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("No debug model present").build();

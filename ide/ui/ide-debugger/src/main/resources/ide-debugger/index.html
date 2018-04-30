@@ -58,10 +58,13 @@
 		.controller('DebuggerController', ['Layouts', function (Layouts) {
 			
 			this.layoutModel = {
-				views: ['debugger', 'editor', 'variables', 'breakpoints', 'console'],
+				views: ['workspace', 'debugger', 'variables', 'breakpoints', 'editor', 'preview', 'console'],
 				events: {
-					'fileselected': function(msg){
+					'debugger.editor.open': function(msg){
 						Layouts.manager.openEditor(msg.data.path, msg.data.label);
+					},
+					'workspace.file.open': function(msg){
+						Layouts.manager.openEditor(msg.data.file.path, msg.data.file.label, msg.data.file.contentType, msg.data.editor);
 					}
 				}
 			};

@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class BreakpointsMetadata {
 	
-	private DebugModel model;
+	private transient DebugModel model;
 
 	private Set<BreakpointMetadata> breakpointsList = new HashSet<BreakpointMetadata>();
 

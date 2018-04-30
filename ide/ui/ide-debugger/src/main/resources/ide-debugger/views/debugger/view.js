@@ -3,7 +3,7 @@ exports.getView = function() {
 			"id":"debugger",
 			"name":"Debugger",
 			"factory":"frame",
-			"region":"left-top",
+			"region":"center-top",
 			"label":"Debugger",
 			"link":"../ide-debugger/views/debugger/index.html"
 	};
