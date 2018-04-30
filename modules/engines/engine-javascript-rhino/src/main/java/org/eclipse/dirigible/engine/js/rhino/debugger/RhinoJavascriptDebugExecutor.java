@@ -12,11 +12,13 @@ package org.eclipse.dirigible.engine.js.rhino.debugger;
 
 import java.util.Set;
 
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.engine.js.debug.model.BreakpointMetadata;
+import org.eclipse.dirigible.engine.js.debug.model.DebugManager;
 import org.eclipse.dirigible.engine.js.debug.model.DebugSessionModel;
 import org.eclipse.dirigible.engine.js.debug.model.IDebugExecutor;
 
-public class RhinoJavascriptDebugActionCommander implements IDebugExecutor {
+public class RhinoJavascriptDebugExecutor implements IDebugExecutor {
 
 	private boolean executing = false;
 	private DebugCommand currentCommand;
@@ -33,7 +35,7 @@ public class RhinoJavascriptDebugActionCommander implements IDebugExecutor {
 
 	private DebugSessionModel session;
 
-	public RhinoJavascriptDebugActionCommander(DebugSessionModel session, String sessionId, String executionId, String userId) {
+	public RhinoJavascriptDebugExecutor(DebugSessionModel session, String sessionId, String executionId, String userId) {
 		this.session = session;
 		this.sessionId = sessionId;
 		this.executionId = executionId;
@@ -108,7 +110,7 @@ public class RhinoJavascriptDebugActionCommander implements IDebugExecutor {
 
 	@Override
 	public Set<BreakpointMetadata> getBreakpoints() {
-		return this.session.getModel().getBreakpointsMetadata().getBreakpoints();
+		return DebugManager.getDebugModel(UserFacade.getName()).getBreakpointsMetadata().getBreakpoints();
 	}
 
 	@Override

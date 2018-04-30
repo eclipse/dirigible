@@ -46,7 +46,9 @@ public class RhinoJavascriptDebugProcessor {
 		}
 		userSessions.add(session);
 		OPEN_USER_SESSIONS.put(userId, userSessions);
-		DebugModelFacade.createDebugModel(userId, new RhinoJavascriptDebugController(userId));
+		if (DebugModelFacade.getDebugModel(userId) == null) {
+			DebugModelFacade.createDebugModel(userId, new RhinoJavascriptDebugController(userId));
+		}
 		logger.debug("Open debug session for user: " + userId);
 	}
 

@@ -43,7 +43,8 @@ angular.module('variables', ['variables.config', 'ngAnimate', 'ngSanitize', 'ui.
 	return {
 		message: message,
 		on: on,
-		onDebugVariables: onDebugVariables
+		onDebugVariables: onDebugVariables,
+		onDebugDisabled: onDebugDisabled
 	};
 }])
 .factory('variablesService', ['$http', 'VARIABLES_SVC_URL', function($http, VARIABLES_SVC_URL){

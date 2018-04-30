@@ -56,24 +56,18 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptDebugFrame.class);
 
 	private static final int SLEEP_TIME = 50;
-	// private DebuggerActionManager debuggerActionManager;
-	private RhinoJavascriptDebugActionCommander debuggerActionCommander;
+	private RhinoJavascriptDebugExecutor debugExecutor;
 	private Stack<DebuggableScript> scriptStack;
 	private Stack<Scriptable> activationStack;
 	private int stepOverLineNumber = 0;
 	private int previousLineNumber = 0;
 	private boolean stepOverFinished = true;
 	private DebugModel debugModel;
-	// private VariableValuesMetadata variableValuesMetadata;
 
 	private DebugSessionModel session;
 
 	public RhinoJavascriptDebugFrame(DebugModel debugModel, HttpServletRequest request, RhinoJavascriptDebugger javaScriptDebugger) {
-		// get the instance of debugger action manager from the session
-
 		logDebug("entering constructor");
-
-		// this.debuggerActionManager = DebuggerActionManager.getInstance(request.getSession());
 
 		this.debugModel = debugModel;
 
@@ -84,20 +78,18 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 
 		this.session = this.debugModel.createSession();
 
-		this.debuggerActionCommander = new RhinoJavascriptDebugActionCommander(this.session, sessionId, executionId, userId);
+		this.debugExecutor = new RhinoJavascriptDebugExecutor(this.session, sessionId, executionId, userId);
 
-		this.session.setDebugExecutor(getDebuggerActionCommander());
+		this.session.setDebugExecutor(getDebuggerExecutor());
 
-		this.debuggerActionCommander.init();
-		this.debuggerActionCommander.setDebugFrame(this);
-		this.debuggerActionCommander.setDebugger(javaScriptDebugger);
+		this.debugExecutor.init();
+		this.debugExecutor.setDebugFrame(this);
+		this.debugExecutor.setDebugger(javaScriptDebugger);
 
 		this.scriptStack = new Stack<DebuggableScript>();
 		this.activationStack = new Stack<Scriptable>();
 
 		this.debugModel.getDebugController().register(session);
-
-		// registerDebugFrame();
 
 		logDebug("exiting constructor");
 	}
@@ -105,19 +97,6 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 	public DebugModel getDebugModel() {
 		return debugModel;
 	}
-
-	// private void registerDebugFrame() {
-	//// logDebug("entering registerDebugFrame");
-	//// String commandBody = new Gson().toJson(new DebugSessionMetadata(
-	//// getDebuggerActionCommander().getSessionId(), getDebuggerActionCommander()
-	//// .getExecutionId(), getDebuggerActionCommander().getUserId()));
-	//// send(DebugConstants.VIEW_REGISTER, commandBody);
-	//
-	// this.session = this.debugModel.createSession();
-	// session.setDebugExecutor(getDebuggerActionCommander());
-	//
-	// logDebug("exiting registerDebugFrame");
-	// }
 
 	@Override
 	public void onEnter(Context context, Scriptable activation, Scriptable thisObj, Object[] args) {
@@ -145,8 +124,8 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 		scriptStack.pop();
 		activationStack.pop();
 		if (scriptStack.isEmpty()) {
-			this.debuggerActionCommander.clean();
-			RhinoJavascriptDebugActionCommander commander = getDebuggerActionCommander();
+			this.debugExecutor.clean();
+			RhinoJavascriptDebugExecutor commander = getDebuggerExecutor();
 			DebugSessionMetadata metadata = new DebugSessionMetadata(commander.getSessionId(), commander.getExecutionId(), commander.getUserId());
 
 			// clear variables for the UI
@@ -160,8 +139,6 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 	}
 
 	private void finishDebugSession(DebugSessionMetadata metadata) {
-		// String json = new Gson().toJson(metadata);
-		// send(DebugConstants.VIEW_FINISH, json);
 		this.session.getDebugController().finish(this.session);
 	}
 
@@ -171,19 +148,11 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 			notifyVariableValuesMetadata();
 		}
 	}
-
-	// private void clearBreakpoints() {
-	// if (debuggerActionManager.getBreakpoints() != null) {
-	// debuggerActionManager.getBreakpoints().clear();
-	//// sendBreakpointsMetadata();
-	// }
-	// }
-
 	@Override
 	public void onDebuggerStatement(Context context) {
 		print(-1);
-		if (debuggerActionCommander.isExecuting()) {
-			debuggerActionCommander.pauseExecution();
+		if (debugExecutor.isExecuting()) {
+			debugExecutor.pauseExecution();
 		}
 	}
 
@@ -214,15 +183,15 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 	private void hitBreakpoint(int lineNumber) {
 		logDebug("entering hitBreakpoint(): " + lineNumber);
 		print(lineNumber);
-		debuggerActionCommander.stepOver();
-		debuggerActionCommander.pauseExecution();
+		debugExecutor.stepOver();
+		debugExecutor.pauseExecution();
 		logDebug("exiting hitBreakpoint()");
 	}
 
 	private void stepInto(int lineNumber) {
 		logDebug("entering stepInto(): " + lineNumber);
 		print(lineNumber);
-		debuggerActionCommander.pauseExecution();
+		debugExecutor.pauseExecution();
 		logDebug("exiting stepInto()");
 	}
 
@@ -242,7 +211,7 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 
 	private void blockExecution() {
 		logDebug("entering blockExecution()");
-		while (!debuggerActionCommander.isExecuting() && (getNextCommand() != DebugCommand.CONTINUE)
+		while (!debugExecutor.isExecuting() && (getNextCommand() != DebugCommand.CONTINUE)
 				&& (getNextCommand() != DebugCommand.SKIP_ALL_BREAKPOINTS)) {
 			try {
 				Thread.sleep(SLEEP_TIME);
@@ -254,7 +223,7 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 	}
 
 	private DebugCommand getNextCommand() {
-		return debuggerActionCommander.getCommand();
+		return debugExecutor.getCommand();
 	}
 
 	private boolean isBreakpoint(int row) {
@@ -262,14 +231,14 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 		if (!path.startsWith(IRepositoryStructure.SEPARATOR)) {
 			path = IRepositoryStructure.SEPARATOR + path;
 		}
-		RhinoJavascriptDebugActionCommander commander = getDebuggerActionCommander();
-		LinebreakMetadata breakpoint = new LinebreakMetadata(commander.getSessionId(), commander.getExecutionId(), commander.getUserId(), path, row);
-		Set<BreakpointMetadata> breakpoints = debuggerActionCommander.getBreakpoints();
+		RhinoJavascriptDebugExecutor executor = getDebuggerExecutor();
+		LinebreakMetadata breakpoint = new LinebreakMetadata(executor.getSessionId(), executor.getExecutionId(), executor.getUserId(), path, row);
+		Set<BreakpointMetadata> breakpoints = debugExecutor.getBreakpoints();
 		return breakpoints.contains(breakpoint.getBreakpoint());
 	}
 
 	private void print(int row) {
-		RhinoJavascriptDebugActionCommander commander = getDebuggerActionCommander();
+		RhinoJavascriptDebugExecutor commander = getDebuggerExecutor();
 		DebuggableScript script = scriptStack.peek();
 		Scriptable activation = activationStack.peek();
 		List<VariableValue> variableValuesList = new ArrayList<VariableValue>();
@@ -325,15 +294,15 @@ public class RhinoJavascriptDebugFrame implements DebugFrame {
 	}
 
 	private void sendOnBreakLineChange(String path, Integer row) {
-		RhinoJavascriptDebugActionCommander commander = getDebuggerActionCommander();
+		RhinoJavascriptDebugExecutor commander = getDebuggerExecutor();
 		LinebreakMetadata currentLineBreak = new LinebreakMetadata(commander.getSessionId(), commander.getExecutionId(), commander.getUserId(), path,
 				row);
 		this.session.setCurrentLineBreak(currentLineBreak);
 		this.session.getDebugController().onLineChange(currentLineBreak, this.session);
 	}
 
-	public RhinoJavascriptDebugActionCommander getDebuggerActionCommander() {
-		return debuggerActionCommander;
+	public RhinoJavascriptDebugExecutor getDebuggerExecutor() {
+		return debugExecutor;
 	}
 
 	private void logError(String message) {
