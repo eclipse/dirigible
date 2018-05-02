@@ -153,29 +153,16 @@ If you like to contribute to Dirigible, please read the [Contributor's guide](CO
 [http://www.dirigible.io](http://www.dirigible.io)
 
 - Help Portal
-[http://help.dirigible.io](http://help.dirigible.io) 
+[http://help.dirigible.io](http://www.dirigible.io/help) 
 
-- Simple Samples
+- Samples
 [http://samples.dirigible.io](http://samples.dirigible.io)
 
 - Trial Instance
-[http://trial.dirigible.io](http://trial.dirigible.io)
-
-- Forum
-[https://www.eclipse.org/forums/index.php/m/1688357/](https://www.eclipse.org/forums/index.php/m/1688357/)
+[http://trial.dirigible.io](http://trial.dirigible.io) or [http://dirigible.eclipse.org](http://dirigible.eclipse.org)
 
 - Mailing List
 [https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
 
-- Bugzilla
-[https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Dirigible](https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Dirigible)
-
-### Update Sites
-
-- [http://download.eclipse.org/dirigible/nightly/p2/bridge/](http://download.eclipse.org/dirigible/nightly/p2/bridge/)
-- [http://download.eclipse.org/dirigible/nightly/p2/external/](http://download.eclipse.org/dirigible/nightly/p2/external/)
-- [http://download.eclipse.org/dirigible/nightly/p2/ide/](http://download.eclipse.org/dirigible/nightly/p2/ide/)
-- [http://download.eclipse.org/dirigible/nightly/p2/lib/](http://download.eclipse.org/dirigible/nightly/p2/lib/)
-- [http://download.eclipse.org/dirigible/nightly/p2/repository/](http://download.eclipse.org/dirigible/nightly/p2/repository/)
-- [http://download.eclipse.org/dirigible/nightly/p2/runtime/](http://download.eclipse.org/dirigible/nightly/p2/runtime/)
-- [http://download.eclipse.org/dirigible/nightly/p2/rcp/](http://download.eclipse.org/dirigible/nightly/p2/rcp/)
+- Issues
+[https://github.com/eclipse/dirigible/issues](https://github.com/eclipse/dirigible/issues)
