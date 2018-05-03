@@ -21,7 +21,9 @@ From the end user's perspective (developer), Dirigible runs directly in the brow
 
 From the service provider's perspective (PaaS/SaaS), Dirigible packs all required components in a self-contained software bundle that can be deployed in any Java-based web server, such as Tomcat, Jetty, JBoss.
 
-Dirigible supports access to RDBMS via JDBC. Currently supported versions for RDBMS are HANA, MaxDB, Sybase ASE, PostgreSQL, H2, and Derby.
+Dirigible supports access to RDBMS via JDBC. Currently supported versions for RDBMS are HANA, MaxDB, Sybase ASE, PostgreSQL, MySQL, H2, and Derby.
+
+Dirigible promotes the In-System Programing development model, where you make dynamic alteration of the live system. To provide the self-contained bundle serving all the needed features for a business application, Dirigible packs various engines such as ActiveMQ, Quartz, Lucene, Flowable, Mylyn, Rhino, V8 and others.
 
 The project started as an internal SAP initiative to address the extension and adaption use-cases related to SOA and Enterprise Services.
 
@@ -29,11 +31,9 @@ The project started as an internal SAP initiative to address the extension and a
 - [Get Started](#get-started)
 	- [Download](#download)
 	- [Build](#build)
-	- [Deploy](#deploy)
-		- [Instant Trial](#instant-trial) 
-		- [HANA Cloud Platform](#hana-cloud-platform)
+	- [Run](#run)
+		- [Desktop](#desktop)
 		- [Tomcat](#tomcat)
-		- [Eclipse](#eclipse)
 		- [CloudFoundry](#cloudfoundry)
 - [Additional Information](#additional-information)
 	- [License](#license)
@@ -54,86 +54,38 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
 ### Build
 
-#### 2.x
-
 ##### Prerequisites
 
 - [Git](http://git-scm.com/)
-- [Maven 3.0.x](http://maven.apache.org/docs/3.0.5/release-notes.html)
+- [Maven 3.5.x](http://maven.apache.org/docs/3.5.3/release-notes.html)
 
 
 ##### Steps
 
-1. Clone the [project repository - master-2.x branch](https://github.com/eclipse/dirigible/tree/master-2.x) or [download the latest 2.x sources](https://github.com/eclipse/dirigible/archive/master-2.x.zip).
-2. Go to the `org.eclipse.dirigible/org.eclipse.dirigible.parent` folder.
-3. Build the project with:
-
-        mvn clean install
-
-The build should pass successfully. The produced WAR files under target sub-folder `org.eclipse.dirigible/org.eclipse.dirigible.parent/releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type.
-
-#### 3.x
-
-##### Prerequisites
-
-- [Git](http://git-scm.com/)
-- [Maven 3.0.x](http://maven.apache.org/docs/3.0.5/release-notes.html)
-
-
-##### Steps
-
-1. Clone the [project repository - master branch](https://github.com/eclipse/dirigible/tree/master) or [download the latest 2.x sources](https://github.com/eclipse/dirigible/archive/master.zip).
+1. Clone the [project repository - master branch](https://github.com/eclipse/dirigible/tree/master) or [download the latest 3.x sources](https://github.com/eclipse/dirigible/archive/master.zip).
 2. Go to the root folder.
 3. Build the project with:
 
         mvn clean install
 
-The build should pass successfully. The produced WAR files under target sub-folder `releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type.
+The build should pass successfully. The produced WAR files under target sub-folder `releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type. There is also an executable JAR file under the `releng/desktop-all/target` folder with name like `dirigible-desktop-all-3.1.4.jar`
 
 
-### Deploy
+### Run
 
-
-#### Trial
-
-Trial package combines the deployable artifacts of Dirigible along with the Tomcat web container and Derby database. It is useful for quick exploration of Dirigible features.
+#### Desktop
 
 ##### Steps
 
-1. Build the project with:
+1. Take the JAR file you have built in the previous step e.g. `dirigible-desktop-all-3.1.4.jar`.
+2. Execute from command line
 
-	mvn clean install -P trial
-	
-The build should pass successfully. Find the produced produced executable JAR file under target sub-folder at `org.eclipse.dirigible/org.eclipse.dirigible.parent/releng`.
-
-2. Run with:
-
-	java -jar dirigible-all-tomcat-trial-executable.jar
+	java -jar dirigible-desktop-all-3.1.4.jar
 	
 3. Open a web browser and go to:
 
-        http://localhost:8080/dirigible/services/ui/anonymous.html	
+        http://localhost:8080
 
-#### HANA Cloud Platform
-
-Deploy on [HANA Cloud Platform](https://account.hana.ondemand.com/) with the [Cloud SDK](https://tools.hana.ondemand.com/#cloud).
-
-##### Prerequisites
-
-- [HANA Cloud Platform SDK](https://tools.hana.ondemand.com/#cloud)
-
-##### Steps
-
-1. Go to the `neo-java-web-sdk-2.xxx/tools` SDK folder.
-2. Deploy with command:
-
-        neo deploy --account <your_account> --application <application_name> --user <your_user> --host <target_landscape_host> --source <source_directory> --password <your_password>
-
-3. Start with command:
-
-        neo start --account <your_account> --application <application_name> --user <your_user> --host <target_landscape_host> --password <your_password> -y
-
-4. Go to https://account.hanatrial.ondemand.com/cockpit at Authorizations section. Add Developer and Operator role to your user which gives you full access to all features.
 
 #### Tomcat
 
@@ -143,7 +95,7 @@ More information about how to deploy on Tomcat can be found [here](http://tomcat
 
 ##### Steps
 
-1. For simplicity rename the WAR `dirigible-all-tomcat-xxx.war` to `dirigible.war`.
+1. Take the WAR file you have built in the previous step `ROOT.war`.
 2. Configure Users store:
 
         <tomcat-users>
@@ -153,57 +105,12 @@ More information about how to deploy on Tomcat can be found [here](http://tomcat
                 <user username="dirigible" password="dirigible" roles="Developer,Operator,Everyone"/>
         </tomcat-users>
 
-4. Open a web browser and go to:
+3. Open a web browser and go to:
 
-        http://localhost:8080/dirigible
+        http://localhost:8080
 
 4. Login with dirigible/dirigible.
 
-#### Eclipse
-
-The IDE part can be run directly via Eclipse. This is useful when testing new features during development.
-
-##### Prerequisites
-
-- [Maven 3.0.x](http://maven.apache.org/)
-- [Eclipse IDE](https://www.eclipse.org/)
-
-##### Steps
-
-1. Run preparation command
-
-        mvn eclipse:eclipse 
-
-2. Import the project as existing Maven project into your local Eclipse environment.
-3. Go to project `org.eclipse.dirigible/org.eclipse.dirigible.parent/platform/org.eclipse.dirigible.platform.target` and open the file `org.eclipse.dirigible.platform.base.target` using the Target Editor.
-4. Click on the `Set as Target Platform` link and wait until the required bundles get synchronized.
-5. Use `dirigible-local.launch` file for `Run As` configuration.
-6. Open a web browser and go to:
-
-        http://localhost:8080/dirigible
-
-
-#### CloudFoundry
-
-##### Prerequisites
-
-- [CloudFoundry Cli](http://docs.cloudfoundry.org/devguide/installcf/install-go-cli.html)
-
-##### Steps
-
-1. Login to CloudFoundry Platform with:
-
-		cf login -a [CloudFoundry Platform Host]
-
-2. Deploy on the CloudFoundry supported Cloud Platform with:
-
-		cf push dirigible -p [path to the target directory]/dist/tomcat/allinone/ROOT.war -b https://github.com/dirigiblelabs/java-buildpack
-
-3. Open a web browser and go to:
-
-        http://dirigible.[CloudFoundry Platform Host]/
-
-4. Login with user `dirigible` and password `dirigible` which are set by default in the custom buildpack used above.
 
 #### Docker
 
@@ -246,29 +153,16 @@ If you like to contribute to Dirigible, please read the [Contributor's guide](CO
 [http://www.dirigible.io](http://www.dirigible.io)
 
 - Help Portal
-[http://help.dirigible.io](http://help.dirigible.io) 
+[http://help.dirigible.io](http://www.dirigible.io/help) 
 
-- Simple Samples
+- Samples
 [http://samples.dirigible.io](http://samples.dirigible.io)
 
 - Trial Instance
-[http://trial.dirigible.io](http://trial.dirigible.io)
-
-- Forum
-[https://www.eclipse.org/forums/index.php/m/1688357/](https://www.eclipse.org/forums/index.php/m/1688357/)
+[http://trial.dirigible.io](http://trial.dirigible.io) or [http://dirigible.eclipse.org](http://dirigible.eclipse.org)
 
 - Mailing List
 [https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
 
-- Bugzilla
-[https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Dirigible](https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Dirigible)
-
-### Update Sites
-
-- [http://download.eclipse.org/dirigible/nightly/p2/bridge/](http://download.eclipse.org/dirigible/nightly/p2/bridge/)
-- [http://download.eclipse.org/dirigible/nightly/p2/external/](http://download.eclipse.org/dirigible/nightly/p2/external/)
-- [http://download.eclipse.org/dirigible/nightly/p2/ide/](http://download.eclipse.org/dirigible/nightly/p2/ide/)
-- [http://download.eclipse.org/dirigible/nightly/p2/lib/](http://download.eclipse.org/dirigible/nightly/p2/lib/)
-- [http://download.eclipse.org/dirigible/nightly/p2/repository/](http://download.eclipse.org/dirigible/nightly/p2/repository/)
-- [http://download.eclipse.org/dirigible/nightly/p2/runtime/](http://download.eclipse.org/dirigible/nightly/p2/runtime/)
-- [http://download.eclipse.org/dirigible/nightly/p2/rcp/](http://download.eclipse.org/dirigible/nightly/p2/rcp/)
+- Issues
+[https://github.com/eclipse/dirigible/issues](https://github.com/eclipse/dirigible/issues)
