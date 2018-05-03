@@ -72,7 +72,6 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		try {
 			logger.trace(format("Creating Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
 			bind(DataSource.class).toInstance(next.getDataSource(dataSourceName));
-			java.util.Iterator<IDatabase> iterator = DATABASES.iterator();
 			logger.info(format("Bound Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 			logger.trace(format("Done creating Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		} catch (Exception e) {
