@@ -47,10 +47,10 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		String databaseProvider = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER);
 		String dataSourceName = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,
 				IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
-		if (databaseProvider == null) {
-			databaseProvider = IDatabase.DIRIGIBLE_DATABASE_PROVIDER_LOCAL;
-		} else {
+		if (databaseProvider != null) {
 			databaseProviderIsSelected = true;
+		} else {
+			databaseProvider = IDatabase.DIRIGIBLE_DATABASE_PROVIDER_LOCAL;
 		}
 		for (IDatabase next : DATABASES) {
 			logger.trace(format("Installing Database Provider [{0}:{1}] ...", next.getType(), next.getName()));
@@ -72,6 +72,7 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		try {
 			logger.trace(format("Creating Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
 			bind(DataSource.class).toInstance(next.getDataSource(dataSourceName));
+			java.util.Iterator<IDatabase> iterator = DATABASES.iterator();
 			logger.info(format("Bound Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 			logger.trace(format("Done creating Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		} catch (Exception e) {
