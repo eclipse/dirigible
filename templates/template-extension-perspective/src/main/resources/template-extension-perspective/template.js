@@ -1,6 +1,6 @@
 exports.getTemplate = function() {
 	return {
-		"name": "Extension Perspective Template",
+		"name": "Extension (Perspective)",
 		"description": "Extension perspective for the IDE",
 		"sources": [{
 			"location": "/template-extension-perspective/extensions/menu/help.extension.template", 
@@ -19,25 +19,25 @@ exports.getTemplate = function() {
 			"action": "generate",
 			"rename": "/extensions/menu/menu-{{fileName}}.extensionpoint"
 		}, {
-			"location": "/template-extension-perspective/extensions/perspective-perspective.extension.template", 
+			"location": "/template-extension-perspective/extensions/perspective.extension.template", 
 			"action": "generate",
-			"rename": "/extensions/perspective-{{fileName}}.extension"
+			"rename": "/extensions/perspective.extension"
 		}, {
-			"location": "/template-extension-perspective/perspective.html.template", 
+			"location": "/template-extension-perspective/index.html.template", 
 			"action": "generate",
-			"rename": "{{fileName}}.html"
+			"rename": "index.html"
 		}, {
-			"location": "/template-extension-perspective/services/menu/perspective.js.template", 
+			"location": "/template-extension-perspective/perspective/menu/perspective.js.template", 
 			"action": "generate",
-			"rename": "/services/menu/{{fileName}}.js"
+			"rename": "/perspective/menu/{{fileName}}.js"
 		}, {
-			"location": "/template-extension-perspective/services/menu-perspective.js.template", 
+			"location": "/template-extension-perspective/api/menu-perspective.js.template", 
 			"action": "generate",
-			"rename": "/services/menu-{{fileName}}.js"
+			"rename": "/api/menu-{{fileName}}.js"
 		}, {
-			"location": "/template-extension-perspective/services/perspective-perspective.js.template", 
+			"location": "/template-extension-perspective/perspective/perspective.js.template", 
 			"action": "generate",
-			"rename": "/services/perspective-{{fileName}}.js"
+			"rename": "/perspective/{{fileName}}.js"
 		}],
 		"parameters": []
 	};

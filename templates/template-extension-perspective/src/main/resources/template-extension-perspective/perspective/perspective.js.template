@@ -11,7 +11,7 @@
 exports.getPerspective = function() {
 	return {
 		"name": "{{fileName}}",
-		"link": "../{{projectName}}/{{fileName}}.html",
+		"link": "../{{projectName}}/index.html",
 		"order": "120",
 		"image": "address-book"
 	};

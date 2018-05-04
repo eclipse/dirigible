@@ -1,5 +1,5 @@
 {
-	"module": "{{projectName}}/services/perspective-{{fileName}}.js",
+	"module": "{{projectName}}/perspective/{{fileName}}.js",
 	"extensionPoint": "ide-perspective",
 	"description": "{{fileName}} Perspective"
 }
