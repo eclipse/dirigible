@@ -35,7 +35,7 @@
 
 <body ng-app="{{fileName}}" ng-controller="Controller as c">
 
-	<div menu menu-data-url="../../js/{{projectName}}/services/menu-{{fileName}}.js"></div>
+	<div menu menu-data-url="/services/v3/js/{{projectName}}/api/menu-{{fileName}}.js"></div>
 	
 	<div class="shell">
 		<div class="sidebar list-group" sidebar active="{{fileName}}"></div>

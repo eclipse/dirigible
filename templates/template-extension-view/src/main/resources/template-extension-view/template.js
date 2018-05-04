@@ -1,19 +1,23 @@
 exports.getTemplate = function() {
 	return {
-		"name": "Extension View Template",
+		"name": "Extension (View)",
 		"description": "Extension view for the IDE",
 		"sources": [{
-			"location": "/template-extension-view/view.html.template", 
-			"action": "generate",
-			"rename": "{{fileName}}.html"
+			"location": "/template-extension-view/views/view/index.html.template", 
+			"action": "copy",
+			"rename": "views/{{fileName}}/index.html"
 		}, {
-			"location": "/template-extension-view/extension-view.js.template", 
+			"location": "/template-extension-view/views/view/controller.js.template", 
 			"action": "generate",
-			"rename": "{{fileName}}.js"
+			"rename": "views/{{fileName}}/controller.js"
 		}, {
-			"location": "/template-extension-view/view.extension.template", 
+			"location": "/template-extension-view/views/view/view.js.template", 
 			"action": "generate",
-			"rename": "{{fileName}}.extension"
+			"rename": "views/{{fileName}}/view.js"
+		}, {
+			"location": "/template-extension-view/extensions/views/view.extension.template", 
+			"action": "generate",
+			"rename": "extensions/views/{{fileName}}.extension"
 		}],
 		"parameters": [{
 			"name": "viewName",

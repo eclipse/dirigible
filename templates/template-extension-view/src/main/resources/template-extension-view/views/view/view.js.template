@@ -10,11 +10,11 @@
 
 exports.getView = function() {
 	return {
-		"id": "{{fileName}}",
-		"name": "{{viewName}}",
-		"factory": "frame",
-		"region": "center-bottom",
-		"label": "{{viewName}}",
-		"link": "../{{projectName}}/{{fileName}}.html"
+		'id': '{{fileName}}',
+		'name': '{{viewName}}',
+		'factory': 'frame',
+		'region': 'center-bottom',
+		'label': '{{viewName}}',
+		'link': '../{{projectName}}/views/{{fileName}}/index.html'
 	};
 };
