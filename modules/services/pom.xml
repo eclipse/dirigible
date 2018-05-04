@@ -23,6 +23,7 @@
 		<module>service-security</module>
 		<module>service-theme</module>
 		<module>service-transport</module>
+		<module>service-operations</module>
 	</modules>
 
 </project>

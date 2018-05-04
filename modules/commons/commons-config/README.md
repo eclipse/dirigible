@@ -38,16 +38,24 @@
 - `DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES`: (default: {empty})
 - `DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT`: (default: DefaultDB)
 
+#### Database Derby
+
+- `DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT`: (default: ./target/dirigible/derby)
+
+#### Database H2
+
+- `DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT`: (default: ./target/dirigible/h2)
+- `DIRIGIBLE_DATABASE_H2_DRIVER`: (default: org.h2.Driver)
+- `DIRIGIBLE_DATABASE_H2_URL`: (default: jdbc:h2:./target/dirigible/h2)
+- `DIRIGIBLE_DATABASE_H2_USERNAME`: (default: sa)
+- `DIRIGIBLE_DATABASE_H2_PASSWORD`: (default is empty)
+
 ### Scheduler
 - `DIRIGIBLE_SCHEDULER_DATABASE_DRIVER`: (default: {empty})
 - `DIRIGIBLE_SCHEDULER_DATABASE_URL`: (default: {empty})
 - `DIRIGIBLE_SCHEDULER_DATABASE_USER`: (default: {empty})
 - `DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD`: (default: {empty})
 - `DIRIGIBLE_SCHEDULER_DATASOURCE_NAME`: (default: DefaultDB)
-
-#### Database Derby
-
-- `DIRIGIBLE_DATABASE_DERBY_DEFAULT_ROOT_FOLDER`: (default: .)
 
 #### Persistence
 
@@ -84,5 +92,10 @@
 
 ### JavaScript
 
- - `DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT`: rhino/nashorn/v8 (default is rhino)
+- `DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT`: rhino/nashorn/v8 (default is rhino)
  
+## Operations
+
+### Logs
+
+- `DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT`: (default: ../logs)

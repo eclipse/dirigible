@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Services</name>
-	<artifactId>dirigible-services</artifactId>
+	<name>Service - Operations</name>
+	<artifactId>dirigible-service-operations</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -20,7 +20,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
-                <inherited>true</inherited>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -30,44 +29,19 @@
     </build>
     
     <dependencies>
-        <dependency>
+    	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-core</artifactId>
+            <artifactId>dirigible-commons-api</artifactId>
             <version>3.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-extensions</artifactId>
+            <artifactId>dirigible-commons-config</artifactId>
             <version>3.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-registry</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-repository</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-security</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-theme</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-transport</artifactId>
-            <version>3.2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-operations</artifactId>
+            <artifactId>dirigible-api-facade-utils</artifactId>
             <version>3.2.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
