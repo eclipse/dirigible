@@ -154,6 +154,17 @@
 	
 	<security-constraint>
 	    <web-resource-collection>
+	        <web-resource-name>Operations Services</web-resource-name>
+	        <url-pattern>/services/v3/ops/*</url-pattern>
+	        <url-pattern>/websockets/v3/ops/*</url-pattern>
+	    </web-resource-collection>
+	    <auth-constraint>
+	        <role-name>Operator</role-name>
+	    </auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+	    <web-resource-collection>
 	        <web-resource-name>Transport Services</web-resource-name>
 	        <url-pattern>/services/v3/transport/*</url-pattern>
 	    </web-resource-collection>
