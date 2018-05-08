@@ -18,6 +18,11 @@ function createSql(graph) {
 						
 						sql.push('\n    '+column.name+' '+column.type);
 						
+						if (column.type === 'VARCHAR' || column.type === 'CHAR') {
+							sql.push('('+column.columnLength+')');
+						}
+
+						
 						if (column.notNull) {
 							sql.push(' NOT NULL');
 						}

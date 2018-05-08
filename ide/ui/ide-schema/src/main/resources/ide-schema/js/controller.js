@@ -329,7 +329,7 @@ function main(container, outline, toolbar, sidebar, status) {
 				}
 			}
 			
-			if (primaryKey !== 'true') {
+			if (primaryKey.value.primaryKey !== 'true') {
 				showAlert('Drop', 'Target Table must have a Primary Key', $scope);
 				return;
 			}
