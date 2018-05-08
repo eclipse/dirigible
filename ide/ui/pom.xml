@@ -54,6 +54,11 @@
 		<module>ide-monaco</module>
 		<module>ide-ace</module>
 		<module>ide-debugger</module>
+		<module>ide-logs</module>
+		<module>ide-jobs</module>
+		<module>ide-extensions</module>
+		<module>ide-operations</module>
+		<module>ide-security</module>
 	</modules>
 
 	<profiles>
