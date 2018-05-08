@@ -119,5 +119,30 @@
 		 	<artifactId>dirigible-ide-ui-debugger</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-ui-logs</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-ui-jobs</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-ui-extensions</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-ui-operations</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-ui-security</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>
