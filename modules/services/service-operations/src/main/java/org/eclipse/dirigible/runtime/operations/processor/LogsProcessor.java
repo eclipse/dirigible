@@ -18,12 +18,12 @@ import org.eclipse.dirigible.commons.config.Configuration;
 public class LogsProcessor {
 	
 	private static final String DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT = "DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT";
-
+	
 	public LogsProcessor() {
 		Configuration.load("/dirigible-operations.properties");
 	}
 	
-	public String list() {
+	public String list() throws IOException {
 		String logsFolder = Configuration.get(DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT);
 		List<String> fileNames = new ArrayList<>();
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(logsFolder))) {
@@ -31,7 +31,9 @@ public class LogsProcessor {
                 String name = path.toString();
 				fileNames.add(name.substring(name.lastIndexOf(File.separator) + 1));
             }
-        } catch (IOException ex) {}
+        } catch (IOException e) {
+        	throw e;
+        }
         return GsonHelper.GSON.toJson(fileNames);
 	}
 	
