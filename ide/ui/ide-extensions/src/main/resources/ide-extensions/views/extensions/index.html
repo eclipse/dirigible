@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" ng-app="extensions">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Eclipse Dirigible &trade; | View </title>
+
+    <link rel="shortcut icon" type="image/png" href="/services/v3/web/resources/images/favicon.png" />
+	
+	<!-- FontAwesome icon set -->
+    <link type="text/css" href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+</head>
+
+<body ng-controller="ExtensionsController">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Location</th>
+				<th>Extension Point</th>
+				<th>Module</th>
+				<th>Description</th>
+				<th>Created By</th>
+				<th>Created At</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="next in extensions">
+				<td>{{$index + 1}}</td>
+				<td>{{next.location}}</td>
+				<td>{{next.extensionPoint}}</td>
+				<td>{{next.module}}</td>
+				<td>{{next.description}}</td>
+				<td>{{next.createdBy}}</td>
+				<td>{{next.createdAt}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+	<script>
+		angular.module('extensions', []);
+		angular.module('extensions').controller('ExtensionsController', function ($scope, $http) {
+		
+		    var extensionsApi = '/services/v3/js/ide-extensions/services/extensions.js';
+		
+		    function loadExtensions() {
+		        $http.get(extensionsApi)
+		        .success(function(data) {
+		            $scope.extensions = data;
+		        });
+		    }
+		
+		    loadExtensions();
+		});
+	</script>
+</body>
+
+
+</html>
