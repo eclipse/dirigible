@@ -1,1 +1,3 @@
 org.eclipse.dirigible.runtime.operations.service.LogsService	# Logs Service
+org.eclipse.dirigible.runtime.operations.service.JobsService	# Jobs Service
+org.eclipse.dirigible.runtime.operations.service.SecurityService	# Security Service
