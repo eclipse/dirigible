@@ -21,7 +21,8 @@ function createSchema(graph) {
 						schema.push('    <query value="'+column.name+'"/>\n');
 					} else {
 						schema.push('    <column name="'+column.name+'" type="'+column.type+'"');
-						if (column.columnLength !== null) {
+						
+						if (column.type === 'VARCHAR' || column.type === 'CHAR') {
 							schema.push(' length="'+column.columnLength+'"');
 						}
 						if (column.notNull === 'true') {
