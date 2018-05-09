@@ -17,6 +17,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureSchemaModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
@@ -660,5 +661,13 @@ public interface IDataStructuresCoreService extends ICoreService {
 	 * @return the data structure schema model
 	 */
 	public DataStructureSchemaModel parseSchema(String location, String content);
+
+	/**
+	 * Get all the data structure definitions
+	 * 
+	 * @return the list of the definitions
+	 * @throws DataStructuresException in case of an error
+	 */
+	public List<DataStructureModel> getDataStructures() throws DataStructuresException;
 
 }
