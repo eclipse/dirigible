@@ -68,8 +68,11 @@
 		.controller('Controller', ['Layouts', function (Layouts) {
 			
 			this.layoutModel = {
-				views: ['extensionPoints', 'extensions', 'jobs', 'access', 'roles', 'console', 'terminal', 'logs'],
+				views: ['registry', 'repository', 'extensionPoints', 'extensions', 'jobs', 'listeners', 'datastructures', 'access', 'roles', 'console', 'terminal', 'logs'],
 				events: {
+					'repository.resource.open': function(msg){
+						Layouts.manager.openEditor(msg.data.path, msg.data.label, msg.data.contentType, "repository");
+					},
 					'fileselected': function(msg){
 						Layouts.manager.openEditor(msg.data.path, msg.data.label);
 					}

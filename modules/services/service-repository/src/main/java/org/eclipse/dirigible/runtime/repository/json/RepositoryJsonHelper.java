@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.runtime.repository.json;
 
+import java.util.List;
+
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 
@@ -33,11 +35,13 @@ public class RepositoryJsonHelper {
 		Repository repositoryPojo = new Repository();
 		repositoryPojo.setName(collection.getName());
 		repositoryPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
-		for (ICollection childCollection : collection.getCollections()) {
+		List<ICollection> collections = collection.getCollections();
+		for (ICollection childCollection : collections) {
 			repositoryPojo.getCollections().add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
 		}
 
-		for (IResource childResource : collection.getResources()) {
+		List<IResource> resources = collection.getResources();
+		for (IResource childResource : resources) {
 			Resource resourcePojo = new Resource();
 			resourcePojo.setName(childResource.getName());
 			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
@@ -63,11 +67,13 @@ public class RepositoryJsonHelper {
 		Registry registryPojo = new Registry();
 		registryPojo.setName(collection.getName());
 		registryPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
-		for (ICollection childCollection : collection.getCollections()) {
+		List<ICollection> collections = collection.getCollections();
+		for (ICollection childCollection : collections) {
 			registryPojo.getCollections().add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
 		}
 
-		for (IResource childResource : collection.getResources()) {
+		List<IResource> resources = collection.getResources();
+		for (IResource childResource : resources) {
 			Resource resourcePojo = new Resource();
 			resourcePojo.setName(childResource.getName());
 			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
@@ -93,11 +99,13 @@ public class RepositoryJsonHelper {
 		Collection collectionPojo = new Collection();
 		collectionPojo.setName(collection.getName());
 		collectionPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
-		for (ICollection childCollection : collection.getCollections()) {
+		List<ICollection> collections = collection.getCollections();
+		for (ICollection childCollection : collections) {
 			collectionPojo.getCollections().add(traverseCollection(childCollection, removePathPrefix, addPathPrefix));
 		}
 
-		for (IResource childResource : collection.getResources()) {
+		List<IResource> resources = collection.getResources();
+		for (IResource childResource : resources) {
 			Resource resourcePojo = new Resource();
 			resourcePojo.setName(childResource.getName());
 			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));

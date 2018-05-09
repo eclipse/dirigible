@@ -10,6 +10,8 @@
 
 package org.eclipse.dirigible.core.workspace.json;
 
+import java.util.List;
+
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 
@@ -33,7 +35,8 @@ public class WorkspaceJsonHelper {
 		WorkspaceDescriptor workspacePojo = new WorkspaceDescriptor();
 		workspacePojo.setName(collection.getName());
 		workspacePojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
-		for (ICollection childCollection : collection.getCollections()) {
+		List<ICollection> collections = collection.getCollections();
+		for (ICollection childCollection : collections) {
 			workspacePojo.getProjects().add(describeProject(childCollection, removePathPrefix, addPathPrefix));
 		}
 
@@ -55,11 +58,13 @@ public class WorkspaceJsonHelper {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
-		for (ICollection childCollection : collection.getCollections()) {
+		List<ICollection> collections = collection.getCollections();
+		for (ICollection childCollection : collections) {
 			projectPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix));
 		}
 
-		for (IResource childResource : collection.getResources()) {
+		List<IResource> resources = collection.getResources();
+		for (IResource childResource : resources) {
 			FileDescriptor resourcePojo = new FileDescriptor();
 			resourcePojo.setName(childResource.getName());
 			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
@@ -85,11 +90,13 @@ public class WorkspaceJsonHelper {
 		FolderDescriptor folderPojo = new FolderDescriptor();
 		folderPojo.setName(collection.getName());
 		folderPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
-		for (ICollection childCollection : collection.getCollections()) {
+		List<ICollection> collections = collection.getCollections();
+		for (ICollection childCollection : collections) {
 			folderPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix));
 		}
 
-		for (IResource childResource : collection.getResources()) {
+		List<IResource> resources = collection.getResources();
+		for (IResource childResource : resources) {
 			FileDescriptor resourcePojo = new FileDescriptor();
 			resourcePojo.setName(childResource.getName());
 			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
