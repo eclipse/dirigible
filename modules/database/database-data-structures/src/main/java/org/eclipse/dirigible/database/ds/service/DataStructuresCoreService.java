@@ -30,6 +30,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureSchemaModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
@@ -67,6 +68,9 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	
 	@Inject
 	private PersistenceManager<DataStructureSchemaModel> schemaPersistenceManager;
+	
+	@Inject
+	private PersistenceManager<DataStructureModel> dataStructurePersistenceManager;
 
 	// Tables
 
@@ -1182,6 +1186,28 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	 */
 	public DataStructureSchemaModel parseSchema(String location, String content) {
 		return DataStructureModelFactory.parseSchema(location, content);
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseSchema(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<DataStructureModel> getDataStructures() throws DataStructuresException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				return dataStructurePersistenceManager.findAll(connection, DataStructureModel.class);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new DataStructuresException(e);
+		}
 	}
 
 }
