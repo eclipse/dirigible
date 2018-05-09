@@ -9,12 +9,13 @@
  */
 
 exports.getView = function() {
-	return {
-		"id": "extensionPoints",
-		"name": "ExtensionPoints",
-		"factory": "frame",
-		"region": "center-top",
-		"label": "Extension Points",
-		"link": "../ide-extensions/views/extensionPoints/index.html"
+	var view = {
+			"id":"registry",
+			"name":"Registry",
+			"factory":"frame",
+			"region":"left-top",
+			"label":"Registry",
+			"link":"../ide-registry/registry.html"
 	};
-};
+	return view;
+}

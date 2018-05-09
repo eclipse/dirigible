@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2017 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	
+	<title>Eclipse Dirigible - Registry</title>
+	
+	<script src="../ide/ui/message-hub.js"></script>
+	
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+	<!-- jQuery -->
+	<script src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	
+	<!-- AngularJS -->
+	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+
+	<!-- jsTree -->
+	<link href="/services/v3/core/theme/jstree.css" rel="stylesheet">
+	<script src="/services/v3/web/resources/jstree/3.3.4/jstree.js"></script>
+	
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+	<script src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
+	
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
+	
+	<script src="registry.js"></script>
+
+</head>
+
+<body border="1px" ng-app="registry" ng-controller="RegistryController as registry">
+
+	<div>
+		<div class="btn-group pull-right" role="group" aria-label="toolbar">
+			<button type="button" class="btn btn-default" title="Refresh" ng-click="registry.refresh()"><i class="fa fa-refresh"></i></button>
+		</div>
+	</div>
+	
+	<div class="registry"></div>
+
+</body>
+</html>

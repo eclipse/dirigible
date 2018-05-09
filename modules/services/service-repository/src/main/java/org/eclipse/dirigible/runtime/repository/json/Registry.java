@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * The Registry transport object.
  */
-public class Registry extends Collection {
+public class Registry {
 
 	private static final String TYPE_REGISTRY = "registry";
 
@@ -24,89 +24,93 @@ public class Registry extends Collection {
 
 	private String path;
 
-	private static String type = TYPE_REGISTRY;
+	private String type = TYPE_REGISTRY;
 
 	private List<Collection> collections = new ArrayList<Collection>();
 
 	private List<Resource> resources = new ArrayList<Resource>();
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getName()
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#setName(java.lang.String)
+	/**
+	 * Sets the name.
+	 *
+	 * @param name
+	 *            the new name
 	 */
-	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getPath()
+	/**
+	 * Gets the path.
+	 *
+	 * @return the path
 	 */
-	@Override
 	public String getPath() {
 		return path;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#setPath(java.lang.String)
+	/**
+	 * Sets the path.
+	 *
+	 * @param path
+	 *            the new path
 	 */
-	@Override
 	public void setPath(String path) {
 		this.path = path;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getCollections()
+	/**
+	 * Gets the collections.
+	 *
+	 * @return the collections
 	 */
-	@Override
 	public List<Collection> getCollections() {
 		return collections;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#setCollections(java.util.List)
+	/**
+	 * Sets the collections.
+	 *
+	 * @param collections
+	 *            the new collections
 	 */
-	@Override
 	public void setCollections(List<Collection> collections) {
 		this.collections = collections;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getResources()
+	/**
+	 * Gets the resources.
+	 *
+	 * @return the resources
 	 */
-	@Override
 	public List<Resource> getResources() {
 		return resources;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#setResources(java.util.List)
+	/**
+	 * Sets the resources.
+	 *
+	 * @param resources
+	 *            the new resources
 	 */
-	@Override
 	public void setResources(List<Resource> resources) {
 		this.resources = resources;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.runtime.repository.json.Collection#getType()
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
 	 */
-	@Override
 	public String getType() {
 		return type;
 	}

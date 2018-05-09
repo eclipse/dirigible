@@ -59,6 +59,9 @@
 		<module>ide-extensions</module>
 		<module>ide-operations</module>
 		<module>ide-security</module>
+		<module>ide-listeners</module>
+		<module>ide-data-structures</module>
+		<module>ide-registry</module>
 	</modules>
 
 	<profiles>
