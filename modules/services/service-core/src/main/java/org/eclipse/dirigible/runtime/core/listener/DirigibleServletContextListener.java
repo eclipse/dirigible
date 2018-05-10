@@ -79,6 +79,7 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		super.contextInitialized(servletContextEvent);
 
 		Configuration.load("/dirigible-core.properties");
+		Configuration.load("/dirigible.properties");
 
 		loadPredeliveredContent();
 

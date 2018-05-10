@@ -79,31 +79,11 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-		 	<exclusions>
-		 		<exclusion>
-		        	<groupId>org.eclipse.dirigible</groupId>
-		        	<artifactId>dirigible-repository-search</artifactId>
-		    	</exclusion>
-		    	<exclusion>
-		        	<groupId>org.eclipse.dirigible</groupId>
-		        	<artifactId>dirigible-repository-zip</artifactId>
-		    	</exclusion>
-		    </exclusions> 
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-local</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
-		 	<exclusions>
-		 		<exclusion>
-		        	<groupId>org.eclipse.dirigible</groupId>
-		        	<artifactId>dirigible-repository-search</artifactId>
-		    	</exclusion>
-		    	<exclusion>
-		        	<groupId>org.eclipse.dirigible</groupId>
-		        	<artifactId>dirigible-repository-zip</artifactId>
-		    	</exclusion>
-		    </exclusions>
 		</dependency>
 
 		<!-- Database -->
@@ -111,6 +91,16 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
+		 	<exclusions>
+		 		<exclusion>
+		        	<groupId>org.eclipse.dirigible</groupId>
+		        	<artifactId>dirigible-database-data-models</artifactId>
+		    	</exclusion>
+		 		<exclusion>
+		        	<groupId>org.eclipse.dirigible</groupId>
+		        	<artifactId>dirigible-database-data-structures</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -124,10 +114,14 @@
 		 	<artifactId>dirigible-core</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
 		 	<exclusions>
-		 		<exclusion>
+		 		<!-- <exclusion>
 		        	<groupId>org.eclipse.dirigible</groupId>
 		        	<artifactId>dirigible-core-messaging</artifactId>
 		    	</exclusion>
+		    	<exclusion>
+		        	<groupId>org.eclipse.dirigible</groupId>
+		        	<artifactId>dirigible-core-scheduler</artifactId>
+		    	</exclusion> -->
 		    	<exclusion>
 		        	<groupId>org.eclipse.dirigible</groupId>
 		        	<artifactId>dirigible-core-indexing</artifactId>
@@ -146,6 +140,27 @@
 		    	</exclusion>
 		    </exclusions>
 		</dependency>
+		
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-javascript-rhino</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
+		<!-- <dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-job</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-listener</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency> -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-engine-web</artifactId>
+		 	<version>3.2.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Services -->
 		<dependency>
@@ -153,10 +168,14 @@
 		 	<artifactId>dirigible-services</artifactId>
 		 	<version>3.2.0-SNAPSHOT</version>
 		 	<exclusions>
-		 		<exclusion>
+		 		<!-- <exclusion>
 		        	<groupId>org.eclipse.dirigible</groupId>
 		        	<artifactId>dirigible-core-messaging</artifactId>
 		    	</exclusion>
+		    	<exclusion>
+		        	<groupId>org.eclipse.dirigible</groupId>
+		        	<artifactId>dirigible-core-scheduler</artifactId>
+		    	</exclusion> -->
 		    	<exclusion>
 		        	<groupId>org.eclipse.dirigible</groupId>
 		        	<artifactId>dirigible-core-indexing</artifactId>
