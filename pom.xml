@@ -407,6 +407,7 @@
 		<module>releng/server-runtime</module>
 		<module>releng/trial-all</module>
 		<module>releng/server-javascript</module>
+		<module>releng/server-database</module>
 	</modules>
 
 </project>
