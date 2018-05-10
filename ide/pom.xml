@@ -16,6 +16,7 @@
 
 	<modules>
         <module>ide-all</module>
+        <module>ide-javascript</module>
 		<module>services</module>
 		<module>ui</module>
 	</modules>

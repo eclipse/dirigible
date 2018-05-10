@@ -35,7 +35,11 @@
 	</properties>
 
 	<modules>
-		<module>ide-all</module>
+		<!-- Grouping Modules -->
+		<module>ide-group-all</module>
+		<module>ide-group-javascript</module>
+		
+		<!-- Plugin Modules -->
 		<module>ide-console</module>
 		<module>ide-core</module>
 		<module>ide-database</module>

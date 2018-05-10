@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>IDE - Services</name>
-	<artifactId>dirigible-ide-services</artifactId>
+	<artifactId>dirigible-ide-services-group-all</artifactId>
     <packaging>jar</packaging>
     
     <build>
