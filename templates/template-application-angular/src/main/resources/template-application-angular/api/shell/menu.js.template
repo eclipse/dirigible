@@ -13,7 +13,7 @@ var response = require('http/v3/response');
 
 var mainmenu = [];
 var menuExtensions = extensions.getExtensions('shell-{{projectName}}-menu');
-for (var i=0; i< menuExtensions.length; i++) {
+for (var i = 0; i < menuExtensions.length; i++) {
     var menuExtension = require(menuExtensions[i]);
     var menu = menuExtension.getMenu();
     mainmenu.push(menu);

@@ -36,7 +36,7 @@
 
 <body ng-app="workbench" ng-controller="WorkbenchController">
 
-	<div menu menu-data-url="../../js/{{projectName}}/api/shell/menu.js"></div>
+	<div menu menu-data-url="/services/v3/js/{{projectName}}/api/shell/menu.js"></div>
 
 	<div class="shell">
 		<div class="sidebar list-group" sidebar active="Workbench"></div>
@@ -57,9 +57,9 @@
 	<!-- GoldenLayout with Theme Support -->
 	<script type="text/javascript" src="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
-	<script type="text/javascript" src="ui/shell/message-hub.js"></script>	
-	<script type="text/javascript" src="ui/shell/ui-layout.js"></script>
-	<script type="text/javascript" src="ui/shell/ui-core-ng-modules.js"></script>
+	<script type="text/javascript" src="/services/v3/web/{{projectName}}/resources/js/message-hub.js"></script>	
+	<script type="text/javascript" src="/services/v3/web/{{projectName}}/resources/js/ui-layout.js"></script>
+	<script type="text/javascript" src="/services/v3/web/{{projectName}}/resources/js/ui-core-ng-modules.js"></script>
 
 	<script type="text/javascript">
 		angular.module('workbench', ['ngResource', 'ideUiCore'])
@@ -92,7 +92,7 @@
 				}
 			};
 
-			$http.get('../../js/{{projectName}}/api/shell/views.js')
+			$http.get('/services/v3/js/{{projectName}}/api/shell/views.js')
 			.success(function(views) {
 				for (var i = 0 ; i < views.length; i ++) {
 					$scope.layoutModel.views.push(views[i].id);

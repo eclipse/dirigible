@@ -15,6 +15,6 @@ exports.getView = function() {
 		'label': '{{name}}',
 		'factory': 'frame',
 		// 'region': 'center-bottom',
-		'link': '/services/v3/web/{{projectName}}/ui/{{name}}/index.html'
+		'link': '/services/v3/web/{{projectName}}/views/{{name}}/index.html'
 	};
 };
