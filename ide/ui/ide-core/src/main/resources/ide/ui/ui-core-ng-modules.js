@@ -43,7 +43,8 @@ angular.module('ideUiCore', ['ngResource'])
 		"default": "/services/v3/web/resources/themes/default/bootstrap.min.css",
 		"wendy" : "/services/v3/web/resources/themes/wendy/bootstrap.min.css",
 		"baroness" : "/services/v3/web/resources/themes/baroness/bootstrap.min.css",
-		"simone" : "/services/v3/web/resources/themes/simone/bootstrap.min.css"
+		"simone" : "/services/v3/web/resources/themes/simone/bootstrap.min.css",
+		"alice" : "/services/v3/web/resources/themes/alice/bootstrap.min.css"
 	};
 	return {
 		changeTheme: function(themeName){

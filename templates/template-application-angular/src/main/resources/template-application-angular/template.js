@@ -30,21 +30,11 @@ exports.getTemplate = function() {
 			'action': 'generate',
 			'rename': 'data/{{fileNameBase}}.schema'
 		}, {
-			'location': '/template-application-angular/data/dao/application.js.template', 
+			'location': '/template-application-angular/data/dao/entity.js.template', 
 			'action': 'generate',
 			'rename': 'data/dao/{{fileName}}.js',
 			'collection': 'dataModels',
 			'engine': 'velocity'
-		}, {
-			'location': '/template-application-angular/extensions/menu/application.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/menu/{{fileName}}.extension',
-			'collection': 'dataModels'
-		}, {
-			'location': '/template-application-angular/extensions/menu/application.js.template', 
-			'action': 'generate',
-			'rename': 'extensions/menu/{{fileName}}.js',
-			'collection': 'dataModels'
 		}, {
 			'location': '/template-application-angular/extensions/perspective/application.extension.template', 
 			'action': 'generate',
@@ -66,61 +56,77 @@ exports.getTemplate = function() {
 			'action': 'generate',
 			'rename': 'extensions/point/view.extensionpoint'
 		}, {
-			'location': '/template-application-angular/extensions/view/application.extension.template', 
+			'location': '/template-application-angular/extensions/views/entity.extension.template', 
 			'action': 'generate',
-			'rename': 'extensions/view/{{fileName}}.extension',
+			'rename': 'extensions/views/{{fileName}}.extension',
 			'collection': 'dataModels'
 		}, {
-			'location': '/template-application-angular/extensions/view/application.js.template', 
+			'location': '/template-application-angular/views/manage/index.html.template', 
 			'action': 'generate',
-			'rename': 'extensions/view/{{fileName}}.js',
-			'collection': 'dataModels'
-		}, {
-			'location': '/template-application-angular/ui/manage/index.html.template', 
-			'action': 'generate',
-			'rename': 'ui/{{fileName}}/index.html',
+			'rename': 'views/{{fileName}}/index.html',
 			'collection': 'uiManageModels',
 			'engine': 'velocity'
 		}, {
-			'location': '/template-application-angular/ui/list.html.template', 
+			'location': '/template-application-angular/views/manage/controller.js.template', 
 			'action': 'generate',
-			'rename': 'ui/{{fileName}}.html',
+			'rename': 'views/{{fileName}}/controller.js',
+			'collection': 'uiManageModels',
+			'engine': 'velocity'
+		}, {
+			'location': '/template-application-angular/views/manage/view.js.template', 
+			'action': 'generate',
+			'collection': 'dataModels',
+			'rename': 'views/{{fileName}}/view.js'
+		}, {
+			'location': '/template-application-angular/views/manage/menu/item.extension.template', 
+			'action': 'generate',
+			'rename': 'views/{{fileName}}/menu/item.extension',
+			'collection': 'dataModels'
+		}, {
+			'location': '/template-application-angular/views/manage/menu/item.js.template', 
+			'action': 'generate',
+			'rename': 'views/{{fileName}}/menu/item.js',
+			'collection': 'dataModels'
+		}, {
+			'location': '/template-application-angular/views/list.html.template', 
+			'action': 'generate',
+			'rename': 'views/{{fileName}}.html',
 			'start' : '[[',
 			'end' : ']]',
 			'collection': 'uiListModels'
 		}, {
-			'location': '/template-application-angular/ui/display.html.template', 
+			'location': '/template-application-angular/views/display.html.template', 
 			'action': 'generate',
-			'rename': 'ui/{{fileName}}.html',
+			'rename': 'views/{{fileName}}.html',
 			'start' : '[[',
 			'end' : ']]',
 			'collection': 'uiDisplayModels'
 		}, {
-			'location': '/template-application-angular/ui/shell/message-hub.js.template', 
-			'action': 'copy',
-			'rename': 'ui/shell/message-hub.js'
-		}, {
-			'location': '/template-application-angular/ui/shell/tmpl/menu.html.template', 
+			'location': '/template-application-angular/resources/templates/menu.html.template', 
 			'action': 'generate',
 			'start' : '[[',
 			'end' : ']]',
-			'rename': 'ui/shell/tmpl/menu.html'
+			'rename': 'resources/templates/menu.html'
 		}, {
-			'location': '/template-application-angular/ui/shell/tmpl/sidebar.html.template', 
+			'location': '/template-application-angular/resources/templates/sidebar.html.template', 
 			'action': 'copy',
-			'rename': 'ui/shell/tmpl/sidebar.html'
+			'rename': 'resources/templates/sidebar.html'
 		}, {
-			'location': '/template-application-angular/ui/shell/ui-bootstrap-tpls-0.14.3.min.js.template', 
+			'location': '/template-application-angular/resources/js/message-hub.js.template', 
 			'action': 'copy',
-			'rename': 'ui/shell/tmpl/ui-bootstrap-tpls-0.14.3.min.js'
+			'rename': 'resources/js/message-hub.js'
 		}, {
-			'location': '/template-application-angular/ui/shell/ui-core-ng-modules.js.template', 
-			'action': 'generate',
-			'rename': 'ui/shell/ui-core-ng-modules.js'
+			'location': '/template-application-angular/resources/js/ui-bootstrap-tpls-0.14.3.min.js.template', 
+			'action': 'copy',
+			'rename': 'resources/js/ui-bootstrap-tpls-0.14.3.min.js'
 		}, {
-			'location': '/template-application-angular/ui/shell/ui-layout.js.template', 
+			'location': '/template-application-angular/resources/js/ui-core-ng-modules.js.template', 
 			'action': 'generate',
-			'rename': 'ui/shell/ui-layout.js'
+			'rename': 'resources/js/ui-core-ng-modules.js'
+		}, {
+			'location': '/template-application-angular/resources/js/ui-layout.js.template', 
+			'action': 'generate',
+			'rename': 'resources/js/ui-layout.js'
 		}, {
 			'location': '/template-application-angular/index.html.template', 
 			'action': 'generate',

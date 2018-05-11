@@ -193,3 +193,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .modal-backdrop.in{
 	opacity:.8;filter:alpha(opacity=50)
 }
+
+.navbar-brand {
+    font-weight: normal !important;
+}

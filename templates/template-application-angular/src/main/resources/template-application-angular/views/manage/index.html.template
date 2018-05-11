@@ -35,7 +35,11 @@
 					<td>{{$index + 1}}</td>
 #foreach ($property in $properties) 
 #if($property.widgetIsMajor)
+#if($property.widgetType == "DROPDOWN")
+					<td>{{${property.name.toLowerCase()}OptionValue(next.${property.name})}}</td>
+#else
 					<td>{{next.${property.name}}}</td>
+#end
 #end
 #end
 					<td>
@@ -45,25 +49,6 @@
 				</tr>
 			</tbody>
 		</table>
-		<nav>
-			<ul class="pagination pagination-lg">
-				<li class="page-item">
-					<a class="page-link" href="#" aria-label="Previous">
-						<span aria-hidden="true">&laquo;</span>
-						<span class="sr-only">Previous</span>
-					</a>
-				</li>
-				<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">1</a></li>
-				<li class="page-item"><a class="page-link" href="#">2</a></li>
-				<li class="page-item"><a class="page-link" href="#">3</a></li>
-				<li class="page-item">
-					<a class="page-link" href="#" aria-label="Next">
-						<span aria-hidden="true">&raquo;</span>
-						<span class="sr-only">Next</span>
-					</a>
-				</li>
-			</ul>
-		</nav>
 	</div>
 
 	<div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -81,10 +66,17 @@
 					<form ng-hide="actionType === 'delete'">
 #foreach ($property in $properties)
 #if(!$property.dataAutoIncrement)
+#if($property.widgetType == "DROPDOWN")
+						<div class="form-group">
+							<label>${property.widgetLabel}</label>
+							<select ng-options="o.${property.widgetDropdownKey} as o.${property.widgetDropdownValue} for o in ${property.name.toLowerCase()}Options" ng-model="entity.${property.name}"></select>
+						</div>
+#else
 						<div class="form-group">
 							<label>${property.widgetLabel}</label>
 							<input type="${property.widgetType}" class="form-control" placeholder="Enter ${property.widgetLabel.toLowerCase()}" ng-model="entity.${property.name}">
 						</div>
+#end
 #end
 #end
 					</form>
@@ -108,79 +100,7 @@
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 
-#set($dollar = '$' )
-	<script type="text/javascript">
-		angular.module('page', []);
-		angular.module('page').controller('PageController', function ($scope, $http) {
+	<script type="text/javascript" src="controller.js"></script>
 
-			var api = '/services/v3/js/${projectName}/api/${name}.js';
-
-			function load() {
-				$http.get(api)
-				.success(function(data) {
-					$scope.data = data;
-				});
-			}
-			load();
-
-			$scope.openNewDialog = function() {
-				$scope.actionType = 'new';
-				$scope.entity = {};
-				toggleEntityModal();
-			};
-
-			$scope.openEditDialog = function(entity) {
-				$scope.actionType = 'update';
-				$scope.entity = entity;
-				toggleEntityModal();
-			};
-
-			$scope.openDeleteDialog = function(entity) {
-				$scope.actionType = 'delete';
-				$scope.entity = entity;
-				toggleEntityModal();
-			};
-
-			$scope.close = function() {
-				load();
-				toggleEntityModal();
-			};
-
-			$scope.create = function() {
-				${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
-				.success(function(data) {
-					load();
-					toggleEntityModal();
-				}).error(function(data) {
-					alert(JSON.stringify(data));
-				});
-					
-			};
-
-			$scope.update = function() {
-				${dollar}http.put(api + '/' + ${dollar}scope.entity.id, JSON.stringify(${dollar}scope.entity))
-				.success(function(data) {
-					load();
-					toggleEntityModal();
-				}).error(function(data) {
-					alert(JSON.stringify(data));
-				})
-			};
-
-			$scope.delete = function() {
-				${dollar}http.delete(api + '/' + ${dollar}scope.entity.id)
-				.success(function(data) {
-					load();
-					toggleEntityModal();
-				}).error(function(data) {
-					alert(JSON.stringify(data));
-				});
-			};
-
-			function toggleEntityModal() {
-				$('#entityModal').modal('toggle');
-			}
-  	  });
-	</script>
 </body>
 </html>
