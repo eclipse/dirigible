@@ -400,6 +400,9 @@
 		<module>modules/commons</module>
 		<module>modules/cms</module>
 		<module>modules/bpm</module>
+		
+		<module>groups/runtime-all</module>
+		<module>groups/runtime-javascript</module>
 
 		<module>releng/desktop-all</module>
 		<module>releng/sap-all</module>
