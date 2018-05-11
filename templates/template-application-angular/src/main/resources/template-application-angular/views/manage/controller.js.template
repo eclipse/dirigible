@@ -1,0 +1,105 @@
+#set($dollar = '$' )
+angular.module('page', []);
+angular.module('page').controller('PageController', function ($scope, $http) {
+
+	var api = '/services/v3/js/${projectName}/api/${name}.js';
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+	var ${property.name.toLowerCase()}OptionsApi = '/services/v3/js/${projectName}/api/${property.relationshipEntityName}.js';
+#end
+#end
+
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+	$scope.${property.name.toLowerCase()}Options = [];
+#end
+#end
+
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+	${dollar}http.get(${property.name.toLowerCase()}OptionsApi)
+	.success(function(data) {
+		$scope.${property.name.toLowerCase()}Options = data;
+	});
+#end
+#end
+
+	function load() {
+		$http.get(api)
+		.success(function(data) {
+			$scope.data = data;
+		});
+	}
+	load();
+
+	$scope.openNewDialog = function() {
+		$scope.actionType = 'new';
+		$scope.entity = {};
+		toggleEntityModal();
+	};
+
+	$scope.openEditDialog = function(entity) {
+		$scope.actionType = 'update';
+		$scope.entity = entity;
+		toggleEntityModal();
+	};
+
+	$scope.openDeleteDialog = function(entity) {
+		$scope.actionType = 'delete';
+		$scope.entity = entity;
+		toggleEntityModal();
+	};
+
+	$scope.close = function() {
+		load();
+		toggleEntityModal();
+	};
+
+	$scope.create = function() {
+		${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
+		.success(function(data) {
+			load();
+			toggleEntityModal();
+		}).error(function(data) {
+			alert(JSON.stringify(data));
+		});
+			
+	};
+
+	$scope.update = function() {
+		${dollar}http.put(api + '/' + ${dollar}scope.entity.id, JSON.stringify(${dollar}scope.entity))
+		.success(function(data) {
+			load();
+			toggleEntityModal();
+		}).error(function(data) {
+			alert(JSON.stringify(data));
+		})
+	};
+
+	$scope.delete = function() {
+		${dollar}http.delete(api + '/' + ${dollar}scope.entity.id)
+		.success(function(data) {
+			load();
+			toggleEntityModal();
+		}).error(function(data) {
+			alert(JSON.stringify(data));
+		});
+	};
+
+#foreach ($property in $properties)
+#if($property.widgetType == "DROPDOWN")
+	${dollar}scope.${property.name.toLowerCase()}OptionValue = function(optionKey) {
+		for (var i = 0 ; i < ${dollar}scope.${property.name.toLowerCase()}Options.length; i ++) {
+			if (${dollar}scope.${property.name.toLowerCase()}Options[i].${property.widgetDropdownKey} === optionKey) {
+				return ${dollar}scope.${property.name.toLowerCase()}Options[i].${property.widgetDropdownValue};
+			}
+		}
+		return null;
+	};
+#end
+#end
+
+	function toggleEntityModal() {
+		$('#entityModal').modal('toggle');
+	}
+});

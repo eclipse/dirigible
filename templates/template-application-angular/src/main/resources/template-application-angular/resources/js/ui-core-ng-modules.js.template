@@ -77,77 +77,18 @@ angular.module('ideUiCore', ['ngResource'])
 		}
 	};
 }])
-.provider('Editors', function(){
-	var editorProviders = {};
-	var editorsForContentType = {};
-	var editorsList = [];
-	editorsList.forEach(function(editor){
-		editorProviders[editor.id] = editor.link;
-		editor.contentTypes.forEach(function(contentType){
-			if (!editorsForContentType[contentType]) {
-				editorsForContentType[contentType] = [editor.id];
-			} else {
-				editorsForContentType[contentType].push(editor.id);
-			}
-		});
-	});
-	
-	var defaultEditorId = this.defaultEditorId = "orion";
-	this.$get = [function editorsFactory() {
- 		
- 		return {
-			defaultEditorId: defaultEditorId,
-			editorProviders: editorProviders,
-			editorsForContentType: editorsForContentType
-		};
-	}];
-})
 /**
  * Creates a map object associating a view factory function with a name (id)
  */
 .provider('ViewFactories', function(){
-	var editors = this.editors;
 	var self = this;
 	this.factories = {
 			"frame": function(container, componentState){
 				container.setTitle(componentState.label || 'View');
 					$('<iframe>').attr('src', componentState.path).appendTo(container.getElement().empty());
-			},
-			"editor": function(container, componentState){
-				/* Improvement hint: Instead of hardcoding ?file=.. use URL template for the editor provider values 
-				 * and then replace the placeholders in the template with matching properties from the componentState.
-				 * This will make it easy to replace the query string property if needed or provide additional 
-				 * (editor-specific) parameters easily.
-				 */
-				(function(componentState){
-					var src, editorPath;
-					if(!componentState.editorId || Object.keys(self.editors.editorProviders).indexOf(componentState.editorId) < 0) {
-						if (Object.keys(self.editors.editorsForContentType).indexOf(componentState.contentType) < 0) {
-							editorPath = self.editors.editorProviders[self.editors.defaultEditorId];
-						} else {
-							componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0];
-							editorPath = self.editors.editorProviders[componentState.editorId];
-						}
-					}
-					else
-						editorPath = self.editors.editorProviders[componentState.editorId];
-					if (componentState.path) {
-						if (componentState.editorId === 'flowable')
-							src = editorPath + componentState.path;
-						else 
-							src = editorPath + '?file=' + componentState.path;
-						if(componentState.contentType && componentState.editorId !== 'flowable')
-							src += "&contentType="+componentState.contentType;
-					} else {
-						container.setTitle("Welcome");
-						src = '/services/v3/web/shell/welcome.html';
-					}
-					$('<iframe>').attr('src', src).appendTo(container.getElement().empty());
-				})(componentState, this);
-			}.bind(self)
+			}
 	};
-	this.$get = ['Editors', function viewFactoriesFactory(Editors) {
-		this.editors = Editors;
+	this.$get = [function viewFactoriesFactory() {
 		return this.factories;
 	}];
 })
@@ -218,7 +159,7 @@ angular.module('ideUiCore', ['ngResource'])
 			};
 			scope.user = User.get();
 		},
-		templateUrl: '/services/v3/web/{{projectName}}/ui/shell/tmpl/menu.html'
+		templateUrl: '/services/v3/web/{{projectName}}/resources/templates/menu.html'
 	}
 }])
 .directive('sidebar', ['Perspectives', function(Perspectives){
@@ -232,7 +173,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			scope.perspectives = Perspectives.query();
 		},
-		templateUrl: '/services/v3/web/{{projectName}}/ui/shell/tmpl/sidebar.html'
+		templateUrl: '/services/v3/web/{{projectName}}/resources/templates/sidebar.html'
 	}
 }])
 .directive('statusBar', ['messageHub', function(messageHub){
