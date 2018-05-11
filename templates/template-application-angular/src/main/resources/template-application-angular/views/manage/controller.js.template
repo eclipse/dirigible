@@ -1,0 +1,72 @@
+#set($dollar = '$' )
+angular.module('page', []);
+angular.module('page').controller('PageController', function ($scope, $http) {
+
+	var api = '/services/v3/js/${projectName}/api/${name}.js';
+
+	function load() {
+		$http.get(api)
+		.success(function(data) {
+			$scope.data = data;
+		});
+	}
+	load();
+
+	$scope.openNewDialog = function() {
+		$scope.actionType = 'new';
+		$scope.entity = {};
+		toggleEntityModal();
+	};
+
+	$scope.openEditDialog = function(entity) {
+		$scope.actionType = 'update';
+		$scope.entity = entity;
+		toggleEntityModal();
+	};
+
+	$scope.openDeleteDialog = function(entity) {
+		$scope.actionType = 'delete';
+		$scope.entity = entity;
+		toggleEntityModal();
+	};
+
+	$scope.close = function() {
+		load();
+		toggleEntityModal();
+	};
+
+	$scope.create = function() {
+		${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
+		.success(function(data) {
+			load();
+			toggleEntityModal();
+		}).error(function(data) {
+			alert(JSON.stringify(data));
+		});
+			
+	};
+
+	$scope.update = function() {
+		${dollar}http.put(api + '/' + ${dollar}scope.entity.id, JSON.stringify(${dollar}scope.entity))
+		.success(function(data) {
+			load();
+			toggleEntityModal();
+		}).error(function(data) {
+			alert(JSON.stringify(data));
+		})
+	};
+
+	$scope.delete = function() {
+		${dollar}http.delete(api + '/' + ${dollar}scope.entity.id)
+		.success(function(data) {
+			load();
+			toggleEntityModal();
+		}).error(function(data) {
+			alert(JSON.stringify(data));
+		});
+	};
+
+	function toggleEntityModal() {
+		$('#entityModal').modal('toggle');
+	}
+});
