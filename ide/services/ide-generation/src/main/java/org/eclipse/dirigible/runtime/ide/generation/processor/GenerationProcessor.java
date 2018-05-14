@@ -282,16 +282,12 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			GenerationTemplateMetadata metadataObject = GsonHelper.GSON.fromJson(metadata.toString(), GenerationTemplateMetadata.class);
 			EntityDataModel entityDataModel = GsonHelper.GSON.fromJson(new String(model.getContent(), StandardCharsets.UTF_8), EntityDataModel.class);
 			
-			List<Map<String, Object>> dataModels = mapDataModels(entityDataModel, parameters, workspace, project, path);
-			parameters.getParameters().put("dataModels", dataModels);
-			List<Map<String, Object>> relationshipModels = mapRelationshipModels(entityDataModel, parameters, workspace, project, path);
-			parameters.getParameters().put("relationshipModels", dataModels);
-			List<Map<String, Object>> uiModels = mapUiModels(entityDataModel, parameters, workspace, project, path);
-			parameters.getParameters().put("uiModels", uiModels);
+			List<Map<String, Object>> models = mapModels(entityDataModel, parameters, workspace, project, path);
+			parameters.getParameters().put("models", models);
 			List<Map<String, Object>> uiManageModels = new ArrayList<>();
 			List<Map<String, Object>> uiListModels = new ArrayList<>();
 			List<Map<String, Object>> uiDisplayModels = new ArrayList<>();
-			distributeByLayoutType(uiModels, parameters, uiManageModels, uiListModels, uiDisplayModels);
+			distributeByLayoutType(models, parameters, uiManageModels, uiListModels, uiDisplayModels);
 			parameters.getParameters().put("uiManageModels", uiManageModels);
 			parameters.getParameters().put("uiListModels", uiListModels);
 			parameters.getParameters().put("uiDisplayModels", uiDisplayModels);
@@ -342,19 +338,24 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		}
 	}
 
-	private List<Map<String, Object>> mapDataModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
-		List<Map<String, Object>> dataModels = new ArrayList<>();
+	private List<Map<String, Object>> mapModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
+		List<Map<String, Object>> models = new ArrayList<>();
 		for (EntityDataModelEntity entity : entityDataModel.getModel().getEntities()) {
-			Map<String, Object> dataModel = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<String, Object>();
 			RepositoryPath localPath = new RepositoryPath().append(path).getParentPath().append(entity.getName());
-			dataModel.putAll(parameters.getParameters());
-			addStandardParameters(workspace, project, localPath.build(), dataModel);
-			dataModel.put("name", entity.getName());
-			dataModel.put("dataName", entity.getDataName());
+			model.putAll(parameters.getParameters());
+			addStandardParameters(workspace, project, localPath.build(), model);
+			model.put("name", entity.getName());
+			model.put("dataName", entity.getDataName());
+			model.put("layoutType", entity.getLayoutType());
+			model.put("menuKey", entity.getMenuKey());
+			model.put("menuLabel", entity.getMenuLabel());
+			model.put("menuIndex", entity.getMenuIndex());
 			List<Map<String, Object>> propertiesModels = new ArrayList<>();
 			for (EntityDataModelProperty property : entity.getProperties()) {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();
 				propertyModel.put("name", property.getName());
+				
 				propertyModel.put("dataName", property.getDataName());
 				propertyModel.put("dataPrimaryKey", property.getDataPrimaryKey());
 				propertyModel.put("dataIdentity", property.getDataAutoIncrement());
@@ -365,55 +366,12 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				propertyModel.put("dataScale", property.getDataScale());
 				propertyModel.put("dataType", property.getDataType());
 				propertyModel.put("dataUnique", property.getDataUnique());
-				propertiesModels.add(propertyModel);
-			}
-			dataModel.put("properties", propertiesModels);
-			dataModels.add(dataModel);
-		}
-		return dataModels;
-	}
-	
-	private List<Map<String, Object>> mapRelationshipModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
-		List<Map<String, Object>> dataModels = new ArrayList<>();
-		for (EntityDataModelEntity entity : entityDataModel.getModel().getEntities()) {
-			Map<String, Object> dataModel = new HashMap<String, Object>();
-			RepositoryPath localPath = new RepositoryPath().append(path).getParentPath().append(entity.getName());
-			dataModel.putAll(parameters.getParameters());
-			addStandardParameters(workspace, project, localPath.build(), dataModel);
-			dataModel.put("name", entity.getName());
-			List<Map<String, Object>> propertiesModels = new ArrayList<>();
-			for (EntityDataModelProperty property : entity.getProperties()) {
-				Map<String, Object> propertyModel = new HashMap<String, Object>();
-				propertyModel.put("name", property.getName());
+				
 				propertyModel.put("relationshipType", property.getRelationshipType());
 				propertyModel.put("relationshipCardinality", property.getRelationshipCardinality());
 				propertyModel.put("relationshipName", property.getRelationshipName());
 				propertyModel.put("relationshipEntityName", property.getRelationshipEntityName());
-				propertiesModels.add(propertyModel);
-			}
-			dataModel.put("properties", propertiesModels);
-			dataModels.add(dataModel);
-		}
-		return dataModels;
-	}
-	
-	private List<Map<String, Object>> mapUiModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
-		List<Map<String, Object>> dataModels = new ArrayList<>();
-		for (EntityDataModelEntity entity : entityDataModel.getModel().getEntities()) {
-			Map<String, Object> uiModel = new HashMap<String, Object>();
-			RepositoryPath localPath = new RepositoryPath().append(path).getParentPath().append(entity.getName());
-			uiModel.putAll(parameters.getParameters());
-			addStandardParameters(workspace, project, localPath.build(), uiModel);
-			uiModel.put("name", entity.getName());
-			uiModel.put("layoutType", entity.getLayoutType());
-			uiModel.put("menuKey", entity.getMenuKey());
-			uiModel.put("menuLabel", entity.getMenuLabel());
-			uiModel.put("menuIndex", entity.getMenuIndex());
-			List<Map<String, Object>> propertiesModels = new ArrayList<>();
-			for (EntityDataModelProperty property : entity.getProperties()) {
-				Map<String, Object> propertyModel = new HashMap<String, Object>();
-				propertyModel.put("name", property.getName());
-				propertyModel.put("dataAutoIncrement", property.getDataAutoIncrement());
+				
 				propertyModel.put("widgetLength", property.getWidgetLength());
 				propertyModel.put("widgetPattern", property.getWidgetPattern());
 				propertyModel.put("widgetService", property.getWidgetService());
@@ -425,12 +383,13 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				propertyModel.put("widgetFormat", property.getWidgetFormat());
 				propertyModel.put("widgetDropDownKey", property.getWidgetDropDownKey());
 				propertyModel.put("widgetDropDownValue", property.getWidgetDropDownValue());
+				
 				propertiesModels.add(propertyModel);
 			}
-			uiModel.put("properties", propertiesModels);
-			dataModels.add(uiModel);
+			model.put("properties", propertiesModels);
+			models.add(model);
 		}
-		return dataModels;
+		return models;
 	}
 
 
