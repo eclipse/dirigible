@@ -90,8 +90,8 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 #if($property.widgetType == "DROPDOWN")
 	${dollar}scope.${property.name.toLowerCase()}OptionValue = function(optionKey) {
 		for (var i = 0 ; i < ${dollar}scope.${property.name.toLowerCase()}Options.length; i ++) {
-			if (${dollar}scope.${property.name.toLowerCase()}Options[i].${property.widgetDropdownKey} === optionKey) {
-				return ${dollar}scope.${property.name.toLowerCase()}Options[i].${property.widgetDropdownValue};
+			if (${dollar}scope.${property.name.toLowerCase()}Options[i].${property.widgetDropDownKey} === optionKey) {
+				return ${dollar}scope.${property.name.toLowerCase()}Options[i].${property.widgetDropDownValue};
 			}
 		}
 		return null;

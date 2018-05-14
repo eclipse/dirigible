@@ -56,7 +56,7 @@
 		angular.module('extensionPoints', []);
 		angular.module('extensionPoints').controller('ExtensionPointsController', function ($scope, $http) {
 		
-		    var extensionPointsApi = '/services/v3/js/ide-extensions/services/extensionPoints.js';
+		    var extensionPointsApi = '/services/v3/js/ide-extensions/services/extension-points.js';
 		
 		    function loadExtensionPoints() {
 		        $http.get(extensionPointsApi)

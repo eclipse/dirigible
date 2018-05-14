@@ -8,7 +8,8 @@
 	    "wendy" : "/services/v3/web/resources/themes/wendy/bootstrap.min.css",
 	    "baroness" : "/services/v3/web/resources/themes/baroness/bootstrap.min.css",
 	    "simone" : "/services/v3/web/resources/themes/simone/bootstrap.min.css",
-	    "alice" : "/services/v3/web/resources/themes/alice/bootstrap.min.css"
+	    "alice" : "/services/v3/web/resources/themes/alice/bootstrap.min.css",
+	    "florence" : "/services/v3/web/resources/themes/florence/bootstrap.min.css"
 	};
 
 	$(function() {
