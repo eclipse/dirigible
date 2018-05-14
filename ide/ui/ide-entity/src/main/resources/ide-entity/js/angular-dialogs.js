@@ -34,7 +34,8 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 		{"key":"TEXTAREA","label":"Text Area"},
 		{"key":"DATEPICKER","label":"Date Picker"},
 		{"key":"DROPDOWN","label":"Drop Down"},
-		{"key":"LOOKUPDIALOG","label":"Lookup Dialog"}
+		{"key":"LOOKUPDIALOG","label":"Lookup Dialog"},
+		{"key":"NUMBER","label":"Number"}
 	];
 	
 	ctrl.relationshipTypes = [
