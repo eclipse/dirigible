@@ -127,8 +127,8 @@ function createModelJson(graph) {
 			var relationName = child.name ? child.name : child.source.parent.value.name+'_'+ child.target.parent.value.name;
 			child.source.value.relationshipName = relationName;
 			child.source.value.relationshipEntityName = child.target.parent.value.name;
-			child.source.value.widgetDropDownKey = child.target.value.name;
-			child.source.value.widgetDropDownValue = child.target.value.name;
+			child.source.value.widgetDropDownKey = child.source.value.widgetDropDownKey ? child.source.value.widgetDropDownKey : child.target.value.name;
+			child.source.value.widgetDropDownValue = child.source.value.widgetDropDownValue ? child.source.value.widgetDropDownValue : child.target.value.name;
 		}
 	}
 
@@ -169,8 +169,8 @@ function createModelJson(graph) {
 					property.dataScale = childProperty.dataScale;
 					
 					// Relationship Properties
-					property.relationshipType = childProperty.relationshipType ? childProperty.relationshipType : 'ASSOCIATION';
-					property.relationshipCardinality = childProperty.relationshipCardinality ? childProperty.relationshipCardinality : '1_n';
+					property.relationshipType = childProperty.relationshipType;
+					property.relationshipCardinality = childProperty.relationshipCardinality;
 					property.relationshipName = childProperty.relationshipName;
 					property.relationshipEntityName = childProperty.relationshipEntityName;
 					
