@@ -32,6 +32,7 @@ Property.prototype.dataScale = null;
 Property.prototype.relationshipType = null;
 Property.prototype.relationshipCardinality = null;
 Property.prototype.relationshipName = null;
+Property.prototype.relationshipEntityName = null;
 Property.prototype.widgetType = 'TEXTBOX';
 Property.prototype.widgetLength = '20';
 Property.prototype.widgetPattern = null; // the input validation patern
@@ -41,6 +42,8 @@ Property.prototype.widgetSection = null; // the name of the grouping section
 Property.prototype.widgetLabel = null; // the regular form label
 Property.prototype.widgetShortLabel = null; // a short label for limited character places e.g. table headers
 Property.prototype.widgetFormat = null; // the format for rendering
+Property.prototype.widgetDropDownKey = null; // the key property in drop down case
+Property.prototype.widgetDropDownValue = null; // the value property in drop down case
 
 Property.prototype.clone = function() {
 	return mxUtils.clone(this);

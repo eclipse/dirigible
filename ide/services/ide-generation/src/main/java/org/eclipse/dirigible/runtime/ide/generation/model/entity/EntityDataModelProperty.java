@@ -18,6 +18,7 @@ public class EntityDataModelProperty {
 	private String relationshipType;
 	private String relationshipCardinality;
 	private String relationshipName;
+	private String relationshipEntityName;
 	
 	private String widgetType;
 	private String widgetLength;
@@ -25,7 +26,12 @@ public class EntityDataModelProperty {
 	private String widgetService;
 	private String widgetLabel;
 	private Boolean widgetIsMajor;
-
+	private Boolean widgetSection;
+	private Boolean widgetShortLabel;
+	private Boolean widgetFormat;
+	private Boolean widgetDropDownKey;
+	private Boolean widgetDropDownValue;
+	
 	/**
 	 * @return the name
 	 */
@@ -235,6 +241,20 @@ public class EntityDataModelProperty {
 	public void setRelationshipName(String relationshipName) {
 		this.relationshipName = relationshipName;
 	}
+	
+	/**
+	 * @return the relationshipEntityName
+	 */
+	public String getRelationshipEntityName() {
+		return relationshipEntityName;
+	}
+
+	/**
+	 * @param relationshipName the relationshipEntityName to set
+	 */
+	public void setRelationshipEntityName(String relationshipEntityName) {
+		this.relationshipEntityName = relationshipEntityName;
+	}
 
 	/**
 	 * @return the widgetType
@@ -305,4 +325,77 @@ public class EntityDataModelProperty {
 	public void setWidgetLabel(String widgetLabel) {
 		this.widgetLabel = widgetLabel;
 	}
+
+	/**
+	 * @return the widget section
+	 */
+	public Object getWidgetSection() {
+		return widgetSection;
+	}
+	
+	/**
+	 * @param widgetSection the widget section
+	 */
+	public void setWidgetSection(Boolean widgetSection) {
+		this.widgetSection = widgetSection;
+	}
+
+	/**
+	 * @return the widget short label
+	 */
+	public Boolean getWidgetShortLabel() {
+		return widgetShortLabel;
+	}
+
+	/**
+	 * @param widgetShortLabel the widget short label
+	 */
+	public void setWidgetShortLabel(Boolean widgetShortLabel) {
+		this.widgetShortLabel = widgetShortLabel;
+	}
+
+	/**
+	 * @return the widget format
+	 */
+	public Boolean getWidgetFormat() {
+		return widgetFormat;
+	}
+
+	/**
+	 * @param widgetFormat the widget format
+	 */
+	public void setWidgetFormat(Boolean widgetFormat) {
+		this.widgetFormat = widgetFormat;
+	}
+
+	/**
+	 * @return widget drop down key
+	 */
+	public Boolean getWidgetDropDownKey() {
+		return widgetDropDownKey;
+	}
+
+	/**
+	 * @param widgetDropDownKey the widget drop down key
+	 */
+	public void setWidgetDropDownKey(Boolean widgetDropDownKey) {
+		this.widgetDropDownKey = widgetDropDownKey;
+	}
+
+	/**
+	 * @return widget drop down value
+	 */
+	public Boolean getWidgetDropDownValue() {
+		return widgetDropDownValue;
+	}
+
+	/**
+	 * @param widgetDropDownValue the widget drop down value
+	 */
+	public void setWidgetDropDownValue(Boolean widgetDropDownValue) {
+		this.widgetDropDownValue = widgetDropDownValue;
+	}
+
+	
+	
 }
