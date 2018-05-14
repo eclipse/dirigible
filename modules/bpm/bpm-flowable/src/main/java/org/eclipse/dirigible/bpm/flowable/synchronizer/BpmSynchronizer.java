@@ -1,4 +1,5 @@
 /*
+
  * Copyright (c) 2017 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -9,6 +10,8 @@
  */
 
 package org.eclipse.dirigible.bpm.flowable.synchronizer;
+
+import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +38,7 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Deployment;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,11 +132,13 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		try {
 			if (!bpmCoreService.existsBpm(bpmDefinition.getLocation())) {
 				bpmCoreService.createBpm(bpmDefinition.getLocation(), bpmDefinition.getHash());
+				deployOnProcessEngine(bpmDefinition);
 				logger.info("Synchronized a new BPMN file from location: {}", bpmDefinition.getLocation());
 			} else {
 				BpmDefinition existing = bpmCoreService.getBpm(bpmDefinition.getLocation());
 				if (!bpmDefinition.equals(existing)) {
 					bpmCoreService.updateBpm(bpmDefinition.getLocation(), bpmDefinition.getHash());
+					deployOnProcessEngine(bpmDefinition);
 					logger.info("Synchronized a modified BPMN file from location: {}", bpmDefinition.getLocation());
 				}
 			}
@@ -198,6 +204,21 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		logger.trace("Done cleaning up BPMN files.");
 	}
 	
+	private void deployOnProcessEngine(BpmDefinition bpmDefinition) {
+		try {
+			ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
+			RepositoryService repositoryService = processEngine.getRepositoryService();
+			
+			Deployment deployment = repositoryService.createDeployment()
+				.key(bpmDefinition.getLocation())
+				.addBytes(bpmDefinition.getLocation(), bpmDefinition.getContent().getBytes(StandardCharsets.UTF_8))
+				.deploy();
+			logger.info(format("Deployed: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));
+		} catch (Exception e) {
+			logger.error("Error on deploying a BPMN file from location: {}", bpmDefinition.getLocation(), e);
+		}
+	}
+	
 	private void updateProcessEngine() {
 		if (BPMN_SYNCHRONIZED.isEmpty()) {
 			logger.trace("No BPMN files to update.");
@@ -207,16 +228,14 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
 		RepositoryService repositoryService = processEngine.getRepositoryService();
 		
-		for (Map.Entry<String, BpmDefinition> bpmDefinition : BPMN_SYNCHRONIZED.entrySet()) {
-			try {
-				Deployment deployment = repositoryService.createDeployment()
-				  .addBytes(bpmDefinition.getValue().getLocation(), bpmDefinition.getValue().getContent().getBytes(StandardCharsets.UTF_8))
-				  .deploy();
-			} catch (Exception e) {
-				logger.error("Error on deploying a BPMN file from location: {}", bpmDefinition.getValue().getLocation(), e);
+		List<Deployment> deployments = repositoryService.createDeploymentQuery().list();
+		for (Deployment deployment : deployments) {
+			logger.warn(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));
+			if (!BPMN_SYNCHRONIZED.containsKey(deployment.getKey())) {
+				repositoryService.deleteDeployment(deployment.getId(), true);
+				logger.info(format("Deleted deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));
 			}
 		}
-		
-		// TODO undeploy removed BPMN files
+
 	}
 }
