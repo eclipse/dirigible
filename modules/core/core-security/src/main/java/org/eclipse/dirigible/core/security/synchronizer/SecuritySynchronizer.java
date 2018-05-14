@@ -153,7 +153,13 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		// from 3.1.x to 3.2.x
 		try (Connection connection = dataSource.getConnection()) {
 			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM DIRIGIBLE_SECURITY_ACCESS");
+			ResultSet rs;
+			try {
+				rs = stmt.executeQuery("SELECT * FROM DIRIGIBLE_SECURITY_ACCESS");
+			} catch (Exception e) {
+				logger.warn(e.getMessage());
+				return false;
+			}
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 
