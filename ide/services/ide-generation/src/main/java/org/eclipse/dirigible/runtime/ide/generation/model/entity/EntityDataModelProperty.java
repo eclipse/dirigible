@@ -29,8 +29,8 @@ public class EntityDataModelProperty {
 	private Boolean widgetSection;
 	private Boolean widgetShortLabel;
 	private Boolean widgetFormat;
-	private Boolean widgetDropDownKey;
-	private Boolean widgetDropDownValue;
+	private String widgetDropDownKey;
+	private String widgetDropDownValue;
 	
 	/**
 	 * @return the name
@@ -371,28 +371,28 @@ public class EntityDataModelProperty {
 	/**
 	 * @return widget drop down key
 	 */
-	public Boolean getWidgetDropDownKey() {
+	public String getWidgetDropDownKey() {
 		return widgetDropDownKey;
 	}
 
 	/**
 	 * @param widgetDropDownKey the widget drop down key
 	 */
-	public void setWidgetDropDownKey(Boolean widgetDropDownKey) {
+	public void setWidgetDropDownKey(String widgetDropDownKey) {
 		this.widgetDropDownKey = widgetDropDownKey;
 	}
 
 	/**
 	 * @return widget drop down value
 	 */
-	public Boolean getWidgetDropDownValue() {
+	public String getWidgetDropDownValue() {
 		return widgetDropDownValue;
 	}
 
 	/**
 	 * @param widgetDropDownValue the widget drop down value
 	 */
-	public void setWidgetDropDownValue(Boolean widgetDropDownValue) {
+	public void setWidgetDropDownValue(String widgetDropDownValue) {
 		this.widgetDropDownValue = widgetDropDownValue;
 	}
 
