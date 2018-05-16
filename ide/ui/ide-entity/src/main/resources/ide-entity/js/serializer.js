@@ -12,12 +12,11 @@ function createModel(graph) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
-			model.push('  <entity name="'+child.value.name+'" dataName="'+child.value.dataName+'" isPrimary="'+child.value.isPrimary+'"'
+			model.push('  <entity name="'+child.value.name+'" dataName="'+child.value.dataName+'" isPrimary="'+(child.value.isPrimary ? 'true' : 'false') +'"'
 				+' menuKey="'+child.value.menuKey+'" menuLabel="'+child.value.menuLabel+'" menuIndex="'+child.value.menuIndex+'" layoutType="'+child.value.layoutType+'"'
 				+'>\n');
 			
 			var propertyCount = graph.model.getChildCount(child);
-
 			if (propertyCount > 0) {
 				for (var j=0; j<propertyCount; j++) {
 					var property = graph.model.getChildAt(child, j).value;
@@ -35,7 +34,7 @@ function createModel(graph) {
 						model.push(' dataPrimaryKey="true"');
 					}
 					if (property.dataAutoIncrement) {
-						model.push(' dataIdentity="true"');
+						model.push(' dataAutoIncrement="true"');
 					}
 					if (property.dataUnique) {
 						model.push(' dataUnique="true"');
@@ -50,10 +49,10 @@ function createModel(graph) {
 						model.push(' dataScale="'+property.dataScale+'"');
 					}
 					if (property.relationshipType !== null) {
-						model.push(' relationshipType="'+property.relationshipType ? property.relationshipType : 'ASSOCIATION'+'"');
+						model.push(' relationshipType="'+(property.relationshipType ? property.relationshipType : 'ASSOCIATION')+'"');
 					}
 					if (property.relationshipCardinality !== null) {
-						model.push(' relationshipCardinality="'+property.relationshipCardinality ? property.relationshipCardinality : '1_n'+'"');
+						model.push(' relationshipCardinality="'+(property.relationshipCardinality ? property.relationshipCardinality : '1_n')+'"');
 					}
 					if (property.relationshipName !== null) {
 						model.push(' relationshipName="'+property.relationshipName+'"');
@@ -119,6 +118,7 @@ function createModelJson(graph) {
 	root.model.entities = [];
 	var parent = graph.getDefaultParent();
 	var childCount = graph.model.getChildCount(parent);
+	var compositions = {};
 	
 	for (var i=0; i<childCount; i++) {
 		var child = graph.model.getChildAt(parent, i);
@@ -129,10 +129,19 @@ function createModelJson(graph) {
 			child.source.value.relationshipEntityName = child.target.parent.value.name;
 			child.source.value.widgetDropDownKey = child.source.value.widgetDropDownKey ? child.source.value.widgetDropDownKey : child.target.value.name;
 			child.source.value.widgetDropDownValue = child.source.value.widgetDropDownValue ? child.source.value.widgetDropDownValue : child.target.value.name;
+			
+			if (child.source.value.relationshipType === 'COMPOSITION') {
+				var composition = {};
+				composition.entityName = child.source.parent.value.name;
+				composition.entityProperty = child.source.value.name;
+				composition.localProperty = child.target.value.name;
+				if (!compositions[child.target.parent.value.name]) {
+					compositions[child.target.parent.value.name] = [];
+				}
+				compositions[child.target.parent.value.name].push(composition);
+			}
 		}
 	}
-
-
 
 	for (var i=0; i<childCount; i++) {
 		var child = graph.model.getChildAt(parent, i);
@@ -140,12 +149,16 @@ function createModelJson(graph) {
 			var entity = {};
 			entity.name = child.value.name;
 			entity.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
-			entity.isPrimary = child.value.isPrimary;
+			entity.isPrimary = child.value.isPrimary ? child.value.isPrimary : false;
 			entity.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			entity.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
 			entity.menuIndex = child.value.menuIndex ? child.value.menuIndex : 100;
 			entity.layoutType = child.value.layoutType;
 			entity.properties = [];
+			
+			if (compositions[entity.name]) {
+				entity.compositions = compositions[entity.name];
+			}
 			
 			var propertyCount = graph.model.getChildCount(child);
 			if (propertyCount > 0) {

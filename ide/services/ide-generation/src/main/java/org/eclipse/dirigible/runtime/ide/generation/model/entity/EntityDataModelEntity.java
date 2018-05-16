@@ -23,6 +23,8 @@ public class EntityDataModelEntity {
 	private String layoutType;
 	
 	private List<EntityDataModelProperty> properties;
+	
+	private List<EntityDataModelComposition> compositions;
 
 	/**
 	 * @return the name
@@ -134,6 +136,20 @@ public class EntityDataModelEntity {
 	 */
 	public void setProperties(List<EntityDataModelProperty> properties) {
 		this.properties = properties;
+	}
+	
+	/**
+	 * @return the compositions
+	 */
+	public List<EntityDataModelComposition> getCompositions() {
+		return compositions;
+	}
+
+	/**
+	 * @param compositions the compositions to set
+	 */
+	public void setCompositions(List<EntityDataModelComposition> compositions) {
+		this.compositions = compositions;
 	}
 
 }
