@@ -27,6 +27,7 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.engine.js.processor.JavascriptEngineProcessor;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +71,12 @@ public class JavascriptEngineRestService extends AbstractRestService implements 
 			processor.executeService(path);
 			return Response.ok().build();
 		} catch (ScriptingDependencyException e) {
-			logger.error(e.getMessage(), e);
+			logger.error(e.getMessage());
 			return Response.status(Response.Status.ACCEPTED).entity(e.getMessage()).build();
+		} catch (RepositoryNotFoundException e) {
+			String message = e.getMessage() + ". Try to publish the service before execution.";
+			logger.error(message);
+			return Response.status(Response.Status.ACCEPTED).entity(message).build();	
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
