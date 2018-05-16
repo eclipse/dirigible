@@ -207,7 +207,8 @@ WorkspaceService.prototype.copy = function(filename, sourcepath, targetpath, wor
 	var url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('copy').build();
 	//NOTE: The third argument is a temporary fix for the REST API issue that sending header  content-type: 'application/json' fails the move operation
 	return this.$http.post(url, { 
-		source: sourcepath + '/' + filename,
+		//source: sourcepath + '/' + filename,
+		source: sourcepath,
 		target: targetpath + '/',
 	})
 };
@@ -292,6 +293,7 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController,
 	this.workspaceController = workspaceController;
 	this.workspaceName = workspaceController.selectedWorkspace;
 	this.scope = scope;
+	this.copy_node = null;
 	
 	var self = this;
 	var jstree = this.containerEl.jstree(this.treeConfig);
@@ -343,6 +345,12 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController,
 	}.bind(this))
 	.on('jstree.workspace.openWith', function (e, data, editor) {		
 		this.openWith(data, editor);
+	}.bind(this))
+	.on('jstree.workspace.copy', function (e, data) {
+		this.copy(data);
+	}.bind(this))
+	.on('jstree.workspace.paste', function (e, data) {
+		this.paste(data);
 	}.bind(this))
 //	.on('jstree.workspace.file.properties', function (e, data) {
 //	 	var url = data.path + '/' + data.name;
@@ -446,16 +454,16 @@ WorkspaceTreeAdapter.prototype.copyNode = function(sourceParentNode, node){
 	//strip the "/{workspace}" segment from paths and the file segment from source path (for consistency) 
 	var sourceParentNode = sourceParentNode;
 	var sourcepath = sourceParentNode.original._file.path.substring(this.workspaceName.length+1);
-	var tagetParentNode = this.jstree.get_node(node.parent);
-	var targetpath = tagetParentNode.original._file.path.substring(this.workspaceName.length+1);
+	//var tagetParentNode = this.jstree.get_node(node.parent);
+	var targetpath = node.original._file.path.substring(this.workspaceName.length+1);
 	var self = this;
 	return this.workspaceService.copy(node.text, sourcepath, targetpath, this.workspaceName)
 			.then(function(sourceParentNode, tagetParentNode){
 				self.refresh(sourceParentNode, true);
-				self.refresh(tagetParentNode, true).then(function(){
+				self.refresh(node, true).then(function(){
 					self.messageHub.announceFileCopied(targetpath+'/'+node.text, sourcepath, targetpath);
 				});
-			}.bind(this, sourceParentNode, tagetParentNode))
+			}.bind(this, sourceParentNode, node))
 			.finally(function() {
 				this.refresh();
 			}.bind(this));
@@ -464,17 +472,26 @@ WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
 	var type = node.original.type;
 	if(['folder','project'].indexOf(type)<0)
 		this.messageHub.announceFileOpen(node.original._file);
-}
+};
 WorkspaceTreeAdapter.prototype.openWith = function(node, editor){
 	this.messageHub.announceFileOpen(node, editor);
-}
+};
 WorkspaceTreeAdapter.prototype.clickNode = function(node){
-	var type = node.original.type;
+	//var type = node.original.type;
 	this.messageHub.announceFileSelected(node.original._file);
 };
 WorkspaceTreeAdapter.prototype.raw = function(){
 	return this.jstree;
-}
+};
+WorkspaceTreeAdapter.prototype.copy = function(node){
+	this.copy_node = node;
+};
+WorkspaceTreeAdapter.prototype.paste = function(node){
+	if (this.copy_node && this.copy_node !== null) {
+		this.copyNode(this.copy_node, node);
+	}
+	this.copy_node = null;
+};
 WorkspaceTreeAdapter.prototype.refresh = function(node, keepState){
 	//TODO: This is reliable but a bit intrusive. Find out a more subtle way to update on demand
 	var resourcepath;
@@ -684,6 +701,9 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		this.createOpenFileMenuItem = function(ctxmenu, node){
 			var contentType = node.original._file.contentType;
 			var editors = getEditorsForContentType(contentType || "");
+			if (!editors) {
+				return;
+			}
 			if(editors.length > 1){
 				ctxmenu.openWith =  {
 					"label": "Open with...",
@@ -845,6 +865,28 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 							};
 					});
 				}
+				
+				/*Copy*/
+				ctxmenu.copy = {
+					"separator_before": true,
+					"label": "Copy",
+					"action": function(data){
+						var tree = $.jstree.reference(data.reference);
+						var node = tree.get_node(data.reference);
+						tree.element.trigger('jstree.workspace.copy', [node]);
+					}.bind(this)
+				};
+				
+				/*Paste*/
+				ctxmenu.paste = {
+					"separator_before": false,
+					"label": "Paste",
+					"action": function(data){
+						var tree = $.jstree.reference(data.reference);
+						var node = tree.get_node(data.reference);
+						tree.element.trigger('jstree.workspace.paste', [node]);
+					}.bind(this)
+				};
 				
 				/*Rename*/
 				ctxmenu.rename = _ctxmenu.rename;
