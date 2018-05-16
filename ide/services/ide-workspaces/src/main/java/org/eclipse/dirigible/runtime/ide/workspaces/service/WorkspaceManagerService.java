@@ -30,6 +30,7 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
@@ -133,6 +134,9 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 		}
 
 		String targetFilePath = targetPath.constructPathFrom(1);
+		if (targetFilePath.equals(targetPath.build())) {
+			targetFilePath = IRepository.SEPARATOR;
+		}
 		if (!processor.existsFolder(workspace, targetProject, targetFilePath)) {
 			sendErrorBadRequest(response, ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER);
 			return Response.status(Status.BAD_REQUEST).entity(ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER).build();
