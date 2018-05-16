@@ -11,7 +11,7 @@ exports.getTemplate = function() {
 			'location': '/template-application-angular/api/application.js.template', 
 			'action': 'generate',
 			'rename': 'api/{{fileName}}.js',
-			'collection': 'dataModels',
+			'collection': 'models',
 			'engine': 'velocity'
 		}, {
 			'location': '/template-application-angular/api/shell/menu.js.template', 
@@ -33,7 +33,7 @@ exports.getTemplate = function() {
 			'location': '/template-application-angular/data/dao/entity.js.template', 
 			'action': 'generate',
 			'rename': 'data/dao/{{fileName}}.js',
-			'collection': 'dataModels',
+			'collection': 'models',
 			'engine': 'velocity'
 		}, {
 			'location': '/template-application-angular/extensions/perspective/application.extension.template', 
@@ -59,7 +59,7 @@ exports.getTemplate = function() {
 			'location': '/template-application-angular/extensions/views/entity.extension.template', 
 			'action': 'generate',
 			'rename': 'extensions/views/{{fileName}}.extension',
-			'collection': 'dataModels'
+			'collection': 'models'
 		}, {
 			'location': '/template-application-angular/views/manage/index.html.template', 
 			'action': 'generate',
@@ -75,18 +75,18 @@ exports.getTemplate = function() {
 		}, {
 			'location': '/template-application-angular/views/manage/view.js.template', 
 			'action': 'generate',
-			'collection': 'dataModels',
+			'collection': 'models',
 			'rename': 'views/{{fileName}}/view.js'
 		}, {
 			'location': '/template-application-angular/views/manage/menu/item.extension.template', 
 			'action': 'generate',
 			'rename': 'views/{{fileName}}/menu/item.extension',
-			'collection': 'dataModels'
+			'collection': 'models'
 		}, {
 			'location': '/template-application-angular/views/manage/menu/item.js.template', 
 			'action': 'generate',
 			'rename': 'views/{{fileName}}/menu/item.js',
-			'collection': 'dataModels'
+			'collection': 'models'
 		}, {
 			'location': '/template-application-angular/views/list.html.template', 
 			'action': 'generate',

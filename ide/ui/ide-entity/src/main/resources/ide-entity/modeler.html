@@ -116,6 +116,12 @@
 							<input class="form-control" type="text" placeholder="entity name" ng-model="ctrl.$scope.$parent.cell.value.name" required="required">
 						</div>
 					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Is Primary: </label>
+						<div class="col-xs-5">
+							<input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.isPrimary" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'">
+						</div>
+					</div>
 				  </div>
 			    </div>
 			    <div id="dataEntity" class="tab-pane fade">
@@ -374,7 +380,7 @@
 					<div class="row">
 					    <label class="col-xs-3 col-form-label" for="relationshipCardinality">Relationship Cardinality: </label>
 					    <div class="col-xs-4">
-						    <select class="col-xs-4" name="d" id="relationshipCardinality" ng-model="ctrl.$scope.$parent.cell.value.relationshipCardinality">
+						    <select class="col-xs-4" name="d" id="relationshipCardinality" ng-model="ctrl.$scope.$parent.cell.source.value.relationshipCardinality">
 						    	<option ng-repeat="option in ctrl.relationshipCardinalities" value="{{option.key}}">{{option.label}}</option>
 						    </select>
 						</div>

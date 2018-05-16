@@ -229,8 +229,7 @@ function main(container, outline, toolbar, sidebar, status) {
 					label += '<img src="../resources/mxgraph/3.9.1/images/spacer.gif" width="9" height="1">&nbsp;';
 				}
 
-				var suffix = ': '+mxUtils.htmlEntities(cell.value.dataType, false)+(cell.value.dataLength ? 
-							'('+cell.value.dataLength+')' : '');
+				var suffix = mxUtils.htmlEntities(cell.value.dataType, false)+(cell.value.dataLength ? '('+cell.value.dataLength+')' : '');
 				return label+mxUtils.htmlEntities(cell.value.name, false) + ":" + suffix;
 			}
 			

@@ -10,7 +10,7 @@ iframe {
 }
 body {
   /*background-color: #ffffff;*/
-  font-family: Helvetica, Arial;
+  font-family: Helvetica Neue, Arial;
   color: #000000;
   font-size: 16px;
   /*background-image: url("alice_background.jpg");*/
@@ -66,6 +66,7 @@ body {
 	height: calc(100% - (45px + 2em));
 	left: 4.5em;
 	top: 50px;
+	border-radius: 8px;
 }
 .statusbar {
 	width: 100%;
@@ -281,4 +282,33 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 .list-group-item.active:hover {
     color: #a5b3c0 !important;
+}
+.panel {
+	border-radius: 8px;
+}
+.panel-heading {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
+}
+.panel-footer {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.panel > header {
+	background-color: #495a69;
+	color: #e1e6ea;
+	background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
+	background-size: cover;
+}
+.leading {
+	font-size: 38px;
+	/*font-weight: 500 !important;*/
+	line-height: 1 !important;
+	font-family: Helvetica Neue, Arial;
+}
+.panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #316f8f;
+    /*border-color: #316f8f;*/
 }

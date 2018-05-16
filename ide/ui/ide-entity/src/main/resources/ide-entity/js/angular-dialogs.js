@@ -6,9 +6,12 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 	ctrl.animationsEnabled = true;
 
 	ctrl.layoutTypes = [
-		{"key":"MANAGE","label":"Manage"},
-		{"key":"LIST","label":"List"},
-		{"key":"DISPLAY","label":"Display"}
+		{"key":"MANAGE","label":"Manage Entities"},
+		{"key":"LIST","label":"List Entities"},
+		{"key":"MANAGE_MASTER","label":"Manage Master Entities"},
+		{"key":"LIST_MASTER","label":"List Master Entities"},
+		{"key":"MANAGE_DETAILS","label":"Manage Details Entities"},
+		{"key":"LIST_DETAILS","label":"List Details Entities"}
 	];
 	
 	ctrl.dataTypes = [

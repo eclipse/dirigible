@@ -37,6 +37,7 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.runtime.ide.generation.api.GenerationException;
 import org.eclipse.dirigible.runtime.ide.generation.api.IGenerationEngine;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModel;
+import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelComposition;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelEntity;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelProperty;
 import org.eclipse.dirigible.runtime.ide.generation.model.template.GenerationTemplateMetadata;
@@ -284,13 +285,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			
 			List<Map<String, Object>> models = mapModels(entityDataModel, parameters, workspace, project, path);
 			parameters.getParameters().put("models", models);
-			List<Map<String, Object>> uiManageModels = new ArrayList<>();
-			List<Map<String, Object>> uiListModels = new ArrayList<>();
-			List<Map<String, Object>> uiDisplayModels = new ArrayList<>();
-			distributeByLayoutType(models, parameters, uiManageModels, uiListModels, uiDisplayModels);
-			parameters.getParameters().put("uiManageModels", uiManageModels);
-			parameters.getParameters().put("uiListModels", uiListModels);
-			parameters.getParameters().put("uiDisplayModels", uiDisplayModels);
+			
+			distributeByLayoutType(models, parameters);
+			
 			for (GenerationTemplateMetadataSource source : metadataObject.getSources()) {
 				String sourcePath = new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(source.getLocation()).build();
 				IResource sourceResource = projectObject.getRepository().getResource(sourcePath);
@@ -324,18 +321,38 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		throw new ScriptingException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
 	}
 
-	private void distributeByLayoutType(List<Map<String, Object>> uiModels, GenerationTemplateModelParameters parameters, List<Map<String, Object>> uiManageModels,
-			List<Map<String, Object>> uiListModels, List<Map<String, Object>> uiDisplayModels) {
-		for (Map<String, Object> uiModel : uiModels) {
-			Object layoutType = uiModel.get("layoutType");
-			if ("MANAGE".equals(layoutType)) {
-				uiManageModels.add(uiModel);
-			} else if ("LIST".equals(layoutType)) {
-				uiListModels.add(uiModel);
-			} else if ("DISPLAY".equals(layoutType)) {
-				uiDisplayModels.add(uiModel);
+	private void distributeByLayoutType(List<Map<String, Object>> models, GenerationTemplateModelParameters parameters) {
+		
+		List<Map<String, Object>> uiManageModels = new ArrayList<>();
+		List<Map<String, Object>> uiListModels = new ArrayList<>();
+		List<Map<String, Object>> uiManageMasterModels = new ArrayList<>();
+		List<Map<String, Object>> uiListMasterModels = new ArrayList<>();
+		List<Map<String, Object>> uiManageDetailsModels = new ArrayList<>();
+		List<Map<String, Object>> uiListDetailsModels = new ArrayList<>();
+		
+		for (Map<String, Object> model : models) {
+			Object layoutType = model.get("layoutType");
+			Boolean isPrimary = Boolean.parseBoolean(model.get("isPrimary") != null ? model.get("isPrimary").toString() : "false");
+			if ("MANAGE".equals(layoutType) && isPrimary) {
+				uiManageModels.add(model);
+			} else if ("LIST".equals(layoutType) && isPrimary) {
+				uiListModels.add(model);
+			} else if ("MANAGE_MASTER".equals(layoutType) && isPrimary) {
+				uiManageMasterModels.add(model);
+			} else if ("LIST_MASTER".equals(layoutType) && isPrimary) {
+				uiListMasterModels.add(model);
+			} else if ("MANAGE_DETAILS".equals(layoutType) && isPrimary) {
+				uiManageDetailsModels.add(model);
+			} else if ("LIST_DETAILS".equals(layoutType) && isPrimary) {
+				uiListDetailsModels.add(model);
 			}
 		}
+		parameters.getParameters().put("uiManageModels", uiManageModels);
+		parameters.getParameters().put("uiListModels", uiListModels);
+		parameters.getParameters().put("uiManageMasterModels", uiManageMasterModels);
+		parameters.getParameters().put("uiListMasterModels", uiListMasterModels);
+		parameters.getParameters().put("uiManageDetailsModels", uiManageDetailsModels);
+		parameters.getParameters().put("uiListDetailsModels", uiListDetailsModels);
 	}
 
 	private List<Map<String, Object>> mapModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
@@ -358,7 +375,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				
 				propertyModel.put("dataName", property.getDataName());
 				propertyModel.put("dataPrimaryKey", property.getDataPrimaryKey());
-				propertyModel.put("dataIdentity", property.getDataAutoIncrement());
+				propertyModel.put("dataAutoIncrement", property.getDataAutoIncrement());
 				propertyModel.put("dataDefaultValue", property.getDataDefaultValue());
 				propertyModel.put("dataLength", property.getDataLength());
 				propertyModel.put("dataNullable", !property.getDataNotNull());
@@ -387,6 +404,18 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				propertiesModels.add(propertyModel);
 			}
 			model.put("properties", propertiesModels);
+			
+			List<Map<String, Object>> compositionsModels = new ArrayList<>();
+			for (EntityDataModelComposition composition : entity.getCompositions()) {
+				Map<String, Object> compositionModel = new HashMap<String, Object>();
+				compositionModel.put("entityName", composition.getEntityName());
+				compositionModel.put("entityProperty", composition.getEntityProperty());
+				compositionModel.put("localProperty", composition.getLocalProperty());
+				
+				compositionsModels.add(compositionModel);
+			}
+			model.put("compositions", compositionsModels);
+			
 			models.add(model);
 		}
 		return models;
