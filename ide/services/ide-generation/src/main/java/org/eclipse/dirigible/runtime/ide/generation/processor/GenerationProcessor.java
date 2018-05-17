@@ -363,6 +363,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			model.putAll(parameters.getParameters());
 			addStandardParameters(workspace, project, localPath.build(), model);
 			model.put("name", entity.getName());
+			model.put("isPrimary", entity.isPrimary());
 			model.put("dataName", entity.getDataName());
 			model.put("layoutType", entity.getLayoutType());
 			model.put("menuKey", entity.getMenuKey());
