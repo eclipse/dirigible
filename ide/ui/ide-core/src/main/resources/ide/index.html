@@ -88,6 +88,12 @@
 					},
 					'workbench.alert': function(msg){
 						alert(msg.data);
+					},
+					'editor.file.dirty': function(msg){
+						Layouts.manager.setEditorDirty(msg.data, true);
+					},
+					'editor.file.saved': function(msg){
+						Layouts.manager.setEditorDirty(msg.data, false);
 					}
 				}
 			};
