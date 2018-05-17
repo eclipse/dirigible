@@ -35,10 +35,20 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 	ctrl.widgetTypes = [
 		{"key":"TEXTBOX","label":"Text Box"},
 		{"key":"TEXTAREA","label":"Text Area"},
-		{"key":"DATEPICKER","label":"Date Picker"},
+		{"key":"DATE","label":"Date Picker"},
 		{"key":"DROPDOWN","label":"Drop Down"},
 		{"key":"LOOKUPDIALOG","label":"Lookup Dialog"},
-		{"key":"NUMBER","label":"Number"}
+		{"key":"NUMBER","label":"Number"},
+		{"key":"COLOR","label":"Color"},
+		{"key":"DATETIME-LOCAL","label":"Datetime Local"},
+		{"key":"EMAIL","label":"e-mail"},
+		{"key":"MONTH","label":"Month"},
+		{"key":"RANGE","label":"Range"},
+		{"key":"SEARCH","label":"Search"},
+		{"key":"TEL","label":"Telephone"},
+		{"key":"TIME","label":"Time"},
+		{"key":"URL","label":"URL"},
+		{"key":"WEEK","label":"Week"}
 	];
 	
 	ctrl.relationshipTypes = [

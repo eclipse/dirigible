@@ -1,4 +1,4 @@
 {
 	'description': 'Extension Point for the {{projectName}} Menu Providers',
-	'name': 'shell-{{projectName}}-menu'
+	'name': 'launchpad-{{projectName}}-menu'
 }

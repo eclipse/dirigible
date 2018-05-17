@@ -91,7 +91,8 @@
 #end
 					</form>
 					<div ng-show="actionType === 'delete'">
-						You are going to delete ${name} with <b>Id = {{entity.id}}</b>.
+						You are going to delete <b>${name}</b> with #foreach ($property in $properties)#if($property.dataPrimaryKey)<b>${property.name} = {{entity.${property.name}}}</b>.#end#end
+
 					</div>
 				</div>
 				<div class="modal-footer">
