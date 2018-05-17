@@ -88,8 +88,18 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 		startupScheduler();
 
 		startupMessaging();
+		
+		printAllConfigurations();
 
 		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
+	}
+
+	private void printAllConfigurations() {
+		String[] keys = Configuration.getKeys();
+		for (String key: keys) {
+			String value = Configuration.get(key);
+			logger.info("Configuration: {}={}", key, value);			
+		}
 	}
 
 	/**
