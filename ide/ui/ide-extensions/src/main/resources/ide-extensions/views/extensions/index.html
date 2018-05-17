@@ -24,33 +24,58 @@
 		
 	<!-- Twitter Bootstrap with Theme Support -->
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+	
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
+	
 </head>
 
 <body ng-controller="ExtensionsController">
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>#</th>
-				<th>Location</th>
-				<th>Extension Point</th>
-				<th>Module</th>
-				<th>Description</th>
-				<th>Created By</th>
-				<th>Created At</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="next in extensions">
-				<td>{{$index + 1}}</td>
-				<td>{{next.location}}</td>
-				<td>{{next.extensionPoint}}</td>
-				<td>{{next.module}}</td>
-				<td>{{next.description}}</td>
-				<td>{{next.createdBy}}</td>
-				<td>{{next.createdAt}}</td>
-			</tr>
-		</tbody>
-	</table>
+	
+			<div ng-repeat="next in extensionPoints">
+				<hr>
+				<h4>
+					<label>Name:</label> {{next.extensionPoint.name}}
+					<label>Location:</label> {{next.extensionPoint.location}}
+				</h4>
+				<h4>
+					<i>{{next.extensionPoint.description}}</i>
+				</h4>
+				<hr>
+				<!--
+				<td>{{next.extensionPoint.createdBy}}</td>
+				<td>{{next.extensionPoint.createdAt}}</td>
+				-->
+				<td>
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Location</th>
+								<th>Module</th>
+								<th>Description</th>
+								<!--
+								<th>Created By</th>
+								<th>Created At</th>
+								-->
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="extension in next.extensions">
+								<td>{{$index + 1}}</td>
+								<td>{{extension.location}}</td>
+								<td>{{extension.module}}</td>
+								<td>{{extension.description}}</td>
+								<!--
+								<td>{{extension.createdBy}}</td>
+								<td>{{extension.createdAt}}</td>
+								-->
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</div>
+		
 
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
@@ -58,12 +83,12 @@
 		angular.module('extensions', []);
 		angular.module('extensions').controller('ExtensionsController', function ($scope, $http) {
 		
-		    var extensionsApi = '/services/v3/js/ide-extensions/services/extensions.js';
+		    var extensionsApi = '/services/v3/core/extensions';
 		
 		    function loadExtensions() {
 		        $http.get(extensionsApi)
 		        .success(function(data) {
-		            $scope.extensions = data;
+		            $scope.extensionPoints = data;
 		        });
 		    }
 		

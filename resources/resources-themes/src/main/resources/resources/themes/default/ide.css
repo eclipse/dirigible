@@ -191,9 +191,12 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	color: #ccc;
 }
 .modal-backdrop.in{
-	opacity:.8;filter:alpha(opacity=50)
+	opacity:.8;filter:alpha(opacity=50);
 }
 
 .navbar-brand {
     font-weight: normal !important;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    line-height: 1;
 }

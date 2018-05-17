@@ -1,4 +1,0 @@
-{
-	'description': 'Extension Point for the {{extensionName}} Perspective Providers',
-	'name': 'shell-{{extensionName}}-perspective'
-}

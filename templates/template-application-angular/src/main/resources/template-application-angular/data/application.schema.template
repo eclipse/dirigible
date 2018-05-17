@@ -1,7 +1,7 @@
 {
     "schema": {
         "structures": [
-        {{#dataModels_}}
+        {{#models_}}
             {
                 "name": "{{value.dataName}}",
                 "type": "TABLE",
@@ -20,7 +20,7 @@
                 {{/value.properties_}}
                 ]
             }{{^last}},{{/last}}
-        {{/dataModels_}}
+        {{/models_}}
         ]
     }
 }

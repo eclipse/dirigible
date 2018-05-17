@@ -2,7 +2,7 @@ var daoApi = require('db/v3/dao');
 var dao = daoApi.create({
 	'table': '${dataName}',
 	'properties': [
-#foreach ($property in $properties) 
+#foreach ($property in $properties)
 		{
 			'name':  '${property.name}',
 			'column': '${property.dataName}',

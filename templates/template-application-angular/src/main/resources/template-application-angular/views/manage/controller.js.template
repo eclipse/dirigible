@@ -67,7 +67,12 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 	};
 
 	$scope.update = function() {
-		${dollar}http.put(api + '/' + ${dollar}scope.entity.id, JSON.stringify(${dollar}scope.entity))
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+		${dollar}http.put(api + '/' + ${dollar}scope.entity.${property.name}, JSON.stringify(${dollar}scope.entity))
+#end
+#end
+
 		.success(function(data) {
 			load();
 			toggleEntityModal();
@@ -77,7 +82,11 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 	};
 
 	$scope.delete = function() {
-		${dollar}http.delete(api + '/' + ${dollar}scope.entity.id)
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+		${dollar}http.delete(api + '/' + ${dollar}scope.entity.${property.name})
+#end
+#end
 		.success(function(data) {
 			load();
 			toggleEntityModal();
