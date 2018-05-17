@@ -321,7 +321,7 @@ function LayoutController(viewRegistry, messageHub){
 			if(this.layout.root.getItemsById(newItemConfig.id).length){
 				//replace content
 				var panel = this.layout.root.getItemsById(newItemConfig.id)[0];
-				//panel.instance.setContent(newItemConfig.id)
+				//panel.instance.setContent(newItemConfig.id);
 				panel.parent.setActiveContentItem(panel);
 			} else {
 				// open new tab
@@ -331,7 +331,26 @@ function LayoutController(viewRegistry, messageHub){
 			this.openView('editor');
 			this.layout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
 		}		
-	}
+	};
+	
+	this.setEditorDirty = function(resourcePath, dirty){
+		//is an editor available to stack new children to it?
+		if(this.layout.root.getItemsById('editor')[0]){
+			//is already open?
+			if(this.layout.root.getItemsById(resourcePath).length){
+				var panel = this.layout.root.getItemsById(resourcePath)[0];
+				var title = panel.container.tab.titleElement.text();
+				if (!title.startsWith('*') && dirty) {
+					panel.setTitle('*'+title);
+				} else {
+					if (title.startsWith('*') && !dirty) {
+						panel.setTitle(title.substring(1, title.length));
+					}
+				}
+				panel.parent.setActiveContentItem(panel);
+			}
+		}	
+	};
 	
 	this.resize = function(){
 		this.layout.updateSize();
@@ -342,10 +361,10 @@ function LayoutController(viewRegistry, messageHub){
 		this.containerEl.empty();
 		this.layout.init(this.containerEl, this.viewNames);
 	};
-};
+}
 
 function uuidv4() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
 	(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  )
+  );
 }

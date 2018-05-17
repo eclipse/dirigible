@@ -83,7 +83,7 @@
 				return 'plain/text';
 			}
 			
-			
+			var dirty = true;
 		
 			var searchParams = new URLSearchParams(window.location.search);
 			var file = searchParams.get('file');
@@ -123,7 +123,13 @@
 					        	var text = editorViewer.editor.getTextView().getText();
 						    	saveContents(text);
 							} else {
-								messageHub.post({data: file}, 'editor.file.dirty');
+								dirty = false;
+							}
+					    });
+					    editorViewer.editor.getModel().addEventListener("Changed", function(evt) {
+					        if(evt && !dirty) {
+					        	dirty = true;
+					        	messageHub.post({data: file}, 'editor.file.dirty');
 							}
 					    });
 						editorViewer.setContents(contents, mode);
@@ -158,6 +164,7 @@
 						}
 					};
 					xhr.send(text);
+					dirty = false;
 					messageHub.post({data: file}, 'editor.file.saved');
 				} else {
 					console.error('file parameter is not present in the request');
