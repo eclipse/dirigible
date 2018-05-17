@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.runtime.ide.generation.model.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +23,9 @@ public class EntityDataModelEntity {
 	
 	private String layoutType;
 	
-	private List<EntityDataModelProperty> properties;
+	private List<EntityDataModelProperty> properties = new ArrayList<EntityDataModelProperty>();
 	
-	private List<EntityDataModelComposition> compositions;
+	private List<EntityDataModelComposition> compositions = new ArrayList<EntityDataModelComposition>();
 
 	/**
 	 * @return the name
