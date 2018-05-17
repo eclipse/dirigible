@@ -14,7 +14,7 @@ body {
   color: #000000;
   font-size: 16px;
   /*background-image: url("alice_background.jpg");*/
-  background: linear-gradient(#f5f4f4, #ffffff, #f3f5f7);
+  /*background: linear-gradient(#f5f4f4, #ffffff, #f3f5f7);*/
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
