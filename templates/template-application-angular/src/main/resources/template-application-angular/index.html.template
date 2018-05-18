@@ -40,7 +40,7 @@
 
 	<div class="shell">
 		<div class="sidebar list-group" sidebar active="Workbench"></div>
-		<div id="workbench" class="plane" view-extension-point="launchpad-{{projectName}}-view" views-layout views-layout-model="layoutModel"></div>
+		<div id="{{projectName}}" class="plane" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-{{projectName}}-view"></div>
 	</div>
 	<div class="statusbar" status-bar>{{message}}</div>
 	
@@ -57,9 +57,9 @@
 	<!-- GoldenLayout with Theme Support -->
 	<script type="text/javascript" src="/services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
-	<script type="text/javascript" src="/services/v3/web/{{projectName}}/resources/js/message-hub.js"></script>	
-	<script type="text/javascript" src="/services/v3/web/{{projectName}}/resources/js/ui-layout.js"></script>
-	<script type="text/javascript" src="/services/v3/web/{{projectName}}/resources/js/ui-core-ng-modules.js"></script>
+	<script type="text/javascript" src="/services/v3/web/{{launchpadName}}/resources/js/message-hub.js"></script>	
+	<script type="text/javascript" src="/services/v3/web/{{launchpadName}}/resources/js/ui-layout.js"></script>
+	<script type="text/javascript" src="/services/v3/web/{{launchpadName}}/resources/js/ui-core-ng-modules.js"></script>
 
 	<script type="text/javascript">
 		angular.module('workbench', ['ngResource', 'ideUiCore'])
@@ -92,7 +92,7 @@
 				}
 			};
 
-			$http.get('/services/v3/js/{{projectName}}/api/shell/views.js')
+			$http.get('/services/v3/js/{{launchpadName}}/api/launchpad/views.js?extensionPoint=launchpad-{{projectName}}-view')
 			.success(function(views) {
 				for (var i = 0 ; i < views.length; i ++) {
 					$scope.layoutModel.views.push(views[i].id);
