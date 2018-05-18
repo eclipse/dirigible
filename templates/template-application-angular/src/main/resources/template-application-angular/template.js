@@ -38,24 +38,34 @@ exports.getTemplate = function() {
 		
 		{
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/perspective/application.extension.template', 
+			'location': '/template-application-angular/extensions/perspective/perspective.extension.template', 
 			'action': 'generate',
-			'rename': 'extensions/perspective/home.extension'
+			'rename': 'extensions/perspective/perspective.extension'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/perspective/home.js.template', 
+			'location': '/template-application-angular/extensions/perspective/perspective.js.template', 
 			'action': 'generate',
-			'rename': 'extensions/perspective/home.js'
+			'rename': 'extensions/perspective/perspective.js'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/point/menu.extensionpoint.template', 
+			'location': '/template-application-angular/extensions/tiles/tiles.extension.template', 
 			'action': 'generate',
-			'rename': 'extensions/point/menu.extensionpoint'
+			'rename': 'extensions/tiles/tiles.extension'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/point/view.extensionpoint.template', 
+			'location': '/template-application-angular/extensions/tiles/tiles.js.template', 
 			'action': 'generate',
-			'rename': 'extensions/point/view.extensionpoint'
+			'rename': 'extensions/tiles/tiles.js'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/extensions/menu.extensionpoint.template', 
+			'action': 'generate',
+			'rename': 'extensions/menu.extensionpoint'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/extensions/views/view.extensionpoint.template', 
+			'action': 'generate',
+			'rename': 'extensions/views/view.extensionpoint'
 		}, {
 			'_section': 'Extensions',
 			'location': '/template-application-angular/extensions/views/entity.extension.template', 
@@ -111,6 +121,9 @@ exports.getTemplate = function() {
 		'parameters': [{
 			'name': 'extensionName',
 			'label': 'Extension Name'
+		}, {
+			'name': 'launchpadName',
+			'label': 'Launchpad Name'
 		}, {
 			'name': 'brand',
 			'label': 'Brand'
