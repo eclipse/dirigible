@@ -151,7 +151,7 @@ public class GenerationTemplateMetadataSource {
 	/**
 	 * Sets the named type
 	 * 
-	 * @param type
+	 * @param type the type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -169,7 +169,7 @@ public class GenerationTemplateMetadataSource {
 	/**
 	 * Sets the named engine
 	 * 
-	 * @param engine
+	 * @param engine the engine
 	 */
 	public void setEngine(String engine) {
 		this.engine = engine;

@@ -37,7 +37,6 @@ public interface IBpmProvider {
 	 * @param location the process definition location
 	 * 
 	 * @return the deployment id
-	 * @throws IOException 
 	 */
 	public String deployProcess(String location);
 	
@@ -71,7 +70,7 @@ public interface IBpmProvider {
 	 * 
 	 * @param processInstanceId the process instance id
 	 * @param variableName the variable name
-	 * @param value the variable value object
+	 * @param variableValue the variable value object
 	 */
 	public void setVariable(String processInstanceId, String variableName, Object variableValue);
 	

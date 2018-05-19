@@ -112,11 +112,15 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 	/**
 	 * Save the BPM model source
 	 *
-	 * @param id
-	 *            the id
-	 * @param request the HTTP request
+	 * @param workspace
+	 *            the workspace
+	 * @param project
+	 *            the project
+	 * @param path
+	 *            the path
+	 * @param payload the payload
 	 * @return the response
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException in case of an error
 	 */
 	@POST
 	@Path("models/{workspace}/{project}/{path:.*}")
