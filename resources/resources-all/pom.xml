@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-resources-parent</artifactId>
-		<version>3.2.0</version>
+		<version>3.2.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,47 +32,47 @@
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-angular</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-bootstrap</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-fonts</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-goldenlayout</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-jquery</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-jstree</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-themes</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-flowable-libs</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-mxgraph</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1-SNAPSHOT</version>
         </dependency>
 	</dependencies>
 </project>
