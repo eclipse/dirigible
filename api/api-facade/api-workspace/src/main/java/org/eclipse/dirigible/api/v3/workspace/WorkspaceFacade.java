@@ -32,7 +32,7 @@ public class WorkspaceFacade {
 	/**
 	 * Gets the workspace.
 	 *
-	 * @param workspace the workspace name
+	 * @param name the workspace name
 	 * @return the workspace
 	 */
 	public static IWorkspace getWorkspace(String name) {

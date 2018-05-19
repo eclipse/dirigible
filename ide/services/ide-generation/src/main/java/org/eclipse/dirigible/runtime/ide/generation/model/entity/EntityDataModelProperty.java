@@ -250,7 +250,7 @@ public class EntityDataModelProperty {
 	}
 
 	/**
-	 * @param relationshipName the relationshipEntityName to set
+	 * @param relationshipEntityName the relationship entity name to set
 	 */
 	public void setRelationshipEntityName(String relationshipEntityName) {
 		this.relationshipEntityName = relationshipEntityName;

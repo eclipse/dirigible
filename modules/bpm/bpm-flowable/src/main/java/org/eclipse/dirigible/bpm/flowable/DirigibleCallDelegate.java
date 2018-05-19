@@ -38,7 +38,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
 	
 	/**
 	 * Getter for the engine attribute
-	 * @return the engine
+	 * @return the type
 	 */
 	public FixedValue getType() {
 		return type;
@@ -46,7 +46,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
 	
 	/**
 	 * Setter of the engine attribute
-	 * @param handler the engine
+	 * @param type the type
 	 */
 	public void setType(FixedValue type) {
 		this.type = type;

@@ -67,7 +67,7 @@ public class SecurityService extends AbstractRestService implements IRestService
 	 * List all the access definitions currently registered.
 	 *
 	 * @return the response
-	 * @throws SchedulerException the scheduler exception
+	 * @throws AccessException the scheduler exception
 	 */
 	@GET
 	@Path("/access")
@@ -87,7 +87,7 @@ public class SecurityService extends AbstractRestService implements IRestService
 	 * List all the roles definitions currently registered.
 	 *
 	 * @return the response
-	 * @throws SchedulerException the scheduler exception
+	 * @throws AccessException the scheduler exception
 	 */
 	@GET
 	@Path("/roles")

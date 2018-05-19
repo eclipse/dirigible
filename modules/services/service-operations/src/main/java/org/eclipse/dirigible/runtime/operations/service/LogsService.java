@@ -74,7 +74,7 @@ public class LogsService extends AbstractRestService implements IRestService {
 	 *             the URI syntax exception
 	 * @throws DecoderException
 	 *             the decoder exception
-	 * @throws IOException 
+	 * @throws IOException the I/O error
 	 */
 	@GET
 	@Path("")
@@ -100,7 +100,7 @@ public class LogsService extends AbstractRestService implements IRestService {
 	 *             the URI syntax exception
 	 * @throws DecoderException
 	 *             the decoder exception
-	 * @throws IOException 
+	 * @throws IOException the I/O error
 	 */
 	@GET
 	@Path("{file}")
