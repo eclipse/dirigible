@@ -656,7 +656,7 @@ public interface IDataStructuresCoreService extends ICoreService {
 	 *
 	 * @param location
 	 *            the location
-	 * @param data
+	 * @param content
 	 *            the schema content
 	 * @return the data structure schema model
 	 */

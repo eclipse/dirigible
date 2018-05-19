@@ -67,7 +67,7 @@ public class ListenersService extends AbstractRestService implements IRestServic
 	 * List all the listeners currently registered.
 	 *
 	 * @return the response
-	 * @throws SchedulerException the scheduler exception
+	 * @throws MessagingException the scheduler exception
 	 */
 	@GET
 	@Path("")
