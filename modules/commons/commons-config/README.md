@@ -99,3 +99,9 @@
 ### Logs
 
 - `DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT`: (default: ../logs)
+
+## Look & Feel
+
+### Theme
+
+- `DIRIGIBLE_THEME_DEFAULT`: (default: ../Default)
