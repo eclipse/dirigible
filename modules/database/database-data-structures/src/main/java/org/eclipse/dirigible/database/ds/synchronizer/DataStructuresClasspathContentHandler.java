@@ -35,6 +35,11 @@ public class DataStructuresClasspathContentHandler extends AbstractClasspathCont
 	protected boolean isValid(String path) {
 
 		try {
+			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_SCHEMA)) {
+				dataStructuresSynchronizer.registerPredeliveredSchema(path);
+				return true;
+			}
+			
 			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_TABLE)) {
 				dataStructuresSynchronizer.registerPredeliveredTable(path);
 				return true;
