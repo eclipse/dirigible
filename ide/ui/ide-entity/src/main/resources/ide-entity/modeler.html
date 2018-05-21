@@ -119,7 +119,11 @@
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Is Primary: </label>
 						<div class="col-xs-5">
-							<input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.isPrimary" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'">
+							<!-- <input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.isPrimary" required="required" data-ng-true-value="'yes'" data-ng-false-value="'no'">
+							<input class="form-control" type="text" placeholder="data name" ng-model="ctrl.$scope.$parent.cell.value.isPrimary" required="required"> -->
+							<select class="form-control" name="entityIsPrimary" id="entityLayout" ng-model="ctrl.$scope.$parent.cell.value.isPrimary">
+						    	<option ng-repeat="option in ctrl.isPrimaryTypes" value="{{option.key}}">{{option.label}}</option>
+						    </select>
 						</div>
 					</div>
 				  </div>
@@ -318,9 +322,12 @@
 						</div>
 					</div>
 					<div class="row">
-						<label class="col-xs-3 col-form-label">Is Major (e.g. shown on table headers): </label>
+						<label class="col-xs-3 col-form-label">Is Major: </label>
 						<div class="col-xs-9">
-							<input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.widgetIsMajor" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'">
+							<!-- <input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.widgetIsMajor" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'"> -->
+							<select class="form-control" name="propertyIsMajor" id="entityLayout" ng-model="ctrl.$scope.$parent.cell.value.widgetIsMajor">
+						    	<option ng-repeat="option in ctrl.isMajorTypes" value="{{option.key}}">{{option.label}}</option>
+						    </select>
 						</div>
 					</div>
 					<div class="row">

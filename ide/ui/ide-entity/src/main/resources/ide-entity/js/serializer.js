@@ -12,7 +12,7 @@ function createModel(graph) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
-			model.push('  <entity name="'+child.value.name+'" dataName="'+child.value.dataName+'" isPrimary="'+(child.value.isPrimary ? 'true' : 'false') +'"'
+			model.push('  <entity name="'+child.value.name+'" dataName="'+child.value.dataName+'" isPrimary="'+(child.value.isPrimary ? child.value.isPrimary : 'false') +'"'
 				+' menuKey="'+child.value.menuKey+'" menuLabel="'+child.value.menuLabel+'" menuIndex="'+child.value.menuIndex+'" layoutType="'+child.value.layoutType+'"'
 				+'>\n');
 			
@@ -149,7 +149,7 @@ function createModelJson(graph) {
 			var entity = {};
 			entity.name = child.value.name;
 			entity.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
-			entity.isPrimary = child.value.isPrimary ? child.value.isPrimary : false;
+			entity.isPrimary = child.value.isPrimary ? child.value.isPrimary : "false";
 			entity.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			entity.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
 			entity.menuIndex = child.value.menuIndex ? child.value.menuIndex : 100;
@@ -174,10 +174,10 @@ function createModelJson(graph) {
 					property.dataType = childProperty.dataType;
 					property.dataLength = childProperty.dataLength;
 					property.dataDefaultValue = childProperty.dataDefaultValue;
-					property.dataPrimaryKey = childProperty.dataPrimaryKey ? childProperty.dataPrimaryKey : false;
-					property.dataAutoIncrement = childProperty.dataAutoIncrement ? childProperty.dataAutoIncrement : false;
-					property.dataNotNull = childProperty.dataNotNull ? childProperty.dataNotNull : false;
-					property.dataUnique = childProperty.dataUnique ? childProperty.dataUnique : false;
+					property.dataPrimaryKey = childProperty.dataPrimaryKey ? childProperty.dataPrimaryKey : "false";
+					property.dataAutoIncrement = childProperty.dataAutoIncrement ? childProperty.dataAutoIncrement : "false";
+					property.dataNotNull = childProperty.dataNotNull ? childProperty.dataNotNull : "false";
+					property.dataUnique = childProperty.dataUnique ? childProperty.dataUnique : "false";
 					property.dataPrecision = childProperty.dataPrecision;
 					property.dataScale = childProperty.dataScale;
 					
@@ -196,7 +196,7 @@ function createModelJson(graph) {
 					property.widgetFormat = childProperty.widgetFormat;
 					property.widgetSection = childProperty.widgetSection;
 					property.widgetService = childProperty.widgetService;
-					property.widgetIsMajor = childProperty.widgetIsMajor ? childProperty.widgetIsMajor : false;
+					property.widgetIsMajor = childProperty.widgetIsMajor ? childProperty.widgetIsMajor : "false";
 					property.widgetDropDownKey = childProperty.widgetDropDownKey;
 					property.widgetDropDownValue = childProperty.widgetDropDownValue;
 					

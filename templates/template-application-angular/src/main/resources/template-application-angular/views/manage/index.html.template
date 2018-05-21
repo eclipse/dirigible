@@ -68,23 +68,23 @@
 #if(!$property.dataAutoIncrement)
 #if($property.widgetType == "DROPDOWN")
 						<div class="form-group">
-							<label>${property.widgetLabel}</label>
+							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
 							<select class="form-control" ng-options="o.${property.widgetDropDownKey} as o.${property.widgetDropDownValue} for o in ${property.name.toLowerCase()}Options" ng-model="entity.${property.name}"></select>
 						</div>
 #elseif($property.widgetType == "TEXTAREA")
 						<div class="form-group">
-							<label>${property.widgetLabel}</label>
-							<textarea class="form-control" placeholder="Enter ${property.widgetLabel.toLowerCase()}" ng-model="entity.${property.name}"></textarea>
+							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
+							<textarea class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}"></textarea>
 						</div>
 #elseif($property.widgetType == "NUMBER")
 						<div class="form-group">
-							<label>${property.widgetLabel}</label>
-							<input type="number" class="form-control" placeholder="Enter ${property.widgetLabel.toLowerCase()}" ng-model="entity.${property.name}">
+							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
+							<input type="number" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
 						</div>
 #else
 						<div class="form-group">
-							<label>${property.widgetLabel}</label>
-							<input type="text" class="form-control" placeholder="Enter ${property.widgetLabel.toLowerCase()}" ng-model="entity.${property.name}">
+							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
+							<input type="text" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
 						</div>
 #end
 #end

@@ -63,15 +63,40 @@ exports.getTemplate = function() {
 			'rename': 'extensions/menu.extensionpoint'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/view.extensionpoint.template', 
+			'location': '/template-application-angular/extensions/views/manage/view-manage.extensionpoint.template', 
 			'action': 'generate',
-			'rename': 'extensions/views/view.extensionpoint'
+			'rename': 'extensions/views/view-manage.extensionpoint'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/entity.extension.template', 
+			'location': '/template-application-angular/extensions/views/manage/entity.extension.template', 
 			'action': 'generate',
 			'rename': 'extensions/views/{{fileName}}.extension',
-			'collection': 'models'
+			'collection': 'uiManageModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/extensions/views/master/entity-view.extensionpoint.template', 
+			'action': 'generate',
+			'rename': 'extensions/views/{{fileName}}-view.extensionpoint',
+			'collection': 'uiManageMasterModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/extensions/views/master/entity-view-master.extension.template', 
+			'action': 'generate',
+			'rename': 'extensions/views/{{fileName}}-view-master.extension',
+			'collection': 'uiManageMasterModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/extensions/views/master/entity-view-detail.extension.template', 
+			'action': 'generate',
+			'rename': 'extensions/views/{{fileName}}-view-detail.extension',
+			'collection': 'uiManageDetailsModels',
+			'engine': 'velocity'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/extensions/views/master/entity.extension.template', 
+			'action': 'generate',
+			'rename': 'extensions/views/{{fileName}}.extension',
+			'collection': 'uiManageMasterModels'
 		},
 		
 		
@@ -109,9 +134,69 @@ exports.getTemplate = function() {
 			'rename': 'views/{{fileName}}/menu/item.js',
 			'collection': 'uiManageModels'
 		},
-		
-		
-		
+
+
+
+		{
+			'_section': 'UI - Manage Master Models',
+			'location': '/template-application-angular/views/master/index.html.template', 
+			'action': 'generate',
+			'rename': 'views/master/{{fileName}}/index.html',
+			'collection': 'uiManageMasterModels',
+		}, {
+			'_section': 'UI - Manage Master Models',
+			'location': '/template-application-angular/views/master/view.js.template', 
+			'action': 'generate',
+			'rename': 'views/master/{{fileName}}/view.js',
+			'collection': 'uiManageMasterModels'
+		}, {
+			'_section': 'UI - Manage Master Models',
+			'location': '/template-application-angular/views/master/master/index.html.template', 
+			'action': 'generate',
+			'rename': 'views/master/{{fileName}}/master/index.html',
+			'collection': 'uiManageMasterModels',
+			'engine': 'velocity'
+		}, {
+			'_section': 'UI - Manage Master Models',
+			'location': '/template-application-angular/views/master/master/controller.js.template', 
+			'action': 'generate',
+			'rename': 'views/master/{{fileName}}/master/controller.js',
+			'collection': 'uiManageMasterModels',
+			'engine': 'velocity'
+		}, {
+			'_section': 'UI - Manage Master Models',
+			'location': '/template-application-angular/views/master/master/view.js.template', 
+			'action': 'generate',
+			'rename': 'views/master/{{fileName}}/master/view.js',
+			'collection': 'uiManageMasterModels'
+		},
+
+
+
+		{
+			'_section': 'UI - Manage Details Models',
+			'location': '/template-application-angular/views/master/details/index.html.template', 
+			'action': 'generate',
+			'rename': 'views/master/details/{{fileName}}/index.html',
+			'collection': 'uiManageDetailsModels',
+			'engine': 'velocity'
+		}, {
+			'_section': 'UI - Manage Details Models',
+			'location': '/template-application-angular/views/master/details/controller.js.template', 
+			'action': 'generate',
+			'rename': 'views/master/details/{{fileName}}/controller.js',
+			'collection': 'uiManageDetailsModels',
+			'engine': 'velocity'
+		}, {
+			'_section': 'UI - Manage Details Models',
+			'location': '/template-application-angular/views/master/details/view.js.template', 
+			'action': 'generate',
+			'rename': 'views/master/details/{{fileName}}/view.js',
+			'collection': 'uiManageDetailsModels'
+		},
+
+
+
 		{
 			'_section': 'UI - Index.html',
 			'location': '/template-application-angular/index.html.template', 
