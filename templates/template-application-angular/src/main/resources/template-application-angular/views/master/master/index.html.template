@@ -13,7 +13,7 @@
 </head>
 
 <body ng-controller="PageController">
-	<div class="page-header">
+	<div class="page-header container">
 		<h1>Manage ${name}</h1>
 	</div>
 	<div class="container">
