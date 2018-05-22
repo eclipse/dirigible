@@ -1,0 +1,9 @@
+{
+	'description': '${name} view',
+#foreach ($property in $properties)
+#if($property.relationshipType == "COMPOSITION" && $property.relationshipCardinality == "1_n")
+	'extensionPoint': 'launchpad-${projectName}-${property.relationshipEntityName}-view',
+#end
+#end
+	'module': '${projectName}/views/master/details/${name}/view.js'
+}
