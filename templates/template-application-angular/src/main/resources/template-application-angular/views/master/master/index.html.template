@@ -31,7 +31,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="next in data">
+				<tr ng-repeat="next in data" ng-class="{'bg-info':next && next.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end == selectedEntity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end}" style="cursor: pointer;" ng-click="selectEntity(next)">
 					<td>{{$index + 1}}</td>
 #foreach ($property in $properties) 
 #if($property.widgetIsMajor)

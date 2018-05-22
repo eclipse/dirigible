@@ -24,6 +24,9 @@ angular.module('page')
 #end
 		messageEntityModified: function() {
 			message('modified');
+		},
+		messageEntitySelected: function(id) {
+			message('selected', id);
 		}
 	};
 }])
@@ -131,7 +134,6 @@ angular.module('page')
 			alert(JSON.stringify(data));
 		});
 	};
-
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 	${dollar}scope.${property.name.toLowerCase()}OptionValue = function(optionKey) {
@@ -142,14 +144,21 @@ angular.module('page')
 		}
 		return null;
 	};
-#end
-#end
 
+#end
+#end
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName)
 	${dollar}messageHub.on${property.relationshipEntityName}Modified(${property.name.toLowerCase()}OptionsLoad);
 #end
 #end
+
+	$scope.selectEntity = function(entity) {
+		$scope.selectedEntity = entity;
+		${dollar}messageHub.messageEntitySelected({
+			'id': entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end
+		})
+	};
 
 	function toggleEntityModal() {
 		$('#entityModal').modal('toggle');

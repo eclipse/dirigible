@@ -45,7 +45,8 @@ exports.getTemplate = function() {
 			'_section': 'Extensions',
 			'location': '/template-application-angular/extensions/perspective/perspective.js.template', 
 			'action': 'generate',
-			'rename': 'extensions/perspective/perspective.js'
+			'rename': 'extensions/perspective/perspective.js',
+			'engine': 'velocity'
 		}, {
 			'_section': 'Extensions',
 			'location': '/template-application-angular/extensions/tiles/tiles.extension.template', 
@@ -55,7 +56,8 @@ exports.getTemplate = function() {
 			'_section': 'Extensions',
 			'location': '/template-application-angular/extensions/tiles/tiles.js.template', 
 			'action': 'generate',
-			'rename': 'extensions/tiles/tiles.js'
+			'rename': 'extensions/tiles/tiles.js',
+			'engine': 'velocity'
 		}, {
 			'_section': 'Extensions',
 			'location': '/template-application-angular/extensions/menu.extensionpoint.template', 
@@ -212,6 +214,15 @@ exports.getTemplate = function() {
 		}, {
 			'name': 'brand',
 			'label': 'Brand'
+		}, {
+			'name': 'moduleName',
+			'label': 'Module Name'
+		}, {
+			'name': 'moduleIcon',
+			'label': 'Module Icon'
+		}, {
+			'name': 'moduleOrder',
+			'label': 'Module Order'
 		}]
 	};
 };

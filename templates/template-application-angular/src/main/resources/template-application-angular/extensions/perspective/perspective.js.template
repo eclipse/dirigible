@@ -10,9 +10,22 @@
 
 exports.getPerspective = function() {
 	return {
-		'name': '{{brand}}',
-		'link': '/services/v3/web/{{projectName}}/index.html',
-		'order': '999',
-		'image': 'life-ring'
+#if($brand)
+		'name': '${brand}',
+#else
+		'name': '${projectName}',
+#end
+#if($moduleIcon)
+		'image': '${moduleIcon}',
+#else
+		'image': 'life-ring',
+#end
+
+		'link': '/services/v3/web/${projectName}/index.html',
+#if($moduleOrder)
+		'order': ${moduleOrder},
+#else
+		'order': 999
+#end
 	};
 };

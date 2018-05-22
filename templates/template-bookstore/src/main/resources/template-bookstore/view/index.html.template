@@ -14,7 +14,7 @@
 
 <body ng-controller="PageController">
 	<div class="page-header">
-		<h1>Manage ${name}</h1>
+		<h1>Manage Books</h1>
 	</div>
 	<div class="container">
 		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-primary pull-right">New</button>
@@ -22,26 +22,24 @@
 			<thead>
 				<tr>
 					<th>#</th>
-#foreach ($property in $properties)
-#if($property.widgetIsMajor)
-					<th class="text-capitalize">${property.name}</th>
-#end
-#end
+					<th class="text-capitalize">id</th>
+					<th class="text-capitalize">isbn</th>
+					<th class="text-capitalize">title</th>
+					<th class="text-capitalize">publisher</th>
+					<th class="text-capitalize">date</th>
+					<th class="text-capitalize">price</th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="next in data">
 					<td>{{$index + 1}}</td>
-#foreach ($property in $properties) 
-#if($property.widgetIsMajor)
-#if($property.widgetType == "DROPDOWN")
-					<td>{{${property.name.toLowerCase()}OptionValue(next.${property.name})}}</td>
-#else
-					<td>{{next.${property.name}}}</td>
-#end
-#end
-#end
+					<td>{{next.id}}</td>
+					<td>{{next.isbn}}</td>
+					<td>{{next.title}}</td>
+					<td>{{next.publisher}}</td>
+					<td>{{next.date}}</td>
+					<td>{{next.price}}</td>
 					<td>
 						<i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
 						<i class="close fa fa-2x fa-pencil" ng-click="openEditDialog(next)" style="margin-right: 0.5em"></i>
@@ -64,35 +62,29 @@
 				</div>
 				<div class="modal-body">
 					<form ng-hide="actionType === 'delete'">
-#foreach ($property in $properties)
-#if(!$property.dataAutoIncrement)
-#if($property.widgetType == "DROPDOWN")
 						<div class="form-group">
-							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<select class="form-control" ng-options="o.${property.widgetDropDownKey} as o.${property.widgetDropDownValue} for o in ${property.name.toLowerCase()}Options" ng-model="entity.${property.name}"></select>
+							<label>ISBN</label>
+							<input type="text" class="form-control" placeholder="Enter isbn" ng-model="entity.isbn">
 						</div>
-#elseif($property.widgetType == "TEXTAREA")
 						<div class="form-group">
-							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<textarea class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}"></textarea>
+							<label>Title</label>
+							<input type="text" class="form-control" placeholder="Enter title" ng-model="entity.title">
 						</div>
-#elseif($property.widgetType == "NUMBER")
 						<div class="form-group">
-							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input type="number" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
+							<label>Publisher</label>
+							<input type="text" class="form-control" placeholder="Enter publisher" ng-model="entity.publisher">
 						</div>
-#else
 						<div class="form-group">
-							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input type="text" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
+							<label>Date</label>
+							<input type="date" class="form-control" placeholder="Enter date" ng-model="entity.date">
 						</div>
-#end
-#end
-#end
+						<div class="form-group">
+							<label>price</label>
+							<input type="number" class="form-control" placeholder="Enter price" ng-model="entity.price">
+						</div>
 					</form>
 					<div ng-show="actionType === 'delete'">
-						You are going to delete <b>${name}</b> with #foreach ($property in $properties)#if($property.dataPrimaryKey)<b>${property.name} = {{entity.${property.name}}}</b>.#end#end
-
+						You are going to delete <b>Books</b> with <b>id = {{entity.id}}</b>.
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -110,9 +102,8 @@
 	<script type="text/javascript" src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js" async></script>
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
-	<script type="text/javascript" src="/services/v3/web/${launchpadName}/resources/js/message-hub.js"></script>
 
-	<script type="text/javascript" src="controller.js"></script>
+	<script type="text/javascript" src="[[fileName]].js"></script>
 
 </body>
 </html>

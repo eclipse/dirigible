@@ -11,8 +11,8 @@
 exports.getView = function() {
 	return {
 		'id': '{{name}}',
-		'name': '{{name}}',
-		'label': '{{name}}',
+		'name': '{{menuLabel}}',
+		'label': '{{menuLabel}}',
 		'factory': 'frame',
 		// 'region': 'center-bottom',
 		'link': '/services/v3/web/{{projectName}}/views/{{name}}/index.html'
