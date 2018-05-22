@@ -56,6 +56,17 @@ body {
 	left: 4.5em;
 	top: 50px;
 }
+.plane-inner {
+ 	left: 0em;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #f3f3f3;
+}
+
+.plane-outer {
+    background-color: #f8f8f8;
+}
 .statusbar {
 	width: 100%;
 	height: 2em;

@@ -1,0 +1,9 @@
+{
+  "main": "{{fileName}}",
+  "scripts": {
+    "start": "tabris serve"
+  },
+  "dependencies": {
+    "tabris": "^2.3.0"
+  }
+}

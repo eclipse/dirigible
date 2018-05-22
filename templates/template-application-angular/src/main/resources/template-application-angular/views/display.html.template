@@ -17,7 +17,7 @@
   <body ng-controller="PageController">
 
     <div>
-      <div class="page-header">
+      <div class="page-header container">
         <h1>[[name]] Details</h1>
       </div>
       

@@ -50,6 +50,7 @@
 		<module>template-application-launchpad</module>
 		<module>template-application-angular</module>
 		<module>template-application-openui5</module>
+		<module>template-mobile-hello-world</module>
 	</modules>
 
 	<profiles>
