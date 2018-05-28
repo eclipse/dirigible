@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>3.2.1-SNAPSHOT</version>
+		<version>3.2.1</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -64,58 +64,58 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-commons-config</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 	
 		<!-- API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 
 		<!-- Repository -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-local</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 
 		<!-- Database -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-h2</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 
 		<!-- Core Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 
 		<!-- Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-services</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		 	<exclusions>
 		 		<exclusion>
 		        	<groupId>org.eclipse.dirigible</groupId>
@@ -132,21 +132,21 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-javascript</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 
 		<!-- Resources Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 
 		<!-- External API modules -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ext-qunit</artifactId>
-		 	<version>3.2.1-SNAPSHOT</version>
+		 	<version>3.2.1</version>
 		</dependency>
 
 		<!-- External -->
