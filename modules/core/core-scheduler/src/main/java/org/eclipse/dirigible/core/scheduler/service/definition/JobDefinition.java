@@ -52,7 +52,7 @@ public class JobDefinition {
 	@Column(name = "JOB_ENABLED", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean enabled = true;
 
-	@Column(name = "JOB_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "JOB_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 64)
 	private String createdBy;
 
 	@Column(name = "JOB_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
