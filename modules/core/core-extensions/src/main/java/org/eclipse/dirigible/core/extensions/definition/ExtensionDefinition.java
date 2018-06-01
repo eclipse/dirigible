@@ -37,7 +37,7 @@ public class ExtensionDefinition {
 	@Column(name = "EXTENSION_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	@Column(name = "EXTENSION_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 64)
+	@Column(name = "EXTENSION_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
 	@Column(name = "EXTENSION_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)

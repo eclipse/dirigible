@@ -40,7 +40,7 @@ public class ListenerDefinition {
 	@Column(name = "LISTENER_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	@Column(name = "LISTENER_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 64)
+	@Column(name = "LISTENER_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
 	@Column(name = "LISTENER_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
