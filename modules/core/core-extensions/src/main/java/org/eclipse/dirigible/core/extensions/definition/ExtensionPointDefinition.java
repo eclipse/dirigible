@@ -34,7 +34,7 @@ public class ExtensionPointDefinition {
 	@Column(name = "EXTENSIONPOINT_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	@Column(name = "EXTENSIONPOINT_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "EXTENSIONPOINT_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 64)
 	private String createdBy;
 
 	@Column(name = "EXTENSIONPOINT_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)

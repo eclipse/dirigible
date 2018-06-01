@@ -39,7 +39,7 @@ public class DataStructureModel {
 	@Column(name = "DS_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
-	@Column(name = "DS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "DS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 64)
 	private String createdBy;
 
 	@Column(name = "DS_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
