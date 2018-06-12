@@ -14,27 +14,26 @@
 
 <body ng-controller="PageController">
 	<div class="page-header container">
-		<h1>Manage ${name}</h1>
+		<h1>${menuLabel}</h1>
 	</div>
 	<div class="container">
-		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-primary pull-right">New</button>
 		<table class="table product-table">
 			<thead>
 				<tr>
 					<th>#</th>
 #foreach ($property in $properties)
 #if($property.widgetIsMajor)
-					<th class="text-capitalize">${property.name}</th>
+					<th class="text-capitalize">#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</th>
 #end
 #end
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="next in data">
+				<tr ng-repeat="next in data" ng-class="{'bg-info':next && next.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end == selectedEntity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end}" style="cursor: pointer;" ng-click="selectEntity(next)">
 					<td>{{$index + 1}}</td>
 #foreach ($property in $properties) 
-#if($property.widgetIsMajor && $property.relationshipType != "COMPOSITION")
+#if($property.widgetIsMajor)
 #if($property.widgetType == "DROPDOWN")
 					<td>{{${property.name.toLowerCase()}OptionValue(next.${property.name})}}</td>
 #else
@@ -43,8 +42,7 @@
 #end
 #end
 					<td>
-						<i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
-						<i class="close fa fa-2x fa-pencil" ng-click="openEditDialog(next)" style="margin-right: 0.5em"></i>
+						<i class="close fa fa-2x fa-search" ng-click="openInfoDialog(next)"></i>
 					</td>
 				</tr>
 			</tbody>
@@ -55,50 +53,41 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create entity</h3>
-					<h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update entity</h3>
-					<h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete entity</h3>
+					<h3 class="modal-title" id="exampleModalLabel">Entity info</h3>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<form ng-hide="actionType === 'delete'">
+					<form>
 #foreach ($property in $properties)
-#if(!$property.dataAutoIncrement && $property.relationshipType != "COMPOSITION")
+#if(!$property.dataAutoIncrement)
 #if($property.widgetType == "DROPDOWN")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<select class="form-control" ng-options="o.${property.widgetDropDownKey} as o.${property.widgetDropDownValue} for o in ${property.name.toLowerCase()}Options" ng-model="entity.${property.name}"></select>
+							<select readonly class="form-control" ng-options="o.${property.widgetDropDownKey} as o.${property.widgetDropDownValue} for o in ${property.name.toLowerCase()}Options" ng-model="entity.${property.name}"></select>
 						</div>
 #elseif($property.widgetType == "TEXTAREA")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<textarea class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}"></textarea>
+							<textarea readonly class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}"></textarea>
 						</div>
 #elseif($property.widgetType == "NUMBER")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input type="number" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
+							<input readonly type="number" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
 						</div>
 #else
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input type="text" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
+							<input readonly type="text" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
 						</div>
 #end
 #end
 #end
 					</form>
-					<div ng-show="actionType === 'delete'">
-						You are going to delete <b>${name}</b> with #foreach ($property in $properties)#if($property.dataPrimaryKey)<b>${property.name} = {{entity.${property.name}}}</b>.#end#end
-
-					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'new'" ng-click="create()">Save</button>
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'update'" ng-click="update()">Update</button>
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'delete'" ng-click="delete()">Delete</button>
 					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 				</div>
 			</div>

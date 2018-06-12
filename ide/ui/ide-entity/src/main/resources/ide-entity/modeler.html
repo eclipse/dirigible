@@ -30,6 +30,8 @@
 <!-- Custom IDE Styles -->
 <link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
 
+<script type="text/javascript" src="js/underscore.js"></script>
+
 <script type="text/javascript" src="js/model.js"></script>
 <script type="text/javascript" src="js/dialogs.js"></script>
 <script type="text/javascript" src="js/widgets.js"></script>
@@ -117,12 +119,10 @@
 						</div>
 					</div>
 					<div class="row">
-						<label class="col-xs-3 col-form-label">Is Primary: </label>
+						<label class="col-xs-3 col-form-label">Type: </label>
 						<div class="col-xs-5">
-							<!-- <input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.isPrimary" required="required" data-ng-true-value="'yes'" data-ng-false-value="'no'">
-							<input class="form-control" type="text" placeholder="data name" ng-model="ctrl.$scope.$parent.cell.value.isPrimary" required="required"> -->
-							<select class="form-control" name="entityIsPrimary" id="entityLayout" ng-model="ctrl.$scope.$parent.cell.value.isPrimary">
-						    	<option ng-repeat="option in ctrl.isPrimaryTypes" value="{{option.key}}">{{option.label}}</option>
+							<select class="form-control" name="entityType" id="entityType" ng-model="ctrl.$scope.$parent.cell.value.type">
+						    	<option ng-repeat="option in ctrl.entityTypes" value="{{option.key}}">{{option.label}}</option>
 						    </select>
 						</div>
 					</div>
@@ -135,6 +135,12 @@
 						<label class="col-xs-3 col-form-label">Database Name: </label>
 						<div class="col-xs-5">
 							<input class="form-control" type="text" placeholder="data name" ng-model="ctrl.$scope.$parent.cell.value.dataName" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Database Query: </label>
+						<div class="col-xs-5">
+							<textarea class="form-control" type="text" placeholder="data query in case of report entity" ng-model="ctrl.$scope.$parent.cell.value.dataQuery" cols="50" rows="10"></textarea>
 						</div>
 					</div>
 				  </div>

@@ -15,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
  
-    <title>Eclipse Dirigible &trade; | Operations </title>
+    <title>{{brand}} | Home</title>
  
     <link rel="shortcut icon" type="image/png" href="/services/v3/web/resources/images/favicon.png" />
                
@@ -47,8 +47,8 @@
       <div class="container">
         <div class="row">
           <div class="col-xl-9 mx-auto" style="width: 90%">
-            <h1 class="leading">Eclipse Dirigible - Cloud Development Platform</h1>
-            <h3>providing development tools and runtime environment</h3>
+            <h1 class="leading">{{title}}</h1>
+            <h3>{{subTitle}}</h3>
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@
 </div>
  
 <br><br><br>
-<p style="font-size: 1.2em"><a href="http://www.dirigible.io" target="_blank">Eclipse Dirigible ™</a> is a Cloud Development Platform providing development tools and runtime environment. It supports full development life-cycle of on-demand applications by leveraging the in-system programming models and the rapid application development techniques.</p>
+<p style="font-size: 1.2em">{{description}}</p>
            
 </div>
            

@@ -12,8 +12,14 @@ function createModel(graph) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
-			model.push('  <entity name="'+child.value.name+'" dataName="'+child.value.dataName+'" isPrimary="'+(child.value.isPrimary ? child.value.isPrimary : 'false') +'"'
-				+' menuKey="'+child.value.menuKey+'" menuLabel="'+child.value.menuLabel+'" menuIndex="'+child.value.menuIndex+'" layoutType="'+child.value.layoutType+'"'
+			model.push('  <entity name="'+_.escape(child.value.name)+
+				'" dataName="'+_.escape(child.value.dataName)+
+				'" dataQuery="'+_.escape(child.value.dataQuery)+
+				'" type="'+_.escape(child.value.type ? child.value.type : 'primary')+
+				'" menuKey="'+_.escape(child.value.menuKey)+
+				'" menuLabel="'+_.escape(child.value.menuLabel)+
+				'" menuIndex="'+_.escape(child.value.menuIndex)+
+				'" layoutType="'+_.escape(child.value.layoutType)+'"'
 				+'>\n');
 			
 			var propertyCount = graph.model.getChildCount(child);
@@ -23,9 +29,11 @@ function createModel(graph) {
 					
 					property.dataName = property.dataName ? property.dataName : JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 					
-					model.push('    <property name="'+property.name+'" dataName="'+property.dataName+'" dataType="'+property.dataType+'"');
+					model.push('    <property name="'+_.escape(property.name)+
+						'" dataName="'+_.escape(property.dataName)+
+						'" dataType="'+_.escape(property.dataType)+'"');
 					if (property.dataLength !== null) {
-						model.push(' dataLength="'+property.dataLength+'"');
+						model.push(' dataLength="'+_.escape(property.dataLength)+'"');
 					}
 					if (property.dataNotNull) {
 						model.push(' dataNullable="false"');
@@ -40,46 +48,46 @@ function createModel(graph) {
 						model.push(' dataUnique="true"');
 					}
 					if (property.dataDefaultValue !== null) {
-						model.push(' dataDefaultValue="'+property.dataDefaultValue+'"');
+						model.push(' dataDefaultValue="'+_.escape(property.dataDefaultValue)+'"');
 					}
 					if (property.dataPrecision !== null) {
-						model.push(' dataPrecision="'+property.dataPrecision+'"');
+						model.push(' dataPrecision="'+_.escape(property.dataPrecision)+'"');
 					}
 					if (property.dataScale !== null) {
-						model.push(' dataScale="'+property.dataScale+'"');
+						model.push(' dataScale="'+_.escape(property.dataScale)+'"');
 					}
 					if (property.relationshipType !== null) {
-						model.push(' relationshipType="'+(property.relationshipType ? property.relationshipType : 'ASSOCIATION')+'"');
+						model.push(' relationshipType="'+_.escape(property.relationshipType ? property.relationshipType : 'ASSOCIATION')+'"');
 					}
 					if (property.relationshipCardinality !== null) {
-						model.push(' relationshipCardinality="'+(property.relationshipCardinality ? property.relationshipCardinality : '1_n')+'"');
+						model.push(' relationshipCardinality="'+_.escape(property.relationshipCardinality ? property.relationshipCardinality : '1_n')+'"');
 					}
 					if (property.relationshipName !== null) {
-						model.push(' relationshipName="'+property.relationshipName+'"');
+						model.push(' relationshipName="'+_.escape(property.relationshipName)+'"');
 					}
 					if (property.widgetType !== null) {
-						model.push(' widgetType="'+property.widgetType+'"');
+						model.push(' widgetType="'+_.escape(property.widgetType)+'"');
 					}
 					if (property.widgetLength !== null) {
-						model.push(' widgetLength="'+property.widgetLength+'"');
+						model.push(' widgetLength="'+_.escape(property.widgetLength)+'"');
 					}
 					if (property.widgetLabel !== null) {
-						model.push(' widgetLabel="'+property.widgetLabel+'"');
+						model.push(' widgetLabel="'+_.escape(property.widgetLabel)+'"');
 					}
 					if (property.widgetShortLabel !== null) {
-						model.push(' widgetShortLabel="'+property.widgetShortLabel+'"');
+						model.push(' widgetShortLabel="'+_.escape(property.widgetShortLabel)+'"');
 					}
 					if (property.widgetPattern !== null) {
-						model.push(' widgetPattern="'+property.widgetPattern+'"');
+						model.push(' widgetPattern="'+_.escape(property.widgetPattern)+'"');
 					}
 					if (property.widgetFormat !== null) {
-						model.push(' widgetFormat="'+property.widgetFormat+'"');
+						model.push(' widgetFormat="'+_.escape(property.widgetFormat)+'"');
 					}
 					if (property.widgetSection !== null) {
-						model.push(' widgetSection="'+property.widgetSection+'"');
+						model.push(' widgetSection="'+_.escape(property.widgetSection)+'"');
 					}
 					if (property.widgetService !== null) {
-						model.push(' widgetService="'+property.widgetService+'"');
+						model.push(' widgetService="'+_.escape(property.widgetService)+'"');
 					}
 					if (property.widgetIsMajor) {
 						model.push(' widgetIsMajor="true"');
@@ -91,13 +99,13 @@ function createModel(graph) {
 			model.push('  </entity>\n');
 		} else {
 			var relationName = child.name ? child.name : child.source.parent.value.name+'_'+ child.target.parent.value.name;
-			model.push('  <relation name="'+child.source.parent.value.name+'_' 
-				+child.target.parent.value.name+'" type="relation" ');
-			model.push('entity="'+child.source.parent.value.name+'" ');
-			model.push('relationName="'+relationName+'" ');
-			model.push('property="'+child.source.value.name+'" '+
-				'referenced="'+child.target.parent.value.name+'" '+
-				'referencedProperty="'+child.target.value.name+'">\n');
+			model.push('  <relation name="'+_.escape(child.source.parent.value.name)+'_' 
+				+_.escape(child.target.parent.value.name)+'" type="relation" ');
+			model.push('entity="'+_.escape(child.source.parent.value.name)+'" ');
+			model.push('relationName="'+_.escape(relationName)+'" ');
+			model.push('property="'+_.escape(child.source.value.name)+'" '+
+				'referenced="'+_.escape(child.target.parent.value.name)+'" '+
+				'referencedProperty="'+_.escape(child.target.value.name)+'">\n');
 			model.push('  </relation>\n');
 		}
 	}
@@ -149,7 +157,8 @@ function createModelJson(graph) {
 			var entity = {};
 			entity.name = child.value.name;
 			entity.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
-			entity.isPrimary = child.value.isPrimary ? child.value.isPrimary : "false";
+			entity.dataQuery = child.value.dataQuery;
+			entity.type = child.value.type ? child.value.type : "primary";
 			entity.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			entity.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
 			entity.menuIndex = child.value.menuIndex ? child.value.menuIndex : 100;

@@ -13,7 +13,9 @@ public class EntityDataModelEntity {
 	
 	private String dataName;
 	
-	private boolean isPrimary;
+	private String dataQuery;
+	
+	private String type;
 	
 	private String menuKey;
 	
@@ -54,19 +56,33 @@ public class EntityDataModelEntity {
 	public void setDataName(String dataName) {
 		this.dataName = dataName;
 	}
-
+	
 	/**
-	 * @return the isPrimary
+	 * @return the dataQuery
 	 */
-	public boolean isPrimary() {
-		return isPrimary;
+	public String getDataQuery() {
+		return dataQuery;
 	}
 
 	/**
-	 * @param isPrimary the isPrimary to set
+	 * @param dataQuery the dataQuery to set
 	 */
-	public void setPrimary(boolean isPrimary) {
-		this.isPrimary = isPrimary;
+	public void setDataQuery(String dataQuery) {
+		this.dataQuery = dataQuery;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**
