@@ -10,7 +10,9 @@
 
 exports.getPerspective = function() {
 	return {
-#if($brand)
+#if($moduleName)
+		'name': '${moduleName}',
+#elseif($brand)
 		'name': '${brand}',
 #else
 		'name': '${projectName}',

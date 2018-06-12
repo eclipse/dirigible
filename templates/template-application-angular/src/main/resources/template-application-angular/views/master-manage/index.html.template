@@ -16,7 +16,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{brand}} | {{moduleName}}</title>
+    <title>{{brand}}</title>
 
 	<!-- Twitter Bootstrap with Theme Support -->
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
@@ -36,13 +36,10 @@
 
 <body ng-app="workbench" ng-controller="WorkbenchController">
 
-	<div menu menu-extension-point="launchpad-{{projectName}}-menu"></div>
-
 	<div class="shell">
-		<div class="sidebar list-group" sidebar active="Workbench"></div>
-		<div id="{{projectName}}" class="plane" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-{{projectName}}-view"></div>
+		<div id="{{projectName}}-{{name}}" class="plane plane-inner" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-{{projectName}}-{{name}}-view"></div>
 	</div>
-	<div class="statusbar" status-bar>{{message}}</div>
+	<!-- div class="statusbar" status-bar>{{message}}</div -->
 	
 	<!-- jQuery -->
 	<script type="text/javascript" src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
@@ -92,12 +89,21 @@
 				}
 			};
 
-			$http.get('/services/v3/js/{{launchpadName}}/api/launchpad/views.js?extensionPoint=launchpad-{{projectName}}-view')
+			$http.get('/services/v3/js/{{launchpadName}}/api/launchpad/views.js?extensionPoint=launchpad-{{projectName}}-{{name}}-view')
 			.success(function(views) {
+				var master = [];
+				var details = [];
+
 				for (var i = 0 ; i < views.length; i ++) {
-					$scope.layoutModel.views.push(views[i].id);
+					if (views[i].type !== undefined && views[i].type === 'master') {
+						master.push(views[i].id);
+					} else {
+						details.push(views[i].id);
+					}
 				}
 
+				$scope.layoutModel.views.push.apply($scope.layoutModel.views, master);
+				$scope.layoutModel.views.push.apply($scope.layoutModel.views, details);
 			});
 		}]);
 	</script>

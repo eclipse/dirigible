@@ -3,8 +3,9 @@ function Entity(name) {
 	this.name = name;
 }
 
+Entity.prototype.type = 'PRIMARY'; // the type of the entity - PRIMARY, DEPENDENT, REPORT
 Entity.prototype.dataName = null;
-Entity.prototype.isPrimary = 'true'; // whether the entity is a major one to be shown in the e.g. main menu
+Entity.prototype.dataQuery = null; // database query in case of a report type of the entity
 Entity.prototype.menuKey = ''; // the hidden key for the menu
 Entity.prototype.menuLabel = ''; // the visible name of the menu
 Entity.prototype.menuIndex = 100;

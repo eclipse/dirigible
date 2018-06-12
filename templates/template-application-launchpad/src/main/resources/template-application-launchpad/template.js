@@ -102,6 +102,15 @@ exports.getTemplate = function() {
 		}, {
 			'name': 'brand',
 			'label': 'Brand'
+		}, {
+			'name': 'title',
+			'label': 'Title'
+		}, {
+			'name': 'subTitle',
+			'label': 'Sub-title'
+		}, {
+			'name': 'description',
+			'label': 'Description'
 		}]
 	};
 };

@@ -25,6 +25,13 @@ angular.module('page')
 		},
 #end
 #end
+#foreach ($property in $properties)
+#if($property.relationshipType == "COMPOSITION" && $property.relationshipCardinality == "1_n")
+		on${property.relationshipEntityName}Selected: function(callback) {
+			on('${launchpadName}.${projectName}.${property.relationshipEntityName}.selected', callback);
+		},
+#end
+#end
 		messageEntityModified: function() {
 			message('modified');
 		}
@@ -62,27 +69,13 @@ angular.module('page')
 #end
 
 	function load() {
-		$http.get(api)
+		${dollar}http.get(api + '?#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION" && $property.relationshipCardinality == "1_n")${property.name}#end#end=' + $scope.masterEntityId)
 		.success(function(data) {
 			$scope.data = data;
 		});
 	}
-	load();
 
-	$scope.openNewDialog = function() {
-		$scope.actionType = 'new';
-		$scope.entity = {};
-		toggleEntityModal();
-	};
-
-	$scope.openEditDialog = function(entity) {
-		$scope.actionType = 'update';
-		$scope.entity = entity;
-		toggleEntityModal();
-	};
-
-	$scope.openDeleteDialog = function(entity) {
-		$scope.actionType = 'delete';
+	$scope.openInfoDialog = function(entity) {
 		$scope.entity = entity;
 		toggleEntityModal();
 	};
@@ -90,49 +83,6 @@ angular.module('page')
 	$scope.close = function() {
 		load();
 		toggleEntityModal();
-	};
-
-	$scope.create = function() {
-		${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
-		.success(function(data) {
-			load();
-			toggleEntityModal();
-			$messageHub.messageEntityModified();
-		}).error(function(data) {
-			alert(JSON.stringify(data));
-		});
-			
-	};
-
-	$scope.update = function() {
-#foreach ($property in $properties)
-#if($property.dataPrimaryKey)
-		${dollar}http.put(api + '/' + ${dollar}scope.entity.${property.name}, JSON.stringify(${dollar}scope.entity))
-#end
-#end
-
-		.success(function(data) {
-			load();
-			toggleEntityModal();
-			$messageHub.messageEntityModified();
-		}).error(function(data) {
-			alert(JSON.stringify(data));
-		})
-	};
-
-	$scope.delete = function() {
-#foreach ($property in $properties)
-#if($property.dataPrimaryKey)
-		${dollar}http.delete(api + '/' + ${dollar}scope.entity.${property.name})
-#end
-#end
-		.success(function(data) {
-			load();
-			toggleEntityModal();
-			$messageHub.messageEntityModified();
-		}).error(function(data) {
-			alert(JSON.stringify(data));
-		});
 	};
 
 #foreach ($property in $properties)
@@ -152,6 +102,14 @@ angular.module('page')
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName)
 	${dollar}messageHub.on${property.relationshipEntityName}Modified(${property.name.toLowerCase()}OptionsLoad);
+#end
+#end
+#foreach ($property in $properties)
+#if($property.relationshipType == "COMPOSITION" && $property.relationshipCardinality == "1_n")
+	${dollar}messageHub.on${property.relationshipEntityName}Selected(function(event) {
+		$scope.masterEntityId = event.data.id
+		load();
+	});
 #end
 #end
 

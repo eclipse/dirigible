@@ -31,10 +31,11 @@ public class EntityDataModelSerializationTest {
 		EntityDataModelEntity entity1 = new EntityDataModelEntity();
 		entity1.setName("Entity1");
 		entity1.setDataName("ENTITY1");
+		entity1.setDataQuery("SELECT * FROM ENTITY1");
 		entity1.setLayoutType("MANAGE");
 		entity1.setMenuKey("entity1");
 		entity1.setMenuLabel("Entity1");
-		entity1.setPrimary(true);
+		entity1.setType("PRIMARY");
 		List<EntityDataModelProperty> properties = new ArrayList<EntityDataModelProperty>();
 		EntityDataModelProperty property1 = new EntityDataModelProperty();
 		property1.setName("property1");

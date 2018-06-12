@@ -14,7 +14,7 @@
 
 <body ng-controller="PageController">
 	<div class="page-header container">
-		<h1>Manage ${name}</h1>
+		<h1>Manage ${menuLabel}</h1>
 	</div>
 	<div class="container">
 		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-primary pull-right">New</button>
@@ -24,7 +24,7 @@
 					<th>#</th>
 #foreach ($property in $properties)
 #if($property.widgetIsMajor)
-					<th class="text-capitalize">${property.name}</th>
+					<th class="text-capitalize">#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</th>
 #end
 #end
 					<th></th>

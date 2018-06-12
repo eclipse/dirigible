@@ -331,9 +331,15 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		List<Map<String, Object>> uiManageDetailsModels = new ArrayList<>();
 		List<Map<String, Object>> uiListDetailsModels = new ArrayList<>();
 		
+		List<Map<String, Object>> uiReportTableModels = new ArrayList<>();
+		List<Map<String, Object>> uiReportBarsModels = new ArrayList<>();
+		List<Map<String, Object>> uiReportLinesModels = new ArrayList<>();
+		List<Map<String, Object>> uiReportPieModels = new ArrayList<>();
+		
 		for (Map<String, Object> model : models) {
 			Object layoutType = model.get("layoutType");
-			Boolean isPrimary = Boolean.parseBoolean(model.get("isPrimary") != null ? model.get("isPrimary").toString() : "false");
+			Boolean isPrimary = model.get("type") != null ? model.get("type").toString() == "PRIMARY" : false;
+			Boolean isReport = model.get("type") != null ? model.get("type").toString() == "REPORT" : false;
 			if ("MANAGE".equals(layoutType) && isPrimary) {
 				uiManageModels.add(model);
 			} else if ("LIST".equals(layoutType) && isPrimary) {
@@ -342,11 +348,19 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				uiManageMasterModels.add(model);
 			} else if ("LIST_MASTER".equals(layoutType) && isPrimary) {
 				uiListMasterModels.add(model);
-			} else if ("MANAGE_DETAILS".equals(layoutType) && isPrimary) {
+			} else if ("MANAGE_DETAILS".equals(layoutType) && !isPrimary && !isReport) {
 				uiManageDetailsModels.add(model);
-			} else if ("LIST_DETAILS".equals(layoutType) && isPrimary) {
+			} else if ("LIST_DETAILS".equals(layoutType) && !isPrimary && !isReport) {
 				uiListDetailsModels.add(model);
-			}
+			} else if ("REPORT_TABLE".equals(layoutType) && isReport) {
+				uiReportTableModels.add(model);
+			} else if ("REPORT_BAR".equals(layoutType) && isReport) {
+				uiReportBarsModels.add(model);
+			} else if ("REPORT_LINE".equals(layoutType) && isReport) {
+				uiReportLinesModels.add(model);
+			} else if ("REPORT_PIE".equals(layoutType) && isReport) {
+				uiReportPieModels.add(model);
+			} 
 		}
 		parameters.getParameters().put("uiManageModels", uiManageModels);
 		parameters.getParameters().put("uiListModels", uiListModels);
@@ -354,6 +368,11 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		parameters.getParameters().put("uiListMasterModels", uiListMasterModels);
 		parameters.getParameters().put("uiManageDetailsModels", uiManageDetailsModels);
 		parameters.getParameters().put("uiListDetailsModels", uiListDetailsModels);
+		
+		parameters.getParameters().put("uiReportTableModels", uiReportTableModels);
+		parameters.getParameters().put("uiReportBarsModels", uiReportBarsModels);
+		parameters.getParameters().put("uiReportLinesModels", uiReportLinesModels);
+		parameters.getParameters().put("uiReportPieModels", uiReportPieModels);
 	}
 
 	private List<Map<String, Object>> mapModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
@@ -364,8 +383,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			model.putAll(parameters.getParameters());
 			addStandardParameters(workspace, project, localPath.build(), model);
 			model.put("name", entity.getName());
-			model.put("isPrimary", entity.isPrimary());
+			model.put("type", entity.getType());
 			model.put("dataName", entity.getDataName());
+			model.put("dataQuery", entity.getDataQuery());
 			model.put("layoutType", entity.getLayoutType());
 			model.put("menuKey", entity.getMenuKey());
 			model.put("menuLabel", entity.getMenuLabel());

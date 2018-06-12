@@ -15,6 +15,9 @@ angular.module('page')
 	return {
 		message: message,
 		on: on,
+		onEntityRefresh: function(callback) {
+			on('${launchpadName}.${projectName}.${name}.refresh', callback);
+		},
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName)
 		on${property.relationshipEntityName}Modified: function(callback) {
@@ -48,6 +51,14 @@ angular.module('page')
 	$scope.${property.name.toLowerCase()}Options = [];
 #end
 #end
+
+	function load() {
+		${dollar}http.get(api)
+		.success(function(data) {
+			$scope.data = data;
+		});
+	}
+	load();
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 
@@ -61,28 +72,7 @@ angular.module('page')
 #end
 #end
 
-	function load() {
-		$http.get(api)
-		.success(function(data) {
-			$scope.data = data;
-		});
-	}
-	load();
-
-	$scope.openNewDialog = function() {
-		$scope.actionType = 'new';
-		$scope.entity = {};
-		toggleEntityModal();
-	};
-
-	$scope.openEditDialog = function(entity) {
-		$scope.actionType = 'update';
-		$scope.entity = entity;
-		toggleEntityModal();
-	};
-
-	$scope.openDeleteDialog = function(entity) {
-		$scope.actionType = 'delete';
+	$scope.openInfoDialog = function(entity) {
 		$scope.entity = entity;
 		toggleEntityModal();
 	};
@@ -92,48 +82,7 @@ angular.module('page')
 		toggleEntityModal();
 	};
 
-	$scope.create = function() {
-		${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
-		.success(function(data) {
-			load();
-			toggleEntityModal();
-			$messageHub.messageEntityModified();
-		}).error(function(data) {
-			alert(JSON.stringify(data));
-		});
-			
-	};
-
-	$scope.update = function() {
-#foreach ($property in $properties)
-#if($property.dataPrimaryKey)
-		${dollar}http.put(api + '/' + ${dollar}scope.entity.${property.name}, JSON.stringify(${dollar}scope.entity))
-#end
-#end
-
-		.success(function(data) {
-			load();
-			toggleEntityModal();
-			$messageHub.messageEntityModified();
-		}).error(function(data) {
-			alert(JSON.stringify(data));
-		})
-	};
-
-	$scope.delete = function() {
-#foreach ($property in $properties)
-#if($property.dataPrimaryKey)
-		${dollar}http.delete(api + '/' + ${dollar}scope.entity.${property.name})
-#end
-#end
-		.success(function(data) {
-			load();
-			toggleEntityModal();
-			$messageHub.messageEntityModified();
-		}).error(function(data) {
-			alert(JSON.stringify(data));
-		});
-	};
+	$messageHub.onEntityRefresh(load);
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 	${dollar}scope.${property.name.toLowerCase()}OptionValue = function(optionKey) {
