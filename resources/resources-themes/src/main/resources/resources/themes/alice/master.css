@@ -1,0 +1,11 @@
+.lm_header .lm_tab.lm_active {
+    background-color: #ccc !important;
+    color: #555 !important;
+}
+.lm_header .lm_tab {
+    background-color: #ddd !important;
+    color: #777 !important;
+}
+.lm_header, .lm_splitter {
+    background-color: #eee;
+}
