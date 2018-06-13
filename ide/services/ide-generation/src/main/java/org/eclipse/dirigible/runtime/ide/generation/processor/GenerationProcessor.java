@@ -338,8 +338,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		
 		for (Map<String, Object> model : models) {
 			Object layoutType = model.get("layoutType");
-			Boolean isPrimary = model.get("type") != null ? model.get("type").toString() == "PRIMARY" : false;
-			Boolean isReport = model.get("type") != null ? model.get("type").toString() == "REPORT" : false;
+			Boolean isPrimary = model.get("type") != null ? "PRIMARY".equals(model.get("type").toString()) : false;
+			Boolean isReport = model.get("type") != null ? "REPORT".equals(model.get("type").toString()) : false;
 			if ("MANAGE".equals(layoutType) && isPrimary) {
 				uiManageModels.add(model);
 			} else if ("LIST".equals(layoutType) && isPrimary) {

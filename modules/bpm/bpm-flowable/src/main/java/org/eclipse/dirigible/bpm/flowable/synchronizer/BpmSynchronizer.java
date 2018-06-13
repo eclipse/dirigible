@@ -230,7 +230,7 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		
 		List<Deployment> deployments = repositoryService.createDeploymentQuery().list();
 		for (Deployment deployment : deployments) {
-			logger.warn(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));
+			logger.trace(format("Deployment: [{0}] with key: [{1}]", deployment.getId(), deployment.getKey()));
 			if (!BPMN_SYNCHRONIZED.containsKey(deployment.getKey())) {
 				repositoryService.deleteDeployment(deployment.getId(), true);
 				logger.info(format("Deleted deployment: [{0}] with key: [{1}] on the Flowable BPMN Engine.", deployment.getId(), deployment.getKey()));
