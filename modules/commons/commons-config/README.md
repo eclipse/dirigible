@@ -38,6 +38,12 @@
 - `DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES`: (default: {empty})
 - `DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT`: (default: DefaultDB)
 
+### Database Custom
+- `<CUSTOM_NAME>_DRIVER`: (e.g. org.postgresql.Driver)
+- `<CUSTOM_NAME>_URL`: (e.g. jdbc:postgresql://localhost:5432/<database-name>)
+- `<CUSTOM_NAME>_USERNAME`: 
+- `<CUSTOM_NAME>_PASSWORD`: 
+
 #### Database Derby
 
 - `DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT`: (default: ./target/dirigible/derby)
@@ -50,6 +56,10 @@
 - `DIRIGIBLE_DATABASE_H2_USERNAME`: (default: sa)
 - `DIRIGIBLE_DATABASE_H2_PASSWORD`: (default is empty)
 
+#### Persistence
+
+- `DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE`: (true : false)
+
 ### Scheduler
 - `DIRIGIBLE_SCHEDULER_DATABASE_DRIVER`: (default: {empty})
 - `DIRIGIBLE_SCHEDULER_DATABASE_URL`: (default: {empty})
@@ -57,9 +67,6 @@
 - `DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD`: (default: {empty})
 - `DIRIGIBLE_SCHEDULER_DATASOURCE_NAME`: (default: DefaultDB)
 
-#### Persistence
-
-- `DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE`: (true : false)
 
 ### Runtime
 
@@ -72,12 +79,12 @@
 - `DIRIGIBLE_CMS_PROVIDER`: (internal | managed | remote)
 - `DIRIGIBLE_CMS_ROLES_ENABLED`: (true | false)
 
-#### Internal
+#### CMS Internal
 
 - `DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER`: (e.g. target)
 - `DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE`: (true | false)
 
-#### Managed
+#### CMS Managed
 
 - `DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME`: (e.g. java:comp/env/EcmService)
 - `DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD`: (key | destination)
@@ -86,7 +93,19 @@
 - `DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION`: (e.g. CMIS_DESTINATION)
 
 - `DIRIGIBLE_CONNECTIVITY_CONFIGURATION_JNDI_NAME`: (e.g. java:comp/env/connectivity/Configuration)
- 
+
+### BPM
+
+- `DIRIGIBLE_BPM_PROVIDER`: (internal | managed | remote)
+
+#### BPM - Flowable
+
+- `DIRIGIBLE_FLOWABLE_DATABASE_DRIVER`: (default: {empty})
+- `DIRIGIBLE_FLOWABLE_DATABASE_URL`: (default: {empty})
+- `DIRIGIBLE_FLOWABLE_DATABASE_USER`: (default: {empty})
+- `DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD`: (default: {empty})
+- `DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME`: (default: DefaultDB)
+- `DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE`: (default: true)
 
 ## Engines
 

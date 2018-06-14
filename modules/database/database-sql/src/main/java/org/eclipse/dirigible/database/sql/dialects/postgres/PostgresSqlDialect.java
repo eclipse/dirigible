@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.database.sql.dialects.postgres;
 
+import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
@@ -76,6 +77,18 @@ public class PostgresSqlDialect extends
 	@Override
 	public String functionCurrentTimestamp() {
 		return FUNCTION_CURRENT_TIMESTAMP;
+	}
+	
+	@Override
+	public String getDataTypeName(DataType dataType) {
+		switch (dataType) {
+			case BLOB:
+				return "bytea";
+			case DOUBLE:
+				return "DOUBLE PRECISION";
+			default:
+				return super.getDataTypeName(dataType);
+		}
 	}
 
 }

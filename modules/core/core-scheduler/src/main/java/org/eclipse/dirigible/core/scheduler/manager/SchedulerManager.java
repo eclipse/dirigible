@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 public class SchedulerManager {
 
 	private static final String PROPERTY_KEY_DATABASE_DATA_SOURCE = "org.quartz.jobStore.dataSource";
+	private static final String PROPERTY_KEY_DATABASE_DELEGATE = "org.quartz.jobStore.driverDelegateClass";
 
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerManager.class);
 
@@ -60,6 +61,7 @@ public class SchedulerManager {
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_USER = "DIRIGIBLE_SCHEDULER_DATABASE_USER";
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD = "DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD";
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME";
+	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE = "DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE";
 
 	/**
 	 * Gets the scheduler.
@@ -281,12 +283,15 @@ public class SchedulerManager {
 		String url = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_URL);
 		String user = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_USER);
 		String password = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD);
+		
+		String delegate = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE);
 
 		setProperty(properties, PROPERTY_KEY_DATABASE_DATA_SOURCE, dataSourceName);
 		setProperty(properties, PoolingConnectionProvider.DB_DRIVER, driver);
 		setProperty(properties, PoolingConnectionProvider.DB_URL, url);
 		setProperty(properties, PoolingConnectionProvider.DB_USER, user);
 		setProperty(properties, PoolingConnectionProvider.DB_PASSWORD, password);
+		setProperty(properties, PROPERTY_KEY_DATABASE_DELEGATE, delegate);
 	}
 
 	private static void setProperty(Properties properties, String key, String value) {
