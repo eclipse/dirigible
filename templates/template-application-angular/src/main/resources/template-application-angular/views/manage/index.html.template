@@ -18,7 +18,7 @@
 	</div>
 	<div class="container">
 		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-primary pull-right">New</button>
-		<table class="table product-table">
+		<table class="table table-striped table-hover product-table">
 			<thead>
 				<tr>
 					<th>#</th>
@@ -43,8 +43,8 @@
 #end
 #end
 					<td>
-						<i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
-						<i class="close fa fa-2x fa-pencil" ng-click="openEditDialog(next)" style="margin-right: 0.5em"></i>
+						<button type="button" ng-click="openDeleteDialog(next)" class="btn btn-lg btn-danger pull-right"><i class="fa fa-remove"></i></button>
+    					<button type="button" ng-click="openEditDialog(next)" class="btn btn-lg btn-success pull-right" style="margin-right: 0.5em"><i class="fa fa-pencil"></i></button>
 					</td>
 				</tr>
 			</tbody>
