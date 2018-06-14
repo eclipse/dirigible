@@ -55,7 +55,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 	public static final String NAME = "flowable"; //$NON-NLS-1$
 
 	/** The Constant TYPE. */
-	public static final String TYPE = "local"; //$NON-NLS-1$
+	public static final String TYPE = "internal"; //$NON-NLS-1$
 
 	private static ProcessEngine processEngine;
 
