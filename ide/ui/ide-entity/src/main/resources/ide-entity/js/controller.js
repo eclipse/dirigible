@@ -27,7 +27,8 @@ function main(container, outline, toolbar, sidebar, status) {
 
 	var messageHub = new FramesMessageHub();
 	
-	initializeModelJson(file.substring(0, file.lastIndexOf('.')) + '.model');
+	if (file)
+		initializeModelJson(file.substring(0, file.lastIndexOf('.')) + '.model');
 
 	function saveContents(text, file) {
 		console.log('Save called...');
@@ -117,6 +118,8 @@ function main(container, outline, toolbar, sidebar, status) {
 		var editor = new mxEditor();
 		var graph = editor.graph;
 		var model = graph.model;
+		
+		initClipboard(graph);
 		
 		$scope.$parent.editor = editor;
 		$scope.$parent.graph = graph;
@@ -388,13 +391,30 @@ function main(container, outline, toolbar, sidebar, status) {
 			}
 		});
 
-		addToolbarButton(editor, toolbar, 'delete', 'Delete', 'times', true);
+		toolbar.appendChild(spacer.cloneNode(true));
+		
+		addToolbarButton(editor, toolbar, 'copy', 'Copy', 'copy', true);
+		// Defines a new save action
+		editor.addAction('copy', function(editor, cell) {
+			mxClipboard.copy(graph);
+//			document.execCommand("copy");
+		});
+		addToolbarButton(editor, toolbar, 'paste', 'Paste', 'paste', true);
+		// Defines a new save action
+		editor.addAction('paste', function(editor, cell) {
+			mxClipboard.paste(graph);
+//			document.execCommand("paste");
+		});
 
 		toolbar.appendChild(spacer.cloneNode(true));
 		
 		addToolbarButton(editor, toolbar, 'undo', '', 'undo', true);
 		addToolbarButton(editor, toolbar, 'redo', '', 'repeat', true);
 		
+		toolbar.appendChild(spacer.cloneNode(true));
+		
+		addToolbarButton(editor, toolbar, 'delete', 'Delete', 'times', true);
+
 		toolbar.appendChild(spacer.cloneNode(true));
 		
 		addToolbarButton(editor, toolbar, 'show', 'Show', 'camera', true);
