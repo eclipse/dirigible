@@ -178,20 +178,19 @@ function configureStylesheet(graph) {
 // Function to create the entries in the popupmenu
 function createPopupMenu(editor, graph, menu, cell, evt) {
 	if (cell !== null) {
-		// if (graph.isHtmlLabel(cell)) {
 			menu.addItem('Properties', 'list-ul', function() {
 				editor.execute('properties', cell);
 			});
 	
-			menu.addSeparator();
-		// }
-
-		menu.addItem('Delete', 'times', function() {
-			editor.execute('delete', cell);
+		menu.addItem('Copy', 'copy', function() {
+			editor.execute('copy', cell);
 		});
-	
-		menu.addSeparator();
+		
 	}
+	
+	menu.addItem('Paste', 'paste', function() {
+			editor.execute('paste', cell);
+	});
 
 	menu.addItem('Undo', 'undo', function() {
 		editor.execute('undo', cell);
@@ -200,6 +199,14 @@ function createPopupMenu(editor, graph, menu, cell, evt) {
 	menu.addItem('Redo', 'repeat', function() {
 		editor.execute('redo', cell);
 	});
+	
+	if (cell !== null) {
+
+		menu.addItem('Delete', 'times', function() {
+			editor.execute('delete', cell);
+		});
+	
+	}
 	
 	menu.addSeparator();
 	
