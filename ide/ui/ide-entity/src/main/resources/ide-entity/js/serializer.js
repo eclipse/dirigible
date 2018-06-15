@@ -19,8 +19,11 @@ function createModel(graph) {
 				'" menuKey="'+_.escape(child.value.menuKey)+
 				'" menuLabel="'+_.escape(child.value.menuLabel)+
 				'" menuIndex="'+_.escape(child.value.menuIndex)+
-				'" layoutType="'+_.escape(child.value.layoutType)+'"'
-				+'>\n');
+				'" layoutType="'+_.escape(child.value.layoutType)+
+				'" perspectiveName="'+_.escape(child.value.perspectiveName)+
+				'" perspectiveIcon="'+_.escape(child.value.perspectiveIcon)+
+				'" perspectiveOrder="'+_.escape(child.value.perspectiveOrder)+
+				'">\n');
 			
 			var propertyCount = graph.model.getChildCount(child);
 			if (propertyCount > 0) {
@@ -163,6 +166,9 @@ function createModelJson(graph) {
 			entity.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
 			entity.menuIndex = child.value.menuIndex ? child.value.menuIndex : 100;
 			entity.layoutType = child.value.layoutType;
+			entity.perspectiveName = child.value.perspectiveName;
+			entity.perspectiveIcon = child.value.perspectiveIcon;
+			entity.perspectiveOrder = child.value.perspectiveOrder;
 			entity.properties = [];
 			
 			if (compositions[entity.name]) {

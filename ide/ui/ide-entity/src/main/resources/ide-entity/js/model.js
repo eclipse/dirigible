@@ -10,6 +10,9 @@ Entity.prototype.menuKey = ''; // the hidden key for the menu
 Entity.prototype.menuLabel = ''; // the visible name of the menu
 Entity.prototype.menuIndex = 100;
 Entity.prototype.layoutType = 'MANAGE';
+Entity.prototype.perspectiveName = 'Entities';
+Entity.prototype.perspectiveIcon = 'files-o';
+Entity.prototype.perspectiveOrder = 100;
 
 Entity.prototype.clone = function() {
 	return mxUtils.clone(this);

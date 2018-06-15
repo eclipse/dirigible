@@ -17,9 +17,11 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -336,6 +338,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		List<Map<String, Object>> uiReportLinesModels = new ArrayList<>();
 		List<Map<String, Object>> uiReportPieModels = new ArrayList<>();
 		
+		List<Map<String, Object>> uiPerspectives = new ArrayList<>();
+		Set<String> perspectiveCheck = new HashSet<String>();
+		
 		for (Map<String, Object> model : models) {
 			Object layoutType = model.get("layoutType");
 			Boolean isPrimary = model.get("type") != null ? "PRIMARY".equals(model.get("type").toString()) : false;
@@ -360,7 +365,19 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				uiReportLinesModels.add(model);
 			} else if ("REPORT_PIE".equals(layoutType) && isReport) {
 				uiReportPieModels.add(model);
-			} 
+			}
+			
+			if (model.get("perspectiveName") != null) {
+				String perspectiveName = model.get("perspectiveName").toString();
+				if (!perspectiveCheck.contains(perspectiveName)) {
+					Map<String, Object> uiPerspective = new HashMap<String, Object>();
+					uiPerspective.put("perspectiveName", perspectiveName);
+					uiPerspective.put("perspectiveIcon", model.get("perspectiveIcon").toString());
+					uiPerspective.put("perspectiveOrder", model.get("perspectiveOrder").toString());
+					uiPerspectives.add(uiPerspective);
+					perspectiveCheck.add(perspectiveName);
+				}
+			}
 		}
 		parameters.getParameters().put("uiManageModels", uiManageModels);
 		parameters.getParameters().put("uiListModels", uiListModels);
@@ -373,6 +390,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		parameters.getParameters().put("uiReportBarsModels", uiReportBarsModels);
 		parameters.getParameters().put("uiReportLinesModels", uiReportLinesModels);
 		parameters.getParameters().put("uiReportPieModels", uiReportPieModels);
+		
+		parameters.getParameters().put("uiPerspectives", uiPerspectives);
 	}
 
 	private List<Map<String, Object>> mapModels(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
@@ -390,6 +409,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			model.put("menuKey", entity.getMenuKey());
 			model.put("menuLabel", entity.getMenuLabel());
 			model.put("menuIndex", entity.getMenuIndex());
+			model.put("perspectiveName", entity.getPerspectiveName());
+			model.put("perspectiveIcon", entity.getPerspectiveIcon());
+			model.put("perspectiveOrder", entity.getPerspectiveOrder());
 			List<Map<String, Object>> propertiesModels = new ArrayList<>();
 			for (EntityDataModelProperty property : entity.getProperties()) {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();
