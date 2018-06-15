@@ -156,14 +156,14 @@
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Menu Label: </label>
-						<div class="col-xs-6">
+						<div class="col-xs-5">
 							<input class="form-control" type="text" placeholder="menu label" ng-model="ctrl.$scope.$parent.cell.value.menuLabel" required="required">
 						</div>
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Menu Index: </label>
 						<div class="col-xs-3">
-							<input class="form-control" type="text" placeholder="menu index" ng-model="ctrl.$scope.$parent.cell.value.menuIndex" required="required">
+							<input class="form-control" type="number" placeholder="menu index" ng-model="ctrl.$scope.$parent.cell.value.menuIndex" required="required">
 						</div>
 					</div>
 					<div class="row">
@@ -172,6 +172,26 @@
 						    <select class="form-control" name="entityLayout" id="entityLayout" ng-model="ctrl.$scope.$parent.cell.value.layoutType">
 						    	<option ng-repeat="option in ctrl.layoutTypes" value="{{option.key}}">{{option.label}}</option>
 						    </select>
+						</div>
+					</div>
+					
+					
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Perspective Name: </label>
+						<div class="col-xs-5">
+							<input class="form-control" type="text" placeholder="perspective name" ng-model="ctrl.$scope.$parent.cell.value.perspectiveName" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Perspective Icon: </label>
+						<div class="col-xs-6">
+							<input class="form-control" type="text" placeholder="perspective icon" ng-model="ctrl.$scope.$parent.cell.value.perspectiveIcon" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Perspective Order: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="number" placeholder="perspective order" ng-model="ctrl.$scope.$parent.cell.value.perspectiveOrder" required="required">
 						</div>
 					</div>
   

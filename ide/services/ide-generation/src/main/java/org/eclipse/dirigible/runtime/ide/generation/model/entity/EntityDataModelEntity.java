@@ -25,6 +25,12 @@ public class EntityDataModelEntity {
 	
 	private String layoutType;
 	
+	private String perspectiveName;
+	
+	private String perspectiveIcon;
+	
+	private int perspectiveOrder;
+	
 	private List<EntityDataModelProperty> properties = new ArrayList<EntityDataModelProperty>();
 	
 	private List<EntityDataModelComposition> compositions = new ArrayList<EntityDataModelComposition>();
@@ -169,4 +175,46 @@ public class EntityDataModelEntity {
 		this.compositions = compositions;
 	}
 
+	/**
+	 * @return the perspectiveName
+	 */
+	public String getPerspectiveName() {
+		return perspectiveName;
+	}
+
+	/**
+	 * @param perspectiveName the perspectiveName to set
+	 */
+	public void setPerspectiveName(String perspectiveName) {
+		this.perspectiveName = perspectiveName;
+	}
+
+	/**
+	 * @return the perspectiveIcon
+	 */
+	public String getPerspectiveIcon() {
+		return perspectiveIcon;
+	}
+
+	/**
+	 * @param perspectiveIcon the perspectiveIcon to set
+	 */
+	public void setPerspectiveIcon(String perspectiveIcon) {
+		this.perspectiveIcon = perspectiveIcon;
+	}
+
+	/**
+	 * @return the perspectiveOrder
+	 */
+	public int getPerspectiveOrder() {
+		return perspectiveOrder;
+	}
+
+	/**
+	 * @param perspectiveOrder the perspectiveOrder to set
+	 */
+	public void setPerspectiveOrder(int perspectiveOrder) {
+		this.perspectiveOrder = perspectiveOrder;
+	}
+	
 }
