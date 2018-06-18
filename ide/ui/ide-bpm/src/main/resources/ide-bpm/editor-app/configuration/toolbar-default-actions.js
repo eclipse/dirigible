@@ -18,12 +18,73 @@ FLOWABLE.TOOLBAR = {
     	
         saveModel: function (services) {
 
-            _internalCreateModal({
-                backdrop: true,
-                keyboard: true,
-                template: 'editor-app/popups/save-model.html?version=' + Date.now(),
-                scope: services.$scope
-            }, services.$modal, services.$scope);
+			// --- workaround for saving silently starts here
+			var saveSilently = function ($http, model, modelMetaData, editorManager) {
+		
+		        var json = model;
+		
+		        var params = {
+		            modeltype: modelMetaData.model.modelType,
+		            json_xml: JSON.stringify(json),
+		            name: model.properties.name,
+		            key: model.properties.process_id,
+		            lastUpdated: modelMetaData.lastUpdated
+		        };
+		
+		        // Update
+		        $http({    method: 'POST',
+		            data: params,
+		            ignoreErrors: true,
+		            headers: {'Accept': 'application/json',
+		                      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+		            transformRequest: function (obj) {
+		                var str = [];
+		                for (var p in obj) {
+		                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+		                }
+		                return str.join("&");
+		            },
+		            url: FLOWABLE.URL.putModel(modelMetaData.modelId)})
+		
+		            .success(function (data, status, headers, config) {
+		                console.info(modelMetaData.modelId + ' saved successfully');
+		                // Fire event to all who is listening
+		                
+		                editorManager.handleEvents({
+		                    type: ORYX.CONFIG.EVENT_SAVED
+		                });
+		                
+		                var saveEvent = {
+		                    type: FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED,
+		                    model: params,
+		                    modelId: modelMetaData.modelId,
+				            eventType: 'update-model'
+		                };
+		                FLOWABLE.eventBus.dispatch(FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED, saveEvent);
+		                
+		            })
+		            .error(function (data, status, headers, config) {
+		                if (status === 409) {
+		                	console.error(data.message);
+		                } else {
+		                	console.error(data.message);
+		                }
+		            });
+		    };
+
+			saveSilently(services.$http, services.editorManager.getModel(), services.$rootScope.modelData, services.editorManager);
+			// --- workaround for saving silently ends here
+			
+
+			// original code below
+//            _internalCreateModal({
+//                backdrop: true,
+//                keyboard: true,
+//                template: 'editor-app/popups/save-model.html?version=' + Date.now(),
+//                scope: services.$scope
+//            }, services.$modal, services.$scope);
+//            
+            
         },
         
         validate: function(services) {
@@ -356,7 +417,6 @@ angular.module('flowableModeler').controller('SaveModelCtrl', [ '$rootScope', '$
     };
     
     $scope.save = function (successCallback) {
-
         if (!$scope.saveDialog.name || $scope.saveDialog.name.length == 0 ||
         	!$scope.saveDialog.key || $scope.saveDialog.key.length == 0) {
         	
