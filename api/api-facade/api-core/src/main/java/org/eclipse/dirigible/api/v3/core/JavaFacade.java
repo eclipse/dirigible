@@ -286,9 +286,10 @@ public class JavaFacade {
 		List<Object> params = normalizeParameters(parameters);
 		Class<?>[] parameterTypes = enumerateTypes(params);
 		Method method = null;
-		if (Modifier.isPublic(clazz.getModifiers())) {
-			method = findMethod(methodName, clazz, parameterTypes, params);
-		} else {
+		// if (Modifier.isPublic(clazz.getModifiers())) {
+		method = findMethod(methodName, clazz, parameterTypes, params);
+		if (method == null) {
+		//} else {
 			Class[] interfaces = clazz.getInterfaces();
 			for (Class i : interfaces) {
 				method = findMethod(methodName, i, parameterTypes, params);
@@ -297,12 +298,24 @@ public class JavaFacade {
 				}
 			}
 		}
+		//}
 
 		if (method != null) {
 			checkBlacklist(method.getDeclaringClass().getCanonicalName(), methodName);
 			Object result;
 			try {
-				result = method.invoke(instance, params.toArray(new Object[] {}));
+				boolean forced = false;
+				if (!method.isAccessible()) {
+					method.setAccessible(true);
+					forced = true;
+				}
+				try {
+					result = method.invoke(instance, params.toArray(new Object[] {}));
+				} finally {
+					if (forced) {
+						method.setAccessible(false);
+					}
+				}
 			} catch (Throwable t) {
 				String message = format("Error in invoking the method [{0}] of the instance [{1}] with parameters [{2}]", method.getName(),
 						ReflectionToStringBuilder.toString(instance), ReflectionToStringBuilder.toString(params.toArray(new Object[] {})));
