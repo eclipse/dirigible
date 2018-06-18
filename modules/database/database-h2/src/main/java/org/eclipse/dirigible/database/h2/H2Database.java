@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
@@ -163,6 +163,7 @@ public class H2Database implements IDatabase {
 					basicDataSource.setUsername(databaseUsername);
 					basicDataSource.setPassword(databasePassword);
 					basicDataSource.setDefaultAutoCommit(true);
+					basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
 					logger.warn(String.format("Embedded H2 at: %s", h2Root));
 
 					WrappedDataSource wrappedDataSource = new WrappedDataSource(basicDataSource);

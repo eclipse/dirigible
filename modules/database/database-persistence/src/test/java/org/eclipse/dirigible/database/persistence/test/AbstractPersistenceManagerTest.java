@@ -20,7 +20,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.junit.Before;
 
@@ -98,6 +98,7 @@ public class AbstractPersistenceManagerTest {
 			String databasePassword = databaseProperties.getProperty(database + ".password");
 			basicDataSource.setPassword(databasePassword);
 			basicDataSource.setDefaultAutoCommit(true);
+			basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
 
 			return basicDataSource;
 

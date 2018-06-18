@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
@@ -115,6 +115,7 @@ public class CustomDatabase implements IDatabase {
 			basicDataSource.setUsername(databaseUsername);
 			basicDataSource.setPassword(databasePassword);
 			basicDataSource.setDefaultAutoCommit(true);
+			basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
 			return basicDataSource;
 		}
 		throw new IllegalArgumentException("Invalid configuration for the custom datasource: " + name);
