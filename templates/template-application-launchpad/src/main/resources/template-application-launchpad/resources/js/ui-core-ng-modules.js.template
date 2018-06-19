@@ -216,7 +216,7 @@ angular.module('ideUiCore', ['ngResource'])
 		restrict: 'AE',
 		scope: {
 			viewsLayoutModel: '=',
-			viewsExtensionPoint: '@viewsExtensionPoint',
+			viewsExtensionPoint: '@viewsExtensionPoint'
 		},
 		link: function(scope, el, attrs){
 			var views;

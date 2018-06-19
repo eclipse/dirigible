@@ -38,133 +38,138 @@ exports.getTemplate = function() {
 
 		{
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/perspective/perspective.extension.template', 
+			'location': '/template-application-angular/ui/perspectives/extensions/perspective/perspective.extension.template', 
 			'action': 'generate',
-			'rename': 'extensions/perspective/perspective.extension'
+			'rename': 'ui/{{perspectiveName}}/extensions/perspective/perspective.extension',
+			'collection': 'uiPerspectives'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/perspective/perspective.js.template', 
+			'location': '/template-application-angular/ui/perspectives/extensions/perspective/perspective.js.template', 
 			'action': 'generate',
-			'rename': 'extensions/perspective/perspective.js',
+			'rename': 'ui/{{perspectiveName}}/extensions/perspective/perspective.js',
+			'engine': 'velocity',
+			'collection': 'uiPerspectives'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/extensions/tile/tile.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/extensions/tile/tile.extension',
+			'collection': 'uiPerspectives'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/extensions/tile/tile.js.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/extensions/tile/tile.js',
+			'engine': 'velocity',
+			'collection': 'uiPerspectives'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/manage/extensions/view.extensionpoint.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/extensions/view.extensionpoint',
+			'collection': 'uiPerspectives'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/manage/extensions/entity.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.extension',
+			'collection': 'uiManageModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/list/extensions/entity.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.extension',
+			'collection': 'uiListModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/master-list/extensions/entity-view.extensionpoint.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/extensions/view.extensionpoint',
+			'collection': 'uiListMasterModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/master-list/extensions/entity.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/extensions/view.extension',
+			'collection': 'uiListMasterModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/master-list/master/extensions/entity-view-master.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/extensions/view-master.extension',
+			'collection': 'uiListMasterModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/master-list/details/extensions/entity-view-detail.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/master/details/{{fileName}}/extensions/view-detail.extension',
+			'collection': 'uiListDetailsModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/tiles/tiles.extension.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/extensions/entity-view.extensionpoint.template', 
 			'action': 'generate',
-			'rename': 'extensions/tiles/tiles.extension'
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/extensions/view.extensionpoint',
+			'collection': 'uiManageMasterModels'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/tiles/tiles.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/extensions/entity.extension.template', 
 			'action': 'generate',
-			'rename': 'extensions/tiles/tiles.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/extensions/view.extension',
+			'collection': 'uiManageMasterModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/master/extensions/entity-view-master.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/extensions/view-master.extension',
+			'collection': 'uiManageMasterModels'
+		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/details/extensions/entity-view-detail.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/master/details/{{fileName}}/extensions/view-detail.extension',
+			'collection': 'uiManageDetailsModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'Extensions',
 			'location': '/template-application-angular/extensions/menu.extensionpoint.template', 
 			'action': 'generate',
 			'rename': 'extensions/menu.extensionpoint'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/manage/view-manage.extensionpoint.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/view-manage.extensionpoint'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/list/entity.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}.extension',
-			'collection': 'uiListModels'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/manage/entity.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}.extension',
-			'collection': 'uiManageModels'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/master-list/entity-view.extensionpoint.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}-view.extensionpoint',
-			'collection': 'uiListMasterModels'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/master-list/entity-view-master.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}-view-master.extension',
-			'collection': 'uiListMasterModels'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/master-list/entity-view-detail.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}-view-detail.extension',
-			'collection': 'uiListDetailsModels',
-			'engine': 'velocity'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/master-list/entity.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}.extension',
-			'collection': 'uiListMasterModels'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/master-manage/entity-view.extensionpoint.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}-view.extensionpoint',
-			'collection': 'uiManageMasterModels'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/master-manage/entity-view-master.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}-view-master.extension',
-			'collection': 'uiManageMasterModels'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/master-manage/entity-view-detail.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}-view-detail.extension',
-			'collection': 'uiManageDetailsModels',
-			'engine': 'velocity'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/extensions/views/master-manage/entity.extension.template', 
-			'action': 'generate',
-			'rename': 'extensions/views/{{fileName}}.extension',
-			'collection': 'uiManageMasterModels'
 		},
 
 
 
 		{
 			'_section': 'UI - Manage Models',
-			'location': '/template-application-angular/views/manage/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/views/manage/index.html.template', 
 			'action': 'generate',
-			'rename': 'views/{{fileName}}/index.html',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/index.html',
 			'collection': 'uiManageModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - Manage Models',
-			'location': '/template-application-angular/views/manage/controller.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/manage/controller.js.template', 
 			'action': 'generate',
-			'rename': 'views/{{fileName}}/controller.js',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/controller.js',
 			'collection': 'uiManageModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - Manage Models',
-			'location': '/template-application-angular/views/manage/view.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/manage/extensions/view.js.template', 
 			'action': 'generate',
 			'collection': 'uiManageModels',
-			'rename': 'views/{{fileName}}/view.js'
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.js'
 		}, {
 			'_section': 'UI - Manage Models',
-			'location': '/template-application-angular/views/manage/menu/item.extension.template', 
+			'location': '/template-application-angular/ui/perspectives/views/manage/extensions/menu/item.extension.template', 
 			'action': 'generate',
-			'rename': 'views/{{fileName}}/menu/item.extension',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.extension',
 			'collection': 'uiManageModels'
 		}, {
 			'_section': 'UI - Manage Models',
-			'location': '/template-application-angular/views/manage/menu/item.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/manage/extensions/menu/item.js.template', 
 			'action': 'generate',
-			'rename': 'views/{{fileName}}/menu/item.js',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.js',
 			'collection': 'uiManageModels'
 		},
 
@@ -172,35 +177,35 @@ exports.getTemplate = function() {
 
 		{
 			'_section': 'UI - List Models',
-			'location': '/template-application-angular/views/list/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/views/list/index.html.template', 
 			'action': 'generate',
-			'rename': 'views/{{fileName}}/index.html',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/index.html',
 			'collection': 'uiListModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - List Models',
-			'location': '/template-application-angular/views/list/controller.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/list/controller.js.template', 
 			'action': 'generate',
-			'rename': 'views/{{fileName}}/controller.js',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/controller.js',
 			'collection': 'uiListModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - List Models',
-			'location': '/template-application-angular/views/list/view.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/list/extensions/view.js.template', 
 			'action': 'generate',
 			'collection': 'uiListModels',
-			'rename': 'views/{{fileName}}/view.js'
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.js'
 		}, {
 			'_section': 'UI - List Models',
-			'location': '/template-application-angular/views/list/menu/item.extension.template', 
+			'location': '/template-application-angular/ui/perspectives/views/list/extensions/menu/item.extension.template', 
 			'action': 'generate',
-			'rename': 'views/{{fileName}}/menu/item.extension',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.extension',
 			'collection': 'uiListModels'
 		}, {
 			'_section': 'UI - List Models',
-			'location': '/template-application-angular/views/list/menu/item.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/list/extensions/menu/item.js.template', 
 			'action': 'generate',
-			'rename': 'views/{{fileName}}/menu/item.js',
+			'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.js',
 			'collection': 'uiListModels'
 		},
 
@@ -208,35 +213,35 @@ exports.getTemplate = function() {
 
 		{
 			'_section': 'UI - List Master Models',
-			'location': '/template-application-angular/views/master-list/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-list/index.html.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/index.html',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/index.html',
 			'collection': 'uiListMasterModels',
 		}, {
 			'_section': 'UI - List Master Models',
-			'location': '/template-application-angular/views/master-list/view.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-list/extensions/view.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/view.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/extensions/view.js',
 			'collection': 'uiListMasterModels'
 		}, {
 			'_section': 'UI - List Master Models',
-			'location': '/template-application-angular/views/master-list/master/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-list/master/index.html.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/master/index.html',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/index.html',
 			'collection': 'uiListMasterModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - List Master Models',
-			'location': '/template-application-angular/views/master-list/master/controller.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-list/master/controller.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/master/controller.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/controller.js',
 			'collection': 'uiListMasterModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - List Master Models',
-			'location': '/template-application-angular/views/master-list/master/view.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-list/master/extensions/view.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/master/view.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/extensions/view.js',
 			'collection': 'uiListMasterModels'
 		},
 
@@ -244,23 +249,23 @@ exports.getTemplate = function() {
 
 		{
 			'_section': 'UI - List Details Models',
-			'location': '/template-application-angular/views/master-list/details/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-list/details/index.html.template', 
 			'action': 'generate',
-			'rename': 'views/master/details/{{fileName}}/index.html',
+			'rename': 'ui/{{perspectiveName}}/views/master/details/{{fileName}}/index.html',
 			'collection': 'uiListDetailsModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - List Details Models',
-			'location': '/template-application-angular/views/master-list/details/controller.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-list/details/controller.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/details/{{fileName}}/controller.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/details/{{fileName}}/controller.js',
 			'collection': 'uiListDetailsModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - List Details Models',
-			'location': '/template-application-angular/views/master-list/details/view.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-list/details/extensions/view.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/details/{{fileName}}/view.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/details/{{fileName}}/extensions/view.js',
 			'collection': 'uiListDetailsModels'
 		},
 
@@ -268,35 +273,35 @@ exports.getTemplate = function() {
 
 		{
 			'_section': 'UI - Manage Master Models',
-			'location': '/template-application-angular/views/master-manage/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/index.html.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/index.html',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/index.html',
 			'collection': 'uiManageMasterModels',
 		}, {
 			'_section': 'UI - Manage Master Models',
-			'location': '/template-application-angular/views/master-manage/view.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/extensions/view.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/view.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/extensions/view.js',
 			'collection': 'uiManageMasterModels'
 		}, {
 			'_section': 'UI - Manage Master Models',
-			'location': '/template-application-angular/views/master-manage/master/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/master/index.html.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/master/index.html',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/index.html',
 			'collection': 'uiManageMasterModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - Manage Master Models',
-			'location': '/template-application-angular/views/master-manage/master/controller.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/master/controller.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/master/controller.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/controller.js',
 			'collection': 'uiManageMasterModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - Manage Master Models',
-			'location': '/template-application-angular/views/master-manage/master/view.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/master/extensions/view.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/{{fileName}}/master/view.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/{{fileName}}/master/extensions/view.js',
 			'collection': 'uiManageMasterModels'
 		},
 
@@ -304,23 +309,23 @@ exports.getTemplate = function() {
 
 		{
 			'_section': 'UI - Manage Details Models',
-			'location': '/template-application-angular/views/master-manage/details/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/details/index.html.template', 
 			'action': 'generate',
-			'rename': 'views/master/details/{{fileName}}/index.html',
+			'rename': 'ui/{{perspectiveName}}/views/master/details/{{fileName}}/index.html',
 			'collection': 'uiManageDetailsModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - Manage Details Models',
-			'location': '/template-application-angular/views/master-manage/details/controller.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/details/controller.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/details/{{fileName}}/controller.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/details/{{fileName}}/controller.js',
 			'collection': 'uiManageDetailsModels',
 			'engine': 'velocity'
 		}, {
 			'_section': 'UI - Manage Details Models',
-			'location': '/template-application-angular/views/master-manage/details/view.js.template', 
+			'location': '/template-application-angular/ui/perspectives/views/master-manage/details/extensions/view.js.template', 
 			'action': 'generate',
-			'rename': 'views/master/details/{{fileName}}/view.js',
+			'rename': 'ui/{{perspectiveName}}/views/master/details/{{fileName}}/extensions/view.js',
 			'collection': 'uiManageDetailsModels'
 		},
 
@@ -328,9 +333,10 @@ exports.getTemplate = function() {
 
 		{
 			'_section': 'UI - Index.html',
-			'location': '/template-application-angular/index.html.template', 
+			'location': '/template-application-angular/ui/perspectives/index.html.template', 
 			'action': 'generate',
-			'rename': 'index.html'
+			'rename': 'ui/{{perspectiveName}}/index.html',
+			'collection': 'uiPerspectives'
 		}],
 		'parameters': [{
 			'name': 'extensionName',
@@ -341,15 +347,6 @@ exports.getTemplate = function() {
 		}, {
 			'name': 'brand',
 			'label': 'Brand'
-		}, {
-			'name': 'moduleName',
-			'label': 'Module Name'
-		}, {
-			'name': 'moduleIcon',
-			'label': 'Module Icon'
-		}, {
-			'name': 'moduleOrder',
-			'label': 'Module Order'
 		}]
 	};
 };

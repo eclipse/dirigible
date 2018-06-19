@@ -1,4 +1,0 @@
-{
-	'description': 'Extension Point for the {{projectName}} View Providers',
-	'name': 'launchpad-{{projectName}}-view'
-}

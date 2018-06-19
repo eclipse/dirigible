@@ -367,16 +367,24 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				uiReportPieModels.add(model);
 			}
 			
-			if (model.get("perspectiveName") != null) {
-				String perspectiveName = model.get("perspectiveName").toString();
-				if (!perspectiveCheck.contains(perspectiveName)) {
-					Map<String, Object> uiPerspective = new HashMap<String, Object>();
-					uiPerspective.put("perspectiveName", perspectiveName);
-					uiPerspective.put("perspectiveIcon", model.get("perspectiveIcon").toString());
-					uiPerspective.put("perspectiveOrder", model.get("perspectiveOrder").toString());
-					uiPerspectives.add(uiPerspective);
-					perspectiveCheck.add(perspectiveName);
-				}
+			String perspectiveName = model.get("perspectiveName").toString();
+			if (perspectiveName != null && !perspectiveCheck.contains(perspectiveName)) {
+				Map<String, Object> uiPerspective = new HashMap<String, Object>();
+				uiPerspective.put("perspectiveName", perspectiveName);
+				uiPerspective.put("perspectiveIcon", model.get("perspectiveIcon"));
+				uiPerspective.put("perspectiveOrder", model.get("perspectiveOrder"));
+				uiPerspective.put("launchpadName", model.get("launchpadName"));
+				uiPerspective.put("extensionName", model.get("extensionName"));
+				uiPerspective.put(GenerationParameters.PARAMETER_WORKSPACE_NAME, model.get(GenerationParameters.PARAMETER_WORKSPACE_NAME));
+				uiPerspective.put(GenerationParameters.PARAMETER_PROJECT_NAME, model.get(GenerationParameters.PARAMETER_PROJECT_NAME));
+				uiPerspective.put(GenerationParameters.PARAMETER_FILE_NAME, model.get(GenerationParameters.PARAMETER_FILE_NAME));
+				uiPerspective.put(GenerationParameters.PARAMETER_FILE_NAME_EXT, model.get(GenerationParameters.PARAMETER_FILE_NAME_EXT));
+				uiPerspective.put(GenerationParameters.PARAMETER_FILE_NAME_BASE, model.get(GenerationParameters.PARAMETER_FILE_NAME_BASE));
+				uiPerspective.put(GenerationParameters.PARAMETER_FILE_PATH, model.get(GenerationParameters.PARAMETER_FILE_PATH));
+				uiPerspective.put(GenerationParameters.PARAMETER_PACKAGE_PATH, model.get(GenerationParameters.PARAMETER_PACKAGE_PATH));
+
+				uiPerspectives.add(uiPerspective);
+				perspectiveCheck.add(perspectiveName);
 			}
 		}
 		parameters.getParameters().put("uiManageModels", uiManageModels);
